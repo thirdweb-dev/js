@@ -1,16 +1,18 @@
-import { TransactionResult, TransactionResultWithId } from "..";
+import { Transaction } from "./transactions";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
 } from "../../../core/schema/nft";
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import {
   fetchTokenMetadataForContract,
   getBaseUriFromBatch,
 } from "../../common/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FeatureName } from "../../constants/contract-features";
-import { BatchToReveal, UploadProgressEvent } from "../../types";
+import type { BatchToReveal } from "../../types/delayed-reveal";
+import type { UploadProgressEvent } from "../../types/events";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,
@@ -24,7 +26,8 @@ import type {
 import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, type BigNumberish, utils, Contract } from "ethers";
+import type { TransactionResultWithId } from "../types";
 
 /**
  * Handles delayed reveal logic
@@ -46,10 +49,10 @@ export class DelayedReveal<
   constructor(
     contractWrapper: ContractWrapper<T>,
     storage: ThirdwebStorage,
-    fetureName: FeatureName,
+    featureName: FeatureName,
     nextTokenIdToMintFn: () => Promise<BigNumber>,
   ) {
-    this.featureName = fetureName;
+    this.featureName = featureName;
     this.nextTokenIdToMintFn = nextTokenIdToMintFn;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
@@ -88,89 +91,97 @@ export class DelayedReveal<
    * @param password - the password that will be used to reveal these NFTs
    * @param options - additional options like upload progress
    */
-  public async createDelayedRevealBatch(
-    placeholder: NFTMetadataInput,
-    metadatas: NFTMetadataInput[],
-    password: string,
-    options?: {
-      onProgress: (event: UploadProgressEvent) => void;
-    },
-  ): Promise<TransactionResultWithId[]> {
-    if (!password) {
-      throw new Error("Password is required");
-    }
-
-    const placeholderUris = await this.storage.uploadBatch(
-      [CommonNFTInput.parse(placeholder)],
-      {
-        rewriteFileNames: {
-          fileStartNumber: 0,
-        },
+  createDelayedRevealBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      placeholder: NFTMetadataInput,
+      metadatas: NFTMetadataInput[],
+      password: string,
+      options?: {
+        onProgress: (event: UploadProgressEvent) => void;
       },
-    );
-    const placeholderUri = getBaseUriFromBatch(placeholderUris);
+    ): Promise<Transaction<TransactionResultWithId[]>> => {
+      if (!password) {
+        throw new Error("Password is required");
+      }
 
-    const startFileNumber = await this.nextTokenIdToMintFn();
-
-    const uris = await this.storage.uploadBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
-      {
-        onProgress: options?.onProgress,
-        rewriteFileNames: {
-          fileStartNumber: startFileNumber.toNumber(),
+      const placeholderUris = await this.storage.uploadBatch(
+        [CommonNFTInput.parse(placeholder)],
+        {
+          rewriteFileNames: {
+            fileStartNumber: 0,
+          },
         },
-      },
-    );
+      );
+      const placeholderUri = getBaseUriFromBatch(placeholderUris);
 
-    const baseUri = getBaseUriFromBatch(uris);
-    const baseUriId = await this.contractWrapper.readContract.getBaseURICount();
-    const hashedPassword = await this.hashDelayRevealPasword(
-      baseUriId,
-      password,
-    );
-    const encryptedBaseUri =
-      await this.contractWrapper.readContract.encryptDecrypt(
-        ethers.utils.toUtf8Bytes(baseUri),
-        hashedPassword,
+      const startFileNumber = await this.nextTokenIdToMintFn();
+
+      const uris = await this.storage.uploadBatch(
+        metadatas.map((m) => CommonNFTInput.parse(m)),
+        {
+          onProgress: options?.onProgress,
+          rewriteFileNames: {
+            fileStartNumber: startFileNumber.toNumber(),
+          },
+        },
       );
 
-    let data: string;
-    const legacyContract = await this.isLegacyContract();
-    if (legacyContract) {
-      data = encryptedBaseUri;
-    } else {
-      const chainId = await this.contractWrapper.getChainID();
-      const provenanceHash = ethers.utils.solidityKeccak256(
-        ["bytes", "bytes", "uint256"],
-        [ethers.utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
+      const baseUri = getBaseUriFromBatch(uris);
+      const baseUriId =
+        await this.contractWrapper.readContract.getBaseURICount();
+      const hashedPassword = await this.hashDelayRevealPassword(
+        baseUriId,
+        password,
       );
-      data = ethers.utils.defaultAbiCoder.encode(
-        ["bytes", "bytes32"],
-        [encryptedBaseUri, provenanceHash],
-      );
-    }
+      const encryptedBaseUri =
+        await this.contractWrapper.readContract.encryptDecrypt(
+          utils.toUtf8Bytes(baseUri),
+          hashedPassword,
+        );
 
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      uris.length,
-      placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
-      data,
-    ]);
+      let data: string;
+      const legacyContract = await this.isLegacyContract();
+      if (legacyContract) {
+        data = encryptedBaseUri;
+      } else {
+        const chainId = await this.contractWrapper.getChainID();
+        const provenanceHash = utils.solidityKeccak256(
+          ["bytes", "bytes", "uint256"],
+          [utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
+        );
+        data = utils.defaultAbiCoder.encode(
+          ["bytes", "bytes32"],
+          [encryptedBaseUri, provenanceHash],
+        );
+      }
 
-    const events = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = events[0].args.startTokenId;
-    const endingIndex = events[0].args.endTokenId;
-    const results: TransactionResultWithId[] = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "lazyMint",
+        args: [
+          uris.length,
+          placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
+          data,
+        ],
+        parse: (receipt) => {
+          const events = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+            "TokensLazyMinted",
+            receipt?.logs,
+          );
+          const startingIndex = events[0].args.startTokenId;
+          const endingIndex = events[0].args.endTokenId;
+          const results: TransactionResultWithId[] = [];
+          for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+            results.push({
+              id,
+              receipt,
+            });
+          }
+          return results;
+        },
       });
-    }
-    return results;
-  }
+    },
+  );
 
   /**
    * Reveal a batch of hidden NFTs
@@ -186,36 +197,34 @@ export class DelayedReveal<
    * @param batchId - the id of the batch to reveal
    * @param password - the password
    */
-  public async reveal(
-    batchId: BigNumberish,
-    password: string,
-  ): Promise<TransactionResult> {
-    if (!password) {
-      throw new Error("Password is required");
-    }
-    const key = await this.hashDelayRevealPasword(batchId, password);
-    // performing the reveal locally to make sure it'd succeed before sending the transaction
-    try {
-      const decryptedUri = await this.contractWrapper
-        .callStatic()
-        .reveal(batchId, key);
-      // basic sanity check for making sure decryptedUri is valid
-      // this is optional because invalid decryption key would result in non-utf8 bytes and
-      // ethers would throw when trying to decode it
-      if (!decryptedUri.includes("://") || !decryptedUri.endsWith("/")) {
+  reveal = /* @__PURE__ */ buildTransactionFunction(
+    async (batchId: BigNumberish, password: string): Promise<Transaction> => {
+      if (!password) {
+        throw new Error("Password is required");
+      }
+      const key = await this.hashDelayRevealPassword(batchId, password);
+      // performing the reveal locally to make sure it'd succeed before sending the transaction
+      try {
+        const decryptedUri = await this.contractWrapper
+          .callStatic()
+          .reveal(batchId, key);
+        // basic sanity check for making sure decryptedUri is valid
+        // this is optional because invalid decryption key would result in non-utf8 bytes and
+        // ethers would throw when trying to decode it
+        if (!decryptedUri.includes("://") || !decryptedUri.endsWith("/")) {
+          throw new Error("invalid password");
+        }
+      } catch (e) {
         throw new Error("invalid password");
       }
-    } catch (e) {
-      throw new Error("invalid password");
-    }
 
-    return {
-      receipt: await this.contractWrapper.sendTransaction("reveal", [
-        batchId,
-        key,
-      ]),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "reveal",
+        args: [batchId, key],
+      });
+    },
+  );
 
   /**
    * Gets the list of unrevealed NFT batches.
@@ -277,14 +286,11 @@ export class DelayedReveal<
       ),
     );
     const encryptedBaseUris = encryptedUriData.map((data) => {
-      if (ethers.utils.hexDataLength(data) > 0) {
+      if (utils.hexDataLength(data) > 0) {
         if (legacyContract) {
           return data;
         }
-        const result = ethers.utils.defaultAbiCoder.decode(
-          ["bytes", "bytes32"],
-          data,
-        );
+        const result = utils.defaultAbiCoder.decode(["bytes", "bytes32"], data);
         return result[0];
       } else {
         return data;
@@ -297,9 +303,7 @@ export class DelayedReveal<
         batchUri: meta.uri,
         placeholderMetadata: meta,
       }))
-      .filter(
-        (_, index) => ethers.utils.hexDataLength(encryptedBaseUris[index]) > 0,
-      );
+      .filter((_, index) => utils.hexDataLength(encryptedBaseUris[index]) > 0);
   }
 
   /**
@@ -307,13 +311,13 @@ export class DelayedReveal<
    *
    * @internal
    */
-  private async hashDelayRevealPasword(
+  private async hashDelayRevealPassword(
     batchTokenIndex: BigNumberish,
     password: string,
   ) {
     const chainId = await this.contractWrapper.getChainID();
     const contractAddress = this.contractWrapper.readContract.address;
-    return ethers.utils.solidityKeccak256(
+    return utils.solidityKeccak256(
       ["string", "uint256", "uint256", "address"],
       [password, chainId, batchTokenIndex, contractAddress],
     );
@@ -344,7 +348,7 @@ export class DelayedReveal<
   }
 
   private async getLegacyEncryptedData(index: BigNumber) {
-    const legacy = new ethers.Contract(
+    const legacy = new Contract(
       this.contractWrapper.readContract.address,
       DeprecatedAbi,
       this.contractWrapper.getProvider(),

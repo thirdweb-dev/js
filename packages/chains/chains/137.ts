@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Polygon Mainnet",
   "chain": "Polygon",
@@ -5,20 +6,12 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "rpc": [
     "https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}",
+    "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://polygon-rpc.com/",
     "https://rpc-mainnet.matic.network",
     "https://matic-mainnet.chainstacklabs.com",
@@ -47,4 +40,4 @@ export default {
   ],
   "testnet": false,
   "slug": "polygon"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Autonity Bakerloo (Thames) Testnet",
   "chain": "AUT",
@@ -19,10 +20,10 @@ export default {
   "chainId": 65010000,
   "networkId": 65010000,
   "icon": {
-    "url": "ipfs://Qmae5oAFpcCG1MEMBwGbNodHAR3wqPBxQkon28AF2SfKTX",
-    "width": 81,
-    "height": 81,
-    "format": "svg"
+    "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
   },
   "explorers": [
     {
@@ -33,4 +34,4 @@ export default {
   ],
   "testnet": true,
   "slug": "autonity-bakerloo-thames-testnet"
-} as const;
+} as const satisfies Chain;

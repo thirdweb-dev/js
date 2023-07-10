@@ -1,4 +1,8 @@
 import {
+  THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+  THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+} from "../constants";
+import {
   LoginOptions,
   LoginPayload,
   GenerateOptions,
@@ -6,7 +10,6 @@ import {
   LoginPayloadDataSchema,
   AuthenticationPayloadDataSchema,
   AuthenticationPayloadData,
-  LoginOptionsSchema,
   VerifyOptionsSchema,
   VerifyOptions,
   GenerateOptionsSchema,
@@ -14,6 +17,9 @@ import {
   AuthenticateOptions,
   User,
   Json,
+  LoginOptionsSchema,
+  AuthenticationPayload,
+  AuthenticationPayloadDataInput,
 } from "./schema";
 import { isBrowser } from "./utils";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
@@ -31,7 +37,7 @@ export class ThirdwebAuth {
     this.wallet = wallet;
   }
 
-  public async login(options?: LoginOptions): Promise<LoginPayload> {
+  public async payload(options?: LoginOptions): Promise<LoginPayloadData> {
     const parsedOptions = LoginOptionsSchema.parse(options);
 
     let chainId: string | undefined = parsedOptions?.chainId;
@@ -43,30 +49,46 @@ export class ThirdwebAuth {
       }
     }
 
-    const payloadData = LoginPayloadDataSchema.parse({
+    return LoginPayloadDataSchema.parse({
       type: this.wallet.type,
       domain: parsedOptions?.domain || this.domain,
-      address: await this.wallet.getAddress(),
+      address: parsedOptions?.address || (await this.wallet.getAddress()),
       statement: parsedOptions?.statement,
       version: parsedOptions?.version,
-      uri:
-        parsedOptions?.uri ||
-        (isBrowser() ? window.location.origin : undefined),
+      uri: parsedOptions?.uri,
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
-        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5),
-      invalid_before: parsedOptions?.invalidBefore,
+        parsedOptions?.expirationTime ||
+        new Date(
+          Date.now() +
+            1000 * THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+        ),
+      invalid_before:
+        parsedOptions?.invalidBefore ||
+        new Date(
+          Date.now() -
+            1000 * THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+        ),
       resources: parsedOptions?.resources,
     });
+  }
 
-    const message = this.generateMessage(payloadData);
+  public async loginWithPayload(
+    payload: LoginPayloadData,
+  ): Promise<LoginPayload> {
+    const message = this.generateMessage(payload);
     const signature = await this.wallet.signMessage(message);
 
     return {
-      payload: payloadData,
+      payload,
       signature,
     };
+  }
+
+  public async login(options?: LoginOptions): Promise<LoginPayload> {
+    const payloadData = await this.payload(options);
+    return await this.loginWithPayload(payloadData);
   }
 
   public async verify(
@@ -209,41 +231,37 @@ export class ThirdwebAuth {
     }
 
     const adminAddress = await this.wallet.getAddress();
-    const payloadData = AuthenticationPayloadDataSchema.parse({
+    return this.createToken({
       iss: adminAddress,
       sub: userAddress,
       aud: domain,
       nbf: parsedOptions?.invalidBefore || new Date(),
       exp:
         parsedOptions?.expirationTime ||
-        new Date(Date.now() + 1000 * 60 * 60 * 5),
+        new Date(
+          Date.now() + 1000 * THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+        ),
       iat: new Date(),
       jti: parsedOptions?.tokenId,
       ctx: session,
     });
+  }
 
-    const message = JSON.stringify(payloadData);
-    const signature = await this.wallet.signMessage(message);
-
-    // Header used for JWT token specifying hash algorithm
-    const header = {
-      // Specify ECDSA with SHA-256 for hashing algorithm
-      alg: "ES256",
-      typ: "JWT",
-    };
-
-    const encodedHeader = Buffer.from(JSON.stringify(header)).toString(
-      "base64",
-    );
-    const encodedData = Buffer.from(JSON.stringify(payloadData))
-      .toString("base64")
-      .replace(/=/g, "");
-    const encodedSignature = Buffer.from(signature).toString("base64");
-
-    // Generate a JWT token with base64 encoded header, payload, and signature
-    const token = `${encodedHeader}.${encodedData}.${encodedSignature}`;
-
-    return token;
+  public async refresh(token: string, expirationTime?: Date): Promise<string> {
+    const { payload } = this.parseToken(token);
+    return this.createToken({
+      iss: payload.iss,
+      sub: payload.sub,
+      aud: payload.aud,
+      nbf: new Date(),
+      exp:
+        expirationTime ||
+        new Date(
+          Date.now() + 1000 * THIRDWEB_AUTH_DEFAULT_TOKEN_DURATION_IN_SECONDS,
+        ),
+      iat: new Date(),
+      ctx: payload.ctx,
+    });
   }
 
   /**
@@ -278,12 +296,7 @@ export class ThirdwebAuth {
     const parsedOptions = AuthenticateOptionsSchema.parse(options);
     const domain = parsedOptions?.domain || this.domain;
 
-    const encodedPayload = token.split(".")[1];
-    const encodedSignature = token.split(".")[2];
-    const payload: AuthenticationPayloadData = JSON.parse(
-      Buffer.from(encodedPayload, "base64").toString(),
-    );
-    const signature = Buffer.from(encodedSignature, "base64").toString();
+    const { payload, signature } = this.parseToken(token);
 
     // Check that the payload unique ID is valid
     if (parsedOptions?.validateTokenId !== undefined) {
@@ -349,6 +362,49 @@ export class ThirdwebAuth {
       address: payload.sub,
       session: payload.ctx as TSession | undefined,
     };
+  }
+
+  public parseToken(token: string): AuthenticationPayload {
+    const encodedPayload = token.split(".")[1];
+    const encodedSignature = token.split(".")[2];
+    const payload: AuthenticationPayloadData = JSON.parse(
+      Buffer.from(encodedPayload, "base64").toString(),
+    );
+    const signature = Buffer.from(encodedSignature, "base64").toString();
+
+    return {
+      payload,
+      signature,
+    };
+  }
+
+  private async createToken(
+    payload: AuthenticationPayloadDataInput,
+  ): Promise<string> {
+    const payloadData = AuthenticationPayloadDataSchema.parse(payload);
+
+    const message = JSON.stringify(payloadData);
+    const signature = await this.wallet.signMessage(message);
+
+    // Header used for JWT token specifying hash algorithm
+    const header = {
+      // Specify ECDSA with SHA-256 for hashing algorithm
+      alg: "ES256",
+      typ: "JWT",
+    };
+
+    const encodedHeader = Buffer.from(JSON.stringify(header)).toString(
+      "base64",
+    );
+    const encodedData = Buffer.from(JSON.stringify(payloadData))
+      .toString("base64")
+      .replace(/=/g, "");
+    const encodedSignature = Buffer.from(signature).toString("base64");
+
+    // Generate a JWT token with base64 encoded header, payload, and signature
+    const token = `${encodedHeader}.${encodedData}.${encodedSignature}`;
+
+    return token;
   }
 
   private async verifySignature(

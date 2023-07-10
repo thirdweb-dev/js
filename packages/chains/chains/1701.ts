@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Anytype EVM Chain",
   "chain": "ETH",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "Anytype Explorer",
       "url": "https://explorer.anytype.io",
-      "icon": "any",
+      "icon": {
+        "url": "ipfs://QmaARJiAQUn4Z6wG8GLEry3kTeBB3k6RfHzSZU9SPhBgcG",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "anytype-evm-chain"
-} as const;
+} as const satisfies Chain;

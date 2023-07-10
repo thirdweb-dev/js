@@ -1,11 +1,13 @@
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BURNABLE } from "../../constants/erc20-features";
-import { Amount } from "../../types/currency";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc20 } from "./erc-20";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { Amount } from "../../types/currency";
+import type { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { IBurnableERC20 } from "@thirdweb-dev/contracts-js";
+import type { Erc20 } from "./erc-20";
 
 export class Erc20Burnable implements DetectableFeature {
   featureName = FEATURE_TOKEN_BURNABLE.name;
@@ -31,7 +33,7 @@ export class Erc20Burnable implements DetectableFeature {
    * await contract.token.burn.tokens(amount);
    * ```
    */
-  tokens = buildTransactionFunction(async (amount: Amount) => {
+  tokens = /* @__PURE__ */ buildTransactionFunction(async (amount: Amount) => {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "burn",
@@ -55,11 +57,16 @@ export class Erc20Burnable implements DetectableFeature {
    * await contract.token.burn.from(holderAddress, amount);
    * ```
    */
-  from = buildTransactionFunction(async (holder: string, amount: Amount) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "burnFrom",
-      args: [holder, await this.erc20.normalizeAmount(amount)],
-    });
-  });
+  from = /* @__PURE__ */ buildTransactionFunction(
+    async (holder: AddressOrEns, amount: Amount) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "burnFrom",
+        args: [
+          await resolveAddress(holder),
+          await this.erc20.normalizeAmount(amount),
+        ],
+      });
+    },
+  );
 }

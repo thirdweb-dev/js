@@ -27,6 +27,10 @@ import {
   FEATURE_NFT_CLAIM_PHASES_V1,
   FEATURE_NFT_SIGNATURE_MINTABLE_V1,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
+  FEATURE_NFT_SHARED_METADATA,
+  FEATURE_NFT_CLAIM_ZORA,
+  FEATURE_NFT_LOYALTY_CARD,
+  FEATURE_NFT_UPDATABLE_METADATA,
 } from "./erc721-features";
 import {
   FEATURE_EDITION,
@@ -60,6 +64,8 @@ import {
   FEATURE_ENGLISH_AUCTIONS,
   FEATURE_OFFERS,
   FEATURE_EXTENSION_ROUTER,
+  FEATURE_ACCOUNT,
+  FEATURE_ACCOUNT_FACTORY,
 } from "./thirdweb-features";
 
 /**
@@ -83,6 +89,7 @@ export type Feature =
   | typeof FEATURE_NFT_BATCH_MINTABLE
   | typeof FEATURE_NFT_LAZY_MINTABLE
   | typeof FEATURE_NFT_CLAIM_CUSTOM
+  | typeof FEATURE_NFT_CLAIM_ZORA
   | typeof FEATURE_NFT_CLAIM_CONDITIONS_V1
   | typeof FEATURE_NFT_CLAIM_CONDITIONS_V2
   | typeof FEATURE_NFT_CLAIM_PHASES_V1
@@ -92,6 +99,9 @@ export type Feature =
   | typeof FEATURE_NFT_SIGNATURE_MINTABLE_V2
   | typeof FEATURE_NFT_BURNABLE
   | typeof FEATURE_NFT_TIERED_DROP
+  | typeof FEATURE_NFT_SHARED_METADATA
+  | typeof FEATURE_NFT_LOYALTY_CARD
+  | typeof FEATURE_NFT_UPDATABLE_METADATA
   | typeof FEATURE_EDITION
   | typeof FEATURE_EDITION_ENUMERABLE
   | typeof FEATURE_EDITION_MINTABLE
@@ -120,12 +130,17 @@ export type Feature =
   | typeof FEATURE_EXTENSION_ROUTER
   | typeof FEATURE_DIRECT_LISTINGS
   | typeof FEATURE_ENGLISH_AUCTIONS
-  | typeof FEATURE_OFFERS;
+  | typeof FEATURE_OFFERS
+  | typeof FEATURE_ACCOUNT
+  | typeof FEATURE_ACCOUNT_FACTORY;
+
+export type Extension = Feature;
 
 /**
  * @internal
  */
 export type FeatureName = Feature["name"];
+export type ExtensionName = Feature["name"];
 /**
  * @internal
  */
@@ -133,11 +148,15 @@ export type FeatureWithEnabled = Feature & {
   features: Record<string, FeatureWithEnabled>;
   enabled: boolean;
 };
+export type ExtensionWithEnabled = Extension & {
+  extensions: Record<string, FeatureWithEnabled>;
+  enabled: boolean;
+};
 
 /**
  * @internal
  */
-export const SUPPORTED_FEATURES: Record<string, Feature> = {
+export const SUPPORTED_FEATURES: Record<string, Feature> = /* @__PURE__ */ {
   [FEATURE_TOKEN.name]: FEATURE_TOKEN,
   [FEATURE_NFT.name]: FEATURE_NFT,
   [FEATURE_EDITION.name]: FEATURE_EDITION,
@@ -155,4 +174,8 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_DIRECT_LISTINGS.name]: FEATURE_DIRECT_LISTINGS,
   [FEATURE_ENGLISH_AUCTIONS.name]: FEATURE_ENGLISH_AUCTIONS,
   [FEATURE_OFFERS.name]: FEATURE_OFFERS,
+  [FEATURE_ACCOUNT_FACTORY.name]: FEATURE_ACCOUNT_FACTORY,
+  [FEATURE_ACCOUNT.name]: FEATURE_ACCOUNT,
+  [FEATURE_NFT_LOYALTY_CARD.name]: FEATURE_NFT_LOYALTY_CARD,
+  [FEATURE_NFT_UPDATABLE_METADATA.name]: FEATURE_NFT_UPDATABLE_METADATA,
 };

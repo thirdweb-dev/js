@@ -1,9 +1,10 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ethereum Classic Mainnet",
   "chain": "ETC",
   "rpc": [
     "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.ethercluster.com/etc"
+    "https://etc.rivet.link"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/?"
@@ -27,4 +28,4 @@ export default {
   ],
   "testnet": false,
   "slug": "ethereum-classic"
-} as const;
+} as const satisfies Chain;

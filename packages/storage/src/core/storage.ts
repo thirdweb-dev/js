@@ -35,7 +35,7 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  * const gatewayUrls = {
  *   // We define a mapping of schemes to gateway URLs
  *   "ipfs://": [
- *     "https://gateway.ipfscdn.io/ipfs/",
+ *     "https://ipfs.thirdwebcdn.com/ipfs/",
  *     "https://cloudflare-ipfs.com/ipfs/",
  *     "https://ipfs.io/ipfs/",
  *   ],
@@ -227,7 +227,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
     if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
       // If flag is set, replace all schemes with their preferred gateway URL
-      // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
+      // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be usable by default
       cleaned = replaceObjectSchemesWithGatewayUrls(
         cleaned,
         this.gatewayUrls,

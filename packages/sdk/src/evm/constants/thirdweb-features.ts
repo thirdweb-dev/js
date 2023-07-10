@@ -11,6 +11,8 @@ import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatf
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
+import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
+import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
 
 export const getAllPluginsAbi = [
   {
@@ -107,7 +109,7 @@ export const FEATURE_ROYALTY = {
   namespace: "royalty",
   docLinks: {
     sdk: "sdk.contractroyalty",
-    contracts: "Royalty",
+    contracts: "royalty",
   },
   abis: [IThirdwebRoyaltyAbi],
   features: {},
@@ -118,7 +120,7 @@ export const FEATURE_PRIMARY_SALE = {
   namespace: "sales",
   docLinks: {
     sdk: "sdk.contractprimarysale",
-    contracts: "PrimarySale",
+    contracts: "primarysale",
   },
   abis: [IThirdwebPrimarySaleAbi],
   features: {},
@@ -126,10 +128,10 @@ export const FEATURE_PRIMARY_SALE = {
 
 export const FEATURE_PLATFORM_FEE = {
   name: "PlatformFee",
-  namespace: "platformFee",
+  namespace: "platformFees",
   docLinks: {
     sdk: "sdk.platformfee",
-    contracts: "PlatformFee",
+    contracts: "platformfee",
   },
   abis: [IThirdwebPlatformFeeAbi],
   features: {},
@@ -140,18 +142,18 @@ export const FEATURE_PERMISSIONS_ENUMERABLE = {
   namespace: "roles",
   docLinks: {
     sdk: "sdk.contractroles",
-    contracts: "PermissionsEnumerable",
+    contracts: "permissionsenumerable",
   },
   abis: [IPermissionsEnumerableAbi],
   features: {},
 } as const;
 
-export const FEATURE_PERMISSIONS = {
+export const FEATURE_PERMISSIONS = /* @__PURE__ */ {
   name: "Permissions",
   namespace: "roles",
   docLinks: {
     sdk: "sdk.contractroles",
-    contracts: "Permissions",
+    contracts: "permissions",
   },
   abis: [IPermissionsAbi],
   features: {
@@ -164,7 +166,7 @@ export const FEATURE_METADATA = {
   namespace: "metadata",
   docLinks: {
     sdk: "sdk.contractmetadata",
-    contracts: "ContractMetadata",
+    contracts: "contractmetadata",
   },
   abis: [IContractMetadataAbi],
   features: {},
@@ -175,7 +177,8 @@ export const FEATURE_APPURI = {
   namespace: "appURI",
   docLinks: {
     sdk: "sdk.appURI",
-    contracts: "AppURI",
+    //TODO
+    contracts: "",
   },
   abis: [IAppURI],
   features: {},
@@ -186,7 +189,7 @@ export const FEATURE_OWNER = {
   namespace: "owner",
   docLinks: {
     sdk: "sdk.owner",
-    contracts: "Ownable",
+    contracts: "ownable",
   },
   abis: [IOwnableAbi],
   features: {},
@@ -209,7 +212,8 @@ export const FEATURE_PACK_VRF = {
   namespace: "pack.vrf",
   docLinks: {
     sdk: "sdk.packvrf",
-    contracts: "IPackVRFDirect",
+    //TODO
+    contracts: "",
   },
   abis: [IPackVRFAbi],
   features: {},
@@ -220,7 +224,8 @@ export const FEATURE_PLUGIN_ROUTER = {
   namespace: "plugin.router",
   docLinks: {
     sdk: "sdk.pluginrouter",
-    contracts: "IRouter",
+    //TODO
+    contracts: "",
   },
   abis: [getAllPluginsAbi],
   features: {},
@@ -231,6 +236,7 @@ export const FEATURE_EXTENSION_ROUTER = {
   namespace: "extension.router",
   docLinks: {
     sdk: "",
+    //TODO
     contracts: "",
   },
   abis: [getAllExtensionsAbi],
@@ -270,5 +276,29 @@ export const FEATURE_OFFERS = {
     contracts: "",
   },
   abis: [IOffersAbi],
+  features: {},
+} as const;
+
+export const FEATURE_ACCOUNT_FACTORY = {
+  name: "AccountFactory",
+  namespace: "accountFactory",
+  docLinks: {
+    // TODO
+    sdk: "sdk.accountFactory",
+    contracts: "",
+  },
+  abis: [IAccountFactory],
+  features: {},
+} as const;
+
+export const FEATURE_ACCOUNT = {
+  name: "Account",
+  namespace: "account",
+  docLinks: {
+    // TODO
+    sdk: "sdk.account",
+    contracts: "",
+  },
+  abis: [IAccountCore],
   features: {},
 } as const;

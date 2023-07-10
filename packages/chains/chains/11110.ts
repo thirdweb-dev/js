@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Astra",
   "chain": "Astra",
@@ -27,15 +28,25 @@ export default {
       "name": "Astra EVM Explorer (Blockscout)",
       "url": "https://explorer.astranaut.io",
       "standard": "none",
-      "icon": "astra"
+      "icon": {
+        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+        "width": 104,
+        "height": 80,
+        "format": "png"
+      }
     },
     {
       "name": "Astra PingPub Explorer",
       "url": "https://ping.astranaut.io/astra",
       "standard": "none",
-      "icon": "astra"
+      "icon": {
+        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+        "width": 104,
+        "height": 80,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "astra"
-} as const;
+} as const satisfies Chain;

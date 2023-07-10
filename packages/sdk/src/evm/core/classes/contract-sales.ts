@@ -1,7 +1,9 @@
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
+import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type { IPrimarySale } from "@thirdweb-dev/contracts-js";
 
 /**
@@ -35,7 +37,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @public
    * @twfeature PrimarySale
    */
-  public async getRecipient(): Promise<string> {
+  public async getRecipient(): Promise<Address> {
     return await this.contractWrapper.readContract.primarySaleRecipient();
   }
 
@@ -49,12 +51,13 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @public
    * @twfeature PrimarySale
    */
-  public async setRecipient(recipient: string): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "setPrimarySaleRecipient",
-        [recipient],
-      ),
-    };
-  }
+  setRecipient = /* @__PURE__ */ buildTransactionFunction(
+    async (recipient: string): Promise<Transaction> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<IPrimarySale>,
+        method: "setPrimarySaleRecipient",
+        args: [recipient],
+      });
+    },
+  );
 }

@@ -1,14 +1,16 @@
+import { resolveAddress } from "../common/ens/resolveAddress";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { ContractPublisher } from "../core/classes/contract-publisher";
-import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
+import { NetworkInput } from "../core/types";
 import {
   ContractForPrebuiltContractType,
-  NetworkInput,
   PrebuiltContractType,
-} from "../core/types";
+} from "../contracts";
+import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { getContractFromAbi } from "./getContractFromAbi";
+import { getSignerAndProvider } from "../constants/urls";
 import {
   cacheContract,
   getCachedContract,
@@ -16,11 +18,11 @@ import {
   inContractCache,
 } from "./utils/cache";
 import { resolveContractType } from "./utils/contract";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ContractInterface } from "ethers";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { ContractInterface } from "ethers";
 
 export type GetContractParams<TContractType extends PrebuiltContractType> = {
-  address: string;
+  address: AddressOrEns;
   contractTypeOrAbi?: PrebuiltContractType | ContractInterface | TContractType;
   network: NetworkInput;
   storage?: ThirdwebStorage;
@@ -35,22 +37,24 @@ type ReturnedContractType<TContractType extends PrebuiltContractType> =
 export async function getContract<TContractType extends PrebuiltContractType>(
   params: GetContractParams<TContractType>,
 ): Promise<ReturnedContractType<TContractType>> {
+  const resolvedAddress = await resolveAddress(params.address);
+
   const [signer, provider] = getSignerAndProvider(
     params.network,
     params.sdkOptions,
   );
   const chainId = (await provider.getNetwork()).chainId;
 
-  if (inContractCache(params.address, chainId)) {
+  if (inContractCache(resolvedAddress, chainId)) {
     return getCachedContract(
-      params.address,
+      resolvedAddress,
       chainId,
     ) as ReturnedContractType<TContractType>;
   }
 
   if (!params.contractTypeOrAbi || params.contractTypeOrAbi === "custom") {
     const contractType = await resolveContractType({
-      address: params.address,
+      address: resolvedAddress,
       provider,
     });
     if (contractType === "custom") {
@@ -62,25 +66,27 @@ export async function getContract<TContractType extends PrebuiltContractType>(
 
       try {
         const metadata = await publisher.fetchCompilerMetadataFromAddress(
-          params.address,
+          resolvedAddress,
         );
         return getContractFromAbi({
           ...params,
+          address: resolvedAddress,
           abi: metadata.abi,
         }) as ReturnedContractType<TContractType>;
       } catch {
         throw new Error(
-          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${params.address}`,
+          `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
         );
       }
     } else {
       const abi = await PREBUILT_CONTRACTS_MAP[contractType].getAbi(
-        params.address,
+        resolvedAddress,
         provider,
         getCachedStorage(params.storage),
       );
       return getContractFromAbi({
         ...params,
+        address: resolvedAddress,
         abi,
       }) as ReturnedContractType<TContractType>;
     }
@@ -92,15 +98,16 @@ export async function getContract<TContractType extends PrebuiltContractType>(
       params.contractTypeOrAbi as keyof typeof PREBUILT_CONTRACTS_MAP
     ].initialize(
       signer || provider,
-      params.address,
+      resolvedAddress,
       getCachedStorage(params.storage),
       params.sdkOptions,
     );
-    cacheContract(contract, params.address, chainId);
+    cacheContract(contract, resolvedAddress, chainId);
     return contract as ReturnedContractType<TContractType>;
   } else {
     return getContractFromAbi({
       ...params,
+      address: resolvedAddress,
       abi: params.contractTypeOrAbi,
     }) as ReturnedContractType<TContractType>;
   }

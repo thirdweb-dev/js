@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Findora Mainnet",
   "chain": "Findora",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "findora"
-} as const;
+} as const satisfies Chain;

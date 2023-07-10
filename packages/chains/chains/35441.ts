@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Q Mainnet",
   "chain": "Q",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Q explorer",
       "url": "https://explorer.q.org",
-      "icon": "q",
+      "icon": {
+        "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
+        "width": 585,
+        "height": 603,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "q"
-} as const;
+} as const satisfies Chain;

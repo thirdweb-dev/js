@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "PolySmartChain",
   "chain": "PSC",
@@ -19,4 +20,4 @@ export default {
   "networkId": 6999,
   "testnet": false,
   "slug": "polysmartchain"
-} as const;
+} as const satisfies Chain;

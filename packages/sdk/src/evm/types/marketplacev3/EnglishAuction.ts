@@ -1,5 +1,6 @@
 import { NFTMetadata } from "../../../core/schema/nft";
 import { Status } from "../../enums";
+import { Address } from "../../schema/shared/Address";
 import { CurrencyValue } from "../currency";
 
 /**
@@ -14,12 +15,12 @@ export interface EnglishAuction {
   /**
    * The address of the creator of auction.
    */
-  creatorAddress: string;
+  creatorAddress: Address;
 
   /**
    * The address of the asset being auctioned.
    */
-  assetContractAddress: string;
+  assetContractAddress: Address;
 
   /**
    * The ID of the token to auction.
@@ -36,7 +37,7 @@ export interface EnglishAuction {
   /**
    * The address of the currency to accept for the auction.
    */
-  currencyContractAddress: string;
+  currencyContractAddress: Address;
 
   /**
    * The minimum price that a bid must be in order to be accepted.

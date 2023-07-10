@@ -8,8 +8,13 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -17,23 +22,23 @@ import invariant from "tiny-invariant";
  *
  * @example
  * ```javascript
- * const { data: contractMetadata, isLoading, error } = useAppURI(SmartContract;
+ * const { data: contractMetadata, isLoading, error } = useAppURI(contract);
  * ```
  *
  * @param contract - the {@link SmartContract} instance of the contract to get the appURI of
  * @returns a response object that includes the appURI of the contract
- * @twfeature AppURI | ContractMetadata
+ * @twfeature AppURI
  * @beta
  */
-export function useAppURI<TContract extends SmartContract>(
+export function useAppURI<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
 ) {
   return useQueryWithNetwork<string>(
     cacheKeys.contract.app.get(contract?.getAddress()),
     async () => {
       requiredParamInvariant(contract, "Contract is required");
-      invariant(contract.appURI, "Contract does not support appURI");
-      return await contract.appURI.get();
+      invariant(contract.app, "Contract does not support app");
+      return await contract.app.get();
     },
     {
       enabled: !!contract,
@@ -51,7 +56,7 @@ export function useAppURI<TContract extends SmartContract>(
  *     mutate: useSetAppURI,
  *     isLoading,
  *     error,
- *   } = useSetAppURI(SmartContract);
+ *   } = useSetAppURI(contract);
  *
  *   if (error) {
  *     console.error("failed to update appURI", error);
@@ -69,18 +74,33 @@ export function useAppURI<TContract extends SmartContract>(
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the appURI of a contract
- * @twfeature AppURI | ContractMetadata
+ * @twfeature AppUR
  * @beta
  */
-export function useSetAppURI(contract: RequiredParam<SmartContract>) {
+export function useSetAppURI(
+  contract: RequiredParam<ValidContractInstance>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  {
+    uri: string;
+  },
+  unknown
+> {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
   const activeChainId = useSDKChainId();
   return useMutation(
     (params: { uri: string }) => {
       requiredParamInvariant(contract, "Contract is required");
-      invariant(contract.appURI, "Contract does not support appURI");
-      return contract.appURI.set(params.uri);
+      invariant(contract.app, "Contract does not support app");
+      return contract.app.set(params.uri);
     },
     {
       onSettled: () =>

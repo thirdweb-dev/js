@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "IDChain Mainnet",
   "chain": "IDChain",
@@ -26,10 +27,9 @@ export default {
     {
       "name": "explorer",
       "url": "https://explorer.idchain.one",
-      "icon": "etherscan",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "idchain"
-} as const;
+} as const satisfies Chain;

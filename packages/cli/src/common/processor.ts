@@ -1,13 +1,31 @@
+import {
+  EXTENSION_REGISTRY_ADDRESS,
+  ROUTER_CONTRACTS,
+  PreDeployedRouter,
+  TWRouterParams,
+  RouterParams,
+} from "../constants/router-contracts";
 import { cliVersion, THIRDWEB_URL } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner } from "../core/helpers/logger";
-import { createContractsPrompt } from "../core/helpers/selector";
+import {
+  createContractsPrompt,
+  createRouterPrompt,
+} from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
+import {
+  Extension,
+  ExtensionFunction,
+  ExtensionMetadata,
+  ExtensionDeployArgs,
+} from "../core/interfaces/Extension";
+import { detectFeatures } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
-import { readFileSync } from "fs";
+import { ethers } from "ethers";
+import { readFileSync, writeFileSync } from "fs";
 import ora from "ora";
 import path from "path";
 
@@ -34,7 +52,9 @@ export async function processProject(
 
   logger.debug("Processing project at path " + projectPath);
 
-  const projectType = await detect(projectPath, options);
+  const projectType = options.zksync
+    ? "hardhat"
+    : await detect(projectPath, options);
 
   if (projectType === "none") {
     if (command === "deploy") {
@@ -79,7 +99,7 @@ export async function processProject(
   let compiledResult: { contracts: ContractPayload[] };
   const compileLoader = spinner("Compiling project...");
   try {
-    compiledResult = await build(projectPath, projectType);
+    compiledResult = await build(projectPath, projectType, options);
   } catch (e) {
     compileLoader.fail("Compilation failed");
     logger.error(e);
@@ -91,6 +111,35 @@ export async function processProject(
     logger.error(
       "No deployable contract detected. Run with the '--debug' option to see what contracts were skipped and why.",
     );
+    process.exit(1);
+  }
+
+  let selectedRouter: PreDeployedRouter = {
+    name: "",
+    metadataUri: "",
+    bytecodeUri: "",
+  };
+  if (options.dynamic) {
+    const choices = Object.keys(ROUTER_CONTRACTS).map((key) => {
+      return { title: key, value: key };
+    });
+
+    let routerType: string = "";
+    const res = await createRouterPrompt(choices, "Choose a router to deploy");
+    if (typeof res.routerType === "string") {
+      routerType = res.routerType.trim();
+    }
+
+    selectedRouter = ROUTER_CONTRACTS[routerType];
+  }
+
+  if (options.dynamic && !selectedRouter) {
+    error(`No router selected. Please select a router contract to deploy.`);
+    process.exit(1);
+  }
+
+  if (options.dynamic && !selectedRouter.name) {
+    error(`No router selected. Please select a router contract to deploy.`);
     process.exit(1);
   }
 
@@ -149,7 +198,9 @@ export async function processProject(
       });
       const prompt = createContractsPrompt(
         choices,
-        `Choose which contract(s) to ${command}`,
+        options.dynamic
+          ? "Choose which extensions to add to your contract"
+          : `Choose which contract(s) to ${command}`,
       );
       const selection: Record<string, ContractPayload> = await prompt.run();
       selectedContracts = Object.keys(selection).map((key) => selection[key]);
@@ -168,12 +219,38 @@ export async function processProject(
     process.exit(0);
   }
 
-  const loader = spinner("Uploading contract data...");
-
   const soliditySDKPackage = "@thirdweb-dev/contracts";
   let usesSoliditySDK = false;
 
+  if (options.dynamic) {
+    if (selectedRouter.name === "thirdweb-router") {
+      const deployArgs: TWRouterParams = {
+        extensionRegistry: EXTENSION_REGISTRY_ADDRESS,
+        extensionNames: selectedContracts.map((c) => c.name),
+      };
+
+      const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
+      writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
+      info(
+        "Deployment parameters written to deployArgs.json in your project directory",
+      );
+    } else {
+      const deployArgs: RouterParams = await formatToExtensions(
+        selectedContracts,
+      );
+
+      const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
+      writeFileSync("./deployArgs.json", outputDeployArgs, "utf-8");
+      info(
+        "Deployment parameters written to deployArgs.json in your project directory",
+      );
+    }
+  }
+
+  const loader = spinner("Uploading contract data...");
+
   try {
+    // Upload contract sources.
     for (let i = 0; i < selectedContracts.length; i++) {
       const contract = selectedContracts[i];
       if (contract.sources) {
@@ -201,6 +278,7 @@ export async function processProject(
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
+
         return await storage.upload(JSON.parse(JSON.stringify(c.metadata)), {
           uploadWithoutDirectory: true,
         });
@@ -211,23 +289,43 @@ export async function processProject(
     const bytecodes = selectedContracts.map((c) => c.bytecode);
     const bytecodeURIs = await storage.uploadBatch(bytecodes);
 
-    const combinedContents = selectedContracts.map((c, i) => {
-      // attach analytics blob to metadata
+    let combinedContents = [];
+    if (options.dynamic) {
       const analytics = {
         command,
-        contract_name: c.name,
+        contract_name: selectedRouter.name,
         cli_version: cliVersion,
         project_type: projectType,
         from_ci: options.ci || false,
         uses_contract_extensions: usesSoliditySDK,
       };
-      return {
-        name: c.name,
-        metadataUri: metadataURIs[i],
-        bytecodeUri: bytecodeURIs[i],
+
+      combinedContents.push({
+        name: selectedRouter.name,
+        metadataUri: selectedRouter.metadataUri,
+        bytecodeUri: selectedRouter.bytecodeUri,
         analytics,
-      };
-    });
+      });
+    } else {
+      combinedContents = selectedContracts.map((c, i) => {
+        // attach analytics blob to metadata
+        const analytics = {
+          command,
+          contract_name: c.name,
+          cli_version: cliVersion,
+          project_type: projectType,
+          from_ci: options.ci || false,
+          uses_contract_extensions: usesSoliditySDK,
+        };
+        return {
+          name: c.name,
+          metadataUri: metadataURIs[i],
+          bytecodeUri: bytecodeURIs[i],
+          analytics,
+        };
+      });
+    }
+
     let combinedURIs: string[] = [];
     if (combinedContents.length === 1) {
       // use upload single if only one contract to get a clean IPFS hash
@@ -264,4 +362,61 @@ export function getUrl(hashes: string[], command: string) {
     }
   }
   return url;
+}
+
+async function formatToExtensions(contracts: ContractPayload[]): Promise<{
+  extensions: Extension[];
+  extensionDeployArgs: ExtensionDeployArgs[];
+}> {
+  const storage = new ThirdwebStorage();
+  const extensions: Extension[] = [];
+  const extensionDeployArgs: ExtensionDeployArgs[] = [];
+
+  for (const contract of contracts) {
+    // Prepare extension metadata.
+    let metadata: ExtensionMetadata = {
+      name: contract.name,
+      metadataURI: await getMetadataURIForExtension(contract, storage),
+      implementation: ethers.constants.AddressZero,
+    };
+
+    // Get extension ABI.
+    const abi: Parameters<typeof detectFeatures>[0] = JSON.parse(
+      contract.metadata,
+    )["output"]["abi"];
+
+    // Format ABI as `ExtensionFunction[]`.
+    const extensionInterface = new ethers.utils.Interface(abi);
+    const functions: ExtensionFunction[] = [];
+
+    const fragments = extensionInterface.functions;
+    for (const fnSignature of Object.keys(fragments)) {
+      functions.push({
+        functionSelector: extensionInterface.getSighash(fragments[fnSignature]),
+        functionSignature: fnSignature,
+      });
+    }
+
+    extensions.push({
+      metadata,
+      functions,
+    });
+    extensionDeployArgs.push({
+      name: contract.name,
+      amount: 0,
+      salt: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(contract.name)),
+      bytecode: contract.bytecode,
+    });
+  }
+
+  return { extensions, extensionDeployArgs };
+}
+
+async function getMetadataURIForExtension(
+  contract: ContractPayload,
+  storage: ThirdwebStorage,
+): Promise<string> {
+  return await storage.upload(JSON.parse(JSON.stringify(contract.metadata)), {
+    uploadWithoutDirectory: true,
+  });
 }

@@ -8,10 +8,10 @@ export default {
     height: 512,
     width: 512,
     format: "png",
-    sizes: [16, 32, 64, 128, 256, 512],
   },
   rpc: [
     "https://optimism-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
   ],
+  faucets: ["https://coinbase.com/faucets/optimism-goerli-faucet"],
 };

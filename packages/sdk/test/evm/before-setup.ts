@@ -1,5 +1,6 @@
 import {
   Abi,
+  AbiSchema,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
@@ -61,8 +62,9 @@ import {
   OffersLogic__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
+import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -80,6 +82,7 @@ let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
 let mock_weth_address: string;
+let thirdwebFactory: TWFactory;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -131,6 +134,7 @@ export const mochaHooks = {
       .connect(signer)
       .deploy(trustedForwarderAddress, registry.address)) as TWFactory;
 
+    thirdwebFactory = await thirdwebFactoryDeployer.deployed();
     const deployTxFactory = thirdwebFactoryDeployer.deployTransaction;
     await deployTxFactory.wait();
     const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
@@ -160,21 +164,27 @@ export const mochaHooks = {
     await contractPublisher.deployed();
 
     async function deployContract(
-      contractFactory: ethers.ContractFactory,
+      abi: ContractInterface,
+      bytecode: string,
       contractType: ContractType,
-    ): Promise<ethers.Contract> {
+    ): Promise<string> {
       switch (contractType) {
         case MarketplaceInitializer.contractType:
         case MultiwrapInitializer.contractType:
           const nativeTokenWrapperAddress = getNativeTokenByChainId(
             ChainId.Hardhat,
           ).wrapped.address;
-          return await contractFactory.deploy(nativeTokenWrapperAddress);
+          return await deployContractAndUploadMetadata(abi, bytecode, signer, [
+            nativeTokenWrapperAddress,
+          ]);
         case PackInitializer.contractType:
           const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
-          return await contractFactory.deploy(addr, trustedForwarderAddress);
+          return await deployContractAndUploadMetadata(abi, bytecode, signer, [
+            addr,
+            trustedForwarderAddress,
+          ]);
         default:
-          return await contractFactory.deploy();
+          return await deployContractAndUploadMetadata(abi, bytecode, signer);
       }
     }
 
@@ -225,23 +235,15 @@ export const mochaHooks = {
       }
 
       for (const factory of factories) {
-        const contractFactory = new ethers.ContractFactory(
+        const addr = await deployContract(
           factory.abi,
           factory.bytecode,
-        ).connect(signer);
-
-        const deployedContract: ethers.Contract = await deployContract(
-          contractFactory,
           contractType as ContractType,
         );
 
-        await deployedContract.deployed();
-        const tx = await thirdwebFactoryDeployer.addImplementation(
-          deployedContract.address,
-        );
+        const tx = await thirdwebFactoryDeployer.addImplementation(addr);
         await tx.wait();
-        implementations[contractType as ContractType] =
-          deployedContract.address;
+        implementations[contractType as ContractType] = addr;
       }
     }
 
@@ -251,6 +253,7 @@ export const mochaHooks = {
       marketplaceEntrypointAddress,
     );
     await tx.wait();
+    implementations["marketplace-v3"] = marketplaceEntrypointAddress;
 
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
@@ -270,43 +273,18 @@ export const mochaHooks = {
         gasSettings: {
           maxPriceInGwei: 10000,
         },
+        supportedChains: [
+          {
+            chainId: 31337,
+            rpc: ["http://localhost:8545"],
+            nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+            slug: "hardhat",
+          },
+        ],
       },
       storage,
     );
   },
-};
-
-const getFunctionSignature = (fnInputs: any): string => {
-  return (
-    "(" +
-    fnInputs
-      .map((i) => {
-        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
-      })
-      .join(",") +
-    ")"
-  );
-};
-
-const generatePluginFunctions = (
-  pluginAddress: string,
-  pluginAbi: Abi,
-): Plugin[] => {
-  const pluginInterface = new ethers.utils.Interface(pluginAbi);
-  const pluginFunctions: Plugin[] = [];
-  // TODO - filter out common functions like _msgSender(), contractType(), etc.
-  for (const fnFragment of Object.values(pluginInterface.functions)) {
-    const fn = pluginInterface.getFunction(fnFragment.name);
-    if (fn.name.includes("_")) {
-      continue;
-    }
-    pluginFunctions.push({
-      functionSelector: pluginInterface.getSighash(fn),
-      functionSignature: fn.name + getFunctionSignature(fn.inputs),
-      pluginAddress,
-    });
-  }
-  return pluginFunctions;
 };
 
 // Setup multichain registry for tests
@@ -324,7 +302,7 @@ async function setupMultichainRegistry(
 
   const plugins: Plugin[] = generatePluginFunctions(
     multichainRegistryLogic.address,
-    TWMultichainRegistryLogic__factory.abi,
+    AbiSchema.parse(TWMultichainRegistryLogic__factory.abi),
   );
 
   const pluginMapDeployer = (await new ethers.ContractFactory(
@@ -359,7 +337,7 @@ async function setupMarketplaceV3(): Promise<string> {
   );
   const pluginsDirectListings: Plugin[] = generatePluginFunctions(
     directListingsPluginAddress,
-    DirectListingsLogic__factory.abi,
+    AbiSchema.parse(DirectListingsLogic__factory.abi),
   );
 
   // English Auctions
@@ -371,7 +349,7 @@ async function setupMarketplaceV3(): Promise<string> {
   );
   const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
     englishAuctionPluginAddress,
-    EnglishAuctionsLogic__factory.abi,
+    AbiSchema.parse(EnglishAuctionsLogic__factory.abi),
   );
 
   // Offers
@@ -382,7 +360,7 @@ async function setupMarketplaceV3(): Promise<string> {
   );
   const pluginsOffers: Plugin[] = generatePluginFunctions(
     offersLogicPluginAddress,
-    OffersLogic__factory.abi,
+    AbiSchema.parse(OffersLogic__factory.abi),
   );
 
   // Map
@@ -399,6 +377,7 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.bytecode,
     signer,
     [pluginMapAddress],
+    "MarketplaceV3",
   );
   return marketplaceV3Address;
 }
@@ -414,4 +393,5 @@ export {
   storage,
   implementations,
   hardhatEthers,
+  thirdwebFactory,
 };

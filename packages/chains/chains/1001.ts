@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Klaytn Testnet Baobab",
   "chain": "KLAY",
@@ -19,4 +20,4 @@ export default {
   "networkId": 1001,
   "testnet": true,
   "slug": "klaytn-testnet-baobab"
-} as const;
+} as const satisfies Chain;

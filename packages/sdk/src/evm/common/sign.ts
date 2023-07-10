@@ -1,6 +1,5 @@
-// couldn't find this in barbones ethers export, but "type" should mean it does not increase bundle size either way
-import type { TypedDataField } from "@ethersproject/abstract-signer";
-import { ethers, Signer, providers } from "ethers";
+import type { Signer, providers, TypedDataField } from "ethers";
+import { utils } from "ethers";
 
 /**
  * @internal
@@ -32,21 +31,23 @@ export type EIP712Domain = EIP712StandardDomain | EIP712PolygonDomain;
  * @internal
  */
 export async function signTypedDataInternal(
-  signer: Signer,
+  signerInput: Signer,
   domain: EIP712Domain,
   types: Record<string, Array<TypedDataField>>,
   message: Record<string, any>,
 ) {
+  // Handle ERC4337Signer
+  let signer = signerInput;
+  if ((signerInput as any).originalSigner) {
+    signer = (signerInput as any).originalSigner;
+  }
+
   const provider = signer?.provider as providers.JsonRpcProvider;
   if (!provider) {
     throw new Error("missing provider");
   }
 
-  const payload = ethers.utils._TypedDataEncoder.getPayload(
-    domain,
-    types,
-    message,
-  );
+  const payload = utils._TypedDataEncoder.getPayload(domain, types, message);
 
   let signature = "";
   const signerAddress = (await signer.getAddress()).toLowerCase();
@@ -65,7 +66,7 @@ export async function signTypedDataInternal(
         message,
       );
     } catch (err: any) {
-      if (err?.message?.includes("Method eth_signTypedData_v4 not supported")) {
+      if (err?.message?.includes("eth_signTypedData_v4")) {
         signature = await provider.send("eth_signTypedData", [
           signerAddress,
           JSON.stringify(payload),
@@ -87,8 +88,6 @@ export async function signTypedDataInternal(
   // fix ledger live where signature result in v = 0, 1. ethers magically fix it in split/join.
   return {
     payload,
-    signature: ethers.utils.joinSignature(
-      ethers.utils.splitSignature(signature),
-    ),
+    signature: utils.joinSignature(utils.splitSignature(signature)),
   };
 }

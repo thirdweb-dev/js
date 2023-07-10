@@ -1,8 +1,10 @@
 import { ContractPayload } from "./ContractPayload";
 
 export type CompileOptions = {
+  clean: boolean;
   projectPath: string;
   name: string;
+  zksync?: boolean;
 };
 
 export interface IBuilder {

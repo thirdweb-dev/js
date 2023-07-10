@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "IOLite",
   "chain": "ILT",
@@ -17,4 +18,4 @@ export default {
   "networkId": 18289463,
   "testnet": false,
   "slug": "iolite"
-} as const;
+} as const satisfies Chain;

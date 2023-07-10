@@ -1,9 +1,10 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "Metacodechain",
-  "chain": "metacode",
+  "name": "Jouleverse Mainnet",
+  "chain": "Jouleverse",
   "rpc": [
-    "https://metacodechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://j.blockcoach.com:8503"
+    "https://jouleverse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.jnsdao.com:8503"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -11,17 +12,17 @@ export default {
     "symbol": "J",
     "decimals": 18
   },
-  "infoURL": "https://j.blockcoach.com:8089",
-  "shortName": "metacode",
+  "infoURL": "https://jnsdao.com",
+  "shortName": "jouleverse",
   "chainId": 3666,
   "networkId": 3666,
   "explorers": [
     {
-      "name": "meta",
-      "url": "https://j.blockcoach.com:8089",
+      "name": "jscan",
+      "url": "https://jscan.jnsdao.com",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
-  "slug": "metacodechain"
-} as const;
+  "slug": "jouleverse"
+} as const satisfies Chain;

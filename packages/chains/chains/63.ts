@@ -1,9 +1,10 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ethereum Classic Testnet Mordor",
   "chain": "ETC",
   "rpc": [
     "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.ethercluster.com/mordor"
+    "https://rpc.mordor.etccooperative.org"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -17,4 +18,4 @@ export default {
   "networkId": 7,
   "testnet": true,
   "slug": "ethereum-classic-testnet-mordor"
-} as const;
+} as const satisfies Chain;

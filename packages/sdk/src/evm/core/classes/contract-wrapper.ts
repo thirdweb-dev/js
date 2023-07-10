@@ -1,10 +1,9 @@
-import {
-  TransactionError,
-  extractFunctionsFromAbi,
-  fetchContractMetadataFromAddress,
-  fetchSourceFilesFromMetadata,
-  parseRevertReason,
-} from "../../common";
+import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
+import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
+import { parseRevertReason, TransactionError } from "../../common/error";
+import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -15,10 +14,10 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
-import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
-import { getContractAddressByChainId } from "../../constants/addresses";
+import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
-import { CallOverrideSchema } from "../../schema";
+import { Address } from "../../schema/shared/Address";
+import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -34,16 +33,20 @@ import fetch from "cross-fetch";
 import {
   BaseContract,
   BigNumber,
-  BytesLike,
-  CallOverrides,
+  type BytesLike,
+  type CallOverrides,
   Contract,
-  ContractInterface,
-  ContractTransaction,
-  ethers,
-  providers,
+  type ContractInterface,
+  type ContractTransaction,
+  utils,
+  type ContractFunction,
+  type providers,
+  type Signer,
+  constants,
 } from "ethers";
-import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 /**
  * @internal
@@ -51,7 +54,7 @@ import invariant from "tiny-invariant";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
-  // TOOO: In another PR, make this storage private, and have extending classes pass
+  // TODO: In another PR, make this storage private, and have extending classes pass
   // down storage to be stored in contract wrapper.
   #storage: ThirdwebStorage;
   private isValidContract = false;
@@ -108,7 +111,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  public async getSignerAddress(): Promise<string> {
+  public async getSignerAddress(): Promise<Address> {
     const signer = this.getSigner();
     if (!signer) {
       throw new Error(
@@ -143,7 +146,7 @@ export class ContractWrapper<
       const baseBlockFee =
         block && block.baseFeePerGas
           ? block.baseFeePerGas
-          : ethers.utils.parseUnits("1", "gwei");
+          : utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
       if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
@@ -191,8 +194,8 @@ export class ContractWrapper<
         break;
     }
     let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
-    const min = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
+    const max = utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
+    const min = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
     }
@@ -223,7 +226,7 @@ export class ContractWrapper<
         break;
     }
     txGasPrice = txGasPrice.add(extraTip);
-    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei");
+    const max = utils.parseUnits(maxGasPrice.toString(), "gwei");
     if (txGasPrice.gt(max)) {
       txGasPrice = max;
     }
@@ -274,20 +277,13 @@ export class ContractWrapper<
    */
   public async call(
     functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
+    args: unknown[] = [],
+    overrides?: CallOverrides,
   ): Promise<any> {
     // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined;
-    try {
-      if (args.length > 0 && typeof args[args.length - 1] === "object") {
-        const last = args[args.length - 1];
-        txOptions = CallOverrideSchema.parse(last);
-        // if call overrides found, remove it from args array
-        args = args.slice(0, args.length - 1);
-      }
-    } catch (e) {
-      // no-op
-    }
+    let txOptions: CallOverrides | undefined = overrides
+      ? await CallOverrideSchema.parseAsync(overrides)
+      : undefined;
 
     const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
       (f) => f.name === functionName,
@@ -320,7 +316,9 @@ export class ContractWrapper<
     // TODO validate each argument
     if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
-      return (this.readContract as any)[fnName](...args);
+      return txOptions
+        ? (this.readContract as any)[fnName](...args, txOptions)
+        : (this.readContract as any)[fnName](...args);
     } else {
       // write function
       const receipt = await this.sendTransaction(fnName, args, txOptions);
@@ -356,7 +354,7 @@ export class ContractWrapper<
       if (fn === "multicall" && Array.isArray(args[0]) && args[0].length > 0) {
         const from = await this.getSignerAddress();
         args[0] = args[0].map((tx: any) =>
-          ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+          utils.solidityPack(["bytes", "address"], [tx, from]),
         );
       }
 
@@ -418,9 +416,7 @@ export class ContractWrapper<
     args: any[],
     callOverrides: CallOverrides,
   ): Promise<ContractTransaction> {
-    const func: ethers.ContractFunction = (this.writeContract.functions as any)[
-      fn
-    ];
+    const func: ContractFunction = (this.writeContract.functions as any)[fn];
     if (!func) {
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
@@ -473,8 +469,8 @@ export class ContractWrapper<
     args: any[],
     callOverrides: CallOverrides,
   ) {
-    const provider = this.getProvider() as ethers.providers.Provider & {
-      connection?: ConnectionInfo;
+    const provider = this.getProvider() as providers.Provider & {
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -536,19 +532,22 @@ export class ContractWrapper<
       // no-op
     }
 
-    return new TransactionError({
-      reason,
-      from,
-      to,
-      method,
-      data,
-      network,
-      rpcUrl,
-      value,
-      hash,
-      contractName,
-      sources,
-    });
+    return new TransactionError(
+      {
+        reason,
+        from,
+        to,
+        method,
+        data,
+        network,
+        rpcUrl,
+        value,
+        hash,
+        contractName,
+        sources,
+      },
+      error,
+    );
   }
 
   /**
@@ -620,7 +619,7 @@ export class ContractWrapper<
   }
 
   public async signTypedData(
-    signer: ethers.Signer,
+    signer: Signer,
     domain: {
       name: string;
       version: string;
@@ -680,7 +679,7 @@ export class ContractWrapper<
     const provider = this.getProvider();
     invariant(signer && provider, "signer and provider must be set");
 
-    const forwarder = new ethers.Contract(
+    const forwarder = new Contract(
       getContractAddressByChainId(
         transaction.chainId,
         "biconomyForwarder",
@@ -697,7 +696,7 @@ export class ContractWrapper<
     const request = {
       from: transaction.from,
       to: transaction.to,
-      token: ethers.constants.AddressZero,
+      token: constants.AddressZero,
       txGas: transaction.gasLimit.toNumber(),
       tokenGasPrice: "0",
       batchId,
@@ -712,8 +711,8 @@ export class ContractWrapper<
       data: transaction.data,
     };
 
-    const hashToSign = ethers.utils.arrayify(
-      ethers.utils.solidityKeccak256(
+    const hashToSign = utils.arrayify(
+      utils.solidityKeccak256(
         [
           "address",
           "address",
@@ -734,7 +733,7 @@ export class ContractWrapper<
           request.batchId,
           request.batchNonce,
           request.deadline,
-          ethers.utils.keccak256(request.data),
+          utils.keccak256(request.data),
         ],
       ),
     );
@@ -796,10 +795,12 @@ export class ContractWrapper<
       (this.options.gasless.openzeppelin.useEOAForwarder
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarderEOA
+          ].openzeppelinForwarderEOA ||
+          (await computeEOAForwarderAddress(this.getProvider(), this.#storage))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
-          ].openzeppelinForwarder);
+          ].openzeppelinForwarder ||
+          (await computeForwarderAddress(this.getProvider(), this.#storage)));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -828,8 +829,8 @@ export class ContractWrapper<
       };
     } else {
       domain = {
-        name: "GSNv2 Forwarder",
-        version: "0.0.1",
+        name: this.options.gasless.openzeppelin.domainName,
+        version: this.options.gasless.openzeppelin.domainVersion,
         chainId: transaction.chainId,
         verifyingContract: forwarderAddress,
       };
@@ -871,7 +872,7 @@ export class ContractWrapper<
         amount,
       );
 
-      const { r, s, v } = ethers.utils.splitSignature(sig);
+      const { r, s, v } = utils.splitSignature(sig);
 
       message = {
         to: this.readContract.address,

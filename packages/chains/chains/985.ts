@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Memo Smart Chain Mainnet",
   "chain": "MEMO",
@@ -28,10 +29,15 @@ export default {
     {
       "name": "Memo Mainnet Explorer",
       "url": "https://scan.metamemo.one:8080",
-      "icon": "memoscan",
+      "icon": {
+        "url": "ipfs://bafkreig52paynhccs4o5ew6f7mk3xoqu2bqtitmfvlgnwarh2pm33gbdrq",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "memo-smart-chain"
-} as const;
+} as const satisfies Chain;

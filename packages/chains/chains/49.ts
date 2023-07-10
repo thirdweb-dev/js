@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ennothem Testnet Pioneer",
   "chain": "ETMP",
@@ -25,10 +26,9 @@ export default {
     {
       "name": "etmp",
       "url": "https://pioneer.etmscan.network",
-      "icon": "etmpscan",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "ennothem-testnet-pioneer"
-} as const;
+} as const satisfies Chain;

@@ -1,3 +1,4 @@
+import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import {
   QueryAllParams,
   QueryAllParamsSchema,
@@ -36,6 +37,7 @@ import {
   SignaturesForAddressOptions,
   TransactionResponse,
 } from "@solana/web3.js";
+import BN from "bn.js";
 
 /**
  * @internal
@@ -65,8 +67,11 @@ export class NFTHelper {
     nftAddress: string,
     quantity: number = 1,
   ): Promise<TransactionResult> {
-    const result = await this.metaplex.nfts().send({
-      mintAddress: new PublicKey(nftAddress),
+    const result = await this.metaplex.nfts().transfer({
+      nftOrSft: {
+        address: new PublicKey(nftAddress),
+        tokenStandard: TokenStandard.NonFungible,
+      },
       toOwner: new PublicKey(receiverAddress),
       amount: token(quantity, 0),
     });
@@ -111,7 +116,7 @@ export class NFTHelper {
     }
   }
 
-  async supplyOf(nftAddress: string): Promise<number> {
+  async supplyOf(nftAddress: string): Promise<string> {
     let originalEdition;
 
     const originalEditionAccount = await this.metaplex
@@ -123,11 +128,11 @@ export class NFTHelper {
         toOriginalEditionAccount(originalEditionAccount),
       );
     } else {
-      return 0;
+      return "0";
     }
 
     // Add one to supply to account for the master edition
-    return originalEdition.supply.toNumber() + 1;
+    return originalEdition.supply.add(new BN(1)).toString();
   }
 
   async totalSupply(collectionAddress: string): Promise<number> {
@@ -305,7 +310,7 @@ export class NFTHelper {
   private async toNFTMetadataResolved(
     mint: Mint,
     owner: string | undefined,
-    supply: number,
+    supply: string,
     fullModel:
       | Nft
       | Sft
@@ -322,7 +327,7 @@ export class NFTHelper {
         ...fullModel.json,
       },
       owner: owner || PublicKey.default.toBase58(),
-      supply: supply,
+      supply,
       type: "metaplex",
     };
   }

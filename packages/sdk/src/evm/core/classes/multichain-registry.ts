@@ -1,8 +1,14 @@
-import { NetworkInput, TransactionResult } from "..";
-import { getMultichainRegistryAddress } from "../../constants/addresses";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { buildTransactionFunction } from "../../common/transactions";
+import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { AddContractInput, ContractInput, DeployedContract } from "../../types";
+import type {
+  DeployedContract,
+  AddContractInput,
+  ContractInput,
+} from "../../types/registry";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   TWMultichainRegistryRouter,
@@ -12,6 +18,8 @@ import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegi
 import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
+import { Transaction } from "./transactions";
+import type { NetworkInput, TransactionResult } from "../types";
 
 /**
  * @internal
@@ -49,17 +57,17 @@ export class MultichainRegistry {
 
   public async getContractMetadataURI(
     chainId: number,
-    address: string,
+    address: AddressOrEns,
   ): Promise<string> {
     return await this.registryLogic.readContract.getMetadataUri(
       chainId,
-      address,
+      await resolveAddress(address),
     );
   }
 
   public async getContractMetadata(
     chainId: number,
-    address: string,
+    address: AddressOrEns,
   ): Promise<PublishedMetadata> {
     const uri = await this.getContractMetadataURI(chainId, address);
     if (!uri) {
@@ -72,9 +80,13 @@ export class MultichainRegistry {
   }
 
   public async getContractAddresses(
-    walletAddress: string,
+    walletAddress: AddressOrEns,
   ): Promise<DeployedContract[]> {
-    return (await this.registryLogic.readContract.getAll(walletAddress))
+    return (
+      await this.registryLogic.readContract.getAll(
+        await resolveAddress(walletAddress),
+      )
+    )
       .filter(
         (result) =>
           utils.isAddress(result.deploymentAddress) &&
@@ -86,56 +98,70 @@ export class MultichainRegistry {
       }));
   }
 
-  public async addContract(
-    contract: AddContractInput,
-  ): Promise<TransactionResult> {
-    return await this.addContracts([contract]);
-  }
+  addContract = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      contract: AddContractInput,
+    ): Promise<Transaction<TransactionResult>> => {
+      return await this.addContracts.prepare([contract]);
+    },
+  );
 
-  public async addContracts(
-    contracts: AddContractInput[],
-  ): Promise<TransactionResult> {
-    const deployerAddress = await this.registryRouter.getSignerAddress();
-    const encoded: string[] = [];
-    contracts.forEach((contact) => {
-      encoded.push(
-        this.registryLogic.readContract.interface.encodeFunctionData("add", [
-          deployerAddress,
-          contact.address,
-          contact.chainId,
-          contact.metadataURI || "",
-        ]),
+  addContracts = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      contracts: AddContractInput[],
+    ): Promise<Transaction<TransactionResult>> => {
+      const deployerAddress = await this.registryRouter.getSignerAddress();
+      const encoded: string[] = [];
+      contracts.forEach((contact) => {
+        encoded.push(
+          this.registryLogic.readContract.interface.encodeFunctionData("add", [
+            deployerAddress,
+            contact.address,
+            contact.chainId,
+            contact.metadataURI || "",
+          ]),
+        );
+      });
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.registryRouter,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
+
+  removeContract = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      contract: ContractInput,
+    ): Promise<Transaction<TransactionResult>> => {
+      return await this.removeContracts.prepare([contract]);
+    },
+  );
+
+  removeContracts = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      contracts: ContractInput[],
+    ): Promise<Transaction<TransactionResult>> => {
+      const deployerAddress = await this.registryRouter.getSignerAddress();
+      const encoded: string[] = await Promise.all(
+        contracts.map(async (contract) =>
+          this.registryLogic.readContract.interface.encodeFunctionData(
+            "remove",
+            [
+              deployerAddress,
+              await resolveAddress(contract.address),
+              contract.chainId,
+            ],
+          ),
+        ),
       );
-    });
 
-    return {
-      receipt: await this.registryRouter.multiCall(encoded),
-    };
-  }
-
-  public async removeContract(
-    contract: ContractInput,
-  ): Promise<TransactionResult> {
-    return await this.removeContracts([contract]);
-  }
-
-  public async removeContracts(
-    contracts: ContractInput[],
-  ): Promise<TransactionResult> {
-    const deployerAddress = await this.registryRouter.getSignerAddress();
-    const encoded: string[] = [];
-    contracts.forEach((contract) => {
-      encoded.push(
-        this.registryLogic.readContract.interface.encodeFunctionData("remove", [
-          deployerAddress,
-          contract.address,
-          contract.chainId,
-        ]),
-      );
-    });
-
-    return {
-      receipt: await this.registryRouter.multiCall(encoded),
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.registryRouter,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 }

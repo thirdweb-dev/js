@@ -1,20 +1,26 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "Wanchain Testnet",
-  "chain": "WAN",
+  "name": "Zora Testnet",
+  "chain": "ETH",
   "rpc": [
-    "https://wanchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://gwan-ssl.wandevs.org:46891/"
+    "https://zora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.rpc.zora.co/"
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "Wancoin",
-    "symbol": "WAN",
+    "name": "Ether",
+    "symbol": "GETH",
     "decimals": 18
   },
-  "infoURL": "https://testnet.wanscan.org",
-  "shortName": "twan",
+  "icon": {
+    "url": "ipfs://QmZ6qaRwTPFEZUspwMUjaxC6KhmzcELdRQcQzS3P72Dzts/Vector.svg",
+    "height": 512,
+    "width": 512,
+    "format": "svg"
+  },
+  "shortName": "Zora",
   "chainId": 999,
   "networkId": 999,
   "testnet": true,
-  "slug": "wanchain-testnet"
-} as const;
+  "slug": "zora-testnet"
+} as const satisfies Chain;

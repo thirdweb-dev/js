@@ -1,36 +1,23 @@
-import {
-  detectContractFeature,
-  hasFunction,
-  includesErrorMessage,
-} from "../../common";
-import {
-  abstractContractModelToLegacy,
-  abstractContractModelToNew,
-  fetchSnapshotEntryForAddress,
-  legacyContractModelToAbstract,
-  newContractModelToAbstract,
-  prepareClaim,
-  processClaimConditionInputs,
-  transformResultToClaimCondition,
-  updateExistingClaimConditions,
-} from "../../common/claim-conditions";
-import { isNativeToken } from "../../common/currency";
+import { includesErrorMessage } from "../../common/error";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
-import {
-  AbstractClaimConditionContractStruct,
-  SnapshotEntryWithProof,
-} from "../../schema";
-import {
-  ClaimCondition,
+import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
+import type {
   ClaimConditionFetchOptions,
+  ClaimCondition,
   ClaimConditionInput,
   ClaimConditionsForToken,
-  ClaimOptions,
   ClaimVerification,
-} from "../../types";
+  ClaimOptions,
+} from "../../types/claim-conditions/claim-conditions";
 import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,
@@ -52,8 +39,17 @@ import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
+import { BigNumber, type BigNumberish, constants, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
+import { legacyContractModelToAbstract } from "../../common/claim-conditions/legacyContractModelToAbstract";
+import { newContractModelToAbstract } from "../../common/claim-conditions/newContractModelToAbstract";
+import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
+import { abstractContractModelToNew } from "../../common/claim-conditions/abstractContractModelToNew";
+import { prepareClaim } from "../../common/claim-conditions/prepareClaim";
+import { processClaimConditionInputs } from "../../common/claim-conditions/processClaimConditionInputs";
+import { transformResultToClaimCondition } from "../../common/claim-conditions/transformResultToClaimCondition";
+import { updateExistingClaimConditions } from "../../common/claim-conditions/updateExistingClaimConditions";
+import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -204,9 +200,13 @@ export class DropErc1155ClaimConditions<
   public async canClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    addressToCheck?: string,
+    addressToCheck?: AddressOrEns,
   ): Promise<boolean> {
     // TODO switch to use verifyClaim
+    if (addressToCheck) {
+      addressToCheck = await resolveAddress(addressToCheck);
+    }
+
     return (
       (
         await this.getClaimIneligibilityReasons(
@@ -231,7 +231,7 @@ export class DropErc1155ClaimConditions<
   public async getClaimIneligibilityReasons(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    addressToCheck?: string,
+    addressToCheck?: AddressOrEns,
   ): Promise<ClaimEligibility[]> {
     const reasons: ClaimEligibility[] = [];
     let activeConditionIndex: BigNumber;
@@ -249,6 +249,8 @@ export class DropErc1155ClaimConditions<
     if (!addressToCheck) {
       return [ClaimEligibility.NoWallet];
     }
+
+    const resolvedAddress = await resolveAddress(addressToCheck);
 
     try {
       claimCondition = await this.getActive(tokenId);
@@ -271,13 +273,11 @@ export class DropErc1155ClaimConditions<
     }
 
     // check for merkle root inclusion
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const merkleRootArray = utils.stripZeros(claimCondition.merkleRootHash);
     const hasAllowList = merkleRootArray.length > 0;
     let allowListEntry: SnapshotEntryWithProof | null = null;
     if (hasAllowList) {
-      allowListEntry = await this.getClaimerProofs(tokenId, addressToCheck);
+      allowListEntry = await this.getClaimerProofs(tokenId, resolvedAddress);
       if (
         !allowListEntry &&
         (this.isLegacySinglePhaseDrop(this.contractWrapper) ||
@@ -294,7 +294,7 @@ export class DropErc1155ClaimConditions<
             tokenId,
             quantity,
             false,
-            addressToCheck,
+            resolvedAddress,
           );
 
           let validMerkleProof;
@@ -307,7 +307,7 @@ export class DropErc1155ClaimConditions<
             [validMerkleProof] =
               await this.contractWrapper.readContract.verifyClaimMerkleProof(
                 activeConditionIndex,
-                addressToCheck,
+                resolvedAddress,
                 tokenId,
                 quantity,
                 claimVerification.proofs,
@@ -321,7 +321,7 @@ export class DropErc1155ClaimConditions<
             [validMerkleProof] =
               await this.contractWrapper.readContract.verifyClaimMerkleProof(
                 tokenId,
-                addressToCheck,
+                resolvedAddress,
                 quantity,
                 {
                   proof: claimVerification.proofs,
@@ -335,7 +335,7 @@ export class DropErc1155ClaimConditions<
           } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
             await this.contractWrapper.readContract.verifyClaim(
               tokenId,
-              addressToCheck,
+              resolvedAddress,
               quantity,
               claimVerification.currencyAddress,
               claimVerification.price,
@@ -346,18 +346,6 @@ export class DropErc1155ClaimConditions<
                 pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
-            // TODO (cc) in new override format, anyone can claim (no allow list restriction)
-            // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
-            // TODO (cc) meaning this address is not allowed to claim
-            if (
-              (claimCondition.maxClaimablePerWallet === "0" &&
-                claimVerification.maxClaimable ===
-                  ethers.constants.MaxUint256) ||
-              claimVerification.maxClaimable === BigNumber.from(0)
-            ) {
-              reasons.push(ClaimEligibility.AddressNotAllowed);
-              return reasons;
-            }
           } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
             activeConditionIndex =
               await this.contractWrapper.readContract.getActiveClaimConditionId(
@@ -365,7 +353,7 @@ export class DropErc1155ClaimConditions<
               );
             await this.contractWrapper.readContract.verifyClaim(
               activeConditionIndex,
-              addressToCheck,
+              resolvedAddress,
               tokenId,
               quantity,
               claimVerification.currencyAddress,
@@ -377,15 +365,6 @@ export class DropErc1155ClaimConditions<
                 pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
-            if (
-              (claimCondition.maxClaimablePerWallet === "0" &&
-                claimVerification.maxClaimable ===
-                  ethers.constants.MaxUint256) ||
-              claimVerification.maxClaimable === BigNumber.from(0)
-            ) {
-              reasons.push(ClaimEligibility.AddressNotAllowed);
-              return reasons;
-            }
           }
         } catch (e: any) {
           console.warn(
@@ -424,13 +403,13 @@ export class DropErc1155ClaimConditions<
         await this.contractWrapper.readContract.getClaimTimestamp(
           tokenId,
           activeConditionIndex,
-          addressToCheck,
+          resolvedAddress,
         );
     } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
       [lastClaimedTimestamp, timestampForNextClaim] =
         await this.contractWrapper.readContract.getClaimTimestamp(
           tokenId,
-          addressToCheck,
+          resolvedAddress,
         );
     }
 
@@ -451,7 +430,7 @@ export class DropErc1155ClaimConditions<
       const totalPrice = claimCondition.price.mul(quantity);
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {
-        const balance = await provider.getBalance(addressToCheck);
+        const balance = await provider.getBalance(resolvedAddress);
         if (balance.lt(totalPrice)) {
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
@@ -463,7 +442,7 @@ export class DropErc1155ClaimConditions<
           {},
         );
 
-        const balance = await erc20.readContract.balanceOf(addressToCheck);
+        const balance = await erc20.readContract.balanceOf(resolvedAddress);
         if (balance.lt(totalPrice)) {
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
@@ -481,16 +460,17 @@ export class DropErc1155ClaimConditions<
    */
   public async getClaimerProofs(
     tokenId: BigNumberish,
-    claimerAddress: string,
+    claimerAddress: AddressOrEns,
     claimConditionId?: BigNumberish,
   ): Promise<SnapshotEntryWithProof | null> {
     const claimCondition = await this.get(tokenId, claimConditionId);
     const merkleRoot = claimCondition.merkleRoot;
-    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
+    const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
+      const resolvedAddress = await resolveAddress(claimerAddress);
       return await fetchSnapshotEntryForAddress(
-        claimerAddress,
+        resolvedAddress,
         merkleRoot.toString(),
         metadata.merkle,
         this.contractWrapper.getProvider(),
@@ -543,7 +523,7 @@ export class DropErc1155ClaimConditions<
    * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       claimConditionInputs: ClaimConditionInput[],
@@ -593,7 +573,7 @@ export class DropErc1155ClaimConditions<
    * @param claimConditionsForToken - The claim conditions for each NFT
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  setBatch = buildTransactionFunction(
+  setBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       claimConditionsForToken: ClaimConditionsForToken[],
       resetClaimEligibilityForAll = false,
@@ -609,7 +589,7 @@ export class DropErc1155ClaimConditions<
               claimConditionsProcessed = [
                 {
                   startTime: new Date(0),
-                  currencyAddress: ethers.constants.AddressZero,
+                  currencyAddress: constants.AddressZero,
                   price: 0,
                   maxClaimableSupply: 0,
                   maxClaimablePerWallet: 0,
@@ -695,7 +675,7 @@ export class DropErc1155ClaimConditions<
 
       // upload new merkle roots to snapshot URIs if updated
       if (!deepEqual(metadata.merkle, merkleInfo)) {
-        const mergedMetadata = this.metadata.parseInputMetadata({
+        const mergedMetadata = await this.metadata.parseInputMetadata({
           ...metadata,
           merkle: merkleInfo,
         });
@@ -787,7 +767,7 @@ export class DropErc1155ClaimConditions<
    * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput - the new data to update, previous data will be retained
    */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       index: number,
@@ -812,11 +792,11 @@ export class DropErc1155ClaimConditions<
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
-    address?: string,
+    address?: AddressOrEns,
   ): Promise<ClaimVerification> {
-    const addressToClaim = address
-      ? address
-      : await this.contractWrapper.getSignerAddress();
+    const addressToClaim = await resolveAddress(
+      address ? address : await this.contractWrapper.getSignerAddress(),
+    );
     return prepareClaim(
       addressToClaim,
       quantity,
@@ -832,13 +812,14 @@ export class DropErc1155ClaimConditions<
 
   public async getClaimArguments(
     tokenId: BigNumberish,
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     quantity: BigNumberish,
     claimVerification: ClaimVerification,
   ): Promise<any[]> {
+    const resolvedAddress = await resolveAddress(destinationAddress);
     if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       return [
-        destinationAddress,
+        resolvedAddress,
         tokenId,
         quantity,
         claimVerification.currencyAddress,
@@ -848,7 +829,7 @@ export class DropErc1155ClaimConditions<
       ];
     } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
       return [
-        destinationAddress,
+        resolvedAddress,
         tokenId,
         quantity,
         claimVerification.currencyAddress,
@@ -857,11 +838,11 @@ export class DropErc1155ClaimConditions<
           proof: claimVerification.proofs,
           maxQuantityInAllowlist: claimVerification.maxClaimable,
         } as IDropSinglePhase_V1.AllowlistProofStruct,
-        ethers.utils.toUtf8Bytes(""),
+        utils.toUtf8Bytes(""),
       ];
     }
     return [
-      destinationAddress,
+      resolvedAddress,
       tokenId,
       quantity,
       claimVerification.currencyAddress,
@@ -872,7 +853,7 @@ export class DropErc1155ClaimConditions<
         pricePerToken: claimVerification.priceInProof,
         currency: claimVerification.currencyAddressInProof,
       } as IDropSinglePhase.AllowlistProofStruct,
-      ethers.utils.toUtf8Bytes(""),
+      utils.toUtf8Bytes(""),
     ];
   }
 
@@ -886,7 +867,7 @@ export class DropErc1155ClaimConditions<
    * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     options?: ClaimOptions,

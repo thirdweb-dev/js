@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Ethereum Mainnet",
   "chain": "ETH",
@@ -5,23 +6,16 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "rpc": [
     "https://ethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.infura.io/v3/${INFURA_API_KEY}",
     "wss://mainnet.infura.io/ws/v3/${INFURA_API_KEY}",
+    "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://api.mycryptoapi.com/eth",
-    "https://cloudflare-eth.com"
+    "https://cloudflare-eth.com",
+    "https://ethereum.publicnode.com"
   ],
   "features": [
     {
@@ -54,4 +48,4 @@ export default {
   ],
   "testnet": false,
   "slug": "ethereum"
-} as const;
+} as const satisfies Chain;

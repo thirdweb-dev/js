@@ -3,9 +3,10 @@ import {
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -18,19 +19,21 @@ import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DelayedReveal } from "../../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
-import { Erc721 } from "../../core/classes/erc-721";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Abi } from "../../schema/contracts/custom";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
+import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -47,7 +50,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public encoder: ContractEncoder<PrebuiltNFTDrop>;
@@ -56,6 +59,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
+  public app: ContractAppURI<PrebuiltNFTDrop>;
   public sales: ContractPrimarySale<PrebuiltNFTDrop>;
   public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
   public events: ContractEvents<PrebuiltNFTDrop>;
@@ -150,7 +154,6 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    */
   public checkout: PaperCheckout<PrebuiltNFTDrop>;
 
-  public erc721: Erc721<PrebuiltNFTDrop>;
   public owner: ContractOwner<PrebuiltNFTDrop>;
 
   constructor(
@@ -158,7 +161,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: Abi,
+    abi: AbiInput,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltNFTDrop>(
       network,
@@ -168,10 +171,15 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     ),
   ) {
     super(contractWrapper, storage, chainId);
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ContractSchema,
+      this.storage,
+    );
+    this.app = new ContractAppURI(
+      this.contractWrapper,
+      this.metadata,
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
@@ -186,7 +194,6 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,
@@ -206,7 +213,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -369,7 +376,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -390,7 +397,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @deprecated Use `contract.erc721.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<Transaction> {
@@ -421,9 +428,9 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       quantity: BigNumberish,
       checkERC20Allowance = true,
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
@@ -440,7 +447,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       quantity: BigNumberish,
       checkERC20Allowance = true,
@@ -464,9 +471,11 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * ```
    *
    */
-  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return this.erc721.burn.prepare(tokenId);
-  });
+  burn = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return this.erc721.burn.prepare(tokenId);
+    },
+  );
 
   /******************************
    * STANDARD ERC721 FUNCTIONS
@@ -509,7 +518,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * console.log(balance);
    * ```
    */
-  public async balanceOf(address: string): Promise<BigNumber> {
+  public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
     return this.erc721.balanceOf(address);
   }
 
@@ -525,7 +534,10 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param address - the wallet address
    * @param operator - the operator address
    */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(
+    address: AddressOrEns,
+    operator: AddressOrEns,
+  ): Promise<boolean> {
     return this.erc721.isApproved(address, operator);
   }
 
@@ -541,8 +553,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  transfer = buildTransactionFunction(
-    async (to: string, tokenId: BigNumberish) => {
+  transfer = /* @__PURE__ */ buildTransactionFunction(
+    async (to: AddressOrEns, tokenId: BigNumberish) => {
       return this.erc721.transfer.prepare(to, tokenId);
     },
   );
@@ -554,8 +566,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
-    async (operator: string, approved: boolean) => {
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
+    async (operator: AddressOrEns, approved: boolean) => {
       return this.erc721.setApprovalForAll.prepare(operator, approved);
     },
   );
@@ -567,8 +579,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForToken = buildTransactionFunction(
-    async (operator: string, tokenId: BigNumberish) => {
+  setApprovalForToken = /* @__PURE__ */ buildTransactionFunction(
+    async (operator: AddressOrEns, tokenId: BigNumberish) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
@@ -577,16 +589,37 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     },
   );
 
+  /**
+   * @internal
+   */
+  public async prepare<
+    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<PrebuiltNFTDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
+  }
+
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
   /**
    * @internal
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<PrebuiltNFTDrop["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<PrebuiltNFTDrop["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 }

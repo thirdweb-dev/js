@@ -1,10 +1,7 @@
-import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
+export { useLogin } from "./useLogin";
+export type { LoginConfig } from "./useLogin";
 
-export * from "./useLogin";
-export * from "./useLogout";
-export * from "./useUser";
+export { useLogout } from "./useLogout";
 
-export function useAuth() {
-  const authConfig = useThirdwebAuthContext();
-  return authConfig?.auth;
-}
+export type { UserWithData } from "./useUser";
+export { useUser } from "./useUser";

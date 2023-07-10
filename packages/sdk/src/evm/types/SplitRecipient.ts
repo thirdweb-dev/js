@@ -1,3 +1,5 @@
+import { Address } from "../schema/shared/Address";
+
 /**
  * The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage.
  */
@@ -5,7 +7,7 @@ export interface SplitRecipient {
   /**
    * The address of the recipient
    */
-  address: string;
+  address: Address;
 
   /**
    * The split of the recipient as a percentage of the total amount

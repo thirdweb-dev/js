@@ -1,72 +1,19 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
-import { ChainOrRpcUrl, NetworkInput } from "../core";
+import type { ChainOrRpcUrl, NetworkInput } from "../core/types";
+import { isProvider, isSigner } from "../functions/getSignerAndProvider";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
-import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
-import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
-import { getChainRPC, Chain } from "@thirdweb-dev/chains";
-import { ethers, providers } from "ethers";
+import type { SDKOptions, SDKOptionsOutput } from "../schema/sdk-options";
+import { SDKOptionsSchema } from "../schema/sdk-options";
+import type { ChainInfo } from "../schema/shared/ChainInfo";
+import { getChainRPC } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { providers } from "ethers";
+import type { Signer } from "ethers";
 
 /**
  * @internal
  */
-export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
-
-export type ChainNames =
-  | "mainnet"
-  // common alias for `mainnet`
-  | "ethereum"
-  | "goerli"
-  | "polygon"
-  // common alias for `polygon`
-  | "matic"
-  | "mumbai"
-  | "fantom"
-  | "fantom-testnet"
-  | "avalanche"
-  | "avalanche-testnet"
-  // actual name
-  | "avalanche-fuji"
-  | "optimism"
-  | "optimism-goerli"
-  | "arbitrum"
-  | "arbitrum-goerli"
-  | "binance"
-  | "binance-testnet"
-  // local nodes
-  | "hardhat"
-  | "localhost";
-/**
- * @internal
- */
-
-export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
-  "avalanche-fuji": ChainId.AvalancheFujiTestnet,
-  "avalanche-testnet": ChainId.AvalancheFujiTestnet,
-  "fantom-testnet": ChainId.FantomTestnet,
-  ethereum: ChainId.Mainnet,
-  matic: ChainId.Polygon,
-  mumbai: ChainId.Mumbai,
-  goerli: ChainId.Goerli,
-  polygon: ChainId.Polygon,
-  mainnet: ChainId.Mainnet,
-  optimism: ChainId.Optimism,
-  "optimism-goerli": ChainId.OptimismGoerli,
-  arbitrum: ChainId.Arbitrum,
-  "arbitrum-goerli": ChainId.ArbitrumGoerli,
-  fantom: ChainId.Fantom,
-  avalanche: ChainId.Avalanche,
-  binance: ChainId.BinanceSmartChainMainnet,
-  "binance-testnet": ChainId.BinanceSmartChainTestnet,
-  hardhat: ChainId.Hardhat,
-  localhost: ChainId.Localhost,
-};
-
-export const CHAIN_ID_TO_NAME = Object.fromEntries(
-  Object.entries(CHAIN_NAME_TO_ID).map(([name, id]) => [id, name]),
-) as Record<ChainId, ChainNames>;
-
-export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
-  const options = SDKOptionsSchema.parse(sdkOptions);
+function buildDefaultMap(options: SDKOptionsOutput) {
   return options.supportedChains.reduce((previousValue, currentValue) => {
     previousValue[currentValue.chainId] = currentValue;
     return previousValue;
@@ -81,7 +28,7 @@ export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
 export function getChainProvider(
   network: ChainOrRpcUrl,
   sdkOptions: SDKOptions,
-): ethers.providers.Provider {
+): providers.Provider {
   // If we have an RPC URL, use that for the provider
   if (typeof network === "string" && isRpcUrl(network)) {
     return getProviderFromRpcUrl(network);
@@ -97,11 +44,11 @@ export function getChainProvider(
   // Build a map of chainId -> ChainInfo based on the supportedChains
   const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
 
-  // Resolve the chain id from the network, which could be a chain, chain name, or chain id
-  const chainId = getChainIdFromNetwork(network);
-
   let rpcUrl = "";
+  let chainId;
   try {
+    // Resolve the chain id from the network, which could be a chain, chain name, or chain id
+    chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
     rpcUrl = getChainRPC(rpcMap[chainId], {
       thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
@@ -109,40 +56,49 @@ export function getChainProvider(
       alchemyApiKey: options.alchemyApiKey,
     });
   } catch (e) {
-    console.warn("Failed to get chain RPC", e);
     // no-op
   }
 
-  // if we still don't have a url fall back to just using the chainId in the rpc and try that shit
+  // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId}.rpc.thirdweb.com/${
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
       options.thirdwebApiKey || DEFAULT_API_KEY
     }`;
   }
 
   if (!rpcUrl) {
     throw new Error(
-      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chains' property of the sdk options.`,
+      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'supportedChains' property of the sdk options.`,
     );
   }
 
   return getProviderFromRpcUrl(rpcUrl, chainId);
 }
 
-export function getChainIdFromNetwork(network: ChainOrRpcUrl): number {
+export function getChainIdFromNetwork(
+  network: ChainOrRpcUrl,
+  options: SDKOptionsOutput,
+): number {
   if (isChainConfig(network)) {
     // If it's a chain just return the chain id
     return network.chainId;
   } else if (typeof network === "number") {
     // If it's a number (chainId) return it directly
     return network;
-  } else if (network in CHAIN_NAME_TO_ID) {
+  } else {
     // If it's a string (chain name) return the chain id from the map
-    return CHAIN_NAME_TO_ID[network as ChainNames];
+    const chainNameToId = options.supportedChains.reduce((acc, curr) => {
+      acc[curr.slug] = curr.chainId;
+      return acc;
+    }, {} as Record<string, number>);
+
+    if (network in chainNameToId) {
+      return chainNameToId[network];
+    }
   }
 
   throw new Error(
-    `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chains' property of the SDK options.`,
+    `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'supportedChains' property of the SDK options.`,
   );
 }
 
@@ -153,8 +109,8 @@ export function isChainConfig(network: NetworkInput): network is Chain {
   return (
     typeof network !== "string" &&
     typeof network !== "number" &&
-    !ethers.Signer.isSigner(network) &&
-    !ethers.providers.Provider.isProvider(network)
+    !isSigner(network) &&
+    !isProvider(network)
   );
 }
 
@@ -166,7 +122,7 @@ export function isChainConfig(network: NetworkInput): network is Chain {
  *
  * @internal
  */
-export function isRpcUrl(url: string): boolean {
+function isRpcUrl(url: string): boolean {
   const match = url.match(/^(ws|http)s?:/i);
   if (match) {
     switch (match[1].toLowerCase()) {
@@ -233,5 +189,55 @@ export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
   }
 
   // Always fallback to the default provider if no other option worked
-  return ethers.getDefaultProvider(rpcUrl);
+  return providers.getDefaultProvider(rpcUrl);
+}
+
+/**
+ * @internal
+ */
+export function getSignerAndProvider(
+  network: NetworkInput,
+  options?: SDKOptions,
+): [Signer | undefined, providers.Provider] {
+  let signer: Signer | undefined;
+  let provider: providers.Provider | undefined;
+
+  if (isSigner(network)) {
+    // Here, we have an ethers.Signer
+    signer = network;
+    if (network.provider) {
+      provider = network.provider;
+    }
+  } else if (isProvider(network)) {
+    // Here, we have an ethers.providers.Provider
+    provider = network;
+  } else {
+    // Here, we must have a ChainOrRpcUrl, which is a chain name, chain id, rpc url, or chain config
+    // All of which, getChainProvider can handle for us
+    provider = getChainProvider(network, options);
+  }
+
+  if (options?.readonlySettings) {
+    // If readonly settings are specified, then overwrite the provider
+    provider = getProviderFromRpcUrl(
+      options.readonlySettings.rpcUrl,
+      options.readonlySettings.chainId,
+    );
+  }
+
+  // At this point, if we don't have a provider, don't default to a random chain
+  // Instead, just throw an error
+  if (!provider) {
+    if (signer) {
+      throw new Error(
+        "No provider passed to the SDK! Please make sure that your signer is connected to a provider!",
+      );
+    }
+
+    throw new Error(
+      "No provider found! Make sure to specify which network to connect to, or pass a signer or provider to the SDK!",
+    );
+  }
+
+  return [signer, provider];
 }

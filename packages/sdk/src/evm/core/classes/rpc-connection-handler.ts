@@ -1,11 +1,12 @@
-import { getChainProvider, getProviderFromRpcUrl } from "../../constants/urls";
+import { isSigner } from "../../functions/getSignerAndProvider";
+import { getSignerAndProvider } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkInput } from "../types";
-import { Signer, providers } from "ethers";
+import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 /**
@@ -46,7 +47,7 @@ export class RPCConnectionHandler extends EventEmitter {
    * @returns whether or not a signer is set, `true` if there is no signer so the class is in "read only" mode
    */
   public isReadOnly(): boolean {
-    return !Signer.isSigner(this.signer);
+    return !isSigner(this.signer);
   }
 
   /**
@@ -72,54 +73,4 @@ export class RPCConnectionHandler extends EventEmitter {
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
   }
-}
-
-/**
- * @internal
- */
-export function getSignerAndProvider(
-  network: NetworkInput,
-  options: SDKOptions,
-): [Signer | undefined, providers.Provider] {
-  let signer: Signer | undefined;
-  let provider: providers.Provider | undefined;
-
-  if (Signer.isSigner(network)) {
-    // Here, we have an ethers.Signer
-    signer = network;
-    if (network.provider) {
-      provider = network.provider;
-    }
-  } else if (providers.Provider.isProvider(network)) {
-    // Here, we have an ethers.providers.Provider
-    provider = network;
-  } else {
-    // Here, we must have a ChainOrRpcUrl, which is a chain name, chain id, rpc url, or chain config
-    // All of which, getChainProvider can handle for us
-    provider = getChainProvider(network, options);
-  }
-
-  if (options?.readonlySettings) {
-    // If readonly settings are specified, then overwrite the provider
-    provider = getProviderFromRpcUrl(
-      options.readonlySettings.rpcUrl,
-      options.readonlySettings.chainId,
-    );
-  }
-
-  // At this point, if we don't have a provider, don't default to a random chain
-  // Instead, just throw an error
-  if (!provider) {
-    if (signer) {
-      throw new Error(
-        "No provider passed to the SDK! Please make sure that your signer is connected to a provider!",
-      );
-    }
-
-    throw new Error(
-      "No provider found! Make sure to specify which network to connect to, or pass a signer or provider to the SDK!",
-    );
-  }
-
-  return [signer, provider];
 }

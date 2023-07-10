@@ -1,9 +1,9 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Evmos",
   "chain": "Evmos",
   "rpc": [
     "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth.bd.evmos.org:8545",
     "https://evmos-evm.publicnode.com"
   ],
   "faucets": [],
@@ -24,18 +24,17 @@ export default {
   },
   "explorers": [
     {
-      "name": "Evmos EVM Explorer (Escan)",
+      "name": "Evmos Explorer (Escan)",
       "url": "https://escan.live",
       "standard": "none",
-      "icon": "evmos"
-    },
-    {
-      "name": "Evmos Cosmos Explorer (Mintscan)",
-      "url": "https://www.mintscan.io/evmos",
-      "standard": "none",
-      "icon": "evmos"
+      "icon": {
+        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "evmos"
-} as const;
+} as const satisfies Chain;

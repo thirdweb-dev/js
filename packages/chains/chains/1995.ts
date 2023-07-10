@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "edeXa Testnet",
   "chain": "edeXa TestNetwork",
@@ -27,10 +28,10 @@ export default {
   "explorers": [
     {
       "name": "edexa-testnet",
-      "url": "https://explorer.edexa.com",
+      "url": "https://explorer.testnet.edexa.com",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "edexa-testnet"
-} as const;
+} as const satisfies Chain;

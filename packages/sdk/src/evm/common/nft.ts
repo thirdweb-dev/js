@@ -9,7 +9,6 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { NotFoundError } from "./error";
 import type {
   IERC1155Metadata,
   IERC165,
@@ -22,7 +21,13 @@ import type {
   ThirdwebStorage,
   UploadProgressEvent,
 } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
+import {
+  BigNumber,
+  type BigNumberish,
+  Contract,
+  utils,
+  type providers,
+} from "ethers";
 
 export const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
@@ -41,9 +46,25 @@ export async function fetchTokenMetadata(
   tokenUri: string,
   storage: ThirdwebStorage,
 ): Promise<NFTMetadata> {
+  // check for base64 encoded JSON
+  if (
+    tokenUri.startsWith("data:application/json;base64") &&
+    typeof Buffer !== "undefined"
+  ) {
+    const base64 = tokenUri.split(",")[1];
+    const jsonMetadata = JSON.parse(
+      Buffer.from(base64, "base64").toString("utf-8"),
+    );
+    return CommonNFTOutput.parse({
+      ...jsonMetadata,
+      id: BigNumber.from(tokenId).toString(),
+      uri: tokenUri,
+    });
+  }
+  // handle dynamic id URIs (2 possible formats)
   const parsedUri = tokenUri.replace(
     "{id}",
-    ethers.utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
+    utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
   );
   let jsonMetadata;
   try {
@@ -86,7 +107,7 @@ export async function fetchTokenMetadataForContract(
   provider: providers.Provider,
   tokenId: BigNumberish,
   storage: ThirdwebStorage,
-) {
+): Promise<NFTMetadata> {
   let uri: string | undefined;
   const erc165 = new Contract(
     contractAddress,
@@ -113,7 +134,12 @@ export async function fetchTokenMetadataForContract(
     throw Error("Contract must implement ERC 1155 or ERC 721.");
   }
   if (!uri) {
-    throw new NotFoundError();
+    // no uri found, return fallback metadata
+    return CommonNFTOutput.parse({
+      ...FALLBACK_METADATA,
+      id: BigNumber.from(tokenId).toString(),
+      uri: "",
+    });
   }
   return fetchTokenMetadata(tokenId, uri, storage);
 }

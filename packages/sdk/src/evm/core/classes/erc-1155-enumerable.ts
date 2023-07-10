@@ -1,15 +1,15 @@
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../../core/schema/QueryParams";
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc1155 } from "./erc-1155";
 import type { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BigNumberish } from "ethers";
+import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
+import type { Erc1155 } from "./erc-1155";
 
 /**
  * List ERC1155 NFTs
@@ -21,6 +21,7 @@ import { BigNumber, BigNumberish } from "ethers";
  * ```
  * @public
  */
+
 export class Erc1155Enumerable implements DetectableFeature {
   featureName = FEATURE_EDITION_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC1155 & IERC1155Enumerable>;
@@ -99,9 +100,10 @@ export class Erc1155Enumerable implements DetectableFeature {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async owned(walletAddress?: string): Promise<NFT[]> {
-    const address =
-      walletAddress || (await this.contractWrapper.getSignerAddress());
+  public async owned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+    const address = await resolveAddress(
+      walletAddress || (await this.contractWrapper.getSignerAddress()),
+    );
     const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
     const balances = await this.contractWrapper.readContract.balanceOfBatch(
       Array(maxId.toNumber()).fill(address),
@@ -122,7 +124,7 @@ export class Erc1155Enumerable implements DetectableFeature {
         return {
           ...editionMetadata,
           owner: address,
-          quantityOwned: b.balance.toNumber(),
+          quantityOwned: b.balance.toString(),
         };
       }),
     );

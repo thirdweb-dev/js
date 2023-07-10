@@ -14,7 +14,7 @@ export const FEATURE_TOKEN_CLAIM_CONDITIONS_V1 = {
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
-    contracts: "DropSinglePhase_V1",
+    contracts: "erc20claimconditions",
   },
   abis: [ERC20Abi, IDropSinglePhaseV1],
   features: {},
@@ -25,7 +25,7 @@ export const FEATURE_TOKEN_CLAIM_CONDITIONS_V2 = {
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
-    contracts: "DropSinglePhase",
+    contracts: "erc20claimconditions",
   },
   abis: [ERC20Abi, IDropSinglePhase],
   features: {},
@@ -36,7 +36,7 @@ export const FEATURE_TOKEN_CLAIM_PHASES_V2 = {
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
-    contracts: "Drop",
+    contracts: "erc20claimphases",
   },
   abis: [ERC20Abi, IDrop],
   features: {},
@@ -47,7 +47,7 @@ export const FEATURE_TOKEN_CLAIM_PHASES_V1 = {
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
-    contracts: "Drop",
+    contracts: "erc20claimphases",
   },
   abis: [DropERC20_V2Abi],
   features: {},
@@ -58,7 +58,7 @@ export const FEATURE_TOKEN_BURNABLE = {
   namespace: "token.burn",
   docLinks: {
     sdk: "sdk.erc20burnable",
-    contracts: "IBurnableERC20",
+    contracts: "erc20burnable",
   },
   abis: [ERC20Abi, IBurnableERC20Abi],
   features: {},
@@ -69,7 +69,7 @@ export const FEATURE_TOKEN_SIGNATURE_MINTABLE = {
   namespace: "token.signature",
   docLinks: {
     sdk: "sdk.erc20signaturemintable",
-    contracts: "ISignatureMintERC20",
+    contracts: "erc20signaturemint",
   },
   abis: [ERC20Abi, ISignatureMintERC20Abi],
   features: {},
@@ -80,18 +80,18 @@ export const FEATURE_TOKEN_BATCH_MINTABLE = {
   namespace: "token.mint.batch",
   docLinks: {
     sdk: "sdk.erc20batchmintable",
-    contracts: "IMulticall",
+    contracts: "erc20batchmintable",
   },
   abis: [ERC20Abi, IMintableERC20Abi, MulticallAbi],
   features: {},
 } as const;
 
-export const FEATURE_TOKEN_MINTABLE = {
+export const FEATURE_TOKEN_MINTABLE = /* @__PURE__ */ {
   name: "ERC20Mintable",
   namespace: "token.mint",
   docLinks: {
     sdk: "sdk.erc20mintable",
-    contracts: "IMintableERC20",
+    contracts: "erc20mintable",
   },
   abis: [ERC20Abi, IMintableERC20Abi],
   features: {
@@ -104,18 +104,18 @@ export const FEATURE_TOKEN_PERMIT = {
   namespace: "token.permit",
   docLinks: {
     sdk: "sdk.erc20permit",
-    contracts: "IERC20Permit",
+    contracts: "erc20permit",
   },
   abis: [ERC20Abi, IERC20PermitAbi],
   features: {},
 } as const;
 
-export const FEATURE_TOKEN = {
+export const FEATURE_TOKEN = /* @__PURE__ */ {
   name: "ERC20",
   namespace: "token",
   docLinks: {
     sdk: "sdk.erc20",
-    contracts: "IERC20",
+    contracts: "erc20",
   },
   abis: [ERC20Abi],
   features: {

@@ -1,9 +1,18 @@
 import { ThirdwebAuth } from "../../core";
 import { Json, LoginPayloadOutputSchema, User } from "../../core/schema";
-import { GenericAuthWallet } from "@thirdweb-dev/wallets";
+import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 import { z } from "zod";
+
+export const PayloadBodySchema = z.object({
+  address: z.string(),
+  chainId: z.string().optional(),
+});
+
+export const ActiveBodySchema = z.object({
+  address: z.string(),
+});
 
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
@@ -14,7 +23,12 @@ type RequestType =
   | NextRequest
   | NextApiRequest;
 
-export type ThirdwebAuthRoute = "login" | "logout" | "user";
+export type ThirdwebAuthRoute =
+  | "payload"
+  | "login"
+  | "logout"
+  | "user"
+  | "switch-account";
 
 export type ThirdwebAuthUser<
   TData extends Json = Json,
@@ -41,7 +55,9 @@ export type ThirdwebAuthConfig<
     validateTokenId?:
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
+    loginPayloadDurationInSeconds?: number;
     tokenDurationInSeconds?: number;
+    refreshIntervalInSeconds?: number;
   };
   cookieOptions?: {
     domain?: string;

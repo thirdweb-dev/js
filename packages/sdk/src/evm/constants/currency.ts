@@ -1,6 +1,7 @@
-import { NativeToken } from "../types/currency";
-import { ChainId, getSupportedChains, SUPPORTED_CHAIN_ID } from "./chains";
-import { ethers } from "ethers";
+import type { NativeToken } from "../types/currency";
+import { ChainId } from "./chains/ChainId";
+import { getSupportedChains } from "./chains/supportedChains";
+import { constants } from "ethers";
 
 /**
  * @public
@@ -11,10 +12,7 @@ export const NATIVE_TOKEN_ADDRESS =
 /**
  * @public
  */
-export const NATIVE_TOKENS: Record<
-  SUPPORTED_CHAIN_ID | ChainId.Hardhat,
-  NativeToken
-> = {
+export const NATIVE_TOKENS: Record<number, NativeToken> = /* @__PURE__ */ {
   [ChainId.Mainnet]: {
     name: "Ether",
     symbol: "ETH",
@@ -31,6 +29,16 @@ export const NATIVE_TOKENS: Record<
     decimals: 18,
     wrapped: {
       address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  11155111: {
+    name: "Sepolia Ether",
+    symbol: "SEP",
+    decimals: 18,
+    wrapped: {
+      address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
@@ -177,6 +185,27 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
+  84531: {
+    name: "Base Goerli Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  // eslint-disable-next-line no-useless-computed-key
+  [280]: {
+    name: "zkSync Era Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
 };
 
 /**
@@ -192,19 +221,19 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
       symbol: chain.nativeCurrency.symbol,
       decimals: 18,
       wrapped: {
-        address: ethers.constants.AddressZero,
+        address: constants.AddressZero,
         name: `Wrapped ${chain.nativeCurrency.name}`,
         symbol: `W${chain.nativeCurrency.symbol}`,
       },
     };
   }
   return (
-    NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID] || {
+    NATIVE_TOKENS[chainId as number] || {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
       wrapped: {
-        address: ethers.constants.AddressZero,
+        address: constants.AddressZero,
         name: "Wrapped Ether",
         symbol: "WETH",
       },
@@ -212,7 +241,7 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
   );
 }
 
-export const LINK_TOKEN_ADDRESS: Record<number, string> = {
+export const LINK_TOKEN_ADDRESS: Record<number, string> = /* @__PURE__ */ {
   [ChainId.Mainnet]: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
   [ChainId.Goerli]: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
   [ChainId.BinanceSmartChainMainnet]:

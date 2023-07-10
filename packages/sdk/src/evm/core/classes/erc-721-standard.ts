@@ -1,6 +1,9 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput } from "../types";
@@ -56,7 +59,7 @@ export class StandardErc721<
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -94,7 +97,10 @@ export class StandardErc721<
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFT[]> {
+  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
     return this.erc721.getOwned(walletAddress);
   }
 
@@ -102,7 +108,12 @@ export class StandardErc721<
    * Get Owned Token Ids
    * @remarks Get all the token ids of NFTs owned by a specific wallet (no metadata)
    */
-  public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
+  public async getOwnedTokenIds(
+    walletAddress?: AddressOrEns,
+  ): Promise<BigNumber[]> {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
     return this.erc721.getOwnedTokenIds(walletAddress);
   }
 
@@ -150,7 +161,7 @@ export class StandardErc721<
    * console.log(balance);
    * ```
    */
-  public async balanceOf(address: string): Promise<BigNumber> {
+  public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
     return this.erc721.balanceOf(address);
   }
 
@@ -166,7 +177,10 @@ export class StandardErc721<
    * @param address - the wallet address
    * @param operator - the operator address
    */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(
+    address: AddressOrEns,
+    operator: AddressOrEns,
+  ): Promise<boolean> {
     return this.erc721.isApproved(address, operator);
   }
 
@@ -182,8 +196,8 @@ export class StandardErc721<
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  transfer = buildTransactionFunction(
-    async (to: string, tokenId: BigNumberish): Promise<Transaction> => {
+  transfer = /* @__PURE__ */ buildTransactionFunction(
+    async (to: AddressOrEns, tokenId: BigNumberish): Promise<Transaction> => {
       return this.erc721.transfer.prepare(to, tokenId);
     },
   );
@@ -195,8 +209,8 @@ export class StandardErc721<
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
-    async (operator: string, approved: boolean): Promise<Transaction> => {
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
+    async (operator: AddressOrEns, approved: boolean): Promise<Transaction> => {
       return this.erc721.setApprovalForAll.prepare(operator, approved);
     },
   );
@@ -208,12 +222,15 @@ export class StandardErc721<
    *
    * @internal
    */
-  setApprovalForToken = buildTransactionFunction(
-    async (operator: string, tokenId: BigNumberish): Promise<Transaction> => {
+  setApprovalForToken = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      operator: AddressOrEns,
+      tokenId: BigNumberish,
+    ): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
-        args: [operator, tokenId],
+        args: [await resolveAddress(operator), tokenId],
       });
     },
   );

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Portal Fantasy Chain Test",
   "chain": "PF",
@@ -24,4 +25,4 @@ export default {
   "explorers": [],
   "testnet": true,
   "slug": "portal-fantasy-chain-test"
-} as const;
+} as const satisfies Chain;

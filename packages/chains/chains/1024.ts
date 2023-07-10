@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "CLV Parachain",
   "chain": "CLV",
@@ -17,4 +18,4 @@ export default {
   "networkId": 1024,
   "testnet": false,
   "slug": "clv-parachain"
-} as const;
+} as const satisfies Chain;

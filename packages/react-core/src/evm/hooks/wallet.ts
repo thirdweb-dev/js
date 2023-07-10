@@ -1,7 +1,9 @@
 import { useThirdwebConnectedWalletContext } from "../contexts/thirdweb-wallet";
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
+import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useMemo } from "react";
 
 /**
@@ -64,6 +66,8 @@ export function useConnectedWallet() {
  *
  * The `address` variable will hold the address of the connected wallet if a user has connected using one of the supported wallet connection hooks.
  *
+ * @see {@link https://portal.thirdweb.com/react/react.useaddress?utm_source=sdk | Documentation}
+ *
  * @public
  */
 export function useAddress(): string | undefined {
@@ -88,8 +92,59 @@ export function useAddress(): string | undefined {
  *   return <div>{chainId}</div>
  * }
  * ```
+ * @see {@link https://portal.thirdweb.com/react/react.usechainid?utm_source=sdk | Documentation}
  * @public
  */
 export function useChainId(): number | undefined {
   return useThirdwebConnectedWalletContext().chainId;
+}
+
+/**
+ * Hook for accessing the active Chain the current wallet is connected to
+ *
+ * ```javascript
+ * import { useChain } from "@thirdweb-dev/react-core"
+ * ```
+ *
+ * @example
+ * You can get the chain of the connected wallet by using the hook as follows:
+ * ```javascript
+ * import { useChain } from "@thirdweb-dev/react-core"
+ *
+ * const App = () => {
+ *   const chain = useChain()
+ *
+ *   return <div>{chain.chainId}</div>
+ * }
+ * ```
+ * @see {@link https://portal.thirdweb.com/react/react.useActiveChain?utm_source=sdk | Documentation}
+ * @public
+ */
+export function useChain(): Chain | undefined {
+  const chainId = useChainId();
+
+  const chains = useSupportedChains();
+
+  const chain = useMemo(() => {
+    return chains.find((_chain) => _chain.chainId === chainId);
+  }, [chainId, chains]);
+
+  const unknownChain = useMemo(() => {
+    if (!chain) {
+      return defaultChains.find((c) => c.chainId === chainId);
+    }
+  }, [chainId, chain]);
+
+  return chain || unknownChain;
+}
+
+/**
+ * @deprecated
+ *
+ * This hook is renamed to `useChain`
+ *
+ * use the `useChain` hook instead
+ */
+export function useActiveChain() {
+  return useChain();
 }

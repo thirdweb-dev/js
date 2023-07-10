@@ -16,7 +16,12 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
+import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -32,8 +37,9 @@ import invariant from "tiny-invariant";
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
- * @returns a response object that incudes the total minted supply
+ * @returns a response object that includes the total minted supply
  * @twfeature ERC20
+ * @see {@link https://portal.thirdweb.com/react/react.usetokensupply?utm_source=sdk | Documentation}
  * @beta
  */
 export function useTokenSupply(contract: RequiredParam<TokenContract>) {
@@ -65,6 +71,7 @@ export function useTokenSupply(contract: RequiredParam<TokenContract>) {
  * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that includes the balance of the address
  * @twfeature ERC20
+ * @see {@link https://portal.thirdweb.com/react/react.usetokenbalance?utm_source=sdk | Documentation}
  * @beta
  */
 export function useTokenBalance(
@@ -101,6 +108,7 @@ export function useTokenBalance(
  * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that includes the decimals of the ERC20 token
  * @twfeature ERC20
+ * @see {@link https://portal.thirdweb.com/react/react.usetokendecimals?utm_source=sdk | Documentation}
  * @beta
  */
 export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
@@ -157,9 +165,23 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
  * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to mint new tokens to the connected wallet
  * @twfeature ERC20Mintable
+ * @see {@link https://portal.thirdweb.com/react/react.useminttoken?utm_source=sdk | Documentation}
  * @beta
  */
-export function useMintToken(contract: RequiredParam<TokenContract>) {
+export function useMintToken(
+  contract: RequiredParam<TokenContract>,
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  TokenParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -214,8 +236,9 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
  * ```
  *
  * @param contract - an instance of a {@link TokenContract}
- * @returns a mutation object that can be used to tokens to the wallet specificed in the params
+ * @returns a mutation object that can be used to tokens to the wallet specified in the params
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimtoken?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimToken(contract: RequiredParam<TokenContract>) {
@@ -277,6 +300,7 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
  * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to transfer tokens
  * @twfeature ERC20
+ * @see {@link https://portal.thirdweb.com/react/react.usetransfertoken?utm_source=sdk | Documentation}
  * @beta
  */
 export function useTransferToken(contract: RequiredParam<TokenContract>) {
@@ -336,6 +360,7 @@ export function useTransferToken(contract: RequiredParam<TokenContract>) {
  * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to transfer batch tokens
  * @twfeature ERC20
+ * @see {@link https://portal.thirdweb.com/react/react.usetransferbatchtoken?utm_source=sdk | Documentation}
  * @beta
  */
 export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
@@ -402,6 +427,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
  * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to burn tokens from the connected wallet
  * @twfeature ERC20Burnable
+ * @see {@link https://portal.thirdweb.com/react/react.useburntoken?utm_source=sdk | Documentation}
  * @beta
  */
 export function useBurnToken(contract: RequiredParam<TokenContract>) {

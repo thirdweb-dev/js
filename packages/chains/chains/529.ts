@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Firechain Mainnet",
   "chain": "FIRE",
@@ -25,4 +26,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "firechain"
-} as const;
+} as const satisfies Chain;

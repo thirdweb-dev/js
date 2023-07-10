@@ -17,7 +17,7 @@ export const FEATURE_EDITION_BURNABLE = {
   namespace: "edition.burn",
   docLinks: {
     sdk: "sdk.erc1155burnable",
-    contracts: "IBurnableERC1155",
+    contracts: "erc1155burnable",
   },
   abis: [Erc1155Abi, IBurnableERC1155Abi],
   features: {},
@@ -28,9 +28,9 @@ export const FEATURE_EDITION_CLAIM_CONDITIONS_V1 = {
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
-    contracts: "DropSinglePhase1155",
+    contracts: "erc1155dropsinglephase",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155_V1],
+  abis: [Erc1155Abi, IDropSinglePhase1155_V1],
   features: {},
 } as const;
 
@@ -39,9 +39,9 @@ export const FEATURE_EDITION_CLAIM_CONDITIONS_V2 = {
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
-    contracts: "DropSinglePhase1155",
+    contracts: "erc1155claimconditions",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155],
+  abis: [Erc1155Abi, IDropSinglePhase1155],
   features: {},
 } as const;
 
@@ -50,9 +50,9 @@ export const FEATURE_EDITION_CLAIM_PHASES_V2 = {
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
-    contracts: "Drop1155",
+    contracts: "erc1155claimphases",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropMultiPhase1155],
+  abis: [Erc1155Abi, IDropMultiPhase1155],
   features: {},
 } as const;
 
@@ -61,7 +61,7 @@ export const FEATURE_EDITION_CLAIM_PHASES_V1 = {
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
-    contracts: "Drop1155",
+    contracts: "erc1155claimphases",
   },
   abis: [DropERC1155_V2Abi],
   features: {},
@@ -72,9 +72,9 @@ export const FEATURE_EDITION_CLAIM_CUSTOM = {
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
-    contracts: "IClaimableERC1155",
+    contracts: "erc1155claimcustom",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, IClaimableERC1155],
+  abis: [Erc1155Abi, IClaimableERC1155],
   features: {},
 } as const;
 
@@ -83,37 +83,31 @@ export const FEATURE_EDITION_REVEALABLE = {
   namespace: "edition.drop.revealer",
   docLinks: {
     sdk: "sdk.drop.delayedreveal",
-    contracts: "DelayedReveal",
+    contracts: "erc1155revealable",
   },
   abis: [Erc1155Abi, ILazyMintAbi, DelayedRevealAbi],
   features: {},
 } as const;
 
-export const FEATURE_EDITION_LAZY_MINTABLE_V2 = {
+export const FEATURE_EDITION_LAZY_MINTABLE_V2 = /* @__PURE__ */ {
   name: "ERC1155LazyMintableV2",
   namespace: "edition.drop",
   docLinks: {
     sdk: "sdk.erc1155droppable",
-    contracts: "LazyMint",
+    contracts: "lazymint",
   },
   abis: [Erc1155Abi, ILazyMintAbi],
   features: {
     [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
-    [FEATURE_EDITION_CLAIM_CUSTOM.name]: FEATURE_EDITION_CLAIM_CUSTOM,
-    [FEATURE_EDITION_CLAIM_CONDITIONS_V1.name]:
-      FEATURE_EDITION_CLAIM_CONDITIONS_V1,
-    [FEATURE_EDITION_CLAIM_CONDITIONS_V2.name]:
-      FEATURE_EDITION_CLAIM_CONDITIONS_V2,
-    [FEATURE_EDITION_CLAIM_PHASES_V2.name]: FEATURE_EDITION_CLAIM_PHASES_V2,
   },
 } as const;
 
-export const FEATURE_EDITION_LAZY_MINTABLE_V1 = {
+export const FEATURE_EDITION_LAZY_MINTABLE_V1 = /* @__PURE__ */ {
   name: "ERC1155LazyMintableV1",
   namespace: "edition.drop",
   docLinks: {
     sdk: "sdk.erc1155droppable",
-    contracts: "LazyMint",
+    contracts: "lazymint",
   },
   abis: [DropERC1155_V2Abi],
   features: {
@@ -126,7 +120,7 @@ export const FEATURE_EDITION_SIGNATURE_MINTABLE = {
   namespace: "edition.signature",
   docLinks: {
     sdk: "sdk.erc1155signaturemintable",
-    contracts: "ISignatureMintERC1155",
+    contracts: "erc1155signaturemint",
   },
   abis: [Erc1155Abi, ISignatureMintERC1155Abi],
   features: {},
@@ -137,7 +131,7 @@ export const FEATURE_EDITION_BATCH_TRASNFERABLE = {
   namespace: "",
   docLinks: {
     sdk: "sdk.erc1155",
-    contracts: "IMulticall",
+    contracts: "multicall",
   },
   abis: [Erc1155Abi, MulticallAbi],
   features: {},
@@ -148,18 +142,18 @@ export const FEATURE_EDITION_BATCH_MINTABLE = {
   namespace: "edition.mint.batch",
   docLinks: {
     sdk: "sdk.erc1155batchmintable",
-    contracts: "IMulticall",
+    contracts: "erc1155batchmintable",
   },
   abis: [Erc1155Abi, IMintableERC1155Abi, MulticallAbi],
   features: {},
 } as const;
 
-export const FEATURE_EDITION_MINTABLE = {
+export const FEATURE_EDITION_MINTABLE = /* @__PURE__ */ {
   name: "ERC1155Mintable",
   namespace: "edition.mint",
   docLinks: {
     sdk: "sdk.erc1155mintable",
-    contracts: "IMintableERC1155",
+    contracts: "erc1155mintable",
   },
   abis: [Erc1155Abi, IMintableERC1155Abi],
   features: {
@@ -172,18 +166,18 @@ export const FEATURE_EDITION_ENUMERABLE = {
   namespace: "edition.query",
   docLinks: {
     sdk: "sdk.erc1155",
-    contracts: "IERC1155",
+    contracts: "erc1155enumerable",
   },
   abis: [Erc1155Abi, Erc1155EnumerableAbi],
   features: {},
 } as const;
 
-export const FEATURE_EDITION = {
+export const FEATURE_EDITION = /* @__PURE__ */ {
   name: "ERC1155",
   namespace: "edition",
   docLinks: {
     sdk: "sdk.erc1155enumerable",
-    contracts: "IERC1155Enumerable",
+    contracts: "erc1155",
   },
   abis: [Erc1155Abi],
   features: {
@@ -195,5 +189,11 @@ export const FEATURE_EDITION = {
     [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
     [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
       FEATURE_EDITION_SIGNATURE_MINTABLE,
+    [FEATURE_EDITION_CLAIM_CUSTOM.name]: FEATURE_EDITION_CLAIM_CUSTOM,
+    [FEATURE_EDITION_CLAIM_CONDITIONS_V1.name]:
+      FEATURE_EDITION_CLAIM_CONDITIONS_V1,
+    [FEATURE_EDITION_CLAIM_CONDITIONS_V2.name]:
+      FEATURE_EDITION_CLAIM_CONDITIONS_V2,
+    [FEATURE_EDITION_CLAIM_PHASES_V2.name]: FEATURE_EDITION_CLAIM_PHASES_V2,
   },
 } as const;

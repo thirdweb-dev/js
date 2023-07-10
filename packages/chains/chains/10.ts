@@ -1,10 +1,11 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "Optimism",
+  "name": "OP Mainnet",
   "chain": "ETH",
   "rpc": [
     "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
+    "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.optimism.io/"
   ],
   "faucets": [],
@@ -28,16 +29,8 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "testnet": false,
   "slug": "optimism"
-} as const;
+} as const satisfies Chain;

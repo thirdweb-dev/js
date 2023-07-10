@@ -1,11 +1,17 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "1.0.10",
+  "version": "1.1.7",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-storage.esm.js": "./dist/thirdweb-dev-storage.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-storage.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-storage.browser.esm.js",
+        "default": "./dist/thirdweb-dev-storage.esm.js"
+      },
       "default": "./dist/thirdweb-dev-storage.cjs.js"
     },
     "./package.json": "./package.json"
@@ -13,6 +19,7 @@
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/storage",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
+  "sideEffects": false,
   "scripts": {
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
@@ -21,7 +28,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "test:all": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
-    "test": "yarn test:all",
+    "test": "pnpm test:all",
     "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
     "push": "yalc push"
   },
@@ -29,28 +36,36 @@
     "dist/"
   ],
   "preconstruct": {
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.18.10",
-    "@babel/preset-typescript": "^7.18.6",
-    "@microsoft/api-documenter": "^7.19.4",
-    "@microsoft/api-extractor": "^7.29.2",
+    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@microsoft/api-documenter": "^7.22.21",
+    "@microsoft/api-extractor": "^7.36.0",
     "@microsoft/tsdoc": "^0.14.1",
-    "@preconstruct/cli": "^2.2.1",
-    "@swc-node/register": "^1.5.1",
-    "@types/chai": "^4.3.3",
+    "@preconstruct/cli": "^2.7.0",
+    "@swc-node/register": "^1.6.6",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
+    "@types/uuid": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
     "chai": "^4.3.6",
-    "eslint": "^8.21.0",
+    "eslint": "^8.43.0",
+    "eslint-config-thirdweb": "workspace:*",
     "esm": "^3.2.25",
-    "mocha": "^10.0.0",
-    "typescript": "^4.7.4"
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "cross-fetch": "^3.1.5",
+    "cid-tool": "^3.0.0",
+    "cross-fetch": "^3.1.6",
     "form-data": "^4.0.0",
     "ipfs-unixfs-importer": "^7.0.1",
     "uuid": "^9.0.0"

@@ -1,14 +1,14 @@
-import { __DEV__ } from "../constants/runtime";
+import { __DEV__ } from "../../core/constants/runtime";
 import { useThirdwebConfigContext } from "./thirdweb-config";
 import { getChainRPC } from "@thirdweb-dev/chains";
 import { UserWallet } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import React, {
-  PropsWithChildren,
   createContext,
+  PropsWithChildren,
   useContext,
-  useState,
   useEffect,
+  useState,
 } from "react";
 
 interface ThirdwebConnectedWalletContext {
@@ -26,7 +26,9 @@ const INITIAL_CONTEXT_VALUE: ThirdwebConnectedWalletContext = {
 };
 
 const ThirdwebConnectedWalletContext =
-  createContext<ThirdwebConnectedWalletContext>(INITIAL_CONTEXT_VALUE);
+  /* @__PURE__ */ createContext<ThirdwebConnectedWalletContext>(
+    INITIAL_CONTEXT_VALUE,
+  );
 
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
@@ -64,6 +66,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
               });
             } catch (e) {
               // failed to get a viable rpc url, nothing we can do
+              console.error(e);
             }
           }
 

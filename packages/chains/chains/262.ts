@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SUR Blockchain Network",
   "chain": "SUR",
@@ -25,10 +26,15 @@ export default {
     {
       "name": "Surnet Explorer",
       "url": "https://explorer.surnet.org",
-      "icon": "SUR",
+      "icon": {
+        "url": "ipfs://QmbUcDQHCvheYQrWk9WFJRMW5fTJQmtZqkoGUed4bhCM7T",
+        "width": 3000,
+        "height": 3000,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "sur-blockchain-network"
-} as const;
+} as const satisfies Chain;

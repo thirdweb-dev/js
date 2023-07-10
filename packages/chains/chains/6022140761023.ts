@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Molereum Network",
   "chain": "ETH",
@@ -17,4 +18,4 @@ export default {
   "networkId": 6022140761023,
   "testnet": false,
   "slug": "molereum-network"
-} as const;
+} as const satisfies Chain;

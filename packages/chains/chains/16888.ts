@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "IVAR Chain Testnet",
   "chain": "IVAR",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "ivar-chain-testnet"
-} as const;
+} as const satisfies Chain;

@@ -1,7 +1,9 @@
-import { calculateClaimCost } from "../../common/claim-conditions";
+import { calculateClaimCost } from "../../common/claim-conditions/calculateClaimCost";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";
-import { ClaimOptions } from "../../types";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -37,7 +39,7 @@ export class ERC1155Claimable implements DetectableFeature {
    * @deprecated Use `contract.erc1155.claim.prepare(...args)` instead
    */
   public async getClaimTransaction(
-    destinationAddress: string,
+    destinationAddress: AddressOrEns,
     tokenId: BigNumberish,
     quantity: BigNumberish,
     options?: ClaimOptions,
@@ -55,7 +57,7 @@ export class ERC1155Claimable implements DetectableFeature {
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "claim",
-      args: [destinationAddress, tokenId, quantity],
+      args: [await resolveAddress(destinationAddress), tokenId, quantity],
       overrides,
     });
   }
@@ -82,9 +84,9 @@ export class ERC1155Claimable implements DetectableFeature {
    *
    * @returns - Receipt for the transaction
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
-      destinationAddress: string,
+      destinationAddress: AddressOrEns,
       tokenId: BigNumberish,
       quantity: BigNumberish,
       options?: ClaimOptions,

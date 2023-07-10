@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/pay",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/thirdweb-dev-pay.cjs.js",
   "module": "dist/thirdweb-dev-pay.esm.js",
   "exports": {
@@ -33,11 +33,13 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@coinbase/cbpay-js": "^1.6.0"
+    "@coinbase/cbpay-js": "^1.7.0"
   },
   "devDependencies": {
-    "@preconstruct/cli": "^2.2.1",
-    "typescript": "^4.7.4"
+    "@preconstruct/cli": "^2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.1.6"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

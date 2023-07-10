@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Thinkium Mainnet Chain 2",
   "chain": "Thinkium",
@@ -24,4 +25,4 @@ export default {
   ],
   "testnet": false,
   "slug": "thinkium-chain-2"
-} as const;
+} as const satisfies Chain;

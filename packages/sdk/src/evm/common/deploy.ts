@@ -1,4 +1,4 @@
-import { getDefaultTrustedForwarders } from "../constants/addresses";
+import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
 import {
   PackInitializer,
   NFTDropInitializer,
@@ -14,12 +14,15 @@ import {
   MarketplaceInitializer,
   MarketplaceV3Initializer,
 } from "../contracts";
-import {
+import { BigNumber, Signer, providers } from "ethers";
+import { z } from "zod";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { SUPPORTED_CHAIN_IDS } from "../constants/chains/SUPPORTED_CHAIN_IDS";
+import { computeForwarderAddress } from "./any-evm-utils/computeForwarderAddress";
+import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
-} from "../core";
-import { BigNumber, Signer } from "ethers";
-import { z } from "zod";
+} from "../contracts";
 
 /**
  *
@@ -36,21 +39,35 @@ export async function getDeployArguments<
   metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
   contractURI: string,
   signer: Signer,
+  storage: ThirdwebStorage,
 ): Promise<any[]> {
   const chainId = await signer.getChainId();
   const signerAddress = await signer.getAddress();
-  let trustedForwarders =
-    contractType === PackInitializer.contractType
-      ? []
-      : getDefaultTrustedForwarders(chainId);
-  // override default forwarders if custom ones are passed in
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders: string[] = [];
+  if (!chainEnum) {
+    const forwarder = await computeForwarderAddress(
+      signer.provider as providers.Provider,
+      storage,
+    );
+    trustedForwarders = [forwarder];
+  } else {
+    trustedForwarders =
+      contractType === PackInitializer.contractType
+        ? []
+        : getDefaultTrustedForwarders(chainId);
+  }
+
+  // add default forwarders to any custom forwarders passed in
   if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
-    trustedForwarders = metadata.trusted_forwarders;
+    trustedForwarders.push(...metadata.trusted_forwarders);
   }
   switch (contractType) {
     case NFTDropInitializer.contractType:
     case NFTCollectionInitializer.contractType:
-      const erc721metadata = NFTDropInitializer.schema.deploy.parse(metadata);
+      const erc721metadata = await NFTDropInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         erc721metadata.name,
@@ -65,7 +82,7 @@ export async function getDeployArguments<
       ];
     case SignatureDropInitializer.contractType:
       const signatureDropmetadata =
-        SignatureDropInitializer.schema.deploy.parse(metadata);
+        await SignatureDropInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         signatureDropmetadata.name,
@@ -80,7 +97,7 @@ export async function getDeployArguments<
       ];
     case MultiwrapInitializer.contractType:
       const multiwrapMetadata =
-        MultiwrapInitializer.schema.deploy.parse(metadata);
+        await MultiwrapInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         multiwrapMetadata.name,
@@ -93,7 +110,7 @@ export async function getDeployArguments<
     case EditionDropInitializer.contractType:
     case EditionInitializer.contractType:
       const erc1155metadata =
-        EditionDropInitializer.schema.deploy.parse(metadata);
+        await EditionDropInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         erc1155metadata.name,
@@ -108,7 +125,9 @@ export async function getDeployArguments<
       ];
     case TokenDropInitializer.contractType:
     case TokenInitializer.contractType:
-      const erc20metadata = TokenInitializer.schema.deploy.parse(metadata);
+      const erc20metadata = await TokenInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         erc20metadata.name,
@@ -120,7 +139,9 @@ export async function getDeployArguments<
         erc20metadata.platform_fee_basis_points,
       ];
     case VoteInitializer.contractType:
-      const voteMetadata = VoteInitializer.schema.deploy.parse(metadata);
+      const voteMetadata = await VoteInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         voteMetadata.name,
         contractURI,
@@ -132,7 +153,9 @@ export async function getDeployArguments<
         voteMetadata.voting_quorum_fraction,
       ];
     case SplitInitializer.contractType:
-      const splitsMetadata = SplitInitializer.schema.deploy.parse(metadata);
+      const splitsMetadata = await SplitInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         contractURI,
@@ -143,7 +166,7 @@ export async function getDeployArguments<
     case MarketplaceInitializer.contractType:
     case MarketplaceV3Initializer.contractType:
       const marketplaceMetadata =
-        MarketplaceInitializer.schema.deploy.parse(metadata);
+        await MarketplaceInitializer.schema.deploy.parseAsync(metadata);
       return [
         signerAddress,
         contractURI,
@@ -152,7 +175,9 @@ export async function getDeployArguments<
         marketplaceMetadata.platform_fee_basis_points,
       ];
     case PackInitializer.contractType:
-      const packsMetadata = PackInitializer.schema.deploy.parse(metadata);
+      const packsMetadata = await PackInitializer.schema.deploy.parseAsync(
+        metadata,
+      );
       return [
         signerAddress,
         packsMetadata.name,
@@ -165,4 +190,21 @@ export async function getDeployArguments<
     default:
       return [];
   }
+}
+
+export async function getTrustedForwarders(
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  contractName?: string,
+): Promise<string[]> {
+  const chainId = (await provider.getNetwork()).chainId;
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  let trustedForwarders: string[] =
+    contractName && contractName === PackInitializer.name
+      ? []
+      : chainEnum
+      ? getDefaultTrustedForwarders(chainId)
+      : [await computeForwarderAddress(provider, storage)]; // TODO: make this default for all chains (standard + others)
+
+  return trustedForwarders;
 }

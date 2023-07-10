@@ -1,16 +1,23 @@
-import { ALL_ROLES, assertEnabled, detectContractFeature } from "../common";
+import { assertEnabled } from "../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../common/feature-detection/detectContractFeature";
+import { ALL_ROLES } from "../common/role";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
   FEATURE_APPURI,
+  FEATURE_DIRECT_LISTINGS,
+  FEATURE_ENGLISH_AUCTIONS,
+  FEATURE_OFFERS,
   FEATURE_OWNER,
   FEATURE_PERMISSIONS,
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_ACCOUNT_FACTORY,
+  FEATURE_ACCOUNT,
 } from "../constants/thirdweb-features";
-import { ContractEncoder, ContractOwner, NetworkInput } from "../core";
+import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -26,19 +33,41 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import { Address } from "../schema/shared/Address";
+import {
+  Abi,
+  AbiInput,
+  AbiSchema,
+  CustomContractSchema,
+} from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import type {
-  AppURI,
   IPermissions,
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
   Ownable,
+  IAppURI,
+  IContractMetadata,
+  DirectListingsLogic,
+  EnglishAuctionsLogic,
+  OffersLogic,
+  IAccountFactory,
+  IAccountCore,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, ContractInterface } from "ethers";
+import { BaseContract, CallOverrides } from "ethers";
+import { BaseContractInterface } from "../types/contract";
+
+import { NetworkInput } from "../core/types";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractOwner } from "../core/classes/contract-owner";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
+import { AccountFactory } from "../core/classes/account-factory";
+import { Account } from "../core/classes/account";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -52,7 +81,7 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  * const contract = await sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
- * await contract.call("myCustomFunction", param1, param2);
+ * await contract.call("myCustomFunction", [param1, param2]);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.erc721.query.all()
@@ -66,8 +95,9 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  *
  * @beta
  */
-export class SmartContract<TContract extends BaseContract = BaseContract>
-  implements UpdateableNetwork
+export class SmartContract<
+  TContract extends BaseContractInterface = BaseContract,
+> implements UpdateableNetwork
 {
   private contractWrapper;
   private storage;
@@ -78,8 +108,8 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public abi: ContractInterface;
-  public metadata: ContractMetadata<BaseContract, any>;
+  public abi: Abi;
+  public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
 
   /**
    * Handle royalties
@@ -140,8 +170,169 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Auto-detects AppURI standard functions.
    */
-  get appURI(): ContractAppURI<BaseContract> {
-    return assertEnabled(this.detectAppURI(), FEATURE_APPURI);
+  get app(): ContractAppURI<IAppURI | IContractMetadata> {
+    return assertEnabled(this.detectApp(), FEATURE_APPURI);
+  }
+
+  /**
+   * Direct listings
+   * @remarks Create and manage direct listings in your marketplace.
+   * ```javascript
+   * // Data of the listing you want to create
+   * const listing = {
+   *   // address of the contract the asset you want to list is on
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to list
+   *   tokenId: "0",
+   *   // how many of the asset you want to list
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the listing
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // The price to pay per unit of NFTs listed.
+   *   pricePerToken: 1.5,
+   *   // when should the listing open up for offers
+   *   startTimestamp: new Date(Date.now()),
+   *   // how long the listing will be open for
+   *   endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+   *   // Whether the listing is reserved for a specific set of buyers.
+   *   isReservedListing: false
+   * }
+   *
+   * const tx = await contract.directListings.createListing(listing);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created listing
+   *
+   * // And on the buyers side:
+   * // The ID of the listing you want to buy from
+   * const listingId = 0;
+   * // Quantity of the asset you want to buy
+   * const quantityDesired = 1;
+   *
+   * await contract.directListings.buyFromListing(listingId, quantityDesired);
+   * ```
+   */
+  get directListings(): MarketplaceV3DirectListings<DirectListingsLogic> {
+    return assertEnabled(this.detectDirectListings(), FEATURE_DIRECT_LISTINGS);
+  }
+  /**
+   * Auctions
+   * @remarks Create and manage auctions in your marketplace.
+   * @example
+   * ```javascript
+   * // Data of the auction you want to create
+   * const auction = {
+   *   // address of the contract of the asset you want to auction
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to auction
+   *   tokenId: "0",
+   *   // how many of the asset you want to auction
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the auctioned tokens
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // the minimum bid that will be accepted for the token
+   *   minimumBidAmount: "1.5",
+   *   // how much people would have to bid to instantly buy the asset
+   *   buyoutBidAmount: "10",
+   *   // If a bid is made less than these many seconds before expiration, the expiration time is increased by this.
+   *   timeBufferInSeconds: "1000",
+   *   // A bid must be at least this much bps greater than the current winning bid
+   *   bidBufferBps: "100", // 100 bps stands for 1%
+   *   // when should the auction open up for bidding
+   *   startTimestamp: new Date(Date.now()),
+   *   // end time of auction
+   *   endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+   * }
+   *
+   * const tx = await contract.englishAuctions.createAuction(auction);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created auction
+   *
+   * // And on the buyers side:
+   * // The auction ID of the asset you want to bid on
+   * const auctionId = 0;
+   * // The total amount you are willing to bid for auctioned tokens
+   * const bidAmount = 1;
+   *
+   * await contract.englishAuctions.makeBid(auctionId, bidAmount);
+   * ```
+   */
+  get englishAuctions(): MarketplaceV3EnglishAuctions<EnglishAuctionsLogic> {
+    return assertEnabled(
+      this.detectEnglishAuctions(),
+      FEATURE_ENGLISH_AUCTIONS,
+    );
+  }
+
+  /**
+   * Offers
+   * @remarks Make and manage offers.
+   * @example
+   * ```javascript
+   * // Data of the offer you want to make
+   * const offer = {
+   *   // address of the contract the asset you want to make an offer for
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to buy
+   *   tokenId: "0",
+   *   // how many of the asset you want to buy
+   *   quantity: 1,
+   *   // address of the currency contract that you offer to pay in
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // Total price you offer to pay for the mentioned token(s)
+   *   totalPrice: "1.5",
+   *   // Offer valid until
+   *   endTimestamp: new Date(),
+   * }
+   *
+   * const tx = await contract.offers.makeOffer(offer);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created offer
+   *
+   * // And on the seller's side:
+   * // The ID of the offer you want to accept
+   * const offerId = 0;
+   * await contract.offers.acceptOffer(offerId);
+   * ```
+   */
+  get offers(): MarketplaceV3Offers<OffersLogic> {
+    return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
+  }
+
+  /**
+   * Account Factory
+   *
+   * @remarks Create accounts and fetch data about them.
+   * @example
+   * ```javascript
+   *
+   * // Predict the address of the account that will be created for an admin.
+   * const deterministicAddress = await contract.accountFactory.predictAccountAddress(admin, extraData);
+   *
+   * // Create accounts
+   * const tx = await contract.accountFactory.createAccount(admin, extraData);
+   * // the same as `deterministicAddress`
+   * const accountAddress = tx.address;
+   *
+   * // Get all accounts created by the factory
+   * const allAccounts = await contract.accountFactory.getAllAccounts();
+   *
+   * // Get all accounts on which a signer has been given authority.
+   * const associatedAccounts = await contract.accountFactory.getAssociatedAccounts(signer);
+   *
+   * // Get all signers who have been given authority on a account.
+   * const associatedSigners = await contract.accountFactory.getAssociatedSigners(accountAddress);
+   *
+   * // Check whether a account has already been created for a given admin.
+   * const isAccountDeployed = await contract.accountFactory.isAccountDeployed(admin, extraData);
+   * ```
+   */
+  get accountFactory(): AccountFactory<IAccountFactory> {
+    return assertEnabled(this.detectAccountFactory(), FEATURE_ACCOUNT_FACTORY);
+  }
+
+  // TODO documentation
+  get account(): Account<IAccountCore> {
+    return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
   private _chainId: number;
@@ -152,7 +343,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   constructor(
     network: NetworkInput,
     address: string,
-    abi: ContractInterface,
+    abi: AbiInput,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     chainId: number,
@@ -166,7 +357,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this._chainId = chainId;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.abi = abi;
+    this.abi = AbiSchema.parse(abi || []);
 
     this.events = new ContractEvents(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -188,8 +379,26 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
+  }
+
+  /**
+   * Prepare a transaction for sending
+   */
+  public prepare<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    method: string & TMethod,
+    args: any[] & Parameters<TContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ) {
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method,
+      args,
+      overrides,
+    });
   }
 
   /**
@@ -201,11 +410,11 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    * console.log(myValue);
    *
    * // write functions will return the transaction receipt
-   * const tx = await contract.call("myWriteFunction", arg1, arg2);
+   * const tx = await contract.call("myWriteFunction", [arg1, arg2]);
    * const receipt = tx.receipt;
    *
    * // Optionally override transaction options
-   * await contract.call("myWriteFunction", arg1, arg2, {
+   * await contract.call("myWriteFunction", [arg1, arg2], {
    *  gasLimit: 1000000, // override default gas limit
    *  value: ethers.utils.parseEther("0.1"), // send 0.1 ether with the contract call
    * };
@@ -213,11 +422,14 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    * @param functionName - the name of the function to call
    * @param args - the arguments of the function
    */
-  public async call(
-    functionName: string,
-    ...args: unknown[] | [...unknown[], CallOverrides]
-  ): Promise<any> {
-    return this.contractWrapper.call(functionName, ...args);
+  public async call<
+    TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
+  >(
+    functionName: string & TMethod,
+    args?: Parameters<TContract["functions"][TMethod]>,
+    overrides?: CallOverrides,
+  ): Promise<ReturnType<TContract["functions"][TMethod]>> {
+    return this.contractWrapper.call(functionName, args, overrides);
   }
 
   /** ********************
@@ -293,12 +505,85 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     return undefined;
   }
 
-  private detectAppURI() {
-    if (
-      detectContractFeature<AppURI>(this.contractWrapper, "AppURI") ||
-      detectContractFeature(this.contractWrapper, "ContractMetadata")
+  private detectApp() {
+    const metadata = new ContractMetadata(
+      this.contractWrapper,
+      CustomContractSchema,
+      this.storage,
+    );
+
+    if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
+      return new ContractAppURI(this.contractWrapper, metadata, this.storage);
+    } else if (
+      detectContractFeature<IContractMetadata>(
+        this.contractWrapper,
+        "ContractMetadata",
+      )
     ) {
-      return new ContractAppURI(this.contractWrapper, this.metadata);
+      return new ContractAppURI(this.contractWrapper, metadata, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectDirectListings() {
+    if (
+      detectContractFeature<DirectListingsLogic>(
+        this.contractWrapper,
+        "DirectListings",
+      )
+    ) {
+      return new MarketplaceV3DirectListings(
+        this.contractWrapper,
+        this.storage,
+      );
+    }
+    return undefined;
+  }
+
+  private detectEnglishAuctions() {
+    if (
+      detectContractFeature<EnglishAuctionsLogic>(
+        this.contractWrapper,
+        "EnglishAuctions",
+      )
+    ) {
+      return new MarketplaceV3EnglishAuctions(
+        this.contractWrapper,
+        this.storage,
+      );
+    }
+    return undefined;
+  }
+
+  private detectOffers() {
+    if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
+      return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  // ========== Account features ==========
+
+  private detectAccountFactory() {
+    if (
+      detectContractFeature<IAccountFactory>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT_FACTORY.name,
+      )
+    ) {
+      return new AccountFactory(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAccount() {
+    if (
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT.name,
+      )
+    ) {
+      return new Account(this.contractWrapper);
     }
     return undefined;
   }

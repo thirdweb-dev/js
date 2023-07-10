@@ -30,7 +30,8 @@ let overrides = {};
 const overridesDir = path.join(process.cwd(), "./data/overrides");
 const overridesFiles = fs.readdirSync(overridesDir);
 for (const file of overridesFiles) {
-  const override = await import(path.join(overridesDir, file));
+  // file:// is required for windows builds
+  const override = await import(path.join("file://", overridesDir, file));
   // get file name without extension
   const chainId = parseInt(file.split(".")[0]);
   overrides[chainId] = override.default;
@@ -49,7 +50,12 @@ chains = chains.filter((c) => c.chainId !== 1337);
 const additionalChainsDir = path.join(process.cwd(), "./data/additional");
 const additionalChainsFiles = fs.readdirSync(additionalChainsDir);
 for (const file of additionalChainsFiles) {
-  const additionalChain = await import(path.join(additionalChainsDir, file));
+  // file:// is required for windows builds
+  const additionalChain = await import(
+    path.join("file://", additionalChainsDir, file)
+  );
+
+  chains = chains.filter((c) => c.chainId !== additionalChain.default.chainId);
   chains.push(additionalChain.default);
 }
 
@@ -63,7 +69,10 @@ chains = chains
     }
 
     // apparently this is the best way to do this off of raw data
-    const testnet = JSON.stringify(chain).toLowerCase().includes("test");
+    const testnet =
+      chain.testnet === false
+        ? false
+        : JSON.stringify(chain).toLowerCase().includes("test");
 
     return {
       ...chain,
@@ -71,13 +80,55 @@ chains = chains
     };
   });
 
+/**
+ * Sort RPCs in chain
+ * @param {Chain} chain
+ */
+function sortRPCs(chain) {
+  const thirdwebRPCs = [];
+  const alchemyRPCs = [];
+  const infuraRPCs = [];
+  const otherRPCs = [];
+
+  chain.rpc.forEach((rpc) => {
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      thirdwebRPCs.push(rpc);
+    } else if (rpc.includes("${ALCHEMY_API_KEY}")) {
+      alchemyRPCs.push(rpc);
+    } else if (rpc.includes("${INFURA_API_KEY}")) {
+      infuraRPCs.push(rpc);
+    } else {
+      otherRPCs.push(rpc);
+    }
+  });
+
+  chain.rpc = [...thirdwebRPCs, ...infuraRPCs, ...alchemyRPCs, ...otherRPCs];
+}
+
+chains.forEach(sortRPCs);
+
 const imports = [];
 const exports = [];
 const exportNames = [];
-
-const chainToIcon = {};
+const exportNameToChain = {};
 
 const takenSlugs = {};
+
+const iconMetaMap = new Map();
+
+async function downloadIcon(icon) {
+  if (iconMetaMap.has(icon)) {
+    return iconMetaMap.get(icon);
+  }
+  const result = await axios.get(`${iconRoute}/${icon}.json`);
+  if (result.status == 200) {
+    const iconMeta = result.data[0];
+
+    iconMetaMap.set(icon, iconMeta);
+    return iconMeta;
+  }
+  throw new Error(`Could not download icon for ${icon}`);
+}
 
 function findSlug(chain) {
   let slug = chain.name
@@ -122,6 +173,10 @@ function findSlug(chain) {
   if (slug === "base-goerli-testnet") {
     slug = "base-goerli";
   }
+  // optimisim rename handling
+  if (slug === "op") {
+    slug = "optimism";
+  }
   // end special cases
 
   takenSlugs[slug] = true;
@@ -138,17 +193,22 @@ for (const chain of chains) {
   try {
     if ("icon" in chain) {
       if (typeof chain.icon === "string") {
-        const response = await axios.get(`${iconRoute}/${chain.icon}.json`);
-        if (response.status == 200) {
-          const iconMeta = response.data[0];
+        const iconMeta = await downloadIcon(chain.icon);
+        if (iconMeta) {
           chain.icon = iconMeta;
-          if (!chainToIcon[chain.chain]) {
-            chainToIcon[chain.chain] = iconMeta;
+        }
+      }
+    }
+    if ("explorers" in chain && Array.isArray(chain.explorers)) {
+      for (const explorer of chain.explorers) {
+        if ("icon" in explorer) {
+          if (typeof explorer.icon === "string") {
+            const iconMeta = await downloadIcon(explorer.icon);
+            if (iconMeta) {
+              explorer.icon = iconMeta;
+            }
           }
         }
-      } else {
-        // just pass it through
-        chainToIcon[chain.chain] = chain.icon;
       }
     }
   } catch (err) {
@@ -174,7 +234,8 @@ for (const chain of chains) {
 
   fs.writeFileSync(
     `${chainDir}/${chain.chainId}.ts`,
-    `export default ${JSON.stringify(chain, null, 2)} as const;`,
+    `import type { Chain } from "../src/types";
+export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
   );
 
   let exportName = slug
@@ -190,10 +251,12 @@ for (const chain of chains) {
   imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
 
   exports.push(
-    `export const ${exportName} = c${chain.chainId} satisfies Chain;`,
+    `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
   );
 
-  exportNames.push(exportName);
+  const key = `c${chain.chainId}`;
+  exportNames.push(key);
+  exportNameToChain[key] = chain;
 }
 
 fs.writeFileSync(
@@ -204,25 +267,82 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
-export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
-export const allChains = [${exportNames.join(", ")}];
+export const defaultChains = [c1, c5, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
+export const allChains: Chain[] = [${exportNames.join(", ")}];
 
-export function getChainByChainId(chainId: number): Chain {
-  const chain = allChains.find(chain => chain.chainId === chainId);
-  if (!chain) {
-    throw new Error(\`Chain with chainId "\${chainId}" not found\`);
+type ChainsById = {
+  ${exportNames
+    .map((n) => `${exportNameToChain[n].chainId}: typeof ${n}`)
+    .join(",\n")}
+};
+
+type ChainIdsBySlug = {
+  ${exportNames
+    .map(
+      (n) => `"${exportNameToChain[n].slug}": ${exportNameToChain[n].chainId}`,
+    )
+    .join(",\n")}
+};
+
+let _chainsById: Record<number, Chain>;
+let _chainIdsBySlug: Record<string, number>;
+
+function getChainsById() {
+  if (_chainsById) {
+    return _chainsById;
   }
-  return chain;
+  _chainsById = {};
+  allChains.forEach((chain) => {
+    _chainsById[chain.chainId] = chain;
+  });
+  return _chainsById;
 }
 
-export function getChainBySlug(slug: string): Chain {
-  const chain = allChains.find(chain => chain.slug === slug);
-  if (!chain) {
-    throw new Error(\`Chain with slug "\${slug}" not found\`);
+export function getChainIdsBySlug() {
+  if (_chainIdsBySlug) {
+    return _chainIdsBySlug;
   }
-  return chain;
+  _chainIdsBySlug = {};
+  allChains.forEach((chain) => {
+    _chainIdsBySlug[chain.slug] = chain.chainId;
+  });
+  return _chainIdsBySlug;
 }
 
-export type ChainSlug = typeof allChains[number]["slug"];
-export type ChainId = typeof allChains[number]["chainId"];`,
+export type ChainSlug = keyof ChainIdsBySlug;
+export type ChainId = keyof ChainsById;
+
+function isValidChainId(chainId: number): chainId is ChainId {
+  const chainsById = getChainsById();
+  return chainId in chainsById;
+}
+
+function isValidChainSlug(slug: string): slug is ChainSlug {
+  const chainIdsBySlug = getChainIdsBySlug();
+  return slug in chainIdsBySlug;
+}
+
+export function getChainByChainId<TChainId extends ChainId>(
+  chainId: TChainId | (number & {}),
+) {
+  if (isValidChainId(chainId)) {
+    const chainsById = getChainsById();
+    return chainsById[chainId] as ChainsById[TChainId];
+  }
+  throw new Error(\`Chain with chainId "\${chainId}" not found\`);
+}
+
+export function getChainBySlug<TSlug extends ChainSlug>(
+  slug: TSlug | (string & {}),
+) {
+  if (isValidChainSlug(slug)) {
+    const chainIdsBySlug = getChainIdsBySlug();
+    const chainsById = getChainsById();
+    return chainsById[
+      chainIdsBySlug[slug]
+    ] as ChainsById[ChainIdsBySlug[TSlug]];
+  }
+  throw new Error(\`Chain with slug "\${slug}" not found\`);
+}
+`,
 );

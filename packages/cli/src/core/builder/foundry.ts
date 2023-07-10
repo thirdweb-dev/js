@@ -25,7 +25,9 @@ export class FoundryBuilder extends BaseBuilder {
       process.exit(1);
     }
 
-    await execute("forge clean", options.projectPath);
+    if (options.clean) {
+      await execute("forge clean", options.projectPath);
+    }
     await execute("forge build --extra-output metadata", options.projectPath);
 
     // get the current config first
@@ -150,7 +152,7 @@ export class FoundryBuilder extends BaseBuilder {
   ) {
     // replace the abi with the actual abi
     parsedMetadata.output.abi = abi;
-    // need to re-add libraries if not present since forge stripts it out
+    // need to re-add libraries if not present since forge strips it out
     if (!parsedMetadata.settings.libraries) {
       parsedMetadata.settings.libraries = {};
     }

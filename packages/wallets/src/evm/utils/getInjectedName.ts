@@ -1,4 +1,4 @@
-import { Ethereum } from "@wagmi/core";
+import type { Ethereum } from "../connectors/injected/types";
 
 export function getInjectedName(ethereum?: Ethereum) {
   if (!ethereum) {

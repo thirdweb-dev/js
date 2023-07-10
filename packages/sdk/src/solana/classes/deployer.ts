@@ -11,7 +11,6 @@ import {
 import { enforceCreator } from "./helpers/creators-helper";
 import { Registry } from "./registry";
 import {
-  findMetadataPda,
   getSignerHistogram,
   Metaplex,
   sol,
@@ -20,7 +19,7 @@ import {
   TransactionBuilder,
 } from "@metaplex-foundation/js";
 import {
-  createCreateMetadataAccountV2Instruction,
+  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair } from "@solana/web3.js";
@@ -81,7 +80,9 @@ export class Deployer {
    * ```
    */
   async createToken(tokenMetadata: TokenMetadataInput): Promise<string> {
-    const tokenMetadataParsed = TokenMetadataInputSchema.parse(tokenMetadata);
+    const tokenMetadataParsed = await TokenMetadataInputSchema.parseAsync(
+      tokenMetadata,
+    );
     const uri = await this.storage.upload(tokenMetadataParsed);
     const mint = Keypair.generate();
     const owner = this.metaplex.identity().publicKey;
@@ -107,8 +108,11 @@ export class Deployer {
       collection: null,
       uses: null,
     };
-    const metadata = findMetadataPda(mint.publicKey);
-    const metaTx = createCreateMetadataAccountV2Instruction(
+    const metadata = this.metaplex
+      .nfts()
+      .pdas()
+      .metadata({ mint: mint.publicKey });
+    const metaTx = createCreateMetadataAccountV3Instruction(
       {
         metadata,
         mint: mint.publicKey,
@@ -116,7 +120,13 @@ export class Deployer {
         payer: owner,
         updateAuthority: owner,
       },
-      { createMetadataAccountArgsV2: { data, isMutable: false } },
+      {
+        createMetadataAccountArgsV3: {
+          isMutable: true,
+          data,
+          collectionDetails: null,
+        },
+      },
     );
 
     const registryInstructions =
@@ -152,7 +162,9 @@ export class Deployer {
   async createNftCollection(
     collectionMetadata: NFTCollectionMetadataInput,
   ): Promise<string> {
-    const parsed = NFTCollectionMetadataInputSchema.parse(collectionMetadata);
+    const parsed = await NFTCollectionMetadataInputSchema.parseAsync(
+      collectionMetadata,
+    );
     const uri = await this.storage.upload(parsed);
 
     const collectionMint = Keypair.generate();
@@ -207,9 +219,11 @@ export class Deployer {
    * ```
    */
   async createNftDrop(metadata: NFTDropContractInput): Promise<string> {
-    const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
+    const collectionInfo = await NFTCollectionMetadataInputSchema.parseAsync(
+      metadata,
+    );
     const candyMachineInfo =
-      NFTDropInitialConditionsInputSchema.parse(metadata);
+      await NFTDropInitialConditionsInputSchema.parseAsync(metadata);
     const uri = await this.storage.upload(collectionInfo);
 
     const collectionMint = Keypair.generate();

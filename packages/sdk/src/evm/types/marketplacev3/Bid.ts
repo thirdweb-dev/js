@@ -1,3 +1,4 @@
+import { Address } from "../../schema/shared/Address";
 import { CurrencyValue } from "../currency";
 
 export interface Bid {
@@ -9,12 +10,12 @@ export interface Bid {
   /**
    * The address of the buyer who made the offer.
    */
-  bidderAddress: string;
+  bidderAddress: Address;
 
   /**
    * The currency contract address of the offer token.
    */
-  currencyContractAddress: string;
+  currencyContractAddress: Address;
 
   /**
    * The amount of coins offered per token.

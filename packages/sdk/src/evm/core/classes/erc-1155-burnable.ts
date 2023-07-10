@@ -1,5 +1,7 @@
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BURNABLE } from "../../constants/erc1155-features";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -33,7 +35,7 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.tokens(tokenId, amount);
    * ```
    */
-  tokens = buildTransactionFunction(
+  tokens = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       const account = await this.contractWrapper.getSignerAddress();
       return this.from.prepare(account, tokenId, amount);
@@ -61,12 +63,16 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.from(account, tokenId, amount);
    * ```
    */
-  from = buildTransactionFunction(
-    async (account: string, tokenId: BigNumberish, amount: BigNumberish) => {
+  from = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      account: AddressOrEns,
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+    ) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "burn",
-        args: [account, tokenId, amount],
+        args: [await resolveAddress(account), tokenId, amount],
       });
     },
   );
@@ -89,7 +95,7 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.batch(tokenIds, amounts);
    * ```
    */
-  batch = buildTransactionFunction(
+  batch = /* @__PURE__ */ buildTransactionFunction(
     async (tokenIds: BigNumberish[], amounts: BigNumberish[]) => {
       const account = await this.contractWrapper.getSignerAddress();
       return this.batchFrom.prepare(account, tokenIds, amounts);
@@ -117,16 +123,16 @@ export class Erc1155Burnable implements DetectableFeature {
    * const result = await contract.edition.burn.batchFrom(account, tokenIds, amounts);
    * ```
    */
-  batchFrom = buildTransactionFunction(
+  batchFrom = /* @__PURE__ */ buildTransactionFunction(
     async (
-      account: string,
+      account: AddressOrEns,
       tokenIds: BigNumberish[],
       amounts: BigNumberish[],
     ) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "burnBatch",
-        args: [account, tokenIds, amounts],
+        args: [await resolveAddress(account), tokenIds, amounts],
       });
     },
   );

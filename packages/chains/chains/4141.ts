@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Tipboxcoin Testnet",
   "chain": "TPBX",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": true,
   "slug": "tipboxcoin-testnet"
-} as const;
+} as const satisfies Chain;

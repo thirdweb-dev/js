@@ -1,17 +1,20 @@
 import { NFT } from "../../../core/schema/nft";
-import { uploadOrExtractURIs } from "../../common/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
-import { EditionMetadataOrUri } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc1155 } from "./erc-1155";
 import { Transaction } from "./transactions";
-import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
+import type { IMintableERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { constants } from "ethers";
+import { uploadOrExtractURIs } from "../../common/nft";
+import type { IMulticall } from "@thirdweb-dev/contracts-js";
+import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
+import type { Erc1155 } from "./erc-1155";
 
 /**
  * Mint Many ERC1155 NFTs at once
@@ -23,6 +26,7 @@ import { ethers } from "ethers";
  * ```
  * @public
  */
+
 export class Erc1155BatchMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
@@ -72,18 +76,26 @@ export class Erc1155BatchMintable implements DetectableFeature {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
       const metadatas = metadataWithSupply.map((a) => a.metadata);
       const supplies = metadataWithSupply.map((a) => a.supply);
       const uris = await uploadOrExtractURIs(metadatas, this.storage);
-      const encoded = uris.map((uri, index) =>
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintTo",
-          [to, ethers.constants.MaxUint256, uri, supplies[index]],
+      const resolvedAddress = await resolveAddress(to);
+      const encoded = await Promise.all(
+        uris.map(async (uri, index) =>
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "mintTo",
+            [
+              resolvedAddress,
+              constants.MaxUint256,
+              uri,
+              supplies[index],
+            ],
+          ),
         ),
       );
       return Transaction.fromContractWrapper({

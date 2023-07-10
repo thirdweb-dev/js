@@ -1,11 +1,16 @@
-import { hasFunction } from "../../common";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { MissingRoleError } from "../../common/error";
 import { getRoleHash, Role } from "../../common/role";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 import type {
+  IMulticall,
   IPermissions,
   IPermissionsEnumerable,
 } from "@thirdweb-dev/contracts-js";
@@ -72,7 +77,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
    * @param role - The Role to to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
-   * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
+   * @throws If you are requesting a role that does not exist on the contract this will throw an error.
    *
    * @example Say you want to get the list of addresses that are members of the minter role.
    * ```javascript
@@ -113,7 +118,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @remarks Every role in the list will be overwritten with the new list of addresses provided with them.
    * If you want to add or remove addresses for a single address use {@link ContractRoles.grant} and {@link ContractRoles.revoke} respectively instead.
    * @param rolesWithAddresses - A record of {@link Role}s to lists of addresses that should be members of the given role.
-   * @throws If you are requestiong a role that does not exist on the contract this will throw an error.
+   * @throws If you are requesting a role that does not exist on the contract this will throw an error.
    * @example Say you want to overwrite the list of addresses that are members of the minter role.
    * ```javascript
    * const minterAddresses = await contract.roles.get("minter");
@@ -126,58 +131,73 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @twfeature Permissions
    *
    * */
-  public async setAll(rolesWithAddresses: {
-    [key in TRole]?: string[];
-  }): Promise<TransactionResult> {
-    const roles = Object.keys(rolesWithAddresses) as TRole[];
-    invariant(roles.length, "you must provide at least one role to set");
-    invariant(
-      roles.every((role) => this.roles.includes(role)),
-      "this contract does not support the given role",
-    );
-    const currentRoles = await this.getAll();
-    const encoded: string[] = [];
-    // add / remove admin role at the end so we don't revoke admin then grant
-    const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
-    for (let i = 0; i < sortedRoles.length; i++) {
-      const role = sortedRoles[i];
-      const addresses: string[] = rolesWithAddresses[role] || [];
-      const currentAddresses = currentRoles[role] || [];
-      const toAdd = addresses.filter(
-        (address) => !currentAddresses.includes(address),
+  setAll = /* @__PURE__ */ buildTransactionFunction(
+    async (rolesWithAddresses: {
+      [key in TRole]?: AddressOrEns[];
+    }): Promise<Transaction> => {
+      const roles = Object.keys(rolesWithAddresses) as TRole[];
+      invariant(roles.length, "you must provide at least one role to set");
+      invariant(
+        roles.every((role) => this.roles.includes(role)),
+        "this contract does not support the given role",
       );
-      const toRemove = currentAddresses.filter(
-        (address) => !addresses.includes(address),
-      );
-      if (toAdd.length) {
-        toAdd.forEach((address) => {
-          encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              "grantRole",
-              [getRoleHash(role), address],
-            ),
-          );
-        });
-      }
-      if (toRemove.length) {
-        for (let j = 0; j < toRemove.length; j++) {
-          const address = toRemove[j];
-          const revokeFunctionName = (await this.getRevokeRoleFunctionName(
-            address,
-          )) as any;
-          encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              revokeFunctionName,
-              [getRoleHash(role), address],
-            ),
-          );
+      const currentRoles = await this.getAll();
+      const encoded: string[] = [];
+      // add / remove admin role at the end so we don't revoke admin then grant
+      const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
+      for (let i = 0; i < sortedRoles.length; i++) {
+        const role = sortedRoles[i];
+        const addresses: Address[] = await Promise.all(
+          rolesWithAddresses[role]?.map(
+            async (addressOrEns) => await resolveAddress(addressOrEns),
+          ) || [],
+        );
+        const currentAddresses: Address[] = await Promise.all(
+          currentRoles[role]?.map(
+            async (addressOrEns) =>
+              await resolveAddress(addressOrEns as AddressOrEns),
+          ) || [],
+        );
+        const toAdd = addresses.filter(
+          (address) => !currentAddresses.includes(address),
+        );
+        const toRemove = currentAddresses.filter(
+          (address) => !addresses.includes(address),
+        );
+        if (toAdd.length) {
+          toAdd.forEach((address) => {
+            encoded.push(
+              this.contractWrapper.readContract.interface.encodeFunctionData(
+                "grantRole",
+                [getRoleHash(role), address],
+              ),
+            );
+          });
+        }
+        if (toRemove.length) {
+          for (let j = 0; j < toRemove.length; j++) {
+            const address = toRemove[j];
+            const revokeFunctionName = (await this.getRevokeRoleFunctionName(
+              address,
+            )) as any;
+            encoded.push(
+              this.contractWrapper.readContract.interface.encodeFunctionData(
+                revokeFunctionName,
+                [getRoleHash(role), address],
+              ),
+            );
+          }
         }
       }
-    }
-    return {
-      receipt: await this.contractWrapper.multiCall(encoded),
-    };
-  }
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this
+          .contractWrapper as unknown as ContractWrapper<IMulticall>,
+        method: "multicall",
+        args: [encoded],
+      });
+    },
+  );
 
   /**
    * Throws an error if an address is missing the roles specified.
@@ -187,14 +207,17 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    *
    * @internal
    */
-  public async verify(roles: TRole[], address: string): Promise<void> {
+  public async verify(roles: TRole[], address: AddressOrEns): Promise<void> {
     await Promise.all(
       roles.map(async (role) => {
         const members = await this.get(role);
+        const resolvedAddress: Address = await resolveAddress(address);
         if (
-          !members.map((a) => a.toLowerCase()).includes(address.toLowerCase())
+          !members
+            .map((a) => a.toLowerCase())
+            .includes(resolvedAddress.toLowerCase())
         ) {
-          throw new MissingRoleError(address, role);
+          throw new MissingRoleError(resolvedAddress, role);
         }
       }),
     );
@@ -222,18 +245,21 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  public async grant(role: TRole, address: string): Promise<TransactionResult> {
-    invariant(
-      this.roles.includes(role),
-      `this contract does not support the "${role}" role`,
-    );
-    return {
-      receipt: await this.contractWrapper.sendTransaction("grantRole", [
-        getRoleHash(role),
-        address,
-      ]),
-    };
-  }
+  grant = /* @__PURE__ */ buildTransactionFunction(
+    async (role: TRole, address: AddressOrEns): Promise<Transaction> => {
+      invariant(
+        this.roles.includes(role),
+        `this contract does not support the "${role}" role`,
+      );
+
+      const resolvedAddress: Address = await resolveAddress(address);
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<IPermissions>,
+        method: "grantRole",
+        args: [getRoleHash(role), resolvedAddress],
+      });
+    },
+  );
 
   /**
    * Revoke a role from a specific address
@@ -259,30 +285,33 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  public async revoke(
-    role: TRole,
-    address: string,
-  ): Promise<TransactionResult> {
-    invariant(
-      this.roles.includes(role),
-      `this contract does not support the "${role}" role`,
-    );
-    const revokeFunctionName = await this.getRevokeRoleFunctionName(address);
-    return {
-      receipt: await this.contractWrapper.sendTransaction(revokeFunctionName, [
-        getRoleHash(role),
-        address,
-      ]),
-    };
-  }
+  revoke = /* @__PURE__ */ buildTransactionFunction(
+    async (role: TRole, address: AddressOrEns): Promise<Transaction> => {
+      invariant(
+        this.roles.includes(role),
+        `this contract does not support the "${role}" role`,
+      );
+      const resolvedAddress = await resolveAddress(address);
+      const revokeFunctionName = await this.getRevokeRoleFunctionName(
+        resolvedAddress,
+      );
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper as ContractWrapper<IPermissions>,
+        method: revokeFunctionName,
+        args: [getRoleHash(role), resolvedAddress],
+      });
+    },
+  );
 
   /** **************************
    * PRIVATE FUNCTIONS
    ****************************/
 
-  private async getRevokeRoleFunctionName(address: string) {
+  private async getRevokeRoleFunctionName(address: AddressOrEns) {
+    const resolvedAddress = await resolveAddress(address);
     const signerAddress = await this.contractWrapper.getSignerAddress();
-    if (signerAddress.toLowerCase() === address.toLowerCase()) {
+    if (signerAddress.toLowerCase() === resolvedAddress.toLowerCase()) {
       return "renounceRole";
     }
     return "revokeRole";

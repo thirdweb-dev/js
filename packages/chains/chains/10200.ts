@@ -1,6 +1,7 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "Chiado Testnet",
-  "chain": "CHI",
+  "name": "Gnosis Chiado Testnet",
+  "chain": "GNO",
   "icon": {
     "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
     "width": 1800,
@@ -8,16 +9,17 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gnosis-chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chiadochain.net",
-    "https://rpc.eu-central-2.gateway.fm/v3/gnosis/archival/chiado"
+    "https://rpc.chiado.gnosis.gateway.fm",
+    "wss://rpc.chiadochain.net/wss"
   ],
   "faucets": [
     "https://gnosisfaucet.com"
   ],
   "nativeCurrency": {
     "name": "Chiado xDAI",
-    "symbol": "xDAI",
+    "symbol": "XDAI",
     "decimals": 18
   },
   "infoURL": "https://docs.gnosischain.com",
@@ -28,10 +30,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.chiadochain.net",
-      "icon": "blockscout",
+      "icon": {
+        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "chiado-testnet"
-} as const;
+  "slug": "gnosis-chiado-testnet"
+} as const satisfies Chain;

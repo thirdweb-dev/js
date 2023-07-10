@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "SanR Chain",
   "chain": "SanRChain",
@@ -39,4 +40,4 @@ export default {
   ],
   "testnet": false,
   "slug": "sanr-chain"
-} as const;
+} as const satisfies Chain;

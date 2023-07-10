@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Mainnet",
   "chain": "FIL",
@@ -10,7 +11,8 @@ export default {
   "rpc": [
     "https://filecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.node.glif.io/",
-    "https://rpc.ankr.com/filecoin"
+    "https://rpc.ankr.com/filecoin",
+    "https://filecoin-mainnet.chainstacklabs.com/rpc/v1"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -30,6 +32,21 @@ export default {
       "standard": "none"
     },
     {
+      "name": "Beryx",
+      "url": "https://beryx.zondax.ch",
+      "standard": "none"
+    },
+    {
+      "name": "Glif Explorer",
+      "url": "https://explorer.glif.io",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Dev.storage",
+      "url": "https://dev.storage",
+      "standard": "none"
+    },
+    {
       "name": "Filscan",
       "url": "https://filscan.io",
       "standard": "none"
@@ -42,4 +59,4 @@ export default {
   ],
   "testnet": false,
   "slug": "filecoin"
-} as const;
+} as const satisfies Chain;

@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { checkRubyVersion } from "./check-ruby-version";
 import type { PackageManager } from "./get-pkg-manager";
 import { getStartOrDev } from "./get-start-or-dev";
 import { tryGitInit } from "./git";
@@ -7,6 +8,7 @@ import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
+import { podInstall } from "./pod-install";
 import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
@@ -58,6 +60,24 @@ export async function createApp({
       );
       process.exit(1);
     }
+  }
+
+  const isReactNative =
+    template?.includes("react-native") || framework === "react-native";
+  function isReactNativeCLI() {
+    return (
+      isReactNative &&
+      (language === "typescript" || (template && !template.includes("expo")))
+    );
+  }
+
+  function isMacOS() {
+    return process.platform === "darwin";
+  }
+
+  if (isReactNativeCLI() && isMacOS()) {
+    // fail early if the user doesn't have the right version of Ruby installed on macOS
+    await checkRubyVersion();
   }
 
   const root = path.resolve(appPath);
@@ -183,6 +203,10 @@ export async function createApp({
     console.log();
   }
 
+  if (isReactNativeCLI() && isMacOS()) {
+    await podInstall(root, isOnline);
+  }
+
   if (tryGitInit(root)) {
     console.log("Initialized a git repository.");
     console.log();
@@ -206,7 +230,26 @@ export async function createApp({
   console.log("Inside that directory, you can run several commands:");
   console.log();
 
-  if (startOrDev) {
+  if (isReactNative) {
+    console.log(
+      chalk.cyan(
+        `  ${packageManager}${
+          useYarn || startOrDev === "start" ? "" : "run "
+        } android`,
+      ),
+    );
+    console.log("    Runs your app on an Android emulator or device.");
+    console.log();
+    console.log(
+      chalk.cyan(
+        `  ${packageManager}${
+          useYarn || startOrDev === "start" ? "" : "run "
+        } ios`,
+      ),
+    );
+    console.log("    Runs your app on an iOS emulator or device.");
+    console.log();
+  } else if (startOrDev) {
     console.log(
       chalk.cyan(
         `  ${packageManager} ${
@@ -231,7 +274,7 @@ export async function createApp({
   console.log();
   console.log(chalk.cyan("  cd"), cdpath);
 
-  if (startOrDev) {
+  if (startOrDev && !isReactNative) {
     console.log(
       `  ${chalk.cyan(
         `${packageManager} ${
@@ -240,5 +283,6 @@ export async function createApp({
       )}`,
     );
   }
+
   console.log();
 }

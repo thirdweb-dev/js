@@ -1,32 +1,50 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.5",
+  "version": "0.1.28",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains.esm.js": "./dist/thirdweb-dev-chains.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-chains.esm.js",
+      "module": {
+        "browser": "./dist/thirdweb-dev-chains.browser.esm.js",
+        "default": "./dist/thirdweb-dev-chains.esm.js"
+      },
       "default": "./dist/thirdweb-dev-chains.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/chains",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "axios": "^0.27.2",
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@babel/runtime": "^7.22.5",
+    "@preconstruct/cli": "^2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "axios": "^1.4.0",
+    "deepmerge": "^4.3.1",
+    "eslint-config-thirdweb": "workspace:*",
     "jest": "^29.4.3",
     "plop": "^3.1.2",
-    "typescript": "^4.7.4"
+    "typescript": "^5.1.6"
   },
   "preconstruct": {
     "entrypoints": [
       "index.ts"
     ],
-    "exports": true
+    "exports": {
+      "envConditions": [
+        "browser"
+      ]
+    }
   },
   "sideEffects": false,
   "scripts": {

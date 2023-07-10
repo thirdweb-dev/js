@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Filecoin - Calibration testnet",
   "chain": "FIL",
@@ -9,7 +10,10 @@ export default {
   },
   "rpc": [
     "https://filecoin-calibration-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.calibration.node.glif.io/rpc/v1"
+    "https://api.calibration.node.glif.io/rpc/v1",
+    "https://rpc.ankr.com/filecoin_testnet",
+    "https://filecoin-calibration.chainstacklabs.com/rpc/v1",
+    "https://filecoin-calibration.chainup.net/rpc/v1"
   ],
   "faucets": [
     "https://faucet.calibration.fildev.network/"
@@ -34,8 +38,23 @@ export default {
       "name": "Filscout - Calibration",
       "url": "https://calibration.filscout.com/en",
       "standard": "none"
+    },
+    {
+      "name": "Filfox - Calibration",
+      "url": "https://calibration.filfox.info",
+      "standard": "none"
+    },
+    {
+      "name": "Glif Explorer - Calibration",
+      "url": "https://explorer.glif.io/?network=calibration",
+      "standard": "none"
+    },
+    {
+      "name": "Beryx",
+      "url": "https://beryx.zondax.ch",
+      "standard": "none"
     }
   ],
   "testnet": true,
   "slug": "filecoin-calibration-testnet"
-} as const;
+} as const satisfies Chain;

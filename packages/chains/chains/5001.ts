@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Mantle Testnet",
   "chain": "ETH",
@@ -9,8 +10,8 @@ export default {
     "https://faucet.testnet.mantle.xyz"
   ],
   "nativeCurrency": {
-    "name": "Testnet BitDAO",
-    "symbol": "BIT",
+    "name": "Testnet Mantle",
+    "symbol": "MNT",
     "decimals": 18
   },
   "infoURL": "https://mantle.xyz",
@@ -26,4 +27,4 @@ export default {
   ],
   "testnet": true,
   "slug": "mantle-testnet"
-} as const;
+} as const satisfies Chain;

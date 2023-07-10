@@ -1,27 +1,45 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "CryptoKylin Testnet",
-  "chain": "EOS",
+  "name": "CamDL Mainnet",
+  "chain": "CADL",
   "rpc": [
-    "https://cryptokylin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://kylin.eosargentina.io"
+    "https://camdl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.camdl.gov.kh/"
   ],
-  "faucets": [],
+  "faucets": [
+    "https://faucet.camdl.gov.kh/"
+  ],
   "nativeCurrency": {
-    "name": "EOS",
-    "symbol": "EOS",
+    "name": "CADL",
+    "symbol": "CADL",
     "decimals": 18
   },
-  "infoURL": "https://www.cryptokylin.io/",
-  "shortName": "KylinTestnet",
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ],
+  "infoURL": "https://camdl.gov.kh/",
+  "shortName": "camdl",
   "chainId": 95,
   "networkId": 95,
+  "redFlags": [
+    "reusedChainId"
+  ],
+  "icon": {
+    "url": "ipfs://QmW5Fpb2Ywnfqcj4ibvpbKvPv5Mo5eseWdYZnnUvLkj2Hp",
+    "width": 1453,
+    "height": 1453,
+    "format": "png"
+  },
   "explorers": [
     {
-      "name": "eosq",
-      "url": "https://kylin.eosargentina.io",
+      "name": "CamDL Block Explorer",
+      "url": "https://explorer.camdl.gov.kh",
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "cryptokylin-testnet"
-} as const;
+  "status": "active",
+  "testnet": false,
+  "slug": "camdl"
+} as const satisfies Chain;

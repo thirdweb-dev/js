@@ -1,25 +1,40 @@
-// providers
-export { ThirdwebProvider } from "./providers/thirdweb-provider";
-export type {
-  ThirdwebProviderProps,
-  WalletConnector,
-  DAppMetaData,
-} from "./providers/thirdweb-provider";
+export {
+  useIsWalletModalOpen,
+  useSetIsWalletModalOpen,
+} from "./providers/wallet-ui-states-provider";
 
-// require to be inside `<ThirdwebProvider />`
-export * from "./hooks/wagmi-required/useAccount";
-export * from "./hooks/wagmi-required/useNetwork";
-export * from "./hooks/wagmi-required/useDisconnect";
-export * from "./hooks/wagmi-required/useConnect";
-export * from "./hooks/connectors/useMetamask";
-export * from "./hooks/connectors/useWalletConnect";
-export * from "./hooks/connectors/useWalletLink";
+export { useSafe } from "./connectors/gnosis";
+export { useMagic } from "./connectors/magic";
 
-// ui components
+export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
+export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
+export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
+
+// UI components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
-export * from "./components/ConnectWallet";
 export * from "./components/Web3Button";
+export { ThirdwebProvider } from "./providers/thirdweb-provider";
 
-// re-export everything from react-core
-export * from "@thirdweb-dev/react-core/evm";
+// wallet/hooks
+export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
+
+// wallet connection hooks
+export { useRainbowWallet } from "./hooks/wallets/useRainbowWallet";
+export { useTrustWallet } from "./hooks/wallets/useTrustWallet";
+export { useMetamask } from "./hooks/wallets/useMetamask";
+export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
+export { useFrameWallet } from "./hooks/wallets/useFrame";
+
+export {
+  usePaperWalletUserEmail,
+  usePaperWallet,
+} from "./hooks/wallets/usePaper";
+
+export {
+  useWalletConnect,
+  useWalletConnectV1,
+} from "./hooks/wallets/useWalletConnect";
+
+// react-core
+export * from "@thirdweb-dev/react-core";

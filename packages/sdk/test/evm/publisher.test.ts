@@ -1,17 +1,23 @@
 import {
   ChainId,
-  getAllDetectedFeatureNames,
-  isFeatureEnabled,
+  getAllDetectedExtensionNames,
+  isExtensionEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
-import { implementations, signers } from "./before-setup";
+import {
+  defaultProvider,
+  implementations,
+  signers,
+  sdk as mockSdk,
+} from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   DropERC721__factory,
   DropERC721_V3__factory,
   TokenERC721__factory,
+  MarketplaceV3__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
@@ -47,7 +53,7 @@ export const uploadContractMetadata = async (
 
 describe("Publishing", async () => {
   let simpleContractUri: string;
-  let contructorParamsContractUri: string;
+  let constructorParamsContractUri: string;
   let adminWallet: SignerWithAddress;
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
@@ -59,7 +65,7 @@ describe("Publishing", async () => {
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we change the test data - await uploadContractMetadata("Greeter", storage);
-    contructorParamsContractUri =
+    constructorParamsContractUri =
       "ipfs://QmT5Dx3xigHr6BPG8scxbX7JaAucHRD9UPXc6FCtgcNn5e/0";
   });
 
@@ -75,34 +81,36 @@ describe("Publishing", async () => {
 
   it("should extract features", async () => {
     expect(
-      isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
     ).to.eq(true);
-    expect(isFeatureEnabled(TokenERC721__factory.abi, "ERC721Mintable")).to.eq(
-      true,
-    );
     expect(
-      isFeatureEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Mintable"),
+    ).to.eq(true);
+    expect(
+      isExtensionEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
     ).to.eq(true);
 
     // Drop
     expect(
-      isFeatureEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
+      isExtensionEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
     ).to.eq(true);
-    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
+    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
       true,
     );
-    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
+    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
       false,
     );
   });
 
   it("should extract all features", async () => {
-    const tokenFeatures = getAllDetectedFeatureNames(TokenERC721__factory.abi);
+    const tokenFeatures = getAllDetectedExtensionNames(
+      TokenERC721__factory.abi,
+    );
     expect(tokenFeatures).to.contain("ERC721Enumerable");
-    expect(getAllDetectedFeatureNames(DropERC721__factory.abi)).to.contain(
+    expect(getAllDetectedExtensionNames(DropERC721__factory.abi)).to.contain(
       "ERC721ClaimPhasesV2",
     );
-    expect(getAllDetectedFeatureNames(DropERC721_V3__factory.abi)).to.contain(
+    expect(getAllDetectedExtensionNames(DropERC721_V3__factory.abi)).to.contain(
       "ERC721ClaimPhasesV1",
     );
   });
@@ -227,7 +235,7 @@ describe("Publishing", async () => {
   it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
-    const tx = await publisher.publish(contructorParamsContractUri, {
+    const tx = await publisher.publish(constructorParamsContractUri, {
       version: "0.0.1",
     });
     const contract = await tx.data();
@@ -371,7 +379,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
-  it("ERC721Dropable multiphase feature detection", async () => {
+  it("ERC721Droppable multiphase feature detection", async () => {
     const ipfsUri = "ipfs://Qmbu57WNPmmGuNZEiEAVi9yeXxGK2GkJRBbRMaPxs9KS5b";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
@@ -462,9 +470,9 @@ describe("Publishing", async () => {
     const nftsAfter = await c.erc1155.getAll();
     expect(nftsAfter.length).to.equal(2);
     expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
-    expect(nftsAfter[0].supply).to.equal(1);
+    expect(nftsAfter[0].supply).to.equal("1");
     expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
-    expect(nftsAfter[1].supply).to.equal(0);
+    expect(nftsAfter[1].supply).to.equal("0");
   });
 
   it("ERC1155Signature mint feature detection", async () => {
@@ -507,11 +515,13 @@ describe("Publishing", async () => {
     const uri = await c.call("contractUri");
     expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
 
-    const tx = await c.call("updateStruct", {
-      aNumber: 123,
-      aString: ethers.utils.hexZeroPad("0x1234", 32),
-      anArray: [adminWallet.address, samWallet.address],
-    });
+    const tx = await c.call("updateStruct", [
+      {
+        aNumber: 123,
+        aString: ethers.utils.hexZeroPad("0x1234", 32),
+        anArray: [adminWallet.address, samWallet.address],
+      },
+    ]);
     expect(tx).to.not.eq(undefined);
   });
 
@@ -523,5 +533,39 @@ describe("Publishing", async () => {
       "0x01551220", // bytes4 param
     ]);
     expect(addr).to.not.eq(undefined);
+  });
+
+  it("Composite Abi for Extension Router", async () => {
+    const ipfsHash = (await resolveContractUriFromAddress(
+      implementations["marketplace-v3"] as string,
+      defaultProvider,
+    )) as string;
+
+    const pub = await mockSdk.getPublisher();
+    const tx = await pub.publish(ipfsHash.concat("rawMeta"), {
+      version: "0.0.1",
+      isDeployableViaFactory: true,
+      factoryDeploymentData: {
+        implementationInitializerFunction: "initialize",
+        implementationAddresses: {
+          [ChainId.Hardhat]: implementations["marketplace-v3"] || "",
+        },
+        factoryAddresses: {
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
+        },
+      },
+    });
+    const contract = await tx.data();
+    expect(contract.id).to.eq("MarketplaceV3");
+
+    const fullMetadata = await pub.fetchFullPublishMetadata(
+      contract.metadataUri,
+    );
+    const compositeAbi = fullMetadata.compositeAbi;
+    expect(
+      compositeAbi != undefined &&
+        compositeAbi.length > MarketplaceV3__factory.abi.length,
+    );
   });
 });

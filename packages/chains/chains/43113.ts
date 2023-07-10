@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Avalanche Fuji Testnet",
   "chain": "AVAX",
@@ -5,22 +6,16 @@ export default {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/avalanche/512.png",
     "height": 512,
     "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
+    "format": "png"
   },
   "rpc": [
     "https://avalanche-fuji.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-fuji.infura.io/v3/${INFURA_API_KEY}",
-    "https://api.avax-test.network/ext/bc/C/rpc"
+    "https://api.avax-test.network/ext/bc/C/rpc",
+    "https://avalanche-fuji-c-chain.publicnode.com"
   ],
   "faucets": [
+    "https://faucet.avax.network/",
     "https://faucet.avax-test.network/"
   ],
   "nativeCurrency": {
@@ -41,4 +36,4 @@ export default {
   ],
   "testnet": true,
   "slug": "avalanche-fuji"
-} as const;
+} as const satisfies Chain;

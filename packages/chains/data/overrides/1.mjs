@@ -8,7 +8,6 @@ export default {
     height: 512,
     width: 512,
     format: "png",
-    sizes: [16, 32, 64, 128, 256, 512],
   },
   rpc: ["https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"],
 };

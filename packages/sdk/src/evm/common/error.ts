@@ -1,7 +1,8 @@
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants";
+import { SUPPORTED_CHAIN_ID } from "../constants/chains/SUPPORTED_CHAIN_ID";
+import { NATIVE_TOKENS } from "../constants/currency";
 import { Feature } from "../constants/contract-features";
-import { ContractSource } from "../schema";
-import { BigNumber, BigNumberish, ethers, providers } from "ethers";
+import { ContractSource } from "../schema/contracts/custom";
+import { BigNumber, type BigNumberish, utils, type providers } from "ethers";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
@@ -268,7 +269,7 @@ export type FunctionInfo = {
 export type TransactionErrorInfo = {
   reason: string;
   from: string;
-  to: string;
+  to?: string;
   network: providers.Network;
   method?: string;
   data?: string;
@@ -285,16 +286,19 @@ export type TransactionErrorInfo = {
 export class TransactionError extends Error {
   #reason: string;
   #info: TransactionErrorInfo;
+  #raw: any;
 
-  constructor(info: TransactionErrorInfo) {
+  constructor(info: TransactionErrorInfo, raw: any) {
     let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
     errorMessage += `Reason: ${info.reason}`;
     errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
     errorMessage += withSpaces("from", info.from);
-    errorMessage += withSpaces(
-      "to",
-      info.contractName ? `${info.to} (${info.contractName})` : info.to,
-    );
+    if (info.to) {
+      errorMessage += withSpaces(
+        "to",
+        info.contractName ? `${info.to} (${info.contractName})` : info.to,
+      );
+    }
     errorMessage += withSpaces(
       `chain`,
       `${info.network.name} (${info.network.chainId})`,
@@ -316,7 +320,7 @@ export class TransactionError extends Error {
     if (info.value && info.value.gt(0)) {
       errorMessage += withSpaces(
         "value",
-        `${ethers.utils.formatEther(info.value)} ${
+        `${utils.formatEther(info.value)} ${
           NATIVE_TOKENS[info.network.chainId as SUPPORTED_CHAIN_ID]?.symbol ||
           ""
         }`,
@@ -361,11 +365,16 @@ export class TransactionError extends Error {
 
     this.#reason = info.reason;
     this.#info = info;
+    this.#raw = raw;
   }
 
   // Keep reason here for backwards compatibility
   get reason(): string {
     return this.#reason;
+  }
+
+  get raw(): any {
+    return this.#raw;
   }
 
   get info(): TransactionErrorInfo {
@@ -377,8 +386,12 @@ export class TransactionError extends Error {
  * @internal
  */
 export function parseRevertReason(error: any): string {
-  if (error.reason) {
+  if (error.reason && !error.reason.includes("cannot estimate gas")) {
     return error.reason as string;
+  }
+
+  if (error.error) {
+    return error.error as string;
   }
 
   // I think this code path should never be hit, but just in case

@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "TBSI Mainnet",
   "title": "Thai Blockchain Service Infrastructure Mainnet",
@@ -18,4 +19,4 @@ export default {
   "networkId": 1707,
   "testnet": false,
   "slug": "tbsi"
-} as const;
+} as const satisfies Chain;

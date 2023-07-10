@@ -1,11 +1,13 @@
-import { NFT } from "../../../core/schema/nft";
-import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
-import { BaseERC721 } from "../../types/eips";
+import type { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
+import type { ContractWrapper } from "./contract-wrapper";
 import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
+import type { Erc721 } from "./erc-721";
 
 /**
  * List owned ERC721 NFTs
@@ -18,6 +20,7 @@ import { BigNumber } from "ethers";
  * ```
  * @public
  */
+
 export class Erc721Enumerable implements DetectableFeature {
   featureName = FEATURE_NFT_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
@@ -45,7 +48,7 @@ export class Erc721Enumerable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async all(walletAddress?: string): Promise<NFT[]> {
+  public async all(walletAddress?: AddressOrEns): Promise<NFT[]> {
     const tokenIds = await this.tokenIds(walletAddress);
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
@@ -56,9 +59,10 @@ export class Erc721Enumerable implements DetectableFeature {
    * Get all token ids of NFTs owned by a specific wallet.
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
-  public async tokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    const address =
-      walletAddress || (await this.contractWrapper.getSignerAddress());
+  public async tokenIds(walletAddress?: AddressOrEns): Promise<BigNumber[]> {
+    const address = await resolveAddress(
+      walletAddress || (await this.contractWrapper.getSignerAddress()),
+    );
 
     const balance = await this.contractWrapper.readContract.balanceOf(address);
     const indices = Array.from(Array(balance.toNumber()).keys());

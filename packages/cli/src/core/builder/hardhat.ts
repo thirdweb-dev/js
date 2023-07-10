@@ -1,7 +1,6 @@
 import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
 import { logger } from "../helpers/logger";
-import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { existsSync, readFileSync } from "fs";
@@ -9,11 +8,9 @@ import { HardhatConfig } from "hardhat/types";
 import { join, resolve } from "path";
 
 export class HardhatBuilder extends BaseBuilder {
-  public async compile(options: CompileOptions): Promise<{
+  public async compile(options: any): Promise<{
     contracts: ContractPayload[];
   }> {
-    await execute("npx hardhat clean", options.projectPath);
-    await execute("npx hardhat compile", options.projectPath);
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)
     // then we look up the hardhat config extractor file path from there
@@ -36,6 +33,24 @@ export class HardhatBuilder extends BaseBuilder {
     ) as HardhatConfig;
 
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
+
+    await execute("npx hardhat clean", options.projectPath);
+
+    let ignoreIpfsHash = false;
+    if (options.zksync) {
+      const zkNetwork = Object.entries(actualHardhatConfig.networks).find(
+        (network) => {
+          return (network[1] as any).zksync;
+        },
+      );
+      ignoreIpfsHash = (zkNetwork?.[1] as any).zksync; // IPFS hash can't be recovered from ZKSync bytecode
+      await execute(
+        `npx hardhat compile --network ${zkNetwork?.[0]}`,
+        options.projectPath,
+      );
+    } else {
+      await execute(`npx hardhat compile`, options.projectPath);
+    }
 
     const solcConfigs = actualHardhatConfig.solidity.compilers;
     if (solcConfigs) {
@@ -78,7 +93,6 @@ export class HardhatBuilder extends BaseBuilder {
           logger.debug("Skipping", contractPath, "(not a source target)");
           continue;
         }
-
         for (const [contractName, contractInfo] of Object.entries(
           contractInfos as any,
         )) {
@@ -96,11 +110,13 @@ export class HardhatBuilder extends BaseBuilder {
           }
 
           const bytecode = info.evm.bytecode.object;
-          const deployedBytecode = info.evm.deployedBytecode.object;
-          const metadata = info.metadata;
-          const abi = info.abi;
+          const deployedBytecode =
+            info.evm.deployedBytecode?.object || bytecode;
+          const { metadata, abi } = info;
 
-          const meta = JSON.parse(metadata);
+          const meta = metadata.solc_metadata
+            ? JSON.parse(metadata.solc_metadata)
+            : JSON.parse(metadata);
           const sources = Object.keys(meta.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
@@ -128,9 +144,16 @@ export class HardhatBuilder extends BaseBuilder {
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
-          if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
+          if (
+            this.shouldProcessContract(
+              abi,
+              deployedBytecode,
+              contractName,
+              ignoreIpfsHash,
+            )
+          ) {
             contracts.push({
-              metadata,
+              metadata: JSON.stringify(meta),
               bytecode,
               name: contractName,
               fileName,

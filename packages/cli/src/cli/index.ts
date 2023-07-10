@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import { detectExtensions } from "../common/feature-detector";
+import { detectProject } from "../common/project-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
 import { CacheEntry } from "../core/types/cache";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
+import { generate } from "../generate/command";
 import { findPackageInstallation } from "../helpers/detect-local-packages";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -15,6 +17,7 @@ import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
+import { install } from "../install";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -54,10 +57,7 @@ const main = async () => {
         if (lastCheckCache.isCached) {
           const lastVersionCheck = new Date(lastCheckCache.value);
           // Don't check for updates if already checked within past 24 hours
-          if (
-            new Date().getTime() - lastVersionCheck.getTime() <
-            1000 * 60 * 60 * 24
-          ) {
+          if (Date.now() - lastVersionCheck.getTime() < 1000 * 60 * 60 * 24) {
             shouldCheckVersion = false;
           }
         }
@@ -115,7 +115,7 @@ const main = async () => {
                   `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
                 );
 
-                await new Promise((done, failed) => {
+                await new Promise((resolve, reject) => {
                   const shell = spawn(
                     `npx --yes thirdweb@latest ${process.argv
                       .slice(2)
@@ -125,9 +125,9 @@ const main = async () => {
                   );
                   shell.on("close", (code) => {
                     if (code === 0) {
-                      done("");
+                      resolve("");
                     } else {
-                      failed();
+                      reject();
                     }
                   });
                 });
@@ -160,14 +160,12 @@ const main = async () => {
                   process.exit(1);
               }
 
-              await new Promise((done, failed) => {
+              await new Promise((resolve, reject) => {
                 exec(command, (err, stdout, stderr) => {
                   if (err) {
-                    failed(err);
-                    return;
+                    return reject(err);
                   }
-
-                  done({ stdout, stderr });
+                  resolve({ stdout, stderr });
                 });
               });
 
@@ -181,19 +179,15 @@ const main = async () => {
                 !installation.isGlobal || installation.packageManager === "npm"
                   ? `npx thirdweb`
                   : `thirdweb`;
-              await new Promise((done, failed) => {
+              await new Promise((resolve, reject) => {
                 const shell = spawn(
                   `${executionCommand} ${process.argv.slice(2).join(" ")}`,
                   [],
                   { stdio: "inherit", shell: true, env: clonedEnvironment },
                 );
-                shell.on("close", (code) => {
-                  if (code === 0) {
-                    done("");
-                  } else {
-                    failed();
-                  }
-                });
+                shell.on("close", (code) =>
+                  code === 0 ? resolve("") : reject(),
+                );
               });
 
               process.exit(0);
@@ -201,6 +195,18 @@ const main = async () => {
           }
         },
       );
+    });
+
+  program
+    .command("install [projectPath]")
+    .description(
+      "Install thirdweb into your project. If no path is specified, the current directory will be used.",
+    )
+    .option("--nightly", "Install the nightly version of packages.")
+    .option("--dev", "Install the dev version of packages")
+    .option("-d, --debug", "show debug logs")
+    .action(async (path, options) => {
+      await install(path, options);
     });
 
   program
@@ -214,6 +220,7 @@ const main = async () => {
     .option("--js, --javascript", "Initialize as a JavaScript project.")
     .option("--forge", "Initialize as a Forge project.")
     .option("--hardhat", "Initialize as a Hardhat project.")
+    .option("--extension", "Create a smart contract extension.")
     .option("--cra", "Initialize as a Create React App project.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
@@ -246,6 +253,7 @@ const main = async () => {
   program
     .command("build")
     .description("Compile contract and detect thirdweb contract extensions")
+    .option("--clean", "clear the cache before building")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
     .option("-a, --all", "run detection on all contracts")
@@ -257,6 +265,7 @@ const main = async () => {
     .command("deploy")
     .description("Deploy your (or team) contracts securely to blockchains")
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -282,10 +291,15 @@ const main = async () => {
     )
     .option("--app", "Deploy a web app to decentralized storage")
     .option("--contract", "Deploy a smart contract to blockchains")
+    .option(
+      "--dynamic",
+      "Deploy a dynamic smart contract made up of extensions to blockchains",
+    )
+    .option("--zksync", "Deploy on ZKSync")
     .action(async (options) => {
       const url = await deploy(options);
       if (url) {
-        open(url);
+        await open(url);
       }
     });
 
@@ -301,6 +315,7 @@ const main = async () => {
       "-cn, --contract-name [name]",
       "Filter for contracts that contain this contract name",
     )
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -314,7 +329,7 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      open(url.toString());
+      await open(url.toString());
     });
 
   program
@@ -331,6 +346,7 @@ const main = async () => {
       "-cn, --contract-name [name]",
       "Filter for contracts that contain this contract name",
     )
+    .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -341,7 +357,7 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      open(url.toString());
+      await open(url.toString());
     });
 
   program
@@ -384,13 +400,22 @@ const main = async () => {
   program
     .command("detect")
     .description(
-      "(deprecated) Compile contracts and detect implemented thirdweb contract extensions",
+      "Detect the type of project your are running and let you know what it is.",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
-    .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
-      await detectExtensions(options);
+      await detectProject(options);
+    });
+
+  program
+    .command("generate")
+    .description(
+      "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .action(async (options) => {
+      await generate(options);
     });
 
   await program.parseAsync();

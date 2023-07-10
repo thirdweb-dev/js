@@ -1,6 +1,7 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Lucid Blockchain",
-  "chain": "Lucid Blockchain",
+  "chain": "Lucid",
   "icon": {
     "url": "ipfs://bafybeigxiyyxll4vst5cjjh732mr6zhsnligxubaldyiul2xdvvi6ibktu",
     "width": 800,
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "lucid-blockchain"
-} as const;
+} as const satisfies Chain;

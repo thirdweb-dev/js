@@ -1,3 +1,4 @@
+import { BasicNFTInput } from "@thirdweb-dev/sdk/dist/declarations/src/core/schema/nft";
 import {
   requiredParamInvariant,
   RequiredParam,
@@ -19,9 +20,14 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -42,6 +48,7 @@ import invariant from "tiny-invariant";
  * @returns a response object that includes the metadata for the given tokenId
  * @beta
  * @twfeature ERC721 | ERC1155
+ * @see {@link https://portal.thirdweb.com/react/react.usenft?utm_source=sdk | Documentation}
  */
 export function useNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -84,6 +91,7 @@ export function useNFT<TContract extends NFTContract>(
  * @returns a response object that includes an array of NFTs
  * @twfeature ERC721Supply | ERC721Enumerable | ERC1155Enumerable
  * @beta
+ * @see {@link https://portal.thirdweb.com/react/react.usenfts?utm_source=sdk | Documentation}
  */
 export function useNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -126,6 +134,7 @@ export function useNFTs<TContract extends NFTContract>(
  * @returns a response object that includes the total count of NFTs
  * @beta
  * @twfeature ERC721Supply | ERC1155Enumerable
+ * @see {@link https://portal.thirdweb.com/react/react.usetotalcount?utm_source=sdk | Documentation}
  */
 export function useTotalCount<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -170,13 +179,15 @@ export function useTotalCount<TContract extends NFTContract>(
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @returns a response object that incudes the total minted supply
+ * @param tokenId - required for ERC1155, the tokenId to look up
+ * @returns a response object that includes the total minted supply
  * @beta
  * @twfeature ERC721Supply | ERC1155Enumerable
+ * @see {@link https://portal.thirdweb.com/react/react.usetotalcirculatingsupply?utm_source=sdk | Documentation}
  */
 export function useTotalCirculatingSupply(
   contract: RequiredParam<NFTContract>,
-  tokenId: RequiredParam<BigNumberish>,
+  tokenId?: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -218,10 +229,11 @@ export function useTotalCirculatingSupply(
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet adress to get owned tokens for
+ * @param ownerWalletAddress - the wallet address to get owned tokens for
  * @returns a response object that includes the list of owned tokens
  * @beta
  * @twfeature ERC721Enumerable | ERC1155Enumerable | ERC721Supply
+ * @see {@link https://portal.thirdweb.com/react/react.useownednfts?utm_source=sdk | Documentation}
  */
 export function useOwnedNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -261,15 +273,17 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  * ```
  *
  * @param contract - an instance of a {@link NFTContract}
- * @param ownerWalletAddress - the wallet adress to check the balance of
+ * @param ownerWalletAddress - the wallet address to check the balance of
+ * @param tokenId - required for ERC1155, the tokenId to look up
  * @returns a response object that includes the total balance of the owner
  * @twfeature ERC721 | ERC1155
+ * @see {@link https://portal.thirdweb.com/react/react.usenftbalance?utm_source=sdk | Documentation}
  * @beta
  */
 export function useNFTBalance(
   contract: RequiredParam<NFTContract>,
   ownerWalletAddress: RequiredParam<WalletAddress>,
-  tokenId: RequiredParam<BigNumberish>,
+  tokenId?: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -302,6 +316,44 @@ export function useNFTBalance(
     },
     {
       enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
+    },
+  );
+}
+
+/**
+ * Get the shared metadata of an Open Edition NFT contract
+ *
+ * @example
+ * ```javascript
+ * const { data: sharedMetadata, isLoading, error } = useSharedMetadata(contract);
+ * ```
+ *
+ * @param contract - an instance of a {@link NFTContract}
+ * @returns a response object that includes the shared metadata of the contract
+ * @twfeature ERC721SharedMetadata
+ * @see {@link https://portal.thirdweb.com/react/react.usesharedmetadata?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useSharedMetadata(
+  contract: RequiredParam<NFTContract>,
+): UseQueryResult<BasicNFTInput | undefined> {
+  const contractAddress = contract?.getAddress();
+  const { erc721 } = getErcs(contract);
+  return useQueryWithNetwork(
+    cacheKeys.contract.nft.sharedMetadata.get(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      if (erc721) {
+        invariant(
+          erc721.sharedMetadata.get,
+          "Contract instance does not support sharedMetadata.get",
+        );
+        return erc721.sharedMetadata.get();
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      enabled: !!contract,
     },
   );
 }
@@ -342,6 +394,7 @@ export function useNFTBalance(
  * @returns a mutation object that can be used to mint a new NFT token to the connected wallet
  * @beta
  * @twfeature ERC721Mintable | ERC1155Mintable
+ * @see {@link https://portal.thirdweb.com/react/react.usemintnft?utm_source=sdk | Documentation}
  */
 export function useMintNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
@@ -414,6 +467,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * @returns a mutation object that can be used to mint a more supply of a token id to the provided wallet
  * @beta
  * @twfeature ERC1155Mintable
+ * @see {@link https://portal.thirdweb.com/react/react.usemintnftsupply?utm_source=sdk | Documentation}
  */
 export function useMintNFTSupply(contract: Erc1155) {
   const activeChainId = useSDKChainId();
@@ -465,9 +519,9 @@ export function useMintNFTSupply(contract: Erc1155) {
  *   return (
  *     <button
  *       disabled={isLoading}
- *       onClick={() => transferNFT({ 
- *         to: "{{wallet_address}}", 
- *         tokenId: 2 
+ *       onClick={() => transferNFT({
+ *         to: "{{wallet_address}}",
+ *         tokenId: 2
  *       })}
  *     >
  *       Transfer
@@ -480,10 +534,22 @@ export function useMintNFTSupply(contract: Erc1155) {
  * @returns a mutation object that can be used to transfer NFTs
  * @beta
  * @twfeature ERC721 | ERC1155
+ * @see {@link https://portal.thirdweb.com/react/react.usetransfernft?utm_source=sdk | Documentation}
  */
 export function useTransferNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
-) {
+): UseMutationResult<
+  Omit<
+    {
+      receipt: providers.TransactionReceipt;
+      data: () => Promise<unknown>;
+    },
+    "data"
+  >,
+  unknown,
+  TransferNFTParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -538,7 +604,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  *       onClick={() => airdropNFT({
  *          tokenId: 2,
  *          addresses: [
- *            { address: "{{wallet_address}}", quantity: 2 }, 
+ *            { address: "{{wallet_address}}", quantity: 2 },
  *            { address: "{{wallet_address}}", quantity: 4 } }
  *          ]
  *       )}
@@ -552,6 +618,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @param contract - an instance of a {@link Erc1155}
  * @returns a mutation object that can be used to transfer batch NFTs
  * @twfeature ERC1155
+ * @see {@link https://portal.thirdweb.com/react/react.useairdropnft?utm_source=sdk | Documentation}
  * @beta
  */
 export function useAirdropNFT(contract: Erc1155) {
@@ -576,10 +643,6 @@ export function useAirdropNFT(contract: Erc1155) {
     },
   );
 }
-
-/** **********************/
-/**     WRITE HOOKS     **/
-/** **********************/
 
 /**
  * Burn an NFT
@@ -612,6 +675,7 @@ export function useAirdropNFT(contract: Erc1155) {
  * @param contract - an instance of a {@link NFTContract}
  * @returns a mutation object that can be used to burn an NFT token from the connected wallet
  * @twfeature ERC721Burnable | ERC1155Burnable
+ * @see {@link https://portal.thirdweb.com/react/react.useburnnft?utm_source=sdk | Documentation}
  * @beta
  */
 export function useBurnNFT<TContract extends NFTContract>(
@@ -635,6 +699,37 @@ export function useBurnNFT<TContract extends NFTContract>(
       if (erc721) {
         const { tokenId } = data;
         return await erc721.burn(tokenId);
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Set shared metadata
+ * TODO add docs
+ * @private
+ */
+export function useSetSharedMetadata<TContract extends NFTContract>(
+  contract: RequiredParam<TContract>,
+) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const { erc721 } = getErcs(contract);
+
+  return useMutation(
+    async (data: BasicNFTInput) => {
+      if (erc721) {
+        return await erc721.sharedMetadata.set(data);
       }
       invariant(false, "Unknown NFT type");
     },

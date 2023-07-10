@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "ZCore Testnet",
   "chain": "Beach",
@@ -25,4 +26,4 @@ export default {
   "networkId": 3331,
   "testnet": true,
   "slug": "zcore-testnet"
-} as const;
+} as const satisfies Chain;

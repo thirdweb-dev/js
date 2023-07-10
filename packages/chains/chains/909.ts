@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Portal Fantasy Chain",
   "chain": "PF",
@@ -22,4 +23,4 @@ export default {
   "status": "incubating",
   "testnet": false,
   "slug": "portal-fantasy-chain"
-} as const;
+} as const satisfies Chain;

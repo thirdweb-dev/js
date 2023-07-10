@@ -1,27 +1,29 @@
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { buildTransactionFunction } from "../../common/transactions";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
+import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
 import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
-import { MarketplaceFilter } from "../../types";
+import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace";
 import { OfferV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
+import { Transaction } from "./transactions";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
@@ -68,7 +70,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
   /**
    * Get the total number of offers
-   * 
+   *
    * @returns Returns the total number of offers created.
    * @public
    *
@@ -94,7 +96,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAll(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -112,7 +114,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     );
     rawOffers = batches.flat();
 
-    const filteredOffers = this.applyFilter(rawOffers, filter);
+    const filteredOffers = await this.applyFilter(rawOffers, filter);
 
     return await Promise.all(
       filteredOffers.map((offer) => this.mapOffer(offer)),
@@ -131,7 +133,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAllValid(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAllValid(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -149,7 +151,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     );
     rawOffers = batches.flat();
 
-    const filteredOffers = this.applyFilter(rawOffers, filter);
+    const filteredOffers = await this.applyFilter(rawOffers, filter);
 
     return await Promise.all(
       filteredOffers.map((offer) => this.mapOffer(offer)),
@@ -210,57 +212,57 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt and the id of the newly created offer
    * @twfeature Offers
    */
-  public async makeOffer(
-    offer: OfferInputParams,
-  ): Promise<TransactionResultWithId> {
-    const parsedOffer = OfferInputParamsSchema.parse(offer);
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      offer: OfferInputParams,
+    ): Promise<Transaction<TransactionResultWithId>> => {
+      const parsedOffer = await OfferInputParamsSchema.parseAsync(offer);
 
-    const chainId = await this.contractWrapper.getChainID();
-    const currency = isNativeToken(parsedOffer.currencyContractAddress)
-      ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
-      : parsedOffer.currencyContractAddress;
+      const chainId = await this.contractWrapper.getChainID();
+      const currency = isNativeToken(parsedOffer.currencyContractAddress)
+        ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
+        : parsedOffer.currencyContractAddress;
 
-    const normalizedTotalPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      parsedOffer.totalPrice,
-      currency,
-    );
+      const normalizedTotalPrice = await normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        parsedOffer.totalPrice,
+        currency,
+      );
 
-    const overrides = await this.contractWrapper.getCallOverrides();
-    await setErc20Allowance(
-      this.contractWrapper,
-      normalizedTotalPrice,
-      currency,
-      overrides,
-    );
+      const overrides = await this.contractWrapper.getCallOverrides();
+      await setErc20Allowance(
+        this.contractWrapper,
+        normalizedTotalPrice,
+        currency,
+        overrides,
+      );
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "makeOffer",
-      [
-        {
-          assetContract: parsedOffer.assetContractAddress,
-          tokenId: parsedOffer.tokenId,
-          quantity: parsedOffer.quantity,
-          currency: currency,
-          totalPrice: normalizedTotalPrice,
-          expirationTimestamp: parsedOffer.endTimestamp,
-        } as IOffers.OfferParamsStruct,
-      ],
-      {
-        // Higher gas limit for create listing
-        gasLimit: 500000,
-      },
-    );
-
-    const event = this.contractWrapper.parseLogs<NewOfferEvent>(
-      "NewOffer",
-      receipt?.logs,
-    );
-    return {
-      id: event[0].args.offerId,
-      receipt,
-    };
-  }
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "makeOffer",
+        args: [
+          {
+            assetContract: parsedOffer.assetContractAddress,
+            tokenId: parsedOffer.tokenId,
+            quantity: parsedOffer.quantity,
+            currency: currency,
+            totalPrice: normalizedTotalPrice,
+            expirationTimestamp: parsedOffer.endTimestamp,
+          } as IOffers.OfferParamsStruct,
+        ],
+        parse: (receipt) => {
+          const event = this.contractWrapper.parseLogs<NewOfferEvent>(
+            "NewOffer",
+            receipt?.logs,
+          );
+          return {
+            id: event[0].args.offerId,
+            receipt,
+          };
+        },
+      });
+    },
+  );
 
   /**
    * Cancel an offer
@@ -278,13 +280,15 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  public async cancelOffer(offerId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("cancelOffer", [
-        offerId,
-      ]),
-    };
-  }
+  cancelOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (offerId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelOffer",
+        args: [offerId],
+      });
+    },
+  );
 
   /**
    * Accept an offer
@@ -301,30 +305,31 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  public async acceptOffer(offerId: BigNumberish): Promise<TransactionResult> {
-    const offer = await this.validateOffer(BigNumber.from(offerId));
-    const { valid, error } = await this.isStillValidOffer(offer);
-    if (!valid) {
-      throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
-    }
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+  acceptOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (offerId: BigNumberish) => {
+      const offer = await this.validateOffer(BigNumber.from(offerId));
+      const { valid, error } = await this.isStillValidOffer(offer);
+      if (!valid) {
+        throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
+      }
+      const overrides = (await this.contractWrapper.getCallOverrides()) || {};
 
-    await handleTokenApproval(
-      this.contractWrapper,
-      this.getAddress(),
-      offer.assetContractAddress,
-      offer.tokenId,
-      await this.contractWrapper.getSignerAddress(),
-    );
+      await handleTokenApproval(
+        this.contractWrapper,
+        this.getAddress(),
+        offer.assetContractAddress,
+        offer.tokenId,
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "acceptOffer",
-        [offerId],
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "acceptOffer",
+        args: [offerId],
         overrides,
-      ),
-    };
-  }
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS
@@ -450,25 +455,27 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     };
   }
 
-  private applyFilter(
+  private async applyFilter(
     offers: IOffers.OfferStructOutput[],
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutSeller,
   ) {
     let rawOffers = [...offers];
 
     if (filter) {
       if (filter.offeror) {
+        const resolvedOfferor = await resolveAddress(filter.offeror);
         rawOffers = rawOffers.filter(
           (offeror) =>
             offeror.offeror.toString().toLowerCase() ===
-            filter?.offeror?.toString().toLowerCase(),
+            resolvedOfferor?.toString().toLowerCase(),
         );
       }
       if (filter.tokenContract) {
+        const resolvedToken = await resolveAddress(filter.tokenContract);
         rawOffers = rawOffers.filter(
           (tokenContract) =>
             tokenContract.assetContract.toString().toLowerCase() ===
-            filter?.tokenContract?.toString().toLowerCase(),
+            resolvedToken?.toString().toLowerCase(),
         );
       }
 

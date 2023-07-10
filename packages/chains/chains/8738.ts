@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Alph Network",
   "chain": "ALPH",
@@ -20,10 +21,9 @@ export default {
     {
       "name": "alphscan",
       "url": "https://explorer.alph.network",
-      "icon": "alphscan",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "alph-network"
-} as const;
+} as const satisfies Chain;

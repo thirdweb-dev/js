@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Godwoken Testnet v1",
   "chain": "GWT",
@@ -20,11 +21,6 @@ export default {
   "networkId": 71401,
   "explorers": [
     {
-      "name": "GWScout Explorer",
-      "url": "https://gw-testnet-explorer.nervosdao.community",
-      "standard": "none"
-    },
-    {
       "name": "GWScan Block Explorer",
       "url": "https://v1.testnet.gwscan.com",
       "standard": "none"
@@ -32,4 +28,4 @@ export default {
   ],
   "testnet": true,
   "slug": "godwoken-testnet-v1"
-} as const;
+} as const satisfies Chain;

@@ -1,23 +1,12 @@
 import { DEFAULT_API_KEY } from "../../core/constants/rpc";
-import {
-  QueryClientProviderProps,
-  QueryClientProviderWithDefault,
-} from "../../core/providers/query-client";
-import {
-  ThirdwebAuthConfig,
-  ThirdwebAuthProvider,
-} from "../contexts/thirdweb-auth";
+import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
+import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { ThirdwebSDKProviderProps } from "./types";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
-import {
-  SDKOptions,
-  SDKOptionsOutput,
-  ThirdwebSDK,
-} from "@thirdweb-dev/sdk/evm";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { Signer } from "ethers";
-import { createContext, useContext, useMemo } from "react";
+import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
@@ -25,69 +14,16 @@ interface TWSDKContext {
   _inProvider?: true;
 }
 
-const ThirdwebSDKContext = createContext<TWSDKContext>({});
-
-function resolveChainIdFromNetwork(
-  network?: number | string,
-  chains: Readonly<Chain[]> = defaultChains,
-): number | undefined {
-  let chainId: number | undefined = undefined;
-  // try to resolve the chainId
-  if (typeof network === "number") {
-    if (chains.find((c) => c.chainId === network)) {
-      chainId = network;
-    }
-  } else if (typeof network === "string") {
-    const chain = chains.find((c) => c.slug === network);
-    if (chain) {
-      chainId = chain.chainId;
-    }
-  }
-  return chainId;
-}
-
-// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
-type ChainIdIsh = (string | number) & { __chainIdIsh: never };
-
-export interface ThirdwebSDKProviderProps<
-  TChains extends Chain[] = typeof defaultChains,
-> extends QueryClientProviderProps {
-  // the chains that we want to configure - optional, defaults to defaultChains
-  supportedChains?: Readonly<TChains>;
-  // a possible signer - optional, defaults to undefined
-  signer?: Signer;
-
-  // additional SDK options (forwarded to the SDK initializer)
-  sdkOptions?: Omit<SDKOptions, "chains">;
-  // storage
-  storageInterface?: ThirdwebStorage;
-  // if u want to use auth, pass this
-  authConfig?: ThirdwebAuthConfig;
-
-  // the network to use - optional, defaults to undefined
-  activeChain?:
-    | TChains[number]["chainId"]
-    | TChains[number]["slug"]
-    | ChainIdIsh
-    | Chain;
-
-  // api keys that can be passed
-  thirdwebApiKey?: string;
-  alchemyApiKey?: string;
-  infuraApiKey?: string;
-}
+const ThirdwebSDKContext = /* @__PURE__ */ createContext<TWSDKContext>({});
 
 /**
  *
  * @internal
  */
-const WrappedThirdwebSDKProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   sdkOptions = {},
   storageInterface,
-  // @ts-expect-error - different subtype of Chain[] but this works fine
-  supportedChains = defaultChains,
+  supportedChains,
   activeChain,
   signer,
   children,
@@ -95,29 +31,31 @@ const WrappedThirdwebSDKProvider = <
   infuraApiKey,
   alchemyApiKey,
 }: React.PropsWithChildren<
-  Omit<ThirdwebSDKProviderProps<TChains>, "authConfig">
+  { supportedChains: Readonly<TChains> } & Omit<
+    ThirdwebSDKProviderProps<TChains>,
+    "authConfig" | "supportedChains"
+  >
 >) => {
   const activeChainId = useMemo(() => {
     if (!activeChain) {
-      return undefined;
+      return supportedChains[0]?.chainId;
     }
-    if (typeof activeChain === "string" || typeof activeChain === "number") {
+    if (typeof activeChain === "number") {
       return activeChain;
     }
+    if (typeof activeChain === "string") {
+      return supportedChains.find((c) => c.slug === activeChain)?.chainId;
+    }
     return activeChain.chainId;
-  }, [activeChain]);
+  }, [activeChain, supportedChains]);
 
   const sdk = useMemo(() => {
     // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId = resolveChainIdFromNetwork(activeChainId, supportedChains);
-    if (signer && !chainId) {
-      try {
-        chainId = (signer?.provider as any)?._network?.chainId;
-      } catch (e) {}
-    }
+    let chainId = activeChainId;
+
     const supportedChain = supportedChains.find((c) => c.chainId === chainId);
 
     if (!supportedChain && chainId !== undefined) {
@@ -147,22 +85,23 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // TODO: find a better way to fix the type error
+    type ForcedChainType = {
+      rpc: string[];
+      chainId: number;
+      nativeCurrency: { symbol: string; name: string; decimals: number };
+      slug: string;
+    };
+
     const mergedOptions = {
       readonlySettings,
       ...sdkOptions,
-      chains: supportedChains,
+      supportedChains: supportedChains as any as ForcedChainType[],
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
 
-    if (signer) {
-      // sdk from signer
-      sdk_ = new ThirdwebSDK(
-        signer,
-        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
-        storageInterface,
-      );
-    } else if (chainId) {
+    if (chainId) {
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
@@ -183,6 +122,9 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
+    // set the chainId on the sdk instance to compare things later
+    (sdk_ as any)._chainId = chainId;
+
     return sdk_;
   }, [
     activeChainId,
@@ -190,17 +132,29 @@ const WrappedThirdwebSDKProvider = <
     infuraApiKey,
     supportedChains,
     sdkOptions,
-    signer,
     storageInterface,
     thirdwebApiKey,
   ]);
 
+  useEffect(() => {
+    // if we have an sdk and a signer update the signer
+    if (sdk && (sdk as any)._chainId === activeChainId) {
+      if (signer) {
+        sdk.updateSignerOrProvider(signer);
+      } else if (activeChainId) {
+        sdk.updateSignerOrProvider(activeChainId);
+      }
+    }
+    // we know what we're doing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sdk, (sdk as any)?._chainId, signer, activeChainId]);
+
   const ctxValue = useMemo(
     () => ({
-      sdk,
+      sdk: sdk && (sdk as any)._chainId === activeChainId ? sdk : undefined,
       _inProvider: true as const,
     }),
-    [sdk],
+    [activeChainId, sdk],
   );
 
   return (
@@ -219,36 +173,55 @@ const WrappedThirdwebSDKProvider = <
  *
  * @public
  */
-export const ThirdwebSDKProvider = <
-  TChains extends Chain[] = typeof defaultChains,
->({
+export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   queryClient,
-  authConfig,
-  // @ts-expect-error - different subtype of Chain[] but this works fine
-  supportedChains = defaultChains,
+  supportedChains,
   activeChain,
   thirdwebApiKey = DEFAULT_API_KEY,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  const supportedChainsNonNull = useMemo(() => {
+    return supportedChains || (defaultChains as any as TChains);
+  }, [supportedChains]);
+  const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
+    useUpdateChainsWithApiKeys(
+      supportedChainsNonNull,
+      activeChain || supportedChainsNonNull[0],
+      thirdwebApiKey,
+      alchemyApiKey,
+      infuraApiKey,
+    );
+
   const mergedChains = useMemo(() => {
     if (
-      !activeChain ||
-      typeof activeChain === "string" ||
-      typeof activeChain === "number"
+      !activeChainIdOrObjWithKey ||
+      typeof activeChainIdOrObjWithKey === "string" ||
+      typeof activeChainIdOrObjWithKey === "number"
     ) {
-      return supportedChains as Readonly<Chain[]>;
+      return supportedChainsWithKey as Readonly<Chain[]>;
     }
-    return [...supportedChains, activeChain] as Readonly<Chain[]>;
-  }, [supportedChains, activeChain]);
+
+    const _mergedChains = [
+      ...supportedChainsWithKey.filter(
+        (c) => c.chainId !== activeChainIdOrObjWithKey.chainId,
+      ),
+      activeChainIdOrObjWithKey,
+    ] as Readonly<Chain[]>;
+    // return a _mergedChains uniqued by chainId key
+    return _mergedChains.filter(
+      (chain, index, self) =>
+        index === self.findIndex((c) => c.chainId === chain.chainId),
+    );
+  }, [supportedChainsWithKey, activeChainIdOrObjWithKey]);
 
   return (
     <ThirdwebConfigProvider
       value={{
-        chains: mergedChains,
+        chains: mergedChains as Chain[],
         thirdwebApiKey,
         alchemyApiKey,
         infuraApiKey,
@@ -256,20 +229,17 @@ export const ThirdwebSDKProvider = <
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
         <QueryClientProviderWithDefault queryClient={queryClient}>
-          <ThirdwebAuthProvider value={authConfig}>
-            <WrappedThirdwebSDKProvider
-              signer={signer}
-              // @ts-expect-error - different subtype of Chain[] but this works fine
-              supportedChains={mergedChains}
-              thirdwebApiKey={thirdwebApiKey}
-              alchemyApiKey={alchemyApiKey}
-              infuraApiKey={infuraApiKey}
-              activeChain={activeChain}
-              {...restProps}
-            >
-              {children}
-            </WrappedThirdwebSDKProvider>
-          </ThirdwebAuthProvider>
+          <WrappedThirdwebSDKProvider
+            signer={signer}
+            supportedChains={mergedChains}
+            thirdwebApiKey={thirdwebApiKey}
+            alchemyApiKey={alchemyApiKey}
+            infuraApiKey={infuraApiKey}
+            activeChain={activeChainIdOrObjWithKey}
+            {...restProps}
+          >
+            {children}
+          </WrappedThirdwebSDKProvider>
         </QueryClientProviderWithDefault>
       </ThirdwebConnectedWalletProvider>
     </ThirdwebConfigProvider>
@@ -308,5 +278,5 @@ export function useSDK(): ThirdwebSDK | undefined {
  */
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
-  return (sdk?.getProvider() as any)?._network?.chainId;
+  return (sdk as any)?._chainId;
 }

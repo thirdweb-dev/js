@@ -5,14 +5,14 @@ import {
   SnapshotEntry,
   SnapshotEntryWithProof,
   SnapshotEntryWithProofSchema,
-  SnapshotInputSchema,
 } from "../schema/contracts/common/snapshots";
-import { SnapshotInput } from "../types";
-import { convertQuantityToBigNumber } from "./claim-conditions";
-import { fetchCurrencyMetadata } from "./currency";
+import type { SnapshotInput } from "../types/claim-conditions/claim-conditions";
+import { convertQuantityToBigNumber } from "./claim-conditions/convertQuantityToBigNumber";
+import { fetchCurrencyMetadata } from "./currency/fetchCurrencyMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, utils } from "ethers";
+import { constants, utils, type providers } from "ethers";
 import { MerkleTree } from "merkletreejs";
+import { parseSnapshotInputs } from "./parseSnapshotInputs";
 
 // shard using the first 2 hex character of the address
 // this splits the merkle tree into 256 shards
@@ -105,7 +105,7 @@ export class ShardedMerkleTree {
               entry.price || "unlimited",
               currencyDecimals,
             ),
-            entry.currencyAddress || ethers.constants.AddressZero,
+            entry.currencyAddress || constants.AddressZero,
           ],
         );
     }
@@ -113,7 +113,7 @@ export class ShardedMerkleTree {
 
   static async fetchAndCacheDecimals(
     cache: Record<string, number>,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     currencyAddress?: string,
   ): Promise<number> {
     if (!currencyAddress) {
@@ -135,12 +135,13 @@ export class ShardedMerkleTree {
   static async buildAndUpload(
     snapshotInput: SnapshotInput,
     tokenDecimals: number,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
     snapshotFormatVersion: SnapshotFormatVersion,
     shardNybbles = SHARD_NYBBLES,
   ): Promise<ShardedSnapshot> {
-    const inputs = SnapshotInputSchema.parse(snapshotInput);
+    const inputs = await parseSnapshotInputs(snapshotInput);
+
     // TODO Could also derive shardNybbles from input size
     const shards: Record<string, SnapshotEntry[]> = {};
     for (const snapshotEntry of inputs) {
@@ -225,7 +226,7 @@ export class ShardedMerkleTree {
 
   public async getProof(
     address: string,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     snapshotFormatVersion: SnapshotFormatVersion,
   ): Promise<SnapshotEntryWithProof | null> {
     const shardId = address.slice(2, 2 + this.shardNybbles).toLowerCase();
@@ -281,7 +282,7 @@ export class ShardedMerkleTree {
     const proof = this.trees[shardId]
       .getProof(leaf)
       .map((i) => "0x" + i.data.toString("hex"));
-    return SnapshotEntryWithProofSchema.parse({
+    return SnapshotEntryWithProofSchema.parseAsync({
       ...entry,
       proof: proof.concat(shard.proofs),
     });

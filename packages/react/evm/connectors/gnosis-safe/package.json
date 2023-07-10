@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-react-evm-connectors-gnosis-safe.cjs.js",
-  "module": "dist/thirdweb-dev-react-evm-connectors-gnosis-safe.esm.js"
-}

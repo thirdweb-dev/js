@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Planq Mainnet",
   "chain": "Planq",
@@ -35,4 +36,4 @@ export default {
   ],
   "testnet": false,
   "slug": "planq"
-} as const;
+} as const satisfies Chain;

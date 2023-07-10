@@ -143,7 +143,7 @@ Each [extension](https://portal.thirdweb.com/extensions) you implement in your s
 
 These hooks make it easy to interact with your smart contracts by implementing the complex logic for you under the hood.
 
-For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/contractkit/interfaces/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
+For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/solidity/extensions/erc721supply), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
 
 ```jsx
 import { useContract, useNFTs } from "@thirdweb-dev/react";
@@ -154,7 +154,7 @@ export default function Home() {
 }
 ```
 
-If we want to mint an NFT and our contract implements [ERC721Mintable](https://portal.thirdweb.com/contractkit/interfaces/erc721mintable#unlocked-features), we can use the [`useMintNFT`](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721mintable) hook to mint an NFT from the connected wallet; handling all of the logic of uploading and pinning the metadata to IPFS for us behind the scenes.
+If we want to mint an NFT and our contract implements [ERC721Mintable](https://portal.thirdweb.com/solidity/extensions/erc721mintable), we can use the [`useMintNFT`](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721mintable) hook to mint an NFT from the connected wallet; handling all of the logic of uploading and pinning the metadata to IPFS for us behind the scenes.
 
 ```jsx
 import { useContract, useNFTs, useMintNFT } from "@thirdweb-dev/react";
@@ -384,6 +384,7 @@ const KitchenSinkExample = () => {
 | [`useCancelListing`](https://portal.thirdweb.com/react/react.usecancellisting)               | Use this to cancel a listing on your marketplace contract.                                |
 | [`useMakeBid`](https://portal.thirdweb.com/react/react.usemakebid)                           | Use this to place a bid on an auction listing from your marketplace contract.             |
 | [`useBuyNow`](https://portal.thirdweb.com/react/react.usebuynow)                             | Use this to buy out an auction listing from your marketplace contract.                    |
+| [`useBuyDirectListing`](https://portal.thirdweb.com/react/react.useBuyDirectListing)             | Use this to buy from a direct listing in your marketplace v3 contract.                    |
 
 ### Permissions Controls
 

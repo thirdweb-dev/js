@@ -1,36 +1,46 @@
+import type { Chain } from "../src/types";
 export default {
-  "name": "Kovan",
-  "title": "Ethereum Testnet Kovan",
-  "chain": "ETH",
+  "name": "LUKSO Mainnet",
+  "chain": "LUKSO",
+  "icon": {
+    "url": "ipfs://Qmeg9sFF5tAGi6MCx7YjtVHW6a23zqvHRK1xwzSdp9iE7z",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "rpc": [
-    "https://kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://kovan.poa.network",
-    "http://kovan.poa.network:8545",
-    "https://kovan.infura.io/v3/${INFURA_API_KEY}",
-    "wss://kovan.infura.io/ws/v3/${INFURA_API_KEY}",
-    "ws://kovan.poa.network:8546"
+    "https://lukso.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mainnet.lukso.network",
+    "wss://ws-rpc.mainnet.lukso.network"
   ],
-  "faucets": [
-    "http://fauceth.komputing.org?chain=42&address=${ADDRESS}",
-    "https://faucet.kovan.network",
-    "https://gitter.im/kovan-testnet/faucet"
-  ],
+  "faucets": [],
   "nativeCurrency": {
-    "name": "Kovan Ether",
-    "symbol": "ETH",
+    "name": "LUKSO",
+    "symbol": "LYX",
     "decimals": 18
   },
   "explorers": [
     {
-      "name": "etherscan",
-      "url": "https://kovan.etherscan.io",
+      "name": "Blockscout",
+      "url": "https://explorer.execution.mainnet.lukso.network",
       "standard": "EIP3091"
     }
   ],
-  "infoURL": "https://kovan-testnet.github.io/website",
-  "shortName": "kov",
+  "infoURL": "https://lukso.network",
+  "shortName": "lukso",
   "chainId": 42,
   "networkId": 42,
-  "testnet": true,
-  "slug": "kovan"
-} as const;
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "redFlags": [
+    "reusedChainId"
+  ],
+  "testnet": false,
+  "slug": "lukso"
+} as const satisfies Chain;

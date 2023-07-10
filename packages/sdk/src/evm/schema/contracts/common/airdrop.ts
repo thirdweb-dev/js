@@ -1,25 +1,30 @@
 import { AmountSchema } from "../../../../core/schema/shared";
-import { AddressSchema } from "../../shared";
+import { AddressOrEnsSchema } from "../../shared/AddressOrEnsSchema";
 import { z } from "zod";
 
 /**
  * @internal
  */
-export const AirdropAddressInput = z.object({
-  address: AddressSchema,
-  quantity: AmountSchema.default(1),
-});
+export const AirdropAddressInput = /* @__PURE__ */ (() =>
+  z.object({
+    address: AddressOrEnsSchema,
+    quantity: AmountSchema.default(1),
+  }))();
 
 /**
  * @internal
  */
-export const AirdropInputSchema = z.union([
-  z.array(z.string()).transform((strings) =>
-    strings.map((address) =>
-      AirdropAddressInput.parse({
-        address,
-      }),
+export const AirdropInputSchema = /* @__PURE__ */ (() =>
+  z.union([
+    z.array(z.string()).transform(
+      async (strings) =>
+        await Promise.all(
+          strings.map((address) =>
+            AirdropAddressInput.parseAsync({
+              address,
+            }),
+          ),
+        ),
     ),
-  ),
-  z.array(AirdropAddressInput),
-]);
+    z.array(AirdropAddressInput),
+  ]))();

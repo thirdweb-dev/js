@@ -9,17 +9,22 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import {
   ClaimCondition,
   ClaimConditionFetchOptions,
   ClaimConditionInput,
   SnapshotEntryWithProof,
   fetchCurrencyValue,
-  convertToReadableQuantity,
   fetchCurrencyMetadata,
 } from "@thirdweb-dev/sdk";
-import { BigNumberish, constants, utils } from "ethers";
+import type { BigNumberish, providers } from "ethers";
+import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -60,13 +65,14 @@ export type SetClaimConditionsParams = {
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useactiveclaimcondition?utm_source=sdk | Documentation}
  * @beta
  */
 export function useActiveClaimCondition(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
   options?: ClaimConditionFetchOptions,
-) {
+): UseQueryResult<ClaimCondition | undefined> {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
@@ -115,6 +121,7 @@ export function useActiveClaimCondition(
  * @param claimConditionId - optional the claim condition id to get the proofs for
  * @returns a response object with the snapshot for the provided address
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimerproofs?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimerProofs(
@@ -178,13 +185,14 @@ export function useClaimerProofs(
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the list of claim conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimconditions?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
   options?: ClaimConditionFetchOptions,
-) {
+): UseQueryResult<ClaimCondition[]> {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
@@ -221,7 +229,7 @@ export function useClaimConditions(
 
 /**
  * Get the reasons why a specific wallet can't claim
- * 
+ *
  * @example
  * ```javascript
  * const { data: claimIneligibilityReasons, isLoading, error } = useClaimIneligibilityReasons(contract, { walletAddress: "{{wallet_address}}" });
@@ -230,8 +238,9 @@ export function useClaimConditions(
  * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param eligibilityParams - the parameters for the eligibility check, see: {@link ClaimIneligibilityParams}
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
- * @returns a response object with the resons for the claim ineligibility
+ * @returns a response object with the reasons for the claim ineligibility
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.useclaimineligibilityreasons?utm_source=sdk | Documentation}
  * @beta
  */
 export function useClaimIneligibilityReasons(
@@ -290,7 +299,7 @@ export function useClaimIneligibilityReasons(
 
 /**
  * Get the active claim condition for a specific wallet
- * 
+ *
  * @example
  * ```javascript
  * const { data: activeClaimConditionForWallet, isLoading, error } = useActiveClaimConditionForWallet(contract, "{{wallet_address}}");
@@ -301,14 +310,14 @@ export function useClaimIneligibilityReasons(
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns the active claim conditon for the wallet address or null if there is no active claim condition
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
- *
+ * @see {@link https://portal.thirdweb.com/react/react.useactiveclaimconditionforwallet?utm_source=sdk | Documentation}
  * @beta
  */
 export function useActiveClaimConditionForWallet(
   contract: RequiredParam<DropContract>,
   walletAddress: RequiredParam<WalletAddress>,
   tokenId?: BigNumberish,
-) {
+): UseQueryResult<ClaimCondition | null> {
   const sdk = useSDK();
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -395,9 +404,7 @@ export function useActiveClaimConditionForWallet(
         normalizedPrize || activeGeneralClaimCondition.price;
 
       const maxClaimableWithOverride =
-        // have to transform this the same way that claim conditions do it in SDK
-        convertToReadableQuantity(maxClaimable, currencyMetadata.decimals) ||
-        activeGeneralClaimCondition.maxClaimablePerWallet;
+        maxClaimable || activeGeneralClaimCondition.maxClaimablePerWallet;
 
       const currencyValueWithOverride = await fetchCurrencyValue(
         sdk.getProvider(),
@@ -459,12 +466,18 @@ export function useActiveClaimConditionForWallet(
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to set claim conditions
  * @twfeature ERC20ClaimPhasesV2 | ERC20ClaimPhasesV1 | ERC20ClaimConditionsV2 | ERC20ClaimConditionsV1 | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC1155ClaimPhasesV2 | ERC1155ClaimPhasesV1 | ERC1155ClaimConditionsV2 | ERC1155ClaimConditionsV1
+ * @see {@link https://portal.thirdweb.com/react/react.usesetclaimconditions?utm_source=sdk | Documentation}
  * @beta
  */
 export function useSetClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
-) {
+): UseMutationResult<
+  { receipt: providers.TransactionReceipt },
+  unknown,
+  SetClaimConditionsParams,
+  unknown
+> {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

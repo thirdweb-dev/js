@@ -1,5 +1,6 @@
 import { NFTMetadata } from "../../../core/schema/nft";
 import { Status } from "../../enums";
+import { Address } from "../../schema/shared/Address";
 import { CurrencyValue } from "../currency";
 
 /**
@@ -14,12 +15,12 @@ export interface DirectListingV3 {
   /**
    * The address of the creator of listing.
    */
-  creatorAddress: string;
+  creatorAddress: Address;
 
   /**
    * The address of the asset being listed.
    */
-  assetContractAddress: string;
+  assetContractAddress: Address;
 
   /**
    * The ID of the token to list.
@@ -36,7 +37,7 @@ export interface DirectListingV3 {
   /**
    * The address of the currency to accept for the listing.
    */
-  currencyContractAddress: string;
+  currencyContractAddress: Address;
 
   /**
    * The `CurrencyValue` of the listing. Useful for displaying the price information.

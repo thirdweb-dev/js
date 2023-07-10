@@ -1,11 +1,14 @@
 import { buildTransactionFunction } from "../../common/transactions";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput, TransactionResult } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
+import { Transaction } from "./transactions";
 import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
@@ -56,7 +59,7 @@ export class StandardErc20<
   /**
    * @internal
    */
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -107,7 +110,7 @@ export class StandardErc20<
    *
    * @returns The balance of a specific wallet.
    */
-  public async balanceOf(address: string): Promise<CurrencyValue> {
+  public async balanceOf(address: AddressOrEns): Promise<CurrencyValue> {
     return this.erc20.balanceOf(address);
   }
 
@@ -137,7 +140,7 @@ export class StandardErc20<
    *
    * @returns The allowance of one wallet over anothers funds.
    */
-  public async allowance(spender: string): Promise<CurrencyValue> {
+  public async allowance(spender: AddressOrEns): Promise<CurrencyValue> {
     return await this.erc20.allowance(spender);
   }
 
@@ -158,8 +161,8 @@ export class StandardErc20<
    * @returns The allowance of one wallet over anothers funds.
    */
   public async allowanceOf(
-    owner: string,
-    spender: string,
+    owner: AddressOrEns,
+    spender: AddressOrEns,
   ): Promise<CurrencyValue> {
     return await this.erc20.allowanceOf(owner, spender);
   }
@@ -182,9 +185,11 @@ export class StandardErc20<
    * await contract.transfer(toAddress, amount);
    * ```
    */
-  transfer = buildTransactionFunction(async (to: string, amount: Amount) => {
-    return this.erc20.transfer.prepare(to, amount);
-  });
+  transfer = /* @__PURE__ */ buildTransactionFunction(
+    async (to: AddressOrEns, amount: Amount) => {
+      return this.erc20.transfer.prepare(to, amount);
+    },
+  );
 
   /**
    * Transfer Tokens From Address
@@ -203,8 +208,8 @@ export class StandardErc20<
    * await contract.transferFrom(fromAddress, toAddress, amount);
    * ```
    */
-  transferFrom = buildTransactionFunction(
-    async (from: string, to: string, amount: Amount) => {
+  transferFrom = /* @__PURE__ */ buildTransactionFunction(
+    async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
       return this.erc20.transferFrom.prepare(from, to, amount);
     },
   );
@@ -221,12 +226,11 @@ export class StandardErc20<
    * await contract.setAllowance(spenderAddress, amount);
    * ```
    */
-  public async setAllowance(
-    spender: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this.erc20.setAllowance(spender, amount);
-  }
+  setAllowance = /* @__PURE__ */ buildTransactionFunction(
+    async (spender: AddressOrEns, amount: Amount): Promise<Transaction> => {
+      return this.erc20.setAllowance.prepare(spender, amount);
+    },
+  );
 
   /**
    * Transfer Tokens To Many Wallets
@@ -250,7 +254,9 @@ export class StandardErc20<
    * await contract.transferBatch(data);
    * ```
    */
-  public async transferBatch(args: TokenMintInput[]) {
-    return this.erc20.transferBatch(args);
-  }
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      return this.erc20.transferBatch.prepare(args);
+    },
+  );
 }

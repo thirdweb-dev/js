@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Metadium Mainnet",
   "chain": "META",
@@ -18,4 +19,4 @@ export default {
   "slip44": 916,
   "testnet": false,
   "slug": "metadium"
-} as const;
+} as const satisfies Chain;

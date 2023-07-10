@@ -1,5 +1,7 @@
 import { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { BaseERC1155, BaseSignatureMintERC1155 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -53,7 +55,7 @@ export class StandardErc1155<
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
-  getAddress(): string {
+  getAddress(): Address {
     return this.contractWrapper.readContract.address;
   }
 
@@ -96,7 +98,7 @@ export class StandardErc1155<
    * ```
    */
   public async balanceOf(
-    address: string,
+    address: AddressOrEns,
     tokenId: BigNumberish,
   ): Promise<BigNumber> {
     return this.erc1155.balanceOf(address, tokenId);
@@ -114,7 +116,10 @@ export class StandardErc1155<
    * @param address - the wallet address
    * @param operator - the operator address
    */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
+  public async isApproved(
+    address: AddressOrEns,
+    operator: AddressOrEns,
+  ): Promise<boolean> {
     return this.erc1155.isApproved(address, operator);
   }
 
@@ -132,9 +137,9 @@ export class StandardErc1155<
    * await contract.transfer(toAddress, tokenId, amount);
    * ```
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (
-      to: string,
+      to: AddressOrEns,
       tokenId: BigNumberish,
       amount: BigNumberish,
       data: BytesLike = [0],
@@ -150,8 +155,8 @@ export class StandardErc1155<
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
-    async (operator: string, approved: boolean) => {
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
+    async (operator: AddressOrEns, approved: boolean) => {
       return this.erc1155.setApprovalForAll.prepare(operator, approved);
     },
   );
@@ -186,7 +191,7 @@ export class StandardErc1155<
    * await contract.airdrop(tokenId, addresses);
    * ```
    */
-  airdrop = buildTransactionFunction(
+  airdrop = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,

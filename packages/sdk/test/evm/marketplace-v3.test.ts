@@ -126,21 +126,18 @@ describe("Marketplace V3", async () => {
     ]);
     tokenAddress = customTokenContract.getAddress();
 
-    await marketplaceContract.call(
-      "grantRole",
+    await marketplaceContract.call("grantRole", [
       ethers.utils.solidityKeccak256(["string"], ["LISTER_ROLE"]),
       adminWallet.address,
-    );
-    await marketplaceContract.call(
-      "grantRole",
+    ]);
+    await marketplaceContract.call("grantRole", [
       ethers.utils.solidityKeccak256(["string"], ["ASSET_ROLE"]),
       dummyBundleContract.getAddress(),
-    );
-    await marketplaceContract.call(
-      "grantRole",
+    ]);
+    await marketplaceContract.call("grantRole", [
       ethers.utils.solidityKeccak256(["string"], ["ASSET_ROLE"]),
       dummyNftContract.getAddress(),
-    );
+    ]);
   });
 
   const createDirectListing = async (
@@ -248,6 +245,31 @@ describe("Marketplace V3", async () => {
         10,
       );
       assert.isDefined(listingId);
+    });
+
+    it("should batch create direct listings", async () => {
+      const listings: Parameters<
+        typeof marketplaceContract.directListings.createListingsBatch
+      >[0] = [];
+      for (let i = 0; i < 5; i++) {
+        listings.push({
+          assetContractAddress: dummyNftContract.getAddress(),
+          tokenId: 0,
+          quantity: 1,
+          currencyContractAddress: tokenAddress,
+          pricePerToken: 0.1,
+          startTimestamp: new Date(),
+          endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+          isReservedListing: false,
+        });
+      }
+
+      const receipts =
+        await marketplaceContract.directListings.createListingsBatch(listings);
+      assert.equal(receipts.length, 5);
+      for (const receipt of receipts) {
+        assert.isDefined(receipt.id);
+      }
     });
   });
 
@@ -496,6 +518,33 @@ describe("Marketplace V3", async () => {
         10,
       );
       assert.isDefined(listingId);
+    });
+
+    it("should batch create auction listings", async () => {
+      const listings: Parameters<
+        typeof marketplaceContract.englishAuctions.createAuctionsBatch
+      >[0] = [];
+      for (let i = 0; i < 5; i++) {
+        listings.push({
+          assetContractAddress: dummyBundleContract.getAddress(),
+          tokenId: "1",
+          quantity: 1,
+          currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+          minimumBidAmount: 0.1,
+          buyoutBidAmount: 1,
+          timeBufferInSeconds: 100,
+          bidBufferBps: 100,
+          startTimestamp: new Date(),
+          endTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        });
+      }
+
+      const receipts =
+        await marketplaceContract.englishAuctions.createAuctionsBatch(listings);
+      assert.equal(receipts.length, 5);
+      for (const receipt of receipts) {
+        assert.isDefined(receipt.id);
+      }
     });
   });
 

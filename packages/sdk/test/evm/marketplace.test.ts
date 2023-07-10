@@ -1,10 +1,8 @@
 import {
-  AuctionAlreadyStartedError,
   AuctionListing,
   DirectListing,
   Edition,
   EditionInitializer,
-  ListingNotFoundError,
   ListingType,
   Marketplace,
   MarketplaceInitializer,
@@ -14,8 +12,12 @@ import {
   Offer,
   Token,
   TokenInitializer,
-  WrongListingTypeError,
 } from "../../src/evm";
+import {
+  WrongListingTypeError,
+  ListingNotFoundError,
+  AuctionAlreadyStartedError,
+} from "../../src/evm/common/error";
 import { isWinningBid } from "../../src/evm/common/marketplace";
 import {
   expectError,
@@ -189,7 +191,7 @@ describe("Marketplace Contract", async () => {
     });
 
     // TODO deploy WETH on hardhat
-    it.skip("should list acuction with native token", async () => {
+    it.skip("should list auction with native token", async () => {
       const tx = await marketplaceContract.auction.createListing({
         assetContractAddress: dummyNftContract.getAddress(),
         buyoutPricePerToken: 1,
@@ -237,6 +239,57 @@ describe("Marketplace Contract", async () => {
         0,
       );
       assert.isDefined(listingId);
+    });
+
+    it("should batch list direct listings", async () => {
+      const listings: Parameters<
+        typeof marketplaceContract.direct.createListingsBatch
+      >[0] = [];
+      for (let i = 0; i < 5; i++) {
+        listings.push({
+          assetContractAddress: dummyNftContract.getAddress(),
+          buyoutPricePerToken: 0.1,
+          currencyContractAddress: "0x0000000000000000000000000000000000000000",
+          startTimestamp: new Date(0), // start date can be in the past
+          listingDurationInSeconds: 60 * 60 * 24,
+          tokenId: 0,
+          quantity: 1,
+        });
+      }
+
+      const receipts = await marketplaceContract.direct.createListingsBatch(
+        listings,
+      );
+      assert.equal(receipts.length, 5);
+      for (const receipt of receipts) {
+        assert.isDefined(receipt.id);
+      }
+    });
+
+    it("should batch list auction listings", async () => {
+      const listings: Parameters<
+        typeof marketplaceContract.auction.createListingsBatch
+      >[0] = [];
+      for (let i = 0; i < 5; i++) {
+        listings.push({
+          assetContractAddress: dummyBundleContract.getAddress(),
+          buyoutPricePerToken: 0.1,
+          currencyContractAddress: tokenAddress,
+          startTimestamp: new Date(),
+          listingDurationInSeconds: 60 * 60 * 24,
+          tokenId: 0,
+          quantity: 1,
+          reservePricePerToken: 0.05,
+        });
+      }
+
+      const receipts = await marketplaceContract.auction.createListingsBatch(
+        listings,
+      );
+      assert.equal(receipts.length, 5);
+      for (const receipt of receipts) {
+        assert.isDefined(receipt.id);
+      }
     });
 
     it("should list auction listings with 1155s", async () => {
@@ -1195,6 +1248,20 @@ describe("Marketplace Contract", async () => {
     it("should not return invalid direct listings", async () => {
       await sdk.updateSignerOrProvider(adminWallet);
       await dummyNftContract.transfer(samWallet.address, "0");
+
+      const allListings = await marketplaceContract.getActiveListings();
+      const found = allListings.find(
+        (l) => l.id.toString() === directListingId.toString(),
+      );
+      assert.isUndefined(
+        found,
+        "should not have found the listing because it is invalid",
+      );
+    });
+
+    it("should treat burned tokens listings as invalid", async () => {
+      await sdk.updateSignerOrProvider(adminWallet);
+      await dummyNftContract.burn("0");
 
       const allListings = await marketplaceContract.getActiveListings();
       const found = allListings.find(

@@ -1,8 +1,10 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Astar",
   "chain": "ASTR",
   "rpc": [
     "https://astar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.astar.network",
     "https://rpc.astar.network:8545"
   ],
   "faucets": [],
@@ -26,9 +28,14 @@ export default {
       "name": "subscan",
       "url": "https://astar.subscan.io",
       "standard": "none",
-      "icon": "subscan"
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
   "slug": "astar"
-} as const;
+} as const satisfies Chain;

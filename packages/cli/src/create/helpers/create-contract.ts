@@ -1,5 +1,6 @@
 import { hasBaseContract, readBaseContract } from "./base-contracts";
 import { DownloadError } from "./create-app";
+import { readExtensionBoilerPlate } from "./extension-contract-boilerplate";
 import { PackageManager } from "./get-pkg-manager";
 import { tryGitInit } from "./git";
 import { hasForge } from "./has-forge";
@@ -23,6 +24,15 @@ interface ICreateContractProject {
   framework?: string;
   baseContract?: string;
   onlyContract: boolean;
+  createExtension: boolean;
+}
+
+function isErrorLike(err: unknown): err is { message: string } {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    typeof (err as { message?: unknown }).message === "string"
+  );
 }
 
 export async function createContractProject({
@@ -32,6 +42,7 @@ export async function createContractProject({
   contractName,
   baseContract,
   onlyContract,
+  createExtension,
 }: ICreateContractProject) {
   // Check that the selected base contract is valid
   if (baseContract) {
@@ -70,7 +81,8 @@ export async function createContractProject({
   }
 
   // Clean the contract name
-  contractName = contractName.replace(/\.sol$/, "") + ".sol";
+  const contractObjectName = contractName.replace(/\.sol$/, "");
+  contractName = contractObjectName + ".sol";
 
   const useYarn = packageManager === "yarn";
 
@@ -99,6 +111,23 @@ export async function createContractProject({
         `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
       );
     }
+
+    if (!baseContract && createExtension) {
+      const extensionBoilerplate = readExtensionBoilerPlate(contractObjectName);
+
+      // Set the contents of the Contract.sol file to the extension contract storage library boilerplate
+      let contractFile = "";
+      contractFile = path.join(root, contractName);
+
+      // Write the extension storage library to the MyContract.sol file
+      await writeFile(contractFile, extensionBoilerplate);
+
+      console.log(
+        `${chalk.green(
+          "Success!",
+        )} Created your ${contractName} extension at ${contractPath}`,
+      );
+    }
   } else {
     // Otherwise, create a new contracts project
     const projectName = path.basename(root);
@@ -117,14 +146,6 @@ export async function createContractProject({
     console.log();
 
     process.chdir(root);
-
-    function isErrorLike(err: unknown): err is { message: string } {
-      return (
-        typeof err === "object" &&
-        err !== null &&
-        typeof (err as { message?: unknown }).message === "string"
-      );
-    }
 
     try {
       console.log(`Downloading files. This might take a moment.`);
@@ -148,7 +169,10 @@ export async function createContractProject({
 
       // Add in a new contracts file with specific base contract
       if (baseContract && baseContract.length > 0) {
-        const baseContractText = readBaseContract(baseContract);
+        const baseContractText = readBaseContract(baseContract).replace(
+          "contract Contract",
+          `contract ${contractName.replace(".sol", "")}`,
+        );
 
         // Set the filename of the new file and delete the dummy Contract.sol file
         let contractFile = "";
@@ -163,6 +187,26 @@ export async function createContractProject({
 
         // Write the base contract to the new file
         await writeFile(contractFile, baseContractText);
+      }
+
+      if (!baseContract && createExtension) {
+        const extensionBoilerplate =
+          readExtensionBoilerPlate(contractObjectName);
+
+        // Set the contents of the Contract.sol file to the extension contract storage library boilerplate
+        let contractFile = "";
+        contractFile = path.join(root, contractName);
+        if (framework === "hardhat") {
+          fs.unlinkSync(path.join(root, "contracts", "Contract.sol"));
+          contractFile = path.join(root, "contracts", contractName);
+        }
+        if (framework === "forge") {
+          fs.unlinkSync(path.join(root, "src", "Contract.sol"));
+          contractFile = path.join(root, "src", contractName);
+        }
+
+        // Write the extension storage library to the MyContract.sol file
+        await writeFile(contractFile, extensionBoilerplate);
       }
     } catch (reason) {
       throw new DownloadError(

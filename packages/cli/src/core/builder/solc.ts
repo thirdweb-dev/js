@@ -8,6 +8,7 @@ import { basename, join } from "path";
 import solc from "solc";
 
 export class SolcBuilder extends BaseBuilder {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
@@ -70,7 +71,7 @@ export class SolcBuilder extends BaseBuilder {
     }
 
     // write them out to artifacts dir
-    // TODO technically we *could* just return them straight here, we have them in memory anywa?
+    // TODO technically we *could* just return them straight here, we have them in memory anyway?
     Object.keys(output.contracts)
       .filter((contractName) => contractName in sources)
       .forEach((contractName) => {

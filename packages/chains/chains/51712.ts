@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Sardis Mainnet",
   "chain": "SRDX",
@@ -32,4 +33,4 @@ export default {
   ],
   "testnet": false,
   "slug": "sardis"
-} as const;
+} as const satisfies Chain;

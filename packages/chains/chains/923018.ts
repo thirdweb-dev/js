@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "FNCY Testnet",
   "chain": "FNCY",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "fncy scan testnet",
       "url": "https://fncyscan-testnet.fncy.world",
-      "icon": "fncy",
+      "icon": {
+        "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
   "slug": "fncy-testnet"
-} as const;
+} as const satisfies Chain;

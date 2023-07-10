@@ -1,22 +1,21 @@
-import { getInjectedName } from "../../utils/getInjectedName";
-import { getConnectorStorage } from "../../utils/storage";
+import { AsyncStorage } from "../../../core/AsyncStorage";
+import { WagmiConnector } from "../../../lib/wagmi-connectors";
 import {
   AddChainError,
-  Chain,
   ChainNotConfiguredError,
-  Connector,
   ConnectorNotFoundError,
-  Ethereum,
   normalizeChainId,
   ProviderRpcError,
   ResourceUnavailableError,
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
-} from "@wagmi/core";
-import type { Address } from "abitype";
-import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+} from "../../../lib/wagmi-core";
+import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
+import { getInjectedName } from "../../utils/getInjectedName";
+import { Ethereum } from "./types";
+import type { Chain } from "@thirdweb-dev/chains";
+import { utils, providers } from "ethers";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */
@@ -29,11 +28,6 @@ export type InjectedConnectorOptions = {
    */
   getProvider?: () => Ethereum | undefined;
   /**
-   * MetaMask 10.9.3 emits disconnect event when chain is changed.
-   * This flag prevents the `"disconnect"` event from being emitted upon switching chains. See [GitHub issue](https://github.com/MetaMask/metamask-extension/issues/13375#issuecomment-1027663334) for more info.
-   */
-  shimChainChangedDisconnect?: boolean;
-  /**
    * MetaMask and other injected providers do not support programmatic disconnect.
    * This flag simulates the disconnect behavior by keeping track of connection status in storage. See [GitHub issue](https://github.com/MetaMask/metamask-extension/issues/10353) for more info.
    * @default true
@@ -44,42 +38,61 @@ export type InjectedConnectorOptions = {
 type ConnectorOptions = InjectedConnectorOptions &
   Required<Pick<InjectedConnectorOptions, "getProvider">>;
 
-export class InjectedConnector extends Connector<
+type InjectedConnectorConstructorArg = {
+  chains?: Chain[];
+  connectorStorage: AsyncStorage;
+  options?: InjectedConnectorOptions;
+};
+
+export class InjectedConnector extends WagmiConnector<
   Ethereum,
   ConnectorOptions,
   providers.JsonRpcSigner
 > {
   readonly id: string;
+
+  /**
+   * Name of the injected connector
+   */
   readonly name: string;
+
+  /**
+   * Whether the connector is ready to be used
+   *
+   * `true` if the injected provider is found
+   */
   readonly ready: boolean;
 
   #provider?: Ethereum;
-  #switchingChains?: boolean;
+  connectorStorage: AsyncStorage;
 
   protected shimDisconnectKey = "injected.shimDisconnect";
 
-  constructor({
-    chains,
-    options: options_,
-  }: {
-    chains?: Chain[];
-    options?: InjectedConnectorOptions;
-  } = {}) {
-    const options = {
+  constructor(arg: InjectedConnectorConstructorArg) {
+    const defaultOptions = {
       shimDisconnect: true,
-      shimChainChangedDisconnect: true,
-      getProvider: () =>
-        typeof window !== "undefined"
-          ? (window.ethereum as Ethereum)
-          : undefined,
-      ...options_,
+      getProvider: () => {
+        if (assertWindowEthereum(globalThis.window)) {
+          return globalThis.window.ethereum;
+        }
+      },
     };
-    super({ chains, options });
+
+    const options = {
+      ...defaultOptions,
+      ...arg.options,
+    };
+
+    super({ chains: arg.chains, options });
 
     const provider = options.getProvider();
+
+    // set the name of the connector
     if (typeof options.name === "string") {
+      // if name is given, use that
       this.name = options.name;
     } else if (provider) {
+      // if injected provider is detected, get name from it
       const detectedName = getInjectedName(provider as Ethereum);
       if (options.name) {
         this.name = options.name(detectedName);
@@ -91,47 +104,75 @@ export class InjectedConnector extends Connector<
         }
       }
     } else {
+      // else default to "Injected"
       this.name = "Injected";
     }
 
     this.id = "injected";
     this.ready = !!provider;
+    this.connectorStorage = arg.connectorStorage;
   }
 
-  async connect({ chainId }: { chainId?: number } = {}) {
+  /**
+   * * Connect to the injected provider
+   * * switch to the given chain if `chainId` is specified as an argument
+   */
+  async connect(options: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
+
       if (!provider) {
         throw new ConnectorNotFoundError();
       }
 
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
+      this.setupListeners();
 
+      // emit "connecting" event
       this.emit("message", { type: "connecting" });
 
-      const accounts = await provider.request({
+      // request account addresses from injected provider
+      const accountAddresses = await provider.request({
         method: "eth_requestAccounts",
       });
-      const account = getAddress(accounts[0] as string);
-      // Switch to chain if provided
-      let id = await this.getChainId();
-      let unsupported = this.isChainUnsupported(id);
-      if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
-        id = chain.id;
-        unsupported = this.isChainUnsupported(id);
+
+      // get the first account address
+      const firstAccountAddress = utils.getAddress(
+        accountAddresses[0] as string,
+      );
+
+      // Switch to given chain if a chainId is specified
+      let connectedChainId = await this.getChainId();
+      // Check if currently connected chain is unsupported
+      // chainId is considered unsupported if chainId is not in the list of this.chains array
+      let isUnsupported = this.isChainUnsupported(connectedChainId);
+
+      // if chainId is specified and it is not the same as the currently connected chain
+      if (options.chainId && connectedChainId !== options.chainId) {
+        // switch to the given chain
+        try {
+          await this.switchChain(options.chainId);
+          // recalculate connectedChainId and isUnsupported
+          connectedChainId = options.chainId;
+          isUnsupported = this.isChainUnsupported(options.chainId);
+        } catch (e) {
+          console.error(`Could not switch to chain id: ${options.chainId}`, e);
+        }
       }
 
-      // Add shim to storage signalling wallet is connected
+      // if shimDisconnect is enabled
       if (this.options.shimDisconnect) {
-        await getConnectorStorage()?.setItem(this.shimDisconnectKey, true);
+        // add the shim shimDisconnectKey => it signals that wallet is connected
+        await this.connectorStorage.setItem(this.shimDisconnectKey, "true");
       }
 
-      return { account, chain: { id, unsupported }, provider };
+      const connectionInfo = {
+        account: firstAccountAddress,
+        chain: { id: connectedChainId, unsupported: isUnsupported },
+        provider,
+      };
+
+      this.emit("connect", connectionInfo);
+      return connectionInfo;
     } catch (error) {
       if (this.isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error);
@@ -143,8 +184,13 @@ export class InjectedConnector extends Connector<
     }
   }
 
+  /**
+   * disconnect from the injected provider
+   */
   async disconnect() {
+    // perform cleanup
     const provider = await this.getProvider();
+
     if (!provider?.removeListener) {
       return;
     }
@@ -153,12 +199,16 @@ export class InjectedConnector extends Connector<
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
 
-    // Remove shim signalling wallet is disconnected
+    // if shimDisconnect is enabled
     if (this.options.shimDisconnect) {
-      await getConnectorStorage()?.removeItem(this.shimDisconnectKey);
+      // Remove the shimDisconnectKey => it signals that wallet is disconnected
+      await this.connectorStorage.removeItem(this.shimDisconnectKey);
     }
   }
 
+  /**
+   * @returns The first account address from the injected provider
+   */
   async getAccount() {
     const provider = await this.getProvider();
     if (!provider) {
@@ -167,10 +217,15 @@ export class InjectedConnector extends Connector<
     const accounts = await provider.request({
       method: "eth_accounts",
     });
+
     // return checksum address
-    return getAddress(accounts[0] as string);
+    // https://docs.ethers.org/v5/api/utils/address/#utils-getAddress
+    return utils.getAddress(accounts[0] as string);
   }
 
+  /**
+   * @returns The `chainId` of the currently connected chain from injected provider normalized to a `number`
+   */
   async getChainId() {
     const provider = await this.getProvider();
     if (!provider) {
@@ -179,31 +234,45 @@ export class InjectedConnector extends Connector<
     return provider.request({ method: "eth_chainId" }).then(normalizeChainId);
   }
 
+  /**
+   * get the injected provider
+   */
   async getProvider() {
     const provider = this.options.getProvider();
     if (provider) {
       this.#provider = provider;
+      // setting listeners
     }
     return this.#provider as Ethereum;
   }
 
+  /**
+   * get a `signer` for given `chainId`
+   */
   async getSigner({ chainId }: { chainId?: number } = {}) {
     const [provider, account] = await Promise.all([
       this.getProvider(),
       this.getAccount(),
     ]);
+
+    // ethers.providers.Web3Provider
     return new providers.Web3Provider(
       provider as providers.ExternalProvider,
       chainId,
     ).getSigner(account);
   }
 
+  /**
+   *
+   * @returns `true` if the connector is connected and address is available, else `false`
+   */
   async isAuthorized() {
     try {
+      // `false` if connector is disconnected
       if (
         this.options.shimDisconnect &&
         // If shim does not exist in storage, wallet is disconnected
-        !(await getConnectorStorage()?.getItem(this.shimDisconnectKey))
+        !Boolean(await this.connectorStorage.getItem(this.shimDisconnectKey))
       ) {
         return false;
       }
@@ -212,45 +281,57 @@ export class InjectedConnector extends Connector<
       if (!provider) {
         throw new ConnectorNotFoundError();
       }
+      // `false` if no account address available, else `true`
       const account = await this.getAccount();
       return !!account;
     } catch {
+      // `false` if any error thrown
       return false;
     }
   }
 
+  /**
+   * switch to given chain
+   */
   async switchChain(chainId: number): Promise<Chain> {
-    if (this.options.shimChainChangedDisconnect) {
-      this.#switchingChains = true;
-    }
-
     const provider = await this.getProvider();
     if (!provider) {
       throw new ConnectorNotFoundError();
     }
-    const id = hexValue(chainId);
+
+    const chainIdHex = utils.hexValue(chainId);
 
     try {
+      // request provider to switch to given chainIdHex
       await provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: id }],
+        params: [{ chainId: chainIdHex }],
       });
-      return (
-        this.chains.find((x) => x.id === chainId) ?? {
-          id: chainId,
-          name: `Chain ${id}`,
-          network: `${id}`,
-          nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-          rpcUrls: { default: { http: [""] }, public: { http: [""] } },
-        }
-      );
+      const chain = this.chains.find((_chain) => _chain.chainId === chainId);
+      if (chain) {
+        return chain;
+      }
+
+      return {
+        chainId: chainId,
+        name: `Chain ${chainIdHex}`,
+        slug: `${chainIdHex}`,
+        nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
+        rpc: [""],
+        chain: "",
+        shortName: "",
+        testnet: true,
+      };
     } catch (error) {
-      const chain = this.chains.find((x) => x.id === chainId);
+      // if could not switch to given chainIdHex
+
+      // if tried to connect to a chain that is not configured
+      const chain = this.chains.find((_chain) => _chain.chainId === chainId);
       if (!chain) {
         throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
       }
 
-      // Indicates chain is not added to provider
+      // if chain is not added to provider
       if (
         (error as ProviderRpcError).code === 4902 ||
         // Unwrapping for MetaMask Mobile
@@ -259,27 +340,27 @@ export class InjectedConnector extends Connector<
           ?.originalError?.code === 4902
       ) {
         try {
+          // request provider to add chain
           await provider.request({
             method: "wallet_addEthereumChain",
             params: [
               {
-                chainId: id,
+                chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  chain.rpcUrls.public?.http[0] ??
-                    chain.rpcUrls.default.http[0] ??
-                    "",
-                ],
+                rpcUrls: chain.rpc as string[],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
           });
           return chain;
         } catch (addError) {
+          // if user rejects request to add chain
           if (this.isUserRejectedRequestError(addError)) {
             throw new UserRejectedRequestError(error);
           }
+
+          // else other error
           throw new AddChainError();
         }
       }
@@ -291,64 +372,63 @@ export class InjectedConnector extends Connector<
     }
   }
 
-  async watchAsset({
-    address,
-    decimals = 18,
-    image,
-    symbol,
-  }: {
-    address: Address;
-    decimals?: number;
-    image?: string;
-    symbol: string;
-  }) {
+  async setupListeners() {
     const provider = await this.getProvider();
-    if (!provider) {
-      throw new ConnectorNotFoundError();
+    if (provider.on) {
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
     }
-    return provider.request({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address,
-          decimals,
-          image,
-          symbol,
-        },
-      },
-    });
   }
 
-  protected onAccountsChanged = (accounts: string[]) => {
+  /**
+   * handles the `accountsChanged` event from the provider
+   * * emits `change` event if connected to a different account
+   * * emits `disconnect` event if no accounts available
+   */
+  protected onAccountsChanged = async (accounts: string[]) => {
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
       this.emit("change", {
-        account: getAddress(accounts[0] as string),
+        account: utils.getAddress(accounts[0] as string),
       });
     }
   };
 
+  /**
+   * handles the `chainChanged` event from the provider
+   * * emits `change` event if connected to a different chain
+   */
   protected onChainChanged = (chainId: number | string) => {
     const id = normalizeChainId(chainId);
     const unsupported = this.isChainUnsupported(id);
     this.emit("change", { chain: { id, unsupported } });
   };
 
-  protected onDisconnect = async () => {
-    // We need this as MetaMask can emit the "disconnect" event
-    // upon switching chains. This workaround ensures that the
-    // user currently isn't in the process of switching chains.
-    if (this.options.shimChainChangedDisconnect && this.#switchingChains) {
-      this.#switchingChains = false;
-      return;
+  /**
+   * handles the `disconnect` event from the provider
+   * * emits `disconnect` event
+   */
+  protected onDisconnect = async (error: Error) => {
+    // We need this as MetaMask can emit the "disconnect" event upon switching chains.
+    // If MetaMask emits a `code: 1013` error, wait for reconnection before disconnecting
+    // https://github.com/MetaMask/providers/pull/120
+    if ((error as ProviderRpcError).code === 1013) {
+      const provider = await this.getProvider();
+      if (provider) {
+        const isAuthorized = await this.getAccount();
+        if (isAuthorized) {
+          return;
+        }
+      }
     }
 
     this.emit("disconnect");
-    // Remove shim signalling wallet is disconnected
+
+    // Remove `shimDisconnect` => it signals that wallet is disconnected
     if (this.options.shimDisconnect) {
-      await getConnectorStorage().removeItem(this.shimDisconnectKey);
+      await this.connectorStorage.removeItem(this.shimDisconnectKey);
     }
   };
 

@@ -1,18 +1,29 @@
 // handle browser vs node global
+// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
 globalThis.global = globalThis;
 
-export type { ContractType, NetworkInput } from "./core/types";
+export type { NetworkInput } from "./core/types";
+export type { ContractType } from "./contracts";
 
 export type { Role } from "./common/role";
 
 export * from "./schema/contracts/custom";
 export * from "./schema/contracts/common/claim-conditions";
 export * from "./schema/tokens/common/properties";
-export * from "./constants/chains";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
-export * from "./schema/shared";
+
+// shared
+export * from "./schema/shared/BigNumberSchema";
+export * from "./schema/shared/AddressSchema";
+export * from "./schema/shared/AddressOrEnsSchema";
+export * from "./schema/shared/RawDateSchema";
+export * from "./schema/shared/CallOverrideSchema";
+export * from "./schema/shared/ChainInfo";
+export * from "./schema/shared/Ens";
+export * from "./schema/shared/Address";
+
 export type {
   SDKOptions,
   SDKOptionsSchema,
@@ -27,10 +38,12 @@ export * from "./common";
 export * from "./constants";
 export * from "./contracts";
 
+export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
+
 // export integration things
 export * from "./integrations/thirdweb-checkout";
 
-// explcitly export the *TYPES* of prebuilt contracts
+// explicitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
 export type { EditionDrop } from "./contracts/prebuilt-implementations/edition-drop";
 export type { Marketplace } from "./contracts/prebuilt-implementations/marketplace";
@@ -46,6 +59,5 @@ export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop"
 export type { Vote } from "./contracts/prebuilt-implementations/vote";
 export type { SmartContract } from "./contracts/smart-contract";
 
-// Explicitly export all functions and types that we want from /functions
-export * from "./functions/getContract";
-export * from "./functions/getContractFromAbi";
+// re-export from functions entry point
+export * from "./functions";

@@ -1,5 +1,6 @@
 import { NFTMetadata } from "../../../core/schema/nft";
 import { ListingType } from "../../enums/marketplace";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CurrencyValue } from "../currency";
 import { BigNumber, BigNumberish } from "ethers";
 
@@ -15,7 +16,7 @@ export interface AuctionListing {
   /**
    * The address of the asset being listed.
    */
-  assetContractAddress: string;
+  assetContractAddress: AddressOrEns;
 
   /**
    * The ID of the token to list.
@@ -47,7 +48,7 @@ export interface AuctionListing {
   /**
    * The address of the currency to accept for the listing.
    */
-  currencyContractAddress: string;
+  currencyContractAddress: AddressOrEns;
 
   /**
    * The reserve price is the minimum price that a bid must be in order to be accepted.
@@ -74,7 +75,7 @@ export interface AuctionListing {
   /**
    * The address of the seller.
    */
-  sellerAddress: string;
+  sellerAddress: AddressOrEns;
 
   type: ListingType.Auction;
 }

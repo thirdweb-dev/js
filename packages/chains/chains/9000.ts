@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Evmos Testnet",
   "chain": "Evmos",
@@ -25,18 +26,17 @@ export default {
   },
   "explorers": [
     {
-      "name": "Evmos EVM Explorer",
-      "url": "https://evm.evmos.dev",
-      "standard": "EIP3091",
-      "icon": "evmos"
-    },
-    {
-      "name": "Evmos Cosmos Explorer",
-      "url": "https://explorer.evmos.dev",
+      "name": "Evmos Explorer (Escan)",
+      "url": "https://testnet.escan.live",
       "standard": "none",
-      "icon": "evmos"
+      "icon": {
+        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": true,
   "slug": "evmos-testnet"
-} as const;
+} as const satisfies Chain;

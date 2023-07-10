@@ -7,7 +7,7 @@ import type {
   QueryAllParams,
   SUPPORTED_CHAIN_ID,
 } from "@thirdweb-dev/sdk";
-import { BigNumberish, constants } from "ethers";
+import { BigNumberish, CallOverrides, constants } from "ethers";
 
 const TW_CACHE_KEY_PREFIX = "tw-cache";
 
@@ -108,13 +108,38 @@ export const cacheKeys = {
     call: (
       contractAddress: RequiredParam<ContractAddress>,
       functionName: RequiredParam<string>,
-      args: unknown[],
-    ) => createContractCacheKey(contractAddress, ["call", functionName, args]),
+      args?: unknown[],
+      overrides?: CallOverrides,
+    ) =>
+      createContractCacheKey(contractAddress, [
+        "call",
+        functionName,
+        args,
+        overrides,
+      ]),
+
+    accountFactory: {
+      getAll: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["accountFactory"]),
+      isAccountDeployed: (
+        contractAdress: RequiredParam<ContractAddress>,
+        admin: RequiredParam<string>,
+      ) => createContractCacheKey(contractAdress, ["isAccountDeployed", admin]),
+      getAllForAddress: (
+        contractAdress: RequiredParam<ContractAddress>,
+        address: RequiredParam<string>,
+      ) =>
+        createContractCacheKey(contractAdress, ["getAllForAddress", address]),
+    },
+
+    account: {
+      signers: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["account", "signers"]),
+    },
 
     app: {
-      get: (
-        contractAddress: RequiredParam<ContractAddress>
-      ) => createContractCacheKey(contractAddress, ["appURI"]),
+      get: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["appURI"]),
     },
 
     events: {
@@ -176,6 +201,10 @@ export const cacheKeys = {
               owner,
             ]),
         },
+      },
+      sharedMetadata: {
+        get: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress),
       },
       drop: {
         getAllUnclaimed: (
@@ -250,10 +279,16 @@ export const cacheKeys = {
           contractAddress,
           params ? ["getActiveListings", params] : ["getActiveListings"],
         ),
-      getBidBufferBps: (contractAddress: RequiredParam<ContractAddress>) =>
-        createContractCacheKey(contractAddress, ["getBidBufferBps"]),
-
       auction: {
+        getBidBufferBps: (
+          contractAddress: RequiredParam<ContractAddress>,
+          listingId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "auction",
+            "getBidBufferBps",
+            { listingId },
+          ]),
         getWinningBid: (
           contractAddress: RequiredParam<ContractAddress>,
           listingId: RequiredParam<BigNumberish>,
@@ -261,6 +296,15 @@ export const cacheKeys = {
           createContractCacheKey(contractAddress, [
             "auction",
             "getWinningBid",
+            { listingId },
+          ]),
+        getMinimumNextBid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          listingId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "auction",
+            "getMinimumNextBid",
             { listingId },
           ]),
         getWinner: (
@@ -282,8 +326,8 @@ export const cacheKeys = {
           createContractCacheKey(
             contractAddress,
             params
-              ? ["getAllDirectListings", params]
-              : ["getAllDirectListings"],
+              ? ["directListings", "getAll", params]
+              : ["directListings", "getAll"],
           ),
         getAllValid: (
           contractAddress: RequiredParam<ContractAddress>,
@@ -292,20 +336,22 @@ export const cacheKeys = {
           createContractCacheKey(
             contractAddress,
             params
-              ? ["getAllValidDirectListings", params]
-              : ["getAllValidDirectListings"],
+              ? ["directListings", "getAllValid", params]
+              : ["directListings", "getAllValid"],
           ),
         getListing: (
           contractAddress: RequiredParam<ContractAddress>,
           listingId: RequiredParam<BigNumberish>,
         ) =>
           createContractCacheKey(contractAddress, [
+            "directListings",
             "getListing",
             { listingId },
           ]),
         getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
           createContractCacheKey(contractAddress, [
-            "getTotalDirectListingsCount",
+            "directListings",
+            "getTotalCount",
           ]),
       },
 
@@ -317,8 +363,8 @@ export const cacheKeys = {
           createContractCacheKey(
             contractAddress,
             params
-              ? ["getAllEnglishAuctions", params]
-              : ["getAllEnglishAuctions"],
+              ? ["englishAuctions", "getAll", params]
+              : ["englishAuctions", "getAll"],
           ),
         getAllValid: (
           contractAddress: RequiredParam<ContractAddress>,
@@ -327,14 +373,15 @@ export const cacheKeys = {
           createContractCacheKey(
             contractAddress,
             params
-              ? ["getAllEValidEnglishAuctions", params]
-              : ["getAllEValidEnglishAuctions"],
+              ? ["englishAuctions", "getAllValid", params]
+              : ["englishAuctions", "getAllValid"],
           ),
         getAuction: (
           contractAddress: RequiredParam<ContractAddress>,
           auctionId: RequiredParam<BigNumberish>,
         ) =>
           createContractCacheKey(contractAddress, [
+            "englishAuctions",
             "getAuction",
             { auctionId },
           ]),
@@ -343,12 +390,14 @@ export const cacheKeys = {
           auctionId: RequiredParam<BigNumberish>,
         ) =>
           createContractCacheKey(contractAddress, [
+            "englishAuctions",
             "getWinningBid",
             { auctionId },
           ]),
         getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
           createContractCacheKey(contractAddress, [
-            "getTotalEnglishAuctionsCount",
+            "englishAuctions",
+            "getTotalCount",
           ]),
       },
     },

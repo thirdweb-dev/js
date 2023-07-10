@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Quadrans Blockchain",
   "chain": "QDC",
@@ -27,10 +28,15 @@ export default {
     {
       "name": "explorer",
       "url": "https://explorer.quadrans.io",
-      "icon": "quadrans",
+      "icon": {
+        "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
+        "width": 1024,
+        "height": 1024,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "quadrans-blockchain"
-} as const;
+} as const satisfies Chain;

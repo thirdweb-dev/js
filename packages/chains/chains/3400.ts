@@ -1,3 +1,4 @@
+import type { Chain } from "../src/types";
 export default {
   "name": "Paribu Net Mainnet",
   "chain": "PRB",
@@ -25,10 +26,9 @@ export default {
     {
       "name": "Paribu Net Explorer",
       "url": "https://explorer.paribu.network",
-      "icon": "explorer",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
   "slug": "paribu-net"
-} as const;
+} as const satisfies Chain;
