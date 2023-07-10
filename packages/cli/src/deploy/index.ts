@@ -12,7 +12,7 @@ type DeployOptions = {
   distPath?: string;
 };
 
-export async function deploy(options: DeployOptions) {
+export async function deploy(options: DeployOptions, apiKey: string) {
   if (options.name) {
     const url = generateDashboardUrl(options.name, options.contractVersion);
 
@@ -33,7 +33,7 @@ export async function deploy(options: DeployOptions) {
 
   if (options.app) {
     try {
-      let url = await deployApp(options.distPath, options.path);
+      let url = await deployApp(options.distPath, options.path, apiKey);
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {
@@ -44,7 +44,7 @@ export async function deploy(options: DeployOptions) {
     }
   }
 
-  const url = await processProject(options, "deploy");
+  const url = await processProject(options, "deploy", apiKey);
   info(
     `Open this link to deploy your contracts: ${chalk.blueBright(
       url.toString(),

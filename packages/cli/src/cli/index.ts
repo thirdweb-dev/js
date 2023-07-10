@@ -1,15 +1,4 @@
 #!/usr/bin/env node
-import { detectExtensions } from "../common/feature-detector";
-import { detectProject } from "../common/project-detector";
-import { processProject } from "../common/processor";
-import { cliVersion, pkg } from "../constants/urls";
-import { info, logger, spinner } from "../core/helpers/logger";
-import { CacheEntry } from "../core/types/cache";
-import { twCreate } from "../create/command";
-import { deploy } from "../deploy";
-import { generate } from "../generate/command";
-import { findPackageInstallation } from "../helpers/detect-local-packages";
-import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { exec, spawn } from "child_process";
@@ -17,7 +6,19 @@ import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
+import { loginUserIfNeeded } from "../auth";
+import { detectExtensions } from "../common/feature-detector";
+import { processProject } from "../common/processor";
+import { detectProject } from "../common/project-detector";
+import { cliVersion, pkg } from "../constants/urls";
+import { info, logger, spinner } from "../core/helpers/logger";
+import { CacheEntry } from "../core/types/cache";
+import { twCreate } from "../create/command";
+import { deploy } from "../deploy";
+import { generate } from "../generate/command";
+import { findPackageInstallation } from "../helpers/detect-local-packages";
 import { install } from "../install";
+import { upload } from "../storage/command";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -297,7 +298,8 @@ const main = async () => {
     )
     .option("--zksync", "Deploy on ZKSync")
     .action(async (options) => {
-      const url = await deploy(options);
+      const apiKey = await loginUserIfNeeded(cache);
+      const url = await deploy(options, apiKey);
       if (url) {
         await open(url);
       }
@@ -320,10 +322,11 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
+      const apiKey = await loginUserIfNeeded(cache);
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
-      const url = await processProject(options, "publish");
+      const url = await processProject(options, "publish", apiKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -351,7 +354,8 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
-      const url = await processProject(options, "publish");
+      const apiKey = await loginUserIfNeeded(cache);
+      const url = await processProject(options, "publish", apiKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -365,7 +369,10 @@ const main = async () => {
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
     .action(async (path) => {
-      const storage = new ThirdwebStorage();
+      const apiKey = await loginUserIfNeeded(cache);
+      const storage = new ThirdwebStorage({
+        thirdwebApiKey: apiKey,
+      });
       try {
         const uri = await upload(storage, path);
         info(

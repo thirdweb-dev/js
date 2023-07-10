@@ -32,9 +32,12 @@ import path from "path";
 export async function processProject(
   options: any,
   command: "deploy" | "publish",
+  apiKey: string,
 ) {
   // TODO: allow overriding the default storage
-  const storage = new ThirdwebStorage();
+  const storage = new ThirdwebStorage({
+    thirdwebApiKey: apiKey,
+  });
 
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
