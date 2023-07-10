@@ -7,6 +7,9 @@ import CIDTool from "cid-tool";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
+    "https://{cid}.ipfs.twipfs.com/{path}",
+    "https://{cid}.ipfs.twgateway.com/{path}",
+
     "https://{cid}.ipfs.thirdwebstorage.com/{path}",
     "https://{cid}.ipfs.thirdwebipfs.com/{path}",
     "https://{cid}.ipfs.thirdwebgateway.com/{path}",
