@@ -19,8 +19,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  */
 export function createThirdwebSDK(
   network: Network,
-  apiKey: string,
-  storage: ThirdwebStorage = new ThirdwebStorage({ apiKey: apiKey }),
+  storage: ThirdwebStorage = new ThirdwebStorage(),
 ): ThirdwebSDK {
   const payer = getPayer();
   const signer: KeypairSigner = {
