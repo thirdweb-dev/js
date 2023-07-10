@@ -24,7 +24,7 @@ export const GetStartedScreen: React.FC<{
   appleStoreLink?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
-  hideBackButton: boolean;
+  hideBackButton?: boolean;
 }> = (props) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
