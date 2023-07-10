@@ -428,7 +428,7 @@ const main = async () => {
     program
       .command("login")
       .description("Authenticate with thirdweb CLI using your API key or replace an existing API key")
-      .option("-n, --new", "Generate a new API key", false)
+      .option("-n, --new", "Login with a new API key", false)
       .action(async (options) => {
         await loginUser(cache, options);
       });
