@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.1.7
+
+### Patch Changes
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
 ## 1.1.6
 
 ### Patch Changes
