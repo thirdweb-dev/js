@@ -2,14 +2,14 @@ import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
-import { MetamaskScan } from "./MetamaskScan";
+// import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
-  const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
-  >("connecting");
+  const [screen, setScreen] = useState<"connecting" | "get-started">(
+    "connecting",
+  );
   const { walletConfig, close } = props;
   const connect = useConnect();
 
@@ -49,7 +49,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
           );
         } else {
           // on desktop, show the metamask scan qr code
-          setScreen("scanning");
+          setScreen("get-started");
         }
       }
     })();
@@ -75,26 +75,25 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={() => {
-          setScreen("scanning");
-        }}
+        onBack={props.goBack}
+        hideBackButton={hideBackButton}
       />
     );
   }
 
-  if (screen === "scanning") {
-    return (
-      <MetamaskScan
-        onBack={goBack}
-        onConnected={close}
-        onGetStarted={() => {
-          setScreen("get-started");
-        }}
-        hideBackButton={hideBackButton}
-        walletConfig={walletConfig}
-      />
-    );
-  }
+  // if (screen === "scanning") {
+  //   return (
+  //     <MetamaskScan
+  //       onBack={goBack}
+  //       onConnected={close}
+  //       onGetStarted={() => {
+  //         setScreen("get-started");
+  //       }}
+  //       hideBackButton={hideBackButton}
+  //       walletConfig={walletConfig}
+  //     />
+  //   );
+  // }
 
   return null;
 };

@@ -24,6 +24,7 @@ export const GetStartedScreen: React.FC<{
   appleStoreLink?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
+  hideBackButton: boolean;
 }> = (props) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
@@ -32,26 +33,30 @@ export const GetStartedScreen: React.FC<{
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
 
+  const hide = props.hideBackButton && showScreen === "base";
+
   return (
     <>
-      <BackButton
-        style={
-          isScanScreen
-            ? {
-                position: "absolute",
-                top: spacing.lg,
-                left: spacing.lg,
-              }
-            : undefined
-        }
-        onClick={() => {
-          if (showScreen === "base") {
-            props.onBack();
-          } else {
-            setShowScreen("base");
+      {!hide && (
+        <BackButton
+          style={
+            isScanScreen
+              ? {
+                  position: "absolute",
+                  top: spacing.lg,
+                  left: spacing.lg,
+                }
+              : undefined
           }
-        }}
-      />
+          onClick={() => {
+            if (showScreen === "base") {
+              props.onBack();
+            } else {
+              setShowScreen("base");
+            }
+          }}
+        />
+      )}
 
       {showScreen === "android-scan" && props.googlePlayStoreLink && (
         <ScanScreen
