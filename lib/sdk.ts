@@ -16,7 +16,7 @@ import { DashboardSolanaNetwork } from "utils/solanaUtils";
 // use env var to set IPFS gateway or fallback to ipfscdn.io
 export const IPFS_GATEWAY_URL =
   (process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string) ||
-  "https://{cid}.ipfs.thirdwebstorage.com/{path}";
+  "https://{cid}.gateway.ipfscdn.io/{path}";
 
 export function replaceIpfsUrl(url: string) {
   try {

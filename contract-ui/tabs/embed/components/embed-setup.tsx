@@ -108,7 +108,7 @@ const buildIframeSrc = (
   } = options;
 
   const url = new URL(
-    `https://${contractEmbedHash}.ipfs.thirdwebstorage.com/${contractPath}`,
+    `https://${contractEmbedHash}.gateway.ipfscdn.io/${contractPath}`,
   );
 
   url.searchParams.append("contract", contract.getAddress());
