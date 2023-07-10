@@ -6,7 +6,7 @@ import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
-import { loginUserIfNeeded } from "../auth";
+import { loginUser } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -298,7 +298,7 @@ const main = async () => {
     )
     .option("--zksync", "Deploy on ZKSync")
     .action(async (options) => {
-      const apiKey = await loginUserIfNeeded(cache);
+      const apiKey = await loginUser(cache);
       const url = await deploy(options, apiKey);
       if (url) {
         await open(url);
@@ -322,7 +322,7 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
-      const apiKey = await loginUserIfNeeded(cache);
+      const apiKey = await loginUser(cache);
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
@@ -354,7 +354,7 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
-      const apiKey = await loginUserIfNeeded(cache);
+      const apiKey = await loginUser(cache);
       const url = await processProject(options, "publish", apiKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
@@ -369,9 +369,9 @@ const main = async () => {
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
     .action(async (path) => {
-      const apiKey = await loginUserIfNeeded(cache);
+      const apiKey = await loginUser(cache);
       const storage = new ThirdwebStorage({
-        thirdwebApiKey: apiKey,
+        apiKey,
       });
       try {
         const uri = await upload(storage, path);
@@ -424,6 +424,14 @@ const main = async () => {
     .action(async (options) => {
       await generate(options);
     });
+    
+    program
+      .command("login")
+      .description("Authenticate with thirdweb CLI using your API key or replace an existing API key")
+      .option("-n, --new", "Generate a new API key", false)
+      .action(async (options) => {
+        await loginUser(cache, options);
+      });
 
   await program.parseAsync();
 };

@@ -36,7 +36,7 @@ export async function processProject(
 ) {
   // TODO: allow overriding the default storage
   const storage = new ThirdwebStorage({
-    thirdwebApiKey: apiKey,
+    apiKey,
   });
 
   logger.setSettings({

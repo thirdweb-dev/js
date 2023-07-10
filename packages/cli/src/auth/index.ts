@@ -2,13 +2,12 @@ import chalk from "chalk";
 import prompts from "prompts";
 import { CacheEntry } from "../core/types/cache";
 
-export async function loginUserIfNeeded(cache: any) {
+export async function loginUser(cache: any, options?: { new: boolean }) {
   const keyFound = getSession(cache);
-  if (keyFound) {
+  if (keyFound && !options?.new) {
     return keyFound;
   } else {
-    const apiKey = await loginUser();
-    createSession(cache, apiKey);
+    const apiKey = await createSession(cache);
     return apiKey;
   }
 }
@@ -22,15 +21,23 @@ export function getSession(cache: any) {
   }
 }
 
-export function createSession(cache: any, apiKey: string) {
+export async function createSession(cache: any) {
   try {
-    cache.set("api-key", apiKey);
+    const apiKey = await prompts({
+      type: "text",
+      name: "apiKey",
+      message: "Please enter your API key, you can find it on https://thirdweb.com/settings/api-keys",
+    });
+
+    checkSyntaxOfKey(apiKey.apiKey);
+    cache.set("api-key", apiKey.apiKey);
+    return apiKey.apiKey;
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function loginUser() {
+export async function promptForApiKey() {
   const apiKey = await prompts({
     type: "text",
     name: "apiKey",
