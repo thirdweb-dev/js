@@ -1,6 +1,10 @@
 import { Chain, MinimalChain } from "./types";
 
 export type ChainRPCOptions = {
+  apiKey?: string;
+  /**
+   * @deprecated Use `apiKey` instead
+   */
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
@@ -23,10 +27,14 @@ export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
 ): string[] {
-  const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
+  let { apiKey, thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
     ...defaultOptions,
     ...options,
   };
+
+  if (!apiKey && thirdwebApiKey) {
+    apiKey = thirdwebApiKey;
+  }
 
   const processedRPCs: string[] = [];
 
@@ -41,8 +49,8 @@ export function getChainRPCs(
     }
 
     // Replace API_KEY placeholder with value
-    if (thirdwebApiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
+    if (apiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", apiKey));
     } else if (infuraApiKey && rpc.includes("${INFURA_API_KEY}")) {
       processedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
     } else if (alchemyApiKey && rpc.includes("${ALCHEMY_API_KEY}")) {

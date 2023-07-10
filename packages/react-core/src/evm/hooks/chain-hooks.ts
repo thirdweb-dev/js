@@ -11,17 +11,22 @@ export function useUpdateChainsWithApiKeys<
 >(
   supportedChains: NonNullable<TChains>,
   activeChain: TActiveChain,
+  apiKey?: string,
+  /**
+   * @deprecated Use `apiKey` instead
+   */
   thirdwebApiKey?: string,
   alchemyApiKey?: string,
   infuraApiKey?: string,
 ) {
   const keys = useMemo(
     () => ({
+      apiKey: apiKey,
       thirdwebApiKey: thirdwebApiKey,
       alchemyApiKey: alchemyApiKey,
       infuraApiKey: infuraApiKey,
     }),
-    [thirdwebApiKey, alchemyApiKey, infuraApiKey],
+    [apiKey, thirdwebApiKey, alchemyApiKey, infuraApiKey],
   );
 
   const supportedChainsWithKey = useMemo(() => {

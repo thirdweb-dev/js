@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import type { ChainOrRpcUrl, NetworkInput } from "../core/types";
 import { isProvider, isSigner } from "../functions/getSignerAndProvider";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
@@ -51,7 +50,8 @@ export function getChainProvider(
     chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
     rpcUrl = getChainRPC(rpcMap[chainId], {
-      thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
+      apiKey: options.apiKey,
+      thirdwebApiKey: options.thirdwebApiKey,
       infuraApiKey: options.infuraApiKey,
       alchemyApiKey: options.alchemyApiKey,
     });

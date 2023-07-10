@@ -109,6 +109,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
     useUpdateChainsWithApiKeys(
       supportedChainsNonNull,
       props.activeChain || supportedChainsNonNull[0],
+      props.apiKey,
       props.thirdwebApiKey,
       props.alchemyApiKey,
       props.infuraApiKey,
@@ -163,6 +164,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
           activeChain={activeChainWithKey}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
+          apiKey={props.apiKey}
           thirdwebApiKey={props.thirdwebApiKey}
           alchemyApiKey={props.alchemyApiKey}
           infuraApiKey={props.infuraApiKey}

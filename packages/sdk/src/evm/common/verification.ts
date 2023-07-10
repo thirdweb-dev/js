@@ -12,7 +12,6 @@ import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
 import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
@@ -275,9 +274,10 @@ export async function isVerifiedOnEtherscan(
   chainId: number,
   explorerAPIUrl: string,
   explorerAPIKey: string,
+  apiKey: string,
 ): Promise<boolean> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: DEFAULT_API_KEY,
+    apiKey: apiKey,
   });
   invariant(
     await isContractDeployed(contractAddress, provider),
