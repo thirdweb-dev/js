@@ -8,8 +8,13 @@ export function createStorage(
   if (storage) {
     return storage;
   } else if (options?.gatewayUrls) {
-    return new ThirdwebStorage({ gatewayUrls: options.gatewayUrls });
+    return new ThirdwebStorage({
+      gatewayUrls: options.gatewayUrls,
+      apiKey: options.thirdwebApiKey,
+    });
   } else {
-    return new ThirdwebStorage();
+    return new ThirdwebStorage({
+      apiKey: options?.thirdwebApiKey,
+    });
   }
 }
