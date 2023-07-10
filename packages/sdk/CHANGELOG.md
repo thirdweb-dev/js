@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 3.10.29
+
+### Patch Changes
+
+- [#1299](https://github.com/thirdweb-dev/js/pull/1299) [`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5) Thanks [@nkrishang](https://github.com/nkrishang)! - Add ERC721LoyaltyCard and ERC721UpdatableMetadata
+
+- [#1298](https://github.com/thirdweb-dev/js/pull/1298) [`72ada475`](https://github.com/thirdweb-dev/js/commit/72ada47596d5d5c08736c33215faeec636b7156a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Proper types for contract.metadata.get() for custom contracts
+
+- [#1304](https://github.com/thirdweb-dev/js/pull/1304) [`2c0bb078`](https://github.com/thirdweb-dev/js/commit/2c0bb0789955f6cd397b6fdb8e990a505251c631) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix pack code snippets
+
+- Updated dependencies [[`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5), [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61), [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352)]:
+  - @thirdweb-dev/contracts-js@1.3.9
+  - @thirdweb-dev/chains@0.1.28
+  - @thirdweb-dev/storage@1.1.7
+
 ## 3.10.28
 
 ### Patch Changes
