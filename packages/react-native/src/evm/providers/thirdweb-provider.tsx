@@ -1,4 +1,5 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
+import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -58,6 +59,7 @@ export const ThirdwebProvider = <
 >({
   children,
   createWalletStorage = createAsyncLocalStorage,
+  thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
   theme,
@@ -74,6 +76,7 @@ export const ThirdwebProvider = <
 
   return (
     <ThirdwebProviderCore
+      thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
       authConfig={
         authConfig

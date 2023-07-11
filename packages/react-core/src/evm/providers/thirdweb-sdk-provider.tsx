@@ -1,3 +1,4 @@
+import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
@@ -104,12 +105,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        {
-          ...mergedOptions,
-          infuraApiKey,
-          alchemyApiKey,
-          thirdwebApiKey,
-        },
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
         storageInterface,
       );
     }
@@ -183,11 +179,14 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   queryClient,
   supportedChains,
   activeChain,
-  thirdwebApiKey,
+  thirdwebApiKey = DEFAULT_API_KEY,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  if (!thirdwebApiKey) {
+    console.warn("thirdwebApiKey will be enforced.");
+  }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);

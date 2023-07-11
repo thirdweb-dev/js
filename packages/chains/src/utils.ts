@@ -28,6 +28,10 @@ export function getChainRPCs(
     ...options,
   };
 
+  if (!thirdwebApiKey) {
+    console.warn("thirdwebApiKey will be enforced.");
+  }
+
   const processedRPCs: string[] = [];
 
   chain.rpc.forEach((rpc) => {

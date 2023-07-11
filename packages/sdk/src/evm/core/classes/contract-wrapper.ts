@@ -85,7 +85,7 @@ export class ContractWrapper<
       this.getProvider(),
     ) as TContract;
     this.#storage = new ThirdwebStorage({
-      thirdwebApiKey: options?.thirdwebApiKey,
+      apiKey: options?.thirdwebApiKey,
     });
   }
 

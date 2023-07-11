@@ -45,7 +45,6 @@ export class LocalWallet extends AbstractClientWallet<
 
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
-
     this.options = options || {};
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);

@@ -1,3 +1,4 @@
+import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -56,6 +57,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
+  thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets,
   theme,
   children,
@@ -68,6 +70,7 @@ export const ThirdwebProvider = <
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}
+          thirdwebApiKey={thirdwebApiKey}
           supportedWallets={wallets}
           {...restProps}
         >

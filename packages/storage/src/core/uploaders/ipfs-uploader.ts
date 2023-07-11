@@ -22,8 +22,8 @@ import FormData from "form-data";
  * ```jsx
  * // Can instantiate the uploader with default configuration and your api key
  * const uploader = new StorageUploader();
- * const thirdwebApiKey = "your-api-key";
- * const storage = new ThirdwebStorage({ thirdwebApiKey, uploader });
+ * const apiKey = "your-api-key";
+ * const storage = new ThirdwebStorage({ apiKey, uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
@@ -31,19 +31,19 @@ import FormData from "form-data";
  *   uploadWithGatewayUrl: true,
  * }
  * const uploader = new StorageUploader(options);
- * const thirdwebApiKey = "your-api-key";
- * const storage = new ThirdwebStorage({ thirdwebApiKey, uploader });
+ * const apiKey = "your-api-key";
+ * const storage = new ThirdwebStorage({ apiKey, uploader });
  * ```
  *
  * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
-  private thirdwebApiKey?: string;
+  private apiKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.thirdwebApiKey = options?.thirdwebApiKey || "";
+    this.apiKey = options?.apiKey || "";
   }
 
   async uploadBatch(
@@ -105,7 +105,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           process.env.NODE_ENV === "test" || !!process.env.CI
             ? "Storage SDK CI"
             : "Storage SDK",
-        Authorization: `Bearer ${this.thirdwebApiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
       },
     });
 

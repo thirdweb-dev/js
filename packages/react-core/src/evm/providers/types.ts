@@ -40,6 +40,8 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
     // allow string as well but autocomplete will only show chain slug
     | (string & {})
     | Chain;
+
+  // api keys that can be passed
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
