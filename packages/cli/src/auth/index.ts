@@ -1,8 +1,8 @@
 import chalk from "chalk";
 import prompts from "prompts";
-import { CacheEntry } from "../core/types/cache";
+import Cache, { CacheEntry } from "sync-disk-cache";
 
-export async function loginUser(cache: any, options?: { new: boolean }) {
+export async function loginUser(cache: Cache, options?: { new: boolean }) {
   const keyFound = getSession(cache);
   if (keyFound && !options?.new) {
     return keyFound;
@@ -12,7 +12,16 @@ export async function loginUser(cache: any, options?: { new: boolean }) {
   }
 }
 
-export function getSession(cache: any) {
+export async function logoutUser(cache: Cache) {
+  try {
+    cache.remove("api-key");
+    console.log(chalk.green("You have been logged out"));
+  } catch (error) {
+    console.log(chalk.red("Something went wrong", error));
+  }
+}
+
+export function getSession(cache: Cache) {
   try {
     const apiKey: CacheEntry = cache.get("api-key");
     return apiKey.value;
@@ -21,12 +30,12 @@ export function getSession(cache: any) {
   }
 }
 
-export async function createSession(cache: any) {
+export async function createSession(cache: Cache) {
   try {
     const apiKey = await prompts({
       type: "text",
       name: "apiKey",
-      message: "Please enter your API key, you can find or create it on https://thirdweb.com/settings/api-keys",
+      message: `Please enter your API key, you can find or create it on ${chalk.blue("https://thirdweb.com/settings/api-keys")}`,
     });
 
     checkSyntaxOfKey(apiKey.apiKey);

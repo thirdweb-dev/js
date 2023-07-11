@@ -7,8 +7,8 @@ import open from "open";
 import os from "os";
 import path from "path";
 import prompts from "prompts";
-import Cache from "sync-disk-cache";
-import { loginUser } from "../auth";
+import Cache from 'sync-disk-cache';
+import { loginUser, logoutUser } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -431,10 +431,17 @@ const main = async () => {
 
     program
       .command("login")
-      .description("Authenticate with thirdweb CLI using your API key or replace an existing API key")
+      .description("Authenticate with the thirdweb CLI using your API key or replace an existing API key")
       .option("-n, --new", "Login with a new API key", false)
       .action(async (options) => {
         await loginUser(cache, options);
+      });
+
+    program
+      .command("logout")
+      .description("Logout of the thirdweb CLI, effectively removing your API key from your machine")
+      .action(async () => {
+        await logoutUser(cache);
       });
 
   await program.parseAsync();
