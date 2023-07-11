@@ -29,6 +29,7 @@ import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { Transaction } from "../classes";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -125,6 +126,9 @@ export class UserWallet {
         signer,
         method: "transfer",
         args: [resolvedTo, amountInWei],
+        storage: new ThirdwebStorage({
+          apiKey: this.options?.apiKey,
+        }),
       });
 
       return transferTransaction.execute();
