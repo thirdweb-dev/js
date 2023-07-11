@@ -1,0 +1,153 @@
+import { ApiKeyDetails } from "./Details";
+import { ApiKeyKeyForm } from "./KeyForm";
+import { RevokeApiKeyButton } from "./RevokeButton";
+import { toastMessages } from "./messages";
+import { THIRDWEB_SERVICES } from "./services";
+import { ApiKeyFormValues, DrawerSection } from "./types";
+import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { HStack, useToast } from "@chakra-ui/react";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button, Drawer } from "tw-components";
+import { fromArrayToList, toArrFromList } from "utils/string";
+
+interface ApiKeyDrawerProps {
+  apiKey: ApiKey;
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (apiKey: ApiKey) => void;
+}
+export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
+  apiKey,
+  open,
+  onClose,
+  onSubmit,
+}) => {
+  const { id, name, domains, services } = apiKey;
+  const [editing, setEditing] = useState(false);
+  const mutation = useUpdateApiKey();
+  const [selectedSection, setSelectedSection] = useState(DrawerSection.General);
+  const toast = useToast();
+
+  const form = useForm<ApiKeyFormValues>({
+    values: {
+      name,
+      domains: fromArrayToList(domains),
+      // FIXME: Enable when wallets restrictions is in use
+      // walletAddresses: fromArrayToList(walletAddresses),
+      services: THIRDWEB_SERVICES.map((srv) => {
+        const existingService = (services || []).find(
+          (s) => s.name === srv.name,
+        );
+        return {
+          name: srv.name,
+          targetAddresses: existingService
+            ? fromArrayToList(existingService.targetAddresses)
+            : "*",
+          enabled: !!existingService,
+          actions: existingService?.actions || [],
+        };
+      }),
+    },
+  });
+
+  const { onSuccess, onError } = useTxNotifications(
+    "API Key updated",
+    "Failed to update an API Key",
+  );
+
+  const handleSubmit = form.handleSubmit((values) => {
+    const enabledServices = (values.services || []).filter(
+      (srv) => !!srv.enabled,
+    );
+
+    if (enabledServices.length > 0) {
+      const formattedValues = {
+        id,
+        name: values.name,
+        domains: toArrFromList(values.domains),
+        // FIXME: Enable when wallets restrictions is in use
+        // walletAddresses: toArrFromList(values.walletAddresses),
+        services: (values.services || [])
+          .filter((srv) => srv.enabled)
+          .map((srv) => ({
+            ...srv,
+            targetAddresses: toArrFromList(srv.targetAddresses),
+          })),
+      };
+
+      mutation.mutate(formattedValues, {
+        onSuccess: (data) => {
+          onSubmit(data);
+          onSuccess();
+          setEditing(false);
+        },
+        onError,
+      });
+    } else {
+      toast(toastMessages.updateServices);
+    }
+  });
+
+  const renderActions = () => {
+    if (!editing) {
+      return (
+        <>
+          <RevokeApiKeyButton id={id} name={name} onRevoke={onClose} />
+          <Button colorScheme="primary" onClick={() => setEditing(true)} w={24}>
+            Edit
+          </Button>
+        </>
+      );
+    }
+    return (
+      <>
+        <Button variant="outline" onClick={() => setEditing(false)}>
+          Cancel
+        </Button>
+
+        <Button colorScheme="primary" onClick={handleSubmit} w={24}>
+          Save
+        </Button>
+      </>
+    );
+  };
+
+  useEffect(() => {
+    setEditing(false);
+  }, [apiKey]);
+
+  return (
+    <Drawer
+      allowPinchZoom
+      preserveScrollBarGap
+      onClose={onClose}
+      isOpen={open}
+      size="md"
+      header={{ children: name }}
+      footer={{
+        children: (
+          <HStack justifyContent="space-between" w="full">
+            {renderActions()}
+          </HStack>
+        ),
+      }}
+    >
+      {!editing ? (
+        <ApiKeyDetails
+          apiKey={apiKey}
+          selectedSection={selectedSection}
+          onSectionChange={setSelectedSection}
+        />
+      ) : (
+        <ApiKeyKeyForm
+          form={form}
+          onSubmit={handleSubmit}
+          selectedSection={selectedSection}
+          onSectionChange={setSelectedSection}
+        />
+      )}
+    </Drawer>
+  );
+};

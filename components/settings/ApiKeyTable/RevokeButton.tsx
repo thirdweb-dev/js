@@ -1,45 +1,87 @@
 import { useRevokeApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { Icon, Spinner } from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { FiX } from "react-icons/fi";
-import { MenuItem } from "tw-components";
+import { useRef } from "react";
+import { Button } from "tw-components";
 
 interface RevokeApiKeyButtonProps {
-  apiKey: string;
+  id: string;
+  name: string;
+  onRevoke: () => void;
 }
 
 export const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({
-  apiKey,
+  id,
+  name,
+  onRevoke,
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const mutation = useRevokeApiKey();
   const { onSuccess, onError } = useTxNotifications(
-    "API key revoked",
-    "Failed to revoke an API key",
+    "API Key revoked",
+    "Failed to revoke an API Key",
   );
 
   const handleRevoke = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
 
-    mutation.mutate(apiKey, {
-      onSuccess,
+    mutation.mutate(id, {
+      onSuccess: () => {
+        onSuccess();
+        onRevoke();
+      },
       onError,
     });
   };
 
   return (
-    <MenuItem
-      onClick={handleRevoke}
-      isDisabled={mutation.isLoading}
-      closeOnSelect={false}
-      icon={
-        mutation.isLoading ? (
-          <Spinner size="xs" />
-        ) : (
-          <Icon as={FiX} color="red.500" />
-        )
-      }
-    >
-      Revoke
-    </MenuItem>
+    <>
+      <Button colorScheme="red" onClick={onOpen}>
+        Revoke
+      </Button>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Revoke {name}?
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to revoke <strong>{name}</strong>? Any
+              integrations using this key will no longer be able to access
+              thirdweb services.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={handleRevoke}
+                ml={3}
+                isLoading={mutation.isLoading}
+              >
+                I am sure
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 };

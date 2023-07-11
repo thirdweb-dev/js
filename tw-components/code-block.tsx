@@ -25,7 +25,8 @@ require("prismjs/components/prism-solidity");
 
 export interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
-  language: string;
+  codeValue?: string;
+  language?: string;
   canCopy?: boolean;
   wrap?: boolean;
   prefix?: string;
@@ -34,7 +35,8 @@ export interface CodeBlockProps extends Omit<CodeProps, "size"> {
 }
 export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
-  language,
+  codeValue,
+  language = "sh",
   px = 4,
   py = 2,
   w = "full",
@@ -54,13 +56,13 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
     lightTheme || lightThemeDefault,
     darkTheme || darkThemeDefault,
   );
-  const { onCopy, hasCopied, setValue } = useClipboard(code);
+  const { onCopy, hasCopied, setValue } = useClipboard(codeValue || code);
 
   useEffect(() => {
     if (code) {
-      setValue(code);
+      setValue(codeValue || code);
     }
-  }, [code, setValue]);
+  }, [code, codeValue, setValue]);
 
   return (
     <Highlight

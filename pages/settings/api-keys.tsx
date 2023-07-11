@@ -4,7 +4,7 @@ import { Container, Divider, Flex } from "@chakra-ui/react";
 import { useUser } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
-import { CreateApiKeyButton } from "components/settings/CreateApiKeyButton";
+import { CreateApiKeyButton } from "components/settings/ApiKeyTable/CreateButton";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { Card, Heading, Link, Text } from "tw-components";

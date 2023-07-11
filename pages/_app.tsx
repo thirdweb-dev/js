@@ -70,13 +70,17 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
 
   useEffect(() => {
     // Init PostHog
-    posthog.init("phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV", {
-      api_host: "https://a.thirdweb.com",
-      autocapture: true,
-      debug: false,
-      capture_pageview: false,
-      disable_session_recording: true,
-    });
+    posthog.init(
+      process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
+        "phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV",
+      {
+        api_host: "https://a.thirdweb.com",
+        autocapture: true,
+        debug: false,
+        capture_pageview: false,
+        disable_session_recording: true,
+      },
+    );
     // register the git commit sha on all subsequent events
     posthog.register({
       tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,

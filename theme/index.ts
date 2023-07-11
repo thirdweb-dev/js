@@ -247,6 +247,11 @@ const chakraTheme: Theme = extendTheme({
       baseStyle: {
         thead: {
           background: "backgroundHighlight",
+          borderBottomColor: "accent.100",
+          borderBottomWidth: 1,
+        },
+        tbody: {
+          background: "backgroundHighlight",
         },
         cell: {
           borderColor: "borderColor",

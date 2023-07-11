@@ -1,105 +1,118 @@
 import { CopyApiKeyButton } from "./CopyButton";
-import { EditApiKeyModal } from "./EditModal";
-import { RevokeApiKeyButton } from "./RevokeButton";
-import { ApiKeyInfo } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, Icon, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import { ApiKeyDrawer } from "./KeyDrawer";
+import { findByName } from "./services";
+import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { VStack, useDisclosure } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
-import { useCallback, useMemo, useState } from "react";
-import { FiEdit2, FiMoreVertical } from "react-icons/fi";
-import { MenuItem, Text, TrackedIconButton } from "tw-components";
+import { useState } from "react";
+import { Badge, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface ApiKeyTableProps {
-  keys: ApiKeyInfo[];
+  keys: ApiKey[];
   isLoading: boolean;
   isFetched: boolean;
 }
 
-const columnHelper = createColumnHelper<ApiKeyInfo>();
+const columnHelper = createColumnHelper<ApiKey>();
 
 export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
   keys,
   isLoading,
   isFetched,
 }) => {
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [activeKey, setActiveKey] = useState<ApiKeyInfo>();
+  const [activeKey, setActiveKey] = useState<ApiKey>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleEditKey = useCallback(
-    (apiKey: string) => {
-      const foundKey = keys.find((key) => key.key === apiKey);
-      if (foundKey) {
-        setActiveKey(foundKey);
-        setEditModalOpen(true);
-      }
-    },
-    [keys],
-  );
+  const columns = [
+    columnHelper.accessor("name", {
+      header: "Name",
+      cell: (cell) => <Text>{cell.getValue()}</Text>,
+    }),
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor("name", {
-        header: "Name",
-        cell: (cell) => <Text>{cell.getValue()}</Text>,
-      }),
+    columnHelper.accessor("key", {
+      header: "Key",
+      cell: (cell) => (
+        <CopyApiKeyButton apiKey={cell.getValue()} label="API Key" />
+      ),
+    }),
 
-      columnHelper.accessor("key", {
-        header: "Key",
-        cell: (cell) => <CopyApiKeyButton apiKey={cell.getValue()} />,
-      }),
+    columnHelper.accessor("createdAt", {
+      header: "Created",
+      cell: (cell) => {
+        const value = cell.getValue();
 
-      columnHelper.accessor("createdAt", {
-        header: "Created",
-        cell: (cell) => {
-          const value = cell.getValue();
+        if (!value) {
+          return;
+        }
+        const createdDate = format(new Date(value), "MMM dd, yyyy");
+        return <Text>{createdDate}</Text>;
+      },
+    }),
 
-          if (!value) {
-            return;
-          }
-          const createdDate = format(new Date(value), "MMM dd, yyyy");
-          return <Text>{createdDate}</Text>;
-        },
-      }),
+    columnHelper.accessor("lastAccessedAt", {
+      header: "Last accessed",
+      cell: (cell) => {
+        const value = cell.getValue() as string;
+        const accessedDate = value
+          ? format(new Date(value), "MMM dd, yyyy")
+          : "Unknown";
+        return <Text>{accessedDate}</Text>;
+      },
+    }),
 
-      columnHelper.accessor("key", {
-        header: "",
-        id: "key-actions",
-        cell: (cell) => {
-          return (
-            <Flex width="100%" justify="flex-end">
-              <Menu isLazy>
-                <MenuButton
-                  as={TrackedIconButton}
-                  variant="ghost"
-                  icon={<FiMoreVertical />}
-                />
-                <MenuList>
-                  <MenuItem
-                    onClick={() => handleEditKey(cell.getValue())}
-                    icon={<Icon as={FiEdit2} />}
-                  >
-                    Edit
-                  </MenuItem>
-                  <RevokeApiKeyButton apiKey={cell.getValue()} />
-                </MenuList>
-              </Menu>
-            </Flex>
-          );
-        },
-      }),
-    ],
-    [handleEditKey],
-  );
+    columnHelper.accessor("services", {
+      header: "Services",
+      cell: (cell) => {
+        const value = cell.getValue();
+        if (!value || value.length === 0) {
+          return <Text>None</Text>;
+        }
+
+        return (
+          <VStack alignItems="flex-start" w="full">
+            {value.map((srv) => {
+              const service = findByName(srv.name);
+              return (
+                <Badge
+                  key={srv.name}
+                  textTransform="capitalize"
+                  colorScheme="blue"
+                  px={2}
+                  rounded="md"
+                >
+                  {service?.title}
+                </Badge>
+              );
+            })}
+          </VStack>
+        );
+      },
+    }),
+  ];
+
+  const handleOpen = (apiKey: ApiKey) => {
+    setActiveKey(apiKey);
+    onOpen();
+  };
+
+  const handleClose = () => {
+    onClose();
+    setActiveKey(undefined);
+  };
 
   return (
     <>
-      <EditApiKeyModal
-        open={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        apiKey={activeKey}
-      />
+      {activeKey && (
+        <ApiKeyDrawer
+          open={isOpen}
+          onClose={handleClose}
+          apiKey={activeKey}
+          onSubmit={setActiveKey}
+        />
+      )}
 
       <TWTable
         title="api key"
@@ -107,6 +120,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
         data={keys}
         isLoading={isLoading}
         isFetched={isFetched}
+        onRowClick={handleOpen}
       />
     </>
   );
