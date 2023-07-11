@@ -55,17 +55,17 @@ export class UserWallet {
   private connection: RPCConnectionHandler;
   private options: SDKOptions;
   public events = new EventEmitter<UserWalletEvents>();
-  storage: ThirdwebStorage;
+  // storage: ThirdwebStorage;
 
   constructor(
     network: NetworkInput,
     options: SDKOptions,
-    storage: ThirdwebStorage,
+    // storage: ThirdwebStorage,
   ) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
     this.events = new EventEmitter();
-    this.storage = storage;
+    // this.storage = storage;
   }
 
   // TODO disconnect()
@@ -96,6 +96,7 @@ export class UserWallet {
   async transfer(
     to: AddressOrEns,
     amount: Amount,
+    storage: ThirdwebStorage,
     currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
   ): Promise<TransactionResult> {
     const resolvedTo = await resolveAddress(to);
@@ -121,10 +122,10 @@ export class UserWallet {
     } else {
       // ERC20 token transfer
       return {
-        receipt: await this.createErc20(resolvedCurrency).sendTransaction(
-          "transfer",
-          [resolvedTo, amountInWei],
-        ),
+        receipt: await this.createErc20(
+          resolvedCurrency,
+          storage,
+        ).sendTransaction("transfer", [resolvedTo, amountInWei]),
       };
     }
   }
@@ -142,6 +143,7 @@ export class UserWallet {
    */
   async balance(
     currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
+    storage: ThirdwebStorage,
   ): Promise<CurrencyValue> {
     this.requireWallet();
 
@@ -151,9 +153,10 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       balance = await provider.getBalance(await this.getAddress());
     } else {
-      balance = await this.createErc20(resolvedCurrency).readContract.balanceOf(
-        await this.getAddress(),
-      );
+      balance = await this.createErc20(
+        resolvedCurrency,
+        storage,
+      ).readContract.balanceOf(await this.getAddress());
     }
     return await fetchCurrencyValue(provider, resolvedCurrency, balance);
   }
@@ -295,15 +298,18 @@ export class UserWallet {
    * Request funds from a running local node to the currently connected wallet
    * @param amount the amount in native currency (in ETH) to request
    */
-  public async requestFunds(amount: Amount): Promise<TransactionResult> {
+  public async requestFunds(
+    amount: Amount,
+    storage: ThirdwebStorage,
+  ): Promise<TransactionResult> {
     const chainId = await this.getChainId();
     if (chainId === ChainId.Localhost || chainId === ChainId.Hardhat) {
       const localWallet = new UserWallet(
         new Wallet(LOCAL_NODE_PKEY, getChainProvider(chainId, this.options)),
         this.options,
-        this.storage,
+        // this.storage,
       );
-      return localWallet.transfer(await this.getAddress(), amount);
+      return localWallet.transfer(await this.getAddress(), amount, storage);
     } else {
       throw new Error(
         `Requesting funds is not supported on chain: '${chainId}'.`,
@@ -324,13 +330,13 @@ export class UserWallet {
     return signer;
   }
 
-  private createErc20(currencyAddress: Address) {
+  private createErc20(currencyAddress: Address, storage: ThirdwebStorage) {
     return new ContractWrapper<IERC20>(
       this.connection.getSignerOrProvider(),
       currencyAddress,
       ERC20Abi,
       this.options,
-      this.storage,
+      storage,
     );
   }
 }

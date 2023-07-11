@@ -279,7 +279,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.storage = configuredStorage;
     this.storageHandler = configuredStorage;
 
-    this.wallet = new UserWallet(network, options, configuredStorage);
+    this.wallet = new UserWallet(network, options);
     this.deployer = new ContractDeployer(network, options, configuredStorage);
     this.verifier = new ContractVerifier(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(

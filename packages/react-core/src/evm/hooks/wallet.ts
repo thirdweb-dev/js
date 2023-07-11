@@ -1,6 +1,7 @@
 import { useThirdwebConnectedWalletContext } from "../contexts/thirdweb-wallet";
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
+import { useStorage } from "./storage";
 import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
@@ -15,6 +16,7 @@ import { useMemo } from "react";
  */
 export function useBalance(tokenAddress?: ContractAddress) {
   const walletAddress = useAddress();
+  const storage = useStorage();
 
   const { wallet, address, chainId } = useThirdwebConnectedWalletContext();
 
@@ -25,7 +27,9 @@ export function useBalance(tokenAddress?: ContractAddress) {
   return useQuery(
     cacheKey,
     () => {
-      return wallet?.balance(tokenAddress);
+      if (storage) {
+        return wallet?.balance(tokenAddress, storage);
+      }
     },
     {
       // if user is not logged in no reason to try to fetch

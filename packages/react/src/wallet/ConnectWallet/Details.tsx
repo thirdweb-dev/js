@@ -38,6 +38,7 @@ import {
   useSupportedChains,
   useWallet,
   WalletInstance,
+  useStorage,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
@@ -78,6 +79,7 @@ export const ConnectedWalletDetails: React.FC<{
     WalletInstance | undefined
   >();
   const walletContext = useWalletContext();
+  const storage = useStorage();
 
   const chain = useChain();
   const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
@@ -329,10 +331,10 @@ export const ConnectedWalletDetails: React.FC<{
             target="_blank"
             as="a"
             onClick={async (e) => {
-              if (chain.chainId === Localhost.chainId) {
+              if (chain.chainId === Localhost.chainId && storage) {
                 e.preventDefault();
                 setOpen(false);
-                await sdk?.wallet.requestFunds(10);
+                await sdk?.wallet.requestFunds(10, storage);
                 await balanceQuery.refetch();
               }
             }}
