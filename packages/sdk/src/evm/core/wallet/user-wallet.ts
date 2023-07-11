@@ -127,7 +127,7 @@ export class UserWallet {
         method: "transfer",
         args: [resolvedTo, amountInWei],
         storage: new ThirdwebStorage({
-          apiKey: this.options?.apiKey,
+          apiKey: this.options?.thirdwebApiKey,
         }),
       });
 
