@@ -6,6 +6,7 @@ import { ApiResponse } from "../lib/types";
 export async function loginUser(cache: Cache, options?: { new: boolean }) {
   const keyFound = getSession(cache);
   if (keyFound && !options?.new) {
+    console.log(chalk.green("You are already logged in"));
     return keyFound;
   } else {
     const apiKey = await createSession(cache);
