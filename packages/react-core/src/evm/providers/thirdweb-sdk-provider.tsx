@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
@@ -189,7 +188,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   supportedChains,
   activeChain,
   apiKey,
-  thirdwebApiKey = DEFAULT_API_KEY,
+  thirdwebApiKey,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
