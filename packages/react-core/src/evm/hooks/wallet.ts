@@ -28,7 +28,7 @@ export function useBalance(tokenAddress?: ContractAddress) {
     cacheKey,
     () => {
       if (storage) {
-        return wallet?.balance(tokenAddress, storage);
+        return wallet?.balance(tokenAddress);
       }
     },
     {

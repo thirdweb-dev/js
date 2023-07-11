@@ -8,10 +8,8 @@ import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { Amount, CurrencyValue } from "../../types/currency";
-import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
-import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import {
   type BigNumberish,
@@ -21,6 +19,7 @@ import {
   type Signer,
   type TypedDataField,
   Wallet,
+  Contract,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -28,8 +27,8 @@ import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-
+import { Transaction } from "../classes";
+import type { IERC20 } from "@thirdweb-dev/contracts-js";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -96,7 +95,6 @@ export class UserWallet {
   async transfer(
     to: AddressOrEns,
     amount: Amount,
-    storage: ThirdwebStorage,
     currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
   ): Promise<TransactionResult> {
     const resolvedTo = await resolveAddress(to);
@@ -120,13 +118,16 @@ export class UserWallet {
         receipt: await tx.wait(),
       };
     } else {
-      // ERC20 token transfer
-      return {
-        receipt: await this.createErc20(
-          resolvedCurrency,
-          storage,
-        ).sendTransaction("transfer", [resolvedTo, amountInWei]),
-      };
+      const transferTransaction = await Transaction.fromContractInfo({
+        contractAddress: resolvedCurrency,
+        contractAbi: ERC20Abi,
+        provider: this.connection.getProvider(),
+        signer,
+        method: "transfer",
+        args: [resolvedTo, amountInWei],
+      });
+
+      return transferTransaction.execute();
     }
   }
 
@@ -143,7 +144,6 @@ export class UserWallet {
    */
   async balance(
     currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
-    storage: ThirdwebStorage,
   ): Promise<CurrencyValue> {
     this.requireWallet();
 
@@ -153,10 +153,13 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       balance = await provider.getBalance(await this.getAddress());
     } else {
-      balance = await this.createErc20(
+      const readContract = new Contract(
         resolvedCurrency,
-        storage,
-      ).readContract.balanceOf(await this.getAddress());
+        ERC20Abi,
+        this.connection.getSignerOrProvider(),
+      ) as IERC20;
+
+      balance = await readContract.balanceOf(await this.getAddress());
     }
     return await fetchCurrencyValue(provider, resolvedCurrency, balance);
   }
@@ -298,10 +301,7 @@ export class UserWallet {
    * Request funds from a running local node to the currently connected wallet
    * @param amount the amount in native currency (in ETH) to request
    */
-  public async requestFunds(
-    amount: Amount,
-    storage: ThirdwebStorage,
-  ): Promise<TransactionResult> {
+  public async requestFunds(amount: Amount): Promise<TransactionResult> {
     const chainId = await this.getChainId();
     if (chainId === ChainId.Localhost || chainId === ChainId.Hardhat) {
       const localWallet = new UserWallet(
@@ -309,7 +309,7 @@ export class UserWallet {
         this.options,
         // this.storage,
       );
-      return localWallet.transfer(await this.getAddress(), amount, storage);
+      return localWallet.transfer(await this.getAddress(), amount);
     } else {
       throw new Error(
         `Requesting funds is not supported on chain: '${chainId}'.`,
@@ -328,15 +328,5 @@ export class UserWallet {
       "This action requires a connected wallet. Please pass a valid signer to the SDK.",
     );
     return signer;
-  }
-
-  private createErc20(currencyAddress: Address, storage: ThirdwebStorage) {
-    return new ContractWrapper<IERC20>(
-      this.connection.getSignerOrProvider(),
-      currencyAddress,
-      ERC20Abi,
-      this.options,
-      storage,
-    );
   }
 }
