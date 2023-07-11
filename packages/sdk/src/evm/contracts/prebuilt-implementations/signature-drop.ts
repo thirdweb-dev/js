@@ -492,7 +492,8 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
+    TMethod extends
+      keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<SignatureDropContract["functions"][TMethod]>,
@@ -510,7 +511,8 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @internal
    */
   public async call<
-    TMethod extends keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
+    TMethod extends
+      keyof SignatureDropContract["functions"] = keyof SignatureDropContract["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<SignatureDropContract["functions"][TMethod]>,

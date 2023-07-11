@@ -14,10 +14,13 @@ import type { Signer } from "ethers";
  * @internal
  */
 function buildDefaultMap(options: SDKOptionsOutput) {
-  return options.supportedChains.reduce((previousValue, currentValue) => {
-    previousValue[currentValue.chainId] = currentValue;
-    return previousValue;
-  }, {} as Record<number, ChainInfo>);
+  return options.supportedChains.reduce(
+    (previousValue, currentValue) => {
+      previousValue[currentValue.chainId] = currentValue;
+      return previousValue;
+    },
+    {} as Record<number, ChainInfo>,
+  );
 }
 
 /**
@@ -87,10 +90,13 @@ export function getChainIdFromNetwork(
     return network;
   } else {
     // If it's a string (chain name) return the chain id from the map
-    const chainNameToId = options.supportedChains.reduce((acc, curr) => {
-      acc[curr.slug] = curr.chainId;
-      return acc;
-    }, {} as Record<string, number>);
+    const chainNameToId = options.supportedChains.reduce(
+      (acc, curr) => {
+        acc[curr.slug] = curr.chainId;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     if (network in chainNameToId) {
       return chainNameToId[network];

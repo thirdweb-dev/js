@@ -22,10 +22,7 @@ export function getKeylessTxn(
 
   // 3. Create the signed serialized txn string.
   // To be sent directly to the chain using a provider.
-  const signedSerializedTx = utils.serializeTransaction(
-    transaction,
-    signature,
-  );
+  const signedSerializedTx = utils.serializeTransaction(transaction, signature);
 
   return {
     signer: signer,

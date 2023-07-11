@@ -297,7 +297,8 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
+    TMethod extends
+      keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>,
@@ -315,7 +316,8 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
+    TMethod extends
+      keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltTokenDrop["functions"][TMethod]>,

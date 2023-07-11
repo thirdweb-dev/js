@@ -1,11 +1,15 @@
-import { FrameworkType, LibraryType, PackageManagerType } from "../core/types/ProjectType";
+import {
+  FrameworkType,
+  LibraryType,
+  PackageManagerType,
+} from "../core/types/ProjectType";
 
 export type IProcessContractAppTypeArgs = {
   detectedPackageManager: PackageManagerType;
   thirdwebDepsToUpdate: Set<string>;
   thirdwebDepsToInstall: Set<string>;
   isJSPackageManager: boolean;
-}
+};
 
 export type IProcessAppTypeArgs = {
   detectedLibrary: LibraryType;
@@ -17,4 +21,4 @@ export type IProcessAppTypeArgs = {
   isGoPackageManager: boolean;
   hasEthers: boolean;
   otherDeps: Set<string>;
-}
+};

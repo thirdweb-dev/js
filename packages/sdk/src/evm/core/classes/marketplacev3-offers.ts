@@ -96,7 +96,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAll(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutSeller,
+  ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -133,7 +135,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAllValid(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
+  public async getAllValid(
+    filter?: MarketplaceFilterWithoutSeller,
+  ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();

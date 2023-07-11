@@ -13,6 +13,10 @@ export * from "./schema/tokens/common/properties";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
+export * from "./schema/marketplacev3/direct-listings";
+export * from "./schema/marketplacev3/english-auctions";
+export * from "./schema/marketplacev3/offer";
+export * from "../core/schema/nft";
 
 // shared
 export * from "./schema/shared/BigNumberSchema";

@@ -679,7 +679,8 @@ export class Marketplace implements UpdateableNetwork {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
+    TMethod extends
+      keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<MarketplaceContract["functions"][TMethod]>,
@@ -697,7 +698,8 @@ export class Marketplace implements UpdateableNetwork {
    * @internal
    */
   public async call<
-    TMethod extends keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
+    TMethod extends
+      keyof MarketplaceContract["functions"] = keyof MarketplaceContract["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<MarketplaceContract["functions"][TMethod]>,
