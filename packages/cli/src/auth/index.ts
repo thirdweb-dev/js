@@ -15,7 +15,7 @@ export async function loginUser(cache: Cache, options?: { new: boolean }) {
 
 export async function logoutUser(cache: Cache) {
   try {
-    cache.remove("api-key");
+    cache.remove("api-secret-key");
     console.log(chalk.green("You have been logged out"));
   } catch (error) {
     console.log(chalk.red("Something went wrong", error));
