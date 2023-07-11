@@ -168,6 +168,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

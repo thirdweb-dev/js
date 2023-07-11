@@ -141,6 +141,7 @@ export class Pack extends StandardErc1155<PackContract> {
             },
           }
         : options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

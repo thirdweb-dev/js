@@ -162,6 +162,7 @@ export class Marketplace implements UpdateableNetwork {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;

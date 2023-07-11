@@ -151,6 +151,7 @@ export class Account<TContract extends IAccountCore>
       factoryAddress,
       IAccountFactoryAbi,
       this.contractWrapper.options,
+      this.contractWrapper.storage,
     );
     wrapper.updateSignerOrProvider(this.contractWrapper.getSigner() as Signer);
     return wrapper;
