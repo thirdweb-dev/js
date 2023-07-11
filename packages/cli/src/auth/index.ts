@@ -26,7 +26,7 @@ export async function createSession(cache: any) {
     const apiKey = await prompts({
       type: "text",
       name: "apiKey",
-      message: "Please enter your API key, you can find it on https://thirdweb.com/settings/api-keys",
+      message: "Please enter your API key, you can find or create it on https://thirdweb.com/settings/api-keys",
     });
 
     checkSyntaxOfKey(apiKey.apiKey);
