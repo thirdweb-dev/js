@@ -50,10 +50,6 @@ export interface ProviderConfig extends ContractInfo {
   localSigner: Signer;
   entryPointAddress: string;
   apiKey: string;
-  /**
-   * @deprecated Use `apiKey` instead
-   */
-  thirdwebApiKey: string;
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;

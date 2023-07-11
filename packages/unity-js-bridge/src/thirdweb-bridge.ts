@@ -237,6 +237,7 @@ class ThirdwebBridge implements TWBridge {
           const config: SmartWalletConfig = {
             chain: chain,
             factoryAddress: sdkOptions.smartWalletConfig?.factoryAddress,
+            apiKey: sdkOptions.apiKey,
             thirdwebApiKey: sdkOptions.apiKey,
             gasless: sdkOptions.smartWalletConfig?.gasless,
             bundlerUrl: sdkOptions.smartWalletConfig?.bundlerUrl,

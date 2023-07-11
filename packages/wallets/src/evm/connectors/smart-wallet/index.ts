@@ -61,13 +61,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
           : getVerifyingPaymaster(
               paymasterUrl,
               entryPointAddress,
-              this.config.apiKey,
+              this.config.apiKey || "",
             )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
-      thirdwebApiKey: config.apiKey,
+      apiKey: config.apiKey || "",
     };
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);

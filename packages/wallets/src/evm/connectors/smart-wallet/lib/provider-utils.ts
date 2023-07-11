@@ -21,11 +21,6 @@ export async function create4337Provider(
     originalProvider,
   );
 
-  if (!config.apiKey && config.thirdwebApiKey) {
-    console.warn("thirdwebApiKey is deprecated, please use apiKey instead");
-    config.apiKey = config.thirdwebApiKey;
-  }
-
   const chainId = (await originalProvider.getNetwork()).chainId;
   const httpRpcClient = new HttpRpcClient(
     config.bundlerUrl,
