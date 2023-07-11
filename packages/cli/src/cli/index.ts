@@ -28,7 +28,7 @@ const main = async () => {
 
   const program = new Command();
   const cache = new Cache("thirdweb:cli", {
-    location: path.join(os.homedir(), ".thirdweb", "config"),
+    location: path.join(os.homedir(), ".thirdweb", "creds"),
   });
 
   // yes this has to look like this, eliminates whitespace
