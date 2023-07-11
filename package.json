@@ -97,7 +97,7 @@
     "@types/react-dom": "^18",
     "@types/react-table": "^7.7.7",
     "@types/spdx-correct": "^3.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.11",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.60.0",
     "eslint": "^8.44.0",
     "eslint-config-next": "^13.4.4",
