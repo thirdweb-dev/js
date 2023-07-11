@@ -179,13 +179,16 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   queryClient,
   supportedChains,
   activeChain,
-  thirdwebApiKey = DEFAULT_API_KEY,
+  thirdwebApiKey,
   alchemyApiKey,
   infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   if (!thirdwebApiKey) {
-    console.warn("thirdwebApiKey will be enforced.");
+    console.warn(
+      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+    );
+    thirdwebApiKey = DEFAULT_API_KEY;
   }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);

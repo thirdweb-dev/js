@@ -25,7 +25,7 @@ export class AwsKmsWallet extends AbstractWallet {
   #signer?: Promise<Signer>;
   #options: AwsKmsSignerCredentials;
   constructor(options: AwsKmsSignerCredentials) {
-    super();
+    super({ apiKey: options.apiKey });
     this.#options = options;
   }
 

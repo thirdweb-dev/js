@@ -3,9 +3,18 @@ import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
+export type TConstructorParams = { apiKey?: string } & { [key: string]: any };
+
 export abstract class Connector<
+  TConstParams extends TConstructorParams = {},
   TConnectParams extends Record<string, any> = {},
 > extends EventEmitter {
+  private params?: TConstParams;
+
+  constructor(params?: TConstParams) {
+    super();
+    this.params = params;
+  }
   abstract connect(args?: ConnectParams<TConnectParams>): Promise<string>;
   abstract disconnect(): Promise<void>;
   abstract getAddress(): Promise<string>;
@@ -23,11 +32,12 @@ export type ConnectParams<TOpts extends Record<string, any> = {}> = {
 
 export class WagmiAdapter<
   TConnectParams extends Record<string, any> = {},
-> extends Connector<TConnectParams> {
+> extends Connector<TConstructorParams, TConnectParams> {
   wagmiConnector: WagmiConnector<any, any, any>;
 
   constructor(wagmiConnector: WagmiConnector) {
-    super();
+    super({ apiKey: "pepe" });
+
     this.wagmiConnector = wagmiConnector;
   }
 

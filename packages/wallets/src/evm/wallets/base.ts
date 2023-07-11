@@ -1,6 +1,10 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { ConnectParams, Connector } from "../interfaces/connector";
+import {
+  ConnectParams,
+  Connector,
+  TConstructorParams,
+} from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
@@ -11,6 +15,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   walletId?: string;
   walletStorage?: AsyncStorage;
   dappMetadata?: DAppMetaData;
+  apiKey?: string;
 } & TOpts;
 
 export type WalletMeta = {
@@ -40,7 +45,7 @@ export abstract class AbstractClientWallet<
   }
 
   constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {
-    super();
+    super({ apiKey: options?.apiKey });
     this.walletId = walletId;
     this.options = options;
     this.chains = options?.chains || defaultChains;
@@ -49,7 +54,9 @@ export abstract class AbstractClientWallet<
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
-  protected abstract getConnector(): Promise<Connector<TConnectParams>>;
+  protected abstract getConnector(): Promise<
+    Connector<TConstructorParams, TConnectParams>
+  >;
 
   /**
    * tries to auto connect to the wallet

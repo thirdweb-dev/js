@@ -1,6 +1,5 @@
-import { updateChainRPCs } from "../../core/utils/updateChainRpcs";
 import { useMemo } from "react";
-import type { Chain } from "@thirdweb-dev/chains";
+import { updateChainRPCs, type Chain } from "@thirdweb-dev/chains";
 
 export function useUpdateChainsWithApiKeys<
   TChains extends Chain[],

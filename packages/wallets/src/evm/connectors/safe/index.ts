@@ -1,4 +1,8 @@
-import { ConnectParams, Connector } from "../../interfaces/connector";
+import {
+  ConnectParams,
+  Connector,
+  TConstructorParams,
+} from "../../interfaces/connector";
 import type { SafeConnectionArgs } from "./types";
 import { ethers } from "ethers";
 import type { Signer } from "ethers";
@@ -68,7 +72,10 @@ const SIGN_MESSAGE_LIB_ABI = [
 
 const __IS_SERVER__ = typeof window === "undefined";
 
-export class SafeConnector extends Connector<SafeConnectionArgs> {
+export class SafeConnector extends Connector<
+  TConstructorParams,
+  SafeConnectionArgs
+> {
   static supportedChains = /* @__PURE__ */ Object.keys(
     CHAIN_ID_TO_GNOSIS_SERVER_URL,
   );
@@ -82,8 +89,8 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
   private safeSigner?: Signer;
   personalWallet?: EVMWallet;
 
-  constructor() {
-    super();
+  constructor(params?: TConstructorParams) {
+    super(params);
     // this.options = options;
 
     if (!__IS_SERVER__) {

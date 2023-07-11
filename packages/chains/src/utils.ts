@@ -29,7 +29,9 @@ export function getChainRPCs(
   };
 
   if (!thirdwebApiKey) {
-    console.warn("thirdwebApiKey will be enforced.");
+    console.warn(
+      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+    );
   }
 
   const processedRPCs: string[] = [];
@@ -72,6 +74,21 @@ export function getChainRPCs(
 
   return processedRPCs;
 }
+
+/**
+ *
+ * use the keys and return a new chain object with updated RPCs
+ */
+export const updateChainRPCs = (chain: Chain, options: ChainRPCOptions) => {
+  try {
+    return {
+      ...chain,
+      rpc: getChainRPCs(chain, options),
+    };
+  } catch (error) {
+    return chain;
+  }
+};
 
 /**
  * Get the highest priority RPC URL for a specific chain

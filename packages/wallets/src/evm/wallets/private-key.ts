@@ -9,7 +9,7 @@ export class PrivateKeyWallet extends AbstractWallet {
     chain?: ChainOrRpcUrl,
     thirdwebApiKey?: string,
   ) {
-    super();
+    super({ apiKey: thirdwebApiKey });
 
     this.#signer = new ethers.Wallet(
       privateKey,

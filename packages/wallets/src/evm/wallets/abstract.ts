@@ -3,6 +3,7 @@ import type { Signer } from "ethers";
 import { providers, Contract, utils, Bytes } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
+import { DEFAULT_WALLET_API_KEY } from "../constants/rpc";
 
 // TODO improve this
 function chainIdToThirdwebRpc(chainId: number) {
@@ -46,11 +47,29 @@ export async function checkContractWalletSignature(
   }
 }
 
+type AbstractWalletParams = {
+  apiKey?: string;
+};
+
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
   implements GenericAuthWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
+  private params: AbstractWalletParams;
+
+  constructor(params: AbstractWalletParams) {
+    super();
+
+    if (!params.apiKey) {
+      console.warn(
+        "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+      );
+      params.apiKey = DEFAULT_WALLET_API_KEY;
+    }
+
+    this.params = params;
+  }
 
   public abstract getSigner(): Promise<Signer>;
 

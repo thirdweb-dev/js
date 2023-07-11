@@ -1,5 +1,6 @@
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { default as EventEmitter } from "eventemitter3";
+import { DEFAULT_WALLET_API_KEY } from "../../evm/constants/rpc";
 
 export type WagmiConnectorData<Provider = any> = {
   account?: string;
@@ -15,9 +16,17 @@ export interface WagmiConnectorEvents<Provider = any> {
   error(error: Error): void;
 }
 
+type OptionsWithKey = { apiKey?: string } & {
+  [key: string]: any;
+};
+
+export type ConnectParams<TOpts extends Record<string, any> = {}> = {
+  chainId?: number;
+} & TOpts;
+
 export abstract class WagmiConnector<
   Provider = any,
-  Options = any,
+  Options extends OptionsWithKey = any,
   Signer = any,
 > extends EventEmitter<WagmiConnectorEvents<Provider>> {
   /** Unique connector id */
@@ -39,8 +48,17 @@ export abstract class WagmiConnector<
     options: Options;
   }) {
     super();
-    this.chains = chains;
+    if (!options.apiKey) {
+      console.warn(
+        "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+      );
+      options.apiKey = DEFAULT_WALLET_API_KEY;
+    }
+
     this.options = options;
+    this.chains = chains.map((chain) =>
+      updateChainRPCs(chain, { thirdwebApiKey: options.apiKey }),
+    );
   }
 
   abstract connect(config?: {
@@ -70,6 +88,8 @@ export abstract class WagmiConnector<
   abstract setupListeners(): Promise<void>;
 
   updateChains(chains: Chain[]) {
-    this.chains = chains;
+    this.chains = chains.map((chain) =>
+      updateChainRPCs(chain, { thirdwebApiKey: this.options.apiKey }),
+    );
   }
 }
