@@ -15,7 +15,11 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
+import {
+  FieldArrayWithId,
+  UseFormReturn,
+  useFieldArray,
+} from "react-hook-form";
 import {
   Card,
   Checkbox,
@@ -66,12 +70,20 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
     );
   };
 
-  const handleEnableAction = (
+  const handleAction = (
     srvIdx: number,
+    srv: FieldArrayWithId<ApiKeyFormValues, "services", "id">,
     actionName: string,
     checked: boolean,
   ) => {
-    console.log({ srvIdx, actionName, checked });
+    const actions = checked
+      ? [...(srv.actions || []), actionName]
+      : (srv.actions || []).filter((a) => a !== actionName);
+
+    update(srvIdx, {
+      ...srv,
+      actions,
+    });
   };
 
   const renderGeneral = () => {
@@ -180,15 +192,13 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
                           <HStack gap={1} cursor="help">
                             <Checkbox
                               isChecked={srv.actions.includes(sa.name)}
-                              onChange={({ target: { checked } }) =>
-                                update(idx, {
-                                  ...srv,
-                                  actions: checked
-                                    ? [...(srv.actions || []), sa.name]
-                                    : (srv.actions || []).filter(
-                                        (a) => a !== sa.name,
-                                      ),
-                                })
+                              onChange={(e) =>
+                                handleAction(
+                                  idx,
+                                  srv,
+                                  sa.name,
+                                  e.target.checked,
+                                )
                               }
                             />
                             <Text>{sa.title}</Text>

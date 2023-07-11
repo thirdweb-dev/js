@@ -202,6 +202,7 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
                         return action ? (
                           <Tooltip
+                            key={action.name}
                             p={0}
                             bg="transparent"
                             boxShadow={"none"}
