@@ -1,5 +1,4 @@
 import {
-  DEFAULT_API_KEY,
   getCIDForUpload,
   IPFS_UPLOAD_GATEWAYS,
   isUploaded,
@@ -169,7 +168,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    */
   private async getThirdwebUploadAuthorizationHeaders() {
     return {
-      "x-api-key": this.thirdwebApiKey,
+      "x-api-key": this.apiKey || "",
     };
   }
 

@@ -55,7 +55,6 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
   public gatewayUrls: GatewayUrls;
-  private thirdwebApiKey: string;
 
   constructor(options?: ThirdwebStorageOptions<T>) {
     this.uploader =
@@ -67,7 +66,6 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),
     );
-    this.thirdwebApiKey = options?.thirdwebApiKey || DEFAULT_API_KEY;
   }
 
   /**
