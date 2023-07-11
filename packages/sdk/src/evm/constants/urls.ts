@@ -28,11 +28,6 @@ export function getChainProvider(
   network: ChainOrRpcUrl,
   sdkOptions: SDKOptions,
 ): providers.Provider {
-  if (!sdkOptions?.apiKey && sdkOptions?.thirdwebApiKey) {
-    console.warn("thirdwebApiKey is deprecated, please use apiKey instead.");
-    sdkOptions.apiKey = sdkOptions.thirdwebApiKey;
-  }
-
   // If we have an RPC URL, use that for the provider
   if (typeof network === "string" && isRpcUrl(network)) {
     return getProviderFromRpcUrl(network);
@@ -55,7 +50,6 @@ export function getChainProvider(
     chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
     rpcUrl = getChainRPC(rpcMap[chainId], {
-      apiKey: options.apiKey,
       thirdwebApiKey: options.thirdwebApiKey,
       infuraApiKey: options.infuraApiKey,
       alchemyApiKey: options.alchemyApiKey,
@@ -66,7 +60,9 @@ export function getChainProvider(
 
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${options.apiKey}`;
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
+      options.thirdwebApiKey
+    }`;
   }
 
   if (!rpcUrl) {
