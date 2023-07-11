@@ -210,8 +210,8 @@ const main = async () => {
     .option("--nightly", "Install the nightly version of packages.")
     .option("--dev", "Install the dev version of packages")
     .option("-d, --debug", "show debug logs")
-    .action(async (path, options) => {
-      await install(path, options);
+    .action(async (_path, options) => {
+      await install(_path, options);
     });
 
   program
@@ -251,8 +251,8 @@ const main = async () => {
       "-c, --contract-name [name]",
       "Name of the new smart contract to create",
     )
-    .action(async (type, path, options) => {
-      await twCreate(type, path, options);
+    .action(async (type, _path, options) => {
+      await twCreate(type, _path, options);
     });
 
   program
@@ -372,13 +372,13 @@ const main = async () => {
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .action(async (path) => {
+    .action(async (_path) => {
       const apiKey = await loginUser(cache);
       const storage = new ThirdwebStorage({
         apiKey,
       });
       try {
-        const uri = await upload(storage, path);
+        const uri = await upload(storage, _path);
         info(
           `Files stored at the following IPFS URI: ${chalk.blueBright(
             uri.toString(),
