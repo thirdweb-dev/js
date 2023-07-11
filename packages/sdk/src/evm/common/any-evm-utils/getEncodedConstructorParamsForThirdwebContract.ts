@@ -22,6 +22,7 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
+  apiKey: string,
   constructorParamMap?: ConstructorParamMap,
 ): Promise<BytesLike | undefined> {
   const provider = getChainProvider(chainId, {
