@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.29
+
+### Patch Changes
+
+- [#1320](https://github.com/thirdweb-dev/js/pull/1320) [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Linea mainnet support
+
+- [#1315](https://github.com/thirdweb-dev/js/pull/1315) [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a) Thanks [@jnsdls](https://github.com/jnsdls)! - add more chains
+
 ## 0.1.28
 
 ### Patch Changes
