@@ -21,7 +21,7 @@ export type SmartWalletConfig = {
   /**
    * @deprecated Use `apiKey` instead
    */
-  thirdwebApiKey: string;
+  thirdwebApiKey?: string;
   apiKey?: string;
   gasless: boolean;
   bundlerUrl?: string;

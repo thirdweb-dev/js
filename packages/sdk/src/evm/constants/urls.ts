@@ -28,6 +28,11 @@ export function getChainProvider(
   network: ChainOrRpcUrl,
   sdkOptions: SDKOptions,
 ): providers.Provider {
+  if (!sdkOptions?.apiKey && sdkOptions?.thirdwebApiKey) {
+    console.warn("thirdwebApiKey is deprecated, please use apiKey instead.");
+    sdkOptions.apiKey = sdkOptions.thirdwebApiKey;
+  }
+
   // If we have an RPC URL, use that for the provider
   if (typeof network === "string" && isRpcUrl(network)) {
     return getProviderFromRpcUrl(network);
