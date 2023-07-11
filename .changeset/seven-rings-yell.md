@@ -2,9 +2,9 @@
 "thirdweb": minor
 ---
 
-Introducing API key restrictions for certain commands. Get your API key from [here](https://thirdweb.com/settings/api-keys).
+Introducing API secret key restrictions for certain commands. Get your API secret key from [here](https://thirdweb.com/settings/api-keys).
 
-The following commands will require you to have logged in with your API key:
+The following commands will require you to have logged in with your API secret key:
 
 - `thirdweb deploy`
 - `thirdweb release`
@@ -18,4 +18,4 @@ Implemented 2 new commands for managing your session with the CLI:
 
 Note: If you try to call a command that requires you to be logged in, you will be prompted to login.
 
-Also, updated chains.
+Updated chains.
