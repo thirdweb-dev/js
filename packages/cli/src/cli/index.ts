@@ -4,6 +4,8 @@ import chalk from "chalk";
 import { exec, spawn } from "child_process";
 import { Command } from "commander";
 import open from "open";
+import os from "os";
+import path from "path";
 import prompts from "prompts";
 import Cache from "sync-disk-cache";
 import { loginUser } from "../auth";
@@ -25,7 +27,9 @@ const main = async () => {
   const skipIntro = process.env.THIRDWEB_CLI_SKIP_INTRO === "true";
 
   const program = new Command();
-  const cache = new Cache("thirdweb:cli");
+  const cache = new Cache("thirdweb:cli", {
+    location: path.join(os.homedir(), ".thirdweb", "config"),
+  });
 
   // yes this has to look like this, eliminates whitespace
   if (!skipIntro) {
