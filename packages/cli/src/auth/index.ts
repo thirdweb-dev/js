@@ -53,11 +53,6 @@ export async function createSession(cache: Cache) {
 }
 
 export async function validateKey(apiKey: string) {
-  let regex = /(pk|sk)\.([a-z0-9])\w+/;
-  const valid = regex.test(apiKey);
-  if (!valid) {
-    throw new Error(chalk.red("Invalid API key"));
-  }
   const fetch = (await import('node-fetch')).default;
   const response = await fetch(`https://api.thirdweb.com/v1/keys/use`, {
     method: "POST",
