@@ -104,6 +104,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

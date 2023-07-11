@@ -65,6 +65,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       getContractPublisherAddress(),
       ContractPublisherAbi,
       options,
+      storage,
     );
   }
 

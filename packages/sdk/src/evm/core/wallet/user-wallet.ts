@@ -28,6 +28,7 @@ import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  *
@@ -54,11 +55,17 @@ export class UserWallet {
   private connection: RPCConnectionHandler;
   private options: SDKOptions;
   public events = new EventEmitter<UserWalletEvents>();
+  storage: ThirdwebStorage;
 
-  constructor(network: NetworkInput, options: SDKOptions) {
+  constructor(
+    network: NetworkInput,
+    options: SDKOptions,
+    storage: ThirdwebStorage,
+  ) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
     this.events = new EventEmitter();
+    this.storage = storage;
   }
 
   // TODO disconnect()
@@ -294,6 +301,7 @@ export class UserWallet {
       const localWallet = new UserWallet(
         new Wallet(LOCAL_NODE_PKEY, getChainProvider(chainId, this.options)),
         this.options,
+        this.storage,
       );
       return localWallet.transfer(await this.getAddress(), amount);
     } else {
@@ -322,6 +330,7 @@ export class UserWallet {
       currencyAddress,
       ERC20Abi,
       this.options,
+      this.storage,
     );
   }
 }

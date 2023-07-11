@@ -214,6 +214,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;
