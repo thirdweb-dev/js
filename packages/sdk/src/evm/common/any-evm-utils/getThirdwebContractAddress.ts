@@ -1,7 +1,6 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 import { getChainProvider } from "../../constants/urls";
-import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { isContractDeployed } from "./isContractDeployed";
 import { predictThirdwebContractAddress } from "./predictThirdwebContractAddress";
 
@@ -16,14 +15,16 @@ export async function getThirdwebContractAddress(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
+  apiKey: string,
 ): Promise<string> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: DEFAULT_API_KEY,
+    apiKey: apiKey,
   });
   const contractAddress = await predictThirdwebContractAddress(
     contractName,
     chainId,
     storage,
+    apiKey,
   );
   const isDeployed = await isContractDeployed(contractAddress, provider);
   invariant(isDeployed, "Contract not deployed yet");

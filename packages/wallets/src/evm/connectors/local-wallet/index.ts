@@ -6,12 +6,15 @@ import type { Signer } from "ethers";
 import { providers } from "ethers";
 import type { Wallet } from "ethers";
 import { getChainProvider } from "@thirdweb-dev/sdk";
-import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export type LocalWalletConnectorOptions = {
   chain: Chain;
   ethersWallet: Wallet;
   chains: Chain[];
+  apiKey?: string;
+  /**
+   * @deprecated Use `apiKey` instead
+   */
   thirdwebApiKey?: string;
 };
 
@@ -27,6 +30,12 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
 
   constructor(options: LocalWalletConnectorOptions) {
     super();
+
+    if (!options.apiKey && options.thirdwebApiKey) {
+      console.warn("thirdwebApiKey is deprecated, please use apiKey instead");
+      options.apiKey = options.thirdwebApiKey;
+    }
+
     this.options = options;
   }
 
@@ -64,7 +73,7 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   async getProvider() {
     if (!this.#provider) {
       this.#provider = getChainProvider(this.options.chain, {
-        thirdwebApiKey: this.options.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+        apiKey: this.options.apiKey,
       });
     }
     return this.#provider;
@@ -90,7 +99,7 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
     }
 
     this.#provider = getChainProvider(chain, {
-      thirdwebApiKey: this.options.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+      apiKey: this.options.apiKey,
     });
     this.#signer = getSignerFromEthersWallet(
       this.options.ethersWallet,

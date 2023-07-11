@@ -33,6 +33,7 @@ export function getChainRPCs(
   };
 
   if (!apiKey && thirdwebApiKey) {
+    console.warn("thirdwebApiKey is deprecated, please use apiKey instead.");
     apiKey = thirdwebApiKey;
   }
 

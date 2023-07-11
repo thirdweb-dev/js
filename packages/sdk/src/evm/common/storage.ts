@@ -10,11 +10,11 @@ export function createStorage(
   } else if (options?.gatewayUrls) {
     return new ThirdwebStorage({
       gatewayUrls: options.gatewayUrls,
-      apiKey: options.thirdwebApiKey,
+      apiKey: options.apiKey,
     });
   } else {
     return new ThirdwebStorage({
-      apiKey: options?.thirdwebApiKey,
+      apiKey: options?.apiKey,
     });
   }
 }

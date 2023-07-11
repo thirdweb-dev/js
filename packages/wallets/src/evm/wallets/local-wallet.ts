@@ -8,6 +8,10 @@ import { Wallet, utils } from "ethers";
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
+  apiKey?: string;
+  /**
+   * @deprecated Use `apiKey` instead
+   */
   thirdwebApiKey?: string;
 };
 
@@ -45,6 +49,10 @@ export class LocalWallet extends AbstractClientWallet<
 
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
+    if (!options?.apiKey && options?.thirdwebApiKey) {
+      options.apiKey = options.thirdwebApiKey;
+    }
+
     this.options = options || {};
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
@@ -68,7 +76,7 @@ export class LocalWallet extends AbstractClientWallet<
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
         chains: this.options.chains || defaults,
-        thirdwebApiKey: this.options.thirdwebApiKey,
+        apiKey: this.options.apiKey,
       });
     }
     return this.connector;

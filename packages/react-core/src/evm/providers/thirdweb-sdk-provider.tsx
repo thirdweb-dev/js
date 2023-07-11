@@ -194,6 +194,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   if (!apiKey && thirdwebApiKey) {
+    console.warn("thirdwebApiKey is deprecated, please use apiKey instead.");
     apiKey = thirdwebApiKey;
   }
   const supportedChainsNonNull = useMemo(() => {

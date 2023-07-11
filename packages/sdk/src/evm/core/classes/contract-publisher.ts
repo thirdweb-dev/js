@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
 import { extractFunctions } from "../../common/feature-detection/extractFunctions";
@@ -383,11 +382,17 @@ export class ContractPublisher extends RPCConnectionHandler {
               predeployMetadata.metadataUri,
               this.storage,
             );
+            if (!this.options.apiKey && this.options.thirdwebApiKey) {
+              console.warn(
+                'thirdwebApiKey is deprecated, use "apiKey" instead',
+              );
+              this.options.apiKey = this.options.thirdwebApiKey;
+            }
             const composite = await getCompositePluginABI(
               implementation,
               compilerMetadata.abi,
               getChainProvider(parseInt(network), {
-                thirdwebApiKey: DEFAULT_API_KEY,
+                apiKey: this.options.apiKey,
               }),
               {}, // pass empty object for options instead of this.options
               this.storage,

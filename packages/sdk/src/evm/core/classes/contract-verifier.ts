@@ -68,6 +68,7 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
+      this.options.apiKey || "",
       constructorArgs,
     );
 
@@ -123,10 +124,7 @@ export class ContractVerifier extends RPCConnectionHandler {
         return arg.value;
       });
 
-      encodedArgs = utils.defaultAbiCoder.encode(
-        paramTypes,
-        paramValues,
-      );
+      encodedArgs = utils.defaultAbiCoder.encode(paramTypes, paramValues);
     }
 
     const guid = await verify(
