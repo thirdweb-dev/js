@@ -10302,10 +10302,10 @@ near-seed-phrase@^0.2.0:
     near-hd-key "^1.2.1"
     tweetnacl "^1.0.2"
 
-next-plausible@^3.6.5:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/next-plausible/-/next-plausible-3.8.0.tgz#721ae710f68b12d41fefc0c00ade57e06356e533"
-  integrity sha512-fOSI5dRwQkDcARAPqwCM2nqYf2bCP5ITUrX/jj2owkggi7LHAaKku4k/6CoKHAygs7EumYiGOuPt+qaTxxo+YA==
+next-plausible@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/next-plausible/-/next-plausible-3.9.1.tgz#d297b039edb08d73d6846226cdfed93ec4c6e566"
+  integrity sha512-Vt1vUKefLzBO/B/m0SbZf0wviKQcfwpogCxxmpr+gYmbAhZl8RClypKXvPKJHH/P9Rt2aw+GmlAIUUReFKGBPQ==
 
 next-seo@^6.1.0:
   version "6.1.0"
