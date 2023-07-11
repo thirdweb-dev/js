@@ -260,10 +260,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage?: ThirdwebStorage,
   ) {
-    if (options.thirdwebApiKey && !options.apiKey) {
-      console.warn("thirdwebApiKey is deprecated, please use apiKey instead.");
-      options.apiKey = options.thirdwebApiKey;
-    }
     if (isChainConfig(network)) {
       options = {
         ...options,

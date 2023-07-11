@@ -11,10 +11,6 @@ export type LocalWalletConnectorOptions = {
   chain: Chain;
   ethersWallet: Wallet;
   chains: Chain[];
-  apiKey?: string;
-  /**
-   * @deprecated Use `apiKey` instead
-   */
   thirdwebApiKey?: string;
 };
 
@@ -30,11 +26,6 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
 
   constructor(options: LocalWalletConnectorOptions) {
     super();
-
-    if (!options.apiKey && options.thirdwebApiKey) {
-      console.warn("thirdwebApiKey is deprecated, please use apiKey instead");
-      options.apiKey = options.thirdwebApiKey;
-    }
 
     this.options = options;
   }
@@ -73,7 +64,7 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   async getProvider() {
     if (!this.#provider) {
       this.#provider = getChainProvider(this.options.chain, {
-        apiKey: this.options.apiKey,
+        thirdwebApiKey: this.options.thirdwebApiKey,
       });
     }
     return this.#provider;
@@ -99,7 +90,7 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
     }
 
     this.#provider = getChainProvider(chain, {
-      apiKey: this.options.apiKey,
+      thirdwebApiKey: this.options.thirdwebApiKey,
     });
     this.#signer = getSignerFromEthersWallet(
       this.options.ethersWallet,

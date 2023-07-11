@@ -20,12 +20,12 @@ export default {
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
-    "decimals": 18
+    "decimals": 6
   },
   "infoURL": "https://shimmer.network",
   "shortName": "shimmerevm-testnet",
-  "chainId": 1071,
-  "networkId": 1071,
+  "chainId": 1072,
+  "networkId": 1072,
   "explorers": [
     {
       "name": "explorer",

@@ -68,7 +68,7 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
-      this.options.apiKey || "",
+      this.options.thirdwebApiKey || "",
       constructorArgs,
     );
 

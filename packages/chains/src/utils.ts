@@ -1,10 +1,6 @@
 import { Chain, MinimalChain } from "./types";
 
 export type ChainRPCOptions = {
-  apiKey?: string;
-  /**
-   * @deprecated Use `apiKey` instead
-   */
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
@@ -27,14 +23,13 @@ export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
 ): string[] {
-  let { apiKey, thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
+  const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
     ...defaultOptions,
     ...options,
   };
 
-  if (!apiKey && thirdwebApiKey) {
-    console.warn("thirdwebApiKey is deprecated, please use apiKey instead.");
-    apiKey = thirdwebApiKey;
+  if (!thirdwebApiKey) {
+    console.warn("thirdwebApiKey will be enforced.");
   }
 
   const processedRPCs: string[] = [];
@@ -50,8 +45,8 @@ export function getChainRPCs(
     }
 
     // Replace API_KEY placeholder with value
-    if (apiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", apiKey));
+    if (thirdwebApiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
     } else if (infuraApiKey && rpc.includes("${INFURA_API_KEY}")) {
       processedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
     } else if (alchemyApiKey && rpc.includes("${ALCHEMY_API_KEY}")) {

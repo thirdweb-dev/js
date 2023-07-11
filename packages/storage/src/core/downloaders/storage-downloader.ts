@@ -10,7 +10,7 @@ import fetch from "cross-fetch";
  * // Can instantiate the downloader with the default gateway URLs
  * const downloader = new StorageDownloader();
  * const apiKey = "your-api-key";
- * const storage = new ThirdwebStorage({apiKey, downloader });
+ * const storage = new ThirdwebStorage({ apiKey, downloader });
  * ```
  *
  * @public

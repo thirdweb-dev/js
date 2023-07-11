@@ -126,10 +126,10 @@ class ThirdwebBridge implements TWBridge {
             gatewayUrls: {
               "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
             },
-            apiKey: sdkOptions.apiKey,
+            apiKey: sdkOptions.thirdwebApiKey,
           })
         : new ThirdwebStorage({
-            apiKey: sdkOptions.apiKey,
+            apiKey: sdkOptions.thirdwebApiKey,
           });
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let possibleWallet of WALLETS) {
@@ -237,8 +237,7 @@ class ThirdwebBridge implements TWBridge {
           const config: SmartWalletConfig = {
             chain: chain,
             factoryAddress: sdkOptions.smartWalletConfig?.factoryAddress,
-            apiKey: sdkOptions.apiKey,
-            thirdwebApiKey: sdkOptions.apiKey,
+            thirdwebApiKey: sdkOptions.thirdwebApiKey,
             gasless: sdkOptions.smartWalletConfig?.gasless,
             bundlerUrl: sdkOptions.smartWalletConfig?.bundlerUrl,
             paymasterUrl: sdkOptions.smartWalletConfig?.paymasterUrl,

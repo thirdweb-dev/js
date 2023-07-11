@@ -383,17 +383,11 @@ export class ContractPublisher extends RPCConnectionHandler {
               predeployMetadata.metadataUri,
               this.storage,
             );
-            if (!this.options.apiKey && this.options.thirdwebApiKey) {
-              console.warn(
-                'thirdwebApiKey is deprecated, use "apiKey" instead',
-              );
-              this.options.apiKey = this.options.thirdwebApiKey;
-            }
             const composite = await getCompositePluginABI(
               implementation,
               compilerMetadata.abi,
               getChainProvider(parseInt(network), {
-                apiKey: this.options.apiKey,
+                thirdwebApiKey: this.options.thirdwebApiKey,
               }),
               {}, // pass empty object for options instead of this.options
               this.storage,

@@ -42,10 +42,6 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
     | Chain;
 
   // api keys that can be passed
-  apiKey?: string;
-  /**
-   * @deprecated Use `apiKey` instead
-   */
   thirdwebApiKey?: string;
   alchemyApiKey?: string;
   infuraApiKey?: string;
