@@ -1,8 +1,4 @@
-import {
-  DEFAULT_API_KEY,
-  parseGatewayUrls,
-  prepareGatewayUrls,
-} from "../common";
+import { parseGatewayUrls, prepareGatewayUrls } from "../common";
 import {
   extractObjectFiles,
   isFileOrBuffer,

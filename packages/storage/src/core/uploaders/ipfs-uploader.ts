@@ -157,9 +157,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     } else {
       return this.getThirdwebUploadAuthorizationHeaders();
     }
-    throw new Error(
-      `Unrecognized IPFS header url: ${ipfsUploadUrl}. Please let us know you ran into this error.`,
-    );
   }
 
   /**
@@ -168,7 +165,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    */
   private async getThirdwebUploadAuthorizationHeaders() {
     return {
-      "x-api-key": this.apiKey || "",
+      Authorization: `Bearer ${this.apiKey}`,
     };
   }
 

@@ -372,7 +372,7 @@ describe("IPFS", async () => {
     expect(json.image).to.equal(
       getGatewayUrlForCid(
         DEFAULT_GATEWAY_URLS["ipfs://"][0],
-        `QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+        `bafybeia6tkeuh4au753benm4cay26iof252re6uyim47uj2sekjyyitwoi/0`,
       ),
     );
     expect(json.animation_url).to.equal(
@@ -433,7 +433,7 @@ describe("IPFS", async () => {
       getGatewayUrlForCid(
         DEFAULT_GATEWAY_URLS["ipfs://"][0],
         // CID changes based on file contents (prod gateway vs staging gateway since they get written)
-        `bafybeibexk3gfppyxtrnyy5sqjkgvsjdqzzvwqjndna374y2od4qemseua/0`,
+        `bafybeic6c6qabklvilvktzmzaiygzrrybtjo2c7elbpsufih4pgm23cmie/0`,
       ),
     );
   });
@@ -450,7 +450,7 @@ describe("IPFS", async () => {
     expect(uri).to.equal(
       getGatewayUrlForCid(
         DEFAULT_GATEWAY_URLS["ipfs://"][0],
-        `QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+        `bafybeia6tkeuh4au753benm4cay26iof252re6uyim47uj2sekjyyitwoi/0`,
       ),
     );
   });
