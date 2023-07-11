@@ -56,6 +56,17 @@ export type IpfsUploaderOptions = {
 /**
  * @public
  */
+export type IpfsDownloaderOptions = {
+  /**
+   * Optional apiKey to associate with the IpfsDownloader.
+   * You can get an API key here: https://thirdweb.com/settings
+   */
+  apiKey?: string;
+};
+
+/**
+ * @public
+ */
 export type IpfsUploadBatchOptions = {
   /**
    * If specified, will rewrite file names to numbers for use on-chain.

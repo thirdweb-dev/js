@@ -48,12 +48,18 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
+export function getGatewayUrlForCid(
+  gatewayUrl: string,
+  cid: string,
+  apiKey?: string,
+): string {
   const parts = cid.split("/");
   const hash = convertCidToV1(parts[0]);
   const filePath = parts.slice(1).join("/");
 
   let url = gatewayUrl;
+
+  // TODO construct apiKey based gateway URL
 
   // If the URL contains {cid} or {path} tokens, replace them with the CID and path
   // Both tokens must be present for the URL to be valid
