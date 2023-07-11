@@ -37,16 +37,6 @@ export async function createSession(cache: any) {
   }
 }
 
-export async function promptForApiKey() {
-  const apiKey = await prompts({
-    type: "text",
-    name: "apiKey",
-    message: "Please enter your API key, you can find it on https://thirdweb.com/settings/api-keys",
-  });
-
-  return checkSyntaxOfKey(apiKey.apiKey);
-}
-
 export function checkSyntaxOfKey(apiKey: string) {
   let regex = /(pk|sk)\.([a-z0-9])\w+/;
   const valid = regex.test(apiKey);
