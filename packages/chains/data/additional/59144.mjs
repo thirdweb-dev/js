@@ -13,7 +13,7 @@ export default {
     symbol: "ETH",
     decimals: 18,
   },
-  rpc: ["https://rpc.linea.build"],
+  rpc: [],
   explorers: [
     {
       name: "Linea Scan",
