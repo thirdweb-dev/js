@@ -22,7 +22,7 @@ export default {
     },
   ],
   faucets: ["https://www.infura.io/faucet/linea"],
-  infoURL: "",
+  infoURL: "https://docs.linea.build/overview",
   icon: {
     url: "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
     height: 512,
