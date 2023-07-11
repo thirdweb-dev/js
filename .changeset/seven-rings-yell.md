@@ -17,3 +17,5 @@ Implemented 2 new commands for managing your session with the CLI:
 - thirdweb logout
 
 Note: If you try to call a command that requires you to be logged in, you will be prompted to login.
+
+Also, updated chains.
