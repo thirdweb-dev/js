@@ -1,5 +1,83 @@
 # @thirdweb-dev/chains
 
+## 0.1.28
+
+### Patch Changes
+
+- [#1299](https://github.com/thirdweb-dev/js/pull/1299) [`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5) Thanks [@nkrishang](https://github.com/nkrishang)! - Add ERC721LoyaltyCard and ERC721UpdatableMetadata
+
+- [#1297](https://github.com/thirdweb-dev/js/pull/1297) [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add zksync as default chain
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
+## 0.1.27
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1281](https://github.com/thirdweb-dev/js/pull/1281) [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96) Thanks [@nkrishang](https://github.com/nkrishang)! - Handle ERC4337Signer correctly for signTypedData
+
+## 0.1.26
+
+### Patch Changes
+
+- [#1276](https://github.com/thirdweb-dev/js/pull/1276) [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad) Thanks [@MananTank](https://github.com/MananTank)! - Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
+
+## 0.1.25
+
+### Patch Changes
+
+- [#1248](https://github.com/thirdweb-dev/js/pull/1248) [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - update chains
+
+- [#1243](https://github.com/thirdweb-dev/js/pull/1243) [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19) Thanks [@therealharpaljadeja](https://github.com/therealharpaljadeja)! - update chains
+
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+## 0.1.23
+
+### Patch Changes
+
+- [#1229](https://github.com/thirdweb-dev/js/pull/1229) [`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052) Thanks [@jnsdls](https://github.com/jnsdls)! - add/update chains
+
+## 0.1.22
+
+### Patch Changes
+
+- [#1192](https://github.com/thirdweb-dev/js/pull/1192) [`f41f1a29`](https://github.com/thirdweb-dev/js/commit/f41f1a2958a2cedcf0496c9a3ca284d0b98f1b89) Thanks [@jnsdls](https://github.com/jnsdls)! - fix arbitrum goerli infura url
+
+## 0.1.21
+
+### Patch Changes
+
+- [#1074](https://github.com/thirdweb-dev/js/pull/1074) [`cc20f93e`](https://github.com/thirdweb-dev/js/commit/cc20f93e178d86ee2b3f39102bbb0811de211f05) Thanks [@Marfuen](https://github.com/Marfuen)! - Enhance CLI Install command and update chains
+
+- [#1185](https://github.com/thirdweb-dev/js/pull/1185) [`8e28b0f5`](https://github.com/thirdweb-dev/js/commit/8e28b0f5e75596d29273ed80269bcee6d209adb4) Thanks [@jnsdls](https://github.com/jnsdls)! - add Zora Mainnet
+
+## 0.1.20
+
+### Patch Changes
+
+- [#1140](https://github.com/thirdweb-dev/js/pull/1140) [`16232de9`](https://github.com/thirdweb-dev/js/commit/16232de9eab9966e24e335929b2a3919346af265) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update chains
+
+- [#1138](https://github.com/thirdweb-dev/js/pull/1138) [`645b0303`](https://github.com/thirdweb-dev/js/commit/645b0303cc1a9cbb0a0e9cbd67d11c3b865e4584) Thanks [@jcstein](https://github.com/jcstein)! - feat: create Taro Testnet
+
+## 0.1.19
+
+### Patch Changes
+
+- [#1065](https://github.com/thirdweb-dev/js/pull/1065) [`bd86661f`](https://github.com/thirdweb-dev/js/commit/bd86661f54ca2f1eb09cbae35c704dc79be1b63a) Thanks [@iketw](https://github.com/iketw)! - [Chains] update chains
+
+- [#1064](https://github.com/thirdweb-dev/js/pull/1064) [`c85810ee`](https://github.com/thirdweb-dev/js/commit/c85810eee318b10eee4ada61828adaa51f94ea6c) Thanks [@MananTank](https://github.com/MananTank)! - Do not cache signer in wallets
+
+- [#1047](https://github.com/thirdweb-dev/js/pull/1047) [`6fd10f94`](https://github.com/thirdweb-dev/js/commit/6fd10f94b469dc5659e2ff4ce92a5aff86f3c89d) Thanks [@MananTank](https://github.com/MananTank)! - Fix tree-shaking issue in `@thirdweb-dev/chains`
+
+- [#1090](https://github.com/thirdweb-dev/js/pull/1090) [`5f1e6abb`](https://github.com/thirdweb-dev/js/commit/5f1e6abb391f5c58dbdb207f569b3dd0b5d4729c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add base-goerli to default chains
+
 ## 0.1.18
 
 ### Patch Changes

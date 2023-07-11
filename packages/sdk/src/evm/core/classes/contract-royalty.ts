@@ -102,7 +102,7 @@ export class ContractRoyalty<
    * @public
    * @twfeature Royalty
    */
-  setDefaultRoyaltyInfo = buildTransactionFunction(
+  setDefaultRoyaltyInfo = /* @__PURE__ */ buildTransactionFunction(
     async (
       royaltyData: z.input<typeof CommonRoyaltySchema>,
     ): Promise<
@@ -179,7 +179,7 @@ export class ContractRoyalty<
    * @public
    * @twfeature Royalty
    */
-  setTokenRoyaltyInfo = buildTransactionFunction(
+  setTokenRoyaltyInfo = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       royaltyData: z.input<typeof CommonRoyaltySchema>,

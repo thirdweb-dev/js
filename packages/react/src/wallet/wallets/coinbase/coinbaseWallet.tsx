@@ -21,12 +21,11 @@ export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
     },
     connectUI: CoinbaseConnectUI,
     isInstalled() {
-      if (assertWindowEthereum(globalThis.window)) {
+      const window_: Window | undefined = globalThis?.window;
+      if (assertWindowEthereum(window_)) {
         return (
-          globalThis.window.ethereum?.isCoinbaseWallet ||
-          globalThis.window.ethereum?.providers?.some(
-            (p) => p.isCoinbaseWallet,
-          ) ||
+          window_.ethereum?.isCoinbaseWallet ||
+          window_.ethereum?.providers?.some((p) => p.isCoinbaseWallet) ||
           false
         );
       }

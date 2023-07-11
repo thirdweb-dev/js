@@ -10,13 +10,19 @@ import styled from "@emotion/styled";
 import { fontSize } from "../../../design-system";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { shortenAddress } from "../../../evm/utils/addresses";
-import type { LocalWallet } from "@thirdweb-dev/wallets";
+import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { Img } from "../../../components/Img";
 import { Spinner } from "../../../components/Spinner";
 import { Flex } from "../../../components/basic";
+import {
+  useAddress,
+  useCreateWalletInstance,
+  useWallet,
+} from "@thirdweb-dev/react-core";
+import type { LocalWalletConfig } from "./types";
 
 const localWalletIcon =
   "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg";
@@ -24,68 +30,94 @@ const localWalletIcon =
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
   onExport: () => void;
-  localWallet: LocalWallet;
+  localWalletConfig: LocalWalletConfig;
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const [address, setAddress] = useState("");
-  const [savedData, setSavedData] = useState<WalletData | null | "loading">(
-    "loading",
-  );
+  const [passwordIsRequired, setPasswordIsRequired] = useState(false);
 
-  useEffect(() => {
-    props.localWallet.getAddress().then((add) => {
-      setAddress(add);
-    });
-  }, [props.localWallet]);
+  const wallet = useWallet();
+  const address = useAddress();
+  const [savedAddress, setSavedAddress] = useState("");
+  const createWalletInstance = useCreateWalletInstance();
 
+  // set savedAddress and passwordIsRequired on mount
+  const mounted = useRef(false);
   useEffect(() => {
-    if (!address) {
+    if (mounted.current) {
       return;
     }
-    props.localWallet.getSavedData().then((data) => {
-      if (data) {
-        if (data.address === address) {
-          setSavedData(data);
-        } else {
-          setSavedData(null);
+    mounted.current = true;
+
+    (async () => {
+      // if local wallet is connected - show the address of the connected wallet
+      if (wallet && wallet instanceof LocalWallet) {
+        if (address) {
+          setSavedAddress(address);
         }
-      } else {
-        setSavedData(null);
+
+        // if walletData of it is not already saved - password is required
+        const savedData = await wallet.getSavedData();
+        if (savedData?.address !== address) {
+          setPasswordIsRequired(true);
+        }
       }
-    });
-  }, [props.localWallet, address]);
+
+      // if localWallet is not connected - get address from storage, password is not required
+      else {
+        const localWallet = createWalletInstance(props.localWalletConfig);
+        const data = await localWallet.getSavedData();
+        if (data) {
+          setSavedAddress(data.address);
+        }
+      }
+    })();
+  }, [
+    wallet,
+    props.localWalletConfig,
+    createWalletInstance,
+    password,
+    address,
+  ]);
 
   const exportFromLocalStorage = async () => {
-    if (!props.localWallet || savedData === "loading") {
-      throw new Error("invalid state");
+    // if a local wallet is connected - export it
+    if (wallet && wallet instanceof LocalWallet) {
+      const savedData = await wallet.getSavedData();
+
+      // if already saved - no password required
+      if (savedData && savedData.address === address) {
+        downloadJsonWalletFile(savedData.data);
+        props.onExport();
+      }
+
+      // if not already saved - password is required
+      else {
+        try {
+          const dataStr = await wallet.export({
+            password,
+            strategy: "encryptedJson",
+          });
+          downloadJsonWalletFile(dataStr);
+          props.onExport();
+        } catch (e) {
+          console.error(e);
+          setIsWrongPassword(true);
+        }
+      }
     }
 
-    if (savedData) {
-      downloadAsFile(
-        JSON.parse(savedData.data),
-        "wallet.json",
-        "application/json",
-      );
+    // if local wallet is not connected - get data from storage
+    else {
+      const localWallet = createWalletInstance(props.localWalletConfig);
+      const savedData = (await localWallet.getSavedData()) as WalletData;
+      downloadJsonWalletFile(savedData.data);
       props.onExport();
-    } else {
-      try {
-        const json = await props.localWallet.export({
-          strategy: "encryptedJson",
-          password,
-        });
-
-        downloadAsFile(JSON.parse(json), "wallet.json", "application/json");
-        props.onExport();
-      } catch (e) {
-        setIsWrongPassword(true);
-        return;
-      }
     }
   };
 
-  if (savedData === "loading") {
+  if (!savedAddress) {
     return (
       <Flex
         justifyContent="center"
@@ -99,7 +131,7 @@ export const ExportLocalWallet: React.FC<{
     );
   }
 
-  const disabled = isWrongPassword;
+  const exportDisabled = isWrongPassword;
 
   return (
     <>
@@ -116,8 +148,15 @@ export const ExportLocalWallet: React.FC<{
       <Spacer y="md" />
 
       <ModalDescription>
-        This will download a JSON file containing your wallet information onto
-        your device encrypted with the password.
+        This will download a JSON file containing the wallet information onto
+        your device encrypted with the password
+      </ModalDescription>
+
+      <Spacer y="sm" />
+
+      <ModalDescription>
+        You can use this JSON file to import the account in MetaMask using the
+        same password
       </ModalDescription>
 
       <Spacer y="xl" />
@@ -131,13 +170,11 @@ export const ExportLocalWallet: React.FC<{
         <Label>Wallet Address</Label>
         <Spacer y="sm" />
 
-        <SavedWalletAddress>
-          {address ? shortenAddress(address) : "Loading"}
-        </SavedWalletAddress>
+        <SavedWalletAddress>{shortenAddress(savedAddress)}</SavedWalletAddress>
 
         <Spacer y="lg" />
 
-        {!savedData && (
+        {passwordIsRequired && (
           <>
             {/* Hidden Account Address as Username */}
             <input
@@ -168,6 +205,7 @@ export const ExportLocalWallet: React.FC<{
               type={showPassword ? "text" : "password"}
               value={password}
               error={isWrongPassword ? "Wrong Password" : ""}
+              dataTest="current-password"
             />
             <Spacer y="xl" />
           </>
@@ -175,10 +213,10 @@ export const ExportLocalWallet: React.FC<{
 
         <FormFooter>
           <Button
-            disabled={disabled}
+            disabled={exportDisabled}
             variant="inverted"
             style={{
-              opacity: disabled ? 0.5 : 1,
+              opacity: exportDisabled ? 0.5 : 1,
             }}
             type="submit"
           >
@@ -190,15 +228,16 @@ export const ExportLocalWallet: React.FC<{
   );
 };
 
-function downloadAsFile(data: any, fileName: string, fileType: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: fileType,
+function downloadJsonWalletFile(data: string) {
+  const dataObj = JSON.parse(data);
+  const blob = new Blob([JSON.stringify(dataObj, null, 2)], {
+    type: "application/json",
   });
 
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = fileName;
+  a.download = "wallet.json";
   document.body.appendChild(a);
   a.style.display = "none";
   a.click();

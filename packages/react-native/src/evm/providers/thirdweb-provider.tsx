@@ -5,7 +5,7 @@ import {
   ThirdwebProviderCoreProps,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
@@ -15,6 +15,7 @@ import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
@@ -31,7 +32,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: WalletConfig[];
+  supportedWallets?: WalletConfig<any>[];
 }
 
 /**
@@ -64,7 +65,14 @@ export const ThirdwebProvider = <
   theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  useCoinbaseWalletListener();
+  useCoinbaseWalletListener(
+    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+  );
+
+  const hasMagicConfig = useMemo(
+    () => !!supportedWallets.find((wc) => wc.id === walletIds.magicLink),
+    [supportedWallets],
+  );
 
   return (
     <ThirdwebProviderCore
@@ -81,16 +89,21 @@ export const ThirdwebProvider = <
       {...restProps}
     >
       <ThemeProvider theme={theme}>
-        <SafeAreaProvider>
-          <UIContextProvider>
+        <UIContextProvider>
+          {hasMagicConfig ? (
             <SafeAreaProvider>
               <DappContextProvider>
                 {children}
                 <MainModal />
               </DappContextProvider>
             </SafeAreaProvider>
-          </UIContextProvider>
-        </SafeAreaProvider>
+          ) : (
+            <DappContextProvider>
+              {children}
+              <MainModal />
+            </DappContextProvider>
+          )}
+        </UIContextProvider>
       </ThemeProvider>
     </ThirdwebProviderCore>
   );

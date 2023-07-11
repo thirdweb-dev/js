@@ -1,4 +1,5 @@
-import { createSnapshot, SnapshotEntryInput } from "../../src";
+import { SnapshotEntryInput } from "../../src";
+import { createSnapshot } from "../../src/evm/common/snapshots";
 import {
   ShardedMerkleTree,
   SnapshotFormatVersion,

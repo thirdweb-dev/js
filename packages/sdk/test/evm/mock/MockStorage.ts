@@ -20,5 +20,13 @@ export async function mockUploadWithCID(
   file: FileOrBufferOrString,
   options?: IpfsUploadBatchOptions | undefined,
 ) {
-  storage[cid] = file;
+  const [cidMain, id] = cid.split("/");
+
+  if (id) {
+    storage[cidMain] = {
+      [id]: file,
+    };
+  } else {
+    storage[cid] = file;
+  }
 }

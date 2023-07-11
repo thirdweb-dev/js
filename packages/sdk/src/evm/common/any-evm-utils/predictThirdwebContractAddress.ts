@@ -1,7 +1,7 @@
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 import { getChainProvider } from "../../constants/urls";
-import { getMetadataForPlugins } from "../plugin";
+import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
 import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";

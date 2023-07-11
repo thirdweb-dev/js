@@ -12,7 +12,7 @@ import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrima
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
+import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
 
 export const getAllPluginsAbi = [
   {
@@ -128,7 +128,7 @@ export const FEATURE_PRIMARY_SALE = {
 
 export const FEATURE_PLATFORM_FEE = {
   name: "PlatformFee",
-  namespace: "platformFee",
+  namespace: "platformFees",
   docLinks: {
     sdk: "sdk.platformfee",
     contracts: "platformfee",
@@ -148,7 +148,7 @@ export const FEATURE_PERMISSIONS_ENUMERABLE = {
   features: {},
 } as const;
 
-export const FEATURE_PERMISSIONS = {
+export const FEATURE_PERMISSIONS = /* @__PURE__ */ {
   name: "Permissions",
   namespace: "roles",
   docLinks: {
@@ -279,26 +279,26 @@ export const FEATURE_OFFERS = {
   features: {},
 } as const;
 
-export const FEATURE_SMART_WALLET_FACTORY = {
-  name: "SmartWalletFactory",
-  namespace: "smartwallet.factory",
+export const FEATURE_ACCOUNT_FACTORY = {
+  name: "AccountFactory",
+  namespace: "accountFactory",
   docLinks: {
     // TODO
-    sdk: "",
+    sdk: "sdk.accountFactory",
     contracts: "",
   },
   abis: [IAccountFactory],
   features: {},
 } as const;
 
-export const FEATURE_SMART_WALLET = {
-  name: "SmartWallet",
-  namespace: "smartwallet",
+export const FEATURE_ACCOUNT = {
+  name: "Account",
+  namespace: "account",
   docLinks: {
     // TODO
-    sdk: "",
+    sdk: "sdk.account",
     contracts: "",
   },
-  abis: [IAccount],
+  abis: [IAccountCore],
   features: {},
 } as const;

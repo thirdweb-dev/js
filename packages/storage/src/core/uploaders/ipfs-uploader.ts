@@ -43,11 +43,11 @@ import FormData from "form-data";
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
-  private thirdwebApiKey: string;
+  private apiKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.thirdwebApiKey = options?.thirdwebApiKey || DEFAULT_API_KEY;
+    this.apiKey = options?.apiKey || "";
   }
 
   async uploadBatch(
@@ -190,10 +190,19 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           process.env.NODE_ENV === "test" || !!process.env.CI
             ? "Storage SDK CI"
             : "Storage SDK",
+        Authorization: `Bearer ${this.apiKey}`,
       },
     });
+
     if (!res.ok) {
-      throw new Error(`Failed to get upload token`);
+      const response = await res.json();
+      // throw new Error(`Failed to get upload token`);
+      const error = response.error || response.statusText;
+      const code = response.code || "UNKNOWN";
+
+      throw new Error(
+        `IpfsUploader error: ${error} Status: ${response.status} Code: ${code}`,
+      );
     }
     const body = await res.text();
     return {

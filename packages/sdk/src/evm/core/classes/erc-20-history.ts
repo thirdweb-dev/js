@@ -1,5 +1,5 @@
-import { fetchCurrencyValue } from "../../common/currency";
-import { TokenHolderBalance } from "../../types";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import type { TokenHolderBalance } from "../../types/currency";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";

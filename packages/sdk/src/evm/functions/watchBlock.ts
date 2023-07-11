@@ -3,7 +3,7 @@ import {
   getBlockWithTransactions,
   SharedBlockParams,
 } from "./getBlock";
-import { getSignerAndProvider } from "./getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import type {
   Block,
   BlockWithTransactions,

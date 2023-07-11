@@ -1,27 +1,28 @@
+import inquirer from "inquirer";
 import { info } from "../helpers/logger";
 import { FrameworkType, PackageManagerType } from "../types/ProjectType";
-import inquirer from "inquirer";
-import NextDetector from "./frameworks/next";
-import CRADetector from "./frameworks/cra";
-import RemixDetector from "./frameworks/remix";
-import GatsbyDetector from "./frameworks/gatsby";
-import VueDetector from "./frameworks/vue";
-import ReactNativeCLIDetector from "./frameworks/reactNativeCli";
-import DjangoDetector from "./frameworks/django";
-import ExpoDetector from "./frameworks/expo";
-import FoundryDetector from "./frameworks/foundry";
-import HardhatDetector from "./frameworks/hardhat";
 import { FrameworkDetector } from "./detector";
-import TruffleDetector from "./frameworks/truffle";
 import BrownieDetector from "./frameworks/brownie";
-import FastAPIDetector from "./frameworks/fastAPI";
-import FlaskDetector from "./frameworks/flask";
-import PopulusDetector from "./frameworks/populus";
-import FastifyDetector from "./frameworks/fastify";
+import CRADetector from "./frameworks/cra";
+import DjangoDetector from "./frameworks/django";
 import EchoDetector from "./frameworks/echo";
+import ExpoDetector from "./frameworks/expo";
+import FastAPIDetector from "./frameworks/fastAPI";
+import FastifyDetector from "./frameworks/fastify";
 import FiberDetector from "./frameworks/fiber";
+import FlaskDetector from "./frameworks/flask";
+import FoundryDetector from "./frameworks/foundry";
+import GatsbyDetector from "./frameworks/gatsby";
 import GinDetector from "./frameworks/gin";
+import HardhatDetector from "./frameworks/hardhat";
+import NextDetector from "./frameworks/next";
+import PopulusDetector from "./frameworks/populus";
+import ReactNativeCLIDetector from "./frameworks/reactNativeCli";
+import RemixDetector from "./frameworks/remix";
 import RevelDetector from "./frameworks/revel";
+import TruffleDetector from "./frameworks/truffle";
+import ViteDetector from "./frameworks/vite";
+import VueDetector from "./frameworks/vue";
 import ZenjectDetector from "./frameworks/zenject";
 
 export default async function detect(
@@ -29,7 +30,6 @@ export default async function detect(
   options: any,
   detectedPackageManager: PackageManagerType,
 ): Promise<FrameworkType> {
-  // We could optimize further if we want, by only running the detectors that match the package manager.
   const frameworkDetectors: FrameworkDetector[] = [
     new BrownieDetector(),
     new CRADetector(),
@@ -51,6 +51,7 @@ export default async function detect(
     new RevelDetector(),
     new TruffleDetector(),
     new VueDetector(),
+    new ViteDetector(),
     new ZenjectDetector(),
   ];
 
@@ -64,6 +65,10 @@ export default async function detect(
 
   if (possibleFrameworks.length === 1) {
     return possibleFrameworks[0];
+  }
+
+  if (possibleFrameworks.includes("expo") && possibleFrameworks.includes("react-native-cli")) {
+    return "expo";
   }
 
   info(

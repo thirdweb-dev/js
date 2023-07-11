@@ -23,7 +23,7 @@ import { NetworkInput } from "../../core/types";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,
@@ -32,6 +32,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides } from "ethers";
+import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -48,7 +49,7 @@ import { CallOverrides } from "ethers";
  * @public
  */
 export class MarketplaceV3 implements UpdateableNetwork {
-  static contractRoles = ["admin", "lister", "asset"] as const;
+  static contractRoles = MARKETPLACE_CONTRACT_ROLES;
 
   public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceV3Contract>;

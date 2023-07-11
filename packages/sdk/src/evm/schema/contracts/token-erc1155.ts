@@ -9,18 +9,19 @@ import {
 } from "./common";
 
 export const TokenErc1155ContractInput =
-  CommonContractSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
-
-export const TokenErc1155ContractOutput =
-  CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
+  /* @__PURE__ */ CommonContractSchema.merge(CommonRoyaltySchema).merge(
     CommonSymbolSchema,
   );
 
-export const TokenErc1155ContractDeploy = TokenErc1155ContractInput.merge(
-  CommonPlatformFeeSchema,
-)
-  .merge(CommonPrimarySaleSchema)
-  .merge(CommonTrustedForwarderSchema);
+export const TokenErc1155ContractOutput =
+  /* @__PURE__ */ CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
+    CommonSymbolSchema,
+  );
+
+export const TokenErc1155ContractDeploy =
+  /* @__PURE__ */ TokenErc1155ContractInput.merge(CommonPlatformFeeSchema)
+    .merge(CommonPrimarySaleSchema)
+    .merge(CommonTrustedForwarderSchema);
 
 export const TokenErc1155ContractSchema = {
   deploy: TokenErc1155ContractDeploy,

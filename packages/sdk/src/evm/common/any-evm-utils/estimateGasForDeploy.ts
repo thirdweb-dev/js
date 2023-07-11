@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 
 export function estimateGasForDeploy(initCode: string) {
   let gasLimit =
-    ethers.utils
+    utils
       .arrayify(initCode)
       .map((x) => (x === 0 ? 4 : 16))
       .reduce((sum, x) => sum + x) +

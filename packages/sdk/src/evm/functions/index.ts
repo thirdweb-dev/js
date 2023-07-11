@@ -23,8 +23,4 @@ export type {
 } from "./watchBlock";
 export { watchTransactions } from "./watchTransactions";
 export type { WatchTransactionsParams } from "./watchTransactions";
-export {
-  getSignerAndProvider,
-  isProvider,
-  isSigner,
-} from "./getSignerAndProvider";
+export { isProvider, isSigner } from "./getSignerAndProvider";

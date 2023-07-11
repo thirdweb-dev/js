@@ -5,7 +5,7 @@ export type ThirdwebStorageOptions<T extends UploadOptions> = {
   uploader?: IStorageUploader<T>;
   downloader?: IStorageDownloader;
   gatewayUrls?: GatewayUrls | string[];
-  thirdwebApiKey?: string;
+  apiKey?: string;
 };
 
 export * from "./download";

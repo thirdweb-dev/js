@@ -19,7 +19,7 @@ import {
   ExclamationTriangleIcon,
 } from "@radix-ui/react-icons";
 import {
-  useActiveChain,
+  useChain,
   useChainId,
   useConnect,
   useConnectionStatus,
@@ -30,7 +30,7 @@ import {
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
-import { SafeWalletObj } from "./types";
+import { SafeWalletConfig } from "./types";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -44,11 +44,11 @@ export const gnosisAddressPrefixToChainId = {
 export const SelectAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
-  safeWallet: SafeWalletObj;
+  safeWalletConfig: SafeWalletConfig;
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
-  const activeChain = useActiveChain();
+  const activeChain = useChain();
   const connectedChainId = useChainId();
 
   const [safeAddress, setSafeAddress] = useState("");
@@ -84,7 +84,7 @@ export const SelectAccount: React.FC<{
     setSafeConnectError(false);
 
     try {
-      await connect(props.safeWallet, {
+      await connect(props.safeWalletConfig, {
         chain: selectedSafeChain,
         personalWallet: activeWallet,
         safeAddress,
@@ -108,7 +108,7 @@ export const SelectAccount: React.FC<{
       <BackButton onClick={props.onBack} />
       <Spacer y="md" />
       <Img
-        src={props.safeWallet.meta.iconURL}
+        src={props.safeWalletConfig.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
       />
@@ -238,7 +238,7 @@ export const SelectAccount: React.FC<{
             )}
           </NetworkSelect>
           {!disableNetworkSelection && (
-            <ChevronDownIcon
+            <StyledChevronDownIcon
               width={iconSize.sm}
               height={iconSize.sm}
               style={{
@@ -393,4 +393,10 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
     opacity: 1;
     cursor: not-allowed;
   }
+`;
+
+const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
+  theme?: Theme;
+}>`
+  color: ${(p) => p.theme.icon.secondary};
 `;

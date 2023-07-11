@@ -3,9 +3,9 @@ export default {
   "name": "ZetaChain Athens Testnet",
   "chain": "ZetaChain",
   "icon": {
-    "url": "ipfs://QmeABfwZ2nAxDzYyqZ1LEypPgQFMjEyrx8FfnoPLkF8R3f",
-    "width": 1280,
-    "height": 1280,
+    "url": "ipfs://QmP4Gnf4Lkp8q5LQVePNjAWxSqrw8vU2JAf7amcFz4vEUy",
+    "width": 712,
+    "height": 712,
     "format": "png"
   },
   "rpc": [
@@ -20,7 +20,7 @@ export default {
     "symbol": "aZETA",
     "decimals": 18
   },
-  "infoURL": "https://docs.zetachain.com/",
+  "infoURL": "https://zetachain.com/docs",
   "shortName": "zetachain-athens",
   "chainId": 7001,
   "networkId": 7001,

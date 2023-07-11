@@ -1,4 +1,7 @@
-import { PaperWallet } from "@thirdweb-dev/wallets";
+import {
+  PaperWallet,
+  PaperWalletAdditionalOptions,
+} from "@thirdweb-dev/wallets";
 import {
   WalletConfig,
   WalletOptions,
@@ -11,34 +14,31 @@ import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
 
-type PaperConfig = { clientId: string };
+type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
 
-export const paperWallet = (
-  config: PaperConfig,
-): WalletConfig<PaperWallet, PaperConfig> => {
+export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
     id: PaperWallet.id,
     meta: PaperWallet.meta,
     create(options: WalletOptions) {
       return new PaperWallet({ ...options, ...config });
     },
-    config,
     selectUI: PaperSelectionUI,
     connectUI: PaperConnectionUI,
   };
 };
 
-const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
-  props,
-) => {
+const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
   return (
     <InputSelectionUI
       onSelect={props.onSelect}
       placeholder="Enter your email address"
       name="email"
       type="email"
-      errorMessage={(input) => {
-        const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+      errorMessage={(_input) => {
+        const input = _input.replace(/\+/g, "");
+        const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+        const isValidEmail = emailRegex.test(input);
         if (!isValidEmail) {
           return "Invalid email address";
         }
@@ -49,7 +49,7 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet, PaperConfig>> = (
   );
 };
 
-const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet, PaperConfig>> = ({
+const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
   close,
   walletConfig,
   open,

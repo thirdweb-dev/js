@@ -1,4 +1,4 @@
-import { ChainId } from "../constants/chains";
+import { ChainId } from "../constants/chains/ChainId";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
 import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
@@ -15,7 +15,7 @@ const PAPER_API_VERSION = `2022-08-12` as const;
 export const PAPER_API_URL =
   `${PAPER_API_BASE}/${PAPER_API_VERSION}/platform/thirdweb` as const;
 
-const PAPER_CHAIN_ID_MAP = {
+const PAPER_CHAIN_ID_MAP = /* @__PURE__ */ {
   [ChainId.Mainnet]: "Ethereum",
   [ChainId.Goerli]: "Goerli",
   [ChainId.Polygon]: "Polygon",

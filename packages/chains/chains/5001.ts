@@ -10,8 +10,8 @@ export default {
     "https://faucet.testnet.mantle.xyz"
   ],
   "nativeCurrency": {
-    "name": "Testnet BitDAO",
-    "symbol": "BIT",
+    "name": "Testnet Mantle",
+    "symbol": "MNT",
     "decimals": 18
   },
   "infoURL": "https://mantle.xyz",

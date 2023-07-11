@@ -1,14 +1,12 @@
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { SUPPORTED_CHAIN_ID } from "../../constants/chains";
+import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
@@ -16,7 +14,7 @@ import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
-import { MarketplaceFilter } from "../../types";
+import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace";
 import { OfferV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
@@ -98,7 +96,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAll(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -135,7 +133,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAllValid(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAllValid(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -214,7 +212,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt and the id of the newly created offer
    * @twfeature Offers
    */
-  makeOffer = buildTransactionFunction(
+  makeOffer = /* @__PURE__ */ buildTransactionFunction(
     async (
       offer: OfferInputParams,
     ): Promise<Transaction<TransactionResultWithId>> => {
@@ -282,13 +280,15 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  cancelOffer = buildTransactionFunction(async (offerId: BigNumberish) => {
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "cancelOffer",
-      args: [offerId],
-    });
-  });
+  cancelOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (offerId: BigNumberish) => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "cancelOffer",
+        args: [offerId],
+      });
+    },
+  );
 
   /**
    * Accept an offer
@@ -305,29 +305,31 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the transaction receipt
    * @twfeature Offers
    */
-  acceptOffer = buildTransactionFunction(async (offerId: BigNumberish) => {
-    const offer = await this.validateOffer(BigNumber.from(offerId));
-    const { valid, error } = await this.isStillValidOffer(offer);
-    if (!valid) {
-      throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
-    }
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+  acceptOffer = /* @__PURE__ */ buildTransactionFunction(
+    async (offerId: BigNumberish) => {
+      const offer = await this.validateOffer(BigNumber.from(offerId));
+      const { valid, error } = await this.isStillValidOffer(offer);
+      if (!valid) {
+        throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
+      }
+      const overrides = (await this.contractWrapper.getCallOverrides()) || {};
 
-    await handleTokenApproval(
-      this.contractWrapper,
-      this.getAddress(),
-      offer.assetContractAddress,
-      offer.tokenId,
-      await this.contractWrapper.getSignerAddress(),
-    );
+      await handleTokenApproval(
+        this.contractWrapper,
+        this.getAddress(),
+        offer.assetContractAddress,
+        offer.tokenId,
+        await this.contractWrapper.getSignerAddress(),
+      );
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "acceptOffer",
-      args: [offerId],
-      overrides,
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "acceptOffer",
+        args: [offerId],
+        overrides,
+      });
+    },
+  );
 
   /** ******************************
    * PRIVATE FUNCTIONS
@@ -455,7 +457,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
   private async applyFilter(
     offers: IOffers.OfferStructOutput[],
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutSeller,
   ) {
     let rawOffers = [...offers];
 

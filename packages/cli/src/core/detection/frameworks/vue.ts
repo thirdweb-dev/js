@@ -22,8 +22,8 @@ export default class VueDetector implements FrameworkDetector {
     );
 
     return (
-      dependencies["vue"] ||
-      devDependencies["vue"] ||
+      !!dependencies["vue"] ||
+      !!devDependencies["vue"] ||
       additionalFilesExist ||
       false
     );

@@ -86,7 +86,7 @@ export const FEATURE_TOKEN_BATCH_MINTABLE = {
   features: {},
 } as const;
 
-export const FEATURE_TOKEN_MINTABLE = {
+export const FEATURE_TOKEN_MINTABLE = /* @__PURE__ */ {
   name: "ERC20Mintable",
   namespace: "token.mint",
   docLinks: {
@@ -110,7 +110,7 @@ export const FEATURE_TOKEN_PERMIT = {
   features: {},
 } as const;
 
-export const FEATURE_TOKEN = {
+export const FEATURE_TOKEN = /* @__PURE__ */ {
   name: "ERC20",
   namespace: "token",
   docLinks: {

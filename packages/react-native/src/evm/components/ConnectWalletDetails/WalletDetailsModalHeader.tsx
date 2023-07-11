@@ -1,6 +1,6 @@
 import { Icon } from "../../assets/icon";
 import { useAppTheme } from "../../styles/hooks";
-import { Address } from "../base/Address";
+import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
@@ -12,7 +12,7 @@ import CopyIcon from "../../assets/copy";
 import { useState } from "react";
 
 interface WalletDetailsModalHeaderProps {
-  address: string;
+  address?: string;
   onDisconnectPress: () => void;
   onAddressCopied?: () => void;
   loading?: boolean;
@@ -29,6 +29,9 @@ export const WalletDetailsModalHeader = ({
   const [showLoading, setShowLoading] = useState(false);
 
   const onAddressPress = async () => {
+    if (!address) {
+      return;
+    }
     await Clipboard.setStringAsync(address);
     onAddressCopied?.();
   };
@@ -55,7 +58,7 @@ export const WalletDetailsModalHeader = ({
             justifyContent="center"
             alignItems="center"
           >
-            <Address mr="xs" address={address} />
+            <AddressDisplay mr="xs" address={address} />
             <CopyIcon
               width={14}
               height={14}
@@ -63,7 +66,9 @@ export const WalletDetailsModalHeader = ({
             />
           </Box>
           <Text variant="bodySmallSecondary">
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data
+              ? Number(balanceQuery.data.displayValue).toFixed(3)
+              : ""}{" "}
             {balanceQuery.data?.symbol}
           </Text>
         </BaseButton>

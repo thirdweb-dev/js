@@ -1,4 +1,4 @@
-import { resolveIpfsUri } from "@thirdweb-dev/react-core";
+import { useStorage } from "@thirdweb-dev/react-core";
 
 export const Img: React.FC<{
   width: string;
@@ -8,11 +8,16 @@ export const Img: React.FC<{
   loading?: "eager" | "lazy";
   className?: string;
 }> = (props) => {
+  const storage = useStorage();
   return (
     <img
       width={props.width}
       height={props.height}
-      src={resolveIpfsUri(props.src)}
+      src={
+        storage
+          ? storage.resolveScheme(props.src)
+          : props.src.replace("ipfs://", "https://ipfs.io/ipfs/")
+      }
       alt={props.alt || ""}
       loading={props.loading}
       decoding="async"

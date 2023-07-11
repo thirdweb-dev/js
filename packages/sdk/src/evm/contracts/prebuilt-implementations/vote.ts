@@ -1,8 +1,4 @@
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-} from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -15,7 +11,8 @@ import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { VoteType } from "../../enums";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -32,11 +29,13 @@ import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declaratio
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  BigNumberish,
-  CallOverrides,
+  type BigNumberish,
+  type CallOverrides,
   Contract,
-  ethers,
+  utils,
 } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -254,7 +253,7 @@ export class Vote implements UpdateableNetwork {
     const tos = proposal.executions.map((p) => p.toAddress);
     const values = proposal.executions.map((p) => p.nativeTokenValue);
     const datas = proposal.executions.map((p) => p.transactionData);
-    const descriptionHash = ethers.utils.id(proposal.description);
+    const descriptionHash = utils.id(proposal.description);
     try {
       await this.contractWrapper
         .callStatic()
@@ -279,7 +278,7 @@ export class Vote implements UpdateableNetwork {
       symbol: "",
       decimals: 18,
       value: balance,
-      displayValue: ethers.utils.formatUnits(balance, 18),
+      displayValue: utils.formatUnits(balance, 18),
     };
   }
 
@@ -387,7 +386,7 @@ export class Vote implements UpdateableNetwork {
    * @param executions - A set of executable transactions that will be run if the proposal is passed and executed.
    * @returns - The id of the created proposal and the transaction receipt.
    */
-  propose = buildTransactionFunction(
+  propose = /* @__PURE__ */ buildTransactionFunction(
     async (
       description: string,
       executions?: ProposalExecutable[],
@@ -443,7 +442,7 @@ export class Vote implements UpdateableNetwork {
    * @param voteType - The position the voter is taking on their vote.
    * @param reason - (optional) The reason for the vote.
    */
-  vote = buildTransactionFunction(
+  vote = /* @__PURE__ */ buildTransactionFunction(
     async (proposalId: string, voteType: VoteType, reason = "") => {
       await this.ensureExists(proposalId);
       return Transaction.fromContractWrapper({
@@ -468,21 +467,23 @@ export class Vote implements UpdateableNetwork {
    *
    * @param proposalId - The proposal id to execute.
    */
-  execute = buildTransactionFunction(async (proposalId: string) => {
-    await this.ensureExists(proposalId);
+  execute = /* @__PURE__ */ buildTransactionFunction(
+    async (proposalId: string) => {
+      await this.ensureExists(proposalId);
 
-    const proposal = await this.get(proposalId);
-    const tos = proposal.executions.map((p) => p.toAddress);
-    const values = proposal.executions.map((p) => p.nativeTokenValue);
-    const datas = proposal.executions.map((p) => p.transactionData);
-    const descriptionHash = ethers.utils.id(proposal.description);
+      const proposal = await this.get(proposalId);
+      const tos = proposal.executions.map((p) => p.toAddress);
+      const values = proposal.executions.map((p) => p.nativeTokenValue);
+      const datas = proposal.executions.map((p) => p.transactionData);
+      const descriptionHash = utils.id(proposal.description);
 
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "execute",
-      args: [tos, values, datas, descriptionHash],
-    });
-  });
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "execute",
+        args: [tos, values, datas, descriptionHash],
+      });
+    },
+  );
 
   /**
    * @internal

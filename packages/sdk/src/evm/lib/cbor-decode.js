@@ -1,4 +1,5 @@
 /* eslint-disable eqeqeq */
+/* eslint-disable better-tree-shaking/no-top-level-side-effects  */
 let decoder;
 try {
   decoder = new TextDecoder();
@@ -949,6 +950,7 @@ currentExtensions[28] = (_read) => {
   refEntry.target = targetProperties; // the placeholder wasn't used, replace with the deserialized one
   return targetProperties; // no cycle, can just use the returned read object
 };
+
 currentExtensions[28].handlesRead = true;
 
 currentExtensions[29] = (id) => {

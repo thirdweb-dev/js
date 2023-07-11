@@ -25,7 +25,8 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -34,6 +35,7 @@ import { UploadProgressEvent } from "../../types/events";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -52,7 +54,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class SignatureDrop extends StandardErc721<SignatureDropContract> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public owner: ContractOwner<SignatureDropContract>;
@@ -392,7 +394,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -446,7 +448,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,
@@ -463,7 +465,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       quantity: BigNumberish,
       options?: ClaimOptions,
@@ -480,9 +482,11 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return this.erc721.burn.prepare(tokenId);
-  });
+  burn = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return this.erc721.burn.prepare(tokenId);
+    },
+  );
 
   /**
    * @internal
