@@ -27,9 +27,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   activeChain,
   signer,
   children,
-  thirdwebApiKey,
-  infuraApiKey,
-  alchemyApiKey,
+  apiKey,
 }: React.PropsWithChildren<
   { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
@@ -71,9 +69,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     if (supportedChain && supportedChain.rpc.length > 0) {
       try {
         const rpcUrl = getChainRPC(supportedChain, {
-          thirdwebApiKey,
-          infuraApiKey,
-          alchemyApiKey,
+          apiKey,
         });
 
         readonlySettings = {
@@ -105,7 +101,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        { ...mergedOptions, apiKey },
         storageInterface,
       );
     }
@@ -126,15 +122,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [
-    activeChainId,
-    alchemyApiKey,
-    infuraApiKey,
-    supportedChains,
-    sdkOptions,
-    storageInterface,
-    thirdwebApiKey,
-  ]);
+  }, [activeChainId, supportedChains, sdkOptions, storageInterface, apiKey]);
 
   useEffect(() => {
     // if we have an sdk and a signer update the signer
@@ -179,16 +167,14 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   queryClient,
   supportedChains,
   activeChain,
-  thirdwebApiKey,
-  alchemyApiKey,
-  infuraApiKey,
+  apiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  if (!thirdwebApiKey) {
+  if (!apiKey) {
     console.warn(
       "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
     );
-    thirdwebApiKey = DEFAULT_API_KEY;
+    apiKey = DEFAULT_API_KEY;
   }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
@@ -197,9 +183,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     useUpdateChainsWithApiKeys(
       supportedChainsNonNull,
       activeChain || supportedChainsNonNull[0],
-      thirdwebApiKey,
-      alchemyApiKey,
-      infuraApiKey,
+      apiKey,
     );
 
   const mergedChains = useMemo(() => {
@@ -228,9 +212,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     <ThirdwebConfigProvider
       value={{
         chains: mergedChains as Chain[],
-        thirdwebApiKey,
-        alchemyApiKey,
-        infuraApiKey,
+        apiKey,
       }}
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
@@ -238,9 +220,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
           <WrappedThirdwebSDKProvider
             signer={signer}
             supportedChains={mergedChains}
-            thirdwebApiKey={thirdwebApiKey}
-            alchemyApiKey={alchemyApiKey}
-            infuraApiKey={infuraApiKey}
+            apiKey={apiKey}
             activeChain={activeChainIdOrObjWithKey}
             {...restProps}
           >

@@ -37,7 +37,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   async initialize(personalWallet: EVMWallet) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
-      thirdwebApiKey: config.thirdwebApiKey,
+      apiKey: config.apiKey,
     }) as providers.BaseProvider;
     const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
@@ -57,13 +57,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
           : getVerifyingPaymaster(
               paymasterUrl,
               entryPointAddress,
-              this.config.thirdwebApiKey || "",
+              this.config.apiKey || "",
             )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
-      thirdwebApiKey: config.thirdwebApiKey || "",
+      apiKey: config.apiKey || "",
     };
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);

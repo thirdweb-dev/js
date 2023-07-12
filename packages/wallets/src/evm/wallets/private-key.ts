@@ -4,18 +4,14 @@ import { ChainOrRpcUrl, getChainProvider } from "@thirdweb-dev/sdk";
 
 export class PrivateKeyWallet extends AbstractWallet {
   #signer: ethers.Signer;
-  constructor(
-    privateKey: string,
-    chain?: ChainOrRpcUrl,
-    thirdwebApiKey?: string,
-  ) {
-    super({ apiKey: thirdwebApiKey });
+  constructor(privateKey: string, chain?: ChainOrRpcUrl, apiKey?: string) {
+    super({ apiKey: apiKey });
 
     this.#signer = new ethers.Wallet(
       privateKey,
       chain
         ? getChainProvider(chain, {
-            thirdwebApiKey: thirdwebApiKey,
+            apiKey,
           })
         : undefined,
     );

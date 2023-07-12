@@ -50,19 +50,16 @@ export function getChainProvider(
     chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
     rpcUrl = getChainRPC(rpcMap[chainId], {
-      thirdwebApiKey: options.thirdwebApiKey,
-      infuraApiKey: options.infuraApiKey,
-      alchemyApiKey: options.alchemyApiKey,
+      apiKey: options.apiKey,
     });
   } catch (e) {
     // no-op
+    console.log("error", e);
   }
 
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
-      options.thirdwebApiKey
-    }`;
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${options.apiKey}`;
   }
 
   if (!rpcUrl) {

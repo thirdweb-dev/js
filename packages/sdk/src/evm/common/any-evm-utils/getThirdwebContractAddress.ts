@@ -10,21 +10,22 @@ import { predictThirdwebContractAddress } from "./predictThirdwebContractAddress
  * @param contractName
  * @param chainId
  * @param storage
+ * @param apiKey
  */
 export async function getThirdwebContractAddress(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
-  thirdwebApiKey: string,
+  apiKey?: string,
 ): Promise<string> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: thirdwebApiKey,
+    apiKey: apiKey,
   });
   const contractAddress = await predictThirdwebContractAddress(
     contractName,
     chainId,
     storage,
-    thirdwebApiKey,
+    apiKey,
   );
   const isDeployed = await isContractDeployed(contractAddress, provider);
   invariant(isDeployed, "Contract not deployed yet");
