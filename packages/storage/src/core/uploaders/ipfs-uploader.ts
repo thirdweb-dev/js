@@ -20,10 +20,15 @@ import FormData from "form-data";
  *
  * @example
  * ```jsx
- * // Can instantiate the uploader with default configuration and your api key
+ * // Can instantiate the uploader with default configuration and your client ID when used in client-side applications
  * const uploader = new StorageUploader();
- * const apiKey = "your-api-key";
- * const storage = new ThirdwebStorage({ apiKey, uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
+ *
+ * // Can instantiate the uploader with default configuration and your secret key when used in server-side applications
+ * const uploader = new StorageUploader();
+ * const secretKey = "your-secret-key";
+ * const storage = new ThirdwebStorage({ secretKey, uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
@@ -31,19 +36,21 @@ import FormData from "form-data";
  *   uploadWithGatewayUrl: true,
  * }
  * const uploader = new StorageUploader(options);
- * const apiKey = "your-api-key";
- * const storage = new ThirdwebStorage({ apiKey, uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
  * ```
  *
  * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
-  private apiKey?: string;
+  private clientId?: string;
+  private secretKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.apiKey = options?.apiKey || "";
+    this.clientId = options?.clientId;
+    this.secretKey = options?.secretKey;
   }
 
   async uploadBatch(
@@ -105,7 +112,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           process.env.NODE_ENV === "test" || !!process.env.CI
             ? "Storage SDK CI"
             : "Storage SDK",
-        Authorization: `Bearer ${this.apiKey}`,
+        ...(this.secretKey
+          ? { "x-secret-key": this.secretKey }
+          : { "x-client-id": this.clientId || "" }),
       },
     });
 

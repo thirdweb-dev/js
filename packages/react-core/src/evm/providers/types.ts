@@ -41,6 +41,6 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
     | (string & {})
     | Chain;
 
-  // api keys that can be passed
-  apiKey?: string;
+  // client Id for thirdweb services
+  clientId?: string;
 }

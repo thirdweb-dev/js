@@ -105,7 +105,7 @@ export function ThirdwebWalletProvider(
     chains: Chain[];
     autoSwitch?: boolean;
     autoConnectTimeout?: number;
-    apiKey?: string;
+    clientId?: string;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -139,9 +139,9 @@ export function ThirdwebWalletProvider(
       chains: props.chains,
       dappMetadata: props.dAppMeta,
       chain: props.activeChain || props.chains[0],
-      apiKey: props.apiKey,
+      clientId: props.clientId,
     };
-  }, [props.chains, props.dAppMeta, props.activeChain, props.apiKey]);
+  }, [props.chains, props.dAppMeta, props.activeChain, props.clientId]);
 
   const createWalletInstance = useCallback(
     <I extends WalletInstance>(walletConfig: WalletConfig<I>): I => {

@@ -1,5 +1,5 @@
 import { ThirdwebAuthProvider } from "../../evm/contexts/ThirdwebAuthProvider";
-import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
+import { useUpdateChainsWithClientId } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { WalletConfig } from "../types/wallet";
@@ -106,10 +106,10 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
   }, [props.supportedChains, activeChain]);
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
-    useUpdateChainsWithApiKeys(
+    useUpdateChainsWithClientId(
       supportedChainsNonNull,
       props.activeChain || supportedChainsNonNull[0],
-      props.apiKey,
+      props.clientId,
     );
 
   const activeChainWithKey = useMemo(() => {
@@ -153,7 +153,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
         autoConnectTimeout={props.autoConnectTimeout}
-        apiKey={props.apiKey}
+        clientId={props.clientId}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
@@ -162,7 +162,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
           activeChain={activeChainWithKey}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
-          apiKey={props.apiKey}
+          clientId={props.clientId}
         >
           <ThirdwebAuthProvider value={props.authConfig}>
             {props.children}

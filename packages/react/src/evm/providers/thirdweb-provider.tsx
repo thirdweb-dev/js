@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -57,7 +56,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
-  apiKey: apiKey,
+  clientId: clientId,
   supportedWallets,
   theme,
   children,
@@ -65,9 +64,8 @@ export const ThirdwebProvider = <
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
 
-  if (!apiKey) {
-    apiKey = DEFAULT_API_KEY;
-    noAPIKeyWarning();
+  if (!clientId) {
+    noClientIdWarning();
   }
 
   return (
@@ -75,7 +73,7 @@ export const ThirdwebProvider = <
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}
-          apiKey={apiKey}
+          clientId={clientId}
           supportedWallets={wallets}
           {...restProps}
         >
@@ -87,13 +85,13 @@ export const ThirdwebProvider = <
   );
 };
 
-let noAPIKeyWarningLogged = false;
-function noAPIKeyWarning() {
-  if (noAPIKeyWarningLogged) {
+let noClientIdWarningLogged = false;
+function noClientIdWarning() {
+  if (noClientIdWarningLogged) {
     return;
   }
-  noAPIKeyWarningLogged = true;
+  noClientIdWarningLogged = true;
   console.warn(
-    "No API key provided to <ThirdwebProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+    "No client ID provided to <ThirdwebProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client ID from https://thirdweb.com/dashboard/",
   );
 }

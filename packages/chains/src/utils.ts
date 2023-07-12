@@ -1,7 +1,9 @@
 import { Chain, MinimalChain } from "./types";
 
 export type ChainRPCOptions = {
-  apiKey?: string;
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
   mode?: "http" | "ws";
 };
 
@@ -21,16 +23,10 @@ export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
 ): string[] {
-  const { apiKey, mode } = {
+  const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
     ...defaultOptions,
     ...options,
   };
-
-  if (!apiKey) {
-    console.warn(
-      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/settings",
-    );
-  }
 
   const processedRPCs: string[] = [];
 
@@ -45,9 +41,14 @@ export function getChainRPCs(
     }
 
     // Replace API_KEY placeholder with value
-    if (apiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", apiKey));
+    if (thirdwebApiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
+    } else if (infuraApiKey && rpc.includes("${INFURA_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
+    } else if (alchemyApiKey && rpc.includes("${ALCHEMY_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey));
     }
+
     // exclude RPCs with unknown placeholder
     else if (rpc.includes("${")) {
       return;
@@ -69,19 +70,58 @@ export function getChainRPCs(
 }
 
 /**
+ * Construct the list of RPC URLs given a specific chain config. Format any RPC URLs
+ * with necessary clientId/secretKey and returns the first valid one.
  *
- * use the keys and return a new chain object with updated RPCs
+ * @param chain - The chain config to assemble RPC URLs from
+ * @param clientId - The client id to use for the RPC URL
+ * @param secretKey - The secret key to use for the RPC URL
+ * @returns The first valid RPC URL for the chain
  */
-export const updateChainRPCs = (chain: Chain, options: ChainRPCOptions) => {
-  try {
-    return {
-      ...chain,
-      rpc: getChainRPCs(chain, options),
-    };
-  } catch (error) {
-    return chain;
+export function getValidChainRPC(
+  chain: Pick<Chain, "rpc" | "chainId">,
+  clientId?: string,
+  secretKey?: string,
+  mode: "http" | "ws" = "http",
+): string {
+  const processedRPCs: string[] = [];
+
+  chain.rpc.forEach((rpc) => {
+    // exclude RPC if mode mismatch
+    if (mode === "http" && !rpc.startsWith("http")) {
+      return;
+    }
+
+    if (mode === "ws" && !rpc.startsWith("ws")) {
+      return;
+    }
+
+    // Replace API_KEY placeholder with value
+    if (clientId && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", clientId));
+    } else if (secretKey && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", ""));
+    }
+
+    // exclude RPCs with unknown placeholder
+    else if (rpc.includes("${")) {
+      return;
+    }
+
+    // add as is
+    else {
+      processedRPCs.push(rpc);
+    }
+  });
+
+  if (processedRPCs.length === 0) {
+    throw new Error(
+      `No RPC available for chainId "${chain.chainId}" with mode ${mode}`,
+    );
   }
-};
+
+  return processedRPCs[0];
+}
 
 /**
  * Get the highest priority RPC URL for a specific chain

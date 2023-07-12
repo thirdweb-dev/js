@@ -2,7 +2,7 @@ import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
-import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { useUpdateChainsWithClientId } from "../hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "./types";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
@@ -178,7 +178,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
-    useUpdateChainsWithApiKeys(
+    useUpdateChainsWithClientId(
       supportedChainsNonNull,
       activeChain || supportedChainsNonNull[0],
       apiKey,
