@@ -1,6 +1,5 @@
-import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { default as EventEmitter } from "eventemitter3";
-import { DEFAULT_WALLET_API_KEY } from "../../evm/constants/rpc";
 
 export type WagmiConnectorData<Provider = any> = {
   account?: string;
@@ -16,17 +15,13 @@ export interface WagmiConnectorEvents<Provider = any> {
   error(error: Error): void;
 }
 
-type OptionsWithKey = { apiKey?: string } & {
-  [key: string]: any;
-};
-
 export type ConnectParams<TOpts extends Record<string, any> = {}> = {
   chainId?: number;
 } & TOpts;
 
 export abstract class WagmiConnector<
   Provider = any,
-  Options extends OptionsWithKey = any,
+  Options = any,
   Signer = any,
 > extends EventEmitter<WagmiConnectorEvents<Provider>> {
   /** Unique connector id */
@@ -48,14 +43,9 @@ export abstract class WagmiConnector<
     options: Options;
   }) {
     super();
-    if (!options.apiKey) {
-      options.apiKey = DEFAULT_WALLET_API_KEY;
-    }
 
     this.options = options;
-    this.chains = chains.map((chain) =>
-      updateChainRPCs(chain, { apiKey: options.apiKey }),
-    );
+    this.chains = chains;
   }
 
   abstract connect(config?: {
@@ -85,8 +75,6 @@ export abstract class WagmiConnector<
   abstract setupListeners(): Promise<void>;
 
   updateChains(chains: Chain[]) {
-    this.chains = chains.map((chain) =>
-      updateChainRPCs(chain, { apiKey: this.options.apiKey }),
-    );
+    this.chains = chains;
   }
 }

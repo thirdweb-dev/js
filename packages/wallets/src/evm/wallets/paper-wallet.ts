@@ -4,7 +4,6 @@ import {
 } from "../connectors/paper/types";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
 import { walletIds } from "../constants/walletIds";
 
@@ -57,10 +56,6 @@ export class PaperWallet extends AbstractClientWallet<
       });
     }
     return this.connector;
-  }
-
-  async updateChains(chains: Chain[]) {
-    this.chains = chains;
   }
 
   async getEmail() {

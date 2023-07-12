@@ -153,6 +153,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
         autoConnectTimeout={props.autoConnectTimeout}
+        apiKey={props.apiKey}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}

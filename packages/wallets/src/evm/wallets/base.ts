@@ -1,14 +1,11 @@
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import {
-  ConnectParams,
-  Connector,
-  TConstructorParams,
-} from "../interfaces/connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
+import { DEFAULT_WALLET_API_KEY } from "../constants/rpc";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -48,15 +45,17 @@ export abstract class AbstractClientWallet<
     super({ apiKey: options?.apiKey });
     this.walletId = walletId;
     this.options = options;
-    this.chains = options?.chains || defaultChains;
+    this.chains = (options?.chains || defaultChains).map((c) =>
+      updateChainRPCs(c, {
+        apiKey: options?.apiKey || DEFAULT_WALLET_API_KEY,
+      }),
+    );
     this.dappMetadata = options?.dappMetadata || DEFAULT_DAPP_META;
     this.walletStorage =
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
   }
 
-  protected abstract getConnector(): Promise<
-    Connector<TConstructorParams, TConnectParams>
-  >;
+  protected abstract getConnector(): Promise<Connector<TConnectParams>>;
 
   /**
    * tries to auto connect to the wallet
@@ -181,9 +180,13 @@ export abstract class AbstractClientWallet<
   }
 
   async updateChains(chains: Chain[]) {
-    this.chains = chains;
+    this.chains = chains.map((c) => {
+      return updateChainRPCs(c, {
+        apiKey: this.options?.apiKey || DEFAULT_WALLET_API_KEY,
+      });
+    });
     const connector = await this.getConnector();
-    connector.updateChains(chains);
+    connector.updateChains(this.chains);
   }
 
   /**

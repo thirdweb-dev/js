@@ -61,14 +61,16 @@ export abstract class AbstractWallet
   public type: Ecosystem = "evm";
   private params: AbstractWalletParams;
 
-  constructor(params: AbstractWalletParams) {
+  constructor(params?: AbstractWalletParams) {
     super();
 
-    if (!params.apiKey) {
-      params.apiKey = DEFAULT_WALLET_API_KEY;
-    }
+    this.params = {
+      ...params,
+    };
 
-    this.params = params;
+    if (!params?.apiKey) {
+      this.params.apiKey = DEFAULT_WALLET_API_KEY;
+    }
   }
 
   public abstract getSigner(): Promise<Signer>;

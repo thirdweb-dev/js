@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 export class EthersWallet extends AbstractWallet {
   #signer: ethers.Signer;
   constructor(signer: ethers.Signer) {
-    super({ apiKey: undefined });
+    super();
     this.#signer = signer;
   }
 
