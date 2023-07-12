@@ -4,11 +4,12 @@ import {
     TokenBoundSmartWalletConfig,
 } from "./types"
 import { EVMWallet } from "../../interfaces";
-import { SmartWalletConnector } from "../smart-wallet";
+import * as module from "../smart-wallet";
 import { ethers } from "ethers";
 import { SmartContract } from "@thirdweb-dev/sdk";
-import { getContract } from "@thirdweb-dev/sdk";
 import { SmartWalletConfig } from "../smart-wallet/types";
+
+let SmartWalletConnector = module.SmartWalletConnector;
 
 export class TokenBoundConnnector extends SmartWalletConnector {
     protected config: TokenBoundSmartWalletConfig;
@@ -29,10 +30,8 @@ export class TokenBoundConnnector extends SmartWalletConnector {
     }
 
     async initialize(personalWallet: EVMWallet) {
-        // TODO not hardcode just have default if one isn't provided
-        const hardcodedFactoryAddress = '0x02101dfB77FDE026414827Fdc604ddAF224F0921';
-        this.factoryAddress = hardcodedFactoryAddress;
-        await super.initialize(personalWallet);
+        const factoryAddress = this.config.factoryAddress || "0x02101dfB77FDE026414827Fdc604ddAF224F0921";
+        await super.initialize(personalWallet, factoryAddress);
     }
 
     protected defaultAccountInfo(): AccountContractInfo {
@@ -70,9 +69,5 @@ export class TokenBoundConnnector extends SmartWalletConnector {
                 ]);
             },
         };
-    }
-
-    set factoryAddress(value: string) {
-        this.factoryAddress = value;
     }
 }

@@ -35,7 +35,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet) {
+  async initialize(personalWallet: EVMWallet, factoryAddress: string = this.config.factoryAddress) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
       thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
@@ -61,7 +61,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             this.config.thirdwebApiKey,
           )
         : undefined,
-      factoryAddress: config.factoryAddress,
+      factoryAddress: factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       thirdwebApiKey: config.thirdwebApiKey,

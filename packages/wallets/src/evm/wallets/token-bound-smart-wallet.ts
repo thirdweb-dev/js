@@ -1,6 +1,6 @@
 import { SmartWallet } from "./smart-wallet";
 import { walletIds } from "../constants/walletIds";
-import { TokenBoundSmartWalletConfig } from "../connectors/token-bound-wallet/types";
+import { TokenBoundSmartWalletConfig } from "../connectors/token-bound-smart-wallet/types";
 import { WalletOptions } from "./base";
 
 export class TokenBoundSmartWallet extends SmartWallet {
