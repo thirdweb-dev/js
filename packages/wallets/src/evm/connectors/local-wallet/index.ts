@@ -11,7 +11,7 @@ export type LocalWalletConnectorOptions = {
   chain: Chain;
   ethersWallet: Wallet;
   chains: Chain[];
-  thirdwebApiKey?: string;
+  apiKey?: string;
 };
 
 export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
@@ -64,7 +64,7 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
   async getProvider() {
     if (!this.#provider) {
       this.#provider = getChainProvider(this.options.chain, {
-        thirdwebApiKey: this.options.thirdwebApiKey,
+        apiKey: this.options.apiKey,
       });
     }
     return this.#provider;
@@ -90,7 +90,7 @@ export class LocalWalletConnector extends Connector<LocalWalletConnectionArgs> {
     }
 
     this.#provider = getChainProvider(chain, {
-      thirdwebApiKey: this.options.thirdwebApiKey,
+      apiKey: this.options.apiKey,
     });
     this.#signer = getSignerFromEthersWallet(
       this.options.ethersWallet,

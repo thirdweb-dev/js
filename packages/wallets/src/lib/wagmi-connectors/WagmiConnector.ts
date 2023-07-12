@@ -54,7 +54,7 @@ export abstract class WagmiConnector<
 
     this.options = options;
     this.chains = chains.map((chain) =>
-      updateChainRPCs(chain, { thirdwebApiKey: options.apiKey }),
+      updateChainRPCs(chain, { apiKey: options.apiKey }),
     );
   }
 
@@ -86,7 +86,7 @@ export abstract class WagmiConnector<
 
   updateChains(chains: Chain[]) {
     this.chains = chains.map((chain) =>
-      updateChainRPCs(chain, { thirdwebApiKey: this.options.apiKey }),
+      updateChainRPCs(chain, { apiKey: this.options.apiKey }),
     );
   }
 }

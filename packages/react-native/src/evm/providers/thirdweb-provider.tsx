@@ -59,7 +59,7 @@ export const ThirdwebProvider = <
 >({
   children,
   createWalletStorage = createAsyncLocalStorage,
-  thirdwebApiKey,
+  apiKey,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
   theme,
@@ -74,16 +74,16 @@ export const ThirdwebProvider = <
     [supportedWallets],
   );
 
-  if (!thirdwebApiKey) {
+  if (!apiKey) {
     console.warn(
       "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
     );
-    thirdwebApiKey = DEFAULT_API_KEY;
+    apiKey = DEFAULT_API_KEY;
   }
 
   return (
     <ThirdwebProviderCore
-      thirdwebApiKey={thirdwebApiKey}
+      apiKey={apiKey}
       supportedWallets={supportedWallets}
       authConfig={
         authConfig
