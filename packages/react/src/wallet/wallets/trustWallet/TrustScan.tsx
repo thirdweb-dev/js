@@ -11,8 +11,9 @@ export const TrustScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
+  hideBackButton: boolean;
   walletConfig: WalletConfig<TrustWallet>;
-}> = ({ onBack, onConnected, onGetStarted, walletConfig }) => {
+}> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -54,6 +55,7 @@ export const TrustScan: React.FC<{
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
+      hideBackButton={hideBackButton}
     />
   );
 };

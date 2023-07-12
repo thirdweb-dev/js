@@ -1,5 +1,23 @@
 # thirdweb
 
+## 0.10.31
+
+### Patch Changes
+
+- Updated dependencies [[`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0), [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d), [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a)]:
+  - @thirdweb-dev/storage@1.1.8
+  - @thirdweb-dev/sdk@3.10.30
+  - @thirdweb-dev/chains@0.1.29
+
+## 0.10.30
+
+### Patch Changes
+
+- Updated dependencies [[`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5), [`72ada475`](https://github.com/thirdweb-dev/js/commit/72ada47596d5d5c08736c33215faeec636b7156a), [`2c0bb078`](https://github.com/thirdweb-dev/js/commit/2c0bb0789955f6cd397b6fdb8e990a505251c631), [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61), [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352)]:
+  - @thirdweb-dev/chains@0.1.28
+  - @thirdweb-dev/sdk@3.10.29
+  - @thirdweb-dev/storage@1.1.7
+
 ## 0.10.29
 
 ### Patch Changes

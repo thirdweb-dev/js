@@ -22,32 +22,37 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
     userOp: Partial<UserOperationStruct>,
   ): Promise<string> {
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
-    try {
-      const response = await fetch(this.paymasterUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": this.apiKey,
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          id: 1,
-          method: "pm_sponsorUserOperation",
-          params: [await toJSON(userOp), { entryPoint: this.entryPoint }],
-        }),
-      });
-      const res = await response.json();
-      if (res.result) {
-        const result = (res.result as any).paymasterAndData || res.result;
-        return result.toString();
-      } else {
-        throw new Error(
-          `Paymaster returned no result from: ${this.paymasterUrl}`,
-        );
-      }
-    } catch (e) {
-      console.error("PM - error", (e as any).result?.error || e);
-      throw e;
+    const response = await fetch(this.paymasterUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": this.apiKey,
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "pm_sponsorUserOperation",
+        params: [await toJSON(userOp), { entryPoint: this.entryPoint }],
+      }),
+    });
+    const res = await response.json();
+
+    if (!response.ok) {
+      const error = res.error || response.statusText;
+      const code = res.code || "UNKNOWN";
+
+      throw new Error(
+        `Paymaster error: ${error}
+Status: ${response.status}
+Code: ${code}`,
+      );
+    }
+
+    if (res.result) {
+      const result = (res.result as any).paymasterAndData || res.result;
+      return result.toString();
+    } else {
+      throw new Error(`Paymaster returned no result from ${this.paymasterUrl}`);
     }
   }
 }

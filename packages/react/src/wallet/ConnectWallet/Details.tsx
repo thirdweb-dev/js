@@ -304,7 +304,8 @@ export const ConnectedWalletDetails: React.FC<{
         {activeWalletConfig &&
           activeWalletConfig.id === walletIds.metamask &&
           activeWalletConfig.isInstalled &&
-          activeWalletConfig.isInstalled() && (
+          activeWalletConfig.isInstalled() &&
+          !isMobile() && (
             <MenuButton
               type="button"
               onClick={() => {
