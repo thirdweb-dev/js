@@ -95,6 +95,11 @@ export const RESOURCES: FooterLinkInfo[] = [
       "ipfs://QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
     ),
   },
+  {
+    name: "Report Abuse",
+    label: "abuse",
+    link: "/abuse",
+  },
 ];
 
 export const SDKs: FooterLinkInfo[] = [
