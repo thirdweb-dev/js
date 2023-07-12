@@ -1,5 +1,5 @@
 import { getCIDForUpload, isUploaded } from "../../common";
-import { TW_IPFS_SERVER_URL, TW_UPLOAD_SERVER_URL } from "../../common/urls";
+import { TW_UPLOAD_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
