@@ -25,7 +25,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
   }
 
   async connect(options: MagicConnectorOptions): Promise<string> {
-    if (!this.magicOptions.apiKey) {
+    if (!this.magicOptions.magicAPIKey) {
       throw new Error("Magic API Key is not provided.");
     }
 
@@ -167,7 +167,7 @@ export class MagicConnector extends Connector<MagicConnectorOptions> {
     }
 
     this.magicSDK = new Magic(
-      this.magicOptions.apiKey,
+      this.magicOptions.magicAPIKey,
       this.magicSdkConfiguration,
     );
     this.provider = this.magicSDK.rpcProvider;

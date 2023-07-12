@@ -144,7 +144,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
   }
 
   async connect(options: MagicAuthConnectOptions) {
-    if (!this.magicOptions.apiKey) {
+    if (!this.magicOptions.magicAPIKey) {
       throw new Error("Magic API Key is not provided.");
     }
     try {
@@ -265,7 +265,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
         };
       }
     }
-    this.magicSDK = new Magic(this.magicOptions.apiKey, options);
+    this.magicSDK = new Magic(this.magicOptions.magicAPIKey, options);
     this.provider = this.magicSDK.rpcProvider;
     return this.magicSDK;
   }
