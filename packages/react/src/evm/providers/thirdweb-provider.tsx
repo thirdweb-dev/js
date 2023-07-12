@@ -57,7 +57,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
-  thirdwebApiKey,
+  apiKey: apiKey,
   supportedWallets,
   theme,
   children,
@@ -65,11 +65,9 @@ export const ThirdwebProvider = <
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
 
-  if (!thirdwebApiKey) {
-    console.warn(
-      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-    );
-    thirdwebApiKey = DEFAULT_API_KEY;
+  if (!apiKey) {
+    apiKey = DEFAULT_API_KEY;
+    noAPIKeyWarning();
   }
 
   return (
@@ -77,7 +75,7 @@ export const ThirdwebProvider = <
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}
-          thirdwebApiKey={thirdwebApiKey}
+          apiKey={apiKey}
           supportedWallets={wallets}
           {...restProps}
         >
@@ -88,3 +86,14 @@ export const ThirdwebProvider = <
     </WalletUIStatesProvider>
   );
 };
+
+let noAPIKeyWarningLogged = false;
+function noAPIKeyWarning() {
+  if (noAPIKeyWarningLogged) {
+    return;
+  }
+  noAPIKeyWarningLogged = true;
+  console.warn(
+    "No API key provided to <ThirdwebProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+  );
+}

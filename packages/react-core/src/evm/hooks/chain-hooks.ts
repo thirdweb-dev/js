@@ -10,17 +10,13 @@ export function useUpdateChainsWithApiKeys<
 >(
   supportedChains: NonNullable<TChains>,
   activeChain: TActiveChain,
-  thirdwebApiKey?: string,
-  alchemyApiKey?: string,
-  infuraApiKey?: string,
+  apiKey?: string,
 ) {
   const keys = useMemo(
     () => ({
-      thirdwebApiKey: thirdwebApiKey,
-      alchemyApiKey: alchemyApiKey,
-      infuraApiKey: infuraApiKey,
+      apiKey: apiKey,
     }),
-    [thirdwebApiKey, alchemyApiKey, infuraApiKey],
+    [apiKey],
   );
 
   const supportedChainsWithKey = useMemo(() => {

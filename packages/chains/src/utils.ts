@@ -1,9 +1,7 @@
 import { Chain, MinimalChain } from "./types";
 
 export type ChainRPCOptions = {
-  thirdwebApiKey?: string;
-  alchemyApiKey?: string;
-  infuraApiKey?: string;
+  apiKey?: string;
   mode?: "http" | "ws";
 };
 
@@ -23,14 +21,14 @@ export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
 ): string[] {
-  const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
+  const { apiKey, mode } = {
     ...defaultOptions,
     ...options,
   };
 
-  if (!thirdwebApiKey) {
+  if (!apiKey) {
     console.warn(
-      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/settings",
     );
   }
 
@@ -47,14 +45,9 @@ export function getChainRPCs(
     }
 
     // Replace API_KEY placeholder with value
-    if (thirdwebApiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey));
-    } else if (infuraApiKey && rpc.includes("${INFURA_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${INFURA_API_KEY}", infuraApiKey));
-    } else if (alchemyApiKey && rpc.includes("${ALCHEMY_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey));
+    if (apiKey && rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", apiKey));
     }
-
     // exclude RPCs with unknown placeholder
     else if (rpc.includes("${")) {
       return;

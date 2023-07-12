@@ -49,15 +49,12 @@ export abstract class WagmiConnector<
   }) {
     super();
     if (!options.apiKey) {
-      console.warn(
-        "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-      );
       options.apiKey = DEFAULT_WALLET_API_KEY;
     }
 
     this.options = options;
     this.chains = chains.map((chain) =>
-      updateChainRPCs(chain, { thirdwebApiKey: options.apiKey }),
+      updateChainRPCs(chain, { apiKey: options.apiKey }),
     );
   }
 
@@ -89,7 +86,7 @@ export abstract class WagmiConnector<
 
   updateChains(chains: Chain[]) {
     this.chains = chains.map((chain) =>
-      updateChainRPCs(chain, { thirdwebApiKey: this.options.apiKey }),
+      updateChainRPCs(chain, { apiKey: this.options.apiKey }),
     );
   }
 }

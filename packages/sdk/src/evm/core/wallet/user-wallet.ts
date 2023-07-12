@@ -19,7 +19,6 @@ import {
   type Signer,
   type TypedDataField,
   Wallet,
-  Contract,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -27,9 +26,9 @@ import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-import { Transaction } from "../classes";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ContractWrapper } from "../classes/contract-wrapper";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -55,17 +54,11 @@ export class UserWallet {
   private connection: RPCConnectionHandler;
   private options: SDKOptions;
   public events = new EventEmitter<UserWalletEvents>();
-  // storage: ThirdwebStorage;
 
-  constructor(
-    network: NetworkInput,
-    options: SDKOptions,
-    // storage: ThirdwebStorage,
-  ) {
+  constructor(network: NetworkInput, options: SDKOptions) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
     this.events = new EventEmitter();
-    // this.storage = storage;
   }
 
   // TODO disconnect()
@@ -119,19 +112,13 @@ export class UserWallet {
         receipt: await tx.wait(),
       };
     } else {
-      const transferTransaction = await Transaction.fromContractInfo({
-        contractAddress: resolvedCurrency,
-        contractAbi: ERC20Abi,
-        provider: this.connection.getProvider(),
-        signer,
-        method: "transfer",
-        args: [resolvedTo, amountInWei],
-        storage: new ThirdwebStorage({
-          apiKey: this.options?.thirdwebApiKey,
-        }),
-      });
-
-      return transferTransaction.execute();
+      // ERC20 token transfer
+      return {
+        receipt: await this.createErc20(resolvedCurrency).sendTransaction(
+          "transfer",
+          [resolvedTo, amountInWei],
+        ),
+      };
     }
   }
 
@@ -157,13 +144,9 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       balance = await provider.getBalance(await this.getAddress());
     } else {
-      const readContract = new Contract(
-        resolvedCurrency,
-        ERC20Abi,
-        this.connection.getSignerOrProvider(),
-      ) as IERC20;
-
-      balance = await readContract.balanceOf(await this.getAddress());
+      balance = await this.createErc20(resolvedCurrency).readContract.balanceOf(
+        await this.getAddress(),
+      );
     }
     return await fetchCurrencyValue(provider, resolvedCurrency, balance);
   }
@@ -332,5 +315,18 @@ export class UserWallet {
       "This action requires a connected wallet. Please pass a valid signer to the SDK.",
     );
     return signer;
+  }
+
+  private createErc20(currencyAddress: Address) {
+    return new ContractWrapper<IERC20>(
+      this.connection.getSignerOrProvider(),
+      currencyAddress,
+      ERC20Abi,
+      this.options,
+      // TODO ideally we pass down storage from the constructor but causes problems in react-core
+      new ThirdwebStorage({
+        apiKey: this.options?.apiKey,
+      }),
+    );
   }
 }

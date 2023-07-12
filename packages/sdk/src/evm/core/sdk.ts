@@ -261,11 +261,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage?: ThirdwebStorage,
   ) {
-    if (!options.thirdwebApiKey) {
+    if (!options.apiKey) {
       console.warn(
-        "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+        "No API key provided to ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/settings",
       );
-      options.thirdwebApiKey = DEFAULT_API_KEY;
+      options.apiKey = DEFAULT_API_KEY;
     }
 
     if (isChainConfig(network)) {
