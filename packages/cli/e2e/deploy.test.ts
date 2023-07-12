@@ -21,14 +21,10 @@ describe("npx thirdweb deploy", () => {
       `${path}/BasicContract.sol`,
     );
 
-    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, pressKey, debug } =
-      await spawn("node", "./dist/cli/index.js deploy --contract");
+    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, debug } =
+      await spawn("node", `./dist/cli/index.js deploy --contract -k ${apiKey}`);
 
     debug();
-    await waitForText(`Please enter your API key, you can find or create it on https://thirdweb.com/settings/api-keys`);
-    await writeText(apiKey);
-    await pressKey("enter");
-
     expect(await exists("BasicContract.sol")).toEqual(true);
 
     await waitForText(ERROR_MESSAGES.noConfiguration);
@@ -36,6 +32,7 @@ describe("npx thirdweb deploy", () => {
 
     // wait for program to finish
     await waitForFinish();
+    debug();
 
     expect(getStderr().at(-1)).toContain(
       "https://thirdweb.com/contracts/deploy/",
