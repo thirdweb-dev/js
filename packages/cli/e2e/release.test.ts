@@ -21,10 +21,9 @@ describe("npx thirdweb publish", () => {
       `${path}/BasicContract.sol`,
     );
 
-    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, debug } =
+    const { waitForText, waitForFinish, getExitCode, writeText, getStderr } =
       await spawn("node", `./dist/cli/index.js publish -k ${apiKey}}`);
 
-    debug();
     expect(await exists("BasicContract.sol")).toEqual(true);
 
     await waitForText(ERROR_MESSAGES.noConfiguration);
@@ -32,7 +31,6 @@ describe("npx thirdweb publish", () => {
 
     // wait for program to finish
     await waitForFinish();
-    debug();
 
     expect(getStderr().at(-1)).toContain(
       "https://thirdweb.com/contracts/publish/",
