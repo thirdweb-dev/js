@@ -6,7 +6,7 @@ type SettingsSidebarProps = {
 };
 
 const links: Route[] = [
-  { path: "/settings/api-keys", title: "API Keys", name: "apiKeys" },
+  { path: "/dashboard/settings/api-keys", title: "API Keys", name: "apiKeys" },
 ];
 
 export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({

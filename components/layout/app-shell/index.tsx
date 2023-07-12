@@ -274,8 +274,8 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Wallet
           </LinkButton>
           <LinkButton
-            href="/settings"
-            isActive={pathname.startsWith("/settings")}
+            href="/dashboard/settings"
+            isActive={pathname.startsWith("/dashboard/settings")}
             _active={{
               bg: "bgBlack",
               color: "bgWhite",

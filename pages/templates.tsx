@@ -148,7 +148,6 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   img,
   hoverBorderColor,
   tags,
-  author,
 }) => {
   return (
     <Flex

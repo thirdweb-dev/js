@@ -97,7 +97,6 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
             <IconButton
               mr={-2}
               onClick={onCopy}
-              position="relative"
               float="right"
               aria-label="Copy"
               borderRadius="md"

@@ -2,7 +2,7 @@ import { CopyApiKeyButton } from "./CopyButton";
 import { ApiKeyDrawer } from "./KeyDrawer";
 import { findByName } from "./services";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { VStack, useDisclosure } from "@chakra-ui/react";
+import { HStack, useDisclosure } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
@@ -33,7 +33,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
     }),
 
     columnHelper.accessor("key", {
-      header: "Key",
+      header: "Publishable Key",
       cell: (cell) => (
         <CopyApiKeyButton apiKey={cell.getValue()} label="API Key" />
       ),
@@ -52,19 +52,19 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
       },
     }),
 
-    columnHelper.accessor("lastAccessedAt", {
-      header: "Last accessed",
-      cell: (cell) => {
-        const value = cell.getValue() as string;
-        const accessedDate = value
-          ? format(new Date(value), "MMM dd, yyyy")
-          : "Unknown";
-        return <Text>{accessedDate}</Text>;
-      },
-    }),
+    // columnHelper.accessor("lastAccessedAt", {
+    //   header: "Last accessed",
+    //   cell: (cell) => {
+    //     const value = cell.getValue() as string;
+    //     const accessedDate = value
+    //       ? format(new Date(value), "MMM dd, yyyy")
+    //       : "Unknown";
+    //     return <Text>{accessedDate}</Text>;
+    //   },
+    // }),
 
     columnHelper.accessor("services", {
-      header: "Services",
+      header: "Enabled Services",
       cell: (cell) => {
         const value = cell.getValue();
         if (!value || value.length === 0) {
@@ -72,7 +72,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
         }
 
         return (
-          <VStack alignItems="flex-start" w="full">
+          <HStack alignItems="flex-start" w="full">
             {value.map((srv) => {
               const service = findByName(srv.name);
               return (
@@ -87,7 +87,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
                 </Badge>
               );
             })}
-          </VStack>
+          </HStack>
         );
       },
     }),

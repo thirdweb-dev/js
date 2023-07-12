@@ -10,27 +10,30 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { Button } from "tw-components";
 
 interface GenerateApiKeyButtonProps {
   id: string;
   name: string;
+  generatedKey: ApiKey;
+  setGeneratedKey: Dispatch<SetStateAction<ApiKey>>;
 }
 
 export const GenerateApiKeyButton: React.FC<GenerateApiKeyButtonProps> = ({
   id,
   name,
+  generatedKey,
+  setGeneratedKey,
 }) => {
-  const [generatedKey, setGeneratedKey] = useState<ApiKey | undefined>(
-    undefined,
-  );
   const cancelRef = useRef<HTMLButtonElement>(null);
   const mutation = useGenerateApiKey();
 
   const { onSuccess, onError } = useTxNotifications(
-    "API Key Secret re-generated",
-    "Failed to re-generate an API Key Secret",
+    `API Key Secret ${generatedKey.secretMasked ? "regenerated" : "generated"}`,
+    `Failed to ${
+      generatedKey.secretMasked ? "regenerate" : "generate"
+    } an API Key Secret`,
   );
 
   const {
@@ -65,9 +68,9 @@ export const GenerateApiKeyButton: React.FC<GenerateApiKeyButtonProps> = ({
         position="absolute"
         right={2}
         top={2}
-        onClick={() => alertOnOpen()}
+        onClick={generatedKey.secretMasked ? alertOnOpen : handleGenerate}
       >
-        Regenerate
+        {generatedKey.secretMasked ? "Regenerate" : "Generate"}
       </Button>
 
       {generatedKey && (
@@ -85,13 +88,13 @@ export const GenerateApiKeyButton: React.FC<GenerateApiKeyButtonProps> = ({
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Re-generate {name} Secret?
+              Re-generate &quot;{name}&quot; Secret Key?
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to re-generate <strong>{name}</strong>{" "}
-              Secret? Any integrations using this Secret key will no longer be
-              able to access thirdweb services.
+              Are you sure you want to re-generate this Secret Key? Any
+              integrations using this Secret Key will no longer be able to
+              access thirdweb services.
             </AlertDialogBody>
 
             <AlertDialogFooter>

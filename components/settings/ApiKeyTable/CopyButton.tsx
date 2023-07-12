@@ -49,12 +49,12 @@ export const CopyApiKeyButton: React.FC<CopyApiKeyButtonProps> = ({
         boxShadow={"none"}
         label={
           <Card py={2} px={4} bgColor="backgroundHighlight">
-            <Text size="label.sm">Copy {label} to clipboard</Text>
+            <Text size="label.sm">Copy Publishable Key to clipboard</Text>
           </Card>
         }
       >
         <Button size="sm" p={0} variant="ghost" onClick={handleCopy}>
-          <Icon boxSize={3} as={FiCopy} color="blue.500" />
+          <Icon boxSize={3} as={FiCopy} />
         </Button>
       </Tooltip>
     </Flex>
