@@ -28,8 +28,7 @@ export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
 /**
  * @internal
  */
-export const TW_UPLOAD_SERVER_URL =
-  "https://storage-server-babv-am-pinata.zeet-nftlabs.zeet.app";
+export const TW_UPLOAD_SERVER_URL = "https://storage.thirdweb.com";
 
 /**
  * @internal
