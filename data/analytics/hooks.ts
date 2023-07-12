@@ -260,17 +260,20 @@ async function getEventsAnalytics(
   });
 
   const { results } = await res.json();
-  const callsByTime = (results as EventsQueryResponse[]).reduce((acc, item) => {
-    const time = new Date(item.time).getTime();
-    if (!acc[time]) {
-      acc[time] = {
-        [item.event_name]: parseInt(item.cnt),
-      };
-    } else {
-      acc[time][item.event_name] = parseInt(item.cnt);
-    }
-    return acc;
-  }, {} as Record<string, any>);
+  const callsByTime = (results as EventsQueryResponse[]).reduce(
+    (acc, item) => {
+      const time = new Date(item.time).getTime();
+      if (!acc[time]) {
+        acc[time] = {
+          [item.event_name]: parseInt(item.cnt),
+        };
+      } else {
+        acc[time][item.event_name] = parseInt(item.cnt);
+      }
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
   return Object.keys(callsByTime).map((time) => {
     return { time: parseInt(time), ...callsByTime[time] };

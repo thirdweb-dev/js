@@ -99,9 +99,11 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
               </Center>
             ) : null}
             <AnimatePresence initial={false}>
-              {allEvents?.slice(0, 3).map((e) => (
-                <EventsFeedItem key={e.transactionHash} transaction={e} />
-              ))}
+              {allEvents
+                ?.slice(0, 3)
+                .map((e) => (
+                  <EventsFeedItem key={e.transactionHash} transaction={e} />
+                ))}
             </AnimatePresence>
           </List>
         </Card>

@@ -21,10 +21,13 @@ export function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
       }));
     return parsedArray.length === 0 ? undefined : parsedArray;
   }
-  return Object.entries(data).reduce((acc, [key, value]) => {
-    if (value !== "") {
-      acc[key] = value;
-    }
-    return acc;
-  }, {} as Record<string, unknown>);
+  return Object.entries(data).reduce(
+    (acc, [key, value]) => {
+      if (value !== "") {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {} as Record<string, unknown>,
+  );
 }

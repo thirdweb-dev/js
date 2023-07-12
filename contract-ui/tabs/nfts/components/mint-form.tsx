@@ -139,8 +139,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
         setValue("external_url", undefined);
       }
     } else if (
-      ["text", "application/pdf"].some((type: string) =>
-        file.type?.includes(type),
+      ["text", "application/pdf"].some(
+        (type: string) => file.type?.includes(type),
       )
     ) {
       // text and pdf files

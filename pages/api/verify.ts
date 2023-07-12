@@ -60,10 +60,13 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
     url: "https://goerli.basescan.org/",
   },
 };
-const chainIdToChain: Record<number, Chain> = allChains.reduce((acc, chain) => {
-  acc[chain.chainId] = chain;
-  return acc;
-}, {} as Record<number, Chain>);
+const chainIdToChain: Record<number, Chain> = allChains.reduce(
+  (acc, chain) => {
+    acc[chain.chainId] = chain;
+    return acc;
+  },
+  {} as Record<number, Chain>,
+);
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {

@@ -102,22 +102,26 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     : constructorParams;
 
   const parseDeployParams = {
-    ...deployParams.reduce((acc, param) => {
-      acc[param.name] = replaceTemplateValues(
-        fullPublishMetadata.data?.constructorParams?.[param.name]?.defaultValue
-          ? fullPublishMetadata.data?.constructorParams?.[param.name]
-              ?.defaultValue || ""
-          : param.name === "_royaltyBps" || param.name === "_platformFeeBps"
-          ? "0"
-          : "",
-        param.type,
-        {
-          connectedWallet,
-          chainId: selectedChain,
-        },
-      );
-      return acc;
-    }, {} as Record<string, string>),
+    ...deployParams.reduce(
+      (acc, param) => {
+        acc[param.name] = replaceTemplateValues(
+          fullPublishMetadata.data?.constructorParams?.[param.name]
+            ?.defaultValue
+            ? fullPublishMetadata.data?.constructorParams?.[param.name]
+                ?.defaultValue || ""
+            : param.name === "_royaltyBps" || param.name === "_platformFeeBps"
+            ? "0"
+            : "",
+          param.type,
+          {
+            connectedWallet,
+            chainId: selectedChain,
+          },
+        );
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
   };
 
   // FIXME - temporaryly disabling add to dashboard by default on linea

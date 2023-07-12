@@ -41,18 +41,21 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
       return {};
     }
 
-    return balanceQuery.data.reduce((acc, curr) => {
-      return {
-        ...acc,
-        // convert to bps for BigNumber calculations
-        [curr.token_address]: ethers.utils.formatUnits(
-          BigNumber.from(curr.balance)
-            .mul(activeRecipient.splitPercentage * 100)
-            .div(10000),
-          curr.decimals,
-        ),
-      };
-    }, {} as { [address: string]: string });
+    return balanceQuery.data.reduce(
+      (acc, curr) => {
+        return {
+          ...acc,
+          // convert to bps for BigNumber calculations
+          [curr.token_address]: ethers.utils.formatUnits(
+            BigNumber.from(curr.balance)
+              .mul(activeRecipient.splitPercentage * 100)
+              .div(10000),
+            curr.decimals,
+          ),
+        };
+      },
+      {} as { [address: string]: string },
+    );
   }, [splitQuery.data, balanceQuery.data, address]);
 
   if (contractQuery.isLoading) {

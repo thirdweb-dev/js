@@ -44,9 +44,8 @@ export const DropNotReady: React.FC<DropNotReadyProps> = ({ address }) => {
           <b>{claimConditions.data?.totalAvailableSupply}</b>{" "}
           {claimConditions.data?.lazyMintedSupply === 0
             ? "and you have not uploaded NFTs any yet."
-            : ` but you have only uploaded ${
-                claimConditions.data?.lazyMintedSupply
-              } NFT${
+            : ` but you have only uploaded ${claimConditions.data
+                ?.lazyMintedSupply} NFT${
                 claimConditions.data?.lazyMintedSupply === 1 ? "" : "s"
               }.`}{" "}
           <br />

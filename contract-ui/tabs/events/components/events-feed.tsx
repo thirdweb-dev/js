@@ -163,15 +163,17 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
               allowMultiple
               defaultIndex={[]}
             >
-              {filteredEvents?.slice(0, 10).map((e) => (
-                <EventsFeedItem
-                  key={e.transactionHash}
-                  transaction={e}
-                  setSelectedEvent={setSelectedEvent}
-                  contractAddress={contractAddress}
-                  chainSlug={chainSlug}
-                />
-              ))}
+              {filteredEvents
+                ?.slice(0, 10)
+                .map((e) => (
+                  <EventsFeedItem
+                    key={e.transactionHash}
+                    transaction={e}
+                    setSelectedEvent={setSelectedEvent}
+                    contractAddress={contractAddress}
+                    chainSlug={chainSlug}
+                  />
+                ))}
             </Accordion>
           </List>
         </Card>

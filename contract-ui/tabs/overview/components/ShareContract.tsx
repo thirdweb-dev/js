@@ -50,8 +50,8 @@ export const ShareContract: React.FC<ShareContractProps> = ({
   const badgeCode = `
     <a href="https://thirdweb.com/${chainSlug}/${address}?utm_source=contract_badge" target="_blank">
       <img width="${BADGE_WIDTH}" height="${
-    audited ? AUDITED_BADGE_HEIGHT : BADGE_HEIGHT
-  }" src="${badgeUrl}" alt="View contract" />
+        audited ? AUDITED_BADGE_HEIGHT : BADGE_HEIGHT
+      }" src="${badgeUrl}" alt="View contract" />
     </a>`;
 
   const contractLink = `https://thirdweb.com/${chainSlug}/${address}`;
