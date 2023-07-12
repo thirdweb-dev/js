@@ -21,12 +21,12 @@ describe("npx thirdweb publish", () => {
       `${path}/BasicContract.sol`,
     );
 
-    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, debug } =
+    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, pressKey } =
       await spawn("node", "./dist/cli/index.js publish");
 
-    debug();
     await waitForText(`Please enter your API key, you can find or create it on \u001b[34mhttps://thirdweb.com/settings/api-keys\u001b[39m`);
     await writeText(apiKey);
+    await pressKey("enter");
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 
