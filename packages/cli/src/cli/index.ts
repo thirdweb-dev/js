@@ -300,8 +300,14 @@ const main = async () => {
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
     .option("--zksync", "Deploy on ZKSync")
+    .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      const apiKey = await loginUser(cache);
+      let apiKey = "";
+      if (!options.key) {
+        apiKey = await loginUser(cache);
+      } else {
+        apiKey = options.key;
+      }
       const url = await deploy(options, apiKey);
       if (url) {
         await open(url);
@@ -324,8 +330,14 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      const apiKey = await loginUser(cache);
+      let apiKey = "";
+      if (!options.key) {
+        apiKey = await loginUser(cache);
+      } else {
+        apiKey = options.key;
+      }
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
@@ -356,8 +368,14 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      const apiKey = await loginUser(cache);
+      let apiKey = "";
+      if (!options.key) {
+        apiKey = await loginUser(cache);
+      } else {
+        apiKey = options.key;
+      }
       const url = await processProject(options, "publish", apiKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
@@ -371,8 +389,14 @@ const main = async () => {
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .action(async (_path) => {
-      const apiKey = await loginUser(cache);
+    .option("-k, --key [key]", "API key to authorize usage")
+    .action(async (_path, options) => {
+      let apiKey = "";
+      if (!options.key) {
+        apiKey = await loginUser(cache);
+      } else {
+        apiKey = options.key;
+      }
       const storage = new ThirdwebStorage({
         apiKey,
       });
