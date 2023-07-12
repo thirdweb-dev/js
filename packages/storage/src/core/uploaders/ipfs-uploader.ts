@@ -285,7 +285,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       });
 
       xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-      xhr.setRequestHeader("Authorization", `Bearer ${this.apiKey}`);
+      xhr.setRequestHeader(
+        "Authorization",
+        this.apiKey ? `Bearer ${this.apiKey}` : ``,
+      );
 
       xhr.send(form as any);
     });
@@ -302,7 +305,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${this.apiKey}`,
+        Authorization: this.apiKey ? `Bearer ${this.apiKey}` : ``,
         ...form.getHeaders(),
       },
       body: form.getBuffer(),
