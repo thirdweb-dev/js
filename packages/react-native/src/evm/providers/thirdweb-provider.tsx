@@ -75,10 +75,8 @@ export const ThirdwebProvider = <
   );
 
   if (!apiKey) {
-    console.warn(
-      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-    );
     apiKey = DEFAULT_API_KEY;
+    noAPIKeyWarning();
   }
 
   return (
@@ -115,3 +113,14 @@ export const ThirdwebProvider = <
     </ThirdwebProviderCore>
   );
 };
+
+let noAPIKeyWarningLogged = false;
+function noAPIKeyWarning() {
+  if (noAPIKeyWarningLogged) {
+    return;
+  }
+  noAPIKeyWarningLogged = true;
+  console.warn(
+    "No API key provided to <ThirdwebProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+  );
+}

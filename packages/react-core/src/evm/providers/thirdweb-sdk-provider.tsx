@@ -171,10 +171,8 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   if (!apiKey) {
-    console.warn(
-      "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-    );
     apiKey = DEFAULT_API_KEY;
+    noAPIKeyWarning();
   }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
@@ -265,4 +263,15 @@ export function useSDK(): ThirdwebSDK | undefined {
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
   return (sdk as any)?._chainId;
+}
+
+let noAPIKeyWarningLogged = false;
+function noAPIKeyWarning() {
+  if (noAPIKeyWarningLogged) {
+    return;
+  }
+  noAPIKeyWarningLogged = true;
+  console.warn(
+    "No API key provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+  );
 }
