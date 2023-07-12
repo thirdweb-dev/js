@@ -1,5 +1,4 @@
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
-import chalk from "chalk";
 import { copyFile } from "fs/promises";
 import { resolve } from "path";
 import { ERROR_MESSAGES } from "../constants/constants";
@@ -10,6 +9,7 @@ jest.setTimeout(120_000);
 describe("npx thirdweb publish", () => {
   it("should return publish page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
+    const chalk = (await import('chalk')).default;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     const apiKey = process.env.CLI_E2E_API_KEY as string;
 
