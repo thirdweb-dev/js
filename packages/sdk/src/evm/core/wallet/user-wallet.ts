@@ -19,7 +19,6 @@ import {
   type Signer,
   type TypedDataField,
   Wallet,
-  Contract,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -27,7 +26,6 @@ import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-import { Transaction } from "../classes";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractWrapper } from "../classes/contract-wrapper";
