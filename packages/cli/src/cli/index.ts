@@ -302,13 +302,13 @@ const main = async () => {
     .option("--zksync", "Deploy on ZKSync")
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      let apiKey = "";
+      let apiSecretKey = "";
       if (!options.key) {
-        apiKey = await loginUser(cache);
+        apiSecretKey = await loginUser(cache);
       } else {
-        apiKey = options.key;
+        apiSecretKey = options.key;
       }
-      const url = await deploy(options, apiKey);
+      const url = await deploy(options, apiSecretKey);
       if (url) {
         await open(url);
       }
@@ -332,16 +332,16 @@ const main = async () => {
     .option("--ci", "Continuous Integration mode")
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      let apiKey = "";
+      let apiSecretKey = "";
       if (!options.key) {
-        apiKey = await loginUser(cache);
+        apiSecretKey = await loginUser(cache);
       } else {
-        apiKey = options.key;
+        apiSecretKey = options.key;
       }
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
-      const url = await processProject(options, "publish", apiKey);
+      const url = await processProject(options, "publish", apiSecretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -370,13 +370,13 @@ const main = async () => {
     .option("--ci", "Continuous Integration mode")
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      let apiKey = "";
+      let apiSecretKey = "";
       if (!options.key) {
-        apiKey = await loginUser(cache);
+        apiSecretKey = await loginUser(cache);
       } else {
-        apiKey = options.key;
+        apiSecretKey = options.key;
       }
-      const url = await processProject(options, "publish", apiKey);
+      const url = await processProject(options, "publish", apiSecretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -391,14 +391,14 @@ const main = async () => {
     .argument("[upload]", "path to file or directory to upload")
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (_path, options) => {
-      let apiKey = "";
+      let apiSecretKey = "";
       if (!options.key) {
-        apiKey = await loginUser(cache);
+        apiSecretKey = await loginUser(cache);
       } else {
-        apiKey = options.key;
+        apiSecretKey = options.key;
       }
       const storage = new ThirdwebStorage({
-        apiKey,
+        secretKey: apiSecretKey,
       });
       try {
         const uri = await upload(storage, _path);
@@ -448,21 +448,28 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
-      await generate(options);
+      let apiSecretKey = "";
+      if (!options.key) {
+        apiSecretKey = await loginUser(cache);
+      } else {
+        apiSecretKey = options.key;
+      }
+      await generate(options, apiSecretKey);
     });
 
     program
       .command("login")
-      .description("Authenticate with the thirdweb CLI using your API key or replace an existing API key")
-      .option("-n, --new", "Login with a new API key", false)
+      .description("Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key")
+      .option("-n, --new", "Login with a new API secret key", false)
       .action(async (options) => {
         await loginUser(cache, options);
       });
 
     program
       .command("logout")
-      .description("Logout of the thirdweb CLI, effectively removing your API key from your machine")
+      .description("Logout of the thirdweb CLI, effectively removing your API secret key from your machine")
       .action(async () => {
         await logoutUser(cache);
       });

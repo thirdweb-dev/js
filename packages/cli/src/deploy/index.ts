@@ -1,8 +1,8 @@
+import chalk from "chalk";
 import { processProject } from "../common/processor";
 import { info, logger } from "../core/helpers/logger";
 import generateDashboardUrl from "../helpers/generate-dashboard-url";
 import { deployApp } from "./app";
-import chalk from "chalk";
 
 type DeployOptions = {
   name: string;
@@ -12,7 +12,7 @@ type DeployOptions = {
   distPath?: string;
 };
 
-export async function deploy(options: DeployOptions, apiKey: string) {
+export async function deploy(options: DeployOptions, apiSecretKey: string) {
   if (options.name) {
     const url = generateDashboardUrl(options.name, options.contractVersion);
 
@@ -33,7 +33,7 @@ export async function deploy(options: DeployOptions, apiKey: string) {
 
   if (options.app) {
     try {
-      let url = await deployApp(options.distPath, options.path, apiKey);
+      let url = await deployApp(options.distPath, options.path, apiSecretKey);
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {
@@ -44,7 +44,7 @@ export async function deploy(options: DeployOptions, apiKey: string) {
     }
   }
 
-  const url = await processProject(options, "deploy", apiKey);
+  const url = await processProject(options, "deploy", apiSecretKey);
   info(
     `Open this link to deploy your contracts: ${chalk.blueBright(
       url.toString(),

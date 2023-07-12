@@ -16,7 +16,7 @@ export async function loginUser(cache: Cache, options?: { new: boolean }) {
 
 export async function logoutUser(cache: Cache) {
   try {
-    cache.remove("api-key");
+    cache.remove("api-secret-key");
     console.log(chalk.green("You have been logged out"));
   } catch (error) {
     console.log(chalk.red("Something went wrong", error));
@@ -25,7 +25,7 @@ export async function logoutUser(cache: Cache) {
 
 export function getSession(cache: Cache) {
   try {
-    const apiKey: CacheEntry = cache.get("api-key");
+    const apiKey: CacheEntry = cache.get("api-secret-key");
     return apiKey.value;
   } catch (error) {
     console.log(error);
@@ -34,32 +34,32 @@ export function getSession(cache: Cache) {
 
 export async function createSession(cache: Cache) {
   try {
-    const apiKey = await prompts({
+    const response = await prompts({
       type: "text",
-      name: "apiKey",
-      message: `Please enter your API key, you can find or create it on ${chalk.blue("https://thirdweb.com/settings/api-keys")}`,
+      name: "apiSecretKey",
+      message: `Please enter your API secret key, you can find or create it on ${chalk.blue("https://thirdweb.com/dashboard/settings")}`,
     });
 
     try {
-      await validateKey(apiKey.apiKey);
+      await validateKey(response.apiSecretKey);
     } catch (error) {
       console.log(error);
       process.exit(1);
     }
-    cache.set("api-key", apiKey.apiKey);
-    return apiKey.apiKey;
+    cache.set("api-secret-key", response.apiSecretKey);
+    return response.apiSecretKey;
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function validateKey(apiKey: string) {
+export async function validateKey(apiSecretKey: string) {
   const fetch = (await import('node-fetch')).default;
   const response = await fetch(`https://api.thirdweb.com/v1/keys/use`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
+      "x-secret-key": apiSecretKey,
     },
     body: JSON.stringify({
       scope: "storage",
@@ -72,6 +72,6 @@ export async function validateKey(apiKey: string) {
     const { error } = apiResponse;
     throw new Error(chalk.red(error.message));
   } else {
-    return apiKey;
+    return apiSecretKey;
   }
 }

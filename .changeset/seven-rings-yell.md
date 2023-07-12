@@ -2,9 +2,9 @@
 "thirdweb": minor
 ---
 
-Introducing API key restrictions for certain commands. Get your API key from [here](https://thirdweb.com/settings/api-keys).
+Introducing API secret key restrictions for certain commands. Get your API secret key from [here](https://thirdweb.com/dashboard/settings).
 
-The following commands will require you to have logged in with your API key:
+The following commands will require you to have logged in with your API secret key:
 
 - `thirdweb deploy`
 - `thirdweb release`

@@ -10,9 +10,9 @@ describe("npx thirdweb deploy", () => {
   it("should return deploy page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    const apiKey = process.env.CLI_E2E_API_KEY as string;
+    const apiSecretKey = process.env.CLI_E2E_API_KEY as string;
 
-    if (!apiKey) {
+    if (!apiSecretKey) {
       throw new Error("CLI_E2E_API_KEY is not set in the environment variables");
     }
 
@@ -22,7 +22,7 @@ describe("npx thirdweb deploy", () => {
     );
 
     const { waitForText, waitForFinish, getExitCode, writeText, getStderr } =
-      await spawn("node", `./dist/cli/index.js deploy --contract -k ${apiKey}`);
+      await spawn("node", `./dist/cli/index.js deploy --contract -k ${apiSecretKey}`);
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 
