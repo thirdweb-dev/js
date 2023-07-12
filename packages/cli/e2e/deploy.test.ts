@@ -21,9 +21,10 @@ describe("npx thirdweb deploy", () => {
       `${path}/BasicContract.sol`,
     );
 
-    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, pressKey } =
+    const { waitForText, waitForFinish, getExitCode, writeText, getStderr, pressKey, debug } =
       await spawn("node", "./dist/cli/index.js deploy --contract");
 
+    debug();
     await waitForText(`Please enter your API key, you can find or create it on https://thirdweb.com/settings/api-keys`);
     await writeText(apiKey);
     await pressKey("enter");
