@@ -6,8 +6,8 @@ import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 import { DEFAULT_WALLET_API_KEY } from "../constants/rpc";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number) {
-  return `https://${chainId}.rpc.thirdweb.com`;
+function chainIdToThirdwebRpc(chainId: number, apiKey?: string) {
+  return `https://${chainId}.rpc.thirdweb.com${apiKey ? `/${apiKey}` : ""}}`;
 }
 
 export type WalletData = {
@@ -35,8 +35,11 @@ export async function checkContractWalletSignature(
   signature: string,
   address: string,
   chainId: number,
+  apiKey?: string,
 ): Promise<boolean> {
-  const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
+  const provider = new providers.JsonRpcProvider(
+    chainIdToThirdwebRpc(chainId, apiKey),
+  );
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);
   try {
@@ -62,9 +65,6 @@ export abstract class AbstractWallet
     super();
 
     if (!params.apiKey) {
-      console.warn(
-        "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-      );
       params.apiKey = DEFAULT_WALLET_API_KEY;
     }
 
@@ -130,6 +130,7 @@ export abstract class AbstractWallet
           signature,
           address,
           chainId || 1,
+          this.params.apiKey,
         );
         return isValid;
       } catch {

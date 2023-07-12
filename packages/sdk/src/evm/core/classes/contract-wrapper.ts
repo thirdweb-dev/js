@@ -54,8 +54,6 @@ import { getContractAddressByChainId } from "../../constants/addresses/getContra
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
-  // TODO: In another PR, make this storage private, and have extending classes pass
-  // down storage to be stored in contract wrapper.
   storage: ThirdwebStorage;
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});

@@ -49,9 +49,6 @@ export abstract class WagmiConnector<
   }) {
     super();
     if (!options.apiKey) {
-      console.warn(
-        "No API key provided. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-      );
       options.apiKey = DEFAULT_WALLET_API_KEY;
     }
 
