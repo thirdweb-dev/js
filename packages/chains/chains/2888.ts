@@ -4,7 +4,8 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://goerli.boba.network/"
+    "https://goerli.boba.network/",
+    "wss://wss.goerli.boba.network/"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -13,7 +14,7 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://boba.network",
-  "shortName": "Bobagoerli",
+  "shortName": "BobaGoerli",
   "chainId": 2888,
   "networkId": 2888,
   "explorers": [
@@ -28,7 +29,7 @@ export default {
     "chain": "eip155-5",
     "bridges": [
       {
-        "url": "https://gateway.goerli.boba.network"
+        "url": "https://gateway.boba.network"
       }
     ]
   },

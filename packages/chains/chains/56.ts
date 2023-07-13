@@ -1,9 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Binance Smart Chain Mainnet",
+  "name": "BNB Smart Chain Mainnet",
   "chain": "BSC",
   "rpc": [
-    "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bnb-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://bsc-ws-node.nariox.org",
     "https://bsc.publicnode.com",
     "https://bsc-dataseed4.ninicoin.io",
@@ -14,20 +14,20 @@ export default {
     "https://bsc-dataseed3.defibit.io",
     "https://bsc-dataseed2.defibit.io",
     "https://bsc-dataseed1.defibit.io",
-    "https://bsc-dataseed4.binance.org",
-    "https://bsc-dataseed3.binance.org",
-    "https://bsc-dataseed2.binance.org",
-    "https://bsc-dataseed1.binance.org"
+    "https://bsc-dataseed4.bnbchain.org",
+    "https://bsc-dataseed3.bnbchain.org",
+    "https://bsc-dataseed2.bnbchain.org",
+    "https://bsc-dataseed1.bnbchain.org"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/"
   ],
   "nativeCurrency": {
-    "name": "Binance Chain Native Token",
+    "name": "BNB Chain Native Token",
     "symbol": "BNB",
     "decimals": 18
   },
-  "infoURL": "https://www.binance.org",
+  "infoURL": "https://www.bnbchain.org/en",
   "shortName": "bnb",
   "chainId": 56,
   "networkId": 56,
@@ -46,5 +46,5 @@ export default {
     "format": "png"
   },
   "testnet": false,
-  "slug": "binance"
+  "slug": "bnb-smart-chain"
 } as const satisfies Chain;
