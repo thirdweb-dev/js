@@ -97,10 +97,10 @@ export function getValidChainRPCs(
     }
 
     // Replace API_KEY placeholder with value
-    if (clientId && rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", clientId));
-    } else if (secretKey && rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", ""));
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      processedRPCs.push(
+        rpc.replace("${THIRDWEB_API_KEY}", secretKey || clientId || ""),
+      );
     }
 
     // exclude RPCs with unknown placeholder
