@@ -8,6 +8,9 @@ export interface CurrencyMetadata {
 
 const Ethereum: CurrencyMetadata[] = [
   {
+    ...NATIVE_TOKENS[ChainId.Mainnet].wrapped,
+  },
+  {
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     name: "Tether USD",
     symbol: "USDT",
@@ -23,11 +26,6 @@ const Ethereum: CurrencyMetadata[] = [
     symbol: "WBTC",
   },
   {
-    address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-    name: "Wrapped Ether",
-    symbol: "WETH",
-  },
-  {
     address: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
     name: "Polygon",
     symbol: "WMATIC",
@@ -36,9 +34,7 @@ const Ethereum: CurrencyMetadata[] = [
 
 const Goerli: CurrencyMetadata[] = [
   {
-    address: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-    name: "Wrapped Ether",
-    symbol: "WETH",
+    ...NATIVE_TOKENS[ChainId.Goerli].wrapped,
   },
   {
     address: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
@@ -48,6 +44,14 @@ const Goerli: CurrencyMetadata[] = [
 ];
 
 const Polygon: CurrencyMetadata[] = [
+  {
+    ...NATIVE_TOKENS[ChainId.Polygon].wrapped,
+  },
+  {
+    address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+    name: "Wrapped Ether",
+    symbol: "WETH",
+  },
   {
     address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     name: "USD Coin",
@@ -63,37 +67,33 @@ const Polygon: CurrencyMetadata[] = [
     name: "Wrapped BTC",
     symbol: "WBTC",
   },
-  {
-    address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-    name: "Wrapped Ether",
-    symbol: "WETH",
-  },
 ];
 
 const Mumbai: CurrencyMetadata[] = [
+  {
+    ...NATIVE_TOKENS[ChainId.Mumbai].wrapped,
+  },
   {
     name: "Wrapped Ether",
     address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
     symbol: "WETH",
   },
   {
-    name: "Wrapped Matic",
-    address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
-    symbol: "WMATIC",
+    address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
+    name: "USD Coin",
+    symbol: "USDC",
   },
   {
     name: "Tether USD",
     address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
     symbol: "USDT",
   },
-  {
-    address: "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747",
-    name: "USD Coin",
-    symbol: "USDC",
-  },
 ];
 
 const Fantom: CurrencyMetadata[] = [
+  {
+    ...NATIVE_TOKENS[ChainId.Fantom].wrapped,
+  },
   {
     name: "Wrapped Ether",
     address: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
@@ -109,26 +109,17 @@ const Fantom: CurrencyMetadata[] = [
     address: "0x321162Cd933E2Be498Cd2267a90534A804051b11",
     symbol: "WBTC",
   },
-  {
-    name: "Wrapped Fantom",
-    address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
-    symbol: "WFTM",
-  },
 ];
 
 const FantomTestnet: CurrencyMetadata[] = [
   {
-    name: "Wrapped Fantom",
-    address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
-    symbol: "WFTM",
+    ...NATIVE_TOKENS[ChainId.FantomTestnet].wrapped,
   },
 ];
 
 const Avalanche: CurrencyMetadata[] = [
   {
-    address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-    name: "Wrapped AVAX",
-    symbol: "WAVAX",
+    ...NATIVE_TOKENS[ChainId.Avalanche].wrapped,
   },
   {
     address: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
@@ -141,7 +132,7 @@ const Avalanche: CurrencyMetadata[] = [
     symbol: "USDT",
   },
   {
-    address: "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664",
+    address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
     name: "USD Coin",
     symbol: "USDC",
   },
@@ -154,41 +145,46 @@ const Avalanche: CurrencyMetadata[] = [
 
 const AvalancheFujiTestnet: CurrencyMetadata[] = [
   {
-    address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
-    name: "Wrapped AVAX",
-    symbol: "WAVAX",
+    ...NATIVE_TOKENS[ChainId.AvalancheFujiTestnet].wrapped,
+  },
+  {
+    address: "0x5425890298aed601595a70AB815c96711a31Bc65",
+    name: "USD Coin",
+    symbol: "USDC",
   },
 ];
 
 const Optimism: CurrencyMetadata[] = [
   {
-    address: "0x4200000000000000000000000000000000000006",
-    name: "Wrapped Ether",
-    symbol: "WETH",
+    ...NATIVE_TOKENS[ChainId.Optimism].wrapped,
   },
 ];
 
-const OptimismTestnet: CurrencyMetadata[] = [
+const OptimismGoerli: CurrencyMetadata[] = [
   {
-    address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
-    name: "Wrapped Ether",
-    symbol: "WETH",
+    ...NATIVE_TOKENS[ChainId.OptimismGoerli].wrapped,
   },
 ];
 
 const Arbitrum: CurrencyMetadata[] = [
   {
-    address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
-    name: "Wrapped Ether",
-    symbol: "WETH",
+    ...NATIVE_TOKENS[ChainId.Arbitrum].wrapped,
+  },
+  {
+    address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+    name: "USD Coin",
+    symbol: "USDC",
   },
 ];
 
-const ArbitrumTestnet: CurrencyMetadata[] = [
+const ArbitrumGoerli: CurrencyMetadata[] = [
   {
-    address: "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
-    name: "Wrapped Ether",
-    symbol: "WETH",
+    ...NATIVE_TOKENS[ChainId.ArbitrumGoerli].wrapped,
+  },
+  {
+    address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
+    name: "USD Coin",
+    symbol: "USDC",
   },
 ];
 
@@ -259,11 +255,9 @@ export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.Avalanche]: Avalanche,
   [ChainId.AvalancheFujiTestnet]: AvalancheFujiTestnet,
   [ChainId.Optimism]: Optimism,
-  // eslint-disable-next-line line-comment-position
-  [ChainId.OptimismGoerli]: OptimismTestnet, // TODO adjust wrapped token address
+  [ChainId.OptimismGoerli]: OptimismGoerli,
   [ChainId.Arbitrum]: Arbitrum,
-  // eslint-disable-next-line line-comment-position
-  [ChainId.ArbitrumGoerli]: ArbitrumTestnet, // TODO adjust wrapped token address
+  [ChainId.ArbitrumGoerli]: ArbitrumGoerli,
   [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
   [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
 } as const;
