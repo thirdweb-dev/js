@@ -2,7 +2,7 @@
 "thirdweb": minor
 ---
 
-Introducing API secret key restrictions for certain commands. Get your API secret key from [here](https://thirdweb.com/dashboard/settings).
+Introducing API secret key restrictions for certain commands. Get your API secret key from [here](https://thirdweb.com/dashboard/settings/api-keys).
 
 The following commands will require you to have logged in with your API secret key:
 

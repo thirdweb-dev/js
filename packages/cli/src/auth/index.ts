@@ -37,7 +37,7 @@ export async function createSession(cache: Cache) {
     const response = await prompts({
       type: "text",
       name: "apiSecretKey",
-      message: `Please enter your API secret key, you can find or create it on ${chalk.blue("https://thirdweb.com/dashboard/settings")}`,
+      message: `Please enter your API secret key, you can find or create it on ${chalk.blue("https://thirdweb.com/dashboard/settings/api-keys")}`,
     });
 
     try {
@@ -55,8 +55,8 @@ export async function createSession(cache: Cache) {
 
 export async function validateKey(apiSecretKey: string) {
   const fetch = (await import('node-fetch')).default;
-  const response = await fetch(`https://api.thirdweb.com/v1/keys/use`, {
-    method: "POST",
+  const response = await fetch(`https://staging.api.thirdweb.com/v1/keys/use`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       "x-secret-key": apiSecretKey,
