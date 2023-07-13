@@ -5,8 +5,10 @@ import { logger } from "../core/helpers/logger";
 import { runCommand } from "../create/helpers/run-command";
 import { upload } from "../storage/command";
 
-export async function deployApp(distPath = "dist", projectPath = ".") {
-  const storage = new ThirdwebStorage();
+export async function deployApp(distPath = "dist", projectPath = ".", apiSecretKey: string) {
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  })
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(projectPath, {}, detectedPackageManager);
 

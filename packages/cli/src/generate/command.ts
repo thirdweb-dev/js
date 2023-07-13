@@ -1,20 +1,20 @@
-import { GENERATE_MESSAGES } from "../../constants/constants";
+import { allChains } from "@thirdweb-dev/chains";
 import {
   DeployedContract,
   fetchContractMetadataFromAddress,
   getChainProvider,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { info } from "../core/helpers/logger";
-import { allChains } from "@thirdweb-dev/chains";
 import fs from "fs";
-import prompts from "prompts";
-import { findMatches } from "../common/file-helper";
 import ora from "ora";
+import prompts from "prompts";
+import { GENERATE_MESSAGES } from "../../constants/constants";
+import { findMatches } from "../common/file-helper";
+import { info } from "../core/helpers/logger";
 import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
-export async function generate(options: GenerateOptions) {
+export async function generate(options: GenerateOptions, apiSecretKey: string) {
   let projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
@@ -96,7 +96,9 @@ export async function generate(options: GenerateOptions) {
 
   // Attempt to download the ABI for each contract
   ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
-  const storage = new ThirdwebStorage();
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
   const metadata: {
     address: string;
     metadata: Awaited<ReturnType<typeof fetchContractMetadataFromAddress>>;
