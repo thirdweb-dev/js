@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.32
+
+### Patch Changes
+
+- [#1330](https://github.com/thirdweb-dev/js/pull/1330) [`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95) Thanks [@adam-maj](https://github.com/adam-maj)! - Override binance slug
+
 ## 0.1.31
 
 ### Patch Changes
