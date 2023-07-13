@@ -28,17 +28,22 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
   async getPaymasterAndData(
     userOp: Partial<UserOperationStruct>,
   ): Promise<string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
+
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    }
+
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     const response = await fetch(this.paymasterUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(this.clientId
-          ? { "x-client-id": this.clientId }
-          : this.secretKey
-          ? { "x-secret-key": this.secretKey }
-          : {}),
-      },
+      headers,
       body: JSON.stringify({
         jsonrpc: "2.0",
         id: 1,

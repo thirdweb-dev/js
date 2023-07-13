@@ -22,16 +22,21 @@ export class HttpRpcClient {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
     this.chainId = chainId;
+
+    const headers: Record<string, string> = {};
+
+    if (clientId) {
+      headers["x-client-id"] = clientId;
+    }
+
+    if (secretKey) {
+      headers["x-secret-key"] = secretKey;
+    }
+
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
       {
         url: this.bundlerUrl,
-        headers: {
-          ...(clientId
-            ? { "x-client-id": clientId }
-            : secretKey
-            ? { "x-secret-key": secretKey }
-            : {}),
-        },
+        headers,
       },
       {
         name: "Connected bundler network",
