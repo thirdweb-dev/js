@@ -15,18 +15,14 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
-  ThirdwebSDK,
-  Account,
   ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
-import type { IAccountCore } from "@thirdweb-dev/contracts-js";
 import { AccountAPI } from "./lib/account";
 import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
-import IAccountCoreAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
@@ -148,7 +144,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const signer = await this.getSigner();
     const signerAddress = await signer.getAddress();
 
-    const restrictions = await accountContract.getAccessRestrictions(
+    const restrictions = await accountContract.account.getAccessRestrictions(
       signerAddress,
     );
 

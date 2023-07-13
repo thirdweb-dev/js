@@ -8,7 +8,6 @@ import type { SmartWalletConnector as SmartWalletConnectorType } from "../connec
 import {
   Transaction,
   TransactionResult,
-  Account,
   SmartContract,
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
@@ -21,7 +20,6 @@ import {
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
-import type { IAccountCore } from "@thirdweb-dev/contracts-js";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
