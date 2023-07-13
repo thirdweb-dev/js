@@ -127,10 +127,10 @@ class ThirdwebBridge implements TWBridge {
     let supportedChains;
     if (sdkOptions?.supportedChains) {
       try {
-        supportedChains = sdkOptions.supportedChains.map((chain: any) => {
+        supportedChains = sdkOptions.supportedChains.map((chainData: any) => {
           return {
-            ...getChainByChainId(BigNumber.from(chain.chainId).toNumber()),
-            rpc: chain.rpcUrls,
+            ...getChainByChainId(BigNumber.from(chainData.chainId).toNumber()),
+            rpc: chainData.rpcUrls,
           };
         });
       } catch (error) {
