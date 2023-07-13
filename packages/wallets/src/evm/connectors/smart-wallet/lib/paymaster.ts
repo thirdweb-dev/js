@@ -10,24 +10,40 @@ export const DUMMY_PAYMASTER_AND_DATA =
 class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
-  private apiKey: string;
-  constructor(paymasterUrl: string, entryPoint: string, apiKey: string) {
+  private clientId?: string;
+  private secretKey?: string;
+  constructor(
+    paymasterUrl: string,
+    entryPoint: string,
+    clientId?: string,
+    secretKey?: string,
+  ) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
-    this.apiKey = apiKey;
+    this.clientId = clientId;
+    this.secretKey = secretKey;
   }
 
   async getPaymasterAndData(
     userOp: Partial<UserOperationStruct>,
   ): Promise<string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
+
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    }
+
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     const response = await fetch(this.paymasterUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": this.apiKey,
-      },
+      headers,
       body: JSON.stringify({
         jsonrpc: "2.0",
         id: 1,
@@ -60,5 +76,6 @@ Code: ${code}`,
 export const getVerifyingPaymaster = (
   paymasterUrl: string,
   entryPoint: string,
-  apiKey: string,
-) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, apiKey);
+  clientId?: string,
+  secretKey?: string,
+) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, clientId, secretKey);

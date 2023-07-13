@@ -12,7 +12,6 @@ import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
 import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
@@ -62,17 +61,23 @@ export async function verifyThirdwebPrebuiltImplementation(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
   constructorArgs?: ConstructorParamMap,
 ): Promise<string | string[]> {
   const contractAddress = await getThirdwebContractAddress(
     contractName,
     chainId,
     storage,
+    clientId,
+    secretKey,
   );
   const encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
     contractName,
     chainId,
     storage,
+    clientId,
+    secretKey,
     constructorArgs,
   );
 
@@ -269,15 +274,18 @@ export async function checkVerificationStatus(
  * @param chainId
  * @param explorerAPIUrl
  * @param explorerAPIKey
+ * API get from https://thirdweb.com/dashboard/settings
+ * @param thirdwebApiKey
  */
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
   chainId: number,
   explorerAPIUrl: string,
   explorerAPIKey: string,
+  clientId?: string,
 ): Promise<boolean> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: DEFAULT_API_KEY,
+    clientId,
   });
   invariant(
     await isContractDeployed(contractAddress, provider),

@@ -468,6 +468,7 @@ export class DropClaimConditions<
           claimCondition.currencyAddress,
           ERC20Abi,
           {},
+          this.storage,
         );
         const balance = await erc20.readContract.balanceOf(resolvedAddress);
         if (balance.lt(totalPrice)) {

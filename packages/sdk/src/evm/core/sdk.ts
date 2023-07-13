@@ -1691,6 +1691,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parse: () => {
           return deployedImplementationAddress;
         },
+        storage: this.storage,
       });
       deployedImplementationAddress = await deployTransaction.simulate();
 
@@ -1724,6 +1725,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
+          this.storage,
           this.options,
         );
       }));

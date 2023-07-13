@@ -16,17 +16,27 @@ export class HttpRpcClient {
     bundlerUrl: string,
     entryPointAddress: string,
     chainId: number,
-    apiKey: string,
+    clientId?: string,
+    secretKey?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
     this.chainId = chainId;
+
+    const headers: Record<string, string> = {};
+
+    if (clientId) {
+      headers["x-client-id"] = clientId;
+    }
+
+    if (secretKey) {
+      headers["x-secret-key"] = secretKey;
+    }
+
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
       {
         url: this.bundlerUrl,
-        headers: {
-          "x-api-key": apiKey,
-        },
+        headers,
       },
       {
         name: "Connected bundler network",

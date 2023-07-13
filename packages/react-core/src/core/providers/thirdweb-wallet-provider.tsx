@@ -1,6 +1,9 @@
 import { DAppMetaData } from "../types/dAppMeta";
-import type { WalletConfig, WalletInstance } from "../types/wallet";
-import { ThirdwebThemeContext } from "./theme-context";
+import type {
+  WalletConfig,
+  WalletInstance,
+  WalletOptions,
+} from "../types/wallet";
 import { Chain } from "@thirdweb-dev/chains";
 import {
   AbstractClientWallet,
@@ -102,6 +105,7 @@ export function ThirdwebWalletProvider(
     chains: Chain[];
     autoSwitch?: boolean;
     autoConnectTimeout?: number;
+    clientId?: string;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -130,21 +134,14 @@ export function ThirdwebWalletProvider(
   // if autoSwitch is enabled - enforce connection to activeChain
   const chainToConnect = props.autoSwitch ? props.activeChain : undefined;
 
-  const theme = useContext(ThirdwebThemeContext);
-
-  const walletParams = useMemo(() => {
-    const walletChains = props.chains;
-    const walletOptions = {
-      chains: walletChains,
-      dappMetadata: props.dAppMeta,
-    };
-
+  const walletParams: WalletOptions = useMemo(() => {
     return {
-      ...walletOptions,
+      chains: props.chains,
+      dappMetadata: props.dAppMeta,
       chain: props.activeChain || props.chains[0],
-      theme: theme || "dark",
+      clientId: props.clientId,
     };
-  }, [props.chains, props.dAppMeta, props.activeChain, theme]);
+  }, [props.chains, props.dAppMeta, props.activeChain, props.clientId]);
 
   const createWalletInstance = useCallback(
     <I extends WalletInstance>(walletConfig: WalletConfig<I>): I => {

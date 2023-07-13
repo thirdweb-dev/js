@@ -20,9 +20,15 @@ import FormData from "form-data";
  *
  * @example
  * ```jsx
- * // Can instantiate the uploader with default configuration
+ * // Can instantiate the uploader with default configuration and your client ID when used in client-side applications
  * const uploader = new StorageUploader();
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
+ *
+ * // Can instantiate the uploader with default configuration and your secret key when used in server-side applications
+ * const uploader = new StorageUploader();
+ * const secretKey = "your-secret-key";
+ * const storage = new ThirdwebStorage({ secretKey, uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
@@ -30,18 +36,21 @@ import FormData from "form-data";
  *   uploadWithGatewayUrl: true,
  * }
  * const uploader = new StorageUploader(options);
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
  * ```
  *
  * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
-  private apiKey?: string;
+  private clientId?: string;
+  private secretKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.apiKey = options?.apiKey || "";
+    this.clientId = options?.clientId;
+    this.secretKey = options?.secretKey;
   }
 
   async uploadBatch(
@@ -95,16 +104,25 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    * @returns - The one time use token that can be passed to the Pinata API.
    */
   private async getUploadToken(): Promise<string> {
+    const headers: Record<string, string> = {
+      "X-APP-NAME":
+        // eslint-disable-next-line turbo/no-undeclared-env-vars
+        process.env.NODE_ENV === "test" || !!process.env.CI
+          ? "Storage SDK CI"
+          : "Storage SDK",
+    };
+
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    }
+
+    if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
+
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
-      headers: {
-        "X-APP-NAME":
-          // eslint-disable-next-line turbo/no-undeclared-env-vars
-          process.env.NODE_ENV === "test" || !!process.env.CI
-            ? "Storage SDK CI"
-            : "Storage SDK",
-        Authorization: `Bearer ${this.apiKey}`,
-      },
+      headers,
     });
 
     if (!res.ok) {

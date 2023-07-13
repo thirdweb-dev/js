@@ -97,6 +97,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

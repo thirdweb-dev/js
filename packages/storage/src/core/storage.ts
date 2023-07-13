@@ -24,8 +24,13 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  *
  * @example
  * ```jsx
- * // Create a default storage class without any configuration
- * const storage = new ThirdwebStorage();
+ * // Create a default storage class with a client ID when used in client-side applications
+ * const storage = new ThirdwebStorage({ clientId: "your-client-id" });
+ *
+ * // Create a default storage class with a secret key when used in server-side applications
+ * const storage = new ThirdwebStorage({ serverKey: "your-server-key" });
+ *
+ * You can get a clientId and secretKey from https://thirdweb.com/dashboard/
  *
  * // Upload any file or JSON object
  * const uri = await storage.upload(data);
@@ -42,7 +47,8 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  * };
  * const downloader = new StorageDownloader();
  * const uploader = new IpfsUploader();
- * const storage = new ThirdwebStorage({ uploader, downloader, gatewayUrls });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader, downloader, gatewayUrls });
  * ```
  *
  * @public
@@ -56,7 +62,8 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     this.uploader =
       options?.uploader ||
       new IpfsUploader({
-        apiKey: options?.apiKey,
+        clientId: options?.clientId,
+        secretKey: options?.secretKey,
       });
     this.downloader = options?.downloader || new StorageDownloader();
     this.gatewayUrls = prepareGatewayUrls(

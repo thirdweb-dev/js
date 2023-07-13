@@ -116,6 +116,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

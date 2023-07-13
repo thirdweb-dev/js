@@ -2,7 +2,9 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Base",
   "chain": "ETH",
-  "rpc": [],
+  "rpc": [
+    "https://base.rpc.thirdweb.com/${THIRDWEB_API_KEY}"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -13,7 +15,7 @@ export default {
   "shortName": "base",
   "chainId": 8453,
   "networkId": 8453,
-  "status": "incubating",
+  "status": "active",
   "icon": {
     "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
     "height": 512,
