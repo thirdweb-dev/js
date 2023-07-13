@@ -7,6 +7,7 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Divider,
   Flex,
   Modal,
   ModalBody,
@@ -38,7 +39,7 @@ export const ApiKeysCreateModal: React.FC<ApiKeysCreateModalProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const { secret } = apiKey || {};
+  const { secret, key } = apiKey || {};
 
   const renderKeys = () => {
     return (
@@ -46,15 +47,20 @@ export const ApiKeysCreateModal: React.FC<ApiKeysCreateModalProps> = ({
         <VStack gap={4}>
           {secret && (
             <>
+              {key && (
+                <ApiKeyDetailsRow
+                  title="Client ID"
+                  content={<CodeBlock codeValue={key} code={key} />}
+                  description="Identifies your application. It should generally be restricted to specific domains (web) and/or bundle-ids (native)."
+                />
+              )}
+
+              <Divider />
+
               <ApiKeyDetailsRow
                 title="Secret Key"
-                content={
-                  <CodeBlock
-                    codeValue={secret}
-                    code={secret}
-                    whiteSpace="pre"
-                  />
-                }
+                content={<CodeBlock codeValue={secret} code={secret} />}
+                description="Identifies and authenticates your application from the backend."
               />
 
               <Alert status="warning" variant="left-accent">
@@ -90,7 +96,7 @@ export const ApiKeysCreateModal: React.FC<ApiKeysCreateModalProps> = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {secret ? "Your New Secret Key" : "Create API Key"}
+          {secret ? "Your New Api Key" : "Create API Key"}
         </ModalHeader>
         {!secret && <ModalCloseButton />}
         <ModalBody>{apiKey ? renderKeys() : renderCreateForm()}</ModalBody>

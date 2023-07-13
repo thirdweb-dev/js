@@ -2,9 +2,10 @@ import { ApiKeysCreateModal } from "./CreateKeyModal";
 import { toastMessages } from "./messages";
 import { THIRDWEB_SERVICES } from "./services";
 import { ApiKeyFormValues } from "./types";
-import { useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { ApiKey, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Icon, useDisclosure, useToast } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
@@ -14,6 +15,8 @@ export const CreateApiKeyButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
+
+  const [apiKey, setApiKey] = useState<ApiKey | null>(null);
 
   const form = useForm<ApiKeyFormValues>({
     values: {
@@ -58,9 +61,9 @@ export const CreateApiKeyButton: React.FC = () => {
       };
 
       createKeyMutation.mutate(formattedValues, {
-        onSuccess: () => {
+        onSuccess: (data) => {
           onSuccess();
-          onClose();
+          setApiKey(data);
         },
         onError: (err) => {
           onError(err);
@@ -78,6 +81,7 @@ export const CreateApiKeyButton: React.FC = () => {
   return (
     <>
       <ApiKeysCreateModal
+        apiKey={apiKey}
         form={form}
         open={isOpen}
         onClose={handleClose}

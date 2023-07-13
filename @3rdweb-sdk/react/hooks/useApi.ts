@@ -96,7 +96,7 @@ export function useCreateApiKey() {
         throw new Error(json.error?.message || json.error);
       }
 
-      return json.data;
+      return json.data as ApiKey;
     },
     {
       onSuccess: () => {

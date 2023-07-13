@@ -33,7 +33,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
     }),
 
     columnHelper.accessor("key", {
-      header: "Publishable Key",
+      header: "Client ID",
       cell: (cell) => (
         <CopyApiKeyButton apiKey={cell.getValue()} label="API Key" />
       ),
