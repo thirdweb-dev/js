@@ -1,4 +1,31 @@
+import { KVNamespace, ExecutionContext } from "@cloudflare/workers-types";
+import { IncomingHttpHeaders } from "http";
 import { ServiceName } from "../types";
+
+export interface AuthorizeCFWorkerOptions {
+  ctx?: ExecutionContext;
+  kvStore: KVNamespace<string>;
+  headers: Headers;
+  clientId: string;
+  authOpts: AuthorizationOptions;
+  validations?: AuthorizationValidations;
+}
+
+export interface AuthorizeNodeServiceOptions {
+  clientId: string;
+  headers: IncomingHttpHeaders;
+  authOpts: AuthorizationOptions;
+  validations?: AuthorizationValidations;
+}
+
+export interface AuthorizeCFWorkerOptions {
+  ctx?: ExecutionContext;
+  kvStore: KVNamespace<string>;
+  headers: Headers;
+  clientId: string;
+  authOpts: AuthorizationOptions;
+  validations?: AuthorizationValidations;
+}
 
 export interface AuthorizationOptions {
   apiUrl: string;
@@ -13,8 +40,6 @@ export interface AuthorizationOptions {
 export interface AuthorizationValidations {
   serviceTargetAddresses?: string[];
   serviceActions?: string[];
-  domains: string[];
-  bundleIds: string[];
 }
 
 export interface AuthorizationResponse {

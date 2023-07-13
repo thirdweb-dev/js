@@ -5,21 +5,12 @@ import {
   AuthorizationOptions,
   AuthorizationResponse,
   AuthorizationValidations,
+  AuthorizeCFWorkerOptions,
+  AuthorizeNodeServiceOptions,
 } from "./types";
-import { KVNamespace, ExecutionContext } from "@cloudflare/workers-types";
-import { IncomingHttpHeaders } from "http";
-
-interface AuthorizeWorkerOptions {
-  ctx?: ExecutionContext;
-  kvStore: KVNamespace<string>;
-  headers: Headers;
-  clientId: string;
-  authOpts: AuthorizationOptions;
-  validations?: AuthorizationValidations;
-}
 
 export async function authorizeCFWorkerService(
-  options: AuthorizeWorkerOptions,
+  options: AuthorizeCFWorkerOptions,
 ) {
   let cachedKey;
 
@@ -75,12 +66,9 @@ export async function authorizeCFWorkerService(
   );
 }
 
-export async function authorizeNodeService(options: {
-  clientId: string;
-  headers: IncomingHttpHeaders;
-  authOpts: AuthorizationOptions;
-  validations?: AuthorizationValidations;
-}) {
+export async function authorizeNodeService(
+  options: AuthorizeNodeServiceOptions,
+) {
   if (!options.clientId) {
     return {
       authorized: false,
