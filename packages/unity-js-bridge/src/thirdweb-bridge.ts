@@ -126,10 +126,17 @@ class ThirdwebBridge implements TWBridge {
             gatewayUrls: {
               "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
             },
+<<<<<<< HEAD
             clientId: sdkOptions.apiKey,
           })
         : new ThirdwebStorage({
             clientId: sdkOptions.apiKey,
+=======
+            clientId: sdkOptions.clientId,
+          })
+        : new ThirdwebStorage({
+            clientId: sdkOptions.clientId,
+>>>>>>> ike/key
           });
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let possibleWallet of WALLETS) {
@@ -146,12 +153,14 @@ class ThirdwebBridge implements TWBridge {
           walletInstance = new InjectedWallet({
             dappMetadata,
             chains: allChains,
+            clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.metamask:
           walletInstance = new MetaMaskWallet({
             dappMetadata,
             chains: allChains,
+            clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.walletConnect:
@@ -159,6 +168,7 @@ class ThirdwebBridge implements TWBridge {
             projectId: sdkOptions.wallet?.walletConnectProjectId,
             dappMetadata,
             chains: defaultChains,
+            clientId: sdkOptions.clientId,
             qrModalOptions: {
               explorerRecommendedWalletIds: [
                 "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96", // metamask
@@ -209,12 +219,14 @@ class ThirdwebBridge implements TWBridge {
           walletInstance = new CoinbaseWallet({
             dappMetadata,
             chains: allChains,
+            clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.localWallet:
           walletInstance = new LocalWallet({
             dappMetadata,
             chains: allChains,
+            clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.magicLink:
@@ -223,21 +235,23 @@ class ThirdwebBridge implements TWBridge {
             apiKey: sdkOptions.wallet?.magicLinkApiKey,
             emailLogin: true,
             chains: allChains,
+            clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.paper:
           walletInstance = new PaperWallet({
-            clientId: sdkOptions.wallet?.paperClientId,
+            paperClientId: sdkOptions.wallet?.paperClientId,
             chain: Ethereum,
             dappMetadata,
             chains: allChains,
+            clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.smartWallet:
           const config: SmartWalletConfig = {
             chain: chain,
             factoryAddress: sdkOptions.smartWalletConfig?.factoryAddress,
-            thirdwebApiKey: sdkOptions.apiKey,
+            clientId: sdkOptions.clientId,
             gasless: sdkOptions.smartWalletConfig?.gasless,
             bundlerUrl: sdkOptions.smartWalletConfig?.bundlerUrl,
             paymasterUrl: sdkOptions.smartWalletConfig?.paymasterUrl,

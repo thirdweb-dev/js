@@ -20,9 +20,15 @@ import FormData from "form-data";
  *
  * @example
  * ```jsx
- * // Can instantiate the uploader with default configuration
+ * // Can instantiate the uploader with default configuration and your client ID when used in client-side applications
  * const uploader = new StorageUploader();
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
+ *
+ * // Can instantiate the uploader with default configuration and your secret key when used in server-side applications
+ * const uploader = new StorageUploader();
+ * const secretKey = "your-secret-key";
+ * const storage = new ThirdwebStorage({ secretKey, uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
@@ -30,7 +36,8 @@ import FormData from "form-data";
  *   uploadWithGatewayUrl: true,
  * }
  * const uploader = new StorageUploader(options);
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
  * ```
  *
  * @public
@@ -97,6 +104,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    * @returns - The one time use token that can be passed to the Pinata API.
    */
   private async getUploadToken(): Promise<string> {
+    if (this.secretKey && this.clientId) {
+      throw new Error(
+        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+      );
+    }
+
     const headers: HeadersInit = {};
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;

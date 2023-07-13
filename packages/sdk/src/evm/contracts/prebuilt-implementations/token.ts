@@ -90,6 +90,7 @@ export class Token extends StandardErc20<TokenERC20> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

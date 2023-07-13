@@ -1,5 +1,62 @@
 # @thirdweb-dev/react
 
+## 3.14.14
+
+### Patch Changes
+
+- Updated dependencies [[`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28)]:
+  - @thirdweb-dev/chains@0.1.33
+  - @thirdweb-dev/react-core@3.14.14
+  - @thirdweb-dev/sdk@3.10.34
+  - @thirdweb-dev/wallets@1.0.10
+
+## 3.14.13
+
+### Patch Changes
+
+- Updated dependencies [[`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95)]:
+  - @thirdweb-dev/chains@0.1.32
+  - @thirdweb-dev/react-core@3.14.13
+  - @thirdweb-dev/sdk@3.10.33
+  - @thirdweb-dev/wallets@1.0.9
+
+## 3.14.12
+
+### Patch Changes
+
+- Updated dependencies [[`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5)]:
+  - @thirdweb-dev/chains@0.1.31
+  - @thirdweb-dev/react-core@3.14.12
+  - @thirdweb-dev/sdk@3.10.32
+  - @thirdweb-dev/wallets@1.0.8
+
+## 3.14.11
+
+### Patch Changes
+
+- Updated dependencies [[`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2)]:
+  - @thirdweb-dev/chains@0.1.30
+  - @thirdweb-dev/react-core@3.14.11
+  - @thirdweb-dev/sdk@3.10.31
+  - @thirdweb-dev/wallets@1.0.7
+
+## 3.14.10
+
+### Patch Changes
+
+- [#1310](https://github.com/thirdweb-dev/js/pull/1310) [`3df86ad1`](https://github.com/thirdweb-dev/js/commit/3df86ad16f3daf1a0382d5b860ef6f24a69cc8d0) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet UI fixes
+
+  - Hide Back button when not required
+  - Fix Rainbow wallet meta
+  - Fix backbutton not working on get-started screen when there's a single supported wallet
+  - Remove switchAccount button on mobile for metamask
+
+- Updated dependencies [[`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0), [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d), [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a)]:
+  - @thirdweb-dev/sdk@3.10.30
+  - @thirdweb-dev/chains@0.1.29
+  - @thirdweb-dev/react-core@3.14.10
+  - @thirdweb-dev/wallets@1.0.6
+
 ## 3.14.9
 
 ### Patch Changes

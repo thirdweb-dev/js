@@ -16,17 +16,31 @@ export class HttpRpcClient {
     bundlerUrl: string,
     entryPointAddress: string,
     chainId: number,
-    apiKey: string,
+    clientId?: string,
+    secretKey?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
     this.chainId = chainId;
+
+    const headers: Record<string, string> = {};
+
+    if (secretKey && clientId) {
+      throw new Error(
+        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+      );
+    }
+
+    if (secretKey) {
+      headers["x-secret-key"] = secretKey;
+    } else if (clientId) {
+      headers["x-client-id"] = clientId;
+    }
+
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
       {
         url: this.bundlerUrl,
-        headers: {
-          "x-api-key": apiKey,
-        },
+        headers,
       },
       {
         name: "Connected bundler network",

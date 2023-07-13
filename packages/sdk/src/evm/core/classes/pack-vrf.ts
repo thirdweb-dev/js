@@ -45,6 +45,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
       address,
       IPackAbi,
       options,
+      storage,
     ),
   ) {
     this.contractWrapper = contractWrapper;
@@ -344,6 +345,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
       linkAddress,
       ERC20Abi,
       this.contractWrapper.options,
+      this.storage,
     );
     return new Erc20(contract, this.storage, this.chainId);
   }

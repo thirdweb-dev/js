@@ -1,10 +1,9 @@
-import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
-import { useUpdateChainsWithApiKeys } from "../hooks/chain-hooks";
+import { useUpdateChainsWithClientId } from "../hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "./types";
-import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -27,9 +26,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   activeChain,
   signer,
   children,
-  thirdwebApiKey,
-  infuraApiKey,
-  alchemyApiKey,
+  clientId,
 }: React.PropsWithChildren<
   { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
@@ -70,11 +67,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
 
     if (supportedChain && supportedChain.rpc.length > 0) {
       try {
-        const rpcUrl = getChainRPC(supportedChain, {
-          thirdwebApiKey,
-          infuraApiKey,
-          alchemyApiKey,
-        });
+        const rpcUrl = getValidChainRPCs(supportedChain, clientId)[0];
 
         readonlySettings = {
           chainId: supportedChain.chainId,
@@ -105,7 +98,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        { ...mergedOptions, clientId },
         storageInterface,
       );
     }
@@ -126,15 +119,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [
-    activeChainId,
-    alchemyApiKey,
-    infuraApiKey,
-    supportedChains,
-    sdkOptions,
-    storageInterface,
-    thirdwebApiKey,
-  ]);
+  }, [activeChainId, supportedChains, sdkOptions, storageInterface, clientId]);
 
   useEffect(() => {
     // if we have an sdk and a signer update the signer
@@ -179,21 +164,20 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   queryClient,
   supportedChains,
   activeChain,
-  thirdwebApiKey = DEFAULT_API_KEY,
-  alchemyApiKey,
-  infuraApiKey,
+  clientId,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  if (!clientId) {
+    noClientIdWarning();
+  }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
-    useUpdateChainsWithApiKeys(
+    useUpdateChainsWithClientId(
       supportedChainsNonNull,
       activeChain || supportedChainsNonNull[0],
-      thirdwebApiKey,
-      alchemyApiKey,
-      infuraApiKey,
+      clientId,
     );
 
   const mergedChains = useMemo(() => {
@@ -222,9 +206,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     <ThirdwebConfigProvider
       value={{
         chains: mergedChains as Chain[],
-        thirdwebApiKey,
-        alchemyApiKey,
-        infuraApiKey,
+        clientId,
       }}
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
@@ -232,9 +214,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
           <WrappedThirdwebSDKProvider
             signer={signer}
             supportedChains={mergedChains}
-            thirdwebApiKey={thirdwebApiKey}
-            alchemyApiKey={alchemyApiKey}
-            infuraApiKey={infuraApiKey}
+            clientId={clientId}
             activeChain={activeChainIdOrObjWithKey}
             {...restProps}
           >
@@ -279,4 +259,15 @@ export function useSDK(): ThirdwebSDK | undefined {
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
   return (sdk as any)?._chainId;
+}
+
+let noClientIdWarningLogged = false;
+function noClientIdWarning() {
+  if (noClientIdWarningLogged) {
+    return;
+  }
+  noClientIdWarningLogged = true;
+  console.warn(
+    "No client id provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client id from https://thirdweb.com/dashboard/",
+  );
 }
