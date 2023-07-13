@@ -104,29 +104,28 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    * @returns - The one time use token that can be passed to the Pinata API.
    */
   private async getUploadToken(): Promise<string> {
-    const headers: Record<string, string> = {
-      "X-APP-NAME":
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
-        process.env.NODE_ENV === "test" || !!process.env.CI
-          ? "Storage SDK CI"
-          : "Storage SDK",
-    };
-
     if (this.secretKey && this.clientId) {
       throw new Error(
         "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
       );
     }
 
+    const headers: HeadersInit = {};
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
     } else if (this.clientId) {
       headers["x-client-id"] = this.clientId;
     }
-
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
-      headers,
+      headers: {
+        "X-APP-NAME":
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          process.env.NODE_ENV === "test" || !!process.env.CI
+            ? "Storage SDK CI"
+            : "Storage SDK",
+        ...headers,
+      },
     });
 
     if (!res.ok) {
