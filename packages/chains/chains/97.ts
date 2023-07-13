@@ -3,7 +3,7 @@ export default {
   "name": "BNB Smart Chain Testnet",
   "chain": "BSC",
   "rpc": [
-    "https://bnb-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bsc-testnet.publicnode.com",
     "https://data-seed-prebsc-2-s3.bnbchain.org:8545",
     "https://data-seed-prebsc-1-s3.bnbchain.org:8545",
@@ -38,5 +38,5 @@ export default {
     "format": "png"
   },
   "testnet": true,
-  "slug": "bnb-smart-chain-testnet"
+  "slug": "binance-testnet"
 } as const satisfies Chain;

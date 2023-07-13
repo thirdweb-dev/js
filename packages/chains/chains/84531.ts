@@ -18,12 +18,6 @@ export default {
   "shortName": "basegor",
   "chainId": 84531,
   "networkId": 84531,
-  "icon": {
-    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "basescout",
@@ -37,5 +31,11 @@ export default {
     }
   ],
   "testnet": true,
+  "icon": {
+    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png"
+  },
   "slug": "base-goerli"
 } as const satisfies Chain;
