@@ -164,10 +164,10 @@ function findSlug(chain) {
   if (slug === "arbitrum-one") {
     slug = "arbitrum";
   }
-  if (slug === "binance-smart-chain") {
+  if (slug === "bnb-smart-chain") {
     slug = "binance";
   }
-  if (slug === "binance-smart-chain-testnet") {
+  if (slug === "bnb-smart-chain-testnet") {
     slug = "binance-testnet";
   }
   if (slug === "base-goerli-testnet") {

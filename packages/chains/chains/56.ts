@@ -3,7 +3,7 @@ export default {
   "name": "BNB Smart Chain Mainnet",
   "chain": "BSC",
   "rpc": [
-    "https://bnb-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://bsc-ws-node.nariox.org",
     "https://bsc.publicnode.com",
     "https://bsc-dataseed4.ninicoin.io",
@@ -46,5 +46,5 @@ export default {
     "format": "png"
   },
   "testnet": false,
-  "slug": "bnb-smart-chain"
+  "slug": "binance"
 } as const satisfies Chain;

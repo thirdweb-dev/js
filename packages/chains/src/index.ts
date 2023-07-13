@@ -998,7 +998,7 @@ export { default as CoinexSmartChain } from "../chains/52"
 export { default as CoinexSmartChainTestnet } from "../chains/53"
 export { default as Openpiece } from "../chains/54"
 export { default as Zyx } from "../chains/55"
-export { default as BnbSmartChain } from "../chains/56"
+export { default as Binance } from "../chains/56"
 export { default as Syscoin } from "../chains/57"
 export { default as Ontology } from "../chains/58"
 export { default as Gochain } from "../chains/60"
@@ -1038,7 +1038,7 @@ export { default as GarizonStage3 } from "../chains/93"
 export { default as Swissdlt } from "../chains/94"
 export { default as Camdl } from "../chains/95"
 export { default as BitkubChain } from "../chains/96"
-export { default as BnbSmartChainTestnet } from "../chains/97"
+export { default as BinanceTestnet } from "../chains/97"
 export { default as SixProtocol } from "../chains/98"
 export { default as PoaNetworkCore } from "../chains/99"
 export { default as Gnosis } from "../chains/100"
@@ -2893,7 +2893,7 @@ type ChainIdsBySlug = {
 "coinex-smart-chain-testnet": 53,
 "openpiece": 54,
 "zyx": 55,
-"bnb-smart-chain": 56,
+"binance": 56,
 "syscoin": 57,
 "ontology": 58,
 "gochain": 60,
@@ -2933,7 +2933,7 @@ type ChainIdsBySlug = {
 "swissdlt": 94,
 "camdl": 95,
 "bitkub-chain": 96,
-"bnb-smart-chain-testnet": 97,
+"binance-testnet": 97,
 "six-protocol": 98,
 "poa-network-core": 99,
 "gnosis": 100,
