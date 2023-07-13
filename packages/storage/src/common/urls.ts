@@ -92,10 +92,11 @@ export function prepareGatewayUrls(
           // should only be used on Node.js in a backend/script context
           const crypto = require("crypto");
           const hashedSecretKey = crypto
-            .createHash("md5")
+            .createHash("sha256")
             .update(secretKey)
             .digest("hex");
-          return url.replace("{clientId}", hashedSecretKey);
+          const derivedClientId = hashedSecretKey.slice(0, 32);
+          return url.replace("{clientId}", derivedClientId);
         } else if (url.includes("{clientId}")) {
           // if no client id passed, filter out the url
           return undefined;
