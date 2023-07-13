@@ -469,7 +469,10 @@ const main = async () => {
       .description("Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key")
       .option("-n, --new", "Login with a new API secret key", false)
       .action(async (options) => {
-        await loginUser(cache, options);
+        await loginUser(cache, {
+          ...options,
+          logs: true,
+        });
       });
 
     program

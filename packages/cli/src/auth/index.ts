@@ -3,10 +3,12 @@ import prompts from "prompts";
 import Cache, { CacheEntry } from "sync-disk-cache";
 import { ApiResponse } from "../lib/types";
 
-export async function loginUser(cache: Cache, options?: { new: boolean }) {
+export async function loginUser(cache: Cache, options?: { new: boolean, logs: boolean }) {
   const keyFound = getSession(cache);
   if (keyFound && !options?.new) {
-    console.log(chalk.green("You are already logged in"));
+    if (options?.logs) {
+      console.log(chalk.green("You are already logged in"));
+    }
     return keyFound;
   } else {
     const apiKey = await createSession(cache);
@@ -55,15 +57,12 @@ export async function createSession(cache: Cache) {
 
 export async function validateKey(apiSecretKey: string) {
   const fetch = (await import('node-fetch')).default;
-  const response = await fetch(`https://staging.api.thirdweb.com/v1/keys/use`, {
+  const response = await fetch(`https://api.thirdweb.com/v1/keys/use?scope=storage`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       "x-secret-key": apiSecretKey,
     },
-    body: JSON.stringify({
-      scope: "storage",
-    }),
   });
 
   const apiResponse = (await response.json()) as ApiResponse;
