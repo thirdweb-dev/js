@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "1.1.5",
+  "version": "1.1.8",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "browser": {
@@ -64,6 +64,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "cid-tool": "^3.0.0",
     "cross-fetch": "^3.1.6",
     "form-data": "^4.0.0",
     "ipfs-unixfs-importer": "^7.0.1",

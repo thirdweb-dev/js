@@ -1,4 +1,4 @@
-export { resolveIpfsUri, resolveMimeType } from "../core/utils/ipfs";
+export { resolveMimeType } from "../core/utils/ipfs";
 
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";

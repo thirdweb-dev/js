@@ -84,7 +84,9 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
-    this.#storage = new ThirdwebStorage();
+    this.#storage = new ThirdwebStorage({
+      apiKey: options?.thirdwebApiKey,
+    });
   }
 
   public override updateSignerOrProvider(network: NetworkInput): void {

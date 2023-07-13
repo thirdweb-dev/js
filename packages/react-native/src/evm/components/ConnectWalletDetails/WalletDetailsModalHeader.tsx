@@ -12,7 +12,7 @@ import CopyIcon from "../../assets/copy";
 import { useState } from "react";
 
 interface WalletDetailsModalHeaderProps {
-  address: string;
+  address?: string;
   onDisconnectPress: () => void;
   onAddressCopied?: () => void;
   loading?: boolean;
@@ -29,6 +29,9 @@ export const WalletDetailsModalHeader = ({
   const [showLoading, setShowLoading] = useState(false);
 
   const onAddressPress = async () => {
+    if (!address) {
+      return;
+    }
     await Clipboard.setStringAsync(address);
     onAddressCopied?.();
   };

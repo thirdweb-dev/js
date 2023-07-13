@@ -12,7 +12,8 @@ export const MetamaskScan: React.FC<{
   onGetStarted: () => void;
   onConnected: () => void;
   walletConfig: WalletConfig<MetaMaskWallet>;
-}> = ({ onBack, onConnected, onGetStarted, walletConfig }) => {
+  hideBackButton: boolean;
+}> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -54,6 +55,7 @@ export const MetamaskScan: React.FC<{
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
+      hideBackButton={hideBackButton}
     />
   );
 };

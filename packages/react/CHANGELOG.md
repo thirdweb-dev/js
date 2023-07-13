@@ -1,5 +1,78 @@
 # @thirdweb-dev/react
 
+## 3.14.13
+
+### Patch Changes
+
+- Updated dependencies [[`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95)]:
+  - @thirdweb-dev/chains@0.1.32
+  - @thirdweb-dev/react-core@3.14.13
+  - @thirdweb-dev/sdk@3.10.33
+  - @thirdweb-dev/wallets@1.0.9
+
+## 3.14.12
+
+### Patch Changes
+
+- Updated dependencies [[`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5)]:
+  - @thirdweb-dev/chains@0.1.31
+  - @thirdweb-dev/react-core@3.14.12
+  - @thirdweb-dev/sdk@3.10.32
+  - @thirdweb-dev/wallets@1.0.8
+
+## 3.14.11
+
+### Patch Changes
+
+- Updated dependencies [[`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2)]:
+  - @thirdweb-dev/chains@0.1.30
+  - @thirdweb-dev/react-core@3.14.11
+  - @thirdweb-dev/sdk@3.10.31
+  - @thirdweb-dev/wallets@1.0.7
+
+## 3.14.10
+
+### Patch Changes
+
+- [#1310](https://github.com/thirdweb-dev/js/pull/1310) [`3df86ad1`](https://github.com/thirdweb-dev/js/commit/3df86ad16f3daf1a0382d5b860ef6f24a69cc8d0) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet UI fixes
+
+  - Hide Back button when not required
+  - Fix Rainbow wallet meta
+  - Fix backbutton not working on get-started screen when there's a single supported wallet
+  - Remove switchAccount button on mobile for metamask
+
+- Updated dependencies [[`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0), [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d), [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a)]:
+  - @thirdweb-dev/sdk@3.10.30
+  - @thirdweb-dev/chains@0.1.29
+  - @thirdweb-dev/react-core@3.14.10
+  - @thirdweb-dev/wallets@1.0.6
+
+## 3.14.9
+
+### Patch Changes
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
+- Updated dependencies [[`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5), [`72ada475`](https://github.com/thirdweb-dev/js/commit/72ada47596d5d5c08736c33215faeec636b7156a), [`2c0bb078`](https://github.com/thirdweb-dev/js/commit/2c0bb0789955f6cd397b6fdb8e990a505251c631), [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61), [`10b3a717`](https://github.com/thirdweb-dev/js/commit/10b3a717da606632a05769ac821bdd21d6b63a03), [`b4aee9b5`](https://github.com/thirdweb-dev/js/commit/b4aee9b59121bab5f9b3d9b7ecdc4bcb4cd66f58), [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352)]:
+  - @thirdweb-dev/chains@0.1.28
+  - @thirdweb-dev/sdk@3.10.29
+  - @thirdweb-dev/wallets@1.0.5
+  - @thirdweb-dev/react-core@3.14.9
+
+## 3.14.8
+
+### Patch Changes
+
+- [#1282](https://github.com/thirdweb-dev/js/pull/1282) [`7054f9f0`](https://github.com/thirdweb-dev/js/commit/7054f9f01691e1c942ffbec3ee8042218aadd126) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix issue #1201 - MediaRenderer HTML MimeType
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- Updated dependencies [[`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2), [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96)]:
+  - @thirdweb-dev/react-core@3.14.8
+  - @thirdweb-dev/wallets@1.0.4
+  - @thirdweb-dev/chains@0.1.27
+  - @thirdweb-dev/sdk@3.10.28
+
 ## 3.14.7
 
 ### Patch Changes

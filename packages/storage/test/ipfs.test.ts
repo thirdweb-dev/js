@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { IpfsUploader, ThirdwebStorage } from "../src";
+import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS } from "../src/common/urls";
 import { expect } from "chai";
 import { readFileSync } from "fs";
@@ -7,10 +7,35 @@ import { readFileSync } from "fs";
 describe("IPFS", async () => {
   const storage = new ThirdwebStorage();
 
+  it("Should replace tokens in tokenized gateway URL", async () => {
+    const url = getGatewayUrlForCid(
+      "https://{cid}.example.com/{path}",
+      "QmYtBTkEnTGrzkns2L8R4rL3keowVg3nGcBhPbwrbAWTRP/1.jpg",
+    );
+    expect(url).to.equal(
+      "https://bafybeie4vcsw3ew6io6paaltdvwkpcoeyn6uoewvu7op7fhhztpnivqnyy.example.com/1.jpg",
+    );
+  });
+
+  it("Should append path to canonical gateway URL", async () => {
+    const url = getGatewayUrlForCid(
+      "https://example.com/ipfs/",
+      "QmYtBTkEnTGrzkns2L8R4rL3keowVg3nGcBhPbwrbAWTRP/1.jpg",
+    );
+    expect(url).to.equal(
+      "https://example.com/ipfs/bafybeie4vcsw3ew6io6paaltdvwkpcoeyn6uoewvu7op7fhhztpnivqnyy/1.jpg",
+    );
+  });
+
   it("Should resolve scheme with gateway URL", async () => {
-    const uri = `ipfs://example`;
+    const uri = `ipfs://QmYtBTkEnTGrzkns2L8R4rL3keowVg3nGcBhPbwrbAWTRP`;
     const url = storage.resolveScheme(uri);
-    expect(url).to.equal(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}example`);
+    expect(url).to.equal(
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        "bafybeie4vcsw3ew6io6paaltdvwkpcoeyn6uoewvu7op7fhhztpnivqnyy",
+      ),
+    );
   });
 
   it("Should upload buffer with file number", async () => {
@@ -55,6 +80,37 @@ describe("IPFS", async () => {
     expect(data.name).to.equal("Goku");
     expect(data.description).to.equal("The strongest human in the world");
     expect(data.properties.length).to.equal(1);
+  });
+
+  it("Should retry download if gateways fail", async () => {
+    const storageWithBadGateways = new ThirdwebStorage({
+      gatewayUrls: {
+        "ipfs://": [
+          "http://thisshouldneverwork/",
+          "http://thisshouldalsoneverwork/",
+          ...DEFAULT_GATEWAY_URLS["ipfs://"],
+        ],
+      },
+    });
+
+    const uri = await storageWithBadGateways.upload(
+      {
+        name: "Goku",
+        description: "The strongest human in the world",
+        properties: [
+          {
+            name: "Strength",
+            value: "100",
+          },
+        ],
+      },
+      {
+        alwaysUpload: true,
+      },
+    );
+
+    const data = await storageWithBadGateways.download(uri);
+    expect(data.status).to.equal(200);
   });
 
   it("Should batch upload strings with names", async () => {
@@ -254,7 +310,10 @@ describe("IPFS", async () => {
   it("Should replace gateway URLs with schemes on upload", async () => {
     const uri = await storage.upload(
       {
-        image: `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+        image: getGatewayUrlForCid(
+          DEFAULT_GATEWAY_URLS["ipfs://"][0],
+          `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+        ),
       },
       {
         alwaysUpload: true,
@@ -265,7 +324,7 @@ describe("IPFS", async () => {
     const json = await res.json();
 
     expect(json.image).to.equal(
-      "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
+      "ipfs://bafybeigevrfayusjh2nvk7fqlydj6m3wcagluen5mizxewr6zfx2qk2sy4/0",
     );
   });
 
@@ -282,7 +341,10 @@ describe("IPFS", async () => {
     const json = await storage.downloadJSON(uri);
 
     expect(json.image).to.equal(
-      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      ),
     );
   });
 
@@ -306,10 +368,16 @@ describe("IPFS", async () => {
     const json = await res.json();
 
     expect(json.image).to.equal(
-      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        `QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+      ),
     );
     expect(json.animation_url).to.equal(
-      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      ),
     );
   });
 
@@ -317,7 +385,10 @@ describe("IPFS", async () => {
     const uri = await storage.upload(
       {
         // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
-        image: `${DEFAULT_GATEWAY_URLS["ipfs://"][1]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+        image: getGatewayUrlForCid(
+          DEFAULT_GATEWAY_URLS["ipfs://"][0],
+          `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+        ),
         animation_url:
           "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
       },
@@ -331,10 +402,16 @@ describe("IPFS", async () => {
     const json = await res.json();
 
     expect(json.image).to.equal(
-      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      ),
     );
     expect(json.animation_url).to.equal(
-      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+      ),
     );
   });
 
@@ -350,8 +427,12 @@ describe("IPFS", async () => {
       },
     );
 
-    expect(uri.startsWith(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}`)).to.equal(
-      true,
+    expect(uri).to.equal(
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        // CID changes based on file contents (prod gateway vs staging gateway since they get written)
+        `bafybeibexk3gfppyxtrnyy5sqjkgvsjdqzzvwqjndna374y2od4qemseua/0`,
+      ),
     );
   });
 
@@ -365,7 +446,10 @@ describe("IPFS", async () => {
     );
 
     expect(uri).to.equal(
-      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+      getGatewayUrlForCid(
+        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        `QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+      ),
     );
   });
 

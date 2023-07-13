@@ -37,10 +37,17 @@ export class AccountAPI extends BaseAccountAPI {
           this.params.accountInfo.abi,
         );
       } else {
-        this.accountContract = await this.sdk.getContract(
-          await this.getAccountAddress(),
-          MINIMAL_ACCOUNT_ABI,
-        );
+        try {
+          this.accountContract = await this.sdk.getContract(
+            await this.getAccountAddress(),
+          );
+        } catch (e) {
+          // can't fetch ABI, default to minimal account ABI
+          this.accountContract = await this.sdk.getContract(
+            await this.getAccountAddress(),
+            MINIMAL_ACCOUNT_ABI,
+          );
+        }
       }
     }
     return this.accountContract;

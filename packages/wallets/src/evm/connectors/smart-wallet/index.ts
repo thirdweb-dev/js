@@ -238,19 +238,25 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   }
 
   /**
-   * Get the underlying account smart contract of the smart wallet.
-   * @returns the account smart contract of the smart wallet.
+   * Get the underlying account contract of the smart wallet.
+   * @returns the account contract of the smart wallet.
    */
-  async getAccountContract(): Promise<Account<IAccountCore>> {
-    const signer = await this.getSigner();
-    const network = (await (await this.getProvider()).getNetwork()).chainId;
-    const sdk = ThirdwebSDK.fromSigner(signer, network);
-
-    if (await this.isDeployed()) {
-      throw new Error("Account contract not deployed");
+  async getAccountContract(): Promise<SmartContract> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
     }
-    const contract = await sdk.getContract(await signer.getAddress());
-    return contract.account;
+    return this.accountApi?.getAccountContract();
+  }
+
+  /**
+   * Get the underlying account factory contract of the smart wallet.
+   * @returns the account factory contract.
+   */
+  async getFactoryContract(): Promise<SmartContract> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    return this.accountApi?.getFactoryContract();
   }
 
   private defaultFactoryInfo(): FactoryContractInfo {

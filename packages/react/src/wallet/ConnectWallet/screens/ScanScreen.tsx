@@ -17,7 +17,7 @@ export const ScanScreen: React.FC<{
   qrCodeUri?: string;
   walletName: string;
   walletIconURL: string;
-  hideBackButton?: boolean;
+  hideBackButton: boolean;
 }> = (props) => {
   const walletName = props.walletName.toLowerCase().includes("wallet")
     ? props.walletName

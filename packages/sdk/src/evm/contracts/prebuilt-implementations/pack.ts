@@ -355,7 +355,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *   // ERC20 rewards to be included in the pack
    *   erc20Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       quantityPerReward: 5,
    *       quantity: 100,
    *       totalRewards: 20,
@@ -364,14 +364,14 @@ export class Pack extends StandardErc1155<PackContract> {
    *   // ERC721 rewards to be included in the pack
    *   erc721Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       tokenId: 0,
    *     }
    *   ],
    *   // ERC1155 rewards to be included in the pack
    *   erc1155Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       tokenId: 0,
    *       quantityPerReward: 1,
    *       totalRewards: 100,
@@ -404,7 +404,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *   // ERC20 rewards to be included in the pack
    *   erc20Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       quantityPerReward: 5,
    *       quantity: 100,
    *       totalRewards: 20,
@@ -413,14 +413,14 @@ export class Pack extends StandardErc1155<PackContract> {
    *   // ERC721 rewards to be included in the pack
    *   erc721Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       tokenId: 0,
    *     }
    *   ],
    *   // ERC1155 rewards to be included in the pack
    *   erc1155Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       tokenId: 0,
    *       quantityPerReward: 1,
    *       totalRewards: 100,
@@ -484,7 +484,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *   // ERC20 rewards to be included in the pack
    *   erc20Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       quantityPerReward: 5,
    *       quantity: 100,
    *       totalRewards: 20,
@@ -493,14 +493,14 @@ export class Pack extends StandardErc1155<PackContract> {
    *   // ERC721 rewards to be included in the pack
    *   erc721Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       tokenId: 0,
    *     }
    *   ],
    *   // ERC1155 rewards to be included in the pack
    *   erc1155Rewards: [
    *     {
-   *       assetContract: "0x...",
+   *       contractAddress: "0x...",
    *       tokenId: 0,
    *       quantityPerReward: 1,
    *       totalRewards: 100,
