@@ -26,7 +26,8 @@ export async function create4337Provider(
     config.bundlerUrl,
     config.entryPointAddress,
     chainId,
-    config.apiKey,
+    config.clientId,
+    config.secretKey,
   );
   return await new ERC4337EthersProvider(
     chainId,

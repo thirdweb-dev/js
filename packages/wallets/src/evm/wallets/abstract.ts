@@ -3,11 +3,12 @@ import type { Signer } from "ethers";
 import { providers, Contract, utils, Bytes } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
-import { DEFAULT_WALLET_API_KEY } from "../constants/rpc";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number, apiKey?: string) {
-  return `https://${chainId}.rpc.thirdweb.com${apiKey ? `/${apiKey}` : ""}}`;
+function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+  return `https://${chainId}.rpc.thirdweb.com${
+    clientId ? `/${clientId}` : ""
+  }}`;
 }
 
 export type WalletData = {
@@ -35,11 +36,9 @@ export async function checkContractWalletSignature(
   signature: string,
   address: string,
   chainId: number,
-  apiKey?: string,
 ): Promise<boolean> {
-  const provider = new providers.JsonRpcProvider(
-    chainIdToThirdwebRpc(chainId, apiKey),
-  );
+  //TODO:  A provider should be passed in instead of creating a new one here.
+  const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);
   try {
@@ -50,28 +49,11 @@ export async function checkContractWalletSignature(
   }
 }
 
-type AbstractWalletParams = {
-  apiKey?: string;
-};
-
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
   implements GenericAuthWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
-  private params: AbstractWalletParams;
-
-  constructor(params?: AbstractWalletParams) {
-    super();
-
-    this.params = {
-      ...params,
-    };
-
-    if (!params?.apiKey) {
-      this.params.apiKey = DEFAULT_WALLET_API_KEY;
-    }
-  }
 
   public abstract getSigner(): Promise<Signer>;
 
@@ -132,7 +114,6 @@ export abstract class AbstractWallet
           signature,
           address,
           chainId || 1,
-          this.params.apiKey,
         );
         return isValid;
       } catch {

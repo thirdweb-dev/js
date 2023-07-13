@@ -61,20 +61,23 @@ export async function verifyThirdwebPrebuiltImplementation(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
-  thirdwebApiKey?: string,
+  clientId?: string,
+  secretKey?: string,
   constructorArgs?: ConstructorParamMap,
 ): Promise<string | string[]> {
   const contractAddress = await getThirdwebContractAddress(
     contractName,
     chainId,
     storage,
-    thirdwebApiKey,
+    clientId,
+    secretKey,
   );
   const encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
     contractName,
     chainId,
     storage,
-    thirdwebApiKey,
+    clientId,
+    secretKey,
     constructorArgs,
   );
 
@@ -279,10 +282,10 @@ export async function isVerifiedOnEtherscan(
   chainId: number,
   explorerAPIUrl: string,
   explorerAPIKey: string,
-  thirdwebApiKey?: string,
+  clientId?: string,
 ): Promise<boolean> {
   const provider = getChainProvider(chainId, {
-    apiKey: thirdwebApiKey,
+    clientId,
   });
   invariant(
     await isContractDeployed(contractAddress, provider),

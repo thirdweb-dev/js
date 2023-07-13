@@ -387,7 +387,8 @@ export class ContractPublisher extends RPCConnectionHandler {
               implementation,
               compilerMetadata.abi,
               getChainProvider(parseInt(network), {
-                apiKey: this.options.apiKey,
+                clientId: this.options.clientId,
+                secretKey: this.options.secretKey,
               }),
               {}, // pass empty object for options instead of this.options
               this.storage,

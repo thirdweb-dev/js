@@ -78,12 +78,12 @@ export function getChainRPCs(
  * @param secretKey - The secret key to use for the RPC URL
  * @returns The first valid RPC URL for the chain
  */
-export function getValidChainRPC(
+export function getValidChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   clientId?: string,
   secretKey?: string,
   mode: "http" | "ws" = "http",
-): string {
+): string[] {
   const processedRPCs: string[] = [];
 
   chain.rpc.forEach((rpc) => {
@@ -120,7 +120,7 @@ export function getValidChainRPC(
     );
   }
 
-  return processedRPCs[0];
+  return processedRPCs;
 }
 
 /**
@@ -171,4 +171,23 @@ export function configureChain(
   }
   // prepend additional RPCs to the chain's RPCs
   return { ...chain, rpc: [...additionalRPCs, ...chain.rpc] };
+}
+
+/**
+ *
+ * use the clientId and return a new chain object with updated RPCs
+ */
+export function updateChainRPCs(
+  chain: Chain,
+  clientId?: string,
+  secretKey?: string,
+) {
+  try {
+    return {
+      ...chain,
+      rpc: getValidChainRPCs(chain, clientId, secretKey),
+    };
+  } catch (error) {
+    return chain;
+  }
 }

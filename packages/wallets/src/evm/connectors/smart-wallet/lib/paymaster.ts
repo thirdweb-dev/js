@@ -10,12 +10,19 @@ export const DUMMY_PAYMASTER_AND_DATA =
 class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
-  private apiKey: string;
-  constructor(paymasterUrl: string, entryPoint: string, apiKey: string) {
+  private clientId?: string;
+  private secretKey?: string;
+  constructor(
+    paymasterUrl: string,
+    entryPoint: string,
+    clientId?: string,
+    secretKey?: string,
+  ) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
-    this.apiKey = apiKey;
+    this.clientId = clientId;
+    this.secretKey = secretKey;
   }
 
   async getPaymasterAndData(
@@ -26,7 +33,11 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": this.apiKey,
+        ...(this.clientId
+          ? { "x-client-id": this.clientId }
+          : this.secretKey
+          ? { "x-secret-key": this.secretKey }
+          : {}),
       },
       body: JSON.stringify({
         jsonrpc: "2.0",
@@ -60,5 +71,6 @@ Code: ${code}`,
 export const getVerifyingPaymaster = (
   paymasterUrl: string,
   entryPoint: string,
-  apiKey: string,
-) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, apiKey);
+  clientId?: string,
+  secretKey?: string,
+) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, clientId, secretKey);

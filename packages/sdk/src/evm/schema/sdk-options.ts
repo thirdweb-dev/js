@@ -1,7 +1,6 @@
 import { ChainInfoInputSchema } from "./ChainInfoInputSchema";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { z } from "zod";
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 
 /**
  * @public
@@ -11,7 +10,8 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
     .object({
       // @ts-expect-error - zod doesn't know anything about readonly
       supportedChains: z.array(ChainInfoInputSchema).default(defaultChains),
-      apiKey: z.string().default(DEFAULT_API_KEY),
+      clientId: z.string().optional(),
+      secretKey: z.string().optional(),
       readonlySettings: z
         .object({
           rpcUrl: z.string().url(),

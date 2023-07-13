@@ -5,14 +5,13 @@ import { AbstractWallet } from "./abstract";
 import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
-import { DEFAULT_WALLET_API_KEY } from "../constants/rpc";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   walletId?: string;
   walletStorage?: AsyncStorage;
   dappMetadata?: DAppMetaData;
-  apiKey?: string;
+  clientId?: string;
 } & TOpts;
 
 export type WalletMeta = {
@@ -42,13 +41,11 @@ export abstract class AbstractClientWallet<
   }
 
   constructor(walletId: string, options?: WalletOptions<TAdditionalOpts>) {
-    super({ apiKey: options?.apiKey });
+    super();
     this.walletId = walletId;
     this.options = options;
     this.chains = (options?.chains || defaultChains).map((c) =>
-      updateChainRPCs(c, {
-        apiKey: options?.apiKey || DEFAULT_WALLET_API_KEY,
-      }),
+      updateChainRPCs(c, options?.clientId),
     );
     this.dappMetadata = options?.dappMetadata || DEFAULT_DAPP_META;
     this.walletStorage =
@@ -181,9 +178,7 @@ export abstract class AbstractClientWallet<
 
   async updateChains(chains: Chain[]) {
     this.chains = chains.map((c) => {
-      return updateChainRPCs(c, {
-        apiKey: this.options?.apiKey || DEFAULT_WALLET_API_KEY,
-      });
+      return updateChainRPCs(c, this.options?.clientId);
     });
     const connector = await this.getConnector();
     connector.updateChains(this.chains);

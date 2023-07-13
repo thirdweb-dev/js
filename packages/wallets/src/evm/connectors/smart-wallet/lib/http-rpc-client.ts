@@ -16,7 +16,8 @@ export class HttpRpcClient {
     bundlerUrl: string,
     entryPointAddress: string,
     chainId: number,
-    apiKey: string,
+    clientId?: string,
+    secretKey?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
@@ -25,7 +26,11 @@ export class HttpRpcClient {
       {
         url: this.bundlerUrl,
         headers: {
-          "x-api-key": apiKey,
+          ...(clientId
+            ? { "x-client-id": clientId }
+            : secretKey
+            ? { "x-secret-key": secretKey }
+            : {}),
         },
       },
       {

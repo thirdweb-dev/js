@@ -7,7 +7,6 @@ export type AwsSecretsManagerWalletOptions = {
   secretId: string;
   secretKeyName: string;
   awsConfig?: SecretsManagerClientConfig;
-  apiKey?: string;
 };
 
 /**
@@ -38,7 +37,7 @@ export class AwsSecretsManagerWallet extends AbstractWallet {
   #options: AwsSecretsManagerWalletOptions;
 
   constructor(options: AwsSecretsManagerWalletOptions) {
-    super({ apiKey: options.apiKey });
+    super();
     this.#options = options;
   }
 

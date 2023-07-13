@@ -325,7 +325,8 @@ export class UserWallet {
       this.options,
       // TODO ideally we pass down storage from the constructor but causes problems in react-core
       new ThirdwebStorage({
-        apiKey: this.options?.apiKey,
+        clientId: this.options?.clientId,
+        secretKey: this.options?.secretKey,
       }),
     );
   }

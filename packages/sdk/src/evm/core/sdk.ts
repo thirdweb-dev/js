@@ -111,7 +111,6 @@ import {
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -261,13 +260,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage?: ThirdwebStorage,
   ) {
-    if (!options.apiKey) {
-      console.warn(
-        "No API key provided to ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/settings",
-      );
-      options.apiKey = DEFAULT_API_KEY;
-    }
-
     if (isChainConfig(network)) {
       options = {
         ...options,

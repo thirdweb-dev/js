@@ -4,7 +4,7 @@ import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import type { SDKOptions, SDKOptionsOutput } from "../schema/sdk-options";
 import { SDKOptionsSchema } from "../schema/sdk-options";
 import type { ChainInfo } from "../schema/shared/ChainInfo";
-import { getChainRPC } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
@@ -49,17 +49,20 @@ export function getChainProvider(
     // Resolve the chain id from the network, which could be a chain, chain name, or chain id
     chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
-    rpcUrl = getChainRPC(rpcMap[chainId], {
-      apiKey: options.apiKey,
-    });
+    rpcUrl = getValidChainRPCs(
+      rpcMap[chainId],
+      options.clientId,
+      options.secretKey,
+    )[0];
   } catch (e) {
     // no-op
-    console.log("error", e);
   }
 
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${options.apiKey}`;
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
+      options.clientId
+    }`;
   }
 
   if (!rpcUrl) {

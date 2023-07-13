@@ -1,5 +1,4 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -59,7 +58,6 @@ export const ThirdwebProvider = <
 >({
   children,
   createWalletStorage = createAsyncLocalStorage,
-  apiKey,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
   theme,
@@ -74,14 +72,8 @@ export const ThirdwebProvider = <
     [supportedWallets],
   );
 
-  if (!apiKey) {
-    apiKey = DEFAULT_API_KEY;
-    noAPIKeyWarning();
-  }
-
   return (
     <ThirdwebProviderCore
-      apiKey={apiKey}
       supportedWallets={supportedWallets}
       authConfig={
         authConfig
@@ -113,14 +105,3 @@ export const ThirdwebProvider = <
     </ThirdwebProviderCore>
   );
 };
-
-let noAPIKeyWarningLogged = false;
-function noAPIKeyWarning() {
-  if (noAPIKeyWarningLogged) {
-    return;
-  }
-  noAPIKeyWarningLogged = true;
-  console.warn(
-    "No API key provided to <ThirdwebProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
-  );
-}

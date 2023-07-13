@@ -37,7 +37,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   async initialize(personalWallet: EVMWallet) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
-      apiKey: config.apiKey,
+      clientId: config.clientId,
+      secretKey: config.secretKey,
     }) as providers.BaseProvider;
     const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
@@ -57,13 +58,15 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
           : getVerifyingPaymaster(
               paymasterUrl,
               entryPointAddress,
-              this.config.apiKey || "",
+              this.config.clientId,
+              this.config.secretKey,
             )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
-      apiKey: config.apiKey || "",
+      clientId: config.clientId,
+      secretKey: config.secretKey,
     };
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);

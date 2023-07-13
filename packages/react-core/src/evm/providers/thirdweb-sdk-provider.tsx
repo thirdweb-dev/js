@@ -1,10 +1,9 @@
-import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import { QueryClientProviderWithDefault } from "../../core/providers/query-client";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { useUpdateChainsWithClientId } from "../hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "./types";
-import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { createContext, useContext, useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -27,7 +26,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   activeChain,
   signer,
   children,
-  apiKey,
+  clientId,
 }: React.PropsWithChildren<
   { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
@@ -68,9 +67,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
 
     if (supportedChain && supportedChain.rpc.length > 0) {
       try {
-        const rpcUrl = getChainRPC(supportedChain, {
-          apiKey,
-        });
+        const rpcUrl = getValidChainRPCs(supportedChain, clientId)[0];
 
         readonlySettings = {
           chainId: supportedChain.chainId,
@@ -101,7 +98,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        { ...mergedOptions, apiKey },
+        { ...mergedOptions, clientId },
         storageInterface,
       );
     }
@@ -122,7 +119,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [activeChainId, supportedChains, sdkOptions, storageInterface, apiKey]);
+  }, [activeChainId, supportedChains, sdkOptions, storageInterface, clientId]);
 
   useEffect(() => {
     // if we have an sdk and a signer update the signer
@@ -167,12 +164,11 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   queryClient,
   supportedChains,
   activeChain,
-  apiKey,
+  clientId,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  if (!apiKey) {
-    apiKey = DEFAULT_API_KEY;
-    noAPIKeyWarning();
+  if (!clientId) {
+    noClientIdWarning();
   }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
@@ -181,7 +177,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     useUpdateChainsWithClientId(
       supportedChainsNonNull,
       activeChain || supportedChainsNonNull[0],
-      apiKey,
+      clientId,
     );
 
   const mergedChains = useMemo(() => {
@@ -210,7 +206,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     <ThirdwebConfigProvider
       value={{
         chains: mergedChains as Chain[],
-        apiKey,
+        clientId,
       }}
     >
       <ThirdwebConnectedWalletProvider signer={signer}>
@@ -218,7 +214,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
           <WrappedThirdwebSDKProvider
             signer={signer}
             supportedChains={mergedChains}
-            apiKey={apiKey}
+            clientId={clientId}
             activeChain={activeChainIdOrObjWithKey}
             {...restProps}
           >
@@ -265,13 +261,13 @@ export function useSDKChainId(): number | undefined {
   return (sdk as any)?._chainId;
 }
 
-let noAPIKeyWarningLogged = false;
-function noAPIKeyWarning() {
-  if (noAPIKeyWarningLogged) {
+let noClientIdWarningLogged = false;
+function noClientIdWarning() {
+  if (noClientIdWarningLogged) {
     return;
   }
-  noAPIKeyWarningLogged = true;
+  noClientIdWarningLogged = true;
   console.warn(
-    "No API key provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get an API key from https://thirdweb.com/dashboard/",
+    "No client id provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client id from https://thirdweb.com/dashboard/",
   );
 }
