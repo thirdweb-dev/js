@@ -2,7 +2,7 @@ import { ServiceName } from "../types";
 
 export interface AuthorizationOptions {
   apiUrl: string;
-  serviceAPIKey: string;
+  serviceApiKey: string;
   scope: ServiceName;
   origin?: string;
   cachedKey?: ApiKey;
@@ -39,7 +39,8 @@ export interface ApiKey {
   key: string;
   walletAddresses: string[];
   domains: string[];
-  services?: [
+  bundleIds: string[];
+  services: [
     {
       name: string;
       targetAddresses: string[];

@@ -5,7 +5,7 @@ import { IncomingHttpHeaders } from "http";
 
 export function getServiceByName(srv: Service): Service | undefined;
 
-export function authorizeWorkerService(options: {
+export function authorizeCFWorkerService(options: {
   ctx: ExecutionContext;
   headers: IncomingHttpHeaders;
   kvStore: KVNamespace<string>;

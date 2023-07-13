@@ -18,14 +18,16 @@ interface AuthorizeWorkerOptions {
   validations?: AuthorizationValidations;
 }
 
-export async function authorizeWorkerService(options: AuthorizeWorkerOptions) {
+export async function authorizeCFWorkerService(
+  options: AuthorizeWorkerOptions,
+) {
   let cachedKey;
 
   if (!options.clientId) {
     return {
       authorized: false,
       errorMessage:
-        "The ClientId is missing. Make sure it is included with your Authorization Bearer request header.",
+        "The client ID is missing. Make sure it is included with your Authorization Bearer request header.",
       errorCode: "MISSING_CLIENT_ID",
       statusCode: 422,
     };
@@ -41,8 +43,8 @@ export async function authorizeWorkerService(options: AuthorizeWorkerOptions) {
     // ignore JSON parse, assuming not valid
   }
 
-  const origin = options.headers.get("Origin") || "";
-  let originHost: undefined | string;
+  const origin = options.headers.get("Origin");
+  let originHost = "";
 
   if (origin) {
     try {
@@ -73,19 +75,54 @@ export async function authorizeWorkerService(options: AuthorizeWorkerOptions) {
   );
 }
 
+export async function authorizeNodeService(options: {
+  clientId: string;
+  headers: IncomingHttpHeaders;
+  authOpts: AuthorizationOptions;
+  validations?: AuthorizationValidations;
+}) {
+  if (!options.clientId) {
+    return {
+      authorized: false,
+      errorMessage:
+        "The client ID is missing. Make sure it is included with your Authorization Bearer request header.",
+      errorCode: "MISSING_CLIENT_ID",
+      statusCode: 422,
+    };
+  }
+
+  const origin =
+    typeof options.headers["Origin"] === "string"
+      ? options.headers["Origin"]
+      : options.headers["Origin"]?.join("");
+
+  let originHost = "";
+
+  if (origin) {
+    try {
+      const originUrl = new URL(origin);
+      originHost = originUrl.hostname;
+    } catch (error) {
+      // ignore, will be verified by domains
+    }
+  }
+
+  return authorize(
+    options.clientId,
+    {
+      ...options.authOpts,
+      origin: originHost,
+    },
+    options.validations,
+  );
+}
+
 /**
- * Authorizes a request for a given clientId
+ * Authorizes a request for a given client ID
  *
  * @param clientId The String client id
- * @params authOpts The Object auth options
- *           origin - The String origin
- *           apiUrl - The String API URL
- *           scope - The ServiceName scope identifier
- *           cachedKey - The ApiKey (optional) cached key
- *           onRefetchComplete - The Func to trigger after key refetch from API
- * @params validations The Object of validations to run on a key
- *           serviceTargetAddresses - The Array (optional) of service target addresses to validate
- *           serviceActions - The Array (optional) of service actions to validate
+ * @params authOpts The AuthorizationOptions
+ * @params validations The AuthorizationValidations
  *
  * @returns The Promise AuthorizationResponse
  */
@@ -107,7 +144,7 @@ async function authorize(
           method: "GET",
           headers: {
             "content-type": "application/json",
-            "x-service-api-key": authOpts.serviceAPIKey,
+            "x-service-api-key": authOpts.serviceApiKey,
           },
         },
       );
@@ -135,24 +172,14 @@ async function authorize(
     //
     // Run validations
     //
+    const { domains, services } = keyData;
     const { serviceActions, serviceTargetAddresses } = validations || {};
 
     // validate domains
-    if (keyData.domains && keyData.domains?.length > 0) {
-      let originHost = "";
-
-      if (origin) {
-        try {
-          const originUrl = new URL(origin);
-          originHost = originUrl.host;
-        } catch (error) {
-          // ignore, will be verified by domains
-        }
-      }
-
+    if (origin && domains.length > 0) {
       if (
         // find matching domain, or if all domains allowed
-        !keyData.domains.find((d) => {
+        !domains.find((d) => {
           if (d === "*") {
             return true;
           }
@@ -161,11 +188,11 @@ async function authorize(
           // we'll check that the ending of our domain matches the wildcard
           if (d.startsWith("*.")) {
             const wildcard = d.slice(2);
-            return originHost.endsWith(wildcard);
+            return origin.endsWith(wildcard);
           }
 
           // If there's no wildcard, we'll check for an exact match
-          return d === originHost;
+          return d === origin;
         })
       ) {
         return {
@@ -178,10 +205,8 @@ async function authorize(
     }
 
     // validate services
-    if (keyData.services && keyData.services?.length > 0) {
-      const service = (keyData.services || []).find(
-        (srv) => srv.name === scope,
-      );
+    if (services.length > 0) {
+      const service = services.find((srv) => srv.name === scope);
       if (!service) {
         return {
           authorized: false,
@@ -227,18 +252,8 @@ async function authorize(
       }
     }
 
-    // validate bundleIds
-    // if (
-    //   bundleIds &&
-    //   !keyData.bundleIds.find((addr) => addr === "*" || bundleIds.includes(addr))
-    // ) {
-    //   return {
-    //     authorized: false,
-    //     errorMessage: `The service "${scope}" for BundlerIds ${bundleIds} is not authorized for this key.`,
-    //     errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
-    //     statusCode: 403,
-    //   };
-    // }
+    // FIXME: validate bundleIds
+
     return {
       authorized: true,
       data: keyData,
@@ -253,46 +268,4 @@ async function authorize(
       statusCode: 500,
     };
   }
-}
-
-export async function authorizeNodeService(options: {
-  clientId: string;
-  headers: IncomingHttpHeaders;
-  authOpts: AuthorizationOptions;
-  validations?: AuthorizationValidations;
-}) {
-  if (!options.clientId) {
-    return {
-      authorized: false,
-      errorMessage:
-        "The API key is missing. Make sure it is included with your Authorization Bearer request header.",
-      errorCode: "MISSING_API_KEY",
-      statusCode: 422,
-    };
-  }
-
-  const origin =
-    typeof options.headers["Origin"] === "string"
-      ? options.headers["Origin"]
-      : options.headers["Origin"]?.join("");
-  let originHost: undefined | string;
-
-  if (origin) {
-    try {
-      const originUrl = new URL(origin);
-      originHost = originUrl.hostname;
-    } catch (error) {
-      // ignore, will be verified by domains
-    }
-  }
-
-  return authorize(
-    options.clientId,
-    {
-      ...options.authOpts,
-      origin: originHost,
-      cachedKey: undefined,
-    },
-    options.validations,
-  );
 }
