@@ -1,5 +1,7 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.2.32
+
 ## 0.2.31
 
 ## 0.2.30
