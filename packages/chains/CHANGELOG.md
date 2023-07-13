@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.30
+
+### Patch Changes
+
+- [#1326](https://github.com/thirdweb-dev/js/pull/1326) [`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add base chain support
+
 ## 0.1.29
 
 ### Patch Changes
