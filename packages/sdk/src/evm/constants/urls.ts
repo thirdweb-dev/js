@@ -49,11 +49,7 @@ export function getChainProvider(
     // Resolve the chain id from the network, which could be a chain, chain name, or chain id
     chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
-    rpcUrl = getValidChainRPCs(
-      rpcMap[chainId],
-      options.clientId,
-      options.secretKey,
-    )[0];
+    rpcUrl = getValidChainRPCs(rpcMap[chainId], options.clientId)[0];
   } catch (e) {
     // no-op
   }

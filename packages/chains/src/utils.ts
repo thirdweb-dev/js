@@ -81,7 +81,6 @@ export function getChainRPCs(
 export function getValidChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   clientId?: string,
-  secretKey?: string,
   mode: "http" | "ws" = "http",
 ): string[] {
   const processedRPCs: string[] = [];
@@ -98,9 +97,14 @@ export function getValidChainRPCs(
 
     // Replace API_KEY placeholder with value
     if (rpc.includes("${THIRDWEB_API_KEY}")) {
-      processedRPCs.push(
-        rpc.replace("${THIRDWEB_API_KEY}", secretKey || clientId || ""),
-      );
+      if (clientId) {
+        processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", clientId));
+      } else {
+        // if no client id, let it through with empty string
+        // if secretKey is present, it will be used in header
+        // if none are passed, will have reduced access
+        processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", ""));
+      }
     }
 
     // exclude RPCs with unknown placeholder
@@ -177,15 +181,11 @@ export function configureChain(
  *
  * use the clientId and return a new chain object with updated RPCs
  */
-export function updateChainRPCs(
-  chain: Chain,
-  clientId?: string,
-  secretKey?: string,
-) {
+export function updateChainRPCs(chain: Chain, clientId?: string) {
   try {
     return {
       ...chain,
-      rpc: getValidChainRPCs(chain, clientId, secretKey),
+      rpc: getValidChainRPCs(chain, clientId),
     };
   } catch (error) {
     return chain;
