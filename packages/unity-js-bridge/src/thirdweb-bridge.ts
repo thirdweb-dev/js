@@ -225,7 +225,7 @@ class ThirdwebBridge implements TWBridge {
         case walletIds.magicLink:
           walletInstance = new MagicLink({
             dappMetadata,
-            magicApiKey: sdkOptions.wallet?.magicLinkApiKey,
+            apiKey: sdkOptions.wallet?.magicLinkApiKey,
             emailLogin: true,
             chains: allChains,
             clientId: sdkOptions.clientId,

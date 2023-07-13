@@ -3,7 +3,7 @@ import { Chain } from "@thirdweb-dev/chains";
 import { WalletOptions } from "@thirdweb-dev/wallets";
 
 export interface MagicConnectorOptions {
-  magicApiKey: string;
+  apiKey: string;
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration;
   chains?: Chain[];
   chainId?: number;

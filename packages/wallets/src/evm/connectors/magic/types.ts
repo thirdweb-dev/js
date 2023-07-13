@@ -16,7 +16,7 @@ export interface MagicWalletConnectorOptions {
 export interface MagicWalletConnectionArgs {}
 
 export interface MagicOptions {
-  magicApiKey: string;
+  apiKey: string;
   // accentColor?: string;
   // isDarkMode?: boolean;
   // customLogo?: string;
@@ -51,7 +51,7 @@ export interface MagicAuthOptions extends MagicOptions {
 }
 
 export interface MagicConnectorBaseOptions {
-  magicApiKey: string;
+  apiKey: string;
 
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration;
   /**
