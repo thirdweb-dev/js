@@ -303,6 +303,7 @@ const main = async () => {
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
@@ -333,6 +334,7 @@ const main = async () => {
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
@@ -371,6 +373,7 @@ const main = async () => {
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
@@ -392,6 +395,7 @@ const main = async () => {
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (_path, options) => {
       let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
@@ -451,6 +455,7 @@ const main = async () => {
     .option("-k, --key [key]", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
