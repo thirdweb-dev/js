@@ -1,4 +1,3 @@
-import fetch from "isomorphic-unfetch";
 import {
   ApiKey,
   ApiResponse,
@@ -9,7 +8,6 @@ import {
   AuthorizeNodeServiceOptions,
   AuthOptions,
 } from "./types";
-import { createHash } from "crypto";
 
 export async function authorizeCFWorkerService(
   options: AuthorizeCFWorkerOptions,
@@ -58,15 +56,6 @@ export async function authorizeNodeService(
     serviceConfig,
     validations,
   });
-}
-
-export function hashSecret(secret: string) {
-  return createHash("sha256").update(secret).digest("hex");
-}
-
-export function hashClientId(secret: string) {
-  const hashed = createHash("sha256").update(secret).digest("hex");
-  return hashed.slice(0, 32);
 }
 
 /**
