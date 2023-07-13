@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.10.36
+
+### Patch Changes
+
+- Updated dependencies [[`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b), [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b)]:
+  - @thirdweb-dev/storage@1.1.9
+  - @thirdweb-dev/chains@0.1.34
+  - @thirdweb-dev/sdk@3.10.35
+
 ## 0.10.35
 
 ### Patch Changes
