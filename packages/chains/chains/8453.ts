@@ -15,7 +15,7 @@ export default {
   "shortName": "base",
   "chainId": 8453,
   "networkId": 8453,
-  "status": "incubating",
+  "status": "active",
   "icon": {
     "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
     "height": 512,
