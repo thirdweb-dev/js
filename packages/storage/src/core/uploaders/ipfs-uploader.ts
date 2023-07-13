@@ -37,11 +37,11 @@ import FormData from "form-data";
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
-  private apiKey?: string;
+  private clientId?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.apiKey = options?.apiKey || "";
+    this.clientId = options?.clientId || "";
   }
 
   async uploadBatch(
@@ -103,7 +103,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           process.env.NODE_ENV === "test" || !!process.env.CI
             ? "Storage SDK CI"
             : "Storage SDK",
-        Authorization: `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.clientId}`,
       },
     });
 

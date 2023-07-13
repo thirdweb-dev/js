@@ -1,9 +1,5 @@
 import { replaceSchemeWithGatewayUrl } from "../../common/utils";
-import {
-  GatewayUrls,
-  IStorageDownloader,
-  IpfsDownloaderOptions,
-} from "../../types";
+import { GatewayUrls, IStorageDownloader } from "../../types";
 import fetch from "cross-fetch";
 
 /**
@@ -19,12 +15,6 @@ import fetch from "cross-fetch";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
-  private apiKey?: string;
-
-  constructor(options: IpfsDownloaderOptions) {
-    this.apiKey = options.apiKey;
-  }
-
   async download(
     uri: string,
     gatewayUrls: GatewayUrls,

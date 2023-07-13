@@ -126,10 +126,10 @@ class ThirdwebBridge implements TWBridge {
             gatewayUrls: {
               "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
             },
-            apiKey: sdkOptions.apiKey,
+            clientId: sdkOptions.apiKey,
           })
         : new ThirdwebStorage({
-            apiKey: sdkOptions.apiKey,
+            clientId: sdkOptions.apiKey,
           });
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let possibleWallet of WALLETS) {

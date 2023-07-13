@@ -47,21 +47,10 @@ export type IpfsUploaderOptions = {
    */
   uploadWithGatewayUrl?: boolean;
   /**
-   * Optional apiKey to associate with the IpfsUploader.
-   * You can get an API key here: https://thirdweb.com/settings
+   * Optional clientId to associate with the IpfsUploader.
+   * You can get an clientId here: https://thirdweb.com/dashboard/settings
    */
-  apiKey?: string;
-};
-
-/**
- * @public
- */
-export type IpfsDownloaderOptions = {
-  /**
-   * Optional apiKey to associate with the IpfsDownloader.
-   * You can get an API key here: https://thirdweb.com/settings
-   */
-  apiKey?: string;
+  clientId?: string;
 };
 
 /**

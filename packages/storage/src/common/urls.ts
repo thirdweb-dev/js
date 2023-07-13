@@ -7,16 +7,13 @@ import CIDTool from "cid-tool";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://{cid}.gateway.ipfscdn.io/{path}",
-    "https://{cid}.ipfs.twipfs.com/{path}",
-    "https://{cid}.ipfs.twgateway.com/{path}",
-
-    "https://{cid}.ipfs.thirdwebstorage.com/{path}",
-    "https://{cid}.ipfs.thirdwebipfs.com/{path}",
-    "https://{cid}.ipfs.thirdwebgateway.com/{path}",
-    "https://{cid}.ipfs-public.thirdwebcdn.com/{path}",
+    "https://{clientId}.thirdwebstorage.com/ipfs/{cid}/{path}",
+    "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
     "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
+    "https://dweb.link/ipfs/{cid}/{path}",
     "https://ipfs.io/ipfs/{cid}/{path}",
+    "https://w3s.link/ipfs/{cid}/{path}",
+    "https://nftstorage.link/ipfs/{cid}/{path}",
   ],
 };
 
@@ -48,18 +45,12 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function getGatewayUrlForCid(
-  gatewayUrl: string,
-  cid: string,
-  apiKey?: string,
-): string {
+export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
   const parts = cid.split("/");
   const hash = convertCidToV1(parts[0]);
   const filePath = parts.slice(1).join("/");
 
   let url = gatewayUrl;
-
-  // TODO construct apiKey based gateway URL
 
   // If the URL contains {cid} or {path} tokens, replace them with the CID and path
   // Both tokens must be present for the URL to be valid
@@ -81,25 +72,32 @@ export function getGatewayUrlForCid(
 /**
  * @internal
  */
-export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
+export function prepareGatewayUrls(
+  gatewayUrls: GatewayUrls,
+  clientId?: string,
+): GatewayUrls {
   const allGatewayUrls = {
-    ...gatewayUrls,
     ...DEFAULT_GATEWAY_URLS,
+    ...gatewayUrls,
   };
 
-  for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
-    if (gatewayUrls && gatewayUrls[key]) {
-      // Make sure that all user gateway URLs have trailing slashes
-      const cleanedGatewayUrls = gatewayUrls[key].map((url) =>
-        // don't add trailing slash if the URL contains {path} token
-        url.includes("{path}") ? url : url.replace(/\/$/, "") + "/",
-      );
+  for (const key of Object.keys(allGatewayUrls)) {
+    const cleanedGatewayUrls = allGatewayUrls[key]
+      .map((url) => {
+        // inject clientId when present
+        if (clientId && url.includes("{clientId}")) {
+          return url.replace("{clientId}", clientId);
+        } else if (!clientId && url.includes("{clientId}")) {
+          // if no client id passed, filter out the url
+          console.log("No clientId passed, filtering out url", url);
+          return undefined;
+        } else {
+          return url;
+        }
+      })
+      .filter((url) => url !== undefined) as string[];
 
-      allGatewayUrls[key] = [
-        ...cleanedGatewayUrls,
-        ...DEFAULT_GATEWAY_URLS[key],
-      ];
-    }
+    allGatewayUrls[key] = cleanedGatewayUrls;
   }
 
   return allGatewayUrls;

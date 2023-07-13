@@ -56,11 +56,12 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     this.uploader =
       options?.uploader ||
       new IpfsUploader({
-        apiKey: options?.apiKey,
+        clientId: options?.clientId,
       });
     this.downloader = options?.downloader || new StorageDownloader();
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),
+      options?.clientId,
     );
   }
 
