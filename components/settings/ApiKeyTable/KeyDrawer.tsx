@@ -2,10 +2,10 @@ import { ApiKeyDetails } from "./Details";
 import { ApiKeyKeyForm } from "./KeyForm";
 import { RevokeApiKeyButton } from "./RevokeButton";
 import { toastMessages } from "./messages";
-import { THIRDWEB_SERVICES } from "./services";
 import { ApiKeyFormValues, DrawerSection } from "./types";
 import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { HStack, useToast } from "@chakra-ui/react";
+import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,7 +36,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
       domains: fromArrayToList(domains),
       // FIXME: Enable when wallets restrictions is in use
       // walletAddresses: fromArrayToList(walletAddresses),
-      services: THIRDWEB_SERVICES.map((srv) => {
+      services: SERVICES.map((srv) => {
         const existingService = (services || []).find(
           (s) => s.name === srv.name,
         );
