@@ -38,10 +38,12 @@ import FormData from "form-data";
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
   private clientId?: string;
+  private secretKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.clientId = options?.clientId || "";
+    this.clientId = options?.clientId;
+    this.secretKey = options?.secretKey;
   }
 
   async uploadBatch(
@@ -95,6 +97,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    * @returns - The one time use token that can be passed to the Pinata API.
    */
   private async getUploadToken(): Promise<string> {
+    const headers: HeadersInit = {};
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    } else if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
       headers: {
@@ -103,7 +111,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           process.env.NODE_ENV === "test" || !!process.env.CI
             ? "Storage SDK CI"
             : "Storage SDK",
-        Authorization: `Bearer ${this.clientId}`,
+        ...headers,
       },
     });
 

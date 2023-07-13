@@ -51,6 +51,11 @@ export type IpfsUploaderOptions = {
    * You can get an clientId here: https://thirdweb.com/dashboard/settings
    */
   clientId?: string;
+  /**
+   * Optional secretKey to associate with the IpfsUploader - when used from the backend.
+   * You can get an secretKey here: https://thirdweb.com/dashboard/settings
+   */
+  secretKey?: string;
 };
 
 /**

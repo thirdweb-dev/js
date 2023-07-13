@@ -7,7 +7,7 @@ import CIDTool from "cid-tool";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://{clientId}.thirdwebstorage.com/ipfs/{cid}/{path}",
+    "https://{clientId}.thirdwebstorage-dev.com/ipfs/{cid}/{path}",
     "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
     "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
     "https://dweb.link/ipfs/{cid}/{path}",
@@ -75,6 +75,7 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
 export function prepareGatewayUrls(
   gatewayUrls: GatewayUrls,
   clientId?: string,
+  secretKey?: string,
 ): GatewayUrls {
   const allGatewayUrls = {
     ...DEFAULT_GATEWAY_URLS,
@@ -87,9 +88,16 @@ export function prepareGatewayUrls(
         // inject clientId when present
         if (clientId && url.includes("{clientId}")) {
           return url.replace("{clientId}", clientId);
-        } else if (!clientId && url.includes("{clientId}")) {
+        } else if (secretKey && url.includes("{clientId}")) {
+          // should only be used on Node.js in a backend/script context
+          const crypto = require("crypto");
+          const hashedSecretKey = crypto
+            .createHash("md5")
+            .update(secretKey)
+            .digest("hex");
+          return url.replace("{clientId}", hashedSecretKey);
+        } else if (url.includes("{clientId}")) {
           // if no client id passed, filter out the url
-          console.log("No clientId passed, filtering out url", url);
           return undefined;
         } else {
           return url;
