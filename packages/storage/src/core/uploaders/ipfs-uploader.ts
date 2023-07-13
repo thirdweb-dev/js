@@ -112,11 +112,15 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           : "Storage SDK",
     };
 
-    if (this.secretKey) {
-      headers["x-secret-key"] = this.secretKey;
+    if (this.secretKey && this.clientId) {
+      throw new Error(
+        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+      );
     }
 
-    if (this.clientId) {
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    } else if (this.clientId) {
       headers["x-client-id"] = this.clientId;
     }
 

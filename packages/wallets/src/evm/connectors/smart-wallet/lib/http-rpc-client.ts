@@ -25,12 +25,16 @@ export class HttpRpcClient {
 
     const headers: Record<string, string> = {};
 
-    if (clientId) {
-      headers["x-client-id"] = clientId;
+    if (secretKey && clientId) {
+      throw new Error(
+        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+      );
     }
 
     if (secretKey) {
       headers["x-secret-key"] = secretKey;
+    } else if (clientId) {
+      headers["x-client-id"] = clientId;
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
