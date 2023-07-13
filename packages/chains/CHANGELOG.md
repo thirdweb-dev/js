@@ -1,5 +1,23 @@
 # @thirdweb-dev/chains
 
+## 0.1.32
+
+### Patch Changes
+
+- [#1330](https://github.com/thirdweb-dev/js/pull/1330) [`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95) Thanks [@adam-maj](https://github.com/adam-maj)! - Override binance slug
+
+## 0.1.31
+
+### Patch Changes
+
+- [#1328](https://github.com/thirdweb-dev/js/pull/1328) [`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5) Thanks [@adam-maj](https://github.com/adam-maj)! - Make base default chain
+
+## 0.1.30
+
+### Patch Changes
+
+- [#1326](https://github.com/thirdweb-dev/js/pull/1326) [`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add base chain support
+
 ## 0.1.29
 
 ### Patch Changes
