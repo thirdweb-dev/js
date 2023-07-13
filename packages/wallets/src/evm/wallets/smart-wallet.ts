@@ -5,7 +5,12 @@ import type {
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
-import { Transaction, TransactionResult, Account } from "@thirdweb-dev/sdk";
+import {
+  Transaction,
+  TransactionResult,
+  Account,
+  SmartContract,
+} from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
   WCSession,
@@ -130,12 +135,21 @@ export class SmartWallet
   }
 
   /**
-   * Get the underlying account smart contract of the smart wallet.
-   * @returns the account smart contract of the smart wallet.
+   * Get the underlying account contract of the smart wallet.
+   * @returns the account contract of the smart wallet.
    */
-  async getAccountContract(): Promise<Account<IAccountCore>> {
+  async getAccountContract(): Promise<SmartContract> {
     const connector = await this.getConnector();
     return connector.getAccountContract();
+  }
+
+  /**
+   * Get the underlying account factory contract of the smart wallet.
+   * @returns the account factory contract.
+   */
+  async getFactoryContract(): Promise<SmartContract> {
+    const connector = await this.getConnector();
+    return connector.getFactoryContract();
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
