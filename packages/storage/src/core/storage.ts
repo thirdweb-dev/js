@@ -10,10 +10,10 @@ import {
 import {
   FileOrBufferOrString,
   GatewayUrls,
-  IpfsUploadBatchOptions,
   IStorageDownloader,
-  ThirdwebStorageOptions,
   IStorageUploader,
+  IpfsUploadBatchOptions,
+  ThirdwebStorageOptions,
   UploadOptions,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
@@ -28,7 +28,7 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  * const storage = new ThirdwebStorage({ clientId: "your-client-id" });
  *
  * // Create a default storage class with a secret key when used in server-side applications
- * const storage = new ThirdwebStorage({ serverKey: "your-server-key" });
+ * const storage = new ThirdwebStorage({ secretKey: "your-secret-key" });
  *
  * You can get a clientId and secretKey from https://thirdweb.com/dashboard/
  *
