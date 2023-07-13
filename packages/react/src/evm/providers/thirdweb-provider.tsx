@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -57,7 +56,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
-  thirdwebApiKey = DEFAULT_API_KEY,
+  clientId: clientId,
   supportedWallets,
   theme,
   children,
@@ -65,12 +64,16 @@ export const ThirdwebProvider = <
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
 
+  if (!clientId) {
+    noClientIdWarning();
+  }
+
   return (
     <WalletUIStatesProvider theme={theme}>
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}
-          thirdwebApiKey={thirdwebApiKey}
+          clientId={clientId}
           supportedWallets={wallets}
           {...restProps}
         >
@@ -81,3 +84,14 @@ export const ThirdwebProvider = <
     </WalletUIStatesProvider>
   );
 };
+
+let noClientIdWarningLogged = false;
+function noClientIdWarning() {
+  if (noClientIdWarningLogged) {
+    return;
+  }
+  noClientIdWarningLogged = true;
+  console.warn(
+    "No client ID provided to <ThirdwebProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client ID from https://thirdweb.com/dashboard/",
+  );
+}

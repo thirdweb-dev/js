@@ -352,6 +352,7 @@ export class SmartContract<
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;

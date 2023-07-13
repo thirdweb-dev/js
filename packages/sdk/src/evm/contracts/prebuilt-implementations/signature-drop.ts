@@ -179,6 +179,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

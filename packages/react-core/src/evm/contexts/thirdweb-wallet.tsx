@@ -1,6 +1,6 @@
 import { __DEV__ } from "../../core/constants/runtime";
 import { useThirdwebConfigContext } from "./thirdweb-config";
-import { getChainRPC } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { UserWallet } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import React, {
@@ -33,8 +33,7 @@ const ThirdwebConnectedWalletContext =
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
 > = ({ signer, children }) => {
-  const { chains, thirdwebApiKey, alchemyApiKey, infuraApiKey } =
-    useThirdwebConfigContext();
+  const { chains, clientId } = useThirdwebConfigContext();
 
   const [contextValue, setContextValue] =
     useState<ThirdwebConnectedWalletContext>({
@@ -59,11 +58,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
           let rpcUrl = undefined;
           if (chain) {
             try {
-              rpcUrl = getChainRPC(chain, {
-                thirdwebApiKey,
-                alchemyApiKey,
-                infuraApiKey,
-              });
+              rpcUrl = getValidChainRPCs(chain, clientId)[0];
             } catch (e) {
               // failed to get a viable rpc url, nothing we can do
               console.error(e);
@@ -100,7 +95,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
       s = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signer, thirdwebApiKey, alchemyApiKey, infuraApiKey]);
+  }, [signer, clientId]);
 
   return (
     <ThirdwebConnectedWalletContext.Provider value={contextValue}>

@@ -131,6 +131,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);

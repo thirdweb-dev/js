@@ -7,16 +7,13 @@ import CIDTool from "cid-tool";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://{cid}.gateway.ipfscdn.io/{path}",
-    "https://{cid}.ipfs.twipfs.com/{path}",
-    "https://{cid}.ipfs.twgateway.com/{path}",
-
-    "https://{cid}.ipfs.thirdwebstorage.com/{path}",
-    "https://{cid}.ipfs.thirdwebipfs.com/{path}",
-    "https://{cid}.ipfs.thirdwebgateway.com/{path}",
-    "https://{cid}.ipfs-public.thirdwebcdn.com/{path}",
+    "https://{clientId}.thirdwebstorage-dev.com/ipfs/{cid}/{path}",
+    "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
     "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
+    "https://dweb.link/ipfs/{cid}/{path}",
     "https://ipfs.io/ipfs/{cid}/{path}",
+    "https://w3s.link/ipfs/{cid}/{path}",
+    "https://nftstorage.link/ipfs/{cid}/{path}",
   ],
 };
 
@@ -80,25 +77,41 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
 /**
  * @internal
  */
-export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
+export function prepareGatewayUrls(
+  gatewayUrls: GatewayUrls,
+  clientId?: string,
+  secretKey?: string,
+): GatewayUrls {
   const allGatewayUrls = {
-    ...gatewayUrls,
     ...DEFAULT_GATEWAY_URLS,
+    ...gatewayUrls,
   };
 
-  for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
-    if (gatewayUrls && gatewayUrls[key]) {
-      // Make sure that all user gateway URLs have trailing slashes
-      const cleanedGatewayUrls = gatewayUrls[key].map((url) =>
-        // don't add trailing slash if the URL contains {path} token
-        url.includes("{path}") ? url : url.replace(/\/$/, "") + "/",
-      );
+  for (const key of Object.keys(allGatewayUrls)) {
+    const cleanedGatewayUrls = allGatewayUrls[key]
+      .map((url) => {
+        // inject clientId when present
+        if (clientId && url.includes("{clientId}")) {
+          return url.replace("{clientId}", clientId);
+        } else if (secretKey && url.includes("{clientId}")) {
+          // should only be used on Node.js in a backend/script context
+          const crypto = require("crypto");
+          const hashedSecretKey = crypto
+            .createHash("sha256")
+            .update(secretKey)
+            .digest("hex");
+          const derivedClientId = hashedSecretKey.slice(0, 32);
+          return url.replace("{clientId}", derivedClientId);
+        } else if (url.includes("{clientId}")) {
+          // if no client id passed, filter out the url
+          return undefined;
+        } else {
+          return url;
+        }
+      })
+      .filter((url) => url !== undefined) as string[];
 
-      allGatewayUrls[key] = [
-        ...cleanedGatewayUrls,
-        ...DEFAULT_GATEWAY_URLS[key],
-      ];
-    }
+    allGatewayUrls[key] = cleanedGatewayUrls;
   }
 
   return allGatewayUrls;

@@ -20,9 +20,15 @@ import FormData from "form-data";
  *
  * @example
  * ```jsx
- * // Can instantiate the uploader with default configuration
+ * // Can instantiate the uploader with default configuration and your client ID when used in client-side applications
  * const uploader = new StorageUploader();
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
+ *
+ * // Can instantiate the uploader with default configuration and your secret key when used in server-side applications
+ * const uploader = new StorageUploader();
+ * const secretKey = "your-secret-key";
+ * const storage = new ThirdwebStorage({ secretKey, uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
@@ -30,18 +36,21 @@ import FormData from "form-data";
  *   uploadWithGatewayUrl: true,
  * }
  * const uploader = new StorageUploader(options);
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
  * ```
  *
  * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
-  private apiKey?: string;
+  private clientId?: string;
+  private secretKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
-    this.apiKey = options?.apiKey || "";
+    this.clientId = options?.clientId;
+    this.secretKey = options?.secretKey;
   }
 
   async uploadBatch(
@@ -285,10 +294,18 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       });
 
       xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-      xhr.setRequestHeader(
-        "Authorization",
-        this.apiKey ? `Bearer ${this.apiKey}` : ``,
-      );
+
+      if (this.secretKey && this.clientId) {
+        throw new Error(
+          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+        );
+      }
+
+      if (this.secretKey) {
+        xhr.setRequestHeader("x-secret-key", this.secretKey);
+      } else if (this.clientId) {
+        xhr.setRequestHeader("x-client-id", this.clientId);
+      }
 
       xhr.send(form as any);
     });
@@ -302,10 +319,24 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     if (options?.onProgress) {
       console.warn("The onProgress option is only supported in the browser");
     }
+
+    if (this.secretKey && this.clientId) {
+      throw new Error(
+        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+      );
+    }
+
+    const headers: HeadersInit = {};
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    } else if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
+
     const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
       method: "POST",
       headers: {
-        Authorization: this.apiKey ? `Bearer ${this.apiKey}` : ``,
+        ...headers,
         ...form.getHeaders(),
       },
       body: form.getBuffer(),

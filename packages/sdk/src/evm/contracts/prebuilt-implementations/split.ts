@@ -81,6 +81,7 @@ export class Split implements UpdateableNetwork {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;

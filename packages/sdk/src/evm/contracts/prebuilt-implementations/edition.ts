@@ -112,6 +112,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
