@@ -300,7 +300,7 @@ const main = async () => {
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
     .option("--zksync", "Deploy on ZKSync")
-    .option("-k, --key [key]", "API key to authorize usage")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
@@ -331,7 +331,7 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
-    .option("-k, --key [key]", "API key to authorize usage")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
@@ -370,7 +370,7 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
-    .option("-k, --key [key]", "API key to authorize usage")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
@@ -392,7 +392,7 @@ const main = async () => {
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .option("-k, --key [key]", "API key to authorize usage")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (_path, options) => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
@@ -452,7 +452,7 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
-    .option("-k, --key [key]", "API key to authorize usage")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
