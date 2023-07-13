@@ -6,3 +6,5 @@ export function getServiceByName(srv: Service): Service | undefined;
 export function authorizeCFWorkerService(options: AuthorizeCFWorkerOptions);
 
 export function authorizeNodeService(options: AuthorizeNodeServiceOptions);
+
+export function hashClientId(secret: string): string;

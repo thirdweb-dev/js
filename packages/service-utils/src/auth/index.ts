@@ -10,12 +10,20 @@ import {
   AuthOptions,
 } from "./types";
 import { validateAuthOptions } from "./utils";
+import { createHash } from "crypto";
 
 export async function authorizeCFWorkerService(
   options: AuthorizeCFWorkerOptions,
 ) {
   const { kvStore, ctx, authOptions, serviceConfig, validations } = options;
   const { clientId, bundleId, origin } = authOptions;
+
+  // FIXME: Remove once API keys are enforced
+  if (!clientId) {
+    return {
+      authorized: true,
+    };
+  }
 
   const validationResponse = validateAuthOptions(authOptions);
 
@@ -64,6 +72,13 @@ export async function authorizeNodeService(
   const { authOptions, serviceConfig, validations } = options;
   const { clientId, bundleId, origin } = authOptions;
 
+  // FIXME: Remove once API keys are enforced
+  if (!clientId) {
+    return {
+      authorized: true,
+    };
+  }
+
   const validationResponse = validateAuthOptions(authOptions);
 
   if (!validationResponse.authorized) {
@@ -79,6 +94,10 @@ export async function authorizeNodeService(
     serviceConfig,
     validations,
   });
+}
+
+export function hashClientId(secret: string) {
+  return createHash("md5").update(secret).digest("hex");
 }
 
 /**
@@ -222,7 +241,7 @@ async function authorize(options: {
       data: keyData,
     };
   } catch (err) {
-    console.error("Failed to authorize this key", err);
+    console.error("Failed to authorize this key.", err);
 
     return {
       authorized: false,
