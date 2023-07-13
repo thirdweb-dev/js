@@ -3,6 +3,7 @@ import { ServiceName } from "../types";
 
 export interface AuthOptions {
   clientId: string;
+  secretHash?: string;
   bundleId?: string;
   origin?: string;
 }
@@ -12,13 +13,13 @@ export interface AuthorizeCFWorkerOptions {
   kvStore: KVNamespace<string>;
   authOptions: AuthOptions;
   serviceConfig: ServiceConfiguration;
-  validations?: AuthorizationValidations;
+  validations: AuthorizationValidations;
 }
 
 export interface AuthorizeNodeServiceOptions {
   authOptions: AuthOptions;
   serviceConfig: ServiceConfiguration;
-  validations?: AuthorizationValidations;
+  validations: AuthorizationValidations;
 }
 
 export interface ServiceConfiguration {
@@ -32,7 +33,7 @@ export interface ServiceConfiguration {
 
 export interface AuthorizationValidations {
   serviceTargetAddresses?: string[];
-  serviceActions?: string[];
+  serviceAction?: string;
 }
 
 export interface AuthorizationResponse {
@@ -55,14 +56,13 @@ export interface ApiResponse {
 export interface ApiKey {
   id: string;
   key: string;
+  secretHash: string;
   walletAddresses: string[];
   domains: string[];
   bundleIds: string[];
-  services: [
-    {
-      name: string;
-      targetAddresses: string[];
-      actions: string[];
-    },
-  ];
+  services: {
+    name: string;
+    targetAddresses: string[];
+    actions: string[];
+  }[];
 }

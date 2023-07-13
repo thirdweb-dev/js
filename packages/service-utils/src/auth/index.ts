@@ -9,27 +9,13 @@ import {
   AuthorizeNodeServiceOptions,
   AuthOptions,
 } from "./types";
-import { validateAuthOptions } from "./utils";
 import { createHash } from "crypto";
 
 export async function authorizeCFWorkerService(
   options: AuthorizeCFWorkerOptions,
 ) {
   const { kvStore, ctx, authOptions, serviceConfig, validations } = options;
-  const { clientId, bundleId, origin } = authOptions;
-
-  // FIXME: Remove once API keys are enforced
-  if (!clientId) {
-    return {
-      authorized: true,
-    };
-  }
-
-  const validationResponse = validateAuthOptions(authOptions);
-
-  if (!validationResponse.authorized) {
-    return validationResponse;
-  }
+  const { clientId } = authOptions;
 
   let cachedKey;
 
@@ -50,11 +36,7 @@ export async function authorizeCFWorkerService(
   };
 
   return authorize({
-    authOpts: {
-      clientId,
-      bundleId,
-      origin,
-    },
+    authOptions,
     serviceConfig: {
       ...serviceConfig,
       cachedKey,
@@ -70,34 +52,21 @@ export async function authorizeNodeService(
   options: AuthorizeNodeServiceOptions,
 ) {
   const { authOptions, serviceConfig, validations } = options;
-  const { clientId, bundleId, origin } = authOptions;
-
-  // FIXME: Remove once API keys are enforced
-  if (!clientId) {
-    return {
-      authorized: true,
-    };
-  }
-
-  const validationResponse = validateAuthOptions(authOptions);
-
-  if (!validationResponse.authorized) {
-    return validationResponse;
-  }
 
   return authorize({
-    authOpts: {
-      clientId,
-      bundleId,
-      origin,
-    },
+    authOptions,
     serviceConfig,
     validations,
   });
 }
 
+export function hashSecret(secret: string) {
+  return createHash("sha256").update(secret).digest("hex");
+}
+
 export function hashClientId(secret: string) {
-  return createHash("md5").update(secret).digest("hex");
+  const hashed = createHash("sha256").update(secret).digest("hex");
+  return hashed.slice(0, 32);
 }
 
 /**
@@ -106,13 +75,13 @@ export function hashClientId(secret: string) {
  * @returns The Promise AuthorizationResponse
  */
 async function authorize(options: {
-  authOpts: AuthOptions;
+  authOptions: AuthOptions;
   serviceConfig: ServiceConfiguration;
-  validations?: AuthorizationValidations;
+  validations: AuthorizationValidations;
 }): Promise<AuthorizationResponse> {
   try {
-    const { authOpts, serviceConfig, validations } = options;
-    const { clientId, origin } = authOpts;
+    const { authOptions, serviceConfig, validations } = options;
+    const { clientId } = authOptions;
     const { apiUrl, scope, serviceKey, cachedKey, onRefetchComplete } =
       serviceConfig;
 
@@ -154,86 +123,17 @@ async function authorize(options: {
     //
     // Run validations
     //
-    const { domains, services } = keyData;
-    const { serviceActions, serviceTargetAddresses } = validations || {};
+    const authResponse = authAccess(authOptions, keyData);
 
-    // validate domains
-    if (origin && domains.length > 0) {
-      if (
-        // find matching domain, or if all domains allowed
-        !domains.find((d) => {
-          if (d === "*") {
-            return true;
-          }
-
-          // If the allowedDomain has a wildcard,
-          // we'll check that the ending of our domain matches the wildcard
-          if (d.startsWith("*.")) {
-            const wildcard = d.slice(2);
-            return origin.endsWith(wildcard);
-          }
-
-          // If there's no wildcard, we'll check for an exact match
-          return d === origin;
-        })
-      ) {
-        return {
-          authorized: false,
-          errorMessage: "The domain is not authorized for this key.",
-          errorCode: "DOMAIN_UNAUTHORIZED",
-          statusCode: 403,
-        };
-      }
+    if (!authResponse?.authorized) {
+      return authResponse;
     }
 
-    // validate services
-    if (services.length > 0) {
-      const service = services.find((srv) => srv.name === scope);
-      if (!service) {
-        return {
-          authorized: false,
-          errorMessage: `The service "${scope}" is not authorized for this key.`,
-          errorCode: "SERVICE_UNAUTHORIZED",
-          statusCode: 403,
-        };
-      }
+    const authzResponse = authzServices(validations, keyData, scope);
 
-      // validate service actions
-      if (serviceActions) {
-        let unknownAction;
-
-        serviceActions.forEach((action) => {
-          if (!service.actions.includes(action)) {
-            unknownAction = action;
-          }
-        });
-
-        if (unknownAction) {
-          return {
-            authorized: false,
-            errorMessage: `The service "${scope}" action "${unknownAction}" is not authorized for this key.`,
-            errorCode: "SERVICE_ACTION_UNAUTHORIZED",
-            statusCode: 403,
-          };
-        }
-      }
-
-      // validate service target addresses
-      if (
-        serviceTargetAddresses &&
-        !service.targetAddresses.find(
-          (addr) => addr === "*" || serviceTargetAddresses.includes(addr),
-        )
-      ) {
-        return {
-          authorized: false,
-          errorMessage: `The service "${scope}" target address is not authorized for this key.`,
-          errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
-          statusCode: 403,
-        };
-      }
+    if (!authzResponse?.authorized) {
+      return authzResponse;
     }
-
     // FIXME: validate bundleId
 
     return {
@@ -250,4 +150,115 @@ async function authorize(options: {
       statusCode: 500,
     };
   }
+}
+
+function authAccess(authOptions: AuthOptions, apiKey: ApiKey) {
+  const { origin, secretHash: providedSecretHash } = authOptions;
+  const { domains, secretHash } = apiKey;
+
+  if (providedSecretHash) {
+    if (secretHash !== providedSecretHash) {
+      return {
+        authorized: false,
+        errorMessage: "The secret is invalid.",
+        errorCode: "SECRET_INVALID",
+        statusCode: 401,
+      };
+    }
+    return {
+      authorized: true,
+    };
+  }
+
+  // validate domains
+  if (origin) {
+    if (
+      // find matching domain, or if all domains allowed
+      domains.find((d) => {
+        if (d === "*") {
+          return true;
+        }
+
+        // If the allowedDomain has a wildcard,
+        // we'll check that the ending of our domain matches the wildcard
+        if (d.startsWith("*.")) {
+          const domainRoot = d.slice(2);
+          return origin.endsWith(domainRoot);
+        }
+
+        // If there's no wildcard, we'll check for an exact match
+        return d === origin;
+      })
+    ) {
+      return {
+        authorized: true,
+      };
+    }
+
+    return {
+      authorized: false,
+      errorMessage: "The origin is not authorized for this key.",
+      errorCode: "ORIGIN_UNAUTHORIZED",
+      statusCode: 401,
+    };
+  }
+
+  // FIXME: validate bundle id
+  return {
+    authorized: false,
+    errorMessage: "The keys are invalid.",
+    errorCode: "UNAUTHORIZED",
+    statusCode: 401,
+  };
+}
+
+function authzServices(
+  validations: AuthorizationValidations,
+  apiKey: ApiKey,
+  scope: string,
+) {
+  const { services } = apiKey;
+  const { serviceTargetAddresses, serviceAction } = validations;
+
+  // validate services
+  const service = services.find((srv) => srv.name === scope);
+  if (!service) {
+    return {
+      authorized: false,
+      errorMessage: `The service "${scope}" is not authorized for this key.`,
+      errorCode: "SERVICE_UNAUTHORIZED",
+      statusCode: 403,
+    };
+  }
+
+  // validate service actions
+  if (serviceAction) {
+    if (!service.actions.includes(serviceAction)) {
+      return {
+        authorized: false,
+        errorMessage: `The service "${scope}" action "${serviceAction}" is not authorized for this key.`,
+        errorCode: "SERVICE_ACTION_UNAUTHORIZED",
+        statusCode: 403,
+      };
+    }
+  }
+
+  // validate service target addresses
+  if (
+    serviceTargetAddresses &&
+    !service.targetAddresses.find(
+      (addr) => addr === "*" || serviceTargetAddresses.includes(addr),
+    )
+  ) {
+    return {
+      authorized: false,
+      errorMessage: `The service "${scope}" target address is not authorized for this key.`,
+      errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
+      statusCode: 403,
+    };
+  }
+
+  return {
+    authorized: true,
+  };
 }
