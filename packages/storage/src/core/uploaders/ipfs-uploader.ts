@@ -112,9 +112,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           process.env.NODE_ENV === "test" || !!process.env.CI
             ? "Storage SDK CI"
             : "Storage SDK",
-        ...(this.secretKey
+        ...(this.clientId
+          ? { "x-client-id": this.clientId }
+          : this.secretKey
           ? { "x-secret-key": this.secretKey }
-          : { "x-client-id": this.clientId || "" }),
+          : {}),
       },
     });
 

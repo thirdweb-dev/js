@@ -15,10 +15,6 @@ export interface WagmiConnectorEvents<Provider = any> {
   error(error: Error): void;
 }
 
-export type ConnectParams<TOpts extends Record<string, any> = {}> = {
-  chainId?: number;
-} & TOpts;
-
 export abstract class WagmiConnector<
   Provider = any,
   Options = any,
@@ -43,9 +39,8 @@ export abstract class WagmiConnector<
     options: Options;
   }) {
     super();
-
-    this.options = options;
     this.chains = chains;
+    this.options = options;
   }
 
   abstract connect(config?: {

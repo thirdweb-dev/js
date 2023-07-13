@@ -2,8 +2,6 @@ import { AbstractWallet } from "./abstract";
 import type { Signer } from "ethers";
 import type { AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 
-type AwsKmsWalletOptions = AwsKmsSignerCredentials;
-
 /**
  * Create a wallet instance using a private key stored in AWS KMS.
  *
@@ -25,8 +23,8 @@ type AwsKmsWalletOptions = AwsKmsSignerCredentials;
  */
 export class AwsKmsWallet extends AbstractWallet {
   #signer?: Promise<Signer>;
-  #options: AwsKmsWalletOptions;
-  constructor(options: AwsKmsWalletOptions) {
+  #options: AwsKmsSignerCredentials;
+  constructor(options: AwsKmsSignerCredentials) {
     super();
     this.#options = options;
   }
