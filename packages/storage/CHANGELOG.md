@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.1.9
+
+### Patch Changes
+
+- [#1338](https://github.com/thirdweb-dev/js/pull/1338) [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b) Thanks [@jnsdls](https://github.com/jnsdls)! - no longer check if file exists on gateway before uploading, always upload
+
 ## 1.1.8
 
 ### Patch Changes
