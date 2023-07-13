@@ -1,0 +1,56 @@
+{
+  "name": "@thirdweb-dev/service-utils",
+  "version": "0.0.0",
+  "main": "dist/thirdweb-dev-service-utils.cjs.js",
+  "module": "dist/thirdweb-dev-service-utils.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-service-utils.esm.js",
+      "default": "./dist/thirdweb-dev-service-utils.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/pay",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": [
+    "dist/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230710.0",
+    "@types/node": "^20.4.1",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0",
+    "sort-package-json": "^2.5.1",
+    "ts-node": "^10.9.1",
+    "@preconstruct/cli": "^2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "isomorphic-unfetch": "^4.0.2"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push"
+  }
+}
