@@ -1,26 +1,26 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Binance Smart Chain Testnet",
+  "name": "BNB Smart Chain Testnet",
   "chain": "BSC",
   "rpc": [
-    "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bnb-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bsc-testnet.publicnode.com",
-    "https://data-seed-prebsc-2-s3.binance.org:8545",
-    "https://data-seed-prebsc-1-s3.binance.org:8545",
-    "https://data-seed-prebsc-2-s2.binance.org:8545",
-    "https://data-seed-prebsc-1-s2.binance.org:8545",
-    "https://data-seed-prebsc-2-s1.binance.org:8545",
-    "https://data-seed-prebsc-1-s1.binance.org:8545"
+    "https://data-seed-prebsc-2-s3.bnbchain.org:8545",
+    "https://data-seed-prebsc-1-s3.bnbchain.org:8545",
+    "https://data-seed-prebsc-2-s2.bnbchain.org:8545",
+    "https://data-seed-prebsc-1-s2.bnbchain.org:8545",
+    "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
+    "https://data-seed-prebsc-1-s1.bnbchain.org:8545"
   ],
   "faucets": [
-    "https://testnet.binance.org/faucet-smart"
+    "https://testnet.bnbchain.org/faucet-smart"
   ],
   "nativeCurrency": {
-    "name": "Binance Chain Native Token",
+    "name": "BNB Chain Native Token",
     "symbol": "tBNB",
     "decimals": 18
   },
-  "infoURL": "https://testnet.binance.org/",
+  "infoURL": "https://www.bnbchain.org/en",
   "shortName": "bnbt",
   "chainId": 97,
   "networkId": 97,
@@ -38,5 +38,5 @@ export default {
     "format": "png"
   },
   "testnet": true,
-  "slug": "binance-testnet"
+  "slug": "bnb-smart-chain-testnet"
 } as const satisfies Chain;

@@ -10,4 +10,5 @@ export default {
     width: 512,
     format: "png",
   },
+  rpc: ["https://base.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
 };
