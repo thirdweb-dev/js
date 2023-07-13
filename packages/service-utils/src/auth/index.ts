@@ -2,31 +2,32 @@ import fetch from "isomorphic-unfetch";
 import {
   ApiKey,
   ApiResponse,
-  AuthorizationOptions,
+  ServiceConfiguration,
   AuthorizationResponse,
   AuthorizationValidations,
   AuthorizeCFWorkerOptions,
   AuthorizeNodeServiceOptions,
+  AuthOptions,
 } from "./types";
+import { validateAuthOptions } from "./utils";
 
 export async function authorizeCFWorkerService(
   options: AuthorizeCFWorkerOptions,
 ) {
-  let cachedKey;
+  const { kvStore, ctx, authOptions, serviceConfig, validations } = options;
+  const { clientId, bundleId, origin } = authOptions;
 
-  if (!options.clientId) {
-    return {
-      authorized: false,
-      errorMessage:
-        "The client ID is missing. Make sure it is included with your Authorization Bearer request header.",
-      errorCode: "MISSING_CLIENT_ID",
-      statusCode: 422,
-    };
+  const validationResponse = validateAuthOptions(authOptions);
+
+  if (!validationResponse.authorized) {
+    return validationResponse;
   }
+
+  let cachedKey;
 
   // first, check if the key is in KV
   try {
-    const kvKey = await options.kvStore.get(options.clientId);
+    const kvKey = await kvStore.get(clientId);
     if (kvKey) {
       cachedKey = JSON.parse(kvKey) as ApiKey;
     }
@@ -34,93 +35,67 @@ export async function authorizeCFWorkerService(
     // ignore JSON parse, assuming not valid
   }
 
-  const origin = options.headers.get("Origin");
-  let originHost = "";
-
-  if (origin) {
-    try {
-      const originUrl = new URL(origin);
-      originHost = originUrl.host;
-    } catch (error) {
-      // ignore, will be verified by domains
-    }
-  }
-
   const updateKv = async (keyData: ApiKey) => {
-    options.kvStore.put(options.clientId, JSON.stringify(keyData), {
-      expirationTtl: options.authOpts.cacheTtl || 60,
+    kvStore.put(clientId as string, JSON.stringify(keyData), {
+      expirationTtl: serviceConfig.cacheTtl || 60,
     });
   };
 
-  return authorize(
-    options.clientId,
-    {
-      ...options.authOpts,
-      origin: originHost,
+  return authorize({
+    authOpts: {
+      clientId,
+      bundleId,
+      origin,
+    },
+    serviceConfig: {
+      ...serviceConfig,
       cachedKey,
       onRefetchComplete: (keyData: ApiKey) => {
-        options?.ctx?.waitUntil(updateKv(keyData));
+        ctx.waitUntil(updateKv(keyData));
       },
     },
-    options.validations,
-  );
+    validations,
+  });
 }
 
 export async function authorizeNodeService(
   options: AuthorizeNodeServiceOptions,
 ) {
-  if (!options.clientId) {
-    return {
-      authorized: false,
-      errorMessage:
-        "The client ID is missing. Make sure it is included with your Authorization Bearer request header.",
-      errorCode: "MISSING_CLIENT_ID",
-      statusCode: 422,
-    };
+  const { authOptions, serviceConfig, validations } = options;
+  const { clientId, bundleId, origin } = authOptions;
+
+  const validationResponse = validateAuthOptions(authOptions);
+
+  if (!validationResponse.authorized) {
+    return validationResponse;
   }
 
-  const origin =
-    typeof options.headers["Origin"] === "string"
-      ? options.headers["Origin"]
-      : options.headers["Origin"]?.join("");
-
-  let originHost = "";
-
-  if (origin) {
-    try {
-      const originUrl = new URL(origin);
-      originHost = originUrl.hostname;
-    } catch (error) {
-      // ignore, will be verified by domains
-    }
-  }
-
-  return authorize(
-    options.clientId,
-    {
-      ...options.authOpts,
-      origin: originHost,
+  return authorize({
+    authOpts: {
+      clientId,
+      bundleId,
+      origin,
     },
-    options.validations,
-  );
+    serviceConfig,
+    validations,
+  });
 }
 
 /**
  * Authorizes a request for a given client ID
  *
- * @param clientId The String client id
- * @params authOpts The AuthorizationOptions
- * @params validations The AuthorizationValidations
- *
  * @returns The Promise AuthorizationResponse
  */
-async function authorize(
-  clientId: string,
-  authOpts: AuthorizationOptions,
-  validations?: AuthorizationValidations,
-): Promise<AuthorizationResponse> {
+async function authorize(options: {
+  authOpts: AuthOptions;
+  serviceConfig: ServiceConfiguration;
+  validations?: AuthorizationValidations;
+}): Promise<AuthorizationResponse> {
   try {
-    const { apiUrl, origin, scope, cachedKey, onRefetchComplete } = authOpts;
+    const { authOpts, serviceConfig, validations } = options;
+    const { clientId, origin } = authOpts;
+    const { apiUrl, scope, serviceKey, cachedKey, onRefetchComplete } =
+      serviceConfig;
 
     let keyData = cachedKey;
 
@@ -131,8 +106,8 @@ async function authorize(
         {
           method: "GET",
           headers: {
+            "x-service-api-key": serviceKey,
             "content-type": "application/json",
-            "x-service-api-key": authOpts.serviceApiKey,
           },
         },
       );
@@ -240,7 +215,7 @@ async function authorize(
       }
     }
 
-    // FIXME: validate bundleIds
+    // FIXME: validate bundleId
 
     return {
       authorized: true,

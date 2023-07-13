@@ -1,37 +1,30 @@
 import { KVNamespace, ExecutionContext } from "@cloudflare/workers-types";
-import { IncomingHttpHeaders } from "http";
 import { ServiceName } from "../types";
 
-export interface AuthorizeCFWorkerOptions {
-  ctx?: ExecutionContext;
-  kvStore: KVNamespace<string>;
-  headers: Headers;
+export interface AuthOptions {
   clientId: string;
-  authOpts: AuthorizationOptions;
+  bundleId?: string;
+  origin?: string;
+}
+
+export interface AuthorizeCFWorkerOptions {
+  ctx: ExecutionContext;
+  kvStore: KVNamespace<string>;
+  authOptions: AuthOptions;
+  serviceConfig: ServiceConfiguration;
   validations?: AuthorizationValidations;
 }
 
 export interface AuthorizeNodeServiceOptions {
-  clientId: string;
-  headers: IncomingHttpHeaders;
-  authOpts: AuthorizationOptions;
+  authOptions: AuthOptions;
+  serviceConfig: ServiceConfiguration;
   validations?: AuthorizationValidations;
 }
 
-export interface AuthorizeCFWorkerOptions {
-  ctx?: ExecutionContext;
-  kvStore: KVNamespace<string>;
-  headers: Headers;
-  clientId: string;
-  authOpts: AuthorizationOptions;
-  validations?: AuthorizationValidations;
-}
-
-export interface AuthorizationOptions {
+export interface ServiceConfiguration {
   apiUrl: string;
-  serviceApiKey: string;
   scope: ServiceName;
-  origin?: string;
+  serviceKey: string;
   cachedKey?: ApiKey;
   cacheTtl?: number;
   onRefetchComplete?: (key: ApiKey) => void;
