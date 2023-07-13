@@ -3,10 +3,10 @@ import prompts from "prompts";
 import Cache, { CacheEntry } from "sync-disk-cache";
 import { ApiResponse } from "../lib/types";
 
-export async function loginUser(cache: Cache, options?: { new: boolean, logs: boolean }) {
+export async function loginUser(cache: Cache, options?: { new: boolean }, showLogs?: boolean) {
   const keyFound = getSession(cache);
   if (keyFound && !options?.new) {
-    if (options?.logs) {
+    if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
     return keyFound;
