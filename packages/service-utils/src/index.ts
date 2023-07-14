@@ -1,2 +1,2 @@
-export * from "./services";
-export * from "./auth";
+// only exports the public service definitions
+export * from "./core/services";
