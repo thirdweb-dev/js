@@ -11,8 +11,8 @@ export function authorizeClient(
   authOptions: ClientAuthorizationPayload,
   apiKeyMeta: ApiKeyMetadata,
 ): AuthorizationResult {
-  const { origin, secretKeyHash: providedSecretHash } = authOptions;
-  const { domains, secretHash } = apiKeyMeta;
+  const { origin, bundleId, secretKeyHash: providedSecretHash } = authOptions;
+  const { domains, bundleIds, secretHash } = apiKeyMeta;
 
   if (providedSecretHash) {
     if (secretHash !== providedSecretHash) {
@@ -63,7 +63,32 @@ export function authorizeClient(
     };
   }
 
-  // FIXME: validate bundle id
+  // validate bundleId
+  if (bundleId) {
+    if (
+      // find matching bundle id, or if all bundles allowed
+      bundleIds.find((b) => {
+        if (b === "*") {
+          return true;
+        }
+
+        return b === bundleId;
+      })
+    ) {
+      return {
+        authorized: true,
+        apiKeyMeta,
+      };
+    }
+
+    return {
+      authorized: false,
+      errorMessage: "The bundle is not authorized for this key.",
+      errorCode: "BUNDLE_UNAUTHORIZED",
+      status: 401,
+    };
+  }
+
   return {
     authorized: false,
     errorMessage: "The keys are invalid.",
