@@ -9,13 +9,21 @@ export * from "../core/services";
 
 type NodeServiceConfig = CoreServiceConfig;
 
-export async function authorizeWorker(
-  authInput: AuthInput & { targetAddress?: string },
+export type AuthInput = {
+  // for passing it from the subdomain or path or other service specific things
+  clientId?: string;
+  // for passing in the address target in RPC or bundler services
+  targetAddress?: string;
+  req: IncomingMessage;
+};
+
+export async function authorizeNode(
+  authInput: AuthInput,
   serviceConfig: NodeServiceConfig,
 ): Promise<AuthorizationResult> {
   let authData;
   try {
-    authData = await extractAuthorizationData(authInput);
+    authData = extractAuthorizationData(authInput);
   } catch (e) {
     if (e instanceof Error && e.message === "KEY_CONFLICT") {
       return {
@@ -35,11 +43,6 @@ export async function authorizeWorker(
 
   return await authorize(authData, serviceConfig);
 }
-
-export type AuthInput = {
-  clientId?: string;
-  req: IncomingMessage;
-};
 
 function getHeader(
   headers: IncomingHttpHeaders,

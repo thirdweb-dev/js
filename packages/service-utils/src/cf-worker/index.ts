@@ -16,8 +16,16 @@ type WorkerServiceConfig = CoreServiceConfig & {
 
 const DEFAULT_CACHE_TTL_SECONDS = 60;
 
+type AuthInput = {
+  // for passing it from the subdomain or path or other service specific things
+  clientId?: string;
+  // for passing in the address target in RPC or bundler services
+  targetAddress?: string;
+  req: Request;
+};
+
 export async function authorizeWorker(
-  authInput: AuthInput & { targetAddress?: string },
+  authInput: AuthInput,
   serviceConfig: WorkerServiceConfig,
 ): Promise<AuthorizationResult> {
   let authData;
@@ -62,11 +70,6 @@ export async function authorizeWorker(
     cacheTtlSeconds: serviceConfig.cacheTtlSeconds ?? DEFAULT_CACHE_TTL_SECONDS,
   });
 }
-
-type AuthInput = {
-  clientId?: string;
-  req: Request;
-};
 
 async function extractAuthorizationData(
   authInput: AuthInput,
