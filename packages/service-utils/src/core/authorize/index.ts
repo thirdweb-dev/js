@@ -13,7 +13,7 @@ export type AuthorizationInput = {
   origin: string | null;
   bundleId: string | null;
   secretKeyHash: string | null;
-  targetAddress?: string;
+  targetAddress?: string | string[];
 };
 
 type CacheOptions = {

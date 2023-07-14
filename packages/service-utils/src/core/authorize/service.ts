@@ -1,7 +1,7 @@
 import { ApiKeyMetadata, CoreServiceConfig } from "../api";
 import { AuthorizationResult } from "./types";
 
-export type ServiceAuthorizationPayload = { targetAddress?: string };
+export type ServiceAuthorizationPayload = { targetAddress?: string | string[] };
 
 export function authorizeService(
   apiKeyMetadata: ApiKeyMetadata,
@@ -9,8 +9,6 @@ export function authorizeService(
   authorizationPayload?: ServiceAuthorizationPayload,
 ): AuthorizationResult {
   const { services } = apiKeyMetadata;
-  // const { serviceTargetAddresses, serviceAction } = validations;
-
   // validate services
   const service = services.find(
     (srv) => srv.name === serviceConfig.serviceScope,
@@ -42,13 +40,19 @@ export function authorizeService(
   // validate service target addresses
   // the service has to pass in the target address for this to be validated
   if (authorizationPayload?.targetAddress) {
-    const isTargetAddressAllowed = service.targetAddresses.includes(
-      authorizationPayload.targetAddress,
-    );
-    if (!isTargetAddressAllowed) {
+    const checkedAddresses = Array.isArray(authorizationPayload.targetAddress)
+      ? authorizationPayload.targetAddress
+      : [authorizationPayload.targetAddress];
+
+    const allAllowed = service.targetAddresses.includes("*");
+
+    if (
+      !allAllowed &&
+      checkedAddresses.some((ta) => !service.targetAddresses.includes(ta))
+    ) {
       return {
         authorized: false,
-        errorMessage: `The service "${serviceConfig.serviceScope}" target address "${authorizationPayload.targetAddress}" is not authorized for this key.`,
+        errorMessage: `The service "${serviceConfig.serviceScope}" target address is not authorized for this key.`,
         errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
         status: 403,
       };

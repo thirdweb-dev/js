@@ -21,6 +21,11 @@ describe("authorizeService", () => {
         targetAddresses: ["target3"],
         actions: ["action3"],
       },
+      {
+        name: "bundler",
+        targetAddresses: ["*"],
+        actions: ["action3"],
+      },
     ],
   };
 
@@ -29,6 +34,12 @@ describe("authorizeService", () => {
     serviceScope: "storage",
     serviceApiKey: "service-api-key",
     serviceAction: "action1",
+  };
+
+  const validBundlerServiceConfig: CoreServiceConfig = {
+    apiUrl: "https://api.example.com",
+    serviceScope: "bundler",
+    serviceApiKey: "service-api-key",
   };
 
   it("should authorize service with valid service scope and action", () => {
@@ -54,7 +65,7 @@ describe("authorizeService", () => {
   it("should not authorize service with unauthorized service scope", () => {
     const invalidServiceConfig: CoreServiceConfig = {
       apiUrl: "https://api.example.com",
-      serviceScope: "bundler",
+      serviceScope: "rpc",
       serviceApiKey: "service-api-key",
       serviceAction: "action1",
     };
@@ -65,7 +76,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "bundler" is not authorized for this key.',
+      'The service "rpc" is not authorized for this key.',
     );
     expect(result.errorCode).toBe("SERVICE_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -103,9 +114,41 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "storage" target address "unauthorized-target" is not authorized for this key.',
+      'The service "storage" target address is not authorized for this key.',
     );
     expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
     expect(result.status).toBe(403);
+  });
+
+  it("should not authorize service with unauthorized target addresses", () => {
+    const invalidAuthorizationPayload: ServiceAuthorizationPayload = {
+      targetAddress: ["target1", "target2", "target3"],
+    };
+
+    const result = authorizeService(
+      validApiKeyMeta,
+      validServiceConfig,
+      invalidAuthorizationPayload,
+    ) as any;
+    expect(result.authorized).toBe(false);
+    expect(result.errorMessage).toBe(
+      'The service "storage" target address is not authorized for this key.',
+    );
+    expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
+    expect(result.status).toBe(403);
+  });
+
+  it("should authorize bundler service with * target addresses", () => {
+    const authorizationPayload: ServiceAuthorizationPayload = {
+      targetAddress: ["target1", "target2"],
+    };
+
+    const result = authorizeService(
+      validApiKeyMeta,
+      validBundlerServiceConfig,
+      authorizationPayload,
+    ) as any;
+    expect(result.authorized).toBe(true);
+    expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
   });
 });
