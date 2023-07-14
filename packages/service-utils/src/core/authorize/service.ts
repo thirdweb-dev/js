@@ -44,12 +44,14 @@ export function authorizeService(
       ? authorizationPayload.targetAddress
       : [authorizationPayload.targetAddress];
 
-    const allAllowed = service.targetAddresses.includes("*");
+    if (service.targetAddresses.includes("*")) {
+      return {
+        authorized: true,
+        apiKeyMeta: apiKeyMetadata,
+      };
+    }
 
-    if (
-      !allAllowed &&
-      targetAddresses.some((ta) => !service.targetAddresses.includes(ta))
-    ) {
+    if (targetAddresses.some((ta) => !service.targetAddresses.includes(ta))) {
       return {
         authorized: false,
         errorMessage: `The service "${serviceConfig.serviceScope}" target address is not authorized for this key.`,
