@@ -11,7 +11,7 @@ describe("Base Router for Dynamic Contracts", async () => {
   //     [adminWallet] = signers;
   //   });
 
-  it.skip("should detect base router in a dynamic contract", async () => {
+  it("should detect base router in a dynamic contract", async () => {
     const realSDK = new ThirdwebSDK("ethereum");
 
     // test with an already deployed contract, like tiered drop etc.
@@ -21,7 +21,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(isExtensionEnabled(contract.abi, "BaseRouter"));
   });
 
-  it.skip("should get extensions", async () => {
+  it("should get extensions", async () => {
     const realSDK = new ThirdwebSDK("ethereum");
 
     // test with an already deployed contract
