@@ -5,6 +5,7 @@ import { authorize } from "../core/authorize";
 import type { Request } from "@cloudflare/workers-types";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
+import type { CoreAuthInput } from "../core/types";
 
 export * from "../core/services";
 
@@ -16,11 +17,7 @@ type WorkerServiceConfig = CoreServiceConfig & {
 
 const DEFAULT_CACHE_TTL_SECONDS = 60;
 
-type AuthInput = {
-  // for passing it from the subdomain or path or other service specific things
-  clientId?: string;
-  // for passing in the address target in RPC or bundler services
-  targetAddress?: string;
+type AuthInput = CoreAuthInput & {
   req: Request;
 };
 

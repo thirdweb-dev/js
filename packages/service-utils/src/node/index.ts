@@ -4,16 +4,13 @@ import type { AuthorizationInput } from "../core/authorize";
 import type { CoreServiceConfig } from "../core/api";
 import { authorize } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
+import type { CoreAuthInput } from "../core/types";
 
 export * from "../core/services";
 
 type NodeServiceConfig = CoreServiceConfig;
 
-export type AuthInput = {
-  // for passing it from the subdomain or path or other service specific things
-  clientId?: string;
-  // for passing in the address target in RPC or bundler services
-  targetAddress?: string;
+export type AuthInput = CoreAuthInput & {
   req: IncomingMessage;
 };
 
