@@ -8,7 +8,7 @@ import os from "os";
 import path from "path";
 import prompts from "prompts";
 import Cache, { CacheEntry } from 'sync-disk-cache';
-import { loginUser, logoutUser } from "../auth";
+import { loginUser, logoutUser, validateKey } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -307,6 +307,7 @@ const main = async () => {
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
+        await validateKey(options.key);
         apiSecretKey = options.key;
       }
       const url = await deploy(options, apiSecretKey);
@@ -338,6 +339,7 @@ const main = async () => {
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
+        await validateKey(options.key);
         apiSecretKey = options.key;
       }
       logger.warn(
@@ -377,6 +379,7 @@ const main = async () => {
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
+        await validateKey(options.key);
         apiSecretKey = options.key;
       }
       const url = await processProject(options, "publish", apiSecretKey);
@@ -399,6 +402,7 @@ const main = async () => {
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
+        await validateKey(options.key);
         apiSecretKey = options.key;
       }
       const storage = new ThirdwebStorage({
@@ -459,6 +463,7 @@ const main = async () => {
       if (!options.key) {
         apiSecretKey = await loginUser(cache);
       } else {
+        await validateKey(options.key);
         apiSecretKey = options.key;
       }
       await generate(options, apiSecretKey);
@@ -469,10 +474,7 @@ const main = async () => {
       .description("Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key")
       .option("-n, --new", "Login with a new API secret key", false)
       .action(async (options) => {
-        await loginUser(cache, {
-          ...options,
-          logs: true,
-        });
+        await loginUser(cache, options, true);
       });
 
     program

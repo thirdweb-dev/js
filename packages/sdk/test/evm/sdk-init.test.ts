@@ -115,11 +115,11 @@ describe("SDK Initialization", async () => {
       undefined,
       new ThirdwebStorage({ gatewayUrls: ["example.com"] }),
     );
-    expect(sdk.storage.gatewayUrls["ipfs://"]).to.contain("example.com/");
+    expect(sdk.storage.getGatewayUrls()["ipfs://"]).to.contain("example.com/");
   });
 
   it("Should instantiate SDK storage with gatewayUrls", async () => {
     const sdk = new ThirdwebSDK("goerli", { gatewayUrls: ["example.com"] });
-    expect(sdk.storage.gatewayUrls["ipfs://"]).to.contain("example.com/");
+    expect(sdk.storage.getGatewayUrls()["ipfs://"]).to.contain("example.com/");
   });
 });

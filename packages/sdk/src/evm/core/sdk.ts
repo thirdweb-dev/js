@@ -28,7 +28,7 @@ import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
@@ -258,7 +258,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: NetworkInput,
     options: SDKOptions = {},
-    storage?: ThirdwebStorage,
+    storage?: IThirdwebStorage,
   ) {
     if (isChainConfig(network)) {
       options = {
@@ -271,7 +271,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
-    const configuredStorage = createStorage(storage, options);
+    const configuredStorage = createStorage(
+      storage,
+      options,
+    ) as ThirdwebStorage;
     this.storage = configuredStorage;
     this.storageHandler = configuredStorage;
 

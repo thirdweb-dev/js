@@ -12,6 +12,7 @@ import {
   GatewayUrls,
   IStorageDownloader,
   IStorageUploader,
+  IThirdwebStorage,
   IpfsUploadBatchOptions,
   ThirdwebStorageOptions,
   UploadOptions,
@@ -53,10 +54,12 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  *
  * @public
  */
-export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
+export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
+  implements IThirdwebStorage
+{
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
-  public gatewayUrls: GatewayUrls;
+  private gatewayUrls: GatewayUrls;
 
   constructor(options?: ThirdwebStorageOptions<T>) {
     this.uploader =
@@ -218,6 +221,10 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     } else {
       return uris;
     }
+  }
+
+  getGatewayUrls(): GatewayUrls {
+    return this.gatewayUrls;
   }
 
   private async uploadAndReplaceFilesWithHashes(

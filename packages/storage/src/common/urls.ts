@@ -7,7 +7,8 @@ import CIDTool from "cid-tool";
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
-    "https://{clientId}.thirdwebstorage-dev.com/ipfs/{cid}/{path}",
+    // FIXME switch to prod before merging
+    "https://{clientId}.thirdwebstorage-staging.com/ipfs/{cid}/{path}",
     "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
     "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
     "https://dweb.link/ipfs/{cid}/{path}",

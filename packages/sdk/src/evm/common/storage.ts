@@ -1,10 +1,10 @@
 import { SDKOptions } from "../schema/sdk-options";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export function createStorage(
-  storage?: ThirdwebStorage,
+  storage?: IThirdwebStorage,
   options?: SDKOptions,
-): ThirdwebStorage {
+): IThirdwebStorage {
   if (storage) {
     return storage;
   } else if (options?.gatewayUrls) {
