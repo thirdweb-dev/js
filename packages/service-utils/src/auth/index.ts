@@ -79,7 +79,7 @@ async function authorize(options: {
     // no cached key, re-fetch from API
     if (!keyData) {
       const response = await fetch(
-        `${apiUrl}/v1/keys/use/?scope=${scope}&clientId=${clientId}`,
+        `${apiUrl}/v1/keys/use?scope=${scope}&clientId=${clientId}`,
         {
           method: "GET",
           headers: {
