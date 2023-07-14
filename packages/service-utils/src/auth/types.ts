@@ -1,5 +1,5 @@
-import { KVNamespace, ExecutionContext } from "@cloudflare/workers-types";
-import { ServiceName } from "../types";
+import type { KVNamespace, ExecutionContext } from "@cloudflare/workers-types";
+import type { ServiceName } from "../services";
 
 export interface AuthOptions {
   clientId: string;
