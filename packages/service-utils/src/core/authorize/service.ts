@@ -40,18 +40,16 @@ export function authorizeService(
   // validate service target addresses
   // the service has to pass in the target address for this to be validated
   if (authorizationPayload?.targetAddress) {
-    const targetAddresses = Array.isArray(authorizationPayload.targetAddress)
+    const checkedAddresses = Array.isArray(authorizationPayload.targetAddress)
       ? authorizationPayload.targetAddress
       : [authorizationPayload.targetAddress];
 
-    if (service.targetAddresses.includes("*")) {
-      return {
-        authorized: true,
-        apiKeyMeta: apiKeyMetadata,
-      };
-    }
+    const allAllowed = service.targetAddresses.includes("*");
 
-    if (targetAddresses.some((ta) => !service.targetAddresses.includes(ta))) {
+    if (
+      !allAllowed &&
+      checkedAddresses.some((ta) => !service.targetAddresses.includes(ta))
+    ) {
       return {
         authorized: false,
         errorMessage: `The service "${serviceConfig.serviceScope}" target address is not authorized for this key.`,
