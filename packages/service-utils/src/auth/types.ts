@@ -56,6 +56,7 @@ export interface ApiResponse {
 export interface ApiKey {
   id: string;
   key: string;
+  creatorWalletAddress: string;
   secretHash: string;
   walletAddresses: string[];
   domains: string[];
