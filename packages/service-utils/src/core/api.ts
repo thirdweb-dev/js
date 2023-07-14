@@ -1,6 +1,7 @@
 import type { ServiceName } from "./services";
 
 export type CoreServiceConfig = {
+  enforceAuth: boolean;
   apiUrl: string;
   serviceScope: ServiceName;
   serviceApiKey: string;

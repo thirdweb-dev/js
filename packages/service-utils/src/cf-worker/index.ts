@@ -131,7 +131,6 @@ async function extractAuthorizationData(
     bundleId,
     secretKeyHash,
     targetAddress: authInput.targetAddress,
-    enforceAuth: authInput.enforcedAuth,
   };
 }
 
