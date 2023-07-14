@@ -15,6 +15,17 @@ export interface IStorageDownloader {
 /**
  * @public
  */
+export type IpfsDownloaderOptions = {
+  /**
+   * Optional secretKey to associate with the IpfsDownloader - when used from the backend.
+   * You can get an secretKey here: https://thirdweb.com/dashboard/settings
+   */
+  secretKey?: string;
+};
+
+/**
+ * @public
+ */
 export type GatewayUrls = {
   [key: string]: string[];
 };

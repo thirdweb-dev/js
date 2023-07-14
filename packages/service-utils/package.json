@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -41,9 +41,6 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
     "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "isomorphic-unfetch": "^4.0.2"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

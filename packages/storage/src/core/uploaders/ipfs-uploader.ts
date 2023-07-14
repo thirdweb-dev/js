@@ -1,4 +1,3 @@
-import { getCIDForUpload, isUploaded } from "../../common";
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
@@ -66,30 +65,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const formData = new FormData();
     const { form, fileNames } = this.buildFormData(formData, data, options);
 
-    try {
-      const cid = await getCIDForUpload(
-        data,
-        fileNames.map((name) => decodeURIComponent(name)),
-        !options?.uploadWithoutDirectory,
-      );
-      if ((await isUploaded(cid)) && !options?.alwaysUpload) {
-        if (options?.onProgress) {
-          options?.onProgress({
-            progress: 100,
-            total: 100,
-          });
-        }
-
-        if (options?.uploadWithoutDirectory) {
-          return [`ipfs://${cid}`];
-        } else {
-          return fileNames.map((name) => `ipfs://${cid}/${name}`);
-        }
-      }
-    } catch {
-      // no-op
-    }
-
     if (isBrowser()) {
       return this.uploadBatchBrowser(form, fileNames, options);
     } else {
@@ -104,29 +79,28 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
    * @returns - The one time use token that can be passed to the Pinata API.
    */
   private async getUploadToken(): Promise<string> {
-    const headers: Record<string, string> = {
-      "X-APP-NAME":
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
-        process.env.NODE_ENV === "test" || !!process.env.CI
-          ? "Storage SDK CI"
-          : "Storage SDK",
-    };
-
     if (this.secretKey && this.clientId) {
       throw new Error(
         "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
       );
     }
 
+    const headers: HeadersInit = {};
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
     } else if (this.clientId) {
       headers["x-client-id"] = this.clientId;
     }
-
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
-      headers,
+      headers: {
+        "X-APP-NAME":
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          process.env.NODE_ENV === "test" || !!process.env.CI
+            ? "Storage SDK CI"
+            : "Storage SDK",
+        ...headers,
+      },
     });
 
     if (!res.ok) {

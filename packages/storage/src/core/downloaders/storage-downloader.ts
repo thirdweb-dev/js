@@ -1,5 +1,9 @@
 import { replaceSchemeWithGatewayUrl } from "../../common/utils";
-import { GatewayUrls, IStorageDownloader } from "../../types";
+import {
+  GatewayUrls,
+  IStorageDownloader,
+  IpfsDownloaderOptions,
+} from "../../types";
 import fetch from "cross-fetch";
 
 /**
@@ -22,6 +26,12 @@ import fetch from "cross-fetch";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
+  private secretKey?: string;
+
+  constructor(options: IpfsDownloaderOptions) {
+    this.secretKey = options.secretKey;
+  }
+
   async download(
     uri: string,
     gatewayUrls: GatewayUrls,
@@ -44,7 +54,12 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
-    const resOrErr = await fetch(resolvedUri).catch((err) => err);
+    const headers = this.secretKey
+      ? { "x-secret-key": this.secretKey }
+      : undefined;
+    const resOrErr = await fetch(resolvedUri, {
+      headers,
+    }).catch((err) => err);
 
     if (resOrErr.ok) {
       return resOrErr;
