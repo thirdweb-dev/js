@@ -193,10 +193,14 @@ export class MagicAuthConnector extends MagicBaseConnector {
             provider: options.oauthProvider,
             redirectURI: this.oauthRedirectURI || window.location.href,
           });
+          await new Promise((res) => {
+            // never resolve - to keep the app in "connecting..." state until the redirect happens
+            setTimeout(res, 10000); // timeout if takes if redirect doesn't happen for 10 seconds (will likely never happen)
+          });
         }
 
         // LOGIN WITH MAGIC LINK WITH EMAIL
-        if ("email" in options) {
+        else if ("email" in options) {
           await magic.auth.loginWithMagicLink({
             email: options.email,
             showUI: true,
@@ -208,9 +212,12 @@ export class MagicAuthConnector extends MagicBaseConnector {
           await magic.auth.loginWithSMS({
             phoneNumber: options.phoneNumber,
           });
-        } else {
+        }
+
+        // error
+        else {
           throw new Error(
-            "Invalid options: Either provide and email or phoneNumber when using Magic Auth",
+            "Invalid options: Either provide and email, phoneNumber or oauthProvider when using Magic Auth",
           );
         }
       }
