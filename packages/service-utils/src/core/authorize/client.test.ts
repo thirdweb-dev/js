@@ -9,7 +9,7 @@ describe("authorizeClient", () => {
     secretHash: "secret-hash",
     walletAddresses: [],
     domains: ["example.com", "*.example.com"],
-    bundleIds: [],
+    bundleIds: ["com.example.app"],
     services: [],
   };
 
@@ -38,6 +38,25 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
+  });
+
+  it("should not authorize client with non-matching bundle id", () => {
+    const authOptionsWithBundleId: ClientAuthorizationPayload = {
+      secretKeyHash: null,
+      bundleId: "com.foo.bar",
+      origin: null,
+    };
+
+    const result = authorizeClient(
+      authOptionsWithBundleId,
+      validApiKeyMeta,
+    ) as any;
+    expect(result.authorized).toBe(false);
+    expect(result.errorMessage).toBe(
+      "The bundle is not authorized for this key.",
+    );
+    expect(result.errorCode).toBe("BUNDLE_UNAUTHORIZED");
+    expect(result.status).toBe(401);
   });
 
   it("should not authorize client with invalid secret key", () => {
