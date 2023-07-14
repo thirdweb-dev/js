@@ -4,11 +4,11 @@ import { AuthorizationResult } from "./types";
 export type ServiceAuthorizationPayload = { targetAddress?: string };
 
 export function authorizeService(
-  apikeyMetadata: ApiKeyMetadata,
+  apiKeyMetadata: ApiKeyMetadata,
   serviceConfig: CoreServiceConfig,
   authorizationPayload?: ServiceAuthorizationPayload,
 ): AuthorizationResult {
-  const { services } = apikeyMetadata;
+  const { services } = apiKeyMetadata;
   // const { serviceTargetAddresses, serviceAction } = validations;
 
   // validate services
@@ -57,6 +57,6 @@ export function authorizeService(
 
   return {
     authorized: true,
-    apiKeyMeta: apikeyMetadata,
+    apiKeyMeta: apiKeyMetadata,
   };
 }
