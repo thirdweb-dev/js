@@ -94,7 +94,8 @@ export class LocalWallet extends AbstractClientWallet<
     if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
-    this.ethersWallet = Wallet.createRandom();
+    const random = utils.randomBytes(32);
+    this.ethersWallet = new Wallet(random);
     return this.ethersWallet.address;
   }
 
