@@ -43,6 +43,7 @@ export function InputSelectionUI(props: {
         }}
       >
         <Input
+          tabIndex={-1}
           placeholder={props.placeholder}
           variant="secondary"
           type={props.type}
