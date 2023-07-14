@@ -55,10 +55,18 @@ function getHeader(
 export function extractAuthorizationData(
   authInput: AuthInput,
 ): AuthorizationInput {
-  if (!authInput.req.url) {
-    throw new Error("no req.url in authInput.req");
+  let requestUrl;
+
+  try {
+    requestUrl = new URL(
+      authInput.req.url || "",
+      `http://${authInput.req.headers.host}`,
+    );
+  } catch (error) {
+    console.log("** Node URL Error **", error);
+    throw error;
   }
-  const requestUrl = new URL(authInput.req.url, authInput.req.headers.host);
+
   const headers = authInput.req.headers;
   const secretKey = getHeader(headers, "x-secret-key");
   // prefer clientId that is explicitly passed in

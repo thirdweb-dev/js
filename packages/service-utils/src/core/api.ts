@@ -36,10 +36,8 @@ export async function fetchKeyMetadataFromApi(
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
   const { apiUrl, serviceScope, serviceApiKey } = config;
-  const url = new URL(`${apiUrl}/v1/keys/use`);
-  url.searchParams.set("clientId", clientId);
-  url.searchParams.set("scope", serviceScope);
-  const response = await fetch(url.toString(), {
+  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}`;
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "x-service-api-key": serviceApiKey,
