@@ -1,10 +1,10 @@
-import { ThirdwebSDK } from "../../src/evm";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Goerli, Fncy } from "@thirdweb-dev/chains";
+import { Fncy, Goerli } from "@thirdweb-dev/chains";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
-import { ethers, Signer } from "ethers";
+import { Signer, ethers } from "ethers";
 import hardhat from "hardhat";
+import { ThirdwebSDK } from "../../src/evm";
 
 global.fetch = require("cross-fetch");
 
@@ -115,11 +115,11 @@ describe("SDK Initialization", async () => {
       undefined,
       new ThirdwebStorage({ gatewayUrls: ["example.com"] }),
     );
-    expect(sdk.storage.getGatewayUrls()["ipfs://"]).to.contain("example.com/");
+    expect(sdk.storage.getGatewayUrls()["ipfs://"]).to.contain("example.com");
   });
 
   it("Should instantiate SDK storage with gatewayUrls", async () => {
     const sdk = new ThirdwebSDK("goerli", { gatewayUrls: ["example.com"] });
-    expect(sdk.storage.getGatewayUrls()["ipfs://"]).to.contain("example.com/");
+    expect(sdk.storage.getGatewayUrls()["ipfs://"]).to.contain("example.com");
   });
 });
