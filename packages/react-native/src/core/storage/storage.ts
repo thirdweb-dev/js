@@ -12,7 +12,7 @@ import {
   replaceObjectSchemesWithGatewayUrls,
   replaceSchemeWithGatewayUrl,
   IThirdwebStorage,
-  TW_IPFS_SERVER_URL,
+  TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 
 import DeviceInfo from "react-native-device-info";
@@ -268,7 +268,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   }
 
   private async getUploadToken(): Promise<string> {
-    const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
+    // TODO this should use the new upload flow
+    const res = await fetch(`${TW_UPLOAD_SERVER_URL}/grant`, {
       method: "GET",
       headers: {
         "X-APP-NAME": APP_NAME,
