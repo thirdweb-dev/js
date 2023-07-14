@@ -131,7 +131,9 @@ const MagicSelectionUI: React.FC<
                         props.onSelect({ provider });
                       }}
                     >
-                      <ToolTip tip={`Login with ${provider}`}>
+                      <ToolTip
+                        tip={`Login with ${upperCaseFirstLetter(provider)}`}
+                      >
                         <div>
                           <Img
                             src={providerImages[provider]}
@@ -239,3 +241,7 @@ const providerImages: Record<OuthProvider, string> = {
   microsoft:
     "ipfs://QmTCdRwSPQBsHhFq8HSqn8d9aLmE9vESWnFn3VUb7tv85t/micrsoft.svg",
 };
+
+function upperCaseFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
