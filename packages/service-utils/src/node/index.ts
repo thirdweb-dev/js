@@ -125,7 +125,6 @@ export function extractAuthorizationData(
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,
-    enforceAuth: authInput.enforcedAuth,
   };
 }
 

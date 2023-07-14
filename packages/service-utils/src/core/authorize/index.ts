@@ -14,7 +14,6 @@ export type AuthorizationInput = {
   bundleId: string | null;
   secretKeyHash: string | null;
   targetAddress?: string | string[];
-  enforceAuth: boolean;
 };
 
 type CacheOptions = {
@@ -35,7 +34,8 @@ export async function authorize(
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
-  const { clientId, targetAddress, enforceAuth, secretKeyHash } = authData;
+  const { clientId, targetAddress, secretKeyHash } = authData;
+  const { enforceAuth } = serviceConfig;
 
   // BACKWARDS COMPAT: if auth not enforced and
   //                   we don't have auth credentials bypass
