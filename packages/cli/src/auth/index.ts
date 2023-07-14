@@ -57,7 +57,8 @@ export async function createSession(cache: Cache) {
 
 export async function validateKey(apiSecretKey: string) {
   const fetch = (await import('node-fetch')).default;
-  const response = await fetch(`https://api.thirdweb.com/v1/keys/use?scope=storage`, {
+  // TODO: CHANGE THIS TO PROD BEFORE MERGING!!!
+  const response = await fetch(`https://api-staging.thirdweb.com/v1/keys/use?scope=storage`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
