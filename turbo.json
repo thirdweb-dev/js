@@ -60,6 +60,11 @@
       "inputs": ["package.json"],
       "dependsOn": ["^build"]
     },
+    "@thirdweb-dev/service-utils#build": {
+      "outputs": ["dist/**", "cf-worker/**", "node/**"],
+      "inputs": ["package.json"],
+      "dependsOn": ["^build"]
+    },
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
