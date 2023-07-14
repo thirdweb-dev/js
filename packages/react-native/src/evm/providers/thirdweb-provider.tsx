@@ -15,6 +15,7 @@ import { MainModal } from "../components/MainModal";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { ThirdwebStorage } from "../../core/storage/storage";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
@@ -61,6 +62,8 @@ export const ThirdwebProvider = <
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
   theme,
+  storageInterface,
+  clientId,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener(
@@ -75,6 +78,9 @@ export const ThirdwebProvider = <
   return (
     <ThirdwebProviderCore
       supportedWallets={supportedWallets}
+      storageInterface={
+        storageInterface || new ThirdwebStorage({ clientId: clientId })
+      }
       authConfig={
         authConfig
           ? authConfig.secureStorage

@@ -21,6 +21,12 @@ export type IpfsDownloaderOptions = {
    * You can get an secretKey here: https://thirdweb.com/dashboard/settings
    */
   secretKey?: string;
+
+  /**
+   * Optional clientId to associate with the IpfsDownloader - when used from the frontend.
+   * You can get a clientId here: https://thirdweb.com/dashboard/settings
+   */
+  clientId?: string;
 };
 
 /**
