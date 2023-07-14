@@ -268,6 +268,6 @@ function noClientIdWarning() {
   }
   noClientIdWarningLogged = true;
   console.warn(
-    "No client id provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client id from https://thirdweb.com/dashboard/",
+    "No clientId provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client id from https://thirdweb.com/dashboard/",
   );
 }
