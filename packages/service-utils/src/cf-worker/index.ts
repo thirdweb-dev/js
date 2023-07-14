@@ -130,6 +130,7 @@ async function extractAuthorizationData(
     origin,
     bundleId,
     secretKeyHash,
+    targetAddress: authInput.targetAddress,
   };
 }
 

@@ -116,6 +116,7 @@ export function extractAuthorizationData(
     clientId,
     origin,
     bundleId,
+    targetAddress: authInput.targetAddress,
   };
 }
 
