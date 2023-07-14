@@ -45,7 +45,7 @@ export class StorageDownloader implements IStorageDownloader {
 
     // can't use instanceof "Response" in node...
     if ("status" in resOrErr) {
-      if (resOrErr.status === 410 || resOrErr.status === 403) {
+      if (resOrErr.status === 410) {
         // Don't retry if the content is blocklisted
         console.error(
           `Request to ${resolvedUri} failed because this content seems to be blocklisted. Search VirusTotal for this URL to confirm: ${resolvedUri} `,
@@ -54,8 +54,13 @@ export class StorageDownloader implements IStorageDownloader {
       }
 
       console.warn(
-        `Request to ${resolvedUri} failed with status ${resOrErr.status} - ${resOrErr.statusText}`,
+        `Request to ${resolvedUri} failed with status ${resOrErr.status} - ${resOrErr.statusText}}`,
       );
+
+      let json = await resOrErr.json().catch(() => null);
+      if (json && json.error) {
+        console.warn(`Error message: ${json.error.message}`);
+      }
 
       // Don't retry if we see 408 or < 500 status codes that are likely to be resolved by trying another gateway
       if (resOrErr.status !== 408 && resOrErr.status < 500) {
