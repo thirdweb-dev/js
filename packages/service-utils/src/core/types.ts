@@ -3,6 +3,4 @@ export type CoreAuthInput = {
   clientId?: string;
   // for passing in the address target in RPC or bundler services
   targetAddress?: string | string[];
-  // for backwards compat bypassing auth
-  enforcedAuth: boolean;
 };
