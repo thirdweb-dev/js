@@ -34,12 +34,14 @@ describe("authorizeService", () => {
     serviceScope: "storage",
     serviceApiKey: "service-api-key",
     serviceAction: "action1",
+    enforceAuth: true,
   };
 
   const validBundlerServiceConfig: CoreServiceConfig = {
     apiUrl: "https://api.example.com",
     serviceScope: "bundler",
     serviceApiKey: "service-api-key",
+    enforceAuth: true,
   };
 
   it("should authorize service with valid service scope and action", () => {
@@ -68,6 +70,7 @@ describe("authorizeService", () => {
       serviceScope: "rpc",
       serviceApiKey: "service-api-key",
       serviceAction: "action1",
+      enforceAuth: true,
     };
 
     const result = authorizeService(
@@ -88,6 +91,7 @@ describe("authorizeService", () => {
       serviceScope: "storage",
       serviceApiKey: "service-api-key",
       serviceAction: "unauthorized-action",
+      enforceAuth: true,
     };
 
     const result = authorizeService(
