@@ -89,6 +89,7 @@ export const ThirdwebProvider = <
           : undefined
       }
       createWalletStorage={createWalletStorage}
+      clientId={clientId}
       {...restProps}
     >
       <ThemeProvider theme={theme}>

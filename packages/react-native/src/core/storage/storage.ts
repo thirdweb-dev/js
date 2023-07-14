@@ -108,7 +108,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * const jsonUri = await storage.upload(json);
    * ```
    */
-  async upload(data: FormDataValue, options?: T): Promise<string> {
+  async upload(data: any, options?: T): Promise<string> {
     const [uri] = await this.uploadBatch([data], options);
     return uri;
   }
@@ -138,7 +138,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * const jsonUris = await storage.uploadBatch(objects);
    * ```
    */
-  async uploadBatch(data: FormDataValue[], options?: T): Promise<string[]> {
+  async uploadBatch(data: any[], options?: T): Promise<string[]> {
     data = data.filter((item) => item !== undefined);
 
     if (!data.length) {

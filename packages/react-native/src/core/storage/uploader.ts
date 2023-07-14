@@ -20,18 +20,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   }
 
   async uploadBatch(
-    data: FormDataValue[],
+    data: any[],
     options?: IpfsUploadBatchOptions | undefined,
   ): Promise<string[]> {
     if (data.length === 0) {
       throw new Error("[UPLOAD_BATCH_ERROR] No files or objects to upload.");
     }
 
-    if (
-      options?.uploadWithoutDirectory &&
-      data.length > 1 &&
-      typeof data[0] !== "string"
-    ) {
+    if (options?.uploadWithoutDirectory && data.length > 1) {
       throw new Error(
         "[UPLOAD_WITHOUT_DIRECTORY_ERROR] Cannot upload more than one file without directory!",
       );
@@ -42,35 +38,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       keyvalues: { ...options?.metadata },
     };
 
-    if (typeof data[0] === "string") {
-      // assume an array of strings
-      return new Promise(async (resolve, reject) => {
-        const fetchBody = JSON.stringify({
-          metadata: metadata,
-          content: data,
-        });
-
-        try {
-          const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin/json`, {
-            method: "POST",
-            headers: {
-              "x-bundle-id": APP_BUNDLE_ID,
-              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
-              "Content-Type": "application/json",
-            },
-            body: fetchBody,
-          });
-          if (res.ok) {
-            const ipfs = await res.json();
-            const cid = ipfs.IpfsHash;
-
-            return resolve([`ipfs://${cid}`]);
-          }
-        } catch (error) {
-          reject(error);
-        }
-      });
-    } else {
+    if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
+      // then it's an array of files
       // assume an array of files
       return new Promise(async (resolve, reject) => {
         // asume file
@@ -176,6 +145,37 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         }
 
         xhr.send(form);
+      });
+    } else {
+      // assume an array of things
+      return new Promise(async (resolve, reject) => {
+        const fetchBody = JSON.stringify({
+          metadata: metadata,
+          content: data,
+        });
+
+        reject("Not implemented yet!");
+
+        try {
+          const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
+            method: "POST",
+            headers: {
+              "x-bundle-id": APP_BUNDLE_ID,
+              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
+              "Content-Type": "application/json",
+            },
+            body: fetchBody,
+          });
+
+          if (res.ok) {
+            const ipfs = await res.json();
+            const cid = ipfs.IpfsHash;
+
+            return resolve([`ipfs://${cid}`]);
+          }
+        } catch (error) {
+          reject(error);
+        }
       });
     }
   }
