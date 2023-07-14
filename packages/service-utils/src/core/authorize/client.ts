@@ -1,7 +1,7 @@
 import type { ApiKeyMetadata } from "../api";
 import type { AuthorizationResult } from "./types";
 
-type ClientAuthorizationPayload = {
+export type ClientAuthorizationPayload = {
   secretKeyHash: string | null;
   bundleId: string | null;
   origin: string | null;

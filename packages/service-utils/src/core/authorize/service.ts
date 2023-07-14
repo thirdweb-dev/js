@@ -1,7 +1,7 @@
 import { ApiKeyMetadata, CoreServiceConfig } from "../api";
 import { AuthorizationResult } from "./types";
 
-type ServiceAuthorizationPayload = { targetAddress?: string };
+export type ServiceAuthorizationPayload = { targetAddress?: string };
 
 export function authorizeService(
   apikeyMetadata: ApiKeyMetadata,
