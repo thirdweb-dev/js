@@ -39,7 +39,7 @@ export async function fetchKeyMetadataFromApi(
   const url = new URL(`${apiUrl}/v1/keys/use`);
   url.searchParams.set("clientId", clientId);
   url.searchParams.set("scope", serviceScope);
-  const response = await fetch(url, {
+  const response = await fetch(url.href, {
     method: "GET",
     headers: {
       "x-service-api-key": serviceApiKey,
