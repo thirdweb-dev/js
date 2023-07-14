@@ -1,4 +1,4 @@
-import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
+import { TW_UPLOAD_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
@@ -70,51 +70,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     } else {
       return this.uploadBatchNode(form, fileNames, options);
     }
-  }
-
-  /**
-   * Fetches a one-time-use upload token that can used to upload
-   * a file to storage.
-   *
-   * @returns - The one time use token that can be passed to the Pinata API.
-   */
-  private async getUploadToken(): Promise<string> {
-    if (this.secretKey && this.clientId) {
-      throw new Error(
-        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-      );
-    }
-
-    const headers: HeadersInit = {};
-    if (this.secretKey) {
-      headers["x-secret-key"] = this.secretKey;
-    } else if (this.clientId) {
-      headers["x-client-id"] = this.clientId;
-    }
-    const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
-      method: "GET",
-      headers: {
-        "X-APP-NAME":
-          // eslint-disable-next-line turbo/no-undeclared-env-vars
-          process.env.NODE_ENV === "test" || !!process.env.CI
-            ? "Storage SDK CI"
-            : "Storage SDK",
-        ...headers,
-      },
-    });
-
-    if (!res.ok) {
-      const response = await res.json();
-      // throw new Error(`Failed to get upload token`);
-      const error = response.error || response.statusText;
-      const code = response.code || "UNKNOWN";
-
-      throw new Error(
-        `IpfsUploader error: ${error} Status: ${response.status} Code: ${code}`,
-      );
-    }
-    const body = await res.text();
-    return body;
   }
 
   private buildFormData(
@@ -218,8 +173,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
-    const token = await this.getUploadToken();
-
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -315,8 +268,19 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", PINATA_IPFS_URL);
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
+
+      if (this.secretKey && this.clientId) {
+        throw new Error(
+          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+        );
+      }
+
+      if (this.secretKey) {
+        xhr.setRequestHeader("x-secret-key", this.secretKey);
+      } else if (this.clientId) {
+        xhr.setRequestHeader("x-client-id", this.clientId);
+      }
 
       xhr.send(form as any);
     });
@@ -327,15 +291,27 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
   ) {
-    const token = await this.getUploadToken();
-
     if (options?.onProgress) {
       console.warn("The onProgress option is only supported in the browser");
     }
-    const res = await fetch(PINATA_IPFS_URL, {
+
+    if (this.secretKey && this.clientId) {
+      throw new Error(
+        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+      );
+    }
+
+    const headers: HeadersInit = {};
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    } else if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
+
+    const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...headers,
         ...form.getHeaders(),
       },
       body: form.getBuffer(),
