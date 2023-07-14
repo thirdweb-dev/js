@@ -1,11 +1,20 @@
 /* eslint-disable no-unused-expressions */
-import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
-import { DEFAULT_GATEWAY_URLS } from "../src/common/urls";
 import { expect } from "chai";
 import { readFileSync } from "fs";
+import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
+import { DEFAULT_GATEWAY_URLS, prepareGatewayUrls } from "../src/common/urls";
 
 describe("IPFS", async () => {
-  const storage = new ThirdwebStorage();
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  const apiSecretKey = process.env.CLI_E2E_API_KEY as string;
+
+  if (!apiSecretKey) {
+    throw new Error("CLI_E2E_API_KEY is not set in the environment variables");
+  }
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
+  const authorizedUrls = prepareGatewayUrls(DEFAULT_GATEWAY_URLS, undefined, apiSecretKey);
 
   it("Should replace tokens in tokenized gateway URL", async () => {
     const url = getGatewayUrlForCid(
@@ -32,7 +41,7 @@ describe("IPFS", async () => {
     const url = storage.resolveScheme(uri);
     expect(url).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        authorizedUrls["ipfs://"][0],
         "bafybeie4vcsw3ew6io6paaltdvwkpcoeyn6uoewvu7op7fhhztpnivqnyy",
       ),
     );
@@ -311,7 +320,7 @@ describe("IPFS", async () => {
     const uri = await storage.upload(
       {
         image: getGatewayUrlForCid(
-          DEFAULT_GATEWAY_URLS["ipfs://"][0],
+          authorizedUrls["ipfs://"][0],
           `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
         ),
       },
@@ -342,15 +351,16 @@ describe("IPFS", async () => {
 
     expect(json.image).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        authorizedUrls["ipfs://"][0],
         `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
       ),
     );
   });
 
   it("Should upload files with gateway URLs if specified on class", async () => {
-    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true });
-    const singleStorage = new ThirdwebStorage({ uploader });
+    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true, secretKey: apiSecretKey });
+    const singleStorage = new ThirdwebStorage({ uploader, secretKey: apiSecretKey });
+    const _authorizedUrls = prepareGatewayUrls(DEFAULT_GATEWAY_URLS, undefined, apiSecretKey);
 
     const uri = await singleStorage.upload(
       {
@@ -369,13 +379,13 @@ describe("IPFS", async () => {
 
     expect(json.image).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        _authorizedUrls["ipfs://"][0],
         `QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
       ),
     );
     expect(json.animation_url).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        _authorizedUrls["ipfs://"][0],
         `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
       ),
     );
@@ -386,7 +396,7 @@ describe("IPFS", async () => {
       {
         // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
         image: getGatewayUrlForCid(
-          DEFAULT_GATEWAY_URLS["ipfs://"][0],
+          authorizedUrls["ipfs://"][0],
           `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
         ),
         animation_url:
@@ -403,13 +413,13 @@ describe("IPFS", async () => {
 
     expect(json.image).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        authorizedUrls["ipfs://"][0],
         `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
       ),
     );
     expect(json.animation_url).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        authorizedUrls["ipfs://"][0],
         `QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
       ),
     );
@@ -429,16 +439,17 @@ describe("IPFS", async () => {
 
     expect(uri).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        authorizedUrls["ipfs://"][0],
         // CID changes based on file contents (prod gateway vs staging gateway since they get written)
-        `bafybeibexk3gfppyxtrnyy5sqjkgvsjdqzzvwqjndna374y2od4qemseua/0`,
+        `bafybeidnzwz6rm3jdf6vx5z7eb5ssfmeq64b5ihhjc7ioivxtc2x3f5r4m/0`,
       ),
     );
   });
 
   it("Should return URIs with gateway URLs if specified on class", async () => {
-    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true });
-    const storageSingleton = new ThirdwebStorage({ uploader });
+    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true, secretKey: apiSecretKey });
+    const storageSingleton = new ThirdwebStorage({ uploader, secretKey: apiSecretKey });
+    const _authorizedUrls = prepareGatewayUrls(DEFAULT_GATEWAY_URLS, undefined, apiSecretKey);
 
     const uri = await storageSingleton.upload(
       readFileSync("test/files/0.jpg"),
@@ -447,7 +458,7 @@ describe("IPFS", async () => {
 
     expect(uri).to.equal(
       getGatewayUrlForCid(
-        DEFAULT_GATEWAY_URLS["ipfs://"][0],
+        _authorizedUrls["ipfs://"][0],
         `QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
       ),
     );

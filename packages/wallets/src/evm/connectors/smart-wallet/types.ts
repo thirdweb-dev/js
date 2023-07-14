@@ -40,6 +40,8 @@ export interface AccountApiParams
   localSigner: Signer;
   factoryAddress: string;
   accountAddress?: string;
+  clientId?: string;
+  secretKey?: string;
 }
 
 export interface ProviderConfig extends ContractInfo {
