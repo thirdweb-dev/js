@@ -1,19 +1,19 @@
 import {
   GatewayUrls,
-  IStorageDownloader,
   IStorageUploader,
   IpfsUploadBatchOptions,
-  StorageDownloader,
   ThirdwebStorageOptions,
   UploadOptions,
   parseGatewayUrls,
   replaceObjectSchemesWithGatewayUrls,
   replaceSchemeWithGatewayUrl,
   IThirdwebStorage,
+  IStorageDownloader,
 } from "@thirdweb-dev/storage";
 
 import { prepareGatewayUrls } from "./utils";
 import { IpfsUploader } from "./uploader";
+import { StorageDownloader } from "./downloader";
 
 export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
   implements IThirdwebStorage
@@ -145,10 +145,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       return [];
     }
 
-    const uris: string[] = await this.uploader.uploadBatch(
-      data as FormDataValue[],
-      options,
-    );
+    const uris: string[] = await this.uploader.uploadBatch(data, options);
 
     if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
       return uris.map((uri) => this.resolveScheme(uri));

@@ -1,14 +1,14 @@
 import {
   IStorageUploader,
   IpfsUploadBatchOptions,
-  TW_IPFS_SERVER_URL,
   isFileBufferOrStringEqual,
+  TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions } from "./types";
 import DeviceInfo from "react-native-device-info";
-import { PINATA_IPFS_FILE_URL, PINATA_IPFS_JSON_URL } from "./constants";
 
 const APP_BUNDLE_ID = DeviceInfo.getBundleId();
+const METADATA_NAME = "Storage React Native SDK";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl?: boolean | undefined;
@@ -38,7 +38,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     const metadata = {
-      name: "Storage React Native SDK",
+      name: METADATA_NAME,
       keyvalues: { ...options?.metadata },
     };
 
@@ -46,19 +46,16 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       // assume an array of strings
       return new Promise(async (resolve, reject) => {
         const fetchBody = JSON.stringify({
-          pinataMetadata: metadata,
-          pinataContent: {
-            data: data,
-          },
+          metadata: metadata,
+          content: data,
         });
 
-        const token = await this.getUploadToken();
-
         try {
-          const res = await fetch(PINATA_IPFS_JSON_URL, {
+          const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin/json`, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${token}`,
+              "x-bundle-id": APP_BUNDLE_ID,
+              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
               "Content-Type": "application/json",
             },
             body: fetchBody,
@@ -76,8 +73,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     } else {
       // assume an array of files
       return new Promise(async (resolve, reject) => {
-        const token = await this.getUploadToken();
-
         // asume file
         const formData = new FormData();
 
@@ -142,7 +137,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
               throw new Error("Failed to get IPFS hash from upload response");
             }
 
-            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+            if (options?.uploadWithoutDirectory) {
+              return resolve([`ipfs://${cid}`]);
+            } else {
+              return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+            }
           }
 
           return reject(
@@ -170,8 +169,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           return reject(new Error("Unknown upload error occured"));
         });
 
-        xhr.open("POST", PINATA_IPFS_FILE_URL);
-        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
+        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID);
+        if (this.clientId) {
+          xhr.setRequestHeader("x-client-id", this.clientId);
+        }
 
         xhr.send(form);
       });
@@ -235,7 +237,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     const metadata = {
-      name: APP_BUNDLE_ID,
+      name: METADATA_NAME,
       keyvalues: { ...options?.metadata },
     };
     form.append("pinataMetadata", JSON.stringify(metadata));
@@ -254,28 +256,5 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       // encode the file names on the way out (which is what the upload backend expects)
       fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
     };
-  }
-
-  private async getUploadToken(): Promise<string> {
-    const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
-      method: "GET",
-      headers: {
-        "x-bundle-id": APP_BUNDLE_ID,
-      },
-      ...(this.clientId ? { "x-client-id": this.clientId } : {}),
-    });
-
-    if (!res.ok) {
-      const response = await res.json();
-      // throw new Error(`Failed to get upload token`);
-      const error = response.error || response.statusText;
-      const code = response.code || "UNKNOWN";
-
-      throw new Error(
-        `IpfsUploader error: ${error} Status: ${response.status} Code: ${code}`,
-      );
-    }
-    const body = await res.text();
-    return body;
   }
 }
