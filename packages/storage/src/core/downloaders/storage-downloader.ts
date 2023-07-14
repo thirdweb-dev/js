@@ -67,7 +67,7 @@ export class StorageDownloader implements IStorageDownloader {
 
     // can't use instanceof "Response" in node...
     if ("status" in resOrErr) {
-      if (resOrErr.status === 410 || resOrErr.status === 403) {
+      if (resOrErr.status === 410) {
         // Don't retry if the content is blocklisted
         console.error(
           `Request to ${resolvedUri} failed because this content seems to be blocklisted. Search VirusTotal for this URL to confirm: ${resolvedUri} `,
