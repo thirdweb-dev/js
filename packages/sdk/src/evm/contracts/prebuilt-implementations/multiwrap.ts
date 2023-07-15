@@ -401,7 +401,8 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
+    TMethod extends
+      keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<MultiwrapContract["functions"][TMethod]>,
@@ -419,7 +420,8 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * @internal
    */
   public async call<
-    TMethod extends keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
+    TMethod extends
+      keyof MultiwrapContract["functions"] = keyof MultiwrapContract["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<MultiwrapContract["functions"][TMethod]>,

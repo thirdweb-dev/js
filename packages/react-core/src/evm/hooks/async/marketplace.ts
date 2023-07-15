@@ -596,7 +596,10 @@ export function useBidBuffer(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.auction.getBidBufferBps(contractAddress, listingId),
+    cacheKeys.contract.marketplace.auction.getBidBufferBps(
+      contractAddress,
+      listingId,
+    ),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
 
@@ -1426,13 +1429,13 @@ export function useBuyDirectListing(contract: RequiredParam<MarketplaceV3>) {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
         contract.directListings.buyFromListing,
-        "contract does not support directListings.buyFromListing"
+        "contract does not support directListings.buyFromListing",
       );
 
       return await contract.directListings.buyFromListing(
         data.listingId,
         data.quantity,
-        data.buyer
+        data.buyer,
       );
     },
     {

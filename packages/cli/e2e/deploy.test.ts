@@ -13,7 +13,9 @@ describe("npx thirdweb deploy", () => {
     const apiSecretKey = process.env.CLI_E2E_API_KEY as string;
 
     if (!apiSecretKey) {
-      throw new Error("CLI_E2E_API_KEY is not set in the environment variables");
+      throw new Error(
+        "CLI_E2E_API_KEY is not set in the environment variables",
+      );
     }
 
     await copyFile(
@@ -22,7 +24,10 @@ describe("npx thirdweb deploy", () => {
     );
 
     const { waitForText, waitForFinish, getExitCode, writeText, getStderr } =
-      await spawn("node", `./dist/cli/index.js deploy --contract -k ${apiSecretKey}`);
+      await spawn(
+        "node",
+        `./dist/cli/index.js deploy --contract -k ${apiSecretKey}`,
+      );
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 

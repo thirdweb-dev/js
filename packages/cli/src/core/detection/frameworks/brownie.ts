@@ -21,13 +21,15 @@ export default class BrownieDetector implements FrameworkDetector {
     );
 
     const additionalDirectoriesToCheck = ["/build", "/contracts", "/reports"];
-    const additionalDirectoriesExist = additionalDirectoriesToCheck.every((dir) => {
-      return existsSync(path + dir);
-    });
+    const additionalDirectoriesExist = additionalDirectoriesToCheck.every(
+      (dir) => {
+        return existsSync(path + dir);
+      },
+    );
 
     return (
-      !!dependencies.find(dep => dep.includes("brownie")) ||
-      !!devDependencies.find(dep => dep.includes("brownie")) ||
+      !!dependencies.find((dep) => dep.includes("brownie")) ||
+      !!devDependencies.find((dep) => dep.includes("brownie")) ||
       additionalFilesExist ||
       additionalDirectoriesExist ||
       false

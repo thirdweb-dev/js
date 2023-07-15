@@ -14,7 +14,11 @@ describe("IPFS", async () => {
   const storage = new ThirdwebStorage({
     secretKey: apiSecretKey,
   });
-  const authorizedUrls = prepareGatewayUrls(DEFAULT_GATEWAY_URLS, undefined, apiSecretKey);
+  const authorizedUrls = prepareGatewayUrls(
+    DEFAULT_GATEWAY_URLS,
+    undefined,
+    apiSecretKey,
+  );
 
   it("Should replace tokens in tokenized gateway URL", async () => {
     const url = getGatewayUrlForCid(
@@ -358,9 +362,19 @@ describe("IPFS", async () => {
   });
 
   it("Should upload files with gateway URLs if specified on class", async () => {
-    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true, secretKey: apiSecretKey });
-    const singleStorage = new ThirdwebStorage({ uploader, secretKey: apiSecretKey });
-    const _authorizedUrls = prepareGatewayUrls(DEFAULT_GATEWAY_URLS, undefined, apiSecretKey);
+    const uploader = new IpfsUploader({
+      uploadWithGatewayUrl: true,
+      secretKey: apiSecretKey,
+    });
+    const singleStorage = new ThirdwebStorage({
+      uploader,
+      secretKey: apiSecretKey,
+    });
+    const _authorizedUrls = prepareGatewayUrls(
+      DEFAULT_GATEWAY_URLS,
+      undefined,
+      apiSecretKey,
+    );
 
     const uri = await singleStorage.upload(
       {
@@ -447,9 +461,19 @@ describe("IPFS", async () => {
   });
 
   it("Should return URIs with gateway URLs if specified on class", async () => {
-    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true, secretKey: apiSecretKey });
-    const storageSingleton = new ThirdwebStorage({ uploader, secretKey: apiSecretKey });
-    const _authorizedUrls = prepareGatewayUrls(DEFAULT_GATEWAY_URLS, undefined, apiSecretKey);
+    const uploader = new IpfsUploader({
+      uploadWithGatewayUrl: true,
+      secretKey: apiSecretKey,
+    });
+    const storageSingleton = new ThirdwebStorage({
+      uploader,
+      secretKey: apiSecretKey,
+    });
+    const _authorizedUrls = prepareGatewayUrls(
+      DEFAULT_GATEWAY_URLS,
+      undefined,
+      apiSecretKey,
+    );
 
     const uri = await storageSingleton.upload(
       readFileSync("test/files/0.jpg"),
