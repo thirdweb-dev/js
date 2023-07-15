@@ -113,6 +113,9 @@ export function prepareGatewayUrls(
           return url.replace("{clientId}", clientId);
         } else if (secretKey && url.includes("{clientId}")) {
           // should only be used on Node.js in a backend/script context
+          if (typeof window !== "undefined") {
+            throw new Error("Cannot use secretKey in browser context");
+          }
           const crypto = require("crypto");
           const hashedSecretKey = crypto
             .createHash("sha256")
