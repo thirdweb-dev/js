@@ -52,7 +52,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     let headers = {};
-    if (resolvedUri.includes("storage.staging.thirdweb.com")) {
+    if (new URL(resolvedUri).host === "storage.staging.thirdweb.com") {
       resolvedUri = resolvedUri + `?bundleId=${APP_BUNDLE_ID}`;
       headers = {
         ...(this.clientId ? { "x-client-id": this.clientId } : {}),

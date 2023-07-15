@@ -1,21 +1,43 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
 
+const TW_GATEWAY_URLS = [
+  // FIXME switch to prod before merging
+  "https://{clientId}.thirdwebstorage-staging.com/ipfs/{cid}/{path}",
+  "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
+];
+
+/**
+ * @internal
+ * @param url
+ * @returns
+ */
+export function isTwGatewayUrl(url: string): boolean {
+  return TW_GATEWAY_URLS.some((gatewayUrl) => {
+    const parts = gatewayUrl.split("/")[0].split(".");
+    const domain =
+      "." + parts[parts.length - 2] + "." + parts[parts.length - 1];
+    return new URL(url).hostname.endsWith(domain);
+  });
+}
+
+const PUBLIC_GATEWAY_URLS = [
+  "https://{cid}.ipfs.cf-ipfs.com/{path}",
+  "https://{cid}.ipfs.dweb.link/{path}",
+  "https://ipfs.io/ipfs/{cid}/{path}",
+  "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
+  "https://{cid}.ipfs.w3s.link/{path}",
+  "https://w3s.link/ipfs/{cid}/{path}",
+  "https://nftstorage.link/ipfs/{cid}/{path}",
+  "https://gateway.pinata.cloud/ipfs/{cid}/{path}",
+];
+
 /**
  * @internal
  */
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
-  "ipfs://": [
-    // FIXME switch to prod before merging
-    "https://{clientId}.thirdwebstorage-staging.com/ipfs/{cid}/{path}",
-    "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
-    "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
-    "https://dweb.link/ipfs/{cid}/{path}",
-    "https://ipfs.io/ipfs/{cid}/{path}",
-    "https://w3s.link/ipfs/{cid}/{path}",
-    "https://nftstorage.link/ipfs/{cid}/{path}",
-  ],
+  "ipfs://": [...TW_GATEWAY_URLS, ...PUBLIC_GATEWAY_URLS],
 };
 
 /**
