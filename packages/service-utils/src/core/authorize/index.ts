@@ -34,8 +34,20 @@ export async function authorize(
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
+  const { clientId, targetAddress, secretKeyHash } = authData;
+  const { enforceAuth } = serviceConfig;
+
+  // BACKWARDS COMPAT: if auth not enforced and
+  //                   we don't have auth credentials bypass
+  if (!enforceAuth && !clientId && !secretKeyHash) {
+    return {
+      authorized: true,
+      apiKeyMeta: null,
+    };
+  }
+
   // if we don't have a client id at this point we can't authorize
-  if (!authData.clientId) {
+  if (!clientId) {
     return {
       authorized: false,
       status: 401,
@@ -48,7 +60,7 @@ export async function authorize(
   // if we have cache options we want to check the cache first
   if (cacheOptions) {
     try {
-      const cachedKey = await cacheOptions.get(authData.clientId);
+      const cachedKey = await cacheOptions.get(clientId);
       if (cachedKey) {
         const parsed = JSON.parse(cachedKey) as CacheWithPossibleTtl;
         if ("updatedAt" in parsed) {
@@ -74,7 +86,7 @@ export async function authorize(
   if (!apiKeyMeta) {
     try {
       const { data, error } = await fetchKeyMetadataFromApi(
-        authData.clientId,
+        clientId,
         serviceConfig,
       );
       if (error) {
@@ -98,7 +110,7 @@ export async function authorize(
       // cache the retrieved key if we have cache options
       if (cacheOptions) {
         // we await this always because it can be a promise or not
-        await cacheOptions.put(authData.clientId, data);
+        await cacheOptions.put(clientId, data);
       }
     } catch (err) {
       console.warn("failed to fetch key metadata from api", err);
@@ -132,7 +144,7 @@ export async function authorize(
 
   // if we've made it this far we need to check service specific authorization
   const serviceAuth = authorizeService(apiKeyMeta, serviceConfig, {
-    targetAddress: authData.targetAddress,
+    targetAddress,
   });
 
   if (!serviceAuth.authorized) {
