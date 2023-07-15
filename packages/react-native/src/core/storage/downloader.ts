@@ -1,6 +1,7 @@
 import {
   GatewayUrls,
   IStorageDownloader,
+  isTwGatewayUrl,
   replaceSchemeWithGatewayUrl,
 } from "@thirdweb-dev/storage";
 import { IpfsDownloaderOptions } from "./types";
@@ -52,7 +53,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     let headers = {};
-    if (new URL(resolvedUri).host === "storage.staging.thirdweb.com") {
+    if (isTwGatewayUrl(resolvedUri)) {
       resolvedUri = resolvedUri + `?bundleId=${APP_BUNDLE_ID}`;
       headers = {
         ...(this.clientId ? { "x-client-id": this.clientId } : {}),
