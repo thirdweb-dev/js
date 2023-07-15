@@ -8,6 +8,7 @@ import {
   AlertDialogOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRef } from "react";
 import { Button } from "tw-components";
@@ -23,6 +24,7 @@ export const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({
   name,
   onRevoke,
 }) => {
+  const trackEvent = useTrack();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const mutation = useRevokeApiKey();
@@ -34,12 +36,31 @@ export const RevokeApiKeyButton: React.FC<RevokeApiKeyButtonProps> = ({
   const handleRevoke = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
 
+    trackEvent({
+      category: "api-keys",
+      action: "revoke",
+      label: "attempt",
+    });
+
     mutation.mutate(id, {
       onSuccess: () => {
         onSuccess();
         onRevoke();
+        trackEvent({
+          category: "api-keys",
+          action: "revoke",
+          label: "success",
+        });
       },
-      onError,
+      onError: (err) => {
+        onError(err);
+        trackEvent({
+          category: "api-keys",
+          action: "revoke",
+          label: "error",
+          error: err,
+        });
+      },
     });
   };
 

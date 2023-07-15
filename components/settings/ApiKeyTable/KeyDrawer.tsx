@@ -6,6 +6,7 @@ import { ApiKeyFormValues, DrawerSection } from "./types";
 import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { HStack, useToast } from "@chakra-ui/react";
 import { SERVICES } from "@thirdweb-dev/service-utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const trackEvent = useTrack();
   const { id, name, domains, services } = apiKey;
   const [editing, setEditing] = useState(false);
   const mutation = useUpdateApiKey();
@@ -77,13 +79,32 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
           })),
       };
 
+      trackEvent({
+        category: "api-keys",
+        action: "edit",
+        label: "attempt",
+      });
+
       mutation.mutate(formattedValues, {
         onSuccess: (data) => {
           onSubmit(data);
           onSuccess();
           setEditing(false);
+          trackEvent({
+            category: "api-keys",
+            action: "edit",
+            label: "success",
+          });
         },
-        onError,
+        onError: (err) => {
+          onError(err);
+          trackEvent({
+            category: "api-keys",
+            action: "edit",
+            label: "error",
+            error: err,
+          });
+        },
       });
     } else {
       toast(toastMessages.updateServices);

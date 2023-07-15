@@ -76,14 +76,20 @@ const COMMANDS = {
     javascript: `import {{chainName}} from "@thirdweb-dev/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
-const sdk = new ThirdwebSDK({{chainName}});
+const sdk = new ThirdwebSDK({{chainName}}, {
+  clientId: "YOUR_CLIENT_ID", // Use client id if using on the client side, get it from dashboard settings
+  secretKey: "YOUR_SECRET_KEY", // Use secret key if using on the server, get it from dashboard settings
+});
 const contract = await sdk.getContract("{{contract_address}}");`,
     react: `import {{chainName}} from "@thirdweb-dev/chains";
 import { ThirdwebProvider, useContract } from "@thirdweb-dev/react";
 
 function App() {
   return (
-    <ThirdwebProvider activeChain={{chainName}}>
+    <ThirdwebProvider 
+      activeChain={{chainName}} 
+      clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
+    >
       <Component />
     </ThirdwebProvider>
   )
@@ -97,7 +103,10 @@ import { ThirdwebProvider, useContract } from "@thirdweb-dev/react-native";
 
 function App() {
   return (
-    <ThirdwebProvider activeChain={{chainName}}>
+    <ThirdwebProvider 
+      activeChain={{chainName}}
+      clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
+    >
       <Component />
     </ThirdwebProvider>
   )
@@ -119,7 +128,9 @@ contract, err := sdk.GetContract("{{contract_address}}")
     unity: `using Thirdweb;
 
 private void Start() {
-    ThirdwebSDK SDK = new ThirdwebSDK("{{chainNameOrRpc}}");
+    ThirdwebSDK SDK = new ThirdwebSDK("{{chainNameOrRpc}}", chainId, new ThirdwebSDK.Options() { 
+      clientId = myClientId // you can get client id from dashboard settings
+    });
     Contract myContract = SDK.GetContract("{{contract_address}}");
 }`,
   },

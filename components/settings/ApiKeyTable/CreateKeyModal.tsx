@@ -1,3 +1,6 @@
+import { ApiKeyDetailsRow } from "./DetailsRow";
+import { ApiKeyKeyForm } from "./KeyForm";
+import { ApiKeyFormValues } from "./types";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
@@ -15,12 +18,8 @@ import {
   ModalOverlay,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Button, CodeBlock, Heading, Text } from "tw-components";
-import { ApiKeyDetailsRow } from "./DetailsRow";
-import { ApiKeyKeyForm } from "./KeyForm";
-import { ApiKeyFormValues } from "./types";
 
 interface ApiKeysCreateModalProps {
   apiKey?: ApiKey | null;

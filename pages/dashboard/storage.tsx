@@ -183,7 +183,21 @@ const DashboardStorage: ThirdwebNextPage = () => {
 };
 
 const storageSnippets = {
-  react: `// Upload files to IPFS
+  react: `// Initialize your provider
+import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+function Provider() {
+  return (
+    <ThirdwebProvider
+      clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
+      activeChain="goerli"
+      >
+      ...
+    </ThirdwebProvider>
+  );
+}
+  
+// Upload files to IPFS
 import { useStorageUpload } from "@thirdweb-dev/react";
 
 function App() {
@@ -211,7 +225,9 @@ function App() {
   javascript: `import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 // First, instantiate the thirdweb IPFS storage
-const storage = new ThirdwebStorage();
+const storage = new ThirdwebStorage({
+  secretKey: "YOUR_SECRET_KEY", // You can get one from dashboard settings
+});
 
 // Here we get the IPFS URI of where our metadata has been uploaded
 const uri = await storage.upload(metadata);

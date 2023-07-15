@@ -1,7 +1,7 @@
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { Container, Divider, Flex } from "@chakra-ui/react";
-import { useUser } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
 import { CreateApiKeyButton } from "components/settings/ApiKeyTable/CreateButton";
@@ -11,14 +11,10 @@ import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
-  const { user, isLoading } = useUser();
+  const address = useAddress();
   const keysQuery = useApiKeys();
 
-  if (isLoading) {
-    return null;
-  }
-
-  if (!user?.address) {
+  if (!address) {
     return (
       <Container maxW="lg">
         <Card p={6} as={Flex} flexDir="column" gap={2}>

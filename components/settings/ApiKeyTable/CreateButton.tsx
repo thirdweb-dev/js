@@ -4,6 +4,7 @@ import { ApiKeyFormValues } from "./types";
 import { ApiKey, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Icon, useDisclosure, useToast } from "@chakra-ui/react";
 import { SERVICES } from "@thirdweb-dev/service-utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -12,6 +13,7 @@ import { Button } from "tw-components";
 import { toArrFromList } from "utils/string";
 
 export const CreateApiKeyButton: React.FC = () => {
+  const trackEvent = useTrack();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
@@ -60,13 +62,30 @@ export const CreateApiKeyButton: React.FC = () => {
           })),
       };
 
+      trackEvent({
+        category: "api-keys",
+        action: "create",
+        label: "attempt",
+      });
+
       createKeyMutation.mutate(formattedValues, {
         onSuccess: (data) => {
           onSuccess();
           setApiKey(data);
+          trackEvent({
+            category: "api-keys",
+            action: "create",
+            label: "success",
+          });
         },
         onError: (err) => {
           onError(err);
+          trackEvent({
+            category: "api-keys",
+            action: "create",
+            label: "error",
+            error: err,
+          });
         },
       });
     } else {
@@ -91,7 +110,7 @@ export const CreateApiKeyButton: React.FC = () => {
       />
 
       <Button
-        onClick={() => onOpen()}
+        onClick={onOpen}
         colorScheme="blue"
         leftIcon={<Icon as={FiPlus} boxSize={4} />}
         isLoading={createKeyMutation.isLoading}
