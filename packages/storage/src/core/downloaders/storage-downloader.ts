@@ -161,10 +161,7 @@ function tooManyRequestsBackOff(gatewayUrl: string, response: Response) {
       backOff = retryAfterSeconds * 1000;
     }
   }
-  console.warn("[TOO_MANY_REQUESTS_ERROR]", {
-    gatewayUrl,
-    backOff,
-  });
+
   // track that we got a too many requests error
   TOO_MANY_REQUESTS_TRACKER.set(gatewayUrl, true);
   TIMEOUT_MAP.set(
