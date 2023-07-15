@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.10.36
+
+### Patch Changes
+
+- [#1357](https://github.com/thirdweb-dev/js/pull/1357) [`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getOwned not showing last owned NFT for OpenEdition contracts
+
 ## 3.10.35
 
 ### Patch Changes
