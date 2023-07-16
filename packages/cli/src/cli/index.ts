@@ -7,7 +7,7 @@ import open from "open";
 import os from "os";
 import path from "path";
 import prompts from "prompts";
-import Cache, { CacheEntry } from 'sync-disk-cache';
+import Cache, { CacheEntry } from "sync-disk-cache";
 import { loginUser, logoutUser, validateKey } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
@@ -469,20 +469,24 @@ const main = async () => {
       await generate(options, apiSecretKey);
     });
 
-    program
-      .command("login")
-      .description("Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key")
-      .option("-n, --new", "Login with a new API secret key", false)
-      .action(async (options) => {
-        await loginUser(cache, options, true);
-      });
+  program
+    .command("login")
+    .description(
+      "Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key",
+    )
+    .option("-n, --new", "Login with a new API secret key", false)
+    .action(async (options) => {
+      await loginUser(cache, options, true);
+    });
 
-    program
-      .command("logout")
-      .description("Logout of the thirdweb CLI, effectively removing your API secret key from your machine")
-      .action(async () => {
-        await logoutUser(cache);
-      });
+  program
+    .command("logout")
+    .description(
+      "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
+    )
+    .action(async () => {
+      await logoutUser(cache);
+    });
 
   await program.parseAsync();
 };

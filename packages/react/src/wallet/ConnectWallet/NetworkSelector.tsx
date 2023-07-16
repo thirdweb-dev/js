@@ -525,7 +525,9 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
   padding: ${spacing.sm} ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
   border-radius: ${radius.lg};
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
   &[data-state="active"] {
     background: ${(p) => p.theme.bg.elevated};
     color: ${(p) => p.theme.text.neutral};

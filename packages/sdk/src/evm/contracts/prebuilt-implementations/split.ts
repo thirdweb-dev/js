@@ -407,7 +407,8 @@ export class Split implements UpdateableNetwork {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+    TMethod extends
+      keyof SplitContract["functions"] = keyof SplitContract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<SplitContract["functions"][TMethod]>,
@@ -425,7 +426,8 @@ export class Split implements UpdateableNetwork {
    * @internal
    */
   public async call<
-    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+    TMethod extends
+      keyof SplitContract["functions"] = keyof SplitContract["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<SplitContract["functions"][TMethod]>,

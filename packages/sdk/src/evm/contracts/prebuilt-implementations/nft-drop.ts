@@ -594,7 +594,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+    TMethod extends
+      keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltNFTDrop["functions"][TMethod]>,
@@ -615,7 +616,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+    TMethod extends
+      keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltNFTDrop["functions"][TMethod]>,

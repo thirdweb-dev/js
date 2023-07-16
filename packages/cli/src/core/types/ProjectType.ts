@@ -76,7 +76,6 @@ export type ContractLibrariesType =
   | "solc"
   | "none";
 
-
 export const contractLibraries: readonly ContractLibrariesType[] = [
   "brownie",
   "foundry",

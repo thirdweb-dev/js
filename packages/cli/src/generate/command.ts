@@ -149,10 +149,13 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
 
     const file = fs.readFileSync(filePath, "utf-8");
     const abiRegex = /GENERATED_ABI = \{.*\};\n\n/s;
-    const contractAbis = metadata.reduce((acc, contract) => {
-      acc[contract.address] = contract.metadata.abi;
-      return acc;
-    }, {} as Record<string, any>);
+    const contractAbis = metadata.reduce(
+      (acc, contract) => {
+        acc[contract.address] = contract.metadata.abi;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
     const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(
       abiRegex,
@@ -171,10 +174,13 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
 
     const file = fs.readFileSync(typeFilePath, "utf-8");
     const abiRegex = /GENERATED_ABI: \{.*\}/s;
-    const contractAbis = metadata.reduce((acc, contract) => {
-      acc[contract.address] = contract.metadata.abi;
-      return acc;
-    }, {} as Record<string, any>);
+    const contractAbis = metadata.reduce(
+      (acc, contract) => {
+        acc[contract.address] = contract.metadata.abi;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
     const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(abiRegex, `GENERATED_ABI: ${updatedAbis}`);
     fs.writeFileSync(typeFilePath, updatedFile);

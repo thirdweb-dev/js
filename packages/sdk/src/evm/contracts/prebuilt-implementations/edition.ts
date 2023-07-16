@@ -398,7 +398,8 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
+    TMethod extends
+      keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<TokenERC1155["functions"][TMethod]>,
@@ -416,7 +417,8 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @internal
    */
   public async call<
-    TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
+    TMethod extends
+      keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<TokenERC1155["functions"][TMethod]>,

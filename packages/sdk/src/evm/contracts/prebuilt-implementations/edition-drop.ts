@@ -396,7 +396,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+    TMethod extends
+      keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
@@ -414,7 +415,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+    TMethod extends
+      keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltEditionDrop["functions"][TMethod]>,

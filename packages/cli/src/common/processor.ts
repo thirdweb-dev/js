@@ -368,7 +368,10 @@ export function getUrl(hashes: string[], command: string) {
   return url;
 }
 
-async function formatToExtensions(contracts: ContractPayload[], apiSecretKey: string): Promise<{
+async function formatToExtensions(
+  contracts: ContractPayload[],
+  apiSecretKey: string,
+): Promise<{
   extensions: Extension[];
   extensionDeployArgs: ExtensionDeployArgs[];
 }> {

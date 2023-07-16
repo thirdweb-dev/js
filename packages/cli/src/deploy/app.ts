@@ -5,12 +5,20 @@ import { logger } from "../core/helpers/logger";
 import { runCommand } from "../create/helpers/run-command";
 import { upload } from "../storage/command";
 
-export async function deployApp(distPath = "dist", projectPath = ".", apiSecretKey: string) {
+export async function deployApp(
+  distPath = "dist",
+  projectPath = ".",
+  apiSecretKey: string,
+) {
   const storage = new ThirdwebStorage({
     secretKey: apiSecretKey,
-  })
+  });
   const detectedPackageManager = await detectPackageManager(projectPath, {});
-  const detectedFramework = await detectFramework(projectPath, {}, detectedPackageManager);
+  const detectedFramework = await detectFramework(
+    projectPath,
+    {},
+    detectedPackageManager,
+  );
 
   if (detectedFramework === "none") {
     throw new Error("No supported project detected");
@@ -62,7 +70,10 @@ export async function deployApp(distPath = "dist", projectPath = ".", apiSecretK
 
   try {
     const uri = await upload(storage, distPath);
-    return `${uri.replace("ipfs://", "https://ipfs-public.thirdwebcdn.com/ipfs/")}`;
+    return `${uri.replace(
+      "ipfs://",
+      "https://ipfs-public.thirdwebcdn.com/ipfs/",
+    )}`;
   } catch (err) {
     console.error("Can't upload project", err);
     return Promise.reject("Can't upload project");

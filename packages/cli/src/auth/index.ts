@@ -3,7 +3,11 @@ import prompts from "prompts";
 import Cache, { CacheEntry } from "sync-disk-cache";
 import { ApiResponse } from "../lib/types";
 
-export async function loginUser(cache: Cache, options?: { new: boolean }, showLogs?: boolean) {
+export async function loginUser(
+  cache: Cache,
+  options?: { new: boolean },
+  showLogs?: boolean,
+) {
   const keyFound = getSession(cache);
   if (keyFound && !options?.new) {
     if (showLogs) {
@@ -39,7 +43,9 @@ export async function createSession(cache: Cache) {
     const response = await prompts({
       type: "text",
       name: "apiSecretKey",
-      message: `Please enter your API secret key, you can find or create it on ${chalk.blue("https://thirdweb.com/dashboard/settings/api-keys")}`,
+      message: `Please enter your API secret key, you can find or create it on ${chalk.blue(
+        "https://thirdweb.com/dashboard/settings/api-keys",
+      )}`,
     });
 
     try {
@@ -56,15 +62,18 @@ export async function createSession(cache: Cache) {
 }
 
 export async function validateKey(apiSecretKey: string) {
-  const fetch = (await import('node-fetch')).default;
+  const fetch = (await import("node-fetch")).default;
   // TODO: CHANGE THIS TO PROD BEFORE MERGING!!!
-  const response = await fetch(`https://api.staging.thirdweb.com/v1/keys/use?scope=storage`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "x-secret-key": apiSecretKey,
+  const response = await fetch(
+    `https://api.staging.thirdweb.com/v1/keys/use?scope=storage`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-secret-key": apiSecretKey,
+      },
     },
-  });
+  );
 
   const apiResponse = (await response.json()) as ApiResponse;
 

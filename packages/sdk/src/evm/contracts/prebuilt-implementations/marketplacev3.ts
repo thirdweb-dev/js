@@ -255,7 +255,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
+    TMethod extends
+      keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<MarketplaceV3Contract["functions"][TMethod]>,
@@ -273,7 +274,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
    * @internal
    */
   public async call<
-    TMethod extends keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
+    TMethod extends
+      keyof MarketplaceV3Contract["functions"] = keyof MarketplaceV3Contract["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<MarketplaceV3Contract["functions"][TMethod]>,

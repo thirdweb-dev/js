@@ -4,7 +4,10 @@ import detectLibrary from "../core/detection/detectLibrary";
 import detectLanguage from "../core/detection/detectLanguage";
 import { logger, spinner } from "../core/helpers/logger";
 import path from "path";
-import { ContractLibrariesType, contractLibraries } from "../core/types/ProjectType";
+import {
+  ContractLibrariesType,
+  contractLibraries,
+} from "../core/types/ProjectType";
 import { FeatureWithEnabled, detectFeatures } from "@thirdweb-dev/sdk";
 import chalk from "chalk";
 import ora from "ora";
@@ -48,8 +51,16 @@ export async function detectProject(options: any) {
     options,
     detectedPackageManager,
   );
-  const detectedAppType = detectedFramework !== "none" ? contractLibraries.includes(detectedFramework as ContractLibrariesType) ? "contract" : "app" : "app";
-  const detectedContractLibrary = detectedAppType === "contract" ? detectedFramework as ContractLibrariesType : "none";
+  const detectedAppType =
+    detectedFramework !== "none"
+      ? contractLibraries.includes(detectedFramework as ContractLibrariesType)
+        ? "contract"
+        : "app"
+      : "app";
+  const detectedContractLibrary =
+    detectedAppType === "contract"
+      ? (detectedFramework as ContractLibrariesType)
+      : "none";
 
   logger.info("Detected package manager: " + detectedPackageManager);
   logger.info("Detected library: " + detectedLibrary);
@@ -61,7 +72,11 @@ export async function detectProject(options: any) {
     let compiledResult;
     const compileLoader = spinner("Compiling project...");
     try {
-      compiledResult = await build(projectPath, detectedContractLibrary, options);
+      compiledResult = await build(
+        projectPath,
+        detectedContractLibrary,
+        options,
+      );
     } catch (e) {
       compileLoader.fail("Compilation failed");
       logger.error(e);
@@ -127,7 +142,9 @@ export async function detectProject(options: any) {
         ).stopAndPersist({ symbol: "🔎" });
       } else {
         ora(
-          `Detected extension on ${chalk.blueBright(contractWithFeatures.name)}`,
+          `Detected extension on ${chalk.blueBright(
+            contractWithFeatures.name,
+          )}`,
         ).stopAndPersist({ symbol: "🔎" });
         contractWithFeatures.enabledFeatures.map((feature) => {
           logger.info(`✔️ ${chalk.green(feature.name)}`);
