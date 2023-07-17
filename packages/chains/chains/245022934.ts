@@ -15,19 +15,19 @@ export default {
     "symbol": "NEON",
     "decimals": 18
   },
-  "infoURL": "https://neonevm.org",
+  "infoURL": "https://neon-labs.org",
   "shortName": "neonevm-mainnet",
   "chainId": 245022934,
   "networkId": 245022934,
   "explorers": [
     {
-      "name": "neonscan",
-      "url": "https://neonscan.org",
+      "name": "native",
+      "url": "https://mainnet.explorer.neon-labs.org",
       "standard": "EIP3091"
     },
     {
-      "name": "native",
-      "url": "https://neon.blockscout.com",
+      "name": "neonscan",
+      "url": "https://mainnet.neonscan.org",
       "standard": "EIP3091"
     }
   ],
