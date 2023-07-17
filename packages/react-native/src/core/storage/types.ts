@@ -4,7 +4,7 @@
 export type IpfsDownloaderOptions = {
   /**
    * Optional clientId to associate with the IpfsDownloader - when used from the frontend.
-   * You can get a clientId here: https://thirdweb.com/dashboard/settings
+   * You can get a clientId here: https://thirdweb.com/create-api-key
    */
   clientId?: string;
 };
@@ -19,7 +19,7 @@ export type IpfsUploaderOptions = {
   uploadWithGatewayUrl?: boolean;
   /**
    * Optional clientId to associate with the IpfsUploader.
-   * You can get an clientId here: https://thirdweb.com/dashboard/settings
+   * You can get an clientId here: https://thirdweb.com/create-api-key
    */
   clientId?: string;
 };
