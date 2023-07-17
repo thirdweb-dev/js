@@ -10,6 +10,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { useSDK } from "../hooks/useSDK";
 
 interface ThirdwebConnectedWalletContext {
   wallet: UserWallet | undefined;
@@ -34,6 +35,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
 > = ({ signer, children }) => {
   const { chains, clientId } = useThirdwebConfigContext();
+  const storage = useSDK()?.storage;
 
   const [contextValue, setContextValue] =
     useState<ThirdwebConnectedWalletContext>({
@@ -49,6 +51,10 @@ export const ThirdwebConnectedWalletProvider: React.FC<
   }, [signer]);
 
   useEffect(() => {
+    if (!storage) {
+      return;
+    }
+
     let s = signer;
     if (signer) {
       // just get both of these up front and keep them around with the context
@@ -67,14 +73,18 @@ export const ThirdwebConnectedWalletProvider: React.FC<
 
           // only if the signer is still the same!
           if (signer === s) {
-            const wallet = new UserWallet(signer, {
-              readonlySettings: rpcUrl
-                ? {
-                    rpcUrl,
-                    chainId,
-                  }
-                : undefined,
-            });
+            const wallet = new UserWallet(
+              signer,
+              {
+                readonlySettings: rpcUrl
+                  ? {
+                      rpcUrl,
+                      chainId,
+                    }
+                  : undefined,
+              },
+              storage,
+            );
             setContextValue({ wallet, address, chainId, signer });
           }
         })
