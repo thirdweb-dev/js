@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/sdk": minor
+"@thirdweb-dev/sdk": patch
 ---
 
 Adds new `clientId` / `secretKey` option to access thirdweb's services
