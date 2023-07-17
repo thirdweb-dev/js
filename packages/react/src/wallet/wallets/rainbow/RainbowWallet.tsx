@@ -23,6 +23,10 @@ export const rainbowWallet = (
       name: "Rainbow Wallet",
       iconURL:
         "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
+      urls: {
+        android: "https://rnbwapp.com/e/Va41HWS6Oxb",
+        ios: "https://rnbwapp.com/e/OeMdmkJ6Oxb",
+      },
     },
     create: (walletOptions: WalletOptions) => {
       const wallet = new WalletConnect({

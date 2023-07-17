@@ -12,7 +12,7 @@ export const CoinbaseScan: React.FC<{
   onGetStarted: () => void;
   onConnected: () => void;
   walletConfig: WalletConfig<CoinbaseWallet>;
-  hideBackButton?: boolean;
+  hideBackButton: boolean;
 }> = ({ walletConfig, onConnected, onGetStarted, onBack, hideBackButton }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>(undefined);

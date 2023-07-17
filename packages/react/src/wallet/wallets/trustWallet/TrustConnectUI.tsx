@@ -13,6 +13,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
+  const hideBackButton = props.supportedWallets.length === 1;
 
   const { goBack } = props;
 
@@ -55,6 +56,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
@@ -87,7 +89,9 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={props.goBack}
+        onBack={() => {
+          setScreen("scanning");
+        }}
       />
     );
   }
@@ -95,6 +99,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "scanning") {
     return (
       <TrustScan
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         onGetStarted={() => {

@@ -1,11 +1,10 @@
 import type { Theme } from "../design-system";
 import styled from "@emotion/styled";
 import { Chain } from "@thirdweb-dev/chains";
-import { resolveIpfsUri } from "@thirdweb-dev/react-core";
+import { useStorage } from "@thirdweb-dev/react-core";
 
-const defaultChainIcon = /* @__PURE__ */ resolveIpfsUri(
-  "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
-);
+const defaultChainIcon =
+  "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
 
 export const ChainIcon: React.FC<{
   chain?: Chain;
@@ -14,8 +13,12 @@ export const ChainIcon: React.FC<{
   className?: string;
   loading?: "lazy" | "eager";
 }> = (props) => {
-  const url = props.chain?.icon?.url;
-  const src = url ? resolveIpfsUri(url) : defaultChainIcon;
+  const url = props.chain?.icon?.url || defaultChainIcon;
+  const storage = useStorage();
+
+  const src = storage
+    ? storage.resolveScheme(url)
+    : url.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   return (
     <div

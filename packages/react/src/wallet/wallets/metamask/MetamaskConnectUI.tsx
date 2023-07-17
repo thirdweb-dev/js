@@ -14,6 +14,8 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const { walletConfig, close } = props;
   const connect = useConnect();
 
+  const hideBackButton = props.supportedWallets.length === 1;
+
   const { goBack } = props;
 
   const connectPrompted = useRef(false);
@@ -55,6 +57,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
@@ -87,7 +90,9 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={props.goBack}
+        onBack={() => {
+          setScreen("scanning");
+        }}
       />
     );
   }
@@ -95,11 +100,12 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "scanning") {
     return (
       <MetamaskScan
-        onBack={props.goBack}
+        onBack={goBack}
         onConnected={close}
         onGetStarted={() => {
           setScreen("get-started");
         }}
+        hideBackButton={hideBackButton}
         walletConfig={walletConfig}
       />
     );

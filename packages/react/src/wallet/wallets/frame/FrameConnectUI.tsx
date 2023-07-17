@@ -69,6 +69,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   const { walletConfig, close, goBack } = props;
   const downloadLink = "https://frame.sh";
   const supportLink = "https://docs.frame.sh";
+  const hideBackButton = props.supportedWallets.length === 1;
 
   useEffect(() => {
     if (connectPrompted.current) {
@@ -99,6 +100,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}

@@ -1,11 +1,11 @@
 import type { WalletConnectConnector as WalletConnectConnectorType } from "../connectors/wallet-connect";
 import type { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
-import { assertWindowEthereum } from "../utils/assertWindowEthereum";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { MetaMaskConnector as MetamaskConnectorType } from "../connectors/metamask";
 import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
+import { getInjectedMetamaskProvider } from "../connectors/metamask/getInjectedMetamaskProvider";
 
 type MetamaskAdditionalOptions = {
   /**
@@ -63,12 +63,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
 
   constructor(options: MetamaskWalletOptions) {
     super(MetaMaskWallet.id, options);
-
-    if (assertWindowEthereum(globalThis.window)) {
-      this.isInjected = !!globalThis.window.ethereum?.isMetaMask;
-    } else {
-      this.isInjected = false;
-    }
+    this.isInjected = !!getInjectedMetamaskProvider();
   }
 
   protected async getConnector(): Promise<Connector> {
