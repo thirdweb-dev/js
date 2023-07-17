@@ -48,12 +48,12 @@ export type IpfsUploaderOptions = {
   uploadWithGatewayUrl?: boolean;
   /**
    * Optional clientId to associate with the IpfsUploader.
-   * You can get an clientId here: https://thirdweb.com/dashboard/settings
+   * You can get an clientId here: https://thirdweb.com/create-api-key
    */
   clientId?: string;
   /**
    * Optional secretKey to associate with the IpfsUploader - when used from the backend.
-   * You can get an secretKey here: https://thirdweb.com/dashboard/settings
+   * You can get an secretKey here: https://thirdweb.com/create-api-key
    */
   secretKey?: string;
 };

@@ -44,7 +44,7 @@ export async function createSession(cache: Cache) {
       type: "text",
       name: "apiSecretKey",
       message: `Please enter your API secret key, you can find or create it on ${chalk.blue(
-        "https://thirdweb.com/dashboard/settings/api-keys",
+        "https://thirdweb.com/create-api-key",
       )}`,
     });
 

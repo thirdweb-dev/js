@@ -274,7 +274,7 @@ export async function checkVerificationStatus(
  * @param chainId
  * @param explorerAPIUrl
  * @param explorerAPIKey
- * API get from https://thirdweb.com/dashboard/settings
+ * API get from https://thirdweb.com/create-api-key
  * @param thirdwebApiKey
  */
 export async function isVerifiedOnEtherscan(
