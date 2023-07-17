@@ -19,7 +19,11 @@ import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { PaperWallet } from "@thirdweb-dev/wallets/evm/wallets/paper-wallet";
 import { BigNumber } from "ethers";
-import { Ethereum, allChains, defaultChains } from "@thirdweb-dev/chains";
+import {
+  Ethereum,
+  defaultChains,
+  getChainByChainId,
+} from "@thirdweb-dev/chains";
 import type { ContractInterface, Signer } from "ethers";
 
 declare global {
@@ -120,6 +124,28 @@ class ThirdwebBridge implements TWBridge {
     this.initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
+    let supportedChains;
+    if (sdkOptions?.supportedChains) {
+      try {
+        supportedChains = sdkOptions.supportedChains.map((chainData: any) => {
+          return {
+            ...getChainByChainId(BigNumber.from(chainData.chainId).toNumber()),
+            rpc: chainData.rpcUrls,
+          };
+        });
+      } catch (error) {
+        console.warn(
+          "error parsing supported chains, using default chains",
+          error,
+        );
+        supportedChains = defaultChains;
+      }
+    } else {
+      console.debug("no supportedChains passed, using default chains");
+      supportedChains = defaultChains;
+    }
+    sdkOptions.supportedChains = supportedChains;
+
     const storage =
       sdkOptions?.storage && sdkOptions?.storage?.ipfsGatewayUrl
         ? new ThirdwebStorage({
@@ -145,14 +171,14 @@ class ThirdwebBridge implements TWBridge {
         case "injected":
           walletInstance = new InjectedWallet({
             dappMetadata,
-            chains: allChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.metamask:
           walletInstance = new MetaMaskWallet({
             dappMetadata,
-            chains: allChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
           });
           break;
@@ -160,7 +186,7 @@ class ThirdwebBridge implements TWBridge {
           walletInstance = new WalletConnect({
             projectId: sdkOptions.wallet?.walletConnectProjectId,
             dappMetadata,
-            chains: defaultChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
             qrModalOptions: {
               explorerRecommendedWalletIds: [
@@ -211,14 +237,14 @@ class ThirdwebBridge implements TWBridge {
         case walletIds.coinbase:
           walletInstance = new CoinbaseWallet({
             dappMetadata,
-            chains: allChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
           });
           break;
         case walletIds.localWallet:
           walletInstance = new LocalWallet({
             dappMetadata,
-            chains: allChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
           });
           break;
@@ -227,7 +253,7 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
             apiKey: sdkOptions.wallet?.magicLinkApiKey,
             emailLogin: true,
-            chains: allChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
           });
           break;
@@ -236,7 +262,7 @@ class ThirdwebBridge implements TWBridge {
             paperClientId: sdkOptions.wallet?.paperClientId,
             chain: Ethereum,
             dappMetadata,
-            chains: allChains,
+            chains: supportedChains,
             clientId: sdkOptions.clientId,
           });
           break;
@@ -539,13 +565,12 @@ class ThirdwebBridge implements TWBridge {
     });
   }
 
-  // TODO: Add personal wallet options and check if deployed
   public async initializeSmartWallet(
     sw: SmartWallet,
     personalWallet: AbstractClientWallet,
   ) {
     const personalWalletAddress = await personalWallet.getAddress();
-    console.log("Personal wallet address:", personalWalletAddress);
+    console.debug("Personal wallet address:", personalWalletAddress);
     await sw.connect({
       personalWallet,
     });
