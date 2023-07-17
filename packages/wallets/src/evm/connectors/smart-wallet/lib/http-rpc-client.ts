@@ -1,6 +1,7 @@
 import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
+import { isTwUrl } from "../../../utils/url";
 
 const DEBUG = false;
 
@@ -25,21 +26,23 @@ export class HttpRpcClient {
 
     const headers: Record<string, string> = {};
 
-    if (secretKey && clientId) {
-      throw new Error(
-        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-      );
-    }
+    if (isTwUrl(this.bundlerUrl)) {
+      if (secretKey && clientId) {
+        throw new Error(
+          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+        );
+      }
 
-    if (secretKey) {
-      headers["x-secret-key"] = secretKey;
-    } else if (clientId) {
-      headers["x-client-id"] = clientId;
+      if (secretKey) {
+        headers["x-secret-key"] = secretKey;
+      } else if (clientId) {
+        headers["x-client-id"] = clientId;
 
-      // @ts-ignore
-      if (globalThis.APP_BUNDLE_ID) {
         // @ts-ignore
-        headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+        if (globalThis.APP_BUNDLE_ID) {
+          // @ts-ignore
+          headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+        }
       }
     }
 

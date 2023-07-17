@@ -28,9 +28,11 @@ import fetch, { Response } from "cross-fetch";
  */
 export class StorageDownloader implements IStorageDownloader {
   private secretKey?: string;
+  private clientId?: string;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
+    this.clientId = options.clientId;
   }
 
   async download(
@@ -73,11 +75,21 @@ export class StorageDownloader implements IStorageDownloader {
       return this.download(uri, gatewayUrls, attempts + 1);
     }
 
-    // @joaquim I don't think we want to include secret key in the headers unless it's a thirdweb domain (checking it with isTwGatewayUrl)
-    const headers =
-      this.secretKey && isTwGatewayUrl(resolvedUri)
+    let headers;
+    if (isTwGatewayUrl(resolvedUri)) {
+      headers = this.secretKey
         ? { "x-secret-key": this.secretKey }
+        : this.clientId
+        ? {
+            "x-client-Id": this.clientId,
+            // @ts-ignore
+            ...(globalThis.APP_BUNDLE_ID
+              ? // @ts-ignore
+                { "x-bundle-id": globalThis.APP_BUNDLE_ID }
+              : {}),
+          }
         : undefined;
+    }
 
     const controller = new AbortController();
     let timeout = setTimeout(() => controller.abort(), 5000);

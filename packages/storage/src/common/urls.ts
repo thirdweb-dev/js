@@ -1,10 +1,9 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
 
+const TW_HOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
 const TW_GATEWAY_URLS = [
-  // FIXME switch to prod before merging
-  "https://{clientId}.thirdwebstorage-staging.com/ipfs/{cid}/{path}",
-  "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
+  `https://{clientId}${TW_HOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
 ];
 
 /**
@@ -13,12 +12,7 @@ const TW_GATEWAY_URLS = [
  * @returns
  */
 export function isTwGatewayUrl(url: string): boolean {
-  return TW_GATEWAY_URLS.some((gatewayUrl) => {
-    const parts = gatewayUrl.split("/")[0].split(".");
-    const domain =
-      "." + parts[parts.length - 2] + "." + parts[parts.length - 1];
-    return new URL(url).hostname.endsWith(domain);
-  });
+  return new URL(url).hostname.endsWith(TW_HOSTNAME_SUFFIX);
 }
 
 const PUBLIC_GATEWAY_URLS = [
