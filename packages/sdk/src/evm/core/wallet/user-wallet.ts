@@ -294,7 +294,6 @@ export class UserWallet {
       const localWallet = new UserWallet(
         new Wallet(LOCAL_NODE_PKEY, getChainProvider(chainId, this.options)),
         this.options,
-        // this.storage,
       );
       return localWallet.transfer(await this.getAddress(), amount);
     } else {

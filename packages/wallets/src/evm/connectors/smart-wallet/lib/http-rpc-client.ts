@@ -35,6 +35,12 @@ export class HttpRpcClient {
       headers["x-secret-key"] = secretKey;
     } else if (clientId) {
       headers["x-client-id"] = clientId;
+
+      // @ts-ignore
+      if (globalThis.APP_BUNDLE_ID) {
+        // @ts-ignore
+        headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+      }
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
