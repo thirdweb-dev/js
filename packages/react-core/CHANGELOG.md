@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-core
 
+## 3.14.16
+
+### Patch Changes
+
+- [#1356](https://github.com/thirdweb-dev/js/pull/1356) [`7a6534d1`](https://github.com/thirdweb-dev/js/commit/7a6534d1a98cab1eb47cf88d13e2b7ec04037e42) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix useOwnedNFT enabled state
+
+- Updated dependencies [[`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8), [`c5761b99`](https://github.com/thirdweb-dev/js/commit/c5761b99e9797772481506e90cbfa5c35a05bd1d), [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220)]:
+  - @thirdweb-dev/sdk@3.10.36
+  - @thirdweb-dev/wallets@1.0.12
+
 ## 3.14.15
 
 ### Patch Changes

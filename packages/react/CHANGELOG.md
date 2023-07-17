@@ -1,5 +1,16 @@
 # @thirdweb-dev/react
 
+## 3.14.16
+
+### Patch Changes
+
+- [#1350](https://github.com/thirdweb-dev/js/pull/1350) [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220) Thanks [@MananTank](https://github.com/MananTank)! - Disable autofocus for the Paper/Magic email/phone input in Connect Wallet Modal to avoid keyboard popup on mobile
+
+- Updated dependencies [[`7a6534d1`](https://github.com/thirdweb-dev/js/commit/7a6534d1a98cab1eb47cf88d13e2b7ec04037e42), [`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8), [`c5761b99`](https://github.com/thirdweb-dev/js/commit/c5761b99e9797772481506e90cbfa5c35a05bd1d), [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220)]:
+  - @thirdweb-dev/react-core@3.14.16
+  - @thirdweb-dev/sdk@3.10.36
+  - @thirdweb-dev/wallets@1.0.12
+
 ## 3.14.15
 
 ### Patch Changes

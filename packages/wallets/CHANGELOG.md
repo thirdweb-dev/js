@@ -1,5 +1,16 @@
 # @thirdweb-dev/wallets
 
+## 1.0.12
+
+### Patch Changes
+
+- [#1352](https://github.com/thirdweb-dev/js/pull/1352) [`c5761b99`](https://github.com/thirdweb-dev/js/commit/c5761b99e9797772481506e90cbfa5c35a05bd1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Switch to seed based local wallets for faster encryption
+
+- [#1350](https://github.com/thirdweb-dev/js/pull/1350) [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220) Thanks [@MananTank](https://github.com/MananTank)! - Improved Injected Metamask detection - Do not consider Phantom provider as MetaMask
+
+- Updated dependencies [[`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8)]:
+  - @thirdweb-dev/sdk@3.10.36
+
 ## 1.0.11
 
 ### Patch Changes
