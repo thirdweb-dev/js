@@ -160,9 +160,6 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   clientId,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  if (!clientId) {
-    noClientIdWarning();
-  }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);
@@ -218,14 +215,3 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
     </ThirdwebConfigProvider>
   );
 };
-
-let noClientIdWarningLogged = false;
-function noClientIdWarning() {
-  if (noClientIdWarningLogged) {
-    return;
-  }
-  noClientIdWarningLogged = true;
-  console.warn(
-    "No clientId provided to <ThirdwebSDKProvider />. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a client id from https://thirdweb.com/dashboard/",
-  );
-}
