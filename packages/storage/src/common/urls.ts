@@ -1,11 +1,7 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
 
-const TW_GATEWAY_URLS = [
-  // FIXME switch to prod before merging
-  "https://{clientId}.thirdwebstorage-staging.com/ipfs/{cid}/{path}",
-  "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}",
-];
+const TW_GATEWAY_URLS = ["https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}"];
 
 /**
  * @internal
