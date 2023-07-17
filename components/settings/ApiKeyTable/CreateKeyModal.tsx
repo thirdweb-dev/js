@@ -1,6 +1,6 @@
 import { ApiKeyDetailsRow } from "./DetailsRow";
 import { ApiKeyKeyForm } from "./KeyForm";
-import { ApiKeyFormValues } from "./types";
+import { ApiKeyValidationSchema } from "./validations";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
@@ -24,7 +24,7 @@ import { Button, CodeBlock, Heading, Text } from "tw-components";
 interface ApiKeysCreateModalProps {
   apiKey?: ApiKey | null;
   open: boolean;
-  form?: UseFormReturn<ApiKeyFormValues, any>;
+  form?: UseFormReturn<ApiKeyValidationSchema, any>;
   loading?: boolean;
   onClose: () => void;
   onSubmit?: () => void;

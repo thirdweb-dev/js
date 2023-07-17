@@ -1,9 +1,10 @@
 import { CopyApiKeyButton } from "./CopyButton";
 import { ApiKeyDrawer } from "./KeyDrawer";
+import { HIDDEN_SERVICES } from "./validations";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { HStack, useDisclosure } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { getServiceByName } from "@thirdweb-dev/service-utils";
+import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -74,8 +75,8 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
         return (
           <HStack alignItems="flex-start" w="full">
             {value.map((srv) => {
-              const service = getServiceByName(srv.name);
-              return (
+              const service = getServiceByName(srv.name as ServiceName);
+              return !HIDDEN_SERVICES.includes(service.name) ? (
                 <Badge
                   key={srv.name}
                   textTransform="capitalize"
@@ -85,7 +86,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
                 >
                   {service?.title}
                 </Badge>
-              );
+              ) : null;
             })}
           </HStack>
         );

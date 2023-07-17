@@ -37,7 +37,7 @@ export const CustomSDKContext: ComponentWithChildren<{
           : undefined,
         ...options,
       }}
-      thirdwebApiKey={DASHBOARD_THIRDWEB_API_KEY}
+      clientId={DASHBOARD_THIRDWEB_API_KEY}
       storageInterface={StorageSingleton}
     >
       {children}

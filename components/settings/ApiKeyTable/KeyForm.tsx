@@ -1,4 +1,5 @@
-import { ApiKeyFormValues } from "./types";
+import { HIDDEN_SERVICES, ApiKeyValidationSchema } from "./validations";
+
 import {
   Box,
   FormControl,
@@ -14,7 +15,7 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
-import { getServiceByName } from "@thirdweb-dev/service-utils";
+import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
 import {
   FieldArrayWithId,
   UseFormReturn,
@@ -31,7 +32,7 @@ import {
 } from "tw-components";
 
 interface ApiKeyKeyFormProps {
-  form: UseFormReturn<ApiKeyFormValues, any>;
+  form: UseFormReturn<ApiKeyValidationSchema, any>;
   selectedSection?: number;
   onSubmit: () => void;
   onSectionChange?: (idx: number) => void;
@@ -55,12 +56,15 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   const renderName = () => {
     return (
       <>
-        <FormControl>
+        <FormControl
+          isRequired
+          isInvalid={!!form.getFieldState("name", form.formState).error}
+        >
           <FormLabel>Key name</FormLabel>
           <Input
             placeholder="Descriptive name"
             type="text"
-            {...form.register("name", { minLength: 3 })}
+            {...form.register("name")}
           />
           <FormErrorMessage>
             {form.getFieldState("name", form.formState).error?.message}
@@ -72,7 +76,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
 
   const handleAction = (
     srvIdx: number,
-    srv: FieldArrayWithId<ApiKeyFormValues, "services", "id">,
+    srv: FieldArrayWithId<ApiKeyValidationSchema, "services", "id">,
     actionName: string,
     checked: boolean,
   ) => {
@@ -89,17 +93,52 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   const renderGeneral = () => {
     return (
       <>
-        <FormControl>
+        <FormControl
+          isInvalid={!!form.getFieldState("domains", form.formState).error}
+        >
           <FormLabel>Allowed Domains</FormLabel>
+          <FormHelperText mb={2}>
+            Prevent third-parties from using your Client ID on their websites by
+            only allowing requests from your domains.
+          </FormHelperText>
           <Textarea
             placeholder="thirdweb.com, rpc.example.com"
             {...form.register("domains")}
           />
-          <FormHelperText>
-            New line or comma-separated list of domain names.
-            <br />
-            To allow any domain, set to <code>*</code>.
+          {!form.getFieldState("domains", form.formState).error ? (
+            <FormHelperText>
+              Enter domains separated by commas or new lines. Leave blank to
+              deny all. Use <code>*</code> to allow any.
+            </FormHelperText>
+          ) : (
+            <FormErrorMessage>
+              {form.getFieldState("domains", form.formState).error?.message}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+
+        <FormControl
+          isInvalid={!!form.getFieldState("bundleIds", form.formState).error}
+        >
+          <FormLabel>Allowed Bundle IDs</FormLabel>
+          <FormHelperText mb={2}>
+            Prevent third-parties from using your Client ID in their native apps
+            by only allowing requests from your app bundles.
           </FormHelperText>
+          <Textarea
+            placeholder="com.thirdweb.app"
+            {...form.register("bundleIds")}
+          />
+          {!form.getFieldState("bundleIds", form.formState).error ? (
+            <FormHelperText>
+              Enter bundle ids separated by commas or new lines. Leave blank to
+              deny all. Use <code>*</code> to allow any.
+            </FormHelperText>
+          ) : (
+            <FormErrorMessage>
+              {form.getFieldState("bundleIds", form.formState).error?.message}
+            </FormErrorMessage>
+          )}
         </FormControl>
 
         {/* <FormControl>
@@ -127,10 +166,14 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
 
         <VStack alignItems="flex-start" w="full" gap={4}>
           {fields.map((srv, idx) => {
-            const service = getServiceByName(srv.name);
+            const service = getServiceByName(srv.name as ServiceName);
 
             return service ? (
-              <Card w="full" key={srv.name}>
+              <Card
+                w="full"
+                key={srv.name}
+                display={HIDDEN_SERVICES.includes(srv.name) ? "none" : "block"}
+              >
                 <HStack
                   justifyContent="space-between"
                   alignItems="flex-start"
@@ -156,19 +199,37 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
                 </HStack>
 
                 {service.name === "bundler" && (
-                  <FormControl>
+                  <FormControl
+                    isInvalid={
+                      !!form.getFieldState(`services.${idx}`, form.formState)
+                        .error
+                    }
+                  >
                     <FormLabel>Allowed Target addresses</FormLabel>
                     <Textarea
                       disabled={!srv.enabled}
                       placeholder="0xa1234567890AbcC1234567Bb1bDa6c885b2886b6"
                       {...form.register(`services.${idx}.targetAddresses`)}
                     />
-                    <FormHelperText>
-                      New line or comma-separated list of contract/wallet
-                      addresses.
-                      <br />
-                      To allow any target, set to <code>*</code>.
-                    </FormHelperText>
+                    {!form.getFieldState(
+                      `services.${idx}.targetAddresses`,
+                      form.formState,
+                    ).error ? (
+                      <FormHelperText>
+                        Enter contract/wallet addresses separated by commas or
+                        new lines. Leave blank to deny all. Use <code>*</code>{" "}
+                        to allow any.
+                      </FormHelperText>
+                    ) : (
+                      <FormErrorMessage>
+                        {
+                          form.getFieldState(
+                            `services.${idx}.targetAddresses`,
+                            form.formState,
+                          ).error?.message
+                        }
+                      </FormErrorMessage>
+                    )}
                   </FormControl>
                 )}
 
@@ -245,7 +306,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
       {!tabbed && (
         <VStack alignItems="flex-start" w="full" gap={3} pt={3}>
           {renderName()}
-          {renderServices()}
+          {renderGeneral()}
         </VStack>
       )}
     </form>

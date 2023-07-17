@@ -97,7 +97,7 @@ export function getEVMThirdwebSDK(
           rpcUrl,
           chainId,
         },
-        thirdwebApiKey: DASHBOARD_THIRDWEB_API_KEY,
+        clientId: DASHBOARD_THIRDWEB_API_KEY,
         ...sdkOptions,
       },
       StorageSingleton,

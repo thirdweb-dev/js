@@ -2,9 +2,10 @@ import { ApiKeyDetails } from "./Details";
 import { ApiKeyKeyForm } from "./KeyForm";
 import { RevokeApiKeyButton } from "./RevokeButton";
 import { toastMessages } from "./messages";
-import { ApiKeyFormValues, DrawerSection } from "./types";
+import { ApiKeyValidationSchema, apiKeyValidationSchema } from "./validations";
 import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { HStack, useToast } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -12,6 +13,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Drawer } from "tw-components";
 import { fromArrayToList, toArrFromList } from "utils/string";
+
+enum DrawerSection {
+  General,
+  Services,
+}
 
 interface ApiKeyDrawerProps {
   apiKey: ApiKey;
@@ -25,17 +31,19 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const { id, name, domains, bundleIds, services } = apiKey;
   const trackEvent = useTrack();
-  const { id, name, domains, services } = apiKey;
   const [editing, setEditing] = useState(false);
   const mutation = useUpdateApiKey();
   const [selectedSection, setSelectedSection] = useState(DrawerSection.General);
   const toast = useToast();
 
-  const form = useForm<ApiKeyFormValues>({
+  const form = useForm<ApiKeyValidationSchema>({
+    resolver: zodResolver(apiKeyValidationSchema),
     values: {
       name,
       domains: fromArrayToList(domains),
+      bundleIds: fromArrayToList(bundleIds),
       // FIXME: Enable when wallets restrictions is in use
       // walletAddresses: fromArrayToList(walletAddresses),
       services: SERVICES.map((srv) => {
@@ -46,7 +54,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
           name: srv.name,
           targetAddresses: existingService
             ? fromArrayToList(existingService.targetAddresses)
-            : "*",
+            : "",
           enabled: !!existingService,
           actions: existingService?.actions || [],
         };
@@ -69,6 +77,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
         id,
         name: values.name,
         domains: toArrFromList(values.domains),
+        bundleIds: toArrFromList(values.bundleIds),
         // FIXME: Enable when wallets restrictions is in use
         // walletAddresses: toArrFromList(values.walletAddresses),
         services: (values.services || [])

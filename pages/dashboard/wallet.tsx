@@ -51,7 +51,7 @@ await wallet.connect({
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ smartWallet({ factoryAddress: "0x...", thirdwebApiKey: "THIRDWEB_API_KEY" }) ]}>
+    <ThirdwebProvider supportedWallets={[ smartWallet({ factoryAddress: "0x...", clientId: "THIRDWEB_API_KEY" }) ]}>
       <ConnectWallet theme="{{theme}}" />
     </ThirdwebProvider>
   );
