@@ -256,7 +256,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
       invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
+      enabled: (!!erc721 || !!erc1155) && !!ownerWalletAddress,
     },
   );
 }

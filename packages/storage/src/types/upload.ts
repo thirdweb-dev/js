@@ -46,6 +46,11 @@ export type IpfsUploaderOptions = {
    * Whether or not to replace any URLs with schemes with resolved URLs before upload
    */
   uploadWithGatewayUrl?: boolean;
+  /**
+   * Optional apiKey to associate with the IpfsUploader.
+   * You can get an API key here: https://thirdweb.com/settings
+   */
+  apiKey?: string;
 };
 
 /**
