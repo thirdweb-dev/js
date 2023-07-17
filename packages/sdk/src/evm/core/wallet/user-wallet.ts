@@ -54,11 +54,17 @@ export class UserWallet {
   private connection: RPCConnectionHandler;
   private options: SDKOptions;
   public events = new EventEmitter<UserWalletEvents>();
+  storage: ThirdwebStorage;
 
-  constructor(network: NetworkInput, options: SDKOptions) {
+  constructor(
+    network: NetworkInput,
+    options: SDKOptions,
+    storage: ThirdwebStorage,
+  ) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
     this.events = new EventEmitter();
+    this.storage = storage;
   }
 
   // TODO disconnect()
@@ -294,6 +300,7 @@ export class UserWallet {
       const localWallet = new UserWallet(
         new Wallet(LOCAL_NODE_PKEY, getChainProvider(chainId, this.options)),
         this.options,
+        this.storage,
       );
       return localWallet.transfer(await this.getAddress(), amount);
     } else {
@@ -322,11 +329,7 @@ export class UserWallet {
       currencyAddress,
       ERC20Abi,
       this.options,
-      // TODO ideally we pass down storage from the constructor but causes problems in react-core
-      new ThirdwebStorage({
-        clientId: this.options?.clientId,
-        secretKey: this.options?.secretKey,
-      }),
+      this.storage,
     );
   }
 }
