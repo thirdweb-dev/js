@@ -116,7 +116,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @returns the Direct listing object array
    * @twfeature DirectListings
    */
-  public async getAll(filter?: MarketplaceFilterWithoutOfferor): Promise<DirectListingV3[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutOfferor,
+  ): Promise<DirectListingV3[]> {
     const totalListings = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();

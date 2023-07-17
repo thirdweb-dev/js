@@ -9,7 +9,7 @@ import { createSyncStorage } from "../../../core/AsyncStorage";
 
 type SmartWalletConfig = {
   personalWallets?: WalletConfig<any>[];
-} & Omit<SmartWalletConfigWallets, "chain">;
+} & Omit<SmartWalletConfigWallets, "chain" | 'clientId' | 'secretKey'>;
 
 export type SmartWalletObj = WalletConfig<SmartWallet>;
 

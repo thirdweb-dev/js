@@ -16,7 +16,8 @@ const ImageSvgUri = ({
 }) => {
   const storage = useStorage();
   const resolvedImageUrl = storage
-    ? storage.resolveScheme(imageUrl)
+    ? // @ts-ignore
+      storage.resolveScheme(imageUrl) + `?bundleId=${globalThis.APP_BUNDLE_ID}`
     : imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   const [error, setError] = useState(false);

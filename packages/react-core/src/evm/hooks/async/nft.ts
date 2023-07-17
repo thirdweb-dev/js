@@ -3,7 +3,7 @@ import {
   requiredParamInvariant,
   RequiredParam,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDKChainId } from "../useSDK";
 import {
   AirdropNFTParams,
   BurnNFTParams,
