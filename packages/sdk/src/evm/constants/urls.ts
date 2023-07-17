@@ -13,13 +13,10 @@ import type { Signer } from "ethers";
  * @internal
  */
 function buildDefaultMap(options: SDKOptionsOutput) {
-  return options.supportedChains.reduce(
-    (previousValue, currentValue) => {
-      previousValue[currentValue.chainId] = currentValue;
-      return previousValue;
-    },
-    {} as Record<number, ChainInfo>,
-  );
+  return options.supportedChains.reduce((previousValue, currentValue) => {
+    previousValue[currentValue.chainId] = currentValue;
+    return previousValue;
+  }, {} as Record<number, ChainInfo>);
 }
 
 /**
@@ -33,7 +30,7 @@ export function getChainProvider(
 ): providers.Provider {
   // If we have an RPC URL, use that for the provider
   if (typeof network === "string" && isRpcUrl(network)) {
-    return getProviderFromRpcUrl(network);
+    return getProviderFromRpcUrl(network, sdkOptions);
   }
 
   // Add the chain to the supportedChains
@@ -70,7 +67,7 @@ export function getChainProvider(
     );
   }
 
-  return getProviderFromRpcUrl(rpcUrl, chainId);
+  return getProviderFromRpcUrl(rpcUrl, sdkOptions, chainId);
 }
 
 export function getChainIdFromNetwork(
@@ -85,13 +82,10 @@ export function getChainIdFromNetwork(
     return network;
   } else {
     // If it's a string (chain name) return the chain id from the map
-    const chainNameToId = options.supportedChains.reduce(
-      (acc, curr) => {
-        acc[curr.slug] = curr.chainId;
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
+    const chainNameToId = options.supportedChains.reduce((acc, curr) => {
+      acc[curr.slug] = curr.chainId;
+      return acc;
+    }, {} as Record<string, number>);
 
     if (network in chainNameToId) {
       return chainNameToId[network];
@@ -152,8 +146,20 @@ const RPC_PROVIDER_MAP: Map<
  *
  * @internal
  */
-export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
+export function getProviderFromRpcUrl(
+  rpcUrl: string,
+  sdkOptions: SDKOptions,
+  chainId?: number,
+) {
   try {
+    const headers: Record<string, string> = {};
+    if (isTwUrl(rpcUrl)) {
+      if (sdkOptions?.clientId) {
+        headers["x-client-id"] = sdkOptions?.clientId;
+      } else if (sdkOptions?.secretKey) {
+        headers["x-secret-key"] = sdkOptions?.secretKey;
+      }
+    }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available
     if (match) {
@@ -172,9 +178,18 @@ export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
           // Otherwise, create a new provider on the specific network
           const newProvider = chainId
             ? // If we know the chainId we should use the StaticJsonRpcBatchProvider
-              new StaticJsonRpcBatchProvider(rpcUrl, chainId)
+              new StaticJsonRpcBatchProvider(
+                {
+                  url: rpcUrl,
+                  headers,
+                },
+                chainId,
+              )
             : // Otherwise fall back to the built in json rpc batch provider
-              new providers.JsonRpcBatchProvider(rpcUrl);
+              new providers.JsonRpcBatchProvider({
+                url: rpcUrl,
+                headers,
+              });
 
           // Save the provider in our cache
           RPC_PROVIDER_MAP.set(seralizedOpts, newProvider);
@@ -191,6 +206,11 @@ export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
 
   // Always fallback to the default provider if no other option worked
   return providers.getDefaultProvider(rpcUrl);
+}
+
+// TODO move to utils package
+function isTwUrl(url: string): boolean {
+  return new URL(url).hostname.endsWith(".thirdweb.com");
 }
 
 /**
@@ -222,6 +242,7 @@ export function getSignerAndProvider(
     // If readonly settings are specified, then overwrite the provider
     provider = getProviderFromRpcUrl(
       options.readonlySettings.rpcUrl,
+      options,
       options.readonlySettings.chainId,
     );
   }

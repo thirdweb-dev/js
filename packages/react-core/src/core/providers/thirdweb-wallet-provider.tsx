@@ -491,7 +491,14 @@ async function getLastConnectedWalletInfo() {
     return null;
   }
 
-  return JSON.parse(str) as LastConnectedWalletInfo;
+  try {
+    return JSON.parse(str) as LastConnectedWalletInfo;
+  } catch {
+    await lastConnectedWalletStorage.removeItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+    );
+    return null;
+  }
 }
 
 async function saveLastConnectedWalletInfo(
