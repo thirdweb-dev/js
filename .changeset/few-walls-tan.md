@@ -1,7 +1,7 @@
 ---
 "@thirdweb-dev/react-native": patch
-"@thirdweb-dev/react-core": minor
-"@thirdweb-dev/react": minor
+"@thirdweb-dev/react-core": patch
+"@thirdweb-dev/react": patch
 ---
 
 Adds new `clientId` prop to access thirdweb's services.
