@@ -14,6 +14,7 @@ import {
 import { prepareGatewayUrls } from "./utils";
 import { IpfsUploader } from "./uploader";
 import { StorageDownloader } from "./downloader";
+import { UploadDataValue } from "./types";
 
 export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
   implements IThirdwebStorage
@@ -99,16 +100,24 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    *
    * @example
    * ```jsx
-   * // Upload file data
-   * const file = readFileSync("../file.jpg");
-   * const fileUri = await storage.upload(file);
-   *
-   * // Or upload a JSON object
-   * const json = { name: "JSON", image: file };
+   * // Upload an image
+   * launchImageLibrary({mediaType: 'photo'}, async response => {
+   *   if (response.assets?.[0]) {
+   *      const {fileName, type, uri} = response.assets[0];
+   *      if (!uri) {
+   *        throw new Error('No uri');
+   *      }
+   *      const resp = await storage.upload({
+   *        uri,
+   *        type,
+   *        name: fileName,
+   *      });
+   *    }
+   *  });
    * const jsonUri = await storage.upload(json);
    * ```
    */
-  async upload(data: any, options?: T): Promise<string> {
+  async upload(data: UploadDataValue, options?: T): Promise<string> {
     const [uri] = await this.uploadBatch([data], options);
     return uri;
   }
@@ -123,22 +132,30 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    *
    * @example
    * ```jsx
-   * // Upload an array of file data
-   * const files = [
-   *  readFileSync("../file1.jpg"),
-   *  readFileSync("../file2.jpg"),
-   * ];
-   * const fileUris = await storage.uploadBatch(files);
+   * // Upload an image
+   * launchImageLibrary({mediaType: 'photo'}, async response => {
+   *   if (response.assets?.[0]) {
+   *      const {fileName, type, uri} = response.assets[0];
+   *      if (!uri) {
+   *        throw new Error('No uri');
+   *      }
+   *      const resp = await storage.upload({
+   *        uri,
+   *        type,
+   *        name: fileName,
+   *      });
+   *    }
+   *  });
    *
    * // Upload an array of JSON objects
    * const objects = [
-   *  { name: "JSON 1", image: files[0] },
-   *  { name: "JSON 2", image: files[1] },
+   *  { name: "JSON 1", text: "Hello World" },
+   *  { name: "JSON 2", trait: "Awesome" },
    * ];
    * const jsonUris = await storage.uploadBatch(objects);
    * ```
    */
-  async uploadBatch(data: any[], options?: T): Promise<string[]> {
+  async uploadBatch(data: UploadDataValue[], options?: T): Promise<string[]> {
     data = data.filter((item) => item !== undefined);
 
     if (!data.length) {

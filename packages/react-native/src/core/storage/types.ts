@@ -23,3 +23,7 @@ export type IpfsUploaderOptions = {
    */
   clientId?: string;
 };
+
+export type UploadFile = { name?: string; type?: string; uri: string };
+
+export type UploadDataValue = UploadFile | any;

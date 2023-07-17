@@ -4,10 +4,10 @@ import {
   isFileBufferOrStringEqual,
   TW_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
-import { IpfsUploaderOptions } from "./types";
-import DeviceInfo from "react-native-device-info";
+import { IpfsUploaderOptions, UploadDataValue } from "./types";
+import * as Application from "expo-application";
 
-const APP_BUNDLE_ID = DeviceInfo.getBundleId();
+const APP_BUNDLE_ID = Application.applicationId;
 const METADATA_NAME = "Storage React Native SDK";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
@@ -20,18 +20,18 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   }
 
   async uploadBatch(
-    data: any[],
+    data: UploadDataValue[],
     options?: IpfsUploadBatchOptions | undefined,
   ): Promise<string[]> {
     if (data.length === 0) {
       throw new Error("[UPLOAD_BATCH_ERROR] No files or objects to upload.");
     }
 
-    if (options?.uploadWithoutDirectory && data.length > 1) {
-      throw new Error(
-        "[UPLOAD_WITHOUT_DIRECTORY_ERROR] Cannot upload more than one file without directory!",
-      );
-    }
+    // if (options?.uploadWithoutDirectory && data.length > 1) {
+    //   throw new Error(
+    //     "[UPLOAD_WITHOUT_DIRECTORY_ERROR] Cannot upload more than one file without directory!",
+    //   );
+    // }
 
     const metadata = {
       name: METADATA_NAME,
@@ -40,9 +40,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     if ("uri" in data[0] && "type" in data[0] && "name" in data[0]) {
       // then it's an array of files
-      // assume an array of files
       return new Promise(async (resolve, reject) => {
-        // asume file
         const formData = new FormData();
 
         const { form, fileNames } = this.buildFormData(
@@ -139,7 +137,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID);
+        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
         if (this.clientId) {
           xhr.setRequestHeader("x-client-id", this.clientId);
         }
@@ -154,13 +152,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           content: data,
         });
 
-        reject("Not implemented yet!");
-
         try {
           const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
             method: "POST",
             headers: {
-              "x-bundle-id": APP_BUNDLE_ID,
+              "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
               ...(this.clientId ? { "x-client-id": this.clientId } : {}),
               "Content-Type": "application/json",
             },

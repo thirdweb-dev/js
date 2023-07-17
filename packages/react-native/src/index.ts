@@ -1,6 +1,6 @@
-import DeviceInfo from "react-native-device-info";
+import * as Application from "expo-application";
 
 export * from "./evm";
 
 // @ts-ignore
-globalThis.APP_BUNDLE_ID = DeviceInfo.getBundleId();
+globalThis.APP_BUNDLE_ID = Application.applicationId;

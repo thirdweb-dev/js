@@ -2,10 +2,10 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Kroma Sepolia",
   "title": "Kroma Testnet Sepolia",
-  "chainId": 2357,
+  "chainId": 2358,
   "shortName": "kroma-sepolia",
   "chain": "ETH",
-  "networkId": 2357,
+  "networkId": 2358,
   "nativeCurrency": {
     "name": "Sepolia Ether",
     "symbol": "ETH",
