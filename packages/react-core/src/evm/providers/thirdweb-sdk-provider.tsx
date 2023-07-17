@@ -7,6 +7,7 @@ import { useUpdateChainsWithClientId } from "../hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "./types";
 import { Chain, defaultChains, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { checkClientIdOrSecretKey } from "@thirdweb-dev/sdk";
 
 /**
  *
@@ -160,6 +161,13 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   clientId,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  if (!clientId) {
+    checkClientIdOrSecretKey(
+      "No clientId provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a clientId from https://thirdweb.com/create-api-key",
+      clientId,
+      undefined,
+    );
+  }
   const supportedChainsNonNull = useMemo(() => {
     return supportedChains || (defaultChains as any as TChains);
   }, [supportedChains]);

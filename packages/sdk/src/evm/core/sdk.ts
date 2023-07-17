@@ -261,7 +261,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage?: IThirdwebStorage,
   ) {
-    checkClientIdOrSecretKey(options.clientId, options.secretKey);
+    const apiKeyType = window !== undefined ? "clientId" : "secretKey";
+    checkClientIdOrSecretKey(
+      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
+      options.clientId,
+      options.secretKey,
+    );
 
     if (isChainConfig(network)) {
       options = {
