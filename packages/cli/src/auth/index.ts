@@ -8,7 +8,7 @@ export async function loginUser(
   options?: { new: boolean },
   showLogs?: boolean,
 ) {
-  const keyFound = getSession(cache);
+  const keyFound = await getSession(cache);
   if (keyFound && !options?.new) {
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
@@ -29,9 +29,15 @@ export async function logoutUser(cache: Cache) {
   }
 }
 
-export function getSession(cache: Cache) {
+export async function getSession(cache: Cache) {
   try {
     const apiKey: CacheEntry = cache.get("api-secret-key");
+    try {
+      await validateKey(apiKey.value);
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
     return apiKey.value;
   } catch (error) {
     console.log(error);
@@ -63,7 +69,6 @@ export async function createSession(cache: Cache) {
 
 export async function validateKey(apiSecretKey: string) {
   const fetch = (await import("node-fetch")).default;
-  // TODO: CHANGE THIS TO PROD BEFORE MERGING!!!
   const response = await fetch(
     `https://api.thirdweb.com/v1/keys/use?scope=storage`,
     {
