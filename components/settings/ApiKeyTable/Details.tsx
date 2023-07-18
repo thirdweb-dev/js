@@ -190,6 +190,30 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
               }
             />
 
+            <Divider />
+
+            <ApiKeyDetailsRow
+              title="Secret Key"
+              description="Identifies and authenticates your application from the backend. Using the secret key bypasses any allowed domains or bundle ids."
+              content={
+                <VStack gap={2} w="full" alignItems="flex-start">
+                  <CodeBlock code={secretMasked} canCopy={false} />
+                  <Text>
+                    Instantiate the thirdweb SDK with your secret key:
+                  </Text>
+                  <CodeBlock
+                    language="ts"
+                    whiteSpace="pre"
+                    code={`const sdk = new ThirdwebSDK("goerli", {
+  secretKey: "${secretMasked}"
+});`}
+                  />
+                </VStack>
+              }
+            />
+
+            <Divider />
+
             <ApiKeyDetailsRow
               title="Allowed Domains"
               tooltip={`Prevent third-parties from using your Client ID on their websites by only allowing requests from your domains.`}
@@ -201,16 +225,6 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
               tooltip={`Prevent third-parties from using your Client ID in their native apps by only allowing requests from your app bundles.`}
               content={bundleIdsContent}
             />
-
-            <Divider />
-
-            {secretMasked && (
-              <ApiKeyDetailsRow
-                title="Secret Key"
-                description="Identifies and authenticates your application from the backend."
-                content={<CodeBlock code={secretMasked} canCopy={false} />}
-              />
-            )}
 
             {/*
             FIXME: Enable when wallets restrictions is in use
