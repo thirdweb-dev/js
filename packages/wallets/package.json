@@ -64,6 +64,13 @@
       },
       "default": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.cjs.js"
     },
+    "./evm/wallets/blocto": {
+      "module": {
+        "browser": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.browser.esm.js",
+        "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.esm.js"
+      },
+      "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.cjs.js"
+    },
     "./evm/wallets/ethers": {
       "module": {
         "browser": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.browser.esm.js",
@@ -204,6 +211,13 @@
       },
       "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.cjs.js"
     },
+    "./evm/connectors/blocto": {
+      "module": {
+        "browser": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.browser.esm.js",
+        "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.esm.js"
+      },
+      "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.cjs.js"
+    },
     "./evm/connectors/zerion": {
       "module": {
         "browser": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.browser.esm.js",
@@ -321,7 +335,7 @@
     "@account-abstraction/contracts": "^0.5.0",
     "@account-abstraction/sdk": "^0.5.0",
     "@account-abstraction/utils": "^0.5.0",
-    "@blocto/sdk": "^0.5.0",
+    "@blocto/sdk": "^0.5.1",
     "@coinbase/wallet-sdk": "^3.7.1",
     "@magic-ext/connect": "^6.7.2",
     "@magic-ext/oauth": "^7.6.2",

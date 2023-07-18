@@ -12,6 +12,7 @@ export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { smartWallet } from "./wallet/wallets/smartWallet/smartWallet";
 export { magicLink } from "./wallet/wallets/magic/magicLink";
 export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
+export { bloctoWallet } from "./wallet/wallets/blocto/BloctoWallet";
 
 // at the moment we'll re-export everything from the evm package
 export * from "./evm";
