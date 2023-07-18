@@ -65,17 +65,24 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: `using UnityEngine;
-using Thirdweb;
+      unity: `using Thirdweb;
 
-public class ConnectWalletButton: MonoBehaviour
+public async void ConnectWallet()
 {
-    public async void ConnectWallet()
-    {
-        int chainId = 1;
-        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.SmartWallet, chainId));
-        Debug.Log("Connected successfully to: " + address);
-    }
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.SmartWallet,        // The wallet provider you want to connect to (Required)
+      chainId: 1,                                  // The chain you want to connect to (Required)
+      password: "myEpicPassword",                  // If using a local wallet as personal wallet (Optional) 
+      email: "email@email.com",                    // If using an email wallet as personal wallet (Optional)
+      personalWallet: WalletProvider.LocalWallet   // The personal wallet you want to use with your Smart Wallet (Optional)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
@@ -123,18 +130,22 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: `using UnityEngine;
-using Thirdweb;
+      unity: `using Thirdweb;
 
-public class ConnectWalletButton: MonoBehaviour
+public async void ConnectWallet()
 {
-    public async void ConnectWallet()
-    {
-        int chainId = 1;
-        string password = "myOptionalPassword";
-        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.LocalWallet, chainId, password));
-        Debug.Log("Connected successfully to: " + address);
-    }
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.LocalWallet,      // The wallet provider you want to connect to (Required)
+      chainId: 1,                                // The chain you want to connect to (Required)
+      password: "myEpicPassword"                 // Used to encrypt your Local Wallet, defaults to device uid (Optional) 
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
@@ -169,17 +180,21 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: `using UnityEngine;
-using Thirdweb;
+      unity: `using Thirdweb;
 
-public class ConnectWalletButton: MonoBehaviour
+public async void ConnectWallet()
 {
-    public async void ConnectWallet()
-    {
-        int chainId = 1;
-        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.Coinbase, chainId));
-        Debug.Log("Connected successfully to: " + address);
-    }
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+    
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.Coinbase,        // The wallet provider you want to connect to (Required)
+      chainId: 1                                // The chain you want to connect to (Required)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
@@ -214,17 +229,21 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: `using UnityEngine;
-using Thirdweb;
+      unity: `using Thirdweb;
 
-public class ConnectWalletButton: MonoBehaviour
+public async void ConnectWallet()
 {
-    public async void ConnectWallet()
-    {
-        int chainId = 1;
-        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.Metamask, chainId));
-        Debug.Log("Connected successfully to: " + address);
-    }
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+    
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.Metamask,       // The wallet provider you want to connect to (Required)
+      chainId: 1                               // The chain you want to connect to (Required)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
@@ -253,6 +272,23 @@ return (
       <ConnectWallet theme="{{theme}}" />
     </ThirdwebProvider>
   );
+}`,
+      unity: `using Thirdweb;
+
+public async void ConnectWallet()
+{
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+    
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.Paper,          // The wallet provider you want to connect to (Required)
+      chainId: 1,                              // The chain you want to connect to (Required)
+      email: "email@email.com"                 // The email you want to authenticate with (Required)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
@@ -350,17 +386,21 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: `using UnityEngine;
-using Thirdweb;
+      unity: `using Thirdweb;
 
-public class ConnectWalletButton: MonoBehaviour
+public async void ConnectWallet()
 {
-    public async void ConnectWallet()
-    {
-        int chainId = 1;
-        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.WalletConnectV1, chainId));
-        Debug.Log("Connected successfully to: " + address);
-    }
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+    
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.WalletConnect,     // The wallet provider you want to connect to (Required)
+      chainId: 1                                  // The chain you want to connect to (Required)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
@@ -432,18 +472,22 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      unity: `using UnityEngine;
-using Thirdweb;
+      unity: `using Thirdweb;
 
-public class ConnectWalletButton: MonoBehaviour
+public async void ConnectWallet()
 {
-    public async void ConnectWallet()
-    {
-        int chainId = 1;
-        string email = "email@email.com";
-        string address = await ThirdwebManager.Instance.SDK.wallet.Connect(new WalletConnection(WalletProvider.MagicLink, chainId, null, email));
-        Debug.Log("Connected successfully to: " + address);
-    }
+    // Reference to your Thirdweb SDK
+    var sdk = ThirdwebManager.Instance.SDK;
+    
+    // Configure the connection
+    var connection = new WalletConnection(
+      provider: WalletProvider.MagicLink,      // The wallet provider you want to connect to (Required)
+      chainId: 1,                              // The chain you want to connect to (Required)
+      email: "email@email.com"                 // The email you want to authenticate with (Required)
+    );
+
+    // Connect the wallet
+    string address = await sdk.wallet.Connect(connection);
 }`,
     },
   },
