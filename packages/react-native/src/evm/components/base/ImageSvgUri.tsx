@@ -2,6 +2,7 @@ import { useStorage } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Image } from "react-native";
 import { SvgUri } from "react-native-svg";
+import { isAppBundleIdPresentInGlobal } from "../../utils/global";
 
 const ImageSvgUri = ({
   imageUrl = "",
@@ -16,8 +17,11 @@ const ImageSvgUri = ({
 }) => {
   const storage = useStorage();
   const resolvedImageUrl = storage
-    ? // @ts-ignore
-      storage.resolveScheme(imageUrl) + `?bundleId=${globalThis.APP_BUNDLE_ID}`
+    ? storage.resolveScheme(imageUrl) +
+      (isAppBundleIdPresentInGlobal()
+        ? // @ts-ignore
+          `?bundleId=${globalThis.APP_BUNDLE_ID}`
+        : "")
     : imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   const [error, setError] = useState(false);
@@ -32,7 +36,9 @@ const ImageSvgUri = ({
         width={width}
         height={height}
         uri={resolvedImageUrl}
-        onError={() => setError(true)}
+        onError={(err) => {
+          console.warn("Error loading an svg image: ", err);
+        }}
       />
     );
   } else {
