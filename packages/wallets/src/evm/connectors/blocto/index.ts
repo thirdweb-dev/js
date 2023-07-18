@@ -15,7 +15,7 @@ import type {
 import BloctoSDK from "@blocto/sdk";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
-import { Chain } from '@thirdweb-dev/chains';
+import { Chain } from "@thirdweb-dev/chains";
 
 type BloctoSigner = providers.JsonRpcSigner;
 
@@ -51,9 +51,11 @@ export class BloctoConnector extends WagmiConnector<
     this.#onDisconnectBind = this.onDisconnect.bind(this);
   }
 
-  async connect(
-    { chainId }: { chainId?: number },
-  ): Promise<Required<WagmiConnectorData<BloctoProvider>>> {
+  async connect({
+    chainId,
+  }: {
+    chainId?: number;
+  }): Promise<Required<WagmiConnectorData<BloctoProvider>>> {
     try {
       const provider = await this.getProvider();
 
@@ -61,7 +63,9 @@ export class BloctoConnector extends WagmiConnector<
 
       this.emit("message", { type: "connecting" });
 
-      const accounts = await provider.request({ method: "eth_requestAccounts"});
+      const accounts = await provider.request({
+        method: "eth_requestAccounts",
+      });
       const account = utils.getAddress(accounts[0] as string);
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -96,7 +100,7 @@ export class BloctoConnector extends WagmiConnector<
     const accounts = await provider.request({
       method: "eth_accounts",
     });
-    const [address]  = accounts || [];
+    const [address] = accounts || [];
 
     if (!address) {
       throw new Error("No accounts found");
@@ -125,9 +129,9 @@ export class BloctoConnector extends WagmiConnector<
     return Promise.resolve(this.#provider);
   }
 
-  async getSigner(
-    { chainId }: { chainId?: number} = {},
-  ): Promise<BloctoSigner> {
+  async getSigner({
+    chainId,
+  }: { chainId?: number } = {}): Promise<BloctoSigner> {
     const [provider, account] = await Promise.all([
       this.getProvider(),
       this.getAccount(),
@@ -135,7 +139,7 @@ export class BloctoConnector extends WagmiConnector<
 
     return new providers.Web3Provider(
       provider as unknown as providers.ExternalProvider,
-      chainId
+      chainId,
     ).getSigner(account);
   }
 
@@ -152,22 +156,21 @@ export class BloctoConnector extends WagmiConnector<
     const provider = await this.getProvider();
     const id = utils.hexValue(chainId);
     const chain = this.chains.find((x) => x.chainId === chainId);
-    const isBloctoSupportChain = provider._blocto.supportNetworkList[`${chainId}`];
+    const isBloctoSupportChain =
+      provider._blocto.supportNetworkList[`${chainId}`];
 
     if (!chain || !isBloctoSupportChain) {
       throw new SwitchChainError(`Blocto unsupported chain: ${id}`);
     }
-    
+
     try {
       await provider.request({
-        method: 'wallet_addEthereumChain',
-        params: [
-          { chainId: id, rpcUrls: [chain?.rpc[0] ?? ''] },
-        ],
+        method: "wallet_addEthereumChain",
+        params: [{ chainId: id, rpcUrls: [chain?.rpc[0] ?? ""] }],
       });
 
       await provider.request({
-        method: 'wallet_switchEthereumChain',
+        method: "wallet_switchEthereumChain",
         params: [{ chainId: id }],
       });
 
