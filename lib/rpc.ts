@@ -1,9 +1,9 @@
 import { Chain, getChainRPC } from "@thirdweb-dev/chains";
-import { DASHBOARD_THIRDWEB_API_KEY, RPC_ENV } from "constants/rpc";
+import { DASHBOARD_THIRDWEB_CLIENT_ID, RPC_ENV } from "constants/rpc";
 
 const rpcKeys = {
   // fine to be hard-coded for now
-  thirdwebApiKey: DASHBOARD_THIRDWEB_API_KEY,
+  thirdwebApiKey: DASHBOARD_THIRDWEB_CLIENT_ID,
 };
 
 export function getDashboardChainRpc(chain: Chain) {

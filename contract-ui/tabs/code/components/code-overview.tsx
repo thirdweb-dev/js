@@ -44,7 +44,7 @@ import {
   CodeEnvironment,
   SnippetApiResponse,
 } from "components/contract-tabs/code/types";
-import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
+import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { constants } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -295,7 +295,7 @@ function formatSnippet(
           : rpcUrl?.replace(
               // eslint-disable-next-line no-template-curly-in-string
               "${THIRDWEB_API_KEY}",
-              DASHBOARD_THIRDWEB_API_KEY,
+              DASHBOARD_THIRDWEB_CLIENT_ID,
             ) || "",
       );
 
