@@ -38,7 +38,7 @@ export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
 /**
  * @internal
  */
-export const TW_UPLOAD_SERVER_URL = "https://storage.thirdweb.com";
+export const TW_UPLOAD_SERVER_URL = "https://storage.staging.thirdweb.com";
 
 /**
  * @internal

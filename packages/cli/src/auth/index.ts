@@ -65,7 +65,7 @@ export async function validateKey(apiSecretKey: string) {
   const fetch = (await import("node-fetch")).default;
   // TODO: CHANGE THIS TO PROD BEFORE MERGING!!!
   const response = await fetch(
-    `https://api.thirdweb.com/v1/keys/use?scope=storage`,
+    `https://api.staging.thirdweb.com/v1/keys/use?scope=storage`,
     {
       method: "GET",
       headers: {
