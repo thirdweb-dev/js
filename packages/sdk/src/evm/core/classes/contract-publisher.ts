@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { fetchPreDeployMetadata } from "../../common/feature-detection/fetchPreDeployMetadata";
 import { extractFunctions } from "../../common/feature-detection/extractFunctions";
@@ -66,6 +65,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       getContractPublisherAddress(),
       ContractPublisherAbi,
       options,
+      storage,
     );
   }
 
@@ -275,11 +275,14 @@ export class ContractPublisher extends RPCConnectionHandler {
       resolvedPublisherAddress,
     );
     // since we can fetch from multiple publisher contracts, just keep the latest one in the list
-    const map = data.reduce((acc, curr) => {
-      // replaces the previous contract with the latest one
-      acc[curr.contractId] = curr;
-      return acc;
-    }, {} as Record<string, IContractPublisher.CustomContractInstanceStruct>);
+    const map = data.reduce(
+      (acc, curr) => {
+        // replaces the previous contract with the latest one
+        acc[curr.contractId] = curr;
+        return acc;
+      },
+      {} as Record<string, IContractPublisher.CustomContractInstanceStruct>,
+    );
     return Object.entries(map).map(([, struct]) =>
       this.toPublishedContract(
         struct as IContractPublisher.CustomContractInstanceStruct,
@@ -387,7 +390,8 @@ export class ContractPublisher extends RPCConnectionHandler {
               implementation,
               compilerMetadata.abi,
               getChainProvider(parseInt(network), {
-                thirdwebApiKey: DEFAULT_API_KEY,
+                clientId: this.options.clientId,
+                secretKey: this.options.secretKey,
               }),
               {}, // pass empty object for options instead of this.options
               this.storage,

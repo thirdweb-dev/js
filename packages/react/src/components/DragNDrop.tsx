@@ -121,7 +121,9 @@ const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)<{
   theme?: Theme;
 }>`
   color: ${(props) => props.theme.text.secondary};
-  transition: transform 200ms ease, color 200ms ease;
+  transition:
+    transform 200ms ease,
+    color 200ms ease;
 `;
 
 const DropContainer = styled.div<{ theme?: Theme }>`

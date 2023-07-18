@@ -2,7 +2,6 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 import { getChainProvider } from "../../constants/urls";
 import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
-import { DEFAULT_API_KEY } from "../../../core/constants/urls";
 import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { computeDeploymentInfo } from "./computeDeploymentInfo";
@@ -19,9 +18,12 @@ export async function predictThirdwebContractAddress(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<string> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: DEFAULT_API_KEY,
+    clientId,
+    secretKey,
   });
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const create2Factory = await getCreate2FactoryAddress(provider);

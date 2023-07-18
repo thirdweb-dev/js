@@ -40,6 +40,7 @@ export class MultichainRegistry {
       getMultichainRegistryAddress(),
       TWRegistryABI,
       options,
+      storage,
     );
 
     this.registryRouter = new ContractWrapper<TWMultichainRegistryRouter>(
@@ -47,6 +48,7 @@ export class MultichainRegistry {
       getMultichainRegistryAddress(),
       TWRegistryRouterABI,
       options,
+      storage,
     );
   }
 
