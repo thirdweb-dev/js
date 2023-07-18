@@ -1,6 +1,9 @@
 import * as Application from "expo-application";
+import { isGlobalThisPresent } from "./evm/utils/global";
 
 export * from "./evm";
 
-// @ts-ignore
-globalThis.APP_BUNDLE_ID = Application.applicationId;
+if (isGlobalThisPresent()) {
+  // @ts-ignore
+  globalThis.APP_BUNDLE_ID = Application.applicationId;
+}

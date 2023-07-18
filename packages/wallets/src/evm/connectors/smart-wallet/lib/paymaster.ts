@@ -45,8 +45,10 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
       } else if (this.clientId) {
         headers["x-client-id"] = this.clientId;
 
-        // @ts-ignore
-        if (globalThis.APP_BUNDLE_ID) {
+        if (
+          typeof globalThis !== "undefined" &&
+          "APP_BUNDLE_ID" in globalThis
+        ) {
           // @ts-ignore
           headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
         }

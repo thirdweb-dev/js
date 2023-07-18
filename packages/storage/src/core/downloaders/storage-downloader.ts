@@ -75,8 +75,10 @@ export class StorageDownloader implements IStorageDownloader {
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
       } else if (this.clientId) {
-        // @ts-ignore
-        if (globalThis.APP_BUNDLE_ID) {
+        if (
+          typeof globalThis !== "undefined" &&
+          "APP_BUNDLE_ID" in globalThis
+        ) {
           // @ts-ignore
           resolvedUri = resolvedUri + `?bundleId=${globalThis.APP_BUNDLE_ID}`;
         }

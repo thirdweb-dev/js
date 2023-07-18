@@ -38,8 +38,10 @@ export class HttpRpcClient {
       } else if (clientId) {
         headers["x-client-id"] = clientId;
 
-        // @ts-ignore
-        if (globalThis.APP_BUNDLE_ID) {
+        if (
+          typeof globalThis !== "undefined" &&
+          "APP_BUNDLE_ID" in globalThis
+        ) {
           // @ts-ignore
           headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
         }
