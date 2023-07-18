@@ -32,7 +32,9 @@ const ImageSvgUri = ({
         width={width}
         height={height}
         uri={resolvedImageUrl}
-        onError={() => setError(true)}
+        onError={(err) => {
+          console.warn("Error loading an svg image: ", err);
+        }}
       />
     );
   } else {

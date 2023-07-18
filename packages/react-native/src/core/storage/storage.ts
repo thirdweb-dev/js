@@ -9,11 +9,11 @@ import {
   replaceSchemeWithGatewayUrl,
   IThirdwebStorage,
   IStorageDownloader,
+  StorageDownloader,
 } from "@thirdweb-dev/storage";
 
 import { prepareGatewayUrls } from "./utils";
 import { IpfsUploader } from "./uploader";
-import { StorageDownloader } from "./downloader";
 import { UploadDataValue } from "./types";
 
 export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
@@ -29,7 +29,11 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       new IpfsUploader({
         clientId: options?.clientId,
       });
-    this.downloader = options?.downloader || new StorageDownloader({});
+    this.downloader =
+      options?.downloader ||
+      new StorageDownloader({
+        clientId: options?.clientId,
+      });
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),
       options?.clientId,
