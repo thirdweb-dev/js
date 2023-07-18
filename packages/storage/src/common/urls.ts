@@ -1,7 +1,8 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
 
-const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
+// const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
+const TW_HOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
 const TW_GATEWAY_URLS = [
   `https://{clientId}${TW_HOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
 ];
