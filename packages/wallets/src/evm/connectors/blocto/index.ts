@@ -1,4 +1,3 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import {
   WagmiConnector,
   WagmiConnectorData,
@@ -30,8 +29,6 @@ export class BloctoConnector extends WagmiConnector<
   readonly ready = true;
 
   #provider?: BloctoProvider;
-  #client?: BloctoSDK;
-
 
   #onAccountsChangedBind: typeof this.onAccountsChanged;
   #onChainChangedBind: typeof this.onChainChanged;
@@ -99,12 +96,13 @@ export class BloctoConnector extends WagmiConnector<
     const accounts = await provider.request({
       method: "eth_accounts",
     });
+    const [address]  = accounts || [];
 
-    if (accounts === null || accounts.length === 0) {
+    if (!address) {
       throw new Error("No accounts found");
     }
 
-    return accounts[0];
+    return address;
   }
 
   async getChainId(): Promise<number> {
