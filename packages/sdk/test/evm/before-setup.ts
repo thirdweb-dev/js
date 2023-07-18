@@ -62,7 +62,7 @@ import {
   OffersLogic__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ContractInterface, ethers } from "ethers";
+import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
 import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
 
@@ -376,7 +376,7 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.abi,
     MarketplaceV3__factory.bytecode,
     signer,
-    [pluginMapAddress],
+    [pluginMapAddress, constants.AddressZero],
     "MarketplaceV3",
   );
   return marketplaceV3Address;
