@@ -1,6 +1,12 @@
 import type { Chain } from "../src/types";
 export default {
   "name": "IoTeX Network Mainnet",
+  "icon": {
+    "url": "ipfs://QmQKHQrvtyUC5b5B76ke5GPTGXoGTVCubXS6gHgzCAswKo",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "chain": "iotex.io",
   "rpc": [
     "https://iotex-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -20,7 +26,13 @@ export default {
     {
       "name": "iotexscan",
       "url": "https://iotexscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon":{
+        "url":"ipfs://QmPYzuYAbVFZHWHyVpqG2P4Rhbr9v4TnLyF5bQjRgeAATN",
+        "width":267,
+        "height":47,
+        "format":"png"
+      }
     }
   ],
   "testnet": false,
