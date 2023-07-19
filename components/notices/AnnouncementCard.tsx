@@ -38,7 +38,7 @@ export const AnnouncementCard = () => {
               </Text>
             </Flex>
             <HStack alignItems="center" gap={4}>
-              <LinkButton variant="solid" href="/settings/api-keys">
+              <LinkButton variant="solid" href="/dashboard/settings/api-keys">
                 Create API Key
               </LinkButton>
 
