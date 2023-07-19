@@ -122,8 +122,9 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
         >
           <FormLabel>Allowed Bundle IDs</FormLabel>
           <FormHelperText mb={2}>
-            Prevent third-parties from using your Client ID in their native apps
-            by only allowing requests from your app bundles.
+            (Unity Native/React Native users only) Prevent third-parties from
+            using your Client ID in their native apps by only allowing requests
+            from your app bundles.
           </FormHelperText>
           <Textarea
             placeholder="com.thirdweb.app"

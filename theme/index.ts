@@ -343,7 +343,7 @@ const chakraTheme: Theme = extendTheme({
 
       // borderColor: { default: "accent.200", _dark: "accent.300" },
       bgBlack: { default: "black", _dark: "white" },
-      bgWhite: { default: "white", _dark: "black" },
+      bgWhite: { default: "#fff", _dark: "black" },
       backgroundBody: { default: "backgroundLight", _dark: "backgroundDark" },
       backgroundHighlight: { default: "white", _dark: "#131417" },
       backgroundCardHighlight: { default: "white", _dark: "#232429" },

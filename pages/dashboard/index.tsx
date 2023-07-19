@@ -13,6 +13,7 @@ import { FTUX } from "components/FTUX/FTUX";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
+import { AnnouncementCard } from "components/notices/AnnouncementCard";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
@@ -67,92 +68,99 @@ const Dashboard: ThirdwebNextPage = (
   const isLoading =
     connectionStatus === "unknown" || connectionStatus === "connecting";
   return (
-    <SimpleGrid columns={{ base: 1, lg: 4 }} gap={16} mt={{ base: 2, md: 10 }}>
-      <GridItem colSpan={{ lg: 3 }}>
-        <ClientOnly fadeInDuration={600} ssr={null}>
-          {!isLoading && (
-            <>
-              <Heading mb={8}>Get started quickly</Heading>
-              {(address || publicKey) && (
-                <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
-                  {GET_STARTED_SECTIONS.map(
-                    ({
-                      title,
-                      description,
-                      lightImage,
-                      image,
-                      href,
-                      isExternal,
-                    }) => (
-                      <LinkBox
-                        key={title}
-                        role="group"
-                        overflow="hidden"
-                        position="relative"
-                      >
-                        <Card
-                          p={0}
+    <Flex flexDir="column" gap={4}>
+      <AnnouncementCard />
+      <SimpleGrid
+        columns={{ base: 1, lg: 4 }}
+        gap={16}
+        mt={{ base: 2, md: 10 }}
+      >
+        <GridItem colSpan={{ lg: 3 }}>
+          <ClientOnly fadeInDuration={600} ssr={null}>
+            {!isLoading && (
+              <>
+                <Heading mb={8}>Get started quickly</Heading>
+                {(address || publicKey) && (
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+                    {GET_STARTED_SECTIONS.map(
+                      ({
+                        title,
+                        description,
+                        lightImage,
+                        image,
+                        href,
+                        isExternal,
+                      }) => (
+                        <LinkBox
+                          key={title}
+                          role="group"
                           overflow="hidden"
-                          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-                          _groupHover={{
-                            borderColor: "blue.500",
-                          }}
-                          transitionDuration="200ms"
+                          position="relative"
                         >
-                          <Flex direction="column" gap={3} p={6}>
-                            <LinkOverlay
-                              as={TrackedLink}
-                              category={TRACKING_CATEGORY}
-                              label={title}
-                              href={href}
-                              isExternal={isExternal}
-                              _hover={{ textDecor: "none" }}
-                            >
-                              <Heading
-                                size="title.xs"
-                                _groupHover={{ color: "blue.500" }}
-                                transitionDuration="200ms"
+                          <Card
+                            p={0}
+                            overflow="hidden"
+                            bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+                            _groupHover={{
+                              borderColor: "blue.500",
+                            }}
+                            transitionDuration="200ms"
+                          >
+                            <Flex direction="column" gap={3} p={6}>
+                              <LinkOverlay
+                                as={TrackedLink}
+                                category={TRACKING_CATEGORY}
+                                label={title}
+                                href={href}
+                                isExternal={isExternal}
+                                _hover={{ textDecor: "none" }}
                               >
-                                {title}{" "}
-                                <Text
-                                  fontWeight="inherit"
-                                  fontSize="inherit"
-                                  color="inherit"
-                                  as="span"
+                                <Heading
+                                  size="title.xs"
+                                  _groupHover={{ color: "blue.500" }}
+                                  transitionDuration="200ms"
                                 >
-                                  {"->"}
-                                </Text>
-                              </Heading>
-                            </LinkOverlay>
-                            <Text>{description}</Text>
-                          </Flex>
-                          <Flex justifyContent="center" px={6}>
-                            <ChakraNextImage
-                              pointerEvents="none"
-                              sizes="(max-width: 768px) 100vw,
+                                  {title}{" "}
+                                  <Text
+                                    fontWeight="inherit"
+                                    fontSize="inherit"
+                                    color="inherit"
+                                    as="span"
+                                  >
+                                    {"->"}
+                                  </Text>
+                                </Heading>
+                              </LinkOverlay>
+                              <Text>{description}</Text>
+                            </Flex>
+                            <Flex justifyContent="center" px={6}>
+                              <ChakraNextImage
+                                pointerEvents="none"
+                                sizes="(max-width: 768px) 100vw,
                             (max-width: 1200px) 50vw,
                             33vw"
-                              src={colorMode === "light" ? lightImage : image}
-                              alt=""
-                            />
-                          </Flex>
-                        </Card>
-                      </LinkBox>
-                    ),
-                  )}
-                </SimpleGrid>
-              )}
+                                src={colorMode === "light" ? lightImage : image}
+                                alt=""
+                              />
+                            </Flex>
+                          </Card>
+                        </LinkBox>
+                      ),
+                    )}
+                  </SimpleGrid>
+                )}
 
-              {connectionStatus === "disconnected" && !publicKey && <FTUX />}
-            </>
-          )}
-        </ClientOnly>
-      </GridItem>
-      <GridItem as={Flex} direction="column" gap={6}>
-        <Heading size="title.sm">Latest changes</Heading>
-        <Changelog changelog={props.changelog} />
-      </GridItem>
-    </SimpleGrid>
+                {connectionStatus === "disconnected" && !publicKey && <FTUX />}
+              </>
+            )}
+          </ClientOnly>
+        </GridItem>
+        <GridItem as={Flex} direction="column" gap={6}>
+          <Heading size="title.sm">Latest changes</Heading>
+          <Changelog changelog={props.changelog} />
+        </GridItem>
+      </SimpleGrid>
+    </Flex>
   );
 };
 

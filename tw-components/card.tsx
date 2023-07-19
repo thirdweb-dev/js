@@ -90,14 +90,7 @@ export const Card: React.FC<CardProps> = ({
           </Box>
         </Box>
       ) : (
-        <Box
-          {...combinedProps}
-          _light={{
-            bg: "white",
-          }}
-        >
-          {children}
-        </Box>
+        <Box {...combinedProps}>{children}</Box>
       )}
     </>
   );

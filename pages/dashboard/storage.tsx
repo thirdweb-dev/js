@@ -7,7 +7,7 @@ import { IpfsUploadDropzone } from "components/ipfs-upload/dropzone";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useState } from "react";
-import { Card, Heading, Text, TrackedCopyButton } from "tw-components";
+import { Card, Heading, Text, TrackedCopyButton, Link } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "storage";
@@ -70,7 +70,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
             <Heading size="title.md" as="h2">
               Gateway
             </Heading>
-            <Text>Use our public IPFS gateway in your applications:</Text>
+            <Text>This is the structure of your unique gateway URL:</Text>
             <Card
               as={Flex}
               w="full"
@@ -82,7 +82,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
                 fontFamily="mono"
                 overflow={{ base: "scroll", md: "inherit" }}
               >
-                https://ipfs.thirdwebstorage.com/ipfs/
+                {"https://{client-id}.thirdwebstorage.com/ipfs/"}
               </Text>
               <Flex>
                 <Tooltip
@@ -98,7 +98,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
                   shouldWrapChildren
                 >
                   <TrackedCopyButton
-                    value="https://ipfs.thirdwebstorage.com/ipfs/"
+                    value="https://{client-id}.thirdwebstorage.com/ipfs/"
                     category="storage"
                     label="copy-cli-file-upload"
                     aria-label="Copy code"
@@ -106,6 +106,14 @@ const DashboardStorage: ThirdwebNextPage = () => {
                 </Tooltip>
               </Flex>
             </Card>
+            <Text>
+              Gateway requests need to be authenticated using a client ID. You
+              can get it by creating an API key from the{" "}
+              <Link href="/dashboard/settings/api-keys" color="primary.500">
+                dashboard settings
+              </Link>
+              .
+            </Text>
           </Flex>
           <Flex flexDir="column" w="full" gap={4}>
             <Heading size="title.md" as="h2">
@@ -151,6 +159,18 @@ const DashboardStorage: ThirdwebNextPage = () => {
                   </Tooltip>
                 </Flex>
               </Card>
+              <Text>
+                If this is the first time that you are running this command, you
+                may have to first login using your secret key.{" "}
+                <Link
+                  href="https://portal.thirdweb.com/cli/upload"
+                  color="primary.500"
+                  isExternal
+                >
+                  Learn more here
+                </Link>
+                .
+              </Text>
             </Flex>
           </Flex>
           <Flex flexDir="column" w="full" gap={4}>

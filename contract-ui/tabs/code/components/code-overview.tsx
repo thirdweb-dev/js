@@ -481,6 +481,15 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               })}
               hideTabs
             />
+            <Text>
+              You will need to pass a client ID/secret key to use
+              thirdweb&apos;s infrastructure services. If you don&apos;t have
+              any API keys yet you can create one for free from the{" "}
+              <Link href="/dashboard/settings/api-keys" color="primary.500">
+                dashboard settings
+              </Link>
+              .
+            </Text>
           </Flex>
         </Flex>
         {!onlyInstall ? (

@@ -10,11 +10,10 @@ interface FeatureCardProps {
 
 const features: FeatureCardProps[] = [
   {
-    title: "Permissionless.",
+    title: "Open Source.",
     description: (
       <>
-        Anyone can use thirdweb tools without our permission. The code for our
-        contracts, SDKs, dashboard and UI components are{" "}
+        The code for our tools, contracts, SDKs, dashboard, and UI components is
         <TrackedLink
           color="white"
           fontWeight="500"
