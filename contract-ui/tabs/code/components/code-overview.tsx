@@ -74,12 +74,18 @@ const COMMANDS = {
   },
   setup: {
     javascript: `import {{chainName}} from "@thirdweb-dev/chains";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
+// If used on the FRONTEND pass your 'clientId'
 const sdk = new ThirdwebSDK({{chainName}}, {
-  clientId: "YOUR_CLIENT_ID", // Use client id if using on the client side, get it from dashboard settings
-  secretKey: "YOUR_SECRET_KEY", // Use secret key if using on the server, get it from dashboard settings
+  clientId: "YOUR_CLIENT_ID",
 });
+// --- OR ---
+// If used on the BACKEND pass your 'secretKey'
+const sdk = new ThirdwebSDK({{chainName}}, {
+  secretKey: "YOUR_SECRET_KEY",
+});
+
 const contract = await sdk.getContract("{{contract_address}}");`,
     react: `import {{chainName}} from "@thirdweb-dev/chains";
 import { ThirdwebProvider, useContract } from "@thirdweb-dev/react";
@@ -118,11 +124,13 @@ function Component() {
     web3button: ``,
     python: `from thirdweb import ThirdwebSDK
 
-sdk = ThirdwebSDK("{{chainNameOrRpc}}")
+sdk = ThirdwebSDK("{{chainNameOrRpc}}", options=SDKOptions(secret_key="YOUR_SECRET_KEY"))
 contract = sdk.get_contract("{{contract_address}}")`,
     go: `import "github.com/thirdweb-dev/go-sdk/thirdweb"
 
-sdk, err := thirdweb.NewThirdwebSDK("{{chainNameOrRpc}}")
+sdk, err := thirdweb.NewThirdwebSDK("{{chainNameOrRpc}}", &thirdweb.SDKOptions{
+  SecretKey: "YOUR_SECRET_KEY",
+})
 contract, err := sdk.GetContract("{{contract_address}}")
 `,
     unity: `using Thirdweb;
