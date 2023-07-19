@@ -22,3 +22,8 @@ export type ExtensionFunction = z.input<typeof ExtensionFunctionInput>;
  * @public
  */
 export type Extension = z.input<typeof ExtensionInput>;
+
+export type FunctionInput = {
+  functionSelector?: string;
+  functionSignature?: string;
+};

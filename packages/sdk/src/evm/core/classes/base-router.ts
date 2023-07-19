@@ -7,11 +7,14 @@ import {
   Extension,
   ExtensionFunction,
   ExtensionMetadata,
+  FunctionInput,
 } from "../../types/extension";
 import { FEATURE_BASE_ROUTER } from "../../constants/thirdweb-features";
 import { ContractInterface } from "ethers";
 import { generateExtensionFunctions } from "../../common/plugin/generatePluginFunctions";
 import { AbiSchema } from "../../schema";
+import { utils } from "ethers";
+import invariant from "tiny-invariant";
 
 export class BaseRouterClass<TContract extends BaseRouter>
   implements DetectableFeature
@@ -32,27 +35,66 @@ export class BaseRouterClass<TContract extends BaseRouter>
    * READ FUNCTIONS
    *******************************/
 
-  //   getAllExtensions;
-  public async getAllExtensions(): Promise<ExtensionMetadata[]> {
+  public async getAllExtensions(): Promise<Extension[]> {
     const extensions: Extension[] =
       await this.contractWrapper.readContract.getAllExtensions();
 
-    return extensions.map((extension) => extension.metadata);
+    return extensions;
   }
 
-  //   getDefaultExtensionSetAddress;
+  public async getExtension(extensionName: string): Promise<Extension> {
+    const extension: Extension =
+      await this.contractWrapper.readContract.getExtension(extensionName);
 
-  //   getExtension;
+    return extension;
+  }
 
-  //   getExtensionImplementation;
+  public async getExtensionAddress(extensionName: string): Promise<string> {
+    const extensionAddress: string =
+      await this.contractWrapper.readContract.getExtensionImplementation(
+        extensionName,
+      );
 
-  //   getAllFunctionsOfImplementation;
+    return extensionAddress;
+  }
 
-  //   getAllFunctionsOfExtension;
+  public async getAllFunctionsOfExtension(
+    extensionName: string,
+  ): Promise<ExtensionFunction[]> {
+    const extensionFunctions: ExtensionFunction[] =
+      await this.contractWrapper.readContract.getAllFunctionsOfExtension(
+        extensionName,
+      );
 
-  //   getExtensionForFunction;
+    return extensionFunctions;
+  }
 
-  //   getImplementationForFunction;
+  public async getExtensionForFunction(
+    functionInput: FunctionInput,
+  ): Promise<ExtensionMetadata> {
+    let selector = functionInput.functionSelector;
+    if (!selector) {
+      invariant(
+        functionInput.functionSignature,
+        "Atleast one of function selector and signature must be provided",
+      );
+
+      selector = utils.id(functionInput.functionSignature).substring(0, 10);
+    }
+
+    const extensionMetadata: ExtensionMetadata =
+      await this.contractWrapper.readContract.getExtensionForFunction(selector);
+
+    return extensionMetadata;
+  }
+
+  public async getExtensionAddressForFunction(
+    functionInput: FunctionInput,
+  ): Promise<string> {
+    const extensionMetadata = await this.getExtensionForFunction(functionInput);
+
+    return extensionMetadata.implementation;
+  }
 
   /** ******************************
    * WRITE FUNCTIONS
