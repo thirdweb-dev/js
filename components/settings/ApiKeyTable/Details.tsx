@@ -190,8 +190,6 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
               }
             />
 
-            <Divider />
-
             <ApiKeyDetailsRow
               title="Secret Key"
               description="Identifies and authenticates your application from the backend. Using the secret key bypasses any allowed domains or bundle ids."
@@ -212,8 +210,6 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
               }
             />
 
-            <Divider />
-
             <ApiKeyDetailsRow
               title="Allowed Domains"
               tooltip={`Prevent third-parties from using your Client ID on their websites by only allowing requests from your domains.`}
@@ -233,8 +229,6 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
               tooltip="The list of wallet addresses allowed to access thirdweb services via the configured Publishable Key."
               content={walletsContent}
             /> */}
-
-            <Divider mt="auto" />
 
             <SimpleGrid columns={2} w="100%" gap={4}>
               <ApiKeyDetailsRow

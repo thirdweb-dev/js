@@ -97,12 +97,12 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
           isInvalid={!!form.getFieldState("domains", form.formState).error}
         >
           <FormLabel>Allowed Domains</FormLabel>
-          <FormHelperText mb={2}>
+          <FormHelperText pb={2} size="body.md">
             Prevent third-parties from using your Client ID on their websites by
             only allowing requests from your domains.
           </FormHelperText>
           <Textarea
-            placeholder="thirdweb.com, rpc.example.com"
+            placeholder="thirdweb.com, rpc.example.com, localhost:3000"
             {...form.register("domains")}
           />
           {!form.getFieldState("domains", form.formState).error ? (
@@ -121,7 +121,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
           isInvalid={!!form.getFieldState("bundleIds", form.formState).error}
         >
           <FormLabel>Allowed Bundle IDs</FormLabel>
-          <FormHelperText mb={2}>
+          <FormHelperText pb={2} size="body.md">
             (Unity Native/React Native users only) Prevent third-parties from
             using your Client ID in their native apps by only allowing requests
             from your app bundles.
@@ -289,7 +289,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
 
           <TabPanels>
             <TabPanel>
-              <VStack gap={4} pt={4}>
+              <VStack gap={6} pt={4}>
                 {renderName()}
                 {renderGeneral()}
               </VStack>
@@ -305,7 +305,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
       )}
 
       {!tabbed && (
-        <VStack alignItems="flex-start" w="full" gap={3} pt={3}>
+        <VStack alignItems="flex-start" w="full" gap={6} pt={3}>
           {renderName()}
           {renderGeneral()}
         </VStack>
