@@ -15,7 +15,7 @@ export type AccessRestrictions = {
   expirationDate: Date;
   nativeTokenLimitPerTransaction: BigNumber;
   approvedCallTargets: string[];
-}
+};
 
 export const AccessRestrictionsSchema = /* @__PURE__ */ z.object({
   startDate: StartDateSchema,
@@ -30,7 +30,7 @@ export type SignerWithRestrictions = {
   signer: string;
   isAdmin: boolean;
   restrictions: AccessRestrictions;
-}
+};
 
 export const SignerWithRestrictionsSchema = /* @__PURE__ */ z.object({
   signer: AddressOrEnsSchema,
@@ -38,17 +38,26 @@ export const SignerWithRestrictionsSchema = /* @__PURE__ */ z.object({
   restrictions: AccessRestrictionsSchema,
 });
 
-export type SignerWithRestrictionsInput = z.input<typeof SignerWithRestrictionsSchema>;
+export type SignerWithRestrictionsInput = z.input<
+  typeof SignerWithRestrictionsSchema
+>;
 
-export const SignerWithRestrictionsBatchSchema = /* @__PURE__ */ z.array(SignerWithRestrictionsSchema);
-export type SignerWithRestrictionsBatchInput = z.input<typeof SignerWithRestrictionsBatchSchema>;
+export const SignerWithRestrictionsBatchSchema = /* @__PURE__ */ z.array(
+  SignerWithRestrictionsSchema,
+);
+export type SignerWithRestrictionsBatchInput = z.input<
+  typeof SignerWithRestrictionsBatchSchema
+>;
 
 export type SignedAccountPermissionsPayload = {
   payload: IAccountPermissions.RoleRequestStruct;
   signature: BytesLike;
-}
+};
 
-export enum RoleAction { GRANT = 0, REVOKE = 1 }
+export enum RoleAction {
+  GRANT = 0,
+  REVOKE = 1,
+}
 
 export const RoleRequest = [
   { name: "role", type: "bytes32" },

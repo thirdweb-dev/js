@@ -1,5 +1,41 @@
 # thirdweb
 
+## 0.11.0
+
+### Minor Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Introducing API secret key restrictions for certain commands. Get your API secret key from [here](https://thirdweb.com/dashboard/settings/api-keys).
+
+  The following commands will require you to have logged in with your API secret key:
+
+  - `thirdweb deploy`
+  - `thirdweb release`
+  - `thirdweb publish`
+  - `thirdweb upload`
+
+  Implemented 2 new commands for managing your session with the CLI:
+
+  - thirdweb login
+  - thirdweb logout
+
+  Note: If you try to call a command that requires you to be logged in, you will be prompted to login.
+
+  Updated chains.
+
+### Patch Changes
+
+- Updated dependencies [[`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/storage@1.2.0
+  - @thirdweb-dev/sdk@3.10.37
+  - @thirdweb-dev/chains@0.1.35
+
+## 0.10.37
+
+### Patch Changes
+
+- Updated dependencies [[`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8)]:
+  - @thirdweb-dev/sdk@3.10.36
+
 ## 0.10.36
 
 ### Patch Changes

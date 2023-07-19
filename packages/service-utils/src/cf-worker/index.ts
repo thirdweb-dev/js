@@ -103,7 +103,7 @@ async function extractAuthorizationData(
   // if we have an origin at this point, normalize it
   if (origin) {
     try {
-      origin = new URL(origin).hostname;
+      origin = new URL(origin).host;
     } catch (e) {
       console.warn("failed to parse origin", origin, e);
     }

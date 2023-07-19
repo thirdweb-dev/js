@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "browser": {
@@ -57,7 +57,7 @@
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "chai": "^4.3.6",
-    "eslint": "^8.43.0",
+    "eslint": "^8.45.0",
     "eslint-config-thirdweb": "workspace:*",
     "esm": "^3.2.25",
     "mocha": "^10.2.0",

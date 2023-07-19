@@ -440,6 +440,7 @@ export class DropErc1155ClaimConditions<
           claimCondition.currencyAddress,
           IERC20ABI,
           {},
+          this.storage,
         );
 
         const balance = await erc20.readContract.balanceOf(resolvedAddress);

@@ -1,5 +1,33 @@
 # @thirdweb-dev/react-core
 
+## 3.14.17
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` prop to access thirdweb's services.
+
+  You can create a _free_ `clientId` [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  <ThirdwebProvider clientId="your-client-id" />
+  ```
+
+- Updated dependencies [[`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/storage@1.2.0
+  - @thirdweb-dev/sdk@3.10.37
+  - @thirdweb-dev/chains@0.1.35
+  - @thirdweb-dev/wallets@1.1.0
+
+## 3.14.16
+
+### Patch Changes
+
+- [#1356](https://github.com/thirdweb-dev/js/pull/1356) [`7a6534d1`](https://github.com/thirdweb-dev/js/commit/7a6534d1a98cab1eb47cf88d13e2b7ec04037e42) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix useOwnedNFT enabled state
+
+- Updated dependencies [[`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8), [`c5761b99`](https://github.com/thirdweb-dev/js/commit/c5761b99e9797772481506e90cbfa5c35a05bd1d), [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220)]:
+  - @thirdweb-dev/sdk@3.10.36
+  - @thirdweb-dev/wallets@1.0.12
+
 ## 3.14.15
 
 ### Patch Changes

@@ -1,11 +1,10 @@
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import type { ChainOrRpcUrl, NetworkInput } from "../core/types";
 import { isProvider, isSigner } from "../functions/getSignerAndProvider";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import type { SDKOptions, SDKOptionsOutput } from "../schema/sdk-options";
 import { SDKOptionsSchema } from "../schema/sdk-options";
 import type { ChainInfo } from "../schema/shared/ChainInfo";
-import { getChainRPC } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
@@ -31,7 +30,7 @@ export function getChainProvider(
 ): providers.Provider {
   // If we have an RPC URL, use that for the provider
   if (typeof network === "string" && isRpcUrl(network)) {
-    return getProviderFromRpcUrl(network);
+    return getProviderFromRpcUrl(network, sdkOptions);
   }
 
   // Add the chain to the supportedChains
@@ -50,11 +49,7 @@ export function getChainProvider(
     // Resolve the chain id from the network, which could be a chain, chain name, or chain id
     chainId = getChainIdFromNetwork(network, options);
     // Attempt to get the RPC url from the map based on the chainId
-    rpcUrl = getChainRPC(rpcMap[chainId], {
-      thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
-      infuraApiKey: options.infuraApiKey,
-      alchemyApiKey: options.alchemyApiKey,
-    });
+    rpcUrl = getValidChainRPCs(rpcMap[chainId], options.clientId)[0];
   } catch (e) {
     // no-op
   }
@@ -62,7 +57,7 @@ export function getChainProvider(
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
     rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
-      options.thirdwebApiKey || DEFAULT_API_KEY
+      options.clientId
     }`;
   }
 
@@ -72,7 +67,7 @@ export function getChainProvider(
     );
   }
 
-  return getProviderFromRpcUrl(rpcUrl, chainId);
+  return getProviderFromRpcUrl(rpcUrl, sdkOptions, chainId);
 }
 
 export function getChainIdFromNetwork(
@@ -151,8 +146,20 @@ const RPC_PROVIDER_MAP: Map<
  *
  * @internal
  */
-export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
+export function getProviderFromRpcUrl(
+  rpcUrl: string,
+  sdkOptions: SDKOptions,
+  chainId?: number,
+) {
   try {
+    const headers: Record<string, string> = {};
+    if (isTwUrl(rpcUrl)) {
+      if (sdkOptions?.clientId) {
+        headers["x-client-id"] = sdkOptions?.clientId;
+      } else if (sdkOptions?.secretKey) {
+        headers["x-secret-key"] = sdkOptions?.secretKey;
+      }
+    }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available
     if (match) {
@@ -171,9 +178,18 @@ export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
           // Otherwise, create a new provider on the specific network
           const newProvider = chainId
             ? // If we know the chainId we should use the StaticJsonRpcBatchProvider
-              new StaticJsonRpcBatchProvider(rpcUrl, chainId)
+              new StaticJsonRpcBatchProvider(
+                {
+                  url: rpcUrl,
+                  headers,
+                },
+                chainId,
+              )
             : // Otherwise fall back to the built in json rpc batch provider
-              new providers.JsonRpcBatchProvider(rpcUrl);
+              new providers.JsonRpcBatchProvider({
+                url: rpcUrl,
+                headers,
+              });
 
           // Save the provider in our cache
           RPC_PROVIDER_MAP.set(seralizedOpts, newProvider);
@@ -190,6 +206,11 @@ export function getProviderFromRpcUrl(rpcUrl: string, chainId?: number) {
 
   // Always fallback to the default provider if no other option worked
   return providers.getDefaultProvider(rpcUrl);
+}
+
+// TODO move to utils package
+function isTwUrl(url: string): boolean {
+  return new URL(url).hostname.endsWith(".thirdweb.com");
 }
 
 /**
@@ -221,6 +242,7 @@ export function getSignerAndProvider(
     // If readonly settings are specified, then overwrite the provider
     provider = getProviderFromRpcUrl(
       options.readonlySettings.rpcUrl,
+      options,
       options.readonlySettings.chainId,
     );
   }

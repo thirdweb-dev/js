@@ -141,6 +141,7 @@ export class Pack extends StandardErc1155<PackContract> {
             },
           }
         : options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -774,7 +775,8 @@ export class Pack extends StandardErc1155<PackContract> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
+    TMethod extends
+      keyof PackContract["functions"] = keyof PackContract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PackContract["functions"][TMethod]>,
@@ -792,7 +794,8 @@ export class Pack extends StandardErc1155<PackContract> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PackContract["functions"] = keyof PackContract["functions"],
+    TMethod extends
+      keyof PackContract["functions"] = keyof PackContract["functions"],
   >(
     functionName: string & TMethod,
     args?: any[] & Parameters<PackContract["functions"][TMethod]>,

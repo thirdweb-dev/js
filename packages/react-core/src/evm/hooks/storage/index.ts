@@ -1,4 +1,4 @@
-import { useSDK } from "../../providers/thirdweb-sdk-provider";
+import { useSDK } from "../useSDK";
 
 export { useStorageUpload } from "./useStorageUpload";
 

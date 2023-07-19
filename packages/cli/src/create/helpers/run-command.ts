@@ -9,7 +9,7 @@ export async function runCommand(
   return new Promise<void>((resolve, reject) => {
     /**
      * Spawn the installation process.
-    */
+     */
     const child = spawn(command, args);
 
     child.stdout?.on("data", (data) => {
@@ -28,7 +28,7 @@ export async function runCommand(
     });
 
     child.on("error", (err) => {
-      console.log("Spawn error", err)
+      console.log("Spawn error", err);
     });
 
     child.on("close", (code) => {

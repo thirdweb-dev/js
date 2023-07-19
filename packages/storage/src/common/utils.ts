@@ -103,7 +103,9 @@ function parseCidAndPath(
   if (match) {
     const hash = match.groups?.hash;
     const path = match.groups?.path;
-    const queryString = uri.includes("?") ? uri.substring(uri.indexOf("?") + 1) : "";
+    const queryString = uri.includes("?")
+      ? uri.substring(uri.indexOf("?") + 1)
+      : "";
 
     return { hash, path, query: queryString };
   }
