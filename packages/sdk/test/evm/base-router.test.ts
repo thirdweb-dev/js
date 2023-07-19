@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { AbiSchema, SmartContract, ThirdwebSDK, isExtensionEnabled } from "../../src/evm";
+import { AbiSchema, SmartContract, ThirdwebSDK, assertEnabled, detectContractFeature, isExtensionEnabled, isFeatureEnabled } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { CoreRouter__factory, DirectListingsLogic__factory, OffersLogic__factory } from "@thirdweb-dev/contracts-js";
@@ -75,6 +75,12 @@ describe("Base Router for Dynamic Contracts", async () => {
     const extensions = await coreRouter.baseRouter.getAllExtensions();
     assert(extensions.length === 1);
     assert(extensions[0].metadata.name === "OffersLogic");
+
+    
+    // call function on extension
+    coreRouter = await sdk.getContract(coreRouterAddress, "custom", true); // don't use cached; fetch again
+    const totalOffers = await coreRouter.offers.getTotalCount();
+    assert(totalOffers.eq(0));
   });
 
   it("should add extensions with abi", async () => {
