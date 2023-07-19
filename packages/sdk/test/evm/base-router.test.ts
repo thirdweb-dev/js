@@ -17,7 +17,7 @@ describe("Base Router for Dynamic Contracts", async () => {
       [adminWallet, randomSigner] = signers;
     });
 
-  it.skip("should detect base router in a dynamic contract", async () => {
+  it("should detect base router in a dynamic contract", async () => {
     const realSDK = new ThirdwebSDK("ethereum");
 
     // test with an already deployed contract, like tiered drop etc.
@@ -27,7 +27,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(isExtensionEnabled(contract.abi, "BaseRouter"));
   });
 
-  it.skip("should get extensions", async () => {
+  it("should get extensions", async () => {
     const realSDK = new ThirdwebSDK("ethereum");
 
     // test with an already deployed contract
@@ -87,12 +87,46 @@ describe("Base Router for Dynamic Contracts", async () => {
   });
 
   it("should remove extensions", async () => {
+    const realSDK = new ThirdwebSDK(31337);
     // deploy base router
+    const coreRouterAddress = await deployContractAndUploadMetadata(CoreRouter__factory.abi, CoreRouter__factory.bytecode, adminWallet, [adminWallet.address]);
+
+    // instantiate custom contract
+    const contract = await sdk.getContract(coreRouterAddress);
+
     // deploy an extension contract
+    // Offers
+    const offersLogicAddress = await deployContractAndUploadMetadata(OffersLogic__factory.abi, OffersLogic__factory.bytecode, adminWallet, []);
+
+    const extensionFunctions: ExtensionFunction[] = generateExtensionFunctions(
+      AbiSchema.parse(OffersLogic__factory.abi),
+    );
+
+    const routerInput: Extension[] = [];
+    routerInput.push({
+      metadata: {
+        name: "OffersLogic",
+        metadataURI: "",
+        implementation:
+          offersLogicAddress,
+      },
+      functions: extensionFunctions,
+    });
+    
     // add extension
-    // remove extension
-    // get contract
+    await contract.baseRouter.addExtension(routerInput[0]);
+
     // read extension
-    // call function on extension - should revert
+    let extensions = await contract.baseRouter.getAllExtensions();
+    assert(extensions.length === 1);
+    assert(extensions[0].name === "OffersLogic");
+
+    // remove extension
+    await contract.baseRouter.removeExtension("OffersLogic");
+
+    // read extension
+    extensions = await contract.baseRouter.getAllExtensions();
+    assert(extensions.length === 0);
+    
   });
 });

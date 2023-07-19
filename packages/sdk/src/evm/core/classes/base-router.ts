@@ -72,11 +72,11 @@ export class BaseRouterClass<TContract extends BaseRouter>
   );
 
   removeExtension = /* @__PURE__ */ buildTransactionFunction(
-    async (extension: Extension): Promise<Transaction> => {
+    async (extensionName: String): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "removeExtension",
-        args: [extension],
+        args: [extensionName],
       });
     },
   );
