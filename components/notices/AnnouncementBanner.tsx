@@ -1,11 +1,20 @@
-import { Box, Container, Flex, Icon, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Flex,
+  Icon,
+  IconButton,
+  Img,
+  SimpleGrid,
+} from "@chakra-ui/react";
+import { IconLogo } from "components/logo";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { FiArrowRight, FiX } from "react-icons/fi";
 import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-open-source", false, true);
+    useLocalStorage("dismissed-paper-acquisition", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -16,7 +25,7 @@ export const AnnouncementBanner = () => {
       position="sticky"
       zIndex="10"
       py={3}
-      bgImage="linear-gradient(145.96deg, #410AB6 5.07%, #5BFF40 100%)"
+      bgImage="linear-gradient(145.96deg, #410AB6 5.07%, #7bdefe 100%)"
     >
       <Flex
         w="full"
@@ -27,9 +36,10 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/wallet-sdk"
+          isExternal
+          href="https://blog.thirdweb.com/acquiring-paper"
           category="announcement"
-          label="open-source"
+          label="paper-acquisition"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -39,6 +49,16 @@ export const AnnouncementBanner = () => {
               gap={{ base: 0.5, md: 2 }}
               color="white"
             >
+              <SimpleGrid
+                columns={3}
+                placeItems="center"
+                gap={0}
+                display={{ base: "none", md: "grid" }}
+              >
+                <IconLogo boxSize={6} />
+                <Icon as={FiX} boxSize={3} />
+                <Img src="/logos/paper-logo-icon.svg" boxSize={6} />
+              </SimpleGrid>
               <Heading
                 size="label.lg"
                 as="p"
@@ -46,8 +66,10 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>LAUNCH:</strong> Introducing <strong>Wallet SDK</strong>
-                ! Connect any wallets to your apps. Learn more
+                <strong>
+                  thirdweb acquires Paper, leading checkout and wallet solution.
+                </strong>{" "}
+                Learn more
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
