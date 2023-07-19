@@ -3,8 +3,15 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Transaction } from "./transactions";
-import { Extension, ExtensionMetadata } from "../../types/extension";
+import {
+  Extension,
+  ExtensionFunction,
+  ExtensionMetadata,
+} from "../../types/extension";
 import { FEATURE_BASE_ROUTER } from "../../constants/thirdweb-features";
+import { ContractInterface } from "ethers";
+import { generateExtensionFunctions } from "../../common/plugin/generatePluginFunctions";
+import { AbiSchema } from "../../schema";
 
 export class BaseRouterClass<TContract extends BaseRouter>
   implements DetectableFeature
@@ -61,8 +68,62 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
+  addExtensionWithAbi = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      extensionName: string,
+      extensionAddress: string,
+      extensionAbi: ContractInterface,
+      extensionMetadataUri: string = "",
+    ): Promise<Transaction> => {
+      const extensionFunctions: ExtensionFunction[] =
+        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
+
+      const extension: Extension = {
+        metadata: {
+          name: extensionName,
+          metadataURI: extensionMetadataUri,
+          implementation: extensionAddress,
+        },
+        functions: extensionFunctions,
+      };
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "addExtension",
+        args: [extension],
+      });
+    },
+  );
+
   updateExtension = /* @__PURE__ */ buildTransactionFunction(
     async (extension: Extension): Promise<Transaction> => {
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "updateExtension",
+        args: [extension],
+      });
+    },
+  );
+
+  updateExtensionWithAbi = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      extensionName: string,
+      extensionAddress: string,
+      extensionAbi: ContractInterface,
+      extensionMetadataUri: string = "",
+    ): Promise<Transaction> => {
+      const extensionFunctions: ExtensionFunction[] =
+        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
+
+      const extension: Extension = {
+        metadata: {
+          name: extensionName,
+          metadataURI: extensionMetadataUri,
+          implementation: extensionAddress,
+        },
+        functions: extensionFunctions,
+      };
+
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "updateExtension",
