@@ -4,7 +4,7 @@ export default {
   "chain": "STOS",
   "rpc": [
     "https://stratos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://web3-testnet-rpc.thestratos.org"
+    "https://web3-rpc-mesos.thestratos.org"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -19,12 +19,12 @@ export default {
   "explorers": [
     {
       "name": "Stratos EVM Explorer (Blockscout)",
-      "url": "https://web3-testnet-explorer.thestratos.org",
+      "url": "https://web3-explorer-mesos.thestratos.org",
       "standard": "none"
     },
     {
       "name": "Stratos Cosmos Explorer (BigDipper)",
-      "url": "https://big-dipper-dev.thestratos.org",
+      "url": "https://big-dipper-mesos.thestratos.org",
       "standard": "none"
     }
   ],
