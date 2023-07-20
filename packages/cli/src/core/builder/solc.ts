@@ -16,11 +16,14 @@ export class SolcBuilder extends BaseBuilder {
     const inputPaths: string[] = [];
     findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
 
-    const sources = inputPaths.reduce((acc, curr) => {
-      const source = readFileSync(curr, "utf-8");
-      acc[basename(curr)] = { content: source };
-      return acc;
-    }, {} as Record<string, { content: string }>);
+    const sources = inputPaths.reduce(
+      (acc, curr) => {
+        const source = readFileSync(curr, "utf-8");
+        acc[basename(curr)] = { content: source };
+        return acc;
+      },
+      {} as Record<string, { content: string }>,
+    );
 
     const input = {
       language: "Solidity",

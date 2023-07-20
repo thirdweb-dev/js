@@ -1,5 +1,99 @@
 # @thirdweb-dev/sdk
 
+## 3.10.38
+
+### Patch Changes
+
+- Updated dependencies [[`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee), [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608)]:
+  - @thirdweb-dev/chains@0.1.36
+
+## 3.10.37
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // if used on the frontend pass the `clientId`
+  const sdk = ThirdwebSDK.fromPrivateKey(process.env.PRIVATE_KEY, "ethereum", {
+    clientId: "your-thirdweb-client-id",
+  });
+
+  // if used on the backend pass the `secretKey`
+  const sdk = ThirdwebSDK.fromPrivateKey(process.env.PRIVATE_KEY, "ethereum", {
+    secretKey: "your-thirdweb-secret-key",
+  });
+  ```
+
+- Updated dependencies [[`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/storage@1.2.0
+  - @thirdweb-dev/chains@0.1.35
+
+## 3.10.36
+
+### Patch Changes
+
+- [#1357](https://github.com/thirdweb-dev/js/pull/1357) [`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getOwned not showing last owned NFT for OpenEdition contracts
+
+## 3.10.35
+
+### Patch Changes
+
+- Updated dependencies [[`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b), [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b)]:
+  - @thirdweb-dev/storage@1.1.9
+  - @thirdweb-dev/chains@0.1.34
+
+## 3.10.34
+
+### Patch Changes
+
+- Updated dependencies [[`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28)]:
+  - @thirdweb-dev/chains@0.1.33
+
+## 3.10.33
+
+### Patch Changes
+
+- Updated dependencies [[`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95)]:
+  - @thirdweb-dev/chains@0.1.32
+
+## 3.10.32
+
+### Patch Changes
+
+- Updated dependencies [[`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5)]:
+  - @thirdweb-dev/chains@0.1.31
+
+## 3.10.31
+
+### Patch Changes
+
+- Updated dependencies [[`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2)]:
+  - @thirdweb-dev/chains@0.1.30
+
+## 3.10.30
+
+### Patch Changes
+
+- [#1314](https://github.com/thirdweb-dev/js/pull/1314) [`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0) Thanks [@iketw](https://github.com/iketw)! - Passes API key to thirdweb storage ipfs uploader
+
+  If you want to use thirdweb's storage upload services you need to pass an API key.
+  You can grab one from: https://thirdweb.com/dashboard/settings
+
+  If using ThirdwebStorage directly:
+
+  ```javascript
+  new ThirdwebStorage({
+      apiKey: <yourApiKey>,
+  });
+  ```
+
+- Updated dependencies [[`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0), [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d), [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a)]:
+  - @thirdweb-dev/storage@1.1.8
+  - @thirdweb-dev/chains@0.1.29
+
 ## 3.10.29
 
 ### Patch Changes

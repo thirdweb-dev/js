@@ -6,8 +6,7 @@ export default {
     "https://bobafuji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.avax.boba.network",
     "wss://wss.testnet.avax.boba.network",
-    "https://replica.testnet.avax.boba.network",
-    "wss://replica-wss.testnet.avax.boba.network"
+    "https://replica.testnet.avax.boba.network"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -26,6 +25,15 @@ export default {
       "standard": "none"
     }
   ],
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "testnet": true,
   "slug": "bobafuji-testnet"
 } as const satisfies Chain;

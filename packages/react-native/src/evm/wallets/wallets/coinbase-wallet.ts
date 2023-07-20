@@ -17,7 +17,7 @@ import {
 
 type CoinbaseWalletOptions = Omit<
   WalletOptions<CoinbaseWalletConnectorOptions>,
-  "walletStorage"
+  "walletStorage" | "secretKey" | "clientId"
 >;
 
 export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {

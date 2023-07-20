@@ -54,10 +54,11 @@ import { normalizeAmount } from "../../common/currency/normalizeAmount";
  * @public
  */
 export class Erc20<
-  T extends TokenERC20 | DropERC20 | BaseERC20 =
-    | BaseERC20
-    | BaseSignatureMintERC20,
-> implements UpdateableNetwork, DetectableFeature
+    T extends TokenERC20 | DropERC20 | BaseERC20 =
+      | BaseERC20
+      | BaseSignatureMintERC20,
+  >
+  implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_TOKEN.name;
   /**
