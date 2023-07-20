@@ -1,8 +1,7 @@
-import { updateChainRPCs } from "../../core/utils/updateChainRpcs";
 import { useMemo } from "react";
-import type { Chain } from "@thirdweb-dev/chains";
+import { updateChainRPCs, type Chain } from "@thirdweb-dev/chains";
 
-export function useUpdateChainsWithApiKeys<
+export function useUpdateChainsWithClientId<
   TChains extends Chain[],
   TActiveChain extends
     | Chain
@@ -11,22 +10,11 @@ export function useUpdateChainsWithApiKeys<
 >(
   supportedChains: NonNullable<TChains>,
   activeChain: TActiveChain,
-  thirdwebApiKey?: string,
-  alchemyApiKey?: string,
-  infuraApiKey?: string,
+  clientId?: string,
 ) {
-  const keys = useMemo(
-    () => ({
-      thirdwebApiKey: thirdwebApiKey,
-      alchemyApiKey: alchemyApiKey,
-      infuraApiKey: infuraApiKey,
-    }),
-    [thirdwebApiKey, alchemyApiKey, infuraApiKey],
-  );
-
   const supportedChainsWithKey = useMemo(() => {
-    return supportedChains.map((chain) => updateChainRPCs(chain, keys));
-  }, [supportedChains, keys]);
+    return supportedChains.map((chain) => updateChainRPCs(chain, clientId));
+  }, [supportedChains, clientId]);
 
   const activeChainIdOrObjWithKey = useMemo(() => {
     if (
@@ -37,8 +25,8 @@ export function useUpdateChainsWithApiKeys<
       return activeChain;
     }
 
-    return updateChainRPCs(activeChain, keys);
-  }, [activeChain, keys]);
+    return updateChainRPCs(activeChain, clientId);
+  }, [activeChain, clientId]);
 
   return [supportedChainsWithKey, activeChainIdOrObjWithKey] as const;
 }

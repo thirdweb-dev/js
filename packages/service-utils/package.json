@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -46,7 +46,7 @@
     "@types/node": "^20.4.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-thirdweb": "workspace:*",
     "jest": "^29.4.3",

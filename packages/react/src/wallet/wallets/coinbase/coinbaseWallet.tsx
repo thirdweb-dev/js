@@ -2,7 +2,15 @@ import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { CoinbaseWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
 
-export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
+type CoinbaseWalletOptions = {
+  qrmodal?: "coinbase" | "custom";
+};
+
+export const coinbaseWallet = (
+  options?: CoinbaseWalletOptions,
+): WalletConfig<CoinbaseWallet> => {
+  const qrmodal = options?.qrmodal || "custom";
+
   return {
     id: CoinbaseWallet.id,
     meta: {
@@ -16,10 +24,13 @@ export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
         ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
       },
     },
-    create(options: WalletOptions) {
-      return new CoinbaseWallet({ ...options, headlessMode: true });
+    create(walletOptions: WalletOptions) {
+      return new CoinbaseWallet({
+        ...walletOptions,
+        headlessMode: qrmodal === "custom",
+      });
     },
-    connectUI: CoinbaseConnectUI,
+    connectUI: qrmodal === "custom" ? CoinbaseConnectUI : undefined,
     isInstalled() {
       const window_: Window | undefined = globalThis?.window;
       if (assertWindowEthereum(window_)) {

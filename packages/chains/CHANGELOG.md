@@ -1,5 +1,19 @@
 # @thirdweb-dev/chains
 
+## 0.1.36
+
+### Patch Changes
+
+- [#1366](https://github.com/thirdweb-dev/js/pull/1366) [`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee) Thanks [@jnsdls](https://github.com/jnsdls)! - new supported chains
+
+- [#1358](https://github.com/thirdweb-dev/js/pull/1358) [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608) Thanks [@DLHTX](https://github.com/DLHTX)! - feat(chain): add iotex chain icon
+
+## 0.1.35
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds support for clientId / secretKey
+
 ## 0.1.34
 
 ### Patch Changes

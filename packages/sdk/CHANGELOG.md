@@ -1,5 +1,36 @@
 # @thirdweb-dev/sdk
 
+## 3.10.38
+
+### Patch Changes
+
+- Updated dependencies [[`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee), [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608)]:
+  - @thirdweb-dev/chains@0.1.36
+
+## 3.10.37
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // if used on the frontend pass the `clientId`
+  const sdk = ThirdwebSDK.fromPrivateKey(process.env.PRIVATE_KEY, "ethereum", {
+    clientId: "your-thirdweb-client-id",
+  });
+
+  // if used on the backend pass the `secretKey`
+  const sdk = ThirdwebSDK.fromPrivateKey(process.env.PRIVATE_KEY, "ethereum", {
+    secretKey: "your-thirdweb-secret-key",
+  });
+  ```
+
+- Updated dependencies [[`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/storage@1.2.0
+  - @thirdweb-dev/chains@0.1.35
+
 ## 3.10.36
 
 ### Patch Changes

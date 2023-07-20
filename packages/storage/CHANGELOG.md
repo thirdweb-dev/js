@@ -1,5 +1,29 @@
 # @thirdweb-dev/storage
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // if used on the frontend pass the `clientId`
+  const storage = new ThirdwebStorage({
+    clientId: "your-client-id",
+  });
+
+  // if used on the backend pass the `secretKey`
+  const storage = new ThirdwebStorage({
+    secretKey: "your-secret-key",
+  });
+  ```
+
+### Patch Changes
+
+- [#1362](https://github.com/thirdweb-dev/js/pull/1362) [`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298) Thanks [@iketw](https://github.com/iketw)! - Correctly pass clientId in storage
+
 ## 1.1.9
 
 ### Patch Changes

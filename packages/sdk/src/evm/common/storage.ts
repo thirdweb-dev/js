@@ -1,20 +1,22 @@
 import { SDKOptions } from "../schema/sdk-options";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export function createStorage(
-  storage?: ThirdwebStorage,
+  storage?: IThirdwebStorage,
   options?: SDKOptions,
-): ThirdwebStorage {
+): IThirdwebStorage {
   if (storage) {
     return storage;
   } else if (options?.gatewayUrls) {
     return new ThirdwebStorage({
       gatewayUrls: options.gatewayUrls,
-      apiKey: options.thirdwebApiKey,
+      clientId: options.clientId,
+      secretKey: options.secretKey,
     });
   } else {
     return new ThirdwebStorage({
-      apiKey: options?.thirdwebApiKey,
+      clientId: options?.clientId,
+      secretKey: options?.secretKey,
     });
   }
 }

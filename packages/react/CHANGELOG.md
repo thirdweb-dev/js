@@ -1,5 +1,33 @@
 # @thirdweb-dev/react
 
+## 3.14.18
+
+### Patch Changes
+
+- Updated dependencies [[`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee), [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608)]:
+  - @thirdweb-dev/chains@0.1.36
+  - @thirdweb-dev/react-core@3.14.18
+  - @thirdweb-dev/sdk@3.10.38
+  - @thirdweb-dev/wallets@1.1.1
+
+## 3.14.17
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` prop to access thirdweb's services.
+
+  You can create a _free_ `clientId` [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  <ThirdwebProvider clientId="your-client-id" />
+  ```
+
+- Updated dependencies [[`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/sdk@3.10.37
+  - @thirdweb-dev/react-core@3.14.17
+  - @thirdweb-dev/chains@0.1.35
+  - @thirdweb-dev/wallets@1.1.0
+
 ## 3.14.16
 
 ### Patch Changes

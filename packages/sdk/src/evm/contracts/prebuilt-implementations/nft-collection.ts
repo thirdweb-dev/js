@@ -116,6 +116,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -340,7 +341,8 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+    TMethod extends
+      keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<TokenERC721["functions"][TMethod]>,
@@ -358,7 +360,8 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public async call<
-    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+    TMethod extends
+      keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<TokenERC721["functions"][TMethod]>,

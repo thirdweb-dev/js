@@ -1,9 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ChainX-EVM",
+  "name": "BEVM",
   "chain": "ChainX",
   "rpc": [
-    "https://chainx-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.chainx.org/rpc",
     "https://mainnet2.chainx.org/rpc"
   ],
@@ -19,11 +19,11 @@ export default {
   "networkId": 1501,
   "explorers": [
     {
-      "name": "chainx-evm scan",
+      "name": "bevm scan",
       "url": "https://evm.chainx.org",
       "standard": "none"
     }
   ],
   "testnet": false,
-  "slug": "chainx-evm"
+  "slug": "bevm"
 } as const satisfies Chain;

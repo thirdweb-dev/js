@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.2.1
+
+### Patch Changes
+
+- [#1365](https://github.com/thirdweb-dev/js/pull/1365) [`da95dce5`](https://github.com/thirdweb-dev/js/commit/da95dce5805210c97e09258be2b25d974f47f8d6) Thanks [@assimovt](https://github.com/assimovt)! - Handle port in the origin check
+
 ## 0.2.0
 
 ### Minor Changes
