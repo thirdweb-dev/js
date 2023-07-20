@@ -1,6 +1,7 @@
 import { getDeployArguments } from "../../common/deploy";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
+  AirdropERC20Initializer,
   EditionDropInitializer,
   EditionInitializer,
   getContractName,
@@ -65,6 +66,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [MarketplaceInitializer.contractType]: 2,
     [MarketplaceV3Initializer.contractType]: 1,
     [PackInitializer.contractType]: 2,
+    [AirdropERC20Initializer.contractType]: 1,
   };
 
   constructor(

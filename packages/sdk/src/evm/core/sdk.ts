@@ -6,6 +6,7 @@ import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
+  AirdropERC20Initializer,
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
@@ -89,6 +90,7 @@ import type {
   DeployOptions,
   DeployMetadata,
   DeployEvent,
+  AirdropContractDeployMetadata,
 } from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
@@ -707,10 +709,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce((acc, chain) => {
-      acc[chain.chainId] = chain;
-      return acc;
-    }, {} as Record<number, Chain>);
+    const chainMap = chains.reduce(
+      (acc, chain) => {
+        acc[chain.chainId] = chain;
+        return acc;
+      },
+      {} as Record<number, Chain>,
+    );
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
@@ -1340,6 +1345,20 @@ export class ContractDeployer extends RPCConnectionHandler {
     ): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         VoteInitializer.contractType,
+        metadata,
+        "latest",
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC20 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      return await this.deployBuiltInContract.prepare(
+        AirdropERC20Initializer.contractType,
         metadata,
         "latest",
         options,

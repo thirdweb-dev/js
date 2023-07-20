@@ -13,6 +13,7 @@ import {
   SplitInitializer,
   MarketplaceInitializer,
   MarketplaceV3Initializer,
+  AirdropERC20Initializer,
 } from "../contracts";
 import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
@@ -187,6 +188,8 @@ export async function getDeployArguments<
         packsMetadata.fee_recipient,
         packsMetadata.seller_fee_basis_points,
       ];
+    case AirdropERC20Initializer.contractType:
+      return [signerAddress];
     default:
       return [];
   }
