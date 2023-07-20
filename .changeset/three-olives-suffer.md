@@ -1,0 +1,3 @@
+---
+"@thirdweb-dev/chains": patch
+---
