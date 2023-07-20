@@ -1,5 +1,67 @@
 # @thirdweb-dev/chains
 
+## 0.1.36
+
+### Patch Changes
+
+- [#1366](https://github.com/thirdweb-dev/js/pull/1366) [`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee) Thanks [@jnsdls](https://github.com/jnsdls)! - new supported chains
+
+- [#1358](https://github.com/thirdweb-dev/js/pull/1358) [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608) Thanks [@DLHTX](https://github.com/DLHTX)! - feat(chain): add iotex chain icon
+
+## 0.1.35
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds support for clientId / secretKey
+
+## 0.1.34
+
+### Patch Changes
+
+- [#1338](https://github.com/thirdweb-dev/js/pull/1338) [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.33
+
+### Patch Changes
+
+- [#1335](https://github.com/thirdweb-dev/js/pull/1335) [`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains again
+
+## 0.1.32
+
+### Patch Changes
+
+- [#1330](https://github.com/thirdweb-dev/js/pull/1330) [`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95) Thanks [@adam-maj](https://github.com/adam-maj)! - Override binance slug
+
+## 0.1.31
+
+### Patch Changes
+
+- [#1328](https://github.com/thirdweb-dev/js/pull/1328) [`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5) Thanks [@adam-maj](https://github.com/adam-maj)! - Make base default chain
+
+## 0.1.30
+
+### Patch Changes
+
+- [#1326](https://github.com/thirdweb-dev/js/pull/1326) [`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add base chain support
+
+## 0.1.29
+
+### Patch Changes
+
+- [#1320](https://github.com/thirdweb-dev/js/pull/1320) [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Linea mainnet support
+
+- [#1315](https://github.com/thirdweb-dev/js/pull/1315) [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a) Thanks [@jnsdls](https://github.com/jnsdls)! - add more chains
+
+## 0.1.28
+
+### Patch Changes
+
+- [#1299](https://github.com/thirdweb-dev/js/pull/1299) [`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5) Thanks [@nkrishang](https://github.com/nkrishang)! - Add ERC721LoyaltyCard and ERC721UpdatableMetadata
+
+- [#1297](https://github.com/thirdweb-dev/js/pull/1297) [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add zksync as default chain
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
 ## 0.1.27
 
 ### Patch Changes

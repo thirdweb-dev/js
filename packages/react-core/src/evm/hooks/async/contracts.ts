@@ -3,7 +3,7 @@ import {
   RequiredParam,
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
-import { useSDK, useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDK, useSDKChainId } from "../useSDK";
 import { ContractAddress } from "../../types";
 import {
   cacheKeys,
@@ -328,7 +328,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {
       requiredParamInvariant(contract, "contract is required");
-      return await contract.metadata.get();
+      return (await contract.metadata.get()) as any; // FIXME types
     },
     {
       enabled: !!contract,

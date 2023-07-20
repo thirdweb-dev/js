@@ -18,7 +18,8 @@ import { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
   factoryAddress: string;
-  thirdwebApiKey: string;
+  clientId?: string;
+  secretKey?: string;
   gasless: boolean;
   bundlerUrl?: string;
   paymasterUrl?: string;
@@ -39,13 +40,16 @@ export interface AccountApiParams
   localSigner: Signer;
   factoryAddress: string;
   accountAddress?: string;
+  clientId?: string;
+  secretKey?: string;
 }
 
 export interface ProviderConfig extends ContractInfo {
   chain: ChainOrRpcUrl;
   localSigner: Signer;
   entryPointAddress: string;
-  thirdwebApiKey: string;
+  clientId?: string;
+  secretKey?: string;
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;

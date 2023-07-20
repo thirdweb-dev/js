@@ -90,6 +90,7 @@ export class Token extends StandardErc20<TokenERC20> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -306,7 +307,8 @@ export class Token extends StandardErc20<TokenERC20> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
+    TMethod extends
+      keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<TokenERC20["functions"][TMethod]>,
@@ -324,7 +326,8 @@ export class Token extends StandardErc20<TokenERC20> {
    * @internal
    */
   public async call<
-    TMethod extends keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
+    TMethod extends
+      keyof TokenERC20["functions"] = keyof TokenERC20["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<TokenERC20["functions"][TMethod]>,

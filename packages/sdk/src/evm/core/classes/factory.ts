@@ -48,7 +48,7 @@ import { getDefaultTrustedForwarders } from "../../constants/addresses/getDefaul
  * @internal
  */
 export class ContractFactory extends ContractWrapper<TWFactory> {
-  private storage: ThirdwebStorage;
+  storage: ThirdwebStorage;
 
   // Map from contract type to version to deploy specific versions by default
   private DEFAULT_VERSION_MAP: Record<PrebuiltContractType, number> = {
@@ -73,7 +73,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     storage: ThirdwebStorage,
     options?: SDKOptions,
   ) {
-    super(network, factoryAddr, TWFactoryAbi, options);
+    super(network, factoryAddr, TWFactoryAbi, options, storage);
     this.storage = storage;
   }
 

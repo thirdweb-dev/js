@@ -84,7 +84,6 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
 
   constructor() {
     super();
-    // this.options = options;
 
     if (!__IS_SERVER__) {
       this.ready = true;

@@ -1,4 +1,4 @@
-import { useSDK } from "../../providers/thirdweb-sdk-provider";
+import { useSDK } from "../useSDK";
 import { useMutation } from "@tanstack/react-query";
 import { IpfsUploadBatchOptions, UploadOptions } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
