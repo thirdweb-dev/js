@@ -1,49 +1,29 @@
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
-import { NetworkInput } from "..";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC20 } from "../../constants/thirdweb-features";
 import { Address } from "../../schema";
 import { Airdrop20Content } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type {
   IAirdropERC20,
   AirdropERC20,
 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * @public
  */
 export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
-  implements UpdateableNetwork, DetectableFeature
+  implements DetectableFeature
 {
   featureName = FEATURE_AIRDROP_ERC20.name;
   protected contractWrapper: ContractWrapper<T>;
-  protected storage: ThirdwebStorage;
-
-  private _chainId: number;
-  get chainId() {
-    return this._chainId;
-  }
 
   constructor(
     contractWrapper: ContractWrapper<T>,
-    storage: ThirdwebStorage,
-    chainId: number,
   ) {
     this.contractWrapper = contractWrapper;
-    this.storage = storage;
-    this._chainId = chainId;
-  }
-
-  /**
-   * @internal
-   */
-  onNetworkUpdated(network: NetworkInput): void {
-    this.contractWrapper.updateSignerOrProvider(network);
   }
 
   /**

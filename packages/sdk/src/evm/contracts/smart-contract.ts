@@ -586,7 +586,7 @@ export class SmartContract<
     if (
       detectContractFeature<AirdropERC20>(this.contractWrapper, "AirdropERC20")
     ) {
-      return new Airdrop20(this.contractWrapper, this.storage, this.chainId);
+      return new Airdrop20(this.contractWrapper);
     }
     return undefined;
   }
@@ -595,7 +595,7 @@ export class SmartContract<
     if (
       detectContractFeature<AirdropERC721>(this.contractWrapper, "AirdropERC721")
     ) {
-      return new Airdrop721(this.contractWrapper, this.storage, this.chainId);
+      return new Airdrop721(this.contractWrapper);
     }
     return undefined;
   }
@@ -604,7 +604,7 @@ export class SmartContract<
     if (
       detectContractFeature<AirdropERC1155>(this.contractWrapper, "AirdropERC1155")
     ) {
-      return new Airdrop1155(this.contractWrapper, this.storage, this.chainId);
+      return new Airdrop1155(this.contractWrapper);
     }
     return undefined;
   }
