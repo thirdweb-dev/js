@@ -69,6 +69,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}

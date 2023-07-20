@@ -51,6 +51,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}

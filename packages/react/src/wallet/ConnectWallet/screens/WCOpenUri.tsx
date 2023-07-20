@@ -19,7 +19,15 @@ export const WCOpenURI: React.FC<{
     other: string;
   };
   supportLink: string;
-}> = ({ onBack, onConnected, walletConfig, appUriPrefix, supportLink }) => {
+  hideBackButton: boolean;
+}> = ({
+  onBack,
+  onConnected,
+  walletConfig,
+  appUriPrefix,
+  supportLink,
+  hideBackButton,
+}) => {
   const createInstance = useCreateWalletInstance();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
     useWalletContext();
@@ -64,6 +72,7 @@ export const WCOpenURI: React.FC<{
 
   return (
     <ConnectingScreen
+      hideBackButton={hideBackButton}
       onBack={onBack}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}

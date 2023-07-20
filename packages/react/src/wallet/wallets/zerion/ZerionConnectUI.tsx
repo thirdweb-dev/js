@@ -68,6 +68,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}

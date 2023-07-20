@@ -68,6 +68,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
