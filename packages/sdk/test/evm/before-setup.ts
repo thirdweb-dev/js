@@ -1,6 +1,7 @@
 import {
   Abi,
   AbiSchema,
+  AirdropERC20Initializer,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
@@ -60,6 +61,7 @@ import {
   DirectListingsLogic__factory,
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
+  AirdropERC20__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractInterface, ethers } from "ethers";
@@ -230,6 +232,9 @@ export const mochaHooks = {
         case MultiwrapInitializer.contractType:
           factories.push(Multiwrap__factory);
           break;
+          case AirdropERC20Initializer.contractType:
+            factories.push(AirdropERC20__factory);
+            break;
         default:
           throw new Error(`No factory for contract: ${contractType}`);
       }
