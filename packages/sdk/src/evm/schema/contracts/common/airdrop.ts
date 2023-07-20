@@ -34,8 +34,8 @@ export const AirdropInputSchema = /* @__PURE__ */ (() =>
  */
 export const Airdrop20ContentInput = /* @__PURE__ */ (() =>
 z.object({
-  address: AddressOrEnsSchema,
-  quantity: AmountSchema.default(1),
+  recipient: AddressOrEnsSchema,
+  amount: AmountSchema.default(1),
 }))();
 
 /**
@@ -43,7 +43,7 @@ z.object({
  */
 export const Airdrop721ContentInput = /* @__PURE__ */ (() =>
 z.object({
-  address: AddressOrEnsSchema,
+  recipient: AddressOrEnsSchema,
   tokenId: z.number(),
 }))();
 
@@ -52,7 +52,7 @@ z.object({
  */
 export const Airdrop1155ContentInput = /* @__PURE__ */ (() =>
 z.object({
-  address: AddressOrEnsSchema,
+  recipient: AddressOrEnsSchema,
   tokenId: z.number(),
-  quantity: AmountSchema.default(1),
+  amount: AmountSchema.default(1),
 }))();

@@ -7,18 +7,16 @@ import {
 } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
-import { ethers } from "ethers";
+import { expect, assert } from "chai";
+import { BigNumber, ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
 
 /**
- * Throughout these tests, the admin wallet will be the deployer
- * and lister of all listings.
+ * Throughout these tests, the admin wallet will be performing the airdrops.
  *
- * Bog and Sam and Abby wallets will be used for direct listings and auctions.
  */
 describe("Airdrop ERC20", async () => {
   let airdropContract: SmartContract;
@@ -27,11 +25,12 @@ describe("Airdrop ERC20", async () => {
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,
+    randomWallet: SignerWithAddress,
     w4: SignerWithAddress;
 
   beforeEach(async () => {
     await jsonProvider.send("hardhat_reset", []);
-    [adminWallet, samWallet, bobWallet, , , , , w4] = signers;
+    [adminWallet, samWallet, bobWallet, randomWallet, , , , w4] = signers;
 
     sdk.updateSignerOrProvider(adminWallet);
 
@@ -59,6 +58,8 @@ describe("Airdrop ERC20", async () => {
       },
     ]);
     tokenAddress = customTokenContract.getAddress();
+
+    await customTokenContract.setAllowance(airdropContract.getAddress(), 1000);
   });
 
   /**
@@ -71,6 +72,39 @@ describe("Airdrop ERC20", async () => {
       const contractType = await airdropContract.call("contractType");
 
       assert(contractType, contractTypeBytes);
+    });
+
+    it("should perform airdrop", async () => {
+      await airdropContract.airdrop20.drop(tokenAddress, adminWallet.address, [
+        { recipient: samWallet.address, amount: 10 },
+        { recipient: bobWallet.address, amount: 15 },
+        { recipient: randomWallet.address, amount: 20 },
+      ]);
+
+      const samBalance = (
+        await customTokenContract.balanceOf(samWallet.address)
+      ).value;
+      const bobBalance = (
+        await customTokenContract.balanceOf(bobWallet.address)
+      ).value;
+      const randomBalance = (
+        await customTokenContract.balanceOf(randomWallet.address)
+      ).value;
+      const adminBalance = (
+        await customTokenContract.balanceOf(adminWallet.address)
+      ).value;
+
+      expect(samBalance.toNumber()).to.equal(10);
+      expect(bobBalance.toNumber()).to.equal(15);
+      expect(randomBalance.toNumber()).to.equal(20);
+
+      expect(adminBalance.toString()).to.equal(
+        BigNumber.from(ethers.utils.parseEther("1000"))
+          .sub(samBalance.toString())
+          .sub(bobBalance.toString())
+          .sub(randomBalance.toString())
+          .toString(),
+      );
     });
   });
 });
