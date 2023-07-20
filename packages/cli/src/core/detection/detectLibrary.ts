@@ -34,7 +34,10 @@ export default async function detect(
     return possibleLibraries[0];
   }
 
-  if (possibleLibraries.includes("react-native") && possibleLibraries.includes("react")) {
+  if (
+    possibleLibraries.includes("react-native") &&
+    possibleLibraries.includes("react")
+  ) {
     return "react-native";
   }
 

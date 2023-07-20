@@ -4,7 +4,6 @@ import {
 } from "../connectors/paper/types";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { Chain } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
 import { walletIds } from "../constants/walletIds";
 
@@ -30,7 +29,7 @@ export class PaperWallet extends AbstractClientWallet<
     return "Paper Wallet" as const;
   }
 
-  clientId: PaperWalletAdditionalOptions_["clientId"];
+  paperClientId: PaperWalletAdditionalOptions_["paperClientId"];
   chain: PaperWalletAdditionalOptions_["chain"];
 
   constructor(options: PaperWalletOptions) {
@@ -38,7 +37,7 @@ export class PaperWallet extends AbstractClientWallet<
       ...options,
     });
 
-    this.clientId = options.clientId;
+    this.paperClientId = options.paperClientId;
     this.chain = options.chain;
   }
 
@@ -46,7 +45,7 @@ export class PaperWallet extends AbstractClientWallet<
     if (!this.connector) {
       const { PaperWalletConnector } = await import("../connectors/paper");
       this.connector = new PaperWalletConnector({
-        clientId: this.clientId,
+        clientId: this.paperClientId,
         chain: this.chain,
         chains: this.chains,
         advancedOptions: {
@@ -57,10 +56,6 @@ export class PaperWallet extends AbstractClientWallet<
       });
     }
     return this.connector;
-  }
-
-  async updateChains(chains: Chain[]) {
-    this.chains = chains;
   }
 
   async getEmail() {

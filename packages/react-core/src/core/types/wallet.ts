@@ -1,19 +1,12 @@
-import type {
-  AbstractClientWallet,
-  Chain,
-  DAppMetaData,
-} from "@thirdweb-dev/wallets";
+import type { AbstractClientWallet, Chain } from "@thirdweb-dev/wallets";
+import { WalletOptions as WalletOptions_ } from "@thirdweb-dev/wallets";
 
 // these are extra options provided by the react-core package
 export type ExtraCoreWalletOptions = {
   chain: Chain;
 };
 
-export type WalletOptions = {
-  chains: Chain[];
-  walletId?: string;
-  dappMetadata?: DAppMetaData;
-} & ExtraCoreWalletOptions;
+export type WalletOptions = WalletOptions_<ExtraCoreWalletOptions>;
 
 export type WalletInstance = AbstractClientWallet;
 

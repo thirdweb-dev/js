@@ -18,21 +18,20 @@ import { Magic } from "magic-sdk";
 import type { AbstractProvider } from "web3-core";
 import { RPCProviderModule } from "@magic-sdk/provider/dist/types/modules/rpc-provider";
 
-export type MagicAuthConnectOptions =
+export type MagicAuthConnectOptions = {
+  chainId?: number;
+} & (
   | {
-      chainId?: number;
-    } & (
-      | {
-          email: string;
-        }
-      | {
-          phoneNumber: string;
-        }
-      | {
-          oauthProvider: OAuthProvider;
-        }
-      | {}
-    );
+      email: string;
+    }
+  | {
+      phoneNumber: string;
+    }
+  | {
+      oauthProvider: OAuthProvider;
+    }
+  | {}
+);
 
 const IS_SERVER = typeof window === "undefined";
 

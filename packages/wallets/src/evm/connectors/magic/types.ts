@@ -48,6 +48,7 @@ export interface MagicAuthOptions extends MagicOptions {
 
 export interface MagicConnectorBaseOptions {
   apiKey: string;
+
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration;
   /**
    * Specify whether to use the Magic Auth or Magic Connect.

@@ -106,6 +106,7 @@ export async function handleTokenApproval(
     assetContract,
     ERC165Abi,
     contractWrapper.options,
+    contractWrapper.storage,
   );
   const isERC721 = await erc165.readContract.supportsInterface(
     InterfaceId_IERC721,
@@ -120,6 +121,7 @@ export async function handleTokenApproval(
       assetContract,
       ERC721Abi,
       contractWrapper.options,
+      contractWrapper.storage,
     );
     const approved = await asset.readContract.isApprovedForAll(
       from,
@@ -143,6 +145,7 @@ export async function handleTokenApproval(
       assetContract,
       ERC1155Abi,
       contractWrapper.options,
+      contractWrapper.storage,
     );
 
     const approved = await asset.readContract.isApprovedForAll(

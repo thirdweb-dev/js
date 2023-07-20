@@ -47,6 +47,7 @@ export async function getMetadataForPlugins(
             implementation,
             getAllPluginsAbi,
             {},
+            storage,
           );
 
           const pluginMap = await contract.call("getAllPlugins");
