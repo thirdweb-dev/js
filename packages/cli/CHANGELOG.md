@@ -1,5 +1,11 @@
 # thirdweb
 
+## 0.11.3
+
+### Patch Changes
+
+- [#1370](https://github.com/thirdweb-dev/js/pull/1370) [`79ebbbca`](https://github.com/thirdweb-dev/js/commit/79ebbbcad92b71b3123f5cc08d7d837b3716cb3f) Thanks [@Marfuen](https://github.com/Marfuen)! - Fixed a bug where passing in --ci in publish, release or deploy would still open the url and crash during runtime. Now it won't open the url if --ci is passed in.
+
 ## 0.11.2
 
 ### Patch Changes
