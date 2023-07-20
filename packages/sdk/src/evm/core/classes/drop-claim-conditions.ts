@@ -155,7 +155,7 @@ export class DropClaimConditions<
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
       const claimCondition =
-        (await this.contractWrapper.readContract.claimCondition()) as {
+        (await this.contractWrapper.readContract.claimCondition()) as unknown as {
           currentStartId: BigNumber;
           count: BigNumber;
         };

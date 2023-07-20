@@ -1,26 +1,26 @@
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
 import { NetworkInput } from "..";
 import { buildTransactionFunction } from "../../common/transactions";
-import { FEATURE_AIRDROP_ERC20 } from "../../constants/thirdweb-features";
+import { FEATURE_AIRDROP_ERC1155 } from "../../constants/thirdweb-features";
 import { Address } from "../../schema";
-import { Airdrop20Content } from "../../types";
+import { Airdrop1155Content } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type {
-  IAirdropERC20,
-  AirdropERC20,
+  AirdropERC1155,
+  IAirdropERC1155,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * @public
  */
-export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
+export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
   implements UpdateableNetwork, DetectableFeature
 {
-  featureName = FEATURE_AIRDROP_ERC20.name;
+  featureName = FEATURE_AIRDROP_ERC1155.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -58,7 +58,7 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    *******************************/
 
   drop = /* @__PURE__ */ buildTransactionFunction(
-    async (tokenAddress: string, tokenOwner: string, contents: Airdrop20Content[]): Promise<Transaction<{recipient: string}[]>> => {
+    async (tokenAddress: string, tokenOwner: string, contents: Airdrop1155Content[]): Promise<Transaction<{recipient: string}[]>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdrop",

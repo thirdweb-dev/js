@@ -14,6 +14,8 @@ import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
 import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
 import IAirdropERC20 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC20.json";
+import IAirdropERC721 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC721.json";
+import IAirdropERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC1155.json";
 
 export const getAllPluginsAbi = [
   {
@@ -304,14 +306,38 @@ export const FEATURE_ACCOUNT = {
   features: {},
 } as const;
 
-export const FEATURE_AIRDROP_TOKEN = {
+export const FEATURE_AIRDROP_ERC20 = {
   name: "AirdropERC20",
-  namespace: "airdroperc20",
+  namespace: "airdrop20",
   docLinks: {
     // TODO
     sdk: "",
     contracts: "",
   },
   abis: [IAirdropERC20],
+  features: {},
+} as const;
+
+export const FEATURE_AIRDROP_ERC721 = {
+  name: "AirdropERC721",
+  namespace: "airdrop721",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IAirdropERC721],
+  features: {},
+} as const;
+
+export const FEATURE_AIRDROP_ERC1155 = {
+  name: "AirdropERC1155",
+  namespace: "airdrop1155",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IAirdropERC1155],
   features: {},
 } as const;
