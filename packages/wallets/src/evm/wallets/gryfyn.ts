@@ -4,7 +4,7 @@ import { Chain } from "@thirdweb-dev/chains";
 
 export type GryfynWalletOptions = WalletOptions<{
   apiKey: string;
-  chains: Chain[];
+  chains?: Chain[];
 }>;
 
 export class GryfynWallet extends AbstractClientWallet {
@@ -21,7 +21,10 @@ export class GryfynWallet extends AbstractClientWallet {
       return this.#connector;
     }
     const { GryFynConnector } = await import("../connectors/gryfyn");
-    this.#connector = new GryFynConnector(this.#options);
+    this.#connector = new GryFynConnector({
+      apiKey: this.#options.apiKey,
+      chains: this.chains,
+    });
     return this.#connector;
   }
 
