@@ -96,7 +96,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAll(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutSeller,
+  ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -133,7 +135,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAllValid(filter?: MarketplaceFilterWithoutSeller): Promise<OfferV3[]> {
+  public async getAllValid(
+    filter?: MarketplaceFilterWithoutSeller,
+  ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();
@@ -426,7 +430,13 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       : offer.currencyContractAddress;
 
     const provider = this.contractWrapper.getProvider();
-    const erc20 = new ContractWrapper<IERC20>(provider, currency, ERC20Abi, {});
+    const erc20 = new ContractWrapper<IERC20>(
+      provider,
+      currency,
+      ERC20Abi,
+      {},
+      this.storage,
+    );
 
     const offerorBalance = await erc20.readContract.balanceOf(
       offer.offerorAddress,

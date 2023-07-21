@@ -80,7 +80,6 @@ export class Erc721ClaimableZora implements DetectableFeature {
         );
       }
       const saleDetails = await this.getSaleDetails();
-      console.log(saleDetails);
       const price = saleDetails.publicSalePrice;
       const zoraFee = toWei("0.000777");
       const totalPrice = BigNumber.from(price).add(zoraFee).mul(quantity);

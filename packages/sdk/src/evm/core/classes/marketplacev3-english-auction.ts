@@ -104,7 +104,9 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the Auction object array
    * @twfeature EnglishAuctions
    */
-  public async getAll(filter?: MarketplaceFilterWithoutOfferor): Promise<EnglishAuction[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutOfferor,
+  ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
     let start = BigNumber.from(filter?.start || 0).toNumber();

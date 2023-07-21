@@ -4,7 +4,7 @@ import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import { useWallet, useBalance, useChain } from "@thirdweb-dev/react-core";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import Box from "../base/Box";
 import { ConnectWalletDetailsModal } from "./ConnectWalletDetailsModal";
@@ -57,7 +57,9 @@ export const WalletDetailsButton = ({
           onPress={onPress}
         >
           <Box flex={1} flexDirection="row" justifyContent="space-between">
-            <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
+            <View>
+              <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
+            </View>
             <Box justifyContent="center" alignItems="flex-start">
               <Text variant="bodySmall">
                 {balanceQuery.data
@@ -74,10 +76,12 @@ export const WalletDetailsButton = ({
                 />
               )}
             </Box>
-            <WalletIcon
-              size={32}
-              iconUri={activeWallet?.getMeta().iconURL || ""}
-            />
+            <View>
+              <WalletIcon
+                size={32}
+                iconUri={activeWallet?.getMeta().iconURL || ""}
+              />
+            </View>
           </Box>
         </BaseButton>
       )}

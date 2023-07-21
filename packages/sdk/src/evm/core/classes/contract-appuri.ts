@@ -61,7 +61,7 @@ export class ContractAppURI<TContract extends BaseContract>
 
     return replaceGatewayUrlWithScheme(
       (await this.metadata.get()).app_uri || "",
-      this.storage.gatewayUrls,
+      this.storage.getGatewayUrls(),
     );
   }
 

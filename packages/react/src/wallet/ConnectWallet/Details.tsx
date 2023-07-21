@@ -304,7 +304,8 @@ export const ConnectedWalletDetails: React.FC<{
         {activeWalletConfig &&
           activeWalletConfig.id === walletIds.metamask &&
           activeWalletConfig.isInstalled &&
-          activeWalletConfig.isInstalled() && (
+          activeWalletConfig.isInstalled() &&
+          !isMobile() && (
             <MenuButton
               type="button"
               onClick={() => {
@@ -559,7 +560,9 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   line-height: 1.3;
 
   &:not([disabled]):hover {
-    transition: box-shadow 250ms ease, border-color 250ms ease;
+    transition:
+      box-shadow 250ms ease,
+      border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.link.primary};
     box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
   }
@@ -572,7 +575,9 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 
   &[disabled]:hover {
-    transition: box-shadow 250ms ease, border-color 250ms ease;
+    transition:
+      box-shadow 250ms ease,
+      border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.text.danger};
     box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
   }

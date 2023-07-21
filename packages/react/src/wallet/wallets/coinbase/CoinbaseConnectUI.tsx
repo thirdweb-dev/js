@@ -18,6 +18,8 @@ export const CoinbaseConnectUI = ({
     "connecting" | "loading" | "scanning" | "get-started"
   >("loading");
 
+  const hideBackButton = supportedWallets.length === 1;
+
   const connectPrompted = useRef(false);
   useEffect(() => {
     if (screen !== "loading") {
@@ -61,6 +63,7 @@ export const CoinbaseConnectUI = ({
   if (screen === "connecting" || screen === "loading") {
     return (
       <ConnectingScreen
+        hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={meta.name}
         walletIconURL={meta.iconURL}
@@ -77,7 +80,9 @@ export const CoinbaseConnectUI = ({
         chromeExtensionLink={meta.urls?.chrome}
         googlePlayStoreLink={meta.urls?.android}
         appleStoreLink={meta.urls?.ios}
-        onBack={goBack}
+        onBack={() => {
+          setScreen("scanning");
+        }}
       />
     );
   }
@@ -89,7 +94,7 @@ export const CoinbaseConnectUI = ({
         onConnected={close}
         onGetStarted={() => setScreen("get-started")}
         walletConfig={walletConfig}
-        hideBackButton={supportedWallets.length === 1}
+        hideBackButton={hideBackButton}
       />
     );
   }

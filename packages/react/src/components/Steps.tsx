@@ -23,12 +23,14 @@ const Circle = styled.div<{ theme?: Theme }>`
   height: 14px;
   border-radius: 50%;
   background-color: ${(p) => p.theme.bg.highlighted};
-  box-shadow: 0 0 0 3px ${(p) => p.theme.bg.base},
+  box-shadow:
+    0 0 0 3px ${(p) => p.theme.bg.base},
     0 0 0 5px ${(p) => p.theme.bg.highlighted};
 
   &[data-active="true"] {
     background-color: ${(p) => p.theme.link.primary};
-    box-shadow: 0 0 0 3px ${(p) => p.theme.bg.base},
+    box-shadow:
+      0 0 0 3px ${(p) => p.theme.bg.base},
       0 0 0 5px ${(p) => p.theme.link.primary};
 
     position: relative;

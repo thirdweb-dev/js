@@ -83,6 +83,7 @@ export class Vote implements UpdateableNetwork {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;

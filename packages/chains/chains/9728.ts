@@ -26,6 +26,15 @@ export default {
       "standard": "none"
     }
   ],
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "testnet": true,
   "slug": "boba-bnb-testnet"
 } as const satisfies Chain;
