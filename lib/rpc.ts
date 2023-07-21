@@ -1,14 +1,9 @@
-import { Chain, getChainRPC } from "@thirdweb-dev/chains";
+import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { DASHBOARD_THIRDWEB_CLIENT_ID, RPC_ENV } from "constants/rpc";
-
-const rpcKeys = {
-  // fine to be hard-coded for now
-  thirdwebApiKey: DASHBOARD_THIRDWEB_CLIENT_ID,
-};
 
 export function getDashboardChainRpc(chain: Chain) {
   try {
-    const rpcUrl = getChainRPC(chain, rpcKeys);
+    const rpcUrl = getValidChainRPCs(chain, DASHBOARD_THIRDWEB_CLIENT_ID)[0];
     // based on the environment hit staging or production
     if (rpcUrl.includes("rpc.thirdweb.com")) {
       return rpcUrl.replace("rpc.thirdweb.com", `${RPC_ENV}.thirdweb.com`);
