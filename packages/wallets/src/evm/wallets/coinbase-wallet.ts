@@ -9,7 +9,10 @@ if (typeof window !== "undefined") {
   window.Buffer = Buffer;
 }
 
-export type CoinbaseWalletOptions = WalletOptions<{ headlessMode?: boolean }>;
+export type CoinbaseWalletOptions = WalletOptions<{
+  headlessMode?: boolean;
+  theme?: "dark" | "light";
+}>;
 
 export class CoinbaseWallet extends AbstractClientWallet {
   connector?: Connector;
@@ -34,10 +37,16 @@ export class CoinbaseWallet extends AbstractClientWallet {
   }
 
   headlessMode: boolean;
+  theme: "dark" | "light";
 
   constructor(options?: CoinbaseWalletOptions) {
     super(CoinbaseWallet.id, options);
     this.headlessMode = options?.headlessMode || false;
+
+    this.theme =
+      options?.theme || this.dappMetadata.isDarkMode === false
+        ? "light"
+        : "dark";
   }
 
   protected async getConnector(): Promise<Connector> {
@@ -52,7 +61,7 @@ export class CoinbaseWallet extends AbstractClientWallet {
         options: {
           appName: this.dappMetadata.name,
           reloadOnDisconnect: false,
-          darkMode: this.dappMetadata.isDarkMode,
+          darkMode: this.theme === "dark",
           headlessMode: this.headlessMode,
         },
       });
