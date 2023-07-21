@@ -8,15 +8,15 @@ export const apiKeyValidationSchema = z.object({
     .string()
     .min(3, { message: "Must be at least 3 chars" })
     .max(64, { message: "Must be max 64 chars" }),
-  domains: z
-    .string()
-    .refine(
-      (str) =>
-        str.split(":")[0] === "localhost" || validStrList(str, RE_DOMAIN),
-      {
-        message: "Some of the domains are invalid",
-      },
-    ),
+  domains: z.string().refine(
+    (str) =>
+      validStrList(str, (domain) => {
+        return domain.split(":")[0] === "localhost" || RE_DOMAIN.test(domain);
+      }),
+    {
+      message: "Some of the domains are invalid",
+    },
+  ),
   bundleIds: z.string().refine((str) => validStrList(str, RE_BUNDLE_ID), {
     message: "Some of the bundle ids are invalid",
   }),
