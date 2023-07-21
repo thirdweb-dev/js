@@ -34,6 +34,7 @@ export * from "./utils/addresses";
 export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
+export { ThirdwebStorage } from "../core/storage/storage";
 
 // ui components
 export * from "./components/base";
