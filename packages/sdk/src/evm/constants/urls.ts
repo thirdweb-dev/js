@@ -13,10 +13,13 @@ import type { Signer } from "ethers";
  * @internal
  */
 function buildDefaultMap(options: SDKOptionsOutput) {
-  return options.supportedChains.reduce((previousValue, currentValue) => {
-    previousValue[currentValue.chainId] = currentValue;
-    return previousValue;
-  }, {} as Record<number, ChainInfo>);
+  return options.supportedChains.reduce(
+    (previousValue, currentValue) => {
+      previousValue[currentValue.chainId] = currentValue;
+      return previousValue;
+    },
+    {} as Record<number, ChainInfo>,
+  );
 }
 
 /**
@@ -82,10 +85,13 @@ export function getChainIdFromNetwork(
     return network;
   } else {
     // If it's a string (chain name) return the chain id from the map
-    const chainNameToId = options.supportedChains.reduce((acc, curr) => {
-      acc[curr.slug] = curr.chainId;
-      return acc;
-    }, {} as Record<string, number>);
+    const chainNameToId = options.supportedChains.reduce(
+      (acc, curr) => {
+        acc[curr.slug] = curr.chainId;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     if (network in chainNameToId) {
       return chainNameToId[network];
@@ -156,6 +162,15 @@ export function getProviderFromRpcUrl(
     if (isTwUrl(rpcUrl)) {
       if (sdkOptions?.clientId) {
         headers["x-client-id"] = sdkOptions?.clientId;
+        // bundleId may already be injected
+        if (!rpcUrl.includes("bundleId")) {
+          rpcUrl =
+            rpcUrl +
+            (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+              ? // @ts-ignore
+                `?bundleId=${globalThis.APP_BUNDLE_ID}`
+              : "");
+        }
       } else if (sdkOptions?.secretKey) {
         headers["x-secret-key"] = sdkOptions?.secretKey;
       }
