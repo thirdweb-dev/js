@@ -98,7 +98,13 @@ export function getValidChainRPCs(
     // Replace API_KEY placeholder with value
     if (rpc.includes("${THIRDWEB_API_KEY}")) {
       if (clientId) {
-        processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", clientId));
+        processedRPCs.push(
+          rpc.replace("${THIRDWEB_API_KEY}", clientId) +
+            (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+              ? // @ts-ignore
+                `/?bundleId=${globalThis.APP_BUNDLE_ID}`
+              : ""),
+        );
       } else {
         // if no client id, let it through with empty string
         // if secretKey is present, it will be used in header

@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taiko Grimsvotn L2",
+  "name": "Taiko Eldfell L3",
   "chain": "ETH",
   "status": "active",
   "icon": {
@@ -10,8 +10,8 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://taiko-grimsvotn-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.test.taiko.xyz"
+    "https://taiko-eldfell-l3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.l3test.taiko.xyz"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -20,16 +20,16 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://taiko.xyz",
-  "shortName": "taiko-l2",
-  "chainId": 167005,
-  "networkId": 167005,
+  "shortName": "taiko-l3",
+  "chainId": 167006,
+  "networkId": 167006,
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://explorer.test.taiko.xyz",
+      "url": "https://explorer.l3test.taiko.xyz",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "taiko-grimsvotn-l2"
+  "slug": "taiko-eldfell-l3"
 } as const satisfies Chain;

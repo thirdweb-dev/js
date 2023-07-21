@@ -19,6 +19,13 @@ export default {
   "shortName": "tTBSI",
   "chainId": 1708,
   "networkId": 1708,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://exp.testnet.blockchain.or.th",
+      "standard": "EIP3091"
+    }
+  ],
   "testnet": true,
   "slug": "tbsi-testnet"
 } as const satisfies Chain;
