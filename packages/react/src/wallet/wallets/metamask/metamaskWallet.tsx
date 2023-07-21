@@ -1,5 +1,8 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { MetaMaskWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
+import {
+  MetaMaskWallet,
+  getInjectedMetamaskProvider,
+} from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
 
 type MetamaskWalletOptions = {
@@ -27,10 +30,7 @@ export const metamaskWallet = (
     },
     connectUI: MetamaskConnectUI,
     isInstalled() {
-      if (assertWindowEthereum(globalThis.window)) {
-        return globalThis.window.ethereum.isMetaMask;
-      }
-      return false;
+      return !!getInjectedMetamaskProvider();
     },
   };
 };

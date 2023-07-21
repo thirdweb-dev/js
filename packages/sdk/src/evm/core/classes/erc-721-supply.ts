@@ -87,11 +87,17 @@ export class Erc721Supply implements DetectableFeature {
    */
   public async allOwners() {
     let totalCount: BigNumber;
+    let startTokenId = BigNumber.from(0);
+    if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
+      startTokenId = await this.contractWrapper.readContract.startTokenId();
+    }
     try {
       totalCount = await this.erc721.totalClaimedSupply();
     } catch (e) {
       totalCount = await this.totalCount();
     }
+
+    totalCount = totalCount.add(startTokenId);
 
     // TODO use multicall3 if available
     // TODO can't call toNumber() here, this can be a very large number

@@ -1,5 +1,17 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.9
+
+### Patch Changes
+
+- [#1299](https://github.com/thirdweb-dev/js/pull/1299) [`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5) Thanks [@nkrishang](https://github.com/nkrishang)! - Add ERC721LoyaltyCard and ERC721UpdatableMetadata
+
+## 1.3.8
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
 ## 1.3.7
 
 ### Patch Changes

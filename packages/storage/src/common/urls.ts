@@ -1,25 +1,43 @@
 import { GatewayUrls } from "../types";
+import CIDTool from "cid-tool";
+
+const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
+const TW_GATEWAY_URLS = [
+  `https://{clientId}${TW_HOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
+];
+
+/**
+ * @internal
+ * @param url
+ * @returns
+ */
+export function isTwGatewayUrl(url: string): boolean {
+  return new URL(url).hostname.endsWith(TW_HOSTNAME_SUFFIX);
+}
+
+const PUBLIC_GATEWAY_URLS = [
+  "https://{cid}.ipfs.cf-ipfs.com/{path}",
+  "https://{cid}.ipfs.dweb.link/{path}",
+  "https://ipfs.io/ipfs/{cid}/{path}",
+  "https://cloudflare-ipfs.com/ipfs/{cid}/{path}",
+  "https://{cid}.ipfs.w3s.link/{path}",
+  "https://w3s.link/ipfs/{cid}/{path}",
+  "https://nftstorage.link/ipfs/{cid}/{path}",
+  "https://gateway.pinata.cloud/ipfs/{cid}/{path}",
+];
 
 /**
  * @internal
  */
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
   // Note: Gateway URLs should have trailing slashes (we clean this on user input)
-  "ipfs://": [
-    "https://ipfs-3.thirdwebcdn.com/ipfs/",
-    "https://ipfs-4.thirdwebcdn.com/ipfs/",
-    "https://ipfs-5.thirdwebcdn.com/ipfs/",
-    "https://cloudflare-ipfs.com/ipfs/",
-    "https://ipfs.io/ipfs/",
-    // TODO this one can become the default again once it's stable (no more VT issues)
-    "https://ipfs.thirdwebcdn.com/ipfs/",
-  ],
+  "ipfs://": [...TW_GATEWAY_URLS, ...PUBLIC_GATEWAY_URLS],
 };
 
 /**
  * @internal
  */
-export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
+export const TW_UPLOAD_SERVER_URL = "https://storage.thirdweb.com";
 
 /**
  * @internal
@@ -44,24 +62,86 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
+export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
+  const parts = cid.split("/");
+  const hash = convertCidToV1(parts[0]);
+  const filePath = parts.slice(1).join("/");
+
+  let url = gatewayUrl;
+
+  // If the URL contains {cid} or {path} tokens, replace them with the CID and path
+  // Both tokens must be present for the URL to be valid
+  if (gatewayUrl.includes("{cid}") && gatewayUrl.includes("{path}")) {
+    url = url.replace("{cid}", hash).replace("{path}", filePath);
+  }
+  // If the URL contains only the {cid} token, replace it with the CID
+  else if (gatewayUrl.includes("{cid}")) {
+    url = url.replace("{cid}", hash);
+  }
+  // If those tokens don't exist, use the canonical gateway URL format
+  else {
+    url += `${hash}/${filePath}`;
+  }
+
+  return url;
+}
+
+/**
+ * @internal
+ */
+export function prepareGatewayUrls(
+  gatewayUrls: GatewayUrls,
+  clientId?: string,
+  secretKey?: string,
+): GatewayUrls {
   const allGatewayUrls = {
-    ...gatewayUrls,
     ...DEFAULT_GATEWAY_URLS,
+    ...gatewayUrls,
   };
 
-  for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
-    if (gatewayUrls && gatewayUrls[key]) {
-      // Make sure that all user gateway URLs have trailing slashes
-      const cleanedGatewayUrls = gatewayUrls[key].map(
-        (url) => url.replace(/\/$/, "") + "/",
-      );
-      allGatewayUrls[key] = [
-        ...cleanedGatewayUrls,
-        ...DEFAULT_GATEWAY_URLS[key],
-      ];
-    }
+  for (const key of Object.keys(allGatewayUrls)) {
+    const cleanedGatewayUrls = allGatewayUrls[key]
+      .map((url) => {
+        // inject clientId when present
+        if (clientId && url.includes("{clientId}")) {
+          return url.replace("{clientId}", clientId);
+        } else if (secretKey && url.includes("{clientId}")) {
+          // should only be used on Node.js in a backend/script context
+          if (typeof window !== "undefined") {
+            throw new Error("Cannot use secretKey in browser context");
+          }
+          const crypto = require("crypto");
+          const hashedSecretKey = crypto
+            .createHash("sha256")
+            .update(secretKey)
+            .digest("hex");
+          const derivedClientId = hashedSecretKey.slice(0, 32);
+          return url.replace("{clientId}", derivedClientId);
+        } else if (url.includes("{clientId}")) {
+          // if no client id passed, filter out the url
+          return undefined;
+        } else {
+          return url;
+        }
+      })
+      .filter((url) => url !== undefined) as string[];
+
+    allGatewayUrls[key] = cleanedGatewayUrls;
   }
 
   return allGatewayUrls;
+}
+
+/**
+ * @internal
+ */
+export function convertCidToV1(cid: string) {
+  let normalized: string;
+  try {
+    const hash = cid.split("/")[0];
+    normalized = CIDTool.base32(hash);
+  } catch (e) {
+    throw new Error(`The CID ${cid} is not valid.`);
+  }
+  return normalized;
 }

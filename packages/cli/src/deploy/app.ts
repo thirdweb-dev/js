@@ -5,10 +5,20 @@ import { logger } from "../core/helpers/logger";
 import { runCommand } from "../create/helpers/run-command";
 import { upload } from "../storage/command";
 
-export async function deployApp(distPath = "dist", projectPath = ".") {
-  const storage = new ThirdwebStorage();
+export async function deployApp(
+  distPath = "dist",
+  projectPath = ".",
+  apiSecretKey: string,
+) {
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
   const detectedPackageManager = await detectPackageManager(projectPath, {});
-  const detectedFramework = await detectFramework(projectPath, {}, detectedPackageManager);
+  const detectedFramework = await detectFramework(
+    projectPath,
+    {},
+    detectedPackageManager,
+  );
 
   if (detectedFramework === "none") {
     throw new Error("No supported project detected");
@@ -35,19 +45,19 @@ export async function deployApp(distPath = "dist", projectPath = ".") {
       case "yarn":
         await runCommand("yarn", ["build"], true);
         if (detectedFramework === "next") {
-          await runCommand("yarn", ["export"], true);
+          await runCommand("yarn", ["next", "export"], true);
         }
         break;
       case "npm":
         await runCommand("npm", ["run", "build"], true);
         if (detectedFramework === "next") {
-          await runCommand("npm", ["run", "export"], true);
+          await runCommand("npx", ["next", "export"], true);
         }
         break;
       case "pnpm":
         await runCommand("pnpm", ["build"], true);
         if (detectedFramework === "next") {
-          await runCommand("pnpm", ["export"], true);
+          await runCommand("pnpm", ["next", "export"], true);
         }
         break;
       default:
@@ -60,7 +70,10 @@ export async function deployApp(distPath = "dist", projectPath = ".") {
 
   try {
     const uri = await upload(storage, distPath);
-    return `${uri.replace("ipfs://", "https://ipfs-public.thirdwebcdn.com/ipfs/")}`;
+    return `${uri.replace(
+      "ipfs://",
+      "https://ipfs-public.thirdwebcdn.com/ipfs/",
+    )}`;
   } catch (err) {
     console.error("Can't upload project", err);
     return Promise.reject("Can't upload project");

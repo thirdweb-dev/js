@@ -109,7 +109,7 @@ export class SmartContract<
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
   public abi: Abi;
-  public metadata: ContractMetadata<BaseContract, any>;
+  public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
 
   /**
    * Handle royalties
@@ -352,6 +352,7 @@ export class SmartContract<
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;

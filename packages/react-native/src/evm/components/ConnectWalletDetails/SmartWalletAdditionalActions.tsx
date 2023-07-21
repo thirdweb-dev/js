@@ -124,7 +124,7 @@ export const SmartWalletAdditionalActions = ({
               color={theme.colors.iconPrimary}
             />
           </BaseButton>
-          <Text variant="error">
+          <Text variant="error" textAlign="left">
             {
               "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
             }

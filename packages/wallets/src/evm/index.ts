@@ -45,3 +45,4 @@ export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
+export { getInjectedMetamaskProvider } from "./connectors/metamask/getInjectedMetamaskProvider";

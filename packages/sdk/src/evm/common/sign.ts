@@ -31,11 +31,17 @@ export type EIP712Domain = EIP712StandardDomain | EIP712PolygonDomain;
  * @internal
  */
 export async function signTypedDataInternal(
-  signer: Signer,
+  signerInput: Signer,
   domain: EIP712Domain,
   types: Record<string, Array<TypedDataField>>,
   message: Record<string, any>,
 ) {
+  // Handle ERC4337Signer
+  let signer = signerInput;
+  if ((signerInput as any).originalSigner) {
+    signer = (signerInput as any).originalSigner;
+  }
+
   const provider = signer?.provider as providers.JsonRpcProvider;
   if (!provider) {
     throw new Error("missing provider");

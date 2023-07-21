@@ -2,7 +2,7 @@ import {
   RequiredParam,
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDKChainId } from "../useSDK";
 import { WalletAddress } from "../../types";
 import {
   cacheKeys,

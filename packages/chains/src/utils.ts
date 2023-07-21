@@ -70,6 +70,70 @@ export function getChainRPCs(
 }
 
 /**
+ * Construct the list of RPC URLs given a specific chain config. Format any RPC URLs
+ * with necessary clientId/secretKey and returns the first valid one.
+ *
+ * @param chain - The chain config to assemble RPC URLs from
+ * @param clientId - The client id to use for the RPC URL
+ * @param secretKey - The secret key to use for the RPC URL
+ * @returns The first valid RPC URL for the chain
+ */
+export function getValidChainRPCs(
+  chain: Pick<Chain, "rpc" | "chainId">,
+  clientId?: string,
+  mode: "http" | "ws" = "http",
+): string[] {
+  const processedRPCs: string[] = [];
+
+  chain.rpc.forEach((rpc) => {
+    // exclude RPC if mode mismatch
+    if (mode === "http" && !rpc.startsWith("http")) {
+      return;
+    }
+
+    if (mode === "ws" && !rpc.startsWith("ws")) {
+      return;
+    }
+
+    // Replace API_KEY placeholder with value
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      if (clientId) {
+        processedRPCs.push(
+          rpc.replace("${THIRDWEB_API_KEY}", clientId) +
+            (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+              ? // @ts-ignore
+                `/?bundleId=${globalThis.APP_BUNDLE_ID}`
+              : ""),
+        );
+      } else {
+        // if no client id, let it through with empty string
+        // if secretKey is present, it will be used in header
+        // if none are passed, will have reduced access
+        processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", ""));
+      }
+    }
+
+    // exclude RPCs with unknown placeholder
+    else if (rpc.includes("${")) {
+      return;
+    }
+
+    // add as is
+    else {
+      processedRPCs.push(rpc);
+    }
+  });
+
+  if (processedRPCs.length === 0) {
+    throw new Error(
+      `No RPC available for chainId "${chain.chainId}" with mode ${mode}`,
+    );
+  }
+
+  return processedRPCs;
+}
+
+/**
  * Get the highest priority RPC URL for a specific chain
  *
  * @param chain - The chain config to get the RPC URL for
@@ -117,4 +181,19 @@ export function configureChain(
   }
   // prepend additional RPCs to the chain's RPCs
   return { ...chain, rpc: [...additionalRPCs, ...chain.rpc] };
+}
+
+/**
+ *
+ * use the clientId and return a new chain object with updated RPCs
+ */
+export function updateChainRPCs(chain: Chain, clientId?: string) {
+  try {
+    return {
+      ...chain,
+      rpc: getValidChainRPCs(chain, clientId),
+    };
+  } catch (error) {
+    return chain;
+  }
 }
