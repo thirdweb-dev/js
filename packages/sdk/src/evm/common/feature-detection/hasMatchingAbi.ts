@@ -1,3 +1,4 @@
+import { Interface } from "ethers/lib/utils";
 import { AbiInput } from "../../schema/contracts/custom";
 import { extractFunctionsFromAbi } from "./extractFunctionsFromAbi";
 
@@ -37,4 +38,19 @@ export function hasMatchingAbi(
     return match !== undefined;
   });
   return intersection.length === interfaceFn.length;
+}
+
+export function matchesAbiFromBytecode(
+  contractBytecode: string,
+  featureAbis: readonly AbiInput[],
+) {
+  const interfaces = featureAbis.map((abi) => new Interface(abi));
+  const selectors = interfaces.flatMap((i) => {
+    return Object.values(i.functions).map((fn) => i.getSighash(fn).slice(2));
+  });
+  const uniqueSelectors = [...new Set(selectors)];
+  // checks that all unique selectors are found in the bytecode
+  return uniqueSelectors.every((selector) =>
+    contractBytecode.includes(selector),
+  );
 }

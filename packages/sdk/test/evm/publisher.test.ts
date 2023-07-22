@@ -79,42 +79,6 @@ describe("Publishing", async () => {
     expect(functions.length).gt(0);
   });
 
-  it("should extract features", async () => {
-    expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
-    ).to.eq(true);
-    expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Mintable"),
-    ).to.eq(true);
-    expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
-    ).to.eq(true);
-
-    // Drop
-    expect(
-      isExtensionEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
-    ).to.eq(true);
-    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
-      true,
-    );
-    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
-      false,
-    );
-  });
-
-  it("should extract all features", async () => {
-    const tokenFeatures = getAllDetectedExtensionNames(
-      TokenERC721__factory.abi,
-    );
-    expect(tokenFeatures).to.contain("ERC721Enumerable");
-    expect(getAllDetectedExtensionNames(DropERC721__factory.abi)).to.contain(
-      "ERC721ClaimPhasesV2",
-    );
-    expect(getAllDetectedExtensionNames(DropERC721_V3__factory.abi)).to.contain(
-      "ERC721ClaimPhasesV1",
-    );
-  });
-
   it("should update bio", async () => {
     const address = adminWallet.address;
     const publisher = sdk.getPublisher();

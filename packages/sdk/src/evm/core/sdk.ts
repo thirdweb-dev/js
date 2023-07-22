@@ -263,7 +263,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
     checkClientIdOrSecretKey(
-      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
+      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a free ${apiKeyType} from https://thirdweb.com/create-api-key`,
       options.clientId,
       options.secretKey,
     );
@@ -707,10 +707,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce((acc, chain) => {
-      acc[chain.chainId] = chain;
-      return acc;
-    }, {} as Record<number, Chain>);
+    const chainMap = chains.reduce(
+      (acc, chain) => {
+        acc[chain.chainId] = chain;
+        return acc;
+      },
+      {} as Record<number, Chain>,
+    );
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
