@@ -1,5 +1,43 @@
 # @thirdweb-dev/chains
 
+## 0.1.38
+
+### Patch Changes
+
+- [#1374](https://github.com/thirdweb-dev/js/pull/1374) [`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d) Thanks [@jnsdls](https://github.com/jnsdls)! -
+
+## 0.1.37
+
+### Patch Changes
+
+- [#1371](https://github.com/thirdweb-dev/js/pull/1371) [`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38) Thanks [@jnsdls](https://github.com/jnsdls)! - add more chains
+
+## 0.1.36
+
+### Patch Changes
+
+- [#1366](https://github.com/thirdweb-dev/js/pull/1366) [`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee) Thanks [@jnsdls](https://github.com/jnsdls)! - new supported chains
+
+- [#1358](https://github.com/thirdweb-dev/js/pull/1358) [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608) Thanks [@DLHTX](https://github.com/DLHTX)! - feat(chain): add iotex chain icon
+
+## 0.1.35
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds support for clientId / secretKey
+
+## 0.1.34
+
+### Patch Changes
+
+- [#1338](https://github.com/thirdweb-dev/js/pull/1338) [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.33
+
+### Patch Changes
+
+- [#1335](https://github.com/thirdweb-dev/js/pull/1335) [`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains again
+
 ## 0.1.32
 
 ### Patch Changes

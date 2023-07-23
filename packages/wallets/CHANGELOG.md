@@ -1,5 +1,95 @@
 # @thirdweb-dev/wallets
 
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d)]:
+  - @thirdweb-dev/chains@0.1.38
+  - @thirdweb-dev/sdk@3.10.40
+
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38)]:
+  - @thirdweb-dev/chains@0.1.37
+  - @thirdweb-dev/sdk@3.10.39
+
+## 1.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee), [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608)]:
+  - @thirdweb-dev/chains@0.1.36
+  - @thirdweb-dev/sdk@3.10.38
+
+## 1.1.0
+
+### Minor Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - 1. Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // For wallets used on the client-side (i.e. react, react-native) you should
+  // pass a `clientId`
+  const metamaskWallet = new MetaMaskWallet({
+    clientId: "your-client-id",
+  });
+
+  // For wallets used on the backend-side (i.e. node, express) you should
+  // pass a `secretKey`
+  const localWallet = new LocalWallet({
+    secretKey: "your-secret-key",
+  });
+  ```
+
+  2. Paper wallet's `clientId` is renamed to `paperClientId`.
+
+  The `clientId` option is reserved for thirdweb's `clientId``
+
+  ```javascript
+  const paperWallet = new PaperWallet({
+    clientId: "your-thirdweb-client-id",
+    paperClientId: "your-paper-client-id",
+  });
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/sdk@3.10.37
+  - @thirdweb-dev/chains@0.1.35
+
+## 1.0.12
+
+### Patch Changes
+
+- [#1352](https://github.com/thirdweb-dev/js/pull/1352) [`c5761b99`](https://github.com/thirdweb-dev/js/commit/c5761b99e9797772481506e90cbfa5c35a05bd1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Switch to seed based local wallets for faster encryption
+
+- [#1350](https://github.com/thirdweb-dev/js/pull/1350) [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220) Thanks [@MananTank](https://github.com/MananTank)! - Improved Injected Metamask detection - Do not consider Phantom provider as MetaMask
+
+- Updated dependencies [[`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8)]:
+  - @thirdweb-dev/sdk@3.10.36
+
+## 1.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b)]:
+  - @thirdweb-dev/chains@0.1.34
+  - @thirdweb-dev/sdk@3.10.35
+
+## 1.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28)]:
+  - @thirdweb-dev/chains@0.1.33
+  - @thirdweb-dev/sdk@3.10.34
+
 ## 1.0.9
 
 ### Patch Changes

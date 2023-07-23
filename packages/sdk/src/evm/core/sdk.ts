@@ -28,7 +28,7 @@ import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
@@ -111,6 +111,7 @@ import {
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
+import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -258,8 +259,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: NetworkInput,
     options: SDKOptions = {},
-    storage?: ThirdwebStorage,
+    storage?: IThirdwebStorage,
   ) {
+    const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
+    checkClientIdOrSecretKey(
+      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
+      options.clientId,
+      options.secretKey,
+    );
+
     if (isChainConfig(network)) {
       options = {
         ...options,
@@ -271,11 +279,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
-    const configuredStorage = createStorage(storage, options);
+    const configuredStorage = createStorage(
+      storage,
+      options,
+    ) as ThirdwebStorage;
     this.storage = configuredStorage;
     this.storageHandler = configuredStorage;
 
-    this.wallet = new UserWallet(network, options);
+    this.wallet = new UserWallet(network, options, configuredStorage);
     this.deployer = new ContractDeployer(network, options, configuredStorage);
     this.verifier = new ContractVerifier(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
@@ -1691,6 +1702,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parse: () => {
           return deployedImplementationAddress;
         },
+        storage: this.storage,
       });
       deployedImplementationAddress = await deployTransaction.simulate();
 
@@ -1724,6 +1736,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
+          this.storage,
           this.options,
         );
       }));

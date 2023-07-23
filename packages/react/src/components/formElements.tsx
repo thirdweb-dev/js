@@ -56,9 +56,11 @@ export const Input = styled.input<{
   }
 
   &:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
+    -webkit-box-shadow:
+      0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
       0 0 0 2px ${(p) => p.theme.input.focusRing} !important;
-    box-shadow: 0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
+    box-shadow:
+      0 0 0px 1000px ${(p) => p.theme.bg.elevated} inset,
       0 0 0 2px ${(p) => p.theme.input.focusRing} !important;
   }
 

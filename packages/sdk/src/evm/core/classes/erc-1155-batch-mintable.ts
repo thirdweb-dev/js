@@ -89,12 +89,7 @@ export class Erc1155BatchMintable implements DetectableFeature {
         uris.map(async (uri, index) =>
           this.contractWrapper.readContract.interface.encodeFunctionData(
             "mintTo",
-            [
-              resolvedAddress,
-              constants.MaxUint256,
-              uri,
-              supplies[index],
-            ],
+            [resolvedAddress, constants.MaxUint256, uri, supplies[index]],
           ),
         ),
       );

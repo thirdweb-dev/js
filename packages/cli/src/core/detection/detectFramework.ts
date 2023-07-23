@@ -67,7 +67,10 @@ export default async function detect(
     return possibleFrameworks[0];
   }
 
-  if (possibleFrameworks.includes("expo") && possibleFrameworks.includes("react-native-cli")) {
+  if (
+    possibleFrameworks.includes("expo") &&
+    possibleFrameworks.includes("react-native-cli")
+  ) {
     return "expo";
   }
 

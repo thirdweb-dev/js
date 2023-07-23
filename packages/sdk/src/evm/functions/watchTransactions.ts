@@ -3,10 +3,9 @@ import { watchBlockWithTransactions } from "./watchBlock";
 import type { BlockWithTransactions } from "@ethersproject/abstract-provider";
 import type { Transaction } from "ethers";
 
-export type WatchTransactionsParams =
-  | SharedBlockParams & {
-      onTransactions: (transactions: Transaction[]) => void;
-    } & { address: string };
+export type WatchTransactionsParams = SharedBlockParams & {
+  onTransactions: (transactions: Transaction[]) => void;
+} & { address: string };
 
 /**
  * Watch for transactions to or from a given address.

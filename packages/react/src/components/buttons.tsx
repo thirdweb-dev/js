@@ -114,7 +114,9 @@ export const IconButton = styled.button<{
     }
   }};
   padding: 2px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
   &:hover {
     background: ${(p) => p.theme.bg.elevated};
     color: ${(p) => p.theme.text.neutral};
