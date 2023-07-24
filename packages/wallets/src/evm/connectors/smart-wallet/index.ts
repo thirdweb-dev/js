@@ -272,10 +272,21 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @returns the account factory contract.
    */
   async getFactoryContract(): Promise<SmartContract> {
-    if (!this.accountApi) {
-      throw new Error("Personal wallet not connected");
+    const sdk = ThirdwebSDK.fromSigner(
+      await this.getSigner(),
+      this.config.chain,
+      {
+        clientId: this.config.clientId,
+        secretKey: this.config.secretKey,
+      },
+    );
+    if (this.config.factoryInfo?.abi) {
+      return sdk.getContract(
+        this.config.factoryAddress,
+        this.config.factoryInfo.abi,
+      );
     }
-    return this.accountApi?.getFactoryContract();
+    return sdk.getContract(this.config.factoryAddress);
   }
 
   private defaultFactoryInfo(): FactoryContractInfo {
