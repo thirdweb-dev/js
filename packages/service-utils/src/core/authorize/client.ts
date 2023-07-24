@@ -57,7 +57,7 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: `The domain: ${origin}, is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard`,
+      errorMessage: `The domain: ${origin}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
       errorCode: "ORIGIN_UNAUTHORIZED",
       status: 401,
     };
@@ -83,7 +83,7 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: `The bundleId: ${bundleId}, is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard`,
+      errorMessage: `The bundleId: ${bundleId}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
       errorCode: "BUNDLE_UNAUTHORIZED",
       status: 401,
     };
