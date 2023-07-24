@@ -4053,10 +4053,15 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.5.tgz#8a351024337d26a2ceee394f927513d72e1d31a0"
   integrity sha512-NsDboaLji7IOOjgoz/A/qf7A5EDfZN3qgyqt+GOxr5/YXzzyH2Obk8grwv2gDwP2mF5T5RjNex0I8kwA+tyKrw==
 
-"@thirdweb-dev/chains@0.1.38", "@thirdweb-dev/chains@^0.1.38":
+"@thirdweb-dev/chains@0.1.38":
   version "0.1.38"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chains/-/chains-0.1.38.tgz#57e93239645a013f0677c711f3f1cdc7cde54db8"
   integrity sha512-XiH/2X5Hgs50fWMX0u4pB/hv2dZSnFSDwF1i54YViDv1Ydganzwt2PEK1Fct0u4Oz8FHww2ybc459FDNaRBnew==
+
+"@thirdweb-dev/chains@0.1.39-nightly-5a02c5ec-20230721181948":
+  version "0.1.39-nightly-5a02c5ec-20230721181948"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/chains/-/chains-0.1.39-nightly-5a02c5ec-20230721181948.tgz#d2ea56f6578c1ab4ced90aa2f0550bd087d0214a"
+  integrity sha512-Cb2copRj0g9EWcu1CK9ci7QVWk+HWLIYfmnuCIh2ol4LCooSklRKbflCjFPUZ+gs1Dn9IYdkGNVqXRevuBTqMQ==
 
 "@thirdweb-dev/contracts-js@1.3.9":
   version "1.3.9"
