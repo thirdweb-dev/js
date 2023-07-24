@@ -6,7 +6,7 @@ export default {
   "rpc": [
     "https://linea-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://linea-goerli.infura.io/v3/${INFURA_API_KEY}",
-    "wss://linea-goerli.infura.io/v3/${INFURA_API_KEY}",
+    "wss://linea-goerli.infura.io/ws/v3/${INFURA_API_KEY}",
     "https://rpc.goerli.linea.build",
     "wss://rpc.goerli.linea.build"
   ],
@@ -39,7 +39,18 @@ export default {
   },
   "explorers": [
     {
-      "name": "blockscout",
+      "name": "Etherscan",
+      "url": "https://goerli.lineascan.build",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
+        "width": 97,
+        "height": 102,
+        "format": "svg"
+      }
+    },
+    {
+      "name": "Blockscout",
       "url": "https://explorer.goerli.linea.build",
       "standard": "EIP3091",
       "icon": {
