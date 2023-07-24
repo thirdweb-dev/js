@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taiko (Alpha-3 Testnet)",
+  "name": "Taiko Grimsvotn L2",
   "chain": "ETH",
   "status": "active",
   "icon": {
@@ -10,7 +10,7 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://taiko-alpha-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://taiko-grimsvotn-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.taiko.xyz"
   ],
   "faucets": [],
@@ -20,7 +20,7 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://taiko.xyz",
-  "shortName": "taiko-a3",
+  "shortName": "taiko-l2",
   "chainId": 167005,
   "networkId": 167005,
   "explorers": [
@@ -31,5 +31,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "taiko-alpha-3-testnet"
+  "slug": "taiko-grimsvotn-l2"
 } as const satisfies Chain;

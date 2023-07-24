@@ -1,5 +1,58 @@
 # @thirdweb-dev/storage
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // if used on the frontend pass the `clientId`
+  const storage = new ThirdwebStorage({
+    clientId: "your-client-id",
+  });
+
+  // if used on the backend pass the `secretKey`
+  const storage = new ThirdwebStorage({
+    secretKey: "your-secret-key",
+  });
+  ```
+
+### Patch Changes
+
+- [#1362](https://github.com/thirdweb-dev/js/pull/1362) [`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298) Thanks [@iketw](https://github.com/iketw)! - Correctly pass clientId in storage
+
+## 1.1.9
+
+### Patch Changes
+
+- [#1338](https://github.com/thirdweb-dev/js/pull/1338) [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b) Thanks [@jnsdls](https://github.com/jnsdls)! - no longer check if file exists on gateway before uploading, always upload
+
+## 1.1.8
+
+### Patch Changes
+
+- [#1314](https://github.com/thirdweb-dev/js/pull/1314) [`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0) Thanks [@iketw](https://github.com/iketw)! - Passes API key to thirdweb storage ipfs uploader
+
+  If you want to use thirdweb's storage upload services you need to pass an API key.
+  You can grab one from: https://thirdweb.com/dashboard/settings
+
+  If using ThirdwebStorage directly:
+
+  ```javascript
+  new ThirdwebStorage({
+      apiKey: <yourApiKey>,
+  });
+  ```
+
+## 1.1.7
+
+### Patch Changes
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
 ## 1.1.6
 
 ### Patch Changes

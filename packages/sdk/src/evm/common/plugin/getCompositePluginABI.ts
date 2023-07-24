@@ -39,6 +39,7 @@ export async function getCompositePluginABI(
         address,
         getAllExtensionsAbi,
         options,
+        storage,
       );
 
       const plugins = await contract.call("getAllExtensions");
@@ -56,6 +57,7 @@ export async function getCompositePluginABI(
         address,
         getAllPluginsAbi,
         options,
+        storage,
       );
 
       const pluginMap = await contract.call("getAllPlugins");

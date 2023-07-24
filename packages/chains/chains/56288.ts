@@ -5,9 +5,11 @@ export default {
   "rpc": [
     "https://boba-bnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bnb.boba.network",
-    "wss://wss.bnb.boba.network",
+    "http://boba-bnb.gateway.tenderly.co/",
+    "http://gateway.tenderly.co/public/boba-bnb",
     "https://replica.bnb.boba.network",
-    "wss://replica-wss.bnb.boba.network"
+    "wss://boba-bnb.gateway.tenderly.co/",
+    "wss://gateway.tenderly.co/public/boba-bnb"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -26,6 +28,15 @@ export default {
       "standard": "none"
     }
   ],
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "testnet": false,
   "slug": "boba-bnb"
 } as const satisfies Chain;

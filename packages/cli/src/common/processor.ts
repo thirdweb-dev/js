@@ -1,11 +1,18 @@
+import { detectFeatures } from "@thirdweb-dev/sdk";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import chalk from "chalk";
+import { ethers } from "ethers";
+import { readFileSync, writeFileSync } from "fs";
+import ora from "ora";
+import path from "path";
 import {
   EXTENSION_REGISTRY_ADDRESS,
-  ROUTER_CONTRACTS,
   PreDeployedRouter,
-  TWRouterParams,
+  ROUTER_CONTRACTS,
   RouterParams,
+  TWRouterParams,
 } from "../constants/router-contracts";
-import { cliVersion, THIRDWEB_URL } from "../constants/urls";
+import { THIRDWEB_URL, cliVersion } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
@@ -17,24 +24,20 @@ import {
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import {
   Extension,
+  ExtensionDeployArgs,
   ExtensionFunction,
   ExtensionMetadata,
-  ExtensionDeployArgs,
 } from "../core/interfaces/Extension";
-import { detectFeatures } from "@thirdweb-dev/sdk";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import chalk from "chalk";
-import { ethers } from "ethers";
-import { readFileSync, writeFileSync } from "fs";
-import ora from "ora";
-import path from "path";
 
 export async function processProject(
   options: any,
   command: "deploy" | "publish",
+  apiSecretKey: string,
 ) {
   // TODO: allow overriding the default storage
-  const storage = new ThirdwebStorage();
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
 
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
@@ -237,6 +240,7 @@ export async function processProject(
     } else {
       const deployArgs: RouterParams = await formatToExtensions(
         selectedContracts,
+        apiSecretKey,
       );
 
       const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
@@ -364,11 +368,16 @@ export function getUrl(hashes: string[], command: string) {
   return url;
 }
 
-async function formatToExtensions(contracts: ContractPayload[]): Promise<{
+async function formatToExtensions(
+  contracts: ContractPayload[],
+  apiSecretKey: string,
+): Promise<{
   extensions: Extension[];
   extensionDeployArgs: ExtensionDeployArgs[];
 }> {
-  const storage = new ThirdwebStorage();
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];
 

@@ -22,7 +22,10 @@ export class AccountAPI extends BaseAccountAPI {
     // Technically dont need the signer here, but we need to encode/estimate gas with it so a signer is required
     // We don't want to use the localSigner directly since it might be connected to another chain
     // so we just use the public hardhat pkey instead
-    this.sdk = ThirdwebSDK.fromPrivateKey(LOCAL_NODE_PKEY, params.chain);
+    this.sdk = ThirdwebSDK.fromPrivateKey(LOCAL_NODE_PKEY, params.chain, {
+      clientId: params.clientId,
+      secretKey: params.secretKey,
+    });
   }
 
   async getChainId() {

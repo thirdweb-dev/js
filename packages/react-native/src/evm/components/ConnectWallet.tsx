@@ -14,6 +14,11 @@ export type ConnectWalletProps = {
    * render a custom button to display the connected wallet details instead of the default button
    */
   detailsButton?: ConnectWalletDetailsProps["detailsButton"];
+
+  /**
+   * render custom rows in the Connect Wallet Details modal
+   */
+  extraRows?: ConnectWalletDetailsProps["extraRows"];
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -21,6 +26,7 @@ export const ConnectWallet = ({
   theme,
   buttonTitle,
   modalTitle,
+  extraRows,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
@@ -40,6 +46,7 @@ export const ConnectWallet = ({
           <WalletDetailsButton
             address={address}
             detailsButton={detailsButton}
+            extraRows={extraRows}
           />
         ) : (
           <ConnectWalletButton

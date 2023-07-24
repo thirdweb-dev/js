@@ -22,7 +22,6 @@ import {
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
-import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -38,7 +37,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   async initialize(personalWallet: EVMWallet, factoryAddress: string = this.config.factoryAddress) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
-      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
+      clientId: config.clientId,
+      secretKey: config.secretKey,
     }) as providers.BaseProvider;
     const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
@@ -56,15 +56,17 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ? this.config.paymasterAPI
           ? this.config.paymasterAPI
           : getVerifyingPaymaster(
-            paymasterUrl,
-            entryPointAddress,
-            this.config.thirdwebApiKey,
-          )
+              paymasterUrl,
+              entryPointAddress,
+              this.config.clientId,
+              this.config.secretKey,
+            )
         : undefined,
       factoryAddress: factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
-      thirdwebApiKey: config.thirdwebApiKey,
+      clientId: config.clientId,
+      secretKey: config.secretKey,
     };
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);

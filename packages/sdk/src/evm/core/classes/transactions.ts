@@ -63,7 +63,7 @@ abstract class TransactionContext {
     this.overrides = options.overrides || {};
     this.provider = options.provider;
     this.signer = options.signer;
-    this.storage = options.storage || new ThirdwebStorage();
+    this.storage = options.storage;
 
     // Connect provider to signer if it isn't already connected
     if (!this.signer.provider) {
@@ -306,6 +306,7 @@ export class Transaction<
       provider: options.contractWrapper.getProvider(),
       signer,
       gasless: options.contractWrapper.options.gasless,
+      storage: options.contractWrapper.storage,
     };
 
     return new Transaction(optionsWithContract);
@@ -314,7 +315,7 @@ export class Transaction<
   static async fromContractInfo<TResult = TransactionResult>(
     options: TransactionOptionsWithContractInfo<TResult>,
   ): Promise<Transaction<TResult>> {
-    const storage = options.storage || new ThirdwebStorage();
+    const storage = options.storage;
 
     let contractAbi = options.contractAbi;
     if (!contractAbi) {
@@ -364,7 +365,7 @@ export class Transaction<
     this.contract = options.contract.connect(this.signer);
 
     // Create new storage instance if one isn't provided
-    this.storage = options.storage || new ThirdwebStorage();
+    this.storage = options.storage;
   }
 
   getTarget() {

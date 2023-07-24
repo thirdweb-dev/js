@@ -5,8 +5,13 @@ import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number) {
-  return `https://${chainId}.rpc.thirdweb.com`;
+function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+  return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
+    typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+      ? // @ts-ignore
+        `?bundleId=${globalThis.APP_BUNDLE_ID}`
+      : ""
+  }`;
 }
 
 export type WalletData = {
@@ -35,6 +40,7 @@ export async function checkContractWalletSignature(
   address: string,
   chainId: number,
 ): Promise<boolean> {
+  //TODO:  A provider should be passed in instead of creating a new one here.
   const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);

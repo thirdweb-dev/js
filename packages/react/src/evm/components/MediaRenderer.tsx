@@ -7,11 +7,7 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import {
-  resolveIpfsUri,
-  resolveMimeType,
-  useStorage,
-} from "@thirdweb-dev/react-core";
+import { resolveMimeType, useStorage } from "@thirdweb-dev/react-core";
 import React, {
   useEffect,
   useMemo,
@@ -547,18 +543,19 @@ export function useResolvedMediaType(
 ) {
   const storage = useStorage();
 
-  const resolvedUrl = useMemo(
-    () =>
-      resolveIpfsUri(
-        uri,
-        gatewayUrl
-          ? { gatewayUrl }
-          : storage
-          ? { gatewayUrl: storage.gatewayUrls["ipfs://"][0] }
-          : undefined,
-      ),
-    [uri, storage, gatewayUrl],
-  );
+  const resolvedUrl = useMemo(() => {
+    if (!uri) {
+      return "";
+    }
+    if (gatewayUrl) {
+      return uri.replace("ipfs://", gatewayUrl);
+    }
+    if (storage) {
+      return storage.resolveScheme(uri);
+    }
+    return uri.replace("ipfs://", "https://ipfs.io/ipfs/");
+  }, [uri, storage, gatewayUrl]);
+
   const resolvedMimType = useQuery(
     ["mime-type", resolvedUrl],
     () => resolveMimeType(resolvedUrl),
