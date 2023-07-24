@@ -30,7 +30,7 @@ const main = async () => {
     cacheDir,
     "last-version-check.txt",
   );
-  const credsConfigPath = path.join(configDir, "creds.txt");
+  const credsConfigPath = path.join(configDir, "creds.json");
 
   const program = new Command();
 

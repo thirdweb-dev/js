@@ -245,6 +245,9 @@ importers:
       '@thirdweb-dev/storage':
         specifier: workspace:*
         version: link:../storage
+      '@thirdweb-dev/wallets':
+        specifier: workspace:*
+        version: link:../wallets
       async-retry:
         specifier: ^1.3.3
         version: 1.3.3
