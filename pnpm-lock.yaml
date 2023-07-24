@@ -1331,7 +1331,7 @@ importers:
         specifier: ^2.8.6
         version: 2.8.6
       '@walletconnect/ethereum-provider':
-        specifier: ^2.9.1
+        specifier: ^2.8.6
         version: 2.9.1(@walletconnect/modal@2.5.9)
       '@walletconnect/jsonrpc-utils':
         specifier: ^1.0.8
