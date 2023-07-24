@@ -47,7 +47,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               <Text>{description}</Text>
             </Stack>
 
-            {role === "transfer" && isPrebuilt && (
+            {role === "transfer" && (
               <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
                 {isLoading || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
@@ -165,7 +165,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             )}
           </Flex>
 
-          {role === "transfer" && isPrebuilt && (
+          {role === "transfer" && (
             <Flex
               direction="row"
               borderRadius="md"
