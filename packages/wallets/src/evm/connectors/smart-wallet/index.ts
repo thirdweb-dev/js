@@ -18,6 +18,7 @@ import {
   ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
+  ThirdwebSDK,
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
@@ -240,10 +241,30 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @returns the account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
-    if (!this.accountApi) {
-      throw new Error("Personal wallet not connected");
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      throw new Error(
+        "Account contract is not deployed yet. You can deploy it manually using SmartWallet.deploy(), or by executing a transaction from this wallet.",
+      );
     }
-    return this.accountApi?.getAccountContract();
+    // getting a new instance everytime
+    // to avoid caching issues pre/post deployment
+    const sdk = ThirdwebSDK.fromSigner(
+      await this.getSigner(),
+      this.config.chain,
+      {
+        clientId: this.config.clientId,
+        secretKey: this.config.secretKey,
+      },
+    );
+    if (this.config.accountInfo?.abi) {
+      return sdk.getContract(
+        await this.getAddress(),
+        this.config.accountInfo.abi,
+      );
+    } else {
+      return sdk.getContract(await this.getAddress());
+    }
   }
 
   /**

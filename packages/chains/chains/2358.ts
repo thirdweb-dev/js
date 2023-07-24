@@ -18,7 +18,7 @@ export default {
   "faucets": [],
   "infoURL": "https://kroma.network",
   "icon": {
-    "url": "ipfs://QmcYafk2je5rMqgnFPDZJTaLi6dgFgq96vmX2Li6DX441B",
+    "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
     "width": 320,
     "height": 320,
     "format": "svg"
@@ -28,7 +28,7 @@ export default {
       "name": "blockscout",
       "url": "https://blockscout.sepolia.kroma.network",
       "icon": {
-        "url": "ipfs://QmcYafk2je5rMqgnFPDZJTaLi6dgFgq96vmX2Li6DX441B",
+        "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
         "width": 320,
         "height": 320,
         "format": "svg"
