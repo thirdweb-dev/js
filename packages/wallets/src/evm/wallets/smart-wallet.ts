@@ -41,18 +41,18 @@ export class SmartWallet
     return "Smart Wallet" as const;
   }
 
-  constructor(options: WalletOptions<SmartWalletConfig>, id?: string) {
-    super(id || SmartWallet.id, {
+  constructor(options: WalletOptions<SmartWalletConfig>) {
+    super(options.walletId || SmartWallet.id, {
       ...options,
     });
 
     this.enableConnectApp = options?.enableConnectApp || false;
     this.#wcWallet = this.enableConnectApp
       ? new WalletConnectV2Handler({
-          walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-        })
+        walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
+        walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+        walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+      })
       : new NoOpWalletConnectHandler();
   }
 

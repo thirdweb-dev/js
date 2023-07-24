@@ -17,8 +17,7 @@ export class TokenBoundSmartWallet extends SmartWallet {
     }
 
     constructor(options: WalletOptions<TokenBoundSmartWalletConfig>) {
-        super(options,
-            TokenBoundSmartWallet.id
+        super(options
         );
     }
 }      
