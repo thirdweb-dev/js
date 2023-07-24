@@ -2,6 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Shinarium Beta",
   "chain": "Shinarium",
+  "icon": {
+    "url": "ipfs://bafybeiadbavrwcial76vs5ovhyykyaobteltuhliqcthdairbja4klwzhu",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "rpc": [
     "https://shinarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shinarium.org"
