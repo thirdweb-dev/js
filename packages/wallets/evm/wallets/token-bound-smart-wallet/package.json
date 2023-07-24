@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.browser.esm.js"
+  }
+}
