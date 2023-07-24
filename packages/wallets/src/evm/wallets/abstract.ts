@@ -6,9 +6,12 @@ import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 
 // TODO improve this
 function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
-  return `https://${chainId}.rpc.thirdweb.com${
-    clientId ? `/${clientId}` : ""
-  }}`;
+  return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
+    typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+      ? // @ts-ignore
+        `?bundleId=${globalThis.APP_BUNDLE_ID}`
+      : ""
+  }`;
 }
 
 export type WalletData = {

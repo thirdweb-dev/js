@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.38
+
+### Patch Changes
+
+- [#1374](https://github.com/thirdweb-dev/js/pull/1374) [`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d) Thanks [@jnsdls](https://github.com/jnsdls)! -
+
+## 0.1.37
+
+### Patch Changes
+
+- [#1371](https://github.com/thirdweb-dev/js/pull/1371) [`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38) Thanks [@jnsdls](https://github.com/jnsdls)! - add more chains
+
 ## 0.1.36
 
 ### Patch Changes
