@@ -79,7 +79,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "rpc" is not authorized for this key.',
+      'The service "rpc" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
     );
     expect(result.errorCode).toBe("SERVICE_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -100,7 +100,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "storage" action "unauthorized-action" is not authorized for this key.',
+      'The service "storage" action "unauthorized-action" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
     );
     expect(result.errorCode).toBe("SERVICE_ACTION_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -118,7 +118,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "storage" target address is not authorized for this key.',
+      'he target address: unauthorized-target, for service "storage" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
     );
     expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -136,7 +136,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "storage" target address is not authorized for this key.',
+      'The target address: target1,target2,target3, for service "storage" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
     );
     expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
     expect(result.status).toBe(403);
