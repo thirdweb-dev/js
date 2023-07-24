@@ -16,7 +16,7 @@ export function authorizeService(
   if (!service) {
     return {
       authorized: false,
-      errorMessage: `The service "${serviceConfig.serviceScope}" is not authorized for this key.`,
+      errorMessage: `The service "${serviceConfig.serviceScope}" is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard.`,
       errorCode: "SERVICE_UNAUTHORIZED",
       status: 403,
     };
@@ -30,7 +30,7 @@ export function authorizeService(
     if (!isActionAllowed) {
       return {
         authorized: false,
-        errorMessage: `The service "${serviceConfig.serviceScope}" action "${serviceConfig.serviceAction}" is not authorized for this key.`,
+        errorMessage: `The service "${serviceConfig.serviceScope}" action "${serviceConfig.serviceAction}" is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard.`,
         errorCode: "SERVICE_ACTION_UNAUTHORIZED",
         status: 403,
       };
@@ -52,7 +52,7 @@ export function authorizeService(
     ) {
       return {
         authorized: false,
-        errorMessage: `The service "${serviceConfig.serviceScope}" target address is not authorized for this key.`,
+        errorMessage: `The target address ${checkedAddresses} for service "${serviceConfig.serviceScope}" is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard.`,
         errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
         status: 403,
       };

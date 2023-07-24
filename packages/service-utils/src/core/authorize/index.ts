@@ -117,7 +117,8 @@ export async function authorize(
       return {
         authorized: false,
         status: 500,
-        errorMessage: "Failed to fetch key metadata.",
+        errorMessage:
+          "Failed to fetch key metadata. Please check your secret-key/clientId.",
         errorCode: "FAILED_TO_FETCH_KEY",
       };
     }
@@ -126,7 +127,7 @@ export async function authorize(
     return {
       authorized: false,
       status: 401,
-      errorMessage: "Key is invalid.",
+      errorMessage: "Key is invalid. Please check your secret-key/clientId.",
       errorCode: "INVALID_KEY",
     };
   }
