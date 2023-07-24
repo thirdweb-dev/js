@@ -118,7 +118,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'he target address: unauthorized-target, for service "storage" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
+      'The target address: unauthorized-target, for service "storage" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
     );
     expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
     expect(result.status).toBe(403);
