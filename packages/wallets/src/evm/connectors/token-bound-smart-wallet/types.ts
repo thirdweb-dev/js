@@ -37,7 +37,8 @@ export type FactoryContractInfo = {
         implementation: SmartContract,
         chainId: Number,
         tokenContract: SmartContract,
-        tokenId: Number
+        tokenId: Number,
+        salt: Number
     ) => Promise<string>;
 };
 

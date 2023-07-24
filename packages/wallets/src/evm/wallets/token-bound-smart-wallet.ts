@@ -11,12 +11,12 @@ export class TokenBoundSmartWallet extends SmartWallet {
             "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
     };
 
-    static id = walletIds.tokenBoundSmartWallet;
     public get walletName() {
         return "Token Bound Smart Wallet" as "Smart Wallet";
     }
 
     constructor(options: WalletOptions<TokenBoundSmartWalletConfig>) {
+        options.walletId = walletIds.tokenBoundSmartWallet;
         super(options
         );
     }

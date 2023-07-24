@@ -18,7 +18,8 @@ export class TokenBoundConnnector extends SmartWalletConnector {
         const smartWalletConfig: SmartWalletConfig = {
             chain: config.chain,
             factoryAddress: config.factoryAddress,
-            thirdwebApiKey: config.thirdwebApiKey,
+            clientId: config.clientId,
+            secretKey: config.secretKey,
             gasless: config.gasless,
             bundlerUrl: config.bundlerUrl,
             paymasterUrl: config.paymasterUrl,
@@ -47,25 +48,23 @@ export class TokenBoundConnnector extends SmartWalletConnector {
 
     protected defaultTokenBoundFactoryInfo(): FactoryContractInfo {
         return {
-            createAccount: async (factory: SmartContract, implementation: SmartContract, chainId: Number, tokenContract: SmartContract, tokenId: Number) => {
+            createAccount: async (factory: SmartContract, implementation: SmartContract, chainId: Number, tokenContract: SmartContract, tokenId: Number, salt: Number = 1) => {
                 return factory.prepare("createAccount", [
                     implementation,
                     chainId,
                     tokenContract,
                     tokenId,
-                    // TODO salt 
-                    1,
+                    salt,
                     ethers.utils.toUtf8Bytes(""),
                 ]);
             },
-            getAccountAddress: async (factory, implementation, chainId, tokenContract, tokenId) => {
+            getAccountAddress: async (factory, implementation, chainId, tokenContract, tokenId, salt = 1) => {
                 return await factory.call("address", [
                     implementation,
                     chainId,
                     tokenContract,
                     tokenId,
-                    // TODO salt
-                    1
+                    salt
                 ]);
             },
         };
