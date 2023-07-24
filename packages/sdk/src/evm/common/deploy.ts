@@ -14,6 +14,8 @@ import {
   MarketplaceInitializer,
   MarketplaceV3Initializer,
   AirdropERC20Initializer,
+  AirdropERC721Initializer,
+  AirdropERC1155Initializer,
 } from "../contracts";
 import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
@@ -189,7 +191,9 @@ export async function getDeployArguments<
         packsMetadata.seller_fee_basis_points,
       ];
     case AirdropERC20Initializer.contractType:
-      return [signerAddress];
+    case AirdropERC721Initializer.contractType:
+    case AirdropERC1155Initializer.contractType:
+      return [signerAddress, contractURI, trustedForwarders];
     default:
       return [];
   }

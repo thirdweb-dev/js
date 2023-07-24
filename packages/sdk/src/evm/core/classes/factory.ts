@@ -2,6 +2,8 @@ import { getDeployArguments } from "../../common/deploy";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   AirdropERC20Initializer,
+  AirdropERC721Initializer,
+  AirdropERC1155Initializer,
   EditionDropInitializer,
   EditionInitializer,
   getContractName,
@@ -44,6 +46,7 @@ import invariant from "tiny-invariant";
 import { z } from "zod";
 import { getApprovedImplementation } from "../../constants/addresses/getApprovedImplementation";
 import { getDefaultTrustedForwarders } from "../../constants/addresses/getDefaultTrustedForwarders";
+import { CustomContractSchema } from "../../schema";
 
 /**
  * @internal
@@ -66,7 +69,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [MarketplaceInitializer.contractType]: 2,
     [MarketplaceV3Initializer.contractType]: 1,
     [PackInitializer.contractType]: 2,
-    [AirdropERC20Initializer.contractType]: 1,
+    [AirdropERC20Initializer.contractType]: 2,
+    [AirdropERC721Initializer.contractType]: 2,
+    [AirdropERC1155Initializer.contractType]: 2,
   };
 
   constructor(
@@ -369,6 +374,13 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
         ];
+      case AirdropERC20Initializer.contractType:
+      case AirdropERC721Initializer.contractType:
+      case AirdropERC1155Initializer.contractType:
+        const airdropMetadata = await CustomContractSchema.deploy.parseAsync(
+          metadata,
+        );
+        return [await this.getSignerAddress(), contractURI, trustedForwarders];
       default:
         return [];
     }

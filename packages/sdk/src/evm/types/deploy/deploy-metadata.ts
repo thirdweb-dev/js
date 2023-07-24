@@ -352,6 +352,10 @@ export interface AirdropContractDeployMetadata {
    */
   external_link?: string;
   /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: AddressOrEns[];
+  /**
    * The default app for this contract
    */
   app_uri?: string;

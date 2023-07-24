@@ -7,6 +7,8 @@ import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
   AirdropERC20Initializer,
+  AirdropERC721Initializer,
+  AirdropERC1155Initializer,
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
@@ -1359,6 +1361,34 @@ export class ContractDeployer extends RPCConnectionHandler {
     ): Promise<DeployTransaction> => {
       return await this.deployBuiltInContract.prepare(
         AirdropERC20Initializer.contractType,
+        metadata,
+        "latest",
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC721 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      return await this.deployBuiltInContract.prepare(
+        AirdropERC721Initializer.contractType,
+        metadata,
+        "latest",
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC1155 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      return await this.deployBuiltInContract.prepare(
+        AirdropERC1155Initializer.contractType,
         metadata,
         "latest",
         options,
