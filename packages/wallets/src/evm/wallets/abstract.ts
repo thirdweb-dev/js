@@ -1,15 +1,16 @@
 import { EVMWallet } from "../interfaces";
-import type { BigNumberish, Signer } from "ethers";
+import type { Signer } from "ethers";
 import { providers, Contract, utils, Bytes, BigNumber } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 import {
   NATIVE_TOKEN_ADDRESS,
-  createErc20,
+  Price,
   fetchCurrencyValue,
   isNativeToken,
   normalizePriceValue,
-} from "../utils/currency";
+} from "@thirdweb-dev/sdk";
+import { createErc20 } from "../utils/currency";
 
 // TODO improve this
 function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
@@ -108,7 +109,7 @@ export abstract class AbstractWallet
 
   public async transfer(
     to: string,
-    amount: BigNumberish,
+    amount: Price,
     currencyAddress: string = NATIVE_TOKEN_ADDRESS,
   ) {
     const signer = await this.getSigner();
@@ -120,8 +121,8 @@ export abstract class AbstractWallet
 
     const value = await normalizePriceValue(
       signer.provider,
-      currencyAddress,
       amount,
+      currencyAddress,
     );
 
     if (isNativeToken(currencyAddress)) {
