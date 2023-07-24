@@ -52,7 +52,7 @@ export function authorizeService(
     ) {
       return {
         authorized: false,
-        errorMessage: `The target address ${checkedAddresses} for service "${serviceConfig.serviceScope}" is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard.`,
+        errorMessage: `The target address: ${checkedAddresses}, for service "${serviceConfig.serviceScope}" is not authorized for this key. Please update your key permissions on the Thirdweb Dashboard.`,
         errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
         status: 403,
       };
