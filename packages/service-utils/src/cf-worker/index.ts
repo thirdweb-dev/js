@@ -8,6 +8,7 @@ import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
 
 export * from "../core/services";
+export { usage } from "../core/usage";
 
 type WorkerServiceConfig = CoreServiceConfig & {
   kvStore: KVNamespace;

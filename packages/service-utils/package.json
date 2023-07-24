@@ -61,5 +61,8 @@
     "build": "tsc && preconstruct build",
     "push": "yalc push",
     "test": "jest"
+  },
+  "dependencies": {
+    "@clickhouse/client": "0.2.0-beta1"
   }
 }
