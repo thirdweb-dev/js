@@ -1,5 +1,25 @@
 # @thirdweb-dev/react-native
 
+## 0.2.39
+
+### Patch Changes
+
+- Updated dependencies [[`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d)]:
+  - @thirdweb-dev/chains@0.1.38
+  - @thirdweb-dev/react-core@3.14.20
+  - @thirdweb-dev/sdk@3.10.40
+  - @thirdweb-dev/wallets@1.1.3
+
+## 0.2.38
+
+### Patch Changes
+
+- Updated dependencies [[`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38)]:
+  - @thirdweb-dev/chains@0.1.37
+  - @thirdweb-dev/react-core@3.14.19
+  - @thirdweb-dev/sdk@3.10.39
+  - @thirdweb-dev/wallets@1.1.2
+
 ## 0.2.37
 
 ### Patch Changes

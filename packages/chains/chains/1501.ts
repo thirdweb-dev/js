@@ -4,8 +4,8 @@ export default {
   "chain": "ChainX",
   "rpc": [
     "https://bevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.chainx.org/rpc",
-    "https://mainnet2.chainx.org/rpc"
+    "https://rpc-1.bevm.io/",
+    "https://rpc-2.bevm.io/"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -20,7 +20,7 @@ export default {
   "explorers": [
     {
       "name": "bevm scan",
-      "url": "https://evm.chainx.org",
+      "url": "https://scan.bevm.io",
       "standard": "none"
     }
   ],
