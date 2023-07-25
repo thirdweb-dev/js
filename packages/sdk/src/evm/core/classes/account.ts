@@ -32,9 +32,6 @@ export class Account<TContract extends IAccountCore>
   featureName = FEATURE_ACCOUNT.name;
   private contractWrapper: ContractWrapper<IAccountCore>;
 
-  private emptyRole: string =
-    "0x0000000000000000000000000000000000000000000000000000000000000000";
-
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
   }
@@ -96,12 +93,12 @@ export class Account<TContract extends IAccountCore>
       permissions,
     );
 
-    const isValidSigner =
+    const { success } =
       await this.contractWrapper.readContract.verifySignerPermissionRequest(
         payload,
         signature,
       );
-    if (!isValidSigner) {
+    if (!success) {
       throw new Error(`Invalid signature.`);
     }
 
@@ -152,9 +149,9 @@ export class Account<TContract extends IAccountCore>
     const payload: IAccountPermissions.SignerPermissionRequestStruct = {
       signer: signerAddress,
       approvedTargets: permissions.approvedCallTargets,
-      nativeTokenLimitPerTransaction:
+      nativeTokenLimitPerTransaction: utils.parseEther(
         permissions.nativeTokenLimitPerTransaction,
-
+      ),
       permissionStartTimestamp: permissions.startDate,
       permissionEndTimestamp: permissions.expirationDate,
       reqValidityStartTimestamp: 0,
@@ -179,7 +176,7 @@ export class Account<TContract extends IAccountCore>
         name: "Account",
         version: "1",
         chainId,
-        verifyingContract: this.contractWrapper.readContract.address,
+        verifyingContract: this.getAddress(),
       },
       { SignerPermissionRequest },
       payload,
@@ -616,16 +613,19 @@ export class Account<TContract extends IAccountCore>
         throw new Error("Duplicate signers found in input.");
       }
 
-      const allMembersOfSnapshot = resolvedSnapshot.map((item) => item.signer);
-
-      const setAdminData: string[] = [];
-      const setPermissionsData: string[] = [];
+      const addAdminData: string[] = [];
+      const removeAdminData: string[] = [];
+      const addOrUpdateSignerData: string[] = [];
+      const removeSignerData: string[] = [];
 
       // Remove all existing admins not included in the passed snapshot.
       const allAdmins = await this.getAllAdmins();
+      const allToMakeAdmin = resolvedSnapshot
+        .filter((item) => item.makeAdmin)
+        .map((item) => item.signer);
       allAdmins.forEach((admin) => {
-        if (!allMembersOfSnapshot.includes(admin)) {
-          setAdminData.push(
+        if (!allToMakeAdmin.includes(admin)) {
+          removeAdminData.push(
             this.contractWrapper.writeContract.interface.encodeFunctionData(
               "setAdmin",
               [admin, false],
@@ -636,9 +636,14 @@ export class Account<TContract extends IAccountCore>
 
       // Remove all existing signers not included in the passed snapshot.
       const allSigners = await this.getAllSigners();
+      const allToMakeSigners = resolvedSnapshot
+        .filter((item) => {
+          return !item.makeAdmin;
+        })
+        .map((item) => item.signer);
       await Promise.all(
         allSigners.map(async (item) => {
-          if (!allMembersOfSnapshot.includes(item.signer)) {
+          if (!allToMakeSigners.includes(item.signer)) {
             const data = await this.buildSignerPermissionRequest(item.signer, {
               startDate: BigNumber.from(0),
               expirationDate: BigNumber.from(0),
@@ -646,7 +651,7 @@ export class Account<TContract extends IAccountCore>
               nativeTokenLimitPerTransaction: "0",
             });
 
-            setPermissionsData.push(data);
+            removeSignerData.push(data);
           }
         }),
       );
@@ -654,7 +659,7 @@ export class Account<TContract extends IAccountCore>
       for (const member of resolvedSnapshot) {
         // Add new admin
         if (member.makeAdmin) {
-          setAdminData.push(
+          addAdminData.push(
             this.contractWrapper.writeContract.interface.encodeFunctionData(
               "setAdmin",
               [member.signer, true],
@@ -666,14 +671,25 @@ export class Account<TContract extends IAccountCore>
             member.signer,
             member.permissions,
           );
-          setPermissionsData.push(data);
+          addOrUpdateSignerData.push(data);
         }
       }
+
+      const data: string[] = [];
+      removeAdminData.forEach((item) => {
+        data.push(item);
+      });
+      removeSignerData.forEach((item) => {
+        data.push(item);
+      });
+      addOrUpdateSignerData.forEach((item) => {
+        data.push(item);
+      });
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "multicall",
-        args: [[...setAdminData, ...setPermissionsData]],
+        args: [data],
       });
     },
   );

@@ -376,7 +376,7 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.abi,
     MarketplaceV3__factory.bytecode,
     signer,
-    [pluginMapAddress],
+    [pluginMapAddress, ethers.constants.AddressZero],
     "MarketplaceV3",
   );
   return marketplaceV3Address;

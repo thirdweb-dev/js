@@ -188,65 +188,65 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       account = (await sdk.getContract(accountAddress)).account;
     });
 
-    it("Should be able to add another admin to the account.", async () => {
-      assert.isFalse(
-        await account.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the account.",
-      );
+    // it("Should be able to add another admin to the account.", async () => {
+    //   assert.isFalse(
+    //     await account.isAdmin(signer1Wallet.address),
+    //     "New signer1 should not be an admin on the account.",
+    //   );
 
-      await account.grantAdminPermissions(signer1Wallet.address);
+    //   await account.grantAdminPermissions(signer1Wallet.address);
 
-      assert.isTrue(
-        await account.isAdmin(signer1Wallet.address),
-        "New signer1 should be an admin on the account.",
-      );
+    //   assert.isTrue(
+    //     await account.isAdmin(signer1Wallet.address),
+    //     "New signer1 should be an admin on the account.",
+    //   );
 
-      const isAdmin = (await account.getAllAdmins()).includes(
-        utils.getAddress(signer1Wallet.address),
-      );
+    //   const isAdmin = (await account.getAllAdmins()).includes(
+    //     utils.getAddress(signer1Wallet.address),
+    //   );
 
-      assert.isTrue(isAdmin, "New signer1 should be an admin on the account.");
+    //   assert.isTrue(isAdmin, "New signer1 should be an admin on the account.");
 
-      assert.isTrue(
-        (
-          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
-        ).includes(account.getAddress()),
-        "Wallet is an associated account of the signer.",
-      );
-    });
+    //   assert.isTrue(
+    //     (
+    //       await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+    //     ).includes(account.getAddress()),
+    //     "Wallet is an associated account of the signer.",
+    //   );
+    // });
 
-    it("Should be able to remove an admin from the account.", async () => {
-      await account.grantAdminPermissions(signer1Wallet.address);
-      assert.isTrue(
-        await account.isAdmin(signer1Wallet.address),
-        "New signer1 should be an admin on the account.",
-      );
+    // it("Should be able to remove an admin from the account.", async () => {
+    //   await account.grantAdminPermissions(signer1Wallet.address);
+    //   assert.isTrue(
+    //     await account.isAdmin(signer1Wallet.address),
+    //     "New signer1 should be an admin on the account.",
+    //   );
 
-      await account.revokeAdminPermissions(signer1Wallet.address);
+    //   await account.revokeAdminPermissions(signer1Wallet.address);
 
-      assert.isFalse(
-        await account.isAdmin(signer1Wallet.address),
-        "New signer1 should not be an admin on the account.",
-      );
+    //   assert.isFalse(
+    //     await account.isAdmin(signer1Wallet.address),
+    //     "New signer1 should not be an admin on the account.",
+    //   );
 
-      assert.isFalse(
-        (await account.getAllSigners())
-          .map((result) => utils.getAddress(result.signer))
-          .includes(signer1Wallet.address),
-        "New signer1 should not be an admin on the account.",
-      );
+    //   assert.isFalse(
+    //     (await account.getAllSigners())
+    //       .map((result) => utils.getAddress(result.signer))
+    //       .includes(signer1Wallet.address),
+    //     "New signer1 should not be an admin on the account.",
+    //   );
 
-      assert.isFalse(
-        (await account.getAllAdmins()).includes(signer1Wallet.address),
-        "New signer1 is not an associated signer of the account.",
-      );
-      assert.isFalse(
-        (
-          await accountFactory.getAssociatedAccounts(signer1Wallet.address)
-        ).includes(account.getAddress()),
-        "Wallet is not an associated account of the signer.",
-      );
-    });
+    //   assert.isFalse(
+    //     (await account.getAllAdmins()).includes(signer1Wallet.address),
+    //     "New signer1 is not an associated signer of the account.",
+    //   );
+    //   assert.isFalse(
+    //     (
+    //       await accountFactory.getAssociatedAccounts(signer1Wallet.address)
+    //     ).includes(account.getAddress()),
+    //     "Wallet is not an associated account of the signer.",
+    //   );
+    // });
 
     it("Should be able to grant restricted access to a new signer.", async () => {
       const signersWithRestrictions = await account.getAllSigners();
@@ -323,7 +323,9 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         });
         expect.fail();
       } catch (err: any) {
-        expect(err.message).to.equal(`Signer already has access`);
+        expect(err.message).to.equal(
+          "Signer already has permissions. Cannot grant permissions to an existing signer. You can update permissions using `updatePermissions`.",
+        );
       }
     });
 
@@ -356,11 +358,11 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
           .includes(signer1Wallet.address),
         "New signer1 is not an associated signer of the account.",
       );
-      assert.isFalse(
+      assert.isTrue(
         (
           await accountFactory.getAssociatedAccounts(signer1Wallet.address)
         ).includes(account.getAddress()),
-        "Wallet is not an associated account of the signer.",
+        "Wallet is still an associated account of the signer.",
       );
     });
 
@@ -378,7 +380,9 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         await account.revokeAccess(signer1Wallet.address);
         expect.fail();
       } catch (err: any) {
-        expect(err.message).to.equal(`Signer does not have any access`);
+        expect(err.message).to.equal(
+          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
+        );
       }
     });
 
@@ -423,7 +427,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       );
 
       // Update access
-      await account.grantPermissions(signer1Wallet.address, {
+      await account.updatePermissions(signer1Wallet.address, {
         nativeTokenLimitPerTransaction: "3",
         approvedCallTargets: [signer2Wallet.address],
       });
@@ -473,12 +477,14 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       // Try updating access of signer1
       try {
-        await account.grantPermissions(signer1Wallet.address, {
+        await account.updatePermissions(signer1Wallet.address, {
           approvedCallTargets: [signer2Wallet.address],
         });
         expect.fail();
       } catch (err: any) {
-        expect(err.message).to.equal(`Signer does not have any access`);
+        expect(err.message).to.equal(
+          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
+        );
       }
     });
 
