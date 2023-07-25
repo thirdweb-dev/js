@@ -43,7 +43,7 @@ import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 type EVMContractProps = {
-  contractInfo: EVMContractInfo;
+  contractInfo?: EVMContractInfo;
   dehydratedState: DehydratedState;
   contractMetadata?: {
     name: string;
@@ -330,17 +330,17 @@ EVMContractPage.getLayout = (page, props: EVMContractProps) => {
 
   const ogImage = ContractOG.toUrl({
     displayName: props.contractMetadata?.name || "",
-    contractAddress: props.contractInfo.contractAddress,
+    contractAddress: props.contractInfo?.contractAddress || "",
     logo: props.contractMetadata?.image || "",
-    chainName: props.contractInfo.chain?.name || "",
+    chainName: props.contractInfo?.chain?.name || "",
   });
 
-  const cleanedChainName = props.contractInfo.chain?.name
+  const cleanedChainName = props.contractInfo?.chain?.name
     .replace("Mainnet", "")
     .replace("Testnet", "")
     .trim();
 
-  const url = `https://thirdweb.com/${props.contractInfo.chainSlug}/${props.contractInfo.contractAddress}/`;
+  const url = `https://thirdweb.com/${props.contractInfo?.chainSlug}/${props.contractInfo?.contractAddress}/`;
   const SEOTitle = `${displayName} | ${
     cleanedChainName ? `${cleanedChainName} ` : ""
   }Smart Contract`;
