@@ -5,7 +5,11 @@ import type {
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
-import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
+import {
+  Transaction,
+  TransactionResult,
+  SmartContract,
+} from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
   WCSession,
@@ -80,6 +84,16 @@ export class SmartWallet
   }
 
   /**
+   * Check whether the connected signer can execute a given transaction using the smart wallet.
+   * @param transaction the transaction to execute using the smart wallet.
+   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   */
+  async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
+    const connector = await this.getConnector();
+    return connector.hasPermissionToExecute(transaction);
+  }
+
+  /**
    * Execute a single transaction
    * @param transactions
    * @returns the transaction receipt
@@ -116,6 +130,24 @@ export class SmartWallet
   async isDeployed(): Promise<boolean> {
     const connector = await this.getConnector();
     return connector.isDeployed();
+  }
+
+  /**
+   * Get the underlying account contract of the smart wallet.
+   * @returns the account contract of the smart wallet.
+   */
+  async getAccountContract(): Promise<SmartContract> {
+    const connector = await this.getConnector();
+    return connector.getAccountContract();
+  }
+
+  /**
+   * Get the underlying account factory contract of the smart wallet.
+   * @returns the account factory contract.
+   */
+  async getFactoryContract(): Promise<SmartContract> {
+    const connector = await this.getConnector();
+    return connector.getFactoryContract();
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
