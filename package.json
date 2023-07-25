@@ -148,8 +148,9 @@
     ],
     "entrypoints": []
   },
-  "browserList": [
+  "browserslist": [
     "defaults",
-    "unreleased versions"
+    "unreleased versions",
+    "not UCAndroid > 0"
   ]
 }
