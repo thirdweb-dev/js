@@ -9,7 +9,7 @@ import {
   ConnectorNotFoundError,
 } from "../../../lib/wagmi-core";
 import type {
-  EthereumProviderConfig as BloctoOptions,
+  EthereumProviderConfig,
   EthereumProviderInterface as BloctoProvider,
 } from "@blocto/sdk";
 import BloctoSDK from "@blocto/sdk";
@@ -18,6 +18,7 @@ import { walletIds } from "../../constants/walletIds";
 import { Chain } from "@thirdweb-dev/chains";
 
 type BloctoSigner = providers.JsonRpcSigner;
+type BloctoOptions = Partial<EthereumProviderConfig>;
 
 export class BloctoConnector extends WagmiConnector<
   BloctoProvider,
@@ -36,10 +37,10 @@ export class BloctoConnector extends WagmiConnector<
 
   constructor({
     chains,
-    options,
+    options = {},
   }: {
     chains?: Chain[];
-    options: BloctoOptions;
+    options?: BloctoOptions;
   }) {
     super({
       chains,
@@ -51,16 +52,13 @@ export class BloctoConnector extends WagmiConnector<
     this.#onDisconnectBind = this.onDisconnect.bind(this);
   }
 
-  async connect({
-    chainId,
-  }: {
+  async connect(config?: {
     chainId?: number;
   }): Promise<Required<WagmiConnectorData<BloctoProvider>>> {
     try {
-      const provider = await this.getProvider();
+      const provider = await this.getProvider(config);
 
       this.setupListeners();
-
       this.emit("message", { type: "connecting" });
 
       const accounts = await provider.request({
@@ -70,18 +68,13 @@ export class BloctoConnector extends WagmiConnector<
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
 
-      if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
-        id = chain.chainId;
-        unsupported = this.isChainUnsupported(id);
-      }
-
       return {
         account,
         chain: { id, unsupported },
         provider,
       };
     } catch (error: unknown) {
+      this.#handleConnectReset();
       if (this.#isUserRejectedRequestError(error)) {
         throw new UserRejectedRequestError(error as Error);
       }
@@ -91,8 +84,8 @@ export class BloctoConnector extends WagmiConnector<
 
   async disconnect(): Promise<void> {
     const provider = await this.getProvider();
-    this.removeListeners();
     await provider.request({ method: "wallet_disconnect" });
+    this.removeListeners();
   }
 
   async getAccount(): Promise<string> {
@@ -116,10 +109,16 @@ export class BloctoConnector extends WagmiConnector<
     return normalizeChainId(chainId);
   }
 
-  getProvider(): Promise<BloctoProvider> {
+  getProvider({ chainId }: { chainId?: number } = {}): Promise<BloctoProvider> {
     if (!this.#provider) {
-      const { appId, ...options } = this.options;
-      this.#provider = new BloctoSDK({ ethereum: options, appId })?.ethereum;
+      const _chainId =
+        chainId ?? this.options.chainId ?? this.chains[0].chainId;
+      const _rpc = this.chains.find((x) => x.chainId === _chainId)?.rpc[0];
+
+      this.#provider = new BloctoSDK({
+        ethereum: { chainId: _chainId, rpc: _rpc },
+        appId: this.options.appId,
+      })?.ethereum;
     }
 
     if (!this.#provider) {
@@ -144,23 +143,22 @@ export class BloctoConnector extends WagmiConnector<
   }
 
   async isAuthorized(): Promise<boolean> {
-    try {
-      const account = await this.getAccount();
-      return !!account;
-    } catch {
-      return false;
-    }
+    return !!this.#provider?._blocto?.sessionKey ?? false;
   }
 
   async switchChain(chainId: number): Promise<Chain> {
     const provider = await this.getProvider();
     const id = utils.hexValue(chainId);
+
     const chain = this.chains.find((x) => x.chainId === chainId);
+    if (!chain) {
+      throw new SwitchChainError(new Error("chain not found on connector."));
+    }
+
     const isBloctoSupportChain =
       provider._blocto.supportNetworkList[`${chainId}`];
-
-    if (!chain || !isBloctoSupportChain) {
-      throw new SwitchChainError(`Blocto unsupported chain: ${id}`);
+    if (!isBloctoSupportChain) {
+      throw new SwitchChainError(new Error(`Blocto unsupported chain: ${id}`));
     }
 
     try {
@@ -187,13 +185,15 @@ export class BloctoConnector extends WagmiConnector<
     // not supported yet
   }
 
-  protected onChainChanged(chain: string | number): void {
+  protected async onChainChanged(chain: string | number): Promise<void> {
     const id = normalizeChainId(chain);
     const unsupported = this.isChainUnsupported(id);
-    this.emit("change", { chain: { id, unsupported } });
+    const account = await this.getAccount();
+    this.emit("change", { chain: { id, unsupported }, account });
   }
 
   protected onDisconnect(): void {
+    this.#handleConnectReset();
     this.emit("disconnect");
   }
 
@@ -215,5 +215,9 @@ export class BloctoConnector extends WagmiConnector<
 
   #isUserRejectedRequestError(error: unknown) {
     return /(user rejected)/i.test((error as Error).message);
+  }
+
+  #handleConnectReset() {
+    this.#provider = undefined;
   }
 }

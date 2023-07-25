@@ -3,32 +3,14 @@ import { AbstractClientWallet, WalletMeta, WalletOptions } from "./base";
 import { walletIds } from "../constants/walletIds";
 import { Chain } from "@thirdweb-dev/chains";
 
-export type BloctoAdditionalOptions = {
-  /**
-   * Blocto supports multiple chains, you can specify the chain you want to connect to.
-   *
-   * https://docs.blocto.app/blocto-sdk/javascript-sdk/evm-sdk
-   */
-  chain: Chain;
-
-  /**
-   * JSON RPC URL to use for the connection.
-   */
-  rpc?: string;
-
-  /**
-   * Your app’s unique identifier that can be obtained at https://developers.blocto.app,
-   * To get advanced features and support with Blocto.
-   *
-   * https://docs.blocto.app/blocto-sdk/register-app-id
-   */
+type BloctoOptions = {
   appId?: string;
+  chain?: Chain;
 };
 
-export class BloctoWallet extends AbstractClientWallet<BloctoAdditionalOptions> {
+export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
   connector?: Connector;
   name: string = "Blocto";
-  chainId: number;
 
   static id = walletIds.blocto;
   static meta: WalletMeta = {
@@ -42,24 +24,17 @@ export class BloctoWallet extends AbstractClientWallet<BloctoAdditionalOptions> 
     },
   };
 
-  constructor(options?: WalletOptions<BloctoAdditionalOptions>) {
+  constructor(options?: WalletOptions<BloctoOptions>) {
     super(BloctoWallet.id, options);
-
-    if (!options?.chain) {
-      throw new Error("Blocto requires a chain to be provided.");
-    }
-    this.chainId = options.chain.chainId;
   }
 
   protected async initConnector(): Promise<Connector> {
     const { BloctoConnector } = await import("../connectors/blocto");
-
     const bloctoConnector = new BloctoConnector({
       chains: this.chains,
       options: {
-        chainId: this.chainId,
-        rpc: this.options?.rpc || this.options?.chain?.rpc[0],
         appId: this.options?.appId,
+        chainId: this.options?.chain?.chainId,
       },
     });
 
