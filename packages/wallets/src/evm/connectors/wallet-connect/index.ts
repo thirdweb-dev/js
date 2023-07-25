@@ -172,7 +172,7 @@ export class WalletConnectConnector extends WagmiConnector<
 
   async disconnect() {
     const cleanup = () => {
-      if (typeof window === "undefined") {
+      if (typeof localStorage === "undefined") {
         return;
       }
       for (var key in localStorage) {
