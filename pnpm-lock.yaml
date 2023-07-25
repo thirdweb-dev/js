@@ -1324,6 +1324,9 @@ importers:
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
+      '@thirdweb-dev/contracts-js':
+        specifier: workspace:*
+        version: link:../contracts-js
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../sdk
