@@ -53,7 +53,7 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      "The bundle is not authorized for this key.",
+      "The bundleId: com.foo.bar, is not authorized for this key. Please update your key permissions on the thirdweb dashboard",
     );
     expect(result.errorCode).toBe("BUNDLE_UNAUTHORIZED");
     expect(result.status).toBe(401);
@@ -71,7 +71,9 @@ describe("authorizeClient", () => {
       validApiKeyMeta,
     ) as any;
     expect(result.authorized).toBe(false);
-    expect(result.errorMessage).toBe("The secret is invalid.");
+    expect(result.errorMessage).toBe(
+      "The secret is invalid. Please check you secret-key",
+    );
     expect(result.errorCode).toBe("SECRET_INVALID");
     expect(result.status).toBe(401);
   });
@@ -89,7 +91,7 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      "The origin is not authorized for this key.",
+      "The domain: unauthorized.com, is not authorized for this key. Please update your key permissions on the thirdweb dashboard",
     );
     expect(result.errorCode).toBe("ORIGIN_UNAUTHORIZED");
     expect(result.status).toBe(401);

@@ -48,3 +48,6 @@ export * from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core";
+
+// ThirdwebSDK RN
+export { ThirdwebSDK } from "./sdk/ThirdwebSDK";
