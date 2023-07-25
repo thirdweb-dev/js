@@ -86,6 +86,7 @@ export class BloctoConnector extends WagmiConnector<
     const provider = await this.getProvider();
     await provider.request({ method: "wallet_disconnect" });
     this.removeListeners();
+    this.#handleConnectReset();
   }
 
   async getAccount(): Promise<string> {
@@ -193,7 +194,6 @@ export class BloctoConnector extends WagmiConnector<
   }
 
   protected onDisconnect(): void {
-    this.#handleConnectReset();
     this.emit("disconnect");
   }
 
