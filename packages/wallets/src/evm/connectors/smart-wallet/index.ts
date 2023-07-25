@@ -147,9 +147,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const signer = await this.getSigner();
     const signerAddress = await signer.getAddress();
 
-    const restrictions = await accountContract.account.getAccessRestrictions(
-      signerAddress,
-    );
+    const restrictions = (await accountContract.account.getAllSigners()).filter(item => ethers.utils.getAddress(item.signer) === ethers.utils.getAddress(signerAddress))[0].permissions;
 
     return restrictions.approvedCallTargets.includes(transaction.getTarget());
   }
