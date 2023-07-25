@@ -83,7 +83,7 @@ export const ThirdwebProvider = <
         storageInterface ||
         new ThirdwebStorage({
           clientId: clientId,
-          /// @ts-ignore
+          // @ts-ignore
           gatewayUrls: sdkOptions?.gatewayUrls,
         })
       }
