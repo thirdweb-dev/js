@@ -58,7 +58,7 @@ export async function fetchContractMetadataFromAddress(
   } catch (e) {
     console.debug(
       "Failed to get Contract Metadata from IPFS, defaulting to onchain registry",
-      e,
+      (e as any)?.message,
     );
     try {
       // try from multichain registry
