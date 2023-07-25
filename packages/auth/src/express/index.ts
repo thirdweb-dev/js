@@ -1,8 +1,10 @@
 import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import { getUser } from "./helpers/user";
+import payloadHandler from "./routes/payload";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
+import switchAccountHandler from "./routes/switch-account";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthContext,
@@ -48,6 +50,13 @@ export function ThirdwebAuth<
   router.use(cookieMiddleware);
 
   router.post(
+    "/payload",
+    asyncHandler((req: Request, res: Response) =>
+      payloadHandler(req, res, ctx as ThirdwebAuthContext),
+    ),
+  );
+
+  router.post(
     "/login",
     asyncHandler((req: Request, res: Response) =>
       loginHandler(req, res, ctx as ThirdwebAuthContext),
@@ -65,6 +74,13 @@ export function ThirdwebAuth<
     "/logout",
     asyncHandler((req: Request, res: Response) =>
       logoutHandler(req, res, ctx as ThirdwebAuthContext),
+    ),
+  );
+
+  router.post(
+    "/switch-account",
+    asyncHandler((req: Request, res: Response) =>
+      switchAccountHandler(req, res, ctx as ThirdwebAuthContext),
     ),
   );
 

@@ -1,13 +1,12 @@
+import inquirer from "inquirer";
 import { info } from "../helpers/logger";
 import { LibraryType, PackageManagerType } from "../types/ProjectType";
 import { LibraryDetector } from "./detector";
-import inquirer from "inquirer";
-import ReactDetector from "./libraries/react";
 import ExpressDetector from "./libraries/express";
-import ReactNativeDetector from "./libraries/reactNative";
-import ViteDetector from "./libraries/vite";
-import Web3PyDetector from "./libraries/web3py";
 import PlayMakerDetector from "./libraries/playmaker";
+import ReactDetector from "./libraries/react";
+import ReactNativeDetector from "./libraries/reactNative";
+import Web3PyDetector from "./libraries/web3py";
 
 export default async function detect(
   path: string,
@@ -19,7 +18,6 @@ export default async function detect(
     new ExpressDetector(),
     new ReactDetector(),
     new ReactNativeDetector(),
-    new ViteDetector(),
     new Web3PyDetector(),
     new PlayMakerDetector(),
   ];
@@ -34,6 +32,13 @@ export default async function detect(
 
   if (possibleLibraries.length === 1) {
     return possibleLibraries[0];
+  }
+
+  if (
+    possibleLibraries.includes("react-native") &&
+    possibleLibraries.includes("react")
+  ) {
+    return "react-native";
   }
 
   info(

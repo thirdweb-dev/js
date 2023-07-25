@@ -1,4 +1,4 @@
-import { CustomChain } from "../types/any-evm/chains";
+import type { CustomChain } from "../types/any-evm/chains";
 
 export const ERROR_SUBSTRINGS = [
   "eip-155",
@@ -10,6 +10,8 @@ export const ERROR_SUBSTRINGS = [
   "recovered sender mismatch",
   "transaction hash mismatch",
   "chainid no support",
+  "chainid (0)",
+  "chainid(0)",
 ];
 
 export const ERROR_SUBSTRINGS_COMPOSITE = [

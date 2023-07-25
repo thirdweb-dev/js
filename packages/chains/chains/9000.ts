@@ -26,19 +26,8 @@ export default {
   },
   "explorers": [
     {
-      "name": "Evmos EVM Explorer",
-      "url": "https://evm.evmos.dev",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
-    },
-    {
-      "name": "Evmos Cosmos Explorer",
-      "url": "https://explorer.evmos.dev",
+      "name": "Evmos Explorer (Escan)",
+      "url": "https://testnet.escan.live",
       "standard": "none",
       "icon": {
         "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",

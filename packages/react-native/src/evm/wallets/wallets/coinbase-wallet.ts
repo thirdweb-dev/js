@@ -17,12 +17,11 @@ import {
 
 type CoinbaseWalletOptions = Omit<
   WalletOptions<CoinbaseWalletConnectorOptions>,
-  "walletStorage"
+  "walletStorage" | "secretKey" | "clientId"
 >;
 
 export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
-    id: "coinbase",
     name: "Coinbase Wallet",
     iconURL:
       "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
@@ -82,6 +81,5 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
-    config: config || {},
-  } satisfies WalletConfig<CoinbaseWallet, { callbackURL?: URL }>;
+  } satisfies WalletConfig<CoinbaseWallet>;
 };

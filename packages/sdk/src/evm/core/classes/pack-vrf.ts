@@ -1,16 +1,13 @@
-import {
-  ContractEvents,
-  NetworkInput,
-  Transaction,
-  TransactionResultWithId,
-} from "..";
-import { fetchCurrencyMetadata } from "../../common";
-import { resolveAddress } from "../../common/ens";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
-import { LINK_TOKEN_ADDRESS } from "../../constants";
+import { LINK_TOKEN_ADDRESS } from "../../constants/currency";
 import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
-import { Address, AddressOrEns, PackRewards, SDKOptions } from "../../schema";
-import { Amount, CurrencyValue } from "../../types";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
+import { SDKOptions } from "../../schema/sdk-options";
+import { PackRewards } from "../../schema/tokens/pack";
+import type { Amount, CurrencyValue } from "../../types/currency";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
@@ -25,7 +22,10 @@ import {
   PackOpenRequestedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, type BigNumberish, utils } from "ethers";
+import type { NetworkInput, TransactionResultWithId } from "../types";
+import { ContractEvents } from "./contract-events";
+import { Transaction } from "./transactions";
 
 export class PackVRF implements UpdateableNetwork, DetectableFeature {
   featureName = FEATURE_PACK_VRF.name;
@@ -45,6 +45,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
       address,
       IPackAbi,
       options,
+      storage,
     ),
   ) {
     this.contractWrapper = contractWrapper;
@@ -80,7 +81,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns
    * @twfeature PackVRF
    */
-  open = buildTransactionFunction(
+  open = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       amount: BigNumberish = 1,
@@ -127,7 +128,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @returns the random rewards from opening a pack
    * @twfeature PackVRF
    */
-  claimRewards = buildTransactionFunction(
+  claimRewards = /* @__PURE__ */ buildTransactionFunction(
     async (gasLimit = 500000): Promise<Transaction<Promise<PackRewards>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -169,7 +170,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantityPerReward: ethers.utils
+            quantityPerReward: utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
           });
@@ -344,6 +345,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
       linkAddress,
       ERC20Abi,
       this.contractWrapper.options,
+      this.storage,
     );
     return new Erc20(contract, this.storage, this.chainId);
   }

@@ -11,7 +11,7 @@ import {
   Offer,
   UnmappedOffer,
 } from "../types/marketplace";
-import { fetchCurrencyValue } from "./currency";
+import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
@@ -106,6 +106,7 @@ export async function handleTokenApproval(
     assetContract,
     ERC165Abi,
     contractWrapper.options,
+    contractWrapper.storage,
   );
   const isERC721 = await erc165.readContract.supportsInterface(
     InterfaceId_IERC721,
@@ -120,6 +121,7 @@ export async function handleTokenApproval(
       assetContract,
       ERC721Abi,
       contractWrapper.options,
+      contractWrapper.storage,
     );
     const approved = await asset.readContract.isApprovedForAll(
       from,
@@ -143,6 +145,7 @@ export async function handleTokenApproval(
       assetContract,
       ERC1155Abi,
       contractWrapper.options,
+      contractWrapper.storage,
     );
 
     const approved = await asset.readContract.isApprovedForAll(

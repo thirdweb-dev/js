@@ -1,4 +1,6 @@
-import { ALL_ROLES, assertEnabled, detectContractFeature } from "../common";
+import { assertEnabled } from "../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../common/feature-detection/detectContractFeature";
+import { ALL_ROLES } from "../common/role";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
@@ -12,16 +14,10 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_ACCOUNT_FACTORY,
+  FEATURE_ACCOUNT,
 } from "../constants/thirdweb-features";
-import {
-  ContractEncoder,
-  ContractOwner,
-  MarketplaceV3DirectListings,
-  MarketplaceV3EnglishAuctions,
-  MarketplaceV3Offers,
-  NetworkInput,
-  Transaction,
-} from "../core";
+import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -37,7 +33,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema";
+import { Address } from "../schema/shared/Address";
 import {
   Abi,
   AbiInput,
@@ -57,10 +53,21 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  IAccountFactory,
+  IAccountCore,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
+
+import { NetworkInput } from "../core/types";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractOwner } from "../core/classes/contract-owner";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
+import { AccountFactory } from "../core/classes/account-factory";
+import { Account } from "../core/classes/account";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -74,7 +81,7 @@ import { BaseContractInterface } from "../types/contract";
  * const contract = await sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
- * await contract.call("myCustomFunction", param1, param2);
+ * await contract.call("myCustomFunction", [param1, param2]);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.erc721.query.all()
@@ -102,7 +109,7 @@ export class SmartContract<
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
   public abi: Abi;
-  public metadata: ContractMetadata<BaseContract, any>;
+  public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
 
   /**
    * Handle royalties
@@ -291,6 +298,43 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  /**
+   * Account Factory
+   *
+   * @remarks Create accounts and fetch data about them.
+   * @example
+   * ```javascript
+   *
+   * // Predict the address of the account that will be created for an admin.
+   * const deterministicAddress = await contract.accountFactory.predictAccountAddress(admin, extraData);
+   *
+   * // Create accounts
+   * const tx = await contract.accountFactory.createAccount(admin, extraData);
+   * // the same as `deterministicAddress`
+   * const accountAddress = tx.address;
+   *
+   * // Get all accounts created by the factory
+   * const allAccounts = await contract.accountFactory.getAllAccounts();
+   *
+   * // Get all accounts on which a signer has been given authority.
+   * const associatedAccounts = await contract.accountFactory.getAssociatedAccounts(signer);
+   *
+   * // Get all signers who have been given authority on a account.
+   * const associatedSigners = await contract.accountFactory.getAssociatedSigners(accountAddress);
+   *
+   * // Check whether a account has already been created for a given admin.
+   * const isAccountDeployed = await contract.accountFactory.isAccountDeployed(admin, extraData);
+   * ```
+   */
+  get accountFactory(): AccountFactory<IAccountFactory> {
+    return assertEnabled(this.detectAccountFactory(), FEATURE_ACCOUNT_FACTORY);
+  }
+
+  // TODO documentation
+  get account(): Account<IAccountCore> {
+    return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -308,6 +352,7 @@ export class SmartContract<
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;
@@ -366,11 +411,11 @@ export class SmartContract<
    * console.log(myValue);
    *
    * // write functions will return the transaction receipt
-   * const tx = await contract.call("myWriteFunction", arg1, arg2);
+   * const tx = await contract.call("myWriteFunction", [arg1, arg2]);
    * const receipt = tx.receipt;
    *
    * // Optionally override transaction options
-   * await contract.call("myWriteFunction", arg1, arg2, {
+   * await contract.call("myWriteFunction", [arg1, arg2], {
    *  gasLimit: 1000000, // override default gas limit
    *  value: ethers.utils.parseEther("0.1"), // send 0.1 ether with the contract call
    * };
@@ -514,6 +559,32 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  // ========== Account features ==========
+
+  private detectAccountFactory() {
+    if (
+      detectContractFeature<IAccountFactory>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT_FACTORY.name,
+      )
+    ) {
+      return new AccountFactory(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAccount() {
+    if (
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT.name,
+      )
+    ) {
+      return new Account(this.contractWrapper);
     }
     return undefined;
   }

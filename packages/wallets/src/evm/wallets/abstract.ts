@@ -1,12 +1,25 @@
 import { EVMWallet } from "../interfaces";
 import type { Signer } from "ethers";
-import { providers, Contract, utils, Bytes } from "ethers";
+import { providers, Contract, utils, Bytes, BigNumber } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  Price,
+  fetchCurrencyValue,
+  isNativeToken,
+  normalizePriceValue,
+} from "@thirdweb-dev/sdk";
+import { createErc20 } from "../utils/currency";
 
 // TODO improve this
-function chainIdToThirdwebRpc(chainId: number) {
-  return `https://${chainId}.rpc.thirdweb.com`;
+function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
+  return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
+    typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+      ? // @ts-ignore
+        `?bundleId=${globalThis.APP_BUNDLE_ID}`
+      : ""
+  }`;
 }
 
 export type WalletData = {
@@ -35,6 +48,7 @@ export async function checkContractWalletSignature(
   address: string,
   chainId: number,
 ): Promise<boolean> {
+  //TODO:  A provider should be passed in instead of creating a new one here.
   const provider = new providers.JsonRpcProvider(chainIdToThirdwebRpc(chainId));
   const walletContract = new Contract(address, EIP1271_ABI, provider);
   const _hashMessage = utils.hashMessage(message);
@@ -51,7 +65,6 @@ export abstract class AbstractWallet
   implements GenericAuthWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
-  protected signerPromise?: Promise<Signer>;
 
   public abstract getSigner(): Promise<Signer>;
 
@@ -59,23 +72,78 @@ export abstract class AbstractWallet
    * @returns the account address from connected wallet
    */
   public async getAddress(): Promise<string> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     return signer.getAddress();
+  }
+
+  /**
+   * @returns the native token balance of the connected wallet
+   */
+  public async getBalance(currencyAddress: string = NATIVE_TOKEN_ADDRESS) {
+    const signer = await this.getSigner();
+    const address = await this.getAddress();
+
+    if (!signer.provider) {
+      throw new Error("Please connect a provider");
+    }
+
+    let balance: BigNumber;
+    if (isNativeToken(currencyAddress)) {
+      balance = await signer.provider.getBalance(address);
+    } else {
+      const erc20 = createErc20(signer, currencyAddress);
+      balance = await erc20.balanceOf(address);
+    }
+
+    // Note: assumes that the native currency decimals is 18, which isn't always correct
+    return await fetchCurrencyValue(signer.provider, currencyAddress, balance);
   }
 
   /**
    * @returns the chain id from connected wallet
    */
   public async getChainId(): Promise<number> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     return signer.getChainId();
+  }
+
+  public async transfer(
+    to: string,
+    amount: Price,
+    currencyAddress: string = NATIVE_TOKEN_ADDRESS,
+  ) {
+    const signer = await this.getSigner();
+    const from = await this.getAddress();
+
+    if (!signer.provider) {
+      throw new Error("Please connect a provider");
+    }
+
+    const value = await normalizePriceValue(
+      signer.provider,
+      amount,
+      currencyAddress,
+    );
+
+    if (isNativeToken(currencyAddress)) {
+      const tx = await signer.sendTransaction({
+        from,
+        to,
+        value,
+      });
+      return tx.wait();
+    } else {
+      const erc20 = createErc20(signer, currencyAddress);
+      const tx = await erc20.transfer(to, value);
+      return tx.wait();
+    }
   }
 
   /**
    * @returns the signature of the message
    */
   public async signMessage(message: Bytes | string): Promise<string> {
-    const signer = await this.getCachedSigner();
+    const signer = await this.getSigner();
     return await signer.signMessage(message);
   }
 
@@ -89,12 +157,19 @@ export abstract class AbstractWallet
     address: string,
     chainId?: number,
   ): Promise<boolean> {
-    const messageHash = utils.hashMessage(message);
-    const messageHashBytes = utils.arrayify(messageHash);
-    const recoveredAddress = utils.recoverAddress(messageHashBytes, signature);
+    try {
+      const messageHash = utils.hashMessage(message);
+      const messageHashBytes = utils.arrayify(messageHash);
+      const recoveredAddress = utils.recoverAddress(
+        messageHashBytes,
+        signature,
+      );
 
-    if (recoveredAddress === address) {
-      return true;
+      if (recoveredAddress === address) {
+        return true;
+      }
+    } catch {
+      // no-op
     }
 
     // Check if the address is a smart contract wallet
@@ -113,19 +188,5 @@ export abstract class AbstractWallet
     }
 
     return false;
-  }
-
-  public async getCachedSigner(): Promise<Signer> {
-    // if we already have a signer promise, return that
-    if (this.signerPromise) {
-      return this.signerPromise;
-    }
-
-    this.signerPromise = this.getSigner().catch(() => {
-      this.signerPromise = undefined;
-      throw new Error("Unable to get a signer!");
-    });
-
-    return this.signerPromise;
   }
 }

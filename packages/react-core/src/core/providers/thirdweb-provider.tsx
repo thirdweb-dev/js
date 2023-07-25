@@ -1,5 +1,5 @@
-import { ThirdwebAuthProvider } from "../../evm/contexts/thirdweb-auth";
-import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
+import { ThirdwebAuthProvider } from "../../evm/contexts/ThirdwebAuthProvider";
+import { useUpdateChainsWithClientId } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { WalletConfig } from "../types/wallet";
@@ -61,6 +61,15 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    * Whether or not to automatically switch to wallet's network to active chain
    */
   autoSwitch?: boolean;
+
+  /**
+   * Timeout for auto-connecting wallet in milliseconds
+   *
+   * If wallet fails to connect in this time, it will stop trying to connect and user will have to manually connect
+   *
+   * @defaultValue 15000
+   */
+  autoConnectTimeout?: number;
 }
 
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
@@ -97,12 +106,10 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
   }, [props.supportedChains, activeChain]);
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
-    useUpdateChainsWithApiKeys(
+    useUpdateChainsWithClientId(
       supportedChainsNonNull,
       props.activeChain || supportedChainsNonNull[0],
-      props.thirdwebApiKey,
-      props.alchemyApiKey,
-      props.infuraApiKey,
+      props.clientId,
     );
 
   const activeChainWithKey = useMemo(() => {
@@ -145,6 +152,8 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         dAppMeta={dAppMeta}
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
+        autoConnectTimeout={props.autoConnectTimeout}
+        clientId={props.clientId}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
@@ -153,9 +162,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
           activeChain={activeChainWithKey}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
-          thirdwebApiKey={props.thirdwebApiKey}
-          alchemyApiKey={props.alchemyApiKey}
-          infuraApiKey={props.infuraApiKey}
+          clientId={props.clientId}
         >
           <ThirdwebAuthProvider value={props.authConfig}>
             {props.children}

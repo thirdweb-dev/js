@@ -16,10 +16,11 @@ export const ConnectingScreen: React.FC<{
   walletIconURL: string;
   walletName: string;
   supportLink: string;
+  hideBackButton: boolean;
 }> = (props) => {
   return (
     <>
-      <BackButton onClick={props.onBack} />
+      {!props.hideBackButton && <BackButton onClick={props.onBack} />}
       <IconContainer>
         <Img
           src={props.walletIconURL}
@@ -65,7 +66,7 @@ const IconContainer = styled.div`
   }
 `;
 
-const Desc = styled(ModalDescription)`
+const Desc = /* @__PURE__ */ styled(ModalDescription)`
   ${media.mobile} {
     padding: 0 ${spacing.lg};
   }

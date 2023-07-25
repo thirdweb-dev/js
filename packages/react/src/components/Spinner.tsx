@@ -1,4 +1,4 @@
-import { iconSize, Theme } from "../design-system";
+import { iconSize, type Theme } from "../design-system";
 import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 

@@ -5,7 +5,7 @@ import {
   WalletOptions,
   useConnect,
 } from "@thirdweb-dev/react-core";
-import { ConfiguredMagicLinkWallet } from "./types";
+import type { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect } from "react";
 import { Spinner } from "../../../components/Spinner";
 import { Flex } from "../../../components/basic";
@@ -14,14 +14,24 @@ import { InputSelectionUI } from "../InputSelectionUI";
 export function magicLink(
   config: MagicLinkAdditionalOptions,
 ): ConfiguredMagicLinkWallet {
+  const selectUI = (props: SelectUIProps<MagicLink>) => (
+    <MagicSelectionUI
+      {...props}
+      emailLogin={config.emailLogin !== false}
+      smsLogin={config.smsLogin !== false}
+    />
+  );
+
   return {
     id: MagicLink.id,
     meta: MagicLink.meta,
     create: (options: WalletOptions) =>
       new MagicLink({ ...options, ...config }),
-    config,
-    connectUI: MagicConnectionUI,
-    selectUI: MagicSelectionUI,
+    connectUI(props) {
+      return <MagicConnectionUI {...props} type={config.type || "auth"} />;
+    },
+    // select UI only for auth
+    selectUI: config.type === "connect" ? undefined : selectUI,
     isInstalled() {
       return false;
     },
@@ -29,10 +39,13 @@ export function magicLink(
 }
 
 const MagicSelectionUI: React.FC<
-  SelectUIProps<MagicLink, MagicLinkAdditionalOptions>
+  SelectUIProps<MagicLink> & {
+    emailLogin: boolean;
+    smsLogin: boolean;
+  }
 > = (props) => {
-  const isEmailEnabled = props.walletConfig.config.emailLogin !== false;
-  const isSMSEnabled = props.walletConfig.config.smsLogin !== false;
+  const isEmailEnabled = props.emailLogin !== false;
+  const isSMSEnabled = props.smsLogin !== false;
 
   let placeholder = "Enter your email or phone number";
   let type = "text";
@@ -65,7 +78,8 @@ const MagicSelectionUI: React.FC<
         const isPhone = Number.isInteger(Number(input[input.length - 1]));
 
         if (isEmail && isEmailEnabled) {
-          const isValidEmail = input.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+          const isValidEmail = emailRegex.test(input.replace(/\+/g, ""));
           if (!isValidEmail) {
             return "Invalid email address";
           }
@@ -91,8 +105,8 @@ const MagicSelectionUI: React.FC<
 };
 
 const MagicConnectionUI: React.FC<
-  ConnectUIProps<MagicLink, MagicLinkAdditionalOptions>
-> = ({ close, walletConfig, open, selectionData, supportedWallets }) => {
+  ConnectUIProps<MagicLink> & { type: "auth" | "connect" }
+> = ({ close, walletConfig, open, selectionData, supportedWallets, type }) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
   const connect = useConnect();
@@ -102,14 +116,20 @@ const MagicConnectionUI: React.FC<
       return;
     }
     connectPrompted.current = true;
-    const isEmail = (selectionData as string).includes("@");
+    const isEmail = selectionData
+      ? (selectionData as string).includes("@")
+      : false;
 
     (async () => {
       close();
       try {
         await connect(
           walletConfig,
-          isEmail ? { email: selectionData } : { phoneNumber: selectionData },
+          type === "connect"
+            ? {}
+            : isEmail
+            ? { email: selectionData }
+            : { phoneNumber: selectionData },
         );
       } catch (e) {
         if (!singleWallet) {
@@ -118,7 +138,7 @@ const MagicConnectionUI: React.FC<
         console.error(e);
       }
     })();
-  }, [connect, selectionData, walletConfig, close, open, singleWallet]);
+  }, [connect, selectionData, walletConfig, close, open, singleWallet, type]);
 
   return (
     <Flex

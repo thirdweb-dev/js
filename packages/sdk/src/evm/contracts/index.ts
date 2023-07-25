@@ -1,35 +1,54 @@
-import { fetchAndCachePublishedContractURI } from "../common";
+import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import {
-  getCompositeABIfromRelease,
-  getCompositePluginABI,
-} from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
-import type {
-  ContractType,
-  NetworkInput,
-  PrebuiltContractType,
-} from "../core/types";
-import { getSignerAndProvider } from "../functions/getSignerAndProvider";
-import {
-  Address,
-  DropErc1155ContractSchema,
-  DropErc721ContractSchema,
-  MarketplaceContractSchema,
-  PackContractSchema,
-  SDKOptions,
-  SplitsContractSchema,
-  TokenErc1155ContractSchema,
-  TokenErc20ContractSchema,
-  TokenErc721ContractSchema,
-  VoteContractSchema,
-} from "../schema";
+import type { NetworkInput } from "../core/types";
+import { getSignerAndProvider } from "../constants/urls";
+import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
+import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
+import { SplitsContractSchema } from "../schema/contracts/splits";
+import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
+import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
+import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
+import { Address } from "../schema/shared/Address";
+import { PackContractSchema } from "../schema/contracts/packs";
+import { SDKOptions } from "../schema/sdk-options";
+import { VoteContractSchema } from "../schema/contracts/vote";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import type { providers } from "ethers";
+import type { SmartContract as SmartContractType } from "./smart-contract";
+import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
+import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import {
+  ADMIN_ROLE,
+  MARKETPLACE_CONTRACT_ROLES,
+  MULTIWRAP_CONTRACT_ROLES,
+  NFT_BASE_CONTRACT_ROLES,
+  PACK_CONTRACT_ROLES,
+  TOKEN_DROP_CONTRACT_ROLES,
+} from "./contractRoles";
+
+const prebuiltContractTypes = {
+  vote: "vote",
+  token: "token",
+  "edition-drop": "edition-drop",
+  edition: "edition",
+  marketplace: "marketplace",
+  "marketplace-v3": "marketplace-v3",
+  multiwrap: "multiwrap",
+  "nft-collection": "nft-collection",
+  "nft-drop": "nft-drop",
+  pack: "pack",
+  "signature-drop": "signature-drop",
+  split: "split",
+  "token-drop": "token-drop",
+} as const;
+
+export type PrebuiltContractType = keyof typeof prebuiltContractTypes;
 
 type InitalizeParams = [
   network: NetworkInput,
@@ -40,9 +59,9 @@ type InitalizeParams = [
 
 export const EditionDropInitializer = {
   name: "DropERC1155" as const,
-  contractType: "edition-drop" as const,
+  contractType: prebuiltContractTypes["edition-drop"],
   schema: DropErc1155ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -64,7 +83,7 @@ export const EditionDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -86,9 +105,9 @@ export const EditionDropInitializer = {
 
 export const EditionInitializer = {
   name: "TokenERC1155" as const,
-  contractType: "edition" as const,
+  contractType: prebuiltContractTypes["edition"],
   schema: TokenErc1155ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -110,7 +129,7 @@ export const EditionInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -126,9 +145,9 @@ export const EditionInitializer = {
 
 export const MarketplaceInitializer = {
   name: "Marketplace" as const,
-  contractType: "marketplace" as const,
+  contractType: prebuiltContractTypes.marketplace,
   schema: MarketplaceContractSchema,
-  roles: ["admin", "lister", "asset"] as const,
+  roles: MARKETPLACE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -150,7 +169,7 @@ export const MarketplaceInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -167,9 +186,9 @@ export const MarketplaceInitializer = {
 
 export const MarketplaceV3Initializer = {
   name: "MarketplaceV3" as const,
-  contractType: "marketplace-v3" as const,
+  contractType: prebuiltContractTypes["marketplace-v3"],
   schema: MarketplaceContractSchema,
-  roles: ["admin", "lister", "asset"] as const,
+  roles: MARKETPLACE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -191,7 +210,7 @@ export const MarketplaceV3Initializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const chainId = (await provider.getNetwork()).chainId;
@@ -227,9 +246,9 @@ export const MarketplaceV3Initializer = {
 
 export const MultiwrapInitializer = {
   name: "Multiwrap" as const,
-  contractType: "multiwrap" as const,
+  contractType: prebuiltContractTypes.multiwrap,
   schema: MultiwrapContractSchema,
-  roles: ["admin", "transfer", "minter", "unwrap", "asset"] as const,
+  roles: MULTIWRAP_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -251,7 +270,7 @@ export const MultiwrapInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -266,9 +285,9 @@ export const MultiwrapInitializer = {
 
 export const NFTCollectionInitializer = {
   name: "TokenERC721" as const,
-  contractType: "nft-collection" as const,
+  contractType: prebuiltContractTypes["nft-collection"],
   schema: TokenErc721ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: NFT_BASE_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -291,7 +310,7 @@ export const NFTCollectionInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -307,9 +326,9 @@ export const NFTCollectionInitializer = {
 
 export const NFTDropInitializer = {
   name: "DropERC721" as const,
-  contractType: "nft-drop" as const,
+  contractType: prebuiltContractTypes["nft-drop"],
   schema: DropErc721ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -331,7 +350,7 @@ export const NFTDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -353,9 +372,9 @@ export const NFTDropInitializer = {
 
 export const PackInitializer = {
   name: "Pack" as const,
-  contractType: "pack" as const,
+  contractType: prebuiltContractTypes["pack"],
   schema: PackContractSchema,
-  roles: ["admin", "minter", "asset", "transfer"] as const,
+  roles: PACK_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -378,7 +397,7 @@ export const PackInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ): Promise<Abi> => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -395,9 +414,9 @@ export const PackInitializer = {
 
 export const SignatureDropInitializer = {
   name: "SignatureDrop" as const,
-  contractType: "signature-drop" as const,
+  contractType: prebuiltContractTypes["signature-drop"],
   schema: DropErc721ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: NFT_BASE_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -420,7 +439,7 @@ export const SignatureDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -445,9 +464,9 @@ export const SignatureDropInitializer = {
 
 export const SplitInitializer = {
   name: "Split" as const,
-  contractType: "split" as const,
+  contractType: prebuiltContractTypes["split"],
   schema: SplitsContractSchema,
-  roles: ["admin"] as const,
+  roles: ADMIN_ROLE,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -470,7 +489,7 @@ export const SplitInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -485,9 +504,9 @@ export const SplitInitializer = {
 
 export const TokenDropInitializer = {
   name: "DropERC20" as const,
-  contractType: "token-drop" as const,
+  contractType: prebuiltContractTypes["token-drop"],
   schema: DropErc20ContractSchema,
-  roles: ["admin", "transfer"] as const,
+  roles: TOKEN_DROP_CONTRACT_ROLES,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -510,7 +529,7 @@ export const TokenDropInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -529,9 +548,9 @@ export const TokenDropInitializer = {
 
 export const TokenInitializer = {
   name: "TokenERC20" as const,
-  contractType: "token" as const,
+  contractType: prebuiltContractTypes.token,
   schema: TokenErc20ContractSchema,
-  roles: ["admin", "minter", "transfer"] as const,
+  roles: NFT_BASE_CONTRACT_ROLES,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -553,7 +572,7 @@ export const TokenInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -569,7 +588,7 @@ export const TokenInitializer = {
 
 export const VoteInitializer = {
   name: "VoteERC20" as const,
-  contractType: "vote" as const,
+  contractType: prebuiltContractTypes.vote,
   schema: VoteContractSchema,
   roles: [] as const,
 
@@ -594,7 +613,7 @@ export const VoteInitializer = {
   },
   getAbi: async (
     address: Address,
-    provider: ethers.providers.Provider,
+    provider: providers.Provider,
     storage: ThirdwebStorage,
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
@@ -607,10 +626,7 @@ export const VoteInitializer = {
   },
 };
 
-async function getContractInfo(
-  address: Address,
-  provider: ethers.providers.Provider,
-) {
+async function getContractInfo(address: Address, provider: providers.Provider) {
   try {
     return await getPrebuiltInfo(address, provider);
   } catch (e) {
@@ -622,42 +638,42 @@ async function getContractInfo(
  * a map from contractType -> contract metadata
  * @internal
  */
-export const PREBUILT_CONTRACTS_MAP = {
-  [EditionDropInitializer.contractType]: EditionDropInitializer,
-  [EditionInitializer.contractType]: EditionInitializer,
-  [MarketplaceInitializer.contractType]: MarketplaceInitializer,
-  [MarketplaceV3Initializer.contractType]: MarketplaceV3Initializer,
-  [MultiwrapInitializer.contractType]: MultiwrapInitializer,
-  [NFTCollectionInitializer.contractType]: NFTCollectionInitializer,
-  [NFTDropInitializer.contractType]: NFTDropInitializer,
-  [PackInitializer.contractType]: PackInitializer,
-  [SignatureDropInitializer.contractType]: SignatureDropInitializer,
-  [SplitInitializer.contractType]: SplitInitializer,
-  [TokenDropInitializer.contractType]: TokenDropInitializer,
-  [TokenInitializer.contractType]: TokenInitializer,
-  [VoteInitializer.contractType]: VoteInitializer,
+export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
+  [prebuiltContractTypes["edition-drop"]]: EditionDropInitializer,
+  [prebuiltContractTypes.edition]: EditionInitializer,
+  [prebuiltContractTypes.marketplace]: MarketplaceInitializer,
+  [prebuiltContractTypes["marketplace-v3"]]: MarketplaceV3Initializer,
+  [prebuiltContractTypes.multiwrap]: MultiwrapInitializer,
+  [prebuiltContractTypes["nft-collection"]]: NFTCollectionInitializer,
+  [prebuiltContractTypes["nft-drop"]]: NFTDropInitializer,
+  [prebuiltContractTypes.pack]: PackInitializer,
+  [prebuiltContractTypes["signature-drop"]]: SignatureDropInitializer,
+  [prebuiltContractTypes.split]: SplitInitializer,
+  [prebuiltContractTypes["token-drop"]]: TokenDropInitializer,
+  [prebuiltContractTypes.token]: TokenInitializer,
+  [prebuiltContractTypes.vote]: VoteInitializer,
 } as const;
 
-export const PREBUILT_CONTRACTS_APPURI_MAP = {
-  [EditionDropInitializer.contractType]:
+export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
+  [prebuiltContractTypes["edition-drop"]]:
     "ipfs://QmNm3wRzpKYWo1SRtJfgfxtvudp5p2nXD6EttcsQJHwTmk",
-  [EditionInitializer.contractType]: "",
-  [MarketplaceInitializer.contractType]:
+  [prebuiltContractTypes.edition]: "",
+  [prebuiltContractTypes.marketplace]:
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace.html",
-  [MarketplaceV3Initializer.contractType]:
+  [prebuiltContractTypes["marketplace-v3"]]:
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/marketplace-v3.html",
-  [MultiwrapInitializer.contractType]: "",
-  [NFTCollectionInitializer.contractType]: "",
-  [NFTDropInitializer.contractType]:
+  [prebuiltContractTypes.multiwrap]: "",
+  [prebuiltContractTypes["nft-collection"]]: "",
+  [prebuiltContractTypes["nft-drop"]]:
     "ipfs://QmZptmVipc6SGFbKAyXcxGgohzTwYRXZ9LauRX5ite1xDK",
-  [PackInitializer.contractType]: "",
-  [SignatureDropInitializer.contractType]:
+  [prebuiltContractTypes.pack]: "",
+  [prebuiltContractTypes["signature-drop"]]:
     "ipfs://QmZptmVipc6SGFbKAyXcxGgohzTwYRXZ9LauRX5ite1xDK",
-  [SplitInitializer.contractType]: "",
-  [TokenDropInitializer.contractType]:
+  [prebuiltContractTypes.split]: "",
+  [prebuiltContractTypes["token-drop"]]:
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc20.html",
-  [TokenInitializer.contractType]: "",
-  [VoteInitializer.contractType]: "",
+  [prebuiltContractTypes.token]: "",
+  [prebuiltContractTypes.vote]: "",
 } as const;
 
 const SmartContract = {
@@ -667,7 +683,7 @@ const SmartContract = {
   roles: ALL_ROLES,
 };
 
-export const CONTRACTS_MAP = {
+export const CONTRACTS_MAP = /* @__PURE__ */ {
   ...PREBUILT_CONTRACTS_MAP,
   [SmartContract.contractType]: SmartContract,
 } as const;
@@ -689,3 +705,29 @@ export function getContractName(
     (contract) => contract.contractType === type,
   )?.name;
 }
+
+export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
+export type PrebuiltContractsInstances = {
+  [K in keyof PrebuiltContractsMap]: Awaited<
+    ReturnType<(typeof PREBUILT_CONTRACTS_MAP)[K]["initialize"]>
+  >;
+};
+
+export type ContractsMap = typeof CONTRACTS_MAP;
+
+export type ValidContractInstance =
+  | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
+  | SmartContractType;
+
+export type SchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsMap[TContractType]["schema"];
+
+export type ContractForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsInstances[TContractType];
+
+export type ContractType = keyof ContractsMap;
+export type DeploySchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = SchemaForPrebuiltContractType<TContractType>["deploy"];

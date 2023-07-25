@@ -1,8 +1,7 @@
-import { EventType } from "../../constants";
-import { ContractEvent, EventQueryOptions } from "../../types";
+import { EventType } from "../../constants/events";
+import type { ContractEvent, EventQueryOptions } from "../../types/events";
 import { ContractWrapper } from "./contract-wrapper";
-import type { BaseContract, Event, providers } from "ethers";
-import type { EventFragment } from "ethers/lib/utils.js";
+import type { BaseContract, Event, providers, utils } from "ethers";
 import type { EventEmitter } from "eventemitter3";
 
 /**
@@ -325,7 +324,7 @@ export class ContractEvents<TContract extends BaseContract> {
   }
 
   private toContractEvent<TEvent extends Record<string, any>>(
-    event: EventFragment,
+    event: utils.EventFragment,
     args: ReadonlyArray<any>,
     rawLog: providers.Log,
   ): ContractEvent<TEvent> {

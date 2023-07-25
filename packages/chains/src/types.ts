@@ -56,4 +56,5 @@ export type MinimalChain = Pick<
   | "chainId"
   | "testnet"
   | "slug"
+  | "icon"
 >;

@@ -3,10 +3,10 @@ import {
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -24,7 +24,8 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Address, AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -32,6 +33,7 @@ import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -48,7 +50,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public encoder: ContractEncoder<PrebuiltNFTDrop>;
@@ -166,6 +168,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -374,7 +377,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -426,7 +429,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       quantity: BigNumberish,
@@ -445,7 +448,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       quantity: BigNumberish,
       checkERC20Allowance = true,
@@ -469,9 +472,11 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * ```
    *
    */
-  burn = buildTransactionFunction(async (tokenId: BigNumberish) => {
-    return this.erc721.burn.prepare(tokenId);
-  });
+  burn = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return this.erc721.burn.prepare(tokenId);
+    },
+  );
 
   /******************************
    * STANDARD ERC721 FUNCTIONS
@@ -549,7 +554,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * await contract.transfer(walletAddress, tokenId);
    * ```
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, tokenId: BigNumberish) => {
       return this.erc721.transfer.prepare(to, tokenId);
     },
@@ -562,7 +567,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForAll = buildTransactionFunction(
+  setApprovalForAll = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, approved: boolean) => {
       return this.erc721.setApprovalForAll.prepare(operator, approved);
     },
@@ -575,7 +580,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    *
    * @internal
    */
-  setApprovalForToken = buildTransactionFunction(
+  setApprovalForToken = /* @__PURE__ */ buildTransactionFunction(
     async (operator: AddressOrEns, tokenId: BigNumberish) => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -589,7 +594,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+    TMethod extends
+      keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltNFTDrop["functions"][TMethod]>,
@@ -610,7 +616,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+    TMethod extends
+      keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltNFTDrop["functions"][TMethod]>,

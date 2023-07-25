@@ -54,6 +54,8 @@ for (const file of additionalChainsFiles) {
   const additionalChain = await import(
     path.join("file://", additionalChainsDir, file)
   );
+
+  chains = chains.filter((c) => c.chainId !== additionalChain.default.chainId);
   chains.push(additionalChain.default);
 }
 
@@ -77,6 +79,33 @@ chains = chains
       testnet,
     };
   });
+
+/**
+ * Sort RPCs in chain
+ * @param {Chain} chain
+ */
+function sortRPCs(chain) {
+  const thirdwebRPCs = [];
+  const alchemyRPCs = [];
+  const infuraRPCs = [];
+  const otherRPCs = [];
+
+  chain.rpc.forEach((rpc) => {
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      thirdwebRPCs.push(rpc);
+    } else if (rpc.includes("${ALCHEMY_API_KEY}")) {
+      alchemyRPCs.push(rpc);
+    } else if (rpc.includes("${INFURA_API_KEY}")) {
+      infuraRPCs.push(rpc);
+    } else {
+      otherRPCs.push(rpc);
+    }
+  });
+
+  chain.rpc = [...thirdwebRPCs, ...infuraRPCs, ...alchemyRPCs, ...otherRPCs];
+}
+
+chains.forEach(sortRPCs);
 
 const imports = [];
 const exports = [];
@@ -135,14 +164,18 @@ function findSlug(chain) {
   if (slug === "arbitrum-one") {
     slug = "arbitrum";
   }
-  if (slug === "binance-smart-chain") {
+  if (slug === "bnb-smart-chain") {
     slug = "binance";
   }
-  if (slug === "binance-smart-chain-testnet") {
+  if (slug === "bnb-smart-chain-testnet") {
     slug = "binance-testnet";
   }
   if (slug === "base-goerli-testnet") {
     slug = "base-goerli";
+  }
+  // optimisim rename handling
+  if (slug === "op") {
+    slug = "optimism";
   }
   // end special cases
 
@@ -234,7 +267,7 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
-export const defaultChains = [c1, c5, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
+export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
 export const allChains: Chain[] = [${exportNames.join(", ")}];
 
 type ChainsById = {

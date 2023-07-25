@@ -16,7 +16,7 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { isMobile } from "../../evm/utils/isMobile";
-import { NetworkSelector, NetworkSelectorProps } from "./NetworkSelector";
+import { NetworkSelector, type NetworkSelectorProps } from "./NetworkSelector";
 import { ExitIcon } from "./icons/ExitIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -41,13 +41,14 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
-import { LocalWallet, MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
+import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Flex } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
+import type { LocalWalletConfig } from "../wallets/localWallet/types";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -107,6 +108,7 @@ export const ConnectedWalletDetails: React.FC<{
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
       data-theme={props.theme}
       style={props.style}
+      data-test="connected-wallet-details"
     >
       <ChainIcon
         chain={chain}
@@ -117,7 +119,7 @@ export const ConnectedWalletDetails: React.FC<{
       <ColFlex>
         {balanceQuery.data ? (
           <WalletBalance className={`${TW_CONNECTED_WALLET}__balance`}>
-            {balanceQuery.data.displayValue.slice(0, 5)}{" "}
+            {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
             {balanceQuery.data.symbol}
           </WalletBalance>
         ) : (
@@ -213,6 +215,8 @@ export const ConnectedWalletDetails: React.FC<{
                 gap: spacing.xs,
                 alignItems: "center",
               }}
+              data-test="connected-wallet-address"
+              data-address={address}
             >
               <AccountAddress> {shortenString(address || "")}</AccountAddress>
               <IconButton
@@ -220,6 +224,7 @@ export const ConnectedWalletDetails: React.FC<{
                 style={{
                   padding: "3px",
                 }}
+                data-test="copy-address"
               >
                 <CopyIcon
                   text={address || ""}
@@ -251,7 +256,11 @@ export const ConnectedWalletDetails: React.FC<{
           {/* row 2 */}
           <AccountBalance>
             {" "}
-            {balanceQuery.data?.displayValue.slice(0, 5)}{" "}
+            {balanceQuery.data ? (
+              Number(balanceQuery.data.displayValue).toFixed(3)
+            ) : (
+              <Skeleton height="1em" width="100px" />
+            )}{" "}
             {balanceQuery.data?.symbol}{" "}
           </AccountBalance>
         </div>
@@ -295,7 +304,8 @@ export const ConnectedWalletDetails: React.FC<{
         {activeWalletConfig &&
           activeWalletConfig.id === walletIds.metamask &&
           activeWalletConfig.isInstalled &&
-          activeWalletConfig.isInstalled() && (
+          activeWalletConfig.isInstalled() &&
+          !isMobile() && (
             <MenuButton
               type="button"
               onClick={() => {
@@ -424,7 +434,7 @@ export const ConnectedWalletDetails: React.FC<{
           }}
         >
           <ExportLocalWallet
-            localWallet={activeWallet as LocalWallet}
+            localWalletConfig={activeWalletConfig as LocalWalletConfig}
             onBack={() => {
               setShowExportModal(false);
             }}
@@ -449,7 +459,9 @@ const dropdownContentFade = keyframes`
   }
 `;
 
-const DropDownContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
+const DropDownContent = /* @__PURE__ */ styled(
+  /* @__PURE__ */ DropdownMenu.Content,
+)<{ theme?: Theme }>`
   width: 360px;
   box-sizing: border-box;
   max-width: 100%;
@@ -548,7 +560,9 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   line-height: 1.3;
 
   &:not([disabled]):hover {
-    transition: box-shadow 250ms ease, border-color 250ms ease;
+    transition:
+      box-shadow 250ms ease,
+      border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.link.primary};
     box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
   }
@@ -561,25 +575,33 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 
   &[disabled]:hover {
-    transition: box-shadow 250ms ease, border-color 250ms ease;
+    transition:
+      box-shadow 250ms ease,
+      border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.text.danger};
     box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
   }
 `;
 
-const MenuLink = MenuButton.withComponent("a");
+const MenuLink = /* @__PURE__ */ MenuButton.withComponent("a");
 
-export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
+export const DropdownMenuItem = /* @__PURE__ */ styled(
+  /* @__PURE__ */ DropdownMenu.Item,
+)<{ theme?: Theme }>`
   outline: none;
 `;
 
-export const StyledChevronRightIcon = styled(ChevronRightIcon)<{
+export const StyledChevronRightIcon = /* @__PURE__ */ styled(
+  /* @__PURE__ */ ChevronRightIcon,
+)<{
   theme?: Theme;
 }>`
   color: ${(props) => props.theme.text.secondary};
 `;
 
-const DisconnectIconButton = styled(IconButton)<{ theme?: Theme }>`
+const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
+  theme?: Theme;
+}>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
   color: ${(props) => props.theme.icon.secondary};

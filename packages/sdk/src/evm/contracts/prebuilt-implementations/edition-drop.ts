@@ -1,8 +1,8 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -20,13 +20,15 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { Address, AddressOrEns } from "../../schema";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -43,7 +45,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
-  private static contractRoles = ["admin", "minter", "transfer"] as const;
+  private static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public sales: ContractPrimarySale<PrebuiltEditionDrop>;
@@ -129,6 +131,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -267,7 +270,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  createBatch = buildTransactionFunction(
+  createBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: NFTMetadataOrUri[],
       options?: {
@@ -326,7 +329,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  claimTo = buildTransactionFunction(
+  claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       destinationAddress: AddressOrEns,
       tokenId: BigNumberish,
@@ -356,7 +359,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns - Receipt for the transaction
    */
-  claim = buildTransactionFunction(
+  claim = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       quantity: BigNumberish,
@@ -383,7 +386,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  burnTokens = buildTransactionFunction(
+  burnTokens = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       return this.erc1155.burn.prepare(tokenId, amount);
     },
@@ -393,7 +396,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+    TMethod extends
+      keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
@@ -411,7 +415,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+    TMethod extends
+      keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltEditionDrop["functions"][TMethod]>,

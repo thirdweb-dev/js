@@ -1,7 +1,7 @@
-import { providers } from "ethers";
-import { resolveProperties } from "ethers/lib/utils";
+import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
+import { isTwUrl } from "../../../utils/url";
 
 const DEBUG = false;
 
@@ -17,17 +17,41 @@ export class HttpRpcClient {
     bundlerUrl: string,
     entryPointAddress: string,
     chainId: number,
-    apiKey: string,
+    clientId?: string,
+    secretKey?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
     this.chainId = chainId;
+
+    const headers: Record<string, string> = {};
+
+    if (isTwUrl(this.bundlerUrl)) {
+      if (secretKey && clientId) {
+        throw new Error(
+          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+        );
+      }
+
+      if (secretKey) {
+        headers["x-secret-key"] = secretKey;
+      } else if (clientId) {
+        headers["x-client-id"] = clientId;
+
+        if (
+          typeof globalThis !== "undefined" &&
+          "APP_BUNDLE_ID" in globalThis
+        ) {
+          // @ts-ignore
+          headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+        }
+      }
+    }
+
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
       {
         url: this.bundlerUrl,
-        headers: {
-          "x-api-key": apiKey,
-        },
+        headers,
       },
       {
         name: "Connected bundler network",
@@ -55,7 +79,7 @@ export class HttpRpcClient {
    */
   async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -71,7 +95,7 @@ export class HttpRpcClient {
     userOp1: Partial<UserOperationStruct>,
   ): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -93,7 +117,7 @@ export class HttpRpcClient {
     if (!DEBUG) {
       return;
     }
-    const userOp = await resolveProperties(userOp1);
+    const userOp = await utils.resolveProperties(userOp1);
     console.debug(
       "sending",
       method,

@@ -1,18 +1,20 @@
 import { NFT } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens";
-import { uploadOrExtractURIs } from "../../common/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
-import { AddressOrEns, EditionMetadataOrUri } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc1155 } from "./erc-1155";
 import { Transaction } from "./transactions";
-import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
+import type { IMintableERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { constants } from "ethers";
+import { uploadOrExtractURIs } from "../../common/nft";
+import type { IMulticall } from "@thirdweb-dev/contracts-js";
+import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
+import type { Erc1155 } from "./erc-1155";
 
 /**
  * Mint Many ERC1155 NFTs at once
@@ -24,6 +26,7 @@ import { ethers } from "ethers";
  * ```
  * @public
  */
+
 export class Erc1155BatchMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
@@ -73,7 +76,7 @@ export class Erc1155BatchMintable implements DetectableFeature {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
@@ -86,12 +89,7 @@ export class Erc1155BatchMintable implements DetectableFeature {
         uris.map(async (uri, index) =>
           this.contractWrapper.readContract.interface.encodeFunctionData(
             "mintTo",
-            [
-              resolvedAddress,
-              ethers.constants.MaxUint256,
-              uri,
-              supplies[index],
-            ],
+            [resolvedAddress, constants.MaxUint256, uri, supplies[index]],
           ),
         ),
       );

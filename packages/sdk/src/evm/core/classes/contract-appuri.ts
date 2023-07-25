@@ -1,4 +1,4 @@
-import { detectContractFeature } from "../../common";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_APPURI } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -61,7 +61,7 @@ export class ContractAppURI<TContract extends BaseContract>
 
     return replaceGatewayUrlWithScheme(
       (await this.metadata.get()).app_uri || "",
-      this.storage.gatewayUrls,
+      this.storage.getGatewayUrls(),
     );
   }
 
@@ -75,7 +75,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * ```
    * @twfeature AppURI
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (appURI: string): Promise<Transaction<TransactionResult>> => {
       if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
         return Transaction.fromContractWrapper({

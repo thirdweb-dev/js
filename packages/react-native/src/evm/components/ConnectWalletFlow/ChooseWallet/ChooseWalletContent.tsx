@@ -2,11 +2,13 @@ import { useMemo } from "react";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { StyleSheet, View, FlatList } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
+import Box from "../../base/Box";
+import { useTheme } from "@shopify/restyle";
 
 interface ChooseWalletContentProps {
   wallets: WalletConfig[];
   excludeWalletIds?: string[];
-  onChooseWallet: (wallet: WalletConfig) => void;
+  onChooseWallet: (wallet: WalletConfig, data?: any) => void;
 }
 
 export const ChooseWalletContent = ({
@@ -19,6 +21,7 @@ export const ChooseWalletContent = ({
       (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
     );
   }, [wallets, excludeWalletIds]);
+  const theme = useTheme();
 
   return (
     <View style={styles.explorerContainer}>
@@ -28,13 +31,35 @@ export const ChooseWalletContent = ({
         renderItem={({ item, index }) => {
           const marginBottom =
             index === walletsToDisplay.length - 1 ? "none" : "xxs";
+
           return (
-            <WalletButton
-              walletIconUrl={item.meta.iconURL}
-              name={item.meta.name}
-              onPress={() => onChooseWallet(item)}
-              mb={marginBottom}
-            />
+            <>
+              {item.selectUI ? (
+                <Box
+                  mb={marginBottom}
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderRadius="sm"
+                >
+                  <item.selectUI
+                    theme={theme}
+                    supportedWallets={wallets}
+                    onSelect={(data) => {
+                      onChooseWallet(item, data);
+                    }}
+                    walletConfig={item}
+                  />
+                </Box>
+              ) : (
+                <WalletButton
+                  walletIconUrl={item.meta.iconURL}
+                  name={item.meta.name}
+                  onPress={() => onChooseWallet(item)}
+                  mb={marginBottom}
+                />
+              )}
+            </>
           );
         }}
       />

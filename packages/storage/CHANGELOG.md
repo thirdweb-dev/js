@@ -1,5 +1,86 @@
 # @thirdweb-dev/storage
 
+## 1.2.0
+
+### Minor Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // if used on the frontend pass the `clientId`
+  const storage = new ThirdwebStorage({
+    clientId: "your-client-id",
+  });
+
+  // if used on the backend pass the `secretKey`
+  const storage = new ThirdwebStorage({
+    secretKey: "your-secret-key",
+  });
+  ```
+
+### Patch Changes
+
+- [#1362](https://github.com/thirdweb-dev/js/pull/1362) [`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298) Thanks [@iketw](https://github.com/iketw)! - Correctly pass clientId in storage
+
+## 1.1.9
+
+### Patch Changes
+
+- [#1338](https://github.com/thirdweb-dev/js/pull/1338) [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b) Thanks [@jnsdls](https://github.com/jnsdls)! - no longer check if file exists on gateway before uploading, always upload
+
+## 1.1.8
+
+### Patch Changes
+
+- [#1314](https://github.com/thirdweb-dev/js/pull/1314) [`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0) Thanks [@iketw](https://github.com/iketw)! - Passes API key to thirdweb storage ipfs uploader
+
+  If you want to use thirdweb's storage upload services you need to pass an API key.
+  You can grab one from: https://thirdweb.com/dashboard/settings
+
+  If using ThirdwebStorage directly:
+
+  ```javascript
+  new ThirdwebStorage({
+      apiKey: <yourApiKey>,
+  });
+  ```
+
+## 1.1.7
+
+### Patch Changes
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
+## 1.1.6
+
+### Patch Changes
+
+- [#1286](https://github.com/thirdweb-dev/js/pull/1286) [`2d088d36`](https://github.com/thirdweb-dev/js/commit/2d088d367ca54233836dc69712fd411ab7924205) Thanks [@jnsdls](https://github.com/jnsdls)! - fix double `//` case
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1232](https://github.com/thirdweb-dev/js/pull/1232) [`9daf0449`](https://github.com/thirdweb-dev/js/commit/9daf044926bf995ac8998929dbeca548c5eb8561) Thanks [@nessup](https://github.com/nessup)! - Switch over to the new `ipfs.thirdweb-storage.com` public gateway.
+  Better fallback logic for if a gateway is down.
+  Faster loading of files from the default gateway by skipping a roundtrip to redirect.
+
+- [#1285](https://github.com/thirdweb-dev/js/pull/1285) [`546353a4`](https://github.com/thirdweb-dev/js/commit/546353a479c11533818ef917c0f6b4d6f8f69872) Thanks [@jnsdls](https://github.com/jnsdls)! - add additional fallback gateways
+
+- [#1287](https://github.com/thirdweb-dev/js/pull/1287) [`0135a779`](https://github.com/thirdweb-dev/js/commit/0135a7790cf2acde6b701cb41ea10dd311da5ec3) Thanks [@jnsdls](https://github.com/jnsdls)! - fix uploaded-check
+
+## 1.1.5
+
+### Patch Changes
+
+- [#1246](https://github.com/thirdweb-dev/js/pull/1246) [`0c5b03b8`](https://github.com/thirdweb-dev/js/commit/0c5b03b8d6cc6a4e69bb2a4647d3626e69f1283c) Thanks [@nessup](https://github.com/nessup)! - Remove the ipfs-2 gateway due to connectivity errors that seem to happen with certain ISPs
+
+## 1.1.4
+
+### Patch Changes
+
+- [#1098](https://github.com/thirdweb-dev/js/pull/1098) [`67450789`](https://github.com/thirdweb-dev/js/commit/67450789473b6008b86453ee4f4c7b99461223a6) Thanks [@MananTank](https://github.com/MananTank)! - add sideEffects: false in package.json
+
 ## 1.1.3
 
 ### Patch Changes

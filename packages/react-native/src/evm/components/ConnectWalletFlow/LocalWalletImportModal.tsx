@@ -10,41 +10,39 @@ import Box from "../base/Box";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
 import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { PasswordInput } from "../PasswordInput";
-import type {
-  LocalConfiguredWallet,
-  LocalWalletInstance,
-} from "../../wallets/types/local-wallet";
+import type { LocalWalletInstance } from "../../wallets/types/local-wallet";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { TWModal } from "../base/modal/TWModal";
+import { localWallet } from "../../wallets/wallets/local-wallet";
+import { TextInput } from "../base";
+import { useAppTheme } from "../../styles/hooks";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
   onClose: () => void;
-  localWallet: LocalConfiguredWallet;
   onWalletImported: (wallet: LocalWalletInstance) => void;
 };
 
 export const LocalWalletImportModal = ({
   isVisible,
   onClose,
-  localWallet,
   onWalletImported,
 }: LocalWalletImportModalProps) => {
   const [password, setPassword] = useState<string | undefined>();
+  const [privateKeyOrMnemonic, setPrivateKeyOrMnemonic] = useState<
+    string | undefined
+  >(undefined);
   const [jsonFile, setJsonFile] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
+  const theme = useAppTheme();
 
-  const onImportPress = async () => {
-    setError(undefined);
-    if (!password || !jsonFile) {
-      setError("Please enter a password and select a file.");
-      return;
+  const createLocalWalletFromJsonFile = async () => {
+    if (!jsonFile || !password) {
+      return null;
     }
-
-    setIsImporting(true);
 
     let json;
     try {
@@ -52,12 +50,10 @@ export const LocalWalletImportModal = ({
         encoding: FileSystem.EncodingType.UTF8,
       });
     } catch (err) {
-      setError("Error reading the file. Please try again.");
-      setIsImporting(false);
-      return;
+      return null;
     }
 
-    const localWalletInstance = createWalletInstance(localWallet);
+    const localWalletInstance = createWalletInstance(localWallet());
 
     try {
       await localWalletInstance.import({
@@ -66,20 +62,66 @@ export const LocalWalletImportModal = ({
       });
     } catch (err) {
       console.error("Error importing the wallet", err);
-      setError("Invalid password");
-      setIsImporting(false);
-      return;
+      return null;
     }
 
-    localWalletInstance.save({
-      strategy: "privateKey",
-      encryption: false,
-    });
+    return localWalletInstance;
+  };
 
-    onWalletImported(localWalletInstance);
+  const createLocalWalletPK = async () => {
+    if (!privateKeyOrMnemonic) {
+      return null;
+    }
 
-    setIsImporting(false);
-    onCloseInternal();
+    const localWalletInstance = createWalletInstance(localWallet());
+
+    try {
+      if (privateKeyOrMnemonic.indexOf(" ") === -1) {
+        await localWalletInstance.import({
+          privateKey: privateKeyOrMnemonic,
+          encryption: false,
+        });
+      } else {
+        await localWalletInstance.import({
+          mnemonic: privateKeyOrMnemonic,
+          encryption: false,
+        });
+      }
+    } catch (err) {
+      console.error("Error importing the wallet", err);
+      return null;
+    }
+
+    return localWalletInstance;
+  };
+
+  const onImportPress = async () => {
+    setError(undefined);
+    setIsImporting(true);
+
+    setTimeout(async () => {
+      let localWalletInstance = await createLocalWalletFromJsonFile();
+
+      if (!localWalletInstance) {
+        localWalletInstance = await createLocalWalletPK();
+      }
+
+      if (!localWalletInstance) {
+        setError("Please, double check your password or private key.");
+        setIsImporting(false);
+        return;
+      }
+
+      localWalletInstance.save({
+        strategy: "privateKey",
+        encryption: false,
+      });
+
+      onWalletImported(localWalletInstance);
+
+      setIsImporting(false);
+      onCloseInternal();
+    }, 0);
   };
 
   const onCloseInternal = () => {
@@ -107,6 +149,10 @@ export const LocalWalletImportModal = ({
     } else {
       setError("Error accessing the file. Please try again.");
     }
+  };
+
+  const onPrivateKeyEntered = (text: string) => {
+    setPrivateKeyOrMnemonic(text);
   };
 
   return (
@@ -146,6 +192,15 @@ export const LocalWalletImportModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
+          <Text variant="bodySmall" m="xs" textAlign="center">
+            ---- Or Private key or Mnemonic ----
+          </Text>
+          <TextInput
+            secureTextEntry={true}
+            placeholder={"Private key / Mnemonic"}
+            placeholderTextColor={theme.colors.textSecondary}
+            onChangeText={onPrivateKeyEntered}
+          />
           <Box
             flexDirection="row"
             justifyContent="center"

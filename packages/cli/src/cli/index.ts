@@ -1,30 +1,34 @@
 #!/usr/bin/env node
-import { detectExtensions } from "../common/feature-detector";
-import { detectProjectV2 } from "../common/project-detector-v2";
-import { processProject } from "../common/processor";
-import { cliVersion, pkg } from "../constants/urls";
-import { info, logger, spinner } from "../core/helpers/logger";
-import { CacheEntry } from "../core/types/cache";
-import { twCreate } from "../create/command";
-import { deploy } from "../deploy";
-import { generate } from "../generate/command";
-import { findPackageInstallation } from "../helpers/detect-local-packages";
-import { install } from "../install/command";
-import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { exec, spawn } from "child_process";
 import { Command } from "commander";
 import open from "open";
+import os from "os";
+import path from "path";
 import prompts from "prompts";
-import Cache from "sync-disk-cache";
+import Cache, { CacheEntry } from "sync-disk-cache";
+import { loginUser, logoutUser, validateKey } from "../auth";
+import { detectExtensions } from "../common/feature-detector";
+import { processProject } from "../common/processor";
+import { detectProject } from "../common/project-detector";
+import { cliVersion, pkg } from "../constants/urls";
+import { info, logger, spinner } from "../core/helpers/logger";
+import { twCreate } from "../create/command";
+import { deploy } from "../deploy";
+import { generate } from "../generate/command";
+import { findPackageInstallation } from "../helpers/detect-local-packages";
+import { install } from "../install";
+import { upload } from "../storage/command";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   const skipIntro = process.env.THIRDWEB_CLI_SKIP_INTRO === "true";
 
   const program = new Command();
-  const cache = new Cache("thirdweb:cli");
+  const cache = new Cache("thirdweb:cli", {
+    location: path.join(os.homedir(), ".thirdweb", "creds"),
+  });
 
   // yes this has to look like this, eliminates whitespace
   if (!skipIntro) {
@@ -204,8 +208,9 @@ const main = async () => {
     )
     .option("--nightly", "Install the nightly version of packages.")
     .option("--dev", "Install the dev version of packages")
-    .action(async (path, options) => {
-      await install(path, options);
+    .option("-d, --debug", "show debug logs")
+    .action(async (_path, options) => {
+      await install(_path, options);
     });
 
   program
@@ -245,8 +250,8 @@ const main = async () => {
       "-c, --contract-name [name]",
       "Name of the new smart contract to create",
     )
-    .action(async (type, path, options) => {
-      await twCreate(type, path, options);
+    .action(async (type, _path, options) => {
+      await twCreate(type, _path, options);
     });
 
   program
@@ -294,9 +299,19 @@ const main = async () => {
       "--dynamic",
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
+    .option("--zksync", "Deploy on ZKSync")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      const url = await deploy(options);
-      if (url) {
+      let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
+      if (!options.key) {
+        apiSecretKey = await loginUser(cache);
+      } else {
+        await validateKey(options.key);
+        apiSecretKey = options.key;
+      }
+      const url = await deploy(options, apiSecretKey);
+      if (url && !options.ci) {
         await open(url);
       }
     });
@@ -317,17 +332,28 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
+      let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
+      if (!options.key) {
+        apiSecretKey = await loginUser(cache);
+      } else {
+        await validateKey(options.key);
+        apiSecretKey = options.key;
+      }
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
-      const url = await processProject(options, "publish");
+      const url = await processProject(options, "publish", apiSecretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
         )}`,
       );
-      await open(url.toString());
+      if (url && !options.ci) {
+        await open(url.toString());
+      }
     });
 
   program
@@ -348,24 +374,46 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      const url = await processProject(options, "publish");
+      let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
+      if (!options.key) {
+        apiSecretKey = await loginUser(cache);
+      } else {
+        await validateKey(options.key);
+        apiSecretKey = options.key;
+      }
+      const url = await processProject(options, "publish", apiSecretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
         )}`,
       );
-      await open(url.toString());
+      if (url && !options.ci) {
+        await open(url.toString());
+      }
     });
 
   program
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .action(async (path) => {
-      const storage = new ThirdwebStorage();
+    .option("-k, --key <key>", "API key to authorize usage")
+    .action(async (_path, options) => {
+      let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
+      if (!options.key) {
+        apiSecretKey = await loginUser(cache);
+      } else {
+        await validateKey(options.key);
+        apiSecretKey = options.key;
+      }
+      const storage = new ThirdwebStorage({
+        secretKey: apiSecretKey,
+      });
       try {
-        const uri = await upload(storage, path);
+        const uri = await upload(storage, _path);
         info(
           `Files stored at the following IPFS URI: ${chalk.blueBright(
             uri.toString(),
@@ -398,24 +446,12 @@ const main = async () => {
   program
     .command("detect")
     .description(
-      "(deprecated) Compile contracts and detect implemented thirdweb contract extensions",
-    )
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("-d, --debug", "show debug logs")
-    .option("-a, --all", "run detection on all contracts")
-    .action(async (options) => {
-      await detectExtensions(options);
-    });
-
-  program
-    .command("detect-project")
-    .description(
       "Detect the type of project your are running and let you know what it is.",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
-      await detectProjectV2(options);
+      await detectProject(options);
     });
 
   program
@@ -424,8 +460,36 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      await generate(options);
+      let apiSecretKey = "";
+      // If no key is passed in, prompt the user to login. If it is passed in, use it.
+      if (!options.key) {
+        apiSecretKey = await loginUser(cache);
+      } else {
+        await validateKey(options.key);
+        apiSecretKey = options.key;
+      }
+      await generate(options, apiSecretKey);
+    });
+
+  program
+    .command("login")
+    .description(
+      "Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key",
+    )
+    .option("-n, --new", "Login with a new API secret key", false)
+    .action(async (options) => {
+      await loginUser(cache, options, true);
+    });
+
+  program
+    .command("logout")
+    .description(
+      "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
+    )
+    .action(async () => {
+      await logoutUser(cache);
     });
 
   await program.parseAsync();

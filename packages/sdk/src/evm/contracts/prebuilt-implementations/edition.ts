@@ -1,8 +1,8 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { getRoleHash } from "../../common";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ContractAppURI } from "../../core";
+import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -18,7 +18,8 @@ import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address, AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -26,6 +27,7 @@ import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -42,7 +44,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class Edition extends StandardErc1155<TokenERC1155> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<
@@ -110,6 +112,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -220,7 +223,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @remarks See {@link Edition.mintTo}
    */
-  mint = buildTransactionFunction(
+  mint = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadataWithSupply: EditionMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
@@ -256,7 +259,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  mintTo = buildTransactionFunction(
+  mintTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
@@ -286,7 +289,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
    */
-  mintAdditionalSupply = buildTransactionFunction(
+  mintAdditionalSupply = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenId: BigNumberish,
       additionalSupply: BigNumberish,
@@ -305,7 +308,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
    */
-  mintAdditionalSupplyTo = buildTransactionFunction(
+  mintAdditionalSupplyTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       tokenId: BigNumberish,
@@ -324,7 +327,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @remarks See {@link Edition.mintBatchTo}
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadatas: EditionMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
@@ -365,7 +368,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  mintBatchTo = buildTransactionFunction(
+  mintBatchTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri[],
@@ -385,7 +388,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  burn = buildTransactionFunction(
+  burn = /* @__PURE__ */ buildTransactionFunction(
     async (tokenId: BigNumberish, amount: BigNumberish) => {
       return this.erc1155.burn.prepare(tokenId, amount);
     },
@@ -395,7 +398,8 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
+    TMethod extends
+      keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<TokenERC1155["functions"][TMethod]>,
@@ -413,7 +417,8 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @internal
    */
   public async call<
-    TMethod extends keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
+    TMethod extends
+      keyof TokenERC1155["functions"] = keyof TokenERC1155["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<TokenERC1155["functions"][TMethod]>,

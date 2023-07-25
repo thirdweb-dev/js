@@ -1,4 +1,4 @@
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -15,13 +15,14 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
+  ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
+  ThirdwebSDK,
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
-import { DEFAULT_WALLET_API_KEY } from "../../constants/keys";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private config: SmartWalletConfig;
@@ -36,14 +37,15 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   async initialize(personalWallet: EVMWallet) {
     const config = this.config;
-    const chain =
-      typeof config.chain === "string"
-        ? config.chain
-        : (config.chain as Chain).slug;
+    const originalProvider = getChainProvider(config.chain, {
+      clientId: config.clientId,
+      secretKey: config.secretKey,
+    }) as providers.BaseProvider;
+    const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
-      this.config.bundlerUrl || `https://${chain}.bundler.thirdweb.com`;
+      this.config.bundlerUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const paymasterUrl =
-      this.config.paymasterUrl || `https://${chain}.bundler.thirdweb.com`;
+      this.config.paymasterUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
@@ -57,17 +59,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
           : getVerifyingPaymaster(
               paymasterUrl,
               entryPointAddress,
-              this.config.thirdwebApiKey,
+              this.config.clientId,
+              this.config.secretKey,
             )
         : undefined,
       factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
-      thirdwebApiKey: config.thirdwebApiKey,
+      clientId: config.clientId,
+      secretKey: config.secretKey,
     };
-    const originalProvider = getChainProvider(config.chain, {
-      thirdwebApiKey: config.thirdwebApiKey || DEFAULT_WALLET_API_KEY,
-    }) as providers.BaseProvider;
     this.personalWallet = personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = await create4337Provider(
@@ -87,14 +88,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   getProvider(): Promise<providers.Provider> {
     if (!this.aaProvider) {
-      throw new Error("Local Signer not connected");
+      throw new Error("Personal wallet not connected");
     }
     return Promise.resolve(this.aaProvider);
   }
 
   async getSigner(): Promise<ERC4337EthersSigner> {
     if (!this.aaProvider) {
-      throw new Error("Local Signer not connected");
+      throw new Error("Personal wallet not connected");
     }
     return Promise.resolve(this.aaProvider.getSigner());
   }
@@ -118,17 +119,46 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     this.aaProvider = undefined;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  switchChain(chainId: number): Promise<void> {
-    throw new Error("Not supported.");
-  }
-  setupListeners(): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateChains(chains: Chain[]): void {
-    // throw new Error("Method not implemented.");
+
+  async switchChain(chainId: number): Promise<void> {
+    // TODO implement chain switching
+    const provider = await this.getProvider();
+    const currentChainId = (await provider.getNetwork()).chainId;
+    if (currentChainId !== chainId) {
+      // only throw if actually trying to switch chains
+      throw new Error("Not supported.");
+    }
   }
 
+  setupListeners(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateChains(chains: Chain[]): void {}
+
+  /**
+   * Check whether the connected signer can execute a given transaction using the smart wallet.
+   * @param transaction the transaction to execute using the smart wallet.
+   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   */
+  async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
+    const accountContract = await this.getAccountContract();
+    const signer = await this.getSigner();
+    const signerAddress = await signer.getAddress();
+
+    const restrictions = await accountContract.account.getAccessRestrictions(
+      signerAddress,
+    );
+
+    return restrictions.approvedCallTargets.includes(transaction.getTarget());
+  }
+
+  /**
+   * Execute a single transaction
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const signer = await this.getSigner();
     const tx = await signer.sendTransaction({
@@ -142,10 +172,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * Execute multiple transactions in a single batch
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
     if (!this.accountApi) {
-      throw new Error("Account not connected");
+      throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
     const targets = transactions.map((tx) => tx.getTarget());
@@ -170,6 +204,91 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     };
   }
 
+  /**
+   * Manually deploy the smart wallet contract. If already deployed this will throw an error.
+   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @returns the transaction receipt
+   */
+  async deploy(): Promise<TransactionResult> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    if (await this.accountApi.isAcountDeployed()) {
+      throw new Error("Smart wallet already deployed");
+    }
+    const signer = await this.getSigner();
+    const tx = await signer.sendTransaction({
+      to: await signer.getAddress(),
+      data: "0x",
+    });
+    const receipt = await tx.wait();
+    return { receipt };
+  }
+
+  /**
+   * Check if the smart wallet contract is deployed
+   * @returns true if the smart wallet contract is deployed
+   */
+  async isDeployed(): Promise<boolean> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    return await this.accountApi.isAcountDeployed();
+  }
+
+  /**
+   * Get the underlying account contract of the smart wallet.
+   * @returns the account contract of the smart wallet.
+   */
+  async getAccountContract(): Promise<SmartContract> {
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      throw new Error(
+        "Account contract is not deployed yet. You can deploy it manually using SmartWallet.deploy(), or by executing a transaction from this wallet.",
+      );
+    }
+    // getting a new instance everytime
+    // to avoid caching issues pre/post deployment
+    const sdk = ThirdwebSDK.fromSigner(
+      await this.getSigner(),
+      this.config.chain,
+      {
+        clientId: this.config.clientId,
+        secretKey: this.config.secretKey,
+      },
+    );
+    if (this.config.accountInfo?.abi) {
+      return sdk.getContract(
+        await this.getAddress(),
+        this.config.accountInfo.abi,
+      );
+    } else {
+      return sdk.getContract(await this.getAddress());
+    }
+  }
+
+  /**
+   * Get the underlying account factory contract of the smart wallet.
+   * @returns the account factory contract.
+   */
+  async getFactoryContract(): Promise<SmartContract> {
+    const sdk = ThirdwebSDK.fromSigner(
+      await this.getSigner(),
+      this.config.chain,
+      {
+        clientId: this.config.clientId,
+        secretKey: this.config.secretKey,
+      },
+    );
+    if (this.config.factoryInfo?.abi) {
+      return sdk.getContract(
+        this.config.factoryAddress,
+        this.config.factoryInfo.abi,
+      );
+    }
+    return sdk.getContract(this.config.factoryAddress);
+  }
+
   private defaultFactoryInfo(): FactoryContractInfo {
     return {
       createAccount: async (factory: SmartContract, owner: string) => {
@@ -179,7 +298,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         ]);
       },
       getAccountAddress: async (factory, owner) => {
-        return factory.call("getAddress", [owner]);
+        try {
+          return await factory.call("getAddress", [
+            owner,
+            ethers.utils.toUtf8Bytes(""),
+          ]);
+        } catch (e) {
+          console.log("Falling back to old factory");
+          // TODO remove after a few versions
+          return factory.call("getAddress", [owner]);
+        }
       },
     };
   }
@@ -193,5 +321,30 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         return account.call("getNonce", []);
       },
     };
+  }
+
+  private async getChainSlug(
+    chainOrRpc: ChainOrRpcUrl,
+    provider: ethers.providers.Provider,
+  ): Promise<string> {
+    if (typeof chainOrRpc === "object") {
+      return chainOrRpc.slug;
+    }
+    if (typeof chainOrRpc === "number") {
+      const chain = getChainByChainId(chainOrRpc);
+      return chain.slug;
+    }
+    if (typeof chainOrRpc === "string") {
+      if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
+        // if it's a url, try to get the chain id from the provider
+        const chainId = (await provider.getNetwork()).chainId;
+        const chain = getChainByChainId(chainId);
+        return chain.slug;
+      }
+      // otherwise its the network name
+      return chainOrRpc;
+    } else {
+      throw new Error(`Invalid network: ${chainOrRpc}`);
+    }
   }
 }

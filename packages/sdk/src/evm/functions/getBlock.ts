@@ -1,7 +1,7 @@
 import type { NetworkInput } from "../core/types";
 import type { SDKOptions } from "../schema/sdk-options";
 import { getChainId } from "./getChainId";
-import { getSignerAndProvider } from "./getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import type {
   Block,
   BlockWithTransactions,

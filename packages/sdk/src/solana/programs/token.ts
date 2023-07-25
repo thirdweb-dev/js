@@ -3,11 +3,7 @@ import { CurrencyValue, TokenMetadata } from "../../core/schema/token";
 import { TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import { getNework } from "../utils/urls";
-import {
-  Metaplex,
-  toBigNumber,
-  token,
-} from "@metaplex-foundation/js";
+import { Metaplex, toBigNumber, token } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

@@ -2,10 +2,11 @@ import { useCreateWalletInstance } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { WalletData } from "@thirdweb-dev/wallets/src/evm/wallets/local-wallet";
-import { LocalConfiguredWallet } from "./types";
+import type { LocalWalletConfig } from "./types";
 
 export function useLocalWalletInfo(
-  localConfiguredWallet: LocalConfiguredWallet,
+  localWalletConfig: LocalWalletConfig,
+  persist: boolean,
 ) {
   const [walletData, setWalletData] = useState<WalletData | null | "loading">(
     "loading",
@@ -14,21 +15,21 @@ export function useLocalWalletInfo(
   const [localWallet, setLocalWallet] = useState<LocalWallet | null>(null);
 
   useEffect(() => {
-    const wallet = createWalletInstance(localConfiguredWallet) as LocalWallet;
+    const wallet = createWalletInstance(localWalletConfig) as LocalWallet;
     setLocalWallet(wallet);
 
-    if (localConfiguredWallet.config.persist) {
+    if (persist) {
       wallet.getSavedData().then((data) => {
         setWalletData(data);
       });
     }
-  }, [createWalletInstance, localConfiguredWallet]);
+  }, [createWalletInstance, localWalletConfig, persist]);
 
   return {
     setLocalWallet,
     localWallet,
     walletData,
-    meta: localConfiguredWallet.meta,
-    persist: localConfiguredWallet.config.persist,
+    meta: localWalletConfig.meta,
+    persist: persist,
   };
 }

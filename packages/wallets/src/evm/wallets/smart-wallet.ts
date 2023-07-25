@@ -5,7 +5,11 @@ import type {
   SmartWalletConnectionArgs,
 } from "../connectors/smart-wallet/types";
 import type { SmartWalletConnector as SmartWalletConnectorType } from "../connectors/smart-wallet";
-import { Transaction, TransactionResult } from "@thirdweb-dev/sdk";
+import {
+  Transaction,
+  TransactionResult,
+  SmartContract,
+} from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
   WCSession,
@@ -13,12 +17,9 @@ import {
   WCProposal,
   WCRequest,
   IWalletConnectReceiver,
-  WalletConnectReceiverConfig,
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
-import { WalletConnectV1Handler } from "../../core/WalletConnect/WalletConnectV1Handler";
-import { createLocalStorage } from "../../core";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -32,7 +33,6 @@ export class SmartWallet
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
-  #enableWalletConnectV1: WalletConnectReceiverConfig["wcVersion"];
   #wcWallet: WalletConnectHandler;
 
   static meta = {
@@ -53,18 +53,11 @@ export class SmartWallet
 
     this.enableConnectApp = options?.enableConnectApp || false;
     this.#wcWallet = this.enableConnectApp
-      ? options?.wcVersion === "v1"
-        ? new WalletConnectV1Handler({
-            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-            storage: options?.wcStorage || createLocalStorage("smart-wallet"),
-          })
-        : new WalletConnectV2Handler({
-            walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-            walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
-            walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
-          })
+      ? new WalletConnectV2Handler({
+          walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
+          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
+        })
       : new NoOpWalletConnectHandler();
   }
 
@@ -90,14 +83,71 @@ export class SmartWallet
     return this.connector?.personalWallet;
   }
 
+  /**
+   * Check whether the connected signer can execute a given transaction using the smart wallet.
+   * @param transaction the transaction to execute using the smart wallet.
+   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   */
+  async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
+    const connector = await this.getConnector();
+    return connector.hasPermissionToExecute(transaction);
+  }
+
+  /**
+   * Execute a single transaction
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async execute(transaction: Transaction): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.execute(transaction);
   }
 
+  /**
+   * Execute multiple transactions in a single batch
+   * @param transactions
+   * @returns the transaction receipt
+   */
   async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
+  }
+
+  /**
+   * Manually deploy the smart wallet contract. If already deployed this will throw an error.
+   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @returns the transaction receipt
+   */
+  async deploy(): Promise<TransactionResult> {
+    const connector = await this.getConnector();
+    return connector.deploy();
+  }
+
+  /**
+   * Check if the smart wallet contract is deployed
+   * @returns true if the smart wallet contract is deployed
+   */
+  async isDeployed(): Promise<boolean> {
+    const connector = await this.getConnector();
+    return connector.isDeployed();
+  }
+
+  /**
+   * Get the underlying account contract of the smart wallet.
+   * @returns the account contract of the smart wallet.
+   */
+  async getAccountContract(): Promise<SmartContract> {
+    const connector = await this.getConnector();
+    return connector.getAccountContract();
+  }
+
+  /**
+   * Get the underlying account factory contract of the smart wallet.
+   * @returns the account factory contract.
+   */
+  async getFactoryContract(): Promise<SmartContract> {
+    const connector = await this.getConnector();
+    return connector.getFactoryContract();
   }
 
   autoConnect(params: ConnectParams<SmartWalletConnectionArgs>) {
@@ -143,6 +193,10 @@ export class SmartWallet
 
   disconnectSession(): Promise<void> {
     return this.#wcWallet?.disconnectSession();
+  }
+
+  isWCReceiverEnabled() {
+    return this.enableConnectApp;
   }
 
   #setupWalletConnectEventsListeners() {

@@ -1,4 +1,4 @@
-import { getDefaultTrustedForwarders } from "../constants/addresses";
+import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
 import {
   PackInitializer,
   NFTDropInitializer,
@@ -14,15 +14,15 @@ import {
   MarketplaceInitializer,
   MarketplaceV3Initializer,
 } from "../contracts";
-import {
-  PrebuiltContractType,
-  DeploySchemaForPrebuiltContractType,
-} from "../core";
 import { BigNumber, Signer, providers } from "ethers";
 import { z } from "zod";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { SUPPORTED_CHAIN_IDS } from "../constants";
-import { computeForwarderAddress } from "./any-evm-utils";
+import { SUPPORTED_CHAIN_IDS } from "../constants/chains/SUPPORTED_CHAIN_IDS";
+import { computeForwarderAddress } from "./any-evm-utils/computeForwarderAddress";
+import type {
+  PrebuiltContractType,
+  DeploySchemaForPrebuiltContractType,
+} from "../contracts";
 
 /**
  *

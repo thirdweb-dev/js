@@ -43,6 +43,7 @@ export function InputSelectionUI(props: {
         }}
       >
         <Input
+          tabIndex={-1}
           placeholder={props.placeholder}
           variant="secondary"
           type={props.type}
@@ -105,7 +106,9 @@ export function InputSelectionUI(props: {
   );
 }
 
-const CircleInputButton = styled(InputButton)<{ theme?: Theme }>`
+const CircleInputButton = /* @__PURE__ */ styled(InputButton)<{
+  theme?: Theme;
+}>`
   background: ${(p) => p.theme.bg.highlighted};
   border-radius: 50%;
   padding: ${spacing.xxs};
