@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://zetachain-athens-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://zetachain-athens-evm.blockpi.network/v1/rpc/public",
-    "wss://zetachain-athens.blockpi.network/rpc/v1/public/websocket"
+    "https://api.athens2.zetachain.com/evm"
   ],
   "faucets": [
     "https://labs.zetachain.com/get-zeta"

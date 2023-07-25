@@ -28,7 +28,7 @@ import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
 import {
   Contract as EthersContract,
@@ -109,6 +109,9 @@ import {
   PrecomputedDeploymentTransaction,
 } from "../types/any-evm/deploy-data";
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
+import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
+import { getDefaultTrustedForwarders } from "../constants";
+import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -256,8 +259,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: NetworkInput,
     options: SDKOptions = {},
-    storage?: ThirdwebStorage,
+    storage?: IThirdwebStorage,
   ) {
+    const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
+    checkClientIdOrSecretKey(
+      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
+      options.clientId,
+      options.secretKey,
+    );
+
     if (isChainConfig(network)) {
       options = {
         ...options,
@@ -269,11 +279,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
-    const configuredStorage = createStorage(storage, options);
+    const configuredStorage = createStorage(
+      storage,
+      options,
+    ) as ThirdwebStorage;
     this.storage = configuredStorage;
     this.storageHandler = configuredStorage;
 
-    this.wallet = new UserWallet(network, options);
+    this.wallet = new UserWallet(network, options, configuredStorage);
     this.deployer = new ContractDeployer(network, options, configuredStorage);
     this.verifier = new ContractVerifier(network, options, configuredStorage);
     this.multiChainRegistry = new MultichainRegistry(
@@ -940,6 +953,65 @@ export class ContractDeployer extends RPCConnectionHandler {
         NFTDropInitializer.contractType,
         metadata,
         "latest",
+        options,
+      );
+    },
+  );
+
+  /**
+   * Deploys a new LoyaltyCard contract
+   *
+   * @remarks Deploys a LoyaltyCard contract and returns the address of the deployed contract
+   *
+   * @example
+   * ```javascript
+   * const contractAddress = await sdk.deployer.deployLoyaltyCard({
+   *   name: "My Loyalty Program",
+   *   primary_sale_recipient: "your-address",
+   * });
+   * ```
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   */
+  deployLoyaltyCard = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: NFTContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await LoyaltyCardContractDeploy.parseAsync(
+        metadata,
+      );
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [
+        signerAddress,
+        parsedMetadata.name,
+        parsedMetadata.symbol,
+        contractURI,
+        trustedForwarders,
+        parsedMetadata.primary_sale_recipient,
+        parsedMetadata.fee_recipient,
+        parsedMetadata.seller_fee_basis_points,
+        parsedMetadata.platform_fee_basis_points,
+        parsedMetadata.platform_fee_recipient,
+      ];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "LoyaltyCard",
+        deployArgs,
         options,
       );
     },
@@ -1630,6 +1702,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parse: () => {
           return deployedImplementationAddress;
         },
+        storage: this.storage,
       });
       deployedImplementationAddress = await deployTransaction.simulate();
 
@@ -1663,6 +1736,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
+          this.storage,
           this.options,
         );
       }));

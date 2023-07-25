@@ -41,6 +41,14 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     name: "Theta Testnet",
     gasPrice: 4000 * 10 ** 9,
   },
+  [7700]: {
+    name: "Canto",
+    gasPrice: 1000 * 10 ** 9,
+  },
+  [7701]: {
+    name: "Canto Testnet",
+    gasPrice: 1000 * 10 ** 9,
+  },
 };
 /* eslint-enable no-useless-computed-key */
 

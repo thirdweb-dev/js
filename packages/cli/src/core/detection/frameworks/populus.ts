@@ -18,8 +18,8 @@ export default class PopulusDetector implements FrameworkDetector {
     );
 
     return (
-      !!dependencies.find(dep => dep === "populus") ||
-      !!devDependencies.find(dep => dep === "populus") ||
+      !!dependencies.find((dep) => dep === "populus") ||
+      !!devDependencies.find((dep) => dep === "populus") ||
       additionalFilesExist ||
       false
     );

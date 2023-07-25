@@ -1,5 +1,169 @@
 # @thirdweb-dev/react-native
 
+## 0.2.39
+
+### Patch Changes
+
+- Updated dependencies [[`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d)]:
+  - @thirdweb-dev/chains@0.1.38
+  - @thirdweb-dev/react-core@3.14.20
+  - @thirdweb-dev/sdk@3.10.40
+  - @thirdweb-dev/wallets@1.1.3
+
+## 0.2.38
+
+### Patch Changes
+
+- Updated dependencies [[`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38)]:
+  - @thirdweb-dev/chains@0.1.37
+  - @thirdweb-dev/react-core@3.14.19
+  - @thirdweb-dev/sdk@3.10.39
+  - @thirdweb-dev/wallets@1.1.2
+
+## 0.2.37
+
+### Patch Changes
+
+- Updated dependencies [[`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee), [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608)]:
+  - @thirdweb-dev/chains@0.1.36
+  - @thirdweb-dev/react-core@3.14.18
+  - @thirdweb-dev/sdk@3.10.38
+  - @thirdweb-dev/wallets@1.1.1
+
+## 0.2.36
+
+### Patch Changes
+
+- [#1362](https://github.com/thirdweb-dev/js/pull/1362) [`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298) Thanks [@iketw](https://github.com/iketw)! - Correctly pass clientId in storage
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds new `clientId` prop to access thirdweb's services.
+
+  You can create a _free_ `clientId` [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  <ThirdwebProvider clientId="your-client-id" />
+  ```
+
+- Updated dependencies [[`44dbf283`](https://github.com/thirdweb-dev/js/commit/44dbf283c985f3e2ecbeb1cfdf09fe1d84e26298), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/storage@1.2.0
+  - @thirdweb-dev/sdk@3.10.37
+  - @thirdweb-dev/react-core@3.14.17
+  - @thirdweb-dev/chains@0.1.35
+  - @thirdweb-dev/wallets@1.1.0
+
+## 0.2.35
+
+### Patch Changes
+
+- Updated dependencies [[`7a6534d1`](https://github.com/thirdweb-dev/js/commit/7a6534d1a98cab1eb47cf88d13e2b7ec04037e42), [`dac8fa7d`](https://github.com/thirdweb-dev/js/commit/dac8fa7d98b6952acf8d13e173099889c1d47da8), [`c5761b99`](https://github.com/thirdweb-dev/js/commit/c5761b99e9797772481506e90cbfa5c35a05bd1d), [`b96a2282`](https://github.com/thirdweb-dev/js/commit/b96a2282730582b684cc96802649a96851af5220)]:
+  - @thirdweb-dev/react-core@3.14.16
+  - @thirdweb-dev/sdk@3.10.36
+  - @thirdweb-dev/wallets@1.0.12
+
+## 0.2.34
+
+### Patch Changes
+
+- Updated dependencies [[`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b), [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b)]:
+  - @thirdweb-dev/storage@1.1.9
+  - @thirdweb-dev/chains@0.1.34
+  - @thirdweb-dev/react-core@3.14.15
+  - @thirdweb-dev/sdk@3.10.35
+  - @thirdweb-dev/wallets@1.0.11
+
+## 0.2.33
+
+### Patch Changes
+
+- Updated dependencies [[`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28)]:
+  - @thirdweb-dev/chains@0.1.33
+  - @thirdweb-dev/react-core@3.14.14
+  - @thirdweb-dev/sdk@3.10.34
+  - @thirdweb-dev/wallets@1.0.10
+
+## 0.2.32
+
+### Patch Changes
+
+- Updated dependencies [[`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95)]:
+  - @thirdweb-dev/chains@0.1.32
+  - @thirdweb-dev/react-core@3.14.13
+  - @thirdweb-dev/sdk@3.10.33
+  - @thirdweb-dev/wallets@1.0.9
+
+## 0.2.31
+
+### Patch Changes
+
+- Updated dependencies [[`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5)]:
+  - @thirdweb-dev/chains@0.1.31
+  - @thirdweb-dev/react-core@3.14.12
+  - @thirdweb-dev/sdk@3.10.32
+  - @thirdweb-dev/wallets@1.0.8
+
+## 0.2.30
+
+### Patch Changes
+
+- Updated dependencies [[`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2)]:
+  - @thirdweb-dev/chains@0.1.30
+  - @thirdweb-dev/react-core@3.14.11
+  - @thirdweb-dev/sdk@3.10.31
+  - @thirdweb-dev/wallets@1.0.7
+
+## 0.2.29
+
+### Patch Changes
+
+- Updated dependencies [[`db68bd04`](https://github.com/thirdweb-dev/js/commit/db68bd04cd8bb3ee6bff051d1d5b5a872353fde0), [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d), [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a)]:
+  - @thirdweb-dev/storage@1.1.8
+  - @thirdweb-dev/sdk@3.10.30
+  - @thirdweb-dev/chains@0.1.29
+  - @thirdweb-dev/react-core@3.14.10
+  - @thirdweb-dev/wallets@1.0.6
+
+## 0.2.28
+
+### Patch Changes
+
+- [#1283](https://github.com/thirdweb-dev/js/pull/1283) [`8672c853`](https://github.com/thirdweb-dev/js/commit/8672c8533c694cad46242672ec23b883049bd526) Thanks [@iketw](https://github.com/iketw)! - SDK improvements:
+
+  1. You can now pass an `extraRows` prop to the ConnectWallet button. This will render the `extraRows` at the bottom of the connected wallet details modal.
+
+  ```javascript
+  import {
+    BaseButton,
+    Box,
+    ConnectWallet,
+    Text,
+  } from "@thirdweb-dev/react-native";
+
+  const extraRows = () => {
+    return (
+      <Box>
+        <Text variant="bodySmallSecondary" textAlign="center" mt="sm">
+          Extra option
+        </Text>
+      </Box>
+    );
+  };
+
+  <ConnectWallet theme={"dark"} extraRows={extraRows} />;
+  ```
+
+  2. You can now import a local wallet by a mnemoic as well.
+
+  When creating a Local/Guest Wallet the import wallet modal accepts both a privateKey or a mnemonic. This makes it easier for users to import their wallets into your app
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
+- Updated dependencies [[`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5), [`72ada475`](https://github.com/thirdweb-dev/js/commit/72ada47596d5d5c08736c33215faeec636b7156a), [`2c0bb078`](https://github.com/thirdweb-dev/js/commit/2c0bb0789955f6cd397b6fdb8e990a505251c631), [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61), [`10b3a717`](https://github.com/thirdweb-dev/js/commit/10b3a717da606632a05769ac821bdd21d6b63a03), [`b4aee9b5`](https://github.com/thirdweb-dev/js/commit/b4aee9b59121bab5f9b3d9b7ecdc4bcb4cd66f58), [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352)]:
+  - @thirdweb-dev/chains@0.1.28
+  - @thirdweb-dev/sdk@3.10.29
+  - @thirdweb-dev/wallets@1.0.5
+  - @thirdweb-dev/react-core@3.14.9
+  - @thirdweb-dev/storage@1.1.7
+
 ## 0.2.27
 
 ### Patch Changes

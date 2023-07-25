@@ -17,6 +17,7 @@ export async function approveErc20Allowance(
     currencyAddress,
     ERC20Abi,
     contractToApprove.options,
+    contractToApprove.storage,
   );
   const owner = await contractToApprove.getSignerAddress();
   const spender = contractToApprove.readContract.address;

@@ -42,7 +42,10 @@ export default async function detect(
     return possiblePackageManagers[0];
   }
 
-  if (possiblePackageManagers.includes("brownie") && possiblePackageManagers.includes("pip")) {
+  if (
+    possiblePackageManagers.includes("brownie") &&
+    possiblePackageManagers.includes("pip")
+  ) {
     return "brownie";
   }
 

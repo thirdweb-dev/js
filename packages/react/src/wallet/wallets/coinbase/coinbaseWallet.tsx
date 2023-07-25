@@ -1,8 +1,23 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { CoinbaseWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { CoinbaseConnectUI } from "./CoinbaseConnectUI";
+import {
+  ConnectUIProps,
+  useCreateWalletInstance,
+  useSetConnectedWallet,
+  useSetConnectionStatus,
+} from "@thirdweb-dev/react-core";
+import { useEffect, useRef } from "react";
 
-export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
+type CoinbaseWalletOptions = {
+  qrmodal?: "coinbase" | "custom";
+};
+
+export const coinbaseWallet = (
+  options?: CoinbaseWalletOptions,
+): WalletConfig<CoinbaseWallet> => {
+  const qrmodal = options?.qrmodal || "custom";
+
   return {
     id: CoinbaseWallet.id,
     meta: {
@@ -16,10 +31,14 @@ export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
         ios: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
       },
     },
-    create(options: WalletOptions) {
-      return new CoinbaseWallet({ ...options, headlessMode: true });
+    create(walletOptions: WalletOptions) {
+      return new CoinbaseWallet({
+        ...walletOptions,
+        headlessMode: qrmodal === "custom",
+      });
     },
-    connectUI: CoinbaseConnectUI,
+    connectUI:
+      qrmodal === "custom" ? CoinbaseConnectUI : CoinbaseNativeModalConnectUI,
     isInstalled() {
       const window_: Window | undefined = globalThis?.window;
       if (assertWindowEthereum(window_)) {
@@ -32,4 +51,53 @@ export const coinbaseWallet = (): WalletConfig<CoinbaseWallet> => {
       return false;
     },
   };
+};
+
+export const CoinbaseNativeModalConnectUI = ({
+  close,
+  walletConfig,
+  open,
+  supportedWallets,
+  theme,
+}: ConnectUIProps<CoinbaseWallet>) => {
+  const createWalletInstance = useCreateWalletInstance();
+  const setConnectionStatus = useSetConnectionStatus();
+  const setConnectedWallet = useSetConnectedWallet();
+  const prompted = useRef(false);
+  const singleWallet = supportedWallets.length === 1;
+
+  useEffect(() => {
+    if (prompted.current) {
+      return;
+    }
+    prompted.current = true;
+
+    (async () => {
+      close();
+      const wallet = createWalletInstance(walletConfig);
+      wallet.theme = theme;
+      setConnectionStatus("connecting");
+      try {
+        await wallet.connect();
+        setConnectedWallet(wallet);
+      } catch (e) {
+        setConnectionStatus("disconnected");
+        if (!singleWallet) {
+          open();
+        }
+        console.error(e);
+      }
+    })();
+  }, [
+    walletConfig,
+    close,
+    open,
+    singleWallet,
+    createWalletInstance,
+    theme,
+    setConnectionStatus,
+    setConnectedWallet,
+  ]);
+
+  return null;
 };

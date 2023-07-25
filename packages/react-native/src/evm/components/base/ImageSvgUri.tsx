@@ -1,7 +1,8 @@
-import { resolveIpfsUri } from "@thirdweb-dev/react-core";
+import { useStorage } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Image } from "react-native";
 import { SvgUri } from "react-native-svg";
+import { isAppBundleIdPresentInGlobal } from "../../utils/global";
 
 const ImageSvgUri = ({
   imageUrl = "",
@@ -14,13 +15,14 @@ const ImageSvgUri = ({
   height: number;
   imageAlt?: string;
 }) => {
-  const resolvedImageUrl = resolveIpfsUri(imageUrl) || "";
-
-  const isSvg =
-    resolvedImageUrl.toLowerCase().endsWith(".svg") ||
-    (!resolvedImageUrl.toLowerCase().endsWith(".png") &&
-      !resolvedImageUrl.toLowerCase().endsWith(".jpg") &&
-      !resolvedImageUrl.toLowerCase().endsWith(".jpeg"));
+  const storage = useStorage();
+  const resolvedImageUrl = storage
+    ? storage.resolveScheme(imageUrl) +
+      (isAppBundleIdPresentInGlobal()
+        ? // @ts-ignore
+          `?bundleId=${globalThis.APP_BUNDLE_ID}`
+        : "")
+    : imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   const [error, setError] = useState(false);
 
@@ -28,23 +30,26 @@ const ImageSvgUri = ({
     return null;
   }
 
-  // always try to render svg if we cannot detect the url extension
-  // if error then try to render regular image
-  if (isSvg || error) {
+  if (error) {
     return (
       <SvgUri
         width={width}
         height={height}
         uri={resolvedImageUrl}
-        onError={() => setError(true)}
+        onError={(err) => {
+          console.warn("Error loading an svg image: ", err);
+        }}
       />
     );
   } else {
+    // always try to render Image first, if error then try to render svg
+    // Image from RN handles onError better than SvgUri
     return (
       <Image
         alt={imageAlt}
         source={{ uri: resolvedImageUrl }}
         style={[{ width: width, height: height }]}
+        onError={() => setError(true)}
       />
     );
   }
