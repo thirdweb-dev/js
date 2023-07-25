@@ -7,7 +7,7 @@ import {
   GridItem,
   Icon,
 } from "@chakra-ui/react";
-import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
+// import { Ethereum } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
@@ -211,7 +211,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Home
           </LinkButton>
           <LinkButton
-            leftIcon={<Icon as={Ethereum} />}
+            // leftIcon={<Icon as={Ethereum} />}
             href="/dashboard/contracts"
             isActive={
               pathname.startsWith("/dashboard/contracts") ||
@@ -225,7 +225,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
           >
             Contracts
           </LinkButton>
-          <LinkButton
+          {/* <LinkButton
             leftIcon={<Icon as={Solana} />}
             href="/dashboard/programs"
             isActive={
@@ -239,7 +239,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             rounded="lg"
           >
             Programs
-          </LinkButton>
+          </LinkButton> */}
           <LinkButton
             href="/dashboard/storage"
             isActive={pathname === "/dashboard/storage"}
