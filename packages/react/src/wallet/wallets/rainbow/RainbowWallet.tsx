@@ -1,8 +1,8 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { RainbowConnectUI } from "./RainbowConnectUI";
-import { isMobile } from "../../../evm/utils/isMobile";
-import { openWindow } from "../../utils/openWindow";
+import { rainbowWalletUris } from "./rainbowWalletUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type RainbowWalletOptions = {
   /**
@@ -36,11 +36,7 @@ export const rainbowWallet = (
         qrcode: false,
       });
 
-      if (isMobile()) {
-        wallet.on("wc_session_request_sent", () => {
-          openWindow('rainbow://wc?uri=""');
-        });
-      }
+      handelWCSessionRequest(wallet, rainbowWalletUris);
 
       return wallet;
     },

@@ -6,6 +6,7 @@ import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { TrustScan } from "./TrustScan";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { trustWalletUris } from "./trustWalletUris";
 
 export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const [screen, setScreen] = useState<
@@ -72,11 +73,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        appUriPrefix={{
-          ios: "trust://",
-          android: "https://link.trustwallet.com/",
-          other: "https://link.trustwallet.com/",
-        }}
+        appUriPrefix={trustWalletUris}
         supportLink="https://support.trustwallet.com/en/support/home"
       />
     );

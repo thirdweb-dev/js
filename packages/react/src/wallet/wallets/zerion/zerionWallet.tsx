@@ -3,6 +3,8 @@ import { ZerionWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { ZerionConnectUI } from "./ZerionConnectUI";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { openWindow } from "../../utils/openWindow";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { zerionWalletUris } from "./zerionWalletUris";
 
 type ZerionkWalletOptions = {
   /**
@@ -32,6 +34,8 @@ export const zerionWallet = (
           openWindow(`zerion://wc?uri=""`);
         });
       }
+
+      handelWCSessionRequest(wallet, zerionWalletUris);
 
       return wallet;
     },

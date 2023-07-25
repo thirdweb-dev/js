@@ -1,8 +1,8 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { TrustWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { TrustConnectUI } from "./TrustConnectUI";
-import { isMobile } from "../../../evm/utils/isMobile";
-import { openWindow } from "../../utils/openWindow";
+import { trustWalletUris } from "./trustWalletUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type TrustWalletOptions = {
   /**
@@ -27,11 +27,7 @@ export const trustWallet = (
         qrcode: false,
       });
 
-      if (isMobile()) {
-        wallet.on("wc_session_request_sent", () => {
-          openWindow(`trust://wc?uri=""`);
-        });
-      }
+      handelWCSessionRequest(wallet, trustWalletUris);
 
       return wallet;
     },

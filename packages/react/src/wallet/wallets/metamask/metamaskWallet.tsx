@@ -4,8 +4,8 @@ import {
   getInjectedMetamaskProvider,
 } from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
-import { isMobile } from "../../../evm/utils/isMobile";
-import { openWindow } from "../../utils/openWindow";
+import { metamaskUris } from "./metamaskUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type MetamaskWalletOptions = {
   /**
@@ -30,11 +30,7 @@ export const metamaskWallet = (
         qrcode: false,
       });
 
-      if (isMobile()) {
-        wallet.on("wc_session_request_sent", () => {
-          openWindow(`metamask://wc?uri=""`);
-        });
-      }
+      handelWCSessionRequest(wallet, metamaskUris);
 
       return wallet;
     },

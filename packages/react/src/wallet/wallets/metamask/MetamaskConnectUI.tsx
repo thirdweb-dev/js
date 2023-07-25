@@ -6,6 +6,7 @@ import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { metamaskUris } from "./metamaskUris";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
@@ -73,11 +74,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        appUriPrefix={{
-          ios: "metamask://",
-          android: "https://metamask.app.link/",
-          other: "https://metamask.app.link/",
-        }}
+        appUriPrefix={metamaskUris}
         supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
