@@ -154,13 +154,10 @@ export class DropClaimConditions<
       this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
-      const claimCondition =
-        (await this.contractWrapper.readContract.claimCondition()) as {
-          currentStartId: BigNumber;
-          count: BigNumber;
-        };
-      const startId = claimCondition.currentStartId.toNumber();
-      const count = claimCondition.count.toNumber();
+      const [currentStartId, countBn] =
+        await this.contractWrapper.readContract.claimCondition();
+      const startId = currentStartId.toNumber();
+      const count = countBn.toNumber();
       const conditions: AbstractClaimConditionContractStruct[] = [];
       for (let i = startId; i < startId + count; i++) {
         conditions.push(await this.get(i));

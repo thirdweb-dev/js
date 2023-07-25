@@ -65,12 +65,6 @@ export const ConnectWalletDetailsModal = ({
     });
   };
 
-  const onChangeNetworkPress = () => {
-    // TODO: implement this
-    // setIsDetailsModalVisible(false);
-    // setIsNetworkSelectorModalVisible(true);
-  };
-
   const onExportLocalWalletPress = useCallback(() => {
     setIsExportModalVisible(true);
   }, []);
@@ -203,11 +197,7 @@ export const ConnectWalletDetailsModal = ({
           <View style={styles.currentNetwork}>
             <Text variant="bodySmallSecondary">Current Network</Text>
           </View>
-          <NetworkButton
-            chainIconUrl={chain?.icon?.url || ""}
-            chainName={chain?.name || "Unknown Network"}
-            onPress={onChangeNetworkPress}
-          />
+          <NetworkButton chain={chain} enableSwitchModal={true} />
           {chain?.testnet && chain?.faucets?.length ? (
             <IconTextButton
               mt="xs"
