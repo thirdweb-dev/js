@@ -84,7 +84,7 @@ export const ThirdwebProvider = <
         new ThirdwebStorage({
           clientId: clientId,
           /// @ts-ignore
-          gatewayUrls: sdkOptions?.supportedChains,
+          gatewayUrls: sdkOptions?.gatewayUrls,
         })
       }
       authConfig={
