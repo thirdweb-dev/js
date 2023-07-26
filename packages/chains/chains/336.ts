@@ -38,6 +38,17 @@ export default {
         "height": 400,
         "format": "png"
       }
+    },
+    {
+      "name": "blockscout",
+      "url": "https://blockscout.com/shiden",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,
