@@ -3,7 +3,7 @@ import { Keypair } from "@solana/web3.js";
 import { KeypairWallet } from "@thirdweb-dev/wallets/solana/wallets/keypair";
 import { expect } from "chai";
 
-describe("Wallet Authentication", async () => {
+describe("Wallet Authentication - Solana", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 

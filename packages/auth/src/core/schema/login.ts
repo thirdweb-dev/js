@@ -1,21 +1,36 @@
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { AccountTypeSchema } from "./common";
+import { THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS } from "../../constants";
 
-export const LoginOptionsSchema = z
-  .object({
-    domain: z.string(),
-    address: z.string().optional(),
-    statement: z.string().optional(),
-    uri: z.string().optional(),
-    version: z.string().optional(),
-    chainId: z.string().optional(),
-    nonce: z.string().optional(),
-    expirationTime: z.date().optional(),
-    invalidBefore: z.date().optional(),
-    resources: z.array(z.string()).optional(),
-  })
-  .optional();
+export const LoginOptionsSchema = z.object({
+  domain: z.string(),
+  address: z.string().optional(),
+  statement: z.string().optional(),
+  uri: z.string().optional(),
+  version: z.string().optional(),
+  chainId: z.string().optional(),
+  nonce: z.string().optional(),
+  expirationTime: z
+    .date()
+    .default(
+      () =>
+        new Date(
+          Date.now() +
+            1000 * THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+        ),
+    ),
+  invalidBefore: z
+    .date()
+    .default(
+      () =>
+        new Date(
+          Date.now() -
+            1000 * THIRDWEB_AUTH_DEFAULT_LOGIN_PAYLOAD_DURATION_IN_SECONDS,
+        ),
+    ),
+  resources: z.array(z.string()).optional(),
+});
 
 export const LoginPayloadDataSchema = z.object({
   type: AccountTypeSchema,
@@ -60,3 +75,7 @@ export type LoginOptions = z.input<typeof LoginOptionsSchema>;
 export type LoginPayloadData = z.output<typeof LoginPayloadDataSchema>;
 
 export type LoginPayload = z.output<typeof LoginPayloadSchema>;
+
+export type LoginOptionsWithOptionalDomain = Omit<LoginOptions, "domain"> & {
+  domain?: string;
+};

@@ -3,7 +3,7 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
-describe("Wallet Authentication", async () => {
+describe("Wallet Authentication - EVM", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 

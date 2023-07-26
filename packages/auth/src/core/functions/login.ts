@@ -1,12 +1,122 @@
-import { VerifyParams } from "../schema/functions";
+import {
+  BuildLoginPayloadParams,
+  SignLoginPayloadParams,
+  VerifyLoginPayloadParams,
+} from "../schema/functions";
+import {
+  LoginOptionsSchema,
+  LoginPayload,
+  LoginPayloadData,
+  LoginPayloadDataSchema,
+} from "../schema/login";
 import { VerifyOptionsSchema } from "../schema/verify";
-import { createMessage } from "./message";
 
-export async function verify({
+/**
+ * Create an EIP-4361 & CAIP-122 compliant message to sign based on the login payload
+ */
+function createLoginMessage(payload: LoginPayloadData): string {
+  const typeField = payload.type === "evm" ? "Ethereum" : "Solana";
+  const header = `${payload.domain} wants you to sign in with your ${typeField} account:`;
+  let prefix = [header, payload.address].join("\n");
+  prefix = [prefix, payload.statement].join("\n\n");
+  if (payload.statement) {
+    prefix += "\n";
+  }
+
+  const suffixArray = [];
+  if (payload.uri) {
+    const uriField = `URI: ${payload.uri}`;
+    suffixArray.push(uriField);
+  }
+
+  const versionField = `Version: ${payload.version}`;
+  suffixArray.push(versionField);
+
+  if (payload.chain_id) {
+    const chainField = `Chain ID: ` + payload.chain_id || "1";
+    suffixArray.push(chainField);
+  }
+
+  const nonceField = `Nonce: ${payload.nonce}`;
+  suffixArray.push(nonceField);
+
+  const issuedAtField = `Issued At: ${payload.issued_at}`;
+  suffixArray.push(issuedAtField);
+
+  const expiryField = `Expiration Time: ${payload.expiration_time}`;
+  suffixArray.push(expiryField);
+
+  if (payload.invalid_before) {
+    const invalidBeforeField = `Not Before: ${payload.invalid_before}`;
+    suffixArray.push(invalidBeforeField);
+  }
+
+  if (payload.resources) {
+    suffixArray.push(
+      [`Resources:`, ...payload.resources.map((x) => `- ${x}`)].join("\n"),
+    );
+  }
+
+  const suffix = suffixArray.join("\n");
+  return [prefix, suffix].join("\n");
+}
+
+export async function buildLoginPayload({
+  wallet,
+  options,
+}: BuildLoginPayloadParams): Promise<LoginPayloadData> {
+  const parsedOptions = LoginOptionsSchema.parse(options);
+
+  let chainId: string | undefined = parsedOptions?.chainId;
+  if (!chainId && wallet.getChainId) {
+    try {
+      chainId = (await wallet.getChainId()).toString();
+    } catch {
+      // ignore error
+    }
+  }
+
+  return LoginPayloadDataSchema.parse({
+    type: wallet.type,
+    domain: parsedOptions.domain,
+    address: parsedOptions?.address || (await wallet.getAddress()),
+    statement: parsedOptions?.statement,
+    version: parsedOptions?.version,
+    uri: parsedOptions?.uri,
+    chain_id: chainId,
+    nonce: parsedOptions?.nonce,
+    expiration_time: parsedOptions.expirationTime,
+    invalid_before: parsedOptions.invalidBefore,
+    resources: parsedOptions?.resources,
+  });
+}
+
+export async function signLoginPayload({
+  wallet,
+  payload,
+}: SignLoginPayloadParams): Promise<LoginPayload> {
+  const message = createLoginMessage(payload);
+  const signature = await wallet.signMessage(message);
+
+  return {
+    payload,
+    signature,
+  };
+}
+
+export async function buildAndSignLoginPayload({
+  wallet,
+  options,
+}: BuildLoginPayloadParams): Promise<LoginPayload> {
+  const payload = await buildLoginPayload({ wallet, options });
+  return signLoginPayload({ wallet, payload });
+}
+
+export async function verifyLoginPayload({
   wallet,
   payload,
   options,
-}: VerifyParams): Promise<string> {
+}: VerifyLoginPayloadParams): Promise<string> {
   const parsedOptions = VerifyOptionsSchema.parse(options);
 
   if (payload.payload.type !== wallet.type) {
@@ -93,7 +203,7 @@ export async function verify({
   }
 
   // Check that the signing address is the claimed wallet address
-  const message = createMessage(payload.payload);
+  const message = createLoginMessage(payload.payload);
   const chainId =
     wallet.type === "evm" && payload.payload.chain_id
       ? parseInt(payload.payload.chain_id)

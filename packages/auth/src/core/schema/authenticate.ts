@@ -36,3 +36,10 @@ export type AuthenticationPayload = z.output<
 >;
 
 export type AuthenticateOptions = z.output<typeof AuthenticateOptionsSchema>;
+
+export type AuthenticateOptionsWithOptionalDomain = Omit<
+  AuthenticateOptions,
+  "domain"
+> & {
+  domain?: string;
+};

@@ -11,3 +11,7 @@ export const VerifyOptionsSchema = z.object({
 });
 
 export type VerifyOptions = z.input<typeof VerifyOptionsSchema>;
+
+export type VerifyOptionsWithOptionalDomain = Omit<VerifyOptions, "domain"> & {
+  domain?: string;
+};

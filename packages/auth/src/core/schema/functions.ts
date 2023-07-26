@@ -1,31 +1,48 @@
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
-import { LoginPayload } from "./login";
+import { LoginOptions, LoginPayload, LoginPayloadData } from "./login";
 import { VerifyOptions } from "./verify";
 import {
   AuthenticateOptions,
   AuthenticationPayloadDataInput,
 } from "./authenticate";
 import { RefreshOptions } from "./refresh";
+import { GenerateOptions } from "./generate";
 
-export type VerifyParams = {
+export type BuildLoginPayloadParams = {
+  wallet: GenericAuthWallet;
+  options: LoginOptions;
+};
+
+export type SignLoginPayloadParams = {
+  wallet: GenericAuthWallet;
+  payload: LoginPayloadData;
+};
+
+export type VerifyLoginPayloadParams = {
   wallet: GenericAuthWallet;
   payload: LoginPayload;
   options: VerifyOptions;
 };
 
-export type AuthenticateParams = {
-  wallet: GenericAuthWallet;
-  jwt: string;
-  options: AuthenticateOptions;
-};
-
-export type CreateJwtParams = {
+export type BuildJwtParams = {
   wallet: GenericAuthWallet;
   payload: AuthenticationPayloadDataInput;
+};
+
+export type GenerateJwtParams = {
+  wallet: GenericAuthWallet;
+  payload: LoginPayload;
+  options: GenerateOptions;
 };
 
 export type RefreshJwtParams = {
   wallet: GenericAuthWallet;
   jwt: string;
   options?: RefreshOptions;
+};
+
+export type AuthenticateJwtParams = {
+  wallet: GenericAuthWallet;
+  jwt: string;
+  options: AuthenticateOptions;
 };
