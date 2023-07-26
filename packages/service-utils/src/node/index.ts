@@ -94,6 +94,12 @@ export function extractAuthorizationData(
   if (!origin) {
     origin = getHeader(headers, "referer");
   }
+
+  // If referer is not available we fall back to URL hostname.
+  // To allow for accessing the url from the browser
+  if (!origin) {
+    origin = requestUrl.hostname;
+  }
   // if we have an origin at this point, normalize it
   if (origin) {
     try {
