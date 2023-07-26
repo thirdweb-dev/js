@@ -20,6 +20,17 @@ export default {
   "networkId": 10,
   "explorers": [
     {
+      "name": "blockscout",
+      "url": "https://optimism.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
+    },
+    {
       "name": "etherscan",
       "url": "https://optimistic.etherscan.io",
       "standard": "EIP3091"

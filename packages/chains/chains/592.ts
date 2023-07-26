@@ -25,6 +25,17 @@ export default {
   },
   "explorers": [
     {
+      "name": "blockscout",
+      "url": "https://blockscout.com/astar",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
+    },
+    {
       "name": "subscan",
       "url": "https://astar.subscan.io",
       "standard": "none",

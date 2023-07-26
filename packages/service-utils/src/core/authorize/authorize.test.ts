@@ -17,6 +17,7 @@ describe("authorizeClient", () => {
         origin: null,
         bundleId: null,
         secretKeyHash: null,
+        authToken: null,
       },
       validServiceConfig,
     )) as any;
@@ -33,6 +34,7 @@ describe("authorizeClient", () => {
         origin: null,
         bundleId: null,
         secretKeyHash: null,
+        authToken: null,
       },
       { ...validServiceConfig, enforceAuth: true },
     )) as any;
