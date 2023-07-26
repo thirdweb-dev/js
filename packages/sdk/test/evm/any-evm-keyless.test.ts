@@ -1,4 +1,3 @@
-import { getProcessEnv, setProcessEnv } from "../../src/core/utils/process";
 import { ThirdwebSDK } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
 import { jsonProvider, signers } from "./before-setup";
