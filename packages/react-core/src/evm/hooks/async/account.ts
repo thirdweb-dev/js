@@ -16,8 +16,8 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import type {
-  SignerWithRestrictions,
-  SignerWithRestrictionsBatchInput,
+  SignerWithPermissions,
+  PermissionSnapshotInput,
   SmartContract,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
@@ -42,17 +42,17 @@ import invariant from "tiny-invariant";
  */
 export function useAccountSigners(
   contract: RequiredParam<SmartContract>,
-): UseQueryResult<SignerWithRestrictions[]> {
+): UseQueryResult<SignerWithPermissions[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.account.signers(contractAddress),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract.account.getSignersWithRestrictions,
+        contract.account.getAllSigners,
         "Contract instance does not support contract.account.getSignersWithRestrictions",
       );
-      return contract.account.getSignersWithRestrictions();
+      return contract.account.getAllSigners();
     },
     { enabled: !!contract },
   );
@@ -100,7 +100,7 @@ export function useSetAccountSigners(
 ): UseMutationResult<
   { receipt: providers.TransactionReceipt },
   unknown,
-  SignerWithRestrictionsBatchInput,
+  PermissionSnapshotInput,
   unknown
 > {
   const activeChainId = useSDKChainId();
@@ -108,10 +108,10 @@ export function useSetAccountSigners(
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (permissionsSnapshot: SignerWithRestrictionsBatchInput) => {
+    async (permissionsSnapshot: PermissionSnapshotInput) => {
       requiredParamInvariant(contract, "contract is undefined");
 
-      return contract.account.setAccess(permissionsSnapshot);
+      return contract.account.resetAllPermissions(permissionsSnapshot);
     },
     {
       onSettled: () =>

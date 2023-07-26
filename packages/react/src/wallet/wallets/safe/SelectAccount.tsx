@@ -45,6 +45,7 @@ export const SelectAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   safeWalletConfig: SafeWalletConfig;
+  renderBackButton?: boolean;
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
@@ -105,8 +106,13 @@ export const SelectAccount: React.FC<{
 
   return (
     <>
-      <BackButton onClick={props.onBack} />
-      <Spacer y="md" />
+      {props.renderBackButton && (
+        <>
+          <BackButton onClick={props.onBack} />
+          <Spacer y="md" />
+        </>
+      )}
+
       <Img
         src={props.safeWalletConfig.meta.iconURL}
         width={iconSize.xl}

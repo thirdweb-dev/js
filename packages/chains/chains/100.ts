@@ -43,11 +43,11 @@ export default {
     },
     {
       "name": "blockscout",
-      "url": "https://blockscout.com/xdai/mainnet",
+      "url": "https://gnosis.blockscout.com",
       "icon": {
-        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
-        "width": 512,
-        "height": 512,
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
         "format": "png"
       },
       "standard": "EIP3091"
