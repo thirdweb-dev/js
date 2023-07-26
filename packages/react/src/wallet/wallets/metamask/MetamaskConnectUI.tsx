@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { metamaskUris } from "./metamaskUris";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
@@ -44,9 +46,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
       else {
         // on mobile, open metamask app link
         if (isMobile()) {
-          window.open(
-            `https://metamask.app.link/dapp/${window.location.toString()}`,
-          );
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the metamask scan qr code
           setScreen("scanning");
@@ -62,6 +62,19 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
+        supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        appUriPrefix={metamaskUris}
         supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
