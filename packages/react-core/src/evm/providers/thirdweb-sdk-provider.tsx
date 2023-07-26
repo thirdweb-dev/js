@@ -156,7 +156,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   queryClient,
-  supportedChains,
+  supportedChains: _supportedChains,
   activeChain,
   clientId,
   ...restProps
@@ -168,9 +168,31 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
       undefined,
     );
   }
-  const supportedChainsNonNull = useMemo(() => {
-    return supportedChains || (defaultChains as any as TChains);
-  }, [supportedChains]);
+  const supportedChains = (_supportedChains || defaultChains) as Chain[];
+
+  const supportedChainsNonNull: Chain[] = useMemo(() => {
+    const isActiveChainObject =
+      typeof activeChain === "object" && activeChain !== null;
+
+    if (!isActiveChainObject) {
+      return supportedChains;
+    }
+
+    const isActiveChainInSupportedChains = supportedChains.find(
+      (c) => c.chainId === activeChain.chainId,
+    );
+
+    // if activeChain is not in supportedChains - add it
+    if (!isActiveChainInSupportedChains) {
+      return [...supportedChains, activeChain];
+    }
+
+    // if active chain is in supportedChains - replace it with object in activeChain
+    return supportedChains.map((c) =>
+      c.chainId === activeChain.chainId ? activeChain : c,
+    );
+  }, [supportedChains, activeChain]);
+
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithClientId(
       supportedChainsNonNull,
