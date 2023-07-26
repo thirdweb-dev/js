@@ -372,7 +372,7 @@ import "@thirdweb-dev/contracts/base/Staking20Base.sol";
 
 contract Contract is Staking20Base {
       constructor(
-        address _defaultAdminn,
+        address _defaultAdmin,
         uint256 _timeUnit,
         uint256 _rewardRatioNumerator,
         uint256 _rewardRatioDenominator,
@@ -381,7 +381,7 @@ contract Contract is Staking20Base {
         address _nativeTokenWrapper
     )
         Staking20Base(
-            _defaultAdminn,
+            _defaultAdmin,
             _timeUnit,
             _rewardRatioNumerator,
             _rewardRatioDenominator,
