@@ -14,7 +14,6 @@ export type { CurrencyValue, TokenMetadata } from "./core/schema/token";
 export { getRpcUrl } from "./core/constants/urls";
 
 export { checkClientIdOrSecretKey } from "./core/utils/apiKey";
-export { getProcessEnv } from "./core/utils/process";
 
 export type { QueryAllParams } from "./core/schema/QueryParams";
 
