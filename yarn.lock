@@ -6680,12 +6680,12 @@ ccount@^2.0.0:
   resolved "https://registry.yarnpkg.com/ccount/-/ccount-2.0.1.tgz#17a3bf82302e0870d6da43a01311a8bc02a3ecf5"
   integrity sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==
 
-chakra-react-select@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/chakra-react-select/-/chakra-react-select-4.6.0.tgz#a1a35ee7c531db47ac9c8bd412fb0a3745e77321"
-  integrity sha512-Ckcs+ofX5LxCc0oOz4SorDIRqF/afd5tAQOa694JVJiIckYorUmZASEUSSDdXaZltsUAtJE11CUmEZgVVsk9Eg==
+chakra-react-select@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/chakra-react-select/-/chakra-react-select-4.7.0.tgz#a0b5206416a858e77e7a4f38345a12bfe8425d7a"
+  integrity sha512-BHo4OnLhsfmxMr7ntIL7Sp55zhZKgeU2XOQK/9a0bnnRH6qyd0GMxwII+XnF3TsRHdtrI/2HxdQuX3KKQPFuDg==
   dependencies:
-    react-select "5.7.0"
+    react-select "5.7.4"
 
 chalk@3.0.0, chalk@^3.0.0:
   version "3.0.0"
@@ -12577,10 +12577,10 @@ react-resize-detector@^8.0.4:
   dependencies:
     lodash "^4.17.21"
 
-react-select@5.7.0:
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.7.0.tgz#82921b38f1fcf1471a0b62304da01f2896cd8ce6"
-  integrity sha512-lJGiMxCa3cqnUr2Jjtg9YHsaytiZqeNOKeibv6WF5zbK/fPegZ1hg3y/9P1RZVLhqBTs0PfqQLKuAACednYGhQ==
+react-select@5.7.4:
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.7.4.tgz#d8cad96e7bc9d6c8e2709bdda8f4363c5dd7ea7d"
+  integrity sha512-NhuE56X+p9QDFh4BgeygHFIvJJszO1i1KSkg/JPcIJrbovyRtI+GuOEa4XzFCEpZRAEoEI8u/cAHK+jG/PgUzQ==
   dependencies:
     "@babel/runtime" "^7.12.0"
     "@emotion/cache" "^11.4.0"
