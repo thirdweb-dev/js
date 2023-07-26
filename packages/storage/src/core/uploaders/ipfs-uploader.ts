@@ -303,14 +303,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       console.warn("The onProgress option is only supported in the browser");
     }
 
-    if (this.secretKey && this.clientId) {
-      throw new Error(
-        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-      );
-    }
-
     const headers: HeadersInit = {};
     if (!CUSTOM_UPLOAD_SERVER_URL) {
+      if (this.secretKey && this.clientId) {
+        throw new Error(
+          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+        );
+      }
+
       if (this.secretKey) {
         headers["x-secret-key"] = this.secretKey;
       } else if (this.clientId) {
