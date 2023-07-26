@@ -35,10 +35,12 @@ export abstract class WalletConnectV2 extends WalletConnectV2Wallets {
         options.walletStorage || createAsyncLocalStorage(options.walletId),
     });
 
-    this.on("open_wallet", this._onWCOpenWallet);
+    this.on("display_uri", this._onWCOpenWallet);
+    this.on("wc_session_request_sent", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
-      this.removeListener("open_wallet", this._onWCOpenWallet);
+      this.removeListener("display_uri", this._onWCOpenWallet);
+      this.removeListener("wc_session_request_sent", this._onWCOpenWallet);
     });
   }
 

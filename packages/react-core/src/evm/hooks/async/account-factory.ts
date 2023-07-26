@@ -14,7 +14,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import type { AccountEvent, SmartContract } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -38,7 +38,7 @@ import invariant from "tiny-invariant";
  */
 export function useAccounts(
   contract: RequiredParam<SmartContract>,
-): UseQueryResult<AccountEvent[]> {
+): UseQueryResult<string[]> {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.accountFactory.getAll(contractAddress),

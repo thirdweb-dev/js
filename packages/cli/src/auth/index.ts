@@ -73,7 +73,7 @@ export function getSession(credsConfigPath: string) {
 export async function createSession(credsConfigPath: string) {
   try {
     const response = await prompts({
-      type: "text",
+      type: "invisible",
       name: "apiSecretKey",
       message: `Please enter your API secret key, you can find or create it on ${chalk.blue(
         "https://thirdweb.com/dashboard/settings/api-keys",

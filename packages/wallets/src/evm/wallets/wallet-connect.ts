@@ -117,14 +117,13 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #onMessage = (payload: any) => {
     switch (payload.type) {
       case "display_uri":
-        this.emit("open_wallet", payload.data);
+        this.emit("display_uri", payload.data);
         break;
     }
   };
 
   #onSessionRequestSent = () => {
-    // open wallet after request is sent
-    this.emit("open_wallet");
+    this.emit("wc_session_request_sent");
   };
 
   #setupListeners() {

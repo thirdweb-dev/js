@@ -214,7 +214,7 @@ const main = async () => {
               );
 
               // If the package is installed globally with yarn or pnpm, then npx won't recognize it
-              // So we need to make sure to run the command directly
+              // So we need to make sure to run the command directly.
               const executionCommand =
                 !installation.isGlobal || installation.packageManager === "npm"
                   ? `npx thirdweb`

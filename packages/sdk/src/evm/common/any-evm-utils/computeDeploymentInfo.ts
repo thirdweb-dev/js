@@ -18,6 +18,7 @@ import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
+import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
 
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
@@ -188,6 +189,9 @@ export async function encodeConstructorParamsForImplementation(
         }
 
         return deploymentInfo.transaction.predictedAddress;
+      } else if (p.name && p.name.includes("royaltyEngineAddress")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        return getRoyaltyEngineV1ByChainId(chainId);
       } else {
         throw new Error("Can't resolve constructor arguments");
       }
