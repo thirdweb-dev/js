@@ -45,11 +45,13 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
   private clientId?: string;
   private secretKey?: string;
+  private authToken?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
     this.clientId = options?.clientId;
     this.secretKey = options?.secretKey;
+    this.authToken = options?.authToken;
   }
 
   async uploadBatch(
@@ -276,7 +278,15 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         );
       }
 
-      if (this.secretKey) {
+      if ((this.authToken && this.clientId) || (this.authToken && this.secretKey)) {
+        throw new Error(
+          "Cannot use both auth token and client ID or secret key. Please use auth token or secret key for server-side applications or clientId for client-side applications.",
+        );
+      }
+
+      if (this.authToken) {
+        xhr.setRequestHeader("Authorization", `Bearer ${this.authToken}`);
+      } else if (this.secretKey) {
         xhr.setRequestHeader("x-secret-key", this.secretKey);
       } else if (this.clientId) {
         xhr.setRequestHeader("x-client-id", this.clientId);
@@ -301,8 +311,16 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       );
     }
 
+    if ((this.authToken && this.clientId) || (this.authToken && this.secretKey)) {
+      throw new Error(
+        "Cannot use both auth token and client ID or secret key. Please use auth token or secret key for server-side applications or clientId for client-side applications.",
+      );
+    }
+
     const headers: HeadersInit = {};
-    if (this.secretKey) {
+    if (this.authToken) {
+      headers["Authorization"] = `Bearer ${this.authToken}`;
+    } else if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
     } else if (this.clientId) {
       headers["x-client-id"] = this.clientId;

@@ -173,6 +173,8 @@ export function getProviderFromRpcUrl(
         }
       } else if (sdkOptions?.secretKey) {
         headers["x-secret-key"] = sdkOptions?.secretKey;
+      } else if (sdkOptions?.authToken) {
+        headers["Authorization"] = `Bearer ${sdkOptions?.authToken}`;
       }
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);

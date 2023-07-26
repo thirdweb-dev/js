@@ -13,17 +13,20 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
   private entryPoint: string;
   private clientId?: string;
   private secretKey?: string;
+  private authToken?: string;
   constructor(
     paymasterUrl: string,
     entryPoint: string,
     clientId?: string,
     secretKey?: string,
+    authToken?: string,
   ) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
     this.clientId = clientId;
     this.secretKey = secretKey;
+    this.authToken = authToken;
   }
 
   async getPaymasterAndData(
@@ -40,7 +43,15 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         );
       }
 
-      if (this.secretKey) {
+      if ((this.authToken && this.clientId) || (this.authToken && this.secretKey)) {
+        throw new Error(
+          "Cannot use both auth token and client ID or secret key. Please use auth token or secret key for server-side applications and clientId for client-side applications."
+        );
+      }
+
+      if (this.authToken) {
+        headers["Authorization"] = `Bearer ${this.authToken}`;
+      } else if (this.secretKey) {
         headers["x-secret-key"] = this.secretKey;
       } else if (this.clientId) {
         headers["x-client-id"] = this.clientId;
@@ -93,4 +104,5 @@ export const getVerifyingPaymaster = (
   entryPoint: string,
   clientId?: string,
   secretKey?: string,
-) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, clientId, secretKey);
+  authToken?: string,
+) => new VerifyingPaymasterAPI(paymasterUrl, entryPoint, clientId, secretKey, authToken);

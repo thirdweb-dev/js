@@ -70,6 +70,7 @@ export class ContractVerifier extends RPCConnectionHandler {
       this.storage,
       this.options.clientId,
       this.options.secretKey,
+      this.options.authToken,
       constructorArgs,
     );
 

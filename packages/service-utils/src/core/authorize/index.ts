@@ -10,6 +10,7 @@ import { AuthorizationResult } from "./types";
 export type AuthorizationInput = {
   secretKey: string | null;
   clientId: string | null;
+  authToken: string | null;
   origin: string | null;
   bundleId: string | null;
   secretKeyHash: string | null;
@@ -34,31 +35,31 @@ export async function authorize(
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
-  const { clientId, targetAddress, secretKeyHash } = authData;
+  const { clientId, targetAddress, secretKeyHash, authToken } = authData;
   const { enforceAuth } = serviceConfig;
 
   // BACKWARDS COMPAT: if auth not enforced and
   //                   we don't have auth credentials bypass
-  if (!enforceAuth && !clientId && !secretKeyHash) {
+  if (!enforceAuth && !clientId && !secretKeyHash && !authToken) {
     return {
       authorized: true,
       apiKeyMeta: null,
     };
   }
 
-  // if we don't have a client id at this point we can't authorize
-  if (!clientId) {
+  // if we don't have a client id or auth token at this point, we can't authorize
+  if (!clientId && !authToken) {
     return {
       authorized: false,
       status: 401,
-      errorMessage: "Missing clientId or secretKey.",
+      errorMessage: "Missing clientId, secretKey or auth token.",
       errorCode: "MISSING_KEY",
     };
   }
 
   let apiKeyMeta: ApiKeyMetadata | null = null;
   // if we have cache options we want to check the cache first
-  if (cacheOptions) {
+  if (cacheOptions && clientId) {
     try {
       const cachedKey = await cacheOptions.get(clientId);
       if (cachedKey) {
@@ -83,7 +84,7 @@ export async function authorize(
   }
 
   // if we don't have a cached key, fetch from the API
-  if (!apiKeyMeta) {
+  if (!apiKeyMeta && clientId) {
     try {
       const { data, error } = await fetchKeyMetadataFromApi(
         clientId,

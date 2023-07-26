@@ -56,6 +56,10 @@ export type IpfsUploaderOptions = {
    * You can get an secretKey here: https://thirdweb.com/create-api-key
    */
   secretKey?: string;
+  /**
+   * Optional authToken to associate with the IpfsUploader - when used from the backend.
+   */
+  authToken?: string;
 };
 
 /**

@@ -9,6 +9,7 @@ export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
   secretKey?: string;
+  authToken?: string;
 };
 
 export type WalletData = {
@@ -70,6 +71,7 @@ export class LocalWallet extends AbstractClientWallet<
         chains: this.options.chains || defaults,
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
+        authToken: this.options.authToken,
       });
     }
     return this.connector;

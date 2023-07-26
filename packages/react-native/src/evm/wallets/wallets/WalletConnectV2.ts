@@ -19,7 +19,7 @@ export type WC2Options = {
   projectId?: string;
 } & Omit<
   WalletOptions<WalletConnectOptions>,
-  "projectId" | "qrcode" | "qrModalOptions" | "clientId" | "secretKey"
+  "projectId" | "qrcode" | "qrModalOptions" | "clientId" | "secretKey" | "authToken"
 > & {
     walletId: NonNullable<WalletOptions["walletId"]>;
   };

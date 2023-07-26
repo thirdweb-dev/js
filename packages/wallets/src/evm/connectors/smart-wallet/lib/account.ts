@@ -25,6 +25,7 @@ export class AccountAPI extends BaseAccountAPI {
     this.sdk = ThirdwebSDK.fromPrivateKey(LOCAL_NODE_PKEY, params.chain, {
       clientId: params.clientId,
       secretKey: params.secretKey,
+      authToken: params.authToken,
     });
   }
 

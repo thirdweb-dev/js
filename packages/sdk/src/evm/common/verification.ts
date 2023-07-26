@@ -63,6 +63,7 @@ export async function verifyThirdwebPrebuiltImplementation(
   storage: ThirdwebStorage,
   clientId?: string,
   secretKey?: string,
+  authToken?: string,
   constructorArgs?: ConstructorParamMap,
 ): Promise<string | string[]> {
   const contractAddress = await getThirdwebContractAddress(
@@ -71,6 +72,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     storage,
     clientId,
     secretKey,
+    authToken,
   );
   const encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
     contractName,
@@ -78,6 +80,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     storage,
     clientId,
     secretKey,
+    authToken,
     constructorArgs,
   );
 

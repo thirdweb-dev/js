@@ -18,7 +18,7 @@ export async function authorizeNode(
   authInput: AuthInput,
   serviceConfig: NodeServiceConfig,
 ): Promise<AuthorizationResult> {
-  let authData;
+  let authData: AuthorizationInput;
   try {
     authData = extractAuthorizationData(authInput);
   } catch (e) {
@@ -26,7 +26,7 @@ export async function authorizeNode(
       return {
         authorized: false,
         status: 400,
-        errorMessage: "Please pass either a client id or a secret key.",
+        errorMessage: "Please pass either a client id, secret key or auth token.",
         errorCode: "KEY_CONFLICT",
       };
     }
@@ -69,6 +69,7 @@ export function extractAuthorizationData(
 
   const headers = authInput.req.headers;
   const secretKey = getHeader(headers, "x-secret-key");
+  const authToken = getHeader(headers, "Authorization");
   // prefer clientId that is explicitly passed in
   let clientId = authInput.clientId ?? null;
 
@@ -122,6 +123,7 @@ export function extractAuthorizationData(
     secretKeyHash,
     secretKey,
     clientId,
+    authToken,
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,

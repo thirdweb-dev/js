@@ -20,6 +20,7 @@ export type SmartWalletConfig = {
   factoryAddress: string;
   clientId?: string;
   secretKey?: string;
+  authToken?: string;
   gasless: boolean;
   bundlerUrl?: string;
   paymasterUrl?: string;
@@ -42,6 +43,7 @@ export interface AccountApiParams
   accountAddress?: string;
   clientId?: string;
   secretKey?: string;
+  authToken?: string;
 }
 
 export interface ProviderConfig extends ContractInfo {
@@ -50,6 +52,7 @@ export interface ProviderConfig extends ContractInfo {
   entryPointAddress: string;
   clientId?: string;
   secretKey?: string;
+  authToken?: string;
   bundlerUrl: string;
   factoryAddress: string;
   accountAddress?: string;

@@ -12,6 +12,7 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
       supportedChains: z.array(ChainInfoInputSchema).default(defaultChains),
       clientId: z.string().optional(),
       secretKey: z.string().optional(),
+      authToken: z.string().optional(),
       readonlySettings: z
         .object({
           rpcUrl: z.string().url(),

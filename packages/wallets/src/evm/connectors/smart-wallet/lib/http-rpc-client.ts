@@ -19,6 +19,7 @@ export class HttpRpcClient {
     chainId: number,
     clientId?: string,
     secretKey?: string,
+    authToken?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
@@ -33,7 +34,15 @@ export class HttpRpcClient {
         );
       }
 
-      if (secretKey) {
+      if (authToken && clientId || authToken && secretKey) {
+        throw new Error(
+          "Cannot use both auth token and client ID or secret key. Please use auth token or secret key for server-side applications and clientId for client-side applications.",
+        );
+      }
+
+      if (authToken) {
+        headers["Authorization"] = `Bearer ${authToken}`;
+      } else if (secretKey) {
         headers["x-secret-key"] = secretKey;
       } else if (clientId) {
         headers["x-client-id"] = clientId;

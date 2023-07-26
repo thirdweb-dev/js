@@ -12,11 +12,13 @@ export function createStorage(
       gatewayUrls: options.gatewayUrls,
       clientId: options.clientId,
       secretKey: options.secretKey,
+      authToken: options.authToken,
     });
   } else {
     return new ThirdwebStorage({
       clientId: options?.clientId,
       secretKey: options?.secretKey,
+      authToken: options?.authToken,
     });
   }
 }

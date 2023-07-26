@@ -76,6 +76,7 @@ export function getChainRPCs(
  * @param chain - The chain config to assemble RPC URLs from
  * @param clientId - The client id to use for the RPC URL
  * @param secretKey - The secret key to use for the RPC URL
+ * @param authToken - The auth token to use for the RPC URL
  * @returns The first valid RPC URL for the chain
  */
 export function getValidChainRPCs(

@@ -1,11 +1,11 @@
 let alreadyChecked = false;
-export function checkClientIdOrSecretKey(message: string, clientId?: string, secretKey?: string) {
+export function checkClientIdOrSecretKey(message: string, clientId?: string, secretKey?: string, authToken?: string) {
     if (alreadyChecked) {
         return;
     }
     alreadyChecked = true;
 
-    if (clientId || secretKey) {
+    if (clientId || secretKey || authToken) {
         return;
     }
 

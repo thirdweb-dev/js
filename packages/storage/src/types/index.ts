@@ -7,6 +7,7 @@ export type ThirdwebStorageOptions<T extends UploadOptions> = {
   gatewayUrls?: GatewayUrls | string[];
   clientId?: string;
   secretKey?: string;
+  authToken?: string;
 };
 
 export interface IThirdwebStorage {
