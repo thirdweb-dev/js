@@ -30,6 +30,17 @@ export default {
       "name": "ZetaChain Athens Testnet Explorer",
       "url": "https://explorer.athens.zetachain.com",
       "standard": "none"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://zetachain-athens-3.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     }
   ],
   "testnet": true,

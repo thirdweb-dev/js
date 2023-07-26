@@ -2,13 +2,18 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Bitnet",
   "chain": "BTN",
+  "icon": {
+    "url": "ipfs://QmS9h3nFiCzaBLnBNw8Wot4U7vvEVK45EQfi8nxH4nvrmz",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "rpc": [
     "https://bitnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.bitnet.money"
+    "https://rpc.bitnet.money",
+    "https://rpc.btnscan.com"
   ],
-  "faucets": [
-    "https://bitnet.money/forum/showthread.php?tid=2"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Bitnet",
     "symbol": "BTN",
