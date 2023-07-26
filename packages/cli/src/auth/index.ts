@@ -10,14 +10,17 @@ import prompts from "prompts";
 import url from "url";
 import { logger } from "../core/helpers/logger";
 import { ApiResponse } from "../lib/types";
+import _ from "lodash";
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
 
 export async function loginUser(
   credsConfigPath: string,
+  cliWalletPath: string,
   options?: { new: boolean },
   showLogs?: boolean,
 ) {
   const creds = getSession(credsConfigPath);
-  if (creds.token && !options?.new) {
+  if (creds?.token && !options?.new) {
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
@@ -32,7 +35,8 @@ export async function loginUser(
         ),
       );
     }
-    const apiKey = await startServer({ browser: true }, credsConfigPath);
+    await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
+    const apiKey = await startServer({ browser: true, credsConfigPath, cliWalletPath });
     if (!apiKey) {
       throw new Error("Failed to login");
     }
@@ -40,7 +44,7 @@ export async function loginUser(
   }
 }
 
-export async function logoutUser(credsConfigPath: string) {
+export async function logoutUser(credsConfigPath: string, cliWalletPath: string) {
   try {
     const dirExists = fs.existsSync(credsConfigPath);
     if (!dirExists) {
@@ -49,6 +53,7 @@ export async function logoutUser(credsConfigPath: string) {
     const configJson = fs.readFileSync(credsConfigPath, "utf-8");
     const parsedJson = JSON.parse(configJson);
     parsedJson.password = "";
+    parsedJson.token = "";
     fs.writeFileSync(credsConfigPath, JSON.stringify(parsedJson), "utf-8");
     console.log(chalk.green("You have been logged out"));
   } catch (error) { 
@@ -58,13 +63,8 @@ export async function logoutUser(credsConfigPath: string) {
 
 export function getSession(credsConfigPath: string) {
   try {
-    const fileExists = fs.existsSync(credsConfigPath);
-    if (!fileExists) {
-      return;
-    }
-    const configFile = fs.readFileSync(credsConfigPath, "utf8");
-    const parsedConfig = JSON.parse(configFile);
-    return parsedConfig;
+    const parsedConfigJson = JSON.parse(fs.readFileSync(credsConfigPath, "utf8"));
+    return parsedConfigJson;
   } catch (error) {
     console.log(error);
   }
@@ -124,6 +124,8 @@ export async function validateKey(apiSecretKey: string) {
 
 type LoginProps = {
   browser: boolean;
+  credsConfigPath: string;
+  cliWalletPath: string;
 };
 
 function generateStateParameter(length: number) {
@@ -131,11 +133,21 @@ function generateStateParameter(length: number) {
 }
 
 export const startServer = async (
-  props: LoginProps = { browser: true },
-  credsConfigPath: string,
+  props: LoginProps = {
+    browser: true,
+    credsConfigPath: "",
+    cliWalletPath: ""
+  },
 ) => {
-  const wallet = generateLocalWallet(credsConfigPath);
-  const ourState = generateStateParameter(32);
+  const { credsConfigPath, cliWalletPath } = props;
+  const wallet = await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
+  const walletAddress = await wallet.getAddress();
+  const auth = new ThirdwebAuth(wallet, "localhost:3000");
+  const loggedIn = await auth.login({
+    domain: "localhost:3000",
+    address: walletAddress,
+  });
+  const ourState = encodeURIComponent(JSON.stringify(loggedIn));
   const urlToOpen =
     // `https://thirdweb.com/cli/login?from=cli&#${ourState}`;
     // `https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com/cli/login?from=cli&#${ourState}`;
@@ -169,12 +181,12 @@ export const startServer = async (
       const { pathname, query } = url.parse(req.url, true);
       switch (pathname) {
         case "/auth/callback": {
-          if (query.id) {
-            const secretKey = Array.isArray(query.id) ? query.id[0] : query.id;
+          if (query.token) {
+            const token = Array.isArray(query.token) ? query.token[0] : query.token;
             const theirState = Array.isArray(query.state)
               ? query.state[0]
               : query.state;
-            if (theirState !== ourState) {
+            if (theirState !== JSON.stringify(loggedIn)) {
               res.writeHead(400, { "Content-Type": "text/plain" }); // send a 400 response
               res.end("Unauthorized request, state mismatch", () => {
                 finish(new Error("Unauthorized request, state mismatch"));
@@ -183,8 +195,10 @@ export const startServer = async (
                 new Error(chalk.red("Unauthorized request, state mismatch")),
               );
             } else {
+              const configJson = JSON.parse(fs.readFileSync(credsConfigPath, "utf-8"));
               fs.writeFileSync(credsConfigPath, JSON.stringify({
-
+                ...configJson,
+                token
               }), {
                 encoding: "utf8",
                 mode: 0o600,
@@ -193,14 +207,14 @@ export const startServer = async (
                 finish();
               });
               logger.info(chalk.green(`Successfully logged in.`));
-              resolve(secretKey); // resolve promise with secretKey
+              resolve(token); // resolve promise with secretKey
             }
           } else {
             res.writeHead(400, { "Content-Type": "text/plain" }); // send a 400 response
-            res.end("No secretKey received", () => {
-              finish(new Error("No secretKey received"));
+            res.end("No authToken received", () => {
+              finish(new Error("No authToken received"));
             });
-            reject(new Error(chalk.red("No secretKey received")));
+            reject(new Error(chalk.red("No authToken received")));
           }
         }
       }
@@ -221,34 +235,67 @@ export const startServer = async (
   return Promise.race([timerPromise, loginPromise]);
 };
 
-async function promptAndSavePassword(credsConfigPath: string) {
+async function getOrCreatePassword(credsConfigPath: string): Promise<string> {
+  const configExists = fs.existsSync(credsConfigPath);
+  const configJson = JSON.parse(fs.readFileSync(credsConfigPath, "utf-8"));
+
+  if (configExists && configJson.password) {
+    return configJson.password;
+  }
+
   const response = await prompts({
     type: "invisible",
     name: "password",
     message: `Please enter a password to authenticate with the CLI`,
   });
 
-  const fileExists = fs.existsSync(credsConfigPath);
-  if (!fileExists) {
-    return;
+  const file = fs.existsSync(credsConfigPath);
+  if (!file) {
+    fs.writeFileSync(credsConfigPath, JSON.stringify({
+      token: "",
+      password: response.password
+    }), {
+      encoding: "utf8",
+      mode: 0o600,
+    });
+    return response.password;
+  } else {
+    const configJson = fs.readFileSync(credsConfigPath, "utf-8");
+    const parsedJson = JSON.parse(configJson);
+  
+    fs.writeFileSync(credsConfigPath, JSON.stringify({
+      ...parsedJson,
+      password: response.password
+    }), "utf-8");
   }
-  const configJson = fs.readFileSync(credsConfigPath, "utf-8");
-  const parsedJson = JSON.parse(configJson);
-
-  fs.writeFileSync(credsConfigPath, JSON.stringify({
-    ...parsedJson,
-    password: response.password
-  }), "utf-8");
 
   return response.password;
 }
 
-async function generateLocalWallet(configCredsPath: string) {
+async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
+  // Check if we have a wallet already or password.
+  let password = await getOrCreatePassword(configCredsPath);
+  const walletJson = fs.readFileSync(cliWalletPath, "utf8");
   const wallet = new LocalWallet();
-  await wallet.generate();
-  const password = promptAndSavePassword(configCredsPath);
-  await wallet.save({
+
+  if (walletJson !== "") {
+    await wallet.import({
+      encryptedJson: walletJson,
+      password: password,
+    });
+    return wallet;
+  }
+
+  wallet.generate();
+
+  const walletExported = await wallet.export({
     strategy: "encryptedJson",
-    password: "password",
+    password,
   });
+  fs.writeFileSync(cliWalletPath, walletExported, {
+    encoding: "utf8",
+    mode: 0o600,
+  });
+
+  return wallet;
 }

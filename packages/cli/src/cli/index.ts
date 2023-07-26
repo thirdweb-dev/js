@@ -31,6 +31,7 @@ const main = async () => {
     "last-version-check.txt",
   );
   const credsConfigPath = path.join(configDir, "creds.json");
+  const cliWalletPath = path.join(configDir, "wallet.json");
 
   const program = new Command();
 
@@ -60,6 +61,14 @@ const main = async () => {
       // Create config directory if it doesn't exist
       if (regenerateConfig) {
         fs.mkdirSync(configDir, { recursive: true });
+        fs.writeFileSync(credsConfigPath, JSON.stringify({}), {
+          encoding: "utf-8",
+          mode: 0o600,
+        });
+        fs.writeFileSync(cliWalletPath, "", {
+          encoding: "utf-8",
+          mode: 0o600,
+        });
       }
 
       // Create cache directory if it doesn't exist
@@ -332,7 +341,7 @@ const main = async () => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath);
+        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
       } else {
         await validateKey(options.key);
         apiSecretKey = options.key;
@@ -364,7 +373,7 @@ const main = async () => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath);
+        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
       } else {
         await validateKey(options.key);
         apiSecretKey = options.key;
@@ -404,7 +413,7 @@ const main = async () => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath);
+        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
       } else {
         await validateKey(options.key);
         apiSecretKey = options.key;
@@ -427,7 +436,7 @@ const main = async () => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath);
+        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
       } else {
         await validateKey(options.key);
         apiSecretKey = options.key;
@@ -488,7 +497,7 @@ const main = async () => {
       let apiSecretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath);
+        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
       } else {
         await validateKey(options.key);
         apiSecretKey = options.key;
@@ -503,7 +512,7 @@ const main = async () => {
     )
     .option("-n, --new", "Login with a new API secret key", false)
     .action(async (options) => {
-      await loginUser(credsConfigPath, options, true);
+      await loginUser(credsConfigPath, cliWalletPath, options, true);
     });
 
   program
@@ -512,7 +521,7 @@ const main = async () => {
       "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
     )
     .action(async () => {
-      await logoutUser(credsConfigPath);
+      await logoutUser(credsConfigPath, cliWalletPath);
     });
 
   await program.parseAsync();
