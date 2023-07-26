@@ -6,6 +6,7 @@ import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
 import {
   NATIVE_TOKEN_ADDRESS,
   Price,
+  TransactionResult,
   fetchCurrencyValue,
   isNativeToken,
   normalizePriceValue,
@@ -111,7 +112,7 @@ export abstract class AbstractWallet
     to: string,
     amount: Price,
     currencyAddress: string = NATIVE_TOKEN_ADDRESS,
-  ) {
+  ): Promise<TransactionResult> {
     const signer = await this.getSigner();
     const from = await this.getAddress();
 
@@ -131,11 +132,11 @@ export abstract class AbstractWallet
         to,
         value,
       });
-      return tx.wait();
+      return { receipt: await tx.wait() };
     } else {
       const erc20 = createErc20(signer, currencyAddress);
       const tx = await erc20.transfer(to, value);
-      return tx.wait();
+      return { receipt: await tx.wait() };
     }
   }
 
