@@ -112,6 +112,7 @@ import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
+import { getProcessEnv } from "../../core/utils/process";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -707,10 +708,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce((acc, chain) => {
-      acc[chain.chainId] = chain;
-      return acc;
-    }, {} as Record<number, Chain>);
+    const chainMap = chains.reduce(
+      (acc, chain) => {
+        acc[chain.chainId] = chain;
+        return acc;
+      },
+      {} as Record<number, Chain>,
+    );
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
@@ -2130,7 +2134,6 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   private hasLocalFactory() {
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
-    return process.env.factoryAddress !== undefined;
+    return !!getProcessEnv("factoryAddress");
   }
 }
