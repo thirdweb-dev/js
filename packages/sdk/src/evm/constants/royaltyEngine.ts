@@ -16,15 +16,9 @@ export const ROYALTY_ENGINE_V1_ADDRESS: Record<number, string> =
     [ChainId.Goerli]: "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
     [ChainId.BinanceSmartChainMainnet]:
       "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
-    [ChainId.BinanceSmartChainTestnet]:
-      "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
     [ChainId.Polygon]: "0x28EdFcF0Be7E86b07493466e7631a213bDe8eEF2",
     [ChainId.Mumbai]: "0x0a01E11887f727D1b1Cd81251eeEE9BEE4262D07",
     [ChainId.Avalanche]: "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
-    [ChainId.AvalancheFujiTestnet]:
-      "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
     [ChainId.Optimism]: "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
-    [ChainId.OptimismGoerli]: "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
     [ChainId.Arbitrum]: "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
-    [ChainId.ArbitrumGoerli]: "0xEF770dFb6D5620977213f55f99bfd781D04BBE15",
   };
