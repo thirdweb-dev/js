@@ -1,4 +1,4 @@
-import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
+import { Chain, getChainByChainId, getChainBySlug } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -28,19 +28,21 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   private aaProvider: ERC4337EthersProvider | undefined;
   private accountApi: AccountAPI | undefined;
   personalWallet?: EVMWallet;
+  chainId?: number;
 
   constructor(config: SmartWalletConfig) {
     super();
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet, factoryAddress: string = this.config.factoryAddress) {
+  async initialize(personalWallet: EVMWallet) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
       clientId: config.clientId,
       secretKey: config.secretKey,
     }) as providers.BaseProvider;
     const chainSlug = await this.getChainSlug(config.chain, originalProvider);
+    this.chainId = await this.getChainId(config.chain, originalProvider);
     const bundlerUrl =
       this.config.bundlerUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const paymasterUrl =
@@ -62,7 +64,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
               this.config.secretKey,
             )
         : undefined,
-      factoryAddress: factoryAddress,
+      factoryAddress: config.factoryAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       clientId: config.clientId,
@@ -134,7 +136,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateChains(chains: Chain[]): void { }
+  updateChains(chains: Chain[]): void {}
 
   /**
    * Execute a single transaction
@@ -220,7 +222,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   protected defaultFactoryInfo(): FactoryContractInfo {
     return {
-      createAccount: async (factory: SmartContract, owner: string) => {
+      createAccount: async (factory, owner) => {
         return factory.prepare("createAccount", [
           owner,
           ethers.utils.toUtf8Bytes(""),
@@ -272,6 +274,31 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       }
       // otherwise its the network name
       return chainOrRpc;
+    } else {
+      throw new Error(`Invalid network: ${chainOrRpc}`);
+    }
+  }
+
+  protected async getChainId(
+    chainOrRpc: ChainOrRpcUrl,
+    provider: ethers.providers.Provider,
+  ): Promise<number> {
+    if (typeof chainOrRpc === "object") {
+      return chainOrRpc.chainId;
+    }
+    if (typeof chainOrRpc === "number") {
+      const chain = getChainByChainId(chainOrRpc);
+      return chain.chainId;
+    }
+    if (typeof chainOrRpc === "string") {
+      if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
+        // if it's a url, try to get the chain id from the provider
+        const chainId = (await provider.getNetwork()).chainId;
+        const chain = getChainByChainId(chainId);
+        return chain.chainId;
+      }
+      // otherwise its the network name
+      return getChainBySlug(chainOrRpc).chainId;
     } else {
       throw new Error(`Invalid network: ${chainOrRpc}`);
     }
