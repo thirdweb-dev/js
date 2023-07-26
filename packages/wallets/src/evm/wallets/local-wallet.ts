@@ -78,7 +78,7 @@ export class LocalWallet extends AbstractClientWallet<
   /**
    * load saved wallet data from storage or generate a new one and save it.
    */
-  async loadOrCreate(options: LoadOptions) {
+  async loadOrCreate(options: LoadOrCreateOptions) {
     if (await this.getSavedData()) {
       await this.load(options);
     } else {
@@ -261,6 +261,12 @@ export class LocalWallet extends AbstractClientWallet<
     }
 
     if (options.strategy === "mnemonic") {
+      if (!wallet.mnemonic) {
+        throw new Error(
+          "mnemonic can not be computed if wallet is created from a private key or generated using generate()",
+        );
+      }
+
       const mnemonic = await getEncryptor(options.encryption)(
         wallet.mnemonic.phrase,
       );
@@ -324,7 +330,7 @@ export class LocalWallet extends AbstractClientWallet<
     if (options.strategy === "mnemonic") {
       if (!wallet.mnemonic) {
         throw new Error(
-          "mnemonic can not be computed if wallet is created from a private key",
+          "mnemonic can not be computed if wallet is created from a private key or generated using generate()",
         );
       }
 
@@ -412,6 +418,19 @@ type LoadOptions =
     }
   | {
       strategy: "mnemonic";
+      storage?: AsyncStorage;
+      encryption: DecryptOptions;
+    };
+
+// omit the mnemonic strategy option from LoadOptions
+type LoadOrCreateOptions =
+  | {
+      strategy: "encryptedJson";
+      password: string;
+      storage?: AsyncStorage;
+    }
+  | {
+      strategy: "privateKey";
       storage?: AsyncStorage;
       encryption: DecryptOptions;
     };
