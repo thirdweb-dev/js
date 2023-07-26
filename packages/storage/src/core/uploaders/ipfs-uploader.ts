@@ -273,7 +273,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
       xhr.open(
         "POST",
-        `${CUSTOM_UPLOAD_SERVER_URL || CUSTOM_UPLOAD_SERVER_URL}/ipfs/upload`,
+        `${CUSTOM_UPLOAD_SERVER_URL || TW_UPLOAD_SERVER_URL}/ipfs/upload`,
       );
 
       if (CUSTOM_UPLOAD_SERVER_URL) {
