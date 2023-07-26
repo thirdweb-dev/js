@@ -2,13 +2,7 @@ import { useWallet } from "../../../core/hooks/wallet-hooks";
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  signLoginPayload,
-  type LoginOptions,
-  type LoginPayload,
-  type LoginPayloadData,
-} from "@thirdweb-dev/auth";
-import { GenericAuthWallet } from "@thirdweb-dev/wallets";
+import { signLoginPayload, type LoginPayloadData } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 import { AUTH_TOKEN_STORAGE_KEY } from "../../../core/constants/auth";
 
