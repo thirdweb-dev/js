@@ -8,7 +8,7 @@ import open from "open";
 import path from "path";
 import prompts from "prompts";
 import xdgAppPaths from "xdg-app-paths";
-import { loginUser, logoutUser, validateKey } from "../auth";
+import { loginUser, logoutUser } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -338,15 +338,16 @@ const main = async () => {
     .option("--zksync", "Deploy on ZKSync")
     .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let authToken = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
+        authToken = await loginUser(credsConfigPath, cliWalletPath);
       } else {
-        await validateKey(options.key);
-        apiSecretKey = options.key;
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
+        // await validateToken(options.key);
+        authToken = options.key;
       }
-      const url = await deploy(options, apiSecretKey);
+      const url = await deploy(options, authToken);
       if (url) {
         await open(url);
       }
@@ -370,18 +371,18 @@ const main = async () => {
     .option("--ci", "Continuous Integration mode")
     .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let authToken = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
+        authToken = await loginUser(credsConfigPath, cliWalletPath);
       } else {
-        await validateKey(options.key);
-        apiSecretKey = options.key;
+        // await validateKey(options.key);
+        authToken = options.key;
       }
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
-      const url = await processProject(options, "publish", apiSecretKey);
+      const url = await processProject(options, "publish", authToken);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -410,15 +411,15 @@ const main = async () => {
     .option("--ci", "Continuous Integration mode")
     .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let authToken = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
+        authToken = await loginUser(credsConfigPath, cliWalletPath);
       } else {
-        await validateKey(options.key);
-        apiSecretKey = options.key;
+        // await validateKey(options.key);
+        authToken = options.key;
       }
-      const url = await processProject(options, "publish", apiSecretKey);
+      const url = await processProject(options, "publish", authToken);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -433,16 +434,16 @@ const main = async () => {
     .argument("[upload]", "path to file or directory to upload")
     .option("-k, --key <key>", "API key to authorize usage")
     .action(async (_path, options) => {
-      let apiSecretKey = "";
+      let authToken = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
+        authToken = await loginUser(credsConfigPath, cliWalletPath);
       } else {
-        await validateKey(options.key);
-        apiSecretKey = options.key;
+        // await validateKey(options.key);
+        authToken = options.key;
       }
       const storage = new ThirdwebStorage({
-        secretKey: apiSecretKey,
+        authToken,
       });
       try {
         const uri = await upload(storage, _path);
@@ -494,15 +495,15 @@ const main = async () => {
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-k, --key <key>", "API key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let authToken = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(credsConfigPath, cliWalletPath);
+        authToken = await loginUser(credsConfigPath, cliWalletPath);
       } else {
-        await validateKey(options.key);
-        apiSecretKey = options.key;
+        // await validateKey(options.key);
+        authToken = options.key;
       }
-      await generate(options, apiSecretKey);
+      await generate(options, authToken);
     });
 
   program
@@ -521,7 +522,7 @@ const main = async () => {
       "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
     )
     .action(async () => {
-      await logoutUser(credsConfigPath, cliWalletPath);
+      await logoutUser(credsConfigPath);
     });
 
   await program.parseAsync();

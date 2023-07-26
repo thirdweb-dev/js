@@ -8,10 +8,10 @@ import { upload } from "../storage/command";
 export async function deployApp(
   distPath = "dist",
   projectPath = ".",
-  apiSecretKey: string,
+  authToken: string,
 ) {
   const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
+    authToken,
   });
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(
