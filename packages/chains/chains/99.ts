@@ -21,7 +21,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.com/poa/core",
-      "standard": "none"
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,
