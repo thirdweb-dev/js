@@ -11,11 +11,11 @@ import { SmartWalletConfig } from "../smart-wallet/types";
 
 let SmartWalletConnector = module.SmartWalletConnector;
 
-export class TokenBoundConnnector extends SmartWalletConnector {
+export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
     protected config: TokenBoundSmartWalletConfig;
 
     constructor(config: TokenBoundSmartWalletConfig) {
-        const smartWalletConfig: SmartWalletConfig = {
+        const tokenBoundSmartWalletConfig: TokenBoundSmartWalletConfig = {
             chain: config.chain,
             factoryAddress: config.factoryAddress,
             clientId: config.clientId,
@@ -25,8 +25,11 @@ export class TokenBoundConnnector extends SmartWalletConnector {
             paymasterUrl: config.paymasterUrl,
             paymasterAPI: config.paymasterAPI,
             entryPointAddress: config.entryPointAddress,
+            tokenContract: config.tokenContract,
+            tokenId: config.tokenId,
+            implementation: config.implementation,
         }
-        super(smartWalletConfig);
+        super(tokenBoundSmartWalletConfig);
         this.config = config;
     }
 
