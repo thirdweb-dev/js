@@ -3,4 +3,5 @@
 "@thirdweb-dev/react": patch
 ---
 
-Use Wallet Connect v2 connector in mobile for Metamask, Rainbow, Trust and Zerion wallet
+- Fix wallet connection on mobile for rainbowWallet(), trustWallet(), zerionWallet()
+- update @WalletConnect packages
