@@ -35,7 +35,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet) {
+  async initialize(params: ConnectParams<SmartWalletConnectionArgs>) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
       clientId: config.clientId,
@@ -47,7 +47,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const paymasterUrl =
       this.config.paymasterUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
-    const localSigner = await personalWallet.getSigner();
+    const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
       localSigner,
@@ -64,12 +64,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             )
         : undefined,
       factoryAddress: config.factoryAddress,
+      accountAddress: params.accountAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       clientId: config.clientId,
       secretKey: config.secretKey,
     };
-    this.personalWallet = personalWallet;
+    this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = await create4337Provider(
       providerConfig,
@@ -82,7 +83,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   async connect(
     connectionArgs: ConnectParams<SmartWalletConnectionArgs>,
   ): Promise<string> {
-    await this.initialize(connectionArgs.personalWallet);
+    await this.initialize(connectionArgs);
     return await this.getAddress();
   }
 
@@ -147,9 +148,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const signer = await this.getSigner();
     const signerAddress = await signer.getAddress();
 
-    const restrictions = await accountContract.account.getAccessRestrictions(
-      signerAddress,
-    );
+    const restrictions = (await accountContract.account.getAllSigners()).filter(
+      (item) =>
+        ethers.utils.getAddress(item.signer) ===
+        ethers.utils.getAddress(signerAddress),
+    )[0].permissions;
 
     return restrictions.approvedCallTargets.includes(transaction.getTarget());
   }

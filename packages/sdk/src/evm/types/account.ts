@@ -5,65 +5,52 @@ import { AmountSchema } from "../../core/schema/shared";
 import { EndDateSchema, StartDateSchema } from "../schema";
 import { AddressOrEnsSchema } from "../schema";
 
-export type AccountEvent = {
-  account: string;
-  admin: string;
-};
-
-export type AccessRestrictions = {
+export type SignerPermissions = {
   startDate: Date;
   expirationDate: Date;
   nativeTokenLimitPerTransaction: BigNumber;
   approvedCallTargets: string[];
 };
 
-export const AccessRestrictionsSchema = /* @__PURE__ */ z.object({
+export const SignerPermissionsSchema = /* @__PURE__ */ z.object({
   startDate: StartDateSchema,
   expirationDate: EndDateSchema,
   nativeTokenLimitPerTransaction: /* @__PURE__ */ AmountSchema.default(0),
   approvedCallTargets: /* @__PURE__ */ z.array(AddressOrEnsSchema),
 });
 
-export type AccessRestrictionsInput = z.input<typeof AccessRestrictionsSchema>;
+export type SignerPermissionsInput = z.input<typeof SignerPermissionsSchema>;
+export type SignerPermissionsOutput = z.output<typeof SignerPermissionsSchema>;
 
-export type SignerWithRestrictions = {
+export type SignerWithPermissions = {
   signer: string;
-  isAdmin: boolean;
-  restrictions: AccessRestrictions;
+  permissions: SignerPermissions;
 };
 
-export const SignerWithRestrictionsSchema = /* @__PURE__ */ z.object({
-  signer: AddressOrEnsSchema,
-  isAdmin: /* @__PURE__ */ z.boolean(),
-  restrictions: AccessRestrictionsSchema,
-});
-
-export type SignerWithRestrictionsInput = z.input<
-  typeof SignerWithRestrictionsSchema
->;
-
-export const SignerWithRestrictionsBatchSchema = /* @__PURE__ */ z.array(
-  SignerWithRestrictionsSchema,
+export const PermissionSnapshotSchema = /* @__PURE__ */ z.array(
+  /* @__PURE__ */ z.object({
+    signer: AddressOrEnsSchema,
+    makeAdmin: /* @__PURE__ */ z.boolean(),
+    permissions: SignerPermissionsSchema,
+  }),
 );
-export type SignerWithRestrictionsBatchInput = z.input<
-  typeof SignerWithRestrictionsBatchSchema
+export type PermissionSnapshotInput = z.input<typeof PermissionSnapshotSchema>;
+export type PermissionSnapshotOutput = z.output<
+  typeof PermissionSnapshotSchema
 >;
 
-export type SignedAccountPermissionsPayload = {
-  payload: IAccountPermissions.RoleRequestStruct;
+export type SignedSignerPermissionsPayload = {
+  payload: IAccountPermissions.SignerPermissionRequestStruct;
   signature: BytesLike;
 };
 
-export enum RoleAction {
-  GRANT = 0,
-  REVOKE = 1,
-}
-
-export const RoleRequest = [
-  { name: "role", type: "bytes32" },
-  { name: "target", type: "address" },
-  { name: "action", type: "uint8" },
-  { name: "validityStartTimestamp", type: "uint128" },
-  { name: "validityEndTimestamp", type: "uint128" },
+export const SignerPermissionRequest = [
+  { name: "signer", type: "address" },
+  { name: "approvedTargets", type: "address[]" },
+  { name: "nativeTokenLimitPerTransaction", type: "uint256" },
+  { name: "permissionStartTimestamp", type: "uint128" },
+  { name: "permissionEndTimestamp", type: "uint128" },
+  { name: "reqValidityStartTimestamp", type: "uint128" },
+  { name: "reqValidityEndTimestamp", type: "uint128" },
   { name: "uid", type: "bytes32" },
 ];
