@@ -510,7 +510,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({
 
   // Render the UI for your table
   return (
-    <Flex flexGrow={1} overflow="auto">
+    <Flex flexGrow={1}>
       <TableContainer>
         <Table {...getTableProps()}>
           <Thead>
