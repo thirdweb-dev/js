@@ -65,7 +65,6 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
 import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
-import { setProcessEnv } from "../../src/core/utils/process";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -256,13 +255,16 @@ export const mochaHooks = {
     await tx.wait();
     implementations["marketplace-v3"] = marketplaceEntrypointAddress;
 
-    setProcessEnv("registryAddress", thirdwebRegistryAddress);
-    setProcessEnv("factoryAddress", thirdwebFactoryDeployer.address);
-    setProcessEnv("contractPublisherAddress", contractPublisher.address);
-    const multichainRegistryAddress = await setupMultichainRegistry(
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.registryAddress = thirdwebRegistryAddress;
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.factoryAddress = thirdwebFactoryDeployer.address;
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.contractPublisherAddress = contractPublisher.address;
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry(
       trustedForwarderAddress,
     );
-    setProcessEnv("multiChainRegistryAddress", multichainRegistryAddress);
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(

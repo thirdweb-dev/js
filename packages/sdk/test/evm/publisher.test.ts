@@ -24,7 +24,6 @@ import { expect } from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
 import invariant from "tiny-invariant";
-import { getProcessEnv } from "../../src/core/utils/process";
 
 global.fetch = require("cross-fetch");
 
@@ -269,7 +268,8 @@ describe("Publishing", async () => {
             [ChainId.Hardhat]: implementations["nft-collection"] || "",
           },
           factoryAddresses: {
-            [ChainId.Hardhat]: getProcessEnv("factoryAddress"),
+            // eslint-disable-next-line turbo/no-undeclared-env-vars
+            [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
           },
         },
       },
@@ -551,7 +551,8 @@ describe("Publishing", async () => {
           [ChainId.Hardhat]: implementations["marketplace-v3"] || "",
         },
         factoryAddresses: {
-          [ChainId.Hardhat]: getProcessEnv("factoryAddress"),
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
         },
       },
     });

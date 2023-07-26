@@ -2134,6 +2134,6 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   private hasLocalFactory() {
-    return getProcessEnv("factoryAddress", undefined) !== undefined;
+    return !!getProcessEnv("factoryAddress");
   }
 }
