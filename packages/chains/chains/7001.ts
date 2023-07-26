@@ -27,11 +27,6 @@ export default {
   "status": "active",
   "explorers": [
     {
-      "name": "ZetaChain Athens Testnet Explorer",
-      "url": "https://explorer.athens.zetachain.com",
-      "standard": "none"
-    },
-    {
       "name": "blockscout",
       "url": "https://zetachain-athens-3.blockscout.com",
       "icon": {
@@ -41,6 +36,11 @@ export default {
         "format": "png"
       },
       "standard": "EIP3091"
+    },
+    {
+      "name": "ZetaChain Athens Testnet Explorer",
+      "url": "https://explorer.athens.zetachain.com",
+      "standard": "none"
     }
   ],
   "testnet": true,

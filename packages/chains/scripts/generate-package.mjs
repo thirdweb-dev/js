@@ -17,6 +17,36 @@ const combineMerge = (target, source) => {
   return destination;
 };
 
+/**
+ * @param {Chain['explorers']} explorers
+ */
+function sortExplorers(explorers = []) {
+  let etherscan = null;
+  let blockscout = null;
+
+  let restExplorers = [];
+
+  for (const explorer of explorers) {
+    if (explorer.name.includes("etherscan")) {
+      etherscan = explorer;
+    } else if (explorer.name.includes("blockscout")) {
+      blockscout = explorer;
+    } else {
+      restExplorers.push(explorer);
+    }
+  }
+
+  const returnExplorers = [];
+  if (etherscan) {
+    returnExplorers.push(etherscan);
+  }
+  if (blockscout) {
+    returnExplorers.push(blockscout);
+  }
+
+  return [...returnExplorers, ...restExplorers];
+}
+
 const chainsDir = "./chains";
 
 const chainsJsonUrl = "https://chainid.network/chains.json";
@@ -74,10 +104,15 @@ chains = chains
         ? false
         : JSON.stringify(chain).toLowerCase().includes("test");
 
-    return {
+    const resultChain = {
       ...chain,
       testnet,
     };
+    // only add the explroers if they were there in the first place
+    if (resultChain.explorers) {
+      resultChain.explorers = sortExplorers(resultChain.explorers);
+    }
+    return resultChain;
   });
 
 /**

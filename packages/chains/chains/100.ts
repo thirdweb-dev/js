@@ -37,11 +37,6 @@ export default {
   "slip44": 700,
   "explorers": [
     {
-      "name": "gnosisscan",
-      "url": "https://gnosisscan.io",
-      "standard": "EIP3091"
-    },
-    {
       "name": "blockscout",
       "url": "https://gnosis.blockscout.com",
       "icon": {
@@ -50,6 +45,11 @@ export default {
         "height": 540,
         "format": "png"
       },
+      "standard": "EIP3091"
+    },
+    {
+      "name": "gnosisscan",
+      "url": "https://gnosisscan.io",
       "standard": "EIP3091"
     }
   ],
