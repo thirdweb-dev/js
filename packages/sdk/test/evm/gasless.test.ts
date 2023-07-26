@@ -2,6 +2,7 @@
 import { ThirdwebSDK } from "../../src/evm";
 import { assert } from "chai";
 import { ethers, Wallet } from "ethers";
+import { getProcessEnv } from "../../src/core/utils/process";
 
 const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
 
@@ -15,8 +16,8 @@ describe("Gasless Forwarder", async () => {
     const sdk = new ThirdwebSDK(wallet, {
       gasless: {
         biconomy: {
-          apiKey: process.env.BICONOMY_API_KEY as string,
-          apiId: process.env.BICONOMY_API_ID as string,
+          apiKey: getProcessEnv("BICONOMY_API_KEY"),
+          apiId: getProcessEnv("BICONOMY_API_ID"),
         },
       },
     });

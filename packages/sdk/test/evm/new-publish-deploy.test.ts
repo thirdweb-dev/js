@@ -21,6 +21,9 @@ import {
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
 import { mockUploadMetadataWithBytecode } from "./utils";
+import { getProcessEnv, setProcessEnv } from "../../src/core/utils/process";
+
+const CONTRACT_PUBLISHER_ADDRESS_KEY = "contractPublisherAddress";
 
 const extendedMetadataMock = {
   name: "",
@@ -199,9 +202,11 @@ describe("New Publish Flow", async () => {
 
   describe("Deploy re-published contract", async () => {
     it("should deploy with auto factory", async () => {
-      const mockPublisher = process.env.contractPublisherAddress;
-      process.env.contractPublisherAddress =
-        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      const mockPublisher = getProcessEnv(CONTRACT_PUBLISHER_ADDRESS_KEY);
+      setProcessEnv(
+        CONTRACT_PUBLISHER_ADDRESS_KEY,
+        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7",
+      );
       const adminAddress = await adminWallet.getAddress();
 
       // mock publish as a autoFactory-deploy contract
@@ -247,7 +252,7 @@ describe("New Publish Flow", async () => {
       expect(owner).to.equal(adminAddress);
       assert(code.startsWith("0x363d3d373d3d3d363d73"));
 
-      process.env.contractPublisherAddress = mockPublisher;
+      setProcessEnv(CONTRACT_PUBLISHER_ADDRESS_KEY, mockPublisher);
     });
   });
 
@@ -278,9 +283,10 @@ describe("New Publish Flow", async () => {
     });
 
     it("should deploy via old factory", async () => {
-      const mockPublisher = process.env.contractPublisherAddress;
-      process.env.contractPublisherAddress =
-        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+      setProcessEnv(
+        CONTRACT_PUBLISHER_ADDRESS_KEY,
+        "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7",
+      );
       const adminAddress = await adminWallet.getAddress();
 
       // mock publish as old-style factory deployable -- omit deployType, networksForDeployment etc
@@ -323,7 +329,7 @@ describe("New Publish Flow", async () => {
               "31337": implementationAddress,
             },
             factoryAddresses: {
-              "31337": process.env.factoryAddress,
+              "31337": getProcessEnv("factoryAddress"),
             },
           },
           publisher: adminAddress,

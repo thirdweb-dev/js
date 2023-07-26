@@ -1,9 +1,12 @@
+import { getProcessEnv, setProcessEnv } from "../../src/core/utils/process";
 import { ThirdwebSDK } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
 import { jsonProvider, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "ethers";
+
+const CONTRACT_PUBLISHER_ADDRESS_KEY = "contractPublisherAddress";
 
 describe("Any EVM Keyless Deploy", async () => {
   let contract: SmartContract;
@@ -14,9 +17,11 @@ describe("Any EVM Keyless Deploy", async () => {
   let transactionCount: number;
 
   async function deployTieredDrop() {
-    const mockPublisher = process.env.contractPublisherAddress;
-    process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+    const mockPublisher = getProcessEnv(CONTRACT_PUBLISHER_ADDRESS_KEY);
+    setProcessEnv(
+      CONTRACT_PUBLISHER_ADDRESS_KEY,
+      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7",
+    );
     const walletAddress = await sdk.wallet.getAddress();
 
     // This needs to match the published contract for the currently used ABI
@@ -48,16 +53,18 @@ describe("Any EVM Keyless Deploy", async () => {
       },
     );
 
-    process.env.contractPublisherAddress = mockPublisher;
+    setProcessEnv("contractPublisherAddress", mockPublisher);
     const tieredDrop = await sdk.getContract(address);
 
     return tieredDrop;
   }
 
   async function deployMarketplaceV3() {
-    const mockPublisher = process.env.contractPublisherAddress;
-    process.env.contractPublisherAddress =
-      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+    const mockPublisher = getProcessEnv(CONTRACT_PUBLISHER_ADDRESS_KEY);
+    setProcessEnv(
+      CONTRACT_PUBLISHER_ADDRESS_KEY,
+      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7",
+    );
     const walletAddress = await sdk.wallet.getAddress();
 
     // This needs to match the published contract for the currently used ABI
@@ -85,7 +92,7 @@ describe("Any EVM Keyless Deploy", async () => {
       },
     );
 
-    process.env.contractPublisherAddress = mockPublisher;
+    setProcessEnv(CONTRACT_PUBLISHER_ADDRESS_KEY, mockPublisher);
     const marketplace = await sdk.getContract(address);
 
     return marketplace;
