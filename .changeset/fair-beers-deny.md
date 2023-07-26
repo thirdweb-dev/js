@@ -11,7 +11,7 @@ import { Polygon } from "@thirdweb-dev/chains";
 
 <ThirdwebProvider
   activeChain={Polygon}
-  supportedWallets={[bloctoWallet({ chain: Polygon })]}
+  supportedWallets={[bloctoWallet()]}
 >
   <App />
 </ThirdwebProvider>;
