@@ -1,23 +1,46 @@
-import { SmartWallet } from "./smart-wallet";
+import { SmartWallet, SmartWalletConfig } from "./smart-wallet";
+import type { TokenBoundSmartWalletConnector as TokenBoundSmartWalletConnectorType } from "../connectors/token-bound-smart-wallet";
 import { walletIds } from "../constants/walletIds";
-import { TokenBoundSmartWalletConfig } from "../connectors/token-bound-smart-wallet/types";
-import { WalletOptions } from "./base";
+import type {
+    TokenBoundSmartWalletConfig
+} from "../connectors/token-bound-smart-wallet/types";
+import { AbstractClientWallet, WalletOptions } from "./base";
+import type { SmartWalletConnectionArgs } from "../connectors/smart-wallet/types";
+import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
+import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
 
 export class TokenBoundSmartWallet extends SmartWallet {
+    connector?: TokenBoundSmartWalletConnectorType;
+
     static meta = {
         name: "Token Bound Smart Wallet",
-        // TODO: change this URL
         iconURL:
-            "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
+            "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/token-bound-smart-wallet.svg",
     };
 
+    static id = walletIds.tokenBoundSmartWallet;
     public get walletName() {
-        return "Token Bound Smart Wallet" as "Smart Wallet";
+        return "Token Bound Smart Wallet";
     }
 
     constructor(options: WalletOptions<TokenBoundSmartWalletConfig>) {
-        options.walletId = walletIds.tokenBoundSmartWallet;
-        super(options
-        );
+        super(options);
     }
-}      
+
+    async getConnector(): Promise<TokenBoundSmartWalletConnectorType> {
+        if (!this.connector) {
+            if (this.enableConnectApp) {
+                await this.wcWallet.init();
+                this.setupWalletConnectEventsListeners();
+            }
+
+            const { TokenBoundSmartWalletConnector } = await import(
+                "../connectors/token-bound-smart-wallet"
+            );
+            this.connector = new TokenBoundSmartWalletConnector(
+                this.options as TokenBoundSmartWalletConfig,
+            );
+        }
+        return this.connector;
+    }
+}

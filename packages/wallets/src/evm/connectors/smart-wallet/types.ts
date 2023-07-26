@@ -35,7 +35,7 @@ export type SmartWalletOptions = WalletOptions<{}>;
 
 export interface AccountApiParams
   extends Omit<BaseApiParams, "provider">,
-    ContractInfo {
+  ContractInfo {
   chain: ChainOrRpcUrl;
   localSigner: Signer;
   factoryAddress: string;
@@ -82,6 +82,7 @@ export type FactoryContractInfo = {
   createAccount: (
     factory: SmartContract,
     owner: string,
+    optionalParam?: any
   ) => Promise<Transaction>;
-  getAccountAddress: (factory: SmartContract, owner: string) => Promise<string>;
+  getAccountAddress: (factory: SmartContract, owner: string, optionalParam?: any) => Promise<string>;
 };

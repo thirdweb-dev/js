@@ -10,12 +10,11 @@ import type {
 import { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 import { SmartWalletConfig } from "../smart-wallet/types";
 
-export type TokenBoundSmartWalletConfig = SmartWalletConfig & {
+export type TokenBoundSmartWalletConfig = {
     tokenContract: SmartContract;
     tokenId: Number;
     implementation: SmartContract;
-    owner: string;
-} & ContractInfoInput &
+} & SmartWalletConfig & ContractInfoInput &
     WalletConnectReceiverConfig;
 
 export type ContractInfoInput = {
@@ -27,18 +26,25 @@ export type FactoryContractInfo = {
     abi?: ContractInterface;
     createAccount: (
         factory: SmartContract,
-        implementation: SmartContract,
-        chainId: Number,
-        tokenContract: SmartContract,
-        tokenId: Number
+        owner: string,
+        tokenInfo: {
+            implementation: SmartContract,
+            chainId: Number,
+            tokenContract: SmartContract,
+            tokenId: Number,
+            salt?: Number
+        }
     ) => Promise<Transaction>;
     getAccountAddress: (
         factory: SmartContract,
-        implementation: SmartContract,
-        chainId: Number,
-        tokenContract: SmartContract,
-        tokenId: Number,
-        salt: Number
+        owner: string,
+        tokenInfo: {
+            implementation: SmartContract,
+            chainId: Number,
+            tokenContract: SmartContract,
+            tokenId: Number,
+            salt: Number
+        }
     ) => Promise<string>;
 };
 
