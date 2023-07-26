@@ -28,7 +28,13 @@ export default {
     {
       "name": "basescout",
       "url": "https://base-goerli.blockscout.com",
-      "standard": "none"
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     },
     {
       "name": "basescan",

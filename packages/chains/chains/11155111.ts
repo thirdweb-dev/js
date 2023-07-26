@@ -5,9 +5,12 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sepolia.infura.io/v3/${INFURA_API_KEY}",
+    "wss://sepolia.infura.io/v3/${INFURA_API_KEY}",
     "https://rpc.sepolia.org",
     "https://rpc2.sepolia.org",
-    "https://rpc-sepolia.rockx.com"
+    "https://rpc-sepolia.rockx.com",
+    "https://rpc.sepolia.ethpandaops.io"
   ],
   "faucets": [
     "http://fauceth.komputing.org?chain=11155111&address=${ADDRESS}"
