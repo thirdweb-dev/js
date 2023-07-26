@@ -3,6 +3,7 @@ import {
   IpfsUploadBatchOptions,
   isFileBufferOrStringEqual,
   TW_UPLOAD_SERVER_URL,
+  CUSTOM_UPLOAD_SERVER_URL,
 } from "@thirdweb-dev/storage";
 import { IpfsUploaderOptions, UploadDataValue } from "./types";
 import * as Application from "expo-application";
@@ -136,10 +137,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           return reject(new Error("Unknown upload error occured"));
         });
 
-        xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-        xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
-        if (this.clientId) {
-          xhr.setRequestHeader("x-client-id", this.clientId);
+        if (!!CUSTOM_UPLOAD_SERVER_URL) {
+          xhr.open("POST", `${CUSTOM_UPLOAD_SERVER_URL}/ipfs/upload`);
+        } else {
+          xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
+          xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
+          if (this.clientId) {
+            xhr.setRequestHeader("x-client-id", this.clientId);
+          }
         }
 
         xhr.send(form);
@@ -153,15 +158,25 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         try {
-          const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
-            method: "POST",
-            headers: {
-              "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
-              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${CUSTOM_UPLOAD_SERVER_URL || TW_UPLOAD_SERVER_URL}/ipfs/pin-json`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...(CUSTOM_UPLOAD_SERVER_URL
+                  ? {}
+                  : {
+                      "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
+                      ...(this.clientId
+                        ? { "x-client-id": this.clientId }
+                        : {}),
+                      "Content-Type": "application/json",
+                    }),
+              },
+              body: fetchBody,
             },
-            body: fetchBody,
-          });
+          );
 
           if (res.ok) {
             const ipfs = await res.json();

@@ -1,4 +1,7 @@
-import { TW_UPLOAD_SERVER_URL } from "../../common/urls";
+import {
+  CUSTOM_UPLOAD_SERVER_URL,
+  TW_UPLOAD_SERVER_URL,
+} from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
@@ -268,18 +271,23 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
+      xhr.open(
+        "POST",
+        `${CUSTOM_UPLOAD_SERVER_URL || CUSTOM_UPLOAD_SERVER_URL}/ipfs/upload`,
+      );
 
-      if (this.secretKey && this.clientId) {
-        throw new Error(
-          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-        );
-      }
+      if (CUSTOM_UPLOAD_SERVER_URL) {
+        if (this.secretKey && this.clientId) {
+          throw new Error(
+            "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
+          );
+        }
 
-      if (this.secretKey) {
-        xhr.setRequestHeader("x-secret-key", this.secretKey);
-      } else if (this.clientId) {
-        xhr.setRequestHeader("x-client-id", this.clientId);
+        if (this.secretKey) {
+          xhr.setRequestHeader("x-secret-key", this.secretKey);
+        } else if (this.clientId) {
+          xhr.setRequestHeader("x-client-id", this.clientId);
+        }
       }
 
       xhr.send(form as any);
@@ -302,20 +310,25 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     const headers: HeadersInit = {};
-    if (this.secretKey) {
-      headers["x-secret-key"] = this.secretKey;
-    } else if (this.clientId) {
-      headers["x-client-id"] = this.clientId;
+    if (!CUSTOM_UPLOAD_SERVER_URL) {
+      if (this.secretKey) {
+        headers["x-secret-key"] = this.secretKey;
+      } else if (this.clientId) {
+        headers["x-client-id"] = this.clientId;
+      }
     }
 
-    const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
-      method: "POST",
-      headers: {
-        ...headers,
-        ...form.getHeaders(),
+    const res = await fetch(
+      `${CUSTOM_UPLOAD_SERVER_URL || TW_UPLOAD_SERVER_URL}/ipfs/upload`,
+      {
+        method: "POST",
+        headers: {
+          ...headers,
+          ...form.getHeaders(),
+        },
+        body: form.getBuffer(),
       },
-      body: form.getBuffer(),
-    });
+    );
     const body = await res.json();
     if (!res.ok) {
       console.warn(body);
