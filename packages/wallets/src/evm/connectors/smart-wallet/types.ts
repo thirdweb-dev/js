@@ -30,6 +30,7 @@ export type SmartWalletConfig = {
 
 export type SmartWalletConnectionArgs = {
   personalWallet: EVMWallet;
+  accountAddress?: string;
 };
 export type SmartWalletOptions = WalletOptions<{}>;
 

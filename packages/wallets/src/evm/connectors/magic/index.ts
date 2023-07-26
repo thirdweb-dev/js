@@ -6,10 +6,7 @@ import {
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
 import { ethers, Signer, utils } from "ethers";
-import {
-  // OAuthProvider,
-  OAuthExtension,
-} from "@magic-ext/oauth";
+import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
 import {
   InstanceWithExtensions,
   MagicSDKAdditionalConfiguration,
@@ -30,11 +27,11 @@ export type MagicAuthConnectOptions = {
   | {
       phoneNumber: string;
     }
+  | {
+      oauthProvider: OAuthProvider;
+    }
   | {}
 );
-// | {
-//     oauthProvider: OAuthProvider;
-//   }
 
 const IS_SERVER = typeof window === "undefined";
 
@@ -131,15 +128,15 @@ export class MagicAuthConnector extends MagicBaseConnector {
   #connectedChainId?: number;
   #type?: "connect" | "auth";
 
-  // oauthProviders: OAuthProvider[];
-  oauthCallbackUrl?: string;
+  oauthProviders: OAuthProvider[];
+  oauthRedirectURI?: string;
 
   constructor(config: { chains?: Chain[]; options: MagicAuthOptions }) {
     super(config);
     this.magicSdkConfiguration = config.options.magicSdkConfiguration;
     this.#type = config.options.type;
-    // this.oauthProviders = config.options.oauthOptions?.providers || [];
-    // this.oauthCallbackUrl = config.options.oauthOptions?.callbackUrl;
+    this.oauthProviders = config.options.oauthOptions?.providers || [];
+    this.oauthRedirectURI = config.options.oauthOptions?.redirectURI;
   }
 
   async connect(options: MagicAuthConnectOptions) {
@@ -190,15 +187,19 @@ export class MagicAuthConnector extends MagicBaseConnector {
         await magic.wallet.connectWithUI();
       } else {
         // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
-        // if ("oauthProvider" in options) {
-        //   await magic.oauth.loginWithRedirect({
-        //     provider: options.oauthProvider,
-        //     redirectURI: this.oauthCallbackUrl || window.location.href,
-        //   });
-        // }
+        if ("oauthProvider" in options) {
+          await magic.oauth.loginWithRedirect({
+            provider: options.oauthProvider,
+            redirectURI: this.oauthRedirectURI || window.location.href,
+          });
+          await new Promise((res) => {
+            // never resolve - to keep the app in "connecting..." state until the redirect happens
+            setTimeout(res, 10000); // timeout if takes if redirect doesn't happen for 10 seconds (will likely never happen)
+          });
+        }
 
         // LOGIN WITH MAGIC LINK WITH EMAIL
-        if ("email" in options) {
+        else if ("email" in options) {
           await magic.auth.loginWithMagicLink({
             email: options.email,
             showUI: true,
@@ -210,9 +211,12 @@ export class MagicAuthConnector extends MagicBaseConnector {
           await magic.auth.loginWithSMS({
             phoneNumber: options.phoneNumber,
           });
-        } else {
+        }
+
+        // error
+        else {
           throw new Error(
-            "Invalid options: Either provide and email or phoneNumber when using Magic Auth",
+            "Invalid options: Either provide and email, phoneNumber or oauthProvider when using Magic Auth",
           );
         }
       }
