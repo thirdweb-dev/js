@@ -1,4 +1,4 @@
-import { BasicNFTInput } from "@thirdweb-dev/sdk";
+import type { BasicNFTInput } from "@thirdweb-dev/sdk";
 import {
   requiredParamInvariant,
   RequiredParam,
