@@ -4,9 +4,9 @@ import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
+import type { IERC721AQueryableUpgradeable } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
-import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
+import { FEATURE_NFT_QUERYABLE } from "../../constants/erc721-features";
 import type { Erc721 } from "./erc-721";
 
 /**
@@ -21,14 +21,16 @@ import type { Erc721 } from "./erc-721";
  * @public
  */
 
-export class Erc721Enumerable implements DetectableFeature {
-  featureName = FEATURE_NFT_ENUMERABLE.name;
-  private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
+export class Erc721AQueryable implements DetectableFeature {
+  featureName = FEATURE_NFT_QUERYABLE.name;
+  private contractWrapper: ContractWrapper<
+    BaseERC721 & IERC721AQueryableUpgradeable
+  >;
   private erc721: Erc721;
 
   constructor(
     erc721: Erc721,
-    contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>,
+    contractWrapper: ContractWrapper<BaseERC721 & IERC721AQueryableUpgradeable>,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
@@ -49,7 +51,7 @@ export class Erc721Enumerable implements DetectableFeature {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async all(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    console.log("in enumerable 1");
+    console.log("in queryable");
     const tokenIds = await this.tokenIds(walletAddress);
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
@@ -61,17 +63,11 @@ export class Erc721Enumerable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async tokenIds(walletAddress?: AddressOrEns): Promise<BigNumber[]> {
-    console.log("in enumerable 2");
+    console.log("in queryable 2");
     const address = await resolveAddress(
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );
 
-    const balance = await this.contractWrapper.readContract.balanceOf(address);
-    const indices = Array.from(Array(balance.toNumber()).keys());
-    return await Promise.all(
-      indices.map((i) =>
-        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
-      ),
-    );
+    return await this.contractWrapper.readContract.tokensOfOwner(address);
   }
 }

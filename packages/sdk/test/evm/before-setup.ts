@@ -72,6 +72,30 @@ const RPC_URL = "http://localhost:8545";
 const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 const defaultProvider = hardhatEthers.provider;
 
+const extendedMetadataMock = {
+  name: "",
+  metadataUri: "",
+  bytecodeUri: "",
+  analytics: {},
+  version: "1.0.0",
+  displayName: "",
+  description: "",
+  changelog: "",
+  isDeployableViaFactory: false,
+  isDeployableViaProxy: false,
+  factoryDeploymentData: {
+    implementationAddresses: {},
+    implementationInitializerFunction: "initialize",
+    factoryAddresses: {},
+  },
+  constructorParams: {},
+  publisher: "",
+  customFactoryInput: {
+    factoryFunction: "",
+    customFactoryAddresses: [],
+  },
+};
+
 let registryAddress: string;
 let sdk: ThirdwebSDK;
 let signer: SignerWithAddress;
@@ -393,4 +417,5 @@ export {
   implementations,
   hardhatEthers,
   thirdwebFactory,
+  extendedMetadataMock
 };

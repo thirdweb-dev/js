@@ -6,6 +6,7 @@ import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
 import type {
+  IERC721AQueryableUpgradeable,
   IERC721Enumerable,
   IERC721Supply,
   OpenEditionERC721,
@@ -15,6 +16,7 @@ import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { Erc721AQueryable } from "./erc-721a-queryable";
 
 /**
  * List ERC721 NFTs
@@ -32,7 +34,7 @@ export class Erc721Supply implements DetectableFeature {
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
   private erc721: Erc721;
 
-  public owned: Erc721Enumerable | undefined;
+  public owned: Erc721Enumerable | Erc721AQueryable | undefined;
 
   constructor(
     erc721: Erc721,
@@ -133,15 +135,26 @@ export class Erc721Supply implements DetectableFeature {
     return await this.contractWrapper.readContract.totalSupply();
   }
 
-  private detectErc721Owned(): Erc721Enumerable | undefined {
+  private detectErc721Owned(): Erc721Enumerable | Erc721AQueryable | undefined {
+    console.log("owned 1");
     if (
       detectContractFeature<BaseERC721 & IERC721Enumerable>(
         this.contractWrapper,
         "ERC721Enumerable",
       )
     ) {
+      console.log("owned 2");
       return new Erc721Enumerable(this.erc721, this.contractWrapper);
+    } else if (
+      detectContractFeature<BaseERC721 & IERC721AQueryableUpgradeable>(
+        this.contractWrapper,
+        "ERC721AQueryable",
+      )
+    ) {
+      console.log("owned 3");
+      return new Erc721AQueryable(this.erc721, this.contractWrapper);
     }
+    console.log("owned 4");
     return undefined;
   }
 }
