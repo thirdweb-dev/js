@@ -1,7 +1,7 @@
-import { Center, Flex, Icon, Image, Skeleton } from "@chakra-ui/react";
+import { Center, Flex, Image, Skeleton } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { FiExternalLink } from "react-icons/fi";
+
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -28,9 +28,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   chain,
 }) => {
   const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
-  const validBlockExplorer = chain?.explorers?.find(
-    (explorer) => explorer.standard === "EIP3091",
-  );
+  const validBlockExplorers = chain?.explorers
+    ?.filter((e) => e.standard === "EIP3091")
+    ?.slice(0, 2);
 
   return (
     <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
@@ -133,18 +133,18 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         )}
         <Flex gap={2}>
           <AddressCopyButton size="xs" address={address} />
-          {validBlockExplorer && (
-            <LinkButton
-              variant="outline"
-              isExternal
-              size="xs"
-              noIcon
-              href={`${validBlockExplorer.url}/address/${address}`}
-              leftIcon={<Icon as={FiExternalLink} />}
-            >
-              View on {validBlockExplorer.name}
-            </LinkButton>
-          )}
+          {validBlockExplorers &&
+            validBlockExplorers.map((validBlockExplorer) => (
+              <LinkButton
+                key={validBlockExplorer.name}
+                variant="ghost"
+                isExternal
+                size="xs"
+                href={`${validBlockExplorer.url}/address/${address}`}
+              >
+                {validBlockExplorer.name}
+              </LinkButton>
+            ))}
         </Flex>
       </Flex>
     </Flex>

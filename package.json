@@ -39,7 +39,7 @@
     "@tanstack/react-table": "8.9.3",
     "@thirdweb-dev/auth": "3.2.21-nightly-a9f9a403-20230725125304",
     "@thirdweb-dev/chain-icons": "^1.0.5",
-    "@thirdweb-dev/chains": "^0.1.39-nightly-7ae9f4cd-20230726181154",
+    "@thirdweb-dev/chains": "^0.1.39-nightly-0a5eb19d-20230727055334",
     "@thirdweb-dev/react": "3.14.21-nightly-a9f9a403-20230725125304",
     "@thirdweb-dev/sdk": "3.10.41-nightly-a9f9a403-20230725125304",
     "@thirdweb-dev/service-utils": "^0.2.1",
