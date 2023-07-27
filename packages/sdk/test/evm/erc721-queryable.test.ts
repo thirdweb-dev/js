@@ -215,7 +215,6 @@ describe("ERC721A Queryable NFT Contract", async () => {
 
       for (let j = 0; j < tokensPerClaimer; j++) {
         const tokenId = ownedTokens[j].metadata.id;
-        console.log("token id ", tokenId);
         assert(tokenId === (j * numClaimers + i + 1).toString());
       }
     }
