@@ -197,7 +197,7 @@ export const FEATURE_NFT_QUERYABLE = {
     sdk: "",
     contracts: "",
   },
-  abis: [Erc721Abi, Erc721AQueryableAbi],
+  abis: [Erc721AQueryableAbi],
   features: {},
 } as const;
 
