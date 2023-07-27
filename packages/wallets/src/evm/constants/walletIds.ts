@@ -10,4 +10,5 @@ export const walletIds = {
   walletConnect: "walletConnect",
   magicLink: "magicLink",
   paper: "paper",
+  blocto: "blocto",
 };
