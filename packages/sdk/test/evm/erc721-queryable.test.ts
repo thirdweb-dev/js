@@ -210,10 +210,14 @@ describe("ERC721A Queryable NFT Contract", async () => {
 
     // check ownership
     for (let i = 0; i < numClaimers; i++) {
-      assert(
-        (await contract.erc721.getOwned(claimers[i])).length ===
-          tokensPerClaimer,
-      );
+      const ownedTokens = await contract.erc721.getOwned(claimers[i]);
+      assert(ownedTokens.length === tokensPerClaimer);
+
+      for (let j = 0; j < tokensPerClaimer; j++) {
+        const tokenId = ownedTokens[j].metadata.id;
+        console.log("token id ", tokenId);
+        assert(tokenId === (j * numClaimers + i + 1).toString());
+      }
     }
   });
 });
