@@ -18,10 +18,9 @@ import {
   bytecode as TWCloneFactoryBytecode,
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
-import { NFTMetadataOrUri } from "../../src/core/schema/nft";
 
 describe("ERC721A Queryable NFT Contract", async () => {
-  let openEdition: SmartContract;
+  let contract: SmartContract;
   let openEditionPublishUri: string;
 
   let adminWallet: SignerWithAddress;
@@ -48,13 +47,13 @@ describe("ERC721A Queryable NFT Contract", async () => {
       ],
     );
 
-    openEdition = await sdk.getContract(contractAddress);
+    const openEdition = await sdk.getContract(contractAddress);
 
     return openEdition;
   }
 
   before("Mock upload infra contracts", async () => {
-    [adminWallet, samWallet, claimer1, claimer2, claimer3] = signers;
+    [adminWallet, samWallet] = signers;
     // mock upload Forwarder
     await mockUploadMetadataWithBytecode(
       "Forwarder",
@@ -154,23 +153,23 @@ describe("ERC721A Queryable NFT Contract", async () => {
 
   it("claim", async () => {
     // claiming with default conditions
-    await openEdition.erc721.claimConditions.set([{}]);
-    await openEdition.erc721.claim(1);
+    await contract.erc721.claimConditions.set([{}]);
+    await contract.erc721.claim(1);
     // claiming with max supply
-    await openEdition.erc721.claimConditions.set([
+    await contract.erc721.claimConditions.set([
       {
         maxClaimableSupply: 2,
       },
     ]);
     try {
-      await openEdition.erc721.claim(2);
+      await contract.erc721.claim(2);
       expect.fail("should not be able to claim 2 - maxSupply");
     } catch (e) {
       expectError(e, "!MaxSupply");
     }
-    await openEdition.erc721.claim(1);
+    await contract.erc721.claim(1);
     // claiming with max per wallet
-    await openEdition.erc721.claimConditions.set(
+    await contract.erc721.claimConditions.set(
       [
         {
           maxClaimablePerWallet: 1,
@@ -179,18 +178,18 @@ describe("ERC721A Queryable NFT Contract", async () => {
       true,
     );
     try {
-      await openEdition.erc721.claim(2);
+      await contract.erc721.claim(2);
       expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
     } catch (e) {
       expectError(e, "!Qty");
     }
-    await openEdition.erc721.claim(1);
-    expect((await openEdition.erc721.totalClaimedSupply()).toString()).eq("3");
+    await contract.erc721.claim(1);
+    expect((await contract.erc721.totalClaimedSupply()).toString()).eq("3");
   });
 
   it("get owned", async () => {
     // claiming with default conditions
-    await openEdition.erc721.claimConditions.set([{}]);
+    await contract.erc721.claimConditions.set([{}]);
 
     const numClaimers = 3;
     const tokensPerClaimer = 10;
@@ -201,13 +200,13 @@ describe("ERC721A Queryable NFT Contract", async () => {
     // mint tokens to addresses in claimers array
     for (let i = 0; i < numTokens; i++) {
       const index = i % numClaimers;
-      await openEdition.erc721.claimTo(claimers[index], 1);
+      await contract.erc721.claimTo(claimers[index], 1);
     }
 
     // check ownership
     for (let i = 0; i < numClaimers; i++) {
       assert(
-        (await openEdition.erc721.getOwned(claimers[i])).length ===
+        (await contract.erc721.getOwned(claimers[i])).length ===
           tokensPerClaimer,
       );
     }
