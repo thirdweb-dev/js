@@ -25,17 +25,6 @@ export default {
   },
   "explorers": [
     {
-      "name": "Siberium Mainnet Explorer - blockscout - 1",
-      "url": "https://explorer.main.siberium.net",
-      "icon": {
-        "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
-        "width": 512,
-        "height": 512,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    },
-    {
       "name": "Siberium Mainnet Explorer - blockscout - 2",
       "url": "https://explorer.main.siberium.net.ru",
       "icon": {

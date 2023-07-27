@@ -28,17 +28,6 @@ export default {
   "networkId": 10200,
   "explorers": [
     {
-      "name": "blockscout-chiadochain",
-      "url": "https://blockscout.chiadochain.net",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
-    {
       "name": "blockscout",
       "url": "https://gnosis-chiado.blockscout.com",
       "icon": {

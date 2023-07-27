@@ -29,17 +29,6 @@ export default {
   },
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://shiden.subscan.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
-    },
-    {
       "name": "blockscout",
       "url": "https://blockscout.com/shiden",
       "icon": {
@@ -49,6 +38,17 @@ export default {
         "format": "png"
       },
       "standard": "EIP3091"
+    },
+    {
+      "name": "subscan",
+      "url": "https://shiden.subscan.io",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "testnet": false,
