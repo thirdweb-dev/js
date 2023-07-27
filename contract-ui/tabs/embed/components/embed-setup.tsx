@@ -36,8 +36,8 @@ interface EmbedSetupProps {
 }
 
 // MAKE SURE THIS IS v1 emmbed hashes!!
-const IPFS_URI = "bafybeic54udbggbhtn7nfjrrj7elrim4shfped7c3cco7neset7fdwpwmu";
-const ERC721_IPFS_URI = `bafybeidpp4d3znpjxlvlhitaylbqwmyk2gzcxazp5wkftvwu7r3lsyku2q`;
+const IPFS_URI = "bafybeifhktpfnifwdmrzxwif72uz7leahxghygpletpzxbe7hnlj4ayo3q";
+const ERC721_IPFS_URI = `bafybeialple2tsk7p3nhmqidhl5i5kpebuva6fubfoag6t3zgyblim7zum`;
 
 interface IframeSrcOptions {
   chain: string;
