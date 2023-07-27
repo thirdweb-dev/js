@@ -41,6 +41,11 @@ export default {
   },
   "explorers": [
     {
+      "name": "etherscan",
+      "url": "https://etherscan.io",
+      "standard": "EIP3091"
+    },
+    {
       "name": "blockscout",
       "url": "https://eth.blockscout.com",
       "icon": {
@@ -49,11 +54,6 @@ export default {
         "height": 540,
         "format": "png"
       },
-      "standard": "EIP3091"
-    },
-    {
-      "name": "etherscan",
-      "url": "https://etherscan.io",
       "standard": "EIP3091"
     }
   ],
