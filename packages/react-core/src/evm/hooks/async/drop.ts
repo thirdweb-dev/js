@@ -29,9 +29,9 @@ import type {
   QueryAllParams,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
-import { NFTDrop } from "@thirdweb-dev/sdk";
-import { SignatureDrop } from "@thirdweb-dev/sdk";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import type { NFTDrop } from "@thirdweb-dev/sdk";
+import type { SignatureDrop } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { providers } from "ethers";
 import invariant from "tiny-invariant";
 
