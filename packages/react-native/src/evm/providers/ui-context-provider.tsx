@@ -21,12 +21,12 @@ const UIContext = createContext<UIContextType>({
     isSheet: true,
     caller: "init",
   },
-  setModalState: () => {},
+  setModalState: () => undefined,
   theme: darkTheme(),
-  setTheme: () => {},
+  setTheme: () => undefined,
 });
 
-export const UIContextProvider = (props: PropsWithChildren<{}>) => {
+export const UIContextProvider = (props: PropsWithChildren) => {
   const [modalState, setModalState] = useState<ModalState>({
     view: "Closed",
     data: {},

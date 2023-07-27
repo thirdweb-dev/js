@@ -15,11 +15,11 @@ import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
 export async function generate(options: GenerateOptions, apiSecretKey: string) {
-  let projectPath: string = options.path?.replace(/\/$/, "") || ".";
+  const projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
   // Find all addresses in this project
-  let addresses: string[] = [];
+  const addresses: string[] = [];
   findMatches(projectPath, /(0x[a-fA-F0-9]{40})/g, addresses);
 
   // We check if there's a thirdweb.json config file present

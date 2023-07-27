@@ -4,7 +4,7 @@ import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 export abstract class Connector<
-  TConnectParams extends Record<string, any> = {},
+  TConnectParams extends Record<string, any> = object,
 > extends EventEmitter {
   abstract connect(args?: ConnectParams<TConnectParams>): Promise<string>;
   abstract disconnect(): Promise<void>;
@@ -17,12 +17,12 @@ export abstract class Connector<
   abstract updateChains(chains: Chain[]): void;
 }
 
-export type ConnectParams<TOpts extends Record<string, any> = {}> = {
+export type ConnectParams<TOpts extends Record<string, any> = object> = {
   chainId?: number;
 } & TOpts;
 
 export class WagmiAdapter<
-  TConnectParams extends Record<string, any> = {},
+  TConnectParams extends Record<string, any> = object,
 > extends Connector<TConnectParams> {
   wagmiConnector: WagmiConnector<any, any, any>;
 

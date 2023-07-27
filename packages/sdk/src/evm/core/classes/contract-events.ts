@@ -64,6 +64,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @returns a function to un-subscribe from the event
    */
   public addEventListener<TEvent extends Record<string, any>>(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     eventName: keyof TContract["filters"] | (string & {}),
     listener: (event: ContractEvent<TEvent>) => void,
   ) {
@@ -156,6 +157,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the listener to unregister
    */
   public removeEventListener(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     eventName: keyof TContract["filters"] | (string & {}),
     listener: providers.Listener,
   ) {

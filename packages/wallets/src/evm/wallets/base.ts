@@ -6,7 +6,7 @@ import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
 
-export type WalletOptions<TOpts extends Record<string, any> = {}> = {
+export type WalletOptions<TOpts extends Record<string, any> = object> = {
   chains?: Chain[];
   walletId?: string;
   walletStorage?: AsyncStorage;
@@ -26,8 +26,8 @@ export type WalletMeta = {
 };
 
 export abstract class AbstractClientWallet<
-  TAdditionalOpts extends Record<string, any> = {},
-  TConnectParams extends Record<string, any> = {},
+  TAdditionalOpts extends Record<string, any> = object,
+  TConnectParams extends Record<string, any> = object,
 > extends AbstractWallet {
   walletId: string;
   protected walletStorage;
