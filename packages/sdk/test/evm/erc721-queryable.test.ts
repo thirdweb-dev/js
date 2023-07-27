@@ -18,6 +18,7 @@ import {
   bytecode as TWCloneFactoryBytecode,
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
+import { AbiSchema, isFeatureEnabled } from "../../src/evm";
 
 describe("ERC721A Queryable NFT Contract", async () => {
   let contract: SmartContract;
@@ -149,6 +150,10 @@ describe("ERC721A Queryable NFT Contract", async () => {
     //   "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
     contract = await deployOpenEdition();
     // process.env.contractPublisherAddress = mockPublisher;
+  });
+
+  it("should detect queryable", async () => {
+    assert(isFeatureEnabled(AbiSchema.parse(contract.abi), "ERC721AQueryable"));
   });
 
   it("claim", async () => {

@@ -49,7 +49,6 @@ export class Erc721Enumerable implements DetectableFeature {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async all(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    console.log("in enumerable 1");
     const tokenIds = await this.tokenIds(walletAddress);
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
@@ -61,7 +60,6 @@ export class Erc721Enumerable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async tokenIds(walletAddress?: AddressOrEns): Promise<BigNumber[]> {
-    console.log("in enumerable 2");
     const address = await resolveAddress(
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );

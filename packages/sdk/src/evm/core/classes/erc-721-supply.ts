@@ -136,14 +136,12 @@ export class Erc721Supply implements DetectableFeature {
   }
 
   private detectErc721Owned(): Erc721Enumerable | Erc721AQueryable | undefined {
-    console.log("owned 1");
     if (
       detectContractFeature<BaseERC721 & IERC721Enumerable>(
         this.contractWrapper,
         "ERC721Enumerable",
       )
     ) {
-      console.log("owned 2");
       return new Erc721Enumerable(this.erc721, this.contractWrapper);
     } else if (
       detectContractFeature<BaseERC721 & IERC721AQueryableUpgradeable>(
@@ -151,10 +149,8 @@ export class Erc721Supply implements DetectableFeature {
         "ERC721AQueryable",
       )
     ) {
-      console.log("owned 3");
       return new Erc721AQueryable(this.erc721, this.contractWrapper);
     }
-    console.log("owned 4");
     return undefined;
   }
 }
