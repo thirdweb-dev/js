@@ -34,7 +34,9 @@ describe("Custom Contracts", async () => {
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    realSDK = new ThirdwebSDK(adminWallet);
+    realSDK = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we update the test data - await uploadContractMetadata("Greeter", storage);

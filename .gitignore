@@ -17,6 +17,7 @@ yalc.lock
 build/
 playwright-report/
 .vscode/
+.env/
 
 # Artifacts
 packages/cli/artifacts/

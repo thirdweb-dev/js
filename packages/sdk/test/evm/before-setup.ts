@@ -1,10 +1,8 @@
 import {
-  Abi,
   AbiSchema,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
-  DEFAULT_IPFS_GATEWAY,
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
@@ -76,7 +74,6 @@ const defaultProvider = hardhatEthers.provider;
 
 let registryAddress: string;
 let sdk: ThirdwebSDK;
-const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
@@ -101,6 +98,7 @@ export const expectError = (e: unknown, message: string) => {
 
 export const mochaHooks = {
   beforeAll: async () => {
+    require("dotenv-mono").load();
     signers = await hardhatEthers.getSigners();
     implementations = {};
 
@@ -270,6 +268,7 @@ export const mochaHooks = {
     sdk = new ThirdwebSDK(
       signer,
       {
+        secretKey: process.env.TW_SECRET_KEY,
         gasSettings: {
           maxPriceInGwei: 10000,
         },
@@ -384,7 +383,6 @@ async function setupMarketplaceV3(): Promise<string> {
 }
 
 export {
-  ipfsGatewayUrl,
   sdk,
   signers,
   jsonProvider,
