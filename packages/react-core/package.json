@@ -82,8 +82,8 @@
     "@types/js-cookie": "^3.0.3",
     "@types/mime": "3.0.0",
     "@types/react": "^18.2.17",
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
-    "@typescript-eslint/parser": "^5.60.1",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-thirdweb": "workspace:*",
@@ -98,7 +98,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.29.19",
+    "@tanstack/react-query": "^4.32.0",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/generated-abis": "workspace:^",
     "@thirdweb-dev/sdk": "workspace:*",

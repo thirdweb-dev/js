@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
-    "@typescript-eslint/parser": "^5.60.1",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
     "eslint-config-next": "13.2.4",
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-turbo": "^0.0.8",
