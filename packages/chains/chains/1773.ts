@@ -13,7 +13,6 @@ export default {
     "symbol": "GRAMS",
     "decimals": 18
   },
-  "infoURL": "TeaPartyCrypto.com",
   "shortName": "TeaParty",
   "chainId": 1773,
   "networkId": 1773,

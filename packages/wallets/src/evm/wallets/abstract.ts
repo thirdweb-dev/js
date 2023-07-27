@@ -34,7 +34,8 @@ export interface WalletEvents {
   message({ type, data }: { type: string; data?: unknown }): void;
   disconnect(): void;
   error(error: Error): void;
-  open_wallet(uri?: string): void;
+  display_uri(uri: string): void;
+  wc_session_request_sent(): void;
   request(): void;
 }
 
