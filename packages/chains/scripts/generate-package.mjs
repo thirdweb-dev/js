@@ -47,6 +47,21 @@ function sortExplorers(explorers = []) {
   return [...returnExplorers, ...restExplorers];
 }
 
+/**
+ * @param {readonly any[]} values
+ * @param {(arg0: any) => void} valueChecker
+ */
+function filterOutErroringValues(values, valueChecker) {
+  return values.filter((value) => {
+    try {
+      valueChecker(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+}
+
 const chainsDir = "./chains";
 
 const chainsJsonUrl = "https://chainid.network/chains.json";
@@ -111,7 +126,32 @@ chains = chains
     // only add the explroers if they were there in the first place
     if (resultChain.explorers) {
       resultChain.explorers = sortExplorers(resultChain.explorers);
+      // check every key that *could* contain a url and validate it
+      resultChain.explorers = filterOutErroringValues(
+        resultChain.explorers,
+        (explorer) => new URL(explorer.url),
+      );
     }
+    if (resultChain.faucets) {
+      resultChain.faucets = filterOutErroringValues(
+        resultChain.faucets,
+        (faucet) => new URL(faucet),
+      );
+    }
+    if (resultChain.rpc) {
+      resultChain.rpc = filterOutErroringValues(
+        resultChain.rpc,
+        (rpc) => new URL(rpc),
+      );
+    }
+    if (resultChain.infoURL) {
+      try {
+        new URL(resultChain.infoURL);
+      } catch (e) {
+        delete resultChain.infoURL;
+      }
+    }
+
     return resultChain;
   });
 
