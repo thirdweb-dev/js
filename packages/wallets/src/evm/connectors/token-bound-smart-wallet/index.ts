@@ -1,19 +1,17 @@
+import { TokenBoundSmartWalletConfig } from "./types";
+import { ethers } from "ethers";
+import { SmartWalletConnector } from "../smart-wallet";
 import {
   AccountContractInfo,
   FactoryContractInfo,
-  TokenBoundSmartWalletConfig,
-} from "./types";
-import { ethers } from "ethers";
-import { SmartContract } from "@thirdweb-dev/sdk";
-import { SmartWalletConnector } from "../smart-wallet";
-import { getChainByChainId } from "@thirdweb-dev/chains";
+} from "../smart-wallet/types";
+import { ERC6551_REGISTRY } from "../smart-wallet/lib/constants";
 
 export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
   protected config: TokenBoundSmartWalletConfig;
 
   constructor(config: TokenBoundSmartWalletConfig) {
-    config.factoryAddress =
-      config.factoryAddress || "0x02101dfB77FDE026414827Fdc604ddAF224F0921";
+    config.factoryAddress = config.factoryAddress || ERC6551_REGISTRY;
 
     super(config);
     this.config = config;
@@ -32,43 +30,23 @@ export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
 
   protected defaultFactoryInfo(): FactoryContractInfo {
     return {
-      createAccount: async (
-        factory,
-        owner,
-        {
-          implementation = this.config.implementation,
-          chainId = this.chainId,
-          tokenContract = this.config.tokenContract,
-          tokenId = this.config.tokenId,
-          salt = 1,
-        },
-      ) => {
+      createAccount: async (factory, owner) => {
         return factory.prepare("createAccount", [
-          implementation,
-          chainId,
-          tokenContract,
-          tokenId,
-          salt,
+          this.config.accountImplementation,
+          this.chainId,
+          this.config.tokenContract,
+          this.config.tokenId,
+          this.config.salt,
           ethers.utils.toUtf8Bytes(""),
         ]);
       },
-      getAccountAddress: async (
-        factory,
-        owner,
-        {
-          implementation = this.config.implementation,
-          chainId = this.chainId,
-          tokenContract = this.config.tokenContract,
-          tokenId = this.config.tokenId,
-          salt = 1,
-        },
-      ) => {
+      getAccountAddress: async (factory, owner) => {
         return await factory.call("address", [
-          implementation,
-          chainId,
-          tokenContract,
-          tokenId,
-          salt,
+          this.config.accountImplementation,
+          this.chainId,
+          this.config.tokenContract,
+          this.config.tokenId,
+          this.config.salt,
         ]);
       },
     };

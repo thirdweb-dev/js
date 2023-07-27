@@ -41,8 +41,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       clientId: config.clientId,
       secretKey: config.secretKey,
     }) as providers.BaseProvider;
+    this.chainId = (await originalProvider.getNetwork()).chainId;
     const chainSlug = await this.getChainSlug(config.chain, originalProvider);
-    this.chainId = await this.getChainId(config.chain, originalProvider);
     const bundlerUrl =
       this.config.bundlerUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const paymasterUrl =
@@ -274,31 +274,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       }
       // otherwise its the network name
       return chainOrRpc;
-    } else {
-      throw new Error(`Invalid network: ${chainOrRpc}`);
-    }
-  }
-
-  protected async getChainId(
-    chainOrRpc: ChainOrRpcUrl,
-    provider: ethers.providers.Provider,
-  ): Promise<number> {
-    if (typeof chainOrRpc === "object") {
-      return chainOrRpc.chainId;
-    }
-    if (typeof chainOrRpc === "number") {
-      const chain = getChainByChainId(chainOrRpc);
-      return chain.chainId;
-    }
-    if (typeof chainOrRpc === "string") {
-      if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
-        // if it's a url, try to get the chain id from the provider
-        const chainId = (await provider.getNetwork()).chainId;
-        const chain = getChainByChainId(chainId);
-        return chain.chainId;
-      }
-      // otherwise its the network name
-      return getChainBySlug(chainOrRpc).chainId;
     } else {
       throw new Error(`Invalid network: ${chainOrRpc}`);
     }
