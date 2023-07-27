@@ -1,5 +1,6 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
+import { getProcessEnv } from "./process";
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
 const TW_GATEWAY_URLS = [
@@ -37,7 +38,10 @@ export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
 /**
  * @internal
  */
-export const TW_UPLOAD_SERVER_URL = "https://storage.thirdweb.com";
+export const TW_UPLOAD_SERVER_URL = getProcessEnv(
+  "CUSTOM_UPLOAD_SERVER_URL",
+  "https://storage.thirdweb.com",
+);
 
 /**
  * @internal
