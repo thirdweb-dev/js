@@ -1,4 +1,4 @@
-import { Chain, getChainByChainId, getChainBySlug } from "@thirdweb-dev/chains";
+import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -18,6 +18,7 @@ import {
   ChainOrRpcUrl,
   getChainProvider,
   SmartContract,
+  ThirdwebSDK,
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
@@ -35,7 +36,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     this.config = config;
   }
 
-  async initialize(personalWallet: EVMWallet) {
+  async initialize(params: ConnectParams<SmartWalletConnectionArgs>) {
     const config = this.config;
     const originalProvider = getChainProvider(config.chain, {
       clientId: config.clientId,
@@ -48,7 +49,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const paymasterUrl =
       this.config.paymasterUrl || `https://${chainSlug}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
-    const localSigner = await personalWallet.getSigner();
+    const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
       chain: config.chain,
       localSigner,
@@ -65,12 +66,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             )
         : undefined,
       factoryAddress: config.factoryAddress,
+      accountAddress: params.accountAddress,
       factoryInfo: config.factoryInfo || this.defaultFactoryInfo(),
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       clientId: config.clientId,
       secretKey: config.secretKey,
     };
-    this.personalWallet = personalWallet;
+    this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);
     this.aaProvider = await create4337Provider(
       providerConfig,
@@ -83,7 +85,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   async connect(
     connectionArgs: ConnectParams<SmartWalletConnectionArgs>,
   ): Promise<string> {
-    await this.initialize(connectionArgs.personalWallet);
+    await this.initialize(connectionArgs);
     return await this.getAddress();
   }
 
@@ -137,6 +139,25 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateChains(chains: Chain[]): void {}
+
+  /**
+   * Check whether the connected signer can execute a given transaction using the smart wallet.
+   * @param transaction the transaction to execute using the smart wallet.
+   * @returns whether the connected signer can execute the transaction using the smart wallet.
+   */
+  async hasPermissionToExecute(transaction: Transaction): Promise<boolean> {
+    const accountContract = await this.getAccountContract();
+    const signer = await this.getSigner();
+    const signerAddress = await signer.getAddress();
+
+    const restrictions = (await accountContract.account.getAllSigners()).filter(
+      (item) =>
+        ethers.utils.getAddress(item.signer) ===
+        ethers.utils.getAddress(signerAddress),
+    )[0].permissions;
+
+    return restrictions.approvedCallTargets.includes(transaction.getTarget());
+  }
 
   /**
    * Execute a single transaction
@@ -218,6 +239,59 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     return await this.accountApi.isAcountDeployed();
+  }
+
+  /**
+   * Get the underlying account contract of the smart wallet.
+   * @returns the account contract of the smart wallet.
+   */
+  async getAccountContract(): Promise<SmartContract> {
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      throw new Error(
+        "Account contract is not deployed yet. You can deploy it manually using SmartWallet.deploy(), or by executing a transaction from this wallet.",
+      );
+    }
+    // getting a new instance everytime
+    // to avoid caching issues pre/post deployment
+    const sdk = ThirdwebSDK.fromSigner(
+      await this.getSigner(),
+      this.config.chain,
+      {
+        clientId: this.config.clientId,
+        secretKey: this.config.secretKey,
+      },
+    );
+    if (this.config.accountInfo?.abi) {
+      return sdk.getContract(
+        await this.getAddress(),
+        this.config.accountInfo.abi,
+      );
+    } else {
+      return sdk.getContract(await this.getAddress());
+    }
+  }
+
+  /**
+   * Get the underlying account factory contract of the smart wallet.
+   * @returns the account factory contract.
+   */
+  async getFactoryContract(): Promise<SmartContract> {
+    const sdk = ThirdwebSDK.fromSigner(
+      await this.getSigner(),
+      this.config.chain,
+      {
+        clientId: this.config.clientId,
+        secretKey: this.config.secretKey,
+      },
+    );
+    if (this.config.factoryInfo?.abi) {
+      return sdk.getContract(
+        this.config.factoryAddress,
+        this.config.factoryInfo.abi,
+      );
+    }
+    return sdk.getContract(this.config.factoryAddress);
   }
 
   protected defaultFactoryInfo(): FactoryContractInfo {

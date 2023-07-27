@@ -117,7 +117,7 @@ describe("New Publish Flow", async () => {
       const admin = await adminWallet.getAddress();
       const contractAddress = await sdk.deployer.deployContractFromUri(
         mockPublishUri,
-        ["Direct Deploy ERC721Base", "DDE", admin, 5],
+        [admin, "Direct Deploy ERC721Base", "DDE", admin, 5],
       );
       const contract = await sdk.getContract(contractAddress);
 
@@ -266,7 +266,7 @@ describe("New Publish Flow", async () => {
       const admin = await adminWallet.getAddress();
       const contractAddress = await sdk.deployer.deployContractFromUri(
         mockPublishUri,
-        ["Direct Deploy ERC721Base", "DDE", admin, 5],
+        [admin, "Direct Deploy ERC721Base", "DDE", admin, 5],
       );
       const contract = await sdk.getContract(contractAddress);
 

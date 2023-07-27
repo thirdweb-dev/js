@@ -28,12 +28,23 @@ export default {
   "networkId": 10200,
   "explorers": [
     {
-      "name": "blockscout",
+      "name": "blockscout-chiadochain",
       "url": "https://blockscout.chiadochain.net",
       "icon": {
-        "url": "ipfs://bafybeifu5tpui7dk5cjoo54kde7pmuthvnl7sdykobuarsxgu7t2izurnq",
-        "width": 512,
-        "height": 512,
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://gnosis-chiado.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
         "format": "png"
       },
       "standard": "EIP3091"
