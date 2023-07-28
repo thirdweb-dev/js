@@ -1,5 +1,38 @@
 # @thirdweb-dev/sdk
 
+## 3.10.41
+
+### Patch Changes
+
+- [#1394](https://github.com/thirdweb-dev/js/pull/1394) [`09b3b339`](https://github.com/thirdweb-dev/js/commit/09b3b339e65a6a9a1cfa32bab9e61e57532e7dbe) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Remove incorrect RoyaltyEngine addresses
+
+- [#1380](https://github.com/thirdweb-dev/js/pull/1380) [`98009cb3`](https://github.com/thirdweb-dev/js/commit/98009cb3ca6f1c2221a6a74ffa7df8d7ddac2c60) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Airdrop contract addresses for zksync
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1408](https://github.com/thirdweb-dev/js/pull/1408) [`cbf486c2`](https://github.com/thirdweb-dev/js/commit/cbf486c21088ec1656933961e653e1d161939f63) Thanks [@kumaryash90](https://github.com/kumaryash90)! - ERC721A Queryable feature
+
+- [#1395](https://github.com/thirdweb-dev/js/pull/1395) [`01cc5408`](https://github.com/thirdweb-dev/js/commit/01cc54087b9d276968cb6dd3ceafa07c30bc2242) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update MarketplaceV3 addresses for ZkSync
+
+- [#1389](https://github.com/thirdweb-dev/js/pull/1389) [`53400858`](https://github.com/thirdweb-dev/js/commit/53400858232ceb998d68da8a75a6d493668fcf0f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add default admin param to base contract constructors
+
+- [#1376](https://github.com/thirdweb-dev/js/pull/1376) [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429) Thanks [@iketw](https://github.com/iketw)! - Pass bundleId if present
+
+- [#1398](https://github.com/thirdweb-dev/js/pull/1398) [`aface46d`](https://github.com/thirdweb-dev/js/commit/aface46d7469ca2c1e45895e311a74363ceb8611) Thanks [@iketw](https://github.com/iketw)! - Check if process is not undefined before accessing it
+
+- [#1383](https://github.com/thirdweb-dev/js/pull/1383) [`5fe3cec8`](https://github.com/thirdweb-dev/js/commit/5fe3cec894b98a2361d21bb72a5da843ec2a4d9b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update airdrop addresses for zksync
+
+- [#1053](https://github.com/thirdweb-dev/js/pull/1053) [`8e6e55b1`](https://github.com/thirdweb-dev/js/commit/8e6e55b154ecdc4b09ded31387707571ff963fb7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas for any EVM chains
+
+- [#1387](https://github.com/thirdweb-dev/js/pull/1387) [`aa6bdd08`](https://github.com/thirdweb-dev/js/commit/aa6bdd0809d1d5536c837c59b2d407ee974c1f9c) Thanks [@nkrishang](https://github.com/nkrishang)! - Simplify account permissions
+
+- [#1303](https://github.com/thirdweb-dev/js/pull/1303) [`a9f9a403`](https://github.com/thirdweb-dev/js/commit/a9f9a403457b9e683bcfdb61034ee9c9ee08bbf8) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for royalty registry for marketplace deployment
+
+- Updated dependencies [[`0a5eb19d`](https://github.com/thirdweb-dev/js/commit/0a5eb19d672909027bb6c7e79ea76d431535559c), [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2), [`51b36040`](https://github.com/thirdweb-dev/js/commit/51b3604021ca7b52fd00fd07c5a648a73464a61b), [`cbf486c2`](https://github.com/thirdweb-dev/js/commit/cbf486c21088ec1656933961e653e1d161939f63), [`53400858`](https://github.com/thirdweb-dev/js/commit/53400858232ceb998d68da8a75a6d493668fcf0f), [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429), [`3152d4e9`](https://github.com/thirdweb-dev/js/commit/3152d4e9b42e2777316b1b58513657f4430cb79a), [`aa6bdd08`](https://github.com/thirdweb-dev/js/commit/aa6bdd0809d1d5536c837c59b2d407ee974c1f9c), [`75587c8b`](https://github.com/thirdweb-dev/js/commit/75587c8b38bbbcf68d2101526e9792349cce728f), [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee), [`a9f9a403`](https://github.com/thirdweb-dev/js/commit/a9f9a403457b9e683bcfdb61034ee9c9ee08bbf8), [`5a02c5ec`](https://github.com/thirdweb-dev/js/commit/5a02c5ec0288fd6dfb2b765ef70bb18e714aca19)]:
+  - @thirdweb-dev/chains@0.1.39
+  - @thirdweb-dev/contracts-js@1.3.10
+  - @thirdweb-dev/storage@1.2.1
+
 ## 3.10.40
 
 ### Patch Changes

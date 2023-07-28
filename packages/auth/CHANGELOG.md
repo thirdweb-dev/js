@@ -1,5 +1,16 @@
 # @thirdweb-dev/auth
 
+## 3.2.21
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1410](https://github.com/thirdweb-dev/js/pull/1410) [`247cf57d`](https://github.com/thirdweb-dev/js/commit/247cf57d375a4ec0bc6867e0b65a262c94a9e2f2) Thanks [@jnsdls](https://github.com/jnsdls)! - expose `getToken()` helper function
+
+- Updated dependencies [[`06b4f298`](https://github.com/thirdweb-dev/js/commit/06b4f2983161fc9ff5913fd05dacf17260902576), [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2), [`2025b8cb`](https://github.com/thirdweb-dev/js/commit/2025b8cb8d5157c03314e5db47a0d50382519c41), [`385895ca`](https://github.com/thirdweb-dev/js/commit/385895ca928a5276586f0a370fabdcece7620d83), [`9acf6854`](https://github.com/thirdweb-dev/js/commit/9acf6854dfdc5c0be768e660c1f174e017b06a9c), [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429), [`60fbb767`](https://github.com/thirdweb-dev/js/commit/60fbb767c18ffe1e49792c6ac8e808792acf594c), [`277cfd5c`](https://github.com/thirdweb-dev/js/commit/277cfd5ce1f3a576d29c95492c735b46a00c164e), [`2025b8cb`](https://github.com/thirdweb-dev/js/commit/2025b8cb8d5157c03314e5db47a0d50382519c41), [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee), [`7ae9f4cd`](https://github.com/thirdweb-dev/js/commit/7ae9f4cda1a2009dd414f836757bec8202c83172)]:
+  - @thirdweb-dev/wallets@1.1.4
+
 ## 3.2.20
 
 ### Patch Changes

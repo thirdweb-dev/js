@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.2.2
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1386](https://github.com/thirdweb-dev/js/pull/1386) [`5e58c799`](https://github.com/thirdweb-dev/js/commit/5e58c799263e4a8efbc980e3d7620b5995045dbc) Thanks [@farhanW3](https://github.com/farhanW3)! - updated response messages to include more details on error
+
 ## 0.2.1
 
 ### Patch Changes

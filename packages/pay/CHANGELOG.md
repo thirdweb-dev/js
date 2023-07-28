@@ -1,5 +1,11 @@
 # @thirdweb-dev/pay
 
+## 0.1.3
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
 ## 0.1.2
 
 ### Patch Changes
