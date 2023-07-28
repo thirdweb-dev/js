@@ -1,20 +1,11 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Icon,
-  IconButton,
-  Img,
-  SimpleGrid,
-} from "@chakra-ui/react";
-import { IconLogo } from "components/logo";
+import { Box, Container, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { FiArrowRight, FiX } from "react-icons/fi";
 import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-paper-acquisition", false, true);
+    useLocalStorage("dismissed-api-keys-requirement", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -37,9 +28,9 @@ export const AnnouncementBanner = () => {
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
           isExternal
-          href="https://blog.thirdweb.com/acquiring-paper"
+          href="https://blog.thirdweb.com/changelog/api-keys-to-access-thirdweb-infra/"
           category="announcement"
-          label="paper-acquisition"
+          label="api-keys-requirement"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -49,16 +40,6 @@ export const AnnouncementBanner = () => {
               gap={{ base: 0.5, md: 2 }}
               color="white"
             >
-              <SimpleGrid
-                columns={3}
-                placeItems="center"
-                gap={0}
-                display={{ base: "none", md: "grid" }}
-              >
-                <IconLogo boxSize={6} />
-                <Icon as={FiX} boxSize={3} />
-                <Img src="/logos/paper-logo-icon.svg" boxSize={6} />
-              </SimpleGrid>
               <Heading
                 size="label.lg"
                 as="p"
@@ -66,10 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                <strong>
-                  thirdweb acquires Paper, leading checkout and wallet solution.
-                </strong>{" "}
-                Learn more
+                thirdweb services will require API key authentication starting
+                from <strong>August 1st</strong>
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
