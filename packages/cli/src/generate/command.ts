@@ -205,8 +205,8 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
 
   const postinstall = packageJson.scripts?.postinstall
     ? packageJson.scripts.postinstall +
-      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`
-    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`;
+      `npx --yes thirdweb@latest generate`
+    : `npx --yes thirdweb@latest generate`;
 
   fs.writeFileSync(
     packageJsonPath,
