@@ -82,6 +82,7 @@ const moduleExports = {
   compiler: {
     emotion: true,
   },
+  productionBrowserSourceMaps: true,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
