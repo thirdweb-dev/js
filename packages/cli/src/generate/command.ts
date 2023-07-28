@@ -199,7 +199,7 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
   }
 
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-  if (packageJson.scripts?.postinstall?.includes("thirdweb generate")) {
+  if (packageJson.scripts?.postinstall?.includes("thirdweb generate") || packageJson.scripts?.postinstall?.includes("thirdweb@latest generate")) {
     return;
   }
 
