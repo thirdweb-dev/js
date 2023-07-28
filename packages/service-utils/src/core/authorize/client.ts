@@ -40,14 +40,22 @@ export function authorizeClient(
     if (
       // find matching domain, or if all domains allowed
       domains.find((d) => {
+        // if any domain is allowed, we'll return true
         if (d === "*") {
+          return true;
+        }
+
+        // special rule for `localhost`
+        // if the domain is localhost, we'll allow any origin that starts with localhost
+        if (d === "localhost" && origin.startsWith("localhost")) {
           return true;
         }
 
         // If the allowedDomain has a wildcard,
         // we'll check that the ending of our domain matches the wildcard
         if (d.startsWith("*.")) {
-          const domainRoot = d.slice(2);
+          // get rid of the * and check if it ends with the `.<domain>.<tld>`
+          const domainRoot = d.slice(1);
           return origin.endsWith(domainRoot);
         }
 
