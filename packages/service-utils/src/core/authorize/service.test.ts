@@ -11,6 +11,7 @@ describe("authorizeService", () => {
     walletAddresses: [],
     domains: [],
     bundleIds: [],
+    accountId: "test-account-id",
     services: [
       {
         name: "storage",

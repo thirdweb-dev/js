@@ -12,6 +12,7 @@ describe("authorizeClient", () => {
     domains: ["example.com", "*.example.com"],
     bundleIds: ["com.example.app"],
     services: [],
+    accountId: "test-account-id",
   };
 
   const validAuthOptions: ClientAuthorizationPayload = {
