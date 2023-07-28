@@ -107,6 +107,7 @@ class Decoder {
       );
     }
     if (this instanceof Decoder) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       currentDecoder = this;
       packedValues =
         this.sharedValues &&

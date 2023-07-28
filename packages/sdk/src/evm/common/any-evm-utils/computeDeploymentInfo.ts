@@ -27,7 +27,7 @@ export async function computeDeploymentInfo(
   create2Factory: string,
   contractOptions?: ContractOptions,
 ): Promise<DeploymentPreset> {
-  let contractName = contractOptions && contractOptions.contractName;
+  const contractName = contractOptions && contractOptions.contractName;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -112,7 +112,7 @@ export async function encodeConstructorParamsForImplementation(
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
   );
-  let constructorParamTypes = constructorParams.map((p) => {
+  const constructorParamTypes = constructorParams.map((p) => {
     if (p.type === "tuple[]") {
       return utils.ParamType.from(p);
     } else {

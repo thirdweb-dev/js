@@ -126,7 +126,7 @@ export async function zkDeployContractFromUri(
 export async function getZkTransactionsForDeploy(): Promise<
   DeploymentTransaction[]
 > {
-  let transactions: DeploymentTransaction[] = [];
+  const transactions: DeploymentTransaction[] = [];
 
   transactions.push({
     contractType: "proxy",

@@ -28,6 +28,11 @@ export function getActiveCookie(req: Request): string | undefined {
   return THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX;
 }
 
+/**
+ * @internal
+ * @param req
+ * @returns
+ */
 export function getToken(req: Request): string | undefined {
   if (req.headers["authorization"]) {
     const authorizationHeader = req.headers["authorization"].split(" ");
