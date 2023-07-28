@@ -27,6 +27,12 @@ export function authorizeClient(
     return {
       authorized: true,
       apiKeyMeta,
+      accountMeta: {
+        id: apiKeyMeta.accountId,
+        // TODO update this later
+        name: "",
+        creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+      },
     };
   }
 
@@ -61,6 +67,12 @@ export function authorizeClient(
       return {
         authorized: true,
         apiKeyMeta,
+        accountMeta: {
+          id: apiKeyMeta.accountId,
+          // TODO update this later
+          name: "",
+          creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+        },
       };
     }
 
@@ -87,6 +99,12 @@ export function authorizeClient(
       return {
         authorized: true,
         apiKeyMeta,
+        accountMeta: {
+          id: apiKeyMeta.accountId,
+          // TODO update this later
+          name: "",
+          creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+        },
       };
     }
 
