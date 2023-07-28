@@ -17,11 +17,19 @@ export default async function handler() {
       },
     });
 
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: "Error fetching luma events" },
+        { status: 500 },
+      );
+    }
+
     const data = await response.json();
+
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "Error fetching events", error },
+      { message: "Error fetching luma events", error },
       { status: 500 },
     );
   }
