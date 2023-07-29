@@ -109,6 +109,7 @@ export const CreateApiKeyButton: React.FC = () => {
         apiKey={apiKey}
         form={form}
         open={isOpen}
+        isLoading={createKeyMutation.isLoading}
         onClose={handleClose}
         onSubmit={handleSubmit}
       />

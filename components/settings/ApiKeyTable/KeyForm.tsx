@@ -1,10 +1,23 @@
-import { HIDDEN_SERVICES, ApiKeyValidationSchema } from "./validations";
-
+import { ApiKeyDetailsRow } from "./DetailsRow";
+import { ApiKeyValidationSchema, HIDDEN_SERVICES } from "./validations";
+import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
+  Divider,
+  Flex,
   FormControl,
   HStack,
   Input,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
   Switch,
   Tab,
   TabList,
@@ -16,14 +29,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
+import React from "react";
 import {
   FieldArrayWithId,
   UseFormReturn,
   useFieldArray,
 } from "react-hook-form";
 import {
+  Button,
   Card,
   Checkbox,
+  CodeBlock,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -34,17 +50,30 @@ import {
 interface ApiKeyKeyFormProps {
   form: UseFormReturn<ApiKeyValidationSchema, any>;
   selectedSection?: number;
+  apiKey?: ApiKey | null;
+  isLoading?: boolean;
+  onClose: () => void;
   onSubmit: () => void;
   onSectionChange?: (idx: number) => void;
   tabbed?: boolean;
 }
+
+type FormStep = "name" | "services" | "permissions" | "keys";
+
 export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   form,
   selectedSection,
+  apiKey,
+  onClose,
   onSubmit,
   onSectionChange,
   tabbed = true,
+  isLoading,
 }) => {
+  const { secret, key } = apiKey || {};
+  const [formStep, setFormStep] = React.useState<FormStep>(
+    apiKey ? "keys" : "name",
+  );
   const enabledServices =
     form.getValues("services")?.filter((srv) => !!srv.enabled) || [];
 
@@ -92,7 +121,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
 
   const renderGeneral = () => {
     return (
-      <>
+      <VStack gap={6}>
         <FormControl
           isInvalid={!!form.getFieldState("domains", form.formState).error}
         >
@@ -154,18 +183,17 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
             To allow any wallet, set to <code>*</code>.
           </FormHelperText>
         </FormControl> */}
-      </>
+      </VStack>
     );
   };
 
   const renderServices = () => {
     return (
       <>
-        <Text size="body.md">
-          Choose thirdweb services this API Key is allowed to access.
-        </Text>
-
         <VStack alignItems="flex-start" w="full" gap={4}>
+          <Text size="body.md">
+            Choose thirdweb services this API Key is allowed to access.
+          </Text>
           {fields.map((srv, idx) => {
             const service = getServiceByName(srv.name as ServiceName);
 
@@ -278,8 +306,149 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
     );
   };
 
+  const renderKeys = () => {
+    return (
+      <VStack gap={4}>
+        <ApiKeyDetailsRow
+          title="Client ID"
+          content={
+            isLoading ? (
+              <Spinner size="sm" />
+            ) : key ? (
+              <CodeBlock codeValue={key} code={key} />
+            ) : (
+              <Text>Error generating keys</Text>
+            )
+          }
+          description="Identifies your application. It should generally be restricted to specific domains (web) and/or bundle-ids (native)."
+        />
+
+        <Divider />
+
+        <ApiKeyDetailsRow
+          title="Secret Key"
+          content={
+            isLoading ? (
+              <Spinner size="sm" />
+            ) : secret ? (
+              <CodeBlock codeValue={secret} code={secret} />
+            ) : (
+              <Text>Error generating keys</Text>
+            )
+          }
+          description="Identifies and authenticates your application from the backend."
+        />
+
+        <Alert status="warning" variant="left-accent">
+          <AlertIcon />
+          <Flex direction="column" gap={2}>
+            <Heading as={AlertTitle} size="label.md">
+              Secret Key Handling
+            </Heading>
+            <Text as={AlertDescription} size="body.md">
+              Store the Secret Key in a secure place and{" "}
+              <strong>never share it</strong>. You will not be able to retrieve
+              it again. If you lose it, you will need to regenerate a new Secret
+              Key.
+            </Text>
+          </Flex>
+        </Alert>
+      </VStack>
+    );
+  };
+
+  const renderFormStep = () => {
+    switch (formStep) {
+      case "name":
+        return renderName();
+      case "services":
+        return renderServices();
+      case "permissions":
+        return renderGeneral();
+      case "keys":
+        return renderKeys();
+    }
+  };
+
+  const action = () => {
+    switch (formStep) {
+      case "name":
+        form.trigger();
+        if (form.formState.isValid) {
+          setFormStep("services");
+        }
+        break;
+      case "services":
+        form.trigger();
+        if (form.formState.isValid) {
+          setFormStep("permissions");
+        }
+        break;
+      case "permissions":
+        form.trigger();
+        if (form.formState.isValid) {
+          setFormStep("keys");
+        }
+        onSubmit();
+        break;
+      case "keys":
+        onClose();
+        break;
+    }
+  };
+
+  const backAction = () => {
+    switch (formStep) {
+      case "name":
+        break;
+      case "services":
+        setFormStep("name");
+        break;
+      case "permissions":
+        setFormStep("services");
+        break;
+      case "keys":
+        break;
+    }
+  };
+  const shouldShowBack = () => {
+    switch (formStep) {
+      case "name":
+      case "keys":
+        return false;
+      case "services":
+      case "permissions":
+        return true;
+    }
+  };
+
+  const actionLabel = () => {
+    switch (formStep) {
+      case "name":
+      case "services":
+        return "Next";
+      case "permissions":
+        return "Create";
+      case "keys":
+        return "I have stored the Secret Key securely";
+    }
+  };
+
+  const titleLabel = () => {
+    switch (formStep) {
+      case "name":
+        return "Name your API Keys";
+      case "services":
+        return "Enable Services";
+      case "permissions":
+        return "Set Access Restrictions";
+      case "keys":
+        return "Your API Keys";
+    }
+  };
+
   return (
-    <form onSubmit={onSubmit} autoComplete="off">
+    <form onSubmit={action} autoComplete="off">
       {tabbed && (
         <Tabs defaultIndex={selectedSection} onChange={onSectionChange}>
           <TabList>
@@ -305,10 +474,17 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
       )}
 
       {!tabbed && (
-        <VStack alignItems="flex-start" w="full" gap={6} pt={3}>
-          {renderName()}
-          {renderGeneral()}
-        </VStack>
+        <ModalContent minHeight={250}>
+          <ModalHeader>{titleLabel()}</ModalHeader>
+          {!apiKey && <ModalCloseButton />}
+          <ModalBody>{renderFormStep()}</ModalBody>
+          <ModalFooter gap={4}>
+            {shouldShowBack() && <Button onClick={backAction}>Back</Button>}
+            <Button colorScheme="blue" onClick={action}>
+              {actionLabel()}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       )}
     </form>
   );

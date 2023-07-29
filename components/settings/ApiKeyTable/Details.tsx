@@ -25,7 +25,6 @@ import {
 import { useMemo } from "react";
 import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
-import { shortenString } from "utils/usedapp-external";
 
 interface ApiKeyDetailsProps {
   apiKey: ApiKey;
@@ -170,23 +169,11 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
       <TabPanels>
         <TabPanel>
-          <VStack align="flex-start" w="full" gap={6} py={4}>
+          <VStack align="flex-start" w="full" gap={8} py={4}>
             <ApiKeyDetailsRow
               title="Client Id"
               description={`Identifies your application. It should generally be restricted to specific domains (web) and/or bundle-ids (native).`}
-              content={
-                <VStack gap={2} w="full" alignItems="flex-start">
-                  <CodeBlock code={key} />
-                  <Text>Instantiate the thirdweb SDK with your Client ID:</Text>
-                  <CodeBlock
-                    language="ts"
-                    whiteSpace="pre"
-                    code={`const sdk = new ThirdwebSDK("goerli", {
-  clientId: "${key.startsWith("pk") ? shortenString(key) : key}"
-});`}
-                  />
-                </VStack>
-              }
+              content={<CodeBlock code={key} />}
             />
 
             {/* for very old api keys the secretmask might be `null`, if that's the case we skip it */}
@@ -194,21 +181,7 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
               <ApiKeyDetailsRow
                 title="Secret Key"
                 description="Identifies and authenticates your application from the backend. Using the secret key bypasses any allowed domains or bundle ids."
-                content={
-                  <VStack gap={2} w="full" alignItems="flex-start">
-                    <CodeBlock code={secretMasked} canCopy={false} />
-                    <Text>
-                      Instantiate the thirdweb SDK with your secret key:
-                    </Text>
-                    <CodeBlock
-                      language="ts"
-                      whiteSpace="pre"
-                      code={`const sdk = new ThirdwebSDK("goerli", {
-  secretKey: "${secretMasked}"
-});`}
-                    />
-                  </VStack>
-                }
+                content={<CodeBlock code={secretMasked} canCopy={false} />}
               />
             )}
 

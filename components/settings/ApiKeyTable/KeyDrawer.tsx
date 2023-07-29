@@ -173,6 +173,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
       ) : (
         <ApiKeyKeyForm
           form={form}
+          onClose={onClose}
           onSubmit={handleSubmit}
           selectedSection={selectedSection}
           onSectionChange={setSelectedSection}
