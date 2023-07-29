@@ -74,7 +74,7 @@
     "@microsoft/api-documenter": "^7.22.30",
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
-    "@preconstruct/cli": "^2.8.1",
+    "@preconstruct/cli": "2.7.0",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/auth": "workspace:*",
