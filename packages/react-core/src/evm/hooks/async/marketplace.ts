@@ -32,9 +32,11 @@ import type {
   NewAuctionListing,
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
-import { ListingType } from "@thirdweb-dev/sdk";
-import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
-import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
+import {
+  ListingType,
+  DirectListingInputParams,
+  EnglishAuctionInputParams,
+} from "@thirdweb-dev/sdk";
 import type { BigNumberish, providers } from "ethers";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";

@@ -23,6 +23,9 @@ export * from "./schema/shared/CallOverrideSchema";
 export * from "./schema/shared/ChainInfo";
 export * from "./schema/shared/Ens";
 export * from "./schema/shared/Address";
+export * from "./schema/marketplacev3/direct-listings";
+export * from "./schema/marketplacev3/english-auctions";
+export * from "./schema/marketplacev3/offer";
 
 export type {
   SDKOptions,
