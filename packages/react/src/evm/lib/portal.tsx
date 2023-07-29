@@ -20,7 +20,7 @@ function canUseDOM() {
  * Forces a re-render, similar to `forceUpdate` in class components.
  */
 function useForceUpdate() {
-  const [, dispatch] = useState(Object.create(null));
+  const [, dispatch] = useState<{}>(Object.create(null));
   return useCallback(() => {
     dispatch(Object.create(null));
   }, []);

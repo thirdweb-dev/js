@@ -6,7 +6,6 @@ import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   walletId?: string;
@@ -27,9 +26,7 @@ export type WalletMeta = {
 };
 
 export abstract class AbstractClientWallet<
-  // eslint-disable-next-line @typescript-eslint/ban-types
   TAdditionalOpts extends Record<string, any> = {},
-  // eslint-disable-next-line @typescript-eslint/ban-types
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
   walletId: string;

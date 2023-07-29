@@ -1,7 +1,7 @@
 import type { ChainInfo } from "../../schema/shared/ChainInfo";
 import { defaultChains } from "@thirdweb-dev/chains";
 
-// @ts-expect-error - readonly vs not
+// @ts-expect-error
 let supportedChains: ChainInfo[] = defaultChains;
 
 /**
@@ -11,7 +11,7 @@ export function setSupportedChains(chains: ChainInfo[] | undefined) {
   if (chains && chains.length > 0) {
     supportedChains = chains;
   } else {
-    // @ts-expect-error - readonly vs not
+    // @ts-expect-error
     supportedChains = defaultChains;
   }
 }

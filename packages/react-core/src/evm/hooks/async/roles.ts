@@ -11,8 +11,8 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk";
-import type { Vote } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import type { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/vote";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import { constants } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -30,8 +30,7 @@ export type ContractWithRoles = Exclude<ValidContractInstance, Vote>;
  */
 export type RolesForContract<TContract extends ContractWithRoles> =
   TContract extends SmartContract
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      Role | (string & {})
+    ? Role | (string & {})
     : NonNullable<Exclude<TContract, SmartContract>["roles"]>["roles"][number];
 
 /**

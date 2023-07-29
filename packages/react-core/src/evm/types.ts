@@ -18,13 +18,13 @@ import type {
   Pack,
   AddressOrEns,
 } from "@thirdweb-dev/sdk";
-import type { Edition } from "@thirdweb-dev/sdk";
-import type { EditionDrop } from "@thirdweb-dev/sdk";
-import type { NFTCollection } from "@thirdweb-dev/sdk";
-import type { NFTDrop } from "@thirdweb-dev/sdk";
-import type { SignatureDrop } from "@thirdweb-dev/sdk";
-import type { TokenDrop } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
+import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
+import type { NFTCollection } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-collection";
+import type { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
+import type { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
+import type { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/token-drop";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import type { BigNumberish } from "ethers";
 
 type AddEthereumChainParameter = {

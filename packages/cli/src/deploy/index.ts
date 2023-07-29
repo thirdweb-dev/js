@@ -33,7 +33,7 @@ export async function deploy(options: DeployOptions, apiSecretKey: string) {
 
   if (options.app) {
     try {
-      const url = await deployApp(options.distPath, options.path, apiSecretKey);
+      let url = await deployApp(options.distPath, options.path, apiSecretKey);
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {

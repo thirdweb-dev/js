@@ -167,7 +167,8 @@ export function getProviderFromRpcUrl(
           rpcUrl =
             rpcUrl +
             (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-              ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
+              ? // @ts-ignore
+                `?bundleId=${globalThis.APP_BUNDLE_ID}`
               : "");
         }
       } else if (sdkOptions?.secretKey) {

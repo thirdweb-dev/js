@@ -12,8 +12,7 @@ export default {
   },
   "rpc": [
     "https://arbitrum-nova.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://nova.arbitrum.io/rpc",
-    "https://arbitrum-nova.publicnode.com"
+    "https://nova.arbitrum.io/rpc"
   ],
   "faucets": [],
   "explorers": [

@@ -533,7 +533,7 @@ export class NFTDrop {
       : undefined;
     const txs: TransactionBuilder[] = [];
 
-    for (const nftAddress of nftAddresses) {
+    for (let nftAddress of nftAddresses) {
       txs.push(
         this.metaplex
           .nfts()

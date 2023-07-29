@@ -3,20 +3,20 @@ import { copyFile } from "fs/promises";
 import { resolve } from "path";
 import { ERROR_MESSAGES } from "../constants/constants";
 
-// load env variables
-require("dotenv-mono").load();
-
-const apiSecretKey = process.env.TW_SECRET_KEY as string;
-
-// function to skip tests based on condition
-const itif = (condition: boolean) => (condition ? it : it.skip);
-
 // this creates an app, can take some time that's fine
 jest.setTimeout(120_000);
 
 describe("npx thirdweb deploy", () => {
-  itif(!!apiSecretKey)("should return deploy page url", async () => {
+  it("should return deploy page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    const apiSecretKey = process.env.CLI_E2E_API_KEY as string;
+
+    if (!apiSecretKey) {
+      throw new Error(
+        "CLI_E2E_API_KEY is not set in the environment variables",
+      );
+    }
 
     await copyFile(
       resolve("./e2e/files/BasicContract.sol"),

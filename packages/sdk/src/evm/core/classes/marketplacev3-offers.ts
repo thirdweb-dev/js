@@ -101,15 +101,15 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const end = totalOffers.toNumber();
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalOffers.toNumber();
 
     if (end === 0) {
       throw new Error(`No offers exist on the contract.`);
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    const batches = await getAllInBatches(
+    let batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllOffers,
@@ -140,15 +140,15 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const end = totalOffers.toNumber();
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalOffers.toNumber();
 
     if (end === 0) {
       throw new Error(`No offers exist on the contract.`);
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    const batches = await getAllInBatches(
+    let batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidOffers,

@@ -41,7 +41,7 @@ export async function deployContractDeterministicRaw(
     );
     const initBytecodeWithSalt = getInitBytecodeWithSalt(bytecode, encodedArgs);
 
-    const tx: PopulatedTransaction = {
+    let tx: PopulatedTransaction = {
       to: create2FactoryAddress,
       data: initBytecodeWithSalt,
     };

@@ -35,7 +35,7 @@ export async function sendMultipartTransaction(
   for (let i = 0; i < signedTx.length; i += batchSize) {
     batches.push(signedTx.slice(i, i + batchSize));
   }
-  const signatures: string[][] = [];
+  let signatures: string[][] = [];
   for (const txs of batches) {
     const signature = await Promise.all(
       txs.map((tx) => metaplex.connection.sendRawTransaction(tx.serialize())),
@@ -44,7 +44,7 @@ export async function sendMultipartTransaction(
   }
 
   // wait for confirmations in parallel batches
-  const confirmations = [];
+  let confirmations = [];
   for (let i = 0; i < signatures.length; i += 1) {
     await delay(1000); // add delay to avoid rate limiting
     const sigs = signatures[i];

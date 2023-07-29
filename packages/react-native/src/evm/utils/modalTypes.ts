@@ -46,7 +46,7 @@ export type DialogModal = {
 
 export type ClosedModal = {
   view: "Closed";
-  data: Record<string, never>;
+  data: {};
 } & SheetModal;
 
 // connect wallet flow

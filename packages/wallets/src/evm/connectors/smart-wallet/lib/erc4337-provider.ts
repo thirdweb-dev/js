@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-parameter-properties */
 import { BigNumber, providers, Signer, utils } from "ethers";
 
 import {

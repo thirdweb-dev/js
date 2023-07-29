@@ -24,10 +24,8 @@ export function extractFunctionsFromAbi(
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore we know AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       inputs: f.inputs || [],
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore we know the AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       outputs: f.outputs || [],
       name: f.name || "unknown",

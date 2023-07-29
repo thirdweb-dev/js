@@ -79,9 +79,8 @@ export class StorageDownloader implements IStorageDownloader {
           typeof globalThis !== "undefined" &&
           "APP_BUNDLE_ID" in globalThis
         ) {
-          resolvedUri =
-            resolvedUri +
-            `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`;
+          // @ts-ignore
+          resolvedUri = resolvedUri + `?bundleId=${globalThis.APP_BUNDLE_ID}`;
         }
         headers = {
           "x-client-Id": this.clientId,
@@ -95,7 +94,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    let timeout = setTimeout(() => controller.abort(), 5000);
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,

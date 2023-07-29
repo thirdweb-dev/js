@@ -18,7 +18,6 @@ export type WalletData = {
   isEncrypted: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type LocalWalletConnectionArgs = {};
 
 const STORAGE_KEY_WALLET_DATA = "localWalletData";

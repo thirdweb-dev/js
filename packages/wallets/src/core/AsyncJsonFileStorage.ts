@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { AsyncStorage } from "./AsyncStorage";
 
 export class AsyncJsonFileStorage implements AsyncStorage {

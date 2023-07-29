@@ -52,7 +52,7 @@ export const BigNumberSchema = /* @__PURE__ */ (() =>
       }),
     ])
     .transform((arg) => {
-      const str = BN.isBN(arg)
+      let str = BN.isBN(arg)
         ? new BN(arg).toString()
         : BigNumber.from(arg).toString();
       return BigNumber.from(str);

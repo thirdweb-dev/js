@@ -199,7 +199,7 @@ export async function getTrustedForwarders(
 ): Promise<string[]> {
   const chainId = (await provider.getNetwork()).chainId;
   const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
-  const trustedForwarders: string[] =
+  let trustedForwarders: string[] =
     contractName && contractName === PackInitializer.name
       ? []
       : chainEnum

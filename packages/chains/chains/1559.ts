@@ -11,8 +11,7 @@ export default {
   },
   "rpc": [
     "https://tenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.tenet.org",
-    "https://tenet-evm.publicnode.com"
+    "https://rpc.tenet.org"
   ],
   "faucets": [],
   "nativeCurrency": {

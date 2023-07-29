@@ -31,7 +31,6 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @public
    */
   public async gasCostOf(
-    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
@@ -59,7 +58,6 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @public
    */
   public async gasLimitOf(
-    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<BigNumber> {

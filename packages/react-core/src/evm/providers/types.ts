@@ -35,11 +35,9 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
   activeChain?:
     | TChains[number]["chainId"]
     // allow number as well but autocomplete will only show chainId
-    // eslint-disable-next-line @typescript-eslint/ban-types
     | (number & {})
     | TChains[number]["slug"]
     // allow string as well but autocomplete will only show chain slug
-    // eslint-disable-next-line @typescript-eslint/ban-types
     | (string & {})
     | Chain;
 

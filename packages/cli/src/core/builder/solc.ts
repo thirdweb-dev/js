@@ -90,7 +90,7 @@ export class SolcBuilder extends BaseBuilder {
         }
 
         const contractNamesInNamespace = Object.keys(contract);
-        for (const c of contractNamesInNamespace) {
+        for (let c of contractNamesInNamespace) {
           const contractFile = contract[c];
           const contractFilePath = join(contractPath, c + ".json");
           writeFileSync(

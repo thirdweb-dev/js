@@ -10,11 +10,8 @@ export { SafeSupportedChainsSet } from "../connectors/safe/constants";
 // re-export the connection args for convenience
 export type { SafeConnectionArgs } from "../connectors/safe/types";
 
-export type SafeWalletOptions = WalletOptions;
-export class SafeWallet extends AbstractClientWallet<
-  object,
-  SafeConnectionArgs
-> {
+export type SafeWalletOptions = WalletOptions<{}>;
+export class SafeWallet extends AbstractClientWallet<{}, SafeConnectionArgs> {
   connector?: SafeConnectorType;
 
   static meta = {

@@ -143,8 +143,7 @@ export type PaperCreateCheckoutLinkIntentParams<
         contractArgs: SignedPayload721WithQuantitySignature;
       }
     : TContract extends PrebuiltNFTDrop
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
+    ? {}
     : never);
 
 /**

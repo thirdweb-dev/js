@@ -171,11 +171,11 @@ export const installOrUpdate = async (
   typeOfAction: "install" | "update",
   options?: { oldVersion?: string; debug?: boolean },
 ) => {
-  let runner = "";
+  let runner: string = "";
   let installCommand: string[] = [];
   let updateCommand: string[] = [];
   let deleteCommand: string[] = [];
-  const printLogs = options?.debug || false;
+  let printLogs = options?.debug || false;
 
   switch (packageManager) {
     case "npm":

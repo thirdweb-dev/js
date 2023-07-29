@@ -257,7 +257,7 @@ export async function getAllInBatches(
   end: number,
   fn: ContractFunction,
 ): Promise<any[]> {
-  const batches: any[] = [];
+  let batches: any[] = [];
   while (end - start > DEFAULT_QUERY_ALL_COUNT) {
     batches.push(fn(start, start + DEFAULT_QUERY_ALL_COUNT - 1));
     start += DEFAULT_QUERY_ALL_COUNT;

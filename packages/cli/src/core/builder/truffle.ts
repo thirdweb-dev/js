@@ -12,7 +12,6 @@ export class TruffleBuilder extends BaseBuilder {
     contracts: ContractPayload[];
   }> {
     // get the current config first
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const truffleConfig = require(join(
       options.projectPath,
       "truffle-config.js",

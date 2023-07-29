@@ -1,4 +1,4 @@
-import type { BasicNFTInput } from "@thirdweb-dev/sdk";
+import { BasicNFTInput } from "@thirdweb-dev/sdk/dist/declarations/src/core/schema/nft";
 import {
   requiredParamInvariant,
   RequiredParam,

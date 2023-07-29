@@ -10,8 +10,7 @@ export default {
   },
   "rpc": [
     "https://mantle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mantle.xyz",
-    "https://mantle.publicnode.com"
+    "https://rpc.mantle.xyz"
   ],
   "faucets": [],
   "nativeCurrency": {

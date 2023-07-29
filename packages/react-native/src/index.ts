@@ -4,5 +4,6 @@ import { isGlobalThisPresent } from "./evm/utils/global";
 export * from "./evm";
 
 if (isGlobalThisPresent()) {
-  (globalThis as any).APP_BUNDLE_ID = Application.applicationId;
+  // @ts-ignore
+  globalThis.APP_BUNDLE_ID = Application.applicationId;
 }

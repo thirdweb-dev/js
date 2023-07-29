@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Keypair } from "@solana/web3.js";
 import yaml from "yaml";
 

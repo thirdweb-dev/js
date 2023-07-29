@@ -215,11 +215,12 @@ export class Erc721TieredDrop implements DetectableFeature {
           hashedPassword,
         );
 
+      let data: string;
       const provenanceHash = utils.solidityKeccak256(
         ["bytes", "bytes", "uint256"],
         [utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
       );
-      const data = utils.defaultAbiCoder.encode(
+      data = utils.defaultAbiCoder.encode(
         ["bytes", "bytes32"],
         [encryptedBaseUri, provenanceHash],
       );

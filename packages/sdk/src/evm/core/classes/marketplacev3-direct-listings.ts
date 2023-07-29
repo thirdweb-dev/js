@@ -121,15 +121,15 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   ): Promise<DirectListingV3[]> {
     const totalListings = await this.getTotalCount();
 
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const end = totalListings.toNumber();
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalListings.toNumber();
 
     if (end === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    const batches = await getAllInBatches(
+    let batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllListings,
@@ -162,15 +162,15 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   ): Promise<DirectListingV3[]> {
     const totalListings = await this.getTotalCount();
 
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const end = totalListings.toNumber();
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalListings.toNumber();
 
     if (end === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    const batches = await getAllInBatches(
+    let batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidListings,

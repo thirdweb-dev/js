@@ -280,7 +280,7 @@ export class ContractWrapper<
     overrides?: CallOverrides,
   ): Promise<any> {
     // parse last arg as tx options if present
-    const txOptions: CallOverrides | undefined = overrides
+    let txOptions: CallOverrides | undefined = overrides
       ? await CallOverrideSchema.parseAsync(overrides)
       : undefined;
 
@@ -331,7 +331,6 @@ export class ContractWrapper<
    * @internal
    */
   public async sendTransaction(
-    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: any[],
     callOverrides?: CallOverrides,

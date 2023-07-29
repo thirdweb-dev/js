@@ -114,8 +114,6 @@ export function prepareGatewayUrls(
           if (typeof window !== "undefined") {
             throw new Error("Cannot use secretKey in browser context");
           }
-          // this is on purpose because we're using the crypto module only in node
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
           const crypto = require("crypto");
           const hashedSecretKey = crypto
             .createHash("sha256")

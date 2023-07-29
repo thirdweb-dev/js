@@ -7,8 +7,7 @@ export default {
     "https://evm.kava.io",
     "https://evm2.kava.io",
     "wss://wevm.kava.io",
-    "wss://wevm2.kava.io",
-    "https://kava-evm.publicnode.com"
+    "wss://wevm2.kava.io"
   ],
   "faucets": [],
   "nativeCurrency": {

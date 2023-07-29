@@ -41,7 +41,7 @@ export function install(
    */
   return new Promise((resolve, reject) => {
     let args: string[];
-    const command = packageManager;
+    let command = packageManager;
     const useYarn = packageManager === "yarn";
 
     if (dependencies && dependencies.length) {

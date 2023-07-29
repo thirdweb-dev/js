@@ -62,7 +62,7 @@ export async function detectExtensions(options: any) {
     }
   }
 
-  const contractsWithFeatures: ContractFeatures[] = selectedContracts.map(
+  let contractsWithFeatures: ContractFeatures[] = selectedContracts.map(
     (contract) => {
       const abi: Parameters<typeof detectFeatures>[0] = JSON.parse(
         contract.metadata,

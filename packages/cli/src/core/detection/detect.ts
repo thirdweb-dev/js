@@ -9,7 +9,6 @@ import { existsSync, readdirSync } from "fs";
 import inquirer from "inquirer";
 import { parse } from "path";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Confirm } = require("enquirer");
 
 export default async function detect(

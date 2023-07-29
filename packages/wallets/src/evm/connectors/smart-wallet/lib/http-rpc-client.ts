@@ -42,7 +42,8 @@ export class HttpRpcClient {
           typeof globalThis !== "undefined" &&
           "APP_BUNDLE_ID" in globalThis
         ) {
-          headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
+          // @ts-ignore
+          headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
         }
       }
     }

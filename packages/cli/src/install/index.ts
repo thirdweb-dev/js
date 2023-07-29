@@ -82,6 +82,7 @@ export async function install(projectPath = ".", options: any) {
 
   // Processing JS/TS dependencies
   if (isJSPackageManager) {
+    let packageJson;
     const packageJsonPath = projectPath + "/package.json";
 
     // Check if package.json exists
@@ -93,7 +94,7 @@ export async function install(projectPath = ".", options: any) {
     }
 
     // Parse package.json
-    const packageJson = readFileSync(packageJsonPath);
+    packageJson = readFileSync(packageJsonPath);
     const parsedJSDeps = parsePackageJson(packageJson);
     jsDependencies = parsedJSDeps.dependencies;
     jsDevDependencies = parsedJSDeps.devDependencies;

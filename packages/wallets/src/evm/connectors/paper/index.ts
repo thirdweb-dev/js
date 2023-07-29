@@ -19,7 +19,7 @@ import { walletIds } from "../../constants/walletIds";
 export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
-  ready = true;
+  ready: boolean = true;
 
   private user: InitializedUser | null = null;
   #paper?: Promise<PaperEmbeddedWalletSdk>;
@@ -64,7 +64,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
     }
-    const user = await paperSDK.getUser();
+    let user = await paperSDK.getUser();
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
@@ -132,7 +132,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
 
     if (!this.user) {
       const paperSDK = await this.getPaperSDK();
-      const user = await paperSDK.getUser();
+      let user = await paperSDK.getUser();
       switch (user.status) {
         case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
           this.user = user;

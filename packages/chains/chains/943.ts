@@ -15,8 +15,7 @@ export default {
   "rpc": [
     "https://pulsechain-testnet-v4.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.v4.testnet.pulsechain.com/",
-    "wss://rpc.v4.testnet.pulsechain.com/",
-    "https://pulsechain-testnet.publicnode.com"
+    "wss://rpc.v4.testnet.pulsechain.com/"
   ],
   "features": [
     {

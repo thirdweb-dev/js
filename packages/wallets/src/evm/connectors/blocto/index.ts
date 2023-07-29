@@ -65,8 +65,8 @@ export class BloctoConnector extends WagmiConnector<
         method: "eth_requestAccounts",
       });
       const account = utils.getAddress(accounts[0] as string);
-      const id = await this.getChainId();
-      const unsupported = this.isChainUnsupported(id);
+      let id = await this.getChainId();
+      let unsupported = this.isChainUnsupported(id);
 
       return {
         account,

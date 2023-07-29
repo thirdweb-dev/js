@@ -80,7 +80,7 @@ export async function directDeployDeterministic(
       saltForCreate2,
     );
 
-    const tx: PopulatedTransaction = {
+    let tx: PopulatedTransaction = {
       to: create2Factory,
       data: initBytecodeWithSalt,
     };

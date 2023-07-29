@@ -1,9 +1,6 @@
 import { CREATE_MESSAGES } from "../constants/constants";
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 
-// load env variables
-require("dotenv-mono").load();
-
 // this creates an app, can take some time that's fine
 jest.setTimeout(150_000);
 

@@ -109,15 +109,15 @@ export class MarketplaceV3EnglishAuctions<
   ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const end = totalAuctions.toNumber();
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalAuctions.toNumber();
 
     if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    const batches = await getAllInBatches(
+    let batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllAuctions,
@@ -148,15 +148,15 @@ export class MarketplaceV3EnglishAuctions<
   ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
-    const start = BigNumber.from(filter?.start || 0).toNumber();
-    const end = totalAuctions.toNumber();
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalAuctions.toNumber();
 
     if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    const batches = await getAllInBatches(
+    let batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidAuctions,

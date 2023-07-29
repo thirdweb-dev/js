@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-parameter-properties */
 import { BigNumberish, Event, providers, utils } from "ethers";
 import { EntryPoint } from "@account-abstraction/contracts";
 
@@ -8,7 +9,7 @@ import { EntryPoint } from "@account-abstraction/contracts";
  * TODO refactor this to a simple event listener on the entry point
  */
 export class UserOperationEventListener {
-  resolved = false;
+  resolved: boolean = false;
   boundLisener: (this: any, ...param: any) => void;
 
   constructor(
@@ -46,8 +47,6 @@ export class UserOperationEventListener {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async listenerCallback(this: any, ...param: any): Promise<void> {
-    // TODO clean this up..
-    // eslint-disable-next-line prefer-rest-params
     const event = arguments[arguments.length - 1] as Event;
     if (!event.args) {
       console.error("got event without args", event);

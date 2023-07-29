@@ -19,7 +19,7 @@ type DappContextType = {
 
 const DappContext = createContext<DappContextType>({});
 
-export const DappContextProvider = (props: React.PropsWithChildren) => {
+export const DappContextProvider = (props: React.PropsWithChildren<{}>) => {
   const [smartWallet, setSmartWallet] = useState<SmartWallet | undefined>();
   const [magicWallet, setMagicWallet] = useState<MagicWallet | undefined>();
   const createdWalletInstance = useWalletContext().createdWalletInstance;

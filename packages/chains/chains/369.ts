@@ -8,9 +8,8 @@ export default {
   "infoURL": "https://pulsechain.com/",
   "rpc": [
     "https://pulsechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.pulsechain.com",
-    "wss://rpc.pulsechain.com",
-    "https://pulsechain.publicnode.com"
+    "https://rpc.pulsechain.com/",
+    "wss://rpc.pulsechain.com/"
   ],
   "features": [
     {

@@ -57,7 +57,7 @@ async function isInstalledGloballyWithYarn(): Promise<boolean> {
 async function isInstalledGloballyWithPnpm(): Promise<boolean> {
   const packages: string[] = await new Promise((resolve) => {
     exec(`pnpm list -g --depth=0`, (err, stdout) => {
-      let pkgs: string[] = [];
+      var pkgs: string[] = [];
       pkgs = stdout.split("dependencies:")[1]?.trim().split("\n") || [];
       pkgs = pkgs.map((pkg) => pkg.replace(" ", "@"));
       resolve(pkgs);
@@ -73,7 +73,7 @@ function containsThirdweb(packages: string[]) {
 async function detectPackages(cmd: string): Promise<string[]> {
   return new Promise((resolve) => {
     exec(cmd, (err, stdout) => {
-      let packages: string[] = [];
+      var packages: string[] = [];
       packages = stdout.split("\n");
       // We're one short on '-' to support both yarn and npm
       packages = packages.filter(function (item) {

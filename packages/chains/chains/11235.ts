@@ -4,8 +4,7 @@ export default {
   "chain": "Haqq",
   "rpc": [
     "https://haqq-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.eth.haqq.network",
-    "https://haqq-evm.publicnode.com"
+    "https://rpc.eth.haqq.network"
   ],
   "faucets": [],
   "nativeCurrency": {

@@ -3,6 +3,7 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
+// import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
@@ -68,17 +69,6 @@ abstract class TransactionContext {
     if (!this.signer.provider) {
       this.signer = this.signer.connect(this.provider);
     }
-  }
-  public get getSigner() {
-    return this.signer;
-  }
-
-  public get getProvider() {
-    return this.provider;
-  }
-
-  public get getStorage() {
-    return this.storage;
   }
 
   getArgs() {
@@ -586,11 +576,7 @@ export class Transaction<
     return sentTx;
   }
 
-  /**
-   * @internal
-   * @returns
-   */
-  public async prepareGasless(): Promise<GaslessTransaction> {
+  private async prepareGasless(): Promise<GaslessTransaction> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -1125,14 +1111,17 @@ async function defenderPrepareRequest(
 }
 
 export async function prepareGaslessRequest(tx: Transaction) {
+  // @ts-expect-error
   const gaslessTx = await tx.prepareGasless();
   const gaslessOptions = tx.getGaslessOptions();
 
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     const request = await biconomyPrepareRequest(
       gaslessTx,
-      tx.getSigner,
-      tx.getProvider,
+      // @ts-expect-error
+      tx.signer,
+      // @ts-expect-error
+      tx.provider,
       gaslessOptions,
     );
 
@@ -1148,9 +1137,12 @@ export async function prepareGaslessRequest(tx: Transaction) {
 
     const request = await defenderPrepareRequest(
       gaslessTx,
-      tx.getSigner,
-      tx.getProvider,
-      tx.getStorage,
+      // @ts-expect-error
+      tx.signer,
+      // @ts-expect-error
+      tx.provider,
+      // @ts-expect-error
+      tx.storage,
       gaslessOptions,
     );
 

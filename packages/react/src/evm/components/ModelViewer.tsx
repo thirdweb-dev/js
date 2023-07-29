@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import "@google/model-viewer";
 import type { ModelViewerElement } from "@google/model-viewer";
 import React from "react";

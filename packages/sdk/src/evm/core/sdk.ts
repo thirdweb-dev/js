@@ -1366,7 +1366,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       contractMetadata: z.input<
         DeploySchemaForPrebuiltContractType<TContractType>
       >,
-      version = "latest",
+      version: string = "latest",
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
       const signer = this.getSigner();
@@ -1659,7 +1659,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       signer: Signer,
       chainId: number,
     ): Promise<DeployTransaction> => {
-      const customFactoryAddress = deployMetadata.extendedMetadata
+      let customFactoryAddress = deployMetadata.extendedMetadata
         ?.factoryDeploymentData?.customFactoryInput?.customFactoryAddresses[
         chainId
       ] as AddressOrEns;
@@ -1693,7 +1693,6 @@ export class ContractDeployer extends RPCConnectionHandler {
         constructorParamValues,
       );
 
-      // eslint-disable-next-line prefer-const
       let deployedImplementationAddress: string;
       const deployTransaction = await Transaction.fromContractInfo({
         contractAddress: resolvedCustomFactoryAddress,
@@ -1863,7 +1862,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             constructorParamValues,
           );
 
-          const implementationAddress = extendedMetadata.factoryDeploymentData
+          let implementationAddress = extendedMetadata.factoryDeploymentData
             .implementationAddresses[chainId] as AddressOrEns;
 
           if (
@@ -2002,7 +2001,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     ) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
 
-      const implementationAddress = extendedMetadata.factoryDeploymentData
+      let implementationAddress = extendedMetadata.factoryDeploymentData
         .implementationAddresses[chainId] as AddressOrEns;
 
       if (

@@ -6,8 +6,7 @@ export default {
     "https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
-    "https://goerli.optimism.io",
-    "https://optimism-goerli.publicnode.com"
+    "https://goerli.optimism.io/"
   ],
   "faucets": [
     "https://coinbase.com/faucets/optimism-goerli-faucet"

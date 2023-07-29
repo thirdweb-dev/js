@@ -134,7 +134,7 @@ export const Web3Button = <TAction extends ActionFn>({
   }
 
   let content = children;
-  const buttonDisabled = !!isDisabled;
+  let buttonDisabled = !!isDisabled;
   let buttonLoading = false;
 
   // if button is disabled, show original action

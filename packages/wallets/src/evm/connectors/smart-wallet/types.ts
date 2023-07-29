@@ -32,7 +32,7 @@ export type SmartWalletConnectionArgs = {
   personalWallet: EVMWallet;
   accountAddress?: string;
 };
-export type SmartWalletOptions = WalletOptions;
+export type SmartWalletOptions = WalletOptions<{}>;
 
 export interface AccountApiParams
   extends Omit<BaseApiParams, "provider">,

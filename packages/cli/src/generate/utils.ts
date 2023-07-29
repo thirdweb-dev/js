@@ -10,12 +10,12 @@ export async function getContractsForAddresses(
   chainIds: number[],
   contracts: DeployedContract[],
 ) {
-  const contractChainPrompts: ContractChainPrompt[] = [];
+  let contractChainPrompts: ContractChainPrompt[] = [];
 
   await Promise.all(
     addresses.map(async (address) => {
       // Check which chainIds of the provided chains have a contract at this address
-      const chainIdsWithContract: number[] = [];
+      let chainIdsWithContract: number[] = [];
 
       await Promise.all(
         chainIds.map(async (chainId) => {
