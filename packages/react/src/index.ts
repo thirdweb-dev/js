@@ -13,5 +13,43 @@ export { smartWallet } from "./wallet/wallets/smartWallet/smartWallet";
 export { magicLink } from "./wallet/wallets/magic/magicLink";
 export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
 
-// at the moment we'll re-export everything from the evm package
-export * from "./evm";
+export {
+  useIsWalletModalOpen,
+  useSetIsWalletModalOpen,
+} from "./evm/providers/wallet-ui-states-provider";
+
+export { useSafe } from "./evm/connectors/gnosis";
+export { useMagic } from "./evm/connectors/magic";
+
+export { ConnectWallet } from "./wallet/ConnectWallet/ConnectWallet";
+export { NetworkSelector } from "./wallet/ConnectWallet/NetworkSelector";
+export type { NetworkSelectorProps } from "./wallet/ConnectWallet/NetworkSelector";
+
+// UI components
+export * from "./evm/components/MediaRenderer";
+export * from "./evm/components/NftMedia";
+export * from "./evm/components/Web3Button";
+export { ThirdwebProvider } from "./evm/providers/thirdweb-provider";
+
+// wallet/hooks
+export { useInstalledWallets } from "./wallet/hooks/useInstalledWallets";
+
+// wallet connection hooks
+export { useRainbowWallet } from "./evm/hooks/wallets/useRainbowWallet";
+export { useTrustWallet } from "./evm/hooks/wallets/useTrustWallet";
+export { useMetamask } from "./evm/hooks/wallets/useMetamask";
+export { useCoinbaseWallet } from "./evm/hooks/wallets/useCoinbaseWallet";
+export { useFrameWallet } from "./evm/hooks/wallets/useFrame";
+
+export {
+  usePaperWalletUserEmail,
+  usePaperWallet,
+} from "./evm/hooks/wallets/usePaper";
+
+export {
+  useWalletConnect,
+  useWalletConnectV1,
+} from "./evm/hooks/wallets/useWalletConnect";
+
+// react-core
+export * from "@thirdweb-dev/react-core";
