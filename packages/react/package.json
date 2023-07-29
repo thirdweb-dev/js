@@ -89,7 +89,7 @@
     "@microsoft/api-documenter": "^7.22.21",
     "@microsoft/api-extractor": "^7.36.0",
     "@microsoft/tsdoc": "^0.14.1",
-    "@preconstruct/cli": "^2.7.0",
+    "@preconstruct/cli": "2.7.0",
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
