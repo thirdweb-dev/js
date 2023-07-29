@@ -63,7 +63,7 @@ export async function getUserOpHashV06(
     name: "hashedUserOp",
     type: "tuple",
   };
-  let encoded = utils.defaultAbiCoder.encode(
+  const encoded = utils.defaultAbiCoder.encode(
     [userOpType as any],
     [{ ...hashedUserOp }],
   );

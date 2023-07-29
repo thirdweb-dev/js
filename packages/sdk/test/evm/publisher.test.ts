@@ -61,7 +61,9 @@ describe("Publishing", async () => {
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    sdk = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we change the test data - await uploadContractMetadata("Greeter", storage);
@@ -255,7 +257,9 @@ describe("Publishing", async () => {
   });
 
   it("test factory deploy", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     const pub = await realSDK.getPublisher();
     const tx = await pub.publish(
       "ipfs://QmfGqbJKvrVDhw747YPXKf26GiuXXo4GkwUg3FcjgYzx8r",
@@ -295,7 +299,9 @@ describe("Publishing", async () => {
   });
 
   it("test proxy deploy", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     const pub = realSDK.getPublisher();
     const tx = await pub.publish(
       "ipfs://QmfGqbJKvrVDhw747YPXKf26GiuXXo4GkwUg3FcjgYzx8r",
@@ -331,7 +337,9 @@ describe("Publishing", async () => {
   });
 
   it("SimpleAzuki enumerable", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/0";
     const tx = await pub.publish(ipfsUri, {

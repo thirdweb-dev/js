@@ -1,5 +1,13 @@
 # @thirdweb-dev/storage
 
+## 1.2.1
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1404](https://github.com/thirdweb-dev/js/pull/1404) [`51b36040`](https://github.com/thirdweb-dev/js/commit/51b3604021ca7b52fd00fd07c5a648a73464a61b) Thanks [@iketw](https://github.com/iketw)! - Read custom upload url from env
+
 ## 1.2.0
 
 ### Minor Changes

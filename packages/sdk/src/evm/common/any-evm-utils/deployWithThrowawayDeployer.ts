@@ -9,7 +9,7 @@ export async function deployWithThrowawayDeployer(
   transactions: PrecomputedDeploymentTransaction[],
   options?: DeployOptions,
 ) {
-  let transactionBatches = createTransactionBatches(transactions);
+  const transactionBatches = createTransactionBatches(transactions);
   if (transactionBatches.length === 0) {
     return;
   }
