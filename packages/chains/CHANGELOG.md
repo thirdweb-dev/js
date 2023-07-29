@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.40
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
 ## 0.1.39
 
 ### Patch Changes
