@@ -397,7 +397,7 @@
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.378.0",
     "@noble/ed25519": "^1.7.1",
-    "@preconstruct/cli": "^2.8.1",
+    "@preconstruct/cli": "2.7.0",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/crypto-js": "^4.1.1",
