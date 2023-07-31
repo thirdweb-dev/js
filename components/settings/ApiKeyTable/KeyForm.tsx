@@ -450,8 +450,13 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   return (
     <form onSubmit={action} autoComplete="off">
       {tabbed && (
-        <Tabs defaultIndex={selectedSection} onChange={onSectionChange}>
-          <TabList>
+        <Tabs
+          defaultIndex={selectedSection}
+          onChange={onSectionChange}
+          h="full"
+          mx={-6}
+        >
+          <TabList borderColor="borderColor">
             <Tab>General</Tab>
             <Tab>Services ({enabledServices?.length || 0})</Tab>
           </TabList>
