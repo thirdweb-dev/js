@@ -370,22 +370,22 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
     }
   };
 
-  const action = () => {
+  const action = async () => {
     switch (formStep) {
       case "name":
-        form.trigger();
+        await form.trigger();
         if (form.formState.isValid) {
           setFormStep("services");
         }
         break;
       case "services":
-        form.trigger();
+        await form.trigger();
         if (form.formState.isValid) {
           setFormStep("permissions");
         }
         break;
       case "permissions":
-        form.trigger();
+        await form.trigger();
         if (form.formState.isValid) {
           setFormStep("keys");
         }
