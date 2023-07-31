@@ -8,7 +8,7 @@ import open from "open";
 import path from "path";
 import prompts from "prompts";
 import xdgAppPaths from "xdg-app-paths";
-import { loginUser, logoutUser } from "../auth";
+import { loginUser, logoutUser, validateKey, validateToken } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -32,6 +32,7 @@ const main = async () => {
   );
   const credsConfigPath = path.join(configDir, "creds.json");
   const cliWalletPath = path.join(configDir, "wallet.json");
+  const tokenPath = path.join(configDir, "auth-token.txt");
 
   const program = new Command();
 
@@ -61,7 +62,7 @@ const main = async () => {
       // Create config directory if it doesn't exist
       if (regenerateConfig) {
         fs.mkdirSync(configDir, { recursive: true });
-        fs.writeFileSync(credsConfigPath, JSON.stringify({}), {
+        fs.writeFileSync(credsConfigPath, "", {
           encoding: "utf-8",
           mode: 0o600,
         });
@@ -336,18 +337,22 @@ const main = async () => {
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
     .option("--zksync", "Deploy on ZKSync")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let authToken = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        authToken = await loginUser(credsConfigPath, cliWalletPath);
+        secretKey = await loginUser({
+          credsConfigPath, 
+          cliWalletPath, 
+          tokenPath,
+        });
       } else {
         // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
-        // await validateToken(options.key);
-        authToken = options.key;
+        await validateKey(options.key);
+        secretKey = options.key;
       }
-      const url = await deploy(options, authToken);
+      const url = await deploy(options, secretKey);
       if (url) {
         await open(url);
       }
@@ -369,20 +374,25 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let authToken = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        authToken = await loginUser(credsConfigPath, cliWalletPath);
+        secretKey = await loginUser({
+          credsConfigPath, 
+          cliWalletPath, 
+          tokenPath,
+        });
       } else {
-        // await validateKey(options.key);
-        authToken = options.key;
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
+        await validateKey(options.key);
+        secretKey = options.key;
       }
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
-      const url = await processProject(options, "publish", authToken);
+      const url = await processProject(options, "publish", secretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -409,17 +419,22 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let authToken = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        authToken = await loginUser(credsConfigPath, cliWalletPath);
+        secretKey = await loginUser({
+          credsConfigPath, 
+          cliWalletPath, 
+          tokenPath,
+        });
       } else {
-        // await validateKey(options.key);
-        authToken = options.key;
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
+        await validateKey(options.key);
+        secretKey = options.key;
       }
-      const url = await processProject(options, "publish", authToken);
+      const url = await processProject(options, "publish", secretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -432,18 +447,23 @@ const main = async () => {
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (_path, options) => {
-      let authToken = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        authToken = await loginUser(credsConfigPath, cliWalletPath);
+        secretKey = await loginUser({
+          credsConfigPath, 
+          cliWalletPath, 
+          tokenPath,
+        });
       } else {
-        // await validateKey(options.key);
-        authToken = options.key;
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
+        await validateKey(options.key);
+        secretKey = options.key;
       }
       const storage = new ThirdwebStorage({
-        authToken,
+        secretKey,
       });
       try {
         const uri = await upload(storage, _path);
@@ -493,17 +513,22 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let authToken = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        authToken = await loginUser(credsConfigPath, cliWalletPath);
+        secretKey = await loginUser({
+          credsConfigPath, 
+          cliWalletPath, 
+          tokenPath,
+        });
       } else {
-        // await validateKey(options.key);
-        authToken = options.key;
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
+        await validateKey(options.key);
+        secretKey = options.key;
       }
-      await generate(options, authToken);
+      await generate(options, secretKey);
     });
 
   program
@@ -513,7 +538,11 @@ const main = async () => {
     )
     .option("-n, --new", "Login with a new API secret key", false)
     .action(async (options) => {
-      await loginUser(credsConfigPath, cliWalletPath, options, true);
+      await loginUser({
+        credsConfigPath,
+        cliWalletPath,
+        tokenPath,
+      }, options, true);
     });
 
   program

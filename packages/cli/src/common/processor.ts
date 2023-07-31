@@ -32,11 +32,11 @@ import {
 export async function processProject(
   options: any,
   command: "deploy" | "publish",
-  authToken: string,
+  secretKey: string,
 ) {
   // TODO: allow overriding the default storage
   const storage = new ThirdwebStorage({
-    authToken,
+    secretKey,
   });
 
   logger.setSettings({
@@ -240,7 +240,7 @@ export async function processProject(
     } else {
       const deployArgs: RouterParams = await formatToExtensions(
         selectedContracts,
-        authToken,
+        secretKey,
       );
 
       const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
@@ -370,13 +370,13 @@ export function getUrl(hashes: string[], command: string) {
 
 async function formatToExtensions(
   contracts: ContractPayload[],
-  authToken: string,
+  secretKey: string,
 ): Promise<{
   extensions: Extension[];
   extensionDeployArgs: ExtensionDeployArgs[];
 }> {
   const storage = new ThirdwebStorage({
-    authToken,
+    secretKey,
   });
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];

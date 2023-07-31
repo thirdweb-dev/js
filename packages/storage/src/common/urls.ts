@@ -93,16 +93,11 @@ export function prepareGatewayUrls(
   gatewayUrls: GatewayUrls,
   clientId?: string,
   secretKey?: string,
-  authToken?: string,
 ): GatewayUrls {
   const allGatewayUrls = {
     ...DEFAULT_GATEWAY_URLS,
     ...gatewayUrls,
   };
-
-  if (authToken && typeof window !== "undefined") {
-    throw new Error("Cannot use authToken in browser context");
-  }
 
   for (const key of Object.keys(allGatewayUrls)) {
     const cleanedGatewayUrls = allGatewayUrls[key]

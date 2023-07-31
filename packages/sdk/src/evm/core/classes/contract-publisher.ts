@@ -392,7 +392,6 @@ export class ContractPublisher extends RPCConnectionHandler {
               getChainProvider(parseInt(network), {
                 clientId: this.options.clientId,
                 secretKey: this.options.secretKey,
-                authToken: this.options.authToken,
               }),
               {}, // pass empty object for options instead of this.options
               this.storage,

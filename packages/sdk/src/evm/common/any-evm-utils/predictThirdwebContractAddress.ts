@@ -20,12 +20,10 @@ export async function predictThirdwebContractAddress(
   storage: ThirdwebStorage,
   clientId?: string,
   secretKey?: string,
-  authToken?: string,
 ): Promise<string> {
   const provider = getChainProvider(chainId, {
     clientId,
     secretKey,
-    authToken,
   });
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const create2Factory = await getCreate2FactoryAddress(provider);

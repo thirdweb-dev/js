@@ -28,7 +28,6 @@ export async function create4337Provider(
     chainId,
     config.clientId,
     config.secretKey,
-    config.authToken,
   );
   return await new ERC4337EthersProvider(
     chainId,

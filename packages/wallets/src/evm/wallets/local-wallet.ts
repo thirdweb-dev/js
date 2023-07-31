@@ -71,7 +71,6 @@ export class LocalWallet extends AbstractClientWallet<
         chains: this.options.chains || defaults,
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
-        authToken: this.options.authToken,
       });
     }
     return this.connector;

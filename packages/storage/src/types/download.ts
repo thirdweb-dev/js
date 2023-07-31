@@ -27,11 +27,6 @@ export type IpfsDownloaderOptions = {
    * You can get a clientId here: https://thirdweb.com/create-api-key
    */
   clientId?: string;
-
-  /**
-   * Optional authToken to associate with the IpfsDownloader - when used from the frontend.
-   */
-  authToken?: string;
 };
 
 /**

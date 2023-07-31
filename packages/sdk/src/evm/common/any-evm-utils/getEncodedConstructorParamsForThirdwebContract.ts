@@ -23,13 +23,11 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   storage: ThirdwebStorage,
   clientId?: string,
   secretKey?: string,
-  authToken?: string,
   constructorParamMap?: ConstructorParamMap,
 ): Promise<BytesLike | undefined> {
   const provider = getChainProvider(chainId, {
     clientId,
     secretKey,
-    authToken,
   });
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);

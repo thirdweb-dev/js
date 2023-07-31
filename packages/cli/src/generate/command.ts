@@ -14,7 +14,7 @@ import { info } from "../core/helpers/logger";
 import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
-export async function generate(options: GenerateOptions, authToken: string) {
+export async function generate(options: GenerateOptions, secretKey: string) {
   let projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
@@ -97,7 +97,7 @@ export async function generate(options: GenerateOptions, authToken: string) {
   // Attempt to download the ABI for each contract
   ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
   const storage = new ThirdwebStorage({
-    authToken,
+    secretKey,
   });
   const metadata: {
     address: string;

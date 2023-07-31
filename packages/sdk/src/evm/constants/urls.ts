@@ -157,9 +157,20 @@ export function getProviderFromRpcUrl(
   sdkOptions: SDKOptions,
   chainId?: number,
 ) {
+  const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
+  let authToken = null;
+  if (authTokenExists) {
+    // @ts-ignore
+    authToken = globalThis.AUTH_TOKEN;
+  }
+
   try {
     const headers: Record<string, string> = {};
     if (isTwUrl(rpcUrl)) {
+      if (authToken) {
+        headers["Authorization"] = `Bearer ${authToken}`;
+      }
+
       if (sdkOptions?.clientId) {
         headers["x-client-id"] = sdkOptions?.clientId;
         // bundleId may already be injected
@@ -173,9 +184,8 @@ export function getProviderFromRpcUrl(
         }
       } else if (sdkOptions?.secretKey) {
         headers["x-secret-key"] = sdkOptions?.secretKey;
-      } else if (sdkOptions?.authToken) {
-        headers["Authorization"] = `Bearer ${sdkOptions?.authToken}`;
       }
+
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available

@@ -23,7 +23,6 @@ export async function getThirdwebContractAddress(
   const provider = getChainProvider(chainId, {
     clientId: clientId,
     secretKey: secretKey,
-    authToken: authToken,
   });
   const contractAddress = await predictThirdwebContractAddress(
     contractName,
@@ -31,7 +30,6 @@ export async function getThirdwebContractAddress(
     storage,
     clientId,
     secretKey,
-    authToken,
   );
   const isDeployed = await isContractDeployed(contractAddress, provider);
   invariant(isDeployed, "Contract not deployed yet");

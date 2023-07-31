@@ -7,6 +7,7 @@ const DEBUG = false;
 
 export class HttpRpcClient {
   private readonly userOpJsonRpcProvider: providers.JsonRpcProvider;
+  private authToken?: string | null;
 
   initializing: Promise<void>;
   bundlerUrl: string;
@@ -19,11 +20,16 @@ export class HttpRpcClient {
     chainId: number,
     clientId?: string,
     secretKey?: string,
-    authToken?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
     this.chainId = chainId;
+    this.authToken = null;
+    const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
+    if (authTokenExists) {
+      // @ts-ignore
+      this.authToken = globalThis.AUTH_TOKEN;
+    }
 
     const headers: Record<string, string> = {};
 
@@ -34,15 +40,11 @@ export class HttpRpcClient {
         );
       }
 
-      if (authToken && clientId || authToken && secretKey) {
-        throw new Error(
-          "Cannot use both auth token and client ID or secret key. Please use auth token or secret key for server-side applications and clientId for client-side applications.",
-        );
+      if (this.authToken) {
+        headers["Authorization"] = `Bearer ${this.authToken}`;
       }
 
-      if (authToken) {
-        headers["Authorization"] = `Bearer ${authToken}`;
-      } else if (secretKey) {
+      if (secretKey) {
         headers["x-secret-key"] = secretKey;
       } else if (clientId) {
         headers["x-client-id"] = clientId;

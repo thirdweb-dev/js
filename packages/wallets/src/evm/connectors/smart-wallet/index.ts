@@ -40,7 +40,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const originalProvider = getChainProvider(config.chain, {
       clientId: config.clientId,
       secretKey: config.secretKey,
-      authToken: config.authToken,
     }) as providers.BaseProvider;
     const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
@@ -62,7 +61,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
               entryPointAddress,
               this.config.clientId,
               this.config.secretKey,
-              this.config.authToken,
             )
         : undefined,
       factoryAddress: config.factoryAddress,
@@ -71,7 +69,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       accountInfo: config.accountInfo || this.defaultAccountInfo(),
       clientId: config.clientId,
       secretKey: config.secretKey,
-      authToken: config.authToken,
     };
     this.personalWallet = params.personalWallet;
     const accountApi = new AccountAPI(providerConfig, originalProvider);

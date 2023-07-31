@@ -74,7 +74,6 @@ async function extractAuthorizationData(
   const requestUrl = new URL(authInput.req.url);
   const headers = authInput.req.headers;
   const secretKey = headers.get("x-secret-key");
-  const authToken = headers.get("Authorization");
 
   // prefer clientId that is explicitly passed in
   let clientId = authInput.clientId ?? null;
@@ -128,7 +127,6 @@ async function extractAuthorizationData(
   return {
     secretKey,
     clientId,
-    authToken,
     origin,
     bundleId,
     secretKeyHash,

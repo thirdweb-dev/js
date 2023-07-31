@@ -10,7 +10,6 @@ import { AuthorizationResult } from "./types";
 export type AuthorizationInput = {
   secretKey: string | null;
   clientId: string | null;
-  authToken: string | null;
   origin: string | null;
   bundleId: string | null;
   secretKeyHash: string | null;
@@ -35,24 +34,24 @@ export async function authorize(
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
-  const { clientId, targetAddress, secretKeyHash, authToken } = authData;
+  const { clientId, targetAddress, secretKeyHash } = authData;
   const { enforceAuth } = serviceConfig;
 
   // BACKWARDS COMPAT: if auth not enforced and
   //                   we don't have auth credentials bypass
-  if (!enforceAuth && !clientId && !secretKeyHash && !authToken) {
+  if (!enforceAuth && !clientId && !secretKeyHash) {
     return {
       authorized: true,
       apiKeyMeta: null,
     };
   }
 
-  // if we don't have a client id or auth token at this point, we can't authorize
-  if (!clientId && !authToken) {
+  // if we don't have a client id at this point, we can't authorize
+  if (!clientId) {
     return {
       authorized: false,
       status: 401,
-      errorMessage: "Missing clientId, secretKey or auth token.",
+      errorMessage: "Missing clientId or secretKey.",
       errorCode: "MISSING_KEY",
     };
   }
