@@ -182,9 +182,9 @@ const ConsoleApp = memo(function ConsoleApp({
         `}
       />
       <DefaultSeo
-        defaultTitle="thirdweb: The complete web3 development framework"
+        defaultTitle="thirdweb: The complete web3 development platform"
         titleTemplate="%s | thirdweb"
-        description="Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now."
+        description="Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum & 700+ EVM chains. Try now."
         additionalLinkTags={[
           {
             rel: "icon",
@@ -192,9 +192,9 @@ const ConsoleApp = memo(function ConsoleApp({
           },
         ]}
         openGraph={{
-          title: "thirdweb: The complete web3 development framework",
+          title: "thirdweb: The complete web3 development platform",
           description:
-            "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now.",
+            "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum & 700+ EVM chains. Try now.",
           type: "website",
           locale: "en_US",
           url: "https://thirdweb.com",
