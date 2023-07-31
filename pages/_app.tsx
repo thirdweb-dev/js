@@ -176,6 +176,9 @@ const ConsoleApp = memo(function ConsoleApp({
             vertical-align: -0.1em;
             display: inline;
           }
+          body {
+            font-variant-ligatures: none !important;
+          }
         `}
       />
       <DefaultSeo
