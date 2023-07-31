@@ -14,6 +14,7 @@ export const apiKeyMap: Record<number, string> = {
   420: process.env.OPTIMISMSCAN_KEY as string,
   56: process.env.BSCSCAN_KEY as string,
   97: process.env.BSCSCAN_KEY as string,
+  8453: process.env.BASESCAN_KEY as string,
   // no api key needed for these
   84531: "" as string,
   1442: "" as string,
@@ -48,5 +49,6 @@ export const apiMap: Record<number, string> = {
   1313161554: "https://api.aurorascan.dev/api",
   1313161555: "https://api-testnet.aurorascan.dev/api",
   84531: "https://api-goerli.basescan.org/api",
+  8453: "https://api.basescan.org/api",
   1442: "https://api-testnet-zkevm.polygonscan.com/api",
 };
