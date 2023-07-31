@@ -4,12 +4,11 @@ import { readFileSync } from "fs";
 import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS, prepareGatewayUrls } from "../src/common/urls";
 
-describe("IPFS", async () => {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  const apiSecretKey = process.env.CLI_E2E_API_KEY as string;
+const apiSecretKey = process.env.TW_SECRET_KEY as string;
 
+describe("IPFS", async () => {
   if (!apiSecretKey) {
-    throw new Error("CLI_E2E_API_KEY is not set in the environment variables");
+    throw new Error("TW_SECRET_KEY is not set in the environment variables");
   }
   const storage = new ThirdwebStorage({
     secretKey: apiSecretKey,

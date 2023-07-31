@@ -33,7 +33,7 @@ export async function deployContractDeterministic(
       `deploying contract via create2 factory at: ${transaction.predictedAddress}`,
     );
 
-    let tx: PopulatedTransaction = {
+    const tx: PopulatedTransaction = {
       to: transaction.to,
       data: transaction.data,
     };

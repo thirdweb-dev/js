@@ -26,6 +26,17 @@ export default {
   "networkId": 245022926,
   "explorers": [
     {
+      "name": "blockscout",
+      "url": "https://neon-devnet.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
+    },
+    {
       "name": "native",
       "url": "https://devnet.explorer.neon-labs.org",
       "standard": "EIP3091"

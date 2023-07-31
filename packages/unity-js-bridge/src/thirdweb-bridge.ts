@@ -158,7 +158,7 @@ class ThirdwebBridge implements TWBridge {
             clientId: sdkOptions.clientId,
           });
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
-    for (let possibleWallet of WALLETS) {
+    for (const possibleWallet of WALLETS) {
       let walletInstance: AbstractClientWallet;
       const dappMetadata: DAppMetaData = {
         name: sdkOptions.wallet?.appName || "thirdweb powered game",
