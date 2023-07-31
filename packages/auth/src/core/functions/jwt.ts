@@ -194,7 +194,7 @@ export async function authenticateJWT<TSession extends Json = Json>({
     : await wallet.getAddress();
   if (issuerAddress.toLowerCase() !== payload.iss.toLowerCase()) {
     throw new Error(
-      `Expected the issuer address '${issuerAddress}' to match the token issuer address '${payload.iss}'`,
+      `The expected issuer address '${issuerAddress}' did not match the token issuer address '${payload.iss}'`,
     );
   }
 
