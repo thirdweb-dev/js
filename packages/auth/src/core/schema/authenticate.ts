@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { JsonSchema, RawDateSchema } from "./common";
+import { AddressSchema, JsonSchema, RawDateSchema } from "./common";
 
 export const AuthenticationPayloadDataSchema = z.object({
   iss: z.string(),
@@ -20,6 +20,7 @@ export const AuthenticationPayloadSchema = z.object({
 
 export const AuthenticateOptionsSchema = z.object({
   domain: z.string(),
+  issuerAddress: AddressSchema.optional(),
   validateTokenId: z.function().args(z.string()).optional(),
 });
 

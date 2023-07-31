@@ -189,10 +189,12 @@ export async function authenticateJWT<TSession extends Json = Json>({
   }
 
   // Check that the connected wallet matches the token issuer
-  const connectedAddress = await wallet.getAddress();
-  if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
+  const issuerAddress = parsedOptions.issuerAddress
+    ? parsedOptions.issuerAddress
+    : await wallet.getAddress();
+  if (issuerAddress.toLowerCase() !== payload.iss.toLowerCase()) {
     throw new Error(
-      `Expected the connected wallet address '${connectedAddress}' to match the token issuer address '${payload.iss}'`,
+      `Expected the issuer address '${issuerAddress}' to match the token issuer address '${payload.iss}'`,
     );
   }
 
@@ -208,12 +210,12 @@ export async function authenticateJWT<TSession extends Json = Json>({
   const verified = await wallet.verifySignature(
     JSON.stringify(payload),
     signature,
-    connectedAddress,
+    issuerAddress,
     chainId,
   );
   if (!verified) {
     throw new Error(
-      `The connected wallet address '${connectedAddress}' did not sign the token`,
+      `The expected signer address '${issuerAddress}' did not sign the token`,
     );
   }
 
