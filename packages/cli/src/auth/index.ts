@@ -144,6 +144,12 @@ export const authenticateUser = async (
       res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "");
       res.setHeader("Access-Control-Allow-Methods", "GET");
 
+      if (req.method === 'OPTIONS') {
+        res.setHeader('Access-Control-Allow-Methods', 'GET');
+        res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage');
+        return;
+      }
+
       assert(req.url, "This request doesn't have a URL");
       const { pathname, query } = url.parse(req.url, true);
       switch (pathname) {
