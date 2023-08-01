@@ -5,6 +5,7 @@ describe("authorizeService", () => {
   const validApiKeyMeta: ApiKeyMetadata = {
     id: "1",
     key: "your-api-key",
+    accountId: "account-id",
     creatorWalletAddress: "creator-address",
     secretHash: "secret-hash",
     walletAddresses: [],

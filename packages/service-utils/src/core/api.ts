@@ -11,6 +11,7 @@ export type CoreServiceConfig = {
 export type ApiKeyMetadata = {
   id: string;
   key: string;
+  accountId: string;
   creatorWalletAddress: string;
   secretHash: string;
   walletAddresses: string[];
