@@ -18,7 +18,6 @@ export async function getThirdwebContractAddress(
   storage: ThirdwebStorage,
   clientId?: string,
   secretKey?: string,
-  authToken?: string,
 ): Promise<string> {
   const provider = getChainProvider(chainId, {
     clientId: clientId,
