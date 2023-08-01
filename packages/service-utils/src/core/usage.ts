@@ -5,6 +5,7 @@ import {
   SQSClient,
 } from "@aws-sdk/client-sqs";
 import { AwsCredentialIdentity } from "@smithy/types";
+import { randomUUID } from "crypto";
 
 let sqs: SQSClient | undefined;
 
@@ -67,6 +68,7 @@ export async function publishUsageEvents(
   const { queueUrl, region = "us-west-2", credentials } = config;
 
   const entries = usageEvents.map((event) => ({
+    Id: randomUUID(),
     MessageBody: JSON.stringify(usageEventSchema.parse(event)),
   })) as unknown as SendMessageBatchRequestEntry[];
 
