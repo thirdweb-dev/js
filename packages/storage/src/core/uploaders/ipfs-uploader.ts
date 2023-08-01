@@ -283,6 +283,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         );
       }
 
+      console.log("AuthToken from globalThis", this.authToken);
       if (this.authToken) {
         xhr.setRequestHeader("Authorization", `Bearer ${this.authToken}`);
       }

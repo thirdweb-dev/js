@@ -43,6 +43,8 @@ export async function loginUser(
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
+    // @ts-ignore
+    globalThis["AUTH_TOKEN"] = authToken;
     return authToken;
   } else {
     if (showLogs) {
@@ -57,6 +59,9 @@ export async function loginUser(
     if (!authToken) {
       throw new Error("Failed to login");
     }
+
+    // @ts-ignore
+    globalThis["AUTH_TOKEN"] = authToken;
     return authToken;
   }
 }

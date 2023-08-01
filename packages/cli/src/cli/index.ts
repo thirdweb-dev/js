@@ -8,7 +8,7 @@ import open from "open";
 import path from "path";
 import prompts from "prompts";
 import xdgAppPaths from "xdg-app-paths";
-import { loginUser, logoutUser, validateKey, validateToken } from "../auth";
+import { loginUser, logoutUser, validateKey } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -342,7 +342,7 @@ const main = async () => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        secretKey = await loginUser({
+        await loginUser({
           credsConfigPath, 
           cliWalletPath, 
           tokenPath,
@@ -379,7 +379,7 @@ const main = async () => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        secretKey = await loginUser({
+        await loginUser({
           credsConfigPath, 
           cliWalletPath, 
           tokenPath,
@@ -424,7 +424,7 @@ const main = async () => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        secretKey = await loginUser({
+        await loginUser({
           credsConfigPath, 
           cliWalletPath, 
           tokenPath,
@@ -450,9 +450,10 @@ const main = async () => {
     .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (_path, options) => {
       let secretKey = "";
+      let storage: ThirdwebStorage;
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        secretKey = await loginUser({
+        await loginUser({
           credsConfigPath, 
           cliWalletPath, 
           tokenPath,
@@ -462,9 +463,15 @@ const main = async () => {
         await validateKey(options.key);
         secretKey = options.key;
       }
-      const storage = new ThirdwebStorage({
-        secretKey,
-      });
+
+      if (secretKey) {
+        storage = new ThirdwebStorage({
+          secretKey,
+        });
+      } else {
+        storage = new ThirdwebStorage();
+      }
+
       try {
         const uri = await upload(storage, _path);
         info(
@@ -518,7 +525,7 @@ const main = async () => {
       let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        secretKey = await loginUser({
+        await loginUser({
           credsConfigPath, 
           cliWalletPath, 
           tokenPath,

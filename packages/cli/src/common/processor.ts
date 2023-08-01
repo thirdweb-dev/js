@@ -35,9 +35,14 @@ export async function processProject(
   secretKey: string,
 ) {
   // TODO: allow overriding the default storage
-  const storage = new ThirdwebStorage({
-    secretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    storage = new ThirdwebStorage();
+  }
 
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
@@ -375,9 +380,14 @@ async function formatToExtensions(
   extensions: Extension[];
   extensionDeployArgs: ExtensionDeployArgs[];
 }> {
-  const storage = new ThirdwebStorage({
-    secretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    storage = new ThirdwebStorage();
+  }
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];
 

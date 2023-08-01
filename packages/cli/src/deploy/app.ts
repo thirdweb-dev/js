@@ -10,9 +10,14 @@ export async function deployApp(
   projectPath = ".",
   secretKey: string,
 ) {
-  const storage = new ThirdwebStorage({
-    secretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    storage = new ThirdwebStorage();
+  }
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(
     projectPath,
