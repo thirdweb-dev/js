@@ -173,7 +173,7 @@ export const authenticateUser = async (
               resolve(token); // resolve promise with secretKey
             }
           } else {
-            res.writeHead(400, { "Content-Type": "text/plain" }); // send a 400 response
+            res.writeHead(400, { "Content-Type": "text/plain" });
             res.end("No authToken received", () => {
               finish(new Error("No authToken received"));
             });
