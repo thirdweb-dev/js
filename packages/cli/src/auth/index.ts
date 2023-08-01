@@ -147,6 +147,8 @@ export const authenticateUser = async (
       if (req.method === 'OPTIONS') {
         res.setHeader('Access-Control-Allow-Methods', 'GET');
         res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage');
+        res.writeHead(200);
+        res.end();
         return;
       }
 
