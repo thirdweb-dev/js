@@ -10,7 +10,8 @@ export default {
   },
   "rpc": [
     "https://mind-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-msc.mindchain.info/"
+    "https://rpc-msc.mindchain.info/",
+    "https://seednode.mindchain.info"
   ],
   "faucets": [],
   "nativeCurrency": {

@@ -1,9 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cronos Mainnet Beta",
+  "name": "Cronos Mainnet",
   "chain": "CRO",
   "rpc": [
-    "https://cronos-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://cronos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cronos.org",
     "https://cronos-evm.publicnode.com"
   ],
@@ -30,5 +30,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "cronos-beta"
+  "slug": "cronos"
 } as const satisfies Chain;
