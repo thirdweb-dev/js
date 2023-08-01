@@ -6,7 +6,6 @@ import type { Request } from "@cloudflare/workers-types";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
-import { publishUsageEvents } from "../core/usage";
 
 export * from "../core/services";
 
