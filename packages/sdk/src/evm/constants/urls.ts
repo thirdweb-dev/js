@@ -160,7 +160,6 @@ export function getProviderFromRpcUrl(
   const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
   let authToken = null;
   if (authTokenExists) {
-    // @ts-ignore
     authToken = globalThis.AUTH_TOKEN;
   }
 

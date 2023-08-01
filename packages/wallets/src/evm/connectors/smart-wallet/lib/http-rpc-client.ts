@@ -27,7 +27,6 @@ export class HttpRpcClient {
     this.authToken = null;
     const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
     if (authTokenExists) {
-      // @ts-ignore
       this.authToken = globalThis.AUTH_TOKEN;
     }
 

@@ -54,7 +54,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     this.authToken = null;
     const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
     if (authTokenExists) {
-      // @ts-ignore
       this.authToken = globalThis.AUTH_TOKEN;
     }
   }
