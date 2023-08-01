@@ -4,6 +4,7 @@
     ["@babel/preset-env", { "targets": "defaults, not ie 11" }]
   ],
   "plugins": [
+    "@babel/plugin-transform-flow-strip-types",
     "@babel/plugin-transform-private-methods",
     "@babel/plugin-proposal-class-properties"
   ]
