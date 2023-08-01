@@ -295,20 +295,6 @@ const checkPasswordExpiration = async (credsConfigPath: string) => {
   return password;
 };
 
-export const validateToken = async (token: string) => {
-  const auth = new ThirdwebAuth(new LocalWallet(), "localhost:3000");
-  try {
-    const { payload } = auth.parseToken(token);
-    // Authenticate the token to get the address of the user.
-    const authBody = await auth.authenticate(token, {
-      issuerAddress: payload.iss,
-    })
-    console.log(authBody.address);
-  } catch (error) {
-    throw new Error(chalk.red("Unauthorized token"));
-  }
-};
-
 export const validateKey = async (apiSecretKey: string) => {
   try {
     const response = await fetch(`https://api.thirdweb.com/v1/keys/use?scope=storage`, {
