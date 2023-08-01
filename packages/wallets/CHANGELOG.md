@@ -1,5 +1,11 @@
 # @thirdweb-dev/wallets
 
+## 1.1.6
+
+### Patch Changes
+
+- [#1421](https://github.com/thirdweb-dev/js/pull/1421) [`fbde927a`](https://github.com/thirdweb-dev/js/commit/fbde927a0cb36a6269e045d8e577536f23164ef7) Thanks [@iketw](https://github.com/iketw)! - Add private methods transform plugin to the wallets package for ReactNative support
+
 ## 1.1.5
 
 ### Patch Changes
