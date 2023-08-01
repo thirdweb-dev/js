@@ -5,6 +5,7 @@ import type { CoreServiceConfig } from "../core/api";
 import { authorize } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
+import { publishUsageEvents } from "../core/usage";
 
 export * from "../core/services";
 

@@ -150,10 +150,3 @@ function bufferToHex(buffer: ArrayBuffer) {
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
 }
-
-export async function publishUsage(
-  events: Parameters<typeof publishUsageEvents>[0],
-  config: Parameters<typeof publishUsageEvents>[1],
-): Promise<ReturnType<typeof publishUsageEvents>> {
-  return publishUsageEvents(events, config);
-}

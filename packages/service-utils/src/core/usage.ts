@@ -6,8 +6,6 @@ import {
 } from "@aws-sdk/client-sqs";
 import { AwsCredentialIdentity } from "@smithy/types";
 
-export * from "./services";
-
 let sqs: SQSClient | undefined;
 
 function getSqs({
