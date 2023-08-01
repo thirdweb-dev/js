@@ -14,6 +14,7 @@ export function authorizeClient(
   const { origin, bundleId, secretKeyHash: providedSecretHash } = authOptions;
   const { domains, bundleIds, secretHash } = apiKeyMeta;
 
+  // check for secretHash
   if (providedSecretHash) {
     if (secretHash !== providedSecretHash) {
       return {
@@ -23,6 +24,14 @@ export function authorizeClient(
         status: 401,
       };
     }
+    return {
+      authorized: true,
+      apiKeyMeta,
+    };
+  }
+
+  // check for public restrictions
+  if (domains.includes("*")) {
     return {
       authorized: true,
       apiKeyMeta,
