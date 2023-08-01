@@ -61,3 +61,7 @@ export type { SmartContract } from "./contracts/smart-contract";
 
 // re-export from functions entry point
 export * from "./functions";
+
+// marketplace v3 types
+export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
+export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";

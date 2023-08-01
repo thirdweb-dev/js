@@ -41,6 +41,11 @@ export default {
         "format": "png"
       },
       "standard": "EIP3091"
+    },
+    {
+      "name": "ZetaChain Athens Testnet Explorer",
+      "url": "https://explorer.athens.zetachain.com",
+      "standard": "none"
     }
   ],
   "testnet": true,

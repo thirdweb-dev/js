@@ -60,8 +60,7 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
           typeof globalThis !== "undefined" &&
           "APP_BUNDLE_ID" in globalThis
         ) {
-          // @ts-ignore
-          headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+          headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
         }
       }
     }

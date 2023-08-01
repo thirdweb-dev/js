@@ -26,16 +26,6 @@ export default {
   "networkId": 245022926,
   "explorers": [
     {
-      "name": "native",
-      "url": "https://devnet.explorer.neon-labs.org",
-      "standard": "EIP3091"
-    },
-    {
-      "name": "neonscan",
-      "url": "https://devnet.neonscan.org",
-      "standard": "EIP3091"
-    },
-    {
       "name": "blockscout",
       "url": "https://neon-devnet.blockscout.com",
       "icon": {
@@ -44,6 +34,16 @@ export default {
         "height": 540,
         "format": "png"
       },
+      "standard": "EIP3091"
+    },
+    {
+      "name": "native",
+      "url": "https://devnet.explorer.neon-labs.org",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "neonscan",
+      "url": "https://devnet.neonscan.org",
       "standard": "EIP3091"
     }
   ],

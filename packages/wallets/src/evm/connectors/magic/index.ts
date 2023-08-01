@@ -30,6 +30,7 @@ export type MagicAuthConnectOptions = {
   | {
       oauthProvider: OAuthProvider;
     }
+  // eslint-disable-next-line @typescript-eslint/ban-types
   | {}
 );
 
@@ -43,7 +44,7 @@ export abstract class MagicBaseConnector extends WagmiConnector<
 > {
   readonly id: string = "magic-link";
   readonly name: string = "Magic Link";
-  ready: boolean = !IS_SERVER;
+  ready = !IS_SERVER;
   provider!: MagicProvider;
   magicOptions: MagicOptions;
 

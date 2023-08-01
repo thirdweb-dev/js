@@ -132,7 +132,7 @@ export async function processProject(
       return { title: key, value: key };
     });
 
-    let routerType: string = "";
+    let routerType = "";
     const res = await createRouterPrompt(choices, "Choose a router to deploy");
     if (typeof res.routerType === "string") {
       routerType = res.routerType.trim();
@@ -366,7 +366,7 @@ export function getUrl(hashes: string[], command: string) {
     );
   } else {
     url = new URL(THIRDWEB_URL + "/contracts/" + command);
-    for (let hash of hashes) {
+    for (const hash of hashes) {
       url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
     }
   }
@@ -393,7 +393,7 @@ async function formatToExtensions(
 
   for (const contract of contracts) {
     // Prepare extension metadata.
-    let metadata: ExtensionMetadata = {
+    const metadata: ExtensionMetadata = {
       name: contract.name,
       metadataURI: await getMetadataURIForExtension(contract, storage),
       implementation: ethers.constants.AddressZero,
