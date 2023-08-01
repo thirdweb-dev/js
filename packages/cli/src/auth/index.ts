@@ -102,11 +102,11 @@ export const authenticateUser = async (
   // Get or generate a localwallet.
   const wallet = await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
   const walletAddress = await wallet.getAddress();
-  const auth = new ThirdwebAuth(wallet, "localhost:3000");
+  const auth = new ThirdwebAuth(wallet, "https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com");
 
   // Generate the login payload to pass to the dashboard.
   const loggedIn = await auth.login({
-    domain: "localhost:3000",
+    domain: "https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com",
     address: walletAddress,
   });
 
@@ -114,9 +114,9 @@ export const authenticateUser = async (
   const ourState = generateStateParameter(32);
   const payload = encodeURIComponent(JSON.stringify(loggedIn));
   const urlToOpen =
-    // `https://thirdweb.com/cli/login?from=cli&#${ourState}`;
-    // `https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com/cli/login?from=cli&#${ourState}`;
-    `http://localhost:3000/cli/login?payload=${payload}&#${ourState}`;
+    // `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
+    `https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com/cli/login?payload=${payload}&#${ourState}`;
+    // `http://localhost:3000/cli/login?payload=${payload}&#${ourState}`;
 
   let server: http.Server;
   let loginTimeoutHandle: NodeJS.Timeout;
