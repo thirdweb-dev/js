@@ -139,7 +139,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       },
       manualPagination: true,
       pageCount: Math.max(
-        Math.ceil(safeTotalCount.div(queryParams.count || 1).toNumber()),
+        Math.ceil(safeTotalCount.toNumber() / (queryParams.count || 1)),
         1,
       ),
     },
