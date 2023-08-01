@@ -33,8 +33,8 @@ export const AnnouncementCard = () => {
               </Heading>
               <Text color="white">
                 Action <strong>required</strong> for all users: use of client
-                API keys <strong>mandatory</strong> by August 1st to continue
-                using thirdweb infrastructure services.
+                API keys is now <strong>mandatory</strong> to continue using
+                thirdweb infrastructure services.
               </Text>
             </Flex>
             <HStack alignItems="center" gap={4}>

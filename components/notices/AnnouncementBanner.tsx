@@ -47,8 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                thirdweb services will require API key authentication starting
-                from <strong>August 1st</strong>
+                thirdweb services now <strong>require</strong> API key
+                authentication
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
