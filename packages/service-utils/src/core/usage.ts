@@ -6,6 +6,8 @@ import {
 } from "@aws-sdk/client-sqs";
 import { AwsCredentialIdentity } from "@smithy/types";
 
+export * from "./services";
+
 let sqs: SQSClient | undefined;
 
 function getSqs({
@@ -21,32 +23,34 @@ function getSqs({
   return sqs;
 }
 
-const usageEventsSchema = z.array(
-  z.object({
-    source: z.enum([
-      "wallet",
-      "rpc",
-      "storage",
-      "bundler",
-      "paymaster",
-      "relayer",
-    ]),
-    action: z.string(),
-    accountId: z.string(),
+/**
+ * Types
+ */
+const usageEventSchema = z.object({
+  source: z.enum([
+    "wallet",
+    "rpc",
+    "storage",
+    "bundler",
+    "paymaster",
+    "relayer",
+  ]),
+  action: z.string(),
+  accountId: z.string(),
 
-    // Optional
-    apiKeyId: z.string().optional(),
-    creatorWalletAddress: z.string().optional(),
-    clientId: z.string().optional(),
-    walletAddress: z.string().optional(),
-    chainId: z.number().int().positive().optional(),
-    provider: z.string().optional(),
-    mimeType: z.string().optional(),
-    fileSize: z.number().int().nonnegative().optional(),
-    fileCid: z.string().optional(),
-    gasPriceWei: z.number().positive().optional(),
-  }),
-);
+  // Optional
+  apiKeyId: z.string().optional(),
+  creatorWalletAddress: z.string().optional(),
+  clientId: z.string().optional(),
+  walletAddress: z.string().optional(),
+  chainId: z.number().int().positive().optional(),
+  provider: z.string().optional(),
+  mimeType: z.string().optional(),
+  fileSize: z.number().int().nonnegative().optional(),
+  fileCid: z.string().optional(),
+  gasPriceWei: z.number().positive().optional(),
+});
+export type UsageEvent = z.infer<typeof usageEventSchema>;
 
 /**
  * Publish usage events. Provide the relevant fields for your application.
@@ -55,7 +59,7 @@ const usageEventsSchema = z.array(
  * @param config
  */
 export async function publishUsageEvents(
-  usageEvents: z.infer<typeof usageEventsSchema>,
+  usageEvents: UsageEvent[],
   config: {
     queueUrl: string;
     region?: string;
@@ -64,8 +68,8 @@ export async function publishUsageEvents(
 ): Promise<void> {
   const { queueUrl, region = "us-west-2", credentials } = config;
 
-  const entries = usageEventsSchema.parse(usageEvents).map((event) => ({
-    MessageBody: JSON.stringify(event),
+  const entries = usageEvents.map((event) => ({
+    MessageBody: JSON.stringify(usageEventSchema.parse(event)),
   })) as unknown as SendMessageBatchRequestEntry[];
 
   const input = new SendMessageBatchCommand({

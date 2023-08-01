@@ -6,6 +6,7 @@ import type { Request } from "@cloudflare/workers-types";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
+import { publishUsageEvents } from "../core/usage";
 
 export * from "../core/services";
 
@@ -148,4 +149,11 @@ function bufferToHex(buffer: ArrayBuffer) {
   return [...new Uint8Array(buffer)]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
+}
+
+export async function publishUsage(
+  events: Parameters<typeof publishUsageEvents>[0],
+  config: Parameters<typeof publishUsageEvents>[1],
+): Promise<ReturnType<typeof publishUsageEvents>> {
+  return publishUsageEvents(events, config);
 }
