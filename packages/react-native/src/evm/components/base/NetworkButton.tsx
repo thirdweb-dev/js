@@ -1,51 +1,183 @@
+import { useState } from "react";
+import RightArrowIcon from "../../assets/right-arrow";
 import { Theme } from "../../styles/theme";
 import BaseButton from "./BaseButton";
 import { ChainIcon } from "./ChainIcon";
 import Text from "./Text";
-import { StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
+import { useSwitchChain, useSupportedChains } from "@thirdweb-dev/react-core";
+import Box from "./Box";
+import { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
+import { TWModal } from "./modal/TWModal";
+import { useAppTheme } from "../../styles/hooks";
+import { Chain } from "@thirdweb-dev/chains";
 
-interface NetworkButtonProps {
-  chainIconUrl?: string;
-  chainName: string;
+type NetworkButtonProps = {
+  chain: Chain;
   padding?: keyof Theme["spacing"];
-  onPress: () => void;
-}
+  onPress?: () => void;
+  enableSwitchModal?: boolean;
+  switchChainOnPress?: boolean;
+  onChainSwitched?: () => void;
+} & (typeof BaseButton)["arguments"];
 
 export const NetworkButton = ({
   onPress,
-  chainName,
-  chainIconUrl,
+  chain,
+  enableSwitchModal = false,
+  switchChainOnPress = false,
+  onChainSwitched,
   padding,
+  ...props
 }: NetworkButtonProps) => {
+  const theme = useAppTheme();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [switchError, setSwitchError] = useState<string | undefined>();
+  const [isSwitching, setIsSwitching] = useState(false);
+  const switchChain = useSwitchChain();
+
+  const onClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const onChangeNetworkPress = () => {
+    if (enableSwitchModal) {
+      setIsModalVisible(true);
+    } else if (switchChainOnPress) {
+      setIsSwitching(true);
+      setTimeout(async () => {
+        try {
+          await switchChain(chain.chainId);
+          setIsSwitching(false);
+          onChainSwitched?.();
+        } catch (error) {
+          setSwitchError((error as Error).message);
+          setIsSwitching(false);
+        }
+      }, 0);
+    }
+    onPress?.();
+  };
+
   return (
-    <BaseButton
-      p={padding || "md"}
-      backgroundColor="background"
-      style={styles.networkContainer}
-      onPress={onPress}
-      borderColor="border"
-    >
-      {chainIconUrl ? (
-        <ChainIcon chainIconUrl={chainIconUrl} size={32} active={false} />
+    <>
+      <BaseButton
+        p={padding || "sm"}
+        borderRadius="xs"
+        borderWidth={0.5}
+        flexDirection="row"
+        alignItems="center"
+        onPress={onChangeNetworkPress}
+        justifyContent="space-between"
+        borderColor="border"
+        {...props}
+      >
+        <Box flexDirection="row" alignItems="center">
+          {chain.icon.url ? (
+            <ChainIcon
+              chainIconUrl={chain.icon.url || ""}
+              size={32}
+              active={false}
+            />
+          ) : null}
+          <Box
+            ml="md"
+            alignItems="flex-start"
+            justifyContent="center"
+            height={36}
+          >
+            <Text variant="bodyLarge">{chain.name || "Unknown Network"}</Text>
+            {isSwitching ? (
+              <Box flexDirection="row" alignItems="center">
+                <Text
+                  variant="bodySmall"
+                  color="linkPrimary"
+                  mr="xxs"
+                  fontSize={10}
+                >
+                  Confirm in your wallet
+                </Text>
+                <ActivityIndicator size={10} color={theme.colors.linkPrimary} />
+              </Box>
+            ) : switchError ? (
+              <Text variant="error">Error switching network</Text>
+            ) : null}
+          </Box>
+        </Box>
+        {enableSwitchModal ? (
+          <RightArrowIcon
+            width={10}
+            height={10}
+            color={theme.colors.iconPrimary}
+          />
+        ) : null}
+      </BaseButton>
+      {enableSwitchModal ? (
+        <SwitchChainModal isVisible={isModalVisible} onClose={onClose} />
       ) : null}
-      <Text variant="bodyLarge" style={styles.networkText}>
-        {chainName}
-      </Text>
-      {/* <RightArrowIcon size={10} /> */}
-    </BaseButton>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
-  networkText: {
-    marginLeft: 16,
-  },
-  networkContainer: {
-    borderRadius: 8,
-    borderWidth: 0.5,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-});
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
+
+export type SwitchChainModalProps = {
+  isVisible: boolean;
+  onClose: () => void;
+};
+
+export const SwitchChainModal = ({
+  isVisible,
+  onClose,
+}: SwitchChainModalProps) => {
+  const supportedChains = useSupportedChains();
+
+  const onCloseInternal = () => {
+    onClose();
+  };
+
+  return (
+    <TWModal isVisible={isVisible} backdropOpacity={0.7}>
+      <KeyboardAvoidingView behavior="padding">
+        <Box
+          flexDirection="column"
+          backgroundColor="background"
+          maxHeight={MODAL_HEIGHT}
+          borderRadius="md"
+          p="lg"
+        >
+          <Box flexDirection="row" justifyContent="space-between" mb="sm">
+            <Text variant="bodyLarge" textAlign="left">
+              Select Network
+            </Text>
+            <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
+          </Box>
+          <ScrollView>
+            {supportedChains?.length > 0 ? (
+              supportedChains.map((chain) => {
+                return (
+                  <NetworkButton
+                    mt="xxs"
+                    key={chain.chainId}
+                    backgroundColor="backgroundHighlight"
+                    chain={chain}
+                    enableSwitchModal={false}
+                    switchChainOnPress={true}
+                    onChainSwitched={onCloseInternal}
+                  />
+                );
+              })
+            ) : (
+              <Text variant="error">No supported chains detected</Text>
+            )}
+          </ScrollView>
+        </Box>
+      </KeyboardAvoidingView>
+    </TWModal>
+  );
+};

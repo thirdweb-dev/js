@@ -8,4 +8,5 @@ export type Network =
   | "testnet"
   | "mainnet-beta"
   | "localnet"
+  // eslint-disable-next-line @typescript-eslint/ban-types
   | (string & {});

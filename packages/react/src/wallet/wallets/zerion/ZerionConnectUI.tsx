@@ -5,10 +5,11 @@ import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { ZerionScan } from "./ZerionScan";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 
 export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
@@ -43,7 +44,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
       else {
         // on mobile, open zerion app link
         if (isMobile()) {
-          window.open("https://link.zerion.io/pt3gdRP0njb");
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the metamask scan qr code
           setScreen("scanning");
@@ -59,6 +60,23 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
+        supportLink="https://help.zerion.io/en/"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        appUriPrefix={{
+          ios: "zerion://",
+          android: "https://link.zerion.io/pt3gdRP0njb/",
+          other: "https://link.zerion.io/pt3gdRP0njb/",
+        }}
         supportLink="https://help.zerion.io/en/"
       />
     );

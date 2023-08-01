@@ -54,7 +54,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
-    const resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
+    let resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
     // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
     if (!resolvedUri) {
       console.error(
@@ -70,29 +70,32 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
+    let headers;
+    if (isTwGatewayUrl(resolvedUri)) {
+      if (this.secretKey) {
+        headers = { "x-secret-key": this.secretKey };
+      } else if (this.clientId) {
+        if (
+          typeof globalThis !== "undefined" &&
+          "APP_BUNDLE_ID" in globalThis
+        ) {
+          resolvedUri =
+            resolvedUri +
+            `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`;
+        }
+        headers = {
+          "x-client-Id": this.clientId,
+        };
+      }
+    }
+
     if (isTooManyRequests(resolvedUri)) {
       // skip the request if we're getting too many request error from the gateway
       return this.download(uri, gatewayUrls, attempts + 1);
     }
 
-    let headers;
-    if (isTwGatewayUrl(resolvedUri)) {
-      headers = this.secretKey
-        ? { "x-secret-key": this.secretKey }
-        : this.clientId
-        ? {
-            "x-client-Id": this.clientId,
-            // @ts-ignore
-            ...(globalThis.APP_BUNDLE_ID
-              ? // @ts-ignore
-                { "x-bundle-id": globalThis.APP_BUNDLE_ID }
-              : {}),
-          }
-        : undefined;
-    }
-
     const controller = new AbortController();
-    let timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,

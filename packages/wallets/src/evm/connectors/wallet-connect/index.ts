@@ -171,17 +171,36 @@ export class WalletConnectConnector extends WagmiConnector<
   }
 
   async disconnect() {
-    const provider = await this.getProvider();
-    try {
-      await provider.disconnect();
-    } catch (error) {
-      if (!/No matching key/i.test((error as Error).message)) {
-        throw error;
+    const cleanup = () => {
+      if (typeof localStorage === "undefined") {
+        return;
       }
-    } finally {
-      this.#removeListeners();
-      await this.#setRequestedChainsIds([]);
-    }
+      for (const key in localStorage) {
+        if (key.startsWith("wc@2")) {
+          localStorage.removeItem(key);
+        }
+      }
+    };
+
+    cleanup();
+
+    const provider = await this.getProvider();
+
+    const disconnectProvider = async () => {
+      try {
+        await provider.disconnect();
+      } catch (error) {
+        if (!/No matching key/i.test((error as Error).message)) {
+          throw error;
+        }
+      } finally {
+        this.#removeListeners();
+        await this.#setRequestedChainsIds([]);
+        cleanup();
+      }
+    };
+
+    disconnectProvider();
   }
 
   async getAccount() {

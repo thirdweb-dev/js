@@ -71,11 +71,19 @@ export class MagicLink extends AbstractClientWallet<
     await this.initializeConnector();
     await this.magicConnector?.initializeMagicSDK(options);
     const magic = this.getMagic();
-    if (await magic.user.isLoggedIn()) {
-      return super.autoConnect(options);
-    } else {
-      throw new Error("Magic user is not logged in");
+
+    try {
+      await magic.oauth.getRedirectResult(); // required to do this for social login
+    } catch {
+      // ignore
     }
+
+    const isLoggedIn = await magic.user.isLoggedIn();
+    if (isLoggedIn) {
+      return super.autoConnect(options);
+    }
+
+    throw new Error("Magic user is not logged in");
   }
 
   async disconnect() {

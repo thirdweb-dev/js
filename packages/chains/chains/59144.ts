@@ -10,8 +10,17 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "rpc": [],
+  "rpc": [
+    "https://linea.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://linea-mainnet.infura.io/v3/${INFURA_API_KEY}",
+    "https://rpc.linea.build"
+  ],
   "explorers": [
+    {
+      "name": "lineascan",
+      "url": "https://lineascan.build",
+      "standard": "EIP3091"
+    },
     {
       "name": "Linea Scan",
       "url": "https://lineascan.build",

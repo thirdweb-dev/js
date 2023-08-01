@@ -1,6 +1,8 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import { RainbowConnectUI } from "./RainbowConnectUI";
+import { rainbowWalletUris } from "./rainbowWalletUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type RainbowWalletOptions = {
   /**
@@ -27,12 +29,16 @@ export const rainbowWallet = (
       },
     },
     create: (walletOptions: WalletOptions) => {
-      return new WalletConnect({
+      const wallet = new WalletConnect({
         ...walletOptions,
         walletId: "rainbow",
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      handelWCSessionRequest(wallet, rainbowWalletUris);
+
+      return wallet;
     },
     connectUI: RainbowConnectUI,
     isInstalled() {

@@ -14,15 +14,24 @@ export function authorizeClient(
   const { origin, bundleId, secretKeyHash: providedSecretHash } = authOptions;
   const { domains, bundleIds, secretHash } = apiKeyMeta;
 
+  // check for secretHash
   if (providedSecretHash) {
     if (secretHash !== providedSecretHash) {
       return {
         authorized: false,
-        errorMessage: "The secret is invalid.",
+        errorMessage: "The secret is invalid. Please check you secret-key",
         errorCode: "SECRET_INVALID",
         status: 401,
       };
     }
+    return {
+      authorized: true,
+      apiKeyMeta,
+    };
+  }
+
+  // check for public restrictions
+  if (domains.includes("*")) {
     return {
       authorized: true,
       apiKeyMeta,
@@ -57,7 +66,7 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: "The origin is not authorized for this key.",
+      errorMessage: `The domain: ${origin}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
       errorCode: "ORIGIN_UNAUTHORIZED",
       status: 401,
     };
@@ -83,7 +92,7 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: "The bundle is not authorized for this key.",
+      errorMessage: `The bundleId: ${bundleId}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
       errorCode: "BUNDLE_UNAUTHORIZED",
       status: 401,
     };
@@ -91,7 +100,8 @@ export function authorizeClient(
 
   return {
     authorized: false,
-    errorMessage: "The keys are invalid.",
+    errorMessage:
+      "The keys are invalid. Please check the secret-key/clientId and try again.",
     errorCode: "UNAUTHORIZED",
     status: 401,
   };

@@ -13,7 +13,7 @@ export function createTransactionBatches(
     return [];
   }
 
-  let transactionBatches: PrecomputedDeploymentTransaction[][] = [];
+  const transactionBatches: PrecomputedDeploymentTransaction[][] = [];
   let sum = 0;
   let batch: PrecomputedDeploymentTransaction[] = [];
   transactions.forEach((tx) => {

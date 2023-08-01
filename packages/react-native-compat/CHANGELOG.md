@@ -1,5 +1,27 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.2.42
+
+## 0.2.41
+
+## 0.2.40
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.2.39
+
+## 0.2.38
+
+## 0.2.37
+
+## 0.2.36
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds support for clientId / secretKey
+
 ## 0.2.35
 
 ## 0.2.34

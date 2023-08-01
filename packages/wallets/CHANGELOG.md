@@ -1,5 +1,126 @@
 # @thirdweb-dev/wallets
 
+## 1.1.6
+
+### Patch Changes
+
+- [#1421](https://github.com/thirdweb-dev/js/pull/1421) [`fbde927a`](https://github.com/thirdweb-dev/js/commit/fbde927a0cb36a6269e045d8e577536f23164ef7) Thanks [@iketw](https://github.com/iketw)! - Add private methods transform plugin to the wallets package for ReactNative support
+
+## 1.1.5
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
+- Updated dependencies [[`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390)]:
+  - @thirdweb-dev/chains@0.1.40
+  - @thirdweb-dev/sdk@3.10.42
+
+## 1.1.4
+
+### Patch Changes
+
+- [#1361](https://github.com/thirdweb-dev/js/pull/1361) [`06b4f298`](https://github.com/thirdweb-dev/js/commit/06b4f2983161fc9ff5913fd05dacf17260902576) Thanks [@q20274982](https://github.com/q20274982)! - [Wallets/React] Add Blocto Wallet
+
+  ```javascript
+  import { ThirdwebProvider, bloctoWallet } from "@thirdweb-dev/react";
+  import { Polygon } from "@thirdweb-dev/chains";
+
+  <ThirdwebProvider activeChain={Polygon} supportedWallets={[bloctoWallet()]}>
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1369](https://github.com/thirdweb-dev/js/pull/1369) [`2025b8cb`](https://github.com/thirdweb-dev/js/commit/2025b8cb8d5157c03314e5db47a0d50382519c41) Thanks [@adam-maj](https://github.com/adam-maj)! - Add getBalance() and transfer() functions to all wallets
+
+- [#1307](https://github.com/thirdweb-dev/js/pull/1307) [`385895ca`](https://github.com/thirdweb-dev/js/commit/385895ca928a5276586f0a370fabdcece7620d83) Thanks [@nkrishang](https://github.com/nkrishang)! - Expose getAccountContract() and getFactoryContract()
+
+- [#1334](https://github.com/thirdweb-dev/js/pull/1334) [`9acf6854`](https://github.com/thirdweb-dev/js/commit/9acf6854dfdc5c0be768e660c1f174e017b06a9c) Thanks [@MananTank](https://github.com/MananTank)! - Add social login support in Magic wallet
+
+- [#1376](https://github.com/thirdweb-dev/js/pull/1376) [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429) Thanks [@iketw](https://github.com/iketw)! - Pass bundleId if present
+
+- [#1379](https://github.com/thirdweb-dev/js/pull/1379) [`60fbb767`](https://github.com/thirdweb-dev/js/commit/60fbb767c18ffe1e49792c6ac8e808792acf594c) Thanks [@MananTank](https://github.com/MananTank)! - Set theme in Coinbase Native modal to match ConnectWallet component
+
+- [#1295](https://github.com/thirdweb-dev/js/pull/1295) [`277cfd5c`](https://github.com/thirdweb-dev/js/commit/277cfd5ce1f3a576d29c95492c735b46a00c164e) Thanks [@MananTank](https://github.com/MananTank)! - - Fix wallet connection on mobile for rainbowWallet(), trustWallet(), zerionWallet()
+
+  - update @WalletConnect packages
+
+- [#1369](https://github.com/thirdweb-dev/js/pull/1369) [`2025b8cb`](https://github.com/thirdweb-dev/js/commit/2025b8cb8d5157c03314e5db47a0d50382519c41) Thanks [@adam-maj](https://github.com/adam-maj)! - Add transfer & balance to wallets
+
+- [#1385](https://github.com/thirdweb-dev/js/pull/1385) [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee) Thanks [@iketw](https://github.com/iketw)! - Adds chains and improve error messages
+
+- [#1390](https://github.com/thirdweb-dev/js/pull/1390) [`7ae9f4cd`](https://github.com/thirdweb-dev/js/commit/7ae9f4cda1a2009dd414f836757bec8202c83172) Thanks [@MananTank](https://github.com/MananTank)! - Fix LocalWallet's loadOrCreate method
+
+- Updated dependencies [[`09b3b339`](https://github.com/thirdweb-dev/js/commit/09b3b339e65a6a9a1cfa32bab9e61e57532e7dbe), [`0a5eb19d`](https://github.com/thirdweb-dev/js/commit/0a5eb19d672909027bb6c7e79ea76d431535559c), [`98009cb3`](https://github.com/thirdweb-dev/js/commit/98009cb3ca6f1c2221a6a74ffa7df8d7ddac2c60), [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2), [`cbf486c2`](https://github.com/thirdweb-dev/js/commit/cbf486c21088ec1656933961e653e1d161939f63), [`01cc5408`](https://github.com/thirdweb-dev/js/commit/01cc54087b9d276968cb6dd3ceafa07c30bc2242), [`53400858`](https://github.com/thirdweb-dev/js/commit/53400858232ceb998d68da8a75a6d493668fcf0f), [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429), [`aface46d`](https://github.com/thirdweb-dev/js/commit/aface46d7469ca2c1e45895e311a74363ceb8611), [`3152d4e9`](https://github.com/thirdweb-dev/js/commit/3152d4e9b42e2777316b1b58513657f4430cb79a), [`5fe3cec8`](https://github.com/thirdweb-dev/js/commit/5fe3cec894b98a2361d21bb72a5da843ec2a4d9b), [`8e6e55b1`](https://github.com/thirdweb-dev/js/commit/8e6e55b154ecdc4b09ded31387707571ff963fb7), [`aa6bdd08`](https://github.com/thirdweb-dev/js/commit/aa6bdd0809d1d5536c837c59b2d407ee974c1f9c), [`75587c8b`](https://github.com/thirdweb-dev/js/commit/75587c8b38bbbcf68d2101526e9792349cce728f), [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee), [`a9f9a403`](https://github.com/thirdweb-dev/js/commit/a9f9a403457b9e683bcfdb61034ee9c9ee08bbf8), [`5a02c5ec`](https://github.com/thirdweb-dev/js/commit/5a02c5ec0288fd6dfb2b765ef70bb18e714aca19)]:
+  - @thirdweb-dev/sdk@3.10.41
+  - @thirdweb-dev/chains@0.1.39
+  - @thirdweb-dev/contracts-js@1.3.10
+
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d)]:
+  - @thirdweb-dev/chains@0.1.38
+  - @thirdweb-dev/sdk@3.10.40
+
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38)]:
+  - @thirdweb-dev/chains@0.1.37
+  - @thirdweb-dev/sdk@3.10.39
+
+## 1.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee), [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608)]:
+  - @thirdweb-dev/chains@0.1.36
+  - @thirdweb-dev/sdk@3.10.38
+
+## 1.1.0
+
+### Minor Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - 1. Adds new `clientId` / `secretKey` option to access thirdweb's services
+
+  You can create a _free_ `clientId` / `secretKey` pair [on the thirdweb Dashboard](https://thirdweb.com/dashboard)
+
+  ```javascript
+  // For wallets used on the client-side (i.e. react, react-native) you should
+  // pass a `clientId`
+  const metamaskWallet = new MetaMaskWallet({
+    clientId: "your-client-id",
+  });
+
+  // For wallets used on the backend-side (i.e. node, express) you should
+  // pass a `secretKey`
+  const localWallet = new LocalWallet({
+    secretKey: "your-secret-key",
+  });
+  ```
+
+  2. Paper wallet's `clientId` is renamed to `paperClientId`.
+
+  The `clientId` option is reserved for thirdweb's `clientId``
+
+  ```javascript
+  const paperWallet = new PaperWallet({
+    clientId: "your-thirdweb-client-id",
+    paperClientId: "your-paper-client-id",
+  });
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b), [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b)]:
+  - @thirdweb-dev/sdk@3.10.37
+  - @thirdweb-dev/chains@0.1.35
+
 ## 1.0.12
 
 ### Patch Changes

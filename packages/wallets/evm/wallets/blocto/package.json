@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-blocto.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-blocto.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-blocto.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-blocto.browser.esm.js"
+  }
+}

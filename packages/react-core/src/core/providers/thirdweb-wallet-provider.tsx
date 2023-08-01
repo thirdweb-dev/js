@@ -380,6 +380,14 @@ export function ThirdwebWalletProvider(
       const wallet = createWalletInstance(WalletObj);
       setConnectionStatus("connecting");
       try {
+        // if magic is using social login - it will redirect the page - so need to save walletInfo before connecting
+        // TODO: find a better way to handle this
+        if (WalletObj.id === walletIds.magicLink) {
+          saveLastConnectedWalletInfo({
+            walletId: WalletObj.id,
+            connectParams: _connectedParams,
+          });
+        }
         await wallet.connect(_connectedParams);
         setConnectedWallet(wallet, _connectedParams);
       } catch (e: any) {

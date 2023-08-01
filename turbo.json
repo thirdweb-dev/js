@@ -77,7 +77,8 @@
     "test:evm": {
       "outputs": ["coverage/evm/**"],
       "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "e2e": {
       "outputs": [],

@@ -454,7 +454,7 @@ export class NFTCollection {
   async burnBatch(nftAddresses: string[]): Promise<TransactionResult[]> {
     const txs: TransactionBuilder[] = [];
 
-    for (let nftAddress of nftAddresses) {
+    for (const nftAddress of nftAddresses) {
       txs.push(
         this.metaplex
           .nfts()

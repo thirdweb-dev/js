@@ -178,7 +178,7 @@ const main = async () => {
               );
 
               // If the package is installed globally with yarn or pnpm, then npx won't recognize it
-              // So we need to make sure to run the command directly
+              // So we need to make sure to run the command directly.
               const executionCommand =
                 !installation.isGlobal || installation.packageManager === "npm"
                   ? `npx thirdweb`
@@ -311,7 +311,7 @@ const main = async () => {
         apiSecretKey = options.key;
       }
       const url = await deploy(options, apiSecretKey);
-      if (url) {
+      if (url && !options.ci) {
         await open(url);
       }
     });
@@ -351,7 +351,9 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      await open(url.toString());
+      if (url && !options.ci) {
+        await open(url.toString());
+      }
     });
 
   program
@@ -388,7 +390,9 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      await open(url.toString());
+      if (url && !options.ci) {
+        await open(url.toString());
+      }
     });
 
   program
