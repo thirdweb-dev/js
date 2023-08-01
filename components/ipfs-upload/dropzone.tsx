@@ -439,6 +439,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                           category: TRACKING_CATEGORY,
                           action: "upload",
                           label: "success",
+                          address,
+                          uri:
+                            uris.length === 1
+                              ? uris[0]
+                              : uris[0].split("/").slice(0, -1).join("/"),
                         });
                         setIpfsHashes(uris);
                       },
