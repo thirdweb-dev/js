@@ -114,7 +114,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     async (
       extensionName: string,
       extensionAddress: string,
-      extensionAbi: ContractInterface,
+      extensionAbi?: ContractInterface,
       extensionMetadataUri: string = "",
     ): Promise<Transaction> => {
       const extensionFunctions: ExtensionFunction[] =
@@ -151,7 +151,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     async (
       extensionName: string,
       extensionAddress: string,
-      extensionAbi: ContractInterface,
+      extensionAbi?: ContractInterface,
       extensionMetadataUri: string = "",
     ): Promise<Transaction> => {
       const extensionFunctions: ExtensionFunction[] =
