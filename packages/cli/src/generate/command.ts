@@ -15,7 +15,7 @@ import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
 export async function generate(options: GenerateOptions, secretKey: string) {
-  let projectPath: string = options.path?.replace(/\/$/, "") || ".";
+  const projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
   // Find all addresses in this project

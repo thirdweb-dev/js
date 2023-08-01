@@ -54,13 +54,13 @@ export async function loginUser(
       );
     }
     await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
-    const authToken = await authenticateUser({ browser: true, configPaths });
-    if (!authToken) {
+    const token = await authenticateUser({ browser: true, configPaths });
+    if (!token) {
       throw new Error("Failed to login");
     }
 
-    globalThis["AUTH_TOKEN"] = authToken;
-    return authToken;
+    globalThis["AUTH_TOKEN"] = token;
+    return token;
   }
 }
 
@@ -161,6 +161,7 @@ export const authenticateUser = async (
               );
             } else {
               // Save the token to the config file.
+              // eslint-disable-next-line no-unused-expressions
               fs.writeFileSync(tokenPath, token), {
                 encoding: "utf8",
                 mode: 0o600,
@@ -225,7 +226,7 @@ async function getOrCreatePassword(configCredsPath: string): Promise<string> {
 
 async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
   // Get or prompt for password.
-  let password = await getOrCreatePassword(configCredsPath);
+  const password = await getOrCreatePassword(configCredsPath);
   const wallet = new LocalWallet();
 
   if (fs.existsSync(cliWalletPath)) {
