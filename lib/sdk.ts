@@ -70,6 +70,7 @@ class SpecialDownloader implements IStorageDownloader {
 
 export const StorageSingleton = new ThirdwebStorage({
   gatewayUrls: [IPFS_GATEWAY_URL],
+  clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
   downloader: new SpecialDownloader(),
 });
 
@@ -126,7 +127,11 @@ export function getSOLThirdwebSDK(
   const sdk = SOLThirdwebSDK.fromNetwork(
     rpcUrl,
     new ThirdwebStorage({
-      uploader: new IpfsUploader({ uploadWithGatewayUrl: true }),
+      clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
+      uploader: new IpfsUploader({
+        uploadWithGatewayUrl: true,
+        clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
+      }),
     }),
   );
   SOL_SDK_MAP.set(network, sdk);
