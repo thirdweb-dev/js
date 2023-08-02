@@ -270,16 +270,25 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
       xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
 
-      if (this.secretKey && this.clientId) {
-        throw new Error(
-          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-        );
-      }
-
       if (this.secretKey) {
         xhr.setRequestHeader("x-secret-key", this.secretKey);
       } else if (this.clientId) {
         xhr.setRequestHeader("x-client-id", this.clientId);
+      }
+
+      if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
+        xhr.setRequestHeader(
+          "x-bundle-id",
+          (globalThis as any).APP_BUNDLE_ID as string,
+        );
+      }
+
+      // if we have a authorization token on global context then add that to the headers
+      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+        xhr.setRequestHeader(
+          "authorization",
+          (globalThis as any).TW_AUTH_TOKEN as string,
+        );
       }
 
       xhr.send(form as any);
@@ -295,17 +304,23 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       console.warn("The onProgress option is only supported in the browser");
     }
 
-    if (this.secretKey && this.clientId) {
-      throw new Error(
-        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-      );
-    }
-
     const headers: HeadersInit = {};
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
     } else if (this.clientId) {
       headers["x-client-id"] = this.clientId;
+    }
+
+    // if we have a bundle id on global context then add that to the headers
+    if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
+      headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
+    }
+
+    // if we have a authorization token on global context then add that to the headers
+    if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+      headers["authorization"] = `Bearer ${
+        (globalThis as any).TW_AUTH_TOKEN as string
+      }`;
     }
 
     const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
