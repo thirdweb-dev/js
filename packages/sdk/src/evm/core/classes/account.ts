@@ -287,6 +287,7 @@ export class Account<TContract extends IAccountCore>
     const transformedAdmins: SignerWithPermissions[] = allAdmins.map(
       (admin) => {
         return {
+          isAdmin: true,
           signer: admin,
           permissions: {
             startDate: new Date(0),
