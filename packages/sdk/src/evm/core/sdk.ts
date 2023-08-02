@@ -113,6 +113,7 @@ import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
+import { type } from "os";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -263,11 +264,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: IThirdwebStorage,
   ) {
     const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
-    checkClientIdOrSecretKey(
-      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
-      options.clientId,
-      options.secretKey,
-    );
+    let warnMessage = `No API key. Please provide a ${apiKeyType}. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key`;
+    if (typeof window === "undefined" && !options.secretKey) {
+      warnMessage = `Please provide a secret key instead of the clientId. Create a new API Key at https://thirdweb.com/create-api-key`;
+    }
+    checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
 
     if (isChainConfig(network)) {
       options = {
@@ -708,13 +709,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce(
-      (acc, chain) => {
-        acc[chain.chainId] = chain;
-        return acc;
-      },
-      {} as Record<number, Chain>,
-    );
+    const chainMap = chains.reduce((acc, chain) => {
+      acc[chain.chainId] = chain;
+      return acc;
+    }, {} as Record<number, Chain>);
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
