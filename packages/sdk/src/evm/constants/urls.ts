@@ -60,7 +60,7 @@ export function getChainProvider(
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
     rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
-      options.clientId
+      options.clientId || ""
     }`;
   }
 
