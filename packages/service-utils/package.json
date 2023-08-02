@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.2.1",
+  "version": "0.2.4",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -40,7 +40,7 @@
   "sideEffects": false,
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230724.0",
-    "@preconstruct/cli": "^2.8.1",
+    "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
     "@types/node": "^18.17.1",

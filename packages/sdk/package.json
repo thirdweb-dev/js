@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.10.40",
+  "version": "3.10.42",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -107,7 +107,7 @@
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@preconstruct/cli": "^2.8.1",
+    "@preconstruct/cli": "2.7.0",
     "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.3.5",
     "@solana/web3.js": "^1.62.0",

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.14.20",
+  "version": "3.14.23",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -89,7 +89,7 @@
     "@microsoft/api-documenter": "^7.22.30",
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
-    "@preconstruct/cli": "^2.8.1",
+    "@preconstruct/cli": "2.7.0",
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",

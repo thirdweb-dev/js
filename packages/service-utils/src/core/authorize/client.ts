@@ -14,6 +14,23 @@ export function authorizeClient(
   const { origin, bundleId, secretKeyHash: providedSecretHash } = authOptions;
   const { domains, bundleIds, secretHash } = apiKeyMeta;
 
+  const authResult: AuthorizationResult = {
+    authorized: true,
+    apiKeyMeta,
+    accountMeta: {
+      id: apiKeyMeta.accountId,
+      // TODO update this later
+      name: "",
+      creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+    },
+  };
+
+  // check for public restrictions
+  if (domains.includes("*")) {
+    return authResult;
+  }
+
+  // check for secretHash
   if (providedSecretHash) {
     if (secretHash !== providedSecretHash) {
       return {
@@ -23,16 +40,8 @@ export function authorizeClient(
         status: 401,
       };
     }
-    return {
-      authorized: true,
-      apiKeyMeta,
-      accountMeta: {
-        id: apiKeyMeta.accountId,
-        // TODO update this later
-        name: "",
-        creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
-      },
-    };
+
+    return authResult;
   }
 
   // validate domains
@@ -63,16 +72,7 @@ export function authorizeClient(
         return d === origin;
       })
     ) {
-      return {
-        authorized: true,
-        apiKeyMeta,
-        accountMeta: {
-          id: apiKeyMeta.accountId,
-          // TODO update this later
-          name: "",
-          creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
-        },
-      };
+      return authResult;
     }
 
     return {
@@ -95,16 +95,7 @@ export function authorizeClient(
         return b === bundleId;
       })
     ) {
-      return {
-        authorized: true,
-        apiKeyMeta,
-        accountMeta: {
-          id: apiKeyMeta.accountId,
-          // TODO update this later
-          name: "",
-          creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
-        },
-      };
+      return authResult;
     }
 
     return {

@@ -41,6 +41,26 @@ describe("authorizeClient", () => {
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
   });
 
+  it("should authorize client with any domain w/o origin check", () => {
+    const authOptionsWithAnyDomain: ClientAuthorizationPayload = {
+      secretKeyHash: null,
+      bundleId: null,
+      origin: null,
+    };
+
+    const validApiKeyMetaAnyDomain = {
+      ...validApiKeyMeta,
+      domains: ["*"],
+    };
+
+    const result = authorizeClient(
+      authOptionsWithAnyDomain,
+      validApiKeyMetaAnyDomain,
+    ) as any;
+    expect(result.authorized).toBe(true);
+    expect(result.apiKeyMeta).toEqual(validApiKeyMetaAnyDomain);
+  });
+
   it("should not authorize client with non-matching bundle id", () => {
     const authOptionsWithBundleId: ClientAuthorizationPayload = {
       secretKeyHash: null,

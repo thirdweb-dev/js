@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.38",
+  "version": "0.1.40",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "browser": {
@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.22.5",
     "@babel/runtime": "^7.22.6",
-    "@preconstruct/cli": "^2.8.1",
+    "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
     "axios": "^1.4.0",
