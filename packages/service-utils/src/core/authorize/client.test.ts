@@ -12,7 +12,6 @@ describe("authorizeClient", () => {
     domains: ["example.com", "*.example.com"],
     bundleIds: ["com.example.app"],
     services: [],
-    accountId: "test-account-id",
   };
 
   const validAuthOptions: ClientAuthorizationPayload = {
@@ -40,6 +39,26 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(true);
     expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
+  });
+
+  it("should authorize client with any domain w/o origin check", () => {
+    const authOptionsWithAnyDomain: ClientAuthorizationPayload = {
+      secretKeyHash: null,
+      bundleId: null,
+      origin: null,
+    };
+
+    const validApiKeyMetaAnyDomain = {
+      ...validApiKeyMeta,
+      domains: ["*"],
+    };
+
+    const result = authorizeClient(
+      authOptionsWithAnyDomain,
+      validApiKeyMetaAnyDomain,
+    ) as any;
+    expect(result.authorized).toBe(true);
+    expect(result.apiKeyMeta).toEqual(validApiKeyMetaAnyDomain);
   });
 
   it("should not authorize client with non-matching bundle id", () => {
