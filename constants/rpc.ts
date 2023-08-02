@@ -3,9 +3,6 @@ import { DashboardSolanaNetwork } from "utils/solanaUtils";
 export const DASHBOARD_THIRDWEB_CLIENT_ID =
   process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID || "";
 
-export const EMBED_THIRDWEB_CLIENT_ID =
-  process.env.NEXT_PUBLIC_EMBED_CLIENT_ID || "";
-
 export const RPC_ENV =
   (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
   "production"

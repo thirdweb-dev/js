@@ -33,6 +33,7 @@ export type ApiKey = {
 export interface UpdateKeyServiceInput {
   name: string;
   targetAddresses: string[];
+  actions?: string[];
 }
 
 export interface CreateKeyInput {
