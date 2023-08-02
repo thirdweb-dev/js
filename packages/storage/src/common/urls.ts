@@ -116,7 +116,7 @@ export function prepareGatewayUrls(
           }
           // this is on purpose because we're using the crypto module only in node
           // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const crypto = require("crypto");
+          const crypto = require("node:crypto");
           const hashedSecretKey = crypto
             .createHash("sha256")
             .update(secretKey)
