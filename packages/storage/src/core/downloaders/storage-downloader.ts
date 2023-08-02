@@ -70,7 +70,7 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
-    let headers;
+    let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
@@ -85,6 +85,15 @@ export class StorageDownloader implements IStorageDownloader {
         }
         headers = {
           "x-client-Id": this.clientId,
+        };
+      }
+      // if we have a authorization token on global context then add that to the headers
+      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+        headers = {
+          ...headers,
+          authorization: `Bearer ${
+            (globalThis as any).TW_AUTH_TOKEN as string
+          }`,
         };
       }
     }
