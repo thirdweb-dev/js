@@ -113,7 +113,6 @@ import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
-import { type } from "os";
 
 /**
  * The main entry point for the thirdweb SDK
