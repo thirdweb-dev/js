@@ -417,9 +417,13 @@ export class InjectedConnector extends WagmiConnector<
     if ((error as ProviderRpcError).code === 1013) {
       const provider = await this.getProvider();
       if (provider) {
-        const isAuthorized = await this.getAccount();
-        if (isAuthorized) {
-          return;
+        try {
+          const isAuthorized = await this.getAccount();
+          if (isAuthorized) {
+            return;
+          }
+        } catch {
+          // If we can't get the account anymore, continue with disconnect
         }
       }
     }

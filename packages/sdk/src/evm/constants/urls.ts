@@ -60,7 +60,7 @@ export function getChainProvider(
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
     rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
-      options.clientId
+      options.clientId || ""
     }`;
   }
 
@@ -158,7 +158,7 @@ export function getProviderFromRpcUrl(
   chainId?: number,
 ) {
   try {
-    const headers: Record<string, string> = {};
+    const headers: HeadersInit = {};
     if (isTwUrl(rpcUrl)) {
       if (sdkOptions?.clientId) {
         headers["x-client-id"] = sdkOptions?.clientId;
@@ -172,6 +172,12 @@ export function getProviderFromRpcUrl(
         }
       } else if (sdkOptions?.secretKey) {
         headers["x-secret-key"] = sdkOptions?.secretKey;
+      }
+      // if we have a tw auth token on global context add it to the headers
+      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
       }
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);

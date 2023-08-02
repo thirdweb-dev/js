@@ -1,5 +1,19 @@
 # @thirdweb-dev/service-utils
 
+## 0.2.5
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - allow account level auth via jwt
+
+## 0.2.4
+
+### Patch Changes
+
+- [#1420](https://github.com/thirdweb-dev/js/pull/1420) [`952009cd`](https://github.com/thirdweb-dev/js/commit/952009cd73a1851dfef7a8f8c29ab6d73d580508) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle \* domain as public
+
+- [#1417](https://github.com/thirdweb-dev/js/pull/1417) [`580e77b1`](https://github.com/thirdweb-dev/js/commit/580e77b17088a439208bd1411c71e9fb0c2cbb79) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return accountId from authorize service call
+
 ## 0.2.3
 
 ### Patch Changes

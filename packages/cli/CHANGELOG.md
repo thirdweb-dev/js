@@ -1,5 +1,15 @@
 # thirdweb
 
+## 0.11.7
+
+### Patch Changes
+
+- [#1419](https://github.com/thirdweb-dev/js/pull/1419) [`2b96f71e`](https://github.com/thirdweb-dev/js/commit/2b96f71e191d7f69c2c75f9c6a9ee4537bac65aa) Thanks [@Marfuen](https://github.com/Marfuen)! - Fix path of cache to work with windows.
+
+- Updated dependencies [[`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e)]:
+  - @thirdweb-dev/storage@1.2.3
+  - @thirdweb-dev/sdk@3.10.43
+
 ## 0.11.6
 
 ### Patch Changes

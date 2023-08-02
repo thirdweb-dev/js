@@ -118,7 +118,19 @@ export function extractAuthorizationData(
     clientId = derivedClientId;
   }
 
+  let jwt: null | string = null;
+  // check for authorization header on the request
+  const authorizationHeader = getHeader(headers, "authorization");
+  if (authorizationHeader) {
+    const [type, token] = authorizationHeader.split(" ");
+    if (type.toLowerCase() === "bearer") {
+      jwt = token;
+    }
+  }
+
   return {
+    jwt,
+    hashedJWT: jwt ? hashSecretKey(jwt) : null,
     secretKeyHash,
     secretKey,
     clientId,
