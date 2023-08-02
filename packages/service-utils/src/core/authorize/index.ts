@@ -1,6 +1,8 @@
 import {
+  AccountMetadata,
   ApiKeyMetadata,
   CoreServiceConfig,
+  fetchAccountFromApi,
   fetchKeyMetadataFromApi,
 } from "../api";
 import { authorizeClient } from "./client";
@@ -13,36 +15,124 @@ export type AuthorizationInput = {
   origin: string | null;
   bundleId: string | null;
   secretKeyHash: string | null;
+  jwt: string | null;
+  hashedJWT: string | null;
   targetAddress?: string | string[];
 };
 
 type CacheOptions = {
   get: (clientId: string) => Promise<string | null>;
-  put: (clientId: string, data: ApiKeyMetadata) => Promise<void> | void;
+  put: (
+    clientId: string,
+    data: ApiKeyMetadata | AccountMetadata,
+  ) => Promise<void> | void;
   cacheTtlSeconds: number;
 };
 
-type CacheWithPossibleTtl =
+type ApiKeyCacheWithPossibleTTL =
   | {
       apiKeyMeta: ApiKeyMetadata;
       updatedAt: number;
     }
   | ApiKeyMetadata;
 
+type AccountCacheWithPossibleTTL =
+  | {
+      apiKeyMeta: AccountMetadata;
+      updatedAt: number;
+    }
+  | AccountMetadata;
+
 export async function authorize(
   authData: AuthorizationInput,
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
-  const { clientId, targetAddress, secretKeyHash } = authData;
+  const { clientId, targetAddress, secretKeyHash, jwt, hashedJWT } = authData;
   const { enforceAuth } = serviceConfig;
 
-  // BACKWARDS COMPAT: if auth not enforced and
-  //                   we don't have auth credentials bypass
+  // BACKWARDS COMPAT: if auth not enforced and we don't have auth credentials bypass
   if (!enforceAuth && !clientId && !secretKeyHash) {
     return {
       authorized: true,
       apiKeyMeta: null,
+      accountMeta: null,
+    };
+  }
+  // if we come in with a JWT then we only check the account is valid
+  if (jwt && hashedJWT) {
+    let accountMeta: AccountMetadata | null = null;
+    if (cacheOptions) {
+      try {
+        const cachedAccountInfo = await cacheOptions.get(hashedJWT);
+        if (cachedAccountInfo) {
+          const parsed = JSON.parse(
+            cachedAccountInfo,
+          ) as AccountCacheWithPossibleTTL;
+          if ("updatedAt" in parsed) {
+            // we want to compare the updatedAt time to the current time
+            // if the difference is greater than the cacheTtl we want to ignore the cached data
+            const now = Date.now();
+            const diff = now - parsed.updatedAt;
+            const cacheTtl = cacheOptions.cacheTtlSeconds * 1000;
+            // only if the diff is less than the cacheTtl do we want to use the cached key
+            if (diff < cacheTtl * 1000) {
+              accountMeta = parsed.apiKeyMeta;
+            }
+          } else {
+            accountMeta = parsed;
+          }
+        }
+      } catch (err) {
+        // ignore errors, proceed as if not in cache
+      }
+    }
+    if (!accountMeta) {
+      try {
+        const { data, error } = await fetchAccountFromApi(jwt, serviceConfig);
+        if (error) {
+          return {
+            authorized: false,
+            errorCode: error.code,
+            errorMessage: error.message,
+            status: error.statusCode,
+          };
+        } else if (!data) {
+          return {
+            authorized: false,
+            errorCode: "NO_ACCOUNT",
+            errorMessage: "No error but also no account returned.",
+            status: 500,
+          };
+        }
+        accountMeta = data;
+        if (cacheOptions) {
+          await cacheOptions.put(hashedJWT, accountMeta);
+        }
+      } catch (err) {
+        console.warn("failed to fetch account from api", err);
+        return {
+          authorized: false,
+          status: 500,
+          errorMessage: "Failed to account information.",
+          errorCode: "FAILED_TO_ACCOUNT",
+        };
+      }
+    }
+    // if we still don't have an accountMeta at this point we can't authorize
+    if (!accountMeta) {
+      return {
+        authorized: false,
+        status: 401,
+        errorMessage: "Missing account information.",
+        errorCode: "MISSING_ACCOUNT",
+      };
+    }
+    // otherwise we want to return early with the accountMeta
+    return {
+      authorized: true,
+      apiKeyMeta: null,
+      accountMeta,
     };
   }
 
@@ -62,7 +152,7 @@ export async function authorize(
     try {
       const cachedKey = await cacheOptions.get(clientId);
       if (cachedKey) {
-        const parsed = JSON.parse(cachedKey) as CacheWithPossibleTtl;
+        const parsed = JSON.parse(cachedKey) as ApiKeyCacheWithPossibleTTL;
         if ("updatedAt" in parsed) {
           // we want to compare the updatedAt time to the current time
           // if the difference is greater than the cacheTtl we want to ignore the cached data
@@ -161,5 +251,11 @@ export async function authorize(
   return {
     authorized: true,
     apiKeyMeta,
+    accountMeta: {
+      id: apiKeyMeta.accountId,
+      // TODO update this later
+      name: "",
+      creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+    },
   };
 }

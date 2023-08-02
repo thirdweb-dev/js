@@ -45,6 +45,12 @@ export class HttpRpcClient {
           headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
         }
       }
+
+      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      }
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
