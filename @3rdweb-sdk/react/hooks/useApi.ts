@@ -212,3 +212,20 @@ export function useGenerateApiKey() {
     },
   );
 }
+
+export async function fetchAuthToken() {
+  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await res.json();
+
+  if (json.error) {
+    throw new Error(json.error?.message || json.error);
+  }
+
+  return json.data.jwt;
+}

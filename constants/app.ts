@@ -1,0 +1,1 @@
+export const GLOBAL_AUTH_TOKEN_KEY = "TW_AUTH_TOKEN";

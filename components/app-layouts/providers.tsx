@@ -4,6 +4,7 @@ import {
   EVMContractInfo,
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
+import { fetchAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ThirdwebProvider,
@@ -12,14 +13,16 @@ import {
   metamaskWallet,
   paperWallet,
   safeWallet,
+  useUser,
   walletConnect,
 } from "@thirdweb-dev/react";
+import { GLOBAL_AUTH_TOKEN_KEY } from "constants/app";
 import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface DashboardThirdwebProviderProps {
@@ -95,7 +98,45 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         authUrl: `${THIRDWEB_API_HOST}/v1/auth`,
       }}
     >
+      <GlobalAuthTokenProvider />
       <SolanaProvider>{children}</SolanaProvider>
     </ThirdwebProvider>
   );
+};
+
+const GlobalAuthTokenProvider = () => {
+  const { user } = useUser();
+
+  const getToken = async () => {
+    try {
+      const token = await fetchAuthToken();
+      return token;
+    } catch (err) {
+      return undefined;
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
+
+    getToken()
+      .then((token) => {
+        if (mounted) {
+          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = token;
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [user?.address]);
+
+  return null;
 };
