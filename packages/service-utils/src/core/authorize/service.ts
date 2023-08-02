@@ -61,6 +61,11 @@ export function authorizeService(
 
   return {
     authorized: true,
+    accountMeta: {
+      id: apiKeyMetadata.accountId,
+      name: "",
+      creatorWalletAddress: apiKeyMetadata.creatorWalletAddress,
+    },
     apiKeyMeta: apiKeyMetadata,
   };
 }
