@@ -21,6 +21,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   clientId,
+  secretKey,
 }: React.PropsWithChildren<
   { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
@@ -92,7 +93,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        { ...mergedOptions, clientId },
+        { ...mergedOptions, clientId, secretKey },
         storageInterface,
       );
     }
@@ -113,7 +114,14 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [activeChainId, supportedChains, sdkOptions, storageInterface, clientId]);
+  }, [
+    activeChainId,
+    supportedChains,
+    sdkOptions,
+    storageInterface,
+    clientId,
+    secretKey,
+  ]);
 
   useEffect(() => {
     // if we have an sdk and a signer update the signer
