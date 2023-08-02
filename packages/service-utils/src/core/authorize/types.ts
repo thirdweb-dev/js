@@ -1,9 +1,10 @@
-import { ApiKeyMetadata } from "../api";
+import { AccountMetadata, ApiKeyMetadata } from "../api";
 
 export type AuthorizationResult =
   | {
       authorized: true;
       apiKeyMeta: ApiKeyMetadata | null;
+      accountMeta: AccountMetadata | null;
     }
   | {
       authorized: false;
