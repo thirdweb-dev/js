@@ -140,13 +140,10 @@ export const authenticateUser = async (
       res.setHeader("Access-Control-Allow-Origin", "https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com");
       res.setHeader("Access-Control-Allow-Origin", "https://thirdweb.com");
       res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "");
       res.setHeader("Access-Control-Allow-Methods", "GET");
 
       if (req.method === 'OPTIONS') {
         res.setHeader('Access-Control-Allow-Methods', 'GET');
-        res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage');
         res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
         res.writeHead(200);
         res.end();
