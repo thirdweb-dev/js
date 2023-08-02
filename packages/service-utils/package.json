@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230724.0",
     "@preconstruct/cli": "2.7.0",
+    "@smithy/types": "^2.0.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
     "@types/node": "^18.17.1",
@@ -61,5 +62,9 @@
     "build": "tsc && preconstruct build",
     "push": "yalc push",
     "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.379.1",
+    "zod": "^3.20.2"
   }
 }

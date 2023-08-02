@@ -1,5 +1,16 @@
 # @thirdweb-dev/wallets
 
+## 1.1.7
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
+- [#1425](https://github.com/thirdweb-dev/js/pull/1425) [`b0ec1d80`](https://github.com/thirdweb-dev/js/commit/b0ec1d80839efccad11b50afbf2216c2c132cf7e) Thanks [@iketw](https://github.com/iketw)! - Adding plugin-transform-flow-strip-types plugin to solve issues with RN FlatList
+
+- Updated dependencies [[`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e)]:
+  - @thirdweb-dev/sdk@3.10.43
+
 ## 1.1.6
 
 ### Patch Changes

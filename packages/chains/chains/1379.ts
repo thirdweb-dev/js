@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kalar Chain Mainnet",
+  "name": "Kalar Chain",
   "chain": "KLC",
   "icon": {
     "url": "ipfs://bafkreihfoy2kgf2rebaoicso7z5h7ju46z6gtr64mskkths3qbfkrtnkjm",
@@ -10,7 +10,7 @@ export default {
   },
   "rpc": [
     "https://kalar-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://rpc-api.kalarchain.tech"
+    "https://rpc-api.kalarchain.tech"
   ],
   "faucets": [],
   "nativeCurrency": {
