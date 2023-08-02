@@ -49,7 +49,7 @@ const usageEventSchema = z.object({
   fileCid: z.string().optional(),
   transactionHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
-  gasPricePerUnit: z.number().nonnegative().optional(),
+  gasPricePerUnit: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
