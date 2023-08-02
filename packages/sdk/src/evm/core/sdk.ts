@@ -89,6 +89,7 @@ import type {
   DeployOptions,
   DeployMetadata,
   DeployEvent,
+  OpenEditionContractDeployMetadata,
 } from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
@@ -113,6 +114,7 @@ import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
+import { DropErc721ContractSchema } from "../schema";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1015,6 +1017,48 @@ export class ContractDeployer extends RPCConnectionHandler {
       return await this.deployReleasedContract.prepare(
         THIRDWEB_DEPLOYER,
         "LoyaltyCard",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  deployOpenEdition = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: OpenEditionContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await DropErc721ContractSchema.deploy.parseAsync(
+        metadata,
+      );
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [
+        signerAddress,
+        parsedMetadata.name,
+        parsedMetadata.symbol,
+        contractURI,
+        trustedForwarders,
+        parsedMetadata.primary_sale_recipient,
+        parsedMetadata.fee_recipient,
+        parsedMetadata.seller_fee_basis_points,
+      ];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "OpenEditionERC721",
         deployArgs,
         options,
       );
