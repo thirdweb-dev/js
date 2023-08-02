@@ -23,6 +23,7 @@ export type SignerPermissionsInput = z.input<typeof SignerPermissionsSchema>;
 export type SignerPermissionsOutput = z.output<typeof SignerPermissionsSchema>;
 
 export type SignerWithPermissions = {
+  isAdmin?: boolean;
   signer: string;
   permissions: SignerPermissions;
 };

@@ -21,13 +21,14 @@ import type {
   SmartContract,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
+import { WalletAddress } from "../../types";
 
 /** **********************/
 /**       READ HOOKS    **/
 /** **********************/
 
 /**
- * Get all accounts
+ * Get all signers of account
  *
  * @example
  * ```javascript
@@ -50,9 +51,74 @@ export function useAccountSigners(
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
         contract.account.getAllSigners,
-        "Contract instance does not support contract.account.getSignersWithRestrictions",
+        "Contract instance does not support contract.account.getAllSigners",
       );
       return contract.account.getAllSigners();
+    },
+    { enabled: !!contract },
+  );
+}
+
+/**
+ * Get all admins of account
+ *
+ * @example
+ * ```javascript
+ * const { data: accounts, isLoading, error } = useAccountSigners(contract);
+ * ```
+ *
+ * @param contract - an instance of a account
+ * @returns a response object that includes an array of all admins of the provided account
+ * @twfeature Account
+ * @see {@link https://portal.thirdweb.com/react/react.useaccountadmins?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useAccountAdmins(
+  contract: RequiredParam<SmartContract>,
+): UseQueryResult<WalletAddress[]> {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.account.signers(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(
+        contract.account.getAllAdmins,
+        "Contract instance does not support contract.account.getAllAdmins",
+      );
+      return contract.account.getAllAdmins();
+    },
+    { enabled: !!contract },
+  );
+}
+
+/**
+ * Get all signers and admins of account
+ *
+ * @example
+ * ```javascript
+ * const { data: accounts, isLoading, error } = useAccountSigners(contract);
+ * ```
+ *
+ * @param contract - an instance of a account
+ * @returns a response object that includes an array of all admins of the provided account
+ * @twfeature Account
+ * @see {@link https://portal.thirdweb.com/react/react.useaccountadmins?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useAccountAdminsAndSigners(
+  contract: RequiredParam<SmartContract>,
+): UseQueryResult<SignerWithPermissions[]> {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.account.signers(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(
+        contract.account.getAllAdminsAndSigners,
+        "Contract instance does not support contract.account.getAllAdminsAndSigners",
+      );
+
+      return contract.account.getAllAdminsAndSigners();
     },
     { enabled: !!contract },
   );

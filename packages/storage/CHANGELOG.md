@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.2.3
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
 ## 1.2.2
 
 ### Patch Changes

@@ -39,6 +39,7 @@ export const gnosisAddressPrefixToChainId = {
   bnb: 56,
   oeth: 10,
   gor: 5,
+  "base-gor": 84531,
 } as const;
 
 export const SelectAccount: React.FC<{

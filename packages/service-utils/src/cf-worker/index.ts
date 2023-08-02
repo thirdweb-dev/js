@@ -1,5 +1,9 @@
 import type { ExecutionContext, KVNamespace } from "@cloudflare/workers-types";
-import type { ApiKeyMetadata, CoreServiceConfig } from "../core/api";
+import type {
+  ApiKeyMetadata,
+  AccountMetadata,
+  CoreServiceConfig,
+} from "../core/api";
 import { authorize } from "../core/authorize";
 
 import type { Request } from "@cloudflare/workers-types";
@@ -47,7 +51,7 @@ export async function authorizeWorker(
 
   return await authorize(authData, serviceConfig, {
     get: async (clientId: string) => serviceConfig.kvStore.get(clientId),
-    put: (clientId: string, apiKeyMeta: ApiKeyMetadata) =>
+    put: (clientId: string, apiKeyMeta: ApiKeyMetadata | AccountMetadata) =>
       serviceConfig.ctx.waitUntil(
         serviceConfig.kvStore.put(
           clientId,
@@ -124,7 +128,20 @@ async function extractAuthorizationData(
     clientId = derivedClientId;
   }
 
+  let jwt: string | null = null;
+  if (headers.has("authorization")) {
+    const authHeader = headers.get("authorization");
+    if (authHeader) {
+      const [type, token] = authHeader.split(" ");
+      if (type.toLowerCase() === "bearer") {
+        jwt = token;
+      }
+    }
+  }
+
   return {
+    jwt,
+    hashedJWT: jwt ? await hashSecretKey(jwt) : null,
     secretKey,
     clientId,
     origin,
