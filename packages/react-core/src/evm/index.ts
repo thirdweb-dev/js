@@ -207,6 +207,7 @@ export {
   useAccountSigners,
   useSetAccountSigners,
   useAccountAdmins,
+  useAccountAdminsAndSigners,
 } from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
