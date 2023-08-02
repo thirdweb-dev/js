@@ -270,6 +270,38 @@ export class Account<TContract extends IAccountCore>
     );
   }
 
+  /**
+   * Get all admins and non-admin signers with permissions to use the account.
+   *
+   * @example
+   * ```javascript
+   * const allAdminsAndSigners = await contract.account.getAllAdminsAndSigners();
+   * ```
+   *
+   * @returns all admins and non-admin signers with permissions to use the account.
+   *
+   * @twfeature Account
+   */
+  public async getAllAdminsAndSigners(): Promise<SignerWithPermissions[]> {
+    const allAdmins = await this.getAllAdmins();
+    const transformedAdmins: SignerWithPermissions[] = allAdmins.map(
+      (admin) => {
+        return {
+          signer: admin,
+          permissions: {
+            startDate: new Date(0),
+            expirationDate: new Date(0),
+            nativeTokenLimitPerTransaction: BigNumber.from(0),
+            approvedCallTargets: [],
+          },
+        };
+      },
+    );
+    const allSigners = await this.getAllSigners();
+
+    return [...transformedAdmins, ...allSigners];
+  }
+
   /*********************************
    * WRITE FUNCTIONS
    ********************************/

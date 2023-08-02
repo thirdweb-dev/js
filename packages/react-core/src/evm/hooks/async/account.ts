@@ -28,7 +28,7 @@ import { WalletAddress } from "../../types";
 /** **********************/
 
 /**
- * Get all accounts
+ * Get all signers of account
  *
  * @example
  * ```javascript
@@ -60,7 +60,7 @@ export function useAccountSigners(
 }
 
 /**
- * Get all accounts
+ * Get all admins of account
  *
  * @example
  * ```javascript
@@ -86,6 +86,39 @@ export function useAccountAdmins(
         "Contract instance does not support contract.account.getAllAdmins",
       );
       return contract.account.getAllAdmins();
+    },
+    { enabled: !!contract },
+  );
+}
+
+/**
+ * Get all signers and admins of account
+ *
+ * @example
+ * ```javascript
+ * const { data: accounts, isLoading, error } = useAccountSigners(contract);
+ * ```
+ *
+ * @param contract - an instance of a account
+ * @returns a response object that includes an array of all admins of the provided account
+ * @twfeature Account
+ * @see {@link https://portal.thirdweb.com/react/react.useaccountadmins?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useAccountAdminsAndSigners(
+  contract: RequiredParam<SmartContract>,
+): UseQueryResult<SignerWithPermissions[]> {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.account.signers(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      invariant(
+        contract.account.getAllAdminsAndSigners,
+        "Contract instance does not support contract.account.getAllAdminsAndSigners",
+      );
+
+      return contract.account.getAllAdminsAndSigners();
     },
     { enabled: !!contract },
   );
