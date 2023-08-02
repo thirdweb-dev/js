@@ -1,13 +1,12 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { AccountEvent, useAccounts, useAddress } from "@thirdweb-dev/react";
+import { useAccounts } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { useRouter } from "next/router";
 import { Text, TrackedCopyButton } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
 
-const columnHelper = createColumnHelper<AccountEvent>();
+const columnHelper = createColumnHelper<{ account: string }>();
 
 const columns = [
   columnHelper.accessor("account", {
@@ -24,47 +23,25 @@ const columns = [
       </Flex>
     ),
   }),
-  columnHelper.accessor("admin", {
-    header: "Admin",
-    cell: (info) => (
-      <Flex gap={2} align="center">
-        <Text fontFamily="mono">{shortenIfAddress(info.getValue())}</Text>
-        <TrackedCopyButton
-          value={info.getValue()}
-          category="accounts"
-          aria-label="Copy admin address"
-          colorScheme="primary"
-        />
-      </Flex>
-    ),
-  }),
 ];
 
 interface AccountsTableProps {
   accountsQuery: ReturnType<typeof useAccounts>;
-  accountsForAddress?: string[];
 }
 
 export const AccountsTable: React.FC<AccountsTableProps> = ({
   accountsQuery,
-  accountsForAddress,
 }) => {
   const router = useRouter();
   const network = useDashboardEVMChainId();
-  const address = useAddress();
 
-  const defaultAccounts: AccountEvent[] = (accountsForAddress || []).map(
-    (account: string) => ({
-      account,
-      admin: address || "",
-    }),
-  );
+  const data = accountsQuery.data || [];
 
   return (
     <TWTable
       title="account"
       columns={columns}
-      data={accountsQuery.data || defaultAccounts}
+      data={data.map((account) => ({ account }))}
       isLoading={accountsQuery.isLoading}
       isFetched={accountsQuery.isFetched}
       onRowClick={(row) => {
