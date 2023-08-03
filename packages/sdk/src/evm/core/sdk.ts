@@ -710,10 +710,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce((acc, chain) => {
-      acc[chain.chainId] = chain;
-      return acc;
-    }, {} as Record<number, Chain>);
+    const chainMap = chains.reduce(
+      (acc, chain) => {
+        acc[chain.chainId] = chain;
+        return acc;
+      },
+      {} as Record<number, Chain>,
+    );
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
@@ -1020,6 +1023,21 @@ export class ContractDeployer extends RPCConnectionHandler {
     },
   );
 
+  /**
+   * Deploys a new OpenEditionERC721 contract
+   *
+   * @remarks Deploys a OpenEdition contract and returns the address of the deployed contract
+   *
+   * @example
+   * ```javascript
+   * const contractAddress = await sdk.deployer.deployOpenEdition({
+   *   name: "My Open Edition",
+   *   primary_sale_recipient: "your-address",
+   * });
+   * ```
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   */
   deployOpenEdition = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
       metadata: OpenEditionContractDeployMetadata,
