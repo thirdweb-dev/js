@@ -1,5 +1,19 @@
 # @thirdweb-dev/service-utils
 
+## 0.3.0
+
+### Minor Changes
+
+- [#1424](https://github.com/thirdweb-dev/js/pull/1424) [`d01e6396`](https://github.com/thirdweb-dev/js/commit/d01e6396d176a162aaacb10792f0d9abade62a1f) Thanks [@arcoraven](https://github.com/arcoraven)! - Add helper to publish usage events from backend services
+
+### Patch Changes
+
+- [#1440](https://github.com/thirdweb-dev/js/pull/1440) [`5ec0f064`](https://github.com/thirdweb-dev/js/commit/5ec0f064d27acbd5225934dfe8ea2cd2c5af3997) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Switch to aws4fetch to call AWS services
+
+- [#1437](https://github.com/thirdweb-dev/js/pull/1437) [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf) Thanks [@farhanW3](https://github.com/farhanW3)! - Updated the error messages
+
+- [#1435](https://github.com/thirdweb-dev/js/pull/1435) [`2a3cd62d`](https://github.com/thirdweb-dev/js/commit/2a3cd62dc9af6accae5c2c48ef4956d139a637e4) Thanks [@arcoraven](https://github.com/arcoraven)! - Use string type for gasPricePerUnit
+
 ## 0.2.5
 
 ### Patch Changes
