@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { useAddress, useSDKChainId } from "@thirdweb-dev/react";
 import { SignerWithPermissions } from "@thirdweb-dev/sdk";
 import { differenceInDays } from "date-fns";
@@ -19,32 +19,39 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
   const chainId = useSDKChainId();
   const configuredChainsRecord = useSupportedChainsRecord();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Card position="relative" p={8}>
       <Flex direction="column" gap={8}>
         <Flex flexDir="column" gap={2} mt={{ base: 4, md: 0 }}>
-          <Flex gap={3} alignItems="center">
+          <Flex
+            gap={3}
+            alignItems="center"
+            flexDir={{ base: "column", lg: "row" }}
+          >
             <Heading size="label.lg">
               <AddressCopyButton
-                shortenAddress={false}
+                shortenAddress={isMobile}
                 address={signer.signer}
               />
             </Heading>
-            {isAdmin ? (
-              <Badge borderRadius="lg" p={1.5}>
-                Admin Key
-              </Badge>
-            ) : (
-              <Badge borderRadius="lg" p={1.5}>
-                Scoped key
-              </Badge>
-            )}
-            {signer.signer === address && (
-              <Badge colorScheme="green" borderRadius="lg" p={1.5}>
-                Currently connected
-              </Badge>
-            )}
+            <Flex gap={2}>
+              {isAdmin ? (
+                <Badge borderRadius="lg" p={1.5}>
+                  Admin Key
+                </Badge>
+              ) : (
+                <Badge borderRadius="lg" p={1.5}>
+                  Scoped key
+                </Badge>
+              )}
+              {signer.signer === address && (
+                <Badge colorScheme="green" borderRadius="lg" p={1.5}>
+                  Currently connected
+                </Badge>
+              )}
+            </Flex>
           </Flex>
         </Flex>
 

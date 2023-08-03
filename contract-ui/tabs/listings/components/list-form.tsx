@@ -7,8 +7,6 @@ import {
   FormControl,
   Icon,
   Input,
-  List,
-  ListItem,
   Select,
   Spinner,
   Stack,
@@ -44,7 +42,6 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
 import {
-  Card,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -53,7 +50,7 @@ import {
   Text,
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { shortenIfAddress } from "utils/usedapp-external";
+import { ListLabel } from "./list-label";
 
 interface ListForm
   extends Omit<NewDirectListing, "type">,
@@ -458,35 +455,6 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
     </Stack>
   );
 };
-
-interface ListLabelProps {
-  nft: WalletNFT;
-}
-
-const ListLabel: React.FC<ListLabelProps> = ({ nft }) => {
-  return (
-    <Card color="paragraph" p={4} bg="backgroundCardHighlight">
-      <List>
-        <ListItem>
-          <strong>Name:</strong> {nft.metadata?.name || "N/A"}
-        </ListItem>
-        <ListItem>
-          <strong>Contract Address:</strong>{" "}
-          {shortenIfAddress(nft.contractAddress)}
-        </ListItem>
-        <ListItem>
-          <strong>Token ID: </strong> {nft.tokenId}
-        </ListItem>
-        <ListItem>
-          <>
-            <strong>Token Standard: </strong> {nft.type}
-          </>
-        </ListItem>
-      </List>
-    </Card>
-  );
-};
-
 function mulDecimalByQuantity(a: string | number, b: string | number): string {
   if (!a || a.toString() === "0" || !b || b.toString() === "0") {
     return "0";
