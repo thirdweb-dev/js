@@ -62,7 +62,8 @@ export async function createSession(cache: Cache) {
     if (keyPassed.length === 32) {
       console.log(chalk.red(`This is not a valid secret key. To get your secret key
 1. Create an API key at https://thirdweb.com/create-api-key 
-2. Store and copy your Secret Key. This will be shown only once.`));
+2. Store and copy your Secret Key. This will be shown only once.
+3. Paste it in the CLI when prompted`));
       process.exit(1);
     }
 
