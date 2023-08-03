@@ -60,7 +60,7 @@ export async function createSession(cache: Cache) {
     }
 
     if (keyPassed.length === 32) {
-      console.log(chalk.red("It seems you passed in an invalid API secret key, please try again"));
+      console.log(chalk.red("It seems you passed in an invalid API secret key."));
       process.exit(1);
     }
 
