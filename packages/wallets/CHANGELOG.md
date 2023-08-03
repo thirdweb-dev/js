@@ -1,5 +1,18 @@
 # @thirdweb-dev/wallets
 
+## 1.1.8
+
+### Patch Changes
+
+- [#1430](https://github.com/thirdweb-dev/js/pull/1430) [`a9f2ff73`](https://github.com/thirdweb-dev/js/commit/a9f2ff73c9f83f05c3e2d3c53b23b2843e8a2576) Thanks [@MananTank](https://github.com/MananTank)! - Handle error on Metamask Disconnect properly
+
+- [#1436](https://github.com/thirdweb-dev/js/pull/1436) [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better gas estimations pre account deploy
+
+- Updated dependencies [[`a5d0be93`](https://github.com/thirdweb-dev/js/commit/a5d0be939a143095e769b68cf86360bfe4720744), [`c0a6d2f1`](https://github.com/thirdweb-dev/js/commit/c0a6d2f18231310d143c9b0cb1b2ff59315087a4), [`becbb637`](https://github.com/thirdweb-dev/js/commit/becbb637367285ed3d8d7d131e1020bf23e38298), [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb), [`c9bf4f05`](https://github.com/thirdweb-dev/js/commit/c9bf4f05c161707c6eb799ecef82f462e4a82405), [`67b145b9`](https://github.com/thirdweb-dev/js/commit/67b145b94dafb2fb1d90553ed4829f0ed22e2907), [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5)]:
+  - @thirdweb-dev/sdk@3.10.44
+  - @thirdweb-dev/chains@0.1.41
+  - @thirdweb-dev/contracts-js@1.3.11
+
 ## 1.1.7
 
 ### Patch Changes
