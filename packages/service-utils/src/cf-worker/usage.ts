@@ -63,7 +63,7 @@ export async function publishUsageEvents(
     secretAccessKey: string;
     region?: string;
   },
-): Promise<void> {
+): Promise<string> {
   const {
     queueUrl,
     accessKeyId,
@@ -81,7 +81,7 @@ export async function publishUsageEvents(
     secretAccessKey,
     region,
   });
-  await aws.fetch(`https://sqs.${region}.amazonaws.com`, {
+  const res = await aws.fetch(`https://sqs.${region}.amazonaws.com`, {
     headers: {
       "X-Amz-Target": "AmazonSQS.SendMessageBatch",
       "X-Amz-Date": new Date().toISOString(),
@@ -92,4 +92,5 @@ export async function publishUsageEvents(
       Entries: entries,
     }),
   });
+  return await res.text();
 }
