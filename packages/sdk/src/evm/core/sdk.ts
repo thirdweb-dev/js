@@ -1501,6 +1501,8 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param publisherAddress the address of the publisher
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
+   *
+   * @deprecated use deployPublishedContract instead
    */
   deployReleasedContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1522,6 +1524,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
     },
   );
+
+  /**
+   * Deploy any published contract by its name
+   * @param publisherAddress the address of the publisher
+   * @param contractName the name of the contract to deploy
+   * @param constructorParams the constructor params to pass to the contract
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param options Optional: the deploy options
+   */
+  deployPublishedContract = this.deployReleasedContract;
 
   /**
    * Deploy a proxy contract of a given implementation via the given factory
