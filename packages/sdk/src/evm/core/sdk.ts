@@ -89,6 +89,7 @@ import type {
   DeployOptions,
   DeployMetadata,
   DeployEvent,
+  OpenEditionContractDeployMetadata,
 } from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
@@ -113,6 +114,7 @@ import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
+import { DropErc721ContractSchema } from "../schema";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -263,11 +265,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: IThirdwebStorage,
   ) {
     const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
-    checkClientIdOrSecretKey(
-      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
-      options.clientId,
-      options.secretKey,
-    );
+    let warnMessage = `No API key. Please provide a ${apiKeyType}. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key`;
+    if (typeof window === "undefined" && !options.secretKey) {
+      warnMessage = `Please provide a secret key instead of the clientId. Create a new API Key at https://thirdweb.com/create-api-key`;
+    }
+    checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
 
     if (isChainConfig(network)) {
       options = {
@@ -708,13 +710,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce(
-      (acc, chain) => {
-        acc[chain.chainId] = chain;
-        return acc;
-      },
-      {} as Record<number, Chain>,
-    );
+    const chainMap = chains.reduce((acc, chain) => {
+      acc[chain.chainId] = chain;
+      return acc;
+    }, {} as Record<number, Chain>);
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
@@ -1015,6 +1014,48 @@ export class ContractDeployer extends RPCConnectionHandler {
       return await this.deployReleasedContract.prepare(
         THIRDWEB_DEPLOYER,
         "LoyaltyCard",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  deployOpenEdition = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: OpenEditionContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await DropErc721ContractSchema.deploy.parseAsync(
+        metadata,
+      );
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [
+        signerAddress,
+        parsedMetadata.name,
+        parsedMetadata.symbol,
+        contractURI,
+        trustedForwarders,
+        parsedMetadata.primary_sale_recipient,
+        parsedMetadata.fee_recipient,
+        parsedMetadata.seller_fee_basis_points,
+      ];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "OpenEditionERC721",
         deployArgs,
         options,
       );
@@ -1457,6 +1498,8 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param publisherAddress the address of the publisher
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
+   *
+   * @deprecated use deployPublishedContract instead
    */
   deployReleasedContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1478,6 +1521,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
     },
   );
+
+  /**
+   * Deploy any published contract by its name
+   * @param publisherAddress the address of the publisher
+   * @param contractName the name of the contract to deploy
+   * @param constructorParams the constructor params to pass to the contract
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param options Optional: the deploy options
+   */
+  deployPublishedContract = this.deployReleasedContract;
 
   /**
    * Deploy a proxy contract of a given implementation via the given factory

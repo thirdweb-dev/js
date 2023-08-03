@@ -382,8 +382,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.8.1-0
-        version: 3.8.1-0
+        specifier: 3.8.3
+        version: 3.8.3
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -1157,6 +1157,9 @@ importers:
       '@preconstruct/cli':
         specifier: 2.7.0
         version: 2.7.0
+      '@smithy/types':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
@@ -10280,8 +10283,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.8.1-0:
-    resolution: {integrity: sha512-yb2W403bh4STD2XujBjK37/rzkF24Y0cdHvgrdl5TKSjt3tR0qTrtRI8m46+E+AmuL64d+nCw+5DNDBqXPypDA==}
+  /@thirdweb-dev/contracts@3.8.3:
+    resolution: {integrity: sha512-J1CRG8bZ/Y9x7jgd0kmu0LDgV3l+s6wBO/ohCJeOamxuXp9ubYMXr1DFmFHnNphmEHnQfLt459nu8qwGJ9ip6Q==}
     dev: false
 
   /@tootallnate/once@1.1.2:
