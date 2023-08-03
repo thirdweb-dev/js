@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { ZodError } from "zod";
 import { apiKeyValidationSchema } from "./validations";
 

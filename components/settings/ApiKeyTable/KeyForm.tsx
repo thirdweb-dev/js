@@ -7,11 +7,13 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
+  ButtonGroup,
   Divider,
   Flex,
   FormControl,
   HStack,
   Input,
+  ListItem,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -26,10 +28,11 @@ import {
   Tabs,
   Textarea,
   Tooltip,
+  UnorderedList,
   VStack,
 } from "@chakra-ui/react";
 import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
-import React from "react";
+import React, { useState } from "react";
 import {
   FieldArrayWithId,
   UseFormReturn,
@@ -46,6 +49,12 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import {
+  AnyBundleIdAlert,
+  AnyDomainAlert,
+  NoBundleIdsAlert,
+  NoDomainsAlert,
+} from "./Alerts";
 
 interface ApiKeyKeyFormProps {
   form: UseFormReturn<ApiKeyValidationSchema, any>;
@@ -70,10 +79,12 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   tabbed = true,
   isLoading,
 }) => {
+  const isEditing = !!apiKey;
   const { secret, key } = apiKey || {};
-  const [formStep, setFormStep] = React.useState<FormStep>(
-    apiKey ? "keys" : "name",
+  const [formStep, setFormStep] = useState<FormStep>(
+    isEditing ? "keys" : "name",
   );
+  const [domainsFieldActive, setDomainsFieldActive] = useState(true);
   const enabledServices =
     form.getValues("services")?.filter((srv) => !!srv.enabled) || [];
 
@@ -91,6 +102,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
         >
           <FormLabel>Key name</FormLabel>
           <Input
+            autoFocus
             placeholder="Descriptive name"
             type="text"
             {...form.register("name")}
@@ -121,55 +133,164 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
 
   const renderGeneral = () => {
     return (
-      <VStack gap={6}>
-        <FormControl
-          isInvalid={!!form.getFieldState("domains", form.formState).error}
-        >
-          <FormLabel>Allowed Domains</FormLabel>
-          <FormHelperText pb={2} size="body.md">
-            Prevent third-parties from using your Client ID on their websites by
-            only allowing requests from your domains.
-          </FormHelperText>
-          <Textarea
-            placeholder="thirdweb.com, rpc.example.com, localhost:3000"
-            {...form.register("domains")}
-          />
-          {!form.getFieldState("domains", form.formState).error ? (
-            <FormHelperText>
-              Enter domains separated by commas or new lines. Leave blank to
-              deny all. Use <code>*</code> to allow any.
-            </FormHelperText>
-          ) : (
-            <FormErrorMessage>
-              {form.getFieldState("domains", form.formState).error?.message}
-            </FormErrorMessage>
-          )}
-        </FormControl>
+      <VStack gap={2} alignItems="flex-start">
+        {isEditing && <FormLabel>Access Restrictions</FormLabel>}
 
-        <FormControl
-          isInvalid={!!form.getFieldState("bundleIds", form.formState).error}
+        <ButtonGroup
+          size="sm"
+          variant="ghost"
+          spacing={{ base: 0.5, md: 2 }}
+          w="full"
         >
-          <FormLabel>Allowed Bundle IDs</FormLabel>
-          <FormHelperText pb={2} size="body.md">
-            (Unity Native/React Native users only) Prevent third-parties from
-            using your Client ID in their native apps by only allowing requests
-            from your app bundles.
-          </FormHelperText>
-          <Textarea
-            placeholder="com.thirdweb.app"
-            {...form.register("bundleIds")}
-          />
-          {!form.getFieldState("bundleIds", form.formState).error ? (
-            <FormHelperText>
-              Enter bundle ids separated by commas or new lines. Leave blank to
-              deny all. Use <code>*</code> to allow any.
-            </FormHelperText>
-          ) : (
-            <FormErrorMessage>
-              {form.getFieldState("bundleIds", form.formState).error?.message}
-            </FormErrorMessage>
-          )}
-        </FormControl>
+          <Button
+            type="button"
+            isActive={domainsFieldActive}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+            variant="outline"
+            onClick={() => setDomainsFieldActive(true)}
+          >
+            Domains (Web apps)
+          </Button>
+          <Button
+            type="button"
+            isActive={!domainsFieldActive}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+            variant="outline"
+            onClick={() => setDomainsFieldActive(false)}
+          >
+            Bundle IDs (iOS, Android, Games)
+          </Button>
+        </ButtonGroup>
+
+        {domainsFieldActive && (
+          <VStack spacing={4}>
+            <FormControl
+              isInvalid={!!form.getFieldState("domains", form.formState).error}
+            >
+              <FormHelperText pb={4} size="body.md">
+                <Text fontWeight="medium">
+                  Prevent third-parties from using your Client ID by restricting
+                  access to allowed domains.
+                </Text>
+
+                <UnorderedList pt={2} spacing={1}>
+                  <Text as={ListItem}>
+                    Use <code>*</code> to authorize all subdomains. eg:
+                    *.thirdweb.com accepts all sites ending in .thirdweb.com.
+                  </Text>
+                  <Text as={ListItem}>
+                    Enter <code>localhost:&lt;port&gt;</code> to authorize local
+                    URLs.
+                  </Text>
+                </UnorderedList>
+              </FormHelperText>
+
+              <HStack alignItems="center" justifyContent="space-between" pb={2}>
+                <FormLabel size="label.sm" mb={0}>
+                  Allowed Domains
+                </FormLabel>
+                <HStack alignItems="center">
+                  <Checkbox
+                    onChange={(e) => {
+                      form.setValue("domains", e.target.checked ? "*" : "");
+                    }}
+                  />
+                  <Text>Unrestricted access</Text>
+                </HStack>
+              </HStack>
+
+              {form.watch("domains") !== "*" && (
+                <>
+                  <Textarea
+                    placeholder="thirdweb.com, rpc.example.com, localhost:3000"
+                    {...form.register("domains")}
+                  />
+                  {!form.getFieldState("domains", form.formState).error ? (
+                    <FormHelperText>
+                      Enter domains separated by commas or new lines.
+                    </FormHelperText>
+                  ) : (
+                    <FormErrorMessage>
+                      {
+                        form.getFieldState("domains", form.formState).error
+                          ?.message
+                      }
+                    </FormErrorMessage>
+                  )}
+                </>
+              )}
+            </FormControl>
+
+            {form.getValues("domains").length === 0 && <NoDomainsAlert />}
+            {form.getValues("domains").includes("*") && <AnyDomainAlert />}
+          </VStack>
+        )}
+
+        {!domainsFieldActive && (
+          <VStack spacing={4}>
+            <FormControl
+              isInvalid={
+                !!form.getFieldState("bundleIds", form.formState).error
+              }
+            >
+              <FormHelperText pb={4} size="body.md">
+                <Text fontWeight="medium">
+                  Prevent third-parties from using your Client ID by restricting
+                  access to allowed Bundle IDs. This is applicable only if you
+                  want to use your key with native games or native mobile
+                  applications.
+                </Text>
+              </FormHelperText>
+
+              <HStack alignItems="center" justifyContent="space-between" pb={2}>
+                <FormLabel size="label.sm" mb={0}>
+                  Allowed Bundle IDs
+                </FormLabel>
+                <HStack alignItems="center">
+                  <Checkbox
+                    onChange={(e) => {
+                      form.setValue("bundleIds", e.target.checked ? "*" : "");
+                    }}
+                  />
+                  <Text>Unrestricted access</Text>
+                </HStack>
+              </HStack>
+
+              {form.watch("bundleIds") !== "*" && (
+                <>
+                  <Textarea
+                    placeholder="com.thirdweb.app"
+                    {...form.register("bundleIds")}
+                  />
+
+                  {!form.getFieldState("bundleIds", form.formState).error ? (
+                    <FormHelperText>
+                      Enter bundle ids separated by commas or new lines.
+                    </FormHelperText>
+                  ) : (
+                    <FormErrorMessage>
+                      {
+                        form.getFieldState("bundleIds", form.formState).error
+                          ?.message
+                      }
+                    </FormErrorMessage>
+                  )}
+                </>
+              )}
+            </FormControl>
+
+            {form.getValues("bundleIds").length === 0 && <NoBundleIdsAlert />}
+            {form.getValues("bundleIds").includes("*") && <AnyBundleIdAlert />}
+          </VStack>
+        )}
 
         {/* <FormControl>
           <FormLabel>Allowed Wallet addresses</FormLabel>
@@ -348,8 +469,8 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
             <Text as={AlertDescription} size="body.md">
               Store the Secret Key in a secure place and{" "}
               <strong>never share it</strong>. You will not be able to retrieve
-              it again. If you lose it, you will need to regenerate a new Secret
-              Key.
+              it again. If you lose it, you will need to create a new API Key
+              pair.
             </Text>
           </Flex>
         </Alert>
@@ -370,7 +491,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
     }
   };
 
-  const action = async () => {
+  const handleSubmit = async () => {
     switch (formStep) {
       case "name":
         await form.trigger();
@@ -437,7 +558,7 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   const titleLabel = () => {
     switch (formStep) {
       case "name":
-        return "Name your API Keys";
+        return "Create an API Key";
       case "services":
         return "Enable Services";
       case "permissions":
@@ -448,7 +569,13 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
   };
 
   return (
-    <form onSubmit={action} autoComplete="off">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
+      autoComplete="off"
+    >
       {tabbed && (
         <Tabs
           defaultIndex={selectedSection}
@@ -481,11 +608,17 @@ export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
       {!tabbed && (
         <ModalContent minHeight={250}>
           <ModalHeader>{titleLabel()}</ModalHeader>
-          {!apiKey && <ModalCloseButton />}
+          {!isEditing && <ModalCloseButton />}
           <ModalBody>{renderFormStep()}</ModalBody>
           <ModalFooter gap={4}>
             {shouldShowBack() && <Button onClick={backAction}>Back</Button>}
-            <Button colorScheme="blue" onClick={action}>
+            <Button
+              colorScheme="blue"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+            >
               {actionLabel()}
             </Button>
           </ModalFooter>

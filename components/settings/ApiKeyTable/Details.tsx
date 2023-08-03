@@ -2,12 +2,7 @@ import { ApiKeyDetailsRow } from "./DetailsRow";
 import { HIDDEN_SERVICES } from "./validations";
 import { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  Flex,
   HStack,
-  Kbd,
   SimpleGrid,
   Tab,
   TabList,
@@ -25,6 +20,12 @@ import {
 import { useMemo } from "react";
 import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
+import {
+  NoDomainsAlert,
+  AnyDomainAlert,
+  NoBundleIdsAlert,
+  AnyBundleIdAlert,
+} from "./Alerts";
 
 interface ApiKeyDetailsProps {
   apiKey: ApiKey;
@@ -51,36 +52,11 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
   const domainsContent = useMemo(() => {
     if (domains.length === 0) {
-      return (
-        <Alert status="error" variant="left-accent">
-          <Flex direction="column" gap={1.5}>
-            <Heading size="label.md" as={AlertTitle}>
-              No Domains Configured
-            </Heading>
-            <Text size="body.sm" as={AlertDescription}>
-              This Client ID cannot be used from the web until at least one
-              domain is configured. To allow access from any domain, use the
-              wildcard: <Kbd>*</Kbd>
-            </Text>
-          </Flex>
-        </Alert>
-      );
+      return <NoDomainsAlert />;
     }
 
     if (domains.includes("*")) {
-      return (
-        <Alert status="warning" variant="left-accent">
-          <Flex direction="column" gap={1.5}>
-            <Heading size="label.md" as={AlertTitle}>
-              Unrestricted Web Access
-            </Heading>
-            <Text size="body.sm" as={AlertDescription}>
-              This Client ID can be used from any domain. Anyone with the key
-              can use it to access all the services enabled for this key.
-            </Text>
-          </Flex>
-        </Alert>
-      );
+      return <AnyDomainAlert />;
     }
 
     return <CodeBlock code={domains.join("\n")} canCopy={false} />;
@@ -88,36 +64,11 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
   const bundleIdsContent = useMemo(() => {
     if (bundleIds.length === 0) {
-      return (
-        <Alert status="error" variant="left-accent">
-          <Flex direction="column" gap={1.5}>
-            <Heading size="label.md" as={AlertTitle}>
-              No Bundle IDs Configured
-            </Heading>
-            <Text size="body.sm" as={AlertDescription}>
-              This Client ID cannot be used from the native app until at least
-              one bundle ID is configured. To allow access from any app bundle,
-              use the wildcard: <Kbd>*</Kbd>
-            </Text>
-          </Flex>
-        </Alert>
-      );
+      return <NoBundleIdsAlert />;
     }
 
     if (bundleIds.includes("*")) {
-      return (
-        <Alert status="warning" variant="left-accent">
-          <Flex direction="column" gap={1.5}>
-            <Heading size="label.md" as={AlertTitle}>
-              Unrestricted App Access
-            </Heading>
-            <Text size="body.sm" as={AlertDescription}>
-              This Client ID can be used from any app bundle. Anyone with the
-              key can use it to access all the services enabled for this key.
-            </Text>
-          </Flex>
-        </Alert>
-      );
+      return <AnyBundleIdAlert />;
     }
 
     return <CodeBlock code={bundleIds.join("\n")} canCopy={false} />;
@@ -187,13 +138,13 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
             <ApiKeyDetailsRow
               title="Allowed Domains"
-              tooltip={`Prevent third-parties from using your Client ID on their websites by only allowing requests from your domains.`}
+              tooltip={`Prevent third-parties from using your Client ID by restricting access to allowed domains.`}
               content={domainsContent}
             />
 
             <ApiKeyDetailsRow
               title="Allowed Bundle IDs"
-              tooltip={`(Unity Native/React Native users only) Prevent third-parties from using your Client ID in their native apps by only allowing requests from your app bundles.`}
+              tooltip={`Prevent third-parties from using your Client ID by restricting access to allowed Bundle IDs. This is applicable only if you want to use your key with native games or native mobile applications.`}
               content={bundleIdsContent}
             />
 

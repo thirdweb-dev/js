@@ -46,23 +46,16 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           <CreateApiKeyButton />
         </Flex>
         <Text>
-          An API key is required to use infrastructure services such as{" "}
+          An API key is required to use thirdweb&apos;s services through the SDK
+          and CLI. {` `}
           <Link
-            href="https://portal.thirdweb.com/wallet/smart-wallet"
+            target="_blank"
             color="blue.500"
+            href="https://portal.thirdweb.com/api-keys"
             isExternal
           >
-            Smart Wallet
+            Learn more
           </Link>
-          ,{" "}
-          <Link
-            href="https://portal.thirdweb.com/storage"
-            color="blue.500"
-            isExternal
-          >
-            Storage
-          </Link>{" "}
-          and RPCs.
         </Text>
       </Flex>
 

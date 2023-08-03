@@ -5,10 +5,11 @@ export const toArrFromList = (str: string) => {
 
   // split by comma or new-line character
   // trim white spaces
+  // remove trailing slash
   // remove empty elements
   return str
     .split(/[\n,]/)
-    .map((v) => v.trim())
+    .map((v) => v.trim().replace(/\/$/, ""))
     .filter((v) => v.length > 0);
 };
 
