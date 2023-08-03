@@ -73,7 +73,7 @@ export async function authorizeWorker(
   });
 }
 
-async function extractAuthorizationData(
+export async function extractAuthorizationData(
   authInput: AuthInput,
 ): Promise<AuthorizationInput> {
   const requestUrl = new URL(authInput.req.url);
