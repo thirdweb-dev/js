@@ -30,6 +30,7 @@ import { NextSeo } from "next-seo";
 import Vibrant from "node-vibrant";
 import { PageId } from "page-id";
 import { useMemo } from "react";
+import { BsArrowRight } from "react-icons/bs";
 import {
   FiAlertCircle,
   FiCheckCircle,
@@ -273,8 +274,15 @@ const ChainPage: ThirdwebNextPage = ({
                   href="/explore"
                   color="blue.500"
                   label="explore_more"
+                  display="flex"
+                  alignItems="center"
+                  gap={"0.5em"}
+                  _hover={{
+                    textDecoration: "none",
+                    color: "heading",
+                  }}
                 >
-                  Explore more {"->"}
+                  Explore more <BsArrowRight />
                 </TrackedLink>
               }
             >

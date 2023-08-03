@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import formatDistance from "date-fns/formatDistance";
 import { Link, Text } from "tw-components";
+import { BsArrowRight } from "react-icons/bs";
 
 export interface ChangelogItem {
   published_at: string;
@@ -65,21 +66,15 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
       <Link
         href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
         isExternal
-        ml={8}
-        _hover={{ textDecor: "none" }}
+        ml={7}
+        _hover={{ textDecor: "none", color: "blue.500" }}
         role="group"
+        color="faded"
+        display="flex"
+        alignItems={"center"}
+        gap="0.5em"
       >
-        <Text color="faded" _groupHover={{ color: "blue.500" }}>
-          View all changes{" "}
-          <Text
-            fontWeight="inherit"
-            fontSize="inherit"
-            color="inherit"
-            as="span"
-          >
-            {"->"}
-          </Text>
-        </Text>
+        View all changes <BsArrowRight />
       </Link>
     </Flex>
   );

@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { useState } from "react";
+import { BsArrowRight } from "react-icons/bs";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 interface RelevantDataSectionProps {
@@ -50,17 +51,12 @@ export const RelevantDataSection: React.FC<RelevantDataSectionProps> = ({
             cursor="pointer"
             opacity={0.6}
             color="heading"
-            _hover={{ opacity: 1, textDecoration: "none" }}
+            _hover={{ opacity: 1, textDecoration: "none", color: "blue.500" }}
+            display="flex"
+            alignItems="center"
+            gap="0.5em"
           >
-            View more{" "}
-            <Text
-              fontWeight="inherit"
-              fontSize="inherit"
-              color="inherit"
-              as="span"
-            >
-              {"->"}
-            </Text>
+            View more <BsArrowRight />
           </Text>
         ) : null}
       </Flex>

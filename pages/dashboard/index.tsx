@@ -16,6 +16,7 @@ import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
 import { AnnouncementCard } from "components/notices/AnnouncementCard";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
+import { BsArrowRight } from "react-icons/bs";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
@@ -119,16 +120,11 @@ const Dashboard: ThirdwebNextPage = (
                                   size="title.xs"
                                   _groupHover={{ color: "blue.500" }}
                                   transitionDuration="200ms"
+                                  display="flex"
+                                  alignItems="center"
+                                  gap="0.5em"
                                 >
-                                  {title}{" "}
-                                  <Text
-                                    fontWeight="inherit"
-                                    fontSize="inherit"
-                                    color="inherit"
-                                    as="span"
-                                  >
-                                    {"->"}
-                                  </Text>
+                                  {title} <BsArrowRight />
                                 </Heading>
                               </LinkOverlay>
                               <Text>{description}</Text>
