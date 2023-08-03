@@ -53,6 +53,17 @@ export async function createSession(cache: Cache) {
       )}`,
     });
 
+    const keyPassed = response.apiSecretKey;
+    if (!keyPassed) {
+      console.log(chalk.red("You need to pass an API secret key"));
+      process.exit(1);
+    }
+
+    if (keyPassed.length === 32) {
+      console.log(chalk.yellow("You passed in a client id, please pass your secret key"));
+      process.exit(1);
+    }
+
     try {
       await validateKey(response.apiSecretKey);
     } catch (error) {
