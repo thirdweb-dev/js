@@ -80,7 +80,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "rpc" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
+      "Invalid request: Unauthorized service: rpc. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key",
     );
     expect(result.errorCode).toBe("SERVICE_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -101,7 +101,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The service "storage" action "unauthorized-action" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
+      "Invalid request: Unauthorized action: storage unauthorized-action. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key",
     );
     expect(result.errorCode).toBe("SERVICE_ACTION_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -119,7 +119,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The target address: unauthorized-target, for service "storage" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
+      "Invalid request: Unauthorized address: storage unauthorized-target. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key",
     );
     expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -137,7 +137,7 @@ describe("authorizeService", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      'The target address: target1,target2,target3, for service "storage" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.',
+      "Invalid request: Unauthorized address: storage target1,target2,target3. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key",
     );
     expect(result.errorCode).toBe("SERVICE_TARGET_ADDRESS_UNAUTHORIZED");
     expect(result.status).toBe(403);

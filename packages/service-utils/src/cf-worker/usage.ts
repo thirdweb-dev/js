@@ -1,25 +1,13 @@
+import { AwsClient } from "aws4fetch";
 import { z } from "zod";
-import {
-  SendMessageBatchCommand,
-  SendMessageBatchRequestEntry,
-  SQSClient,
-} from "@aws-sdk/client-sqs";
-import { AwsCredentialIdentity } from "@smithy/types";
-import { randomUUID } from "crypto";
 
-let sqs: SQSClient | undefined;
-
-function getSqs({
-  region,
-  credentials,
-}: {
-  region: string;
-  credentials?: AwsCredentialIdentity;
-}): SQSClient {
-  if (!sqs) {
-    sqs = new SQSClient({ region, credentials });
+// Initialize a singleton for aws usage.
+let _aws: AwsClient | undefined;
+function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
+  if (!_aws) {
+    _aws = new AwsClient(options);
   }
-  return sqs;
+  return _aws;
 }
 
 /**
@@ -56,6 +44,14 @@ export type UsageEvent = z.infer<typeof usageEventSchema>;
 /**
  * Publish usage events. Provide the relevant fields for your application.
  *
+ * Usage in Cloudflare Workers:
+ *    ctx.waitUntil(
+ *      publishUsageEvents(
+ *        [event1, event2],
+ *        { queueUrl, accessKeyId, secretAccessKey },
+ *      )
+ *    )
+ *
  * @param usageEvents
  * @param config
  */
@@ -63,20 +59,38 @@ export async function publishUsageEvents(
   usageEvents: UsageEvent[],
   config: {
     queueUrl: string;
+    accessKeyId: string;
+    secretAccessKey: string;
     region?: string;
-    credentials?: AwsCredentialIdentity;
   },
-): Promise<void> {
-  const { queueUrl, region = "us-west-2", credentials } = config;
+): Promise<string> {
+  const {
+    queueUrl,
+    accessKeyId,
+    secretAccessKey,
+    region = "us-west-2",
+  } = config;
 
   const entries = usageEvents.map((event) => ({
-    Id: randomUUID(),
-    MessageBody: JSON.stringify(usageEventSchema.parse(event)),
-  })) as unknown as SendMessageBatchRequestEntry[];
+    Id: crypto.randomUUID(),
+    MessageBody: JSON.stringify(event),
+  }));
 
-  const input = new SendMessageBatchCommand({
-    QueueUrl: queueUrl,
-    Entries: entries,
+  const aws = getAws({
+    accessKeyId,
+    secretAccessKey,
+    region,
   });
-  await getSqs({ region, credentials }).send(input);
+  const res = await aws.fetch(`https://sqs.${region}.amazonaws.com`, {
+    headers: {
+      "X-Amz-Target": "AmazonSQS.SendMessageBatch",
+      "X-Amz-Date": new Date().toISOString(),
+      "Content-Type": "application/x-amz-json-1.0",
+    },
+    body: JSON.stringify({
+      QueueUrl: queueUrl,
+      Entries: entries,
+    }),
+  });
+  return await res.text();
 }
