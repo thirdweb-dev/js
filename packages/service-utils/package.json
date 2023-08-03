@@ -64,7 +64,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.379.1",
+    "aws4fetch": "^1.0.17",
     "zod": "^3.20.2"
   }
 }

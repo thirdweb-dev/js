@@ -12,11 +12,40 @@ import { z } from "zod";
 export const BasicNFTInput = /* @__PURE__ */ (() =>
   z.object({
     name: z.union([z.string(), z.number()]).optional().nullable(),
-    description: z.string().nullable().optional().nullable(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .nullable()
+      .transform((i) => {
+        return sanitizeJSONString(i);
+      }),
     image: FileOrBufferOrStringSchema.nullable().optional(),
 
     animation_url: FileOrBufferOrStringSchema.optional().nullable(),
   }))();
+
+function sanitizeJSONString(val: string | undefined | null) {
+  if (!val) {
+    return val;
+  }
+  return JSON.parse(JSON.stringify(val, escape));
+}
+
+function escape(key: string, val: any) {
+  if (typeof val !== "string") {
+    return val;
+  }
+  return val
+    .replace(/[\"]/g, '\\"')
+    .replace(/[\\]/g, "\\\\")
+    .replace(/[\/]/g, "\\/")
+    .replace(/[\b]/g, "\\b")
+    .replace(/[\f]/g, "\\f")
+    .replace(/[\n]/g, "\\n")
+    .replace(/[\r]/g, "\\r")
+    .replace(/[\t]/g, "\\t");
+}
 
 /**
  * @internal
