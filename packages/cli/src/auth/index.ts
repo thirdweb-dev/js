@@ -43,7 +43,7 @@ export async function createSession(cache: Cache) {
   try {
     const isWindows = os.type() === "Windows_NT";
     if (isWindows) {
-      console.log(chalk.yellow("Windows detected: if you are using powershell, there are some known issues with it that we are actively working on, please use git bash or another terminal. Thank you for your understanding."));
+      console.log(chalk.yellow("Windows detected: if you are using powershell, there are some known issues with it that we are actively working on, please use git bash or the command prompt. Thank you for your understanding."));
     }
     const response = await prompts({
       type: "invisible",
@@ -60,7 +60,9 @@ export async function createSession(cache: Cache) {
     }
 
     if (keyPassed.length === 32) {
-      console.log(chalk.red("It seems you passed in an invalid API secret key."));
+      console.log(chalk.red(`This is not a valid secret key. To get your secret key
+1. Create an API key at https://thirdweb.com/create-api-key 
+2. Store and copy your Secret Key. This will be shown only once.`));
       process.exit(1);
     }
 
