@@ -35,7 +35,8 @@ export function authorizeClient(
     if (secretHash !== providedSecretHash) {
       return {
         authorized: false,
-        errorMessage: "The secret is invalid. Please check you secret-key",
+        errorMessage:
+          "Incorrect key provided. You can view your active API keys at https://thirdweb.com/dashboard/settings",
         errorCode: "SECRET_INVALID",
         status: 401,
       };
@@ -77,7 +78,7 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: `The domain: ${origin}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
+      errorMessage: `Invalid request: Unauthorized domain: ${origin}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       errorCode: "ORIGIN_UNAUTHORIZED",
       status: 401,
     };
@@ -100,7 +101,7 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: `The bundleId: ${bundleId}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
+      errorMessage: `Invalid request: Unauthorized Bundle ID: ${bundleId}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       errorCode: "BUNDLE_UNAUTHORIZED",
       status: 401,
     };
