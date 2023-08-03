@@ -158,14 +158,17 @@ export class DropClaimConditions<
         await this.contractWrapper.readContract.claimCondition();
       const startId = currentStartId.toNumber();
       const count = countBn.toNumber();
-      const conditions: AbstractClaimConditionContractStruct[] = [];
+      const conditions: Promise<AbstractClaimConditionContractStruct>[] = [];
       for (let i = startId; i < startId + count; i++) {
-        conditions.push(await this.get(i));
+        conditions.push(this.get(i));
       }
-      const metadata = await this.metadata.get();
-      const decimals = await this.getTokenDecimals();
+      const [metadata, decimals, ...fetchedConditions] = await Promise.all([
+        this.metadata.get(),
+        this.getTokenDecimals(),
+        ...conditions,
+      ]);
       return Promise.all(
-        conditions.map((c) =>
+        fetchedConditions.map((c) =>
           transformResultToClaimCondition(
             c,
             decimals,
