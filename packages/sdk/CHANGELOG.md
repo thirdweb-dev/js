@@ -1,5 +1,25 @@
 # @thirdweb-dev/sdk
 
+## 3.10.44
+
+### Patch Changes
+
+- [#1444](https://github.com/thirdweb-dev/js/pull/1444) [`a5d0be93`](https://github.com/thirdweb-dev/js/commit/a5d0be939a143095e769b68cf86360bfe4720744) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize claimConditions.getAll()
+
+- [#1438](https://github.com/thirdweb-dev/js/pull/1438) [`c0a6d2f1`](https://github.com/thirdweb-dev/js/commit/c0a6d2f18231310d143c9b0cb1b2ff59315087a4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk.deployer.deployOpenEdition() convenience function
+
+- [#1441](https://github.com/thirdweb-dev/js/pull/1441) [`becbb637`](https://github.com/thirdweb-dev/js/commit/becbb637367285ed3d8d7d131e1020bf23e38298) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Sanitize NFT description input strings
+
+- [#1433](https://github.com/thirdweb-dev/js/pull/1433) [`c9bf4f05`](https://github.com/thirdweb-dev/js/commit/c9bf4f05c161707c6eb799ecef82f462e4a82405) Thanks [@iketw](https://github.com/iketw)! - Pass empty string when clientId is undefined
+
+- [#1439](https://github.com/thirdweb-dev/js/pull/1439) [`67b145b9`](https://github.com/thirdweb-dev/js/commit/67b145b94dafb2fb1d90553ed4829f0ed22e2907) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose deployPublishContract alias
+
+- [#1437](https://github.com/thirdweb-dev/js/pull/1437) [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf) Thanks [@farhanW3](https://github.com/farhanW3)! - Updated the error messages
+
+- Updated dependencies [[`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5)]:
+  - @thirdweb-dev/chains@0.1.41
+  - @thirdweb-dev/contracts-js@1.3.11
+
 ## 3.10.43
 
 ### Patch Changes
