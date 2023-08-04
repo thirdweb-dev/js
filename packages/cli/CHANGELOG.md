@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.11.9
+
+### Patch Changes
+
+- [#1442](https://github.com/thirdweb-dev/js/pull/1442) [`7f54012e`](https://github.com/thirdweb-dev/js/commit/7f54012ec648b727b60784990e71b0efb4690934) Thanks [@Marfuen](https://github.com/Marfuen)! - - Warn users on windows to not use the powershell as there are some compatibility issues with it at the moment.
+  - Warn users if they are pasting a client id instead of a secret key.
+- Updated dependencies [[`2a91113a`](https://github.com/thirdweb-dev/js/commit/2a91113a760733fcff2aec90041f69e15de33905)]:
+  - @thirdweb-dev/sdk@3.10.45
+
 ## 0.11.8
 
 ### Patch Changes
