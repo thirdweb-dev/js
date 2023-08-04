@@ -1,5 +1,3 @@
-// import { extractAuthorizationData } from ".";
-
 import type { ServerResponse } from "http";
 import { extractAuthorizationData } from ".";
 import type { Request } from "@cloudflare/workers-types";
