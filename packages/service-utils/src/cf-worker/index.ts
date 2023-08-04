@@ -178,6 +178,8 @@ export async function logHttpRequest({
   error,
 }: AuthInput & {
   source: string;
+  clientId: string;
+  req: Request;
   res: ServerResponse;
   isAuthed?: boolean;
   error?: any;
