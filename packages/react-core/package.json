@@ -104,6 +104,7 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
+    "@thirdweb-dev/auth": "workspace:*",
     "mime": "3.0.0",
     "tiny-invariant": "^1.2.0"
   },

@@ -3,7 +3,7 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
-describe("Wallet Authentication", async () => {
+describe("Wallet Authentication - EVM", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 
@@ -272,7 +272,7 @@ describe("Wallet Authentication", async () => {
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain(
-        `Expected the connected wallet address '${await signerWallet.getAddress()}' to match the token issuer address '${await adminWallet.getAddress()}'`,
+        `The expected issuer address '${await signerWallet.getAddress()}' did not match the token issuer address '${await adminWallet.getAddress()}'`,
       );
     }
   });
@@ -349,5 +349,25 @@ describe("Wallet Authentication", async () => {
       address: await signerWallet.getAddress(),
       role: "admin",
     });
+  });
+
+  it("Should authenticate with issuer address", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const token = await auth.generate(payload);
+
+    auth.updateWallet(attackerWallet);
+    try {
+      await auth.authenticate(token);
+      expect.fail();
+    } catch (err: any) {
+      expect(err.message).to.contain("The expected issuer address");
+    }
+
+    const user = await auth.authenticate(token, {
+      issuerAddress: await adminWallet.getAddress(),
+    });
+    expect(user.address).to.equal(await signerWallet.getAddress());
   });
 });

@@ -640,6 +640,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^4.32.0
         version: 4.32.0(react@18.2.0)
+      '@thirdweb-dev/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
@@ -695,9 +698,6 @@ importers:
       '@solana/web3.js':
         specifier: ^1.62.0
         version: 1.73.3
-      '@thirdweb-dev/auth':
-        specifier: workspace:*
-        version: link:../auth
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
