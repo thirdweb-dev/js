@@ -30,7 +30,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
   return (
-    <Stack pt={3}>
+    <Stack w="full">
       <form
         onSubmit={form.handleSubmit((data) => {
           trackEvent({

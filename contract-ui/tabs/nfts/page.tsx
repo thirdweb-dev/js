@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
@@ -7,9 +8,11 @@ import { NFTSharedMetadataButton } from "./components/shared-metadata-button";
 import { SupplyCards } from "./components/supply-cards";
 import { NFTGetAllTable } from "./components/table";
 import { Box, Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
+import { NFTContract, useContract, useNFT } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
+import { TokenIdPage } from "./components/token-id";
 
 interface NftOverviewPageProps {
   contractAddress?: string;
@@ -19,6 +22,15 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contractAddress,
 }) => {
   const contractQuery = useContract(contractAddress);
+  const router = useRouter();
+
+  const tokenId = router.query?.paths?.[3];
+  const { data: nft } = useNFT(contractQuery.contract, tokenId);
+  const tabs = useNFTDrawerTabs(
+    "evm",
+    contractQuery.contract as NFTContract,
+    nft || null,
+  );
 
   const detectedState = detectFeatures(contractQuery?.contract, [
     "ERC721Enumerable",
@@ -43,6 +55,12 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
 
   if (!contractQuery?.contract) {
     return null;
+  }
+
+  if (tokenId) {
+    return (
+      <TokenIdPage nft={nft} tabs={tabs} contractAddress={contractAddress} />
+    );
   }
 
   return (

@@ -120,7 +120,7 @@ const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
           key={`${chainId}-${contractAddress}-${token.metadata.id}}`}
           as={TrackedLink}
           category={trackingCategory}
-          href={nftsHref}
+          href={`${nftsHref}/${token.metadata.id}`}
           _hover={{ opacity: 0.75, textDecoration: "none" }}
         >
           <Card p={0}>

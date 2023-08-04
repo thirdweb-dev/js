@@ -1,3 +1,4 @@
+import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { NFTDrawerTab } from "./types";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
@@ -7,7 +8,7 @@ import {
   useAddress,
   useNFTBalance,
 } from "@thirdweb-dev/react/evm";
-import type { NFT } from "@thirdweb-dev/sdk";
+import type { NFT, ValidContractInstance } from "@thirdweb-dev/sdk";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
 import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
@@ -52,6 +53,8 @@ export function useNFTDrawerTabs(
   const [ecosystem, contractOrProgram, token] = args;
 
   const tokenId = token?.metadata.id || "";
+
+  const isMinter = useIsMinter(contractOrProgram as ValidContractInstance);
 
   if (ecosystem === "solana") {
     // solana land
@@ -143,45 +146,9 @@ export function useNFTDrawerTabs(
       const isOwner =
         (isERC1155 && BigNumber.from(balanceOf?.data || 0).gt(0)) ||
         (isERC721 && token?.owner === address);
+
       const { erc1155 } = getErcs(contractOrProgram);
-      let tabs: NFTDrawerTab[] = [
-        {
-          title: "Transfer",
-          isDisabled: !isOwner,
-          children: (
-            <EVMTransferTab contract={contractOrProgram} tokenId={tokenId} />
-          ),
-        },
-      ];
-      if (erc1155) {
-        tabs = tabs.concat([
-          {
-            title: "Airdrop",
-            isDisabled: !isOwner,
-            children: <EVMAirdropTab contract={erc1155} tokenId={tokenId} />,
-          },
-        ]);
-      }
-      if (isBurnable) {
-        tabs = tabs.concat([
-          {
-            title: "Burn",
-            isDisabled: !isOwner,
-            children: (
-              <EVMBurnTab contract={contractOrProgram} tokenId={tokenId} />
-            ),
-          },
-        ]);
-      }
-      if (isMintable && erc1155) {
-        tabs = tabs.concat([
-          {
-            title: "Mint",
-            isDisabled: false,
-            children: <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />,
-          },
-        ]);
-      }
+      let tabs: NFTDrawerTab[] = [];
       if (hasClaimConditions && isERC1155) {
         tabs = tabs.concat([
           {
@@ -194,6 +161,50 @@ export function useNFTDrawerTabs(
                 isColumn
               />
             ),
+          },
+        ]);
+      }
+      tabs = tabs.concat([
+        {
+          title: "Transfer",
+          isDisabled: !isOwner,
+          disabledText: erc1155
+            ? "You don't own any copy of this NFT"
+            : "You don't own this NFT",
+          children: (
+            <EVMTransferTab contract={contractOrProgram} tokenId={tokenId} />
+          ),
+        },
+      ]);
+      if (erc1155) {
+        tabs = tabs.concat([
+          {
+            title: "Airdrop",
+            isDisabled: !isOwner,
+            disabledText: "You don't own any copy of this NFT",
+            children: <EVMAirdropTab contract={erc1155} tokenId={tokenId} />,
+          },
+        ]);
+      }
+      if (isBurnable) {
+        tabs = tabs.concat([
+          {
+            title: "Burn",
+            isDisabled: !isOwner,
+            disabledText: "You don't own this NFT",
+            children: (
+              <EVMBurnTab contract={contractOrProgram} tokenId={tokenId} />
+            ),
+          },
+        ]);
+      }
+      if (isMintable && erc1155) {
+        tabs = tabs.concat([
+          {
+            title: "Mint",
+            isDisabled: !isMinter,
+            disabledText: "You don't have minter permissions",
+            children: <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />,
           },
         ]);
       }
@@ -210,7 +221,14 @@ export function useNFTDrawerTabs(
       }
 
       return tabs;
-    }, [address, balanceOf?.data, contractOrProgram, token?.owner, tokenId]);
+    }, [
+      address,
+      balanceOf?.data,
+      contractOrProgram,
+      isMinter,
+      token?.owner,
+      tokenId,
+    ]);
   }
 
   return [];

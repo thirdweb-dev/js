@@ -39,7 +39,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   const addresses = watch("addresses");
 
   return (
-    <Stack pt={3}>
+    <Stack w="full">
       <form
         onSubmit={handleSubmit((data) => {
           trackEvent({

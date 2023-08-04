@@ -28,7 +28,7 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
 
   return (
     <Flex
-      pt={3}
+      w="full"
       direction="column"
       as="form"
       onSubmit={form.handleSubmit(async (data) => {

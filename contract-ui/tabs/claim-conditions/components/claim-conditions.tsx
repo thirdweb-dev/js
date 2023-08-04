@@ -27,7 +27,12 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   return (
     <Stack spacing={8}>
       <Flex p={0} position="relative">
-        <Flex pt={{ base: 6, md: 6 }} direction="column" gap={8} w="full">
+        <Flex
+          pt={{ base: isColumn ? 0 : 6, md: 6 }}
+          direction="column"
+          gap={8}
+          w="full"
+        >
           {/* Info */}
           <Flex as="section" direction="column" gap={4}>
             <Flex direction="column">
