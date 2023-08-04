@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.3.1
+
+### Patch Changes
+
+- [#1447](https://github.com/thirdweb-dev/js/pull/1447) [`b103872d`](https://github.com/thirdweb-dev/js/commit/b103872daff87b032082a433713d16b9dee13082) Thanks [@nessup](https://github.com/nessup)! - Export extractAuthorizationData for CF Workers
+
 ## 0.3.0
 
 ### Minor Changes
