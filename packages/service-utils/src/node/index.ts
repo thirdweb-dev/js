@@ -156,15 +156,16 @@ export function logHttpRequest({
   req,
   res,
   isAuthed,
-  error,
+  statusMessage,
 }: AuthInput & {
   source: string;
   res: ServerResponse;
   isAuthed?: boolean;
-  error?: Error | string;
+  statusMessage?: Error | string;
 }) {
   const authorizationData = extractAuthorizationData({ req, clientId });
 
+  const _statusMessage = statusMessage ?? res.statusMessage;
   console.log(
     JSON.stringify({
       source,
@@ -175,10 +176,8 @@ export function logHttpRequest({
       clientId: authorizationData.clientId,
       isAuthed: !!isAuthed ?? null,
       status: res.statusCode,
+      statusMessage: _statusMessage,
     }),
   );
-
-  if (error) {
-    console.error("Request error:", error);
-  }
+  console.log(`statusMessage=${_statusMessage}`);
 }

@@ -1,4 +1,8 @@
-import type { ExecutionContext, KVNamespace } from "@cloudflare/workers-types";
+import type {
+  ExecutionContext,
+  KVNamespace,
+  Response,
+} from "@cloudflare/workers-types";
 import type {
   ApiKeyMetadata,
   AccountMetadata,
@@ -10,7 +14,6 @@ import type { Request } from "@cloudflare/workers-types";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
-import type { ServerResponse } from "http";
 
 export * from "../core/services";
 export * from "./usage";
@@ -175,14 +178,14 @@ export async function logHttpRequest({
   req,
   res,
   isAuthed,
-  error,
+  statusMessage,
 }: AuthInput & {
   source: string;
   clientId: string;
   req: Request;
-  res: ServerResponse;
+  res: Response;
   isAuthed?: boolean;
-  error?: Error | string;
+  statusMessage?: Error | string;
 }) {
   const authorizationData = await extractAuthorizationData({ req, clientId });
 
@@ -195,12 +198,8 @@ export async function logHttpRequest({
       hasJwt: !!authorizationData.jwt,
       clientId: authorizationData.clientId,
       isAuthed: !!isAuthed ?? null,
-      status: res.statusCode,
+      status: res.status,
     }),
   );
-
-  if (error) {
-    // Log to a separate line. Logpush has a character limit per log line.
-    console.error("Request error:", error);
-  }
+  console.log(`statusMessage=${statusMessage ?? res.statusText}`);
 }
