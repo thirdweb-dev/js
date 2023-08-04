@@ -13,7 +13,7 @@ const features: FeatureCardProps[] = [
     title: "Open Source.",
     description: (
       <>
-        The code for our tools, contracts, SDKs, dashboard, and UI components is
+        The code for our tools, contracts, SDKs, dashboard, and UI components is{" "}
         <TrackedLink
           color="white"
           fontWeight="500"
