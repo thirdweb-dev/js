@@ -5,7 +5,8 @@ export default {
   "rpc": [
     "https://syscoin-tanenbaum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tanenbaum.io",
-    "wss://rpc.tanenbaum.io/wss"
+    "wss://rpc.tanenbaum.io/wss",
+    "https://syscoin-tanenbaum-evm.publicnode.com"
   ],
   "faucets": [
     "https://faucet.tanenbaum.io"
