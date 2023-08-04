@@ -96,7 +96,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   }
 
   return isAlreadyOnDashboard ? (
-    <BuildAppsButton>Build apps</BuildAppsButton>
+    <BuildAppsButton>Code Snippets</BuildAppsButton>
   ) : (
     <Button
       minW="inherit"
