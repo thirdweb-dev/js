@@ -93,7 +93,7 @@ export const HeroSection = () => {
                     background: "rgba(255,255,255,0.9)!important",
                   }}
                 >
-                  Go to Dashboard
+                  Get Started
                 </LinkButton>
                 <Link
                   href="#pricing"
