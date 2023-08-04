@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.10.45
+
+### Patch Changes
+
+- [#1449](https://github.com/thirdweb-dev/js/pull/1449) [`2a91113a`](https://github.com/thirdweb-dev/js/commit/2a91113a760733fcff2aec90041f69e15de33905) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Revert sanitizing inputs
+
 ## 3.10.44
 
 ### Patch Changes
