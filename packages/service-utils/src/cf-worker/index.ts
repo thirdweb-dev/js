@@ -182,7 +182,7 @@ export async function logHttpRequest({
   req: Request;
   res: ServerResponse;
   isAuthed?: boolean;
-  error?: any;
+  error?: Error | string;
 }) {
   const authorizationData = await extractAuthorizationData({ req, clientId });
 

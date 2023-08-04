@@ -161,7 +161,7 @@ export function logHttpRequest({
   source: string;
   res: ServerResponse;
   isAuthed?: boolean;
-  error?: any;
+  error?: Error | string;
 }) {
   const authorizationData = extractAuthorizationData({ req, clientId });
 
