@@ -10,6 +10,7 @@ import type { Request } from "@cloudflare/workers-types";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
+import type { ServerResponse } from "http";
 
 export * from "../core/services";
 export * from "./usage";
@@ -166,4 +167,38 @@ function bufferToHex(buffer: ArrayBuffer) {
   return [...new Uint8Array(buffer)]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
+}
+
+export async function logHttpRequest({
+  source,
+  req,
+  res,
+  isAuthed,
+  error,
+}: {
+  source: string;
+  req: Request;
+  res: ServerResponse;
+  isAuthed?: boolean;
+  error?: any;
+}) {
+  const authorizationData = await extractAuthorizationData({ req });
+
+  console.log(
+    JSON.stringify({
+      source,
+      pathname: req.url,
+      hasSecretKey: !!authorizationData.secretKey,
+      hasClientId: !!authorizationData.clientId,
+      hasJwt: !!authorizationData.jwt,
+      clientId: authorizationData.clientId,
+      isAuthed: !!isAuthed ?? null,
+      status: res.statusCode,
+    }),
+  );
+
+  if (error) {
+    // Log to a separate line. Logpush has a character limit per log line.
+    console.error("Request error:", error);
+  }
 }
