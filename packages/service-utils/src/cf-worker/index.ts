@@ -171,18 +171,20 @@ function bufferToHex(buffer: ArrayBuffer) {
 
 export async function logHttpRequest({
   source,
+  clientId,
   req,
   res,
   isAuthed,
   error,
 }: {
   source: string;
+  clientId: string;
   req: Request;
   res: ServerResponse;
   isAuthed?: boolean;
   error?: any;
 }) {
-  const authorizationData = await extractAuthorizationData({ req });
+  const authorizationData = await extractAuthorizationData({ clientId, req });
 
   console.log(
     JSON.stringify({
