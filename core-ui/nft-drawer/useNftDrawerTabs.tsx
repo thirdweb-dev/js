@@ -1,4 +1,3 @@
-import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { NFTDrawerTab } from "./types";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
@@ -8,7 +7,7 @@ import {
   useAddress,
   useNFTBalance,
 } from "@thirdweb-dev/react/evm";
-import type { NFT, ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { NFT } from "@thirdweb-dev/sdk";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
 import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
@@ -53,8 +52,6 @@ export function useNFTDrawerTabs(
   const [ecosystem, contractOrProgram, token] = args;
 
   const tokenId = token?.metadata.id || "";
-
-  const isMinter = useIsMinter(contractOrProgram as ValidContractInstance);
 
   if (ecosystem === "solana") {
     // solana land
@@ -202,7 +199,7 @@ export function useNFTDrawerTabs(
         tabs = tabs.concat([
           {
             title: "Mint",
-            isDisabled: !isMinter,
+            isDisabled: false,
             disabledText: "You don't have minter permissions",
             children: <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />,
           },
@@ -221,14 +218,7 @@ export function useNFTDrawerTabs(
       }
 
       return tabs;
-    }, [
-      address,
-      balanceOf?.data,
-      contractOrProgram,
-      isMinter,
-      token?.owner,
-      tokenId,
-    ]);
+    }, [address, balanceOf?.data, contractOrProgram, token?.owner, tokenId]);
   }
 
   return [];
