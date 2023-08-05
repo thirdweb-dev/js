@@ -87,6 +87,10 @@ export class Erc721SharedMetadata implements DetectableFeature {
       metadata: BasicNFTInput,
     ): Promise<Transaction<TransactionResult>> => {
       const parsedMetadata = BasicNFTInput.parse(metadata);
+      // cleanup description
+      parsedMetadata.description = this.sanitizeJSONString(
+        parsedMetadata.description,
+      );
 
       // take the input and upload image and animation if it is not a URI already
       const batch = [];
@@ -122,4 +126,12 @@ export class Erc721SharedMetadata implements DetectableFeature {
       });
     },
   );
+
+  private sanitizeJSONString(val: string | undefined | null) {
+    if (!val) {
+      return val;
+    }
+    const sanitized = JSON.stringify(val);
+    return sanitized.slice(1, sanitized.length - 1);
+  }
 }

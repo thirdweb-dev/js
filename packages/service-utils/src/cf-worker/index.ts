@@ -1,4 +1,8 @@
-import type { ExecutionContext, KVNamespace } from "@cloudflare/workers-types";
+import type {
+  ExecutionContext,
+  KVNamespace,
+  Response,
+} from "@cloudflare/workers-types";
 import type {
   ApiKeyMetadata,
   AccountMetadata,
@@ -73,7 +77,7 @@ export async function authorizeWorker(
   });
 }
 
-async function extractAuthorizationData(
+export async function extractAuthorizationData(
   authInput: AuthInput,
 ): Promise<AuthorizationInput> {
   const requestUrl = new URL(authInput.req.url);
@@ -166,4 +170,34 @@ function bufferToHex(buffer: ArrayBuffer) {
   return [...new Uint8Array(buffer)]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
+}
+
+export async function logHttpRequest({
+  source,
+  clientId,
+  req,
+  res,
+  isAuthed,
+  statusMessage,
+}: AuthInput & {
+  source: string;
+  res: Response;
+  isAuthed?: boolean;
+  statusMessage?: Error | string;
+}) {
+  const authorizationData = await extractAuthorizationData({ req, clientId });
+
+  console.log(
+    JSON.stringify({
+      source,
+      pathname: req.url,
+      hasSecretKey: !!authorizationData.secretKey,
+      hasClientId: !!authorizationData.clientId,
+      hasJwt: !!authorizationData.jwt,
+      clientId: authorizationData.clientId,
+      isAuthed: !!isAuthed ?? null,
+      status: res.status,
+    }),
+  );
+  console.log(`statusMessage=${statusMessage ?? res.statusText}`);
 }
