@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.0
+
+### Minor Changes
+
+- [#1448](https://github.com/thirdweb-dev/js/pull/1448) [`3e1c4045`](https://github.com/thirdweb-dev/js/commit/3e1c4045e7c58e2fe58e2ab6a7f767c8f5e206e9) Thanks [@arcoraven](https://github.com/arcoraven)! - Add logHttpRequest helper func
+
+### Patch Changes
+
+- [#1453](https://github.com/thirdweb-dev/js/pull/1453) [`0647f124`](https://github.com/thirdweb-dev/js/commit/0647f12498ed1cdd5aca4dcea5bd3cf0d5d3a23b) Thanks [@arcoraven](https://github.com/arcoraven)! - Remove clientId from logRequest
+
 ## 0.3.1
 
 ### Patch Changes
