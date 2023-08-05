@@ -139,6 +139,7 @@ const VideoPlayer = /* @__PURE__ */ React.forwardRef<
             zIndex: 1,
             transition: "opacity .5s",
             opacity: !poster ? 1 : playing ? 1 : 0,
+            ...style,
           }}
         />
         {poster && (
@@ -161,13 +162,15 @@ const VideoPlayer = /* @__PURE__ */ React.forwardRef<
             alt={alt}
           />
         )}
-        <PlayButton
-          onClick={() => {
-            setPlaying((prev) => !prev);
-            setMuted(false);
-          }}
-          isPlaying={playing}
-        />
+        {controls && (
+          <PlayButton
+            onClick={() => {
+              setPlaying((prev) => !prev);
+              setMuted(false);
+            }}
+            isPlaying={playing}
+          />
+        )}
       </div>
     );
   },
