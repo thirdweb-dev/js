@@ -45,11 +45,15 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
   private clientId?: string;
   private secretKey?: string;
+  private uploadServerUrl: string = TW_UPLOAD_SERVER_URL;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
     this.clientId = options?.clientId;
     this.secretKey = options?.secretKey;
+    if (options?.uploadServerUrl) {
+      this.uploadServerUrl = options.uploadServerUrl;
+    }
   }
 
   async uploadBatch(
@@ -268,7 +272,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
+      xhr.open("POST", `${this.uploadServerUrl}/ipfs/upload`);
 
       if (this.secretKey) {
         xhr.setRequestHeader("x-secret-key", this.secretKey);
@@ -323,7 +327,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }`;
     }
 
-    const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
+    const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",
       headers: {
         ...headers,

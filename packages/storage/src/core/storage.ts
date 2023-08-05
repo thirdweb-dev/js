@@ -67,6 +67,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       new IpfsUploader({
         clientId: options?.clientId,
         secretKey: options?.secretKey,
+        uploadServerUrl: options?.uploadServerUrl,
       });
     this.downloader =
       options?.downloader ||
