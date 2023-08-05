@@ -2194,7 +2194,10 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
-    const publishedContract = await new ThirdwebSDK("polygon")
+    const publishedContract = await new ThirdwebSDK("polygon", {
+      clientId: this.options.clientId,
+      secretKey: this.options.secretKey,
+    })
       .getPublisher()
       .getVersion(address, contractName, version);
     if (!publishedContract) {
