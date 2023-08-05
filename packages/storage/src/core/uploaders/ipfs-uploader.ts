@@ -43,17 +43,15 @@ import FormData from "form-data";
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
+  private uploadServerUrl: string;
   private clientId?: string;
   private secretKey?: string;
-  private uploadServerUrl: string = TW_UPLOAD_SERVER_URL;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
+    this.uploadServerUrl = options?.uploadServerUrl || TW_UPLOAD_SERVER_URL;
     this.clientId = options?.clientId;
     this.secretKey = options?.secretKey;
-    if (options?.uploadServerUrl) {
-      this.uploadServerUrl = options.uploadServerUrl;
-    }
   }
 
   async uploadBatch(
