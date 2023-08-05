@@ -1,5 +1,17 @@
 # @thirdweb-dev/react-native
 
+## 0.2.46
+
+### Patch Changes
+
+- [#1452](https://github.com/thirdweb-dev/js/pull/1452) [`3ba8ba42`](https://github.com/thirdweb-dev/js/commit/3ba8ba428845f5b2ae90ca73855be275fc78373c) Thanks [@iketw](https://github.com/iketw)! - Upgrade Coinbase wallet SDK; it adds support for React Native 0.72.3
+
+- Updated dependencies [[`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf), [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf), [`dfd120a3`](https://github.com/thirdweb-dev/js/commit/dfd120a3a9d1582c8b174265c92bf43dbbaf5c86)]:
+  - @thirdweb-dev/chains@0.1.42
+  - @thirdweb-dev/sdk@3.10.46
+  - @thirdweb-dev/react-core@3.14.27
+  - @thirdweb-dev/wallets@1.1.10
+
 ## 0.2.45
 
 ### Patch Changes
