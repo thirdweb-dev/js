@@ -7,6 +7,8 @@ describe("Error Handling", async () => {
   it("should throw proper error on account with no balance", async () => {
     const newSdk = ThirdwebSDK.fromSigner(
       Wallet.createRandom().connect(sdk.getProvider()),
+      undefined,
+      { secretKey: process.env.TW_SECRET_KEY },
     );
 
     try {

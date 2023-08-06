@@ -1,5 +1,14 @@
 # @thirdweb-dev/auth
 
+## 3.2.27
+
+### Patch Changes
+
+- [#1392](https://github.com/thirdweb-dev/js/pull/1392) [`dfd120a3`](https://github.com/thirdweb-dev/js/commit/dfd120a3a9d1582c8b174265c92bf43dbbaf5c86) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose functions from auth and update useAuth
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@1.1.10
+
 ## 3.2.26
 
 ### Patch Changes

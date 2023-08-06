@@ -266,7 +266,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
     let warnMessage = `No API key. Please provide a ${apiKeyType}. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key`;
-    if (typeof window === "undefined" && !options.secretKey) {
+    if (
+      typeof window === "undefined" &&
+      !options.secretKey &&
+      options.clientId
+    ) {
       warnMessage = `Please provide a secret key instead of the clientId. Create a new API Key at https://thirdweb.com/create-api-key`;
     }
     checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
@@ -2194,7 +2198,10 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
-    const publishedContract = await new ThirdwebSDK("polygon")
+    const publishedContract = await new ThirdwebSDK("polygon", {
+      clientId: this.options.clientId,
+      secretKey: this.options.secretKey,
+    })
       .getPublisher()
       .getVersion(address, contractName, version);
     if (!publishedContract) {
