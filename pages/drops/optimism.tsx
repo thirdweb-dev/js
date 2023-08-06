@@ -73,6 +73,8 @@ export const DropsOptimismSDK: ComponentWithChildren<DropsOptimismSDKProps> = ({
   return (
     <CustomSDKContext
       desiredChainId={chainId}
+      /*
+      // Disable gasless
       options={{
         gasless: {
           openzeppelin: {
@@ -80,7 +82,7 @@ export const DropsOptimismSDK: ComponentWithChildren<DropsOptimismSDKProps> = ({
               "https://optimism.relayer.thirdweb.com/47460e34d71381d25840b41ec35b5f9b?format=oz",
           },
         },
-      }}
+      }} */
     >
       {children}
     </CustomSDKContext>
