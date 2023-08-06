@@ -65,6 +65,7 @@ export const ConnectedWalletDetails: React.FC<{
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
   className?: string;
   detailsBtn?: () => JSX.Element;
+  hideFaucetButton?: boolean;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -322,32 +323,33 @@ export const ConnectedWalletDetails: React.FC<{
           )}
 
         {/* Request Testnet funds */}
-        {((chain?.faucets && chain.faucets.length > 0) ||
-          chain?.chainId === Localhost.chainId) && (
-          <MenuLink
-            href={chain?.faucets ? chain.faucets[0] : "#"}
-            target="_blank"
-            as="a"
-            onClick={async (e) => {
-              if (chain.chainId === Localhost.chainId) {
-                e.preventDefault();
-                setOpen(false);
-                await sdk?.wallet.requestFunds(10);
-                await balanceQuery.refetch();
-              }
-            }}
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <SecondaryIconContainer>
-              <FundsIcon size={iconSize.sm} />
-            </SecondaryIconContainer>
-            Request Testnet Funds
-          </MenuLink>
-        )}
+        {!props.hideFaucetButton &&
+          ((chain?.faucets && chain.faucets.length > 0) ||
+            chain?.chainId === Localhost.chainId) && (
+            <MenuLink
+              href={chain?.faucets ? chain.faucets[0] : "#"}
+              target="_blank"
+              as="a"
+              onClick={async (e) => {
+                if (chain.chainId === Localhost.chainId) {
+                  e.preventDefault();
+                  setOpen(false);
+                  await sdk?.wallet.requestFunds(10);
+                  await balanceQuery.refetch();
+                }
+              }}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                fontSize: fontSize.sm,
+              }}
+            >
+              <SecondaryIconContainer>
+                <FundsIcon size={iconSize.sm} />
+              </SecondaryIconContainer>
+              Request Testnet Funds
+            </MenuLink>
+          )}
 
         {/* Export  Wallet */}
         {activeWallet?.walletId === walletIds.localWallet && (
