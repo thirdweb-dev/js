@@ -31,16 +31,16 @@ type CacheOptions = {
 
 type ApiKeyCacheWithPossibleTTL =
   | {
-      apiKeyMeta: ApiKeyMetadata;
-      updatedAt: number;
-    }
+    apiKeyMeta: ApiKeyMetadata;
+    updatedAt: number;
+  }
   | ApiKeyMetadata;
 
 type AccountCacheWithPossibleTTL =
   | {
-      apiKeyMeta: AccountMetadata;
-      updatedAt: number;
-    }
+    apiKeyMeta: AccountMetadata;
+    updatedAt: number;
+  }
   | AccountMetadata;
 
 export async function authorize(
@@ -136,7 +136,7 @@ export async function authorize(
     };
   }
 
-  // if we don't have a client id at this point, we can't authorize
+  // if we don't have a client id at this point we can't authorize
   if (!clientId) {
     return {
       authorized: false,
@@ -148,7 +148,7 @@ export async function authorize(
 
   let apiKeyMeta: ApiKeyMetadata | null = null;
   // if we have cache options we want to check the cache first
-  if (cacheOptions && clientId) {
+  if (cacheOptions) {
     try {
       const cachedKey = await cacheOptions.get(clientId);
       if (cachedKey) {
@@ -173,7 +173,7 @@ export async function authorize(
   }
 
   // if we don't have a cached key, fetch from the API
-  if (!apiKeyMeta && clientId) {
+  if (!apiKeyMeta) {
     try {
       const { data, error } = await fetchKeyMetadataFromApi(
         clientId,
