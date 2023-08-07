@@ -4,19 +4,22 @@ import { readFileSync } from "fs";
 import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS, prepareGatewayUrls } from "../src/common/urls";
 
-const apiSecretKey = process.env.TW_SECRET_KEY as string;
+// load env variables
+require("dotenv-mono").load();
+
+const secretKey = process.env.TW_SECRET_KEY as string;
 
 describe("IPFS", async () => {
-  if (!apiSecretKey) {
+  if (!secretKey) {
     throw new Error("TW_SECRET_KEY is not set in the environment variables");
   }
   const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
+    secretKey: secretKey,
   });
   const authorizedUrls = prepareGatewayUrls(
     DEFAULT_GATEWAY_URLS,
     undefined,
-    apiSecretKey,
+    secretKey,
   );
 
   it("Should replace tokens in tokenized gateway URL", async () => {
@@ -103,6 +106,7 @@ describe("IPFS", async () => {
           ...DEFAULT_GATEWAY_URLS["ipfs://"],
         ],
       },
+      secretKey,
     });
 
     const uri = await storageWithBadGateways.upload(
@@ -363,16 +367,16 @@ describe("IPFS", async () => {
   it("Should upload files with gateway URLs if specified on class", async () => {
     const uploader = new IpfsUploader({
       uploadWithGatewayUrl: true,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const singleStorage = new ThirdwebStorage({
       uploader,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const _authorizedUrls = prepareGatewayUrls(
       DEFAULT_GATEWAY_URLS,
       undefined,
-      apiSecretKey,
+      secretKey,
     );
 
     const uri = await singleStorage.upload(
@@ -454,7 +458,7 @@ describe("IPFS", async () => {
       getGatewayUrlForCid(
         authorizedUrls["ipfs://"][0],
         // CID changes based on file contents (prod gateway vs staging gateway since they get written)
-        `bafybeidnzwz6rm3jdf6vx5z7eb5ssfmeq64b5ihhjc7ioivxtc2x3f5r4m/0`,
+        `bafybeie4otkctycxgas34kjsvapcbqspqfj2xzjvyaet26i3nvlxv56oxy/0`,
       ),
     );
   });
@@ -462,16 +466,16 @@ describe("IPFS", async () => {
   it("Should return URIs with gateway URLs if specified on class", async () => {
     const uploader = new IpfsUploader({
       uploadWithGatewayUrl: true,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const storageSingleton = new ThirdwebStorage({
       uploader,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const _authorizedUrls = prepareGatewayUrls(
       DEFAULT_GATEWAY_URLS,
       undefined,
-      apiSecretKey,
+      secretKey,
     );
 
     const uri = await storageSingleton.upload(
