@@ -114,7 +114,7 @@ export async function authorize(
         return {
           authorized: false,
           status: 500,
-          errorMessage: "Failed to account information.",
+          errorMessage: "Failed to get account information.",
           errorCode: "FAILED_TO_ACCOUNT",
         };
       }
