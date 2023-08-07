@@ -317,7 +317,7 @@ export function ThirdwebWalletProvider(
               ),
               {
                 ms: autoConnectTimeout,
-                message: "Failed to Auto connect. Auto connect timed out.",
+                message: autoConnectTimeoutErrorMessage,
               },
             );
           } catch (e) {
@@ -346,7 +346,7 @@ export function ThirdwebWalletProvider(
         setConnectionStatus("connecting");
         await timeoutPromise(wallet.autoConnect(walletInfo.connectParams), {
           ms: autoConnectTimeout,
-          message: "Failed to Auto connect. Auto connect timed out.",
+          message: autoConnectTimeoutErrorMessage,
         });
         setConnectedWallet(wallet, walletInfo.connectParams, true);
       } catch (e) {
@@ -552,3 +552,5 @@ function timeoutPromise<T>(
     );
   });
 }
+
+const autoConnectTimeoutErrorMessage = `Failed to Auto connect. Auto connect timed out. You can increase the timeout duration using the autoConnectTimeout prop on <ThirdwebProvider />`;
