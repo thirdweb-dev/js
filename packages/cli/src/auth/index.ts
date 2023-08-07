@@ -113,7 +113,7 @@ export const authenticateUser = async (
   const payload = encodeURIComponent(JSON.stringify(loggedIn));
   const urlToOpen =
     // `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
-    `https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com/cli/login?payload=${payload}&#${ourState}`;
+    `https://thirdweb-www-git-mariano-cli-auth.thirdweb-preview.com/cli/login?payload=${payload}&#${ourState}`;
   // `http://localhost:3000/cli/login?payload=${payload}&#${ourState}`;
 
   let server: http.Server;
@@ -137,7 +137,7 @@ export const authenticateUser = async (
           }
         });
       }
-      res.setHeader("Access-Control-Allow-Origin", "https://thirdweb-www-git-mariano-api-keys-sign-in.thirdweb-preview.com");
+      res.setHeader("Access-Control-Allow-Origin", "https://thirdweb-www-git-mariano-cli-auth.thirdweb-preview.com");
       res.setHeader("Access-Control-Allow-Origin", "https://thirdweb.com");
       res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
       res.setHeader("Access-Control-Allow-Methods", "GET");
