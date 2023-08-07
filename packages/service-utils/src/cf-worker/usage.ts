@@ -38,6 +38,7 @@ const usageEventSchema = z.object({
   transactionHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
   gasPricePerUnit: z.string().optional(),
+  userOpHash: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
@@ -71,10 +72,14 @@ export async function publishUsageEvents(
     region = "us-west-2",
   } = config;
 
-  const entries = usageEvents.map((event) => ({
-    Id: crypto.randomUUID(),
-    MessageBody: JSON.stringify(event),
-  }));
+  const entries = usageEvents.map((event) => {
+    // Enforce schema of usage event.
+    const parsed = usageEventSchema.parse(event);
+    return {
+      Id: crypto.randomUUID(),
+      MessageBody: JSON.stringify(parsed),
+    };
+  });
 
   const aws = getAws({
     accessKeyId,
