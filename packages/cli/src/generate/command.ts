@@ -55,8 +55,7 @@ export async function generate(options: GenerateOptions, secretKey: string) {
         const numberOfNewContracts =
           contracts.length - thirdwebConfig.contracts.length;
         info(
-          `Updated thirdweb.json with ${numberOfNewContracts} new contract${
-            numberOfNewContracts === 1 ? "" : "s"
+          `Updated thirdweb.json with ${numberOfNewContracts} new contract${numberOfNewContracts === 1 ? "" : "s"
           }`,
         );
       }
@@ -86,19 +85,22 @@ export async function generate(options: GenerateOptions, secretKey: string) {
     );
 
     info(
-      `Created a thirdweb.json file with configuration for ${
-        contracts.length
-      } contract${
-        contracts.length === 1 ? "" : "s"
+      `Created a thirdweb.json file with configuration for ${contracts.length
+      } contract${contracts.length === 1 ? "" : "s"
       } detected in your project.\n\n - You can also update this configuration manually by editing the file.\n`,
     );
   }
 
   // Attempt to download the ABI for each contract
   ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
-  const storage = new ThirdwebStorage({
-    secretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    storage = new ThirdwebStorage();
+  }
   const metadata: {
     address: string;
     metadata: Awaited<ReturnType<typeof fetchContractMetadataFromAddress>>;
@@ -187,8 +189,7 @@ export async function generate(options: GenerateOptions, secretKey: string) {
   }
 
   ora(
-    `Downloaded and cached ABIs for ${metadata.length} smart contract${
-      metadata.length === 1 ? "" : "s"
+    `Downloaded and cached ABIs for ${metadata.length} smart contract${metadata.length === 1 ? "" : "s"
     }`,
   ).succeed();
 
@@ -205,7 +206,7 @@ export async function generate(options: GenerateOptions, secretKey: string) {
 
   const postinstall = packageJson.scripts?.postinstall
     ? packageJson.scripts.postinstall +
-      `npx --yes thirdweb@latest generate`
+    `npx --yes thirdweb@latest generate`
     : `npx --yes thirdweb@latest generate`;
 
   fs.writeFileSync(

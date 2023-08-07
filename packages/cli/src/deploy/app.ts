@@ -16,6 +16,7 @@ export async function deployApp(
       secretKey,
     });
   } else {
+    // Since the auth key is being set in the global context, we don't need to pass anything here.
     storage = new ThirdwebStorage();
   }
   const detectedPackageManager = await detectPackageManager(projectPath, {});

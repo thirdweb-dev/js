@@ -156,19 +156,9 @@ export function getProviderFromRpcUrl(
   sdkOptions: SDKOptions,
   chainId?: number,
 ) {
-  const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
-  let authToken = null;
-  if (authTokenExists) {
-    authToken = globalThis.AUTH_TOKEN;
-  }
-
   try {
     const headers: HeadersInit = {};
     if (isTwUrl(rpcUrl)) {
-      if (authToken) {
-        headers["Authorization"] = `Bearer ${authToken}`;
-      }
-
       if (sdkOptions?.clientId) {
         headers["x-client-id"] = sdkOptions?.clientId;
         // bundleId may already be injected
@@ -184,8 +174,7 @@ export function getProviderFromRpcUrl(
       }
       // if we have a tw auth token on global context add it to the headers
       if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
-        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
-          }`;
+        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`;
       }
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);

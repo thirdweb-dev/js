@@ -29,16 +29,10 @@ import fetch, { Response } from "cross-fetch";
 export class StorageDownloader implements IStorageDownloader {
   private secretKey?: string;
   private clientId?: string;
-  private authToken: string | null;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
     this.clientId = options.clientId;
-    this.authToken = null;
-    const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
-    if (authTokenExists) {
-      this.authToken = globalThis.AUTH_TOKEN;
-    }
   }
 
   async download(
@@ -78,9 +72,6 @@ export class StorageDownloader implements IStorageDownloader {
 
     let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
-      if (this.authToken) {
-        headers = { Authorization: `Bearer ${this.authToken}` };
-      }
 
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
@@ -101,9 +92,8 @@ export class StorageDownloader implements IStorageDownloader {
       if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
         headers = {
           ...headers,
-          authorization: `Bearer ${
-            (globalThis as any).TW_AUTH_TOKEN as string
-          }`,
+          authorization: `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
+            }`,
         };
       }
     }

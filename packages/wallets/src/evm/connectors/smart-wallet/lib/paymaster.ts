@@ -13,7 +13,6 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
   private entryPoint: string;
   private clientId?: string;
   private secretKey?: string;
-  private authToken?: string | null;
   constructor(
     paymasterUrl: string,
     entryPoint: string,
@@ -25,11 +24,6 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
     this.entryPoint = entryPoint;
     this.clientId = clientId;
     this.secretKey = secretKey;
-    this.authToken = null;
-    const authTokenExists = typeof globalThis !== "undefined" && "AUTH_TOKEN" in globalThis;
-    if (authTokenExists) {
-      this.authToken = globalThis.AUTH_TOKEN;
-    }
   }
 
   async getPaymasterAndData(
@@ -46,10 +40,6 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         );
       }
 
-      if (this.authToken) {
-        headers["Authorization"] = `Bearer ${this.authToken}`;
-      }
-
       if (this.secretKey) {
         headers["x-secret-key"] = this.secretKey;
       } else if (this.clientId) {
@@ -62,9 +52,9 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
           headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
         }
       }
+
       if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
-        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
-          }`;
+        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`;
       }
     }
 

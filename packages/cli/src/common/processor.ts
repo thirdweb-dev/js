@@ -41,6 +41,7 @@ export async function processProject(
       secretKey,
     });
   } else {
+    // Since the auth key is being set in the global context, we don't need to pass anything here.
     storage = new ThirdwebStorage();
   }
 
@@ -361,8 +362,8 @@ export function getUrl(hashes: string[], command: string) {
   if (hashes.length === 1) {
     url = new URL(
       THIRDWEB_URL +
-        `/contracts/${command}/` +
-        encodeURIComponent(hashes[0].replace("ipfs://", "")),
+      `/contracts/${command}/` +
+      encodeURIComponent(hashes[0].replace("ipfs://", "")),
     );
   } else {
     url = new URL(THIRDWEB_URL + "/contracts/" + command);
@@ -386,6 +387,7 @@ async function formatToExtensions(
       secretKey,
     });
   } else {
+    // Since the auth key is being set in the global context, we don't need to pass anything here.
     storage = new ThirdwebStorage();
   }
   const extensions: Extension[] = [];
