@@ -82,7 +82,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
                 fontFamily="mono"
                 overflow={{ base: "scroll", md: "inherit" }}
               >
-                {"https://{client-id}.thirdwebstorage.com/ipfs/"}
+                {"https://{client-id}.ipfscdn.io/ipfs/"}
               </Text>
               <Flex>
                 <Tooltip
@@ -98,7 +98,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
                   shouldWrapChildren
                 >
                   <TrackedCopyButton
-                    value="https://{client-id}.thirdwebstorage.com/ipfs/"
+                    value="https://{client-id}.ipfscdn.io/ipfs/"
                     category="storage"
                     label="copy-cli-file-upload"
                     aria-label="Copy code"

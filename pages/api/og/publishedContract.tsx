@@ -208,7 +208,7 @@ export default async function handler(req: NextRequest) {
                   <img
                     src={publishedContractData.logo.replace(
                       "ipfs://",
-                      "https://ipfs.thirdwebstorage.com/ipfs/",
+                      `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`,
                     )}
                     tw="w-16 h-16 rounded-xl mr-4"
                     alt=""
