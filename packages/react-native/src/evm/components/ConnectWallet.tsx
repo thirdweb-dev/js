@@ -21,9 +21,11 @@ export type ConnectWalletProps = {
   extraRows?: ConnectWalletDetailsProps["extraRows"];
 
   /**
-   * Hide the [Request Testnet Funds] button | Default to `false`
+   * Hide option to request testnet funds for testnets in dropdown
+   *
+   * @default false
    */
-  hideFaucetButton?: boolean;
+  hideTestnetFaucet?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -32,7 +34,7 @@ export const ConnectWallet = ({
   buttonTitle,
   modalTitle,
   extraRows,
-  hideFaucetButton,
+  hideTestnetFaucet,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
@@ -53,7 +55,7 @@ export const ConnectWallet = ({
             address={address}
             detailsButton={detailsButton}
             extraRows={extraRows}
-            hideFaucetButton={hideFaucetButton}
+            hideTestnetFaucet={hideTestnetFaucet}
           />
         ) : (
           <ConnectWalletButton

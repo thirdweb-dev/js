@@ -65,7 +65,7 @@ export const ConnectedWalletDetails: React.FC<{
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
   className?: string;
   detailsBtn?: () => JSX.Element;
-  hideFaucetButton?: boolean;
+  hideTestnetFaucet?: boolean;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -323,7 +323,7 @@ export const ConnectedWalletDetails: React.FC<{
           )}
 
         {/* Request Testnet funds */}
-        {!props.hideFaucetButton &&
+        {!props.hideTestnetFaucet &&
           ((chain?.faucets && chain.faucets.length > 0) ||
             chain?.chainId === Localhost.chainId) && (
             <MenuLink
