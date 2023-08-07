@@ -75,10 +75,17 @@ export class MagicLink extends AbstractClientWallet<
     await this.initializeConnector();
     await this.magicConnector?.initializeMagicSDK(options);
     const magic = this.getMagic();
-    try {
-      this.oAuthRedirectResult = await magic.oauth.getRedirectResult(); // required to do this for social login
-    } catch {
-      // ignore
+
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const isMagicRedirect = url.searchParams.get("magic_credential");
+      if (isMagicRedirect) {
+        try {
+          this.oAuthRedirectResult = await magic.oauth.getRedirectResult(); // required to do this for social login
+        } catch {
+          // ignore
+        }
+      }
     }
 
     const isLoggedIn = await magic.user.isLoggedIn();
