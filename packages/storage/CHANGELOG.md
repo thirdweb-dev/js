@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.2.4
+
+### Patch Changes
+
+- [#1455](https://github.com/thirdweb-dev/js/pull/1455) [`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4) Thanks [@jnsdls](https://github.com/jnsdls)! - allow overriding the upload server url for IpfsUploader for advanced usage
+
 ## 1.2.3
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # thirdweb
 
+## 0.11.11
+
+### Patch Changes
+
+- Updated dependencies [[`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4)]:
+  - @thirdweb-dev/storage@1.2.4
+  - @thirdweb-dev/sdk@3.10.47
+
 ## 0.11.10
 
 ### Patch Changes
