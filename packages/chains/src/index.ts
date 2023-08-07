@@ -1953,7 +1953,7 @@ export { default as XrpLedgerEvmDevnetSidechain } from "../chains/1440001"
 export { default as BubsTestnet } from "../chains/1582"
 export { default as ProofofpepeTestnet } from "../chains/331769"
 export { default as Omega } from "../chains/408"
-export { default as XaiGRliOrbit } from "../chains/47279324479"
+export { default as XaiGoerliOrbit } from "../chains/47279324479"
 export { default as Opbnb } from "../chains/5611"
 export { default as Linea } from "../chains/59144"
 export { default as ShardeumSphinxDapp1X } from "../chains/8081"
@@ -3922,7 +3922,7 @@ type ChainIdsBySlug = {
 "bubs-testnet": 1582,
 "proofofpepe-testnet": 331769,
 "omega": 408,
-"xai-g-rli-orbit": 47279324479,
+"xai-goerli-orbit": 47279324479,
 "opbnb": 5611,
 "linea": 59144,
 "shardeum-sphinx-dapp-1-x": 8081,
