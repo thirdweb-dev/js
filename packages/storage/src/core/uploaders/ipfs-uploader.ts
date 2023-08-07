@@ -174,11 +174,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
-    let authToken: string | null = null;
-    const authTokenExists = typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis;
-    if (authTokenExists) {
-      authToken = globalThis.TW_AUTH_TOKEN;
-    }
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -276,7 +271,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
       xhr.open("POST", `${this.uploadServerUrl}/ipfs/upload`);
 
-
       if (this.secretKey) {
         xhr.setRequestHeader("x-secret-key", this.secretKey);
       } else if (this.clientId) {
@@ -291,8 +285,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }
 
       // if we have a authorization token on global context then add that to the headers
-      if (authToken) {
-        xhr.setRequestHeader("authorization", `Bearer ${authToken}`);
+      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+        xhr.setRequestHeader(
+          "authorization",
+          `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
+        );
       }
 
       xhr.send(form as any);
@@ -304,16 +301,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
   ) {
-    let authToken = null;
-    const authTokenExists = typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis;
-    if (authTokenExists) {
-      authToken = globalThis.TW_AUTH_TOKEN;
-    }
     if (options?.onProgress) {
       console.warn("The onProgress option is only supported in the browser");
     }
 
     const headers: HeadersInit = {};
+    if (this.authToken) {
+      headers["Authorization"] = `Bearer ${this.authToken}`;
+    }
 
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
@@ -327,8 +322,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     // if we have a authorization token on global context then add that to the headers
-    if (authToken) {
-      headers["authorization"] = `Bearer ${authToken}`;
+    if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+      headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
+        }`;
     }
 
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
