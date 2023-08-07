@@ -1,5 +1,17 @@
 # @thirdweb-dev/react-core
 
+## 3.14.28
+
+### Patch Changes
+
+- [#1460](https://github.com/thirdweb-dev/js/pull/1460) [`4b0e63dc`](https://github.com/thirdweb-dev/js/commit/4b0e63dcc0ca871ce9cef76f8a41ff290316741c) Thanks [@MananTank](https://github.com/MananTank)! - Save `oAuthRedirectResult` when autoconnecting Magic Link via social login
+
+- Updated dependencies [[`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4), [`4b0e63dc`](https://github.com/thirdweb-dev/js/commit/4b0e63dcc0ca871ce9cef76f8a41ff290316741c)]:
+  - @thirdweb-dev/storage@1.2.4
+  - @thirdweb-dev/wallets@1.1.11
+  - @thirdweb-dev/sdk@3.10.47
+  - @thirdweb-dev/auth@3.2.28
+
 ## 3.14.27
 
 ### Patch Changes
