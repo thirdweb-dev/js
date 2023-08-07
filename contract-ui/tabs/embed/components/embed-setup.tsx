@@ -12,7 +12,6 @@ import {
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { Chain, configureChain, minimizeChain } from "@thirdweb-dev/chains";
 import { DropContract } from "@thirdweb-dev/react";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useEffect, useMemo } from "react";
@@ -185,31 +184,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const chainId = useDashboardEVMChainId();
   const configuredChains = useSupportedChainsRecord();
 
-  const chain = useMemo(() => {
-    if (!chainId) {
-      return undefined;
-    }
-
-    const configuredChain = configuredChains[chainId];
-
-    const rpc = configuredChain.rpc[0];
-
-    if (rpc.includes(DASHBOARD_THIRDWEB_CLIENT_ID)) {
-      return configureChain(configuredChain, {
-        rpc: rpc.replace(DASHBOARD_THIRDWEB_CLIENT_ID, validApiKey?.key || ""),
-      });
-    }
-
-    // eslint-disable-next-line no-template-curly-in-string
-    if (rpc.includes("${THIRDWEB_API_KEY}")) {
-      return configureChain(configuredChain, {
-        // eslint-disable-next-line no-template-curly-in-string
-        rpc: rpc.replace("${THIRDWEB_API_KEY}", validApiKey?.key || ""),
-      });
-    }
-
-    return configuredChain;
-  }, [chainId, configuredChains, validApiKey?.key]);
+  const chain = configuredChains[chainId as number];
 
   const { register, watch } = useForm<{
     rpcUrl: string;
