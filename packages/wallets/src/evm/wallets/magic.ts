@@ -5,7 +5,10 @@ import type {
   MagicAuthConnectOptions,
   MagicAuthConnector as MagicAuthConnectorType,
 } from "../connectors/magic";
-import { OAuthProvider as _OAuthProvider } from "@magic-ext/oauth";
+import type {
+  OAuthProvider as _OAuthProvider,
+  OAuthRedirectResult,
+} from "@magic-ext/oauth";
 import { walletIds } from "../constants/walletIds";
 
 export type MagicLinkAdditionalOptions = MagicAuthOptions;
@@ -19,6 +22,7 @@ export class MagicLink extends AbstractClientWallet<
 > {
   connector?: Connector;
   magicConnector?: MagicAuthConnectorType;
+  oAuthRedirectResult?: OAuthRedirectResult;
 
   static meta = {
     iconURL:
@@ -71,9 +75,8 @@ export class MagicLink extends AbstractClientWallet<
     await this.initializeConnector();
     await this.magicConnector?.initializeMagicSDK(options);
     const magic = this.getMagic();
-
     try {
-      await magic.oauth.getRedirectResult(); // required to do this for social login
+      this.oAuthRedirectResult = await magic.oauth.getRedirectResult(); // required to do this for social login
     } catch {
       // ignore
     }
@@ -87,6 +90,7 @@ export class MagicLink extends AbstractClientWallet<
   }
 
   async disconnect() {
+    this.oAuthRedirectResult = undefined;
     const magic = this.getMagic();
     await magic.user.logout();
     return super.disconnect();
