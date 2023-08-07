@@ -177,7 +177,7 @@ const ContactUs: ThirdwebNextPage = () => {
                   <Input
                     h={14}
                     borderColor="gray.300"
-                    placeholder="Your Email *"
+                    placeholder="Your Business Email *"
                     type="email"
                     color="black"
                     _placeholder={{ color: "black" }}
@@ -217,7 +217,7 @@ const ContactUs: ThirdwebNextPage = () => {
                     <option value="solo">Solo</option>
                     <option value="2-10">2-10</option>
                     <option value="11-49">11-49</option>
-                    <option value="500-99">500-99</option>
+                    <option value="50-99">50-99</option>
                     <option value="100-249">100-249</option>
                     <option value="250+">250</option>
                   </Select>
