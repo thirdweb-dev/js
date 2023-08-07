@@ -49,7 +49,7 @@ type ConnectWalletProps = {
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
 
   /**
-   * Show/hide the [Request Testnet Funds] button
+   * Hide the [Request Testnet Funds] button | Default to `false`
    */
   hideFaucetButton?: boolean;
 };

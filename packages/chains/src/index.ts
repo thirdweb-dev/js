@@ -1622,7 +1622,7 @@ export { default as BlgTestnet } from "../chains/12321"
 export { default as StepTestnet } from "../chains/12345"
 export { default as RikezaNetworkTestnet } from "../chains/12715"
 export { default as Sps } from "../chains/13000"
-export { default as CreditSmartchain } from "../chains/13308"
+export { default as CreditSmartChain } from "../chains/13308"
 export { default as Phoenix } from "../chains/13381"
 export { default as Susono } from "../chains/13812"
 export { default as SpsTestnet } from "../chains/14000"
@@ -3589,7 +3589,7 @@ type ChainIdsBySlug = {
 "step-testnet": 12345,
 "rikeza-network-testnet": 12715,
 "sps": 13000,
-"credit-smartchain": 13308,
+"credit-smart-chain": 13308,
 "phoenix": 13381,
 "susono": 13812,
 "sps-testnet": 14000,
