@@ -306,9 +306,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     const headers: HeadersInit = {};
-    if (this.authToken) {
-      headers["Authorization"] = `Bearer ${this.authToken}`;
-    }
 
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
