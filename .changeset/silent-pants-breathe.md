@@ -3,4 +3,4 @@
 "@thirdweb-dev/wallets": patch
 ---
 
-Safe oAuthRedirectResult when autoconnecting Magic Link via social login
+Save `oAuthRedirectResult` when autoconnecting Magic Link via social login
