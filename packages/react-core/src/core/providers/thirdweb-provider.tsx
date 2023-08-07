@@ -161,6 +161,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           clientId={props.clientId}
+          secretKey={props.secretKey}
         >
           <ThirdwebAuthProvider value={props.authConfig}>
             {props.children}

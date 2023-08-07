@@ -1,5 +1,42 @@
 # thirdweb
 
+## 0.11.10
+
+### Patch Changes
+
+- Updated dependencies [[`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf), [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf)]:
+  - @thirdweb-dev/chains@0.1.42
+  - @thirdweb-dev/sdk@3.10.46
+
+## 0.11.9
+
+### Patch Changes
+
+- [#1442](https://github.com/thirdweb-dev/js/pull/1442) [`7f54012e`](https://github.com/thirdweb-dev/js/commit/7f54012ec648b727b60784990e71b0efb4690934) Thanks [@Marfuen](https://github.com/Marfuen)! - - Warn users on windows to not use the powershell as there are some compatibility issues with it at the moment.
+  - Warn users if they are pasting a client id instead of a secret key.
+- Updated dependencies [[`2a91113a`](https://github.com/thirdweb-dev/js/commit/2a91113a760733fcff2aec90041f69e15de33905)]:
+  - @thirdweb-dev/sdk@3.10.45
+
+## 0.11.8
+
+### Patch Changes
+
+- [#1443](https://github.com/thirdweb-dev/js/pull/1443) [`8c0dc9c8`](https://github.com/thirdweb-dev/js/commit/8c0dc9c88084efcd184a416ed372c50c2fb8a209) Thanks [@nessup](https://github.com/nessup)! - Switch IPFS download domain used in CLI
+
+- Updated dependencies [[`a5d0be93`](https://github.com/thirdweb-dev/js/commit/a5d0be939a143095e769b68cf86360bfe4720744), [`c0a6d2f1`](https://github.com/thirdweb-dev/js/commit/c0a6d2f18231310d143c9b0cb1b2ff59315087a4), [`becbb637`](https://github.com/thirdweb-dev/js/commit/becbb637367285ed3d8d7d131e1020bf23e38298), [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb), [`c9bf4f05`](https://github.com/thirdweb-dev/js/commit/c9bf4f05c161707c6eb799ecef82f462e4a82405), [`67b145b9`](https://github.com/thirdweb-dev/js/commit/67b145b94dafb2fb1d90553ed4829f0ed22e2907), [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5)]:
+  - @thirdweb-dev/sdk@3.10.44
+  - @thirdweb-dev/chains@0.1.41
+
+## 0.11.7
+
+### Patch Changes
+
+- [#1419](https://github.com/thirdweb-dev/js/pull/1419) [`2b96f71e`](https://github.com/thirdweb-dev/js/commit/2b96f71e191d7f69c2c75f9c6a9ee4537bac65aa) Thanks [@Marfuen](https://github.com/Marfuen)! - Fix path of cache to work with windows.
+
+- Updated dependencies [[`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e)]:
+  - @thirdweb-dev/storage@1.2.3
+  - @thirdweb-dev/sdk@3.10.43
+
 ## 0.11.6
 
 ### Patch Changes

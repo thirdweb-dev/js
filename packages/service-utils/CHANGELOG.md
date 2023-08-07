@@ -1,5 +1,41 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.0
+
+### Minor Changes
+
+- [#1448](https://github.com/thirdweb-dev/js/pull/1448) [`3e1c4045`](https://github.com/thirdweb-dev/js/commit/3e1c4045e7c58e2fe58e2ab6a7f767c8f5e206e9) Thanks [@arcoraven](https://github.com/arcoraven)! - Add logHttpRequest helper func
+
+### Patch Changes
+
+- [#1453](https://github.com/thirdweb-dev/js/pull/1453) [`0647f124`](https://github.com/thirdweb-dev/js/commit/0647f12498ed1cdd5aca4dcea5bd3cf0d5d3a23b) Thanks [@arcoraven](https://github.com/arcoraven)! - Remove clientId from logRequest
+
+## 0.3.1
+
+### Patch Changes
+
+- [#1447](https://github.com/thirdweb-dev/js/pull/1447) [`b103872d`](https://github.com/thirdweb-dev/js/commit/b103872daff87b032082a433713d16b9dee13082) Thanks [@nessup](https://github.com/nessup)! - Export extractAuthorizationData for CF Workers
+
+## 0.3.0
+
+### Minor Changes
+
+- [#1424](https://github.com/thirdweb-dev/js/pull/1424) [`d01e6396`](https://github.com/thirdweb-dev/js/commit/d01e6396d176a162aaacb10792f0d9abade62a1f) Thanks [@arcoraven](https://github.com/arcoraven)! - Add helper to publish usage events from backend services
+
+### Patch Changes
+
+- [#1440](https://github.com/thirdweb-dev/js/pull/1440) [`5ec0f064`](https://github.com/thirdweb-dev/js/commit/5ec0f064d27acbd5225934dfe8ea2cd2c5af3997) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Switch to aws4fetch to call AWS services
+
+- [#1437](https://github.com/thirdweb-dev/js/pull/1437) [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf) Thanks [@farhanW3](https://github.com/farhanW3)! - Updated the error messages
+
+- [#1435](https://github.com/thirdweb-dev/js/pull/1435) [`2a3cd62d`](https://github.com/thirdweb-dev/js/commit/2a3cd62dc9af6accae5c2c48ef4956d139a637e4) Thanks [@arcoraven](https://github.com/arcoraven)! - Use string type for gasPricePerUnit
+
+## 0.2.5
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - allow account level auth via jwt
+
 ## 0.2.4
 
 ### Patch Changes

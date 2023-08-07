@@ -343,8 +343,8 @@ const main = async () => {
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         await loginUser({
-          credsConfigPath, 
-          cliWalletPath, 
+          credsConfigPath,
+          cliWalletPath,
           tokenPath,
         });
       } else {
@@ -380,8 +380,8 @@ const main = async () => {
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         await loginUser({
-          credsConfigPath, 
-          cliWalletPath, 
+          credsConfigPath,
+          cliWalletPath,
           tokenPath,
         });
       } else {
@@ -425,8 +425,8 @@ const main = async () => {
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         await loginUser({
-          credsConfigPath, 
-          cliWalletPath, 
+          credsConfigPath,
+          cliWalletPath,
           tokenPath,
         });
       } else {
@@ -454,8 +454,8 @@ const main = async () => {
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         await loginUser({
-          credsConfigPath, 
-          cliWalletPath, 
+          credsConfigPath,
+          cliWalletPath,
           tokenPath,
         });
       } else {
@@ -526,8 +526,8 @@ const main = async () => {
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
         await loginUser({
-          credsConfigPath, 
-          cliWalletPath, 
+          credsConfigPath,
+          cliWalletPath,
           tokenPath,
         });
       } else {
