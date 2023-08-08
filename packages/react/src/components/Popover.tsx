@@ -1,4 +1,10 @@
-import { fontSize, radius, shadow, spacing, Theme } from "../design-system";
+import {
+  fontSize,
+  radius,
+  shadow,
+  spacing,
+  type Theme,
+} from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RXPopover from "@radix-ui/react-popover";
@@ -35,7 +41,9 @@ from {
   }
 `;
 
-const PopoverContent = styled(RXPopover.Content)<{ theme?: Theme }>`
+const PopoverContent = /* @__PURE__ */ styled(
+  /* @__PURE__ */ RXPopover.Content,
+)<{ theme?: Theme }>`
   border-radius: ${radius.sm};
   padding: ${spacing.sm} ${spacing.md};
   background-color: ${(p) => p.theme.bg.inverted};
@@ -48,7 +56,9 @@ const PopoverContent = styled(RXPopover.Content)<{ theme?: Theme }>`
   font-size: ${fontSize.md};
 `;
 
-const PopoverArrow = styled(RXPopover.Arrow)<{ theme?: Theme }>`
+const PopoverArrow = /* @__PURE__ */ styled(/* @__PURE__ */ RXPopover.Arrow)<{
+  theme?: Theme;
+}>`
   fill: ${(p) => p.theme.bg.inverted};
 `;
 

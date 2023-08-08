@@ -3,7 +3,7 @@ import { Keypair } from "@solana/web3.js";
 import { KeypairWallet } from "@thirdweb-dev/wallets/solana/wallets/keypair";
 import { expect } from "chai";
 
-describe("Wallet Authentication", async () => {
+describe("Wallet Authentication - Solana", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 
@@ -272,7 +272,7 @@ describe("Wallet Authentication", async () => {
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain(
-        `Expected the connected wallet address '${await signerWallet.getAddress()}' to match the token issuer address '${await adminWallet.getAddress()}'`,
+        `The expected issuer address '${await signerWallet.getAddress()}' did not match the token issuer address '${await adminWallet.getAddress()}'`,
       );
     }
   });

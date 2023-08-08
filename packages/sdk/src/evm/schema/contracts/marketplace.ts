@@ -9,9 +9,10 @@ export const MarketplaceContractInput = CommonContractSchema;
 
 export const MarketplaceContractOutput = CommonContractOutputSchema;
 
-export const MarketplaceContractDeploy = MarketplaceContractInput.merge(
-  CommonPlatformFeeSchema,
-).merge(CommonTrustedForwarderSchema);
+export const MarketplaceContractDeploy =
+  /* @__PURE__ */ MarketplaceContractInput.merge(CommonPlatformFeeSchema).merge(
+    CommonTrustedForwarderSchema,
+  );
 
 export const MarketplaceContractSchema = {
   deploy: MarketplaceContractDeploy,

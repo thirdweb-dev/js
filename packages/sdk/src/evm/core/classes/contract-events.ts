@@ -1,8 +1,7 @@
 import { EventType } from "../../constants/events";
-import { ContractEvent, EventQueryOptions } from "../../types";
+import type { ContractEvent, EventQueryOptions } from "../../types/events";
 import { ContractWrapper } from "./contract-wrapper";
-import type { BaseContract, Event, providers } from "ethers";
-import type { EventFragment } from "ethers/lib/utils.js";
+import type { BaseContract, Event, providers, utils } from "ethers";
 import type { EventEmitter } from "eventemitter3";
 
 /**
@@ -65,6 +64,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @returns a function to un-subscribe from the event
    */
   public addEventListener<TEvent extends Record<string, any>>(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     eventName: keyof TContract["filters"] | (string & {}),
     listener: (event: ContractEvent<TEvent>) => void,
   ) {
@@ -157,6 +157,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the listener to unregister
    */
   public removeEventListener(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     eventName: keyof TContract["filters"] | (string & {}),
     listener: providers.Listener,
   ) {
@@ -325,7 +326,7 @@ export class ContractEvents<TContract extends BaseContract> {
   }
 
   private toContractEvent<TEvent extends Record<string, any>>(
-    event: EventFragment,
+    event: utils.EventFragment,
     args: ReadonlyArray<any>,
     rawLog: providers.Log,
   ): ContractEvent<TEvent> {

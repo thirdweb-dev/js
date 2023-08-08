@@ -1,3 +1,5 @@
+import { WCMeta } from "../wallets/types/wc";
+
 /**
  * Build a WalletConnect display URI from a wc:// uri + a wallet specific link
  *
@@ -7,7 +9,7 @@
  */
 export function formatWalletConnectDisplayUri(
   uri: string,
-  links: { universal: string; native: string },
+  links: WCMeta["links"],
 ) {
   const encodedUri: string = encodeURIComponent(uri);
   return links.universal

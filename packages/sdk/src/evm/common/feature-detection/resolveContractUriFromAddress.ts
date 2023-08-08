@@ -1,5 +1,4 @@
-import { BigNumber, ethers } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { BigNumber, providers, constants, utils } from "ethers";
 import { extractIPFSHashFromBytecode } from "./extractIPFSHashFromBytecode";
 import { extractMinimalProxyImplementationAddress } from "./extractMinimalProxyImplementationAddress";
 
@@ -10,7 +9,7 @@ import { extractMinimalProxyImplementationAddress } from "./extractMinimalProxyI
  */
 export async function resolveContractUriFromAddress(
   address: string,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
 ): Promise<string | undefined> {
   let bytecode;
   try {
@@ -49,8 +48,8 @@ export async function resolveContractUriFromAddress(
     );
     const implementationAddress = `0x${proxyStorage.slice(-40)}`;
     if (
-      isAddress(implementationAddress) &&
-      implementationAddress !== ethers.constants.AddressZero
+      utils.isAddress(implementationAddress) &&
+      implementationAddress !== constants.AddressZero
     ) {
       return await resolveContractUriFromAddress(
         implementationAddress,

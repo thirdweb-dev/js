@@ -61,7 +61,7 @@ export class ContractAppURI<TContract extends BaseContract>
 
     return replaceGatewayUrlWithScheme(
       (await this.metadata.get()).app_uri || "",
-      this.storage.gatewayUrls,
+      this.storage.getGatewayUrls(),
     );
   }
 
@@ -75,7 +75,7 @@ export class ContractAppURI<TContract extends BaseContract>
    * ```
    * @twfeature AppURI
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (appURI: string): Promise<Transaction<TransactionResult>> => {
       if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
         return Transaction.fromContractWrapper({

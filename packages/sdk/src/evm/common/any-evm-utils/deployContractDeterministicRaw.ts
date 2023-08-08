@@ -1,6 +1,11 @@
-import { BigNumber, BytesLike, ethers, Signer } from "ethers";
+import {
+  BigNumber,
+  type BytesLike,
+  type PopulatedTransaction,
+  type Signer,
+} from "ethers";
 import invariant from "tiny-invariant";
-import { DeployOptions } from "../../types";
+import type { DeployOptions } from "../../types/deploy";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 
@@ -10,7 +15,7 @@ import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
  *
  * @public
  *
- * @param singer
+ * @param type signer
  * @param bytecode
  * @param encodedArgs
  * @param create2FactoryAddress
@@ -36,7 +41,7 @@ export async function deployContractDeterministicRaw(
     );
     const initBytecodeWithSalt = getInitBytecodeWithSalt(bytecode, encodedArgs);
 
-    let tx: ethers.PopulatedTransaction = {
+    const tx: PopulatedTransaction = {
       to: create2FactoryAddress,
       data: initBytecodeWithSalt,
     };

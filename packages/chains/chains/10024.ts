@@ -11,7 +11,10 @@ export default {
   "rpc": [
     "https://gon-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.gaiaopen.network",
-    "http://database1.gaiaopen.network"
+    "https://node1.mainnet.gon.network",
+    "https://node2.mainnet.gon.network",
+    "https://node3.mainnet.gon.network",
+    "https://node4.mainnet.gon.network"
   ],
   "faucets": [],
   "nativeCurrency": {

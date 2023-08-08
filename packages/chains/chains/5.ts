@@ -5,9 +5,9 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli.infura.io/v3/${INFURA_API_KEY}",
     "wss://goerli.infura.io/v3/${INFURA_API_KEY}",
+    "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://rpc.goerli.mudit.blog/",
     "https://ethereum-goerli.publicnode.com"
   ],
@@ -33,6 +33,17 @@ export default {
     {
       "name": "etherscan-goerli",
       "url": "https://goerli.etherscan.io",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "blockscout-goerli",
+      "url": "https://eth-goerli.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],

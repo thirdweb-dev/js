@@ -1,6 +1,6 @@
 import type { NetworkInput } from "../core/types";
 import type { SDKOptions } from "../schema/sdk-options";
-import { getSignerAndProvider } from "./getSignerAndProvider";
+import { getSignerAndProvider } from "../constants/urls";
 import type { providers } from "ethers";
 
 export type GetChainIdParams = {

@@ -1,5 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
@@ -184,7 +185,7 @@ export class StandardErc20<
    * await contract.transfer(toAddress, amount);
    * ```
    */
-  transfer = buildTransactionFunction(
+  transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, amount: Amount) => {
       return this.erc20.transfer.prepare(to, amount);
     },
@@ -207,7 +208,7 @@ export class StandardErc20<
    * await contract.transferFrom(fromAddress, toAddress, amount);
    * ```
    */
-  transferFrom = buildTransactionFunction(
+  transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (from: AddressOrEns, to: AddressOrEns, amount: Amount) => {
       return this.erc20.transferFrom.prepare(from, to, amount);
     },
@@ -225,7 +226,7 @@ export class StandardErc20<
    * await contract.setAllowance(spenderAddress, amount);
    * ```
    */
-  setAllowance = buildTransactionFunction(
+  setAllowance = /* @__PURE__ */ buildTransactionFunction(
     async (spender: AddressOrEns, amount: Amount): Promise<Transaction> => {
       return this.erc20.setAllowance.prepare(spender, amount);
     },
@@ -253,7 +254,9 @@ export class StandardErc20<
    * await contract.transferBatch(data);
    * ```
    */
-  transferBatch = buildTransactionFunction(async (args: TokenMintInput[]) => {
-    return this.erc20.transferBatch.prepare(args);
-  });
+  transferBatch = /* @__PURE__ */ buildTransactionFunction(
+    async (args: TokenMintInput[]) => {
+      return this.erc20.transferBatch.prepare(args);
+    },
+  );
 }

@@ -10,7 +10,7 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Siberium",
-    "symbol": "SBR",
+    "symbol": "SIBR",
     "decimals": 18
   },
   "infoURL": "https://siberium.net",
@@ -18,30 +18,19 @@ export default {
   "chainId": 111111,
   "networkId": 111111,
   "icon": {
-    "url": "ipfs://QmVDeoGo2TZPDWiaNDdPCnH2tz2BCQ7viw8ugdDWnU5LFq",
-    "width": 1920,
-    "height": 1920,
+    "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+    "width": 512,
+    "height": 512,
     "format": "svg"
   },
   "explorers": [
     {
-      "name": "Siberium Mainnet Explorer - blockscout - 1",
-      "url": "https://explorer.main.siberium.net",
-      "icon": {
-        "url": "ipfs://QmVDeoGo2TZPDWiaNDdPCnH2tz2BCQ7viw8ugdDWnU5LFq",
-        "width": 1920,
-        "height": 1920,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    },
-    {
       "name": "Siberium Mainnet Explorer - blockscout - 2",
       "url": "https://explorer.main.siberium.net.ru",
       "icon": {
-        "url": "ipfs://QmVDeoGo2TZPDWiaNDdPCnH2tz2BCQ7viw8ugdDWnU5LFq",
-        "width": 1920,
-        "height": 1920,
+        "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+        "width": 512,
+        "height": 512,
         "format": "svg"
       },
       "standard": "EIP3091"

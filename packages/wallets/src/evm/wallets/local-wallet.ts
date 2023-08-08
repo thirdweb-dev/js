@@ -8,7 +8,7 @@ import { Wallet, utils } from "ethers";
 export type LocalWalletOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
-  thirdwebApiKey?: string;
+  secretKey?: string;
 };
 
 export type WalletData = {
@@ -18,6 +18,7 @@ export type WalletData = {
   isEncrypted: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type LocalWalletConnectionArgs = {};
 
 const STORAGE_KEY_WALLET_DATA = "localWalletData";
@@ -68,7 +69,8 @@ export class LocalWallet extends AbstractClientWallet<
         chain: this.options.chain || Ethereum,
         ethersWallet: this.ethersWallet,
         chains: this.options.chains || defaults,
-        thirdwebApiKey: this.options.thirdwebApiKey,
+        clientId: this.options.clientId,
+        secretKey: this.options.secretKey,
       });
     }
     return this.connector;
@@ -77,7 +79,7 @@ export class LocalWallet extends AbstractClientWallet<
   /**
    * load saved wallet data from storage or generate a new one and save it.
    */
-  async loadOrCreate(options: LoadOptions) {
+  async loadOrCreate(options: LoadOrCreateOptions) {
     if (await this.getSavedData()) {
       await this.load(options);
     } else {
@@ -94,7 +96,8 @@ export class LocalWallet extends AbstractClientWallet<
     if (this.ethersWallet) {
       throw new Error("wallet is already initialized");
     }
-    this.ethersWallet = Wallet.createRandom();
+    const random = utils.randomBytes(32);
+    this.ethersWallet = new Wallet(random);
     return this.ethersWallet.address;
   }
 
@@ -259,6 +262,12 @@ export class LocalWallet extends AbstractClientWallet<
     }
 
     if (options.strategy === "mnemonic") {
+      if (!wallet.mnemonic) {
+        throw new Error(
+          "mnemonic can not be computed if wallet is created from a private key or generated using generate()",
+        );
+      }
+
       const mnemonic = await getEncryptor(options.encryption)(
         wallet.mnemonic.phrase,
       );
@@ -322,7 +331,7 @@ export class LocalWallet extends AbstractClientWallet<
     if (options.strategy === "mnemonic") {
       if (!wallet.mnemonic) {
         throw new Error(
-          "mnemonic can not be computed if wallet is created from a private key",
+          "mnemonic can not be computed if wallet is created from a private key or generated using generate()",
         );
       }
 
@@ -361,6 +370,11 @@ export class LocalWallet extends AbstractClientWallet<
   async #saveData(data: WalletData, storage?: AsyncStorage) {
     const _storage = storage || this.#storage;
     await _storage.setItem(STORAGE_KEY_WALLET_DATA, JSON.stringify(data));
+  }
+
+  async disconnect() {
+    await super.disconnect();
+    this.ethersWallet = undefined;
   }
 }
 
@@ -405,6 +419,19 @@ type LoadOptions =
     }
   | {
       strategy: "mnemonic";
+      storage?: AsyncStorage;
+      encryption: DecryptOptions;
+    };
+
+// omit the mnemonic strategy option from LoadOptions
+type LoadOrCreateOptions =
+  | {
+      strategy: "encryptedJson";
+      password: string;
+      storage?: AsyncStorage;
+    }
+  | {
+      strategy: "privateKey";
       storage?: AsyncStorage;
       encryption: DecryptOptions;
     };

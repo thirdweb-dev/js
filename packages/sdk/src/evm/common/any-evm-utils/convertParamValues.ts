@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 export function convertParamValues(
@@ -21,14 +21,14 @@ export function convertParamValues(
     }
     if (p === "bytes32") {
       invariant(
-        ethers.utils.isHexString(constructorParamValues[index]),
+        utils.isHexString(constructorParamValues[index]),
         `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
       );
-      return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
+      return utils.hexZeroPad(constructorParamValues[index], 32);
     }
     if (p.startsWith("bytes")) {
       invariant(
-        ethers.utils.isHexString(constructorParamValues[index]),
+        utils.isHexString(constructorParamValues[index]),
         `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
       );
       return constructorParamValues[index];

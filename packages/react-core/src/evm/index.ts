@@ -1,4 +1,4 @@
-export { resolveIpfsUri, resolveMimeType } from "../core/utils/ipfs";
+export { resolveMimeType } from "../core/utils/ipfs";
 
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";
@@ -47,10 +47,8 @@ export type {
 } from "../core/types/wallet";
 
 // auth
-export {
-  ThirdwebAuthProvider,
-  useThirdwebAuthContext,
-} from "./contexts/thirdweb-auth";
+export { useThirdwebAuthContext } from "./contexts/thirdweb-auth";
+export { ThirdwebAuthProvider } from "./contexts/ThirdwebAuthProvider";
 export type {
   ThirdwebAuthConfig,
   ISecureStorage,
@@ -169,6 +167,8 @@ export {
   useTransferNFT,
   useAirdropNFT,
   useBurnNFT,
+  useSharedMetadata,
+  useSetSharedMetadata,
 } from "./hooks/async/nft";
 
 // roles
@@ -194,10 +194,32 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
+// account factory
+export {
+  useIsAccountDeployed,
+  useAccounts,
+  useCreateAccount,
+  useAccountsForAddress,
+} from "./hooks/async/account-factory";
+
+// account
+export {
+  useAccountSigners,
+  useSetAccountSigners,
+  useAccountAdmins,
+  useAccountAdminsAndSigners,
+} from "./hooks/async/account";
+
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
 // auth hooks
-export { useLogin, useLogout, useUser, useAuth } from "./hooks/auth";
+export {
+  useLogin,
+  useLogout,
+  useUser,
+  useAuth,
+  useSwitchAccount,
+} from "./hooks/auth";
 export type { UserWithData } from "./hooks/auth";
 
 // contract hooks
@@ -225,11 +247,8 @@ export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider
-export {
-  ThirdwebSDKProvider,
-  useSDK,
-  useSDKChainId,
-} from "./providers/thirdweb-sdk-provider";
+export { ThirdwebSDKProvider } from "./providers/thirdweb-sdk-provider";
+export { useSDK, useSDKChainId } from "./hooks/useSDK";
 export type { ThirdwebSDKProviderProps } from "./providers/types";
 
 // types

@@ -5,16 +5,15 @@ import {
   RpcError,
   UserRejectedRequestError,
 } from "../../../lib/wagmi-core/errors";
-import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { walletIds } from "../../constants/walletIds";
 import { InjectedConnector, InjectedConnectorOptions } from "../injected";
-import { Ethereum } from "../injected/types";
 import type { Chain } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
+import { getInjectedMetamaskProvider } from "./getInjectedMetamaskProvider";
 
 export type MetaMaskConnectorOptions = Pick<
   InjectedConnectorOptions,
-  "shimChainChangedDisconnect" | "shimDisconnect"
+  "shimDisconnect"
 > & {
   /**
    * While "disconnected" with `shimDisconnect`, allows user to select a different MetaMask account (than the currently connected account) when trying to connect.
@@ -37,46 +36,7 @@ export class MetaMaskConnector extends InjectedConnector {
       name: "MetaMask",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
-      getProvider() {
-        function getReady(ethereum?: Ethereum) {
-          const isMetaMask = !!ethereum?.isMetaMask;
-          if (!isMetaMask) {
-            return;
-          }
-          // Brave tries to make itself look like MetaMask
-          // Could also try RPC `web3_clientVersion` if following is unreliable
-          if (ethereum.isBraveWallet && !ethereum._events && !ethereum._state) {
-            return;
-          }
-          if (ethereum.isAvalanche) {
-            return;
-          }
-          if (ethereum.isKuCoinWallet) {
-            return;
-          }
-          if (ethereum.isPortal) {
-            return;
-          }
-          if (ethereum.isTokenPocket) {
-            return;
-          }
-          if (ethereum.isTokenary) {
-            return;
-          }
-          return ethereum;
-        }
-
-        if (typeof window === "undefined") {
-          return;
-        }
-        if (assertWindowEthereum(globalThis.window)) {
-          if (globalThis.window.ethereum?.providers) {
-            return globalThis.window.ethereum.providers.find(getReady);
-          }
-
-          return getReady(globalThis.window.ethereum);
-        }
-      },
+      getProvider: getInjectedMetamaskProvider,
     };
 
     const options = {

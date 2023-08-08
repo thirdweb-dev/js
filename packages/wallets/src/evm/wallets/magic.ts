@@ -5,7 +5,10 @@ import type {
   MagicAuthConnectOptions,
   MagicAuthConnector as MagicAuthConnectorType,
 } from "../connectors/magic";
-import { OAuthProvider as _OAuthProvider } from "@magic-ext/oauth";
+import type {
+  OAuthProvider as _OAuthProvider,
+  OAuthRedirectResult,
+} from "@magic-ext/oauth";
 import { walletIds } from "../constants/walletIds";
 
 export type MagicLinkAdditionalOptions = MagicAuthOptions;
@@ -19,6 +22,7 @@ export class MagicLink extends AbstractClientWallet<
 > {
   connector?: Connector;
   magicConnector?: MagicAuthConnectorType;
+  oAuthRedirectResult?: OAuthRedirectResult;
 
   static meta = {
     iconURL:
@@ -71,14 +75,29 @@ export class MagicLink extends AbstractClientWallet<
     await this.initializeConnector();
     await this.magicConnector?.initializeMagicSDK(options);
     const magic = this.getMagic();
-    if (await magic.user.isLoggedIn()) {
-      return super.autoConnect(options);
-    } else {
-      throw new Error("Magic user is not logged in");
+
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const isMagicRedirect = url.searchParams.get("magic_credential");
+      if (isMagicRedirect) {
+        try {
+          this.oAuthRedirectResult = await magic.oauth.getRedirectResult(); // required to do this for social login
+        } catch {
+          // ignore
+        }
+      }
     }
+
+    const isLoggedIn = await magic.user.isLoggedIn();
+    if (isLoggedIn) {
+      return super.autoConnect(options);
+    }
+
+    throw new Error("Magic user is not logged in");
   }
 
   async disconnect() {
+    this.oAuthRedirectResult = undefined;
     const magic = this.getMagic();
     await magic.user.logout();
     return super.disconnect();

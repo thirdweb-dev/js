@@ -1,29 +1,27 @@
-import { LoginOptions } from "@thirdweb-dev/auth";
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { useWallet } from "../../../core/hooks/wallet-hooks";
 import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
-import { doLogin } from "./useLogin";
-import invariant from "tiny-invariant";
+import { useMemo } from "react";
 
-export { useLogin, doLogin } from "./useLogin";
+export { useLogin } from "./useLogin";
 export { useLogout } from "./useLogout";
 export type { UserWithData } from "./useUser";
 export { useUser } from "./useUser";
+export { useSwitchAccount } from "./useSwitchAccount";
 
 export function useAuth() {
   const wallet = useWallet();
   const authConfig = useThirdwebAuthContext();
 
-  return {
-    login: async (options?: LoginOptions) => {
-      invariant(
-        authConfig,
-        "Please specify an authConfig in the ThirdwebProvider",
-      );
-      invariant(wallet, "Need a connected a wallet!");
-      return doLogin(wallet, {
-        domain: authConfig.domain,
-        ...options,
-      });
-    },
-  };
+  return useMemo(() => {
+    if (!authConfig?.domain) {
+      return undefined;
+    }
+
+    if (!wallet) {
+      return undefined;
+    }
+
+    return new ThirdwebAuth(wallet, authConfig.domain)
+  }, [wallet, authConfig, authConfig?.domain])
 }

@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-parameter-properties */
-import { BigNumberish, Event, providers } from "ethers";
+import { BigNumberish, Event, providers, utils } from "ethers";
 import { EntryPoint } from "@account-abstraction/contracts";
-import { defaultAbiCoder } from "ethers/lib/utils";
 
 /**
  * This class encapsulates Ethers.js listener function and necessary UserOperation details to
@@ -10,7 +8,7 @@ import { defaultAbiCoder } from "ethers/lib/utils";
  * TODO refactor this to a simple event listener on the entry point
  */
 export class UserOperationEventListener {
-  resolved: boolean = false;
+  resolved = false;
   boundLisener: (this: any, ...param: any) => void;
 
   constructor(
@@ -48,6 +46,8 @@ export class UserOperationEventListener {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async listenerCallback(this: any, ...param: any): Promise<void> {
+    // TODO clean this up..
+    // eslint-disable-next-line prefer-rest-params
     const event = arguments[arguments.length - 1] as Event;
     if (!event.args) {
       console.error("got event without args", event);
@@ -92,7 +92,7 @@ export class UserOperationEventListener {
       let message = revertReasonEvents[0].args.revertReason;
       if (message.startsWith("0x08c379a0")) {
         // Error(string)
-        message = defaultAbiCoder
+        message = utils.defaultAbiCoder
           .decode(["string"], "0x" + message.substring(10))
           .toString();
       }

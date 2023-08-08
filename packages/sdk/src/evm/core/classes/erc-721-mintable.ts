@@ -1,19 +1,20 @@
-import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
+import type { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens";
-import { uploadOrExtractURI } from "../../common/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema/shared";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResultWithId } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
-import { Erc721BatchMintable } from "./erc-721-batch-mintable";
+import type { TransactionResultWithId } from "../types";
+import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { IMintableERC721 } from "@thirdweb-dev/contracts-js";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { uploadOrExtractURI } from "../../common/nft";
+import type { IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC721";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { Erc721 } from "./erc-721";
+import { Erc721BatchMintable } from "./erc-721-batch-mintable";
 
 /**
  * Mint ERC721 NFTs
@@ -25,6 +26,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * ```
  * @public
  */
+
 export class Erc721Mintable implements DetectableFeature {
   featureName = FEATURE_NFT_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721>;
@@ -67,7 +69,7 @@ export class Erc721Mintable implements DetectableFeature {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadata: NFTMetadataOrUri,

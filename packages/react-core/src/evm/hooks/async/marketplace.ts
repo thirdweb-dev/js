@@ -2,7 +2,7 @@ import {
   RequiredParam,
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDKChainId } from "../useSDK";
 import {
   AcceptDirectOffer,
   BuyFromListingParams,
@@ -33,8 +33,8 @@ import type {
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
-import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
-import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
+import type { DirectListingInputParams } from "@thirdweb-dev/sdk";
+import type { EnglishAuctionInputParams } from "@thirdweb-dev/sdk";
 import type { BigNumberish, providers } from "ethers";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
@@ -504,7 +504,7 @@ export function useEnglishAuctionWinningBid(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.auction.getWinningBid(
+    cacheKeys.contract.marketplace.englishAuctions.getWinningBid(
       contractAddress,
       auctionId,
     ),
@@ -596,7 +596,10 @@ export function useBidBuffer(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
+    cacheKeys.contract.marketplace.auction.getBidBufferBps(
+      contractAddress,
+      listingId,
+    ),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
 
@@ -647,7 +650,7 @@ export function useMinimumNextBid(
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
-    cacheKeys.contract.marketplace.auction.getWinner(
+    cacheKeys.contract.marketplace.auction.getMinimumNextBid(
       contractAddress,
       listingId,
     ),
@@ -1426,13 +1429,13 @@ export function useBuyDirectListing(contract: RequiredParam<MarketplaceV3>) {
       requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
         contract.directListings.buyFromListing,
-        "contract does not support directListings.buyFromListing"
+        "contract does not support directListings.buyFromListing",
       );
 
       return await contract.directListings.buyFromListing(
         data.listingId,
         data.quantity,
-        data.buyer
+        data.buyer,
       );
     },
     {

@@ -1,19 +1,22 @@
-import { ThirdwebSDK } from "../core/sdk";
 import { isContractDeployed } from "./any-evm-utils/isContractDeployed";
 import { getEncodedConstructorParamsForThirdwebContract } from "./any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
 import { getThirdwebContractAddress } from "./any-evm-utils/getThirdwebContractAddress";
 import { extractConstructorParamsFromAbi } from "./feature-detection/extractConstructorParamsFromAbi";
 import { resolveContractUriFromAddress } from "./feature-detection/resolveContractUriFromAddress";
-import { fetchSourceFilesFromMetadata } from "./metadata-resolver";
+import { fetchSourceFilesFromMetadata } from "./fetchSourceFilesFromMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
-import { ethers, utils } from "ethers";
+import { Contract, utils, providers } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
 import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { fetchContractMetadataFromAddress } from "./metadata-resolver";
+import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
+import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
+import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
+import { getContractPublisherAddress } from "../constants/addresses/getContractPublisherAddress";
 
 const RequestStatus = {
   OK: "1",
@@ -58,17 +61,23 @@ export async function verifyThirdwebPrebuiltImplementation(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
   constructorArgs?: ConstructorParamMap,
 ): Promise<string | string[]> {
   const contractAddress = await getThirdwebContractAddress(
     contractName,
     chainId,
     storage,
+    clientId,
+    secretKey,
   );
   const encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
     contractName,
     chainId,
     storage,
+    clientId,
+    secretKey,
     constructorArgs,
   );
 
@@ -122,10 +131,13 @@ export async function verify(
   encodedConstructorArgs?: string,
 ): Promise<string | string[]> {
   try {
-    const sdk = new ThirdwebSDK(chainId);
-    const compilerMetadata = await sdk
-      .getPublisher()
-      .fetchCompilerMetadataFromAddress(contractAddress);
+    const provider = getChainProvider(chainId, {});
+    const compilerMetadata = await fetchContractMetadataFromAddress(
+      contractAddress,
+      provider,
+      storage,
+    );
+
     const compilerVersion = compilerMetadata.metadata.compiler.version;
 
     const sources = await fetchSourceFilesFromMetadata(
@@ -179,7 +191,7 @@ export async function verify(
           explorerAPIKey,
           contractAddress,
           compilerMetadata.abi,
-          sdk.getProvider(),
+          provider,
           storage,
         );
 
@@ -262,15 +274,18 @@ export async function checkVerificationStatus(
  * @param chainId
  * @param explorerAPIUrl
  * @param explorerAPIKey
+ * ClientId get from https://thirdweb.com/create-api-key
+ * @param clientId
  */
 export async function isVerifiedOnEtherscan(
   contractAddress: string,
   chainId: number,
   explorerAPIUrl: string,
   explorerAPIKey: string,
+  clientId?: string,
 ): Promise<boolean> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: DEFAULT_API_KEY,
+    clientId,
   });
   invariant(
     await isContractDeployed(contractAddress, provider),
@@ -316,7 +331,7 @@ async function fetchConstructorParams(
   explorerAPIKey: string,
   contractAddress: string,
   abi: Abi,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<string> {
   const constructorParamTypes = extractConstructorParamsFromAbi(abi);
@@ -404,7 +419,7 @@ async function fetchConstructorParams(
     try {
       // sanity check that the constructor params are valid
       // TODO: should we sanity check after each attempt?
-      ethers.utils.defaultAbiCoder.decode(
+      utils.defaultAbiCoder.decode(
         contract.deploy.inputs,
         `0x${constructorArgs}`,
       );
@@ -432,7 +447,7 @@ async function fetchConstructorParams(
  */
 async function fetchDeployBytecodeFromPublishedContractMetadata(
   contractAddress: string,
-  provider: ethers.providers.Provider,
+  provider: providers.Provider,
   storage: ThirdwebStorage,
 ): Promise<string | undefined> {
   const compilerMetaUri = await resolveContractUriFromAddress(
@@ -440,9 +455,26 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
     provider,
   );
   if (compilerMetaUri) {
-    const pubmeta = await new ThirdwebSDK("polygon")
-      .getPublisher()
-      .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
+    const contract = new Contract(
+      getContractPublisherAddress(),
+      ContractPublisherAbi,
+      getChainProvider("polygon", {}),
+    ) as ContractPublisher;
+
+    const publishedMetadataUri = await contract.getPublishedUriFromCompilerUri(
+      compilerMetaUri,
+    );
+    if (publishedMetadataUri.length === 0) {
+      throw Error(
+        `Could not resolve published metadata URI from ${compilerMetaUri}`,
+      );
+    }
+    const pubmeta = await Promise.all(
+      publishedMetadataUri
+        .filter((uri) => uri.length > 0)
+        .map((uri) => fetchExtendedReleaseMetadata(uri, storage)),
+    );
+
     return pubmeta.length > 0
       ? await (await storage.download(pubmeta[0].bytecodeUri)).text()
       : undefined;

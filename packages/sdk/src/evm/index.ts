@@ -1,4 +1,5 @@
 // handle browser vs node global
+// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
 globalThis.global = globalThis;
 
 export type { NetworkInput } from "./core/types";
@@ -9,11 +10,20 @@ export type { Role } from "./common/role";
 export * from "./schema/contracts/custom";
 export * from "./schema/contracts/common/claim-conditions";
 export * from "./schema/tokens/common/properties";
-export * from "./constants/chains";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
-export * from "./schema/shared";
+
+// shared
+export * from "./schema/shared/BigNumberSchema";
+export * from "./schema/shared/AddressSchema";
+export * from "./schema/shared/AddressOrEnsSchema";
+export * from "./schema/shared/RawDateSchema";
+export * from "./schema/shared/CallOverrideSchema";
+export * from "./schema/shared/ChainInfo";
+export * from "./schema/shared/Ens";
+export * from "./schema/shared/Address";
+
 export type {
   SDKOptions,
   SDKOptionsSchema,
@@ -51,3 +61,7 @@ export type { SmartContract } from "./contracts/smart-contract";
 
 // re-export from functions entry point
 export * from "./functions";
+
+// marketplace v3 types
+export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
+export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";

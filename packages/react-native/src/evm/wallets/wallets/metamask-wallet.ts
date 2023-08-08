@@ -1,28 +1,11 @@
-import {
-  WalletOptions,
-  WalletConnectV1Options,
-  WalletConnectV1,
-  walletIds,
-} from "@thirdweb-dev/wallets";
-import { formatWalletConnectDisplayUri } from "../../utils/uri";
-import { Linking } from "react-native";
-import {
-  WalletOptions as WalletOptionsRC,
-  WalletConfig,
-  ExtraCoreWalletOptions,
-} from "@thirdweb-dev/react-core";
-import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
+import { WalletConnectV2 } from "./WalletConnectV2";
+import { WCMeta } from "../types/wc";
 
-type WC1Options = Omit<
-  WalletOptions<WalletConnectV1Options>,
-  "qrcode" | "walletStorage"
-> &
-  ExtraCoreWalletOptions;
-
-export class MetaMaskWallet extends WalletConnectV1 {
+export class MetaMaskWallet extends WalletConnectV2 {
   static id = walletIds.metamask;
   static meta = {
-    id: walletIds.metamask,
     name: "MetaMask",
     iconURL:
       "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
@@ -32,44 +15,22 @@ export class MetaMaskWallet extends WalletConnectV1 {
     },
   };
 
-  constructor(options: WC1Options) {
-    const storage = createAsyncLocalStorage(walletIds.metamask);
-    super({
-      ...options,
-      walletId: walletIds.metamask,
-      walletStorage: storage,
-      qrcode: false,
-    });
-
-    this.on("open_wallet", this._onWCOpenWallet);
-
-    this.on("disconnect", () => {
-      this.removeListener("open_wallet", this._onWCOpenWallet);
-    });
-  }
-
-  _onWCOpenWallet(uri?: string) {
-    const links = MetaMaskWallet.meta.links;
-
-    console.log("links", links);
-    console.log("uri", uri);
-
-    if (uri) {
-      const fullUrl = formatWalletConnectDisplayUri(uri, links);
-
-      Linking.openURL(fullUrl);
-    } else {
-      const fullUrl = formatWalletConnectDisplayUri("", links);
-
-      Linking.openURL(fullUrl);
-    }
+  getMeta(): WCMeta {
+    return MetaMaskWallet.meta;
   }
 }
 
-export const metamaskWallet = () => {
+type MetaMaskWalletConfig = { projectId?: string };
+
+export const metamaskWallet = (config?: MetaMaskWalletConfig) => {
   return {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
-    create: (options: WalletOptionsRC) => new MetaMaskWallet(options),
+    create: (options: WalletOptions) =>
+      new MetaMaskWallet({
+        ...options,
+        walletId: walletIds.metamask,
+        projectId: config?.projectId,
+      }),
   } satisfies WalletConfig;
 };

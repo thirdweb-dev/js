@@ -1,10 +1,11 @@
 import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { MissingRoleError } from "../../common/error";
 import { getRoleHash, Role } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -130,7 +131,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @twfeature Permissions
    *
    * */
-  setAll = buildTransactionFunction(
+  setAll = /* @__PURE__ */ buildTransactionFunction(
     async (rolesWithAddresses: {
       [key in TRole]?: AddressOrEns[];
     }): Promise<Transaction> => {
@@ -244,7 +245,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  grant = buildTransactionFunction(
+  grant = /* @__PURE__ */ buildTransactionFunction(
     async (role: TRole, address: AddressOrEns): Promise<Transaction> => {
       invariant(
         this.roles.includes(role),
@@ -284,7 +285,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @public
    * @twfeature Permissions
    */
-  revoke = buildTransactionFunction(
+  revoke = /* @__PURE__ */ buildTransactionFunction(
     async (role: TRole, address: AddressOrEns): Promise<Transaction> => {
       invariant(
         this.roles.includes(role),

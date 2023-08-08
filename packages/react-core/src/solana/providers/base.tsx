@@ -74,7 +74,7 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
         sdk,
         desiredNetwork: network || "unknown",
         _inProvider: true,
-      } as const),
+      }) as const,
     [sdk, network],
   );
 
@@ -94,7 +94,7 @@ interface ThirdwebSDKContext {
   desiredNetwork: string;
   _inProvider?: true;
 }
-const ThirdwebSDKContext = createContext<ThirdwebSDKContext>({
+const ThirdwebSDKContext = /* @__PURE__ */ createContext<ThirdwebSDKContext>({
   sdk: null,
   desiredNetwork: "unknown",
 });

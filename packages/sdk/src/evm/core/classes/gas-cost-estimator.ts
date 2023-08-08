@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract, BigNumber, ethers } from "ethers";
+import { BaseContract, BigNumber, utils } from "ethers";
 
 /**
  * Estimates the gas cost of Contract calls
@@ -31,12 +31,13 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @public
    */
   public async gasCostOf(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
     const price = await this.contractWrapper.getPreferredGasPrice();
     const gasUnits = await this.contractWrapper.estimateGas(fn, args);
-    return ethers.utils.formatEther(gasUnits.mul(price));
+    return utils.formatEther(gasUnits.mul(price));
   }
 
   /**
@@ -58,6 +59,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @public
    */
   public async gasLimitOf(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<BigNumber> {
@@ -76,6 +78,6 @@ export class GasCostEstimator<TContract extends BaseContract> {
    */
   public async currentGasPriceInGwei(): Promise<string> {
     const price = await this.contractWrapper.getProvider().getGasPrice();
-    return ethers.utils.formatUnits(price, "gwei");
+    return utils.formatUnits(price, "gwei");
   }
 }

@@ -2,7 +2,6 @@ import {
   MockUploader,
   MockDownloader,
   ThirdwebStorage,
-  IpfsUploadBatchOptions,
   FileOrBufferOrString,
 } from "@thirdweb-dev/storage";
 
@@ -12,13 +11,21 @@ export function MockStorage(): ThirdwebStorage {
   // Store mapping of URIs to files/objects
   const uploader = new MockUploader(storage);
   const downloader = new MockDownloader(storage);
-  return new ThirdwebStorage({ uploader, downloader });
+  return new ThirdwebStorage({
+    uploader,
+    downloader,
+    secretKey: process.env.TW_SECRET_KEY,
+  });
 }
 
-export async function mockUploadWithCID(
-  cid: any,
-  file: FileOrBufferOrString,
-  options?: IpfsUploadBatchOptions | undefined,
-) {
-  storage[cid] = file;
+export async function mockUploadWithCID(cid: any, file: FileOrBufferOrString) {
+  const [cidMain, id] = cid.split("/");
+
+  if (id) {
+    storage[cidMain] = {
+      [id]: file,
+    };
+  } else {
+    storage[cid] = file;
+  }
 }

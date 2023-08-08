@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
@@ -11,14 +10,15 @@ import {
   ModalDescription,
   HelperLink,
 } from "../../../components/modalElements";
-import { iconSize, spacing } from "../../../design-system";
+import { iconSize } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import { WalletConfig } from "@thirdweb-dev/react-core";
-import { SafeConfiguredWallet } from "./types";
+import { SafeWalletConfig } from "./types";
+import { useEffect, useRef } from "react";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
-  safeWallet: SafeConfiguredWallet;
+  safeWallet: SafeWalletConfig;
   personalWallets: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
   renderBackButton?: boolean;
@@ -30,16 +30,37 @@ export const SelectpersonalWallet: React.FC<{
     (w) => w.id !== walletIds.localWallet,
   );
 
+  // auto select guest wallet if no other wallets
+  const { selectWallet } = props;
+  const selected = useRef(false);
+  useEffect(() => {
+    if (selected.current) {
+      return;
+    }
+
+    if (guestWallet && personalWallets.length === 0) {
+      selected.current = true;
+      selectWallet(guestWallet);
+    }
+  }, [guestWallet, personalWallets.length, selectWallet]);
+
+  if (guestWallet && personalWallets.length === 0) {
+    return <div style={{ height: "250px" }}></div>;
+  }
+
   return (
     <>
-      {props.renderBackButton && <BackButton onClick={props.onBack} />}
-      <IconContainer>
-        <Img
-          src={props.safeWallet.meta.iconURL}
-          width={iconSize.xl}
-          height={iconSize.xl}
-        />
-      </IconContainer>
+      {props.renderBackButton && (
+        <>
+          <BackButton onClick={props.onBack} />
+          <Spacer y="md" />
+        </>
+      )}
+      <Img
+        src={props.safeWallet.meta.iconURL}
+        width={iconSize.xl}
+        height={iconSize.xl}
+      />
       <Spacer y="lg" />
       <ModalTitle>Link Personal Wallet</ModalTitle>
       <Spacer y="sm" />
@@ -66,6 +87,7 @@ export const SelectpersonalWallet: React.FC<{
             onClick={() => {
               props.selectWallet(guestWallet);
             }}
+            data-test="continue-as-guest-button"
           >
             Continue as guest
           </Button>
@@ -84,7 +106,3 @@ export const SelectpersonalWallet: React.FC<{
     </>
   );
 };
-
-const IconContainer = styled.div`
-  margin-top: ${spacing.lg};
-`;

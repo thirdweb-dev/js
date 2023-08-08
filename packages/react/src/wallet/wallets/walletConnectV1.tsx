@@ -1,12 +1,9 @@
-import { WalletConnectV1 } from "@thirdweb-dev/wallets";
-import { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
+import { walletConnect } from "./walletConnect";
 
-export const walletConnectV1 = (): WalletConfig<WalletConnectV1> => {
-  return {
-    id: WalletConnectV1.id,
-    meta: WalletConnectV1.meta,
-    create(options: WalletOptions) {
-      return new WalletConnectV1({ ...options, qrcode: true });
-    },
-  };
-};
+/**
+ * @deprecated Use `walletConnect` instead
+ *
+ * The WalletConnect v1.0 protocol has been shut down and no longer works.
+ * To avoid breaking change, `walletConnectV1` is still available but is an alias of `walletConnect`.
+ */
+export const walletConnectV1 = walletConnect;

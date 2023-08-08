@@ -19,13 +19,15 @@ export function extractFunctionsFromAbi(
     const args =
       f.inputs?.map((i) => `${i.name || "key"}: ${toJSType(i)}`)?.join(", ") ||
       "";
-    const fargs = args ? `, ${args}` : "";
+    const fargs = args ? `, [${args}]` : "";
     const out = f.outputs?.map((o) => toJSType(o, true))?.join(", ");
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore we know AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       inputs: f.inputs || [],
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore we know the AbiTypeBaseSchema.name is not going to be undefined since we're doing `.default("")`
       outputs: f.outputs || [],
       name: f.name || "unknown",

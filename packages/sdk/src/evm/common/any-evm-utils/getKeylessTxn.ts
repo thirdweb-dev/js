@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { utils, type UnsignedTransaction } from "ethers";
 import { KeylessTransaction } from "../../types/any-evm/deploy-data";
 
 /**
@@ -9,23 +9,20 @@ import { KeylessTransaction } from "../../types/any-evm/deploy-data";
  * @param signature: Signature bytes
  */
 export function getKeylessTxn(
-  transaction: ethers.UnsignedTransaction,
+  transaction: UnsignedTransaction,
   signature: string,
 ): KeylessTransaction {
   // 1. Create serialized txn string
-  const digest = ethers.utils.arrayify(
-    ethers.utils.keccak256(ethers.utils.serializeTransaction(transaction)),
+  const digest = utils.arrayify(
+    utils.keccak256(utils.serializeTransaction(transaction)),
   );
 
   // 2. Determine signer address from custom signature + txn
-  const signer = ethers.utils.recoverAddress(digest, signature);
+  const signer = utils.recoverAddress(digest, signature);
 
   // 3. Create the signed serialized txn string.
   // To be sent directly to the chain using a provider.
-  const signedSerializedTx = ethers.utils.serializeTransaction(
-    transaction,
-    signature,
-  );
+  const signedSerializedTx = utils.serializeTransaction(transaction, signature);
 
   return {
     signer: signer,

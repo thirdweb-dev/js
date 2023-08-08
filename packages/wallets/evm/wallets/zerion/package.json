@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-zerion.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-zerion.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-zerion.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-zerion.browser.esm.js"
+  }
+}

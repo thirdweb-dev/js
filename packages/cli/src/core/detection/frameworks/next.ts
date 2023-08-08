@@ -22,8 +22,8 @@ export default class NextDetector implements FrameworkDetector {
     );
 
     const nextDependencyExists =
-      dependencies["next"] ||
-      devDependencies["next"] ||
+      !!dependencies["next"] ||
+      !!devDependencies["next"] ||
       additionalFilesExist ||
       false;
 
