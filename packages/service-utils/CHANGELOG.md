@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.1
+
+### Patch Changes
+
+- [#1454](https://github.com/thirdweb-dev/js/pull/1454) [`6979810d`](https://github.com/thirdweb-dev/js/commit/6979810de5c3fc700c7b5b91ac1567d9cdf50607) Thanks [@nessup](https://github.com/nessup)! - Update error message
+
 ## 0.4.0
 
 ### Minor Changes

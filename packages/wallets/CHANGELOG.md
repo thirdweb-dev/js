@@ -1,5 +1,14 @@
 # @thirdweb-dev/wallets
 
+## 1.1.11
+
+### Patch Changes
+
+- [#1460](https://github.com/thirdweb-dev/js/pull/1460) [`4b0e63dc`](https://github.com/thirdweb-dev/js/commit/4b0e63dcc0ca871ce9cef76f8a41ff290316741c) Thanks [@MananTank](https://github.com/MananTank)! - Save `oAuthRedirectResult` when autoconnecting Magic Link via social login
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.47
+
 ## 1.1.10
 
 ### Patch Changes

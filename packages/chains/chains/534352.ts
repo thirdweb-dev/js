@@ -3,7 +3,10 @@ export default {
   "name": "Scroll",
   "chain": "ETH",
   "status": "incubating",
-  "rpc": [],
+  "rpc": [
+    "https://scroll.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.scroll.io"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -14,11 +17,21 @@ export default {
   "shortName": "scr",
   "chainId": 534352,
   "networkId": 534352,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Scroll Mainnet Block Explorer",
+      "url": "https://blockscout.scroll.io",
+      "standard": "EIP3091"
+    }
+  ],
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
-    "bridges": []
+    "bridges": [
+      {
+        "url": "https://scroll.io/bridge"
+      }
+    ]
   },
   "testnet": false,
   "slug": "scroll"
