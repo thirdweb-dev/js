@@ -66,7 +66,11 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
+export function getGatewayUrlForCid(
+  gatewayUrl: string,
+  cid: string,
+  clientId?: string,
+): string {
   const parts = cid.split("/");
   const hash = convertCidToV1(parts[0]);
   const filePath = parts.slice(1).join("/");
@@ -85,6 +89,15 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
   // If those tokens don't exist, use the canonical gateway URL format
   else {
     url += `${hash}/${filePath}`;
+  }
+  // if the URL contains the {clientId} token, replace it with the client ID
+  if (gatewayUrl.includes("{clientId}")) {
+    if (!clientId) {
+      throw new Error(
+        "Cannot use {clientId} in gateway URL without providing a client ID",
+      );
+    }
+    url = url.replace("{clientId}", clientId);
   }
 
   return url;
