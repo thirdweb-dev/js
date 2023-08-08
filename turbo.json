@@ -29,7 +29,13 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/react#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
+      "outputs": [
+        "dist/**",
+        "evm/**",
+        "solana/**",
+        "ThirdwebProvider/**",
+        "ConnectWallet/**"
+      ],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/react-core#build": {
