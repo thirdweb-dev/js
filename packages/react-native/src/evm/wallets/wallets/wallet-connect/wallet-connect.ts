@@ -4,15 +4,16 @@ import {
   WalletConnectOptions,
   WalletConnect as WalletConnectCore,
 } from "@thirdweb-dev/wallets";
-import { formatDisplayUri } from "../../utils/uri";
 import { Linking } from "react-native";
 import {
   WalletOptions as WalletOptionsRC,
-  ConfiguredWallet,
   ExtraCoreWalletOptions,
+  WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
-import { TW_WC_PROJECT_ID, WC_LINKS } from "../../constants/walletConnect";
+import { createAsyncLocalStorage } from "../../../../core/AsyncStorage";
+import { TW_WC_PROJECT_ID, WC_LINKS } from "../../../constants/walletConnect";
+import { formatWalletConnectDisplayUri } from "../../../utils/uri";
+import { WalletConnectUI } from "./WalletConnectUI";
 
 type WCOptions = Omit<WalletOptions<WalletConnectOptions>, "qrcode"> & {
   qrcode: false;
@@ -38,10 +39,12 @@ export class WalletConnect extends WalletConnectCore {
       qrcode: false,
     });
 
-    this.on("open_wallet", this._onWCOpenWallet);
+    this.on("display_uri", this._onWCOpenWallet);
+    this.on("wc_session_request_sent", this._onWCOpenWallet);
 
     this.on("disconnect", () => {
-      this.removeListener("open_wallet", this._onWCOpenWallet);
+      this.removeListener("display_uri", this._onWCOpenWallet);
+      this.removeListener("wc_session_request_sent", this._onWCOpenWallet);
     });
   }
 
@@ -84,13 +87,13 @@ export class WalletConnect extends WalletConnectCore {
     console.log("uri", uri);
 
     if (uri) {
-      const fullUrl = formatDisplayUri(uri, links);
+      const fullUrl = formatWalletConnectDisplayUri(uri, links);
 
       console.log("fullUrl.1st", fullUrl);
 
       Linking.openURL(fullUrl);
     } else {
-      const fullUrl = formatDisplayUri("", links);
+      const fullUrl = formatWalletConnectDisplayUri("", links);
 
       console.log("fullUrl", fullUrl);
 
@@ -109,8 +112,6 @@ export const walletConnect = (config?: WalletConnectConfig) => {
     meta: WalletConnectCore.meta,
     create: (options: WalletOptionsRC) =>
       new WalletConnect({ ...options, qrcode: false, projectId }),
-    config: {
-      projectId,
-    },
-  } satisfies ConfiguredWallet<WalletConnect, WalletConnectConfig>;
+    connectUI: WalletConnectUI,
+  } satisfies WalletConfig;
 };
