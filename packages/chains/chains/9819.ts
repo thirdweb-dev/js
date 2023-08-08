@@ -2,7 +2,11 @@ import type { Chain } from "../src/types";
 export default {
   "name": "IMPERIUM MAINNET",
   "chain": "IMP",
-  "rpc": [],
+  "rpc": [
+    "https://imperium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://data-aws-mainnet.imperiumchain.com",
+    "https://data-aws2-mainnet.imperiumchain.com"
+  ],
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],
