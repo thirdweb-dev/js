@@ -75,8 +75,8 @@
       "solana/index.ts",
       "evm/index.ts",
       "evm/connectors/**/index.ts",
-      "thirdweb-provider.ts",
-      "connect-wallet.ts"
+      "thirdweb-provider/index.ts",
+      "connect-wallet/index.ts"
     ],
     "exports": {
       "envConditions": [
