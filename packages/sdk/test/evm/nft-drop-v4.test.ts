@@ -594,6 +594,117 @@ describe("NFT Drop Contract (v4)", async () => {
     }
   });
 
+  it("should check eligibility reasons max claims per wallet with allowlist", async () => {
+    await dropContract.createBatch([
+      { name: "name", description: "description" },
+      { name: "name2", description: "description" },
+      { name: "name3", description: "description" },
+      { name: "name4", description: "description" },
+    ]);
+    await dropContract.claimConditions.set([{}]);
+    let c = await dropContract.claimConditions.getSupplyClaimedByWallet(
+      w1.address,
+    );
+    expect(c.toNumber()).to.eq(0);
+
+    await sdk.updateSignerOrProvider(w1);
+    await dropContract.claim(2);
+
+    c = await dropContract.claimConditions.getSupplyClaimedByWallet(w1.address);
+
+    expect(c.toNumber()).to.eq(2);
+  });
+
+  it("should check eligibility reasons max claims per wallet with allowlist", async () => {
+    await dropContract.createBatch([
+      { name: "name", description: "description" },
+      { name: "name2", description: "description" },
+      { name: "name3", description: "description" },
+      { name: "name4", description: "description" },
+    ]);
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        snapshot: [
+          { address: w1.address, maxClaimable: 2 },
+          { address: w2.address, maxClaimable: 1 },
+        ],
+      },
+    ]);
+    let r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      2,
+      await w1.getAddress(),
+    );
+    expect(r.length).to.eq(0);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      10,
+      await w1.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.OverMaxClaimablePerWallet);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      10,
+      await w3.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.AddressNotAllowed);
+
+    await sdk.updateSignerOrProvider(w1);
+    await dropContract.claim(2);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      1,
+      await w1.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.OverMaxClaimablePerWallet);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      2,
+      await w2.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.OverMaxClaimablePerWallet);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      2,
+      await w3.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.AddressNotAllowed);
+  });
+
+  it("should check eligibility reasons max claims per wallet", async () => {
+    await dropContract.createBatch([
+      { name: "name", description: "description" },
+      { name: "name2", description: "description" },
+      { name: "name3", description: "description" },
+      { name: "name4", description: "description" },
+    ]);
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    let r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      1,
+      await w1.getAddress(),
+    );
+    expect(r.length).to.eq(0);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      2,
+      await w1.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.OverMaxClaimablePerWallet);
+
+    await sdk.updateSignerOrProvider(w1);
+    await dropContract.claim(1);
+
+    r = await dropContract.claimConditions.getClaimIneligibilityReasons(
+      1,
+      await w1.getAddress(),
+    );
+    expect(r[0]).to.eq(ClaimEligibility.OverMaxClaimablePerWallet);
+  });
+
   it("should return the newly claimed token", async () => {
     await dropContract.claimConditions.set([{}]);
     await dropContract.createBatch([
