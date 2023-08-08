@@ -104,17 +104,17 @@
     },
     "e2e-cra-5#e2e": {
       "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
     "e2e-next-12#e2e": {
       "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
     "e2e-vite-3#e2e": {
       "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
     "thirdweb#e2e": {
