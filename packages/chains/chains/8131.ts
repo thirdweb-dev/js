@@ -2,8 +2,15 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Qitmeer Network Testnet",
   "chain": "MEER",
-  "rpc": [],
-  "faucets": [],
+  "rpc": [
+    "https://qitmeer-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-qng.rpc.qitmeer.io",
+    "https://testnet.meerlabs.com",
+    "https://meer.testnet.meerfans.club"
+  ],
+  "faucets": [
+    "https://faucet.qitmeer.io"
+  ],
   "nativeCurrency": {
     "name": "Qitmeer Testnet",
     "symbol": "MEER-T",
@@ -28,7 +35,7 @@ export default {
         "height": 512,
         "format": "png"
       },
-      "url": "https://testnet.qng.meerscan.io",
+      "url": "https://qng-testnet.meerscan.io",
       "standard": "none"
     }
   ],
