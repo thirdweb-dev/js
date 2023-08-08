@@ -1474,9 +1474,6 @@ importers:
       '@playwright/test':
         specifier: 1.31.2
         version: 1.31.2
-      crypto-browserify:
-        specifier: ^3.12.0
-        version: 3.12.0
       serve:
         specifier: ^14.0.1
         version: 14.2.0
