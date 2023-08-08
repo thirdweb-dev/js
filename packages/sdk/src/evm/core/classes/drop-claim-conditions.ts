@@ -394,8 +394,6 @@ export class DropClaimConditions<
       this.isNewSinglePhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
-      const claimerProofs = await this.getClaimerProofs(resolvedAddress);
-
       let claimedSupply = BigNumber.from(0);
       let maxClaimable = convertQuantityToBigNumber(
         claimCondition.maxClaimablePerWallet,
@@ -408,9 +406,9 @@ export class DropClaimConditions<
         // no-op
       }
 
-      if (claimerProofs) {
+      if (allowListEntry) {
         maxClaimable = convertQuantityToBigNumber(
-          claimerProofs.maxClaimable,
+          allowListEntry.maxClaimable,
           decimals,
         );
       }
