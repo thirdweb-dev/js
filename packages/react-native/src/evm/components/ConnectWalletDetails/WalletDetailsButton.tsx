@@ -14,12 +14,14 @@ export type ConnectWalletDetailsProps = {
   address?: string;
   detailsButton?: React.FC<{ onPress: () => void }>;
   extraRows?: React.FC;
+  hideTestnetFaucet?: boolean;
 };
 
 export const WalletDetailsButton = ({
   address,
   detailsButton,
   extraRows,
+  hideTestnetFaucet,
 }: ConnectWalletDetailsProps) => {
   const activeWallet = useWallet();
   const chain = useChain();
@@ -46,6 +48,7 @@ export const WalletDetailsButton = ({
         onClosePress={onPress}
         extraRows={extraRows}
         address={address}
+        hideTestnetFaucet={hideTestnetFaucet}
       />
       {detailsButton ? (
         detailsButton({ onPress })

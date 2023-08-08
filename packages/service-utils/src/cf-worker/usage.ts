@@ -38,6 +38,7 @@ const usageEventSchema = z.object({
   transactionHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
   gasPricePerUnit: z.string().optional(),
+  userOpHash: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
@@ -63,7 +64,7 @@ export async function publishUsageEvents(
     secretAccessKey: string;
     region?: string;
   },
-): Promise<string> {
+): Promise<void> {
   const {
     queueUrl,
     accessKeyId,
@@ -71,17 +72,21 @@ export async function publishUsageEvents(
     region = "us-west-2",
   } = config;
 
-  const entries = usageEvents.map((event) => ({
-    Id: crypto.randomUUID(),
-    MessageBody: JSON.stringify(event),
-  }));
+  const entries = usageEvents.map((event) => {
+    // Enforce schema of usage event.
+    const parsed = usageEventSchema.parse(event);
+    return {
+      Id: crypto.randomUUID(),
+      MessageBody: JSON.stringify(parsed),
+    };
+  });
 
   const aws = getAws({
     accessKeyId,
     secretAccessKey,
     region,
   });
-  const res = await aws.fetch(`https://sqs.${region}.amazonaws.com`, {
+  await aws.fetch(`https://sqs.${region}.amazonaws.com`, {
     headers: {
       "X-Amz-Target": "AmazonSQS.SendMessageBatch",
       "X-Amz-Date": new Date().toISOString(),
@@ -92,5 +97,4 @@ export async function publishUsageEvents(
       Entries: entries,
     }),
   });
-  return await res.text();
 }

@@ -71,13 +71,13 @@ interface TWBridge {
   initialize: (chain: ChainIdOrName, options: string) => void;
   connect: (
     wallet: PossibleWallet,
-    chainId?: number,
+    chainId: string,
     password?: string,
     email?: string,
     personalWallet?: PossibleWallet,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
-  switchNetwork: (chainId: number) => Promise<void>;
+  switchNetwork: (chainId: string) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
   invokeListener: (
     taskId: string,
@@ -299,7 +299,7 @@ class ThirdwebBridge implements TWBridge {
 
   public async connect(
     wallet: PossibleWallet = "injected",
-    chainId?: number | undefined,
+    chainId: string,
     password?: string,
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
@@ -307,15 +307,13 @@ class ThirdwebBridge implements TWBridge {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
-    if (chainId === 0) {
-      chainId = undefined;
-    }
     const walletInstance = this.walletMap.get(wallet);
+    const chainIdNumber = Number(chainId);
     if (walletInstance) {
       // local wallet needs to be generated or loaded before connecting
       if (walletInstance.walletId === walletIds.localWallet) {
         await this.initializeLocalWallet(password as string);
-        walletInstance.connect({ chainId });
+        walletInstance.connect({ chainId: chainIdNumber });
       }
 
       if (walletInstance.walletId === walletIds.magicLink) {
@@ -323,13 +321,13 @@ class ThirdwebBridge implements TWBridge {
         if (!email) {
           throw new Error("Email is required for Magic Link Wallet");
         }
-        await magicLinkWallet.connect({ chainId, email });
+        await magicLinkWallet.connect({ chainId: chainIdNumber, email: email });
       } else if (walletInstance.walletId === walletIds.paper) {
         const paperWallet = walletInstance as PaperWallet;
         if (!email) {
           throw new Error("Email is required for Paper Wallet");
         }
-        await paperWallet.connect({ chainId, email });
+        await paperWallet.connect({ chainId: chainIdNumber, email: email });
       } else if (walletInstance.walletId === walletIds.smartWallet) {
         const smartWallet = walletInstance as SmartWallet;
         const eoaWallet = this.walletMap.get(personalWallet);
@@ -351,7 +349,7 @@ class ThirdwebBridge implements TWBridge {
           );
         }
       } else {
-        await walletInstance.connect({ chainId });
+        await walletInstance.connect({ chainId: chainIdNumber });
       }
 
       this.activeWallet = walletInstance;
@@ -370,9 +368,9 @@ class ThirdwebBridge implements TWBridge {
     }
   }
 
-  public async switchNetwork(chainId: number) {
+  public async switchNetwork(chainId: string) {
     if (chainId && this.activeWallet && "switchChain" in this.activeWallet) {
-      await this.activeWallet.switchChain(chainId);
+      await this.activeWallet.switchChain(Number(chainId));
       this.updateSDKSigner(await this.activeWallet.getSigner());
     } else {
       throw new Error("Error Switching Network");

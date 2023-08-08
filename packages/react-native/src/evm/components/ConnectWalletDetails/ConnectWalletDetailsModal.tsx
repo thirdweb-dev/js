@@ -32,11 +32,13 @@ export const ConnectWalletDetailsModal = ({
   onClosePress,
   extraRows,
   address,
+  hideTestnetFaucet,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
   extraRows?: React.FC;
   address?: string;
+  hideTestnetFaucet?: boolean;
 }) => {
   const theme = useAppTheme();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -198,7 +200,7 @@ export const ConnectWalletDetailsModal = ({
             <Text variant="bodySmallSecondary">Current Network</Text>
           </View>
           <NetworkButton chain={chain} enableSwitchModal={true} />
-          {chain?.testnet && chain?.faucets?.length ? (
+          {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
             <IconTextButton
               mt="xs"
               text="Request Testnet Funds"
