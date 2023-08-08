@@ -1,5 +1,31 @@
 # @thirdweb-dev/storage
 
+## 1.2.4
+
+### Patch Changes
+
+- [#1455](https://github.com/thirdweb-dev/js/pull/1455) [`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4) Thanks [@jnsdls](https://github.com/jnsdls)! - allow overriding the upload server url for IpfsUploader for advanced usage
+
+## 1.2.3
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
+## 1.2.2
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
+## 1.2.1
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1404](https://github.com/thirdweb-dev/js/pull/1404) [`51b36040`](https://github.com/thirdweb-dev/js/commit/51b3604021ca7b52fd00fd07c5a648a73464a61b) Thanks [@iketw](https://github.com/iketw)! - Read custom upload url from env
+
 ## 1.2.0
 
 ### Minor Changes

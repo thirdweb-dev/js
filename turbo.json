@@ -67,17 +67,20 @@
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "test:solana": {
       "outputs": ["coverage/solana/**"],
       "inputs": ["src/core/**", "src/solana/**", "test/solana/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "test:evm": {
       "outputs": ["coverage/evm/**"],
       "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "e2e": {
       "outputs": [],
@@ -117,7 +120,8 @@
     "thirdweb#e2e": {
       "outputs": [],
       "inputs": ["src/**", "e2e/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "lint": {
       "outputs": []

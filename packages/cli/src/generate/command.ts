@@ -15,11 +15,11 @@ import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
 export async function generate(options: GenerateOptions, apiSecretKey: string) {
-  let projectPath: string = options.path?.replace(/\/$/, "") || ".";
+  const projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
   // Find all addresses in this project
-  let addresses: string[] = [];
+  const addresses: string[] = [];
   findMatches(projectPath, /(0x[a-fA-F0-9]{40})/g, addresses);
 
   // We check if there's a thirdweb.json config file present
@@ -199,14 +199,14 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
   }
 
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-  if (packageJson.scripts?.postinstall?.includes("thirdweb generate")) {
+  if (packageJson.scripts?.postinstall?.includes("thirdweb generate") || packageJson.scripts?.postinstall?.includes("thirdweb@latest generate")) {
     return;
   }
 
   const postinstall = packageJson.scripts?.postinstall
     ? packageJson.scripts.postinstall +
-      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`
-    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`;
+      `npx --yes thirdweb@latest generate`
+    : `npx --yes thirdweb@latest generate`;
 
   fs.writeFileSync(
     packageJsonPath,

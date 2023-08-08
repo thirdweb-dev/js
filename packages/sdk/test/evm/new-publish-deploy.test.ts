@@ -1,5 +1,11 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { jsonProvider, sdk, signers, thirdwebFactory } from "./before-setup";
+import {
+  extendedMetadataMock,
+  jsonProvider,
+  sdk,
+  signers,
+  thirdwebFactory,
+} from "./before-setup";
 import { expect, assert } from "chai";
 import {
   Forwarder__factory,
@@ -21,30 +27,6 @@ import {
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
 import { mockUploadMetadataWithBytecode } from "./utils";
-
-const extendedMetadataMock = {
-  name: "",
-  metadataUri: "",
-  bytecodeUri: "",
-  analytics: {},
-  version: "1.0.0",
-  displayName: "",
-  description: "",
-  changelog: "",
-  isDeployableViaFactory: false,
-  isDeployableViaProxy: false,
-  factoryDeploymentData: {
-    implementationAddresses: {},
-    implementationInitializerFunction: "initialize",
-    factoryAddresses: {},
-  },
-  constructorParams: {},
-  publisher: "",
-  customFactoryInput: {
-    factoryFunction: "",
-    customFactoryAddresses: [],
-  },
-};
 
 describe("New Publish Flow", async () => {
   let adminWallet: SignerWithAddress,
@@ -117,7 +99,7 @@ describe("New Publish Flow", async () => {
       const admin = await adminWallet.getAddress();
       const contractAddress = await sdk.deployer.deployContractFromUri(
         mockPublishUri,
-        ["Direct Deploy ERC721Base", "DDE", admin, 5],
+        [admin, "Direct Deploy ERC721Base", "DDE", admin, 5],
       );
       const contract = await sdk.getContract(contractAddress);
 
@@ -266,7 +248,7 @@ describe("New Publish Flow", async () => {
       const admin = await adminWallet.getAddress();
       const contractAddress = await sdk.deployer.deployContractFromUri(
         mockPublishUri,
-        ["Direct Deploy ERC721Base", "DDE", admin, 5],
+        [admin, "Direct Deploy ERC721Base", "DDE", admin, 5],
       );
       const contract = await sdk.getContract(contractAddress);
 

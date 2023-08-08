@@ -14,6 +14,7 @@ import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 
 export * from "./types";
+export { getToken } from "./helpers/user";
 
 const asyncHandler =
   (fn: CallableFunction) =>

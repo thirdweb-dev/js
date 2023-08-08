@@ -6,7 +6,8 @@ export default {
     "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
-    "https://mainnet.optimism.io/"
+    "https://mainnet.optimism.io",
+    "https://optimism.publicnode.com"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -20,6 +21,11 @@ export default {
   "networkId": 10,
   "explorers": [
     {
+      "name": "etherscan",
+      "url": "https://optimistic.etherscan.io",
+      "standard": "EIP3091"
+    },
+    {
       "name": "blockscout",
       "url": "https://optimism.blockscout.com",
       "icon": {
@@ -28,11 +34,6 @@ export default {
         "height": 540,
         "format": "png"
       },
-      "standard": "EIP3091"
-    },
-    {
-      "name": "etherscan",
-      "url": "https://optimistic.etherscan.io",
       "standard": "EIP3091"
     }
   ],
