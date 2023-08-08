@@ -137,20 +137,11 @@ export const authenticateUser = async (
           }
         });
       }
-      const allowedOrigins = [
-        "https://thirdweb-www-git-mariano-cli-auth.thirdweb-preview.com",
-        "https://thirdweb.com",
-        "http://localhost:3000",
-      ];
+
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader('Access-Control-Allow-Methods', '*');
 
       if (req.method === 'OPTIONS') {
-        const origin = req.headers.origin as string;
-
-        if (allowedOrigins.includes(origin)) {
-          res.setHeader("Access-Control-Allow-Origin", origin);
-        }
-
-        res.setHeader('Access-Control-Allow-Methods', 'GET');
         res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
         res.writeHead(200);
         res.end();
