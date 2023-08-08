@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-react-ConnectWallet.cjs.js",
+  "module": "dist/thirdweb-dev-react-ConnectWallet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-react-ConnectWallet.esm.js": "./dist/thirdweb-dev-react-ConnectWallet.browser.esm.js"
+  }
+}

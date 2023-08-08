@@ -32,12 +32,12 @@
       },
       "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
     },
-    "./connect-wallet": {
+    "./ConnectWallet": {
       "module": {
-        "browser": "./connect-wallet/dist/thirdweb-dev-react-connect-wallet.browser.esm.js",
-        "default": "./connect-wallet/dist/thirdweb-dev-react-connect-wallet.esm.js"
+        "browser": "./ConnectWallet/dist/thirdweb-dev-react-ConnectWallet.browser.esm.js",
+        "default": "./ConnectWallet/dist/thirdweb-dev-react-ConnectWallet.esm.js"
       },
-      "default": "./connect-wallet/dist/thirdweb-dev-react-connect-wallet.cjs.js"
+      "default": "./ConnectWallet/dist/thirdweb-dev-react-ConnectWallet.cjs.js"
     },
     "./thirdweb-provider": {
       "module": {
@@ -67,7 +67,7 @@
     "evm/",
     "solana/",
     "thirdweb-provider/",
-    "connect-wallet/"
+    "ConnectWallet/"
   ],
   "preconstruct": {
     "entrypoints": [
@@ -76,7 +76,7 @@
       "evm/index.ts",
       "evm/connectors/**/index.ts",
       "thirdweb-provider/index.ts",
-      "connect-wallet/index.ts"
+      "ConnectWallet/index.ts"
     ],
     "exports": {
       "envConditions": [
