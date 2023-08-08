@@ -5,7 +5,6 @@ import {
   PreDeployMetadataFetched,
 } from "../../schema/contracts/custom";
 import { isFeatureEnabled } from "../feature-detection/isFeatureEnabled";
-import { fetchContractMetadataFromAddress } from "../metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { getChainProvider } from "../../constants/urls";
 import { fetchAndCachePublishedContractURI } from "../any-evm-utils/fetchAndCachePublishedContractURI";
