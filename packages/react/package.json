@@ -32,6 +32,20 @@
       },
       "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
     },
+    "./connect-wallet": {
+      "module": {
+        "browser": "./connect-wallet/dist/thirdweb-dev-react-connect-wallet.browser.esm.js",
+        "default": "./connect-wallet/dist/thirdweb-dev-react-connect-wallet.esm.js"
+      },
+      "default": "./connect-wallet/dist/thirdweb-dev-react-connect-wallet.cjs.js"
+    },
+    "./thirdweb-provider": {
+      "module": {
+        "browser": "./thirdweb-provider/dist/thirdweb-dev-react-thirdweb-provider.browser.esm.js",
+        "default": "./thirdweb-provider/dist/thirdweb-dev-react-thirdweb-provider.esm.js"
+      },
+      "default": "./thirdweb-provider/dist/thirdweb-dev-react-thirdweb-provider.cjs.js"
+    },
     "./evm/connectors/magic": {
       "module": {
         "browser": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.browser.esm.js",
@@ -51,14 +65,18 @@
   "files": [
     "dist/",
     "evm/",
-    "solana/"
+    "solana/",
+    "thirdweb-provider/",
+    "connect-wallet/"
   ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
       "solana/index.ts",
       "evm/index.ts",
-      "evm/connectors/**/index.ts"
+      "evm/connectors/**/index.ts",
+      "thirdweb-provider.ts",
+      "connect-wallet.ts"
     ],
     "exports": {
       "envConditions": [
