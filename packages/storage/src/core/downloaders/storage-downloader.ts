@@ -7,6 +7,7 @@ import {
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
+import { version } from "os";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -78,20 +79,17 @@ export class StorageDownloader implements IStorageDownloader {
 
     let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
       } else if (this.clientId) {
-        if (
-          typeof globalThis !== "undefined" &&
-          "APP_BUNDLE_ID" in globalThis
-        ) {
-          resolvedUri =
-            resolvedUri +
-            `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`;
+        if (!resolvedUri.includes("bundleId")) {
+          resolvedUri = resolvedUri + (bundleId ? `?bundleId=${bundleId}` : "");
         }
-        headers = {
-          "x-client-Id": this.clientId,
-        };
+        headers["x-client-Id"] = this.clientId;
       }
       // if we have a authorization token on global context then add that to the headers
       if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
@@ -105,7 +103,11 @@ export class StorageDownloader implements IStorageDownloader {
 
       headers["x-sdk-version"] = pkg.version;
       headers["x-sdk-name"] = pkg.name;
-      headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
     }
 
     if (isTooManyRequests(resolvedUri)) {
