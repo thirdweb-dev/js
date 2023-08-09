@@ -3,9 +3,9 @@ export default {
   "name": "Lightlink Pegasus Testnet",
   "chain": "Lightlink Pegasus Testnet",
   "icon": {
-    "url": "ipfs://QmNRUoMgx16hurD3au3ou5A9rmTLYmre8WiGmQEPFmP2Vo",
-    "width": 600,
-    "height": 600,
+    "url": "ipfs://QmXMDj6iAFn2ducQcUU1M87PMMdT2jfyL3Tp3Lz5uUD5Lv",
+    "width": 200,
+    "height": 200,
     "format": "png"
   },
   "rpc": [
@@ -35,9 +35,9 @@ export default {
       "name": "pegasus",
       "url": "https://pegasus.lightlink.io",
       "icon": {
-        "url": "ipfs://QmNRUoMgx16hurD3au3ou5A9rmTLYmre8WiGmQEPFmP2Vo",
-        "width": 600,
-        "height": 600,
+        "url": "ipfs://QmXMDj6iAFn2ducQcUU1M87PMMdT2jfyL3Tp3Lz5uUD5Lv",
+        "width": 200,
+        "height": 200,
         "format": "png"
       },
       "standard": "EIP3091"
