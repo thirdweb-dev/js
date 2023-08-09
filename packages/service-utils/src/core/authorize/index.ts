@@ -141,7 +141,7 @@ export async function authorize(
     return {
       authorized: false,
       status: 401,
-      errorMessage: "Please provide a client id (x-client-id) or secret key (x-secret-key). Starting August 1st, 2023 API Keys are required to use thirdweb services. Learn more: https://blog.thirdweb.com/changelog/api-keys-to-access-thirdweb-infra",
+      errorMessage: "Please include a client id or secret key with your request. Starting August 1st, 2023 API Keys are required to use thirdweb services. Learn more: https://blog.thirdweb.com/changelog/api-keys-to-access-thirdweb-infra",
       errorCode: "MISSING_KEY",
     };
   }
