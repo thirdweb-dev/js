@@ -138,7 +138,7 @@ export async function extractAuthorizationData(
     const authHeader = headers.get("authorization");
     if (authHeader) {
       const [type, token] = authHeader.split(" ");
-      if (type.toLowerCase() === "bearer") {
+      if (type.toLowerCase() === "bearer" && !!token) {
         jwt = token;
       }
     }
