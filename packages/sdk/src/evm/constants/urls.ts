@@ -203,7 +203,11 @@ export function getProviderFromRpcUrl(
       }
 
       // if we *also* have a tw auth token on global context add it to the headers (in addition to anything else)
-      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
         headers["authorization"] = `Bearer ${
           (globalThis as any).TW_AUTH_TOKEN as string
         }`;

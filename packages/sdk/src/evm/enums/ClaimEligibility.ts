@@ -5,7 +5,13 @@ export enum ClaimEligibility {
 
   WaitBeforeNextClaimTransaction = "Not enough time since last claim transaction. Please wait.",
 
+  ClaimPhaseNotStarted = "Claim phase has not started yet.",
+
   AlreadyClaimed = "You have already claimed the token.",
+
+  WrongPriceOrCurrency = "Incorrect price or currency.",
+
+  OverMaxClaimablePerWallet = "Cannot claim more than maximum allowed quantity.",
 
   NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
 

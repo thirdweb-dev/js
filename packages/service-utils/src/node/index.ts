@@ -125,7 +125,7 @@ export function extractAuthorizationData(
   const authorizationHeader = getHeader(headers, "authorization");
   if (authorizationHeader) {
     const [type, token] = authorizationHeader.split(" ");
-    if (type.toLowerCase() === "bearer") {
+    if (type.toLowerCase() === "bearer" && !!token) {
       jwt = token;
     }
   }

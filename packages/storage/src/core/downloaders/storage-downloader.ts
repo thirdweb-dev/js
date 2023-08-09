@@ -93,7 +93,11 @@ export class StorageDownloader implements IStorageDownloader {
         };
       }
       // if we have a authorization token on global context then add that to the headers
-      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
         headers = {
           ...headers,
           authorization: `Bearer ${

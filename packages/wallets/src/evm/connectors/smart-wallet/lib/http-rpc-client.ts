@@ -46,7 +46,11 @@ export class HttpRpcClient {
         }
       }
 
-      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
         headers["authorization"] = `Bearer ${
           (globalThis as any).TW_AUTH_TOKEN as string
         }`;
