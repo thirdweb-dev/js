@@ -61,12 +61,13 @@ export async function fetchKeyMetadataFromApi(
       "content-type": "application/json",
     },
   });
-  if (!response.ok) {
-    throw new Error(
-      `Error fetching key metadata from API: ${response.statusText}`,
-    );
+  let json: ApiResponse
+  try {
+    json = await response.json();
+  } catch (e) {
+    throw new Error(`Error fetching key metadata from API: ${response.status} - ${response.statusText} - ${await response.text()}`);
   }
-  return (await response.json()) as ApiResponse;
+  return json;
 }
 
 export async function fetchAccountFromApi(
