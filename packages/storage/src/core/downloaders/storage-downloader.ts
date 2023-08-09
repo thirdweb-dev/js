@@ -7,7 +7,6 @@ import {
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
-import { version } from "os";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
