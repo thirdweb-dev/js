@@ -115,7 +115,7 @@ export async function authorize(
           authorized: false,
           status: 500,
           errorMessage: "Failed to get account information.",
-          errorCode: "FAILED_TO_ACCOUNT",
+          errorCode: "FAILED_TO_LOAD_ACCOUNT",
         };
       }
     }

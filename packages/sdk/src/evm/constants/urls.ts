@@ -8,6 +8,8 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
+import pkg from "../../../package.json";
+import { isBrowser } from "@thirdweb-dev/storage";
 
 /**
  * @internal
@@ -202,11 +204,32 @@ export function getProviderFromRpcUrl(
       }
 
       // if we *also* have a tw auth token on global context add it to the headers (in addition to anything else)
-      if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
-        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
-          }`;
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
         authStrategy = "twAuthToken";
       }
+
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+      if (!rpcUrl.includes("bundleId")) {
+        rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
+      }
+
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available
