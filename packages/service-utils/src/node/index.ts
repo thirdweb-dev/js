@@ -164,6 +164,7 @@ export function logHttpRequest({
   statusMessage?: Error | string;
 }) {
   const authorizationData = extractAuthorizationData({ req, clientId });
+  const headers = req.headers;
 
   const _statusMessage = statusMessage ?? res.statusMessage;
   console.log(
@@ -177,6 +178,9 @@ export function logHttpRequest({
       isAuthed: !!isAuthed ?? null,
       status: res.statusCode,
       statusMessage: _statusMessage,
+      sdkName: headers["x-sdk-name"] ?? "unknown",
+      sdkVersion: headers["x-sdk-version"] ?? "unknown",
+      platform: headers["x-sdk-platform"] ?? "unknown",
     }),
   );
   console.log(`statusMessage=${_statusMessage}`);
