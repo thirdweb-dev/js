@@ -3,6 +3,7 @@ import CIDTool from "cid-tool";
 import { getProcessEnv } from "./process";
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
+const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
 const TW_GATEWAY_URLS = [
   `https://{clientId}${TW_HOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
 ];
@@ -13,7 +14,13 @@ const TW_GATEWAY_URLS = [
  * @returns
  */
 export function isTwGatewayUrl(url: string): boolean {
-  return new URL(url).hostname.endsWith(TW_HOSTNAME_SUFFIX);
+  const hostname = new URL(url).hostname;
+  const isProd = hostname.endsWith(TW_HOSTNAME_SUFFIX);
+  if (isProd) {
+    return true;
+  }
+  // fall back to also handle staging urls
+  return hostname.endsWith(TW_STAGINGHOSTNAME_SUFFIX);
 }
 
 const PUBLIC_GATEWAY_URLS = [
