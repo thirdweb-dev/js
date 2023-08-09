@@ -3,6 +3,7 @@ import CIDTool from "cid-tool";
 import { getProcessEnv } from "./process";
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
+const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
 const TW_GATEWAY_URLS = [
   `https://{clientId}${TW_HOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
 ];
@@ -13,7 +14,13 @@ const TW_GATEWAY_URLS = [
  * @returns
  */
 export function isTwGatewayUrl(url: string): boolean {
-  return new URL(url).hostname.endsWith(TW_HOSTNAME_SUFFIX);
+  const hostname = new URL(url).hostname;
+  const isProd = hostname.endsWith(TW_HOSTNAME_SUFFIX);
+  if (isProd) {
+    return true;
+  }
+  // fall back to also handle staging urls
+  return hostname.endsWith(TW_STAGINGHOSTNAME_SUFFIX);
 }
 
 const PUBLIC_GATEWAY_URLS = [
@@ -66,7 +73,11 @@ export function parseGatewayUrls(
 /**
  * @internal
  */
-export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
+export function getGatewayUrlForCid(
+  gatewayUrl: string,
+  cid: string,
+  clientId?: string,
+): string {
   const parts = cid.split("/");
   const hash = convertCidToV1(parts[0]);
   const filePath = parts.slice(1).join("/");
@@ -85,6 +96,15 @@ export function getGatewayUrlForCid(gatewayUrl: string, cid: string): string {
   // If those tokens don't exist, use the canonical gateway URL format
   else {
     url += `${hash}/${filePath}`;
+  }
+  // if the URL contains the {clientId} token, replace it with the client ID
+  if (gatewayUrl.includes("{clientId}")) {
+    if (!clientId) {
+      throw new Error(
+        "Cannot use {clientId} in gateway URL without providing a client ID",
+      );
+    }
+    url = url.replace("{clientId}", clientId);
   }
 
   return url;

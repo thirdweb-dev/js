@@ -2,7 +2,11 @@ import type { Chain } from "../src/types";
 export default {
   "name": "IMPERIUM TESTNET",
   "chain": "tIMP",
-  "rpc": [],
+  "rpc": [
+    "https://imperium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://data-aws-testnet.imperiumchain.com",
+    "https://data-aws2-testnet.imperiumchain.com"
+  ],
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],

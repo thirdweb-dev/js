@@ -9,7 +9,11 @@ export default {
     "https://evm-dataseed3.meerscan.io",
     "https://evm-dataseed.meerscan.com",
     "https://evm-dataseed1.meerscan.com",
-    "https://evm-dataseed2.meerscan.com"
+    "https://evm-dataseed2.meerscan.com",
+    "https://qng.rpc.qitmeer.io",
+    "https://mainnet.meerlabs.com",
+    "https://rpc.dimai.ai",
+    "https://rpc.woowow.io"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -37,7 +41,7 @@ export default {
         "height": 512,
         "format": "png"
       },
-      "url": "https://evm.meerscan.com",
+      "url": "https://qng.meerscan.io",
       "standard": "none"
     }
   ],
