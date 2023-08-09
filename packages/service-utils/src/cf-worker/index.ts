@@ -186,6 +186,7 @@ export async function logHttpRequest({
   statusMessage?: Error | string;
 }) {
   const authorizationData = await extractAuthorizationData({ req, clientId });
+  const headers = req.headers;
 
   console.log(
     JSON.stringify({
@@ -197,6 +198,9 @@ export async function logHttpRequest({
       clientId: authorizationData.clientId,
       isAuthed: !!isAuthed ?? null,
       status: res.status,
+      sdkName: headers.get("x-sdk-name") ?? "unknown",
+      sdkVersion: headers.get("x-sdk-version") ?? "unknown",
+      platform: headers.get("x-sdk-platform") ?? "unknown",
     }),
   );
   console.log(`statusMessage=${statusMessage ?? res.statusText}`);
