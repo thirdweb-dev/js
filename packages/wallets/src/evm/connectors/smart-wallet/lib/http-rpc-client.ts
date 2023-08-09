@@ -2,8 +2,12 @@ import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
 import { isTwUrl } from "../../../utils/url";
+import { version, name } from "../../../../../package.json";
 
 const DEBUG = false;
+function isBrowser() {
+  return typeof window !== "undefined";
+}
 
 export class HttpRpcClient {
   private readonly userOpJsonRpcProvider: providers.JsonRpcProvider;
@@ -51,6 +55,10 @@ export class HttpRpcClient {
           (globalThis as any).TW_AUTH_TOKEN as string
         }`;
       }
+
+      headers["x-sdk-version"] = name;
+      headers["x-sdk-name"] = version;
+      headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(

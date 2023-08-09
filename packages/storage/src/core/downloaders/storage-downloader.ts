@@ -1,11 +1,12 @@
 import { isTwGatewayUrl } from "../../common/urls";
-import { replaceSchemeWithGatewayUrl } from "../../common/utils";
+import { isBrowser, replaceSchemeWithGatewayUrl } from "../../common/utils";
 import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
+import { version, name } from "../../../package.json";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -101,6 +102,10 @@ export class StorageDownloader implements IStorageDownloader {
           }`,
         };
       }
+
+      headers["x-sdk-version"] = name;
+      headers["x-sdk-name"] = version;
+      headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
 
     if (isTooManyRequests(resolvedUri)) {

@@ -8,6 +8,8 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
+import { version, name } from "../../../package.json";
+import { isBrowser } from "@thirdweb-dev/storage";
 
 /**
  * @internal
@@ -209,6 +211,10 @@ export function getProviderFromRpcUrl(
         }`;
         authStrategy = "twAuthToken";
       }
+
+      headers["x-sdk-version"] = name;
+      headers["x-sdk-name"] = version;
+      headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available

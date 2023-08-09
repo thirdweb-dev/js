@@ -13,6 +13,7 @@ import {
 } from "../../types";
 import fetch from "cross-fetch";
 import FormData from "form-data";
+import { version, name } from "../../../package.json";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -241,7 +242,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           if (options?.uploadWithoutDirectory) {
             return resolve([`ipfs://${cid}`]);
           } else {
-            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+            return resolve(fileNames.map((n) => `ipfs://${cid}/${n}`));
           }
         }
 
@@ -284,6 +285,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           (globalThis as any).APP_BUNDLE_ID as string,
         );
       }
+
+      xhr.setRequestHeader("x-sdk-version", name);
+      xhr.setRequestHeader("x-sdk-name", version);
+      xhr.setRequestHeader("x-sdk-platform", isBrowser() ? "browser" : "node");
 
       // if we have a authorization token on global context then add that to the headers
       if (typeof globalThis !== "undefined" && "TW_AUTH_TOKEN" in globalThis) {
