@@ -30,6 +30,12 @@ export const contractKeys = {
     [...contractKeys.details(), address] as const,
 };
 
+export const walletKeys = {
+  all: ["balance"] as const,
+  balances: (walletAddress: string) =>
+    [...splitsKeys.all, walletAddress] as const,
+};
+
 export const splitsKeys = {
   all: ["splits"] as const,
   lists: () => [...splitsKeys.all, "list"] as const,
