@@ -54,7 +54,12 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
-    let resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
+    let resolvedUri = replaceSchemeWithGatewayUrl(
+      uri,
+      gatewayUrls,
+      attempts,
+      this.clientId,
+    );
     // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
     if (!resolvedUri) {
       console.error(
