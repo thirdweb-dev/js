@@ -13,6 +13,7 @@ import {
 } from "../../types";
 import fetch from "cross-fetch";
 import FormData from "form-data";
+import pkg from "../../../package.json";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -241,7 +242,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           if (options?.uploadWithoutDirectory) {
             return resolve([`ipfs://${cid}`]);
           } else {
-            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+            return resolve(fileNames.map((n) => `ipfs://${cid}/${n}`));
           }
         }
 
@@ -278,12 +279,20 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.setRequestHeader("x-client-id", this.clientId);
       }
 
-      if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
-        xhr.setRequestHeader(
-          "x-bundle-id",
-          (globalThis as any).APP_BUNDLE_ID as string,
-        );
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+      if (bundleId) {
+        xhr.setRequestHeader("x-bundle-id", bundleId);
       }
+
+      xhr.setRequestHeader("x-sdk-version", pkg.version);
+      xhr.setRequestHeader("x-sdk-name", pkg.name);
+      xhr.setRequestHeader(
+        "x-sdk-platform",
+        bundleId ? "react-native" : isBrowser() ? "browser" : "node",
+      );
 
       // if we have a authorization token on global context then add that to the headers
       if (
