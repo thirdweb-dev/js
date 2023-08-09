@@ -83,8 +83,11 @@ export async function fetchAccountFromApi(
       authorization: `Bearer ${jwt}`,
     },
   });
-  if (!response.ok) {
-    throw new Error(`Error fetching account from API: ${response.statusText}`);
+  let json: ApiAccountResponse
+  try {
+    json = await response.json();
+  } catch (e) {
+    throw new Error(`Error fetching account from API: ${response.status} - ${response.statusText} - ${await response.text()}`);
   }
-  return (await response.json()) as ApiAccountResponse;
+  return json;
 }
