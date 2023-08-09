@@ -6,7 +6,6 @@ import {
   IpfsDownloaderOptions,
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
-import pkg from "../../../package.json";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -103,8 +102,8 @@ export class StorageDownloader implements IStorageDownloader {
         };
       }
 
-      headers["x-sdk-version"] = pkg.version;
-      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-version"] = __PACKAGE_VERSION__;
+      headers["x-sdk-name"] = __PACKAGE_NAME__;
       headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
 

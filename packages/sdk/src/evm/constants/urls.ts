@@ -8,7 +8,6 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
-import pkg from "../../../package.json";
 import { isBrowser } from "@thirdweb-dev/storage";
 
 /**
@@ -212,8 +211,8 @@ export function getProviderFromRpcUrl(
         authStrategy = "twAuthToken";
       }
 
-      headers["x-sdk-version"] = pkg.version;
-      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-version"] = __PACKAGE_VERSION__;
+      headers["x-sdk-name"] = __PACKAGE_NAME__;
       headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);

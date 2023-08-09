@@ -13,7 +13,6 @@ import {
 } from "../../types";
 import fetch from "cross-fetch";
 import FormData from "form-data";
-import pkg from "../../../package.json";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -286,8 +285,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         );
       }
 
-      xhr.setRequestHeader("x-sdk-version", pkg.version);
-      xhr.setRequestHeader("x-sdk-name", pkg.name);
+      xhr.setRequestHeader("x-sdk-version", __PACKAGE_VERSION__);
+      xhr.setRequestHeader("x-sdk-name", __PACKAGE_NAME__);
       xhr.setRequestHeader("x-sdk-platform", isBrowser() ? "browser" : "node");
 
       // if we have a authorization token on global context then add that to the headers
