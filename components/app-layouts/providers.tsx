@@ -17,7 +17,10 @@ import {
   walletConnect,
 } from "@thirdweb-dev/react";
 import { GLOBAL_AUTH_TOKEN_KEY } from "constants/app";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
+import {
+  DASHBOARD_THIRDWEB_CLIENT_ID,
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+} from "constants/rpc";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -86,6 +89,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
         readonlySettings,
       }}
       clientId={DASHBOARD_THIRDWEB_CLIENT_ID}
+      secretKey={DASHBOARD_THIRDWEB_SECRET_KEY}
       supportedWallets={[
         ...personalWallets,
         safeWallet({
