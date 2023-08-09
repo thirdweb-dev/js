@@ -1,5 +1,21 @@
 # @thirdweb-dev/sdk
 
+## 3.10.48
+
+### Patch Changes
+
+- [#1473](https://github.com/thirdweb-dev/js/pull/1473) [`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4) Thanks [@jnsdls](https://github.com/jnsdls)! - do not pass empty auth tokens
+
+- [#1472](https://github.com/thirdweb-dev/js/pull/1472) [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk information to service request headers
+
+- [#1471](https://github.com/thirdweb-dev/js/pull/1471) [`f0443bd9`](https://github.com/thirdweb-dev/js/commit/f0443bd989dbba50d0836d1cf274bfb2f44a53fd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose erc721.claimConditions.getSupplyClaimedByWallet()
+
+- [#1469](https://github.com/thirdweb-dev/js/pull/1469) [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308) Thanks [@jnsdls](https://github.com/jnsdls)! - fix secret key auth strategy for RPC
+
+- Updated dependencies [[`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4), [`27c225a5`](https://github.com/thirdweb-dev/js/commit/27c225a51221417592b5940887abd1ccb8b67e47), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed), [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9), [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76), [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30)]:
+  - @thirdweb-dev/storage@1.2.5
+  - @thirdweb-dev/chains@0.1.43
+
 ## 3.10.47
 
 ### Patch Changes
