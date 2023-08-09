@@ -54,7 +54,12 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
-    let resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
+    let resolvedUri = replaceSchemeWithGatewayUrl(
+      uri,
+      gatewayUrls,
+      attempts,
+      this.clientId,
+    );
     // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
     if (!resolvedUri) {
       console.error(
@@ -70,7 +75,7 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
-    let headers;
+    let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
@@ -79,11 +84,25 @@ export class StorageDownloader implements IStorageDownloader {
           typeof globalThis !== "undefined" &&
           "APP_BUNDLE_ID" in globalThis
         ) {
-          // @ts-ignore
-          resolvedUri = resolvedUri + `?bundleId=${globalThis.APP_BUNDLE_ID}`;
+          resolvedUri =
+            resolvedUri +
+            `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`;
         }
         headers = {
           "x-client-Id": this.clientId,
+        };
+      }
+      // if we have a authorization token on global context then add that to the headers
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers = {
+          ...headers,
+          authorization: `Bearer ${
+            (globalThis as any).TW_AUTH_TOKEN as string
+          }`,
         };
       }
     }
@@ -94,7 +113,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     const controller = new AbortController();
-    let timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,

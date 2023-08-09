@@ -42,9 +42,18 @@ export class HttpRpcClient {
           typeof globalThis !== "undefined" &&
           "APP_BUNDLE_ID" in globalThis
         ) {
-          // @ts-ignore
-          headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+          headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
         }
+      }
+
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
       }
     }
 

@@ -148,6 +148,7 @@ export function replaceSchemeWithGatewayUrl(
   uri: string,
   gatewayUrls: GatewayUrls,
   index = 0,
+  clientId?: string,
 ): string | undefined {
   const scheme = Object.keys(gatewayUrls).find((s) => uri.startsWith(s));
   const schemeGatewayUrls = scheme ? gatewayUrls[scheme] : [];
@@ -161,7 +162,7 @@ export function replaceSchemeWithGatewayUrl(
   }
 
   const path = uri.replace(scheme, "");
-  return getGatewayUrlForCid(schemeGatewayUrls[index], path);
+  return getGatewayUrlForCid(schemeGatewayUrls[index], path, clientId);
 }
 
 /**
@@ -206,9 +207,15 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
 export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
   data: TData,
   gatewayUrls: GatewayUrls,
+  clientId?: string,
 ): TData {
   if (typeof data === "string") {
-    return replaceSchemeWithGatewayUrl(data, gatewayUrls) as any as TData;
+    return replaceSchemeWithGatewayUrl(
+      data,
+      gatewayUrls,
+      0,
+      clientId,
+    ) as any as TData;
   }
   if (typeof data === "object") {
     if (!data) {
@@ -219,13 +226,13 @@ export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
     }
     if (Array.isArray(data)) {
       return data.map((entry) =>
-        replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls),
+        replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls, clientId),
       ) as any as TData;
     }
     return Object.fromEntries(
       Object.entries(data).map(([key, value]) => [
         key,
-        replaceObjectSchemesWithGatewayUrls(value, gatewayUrls),
+        replaceObjectSchemesWithGatewayUrls(value, gatewayUrls, clientId),
       ]),
     ) as any as TData;
   }

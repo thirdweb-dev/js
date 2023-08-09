@@ -2,6 +2,7 @@ import { ContractPayload } from "../interfaces/ContractPayload";
 import chalk from "chalk";
 import prompts from "prompts";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { MultiSelect } = require("enquirer");
 
 export function createContractsPrompt(

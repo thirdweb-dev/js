@@ -1,10 +1,12 @@
-import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
 import { createHash } from "node:crypto";
+import { authorize } from "../core/authorize";
+
+import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
 import type { AuthorizationInput } from "../core/authorize";
 import type { CoreServiceConfig } from "../core/api";
-import { authorize } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
+import type { ServerResponse } from "http";
 
 export * from "../core/services";
 
@@ -118,7 +120,19 @@ export function extractAuthorizationData(
     clientId = derivedClientId;
   }
 
+  let jwt: null | string = null;
+  // check for authorization header on the request
+  const authorizationHeader = getHeader(headers, "authorization");
+  if (authorizationHeader) {
+    const [type, token] = authorizationHeader.split(" ");
+    if (type.toLowerCase() === "bearer" && !!token) {
+      jwt = token;
+    }
+  }
+
   return {
+    jwt,
+    hashedJWT: jwt ? hashSecretKey(jwt) : null,
     secretKeyHash,
     secretKey,
     clientId,
@@ -134,4 +148,36 @@ export function hashSecretKey(secretKey: string) {
 
 export function deriveClientIdFromSecretKeyHash(secretKeyHash: string) {
   return secretKeyHash.slice(0, 32);
+}
+
+export function logHttpRequest({
+  source,
+  clientId,
+  req,
+  res,
+  isAuthed,
+  statusMessage,
+}: AuthInput & {
+  source: string;
+  res: ServerResponse;
+  isAuthed?: boolean;
+  statusMessage?: Error | string;
+}) {
+  const authorizationData = extractAuthorizationData({ req, clientId });
+
+  const _statusMessage = statusMessage ?? res.statusMessage;
+  console.log(
+    JSON.stringify({
+      source,
+      pathname: req.url,
+      hasSecretKey: !!authorizationData.secretKey,
+      hasClientId: !!authorizationData.clientId,
+      hasJwt: !!authorizationData.jwt,
+      clientId: authorizationData.clientId,
+      isAuthed: !!isAuthed ?? null,
+      status: res.statusCode,
+      statusMessage: _statusMessage,
+    }),
+  );
+  console.log(`statusMessage=${_statusMessage}`);
 }

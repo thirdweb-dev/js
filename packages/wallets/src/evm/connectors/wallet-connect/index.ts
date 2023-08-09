@@ -175,7 +175,7 @@ export class WalletConnectConnector extends WagmiConnector<
       if (typeof localStorage === "undefined") {
         return;
       }
-      for (var key in localStorage) {
+      for (const key in localStorage) {
         if (key.startsWith("wc@2")) {
           localStorage.removeItem(key);
         }

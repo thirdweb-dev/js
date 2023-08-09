@@ -21,6 +21,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   clientId,
+  secretKey,
 }: React.PropsWithChildren<
   { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
@@ -92,7 +93,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        { ...mergedOptions, clientId },
+        { ...mergedOptions, clientId, secretKey },
         storageInterface,
       );
     }
@@ -113,7 +114,14 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [activeChainId, supportedChains, sdkOptions, storageInterface, clientId]);
+  }, [
+    activeChainId,
+    supportedChains,
+    sdkOptions,
+    storageInterface,
+    clientId,
+    secretKey,
+  ]);
 
   useEffect(() => {
     // if we have an sdk and a signer update the signer
@@ -163,7 +171,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   if (!clientId) {
     checkClientIdOrSecretKey(
-      "No clientId provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a clientId from https://thirdweb.com/create-api-key",
+      "No API key. Please provide a clientId. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key",
       clientId,
       undefined,
     );

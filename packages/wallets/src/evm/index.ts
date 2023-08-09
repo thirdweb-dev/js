@@ -40,6 +40,7 @@ export * from "./wallets/ethers";
 export * from "./wallets/private-key";
 export * from "./wallets/zerion";
 export * from "./wallets/trust";
+export * from "./wallets/blocto";
 
 export type { Chain } from "@thirdweb-dev/chains";
 

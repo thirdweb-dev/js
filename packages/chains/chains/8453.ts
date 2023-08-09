@@ -4,7 +4,7 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://base.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://developer-access-mainnet.base.org/"
+    "https://mainnet.base.org/"
   ],
   "faucets": [],
   "nativeCurrency": {

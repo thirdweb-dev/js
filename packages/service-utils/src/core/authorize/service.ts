@@ -16,7 +16,7 @@ export function authorizeService(
   if (!service) {
     return {
       authorized: false,
-      errorMessage: `The service "${serviceConfig.serviceScope}" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.`,
+      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope}. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
       errorCode: "SERVICE_UNAUTHORIZED",
       status: 403,
     };
@@ -30,7 +30,7 @@ export function authorizeService(
     if (!isActionAllowed) {
       return {
         authorized: false,
-        errorMessage: `The service "${serviceConfig.serviceScope}" action "${serviceConfig.serviceAction}" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.`,
+        errorMessage: `Invalid request: Unauthorized action: ${serviceConfig.serviceScope} ${serviceConfig.serviceAction}. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
         errorCode: "SERVICE_ACTION_UNAUTHORIZED",
         status: 403,
       };
@@ -52,7 +52,7 @@ export function authorizeService(
     ) {
       return {
         authorized: false,
-        errorMessage: `The target address: ${checkedAddresses}, for service "${serviceConfig.serviceScope}" is not authorized for this key. Please update your key permissions on the thirdweb dashboard.`,
+        errorMessage: `Invalid request: Unauthorized address: ${serviceConfig.serviceScope} ${checkedAddresses}. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
         errorCode: "SERVICE_TARGET_ADDRESS_UNAUTHORIZED",
         status: 403,
       };
@@ -61,6 +61,11 @@ export function authorizeService(
 
   return {
     authorized: true,
+    accountMeta: {
+      id: apiKeyMetadata.accountId,
+      name: "",
+      creatorWalletAddress: apiKeyMetadata.creatorWalletAddress,
+    },
     apiKeyMeta: apiKeyMetadata,
   };
 }

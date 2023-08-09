@@ -1,5 +1,45 @@
 # @thirdweb-dev/chains
 
+## 0.1.42
+
+### Patch Changes
+
+- [#1450](https://github.com/thirdweb-dev/js/pull/1450) [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update chains
+
+## 0.1.41
+
+### Patch Changes
+
+- [#1436](https://github.com/thirdweb-dev/js/pull/1436) [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated chains
+
+- [#1432](https://github.com/thirdweb-dev/js/pull/1432) [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.40
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
+## 0.1.39
+
+### Patch Changes
+
+- [#1407](https://github.com/thirdweb-dev/js/pull/1407) [`0a5eb19d`](https://github.com/thirdweb-dev/js/commit/0a5eb19d672909027bb6c7e79ea76d431535559c) Thanks [@jnsdls](https://github.com/jnsdls)! - remove non-standard urls
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1376](https://github.com/thirdweb-dev/js/pull/1376) [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429) Thanks [@iketw](https://github.com/iketw)! - Pass bundleId if present
+
+- [#1399](https://github.com/thirdweb-dev/js/pull/1399) [`3152d4e9`](https://github.com/thirdweb-dev/js/commit/3152d4e9b42e2777316b1b58513657f4430cb79a) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1387](https://github.com/thirdweb-dev/js/pull/1387) [`aa6bdd08`](https://github.com/thirdweb-dev/js/commit/aa6bdd0809d1d5536c837c59b2d407ee974c1f9c) Thanks [@nkrishang](https://github.com/nkrishang)! - Simplify account permissions
+
+- [#1405](https://github.com/thirdweb-dev/js/pull/1405) [`75587c8b`](https://github.com/thirdweb-dev/js/commit/75587c8b38bbbcf68d2101526e9792349cce728f) Thanks [@jnsdls](https://github.com/jnsdls)! - sort explorers (etherscan -> blockscout -> other)
+
+- [#1385](https://github.com/thirdweb-dev/js/pull/1385) [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee) Thanks [@iketw](https://github.com/iketw)! - Adds chains and improve error messages
+
+- [#1378](https://github.com/thirdweb-dev/js/pull/1378) [`5a02c5ec`](https://github.com/thirdweb-dev/js/commit/5a02c5ec0288fd6dfb2b765ef70bb18e714aca19) Thanks [@MananTank](https://github.com/MananTank)! - add icon in MinimalChain
+
 ## 0.1.38
 
 ### Patch Changes
