@@ -571,8 +571,8 @@ const AsyncContractTypeCell = memo(({ cell }: AsyncContractTypeCellProps) => {
   );
 
   const contractType =
-    publishedContractsFromDeployQuery.data?.[0].displayName ||
-    publishedContractsFromDeployQuery.data?.[0].name;
+    publishedContractsFromDeployQuery.data?.[0]?.displayName ||
+    publishedContractsFromDeployQuery.data?.[0]?.name;
 
   return (
     <Skeleton
