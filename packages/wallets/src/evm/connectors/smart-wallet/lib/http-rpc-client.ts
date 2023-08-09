@@ -2,7 +2,7 @@ import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
 import { isTwUrl } from "../../../utils/url";
-import { version, name } from "../../../../../package.json";
+import pkg from "../../../../../package.json";
 
 const DEBUG = false;
 function isBrowser() {
@@ -56,8 +56,8 @@ export class HttpRpcClient {
         }`;
       }
 
-      headers["x-sdk-version"] = name;
-      headers["x-sdk-name"] = version;
+      headers["x-sdk-version"] = pkg.name;
+      headers["x-sdk-name"] = pkg.version;
       headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
 
