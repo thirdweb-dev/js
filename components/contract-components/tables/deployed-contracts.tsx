@@ -23,7 +23,6 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import {
   ChainId,
   CommonContractOutputSchema,
@@ -74,6 +73,10 @@ import { TableContainer } from "tw-components/table-container";
 import { ComponentWithChildren } from "types/component-with-children";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { z } from "zod";
+import {
+  useContractFullPublishMetadata,
+  usePublishedContractsFromDeploy,
+} from "../hooks";
 
 interface DeployedContractsProps {
   noHeader?: boolean;
@@ -350,9 +353,9 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         },
       },
       {
-        Header: "Extensions",
+        Header: "Type",
         accessor: (row) => row.extensions,
-        Cell: (cell: any) => <AsyncExtensionCell cell={cell.row.original} />,
+        Cell: (cell: any) => <AsyncContractTypeCell cell={cell.row.original} />,
       },
       {
         // No header, show filter instead
@@ -549,7 +552,7 @@ const ContractTableRow = memo(({ row }: { row: Row<ContractWithMetadata> }) => {
 
 ContractTableRow.displayName = "ContractTableRow";
 
-interface AsyncExtensionCellProps {
+interface AsyncContractTypeCellProps {
   cell: {
     address: string;
     chainId: number;
@@ -561,91 +564,37 @@ interface AsyncExtensionCellProps {
   };
 }
 
-function getImportantExtension(extensions: string[]) {
-  const importantExtensions = ["ERC20", "ERC721", "ERC1155"];
-  const lowerCaseExtensions = extensions.map((ext) => ext.toLowerCase());
-  const importantExtension = importantExtensions.find((ext) =>
-    lowerCaseExtensions.includes(ext.toLowerCase()),
+const AsyncContractTypeCell = memo(({ cell }: AsyncContractTypeCellProps) => {
+  const publishedContractsFromDeployQuery = usePublishedContractsFromDeploy(
+    cell.address,
+    cell.chainId,
   );
-  if (!importantExtension) {
-    return null;
-  }
-  // how many extensions are there that start with the important extension
-  const importantExtensionCount = lowerCaseExtensions.filter((ext) =>
-    ext.startsWith(importantExtension.toLowerCase() || ""),
-  ).length;
-  return { ext: importantExtension, count: importantExtensionCount - 1 };
-}
 
-const AsyncExtensionCell = memo(({ cell }: AsyncExtensionCellProps) => {
-  const contractExtensionsQuery = useQuery({
-    queryKey: [
-      "contract-extension-type",
-      { chainId: cell.chainId, address: cell.address },
-    ],
-    queryFn: () => {
-      return Promise.all([
-        cell.extensions ? cell.extensions().catch(() => []) : [],
-        cell.contractType
-          ? cell.contractType().catch(() => "custom")
-          : "custom",
-      ]);
-    },
-    enabled: !!cell.extensions || !!cell.contractType,
-    refetchOnWindowFocus: false,
-    // contract type of a contract does not change - so safe to set high staleTime ( currently set to 1 hour )
-    staleTime: 1000 * 60 * 60,
-  });
-
-  const [importantExtension, contractType, extensions] = useMemo(() => {
-    const [exts, cType] = contractExtensionsQuery.data || [[], ""];
-    const imp = getImportantExtension(exts);
-    return [imp, cType, exts];
-  }, [contractExtensionsQuery.data]);
-
-  let tag: JSX.Element;
-
-  if (importantExtension) {
-    tag = (
-      <Flex gap={2} align="center">
-        <Text size="label.md" as="h4">
-          {importantExtension.ext}
-        </Text>
-        {importantExtension.count > 0 ? (
-          <Badge
-            lineHeight={1}
-            size="label.sm"
-            variant="outline"
-            colorScheme="blue"
-          >
-            +{extensions.length - importantExtension.count}
-          </Badge>
-        ) : null}
-      </Flex>
-    );
-  } else if (contractType !== "custom") {
-    tag = (
-      <Text textTransform="capitalize" size="label.md" as="h4">
-        {contractType}
-      </Text>
-    );
-  } else {
-    tag = (
-      <Text fontStyle="italic" size="label.md" as="h4">
-        {extensions?.length === 0 ? "No" : extensions.length} Extension
-        {extensions.length === 1 ? "" : "s"}
-      </Text>
-    );
-  }
+  const contractType =
+    publishedContractsFromDeployQuery.data?.[0].displayName ||
+    publishedContractsFromDeployQuery.data?.[0].name;
 
   return (
-    <Skeleton isLoaded={!contractExtensionsQuery.isInitialLoading}>
-      {tag}
+    <Skeleton
+      isLoaded={
+        !publishedContractsFromDeployQuery.isInitialLoading ||
+        publishedContractsFromDeployQuery.isLoadingError
+      }
+    >
+      {contractType ? (
+        <Text noOfLines={1} maxWidth={200} isTruncated>
+          {contractType}
+        </Text>
+      ) : (
+        <Text fontStyle="italic" opacity={0.5}>
+          Unpublished
+        </Text>
+      )}
     </Skeleton>
   );
 });
 
-AsyncExtensionCell.displayName = "AsyncExtensionCell";
+AsyncContractTypeCell.displayName = "AsyncContractTypeCell";
 
 interface AsyncContractNameCellProps {
   cell: {

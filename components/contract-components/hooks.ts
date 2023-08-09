@@ -317,6 +317,16 @@ export function usePublishedContractsFromDeploy(
     },
     {
       enabled: !!contractAddress && !!cId && !!chainInfo,
+      retry: (_, err) => {
+        const msg = (err as any).message;
+        if (
+          msg?.includes("Could not resolve contract URI") ||
+          msg?.includes("Could not resolve published metadata URI")
+        ) {
+          return false;
+        }
+        return true;
+      },
     },
   );
 }
