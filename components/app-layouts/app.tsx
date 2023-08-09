@@ -41,8 +41,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
 
-const __CACHE_BUSTER =
-  "v3.10.28-nightly-9daf0449-20230704162309-gateway.ipfscdn.io";
+const __CACHE_BUSTER = "3.10.48-nightly-27c225a5-20230809032740";
 
 interface AsyncStorage {
   getItem: (key: string) => Promise<string | null>;

@@ -1,7 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
 import type { SDKOptions } from "@thirdweb-dev/sdk/evm";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
+import {
+  DASHBOARD_THIRDWEB_CLIENT_ID,
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+} from "constants/rpc";
 import {
   useSupportedChain,
   useSupportedChains,
@@ -38,6 +41,7 @@ export const CustomSDKContext: ComponentWithChildren<{
         ...options,
       }}
       clientId={DASHBOARD_THIRDWEB_CLIENT_ID}
+      secretKey={DASHBOARD_THIRDWEB_SECRET_KEY}
       storageInterface={StorageSingleton}
     >
       {children}
