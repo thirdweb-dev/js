@@ -56,8 +56,8 @@ export class HttpRpcClient {
         }`;
       }
 
-      headers["x-sdk-version"] = pkg.name;
-      headers["x-sdk-name"] = pkg.version;
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
       headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
 

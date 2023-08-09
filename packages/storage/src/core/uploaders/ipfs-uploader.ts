@@ -286,8 +286,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         );
       }
 
-      xhr.setRequestHeader("x-sdk-version", pkg.name);
-      xhr.setRequestHeader("x-sdk-name", pkg.version);
+      xhr.setRequestHeader("x-sdk-version", pkg.version);
+      xhr.setRequestHeader("x-sdk-name", pkg.name);
       xhr.setRequestHeader("x-sdk-platform", isBrowser() ? "browser" : "node");
 
       // if we have a authorization token on global context then add that to the headers

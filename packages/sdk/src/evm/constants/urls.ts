@@ -212,8 +212,8 @@ export function getProviderFromRpcUrl(
         authStrategy = "twAuthToken";
       }
 
-      headers["x-sdk-version"] = pkg.name;
-      headers["x-sdk-name"] = pkg.version;
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
       headers["x-sdk-platform"] = isBrowser() ? "browser" : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
