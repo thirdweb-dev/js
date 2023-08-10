@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import {
   verifyThirdwebPrebuiltImplementation,
   checkVerificationStatus,
@@ -68,6 +68,8 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
+      this.options.clientId,
+      this.options.secretKey,
       constructorArgs,
     );
 
@@ -123,10 +125,7 @@ export class ContractVerifier extends RPCConnectionHandler {
         return arg.value;
       });
 
-      encodedArgs = ethers.utils.defaultAbiCoder.encode(
-        paramTypes,
-        paramValues,
-      );
+      encodedArgs = utils.defaultAbiCoder.encode(paramTypes, paramValues);
     }
 
     const guid = await verify(

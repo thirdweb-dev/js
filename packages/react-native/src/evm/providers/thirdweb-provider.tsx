@@ -1,11 +1,10 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
@@ -15,9 +14,14 @@ import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { ThirdwebStorage } from "../../core/storage/storage";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
-  extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
+  extends Omit<
+    ThirdwebProviderCoreProps<TChains>,
+    "supportedWallets" | "secretKey"
+  > {
   /**
    * Wallets that will be supported by the dApp
    * @defaultValue [MetaMaskWallet, CoinbaseWallet]
@@ -31,7 +35,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * />
    * ```
    */
-  supportedWallets?: WalletConfig[];
+  supportedWallets?: WalletConfig<any>[];
 }
 
 /**
@@ -58,18 +62,34 @@ export const ThirdwebProvider = <
 >({
   children,
   createWalletStorage = createAsyncLocalStorage,
-  thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
   theme,
+  storageInterface,
+  clientId,
+  sdkOptions,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  useCoinbaseWalletListener();
+  useCoinbaseWalletListener(
+    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+  );
+
+  const hasMagicConfig = useMemo(
+    () => !!supportedWallets.find((wc) => wc.id === walletIds.magicLink),
+    [supportedWallets],
+  );
 
   return (
     <ThirdwebProviderCore
-      thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
+      storageInterface={
+        storageInterface ||
+        new ThirdwebStorage({
+          clientId: clientId,
+          // @ts-expect-error - TODO: fix this (it does exist)
+          gatewayUrls: sdkOptions?.gatewayUrls,
+        })
+      }
       authConfig={
         authConfig
           ? authConfig.secureStorage
@@ -78,19 +98,26 @@ export const ThirdwebProvider = <
           : undefined
       }
       createWalletStorage={createWalletStorage}
+      clientId={clientId}
+      {...sdkOptions}
       {...restProps}
     >
       <ThemeProvider theme={theme}>
-        <SafeAreaProvider>
-          <UIContextProvider>
+        <UIContextProvider>
+          {hasMagicConfig ? (
             <SafeAreaProvider>
               <DappContextProvider>
                 {children}
                 <MainModal />
               </DappContextProvider>
             </SafeAreaProvider>
-          </UIContextProvider>
-        </SafeAreaProvider>
+          ) : (
+            <DappContextProvider>
+              {children}
+              <MainModal />
+            </DappContextProvider>
+          )}
+        </UIContextProvider>
       </ThemeProvider>
     </ThirdwebProviderCore>
   );

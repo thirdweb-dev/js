@@ -3,7 +3,7 @@ export default {
   "name": "Ultron Mainnet",
   "chain": "Ultron",
   "icon": {
-    "url": "ipfs://QmS4W4kY7XYBA4f52vuuytXh3YaTcNBXF14V9tEY6SNqhz",
+    "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
     "width": 512,
     "height": 512,
     "format": "png"
@@ -27,7 +27,7 @@ export default {
       "name": "Ultron Explorer",
       "url": "https://ulxscan.com",
       "icon": {
-        "url": "ipfs://QmS4W4kY7XYBA4f52vuuytXh3YaTcNBXF14V9tEY6SNqhz",
+        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
         "width": 512,
         "height": 512,
         "format": "png"

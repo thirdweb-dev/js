@@ -3,12 +3,11 @@ import { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 import { getChainProvider } from "../../constants/urls";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
-import { getMetadataForPlugins } from "../plugin";
-import { DEFAULT_API_KEY } from "../../../core/constants/urls";
+import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
 import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
-import { encodeConstructorParamsForImplementation } from "./encodeConstructorParamsForImplementation";
+import { encodeConstructorParamsForImplementation } from "./computeDeploymentInfo";
 import { getDeploymentInfo } from "./getDeploymentInfo";
 
 /**
@@ -22,10 +21,13 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
   constructorParamMap?: ConstructorParamMap,
 ): Promise<BytesLike | undefined> {
   const provider = getChainProvider(chainId, {
-    thirdwebApiKey: DEFAULT_API_KEY,
+    clientId,
+    secretKey,
   });
   const publishUri = await fetchAndCachePublishedContractURI(contractName);
   const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);

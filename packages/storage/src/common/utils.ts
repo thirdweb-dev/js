@@ -1,4 +1,5 @@
 import { BufferOrStringWithName, FileOrBuffer, GatewayUrls } from "../types";
+import { getGatewayUrlForCid } from "./urls";
 
 /**
  * @internal
@@ -88,14 +89,51 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
 /**
  * @internal
  */
+function parseCidAndPath(
+  gatewayUrl: string,
+  uri: string,
+): { hash?: string; path?: string; query?: string } | undefined {
+  const regexString = gatewayUrl
+    .replace("{cid}", "(?<hash>[^/]+)")
+    .replace("{path}", "(?<path>[^?#]+)");
+
+  const regex = new RegExp(regexString);
+  const match = uri.match(regex);
+
+  if (match) {
+    const hash = match.groups?.hash;
+    const path = match.groups?.path;
+    const queryString = uri.includes("?")
+      ? uri.substring(uri.indexOf("?") + 1)
+      : "";
+
+    return { hash, path, query: queryString };
+  }
+}
+
+/**
+ * @internal
+ */
 export function replaceGatewayUrlWithScheme(
   uri: string,
   gatewayUrls: GatewayUrls,
 ): string {
   for (const scheme of Object.keys(gatewayUrls)) {
-    for (const url of gatewayUrls[scheme]) {
-      if (uri.startsWith(url)) {
-        return uri.replace(url, scheme);
+    for (const gatewayUrl of gatewayUrls[scheme]) {
+      // If the url is a tokenized url, we need to convert it to a canonical url
+      // Otherwise, we just need to check if the url is a prefix of the uri
+      if (gatewayUrl.includes("{cid}")) {
+        // Given the url is a tokenized url, we need to lift the cid and the path from the uri
+        const parsed = parseCidAndPath(gatewayUrl, uri);
+        if (parsed?.hash && parsed?.path) {
+          const queryString = parsed?.query ? `?${parsed?.query}` : "";
+          return `${scheme}${parsed?.hash}/${parsed?.path}${queryString}`;
+        } else {
+          // If we can't lift the cid and path from the uri, we can't replace the gateway url, return the orig string
+          return uri;
+        }
+      } else if (uri.startsWith(gatewayUrl)) {
+        return uri.replace(gatewayUrl, scheme);
       }
     }
   }
@@ -110,6 +148,7 @@ export function replaceSchemeWithGatewayUrl(
   uri: string,
   gatewayUrls: GatewayUrls,
   index = 0,
+  clientId?: string,
 ): string | undefined {
   const scheme = Object.keys(gatewayUrls).find((s) => uri.startsWith(s));
   const schemeGatewayUrls = scheme ? gatewayUrls[scheme] : [];
@@ -122,7 +161,8 @@ export function replaceSchemeWithGatewayUrl(
     return uri;
   }
 
-  return uri.replace(scheme, schemeGatewayUrls[index]);
+  const path = uri.replace(scheme, "");
+  return getGatewayUrlForCid(schemeGatewayUrls[index], path, clientId);
 }
 
 /**
@@ -133,7 +173,7 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
   gatewayUrls: GatewayUrls,
 ): TData {
   if (typeof data === "string") {
-    return replaceGatewayUrlWithScheme(data, gatewayUrls) as TData;
+    return replaceGatewayUrlWithScheme(data, gatewayUrls) as any as TData;
   }
   if (typeof data === "object") {
     if (!data) {
@@ -147,7 +187,7 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
     if (Array.isArray(data)) {
       return data.map((entry) =>
         replaceObjectGatewayUrlsWithSchemes(entry, gatewayUrls),
-      ) as TData;
+      ) as any as TData;
     }
 
     return Object.fromEntries(
@@ -155,7 +195,7 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
         key,
         replaceObjectGatewayUrlsWithSchemes(value, gatewayUrls),
       ]),
-    ) as TData;
+    ) as any as TData;
   }
 
   return data;
@@ -167,9 +207,15 @@ export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
 export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
   data: TData,
   gatewayUrls: GatewayUrls,
+  clientId?: string,
 ): TData {
   if (typeof data === "string") {
-    return replaceSchemeWithGatewayUrl(data, gatewayUrls) as TData;
+    return replaceSchemeWithGatewayUrl(
+      data,
+      gatewayUrls,
+      0,
+      clientId,
+    ) as any as TData;
   }
   if (typeof data === "object") {
     if (!data) {
@@ -180,15 +226,15 @@ export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
     }
     if (Array.isArray(data)) {
       return data.map((entry) =>
-        replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls),
-      ) as TData;
+        replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls, clientId),
+      ) as any as TData;
     }
     return Object.fromEntries(
       Object.entries(data).map(([key, value]) => [
         key,
-        replaceObjectSchemesWithGatewayUrls(value, gatewayUrls),
+        replaceObjectSchemesWithGatewayUrls(value, gatewayUrls, clientId),
       ]),
-    ) as TData;
+    ) as any as TData;
   }
 
   return data;

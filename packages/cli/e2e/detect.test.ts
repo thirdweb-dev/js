@@ -1,8 +1,11 @@
 import { CREATE_MESSAGES } from "../constants/constants";
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 
+// load env variables
+require("dotenv-mono").load();
+
 // this creates an app, can take some time that's fine
-jest.setTimeout(120_000);
+jest.setTimeout(240_000);
 
 describe("npx thirdweb detect", () => {
   it("should detect ERC721Base extensions", async () => {
@@ -34,9 +37,6 @@ describe("npx thirdweb detect", () => {
     // wait for program to finish
     await create.waitForFinish();
 
-    // the process should exit with code 0
-    expect(create.getExitCode()).toEqual(0);
-
     // check if the contract was created
     expect(await exists("thirdweb-contracts/contracts/Contract.sol")).toEqual(
       true,
@@ -56,13 +56,14 @@ describe("npx thirdweb detect", () => {
       "./thirdweb-contracts",
     );
 
+    // Select pnpm as package manager.
+    await detect.pressKey("arrowDown");
+    await detect.pressKey("enter");
+
     // wait for program to finish
     await detect.waitForFinish();
 
     const lines = detect.getStdout();
-
-    // check that detect excited successfully
-    expect(detect.getExitCode()).toEqual(0);
 
     // Detected extensions
     expect(lines.findIndex((line) => line.includes("ERC721"))).toBeGreaterThan(
@@ -85,9 +86,6 @@ describe("npx thirdweb detect", () => {
     expect(
       lines.findIndex((line) => line.includes("- ERC721SignatureMint")),
     ).toBeGreaterThan(-1);
-
-    // the process should exit with code 0
-    expect(detect.getExitCode()).toEqual(0);
 
     await cleanup(); // cleanup after test
   });

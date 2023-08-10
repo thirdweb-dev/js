@@ -1,7 +1,7 @@
-import { spinner } from "../core/helpers/logger";
 import { BufferOrStringWithName, ThirdwebStorage } from "@thirdweb-dev/storage";
 import fs from "fs";
 import path from "path";
+import { spinner } from "../core/helpers/logger";
 
 function recurseFiles(
   uploadPath: string,
@@ -51,9 +51,14 @@ export async function upload(
     const spin = spinner(
       "Uploading directory to IPFS. This may take a while depending on file sizes.",
     );
-    const uris = await storage.uploadBatch(files);
-    spin.succeed("Successfully uploaded directory to IPFS");
-    uri = uris[0].substring(0, uris[0].lastIndexOf("/"));
+    try {
+      const uris = await storage.uploadBatch(files);
+      spin.succeed("Successfully uploaded directory to IPFS");
+      uri = uris[0].substring(0, uris[0].lastIndexOf("/"));
+    } catch (err) {
+      spin.fail("Failed to upload directory to IPFS.");
+      return Promise.reject(err);
+    }
   } else if (fileType.isFile()) {
     const fileName = path.parse(uploadPath).base;
     const fileData = fs.readFileSync(uploadPath);
@@ -62,7 +67,12 @@ export async function upload(
     const spin = spinner(
       "Uploading file to IPFS. This may take a while depending on file sizes.",
     );
-    uri = await storage.upload(file, { uploadWithoutDirectory: true });
+    try {
+      uri = await storage.upload(file, { uploadWithoutDirectory: true });
+    } catch (err) {
+      spin.fail("Failed to upload file to IPFS.");
+      return Promise.reject(err);
+    }
     spin.succeed("Successfully uploaded file to IPFS.");
   } else {
     return Promise.reject("Invalid path provided");

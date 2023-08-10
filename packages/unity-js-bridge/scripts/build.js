@@ -17,6 +17,7 @@ esbuild.build({
   splitting: false,
   write: true,
   sourcemap: false,
+
   inject: [require.resolve("node-stdlib-browser/helpers/esbuild/shim")],
   define: {
     process: JSON.stringify({

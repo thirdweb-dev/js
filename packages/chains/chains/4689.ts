@@ -23,6 +23,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmQKHQrvtyUC5b5B76ke5GPTGXoGTVCubXS6gHgzCAswKo",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "testnet": false,
   "slug": "iotex-network"
 } as const satisfies Chain;

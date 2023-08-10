@@ -1,6 +1,6 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useCallback, useState } from "react";
-import { useActiveChain, useChainId } from "../../evm/hooks/wallet";
+import { useChain, useChainId } from "../../evm/hooks/wallet";
 import { useSupportedChains } from "../../evm/hooks/useSupportedChains";
 import { useSwitchChain, useWallet } from "./wallet-hooks";
 import { assertWindowEthereum, walletIds } from "@thirdweb-dev/wallets";
@@ -29,7 +29,7 @@ type NetworkMetadata = {
 
 /**
  *
- * @deprecated - use `useActiveChain`, `useSwitchChain`, `useChainId` instead
+ * @deprecated - use `useChain`, `useSwitchChain`, `useChainId` instead
  *
  * Hook for getting metadata about the network the current wallet is connected to and switching networks
  *
@@ -55,7 +55,7 @@ type NetworkMetadata = {
  * @public
  */
 export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {
-  const chain = useActiveChain();
+  const chain = useChain();
   const chainId = useChainId();
   const switchChain = useSwitchChain();
   const supportedChains = useSupportedChains();

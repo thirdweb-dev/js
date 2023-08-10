@@ -1,6 +1,6 @@
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
-import { Address } from "../../schema/shared";
+import { Address } from "../../schema/shared/Address";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -51,7 +51,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @public
    * @twfeature PrimarySale
    */
-  setRecipient = buildTransactionFunction(
+  setRecipient = /* @__PURE__ */ buildTransactionFunction(
     async (recipient: string): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper as ContractWrapper<IPrimarySale>,

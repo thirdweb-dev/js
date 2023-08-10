@@ -1,15 +1,15 @@
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
-import { AddressOrEns } from "../../schema/shared";
-import { Amount } from "../../types";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc20 } from "./erc-20";
-import { Erc20BatchMintable } from "./erc-20-batch-mintable";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { Amount } from "../../types/currency";
+import type { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { Erc20 } from "./erc-20";
+import { Erc20BatchMintable } from "./erc-20-batch-mintable";
 
 /**
  * Mint ERC20 Tokens
@@ -21,6 +21,7 @@ import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
  * ```
  * @public
  */
+
 export class Erc20Mintable implements DetectableFeature {
   featureName = FEATURE_TOKEN_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC20>;
@@ -49,9 +50,11 @@ export class Erc20Mintable implements DetectableFeature {
    * await contract.token.mint.to(toAddress, amount);
    * ```
    */
-  to = buildTransactionFunction(async (to: AddressOrEns, amount: Amount) => {
-    return await this.getMintTransaction(to, amount);
-  });
+  to = /* @__PURE__ */ buildTransactionFunction(
+    async (to: AddressOrEns, amount: Amount) => {
+      return await this.getMintTransaction(to, amount);
+    },
+  );
 
   /**
    * @deprecated Use `contract.erc20.mint.prepare(...args)` instead

@@ -5,10 +5,12 @@ import inquirer from "inquirer";
 import NPMDetector from "./packageManagers/npm";
 import YarnDetector from "./packageManagers/yarn";
 import PnpmDetector from "./packageManagers/pnpm";
-import CondaDetector from "./packageManagers/conda";
 import PipDetector from "./packageManagers/pip";
 import PipEnvDetector from "./packageManagers/pipenv";
 import PoetryDetector from "./packageManagers/poetry";
+import BrownieDetector from "./packageManagers/brownie";
+import FoundryDetector from "./packageManagers/foundry";
+import GoModulesDetector from "./packageManagers/goModules";
 
 export default async function detect(
   path: string,
@@ -18,14 +20,18 @@ export default async function detect(
     new NPMDetector(),
     new YarnDetector(),
     new PnpmDetector(),
-    new CondaDetector(),
     new PipDetector(),
     new PipEnvDetector(),
     new PoetryDetector(),
+    new GoModulesDetector(),
+    new BrownieDetector(),
+    new FoundryDetector(),
   ];
 
   const possiblePackageManagers = packageManagerDetectors
-    .filter((detector) => detector.matches(path))
+    .filter((detector) => {
+      return detector.matches(path);
+    })
     .map((detector) => detector.packageManagerType);
 
   if (!possiblePackageManagers.length) {
@@ -34,6 +40,13 @@ export default async function detect(
 
   if (possiblePackageManagers.length === 1) {
     return possiblePackageManagers[0];
+  }
+
+  if (
+    possiblePackageManagers.includes("brownie") &&
+    possiblePackageManagers.includes("pip")
+  ) {
+    return "brownie";
   }
 
   info(

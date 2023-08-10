@@ -1,4 +1,4 @@
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDKChainId } from "../useSDK";
 import { createCacheKeyWithNetwork } from "../../utils/cache-keys";
 import {
   QueryFunction,

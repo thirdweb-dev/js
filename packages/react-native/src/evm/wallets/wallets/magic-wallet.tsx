@@ -19,26 +19,30 @@ import { ActivityIndicator } from "react-native";
 import { useMagicWallet } from "../../providers/context-provider";
 
 export const magicWallet = (
-  config: MagicLinkOptions,
-): WalletConfig<MagicWallet, MagicLinkOptions> => {
+  magicLinkOptions: MagicLinkOptions,
+): WalletConfig<MagicWallet> => {
   return {
     id: walletIds.magicLink,
     meta: MagicWallet.meta,
     create: (options: WalletOptions) => {
       return new MagicWallet({
         ...options,
-        ...config,
+        ...magicLinkOptions,
         chainId: options.chain.chainId,
       });
     },
     /**
      * UI for connecting wallet
      */
-    connectUI: MagicConnectionUI,
+    connectUI(props) {
+      return (
+        <MagicConnectionUI {...props} magicLinkOptions={magicLinkOptions} />
+      );
+    },
     /**
      * UI for selecting wallet - this UI is rendered in the wallet selection screen
      */
-    selectUI: (props: SelectUIProps<MagicWallet, MagicLinkOptions>) => {
+    selectUI: (props: SelectUIProps<MagicWallet>) => {
       return (
         <Box flex={1}>
           <TextInput
@@ -63,15 +67,12 @@ export const magicWallet = (
     isInstalled: () => {
       return true;
     },
-    config: {
-      ...config,
-    },
   };
 };
 
 const MagicConnectionUI: React.FC<
-  ConnectUIProps<MagicWallet, MagicLinkOptions>
-> = ({ selectionData, walletConfig, close }) => {
+  ConnectUIProps<MagicWallet> & { magicLinkOptions: MagicLinkOptions }
+> = ({ selectionData, walletConfig, close, magicLinkOptions }) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectedWallet = useSetConnectedWallet();
   const chainToConnect = useWalletContext().chainToConnect;
@@ -98,7 +99,7 @@ const MagicConnectionUI: React.FC<
         setConnectionStatus("connecting");
         const connectParams = {
           chainId: chainToConnect?.chainId,
-          ...walletConfig.config,
+          ...magicLinkOptions,
           ...(isEmail
             ? { email: selectionData }
             : { phoneNumber: selectionData }),
@@ -122,6 +123,7 @@ const MagicConnectionUI: React.FC<
     setConnectedWallet,
     setConnectionStatus,
     chainToConnect?.chainId,
+    magicLinkOptions,
   ]);
 
   return (

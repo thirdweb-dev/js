@@ -10,7 +10,10 @@ export default {
   },
   "rpc": [
     "https://filecoin-calibration-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.calibration.node.glif.io/rpc/v1"
+    "https://api.calibration.node.glif.io/rpc/v1",
+    "https://rpc.ankr.com/filecoin_testnet",
+    "https://filecoin-calibration.chainstacklabs.com/rpc/v1",
+    "https://filecoin-calibration.chainup.net/rpc/v1"
   ],
   "faucets": [
     "https://faucet.calibration.fildev.network/"
@@ -39,6 +42,16 @@ export default {
     {
       "name": "Filfox - Calibration",
       "url": "https://calibration.filfox.info",
+      "standard": "none"
+    },
+    {
+      "name": "Glif Explorer - Calibration",
+      "url": "https://explorer.glif.io/?network=calibration",
+      "standard": "none"
+    },
+    {
+      "name": "Beryx",
+      "url": "https://beryx.zondax.ch",
       "standard": "none"
     }
   ],

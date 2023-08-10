@@ -1,8 +1,9 @@
+import type { BasicNFTInput } from "@thirdweb-dev/sdk";
 import {
   requiredParamInvariant,
   RequiredParam,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDKChainId } from "../useSDK";
 import {
   AirdropNFTParams,
   BurnNFTParams,
@@ -23,6 +24,7 @@ import {
   useMutation,
   UseMutationResult,
   useQueryClient,
+  UseQueryResult,
 } from "@tanstack/react-query";
 import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
 import { BigNumber, BigNumberish, providers } from "ethers";
@@ -254,7 +256,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
       invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
+      enabled: (!!erc721 || !!erc1155) && !!ownerWalletAddress,
     },
   );
 }
@@ -314,6 +316,44 @@ export function useNFTBalance(
     },
     {
       enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
+    },
+  );
+}
+
+/**
+ * Get the shared metadata of an Open Edition NFT contract
+ *
+ * @example
+ * ```javascript
+ * const { data: sharedMetadata, isLoading, error } = useSharedMetadata(contract);
+ * ```
+ *
+ * @param contract - an instance of a {@link NFTContract}
+ * @returns a response object that includes the shared metadata of the contract
+ * @twfeature ERC721SharedMetadata
+ * @see {@link https://portal.thirdweb.com/react/react.usesharedmetadata?utm_source=sdk | Documentation}
+ * @beta
+ */
+export function useSharedMetadata(
+  contract: RequiredParam<NFTContract>,
+): UseQueryResult<BasicNFTInput | undefined> {
+  const contractAddress = contract?.getAddress();
+  const { erc721 } = getErcs(contract);
+  return useQueryWithNetwork(
+    cacheKeys.contract.nft.sharedMetadata.get(contractAddress),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      if (erc721) {
+        invariant(
+          erc721.sharedMetadata.get,
+          "Contract instance does not support sharedMetadata.get",
+        );
+        return erc721.sharedMetadata.get();
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      enabled: !!contract,
     },
   );
 }
@@ -604,10 +644,6 @@ export function useAirdropNFT(contract: Erc1155) {
   );
 }
 
-/** **********************/
-/**     WRITE HOOKS     **/
-/** **********************/
-
 /**
  * Burn an NFT
  *
@@ -663,6 +699,37 @@ export function useBurnNFT<TContract extends NFTContract>(
       if (erc721) {
         const { tokenId } = data;
         return await erc721.burn(tokenId);
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Set shared metadata
+ * TODO add docs
+ * @private
+ */
+export function useSetSharedMetadata<TContract extends NFTContract>(
+  contract: RequiredParam<TContract>,
+) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const { erc721 } = getErcs(contract);
+
+  return useMutation(
+    async (data: BasicNFTInput) => {
+      if (erc721) {
+        return await erc721.sharedMetadata.set(data);
       }
       invariant(false, "Unknown NFT type");
     },

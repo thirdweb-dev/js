@@ -1,6 +1,6 @@
-import { ethers, Signer } from "ethers";
+import { ContractFactory, type Signer } from "ethers";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import { DeployOptions } from "../../types";
+import type { DeployOptions } from "../../types/deploy";
 import { DEPLOYER_ABI, DEPLOYER_BYTECODE } from "./constants";
 import { createTransactionBatches } from "./createTransactionBatches";
 
@@ -9,7 +9,7 @@ export async function deployWithThrowawayDeployer(
   transactions: PrecomputedDeploymentTransaction[],
   options?: DeployOptions,
 ) {
-  let transactionBatches = createTransactionBatches(transactions);
+  const transactionBatches = createTransactionBatches(transactions);
   if (transactionBatches.length === 0) {
     return;
   }
@@ -18,10 +18,7 @@ export async function deployWithThrowawayDeployer(
   const deployTxns = await Promise.all(
     transactionBatches.map((txBatch) => {
       // Using the deployer contract, send the deploy transactions to common factory with a signer
-      const deployer = new ethers.ContractFactory(
-        DEPLOYER_ABI,
-        DEPLOYER_BYTECODE,
-      )
+      const deployer = new ContractFactory(DEPLOYER_ABI, DEPLOYER_BYTECODE)
         .connect(signer)
         .deploy(txBatch);
 

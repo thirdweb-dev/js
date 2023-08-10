@@ -1,9 +1,40 @@
+import {
+  THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+  THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
+} from "../../constants";
 import { Json } from "../../core/schema";
 import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
-function getToken(
+export function getCookie(
+  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
+  cookie: string,
+): string | undefined {
+  if (typeof req.cookies.get === "function") {
+    return req.cookies.get(cookie);
+  }
+
+  return (req.cookies as any)[cookie];
+}
+
+export function getActiveCookie(
+  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
+): string | undefined {
+  if (!req.cookies) {
+    return undefined;
+  }
+
+  const activeAccount = getCookie(req, THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE);
+  if (activeAccount) {
+    return `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${activeAccount}`;
+  }
+
+  // If active account is not present, then use the old default
+  return THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX;
+}
+
+export function getToken(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
 ): string | undefined {
   if (!!(req as NextApiRequest).headers["authorization"]) {
@@ -13,17 +44,18 @@ function getToken(
     if (authorizationHeader?.length === 2) {
       return authorizationHeader[1];
     }
+  }
 
+  if (!req.cookies) {
     return undefined;
   }
 
-  const cookie: string | undefined = !req.cookies
-    ? undefined
-    : typeof req.cookies.get === "function"
-    ? (req.cookies as any).get("thirdweb_auth_token")
-    : (req.cookies as any).thirdweb_auth_token;
+  const activeCookie = getActiveCookie(req);
+  if (!activeCookie) {
+    return undefined;
+  }
 
-  return cookie;
+  return getCookie(req, activeCookie);
 }
 
 export async function getUser<

@@ -4,6 +4,7 @@ import { ThemeProviderProps } from "../styles/ThemeProvider";
 import { Theme, darkTheme, lightTheme } from "../styles/theme";
 import { useAppTheme } from "../styles/hooks";
 import { useTheme } from "@shopify/restyle";
+import { PropsWithChildren } from "react";
 
 type UIContextType = {
   modalState: ModalState;
@@ -20,12 +21,12 @@ const UIContext = createContext<UIContextType>({
     isSheet: true,
     caller: "init",
   },
-  setModalState: () => {},
+  setModalState: () => undefined,
   theme: darkTheme(),
-  setTheme: () => {},
+  setTheme: () => undefined,
 });
 
-export const UIContextProvider = (props: React.PropsWithChildren<{}>) => {
+export const UIContextProvider = (props: PropsWithChildren) => {
   const [modalState, setModalState] = useState<ModalState>({
     view: "Closed",
     data: {},

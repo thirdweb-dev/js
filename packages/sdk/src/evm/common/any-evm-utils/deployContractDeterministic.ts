@@ -1,7 +1,7 @@
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, type PopulatedTransaction, type Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import { DeployOptions } from "../../types";
+import type { DeployOptions } from "../../types/deploy";
 import { isContractDeployed } from "./isContractDeployed";
 
 /**
@@ -10,7 +10,7 @@ import { isContractDeployed } from "./isContractDeployed";
  *
  * @public
  *
- * @param singer
+ * @param signer
  * @param bytecode
  * @param encodedArgs
  * @param create2FactoryAddress
@@ -33,7 +33,7 @@ export async function deployContractDeterministic(
       `deploying contract via create2 factory at: ${transaction.predictedAddress}`,
     );
 
-    let tx: ethers.PopulatedTransaction = {
+    const tx: PopulatedTransaction = {
       to: transaction.to,
       data: transaction.data,
     };

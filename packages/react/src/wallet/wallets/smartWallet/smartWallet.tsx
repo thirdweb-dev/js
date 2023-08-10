@@ -6,61 +6,57 @@ import {
 } from "@thirdweb-dev/react-core";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { defaultWallets } from "../defaultWallets";
-import { SmartConfiguredWallet, SmartWalletConfig } from "./types";
+import { SmartWalletConfig, SmartWalletConfigOptions } from "./types";
 import { useState } from "react";
 import { SmartWalletConnecting } from "./SmartWalletConnecting";
 import { SelectPersonalWallet } from "./SelectPersonalWallet";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
 export const smartWallet = (
-  config: SmartWalletConfig,
-): SmartConfiguredWallet => {
+  config: SmartWalletConfigOptions,
+): SmartWalletConfig => {
+  const personalWallets = config?.personalWallets || defaultWallets;
   return {
     id: SmartWallet.id,
     meta: SmartWallet.meta,
     create: (options: WalletOptions) =>
       new SmartWallet({ ...options, ...config }),
-    connectUI: SmartConnectUI,
-    isInstalled() {
-      return false;
+    connectUI(props) {
+      return <SmartConnectUI {...props} personalWallets={personalWallets} />;
     },
-    config: {
-      ...config,
-      personalWallets: config?.personalWallets || defaultWallets,
-    },
+    personalWallets,
   };
 };
 
 export const SmartConnectUI = (
-  props: ConnectUIProps<SmartWallet, SmartWalletConfig>,
+  props: ConnectUIProps<SmartWallet> & { personalWallets: WalletConfig[] },
 ) => {
   const activeWallet = useWallet();
   const { walletConfig } = props;
-  const [personalConfiguredWallet, setPersonalConfiguredWallet] = useState<
+  const [personalWalletConfig, setPersonalWalletConfig] = useState<
     WalletConfig | undefined
   >();
 
-  if (personalConfiguredWallet) {
+  if (personalWalletConfig) {
     const _props = {
       close: () => {
-        setPersonalConfiguredWallet(undefined);
+        setPersonalWalletConfig(undefined);
         props.close(false); // do not reset UI
       },
       goBack: () => {
-        setPersonalConfiguredWallet(undefined);
+        setPersonalWalletConfig(undefined);
       },
       isOpen: props.isOpen,
       open: props.open,
       theme: props.theme,
-      walletConfig: personalConfiguredWallet,
-      supportedWallets: props.walletConfig.config
-        .personalWallets as WalletConfig[],
+      walletConfig: personalWalletConfig,
+      supportedWallets: props.personalWallets,
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
     };
 
-    if (personalConfiguredWallet.connectUI) {
-      return <personalConfiguredWallet.connectUI {..._props} />;
+    if (personalWalletConfig.connectUI) {
+      return <personalWalletConfig.connectUI {..._props} />;
     }
 
     return <HeadlessConnectUI {..._props} />;
@@ -69,10 +65,10 @@ export const SmartConnectUI = (
   if (!activeWallet) {
     return (
       <SelectPersonalWallet
-        personalWallets={walletConfig.config.personalWallets as WalletConfig[]}
+        personalWallets={props.personalWallets}
         onBack={props.goBack}
         smartWallet={walletConfig}
-        selectWallet={setPersonalConfiguredWallet}
+        selectWallet={setPersonalWalletConfig}
         renderBackButton={props.supportedWallets.length > 1}
       />
     );

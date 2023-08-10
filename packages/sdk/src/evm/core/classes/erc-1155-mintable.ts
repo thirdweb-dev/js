@@ -1,21 +1,22 @@
 import { NFT } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { uploadOrExtractURI } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
-import { AddressOrEns } from "../../schema/shared";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { Erc1155 } from "./erc-1155";
-import { Erc1155BatchMintable } from "./erc-1155-batch-mintable";
 import { Transaction } from "./transactions";
-import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
-import { TransferSingleEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
+import type { IMintableERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, type BigNumberish, constants } from "ethers";
+import type { IMulticall } from "@thirdweb-dev/contracts-js";
+import { TransferSingleEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
+import type { Erc1155 } from "./erc-1155";
+import { Erc1155BatchMintable } from "./erc-1155-batch-mintable";
 
 /**
  * Mint ERC1155 NFTs
@@ -27,6 +28,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  * ```
  * @public
  */
+
 export class Erc1155Mintable implements DetectableFeature {
   featureName = FEATURE_EDITION_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155>;
@@ -78,7 +80,7 @@ export class Erc1155Mintable implements DetectableFeature {
    * ```
    *
    */
-  to = buildTransactionFunction(
+  to = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       metadataWithSupply: EditionMetadataOrUri,
@@ -122,7 +124,7 @@ export class Erc1155Mintable implements DetectableFeature {
       method: "mintTo",
       args: [
         await resolveAddress(to),
-        ethers.constants.MaxUint256,
+        constants.MaxUint256,
         uri,
         metadataWithSupply.supply,
       ],
@@ -146,7 +148,7 @@ export class Erc1155Mintable implements DetectableFeature {
    * const tx = await contract.edition.mint.additionalSupplyTo(toAddress, tokenId, additionalSupply);
    * ```
    */
-  additionalSupplyTo = buildTransactionFunction(
+  additionalSupplyTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       to: AddressOrEns,
       tokenId: BigNumberish,

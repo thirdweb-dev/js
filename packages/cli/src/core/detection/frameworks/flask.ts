@@ -12,14 +12,14 @@ export default class FlaskDetector implements FrameworkDetector {
       packageManager,
     );
 
-    const additionalFilesToCheck = ["/app.py", "/application.py"];
+    const additionalFilesToCheck: string[] = [];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );
 
     return (
-      dependencies.includes("flask") ||
-      devDependencies.includes("flask") ||
+      !!dependencies.find((dep) => dep.includes("Flask")) ||
+      !!devDependencies.find((dep) => dep.includes("Flask")) ||
       additionalFilesExist ||
       false
     );

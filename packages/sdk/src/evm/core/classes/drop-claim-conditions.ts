@@ -1,19 +1,7 @@
 import { AmountSchema } from "../../../core/schema/shared";
 import { includesErrorMessage } from "../../common/error";
-import {
-  abstractContractModelToLegacy,
-  abstractContractModelToNew,
-  convertQuantityToBigNumber,
-  fetchSnapshotEntryForAddress,
-  legacyContractModelToAbstract,
-  newContractModelToAbstract,
-  prepareClaim,
-  processClaimConditionInputs,
-  transformResultToClaimCondition,
-  updateExistingClaimConditions,
-} from "../../common/claim-conditions";
-import { isNativeToken } from "../../common/currency";
-import { resolveAddress } from "../../common/ens";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
@@ -21,16 +9,16 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
-import { AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
-import {
-  Amount,
-  ClaimCondition,
+import type {
   ClaimConditionFetchOptions,
+  ClaimCondition,
   ClaimConditionInput,
-  ClaimOptions,
   ClaimVerification,
-} from "../../types";
+  ClaimOptions,
+} from "../../types/claim-conditions/claim-conditions";
+import type { Amount } from "../../types/currency";
 import {
   BaseClaimConditionERC721,
   BaseDropERC20,
@@ -56,8 +44,18 @@ import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/dec
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
+import { BigNumber, type BigNumberish, constants, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
+import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
+import { abstractContractModelToLegacy } from "../../common/claim-conditions/abstractContractModelToLegacy";
+import { abstractContractModelToNew } from "../../common/claim-conditions/abstractContractModelToNew";
+import { convertQuantityToBigNumber } from "../../common/claim-conditions/convertQuantityToBigNumber";
+import { legacyContractModelToAbstract } from "../../common/claim-conditions/legacyContractModelToAbstract";
+import { newContractModelToAbstract } from "../../common/claim-conditions/newContractModelToAbstract";
+import { prepareClaim } from "../../common/claim-conditions/prepareClaim";
+import { processClaimConditionInputs } from "../../common/claim-conditions/processClaimConditionInputs";
+import { transformResultToClaimCondition } from "../../common/claim-conditions/transformResultToClaimCondition";
+import { updateExistingClaimConditions } from "../../common/claim-conditions/updateExistingClaimConditions";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -156,21 +154,21 @@ export class DropClaimConditions<
       this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
-      const claimCondition =
-        (await this.contractWrapper.readContract.claimCondition()) as {
-          currentStartId: BigNumber;
-          count: BigNumber;
-        };
-      const startId = claimCondition.currentStartId.toNumber();
-      const count = claimCondition.count.toNumber();
-      const conditions: AbstractClaimConditionContractStruct[] = [];
+      const [currentStartId, countBn] =
+        await this.contractWrapper.readContract.claimCondition();
+      const startId = currentStartId.toNumber();
+      const count = countBn.toNumber();
+      const conditions: Promise<AbstractClaimConditionContractStruct>[] = [];
       for (let i = startId; i < startId + count; i++) {
-        conditions.push(await this.get(i));
+        conditions.push(this.get(i));
       }
-      const metadata = await this.metadata.get();
-      const decimals = await this.getTokenDecimals();
+      const [metadata, decimals, ...fetchedConditions] = await Promise.all([
+        this.metadata.get(),
+        this.getTokenDecimals(),
+        ...conditions,
+      ]);
       return Promise.all(
-        conditions.map((c) =>
+        fetchedConditions.map((c) =>
           transformResultToClaimCondition(
             c,
             decimals,
@@ -231,7 +229,7 @@ export class DropClaimConditions<
     let claimCondition: ClaimCondition;
 
     const decimals = await this.getTokenDecimals();
-    const quantityWithDecimals = ethers.utils.parseUnits(
+    const quantityWithDecimals = utils.parseUnits(
       AmountSchema.parse(quantity),
       decimals,
     );
@@ -267,7 +265,7 @@ export class DropClaimConditions<
     }
 
     if (claimCondition.availableSupply !== "unlimited") {
-      const supplyWithDecimals = ethers.utils.parseUnits(
+      const supplyWithDecimals = utils.parseUnits(
         claimCondition.availableSupply,
         decimals,
       );
@@ -278,9 +276,7 @@ export class DropClaimConditions<
     }
 
     // check for merkle root inclusion
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const merkleRootArray = utils.stripZeros(claimCondition.merkleRootHash);
     const hasAllowList = merkleRootArray.length > 0;
     let allowListEntry: SnapshotEntryWithProof | null = null;
     if (hasAllowList) {
@@ -370,7 +366,25 @@ export class DropClaimConditions<
             "Merkle proof verification failed:",
             "reason" in e ? e.reason : e,
           );
-          reasons.push(ClaimEligibility.AddressNotAllowed);
+          const reason = (e as any).reason;
+          switch (reason) {
+            case "!Qty":
+              reasons.push(ClaimEligibility.OverMaxClaimablePerWallet);
+              break;
+            case "!PriceOrCurrency":
+              reasons.push(ClaimEligibility.WrongPriceOrCurrency);
+              break;
+            case "!MaxSupply":
+              reasons.push(ClaimEligibility.NotEnoughSupply);
+              break;
+            case "cant claim yet":
+              reasons.push(ClaimEligibility.ClaimPhaseNotStarted);
+              break;
+            default: {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              break;
+            }
+          }
           return reasons;
         }
       }
@@ -380,38 +394,35 @@ export class DropClaimConditions<
       this.isNewSinglePhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
-      const claimerProofs = await this.getClaimerProofs(resolvedAddress);
-
       let claimedSupply = BigNumber.from(0);
       let maxClaimable = convertQuantityToBigNumber(
         claimCondition.maxClaimablePerWallet,
         decimals,
       );
 
-      if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
-        claimedSupply =
-          await this.contractWrapper.readContract.getSupplyClaimedByWallet(
-            resolvedAddress,
-          );
+      try {
+        claimedSupply = await this.getSupplyClaimedByWallet(resolvedAddress);
+      } catch (e) {
+        // no-op
       }
 
-      if (this.isNewMultiphaseDrop(this.contractWrapper)) {
-        const activeClaimConditionId =
-          await this.contractWrapper.readContract.getActiveClaimConditionId();
-        claimedSupply =
-          await this.contractWrapper.readContract.getSupplyClaimedByWallet(
-            activeClaimConditionId,
-            resolvedAddress,
-          );
-      }
-
-      if (claimerProofs) {
+      if (allowListEntry) {
         maxClaimable = convertQuantityToBigNumber(
-          claimerProofs.maxClaimable,
+          allowListEntry.maxClaimable,
           decimals,
         );
       }
 
+      if (
+        maxClaimable.gt(0) &&
+        maxClaimable.lt(claimedSupply.add(quantityWithDecimals))
+      ) {
+        reasons.push(ClaimEligibility.OverMaxClaimablePerWallet);
+        return reasons;
+      }
+
+      // if there is no allowlist, or if there is an allowlist and the address is not in it
+      // if maxClaimable is 0, we consider it as the address is not allowed
       if (!hasAllowList || (hasAllowList && !allowListEntry)) {
         if (maxClaimable.lte(claimedSupply) || maxClaimable.eq(0)) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
@@ -472,6 +483,7 @@ export class DropClaimConditions<
           claimCondition.currencyAddress,
           ERC20Abi,
           {},
+          this.storage,
         );
         const balance = await erc20.readContract.balanceOf(resolvedAddress);
         if (balance.lt(totalPrice)) {
@@ -494,7 +506,7 @@ export class DropClaimConditions<
   ): Promise<SnapshotEntryWithProof | null> {
     const claimCondition = await this.get(claimConditionId);
     const merkleRoot = claimCondition.merkleRoot;
-    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
+    const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
       const resolvedAddress = await resolveAddress(claimerAddress);
@@ -509,6 +521,34 @@ export class DropClaimConditions<
     } else {
       return null;
     }
+  }
+
+  /**
+   * Get the total supply claimed by a specific wallet
+   * @param walletAddress the wallet address to check
+   * @returns the total supply claimed
+   */
+  public async getSupplyClaimedByWallet(
+    walletAddress: AddressOrEns,
+  ): Promise<BigNumber> {
+    const resolvedAddress = await resolveAddress(walletAddress);
+    if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+      return await this.contractWrapper.readContract.getSupplyClaimedByWallet(
+        resolvedAddress,
+      );
+    }
+
+    if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+      const activeClaimConditionId =
+        await this.contractWrapper.readContract.getActiveClaimConditionId();
+      return await this.contractWrapper.readContract.getSupplyClaimedByWallet(
+        activeClaimConditionId,
+        resolvedAddress,
+      );
+    }
+    throw new Error(
+      "This contract does not support the getSupplyClaimedByWallet function",
+    );
   }
 
   /** ***************************************
@@ -550,7 +590,7 @@ export class DropClaimConditions<
    * @param claimConditionInputs - The claim conditions
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
-  set = buildTransactionFunction(
+  set = /* @__PURE__ */ buildTransactionFunction(
     async (
       claimConditionInputs: ClaimConditionInput[],
       resetClaimEligibilityForAll = false,
@@ -565,7 +605,7 @@ export class DropClaimConditions<
           claimConditionsProcessed = [
             {
               startTime: new Date(0),
-              currencyAddress: ethers.constants.AddressZero,
+              currencyAddress: constants.AddressZero,
               price: 0,
               maxClaimableSupply: 0,
               maxClaimablePerWallet: 0,
@@ -718,7 +758,7 @@ export class DropClaimConditions<
    * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
    * @param claimConditionInput - the new data to update, previous data will be retained
    */
-  update = buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (
       index: number,
       claimConditionInput: ClaimConditionInput,
@@ -798,7 +838,7 @@ export class DropClaimConditions<
           proof: claimVerification.proofs,
           maxQuantityInAllowlist: claimVerification.maxClaimable,
         } as IDropSinglePhase_V1.AllowlistProofStruct,
-        ethers.utils.toUtf8Bytes(""),
+        utils.toUtf8Bytes(""),
       ];
     }
     return [
@@ -812,7 +852,7 @@ export class DropClaimConditions<
         pricePerToken: claimVerification.priceInProof,
         currency: claimVerification.currencyAddressInProof,
       } as IDropSinglePhase.AllowlistProofStruct,
-      ethers.utils.toUtf8Bytes(""),
+      utils.toUtf8Bytes(""),
     ];
   }
 

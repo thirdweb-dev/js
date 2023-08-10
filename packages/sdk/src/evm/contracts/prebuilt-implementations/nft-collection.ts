@@ -17,13 +17,15 @@ import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import type { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address, AddressOrEns } from "../../schema/shared";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, constants } from "ethers";
+import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -40,7 +42,7 @@ import { BigNumberish, CallOverrides, constants } from "ethers";
  * @public
  */
 export class NFTCollection extends StandardErc721<TokenERC721> {
-  static contractRoles = ["admin", "minter", "transfer"] as const;
+  static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
   public metadata: ContractMetadata<
@@ -114,6 +116,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -198,7 +201,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  mint = buildTransactionFunction(
+  mint = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadata: NFTMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
@@ -229,7 +232,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  mintTo = buildTransactionFunction(
+  mintTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       walletAddress: AddressOrEns,
       metadata: NFTMetadataOrUri,
@@ -277,7 +280,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (
       metadata: NFTMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
@@ -312,7 +315,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
    */
-  mintBatchTo = buildTransactionFunction(
+  mintBatchTo = /* @__PURE__ */ buildTransactionFunction(
     async (
       walletAddress: AddressOrEns,
       metadata: NFTMetadataOrUri[],
@@ -330,7 +333,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  burn = buildTransactionFunction((tokenId: BigNumberish) => {
+  burn = /* @__PURE__ */ buildTransactionFunction((tokenId: BigNumberish) => {
     return this.erc721.burn.prepare(tokenId);
   });
 
@@ -338,7 +341,8 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+    TMethod extends
+      keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<TokenERC721["functions"][TMethod]>,
@@ -356,7 +360,8 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @internal
    */
   public async call<
-    TMethod extends keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
+    TMethod extends
+      keyof TokenERC721["functions"] = keyof TokenERC721["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<TokenERC721["functions"][TMethod]>,

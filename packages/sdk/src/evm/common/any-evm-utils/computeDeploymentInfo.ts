@@ -12,8 +12,13 @@ import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 import { computeDeploymentAddress } from "./computeDeploymentAddress";
+import { type BytesLike, utils, constants } from "ethers";
+import { getNativeTokenByChainId } from "../../constants/currency";
+import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
+import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
+import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
-import { encodeConstructorParamsForImplementation } from "./encodeConstructorParamsForImplementation";
+import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
 
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
@@ -22,7 +27,7 @@ export async function computeDeploymentInfo(
   create2Factory: string,
   contractOptions?: ContractOptions,
 ): Promise<DeploymentPreset> {
-  let contractName = contractOptions && contractOptions.contractName;
+  const contractName = contractOptions && contractOptions.contractName;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -89,4 +94,113 @@ export async function computeDeploymentInfo(
     },
     encodedArgs,
   };
+}
+
+/**
+ * @internal
+ *
+ * Determine constructor params required by an implementation contract.
+ * Return abi-encoded params.
+ */
+export async function encodeConstructorParamsForImplementation(
+  compilerMetadata: PreDeployMetadataFetched,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  create2Factory: string,
+  constructorParamMap?: ConstructorParamMap,
+): Promise<BytesLike> {
+  const constructorParams = extractConstructorParamsFromAbi(
+    compilerMetadata.abi,
+  );
+  const constructorParamTypes = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
+
+  const constructorParamValues = await Promise.all(
+    constructorParams.map(async (p) => {
+      if (constructorParamMap && constructorParamMap[p.name]) {
+        if (constructorParamMap[p.name].type) {
+          invariant(
+            constructorParamMap[p.name].type === p.type,
+            `Provided type ${
+              constructorParamMap[p.name].type
+            } doesn't match the actual type ${p.type} from Abi`,
+          );
+        }
+        return constructorParamMap[p.name].value;
+      }
+      if (p.name && p.name.includes("nativeTokenWrapper")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        let nativeTokenWrapperAddress =
+          getNativeTokenByChainId(chainId).wrapped.address;
+
+        if (nativeTokenWrapperAddress === constants.AddressZero) {
+          const deploymentInfo = await computeDeploymentInfo(
+            "infra",
+            provider,
+            storage,
+            create2Factory,
+            {
+              contractName: "WETH9",
+            },
+          );
+          if (!caches.deploymentPresets["WETH9"]) {
+            caches.deploymentPresets["WETH9"] = deploymentInfo;
+          }
+
+          nativeTokenWrapperAddress =
+            deploymentInfo.transaction.predictedAddress;
+        }
+
+        return nativeTokenWrapperAddress;
+      } else if (p.name && p.name.includes("trustedForwarder")) {
+        if (compilerMetadata.name === "Pack") {
+          // EOAForwarder for Pack
+          const deploymentInfo = await computeDeploymentInfo(
+            "infra",
+            provider,
+            storage,
+            create2Factory,
+            {
+              contractName: "ForwarderEOAOnly",
+            },
+          );
+          if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
+            caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
+          }
+          return deploymentInfo.transaction.predictedAddress;
+        }
+
+        const deploymentInfo = await computeDeploymentInfo(
+          "infra",
+          provider,
+          storage,
+          create2Factory,
+          {
+            contractName: "Forwarder",
+          },
+        );
+        if (!caches.deploymentPresets["Forwarder"]) {
+          caches.deploymentPresets["Forwarder"] = deploymentInfo;
+        }
+
+        return deploymentInfo.transaction.predictedAddress;
+      } else if (p.name && p.name.includes("royaltyEngineAddress")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        return getRoyaltyEngineV1ByChainId(chainId);
+      } else {
+        throw new Error("Can't resolve constructor arguments");
+      }
+    }),
+  );
+
+  const encodedArgs = utils.defaultAbiCoder.encode(
+    constructorParamTypes,
+    constructorParamValues,
+  );
+  return encodedArgs;
 }

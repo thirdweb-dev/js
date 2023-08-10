@@ -13,13 +13,16 @@ import { useCoinbaseWalletListener } from "./useCoinbaseWalletListener";
  */
 export function useCoinbaseWallet(callbackURL: string) {
   const connect = useConnect();
-  useCoinbaseWalletListener();
+  useCoinbaseWalletListener(true);
 
   return useCallback(
     async (connectOptions?: { chainId?: number; callbackURL: string }) => {
       const { coinbaseWallet } = await import("../wallets/coinbase-wallet");
-      // @ts-ignore
-      connect(coinbaseWallet({ callbackURL: callbackURL }), connectOptions);
+      return connect(
+        // @ts-expect-error - Passing a URL object to callbackURL crashes the function @fixme: @manan
+        coinbaseWallet({ callbackURL: callbackURL }),
+        connectOptions,
+      );
     },
     [connect, callbackURL],
   );

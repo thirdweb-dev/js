@@ -9,8 +9,9 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { iconSize, radius, spacing } from "../../../design-system";
-import { Theme } from "../../../design-system/index";
+import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
+import { openWindow } from "../../utils/openWindow";
 import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
 import { useState } from "react";
@@ -24,7 +25,16 @@ export const GetStartedScreen: React.FC<{
   appleStoreLink?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
-}> = (props) => {
+}> = ({
+  walletName,
+  walletIconURL,
+  appleStoreLink,
+  googlePlayStoreLink,
+  chromeExtensionLink,
+  header,
+  footer,
+  onBack,
+}) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
@@ -46,34 +56,34 @@ export const GetStartedScreen: React.FC<{
         }
         onClick={() => {
           if (showScreen === "base") {
-            props.onBack();
+            onBack();
           } else {
             setShowScreen("base");
           }
         }}
       />
 
-      {showScreen === "android-scan" && props.googlePlayStoreLink && (
+      {showScreen === "android-scan" && googlePlayStoreLink && (
         <ScanScreen
           platformIcon={
             <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
           }
-          url={props.googlePlayStoreLink}
+          url={googlePlayStoreLink}
           platform="Google Play"
-          walletName={props.walletName}
-          walletIconURL={props.walletIconURL}
+          walletName={walletName}
+          walletIconURL={walletIconURL}
         />
       )}
 
-      {showScreen === "ios-scan" && props.appleStoreLink && (
+      {showScreen === "ios-scan" && appleStoreLink && (
         <ScanScreen
           platformIcon={
             <Img width={iconSize.md} height={iconSize.md} src={Apple} />
           }
-          url={props.appleStoreLink}
+          url={appleStoreLink}
           platform="App Store"
-          walletName={props.walletName}
-          walletIconURL={props.walletIconURL}
+          walletName={walletName}
+          walletIconURL={walletIconURL}
         />
       )}
 
@@ -81,10 +91,10 @@ export const GetStartedScreen: React.FC<{
         <>
           <Spacer y="lg" />
 
-          {props.header || (
+          {header || (
             <>
               <Img
-                src={props.walletIconURL}
+                src={walletIconURL}
                 width={iconSize.xl}
                 height={iconSize.xl}
                 alt=""
@@ -92,7 +102,7 @@ export const GetStartedScreen: React.FC<{
 
               <Spacer y="lg" />
 
-              <ModalTitle>Get started with {props.walletName}</ModalTitle>
+              <ModalTitle>Get started with {walletName}</ModalTitle>
               <Spacer y="sm" />
 
               <ModalDescription>
@@ -104,10 +114,10 @@ export const GetStartedScreen: React.FC<{
 
           <Flex flexDirection="column" gap="xs">
             {/* Chrome Extension  */}
-            {props.chromeExtensionLink && (
+            {chromeExtensionLink && (
               <ButtonLink
                 onClick={() => {
-                  window.open(props.chromeExtensionLink, "_blank");
+                  openWindow(chromeExtensionLink);
                 }}
               >
                 <Img width={iconSize.lg} height={iconSize.lg} src={Chrome} />
@@ -116,12 +126,12 @@ export const GetStartedScreen: React.FC<{
             )}
 
             {/* Google Play store  */}
-            {props.googlePlayStoreLink && (
+            {googlePlayStoreLink && (
               <ButtonLink
                 as="button"
                 onClick={() => {
                   if (isMobile()) {
-                    window.open(props.googlePlayStoreLink, "_blank");
+                    openWindow(googlePlayStoreLink);
                   } else {
                     setShowScreen("android-scan");
                   }
@@ -137,12 +147,12 @@ export const GetStartedScreen: React.FC<{
             )}
 
             {/* App Store  */}
-            {props.appleStoreLink && (
+            {appleStoreLink && (
               <ButtonLink
                 as="button"
                 onClick={() => {
                   if (isMobile()) {
-                    window.open(props.appleStoreLink, "_blank");
+                    openWindow(appleStoreLink);
                   } else {
                     setShowScreen("ios-scan");
                   }
@@ -161,19 +171,19 @@ export const GetStartedScreen: React.FC<{
           <Spacer y="xl" />
           <HelperLink
             as="button"
-            onClick={props.onBack}
+            onClick={onBack}
             style={{
               textAlign: "center",
               display: "block",
               width: "100%",
             }}
           >
-            I{`'`}ve finished setting up my {props.walletName} on mobile
+            I{`'`}ve finished setting up my {walletName} on mobile
           </HelperLink>
         </>
       )}
 
-      {!isScanScreen && props.footer}
+      {!isScanScreen && footer}
     </>
   );
 };

@@ -2,15 +2,17 @@ import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
 import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   walletId?: string;
   walletStorage?: AsyncStorage;
   dappMetadata?: DAppMetaData;
+  clientId?: string;
 } & TOpts;
 
 export type WalletMeta = {
@@ -25,7 +27,9 @@ export type WalletMeta = {
 };
 
 export abstract class AbstractClientWallet<
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TAdditionalOpts extends Record<string, any> = {},
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
   walletId: string;
@@ -43,7 +47,9 @@ export abstract class AbstractClientWallet<
     super();
     this.walletId = walletId;
     this.options = options;
-    this.chains = options?.chains || defaultChains;
+    this.chains = (options?.chains || defaultChains).map((c) =>
+      updateChainRPCs(c, options?.clientId),
+    );
     this.dappMetadata = options?.dappMetadata || DEFAULT_DAPP_META;
     this.walletStorage =
       options?.walletStorage || createAsyncLocalStorage(this.walletId);
@@ -114,8 +120,12 @@ export abstract class AbstractClientWallet<
       throw new Error("Failed to auto connect to the wallet.");
     }
 
-    const address = await connector.connect(connectOptions);
-    return address;
+    try {
+      const address = await connector.connect(connectOptions);
+      return address;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 
   async #subscribeToEvents(connector: Connector) {
@@ -170,9 +180,11 @@ export abstract class AbstractClientWallet<
   }
 
   async updateChains(chains: Chain[]) {
-    this.chains = chains;
+    this.chains = chains.map((c) => {
+      return updateChainRPCs(c, this.options?.clientId);
+    });
     const connector = await this.getConnector();
-    connector.updateChains(chains);
+    connector.updateChains(this.chains);
   }
 
   /**

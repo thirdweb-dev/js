@@ -16,6 +16,8 @@ export function InputSelectionUI(props: {
   errorMessage?: (input: string) => string | undefined;
   emptyErrorMessage?: string;
   supportedWallets: WalletConfig[];
+  footer?: React.ReactNode;
+  noInput?: boolean;
 }) {
   const [input, setInput] = useState("");
   const singleWallet = props.supportedWallets.length === 1;
@@ -37,43 +39,46 @@ export function InputSelectionUI(props: {
 
   return (
     <div>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        <Input
-          placeholder={props.placeholder}
-          variant="secondary"
-          type={props.type}
-          name={props.name}
-          value={input}
-          data-error={renderingError}
-          onChange={(e) => {
-            setInput(e.target.value);
-            if (props.errorMessage) {
-              setError(props.errorMessage(e.target.value));
-            } else {
-              setError(undefined);
-            }
+      {!props.noInput && (
+        <div
+          style={{
+            position: "relative",
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSelect();
-            }
-          }}
-        />
-
-        <CircleInputButton
-          onClick={() => {
-            handleSelect();
-          }}
-          color="inverted"
-          type="button"
         >
-          <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
-        </CircleInputButton>
-      </div>
+          <Input
+            tabIndex={-1}
+            placeholder={props.placeholder}
+            variant="secondary"
+            type={props.type}
+            name={props.name}
+            value={input}
+            data-error={renderingError}
+            onChange={(e) => {
+              setInput(e.target.value);
+              if (props.errorMessage) {
+                setError(props.errorMessage(e.target.value));
+              } else {
+                setError(undefined);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSelect();
+              }
+            }}
+          />
+
+          <CircleInputButton
+            onClick={() => {
+              handleSelect();
+            }}
+            color="inverted"
+            type="button"
+          >
+            <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
+          </CircleInputButton>
+        </div>
+      )}
 
       {showError && error && (
         <>
@@ -92,6 +97,8 @@ export function InputSelectionUI(props: {
           </>
         )}
 
+      {props.footer}
+
       {!singleWallet && (
         <>
           <Spacer y="lg" />
@@ -105,7 +112,9 @@ export function InputSelectionUI(props: {
   );
 }
 
-const CircleInputButton = styled(InputButton)<{ theme?: Theme }>`
+const CircleInputButton = /* @__PURE__ */ styled(InputButton)<{
+  theme?: Theme;
+}>`
   background: ${(p) => p.theme.bg.highlighted};
   border-radius: 50%;
   padding: ${spacing.xxs};

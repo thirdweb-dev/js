@@ -9,7 +9,6 @@ import { WalletConfig } from "@thirdweb-dev/react-core";
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
   onBack: () => void;
-  onSkip: () => void;
   meta: WalletConfig["meta"];
 }> = (props) => {
   return (
@@ -33,9 +32,6 @@ export const OverrideConfirmation: React.FC<{
         <FormFooter>
           <Button variant="inverted" onClick={props.onBackup}>
             Backup wallet
-          </Button>
-          <Button variant="danger" onClick={props.onSkip}>
-            Skip
           </Button>
         </FormFooter>
       </div>

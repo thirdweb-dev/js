@@ -1,6 +1,12 @@
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
+import type { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
+import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { utils, BigNumber } from "ethers";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import type { TokenInitializer } from "../../contracts";
 import {
   FilledSignaturePayload20,
@@ -11,12 +17,8 @@ import {
   Signature20PayloadOutput,
   SignedPayload20,
 } from "../../schema/contracts/common/signature";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractRoles } from "./contract-roles";
-import { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { BigNumber, ethers } from "ethers";
+import type { ITokenERC20 } from "@thirdweb-dev/contracts-js";
 import invariant from "tiny-invariant";
 
 /**
@@ -24,6 +26,7 @@ import invariant from "tiny-invariant";
  * @public
  */
 // TODO consolidate into a single class
+
 export class Erc20SignatureMintable implements DetectableFeature {
   featureName = FEATURE_TOKEN_SIGNATURE_MINTABLE.name;
 
@@ -56,25 +59,27 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMintable.generate}
    * @twfeature ERC20SignatureMintable
    */
-  mint = buildTransactionFunction(async (signedPayload: SignedPayload20) => {
-    const mintRequest = signedPayload.payload;
-    const signature = signedPayload.signature;
-    const message = await this.mapPayloadToContractStruct(mintRequest);
-    const overrides = await this.contractWrapper.getCallOverrides();
-    // TODO: Transaction Sequence Pattern
-    await setErc20Allowance(
-      this.contractWrapper,
-      BigNumber.from(message.price),
-      mintRequest.currencyAddress,
-      overrides,
-    );
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "mintWithSignature",
-      args: [message, signature],
-      overrides,
-    });
-  });
+  mint = /* @__PURE__ */ buildTransactionFunction(
+    async (signedPayload: SignedPayload20) => {
+      const mintRequest = signedPayload.payload;
+      const signature = signedPayload.signature;
+      const message = await this.mapPayloadToContractStruct(mintRequest);
+      const overrides = await this.contractWrapper.getCallOverrides();
+      // TODO: Transaction Sequence Pattern
+      await setErc20Allowance(
+        this.contractWrapper,
+        BigNumber.from(message.price),
+        mintRequest.currencyAddress,
+        overrides,
+      );
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "mintWithSignature",
+        args: [message, signature],
+        overrides,
+      });
+    },
+  );
 
   /**
    * Mint any number of generated tokens signatures at once
@@ -82,7 +87,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC20SignatureMintable
    */
-  mintBatch = buildTransactionFunction(
+  mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (signedPayloads: SignedPayload20[]) => {
       const contractPayloads = await Promise.all(
         signedPayloads.map(async (s) => {
@@ -231,7 +236,6 @@ export class Erc20SignatureMintable implements DetectableFeature {
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
-
   /**
    * Maps a payload to the format expected by the contract
    *
@@ -248,7 +252,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
       mintRequest.price,
       mintRequest.currencyAddress,
     );
-    const amountWithDecimals = ethers.utils.parseUnits(
+    const amountWithDecimals = utils.parseUnits(
       mintRequest.quantity,
       await this.contractWrapper.readContract.decimals(),
     );
