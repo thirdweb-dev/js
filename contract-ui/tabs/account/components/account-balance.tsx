@@ -1,6 +1,5 @@
 import { walletKeys } from "@3rdweb-sdk/react";
 import {
-  Flex,
   Input,
   SimpleGrid,
   Stat,
@@ -9,18 +8,10 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSDK } from "@thirdweb-dev/react";
-import { CurrencyValue } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { add, parse } from "date-fns";
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { ChangeEvent, useState } from "react";
 import invariant from "tiny-invariant";
-import { Button, Card } from "tw-components";
+import { Card } from "tw-components";
 
 interface AccountBalanceProps {
   address: string;

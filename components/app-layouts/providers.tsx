@@ -51,6 +51,13 @@ const personalWallets = [
   localWallet(),
 ];
 
+export const dashboardSupportedWallets = [
+  ...personalWallets,
+  safeWallet({
+    personalWallets,
+  }),
+];
+
 export const DashboardThirdwebProvider: ComponentWithChildren<
   DashboardThirdwebProviderProps
 > = ({ children }) => {
@@ -90,12 +97,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
       }}
       clientId={DASHBOARD_THIRDWEB_CLIENT_ID}
       secretKey={DASHBOARD_THIRDWEB_SECRET_KEY}
-      supportedWallets={[
-        ...personalWallets,
-        safeWallet({
-          personalWallets,
-        }),
-      ]}
+      supportedWallets={dashboardSupportedWallets}
       storageInterface={StorageSingleton}
       authConfig={{
         domain: THIRDWEB_DOMAIN,

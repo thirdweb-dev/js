@@ -1,12 +1,7 @@
 import { Box, Flex, GridItem, IconButton, SimpleGrid } from "@chakra-ui/react";
-import {
-  ConnectWallet,
-  ThirdwebProvider,
-  coinbaseWallet,
-  metamaskWallet,
-  walletConnect,
-} from "@thirdweb-dev/react";
+import { ConnectWallet, ThirdwebProvider } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
+import { dashboardSupportedWallets } from "components/app-layouts/providers";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { ChainIcon } from "components/icons/ChainIcon";
@@ -15,6 +10,17 @@ import React, { useMemo, useState } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { Card, CodeBlock, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+
+const DEFAULT_CODE = `
+import { ThirdwebProvider, ConnectWallet } from "@thirdweb/react";
+
+export default function App() {
+  return (
+    <ThirdwebProvider supportedWallets={[...]}>
+      <ConnectWallet theme="{{theme}}" />
+    </ThirdwebProvider>
+  );
+}`;
 
 const WALLETS = [
   {
@@ -616,19 +622,36 @@ const DashboardWallets: ThirdwebNextPage = () => {
   };
 
   return (
-    <Flex flexDir="column" gap={12} mt={{ base: 2, md: 6 }}>
-      <Flex direction="column" gap={2}>
-        <Flex
-          justifyContent="space-between"
-          direction={{ base: "column", md: "row" }}
-          gap={4}
-        >
+    <Flex flexDir="column" gap={16} mt={{ base: 2, md: 6 }}>
+      <ThirdwebProvider
+        activeChain="goerli"
+        supportedWallets={dashboardSupportedWallets}
+      >
+        <Flex flexDir="column" gap={4}>
           <Heading size="title.lg" as="h1">
-            Wallet SDK
+            Connect Wallet Button
           </Heading>
+          <Text>
+            One line of code to add a{" "}
+            <Link
+              href="https://portal.thirdweb.com/react/react.connectwallet"
+              color="blue.400"
+              isExternal
+            >
+              Connect Wallet UI component
+            </Link>{" "}
+            to React, React Native and Unity apps.
+          </Text>
+          <ConnectWalletWithPreview code={DEFAULT_CODE} />
         </Flex>
+      </ThirdwebProvider>
+      <Flex direction="column" gap={4}>
+        <Heading size="title.lg" as="h1">
+          Wallet SDK
+        </Heading>
         <Text>
-          Simplified wallet connection to your app, game or backend using a{" "}
+          Full control over wallet connection to your app, game or backend using
+          a{" "}
           <Link
             href="https://portal.thirdweb.com/wallet"
             color="blue.400"
@@ -638,65 +661,61 @@ const DashboardWallets: ThirdwebNextPage = () => {
           </Link>
           .
         </Text>
-      </Flex>
-
-      <Flex direction="column" gap={4}>
-        <Heading size="subtitle.sm" as="h3">
-          Step 1: Pick a language to get started
-        </Heading>
-        {/* Rendering the code snippet for WalletConnect since it supports all languages */}
-        <CodeSegment
-          snippet={
-            WALLETS.find((w) => w.id === "wallet-connect")
-              ?.supportedLanguages || {}
-          }
-          environment={selectedLanguage}
-          setEnvironment={onLanguageSelect}
-          onlyTabs
-        />
-      </Flex>
-
-      <Flex direction="column" gap={4}>
-        <Heading size="subtitle.sm" as="h3">
-          Step 2: Pick a supported wallet
-        </Heading>
-        <SupportedWalletsSelector
-          selectedLanguage={selectedLanguage}
-          selectedWallet={selectedWallet}
-          setSelectedWallet={setSelectedWallet}
-        />
-      </Flex>
-
-      {selectedWallet?.id === "smart-wallet" && (
-        <Flex direction="column" gap={4}>
+        <Flex direction="column" gap={6}>
           <Heading size="subtitle.sm" as="h3">
-            Step 3: Getting started with Smart Wallet
+            Step 1: Pick a language to get started
           </Heading>
-          <Flex flexDir="column">
-            <Text>
-              1. Deploy an account factory contract, you can deploy one in
-              1-click via the{" "}
-              <Link href="/explore/smart-wallet" isExternal color="blue.500">
-                explore page
-              </Link>
-              .
-            </Text>
-            <Text>
-              2.{" "}
-              <Link
-                href="/dashboard/settings/api-keys"
-                isExternal
-                color="blue.500"
-              >
-                Get an API key
-              </Link>{" "}
-              to access thirdweb&apos;s bundler and paymaster infrastructure,
-              which is required for the smart wallet to operate and optionally
-              enable gasless transactions.
-            </Text>
-          </Flex>
+          {/* Rendering the code snippet for WalletConnect since it supports all languages */}
+          <CodeSegment
+            snippet={
+              WALLETS.find((w) => w.id === "wallet-connect")
+                ?.supportedLanguages || {}
+            }
+            environment={selectedLanguage}
+            setEnvironment={onLanguageSelect}
+            onlyTabs
+          />
+          <Heading size="subtitle.sm" as="h3">
+            Step 2: Pick a supported wallet
+          </Heading>
+          <SupportedWalletsSelector
+            selectedLanguage={selectedLanguage}
+            selectedWallet={selectedWallet}
+            setSelectedWallet={setSelectedWallet}
+          />
         </Flex>
-      )}
+
+        {selectedWallet?.id === "smart-wallet" && (
+          <Flex direction="column" gap={4}>
+            <Heading size="subtitle.sm" as="h3">
+              Step 3: Getting started with Smart Wallet
+            </Heading>
+            <Flex flexDir="column">
+              <Text>
+                1. Deploy an account factory contract, you can deploy one in
+                1-click via the{" "}
+                <Link href="/explore/smart-wallet" isExternal color="blue.500">
+                  explore page
+                </Link>
+                .
+              </Text>
+              <Text>
+                2.{" "}
+                <Link
+                  href="/dashboard/settings/api-keys"
+                  isExternal
+                  color="blue.500"
+                >
+                  Get an API key
+                </Link>{" "}
+                to access thirdweb&apos;s bundler and paymaster infrastructure,
+                which is required for the smart wallet to operate and optionally
+                enable gasless transactions.
+              </Text>
+            </Flex>
+          </Flex>
+        )}
+      </Flex>
 
       {selectedWallet?.supportedLanguages[
         selectedLanguage as keyof typeof selectedWallet.supportedLanguages
@@ -713,22 +732,12 @@ const DashboardWallets: ThirdwebNextPage = () => {
             </Link>
             .
           </Text>
-          {selectedLanguage === "react" ? (
-            <ConnectWalletWithPreview
-              code={
-                selectedWallet.supportedLanguages[
-                  "react" as keyof typeof selectedWallet.supportedLanguages
-                ]
-              }
-            />
-          ) : (
-            <CodeSegment
-              snippet={selectedWallet.supportedLanguages}
-              environment={selectedLanguage}
-              setEnvironment={setSelectedLanguage}
-              hideTabs
-            />
-          )}
+          <CodeSegment
+            snippet={selectedWallet.supportedLanguages}
+            environment={selectedLanguage}
+            setEnvironment={setSelectedLanguage}
+            hideTabs
+          />
         </Flex>
       )}
     </Flex>
@@ -750,10 +759,10 @@ interface ConnectWalletWithPreviewProps {
 const ConnectWalletWithPreview: React.FC<ConnectWalletWithPreviewProps> = ({
   code,
 }) => {
-  const [selectedTheme, setSelectedTheme] = useState<"light" | "dark">("light");
+  const [selectedTheme, setSelectedTheme] = useState<"light" | "dark">("dark");
   return (
     <SimpleGrid columns={{ base: 6, md: 12 }} gap={8} mt={8}>
-      <GridItem colSpan={7}>
+      <GridItem colSpan={6}>
         <Flex direction="column" gap={2}>
           <Heading size="label.md">Code</Heading>
           <CodeBlock
@@ -762,17 +771,11 @@ const ConnectWalletWithPreview: React.FC<ConnectWalletWithPreviewProps> = ({
           />
         </Flex>
       </GridItem>
-      <GridItem colSpan={5} gap={2}>
+      <GridItem colSpan={6} gap={2}>
         <Flex gap={2} direction="column" align="flex-start" h="full">
           <Heading size="label.md">Preview</Heading>
           <Box w="full" my="auto" display="grid" placeItems="center">
-            <ThirdwebProvider
-              supportedWallets={[
-                metamaskWallet(),
-                coinbaseWallet(),
-                walletConnect(),
-              ]}
-            >
+            <ThirdwebProvider supportedWallets={dashboardSupportedWallets}>
               <ConnectWallet
                 theme={selectedTheme}
                 // overrides
@@ -780,17 +783,15 @@ const ConnectWalletWithPreview: React.FC<ConnectWalletWithPreviewProps> = ({
               />
             </ThirdwebProvider>
           </Box>
-          <Flex>
-            <IconButton
-              size="sm"
-              onClick={() => {
-                setSelectedTheme(selectedTheme === "light" ? "dark" : "light");
-              }}
-              icon={selectedTheme === "light" ? <FiMoon /> : <FiSun />}
-              aria-label="Toggle button theme"
-              variant="ghost"
-            />
-          </Flex>
+          <IconButton
+            size="sm"
+            onClick={() => {
+              setSelectedTheme(selectedTheme === "light" ? "dark" : "light");
+            }}
+            icon={selectedTheme === "light" ? <FiMoon /> : <FiSun />}
+            aria-label="Toggle button theme"
+            variant="ghost"
+          />
         </Flex>
       </GridItem>
     </SimpleGrid>

@@ -8,15 +8,7 @@ import {
   LinkOverlay,
   SimpleGrid,
 } from "@chakra-ui/react";
-import {
-  ConnectWallet,
-  ThirdwebProvider,
-  coinbaseWallet,
-  localWallet,
-  metamaskWallet,
-  safeWallet,
-  walletConnect,
-} from "@thirdweb-dev/react";
+import { ConnectWallet, ThirdwebProvider } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
@@ -30,6 +22,7 @@ import { PageId } from "page-id";
 import React, { useState } from "react";
 import { Card, Heading, Link, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+import { dashboardSupportedWallets } from "components/app-layouts/providers";
 
 const GRIDS = {
   "invisible-wallet-experience": (
@@ -346,13 +339,7 @@ const WalletSDK: ThirdwebNextPage = () => {
           </Heading>
           <ThirdwebProvider
             activeChain="goerli"
-            supportedWallets={[
-              localWallet(),
-              coinbaseWallet(),
-              metamaskWallet(),
-              walletConnect(),
-              safeWallet(),
-            ]}
+            supportedWallets={dashboardSupportedWallets}
           >
             <Flex flexDir="column" gap={12} mt={{ base: 2, md: 6 }}>
               <Flex
