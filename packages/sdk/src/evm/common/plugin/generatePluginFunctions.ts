@@ -40,13 +40,17 @@ export function generatePluginFunctions(
   return pluginFunctions;
 }
 
-export function generateExtensionFunctions(extensionAbi: any): ExtensionFunction[]{
+export function generateExtensionFunctions(
+  extensionAbi: any,
+): ExtensionFunction[] {
   const extensionInterface = new utils.Interface(extensionAbi);
   const extensionFunctions: ExtensionFunction[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(extensionInterface.functions)) {
-    const fn = extensionInterface.getFunction(extensionInterface.getSighash(fnFragment));
-    if (fn.name.includes("_")) {
+    const fn = extensionInterface.getFunction(
+      extensionInterface.getSighash(fnFragment),
+    );
+    if (fn.name.startsWith("_")) {
       continue;
     }
     extensionFunctions.push({
@@ -55,4 +59,4 @@ export function generateExtensionFunctions(extensionAbi: any): ExtensionFunction
     });
   }
   return extensionFunctions;
-};
+}
