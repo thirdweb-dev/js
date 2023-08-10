@@ -105,7 +105,8 @@ for (const file of additionalChainsFiles) {
 }
 
 chains = chains
-  .filter((c) => c.status !== "deprecated")
+  // Keep scroll-alpha-testnet for now even though its deprecated
+  .filter((c) => c.status !== "deprecated" || c.chainId === 534353)
   .map((chain) => {
     if (overrides[chain.chainId]) {
       chain = merge(chain, overrides[chain.chainId], {

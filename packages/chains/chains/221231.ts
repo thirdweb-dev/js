@@ -4,7 +4,7 @@ export default {
   "chain": "REAP",
   "rpc": [
     "https://reapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test-rpc.reapchain.org"
+    "https://test-eth.reapchain.org"
   ],
   "faucets": [
     "http://faucet.reapchain.com"
