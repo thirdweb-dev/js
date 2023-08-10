@@ -6,7 +6,7 @@ import {
 import type { MagicConnector as MagicConnectorType } from "../connectors/magic/magic-connector";
 import { MagicConnector } from "../connectors/magic/magic-connector";
 
-export class MagicWallet extends AbstractClientWallet<
+export class MagicLink extends AbstractClientWallet<
   MagicLinkOptions,
   MagicConnectorOptions
 > {
@@ -68,3 +68,10 @@ export class MagicWallet extends AbstractClientWallet<
     return super.disconnect();
   }
 }
+
+/**
+ * @deprecated Use `MagicLink` instead
+ *
+ * Renamed for consistency with our React package
+ */
+export class MagicWallet extends MagicLink {}
