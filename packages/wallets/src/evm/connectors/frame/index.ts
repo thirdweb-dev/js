@@ -1,7 +1,7 @@
 import { providers, utils } from "ethers";
 import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
-import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 
 import { WagmiConnector } from "../../../lib/wagmi-connectors";
 import {

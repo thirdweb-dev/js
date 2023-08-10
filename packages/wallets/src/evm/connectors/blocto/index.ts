@@ -15,7 +15,7 @@ import type {
 import BloctoSDK from "@blocto/sdk";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
-import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { getValidPublicRPCUrl } from "../../utils/url";
 
 type BloctoSigner = providers.JsonRpcSigner;
