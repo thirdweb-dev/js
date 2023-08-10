@@ -46,6 +46,7 @@ export function generateExtensionFunctions(
   const extensionInterface = new utils.Interface(extensionAbi);
   const extensionFunctions: ExtensionFunction[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
+
   for (const fnFragment of Object.values(extensionInterface.functions)) {
     const fn = extensionInterface.getFunction(
       extensionInterface.getSighash(fnFragment),
