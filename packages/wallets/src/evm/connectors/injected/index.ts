@@ -13,6 +13,7 @@ import {
 } from "../../../lib/wagmi-core";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
+import { getValidPublicRPCUrl } from "../../utils/url";
 import { Ethereum } from "./types";
 import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
 import { utils, providers } from "ethers";
@@ -340,6 +341,7 @@ export class InjectedConnector extends WagmiConnector<
           ?.originalError?.code === 4902
       ) {
         try {
+          console.log("adding chain", getValidChainRPCs(chain));
           // request provider to add chain
           await provider.request({
             method: "wallet_addEthereumChain",
@@ -348,7 +350,7 @@ export class InjectedConnector extends WagmiConnector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: getValidChainRPCs(chain), // no client id on purpose here
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

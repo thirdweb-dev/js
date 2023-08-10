@@ -16,6 +16,7 @@ import BloctoSDK from "@blocto/sdk";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
+import { getValidPublicRPCUrl } from "../../utils/url";
 
 type BloctoSigner = providers.JsonRpcSigner;
 type BloctoOptions = Partial<EthereumProviderConfig>;
@@ -168,7 +169,7 @@ export class BloctoConnector extends WagmiConnector<
         params: [
           {
             chainId: id,
-            rpcUrls: getValidChainRPCs(chain), // no client id on purpose here
+            rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
           },
         ],
       });
