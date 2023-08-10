@@ -12,7 +12,7 @@ import { Card, CodeBlock, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const DEFAULT_CODE = `
-import { ThirdwebProvider, ConnectWallet } from "@thirdweb/react";
+import { ThirdwebProvider, ConnectWallet } from "@thirdweb-dev/react";
 
 export default function App() {
   return (
@@ -53,7 +53,7 @@ const wallet = new SmartWallet(config);
 await wallet.connect({
   personalWallet,
 });`,
-      react: `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -62,7 +62,7 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb/react-native";
+      "react-native": `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
@@ -118,7 +118,7 @@ await wallet.load(config);
 const exportedWallet = await wallet.export(config);
 // and import it back in
 await wallet.import(exportedWallet, config);`,
-      react: `import { ThirdwebProvider, ConnectWallet, localWallet } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, localWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -127,7 +127,7 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, localWallet } from "@thirdweb/react-native";
+      "react-native": `import { ThirdwebProvider, ConnectWallet, localWallet } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
@@ -168,7 +168,7 @@ public async void ConnectWallet()
 const wallet = new CoinbaseWallet();
 
 wallet.connect();`,
-      react: `import { ThirdwebProvider, ConnectWallet, coinbaseWallet } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, coinbaseWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -177,7 +177,7 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, coinbaseWallet } from "@thirdweb/react-native";
+      "react-native": `import { ThirdwebProvider, ConnectWallet, coinbaseWallet } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
@@ -217,7 +217,7 @@ public async void ConnectWallet()
 const wallet = new MetaMaskWallet();
 
 wallet.connect();`,
-      react: `import { ThirdwebProvider, ConnectWallet, metamaskWallet } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, metamaskWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -226,7 +226,7 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, metamaskWallet } from "@thirdweb/react-native";
+      "react-native": `import { ThirdwebProvider, ConnectWallet, metamaskWallet } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
@@ -270,7 +270,7 @@ const wallet = new PaperWallet({
 });
 
 wallet.connect();`,
-      react: `import { ThirdwebProvider, ConnectWallet, paperWallet } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, paperWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -374,7 +374,7 @@ const wallet = new AwsSecretsManagerWallet({
 const wallet = new WalletConnect();
 
 wallet.connect();`,
-      react: `import { ThirdwebProvider, ConnectWallet, walletConnect } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, walletConnect } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -383,7 +383,7 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, walletConnect } from "@thirdweb/react-native";
+      "react-native": `import { ThirdwebProvider, ConnectWallet, walletConnect } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
@@ -432,7 +432,7 @@ await wallet.connect({
   chain: Ethereum,
   safeAddress: "{{contract_address}}",
 });`,
-      react: `import { ThirdwebProvider, ConnectWallet, safeWallet } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, safeWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
@@ -469,7 +469,7 @@ wallet.connect({
 wallet.connect({
   phoneNumber: "+123456789",
 });`,
-      react: `import { ThirdwebProvider, ConnectWallet, magicLink } from "@thirdweb/react";
+      react: `import { ThirdwebProvider, ConnectWallet, magicLink } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
