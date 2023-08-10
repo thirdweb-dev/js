@@ -1,5 +1,22 @@
 # @thirdweb-dev/react-native
 
+## 0.2.48
+
+### Patch Changes
+
+- [#1458](https://github.com/thirdweb-dev/js/pull/1458) [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add `hideTestnetFaucet` to hide the "Request Testnet funds" button in ConnectWallet details dropdown in `@thirdweb-dev/react-native` and `@thirdweb-dev/react`.
+
+  ```ts
+  <ConnectWallet hideTestnetFaucet={true} />
+  ```
+
+- Updated dependencies [[`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4), [`27c225a5`](https://github.com/thirdweb-dev/js/commit/27c225a51221417592b5940887abd1ccb8b67e47), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed), [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9), [`f0443bd9`](https://github.com/thirdweb-dev/js/commit/f0443bd989dbba50d0836d1cf274bfb2f44a53fd), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76), [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30)]:
+  - @thirdweb-dev/storage@1.2.5
+  - @thirdweb-dev/wallets@1.1.12
+  - @thirdweb-dev/sdk@3.10.48
+  - @thirdweb-dev/chains@0.1.43
+  - @thirdweb-dev/react-core@3.14.29
+
 ## 0.2.47
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.2
+
+### Patch Changes
+
+- [#1463](https://github.com/thirdweb-dev/js/pull/1463) [`205018f6`](https://github.com/thirdweb-dev/js/commit/205018f6e191d2a2fb89f1bee276d0ea89643f30) Thanks [@arcoraven](https://github.com/arcoraven)! - Add userOpHash
+
+- [#1473](https://github.com/thirdweb-dev/js/pull/1473) [`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4) Thanks [@jnsdls](https://github.com/jnsdls)! - handle possible empty auth tokens
+
+- [#1475](https://github.com/thirdweb-dev/js/pull/1475) [`cf82c3b5`](https://github.com/thirdweb-dev/js/commit/cf82c3b58c92714d006f3880ec84a84893da861b) Thanks [@nessup](https://github.com/nessup)! - Improve error logging when authentication fails
+
+- [#1466](https://github.com/thirdweb-dev/js/pull/1466) [`7e483ec9`](https://github.com/thirdweb-dev/js/commit/7e483ec97f576067d0220518b86d00794da94b4d) Thanks [@arcoraven](https://github.com/arcoraven)! - Silence output for publishUsageEvents()
+
 ## 0.4.1
 
 ### Patch Changes
