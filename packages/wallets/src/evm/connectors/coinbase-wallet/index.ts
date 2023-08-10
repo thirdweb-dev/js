@@ -12,7 +12,7 @@ import type {
   CoinbaseWalletSDK,
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import type { Chain } from "@thirdweb-dev/chains";
+import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 
@@ -231,7 +231,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: chain.rpc,
+                rpcUrls: getValidChainRPCs(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

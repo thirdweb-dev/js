@@ -15,7 +15,7 @@ import type {
 import BloctoSDK from "@blocto/sdk";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
 
 type BloctoSigner = providers.JsonRpcSigner;
 type BloctoOptions = Partial<EthereumProviderConfig>;
@@ -165,7 +165,12 @@ export class BloctoConnector extends WagmiConnector<
     try {
       await provider.request({
         method: "wallet_addEthereumChain",
-        params: [{ chainId: id, rpcUrls: [chain?.rpc[0] ?? ""] }],
+        params: [
+          {
+            chainId: id,
+            rpcUrls: getValidChainRPCs(chain), // no client id on purpose here
+          },
+        ],
       });
 
       await provider.request({

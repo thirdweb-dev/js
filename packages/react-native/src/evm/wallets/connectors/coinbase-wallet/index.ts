@@ -227,7 +227,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [getValidChainRPCs(chain)],
+                rpcUrls: getValidChainRPCs(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

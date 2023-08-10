@@ -1,7 +1,7 @@
 import { providers, utils } from "ethers";
 import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
-import type { Chain } from "@thirdweb-dev/chains";
+import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
 
 import { WagmiConnector } from "../../../lib/wagmi-connectors";
 import {
@@ -241,7 +241,7 @@ export class FrameConnector extends WagmiConnector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpc: [chain.rpc[0] ?? ""],
+                rpcUrls: getValidChainRPCs(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

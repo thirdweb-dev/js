@@ -6,7 +6,7 @@ import {
   UserRejectedRequestError,
   WagmiConnector,
 } from "../../../lib/wagmi-core";
-import type { Chain } from "@thirdweb-dev/chains";
+import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
@@ -291,7 +291,7 @@ export class WalletConnectConnector extends WagmiConnector<
               chainId: utils.hexValue(chain.chainId),
               chainName: chain.name,
               nativeCurrency: chain.nativeCurrency,
-              rpcUrls: [...chain.rpc],
+              rpcUrls: getValidChainRPCs(chain), // no clientId on purpose
               ...blockExplorerUrls,
             },
           ],
