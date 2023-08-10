@@ -6,11 +6,11 @@ export const DASHBOARD_THIRDWEB_CLIENT_ID =
 export const DASHBOARD_THIRDWEB_SECRET_KEY =
   process.env.DASHBOARD_SECRET_KEY || "";
 
-export const RPC_ENV =
+export const isProd =
   (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
-  "production"
-    ? "rpc"
-    : "rpc-staging";
+  "production";
+
+export const RPC_ENV = isProd ? "rpc" : "rpc-staging";
 
 const SOLANA_RPC_URL_MAP: Record<DashboardSolanaNetwork, string> = {
   ...addAPIKey({

@@ -1,4 +1,5 @@
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { isProd } from "constants/rpc";
 import { useAllChainsData } from "hooks/chains/allChains";
 import React, { createContext, useCallback, useEffect, useState } from "react";
 
@@ -186,6 +187,21 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
     [applyOverrides],
   );
 
+  const replaceRpcsWithStagingUrl = useCallback((chains: Chain[]) => {
+    if (isProd) {
+      return chains;
+    }
+
+    return chains.map((chn) => {
+      return {
+        ...chn,
+        rpc: chn.rpc.map((rpc) =>
+          rpc.replace("rpc.thirdweb.com", "rpc-staging.thirdweb.com"),
+        ),
+      };
+    });
+  }, []);
+
   // create supported chains and modified chains on mount
   useEffect(() => {
     if (allChains.length === 0) {
@@ -196,15 +212,20 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
       return;
     }
 
+    const allChainsReplaced = replaceRpcsWithStagingUrl(allChains);
+
     const _modifiedChains = chainStorage.get(MODIFIED_CHAINS_KEY);
 
     if (_modifiedChains.length === 0) {
-      setSupportedChains(allChains);
+      setSupportedChains(allChainsReplaced);
       setIsSupportedChainsReady(true);
       return;
     }
 
-    const newSupportedChains = applyOverrides(allChains, _modifiedChains);
+    const newSupportedChains = applyOverrides(
+      allChainsReplaced,
+      _modifiedChains,
+    );
     setSupportedChains(newSupportedChains);
     setModifiedChains(_modifiedChains);
     setIsSupportedChainsReady(true);
@@ -215,6 +236,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
     applyModificationsToSupportedChains,
     applyOverrides,
     supportedChains,
+    replaceRpcsWithStagingUrl,
   ]);
 
   const modifyChain = useCallback(
