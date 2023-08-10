@@ -1,5 +1,18 @@
 # @thirdweb-dev/react-native
 
+## 0.2.49
+
+### Patch Changes
+
+- [#1479](https://github.com/thirdweb-dev/js/pull/1479) [`14d9a71c`](https://github.com/thirdweb-dev/js/commit/14d9a71c928019907618cc8694af0bc631e94b68) Thanks [@iketw](https://github.com/iketw)! - Deprecates magicWallet in favor of magicLink for consistency with our React package
+
+- [#1477](https://github.com/thirdweb-dev/js/pull/1477) [`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass unauth'd RPCs to wallets when adding new chains
+
+- Updated dependencies [[`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2), [`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696)]:
+  - @thirdweb-dev/wallets@1.1.13
+  - @thirdweb-dev/sdk@3.10.49
+  - @thirdweb-dev/react-core@3.14.30
+
 ## 0.2.48
 
 ### Patch Changes
