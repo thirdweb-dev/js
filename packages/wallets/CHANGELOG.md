@@ -1,5 +1,14 @@
 # @thirdweb-dev/wallets
 
+## 1.1.13
+
+### Patch Changes
+
+- [#1477](https://github.com/thirdweb-dev/js/pull/1477) [`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass unauth'd RPCs to wallets when adding new chains
+
+- Updated dependencies [[`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696)]:
+  - @thirdweb-dev/sdk@3.10.49
+
 ## 1.1.12
 
 ### Patch Changes
