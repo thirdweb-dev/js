@@ -16,7 +16,10 @@ import { ThirdwebProvider, ConnectWallet } from "@thirdweb-dev/react";
 
 export default function App() {
   return (
-    <ThirdwebProvider supportedWallets={[...]}>
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[...]}
+    >
       <ConnectWallet theme="{{theme}}" />
     </ThirdwebProvider>
   );
@@ -44,7 +47,7 @@ await personalWallet.connect();
 const config = {
   chain: Goerli, // the chain where your smart wallet will be or is deployed
   factoryAddress: "0x...", // your own deployed account factory address
-  apiKey: "THIRDWEB_API_KEY", // obtained from the thirdweb dashboard
+  clientId: "YOUR_CLIENT_ID", // or use secretKey for no backend/node scripts
   gasless: true, // enable or disable gasless transactions
 };
 
@@ -54,20 +57,42 @@ await wallet.connect({
   personalWallet,
 });`,
       react: `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react";
+import { Goerli } from "@thirdweb-dev/chains";
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ smartWallet({ factoryAddress: "0x...", clientId: "THIRDWEB_API_KEY" }) ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      activeChain={Goerli}
+      supportedWallets={[ 
+        smartWallet({ 
+          factoryAddress: "0x...", 
+          gasless: true,
+          personalWallets={[...]}
+        }) 
+      ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
       "react-native": `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react-native";
+import { Goerli } from "@thirdweb-dev/chains";
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ smartWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      activeChain={Goerli}
+      supportedWallets={[ 
+        smartWallet({ 
+          factoryAddress: "0x...", 
+          gasless: true,
+          personalWallets={[...]}
+        }) 
+      ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -122,8 +147,11 @@ await wallet.import(exportedWallet, config);`,
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ localWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ localWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -131,8 +159,11 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ localWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ localWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -172,8 +203,11 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ coinbaseWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ coinbaseWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -181,8 +215,11 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ coinbaseWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ coinbaseWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -221,8 +258,11 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ metamaskWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ metamaskWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -230,8 +270,11 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ metamaskWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ metamaskWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -274,8 +317,11 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ paperWallet({ clientId: "client_id" }) ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ paperWallet({ clientId: "PAPER_CLIENT_ID" }) ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -362,6 +408,84 @@ const wallet = new AwsSecretsManagerWallet({
     },
   },
   {
+    id: "rainbow",
+    name: "Rainbow",
+    description: "Connect with Rainbow Wallet",
+    iconUrl:
+      "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
+    link: "https://portal.thirdweb.com/wallet/rainbow",
+    supportedLanguages: {
+      javascript: `import { RainbowWallet } from "@thirdweb-dev/wallets";
+
+const wallet = new RainbowWallet();
+
+wallet.connect();`,
+      react: `import { ThirdwebProvider, ConnectWallet, rainbowWallet } from "@thirdweb-dev/react";
+
+export default function App() {
+return (
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ rainbowWallet() ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+      "react-native": `import { ThirdwebProvider, ConnectWallet, rainbowWallet } from "@thirdweb-dev/react-native";
+
+export default function App() {
+return (
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ rainbowWallet() ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+    },
+  },
+  {
+    id: "trust",
+    name: "Trust Wallet",
+    description: "Connect with Trust Wallet",
+    iconUrl:
+      "ipfs://QmNigQbXk7wKZwDcgN38Znj1ZZQ3JEG3DD6fUKLBU8SUTP/trust%20wallet.svg",
+    link: "https://portal.thirdweb.com/wallet/trust-wallet",
+    supportedLanguages: {
+      javascript: `import { TrustWallet } from "@thirdweb-dev/wallets";
+
+const wallet = new TrustWallet();
+
+wallet.connect();`,
+      react: `import { ThirdwebProvider, ConnectWallet, trustWallet } from "@thirdweb-dev/react";
+
+export default function App() {
+return (
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ trustWallet() ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+      "react-native": `import { ThirdwebProvider, ConnectWallet, trustWallet } from "@thirdweb-dev/react-native";
+
+export default function App() {
+return (
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ trustWallet() ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+    },
+  },
+  {
     id: "wallet-connect",
     name: "WalletConnect",
     description: "Connect with WalletConnect",
@@ -378,8 +502,11 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ walletConnect() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ walletConnect() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -387,8 +514,11 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ walletConnect() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ walletConnect() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -436,8 +566,11 @@ await wallet.connect({
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ safeWallet() ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ safeWallet() ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
@@ -473,8 +606,23 @@ wallet.connect({
 
 export default function App() {
 return (
-    <ThirdwebProvider supportedWallets={[ magicLink({ apiKey: "YOUR_API_KEY" }) ]}>
-      <ConnectWallet theme="{{theme}}" />
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ magicWallet({ apiKey: "MAGIC_API_KEY" }) ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+      "react-native": `import { ThirdwebProvider, ConnectWallet, magicWallet } from "@thirdweb-dev/react-native";
+
+export default function App() {
+return (
+    <ThirdwebProvider 
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ magicWallet({ apiKey: "MAGIC_API_KEY" }) ]}
+    >
+      <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
