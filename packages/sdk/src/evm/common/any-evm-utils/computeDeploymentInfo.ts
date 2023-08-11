@@ -18,6 +18,7 @@ import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
+import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
 
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
@@ -26,7 +27,7 @@ export async function computeDeploymentInfo(
   create2Factory: string,
   contractOptions?: ContractOptions,
 ): Promise<DeploymentPreset> {
-  let contractName = contractOptions && contractOptions.contractName;
+  const contractName = contractOptions && contractOptions.contractName;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -111,7 +112,7 @@ export async function encodeConstructorParamsForImplementation(
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
   );
-  let constructorParamTypes = constructorParams.map((p) => {
+  const constructorParamTypes = constructorParams.map((p) => {
     if (p.type === "tuple[]") {
       return utils.ParamType.from(p);
     } else {
@@ -188,6 +189,9 @@ export async function encodeConstructorParamsForImplementation(
         }
 
         return deploymentInfo.transaction.predictedAddress;
+      } else if (p.name && p.name.includes("royaltyEngineAddress")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        return getRoyaltyEngineV1ByChainId(chainId);
       } else {
         throw new Error("Can't resolve constructor arguments");
       }

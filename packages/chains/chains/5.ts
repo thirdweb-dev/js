@@ -34,6 +34,17 @@ export default {
       "name": "etherscan-goerli",
       "url": "https://goerli.etherscan.io",
       "standard": "EIP3091"
+    },
+    {
+      "name": "blockscout-goerli",
+      "url": "https://eth-goerli.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     }
   ],
   "icon": {

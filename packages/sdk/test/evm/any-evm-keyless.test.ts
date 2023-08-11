@@ -93,7 +93,9 @@ describe("Any EVM Keyless Deploy", async () => {
 
   before(async () => {
     [adminWallet, claimerWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    sdk = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
   });
 
   beforeEach(async () => {

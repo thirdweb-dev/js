@@ -17,6 +17,51 @@ const combineMerge = (target, source) => {
   return destination;
 };
 
+/**
+ * @param {Chain['explorers']} explorers
+ */
+function sortExplorers(explorers = []) {
+  let etherscan = null;
+  let blockscout = null;
+
+  let restExplorers = [];
+
+  for (const explorer of explorers) {
+    if (explorer.name.includes("etherscan")) {
+      etherscan = explorer;
+    } else if (explorer.name.includes("blockscout")) {
+      blockscout = explorer;
+    } else {
+      restExplorers.push(explorer);
+    }
+  }
+
+  const returnExplorers = [];
+  if (etherscan) {
+    returnExplorers.push(etherscan);
+  }
+  if (blockscout) {
+    returnExplorers.push(blockscout);
+  }
+
+  return [...returnExplorers, ...restExplorers];
+}
+
+/**
+ * @param {readonly any[]} values
+ * @param {(arg0: any) => void} valueChecker
+ */
+function filterOutErroringValues(values, valueChecker) {
+  return values.filter((value) => {
+    try {
+      valueChecker(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+}
+
 const chainsDir = "./chains";
 
 const chainsJsonUrl = "https://chainid.network/chains.json";
@@ -60,7 +105,8 @@ for (const file of additionalChainsFiles) {
 }
 
 chains = chains
-  .filter((c) => c.status !== "deprecated")
+  // Keep scroll-alpha-testnet for now even though its deprecated
+  .filter((c) => c.status !== "deprecated" || c.chainId === 534353)
   .map((chain) => {
     if (overrides[chain.chainId]) {
       chain = merge(chain, overrides[chain.chainId], {
@@ -74,10 +120,40 @@ chains = chains
         ? false
         : JSON.stringify(chain).toLowerCase().includes("test");
 
-    return {
+    const resultChain = {
       ...chain,
       testnet,
     };
+    // only add the explroers if they were there in the first place
+    if (resultChain.explorers) {
+      resultChain.explorers = sortExplorers(resultChain.explorers);
+      // check every key that *could* contain a url and validate it
+      resultChain.explorers = filterOutErroringValues(
+        resultChain.explorers,
+        (explorer) => new URL(explorer.url),
+      );
+    }
+    if (resultChain.faucets) {
+      resultChain.faucets = filterOutErroringValues(
+        resultChain.faucets,
+        (faucet) => new URL(faucet),
+      );
+    }
+    if (resultChain.rpc) {
+      resultChain.rpc = filterOutErroringValues(
+        resultChain.rpc,
+        (rpc) => new URL(rpc),
+      );
+    }
+    if (resultChain.infoURL) {
+      try {
+        new URL(resultChain.infoURL);
+      } catch (e) {
+        delete resultChain.infoURL;
+      }
+    }
+
+    return resultChain;
   });
 
 /**

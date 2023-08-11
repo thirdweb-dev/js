@@ -1,15 +1,23 @@
 import { EVMWallet } from "../interfaces";
 import type { Signer } from "ethers";
-import { providers, Contract, utils, Bytes } from "ethers";
+import { providers, Contract, utils, Bytes, BigNumber } from "ethers";
 import EventEmitter from "eventemitter3";
 import { Ecosystem, GenericAuthWallet } from "../../core/interfaces/auth";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  Price,
+  TransactionResult,
+  fetchCurrencyValue,
+  isNativeToken,
+  normalizePriceValue,
+} from "@thirdweb-dev/sdk";
+import { createErc20 } from "../utils/currency";
 
 // TODO improve this
 function chainIdToThirdwebRpc(chainId: number, clientId?: string) {
   return `https://${chainId}.rpc.thirdweb.com${clientId ? `/${clientId}` : ""}${
     typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-      ? // @ts-ignore
-        `?bundleId=${globalThis.APP_BUNDLE_ID}`
+      ? `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`
       : ""
   }`;
 }
@@ -25,7 +33,8 @@ export interface WalletEvents {
   message({ type, data }: { type: string; data?: unknown }): void;
   disconnect(): void;
   error(error: Error): void;
-  open_wallet(uri?: string): void;
+  display_uri(uri: string): void;
+  wc_session_request_sent(): void;
   request(): void;
 }
 
@@ -69,11 +78,66 @@ export abstract class AbstractWallet
   }
 
   /**
+   * @returns the native token balance of the connected wallet
+   */
+  public async getBalance(currencyAddress: string = NATIVE_TOKEN_ADDRESS) {
+    const signer = await this.getSigner();
+    const address = await this.getAddress();
+
+    if (!signer.provider) {
+      throw new Error("Please connect a provider");
+    }
+
+    let balance: BigNumber;
+    if (isNativeToken(currencyAddress)) {
+      balance = await signer.provider.getBalance(address);
+    } else {
+      const erc20 = createErc20(signer, currencyAddress);
+      balance = await erc20.balanceOf(address);
+    }
+
+    // Note: assumes that the native currency decimals is 18, which isn't always correct
+    return await fetchCurrencyValue(signer.provider, currencyAddress, balance);
+  }
+
+  /**
    * @returns the chain id from connected wallet
    */
   public async getChainId(): Promise<number> {
     const signer = await this.getSigner();
     return signer.getChainId();
+  }
+
+  public async transfer(
+    to: string,
+    amount: Price,
+    currencyAddress: string = NATIVE_TOKEN_ADDRESS,
+  ): Promise<TransactionResult> {
+    const signer = await this.getSigner();
+    const from = await this.getAddress();
+
+    if (!signer.provider) {
+      throw new Error("Please connect a provider");
+    }
+
+    const value = await normalizePriceValue(
+      signer.provider,
+      amount,
+      currencyAddress,
+    );
+
+    if (isNativeToken(currencyAddress)) {
+      const tx = await signer.sendTransaction({
+        from,
+        to,
+        value,
+      });
+      return { receipt: await tx.wait() };
+    } else {
+      const erc20 = createErc20(signer, currencyAddress);
+      const tx = await erc20.transfer(to, value);
+      return { receipt: await tx.wait() };
+    }
   }
 
   /**

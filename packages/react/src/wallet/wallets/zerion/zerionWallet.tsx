@@ -1,6 +1,8 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { ZerionWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { ZerionConnectUI } from "./ZerionConnectUI";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { zerionWalletUris } from "./zerionWalletUris";
 
 type ZerionkWalletOptions = {
   /**
@@ -19,11 +21,15 @@ export const zerionWallet = (
     id: ZerionWallet.id,
     meta: ZerionWallet.meta,
     create: (walletOptions: WalletOptions) => {
-      return new ZerionWallet({
+      const wallet = new ZerionWallet({
         ...walletOptions,
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      handelWCSessionRequest(wallet, zerionWalletUris);
+
+      return wallet;
     },
     connectUI: ZerionConnectUI,
     isInstalled() {

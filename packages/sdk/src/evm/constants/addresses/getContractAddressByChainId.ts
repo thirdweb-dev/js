@@ -2,6 +2,7 @@ import { CONTRACT_ADDRESSES } from "./CONTRACT_ADDRESSES";
 import { ChainId } from "../chains/ChainId";
 import { SUPPORTED_CHAIN_ID } from "../chains/SUPPORTED_CHAIN_ID";
 import { AddressZero } from "./AddressZero";
+import { getProcessEnv } from "../../../core/utils/process";
 
 /**
  * @internal
@@ -13,11 +14,9 @@ export function getContractAddressByChainId(
   // for testing only
   if (chainId === ChainId.Hardhat || chainId === ChainId.Localhost) {
     if (contractName === "twFactory") {
-      // eslint-disable-next-line turbo/no-undeclared-env-vars
-      return process.env.factoryAddress as string;
+      return getProcessEnv("factoryAddress");
     } else if (contractName === "twRegistry") {
-      // eslint-disable-next-line turbo/no-undeclared-env-vars
-      return process.env.registryAddress as string;
+      return getProcessEnv("registryAddress");
     } else {
       return AddressZero;
     }

@@ -9,7 +9,6 @@ import { Transaction } from "./transactions";
 import { TransactionResultWithAddress } from "../types";
 import { type BytesLike, utils } from "ethers";
 import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
-import type { AccountEvent } from "../../types/account";
 import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
 
 export class AccountFactory<TContract extends IAccountFactory>
@@ -60,22 +59,6 @@ export class AccountFactory<TContract extends IAccountFactory>
   }
 
   /**
-   * Get all signers who have authority on the given account
-   *
-   * @example
-   * ```javascript
-   * const allSigners = await contract.accountFactory.getAssociatedSigners(admin);
-   * ```
-   * @param account - The account address.
-   * @returns all signers who have authority on the given account.
-   *
-   * @twfeature AccountFactory
-   */
-  public async getAssociatedSigners(account: string): Promise<string[]> {
-    return this.contractWrapper.readContract.getSignersOfAccount(account);
-  }
-
-  /**
    * Get all accounts on which the given signer has authority
    *
    * @example
@@ -103,22 +86,8 @@ export class AccountFactory<TContract extends IAccountFactory>
    *
    * @twfeature AccountFactory
    */
-  public async getAllAccounts(): Promise<AccountEvent[]> {
-    const allAccounts =
-      await this.contractWrapper.readContract.getAllAccounts();
-
-    /**
-     * Note: an account can have multiple admins. In this function, we only return the first signer associated with
-     *       the account. This should be the admin that created the account, unless this admin has lost their admin status.
-     */
-    return await Promise.all(
-      allAccounts.map(async (account) => {
-        const assosiatedSigners = await this.getAssociatedSigners(account);
-        const admin = assosiatedSigners[0];
-
-        return { account, admin };
-      }),
-    );
+  public async getAllAccounts(): Promise<string[]> {
+    return await this.contractWrapper.readContract.getAllAccounts();
   }
 
   /**

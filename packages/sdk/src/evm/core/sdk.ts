@@ -93,6 +93,7 @@ import type {
   DeployMetadata,
   DeployEvent,
   AirdropContractDeployMetadata,
+  OpenEditionContractDeployMetadata,
 } from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
@@ -116,6 +117,8 @@ import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
+import { getProcessEnv } from "../../core/utils/process";
+import { DropErc721ContractSchema } from "../schema";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -266,11 +269,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: IThirdwebStorage,
   ) {
     const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
-    checkClientIdOrSecretKey(
-      `No ${apiKeyType} provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a ${apiKeyType} from https://thirdweb.com/create-api-key`,
-      options.clientId,
-      options.secretKey,
-    );
+    let warnMessage = `No API key. Please provide a ${apiKeyType}. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key`;
+    if (
+      typeof window === "undefined" &&
+      !options.secretKey &&
+      options.clientId
+    ) {
+      warnMessage = `Please provide a secret key instead of the clientId. Create a new API Key at https://thirdweb.com/create-api-key`;
+    }
+    checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
 
     if (isChainConfig(network)) {
       options = {
@@ -1025,6 +1032,63 @@ export class ContractDeployer extends RPCConnectionHandler {
   );
 
   /**
+   * Deploys a new OpenEditionERC721 contract
+   *
+   * @remarks Deploys a OpenEdition contract and returns the address of the deployed contract
+   *
+   * @example
+   * ```javascript
+   * const contractAddress = await sdk.deployer.deployOpenEdition({
+   *   name: "My Open Edition",
+   *   primary_sale_recipient: "your-address",
+   * });
+   * ```
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   */
+  deployOpenEdition = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: OpenEditionContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await DropErc721ContractSchema.deploy.parseAsync(
+        metadata,
+      );
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [
+        signerAddress,
+        parsedMetadata.name,
+        parsedMetadata.symbol,
+        contractURI,
+        trustedForwarders,
+        parsedMetadata.primary_sale_recipient,
+        parsedMetadata.fee_recipient,
+        parsedMetadata.seller_fee_basis_points,
+      ];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "OpenEditionERC721",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  /**
    * Deploys a new SignatureDrop contract
    *
    * @remarks Deploys a SignatureDrop contract and returns the address of the deployed contract
@@ -1411,7 +1475,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       contractMetadata: z.input<
         DeploySchemaForPrebuiltContractType<TContractType>
       >,
-      version: string = "latest",
+      version = "latest",
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
       const signer = this.getSigner();
@@ -1502,6 +1566,8 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param publisherAddress the address of the publisher
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
+   *
+   * @deprecated use deployPublishedContract instead
    */
   deployReleasedContract = /* @__PURE__ */ buildDeployTransactionFunction(
     async (
@@ -1523,6 +1589,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
     },
   );
+
+  /**
+   * Deploy any published contract by its name
+   * @param publisherAddress the address of the publisher
+   * @param contractName the name of the contract to deploy
+   * @param constructorParams the constructor params to pass to the contract
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param options Optional: the deploy options
+   */
+  deployPublishedContract = this.deployReleasedContract;
 
   /**
    * Deploy a proxy contract of a given implementation via the given factory
@@ -1704,7 +1780,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       signer: Signer,
       chainId: number,
     ): Promise<DeployTransaction> => {
-      let customFactoryAddress = deployMetadata.extendedMetadata
+      const customFactoryAddress = deployMetadata.extendedMetadata
         ?.factoryDeploymentData?.customFactoryInput?.customFactoryAddresses[
         chainId
       ] as AddressOrEns;
@@ -1738,6 +1814,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         constructorParamValues,
       );
 
+      // eslint-disable-next-line prefer-const
       let deployedImplementationAddress: string;
       const deployTransaction = await Transaction.fromContractInfo({
         contractAddress: resolvedCustomFactoryAddress,
@@ -1907,7 +1984,7 @@ export class ContractDeployer extends RPCConnectionHandler {
             constructorParamValues,
           );
 
-          let implementationAddress = extendedMetadata.factoryDeploymentData
+          const implementationAddress = extendedMetadata.factoryDeploymentData
             .implementationAddresses[chainId] as AddressOrEns;
 
           if (
@@ -2046,7 +2123,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     ) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
 
-      let implementationAddress = extendedMetadata.factoryDeploymentData
+      const implementationAddress = extendedMetadata.factoryDeploymentData
         .implementationAddresses[chainId] as AddressOrEns;
 
       if (
@@ -2167,7 +2244,10 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
-    const publishedContract = await new ThirdwebSDK("polygon")
+    const publishedContract = await new ThirdwebSDK("polygon", {
+      clientId: this.options.clientId,
+      secretKey: this.options.secretKey,
+    })
       .getPublisher()
       .getVersion(address, contractName, version);
     if (!publishedContract) {
@@ -2179,7 +2259,6 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   private hasLocalFactory() {
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
-    return process.env.factoryAddress !== undefined;
+    return !!getProcessEnv("factoryAddress");
   }
 }

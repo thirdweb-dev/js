@@ -56,6 +56,10 @@ export type IpfsUploaderOptions = {
    * You can get an secretKey here: https://thirdweb.com/create-api-key
    */
   secretKey?: string;
+  /**
+   * Optional upload server url to use instead of the default. (Advanced Usage)
+   */
+  uploadServerUrl?: string;
 };
 
 /**

@@ -32,11 +32,13 @@ export const ConnectWalletDetailsModal = ({
   onClosePress,
   extraRows,
   address,
+  hideTestnetFaucet,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
   extraRows?: React.FC;
   address?: string;
+  hideTestnetFaucet?: boolean;
 }) => {
   const theme = useAppTheme();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
@@ -63,12 +65,6 @@ export const ConnectWalletDetailsModal = ({
       setSmartWallet?.(undefined);
       onClosePress();
     });
-  };
-
-  const onChangeNetworkPress = () => {
-    // TODO: implement this
-    // setIsDetailsModalVisible(false);
-    // setIsNetworkSelectorModalVisible(true);
   };
 
   const onExportLocalWalletPress = useCallback(() => {
@@ -203,12 +199,8 @@ export const ConnectWalletDetailsModal = ({
           <View style={styles.currentNetwork}>
             <Text variant="bodySmallSecondary">Current Network</Text>
           </View>
-          <NetworkButton
-            chainIconUrl={chain?.icon?.url || ""}
-            chainName={chain?.name || "Unknown Network"}
-            onPress={onChangeNetworkPress}
-          />
-          {chain?.testnet && chain?.faucets?.length ? (
+          <NetworkButton chain={chain} enableSwitchModal={true} />
+          {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
             <IconTextButton
               mt="xs"
               text="Request Testnet Funds"

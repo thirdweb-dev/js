@@ -203,7 +203,12 @@ export {
 } from "./hooks/async/account-factory";
 
 // account
-export { useAccountSigners, useSetAccountSigners } from "./hooks/async/account";
+export {
+  useAccountSigners,
+  useSetAccountSigners,
+  useAccountAdmins,
+  useAccountAdminsAndSigners,
+} from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 

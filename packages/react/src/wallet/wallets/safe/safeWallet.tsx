@@ -79,7 +79,11 @@ export const SafeConnectUI = (
 
   return (
     <SelectAccount
-      onBack={disconnect}
+      renderBackButton={props.supportedWallets.length > 1}
+      onBack={() => {
+        disconnect();
+        props.goBack();
+      }}
       onConnect={props.close}
       safeWalletConfig={props.walletConfig}
     />

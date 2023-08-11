@@ -22,11 +22,13 @@ export const metamaskWallet = (
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
     create: (walletOptions: WalletOptions) => {
-      return new MetaMaskWallet({
+      const wallet = new MetaMaskWallet({
         ...walletOptions,
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      return wallet;
     },
     connectUI: MetamaskConnectUI,
     isInstalled() {
