@@ -43,7 +43,9 @@ describe("Transactions", async () => {
       "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
       adminWallet.provider,
     );
-    const signerSdk = new ThirdwebSDK(wallet);
+    const signerSdk = new ThirdwebSDK(wallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
     const address = await signerSdk.deployer.deployNFTCollection({
       name: "NFT",
       primary_sale_recipient: adminWallet.address,

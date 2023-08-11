@@ -2,14 +2,14 @@ import {
   WalletOptions as WalletOptionsRC,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { WalletConnectV1 } from "./WalletConnectV1";
+import { WalletConnectV2 } from "./WalletConnectV2";
 
-export class RainbowWallet extends WalletConnectV1 {
+export class RainbowWallet extends WalletConnectV2 {
   static id = "rainbow" as const;
   static meta = {
     name: "Rainbow",
     iconURL:
-      "https://registry.walletconnect.org/v2/logo/md/7a33d7f1-3d12-4b5c-f3ee-5cd83cb1b500",
+      "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
     links: {
       native: "rainbow:",
       universal: "https://rnbwapp.com",
@@ -21,11 +21,17 @@ export class RainbowWallet extends WalletConnectV1 {
   }
 }
 
-export const rainbowWallet = () => {
+type RainbowWalletConfig = { projectId?: string };
+
+export const rainbowWallet = (config?: RainbowWalletConfig) => {
   return {
     id: RainbowWallet.id,
     meta: RainbowWallet.meta,
     create: (options: WalletOptionsRC) =>
-      new RainbowWallet({ ...options, walletId: RainbowWallet.id }),
+      new RainbowWallet({
+        ...options,
+        walletId: RainbowWallet.id,
+        projectId: config?.projectId,
+      }),
   } satisfies WalletConfig;
 };

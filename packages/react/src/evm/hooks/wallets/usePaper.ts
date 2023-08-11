@@ -1,5 +1,9 @@
 import { useConnect, useWallet } from "@thirdweb-dev/react-core";
-import { PaperWallet, walletIds } from "@thirdweb-dev/wallets";
+import {
+  PaperWallet,
+  walletIds,
+  PaperWalletAdditionalOptions,
+} from "@thirdweb-dev/wallets";
 import { useCallback, useEffect } from "react";
 import {
   useQuery,
@@ -7,14 +11,16 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
+
 export function usePaperWallet() {
   const connect = useConnect();
   return useCallback(
-    async (options: { chainId?: number; clientId: string; email?: string }) => {
+    async (options: { chainId?: number; email?: string } & PaperConfig) => {
       const { paperWallet } = await import(
         "../../../wallet/wallets/paperWallet"
       );
-      return connect(paperWallet({ clientId: options.clientId }), {
+      return connect(paperWallet({ paperClientId: options.paperClientId }), {
         chainId: options.chainId,
         email: options.email,
       });

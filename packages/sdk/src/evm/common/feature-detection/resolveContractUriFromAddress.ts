@@ -1,5 +1,4 @@
-import { BigNumber, providers, constants } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { BigNumber, providers, constants, utils } from "ethers";
 import { extractIPFSHashFromBytecode } from "./extractIPFSHashFromBytecode";
 import { extractMinimalProxyImplementationAddress } from "./extractMinimalProxyImplementationAddress";
 
@@ -49,7 +48,7 @@ export async function resolveContractUriFromAddress(
     );
     const implementationAddress = `0x${proxyStorage.slice(-40)}`;
     if (
-      isAddress(implementationAddress) &&
+      utils.isAddress(implementationAddress) &&
       implementationAddress !== constants.AddressZero
     ) {
       return await resolveContractUriFromAddress(

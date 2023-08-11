@@ -3,7 +3,6 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
-// import { defaultGaslessSendFunction } from "../../common/transactions";
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
@@ -30,8 +29,6 @@ import {
   constants,
 } from "ethers";
 import { BigNumber } from "ethers";
-import { FormatTypes } from "ethers/lib/utils.js";
-import type { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 import EventEmitter from "eventemitter3";
 import type { DeployEvents } from "../../types/deploy";
@@ -65,12 +62,23 @@ abstract class TransactionContext {
     this.overrides = options.overrides || {};
     this.provider = options.provider;
     this.signer = options.signer;
-    this.storage = options.storage || new ThirdwebStorage();
+    this.storage = options.storage;
 
     // Connect provider to signer if it isn't already connected
     if (!this.signer.provider) {
       this.signer = this.signer.connect(this.provider);
     }
+  }
+  public get getSigner() {
+    return this.signer;
+  }
+
+  public get getProvider() {
+    return this.provider;
+  }
+
+  public get getStorage() {
+    return this.storage;
   }
 
   getArgs() {
@@ -308,6 +316,7 @@ export class Transaction<
       provider: options.contractWrapper.getProvider(),
       signer,
       gasless: options.contractWrapper.options.gasless,
+      storage: options.contractWrapper.storage,
     };
 
     return new Transaction(optionsWithContract);
@@ -316,7 +325,7 @@ export class Transaction<
   static async fromContractInfo<TResult = TransactionResult>(
     options: TransactionOptionsWithContractInfo<TResult>,
   ): Promise<Transaction<TResult>> {
-    const storage = options.storage || new ThirdwebStorage();
+    const storage = options.storage;
 
     let contractAbi = options.contractAbi;
     if (!contractAbi) {
@@ -366,7 +375,7 @@ export class Transaction<
     this.contract = options.contract.connect(this.signer);
 
     // Create new storage instance if one isn't provided
-    this.storage = options.storage || new ThirdwebStorage();
+    this.storage = options.storage;
   }
 
   getTarget() {
@@ -494,7 +503,7 @@ export class Transaction<
       try {
         // for dynamic contracts, add 30% to the gas limit to account for multiple delegate calls
         const abi = JSON.parse(
-          this.contract.interface.format(FormatTypes.json) as string,
+          this.contract.interface.format("json") as string,
         );
         if (isRouterContract(abi)) {
           overrides.gasLimit = overrides.gasLimit.mul(110).div(100);
@@ -577,7 +586,11 @@ export class Transaction<
     return sentTx;
   }
 
-  private async prepareGasless(): Promise<GaslessTransaction> {
+  /**
+   * @internal
+   * @returns
+   */
+  public async prepareGasless(): Promise<GaslessTransaction> {
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
@@ -663,7 +676,7 @@ export class Transaction<
    */
   private async transactionError(error: any) {
     const provider = this.provider as providers.Provider & {
-      connection?: ConnectionInfo;
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -849,7 +862,7 @@ export class DeployTransaction extends TransactionContext {
    */
   private async deployError(error: any) {
     const provider = this.provider as providers.Provider & {
-      connection?: ConnectionInfo;
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -1112,17 +1125,14 @@ async function defenderPrepareRequest(
 }
 
 export async function prepareGaslessRequest(tx: Transaction) {
-  // @ts-expect-error
   const gaslessTx = await tx.prepareGasless();
   const gaslessOptions = tx.getGaslessOptions();
 
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     const request = await biconomyPrepareRequest(
       gaslessTx,
-      // @ts-expect-error
-      tx.signer,
-      // @ts-expect-error
-      tx.provider,
+      tx.getSigner,
+      tx.getProvider,
       gaslessOptions,
     );
 
@@ -1138,12 +1148,9 @@ export async function prepareGaslessRequest(tx: Transaction) {
 
     const request = await defenderPrepareRequest(
       gaslessTx,
-      // @ts-expect-error
-      tx.signer,
-      // @ts-expect-error
-      tx.provider,
-      // @ts-expect-error
-      tx.storage,
+      tx.getSigner,
+      tx.getProvider,
+      tx.getStorage,
       gaslessOptions,
     );
 

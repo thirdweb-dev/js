@@ -1,5 +1,165 @@
 # @thirdweb-dev/chains
 
+## 0.1.43
+
+### Patch Changes
+
+- [#1469](https://github.com/thirdweb-dev/js/pull/1469) [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1474](https://github.com/thirdweb-dev/js/pull/1474) [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9) Thanks [@adam-maj](https://github.com/adam-maj)! - Add back scroll-alpha-testnet
+
+- [#1458](https://github.com/thirdweb-dev/js/pull/1458) [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update chains
+
+- [#1461](https://github.com/thirdweb-dev/js/pull/1461) [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add xai-goerli chain and support BigInteger from Unity
+
+## 0.1.42
+
+### Patch Changes
+
+- [#1450](https://github.com/thirdweb-dev/js/pull/1450) [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update chains
+
+## 0.1.41
+
+### Patch Changes
+
+- [#1436](https://github.com/thirdweb-dev/js/pull/1436) [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated chains
+
+- [#1432](https://github.com/thirdweb-dev/js/pull/1432) [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.40
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
+## 0.1.39
+
+### Patch Changes
+
+- [#1407](https://github.com/thirdweb-dev/js/pull/1407) [`0a5eb19d`](https://github.com/thirdweb-dev/js/commit/0a5eb19d672909027bb6c7e79ea76d431535559c) Thanks [@jnsdls](https://github.com/jnsdls)! - remove non-standard urls
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1376](https://github.com/thirdweb-dev/js/pull/1376) [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429) Thanks [@iketw](https://github.com/iketw)! - Pass bundleId if present
+
+- [#1399](https://github.com/thirdweb-dev/js/pull/1399) [`3152d4e9`](https://github.com/thirdweb-dev/js/commit/3152d4e9b42e2777316b1b58513657f4430cb79a) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1387](https://github.com/thirdweb-dev/js/pull/1387) [`aa6bdd08`](https://github.com/thirdweb-dev/js/commit/aa6bdd0809d1d5536c837c59b2d407ee974c1f9c) Thanks [@nkrishang](https://github.com/nkrishang)! - Simplify account permissions
+
+- [#1405](https://github.com/thirdweb-dev/js/pull/1405) [`75587c8b`](https://github.com/thirdweb-dev/js/commit/75587c8b38bbbcf68d2101526e9792349cce728f) Thanks [@jnsdls](https://github.com/jnsdls)! - sort explorers (etherscan -> blockscout -> other)
+
+- [#1385](https://github.com/thirdweb-dev/js/pull/1385) [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee) Thanks [@iketw](https://github.com/iketw)! - Adds chains and improve error messages
+
+- [#1378](https://github.com/thirdweb-dev/js/pull/1378) [`5a02c5ec`](https://github.com/thirdweb-dev/js/commit/5a02c5ec0288fd6dfb2b765ef70bb18e714aca19) Thanks [@MananTank](https://github.com/MananTank)! - add icon in MinimalChain
+
+## 0.1.38
+
+### Patch Changes
+
+- [#1374](https://github.com/thirdweb-dev/js/pull/1374) [`7cb55e70`](https://github.com/thirdweb-dev/js/commit/7cb55e7051617268bba1b80146865c606ff6e66d) Thanks [@jnsdls](https://github.com/jnsdls)! -
+
+## 0.1.37
+
+### Patch Changes
+
+- [#1371](https://github.com/thirdweb-dev/js/pull/1371) [`d665954f`](https://github.com/thirdweb-dev/js/commit/d665954fee0554985055bf06abbed8d7b8d5bc38) Thanks [@jnsdls](https://github.com/jnsdls)! - add more chains
+
+## 0.1.36
+
+### Patch Changes
+
+- [#1366](https://github.com/thirdweb-dev/js/pull/1366) [`02ab92cc`](https://github.com/thirdweb-dev/js/commit/02ab92cc5c97f475e3b5642e5a7bdbe63ca136ee) Thanks [@jnsdls](https://github.com/jnsdls)! - new supported chains
+
+- [#1358](https://github.com/thirdweb-dev/js/pull/1358) [`6cc4b8d2`](https://github.com/thirdweb-dev/js/commit/6cc4b8d28b982c5be3e1cd17d2a9a947001d1608) Thanks [@DLHTX](https://github.com/DLHTX)! - feat(chain): add iotex chain icon
+
+## 0.1.35
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds support for clientId / secretKey
+
+## 0.1.34
+
+### Patch Changes
+
+- [#1338](https://github.com/thirdweb-dev/js/pull/1338) [`8dd7540c`](https://github.com/thirdweb-dev/js/commit/8dd7540c455aa70534f6d29986537592fd12169b) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.33
+
+### Patch Changes
+
+- [#1335](https://github.com/thirdweb-dev/js/pull/1335) [`0407b2c2`](https://github.com/thirdweb-dev/js/commit/0407b2c2f39b5f3fa06e613e671623b5644b3a28) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains again
+
+## 0.1.32
+
+### Patch Changes
+
+- [#1330](https://github.com/thirdweb-dev/js/pull/1330) [`a9093bcf`](https://github.com/thirdweb-dev/js/commit/a9093bcf287c01e3335fd780e2ccbfdb3380bf95) Thanks [@adam-maj](https://github.com/adam-maj)! - Override binance slug
+
+## 0.1.31
+
+### Patch Changes
+
+- [#1328](https://github.com/thirdweb-dev/js/pull/1328) [`4393b228`](https://github.com/thirdweb-dev/js/commit/4393b2280505fd0b2284555d64eae6567e8401a5) Thanks [@adam-maj](https://github.com/adam-maj)! - Make base default chain
+
+## 0.1.30
+
+### Patch Changes
+
+- [#1326](https://github.com/thirdweb-dev/js/pull/1326) [`40682191`](https://github.com/thirdweb-dev/js/commit/40682191450de08ad40b9d2957afced248657af2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add base chain support
+
+## 0.1.29
+
+### Patch Changes
+
+- [#1320](https://github.com/thirdweb-dev/js/pull/1320) [`fd74d791`](https://github.com/thirdweb-dev/js/commit/fd74d7918072cda03b52f852ebb3f8dccb84074d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Linea mainnet support
+
+- [#1315](https://github.com/thirdweb-dev/js/pull/1315) [`35f20ceb`](https://github.com/thirdweb-dev/js/commit/35f20ceb4f943e95d9566105096f06412978da7a) Thanks [@jnsdls](https://github.com/jnsdls)! - add more chains
+
+## 0.1.28
+
+### Patch Changes
+
+- [#1299](https://github.com/thirdweb-dev/js/pull/1299) [`7e044c66`](https://github.com/thirdweb-dev/js/commit/7e044c664d8a034f5324b859ac3596860c86f9a5) Thanks [@nkrishang](https://github.com/nkrishang)! - Add ERC721LoyaltyCard and ERC721UpdatableMetadata
+
+- [#1297](https://github.com/thirdweb-dev/js/pull/1297) [`b5c6eedb`](https://github.com/thirdweb-dev/js/commit/b5c6eedb38aa3c52eb97f3d25ad83e38c55afe61) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add zksync as default chain
+
+- [#1309](https://github.com/thirdweb-dev/js/pull/1309) [`4961b597`](https://github.com/thirdweb-dev/js/commit/4961b597a098dae0a4eff01a9ef268a65fe1a352) Thanks [@jnsdls](https://github.com/jnsdls)! - unblock storage domains
+
+## 0.1.27
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#1281](https://github.com/thirdweb-dev/js/pull/1281) [`a3bb17cb`](https://github.com/thirdweb-dev/js/commit/a3bb17cb33f033846fb3b4c8a0a4809ba76cab96) Thanks [@nkrishang](https://github.com/nkrishang)! - Handle ERC4337Signer correctly for signTypedData
+
+## 0.1.26
+
+### Patch Changes
+
+- [#1276](https://github.com/thirdweb-dev/js/pull/1276) [`5882091e`](https://github.com/thirdweb-dev/js/commit/5882091eab65978009a5a5305701f121851b10ad) Thanks [@MananTank](https://github.com/MananTank)! - Do not change order or RPCs in `getChainRPCs` to Fix RPC override issue
+
+## 0.1.25
+
+### Patch Changes
+
+- [#1248](https://github.com/thirdweb-dev/js/pull/1248) [`620e89dc`](https://github.com/thirdweb-dev/js/commit/620e89dc25c91557e2164a602c7aedd733525087) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - update chains
+
+- [#1243](https://github.com/thirdweb-dev/js/pull/1243) [`0fd8aa04`](https://github.com/thirdweb-dev/js/commit/0fd8aa04a9424497758d13a51a72363edcc30e19) Thanks [@therealharpaljadeja](https://github.com/therealharpaljadeja)! - update chains
+
+## 0.1.24
+
+### Patch Changes
+
+- [#1241](https://github.com/thirdweb-dev/js/pull/1241) [`9af346ee`](https://github.com/thirdweb-dev/js/commit/9af346eeada1037be27c8d3c9e1777f7be11a8ea) Thanks [@nkrishang](https://github.com/nkrishang)! - Use fn getAllAccounts instead of event logs AccountCreated
+
+## 0.1.23
+
+### Patch Changes
+
+- [#1229](https://github.com/thirdweb-dev/js/pull/1229) [`6816219a`](https://github.com/thirdweb-dev/js/commit/6816219ac13ae571a0c90db6ab389c319bc1f052) Thanks [@jnsdls](https://github.com/jnsdls)! - add/update chains
+
 ## 0.1.22
 
 ### Patch Changes

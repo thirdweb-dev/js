@@ -39,12 +39,14 @@ export const gnosisAddressPrefixToChainId = {
   bnb: 56,
   oeth: 10,
   gor: 5,
+  "base-gor": 84531,
 } as const;
 
 export const SelectAccount: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   safeWalletConfig: SafeWalletConfig;
+  renderBackButton?: boolean;
 }> = (props) => {
   const activeWallet = useWallet();
   const connect = useConnect();
@@ -105,8 +107,13 @@ export const SelectAccount: React.FC<{
 
   return (
     <>
-      <BackButton onClick={props.onBack} />
-      <Spacer y="md" />
+      {props.renderBackButton && (
+        <>
+          <BackButton onClick={props.onBack} />
+          <Spacer y="md" />
+        </>
+      )}
+
       <Img
         src={props.safeWalletConfig.meta.iconURL}
         width={iconSize.xl}

@@ -56,6 +56,7 @@ export type FrameworkType =
   | "revel"
   | "fiber"
   | "zenject"
+  | "vite"
   | "none";
 export type LibraryType =
   | "react"
@@ -74,7 +75,6 @@ export type ContractLibrariesType =
   | "truffle"
   | "solc"
   | "none";
-
 
 export const contractLibraries: readonly ContractLibrariesType[] = [
   "brownie",

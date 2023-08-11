@@ -9,6 +9,12 @@ import { walletIds } from "../constants/walletIds";
 
 export type WC2_QRModalOptions = QRModalOptions;
 
+type ConnectWithQrCodeArgs = {
+  chainId?: number;
+  onQrCodeUri: (uri: string) => void;
+  onConnected: (accountAddress: string) => void;
+};
+
 export type WalletConnectOptions = {
   /**
    * Your project’s unique identifier that can be obtained at cloud.walletconnect.com. Enables following functionalities within Web3Modal: wallet and chain logos, optional WalletConnect RPC, support for all wallets from our Explorer and WalletConnect v2 support. Defaults to undefined.
@@ -111,14 +117,13 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
   #onMessage = (payload: any) => {
     switch (payload.type) {
       case "display_uri":
-        this.emit("open_wallet", payload.data);
+        this.emit("display_uri", payload.data);
         break;
     }
   };
 
   #onSessionRequestSent = () => {
-    // open wallet after request is sent
-    this.emit("open_wallet");
+    this.emit("wc_session_request_sent");
   };
 
   #setupListeners() {
@@ -151,5 +156,23 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
       "session_request_sent",
       this.#onSessionRequestSent,
     );
+  }
+
+  async connectWithQrCode(options: ConnectWithQrCodeArgs) {
+    await this.getConnector();
+    const wcConnector = this.#walletConnectConnector;
+
+    if (!wcConnector) {
+      throw new Error("WalletConnect connector not found");
+    }
+
+    const wcProvider = await wcConnector.getProvider();
+
+    wcProvider.on("display_uri", (uri) => {
+      options.onQrCodeUri(uri);
+    });
+
+    // trigger connect flow
+    this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
 }

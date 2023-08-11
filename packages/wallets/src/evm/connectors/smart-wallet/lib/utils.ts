@@ -1,10 +1,5 @@
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
-import {
-  resolveProperties,
-  keccak256,
-  defaultAbiCoder,
-} from "ethers/lib/utils";
 
 export function toJSON(op: Partial<UserOperationStruct>): Promise<any> {
   return ethers.utils.resolveProperties(op).then((userOp) =>
@@ -38,18 +33,18 @@ export async function getUserOpHashV06(
   entryPoint: string,
   chainId: number,
 ): Promise<Promise<string>> {
-  const op = await resolveProperties(userOp);
+  const op = await utils.resolveProperties(userOp);
   const hashedUserOp = {
     sender: op.sender,
     nonce: op.nonce,
-    initCodeHash: keccak256(op.initCode),
-    callDataHash: keccak256(op.callData),
+    initCodeHash: utils.keccak256(op.initCode),
+    callDataHash: utils.keccak256(op.callData),
     callGasLimit: op.callGasLimit,
     verificationGasLimit: op.verificationGasLimit,
     preVerificationGas: op.preVerificationGas,
     maxFeePerGas: op.maxFeePerGas,
     maxPriorityFeePerGas: op.maxPriorityFeePerGas,
-    paymasterAndDataHash: keccak256(op.paymasterAndData),
+    paymasterAndDataHash: utils.keccak256(op.paymasterAndData),
   };
 
   const userOpType = {
@@ -68,16 +63,16 @@ export async function getUserOpHashV06(
     name: "hashedUserOp",
     type: "tuple",
   };
-  let encoded = defaultAbiCoder.encode(
+  const encoded = utils.defaultAbiCoder.encode(
     [userOpType as any],
     [{ ...hashedUserOp }],
   );
   // remove leading word (total length) and trailing word (zero-length signature)
 
-  const userOpHash = keccak256(encoded);
-  const enc = defaultAbiCoder.encode(
+  const userOpHash = utils.keccak256(encoded);
+  const enc = utils.defaultAbiCoder.encode(
     ["bytes32", "address", "uint256"],
     [userOpHash, entryPoint, chainId],
   );
-  return keccak256(enc);
+  return utils.keccak256(enc);
 }

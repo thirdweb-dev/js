@@ -14,7 +14,7 @@ import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
-import type { MarketplaceFilter } from "../../types/marketplace";
+import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace";
 import { OfferV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
@@ -96,18 +96,20 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutSeller,
+  ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalOffers.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalOffers.toNumber();
 
     if (end === 0) {
       throw new Error(`No offers exist on the contract.`);
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllOffers,
@@ -133,18 +135,20 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns the Offer object array
    * @twfeature Offers
    */
-  public async getAllValid(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAllValid(
+    filter?: MarketplaceFilterWithoutSeller,
+  ): Promise<OfferV3[]> {
     const totalOffers = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalOffers.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalOffers.toNumber();
 
     if (end === 0) {
       throw new Error(`No offers exist on the contract.`);
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidOffers,
@@ -426,7 +430,13 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       : offer.currencyContractAddress;
 
     const provider = this.contractWrapper.getProvider();
-    const erc20 = new ContractWrapper<IERC20>(provider, currency, ERC20Abi, {});
+    const erc20 = new ContractWrapper<IERC20>(
+      provider,
+      currency,
+      ERC20Abi,
+      {},
+      this.storage,
+    );
 
     const offerorBalance = await erc20.readContract.balanceOf(
       offer.offerorAddress,
@@ -457,7 +467,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
 
   private async applyFilter(
     offers: IOffers.OfferStructOutput[],
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutSeller,
   ) {
     let rawOffers = [...offers];
 

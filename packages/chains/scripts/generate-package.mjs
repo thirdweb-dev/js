@@ -17,6 +17,51 @@ const combineMerge = (target, source) => {
   return destination;
 };
 
+/**
+ * @param {Chain['explorers']} explorers
+ */
+function sortExplorers(explorers = []) {
+  let etherscan = null;
+  let blockscout = null;
+
+  let restExplorers = [];
+
+  for (const explorer of explorers) {
+    if (explorer.name.includes("etherscan")) {
+      etherscan = explorer;
+    } else if (explorer.name.includes("blockscout")) {
+      blockscout = explorer;
+    } else {
+      restExplorers.push(explorer);
+    }
+  }
+
+  const returnExplorers = [];
+  if (etherscan) {
+    returnExplorers.push(etherscan);
+  }
+  if (blockscout) {
+    returnExplorers.push(blockscout);
+  }
+
+  return [...returnExplorers, ...restExplorers];
+}
+
+/**
+ * @param {readonly any[]} values
+ * @param {(arg0: any) => void} valueChecker
+ */
+function filterOutErroringValues(values, valueChecker) {
+  return values.filter((value) => {
+    try {
+      valueChecker(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+}
+
 const chainsDir = "./chains";
 
 const chainsJsonUrl = "https://chainid.network/chains.json";
@@ -60,7 +105,8 @@ for (const file of additionalChainsFiles) {
 }
 
 chains = chains
-  .filter((c) => c.status !== "deprecated")
+  // Keep scroll-alpha-testnet for now even though its deprecated
+  .filter((c) => c.status !== "deprecated" || c.chainId === 534353)
   .map((chain) => {
     if (overrides[chain.chainId]) {
       chain = merge(chain, overrides[chain.chainId], {
@@ -74,11 +120,68 @@ chains = chains
         ? false
         : JSON.stringify(chain).toLowerCase().includes("test");
 
-    return {
+    const resultChain = {
       ...chain,
       testnet,
     };
+    // only add the explroers if they were there in the first place
+    if (resultChain.explorers) {
+      resultChain.explorers = sortExplorers(resultChain.explorers);
+      // check every key that *could* contain a url and validate it
+      resultChain.explorers = filterOutErroringValues(
+        resultChain.explorers,
+        (explorer) => new URL(explorer.url),
+      );
+    }
+    if (resultChain.faucets) {
+      resultChain.faucets = filterOutErroringValues(
+        resultChain.faucets,
+        (faucet) => new URL(faucet),
+      );
+    }
+    if (resultChain.rpc) {
+      resultChain.rpc = filterOutErroringValues(
+        resultChain.rpc,
+        (rpc) => new URL(rpc),
+      );
+    }
+    if (resultChain.infoURL) {
+      try {
+        new URL(resultChain.infoURL);
+      } catch (e) {
+        delete resultChain.infoURL;
+      }
+    }
+
+    return resultChain;
   });
+
+/**
+ * Sort RPCs in chain
+ * @param {Chain} chain
+ */
+function sortRPCs(chain) {
+  const thirdwebRPCs = [];
+  const alchemyRPCs = [];
+  const infuraRPCs = [];
+  const otherRPCs = [];
+
+  chain.rpc.forEach((rpc) => {
+    if (rpc.includes("${THIRDWEB_API_KEY}")) {
+      thirdwebRPCs.push(rpc);
+    } else if (rpc.includes("${ALCHEMY_API_KEY}")) {
+      alchemyRPCs.push(rpc);
+    } else if (rpc.includes("${INFURA_API_KEY}")) {
+      infuraRPCs.push(rpc);
+    } else {
+      otherRPCs.push(rpc);
+    }
+  });
+
+  chain.rpc = [...thirdwebRPCs, ...infuraRPCs, ...alchemyRPCs, ...otherRPCs];
+}
+
+chains.forEach(sortRPCs);
 
 const imports = [];
 const exports = [];
@@ -137,14 +240,18 @@ function findSlug(chain) {
   if (slug === "arbitrum-one") {
     slug = "arbitrum";
   }
-  if (slug === "binance-smart-chain") {
+  if (slug === "bnb-smart-chain") {
     slug = "binance";
   }
-  if (slug === "binance-smart-chain-testnet") {
+  if (slug === "bnb-smart-chain-testnet") {
     slug = "binance-testnet";
   }
   if (slug === "base-goerli-testnet") {
     slug = "base-goerli";
+  }
+  // optimisim rename handling
+  if (slug === "op") {
+    slug = "optimism";
   }
   // end special cases
 
@@ -236,7 +343,7 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
-export const defaultChains = [c1, c5, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
+export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
 export const allChains: Chain[] = [${exportNames.join(", ")}];
 
 type ChainsById = {

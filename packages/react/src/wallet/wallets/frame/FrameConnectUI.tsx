@@ -14,6 +14,7 @@ import { Flex } from "../../../components/basic";
 import { ButtonLink } from "../../ConnectWallet/screens/GetStartedScreen";
 import { Img } from "../../../components/Img";
 import { iconSize } from "../../../design-system";
+import { openWindow } from "../../utils/openWindow";
 
 const FrameFailedConnect: React.FC<{
   onBack: () => void;
@@ -40,7 +41,7 @@ const FrameFailedConnect: React.FC<{
       <Flex flexDirection="column" gap="xs">
         <ButtonLink
           onClick={() => {
-            window.open("https://frame.sh", "_blank");
+            openWindow("https://frame.sh");
           }}
         >
           <Img
@@ -68,6 +69,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   const { walletConfig, close, goBack } = props;
   const downloadLink = "https://frame.sh";
   const supportLink = "https://docs.frame.sh";
+  const hideBackButton = props.supportedWallets.length === 1;
 
   useEffect(() => {
     if (connectPrompted.current) {
@@ -90,7 +92,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
 
       // on mobile we open the website
       else if (isMobile()) {
-        window.open(downloadLink);
+        openWindow(downloadLink);
       }
     })();
   }, [walletConfig, close, connect, goBack]);
@@ -98,6 +100,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}

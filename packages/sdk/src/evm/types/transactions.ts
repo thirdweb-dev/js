@@ -23,14 +23,14 @@ export type TransactionContextOptions = {
   provider: providers.Provider;
   signer: Signer;
   overrides?: CallOverrides;
-  storage?: ThirdwebStorage;
+  storage: ThirdwebStorage;
 };
 
 type TransactionOptions<TResult = TransactionResult> = {
   method: string;
   args: any[];
   overrides?: CallOverrides;
-  storage?: ThirdwebStorage;
+  storage: ThirdwebStorage;
   gasless?: SDKOptionsOutput["gasless"];
   parse?: ParseTransactionReceipt<TResult>;
 };
@@ -39,7 +39,7 @@ export type TransactionOptionsWithContractWrapper<
   TContract extends BaseContract,
   TResult = TransactionResult,
   TMethod extends keyof TContract["functions"] = keyof TContract["functions"],
-> = TransactionOptions<TResult> & {
+> = Omit<TransactionOptions<TResult>, "storage"> & {
   method: TMethod;
   args: Parameters<TContract["functions"][TMethod]>;
   contractWrapper: ContractWrapper<TContract>;

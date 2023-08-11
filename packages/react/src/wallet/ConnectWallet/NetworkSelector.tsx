@@ -385,6 +385,17 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   const [switchingChainId, setSwitchingChainId] = useState(-1);
   const [errorSwitchingChainId, setErrorSwitchingChainId] = useState(-1);
 
+  const close = props.close;
+
+  useEffect(() => {
+    // if switching and switched successfully - close modal
+    if (switchingChainId !== -1 && activeChainId === switchingChainId) {
+      if (close) {
+        close();
+      }
+    }
+  }, [switchingChainId, close, activeChainId]);
+
   const handleSwitch = async (chain: Chain) => {
     setErrorSwitchingChainId(-1);
     setSwitchingChainId(chain.chainId);
@@ -514,7 +525,9 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
   padding: ${spacing.sm} ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
   border-radius: ${radius.lg};
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
   &[data-state="active"] {
     background: ${(p) => p.theme.bg.elevated};
     color: ${(p) => p.theme.text.neutral};

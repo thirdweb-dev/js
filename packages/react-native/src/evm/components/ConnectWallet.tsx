@@ -1,7 +1,10 @@
 import { ThemeProvider } from "../styles/ThemeProvider";
-import { WalletDetailsButton } from "./ConnectWalletDetails/WalletDetailsButton";
+import {
+  ConnectWalletDetailsProps,
+  WalletDetailsButton,
+} from "./ConnectWalletDetails/WalletDetailsButton";
 import { useAddress } from "@thirdweb-dev/react-core";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
@@ -10,7 +13,19 @@ export type ConnectWalletProps = {
   /**
    * render a custom button to display the connected wallet details instead of the default button
    */
-  detailsButton?: React.ReactElement;
+  detailsButton?: ConnectWalletDetailsProps["detailsButton"];
+
+  /**
+   * render custom rows in the Connect Wallet Details modal
+   */
+  extraRows?: ConnectWalletDetailsProps["extraRows"];
+
+  /**
+   * Hide option to request testnet funds for testnets in dropdown
+   *
+   * @default false
+   */
+  hideTestnetFaucet?: boolean;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -18,6 +33,8 @@ export const ConnectWallet = ({
   theme,
   buttonTitle,
   modalTitle,
+  extraRows,
+  hideTestnetFaucet,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
@@ -37,6 +54,8 @@ export const ConnectWallet = ({
           <WalletDetailsButton
             address={address}
             detailsButton={detailsButton}
+            extraRows={extraRows}
+            hideTestnetFaucet={hideTestnetFaucet}
           />
         ) : (
           <ConnectWalletButton

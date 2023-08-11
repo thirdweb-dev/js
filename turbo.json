@@ -60,20 +60,27 @@
       "inputs": ["package.json"],
       "dependsOn": ["^build"]
     },
+    "@thirdweb-dev/service-utils#build": {
+      "outputs": ["dist/**", "cf-worker/**", "node/**"],
+      "dependsOn": ["^build"]
+    },
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "test:solana": {
       "outputs": ["coverage/solana/**"],
       "inputs": ["src/core/**", "src/solana/**", "test/solana/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "test:evm": {
       "outputs": ["coverage/evm/**"],
       "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "e2e": {
       "outputs": [],
@@ -97,23 +104,24 @@
     },
     "e2e-cra-5#e2e": {
       "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
     "e2e-next-12#e2e": {
       "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
     "e2e-vite-3#e2e": {
       "outputs": ["playwright-report/**"],
-      "inputs": ["src/**", "fixtures/**"],
+      "inputs": ["src/**", "fixtures/**", "package.json"],
       "dependsOn": ["build"]
     },
     "thirdweb#e2e": {
       "outputs": [],
       "inputs": ["src/**", "e2e/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["TW_SECRET_KEY"]
     },
     "lint": {
       "outputs": []

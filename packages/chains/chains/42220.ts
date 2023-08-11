@@ -21,14 +21,14 @@ export default {
   "infoURL": "https://docs.celo.org/",
   "explorers": [
     {
-      "name": "Celoscan",
-      "url": "https://celoscan.io",
-      "standard": "EIP3091"
-    },
-    {
       "name": "blockscout",
       "url": "https://explorer.celo.org",
       "standard": "none"
+    },
+    {
+      "name": "Celoscan",
+      "url": "https://celoscan.io",
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,

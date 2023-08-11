@@ -8,10 +8,8 @@ import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { Amount, CurrencyValue } from "../../types/currency";
-import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
-import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import {
   type BigNumberish,
@@ -24,11 +22,13 @@ import {
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
-import { BlockTag } from "@ethersproject/abstract-provider";
+import type { BlockTag } from "@ethersproject/abstract-provider";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-
+import type { IERC20 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ContractWrapper } from "../classes/contract-wrapper";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -54,11 +54,17 @@ export class UserWallet {
   private connection: RPCConnectionHandler;
   private options: SDKOptions;
   public events = new EventEmitter<UserWalletEvents>();
+  storage: ThirdwebStorage;
 
-  constructor(network: NetworkInput, options: SDKOptions) {
+  constructor(
+    network: NetworkInput,
+    options: SDKOptions,
+    storage: ThirdwebStorage,
+  ) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
     this.events = new EventEmitter();
+    this.storage = storage;
   }
 
   // TODO disconnect()
@@ -294,6 +300,7 @@ export class UserWallet {
       const localWallet = new UserWallet(
         new Wallet(LOCAL_NODE_PKEY, getChainProvider(chainId, this.options)),
         this.options,
+        this.storage,
       );
       return localWallet.transfer(await this.getAddress(), amount);
     } else {
@@ -322,6 +329,7 @@ export class UserWallet {
       currencyAddress,
       ERC20Abi,
       this.options,
+      this.storage,
     );
   }
 }

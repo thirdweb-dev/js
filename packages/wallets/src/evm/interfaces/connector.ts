@@ -4,6 +4,7 @@ import type { Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 export abstract class Connector<
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TConnectParams extends Record<string, any> = {},
 > extends EventEmitter {
   abstract connect(args?: ConnectParams<TConnectParams>): Promise<string>;
@@ -17,11 +18,13 @@ export abstract class Connector<
   abstract updateChains(chains: Chain[]): void;
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ConnectParams<TOpts extends Record<string, any> = {}> = {
   chainId?: number;
 } & TOpts;
 
 export class WagmiAdapter<
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TConnectParams extends Record<string, any> = {},
 > extends Connector<TConnectParams> {
   wagmiConnector: WagmiConnector<any, any, any>;

@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { ChainInfoInputSchema } from "./ChainInfoInputSchema";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { z } from "zod";
@@ -11,9 +10,8 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
     .object({
       // @ts-expect-error - zod doesn't know anything about readonly
       supportedChains: z.array(ChainInfoInputSchema).default(defaultChains),
-      thirdwebApiKey: z.string().default(DEFAULT_API_KEY),
-      alchemyApiKey: z.string().optional(),
-      infuraApiKey: z.string().optional(),
+      clientId: z.string().optional(),
+      secretKey: z.string().optional(),
       readonlySettings: z
         .object({
           rpcUrl: z.string().url(),

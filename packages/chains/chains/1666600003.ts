@@ -13,9 +13,17 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://www.harmony.one/",
+  "slip44": 1023,
   "shortName": "hmy-s3",
   "chainId": 1666600003,
   "networkId": 1666600003,
+  "explorers": [
+    {
+      "name": "Harmony Block Explorer",
+      "url": "https://explorer.harmony.one/blocks/shard/3",
+      "standard": "none"
+    }
+  ],
   "testnet": false,
   "slug": "harmony-shard-3"
 } as const satisfies Chain;

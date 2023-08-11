@@ -21,7 +21,7 @@ import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
-import type { MarketplaceFilter } from "../../types/marketplace";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
 import type { DirectListingV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
@@ -116,18 +116,20 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @returns the Direct listing object array
    * @twfeature DirectListings
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<DirectListingV3[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutOfferor,
+  ): Promise<DirectListingV3[]> {
     const totalListings = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalListings.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalListings.toNumber();
 
     if (end === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllListings,
@@ -156,19 +158,19 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @twfeature DirectListings
    */
   public async getAllValid(
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutOfferor,
   ): Promise<DirectListingV3[]> {
     const totalListings = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalListings.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalListings.toNumber();
 
     if (end === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidListings,
@@ -955,7 +957,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
 
   private async applyFilter(
     listings: IDirectListings.ListingStructOutput[],
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutOfferor,
   ) {
     let rawListings = [...listings];
 

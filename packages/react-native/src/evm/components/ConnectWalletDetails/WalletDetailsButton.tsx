@@ -3,52 +3,66 @@ import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet, useBalance } from "@thirdweb-dev/react-core";
-import { useActiveChain } from "@thirdweb-dev/react-core/evm";
-import { StyleSheet } from "react-native";
+import { useWallet, useBalance, useChain } from "@thirdweb-dev/react-core";
+import { StyleSheet, View } from "react-native";
 import { LocalWallet } from "@thirdweb-dev/wallets";
-import { useModalState } from "../../providers/ui-context-provider";
 import Box from "../base/Box";
+import { ConnectWalletDetailsModal } from "./ConnectWalletDetailsModal";
+import { useState } from "react";
 
 export type ConnectWalletDetailsProps = {
-  address: string;
-  detailsButton?: React.ReactElement;
+  address?: string;
+  detailsButton?: React.FC<{ onPress: () => void }>;
+  extraRows?: React.FC;
+  hideTestnetFaucet?: boolean;
 };
 
 export const WalletDetailsButton = ({
   address,
   detailsButton,
+  extraRows,
+  hideTestnetFaucet,
 }: ConnectWalletDetailsProps) => {
   const activeWallet = useWallet();
-  const chain = useActiveChain();
+  const chain = useChain();
   const balanceQuery = useBalance();
-  const { setModalState } = useModalState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onPress = () => {
-    setModalState({
-      view: "WalletDetails",
-      data: {
-        address: address,
-      },
-      isOpen: true,
-      isSheet: true,
-      caller: "ConnectWalletDetails",
-    });
+    // setModalState({
+    //   view: "WalletDetails",
+    //   data: {
+    //     address: address,
+    //   },
+    //   isOpen: true,
+    //   isSheet: true,
+    //   caller: "ConnectWalletDetails",
+    // });
+    setIsModalVisible(!isModalVisible);
   };
 
   return (
     <>
-      <BaseButton
-        backgroundColor="background"
-        borderColor="border"
-        style={styles.walletDetails}
-        onPress={onPress}
-      >
-        {detailsButton ? (
-          detailsButton
-        ) : (
+      <ConnectWalletDetailsModal
+        isVisible={isModalVisible}
+        onClosePress={onPress}
+        extraRows={extraRows}
+        address={address}
+        hideTestnetFaucet={hideTestnetFaucet}
+      />
+      {detailsButton ? (
+        detailsButton({ onPress })
+      ) : (
+        <BaseButton
+          backgroundColor="background"
+          borderColor="border"
+          style={styles.walletDetails}
+          onPress={onPress}
+        >
           <Box flex={1} flexDirection="row" justifyContent="space-between">
-            <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
+            <View>
+              <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
+            </View>
             <Box justifyContent="center" alignItems="flex-start">
               <Text variant="bodySmall">
                 {balanceQuery.data
@@ -65,13 +79,15 @@ export const WalletDetailsButton = ({
                 />
               )}
             </Box>
-            <WalletIcon
-              size={32}
-              iconUri={activeWallet?.getMeta().iconURL || ""}
-            />
+            <View>
+              <WalletIcon
+                size={32}
+                iconUri={activeWallet?.getMeta().iconURL || ""}
+              />
+            </View>
           </Box>
-        )}
-      </BaseButton>
+        </BaseButton>
+      )}
     </>
   );
 };

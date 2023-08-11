@@ -47,6 +47,13 @@ type ConnectWalletProps = {
   };
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+
+  /**
+   * Hide option to request testnet funds for testnets in dropdown
+   *
+   * @default false
+   */
+  hideTestnetFaucet?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -163,6 +170,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             theme={theme}
             style={props.style}
             detailsBtn={props.detailsBtn}
+            hideTestnetFaucet={props.hideTestnetFaucet}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();

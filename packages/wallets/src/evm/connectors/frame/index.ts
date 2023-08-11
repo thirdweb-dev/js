@@ -1,5 +1,4 @@
-import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { providers, utils } from "ethers";
 import type Provider from "ethereum-provider";
 import type { Address } from "abitype";
 import type { Chain } from "@thirdweb-dev/chains";
@@ -17,6 +16,7 @@ import {
 } from "../../../lib/wagmi-core";
 import { Ethereum } from "../injected/types";
 import { AsyncStorage } from "../../../core";
+import { getValidPublicRPCUrl } from "../../utils/url";
 
 export type FrameConnectorOptions = {
   /**
@@ -76,7 +76,7 @@ export class FrameConnector extends WagmiConnector<
       const accounts: string[] = await provider.request({
         method: "eth_requestAccounts",
       });
-      const account = getAddress(accounts[0] as string);
+      const account = utils.getAddress(accounts[0] as string);
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -132,7 +132,7 @@ export class FrameConnector extends WagmiConnector<
       method: "eth_accounts",
     })) as string[];
     // return checksum address
-    return getAddress(accounts[0] as string);
+    return utils.getAddress(accounts[0] as string);
   }
 
   async getChainId() {
@@ -195,7 +195,7 @@ export class FrameConnector extends WagmiConnector<
     if (!provider) {
       throw new ConnectorNotFoundError();
     }
-    const chainIdHex = hexValue(chainId);
+    const chainIdHex = utils.hexValue(chainId);
 
     try {
       await Promise.all([
@@ -242,7 +242,7 @@ export class FrameConnector extends WagmiConnector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpc: [chain.rpc[0] ?? ""],
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
@@ -320,7 +320,7 @@ export class FrameConnector extends WagmiConnector<
       this.emit("disconnect");
     } else {
       this.emit("change", {
-        account: getAddress(accounts[0] as string),
+        account: utils.getAddress(accounts[0] as string),
       });
     }
   };

@@ -2,7 +2,7 @@ import { isFileOrBuffer, type ThirdwebStorage } from "@thirdweb-dev/storage";
 import { FEATURE_NFT_SHARED_METADATA } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import type { ISharedMetadata } from "@thirdweb-dev/contracts-js";
+import type { SharedMetadata } from "@thirdweb-dev/contracts-js";
 import { buildTransactionFunction } from "../../common/transactions";
 import { BasicNFTInput } from "../../../core/schema/nft";
 import { Transaction } from "./transactions";
@@ -19,15 +19,44 @@ import { TransactionResult } from "../types";
 export class Erc721SharedMetadata implements DetectableFeature {
   featureName = FEATURE_NFT_SHARED_METADATA.name;
 
-  private contractWrapper: ContractWrapper<ISharedMetadata>;
+  private contractWrapper: ContractWrapper<SharedMetadata>;
   private storage: ThirdwebStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<ISharedMetadata>,
+    contractWrapper: ContractWrapper<SharedMetadata>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+  }
+
+  /**
+   * Get Shared Metadata
+   *
+   * @remarks Get the shared metadata for the Open Edition NFTs.
+   *
+   * @example
+   * ```javascript
+   * const contract = await sdk.getContract("{{contract_address}}");
+   *
+   * const tx = await contract.erc721.sharedMetadata.get();
+   * ```
+   *
+   * @returns - The shared metadata for the Open Edition NFTs.
+   */
+  public async get(): Promise<BasicNFTInput | undefined> {
+    const metadata = await this.contractWrapper.readContract.sharedMetadata();
+
+    if (metadata.every((value) => value === "")) {
+      return undefined;
+    }
+
+    return {
+      name: metadata.name,
+      description: metadata.description,
+      image: metadata.imageURI,
+      animation_url: metadata.animationURI,
+    };
   }
 
   /**
@@ -58,17 +87,26 @@ export class Erc721SharedMetadata implements DetectableFeature {
       metadata: BasicNFTInput,
     ): Promise<Transaction<TransactionResult>> => {
       const parsedMetadata = BasicNFTInput.parse(metadata);
+      // cleanup description
+      parsedMetadata.description = this.sanitizeJSONString(
+        parsedMetadata.description,
+      );
 
       // take the input and upload image and animation if it is not a URI already
       const batch = [];
 
       if (isFileOrBuffer(parsedMetadata.image)) {
         batch.push(this.storage.upload(parsedMetadata.image));
+      } else if (typeof parsedMetadata.image === "string") {
+        batch.push(Promise.resolve(parsedMetadata.image));
       } else {
         batch.push(Promise.resolve(undefined));
       }
+
       if (isFileOrBuffer(parsedMetadata.animation_url)) {
         batch.push(this.storage.upload(parsedMetadata.animation_url));
+      } else if (typeof parsedMetadata.animation_url === "string") {
+        batch.push(Promise.resolve(parsedMetadata.animation_url));
       } else {
         batch.push(Promise.resolve(undefined));
       }
@@ -88,4 +126,12 @@ export class Erc721SharedMetadata implements DetectableFeature {
       });
     },
   );
+
+  private sanitizeJSONString(val: string | undefined | null) {
+    if (!val) {
+      return val;
+    }
+    const sanitized = JSON.stringify(val);
+    return sanitized.slice(1, sanitized.length - 1);
+  }
 }

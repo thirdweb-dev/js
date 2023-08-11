@@ -1,5 +1,4 @@
 import { createAsyncLocalStorage } from "../../core/AsyncStorage";
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -16,9 +15,13 @@ import { MainModal } from "../components/MainModal";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { ThirdwebStorage } from "../../core/storage/storage";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
-  extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
+  extends Omit<
+    ThirdwebProviderCoreProps<TChains>,
+    "supportedWallets" | "secretKey"
+  > {
   /**
    * Wallets that will be supported by the dApp
    * @defaultValue [MetaMaskWallet, CoinbaseWallet]
@@ -59,13 +62,17 @@ export const ThirdwebProvider = <
 >({
   children,
   createWalletStorage = createAsyncLocalStorage,
-  thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets = DEFAULT_WALLETS,
   authConfig,
   theme,
+  storageInterface,
+  clientId,
+  sdkOptions,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  useCoinbaseWalletListener();
+  useCoinbaseWalletListener(
+    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+  );
 
   const hasMagicConfig = useMemo(
     () => !!supportedWallets.find((wc) => wc.id === walletIds.magicLink),
@@ -74,8 +81,15 @@ export const ThirdwebProvider = <
 
   return (
     <ThirdwebProviderCore
-      thirdwebApiKey={thirdwebApiKey}
       supportedWallets={supportedWallets}
+      storageInterface={
+        storageInterface ||
+        new ThirdwebStorage({
+          clientId: clientId,
+          // @ts-expect-error - TODO: fix this (it does exist)
+          gatewayUrls: sdkOptions?.gatewayUrls,
+        })
+      }
       authConfig={
         authConfig
           ? authConfig.secureStorage
@@ -84,6 +98,8 @@ export const ThirdwebProvider = <
           : undefined
       }
       createWalletStorage={createWalletStorage}
+      clientId={clientId}
+      {...sdkOptions}
       {...restProps}
     >
       <ThemeProvider theme={theme}>

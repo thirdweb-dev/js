@@ -6,7 +6,6 @@ export default class BrownieDetector implements PackageManagerDetector {
   public packageManagerType: PackageManagerType = "brownie";
 
   public matches(path: string): boolean {
-
     const additionalFilesToCheck = [
       "/brownie-config.yaml",
       "/brownie-config.json",
@@ -17,14 +16,12 @@ export default class BrownieDetector implements PackageManagerDetector {
 
     // Check that all of these exist.
     const additionalDirectoriesToCheck = ["/build", "/contracts", "/reports"];
-    const additionalDirectoriesExist = additionalDirectoriesToCheck.every((dir) => {
-      return existsSync(path + dir);
-    });
-
-    return (
-      additionalFilesExist ||
-      additionalDirectoriesExist ||
-      false
+    const additionalDirectoriesExist = additionalDirectoriesToCheck.every(
+      (dir) => {
+        return existsSync(path + dir);
+      },
     );
+
+    return additionalFilesExist || additionalDirectoriesExist || false;
   }
 }

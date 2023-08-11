@@ -27,6 +27,8 @@ import {
   FEATURE_NFT_TIERED_DROP,
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
   FEATURE_NFT_SHARED_METADATA,
+  FEATURE_NFT_LOYALTY_CARD,
+  FEATURE_NFT_UPDATABLE_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -56,11 +58,13 @@ import type {
   TieredDrop,
   TokenERC721,
   Zora_IERC721Drop,
-  ISharedMetadata,
+  SharedMetadata,
+  OpenEditionERC721,
+  ILoyaltyCard,
+  INFTMetadata,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-
 import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
@@ -69,6 +73,8 @@ import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
+import { Erc721LoyaltyCard } from "./erc-721-loyalty-card";
+import { Erc721UpdatableMetadata } from "./erc-721-metadata";
 
 /**
  * Standard ERC721 NFT functions
@@ -81,13 +87,14 @@ import { Erc721ClaimableZora } from "./erc-721-claim-zora";
  * @public
  */
 export class Erc721<
-  T extends
-    | Multiwrap
-    | SignatureDrop
-    | DropERC721
-    | TokenERC721
-    | BaseERC721 = BaseERC721,
-> implements UpdateableNetwork, DetectableFeature
+    T extends
+      | Multiwrap
+      | SignatureDrop
+      | DropERC721
+      | TokenERC721
+      | BaseERC721 = BaseERC721,
+  >
+  implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
   private query: Erc721Supply | undefined;
@@ -100,6 +107,8 @@ export class Erc721<
   private claimCustom: Erc721Claimable | undefined;
   private erc721SharedMetadata: Erc721SharedMetadata | undefined;
   private claimZora: Erc721ClaimableZora | undefined;
+  private loyaltyCard: Erc721LoyaltyCard | undefined;
+  private updatableMetadata: Erc721UpdatableMetadata | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
@@ -125,6 +134,8 @@ export class Erc721<
     this.claimCustom = this.detectErc721Claimable();
     this.claimZora = this.detectErc721ClaimableZora();
     this.erc721SharedMetadata = this.detectErc721SharedMetadata();
+    this.loyaltyCard = this.detectErc721LoyaltyCard();
+    this.updatableMetadata = this.detectErc721UpdatableMetadata();
     this._chainId = chainId;
   }
 
@@ -606,6 +617,54 @@ export class Erc721<
     },
   );
 
+  ////// ERC721 Loyalty Card Extension //////
+
+  /**
+   * Cancel loyalty card NFTs
+   *
+   * @remarks Cancel loyalty card NFTs held by the connected wallet
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the loyalty card you want to cancel
+   * const tokenId = 0;
+   *
+   * const result = await contract.erc721.cancel(tokenId);
+   * ```
+   * @twfeature ERC721LoyaltyCard
+   */
+  cancel = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return assertEnabled(
+        this.loyaltyCard,
+        FEATURE_NFT_LOYALTY_CARD,
+      ).cancel.prepare(tokenId);
+    },
+  );
+
+  /**
+   * Revoke loyalty card NFTs
+   *
+   * @remarks Revoke loyalty card NFTs held by some owner.
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the loyalty card you want to revoke
+   * const tokenId = 0;
+   *
+   * const result = await contract.erc721.revoke(tokenId);
+   * ```
+   * @twfeature ERC721LoyaltyCard
+   */
+  revoke = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish) => {
+      return assertEnabled(
+        this.loyaltyCard,
+        FEATURE_NFT_LOYALTY_CARD,
+      ).revoke.prepare(tokenId);
+    },
+  );
+
   ////// ERC721 LazyMint Extension //////
 
   /**
@@ -649,6 +708,33 @@ export class Erc721<
     },
   );
 
+  ////// ERC721 Metadata Extension //////
+
+  /**
+   * Update the metadata of an NFT
+   *
+   * @remarks Update the metadata of an NFT
+   *
+   * @example
+   * ```javascript
+   * // The token ID of the NFT whose metadata you want to update
+   * const tokenId = 0;
+   * // The new metadata
+   * const metadata = { name: "My NFT", description: "My NFT description""}
+   *
+   * await contract.erc721.update(tokenId, metadata);
+   * ```
+   * @twfeature ERC721UpdatableMetadata
+   */
+  update = /* @__PURE__ */ buildTransactionFunction(
+    async (tokenId: BigNumberish, metadata: NFTMetadataOrUri) => {
+      return assertEnabled(
+        this.updatableMetadata,
+        FEATURE_NFT_UPDATABLE_METADATA,
+      ).update.prepare(tokenId, metadata);
+    },
+  );
+
   ////// ERC721 Claimable Extension //////
 
   /**
@@ -669,7 +755,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
+   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claim = /* @__PURE__ */ buildTransactionFunction(
     async (quantity: BigNumberish, options?: ClaimOptions) => {
@@ -701,7 +787,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    * @param options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
+   * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1 | ERC721ClaimZora
    */
   claimTo = /* @__PURE__ */ buildTransactionFunction(
     async (
@@ -774,11 +860,11 @@ export class Erc721<
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
-    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
-    }
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
       return contract.readContract.totalMinted();
+    }
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
     }
     throw new Error(
       "No function found on contract to get total claimed supply",
@@ -953,7 +1039,17 @@ export class Erc721<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.nextTokenIdToMint();
+      let nextTokenIdToMint =
+        await this.contractWrapper.readContract.nextTokenIdToMint();
+      // handle open editions and contracts with startTokenId
+      if (
+        hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)
+      ) {
+        nextTokenIdToMint = nextTokenIdToMint.sub(
+          await this.contractWrapper.readContract.startTokenId(),
+        );
+      }
+      return nextTokenIdToMint;
     } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
       return await this.contractWrapper.readContract.totalSupply();
     } else {
@@ -1101,12 +1197,36 @@ export class Erc721<
 
   private detectErc721SharedMetadata(): Erc721SharedMetadata | undefined {
     if (
-      detectContractFeature<ISharedMetadata>(
+      detectContractFeature<SharedMetadata>(
         this.contractWrapper,
         "ERC721SharedMetadata",
       )
     ) {
       return new Erc721SharedMetadata(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721LoyaltyCard(): Erc721LoyaltyCard | undefined {
+    if (
+      detectContractFeature<ILoyaltyCard>(
+        this.contractWrapper,
+        "ERC721LoyaltyCard",
+      )
+    ) {
+      return new Erc721LoyaltyCard(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721UpdatableMetadata(): Erc721UpdatableMetadata | undefined {
+    if (
+      detectContractFeature<INFTMetadata>(
+        this.contractWrapper,
+        "ERC721UpdatableMetadata",
+      )
+    ) {
+      return new Erc721UpdatableMetadata(this.contractWrapper, this.storage);
     }
     return undefined;
   }

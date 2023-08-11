@@ -8,6 +8,7 @@ import type {
   AuthLoginReturnType,
   InitializedUser,
   PaperEmbeddedWalletSdk,
+  RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
@@ -18,7 +19,7 @@ import { walletIds } from "../../constants/walletIds";
 export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
-  ready: boolean = true;
+  ready = true;
 
   private user: InitializedUser | null = null;
   #paper?: Promise<PaperEmbeddedWalletSdk>;
@@ -39,9 +40,15 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
             "@paperxyz/embedded-wallet-service-sdk"
           );
           resolve(
-            new PaperEmbeddedWalletSdk({
+            new PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED>({
+              advancedOptions: {
+                // @ts-expect-error - Allow passing string instead of forcing enum
+                recoveryShareManagement:
+                  this.options.advancedOptions?.recoveryShareManagement,
+              },
               clientId: this.options.clientId,
-              chain: "Ethereum", // just pass Ethereum no matter what chain we are going to connect
+              chain: "Ethereum",
+              styles: this.options.styles,
             }),
           );
         } catch (err) {
@@ -57,7 +64,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
     }
-    let user = await paperSDK.getUser();
+    const user = await paperSDK.getUser();
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
@@ -81,6 +88,10 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       throw new Error("Error connecting User");
     }
 
+    if (options?.chainId) {
+      this.switchChain(options.chainId);
+    }
+
     this.setupListeners();
     return this.getAddress();
   }
@@ -88,6 +99,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   async disconnect(): Promise<void> {
     const paper = await this.#paper;
     await paper?.auth.logout();
+    this.#signer = undefined;
     this.user = null;
   }
 
@@ -120,7 +132,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
 
     if (!this.user) {
       const paperSDK = await this.getPaperSDK();
-      let user = await paperSDK.getUser();
+      const user = await paperSDK.getUser();
       switch (user.status) {
         case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
           this.user = user;

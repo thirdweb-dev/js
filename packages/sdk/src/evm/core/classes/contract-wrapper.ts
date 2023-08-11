@@ -44,7 +44,6 @@ import {
   type Signer,
   constants,
 } from "ethers";
-import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
@@ -55,9 +54,7 @@ import { getContractAddressByChainId } from "../../constants/addresses/getContra
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
-  // TODO: In another PR, make this storage private, and have extending classes pass
-  // down storage to be stored in contract wrapper.
-  #storage: ThirdwebStorage;
+  storage: ThirdwebStorage;
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
   /**
@@ -72,6 +69,7 @@ export class ContractWrapper<
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
+    storage: ThirdwebStorage,
   ) {
     super(network, options);
     this.abi = contractAbi;
@@ -85,7 +83,7 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
-    this.#storage = new ThirdwebStorage();
+    this.storage = storage;
   }
 
   public override updateSignerOrProvider(network: NetworkInput): void {
@@ -282,7 +280,7 @@ export class ContractWrapper<
     overrides?: CallOverrides,
   ): Promise<any> {
     // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined = overrides
+    const txOptions: CallOverrides | undefined = overrides
       ? await CallOverrideSchema.parseAsync(overrides)
       : undefined;
 
@@ -333,6 +331,7 @@ export class ContractWrapper<
    * @internal
    */
   public async sendTransaction(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: any[],
     callOverrides?: CallOverrides,
@@ -471,7 +470,7 @@ export class ContractWrapper<
     callOverrides: CallOverrides,
   ) {
     const provider = this.getProvider() as providers.Provider & {
-      connection?: ConnectionInfo;
+      connection?: utils.ConnectionInfo;
     };
 
     // Get metadata for transaction to populate into error
@@ -519,7 +518,7 @@ export class ContractWrapper<
       const metadata = await fetchContractMetadataFromAddress(
         this.readContract.address,
         this.getProvider(),
-        this.#storage,
+        this.storage,
       );
 
       if (metadata.name) {
@@ -527,7 +526,7 @@ export class ContractWrapper<
       }
 
       if (metadata.metadata.sources) {
-        sources = await fetchSourceFilesFromMetadata(metadata, this.#storage);
+        sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
       // no-op
@@ -797,11 +796,11 @@ export class ContractWrapper<
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
           ].openzeppelinForwarderEOA ||
-          (await computeEOAForwarderAddress(this.getProvider(), this.#storage))
+          (await computeEOAForwarderAddress(this.getProvider(), this.storage))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
           ].openzeppelinForwarder ||
-          (await computeForwarderAddress(this.getProvider(), this.#storage)));
+          (await computeForwarderAddress(this.getProvider(), this.storage)));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [

@@ -65,6 +65,7 @@ export const ConnectedWalletDetails: React.FC<{
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
   className?: string;
   detailsBtn?: () => JSX.Element;
+  hideTestnetFaucet?: boolean;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -304,7 +305,8 @@ export const ConnectedWalletDetails: React.FC<{
         {activeWalletConfig &&
           activeWalletConfig.id === walletIds.metamask &&
           activeWalletConfig.isInstalled &&
-          activeWalletConfig.isInstalled() && (
+          activeWalletConfig.isInstalled() &&
+          !isMobile() && (
             <MenuButton
               type="button"
               onClick={() => {
@@ -321,32 +323,33 @@ export const ConnectedWalletDetails: React.FC<{
           )}
 
         {/* Request Testnet funds */}
-        {((chain?.faucets && chain.faucets.length > 0) ||
-          chain?.chainId === Localhost.chainId) && (
-          <MenuLink
-            href={chain?.faucets ? chain.faucets[0] : "#"}
-            target="_blank"
-            as="a"
-            onClick={async (e) => {
-              if (chain.chainId === Localhost.chainId) {
-                e.preventDefault();
-                setOpen(false);
-                await sdk?.wallet.requestFunds(10);
-                await balanceQuery.refetch();
-              }
-            }}
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <SecondaryIconContainer>
-              <FundsIcon size={iconSize.sm} />
-            </SecondaryIconContainer>
-            Request Testnet Funds
-          </MenuLink>
-        )}
+        {!props.hideTestnetFaucet &&
+          ((chain?.faucets && chain.faucets.length > 0) ||
+            chain?.chainId === Localhost.chainId) && (
+            <MenuLink
+              href={chain?.faucets ? chain.faucets[0] : "#"}
+              target="_blank"
+              as="a"
+              onClick={async (e) => {
+                if (chain.chainId === Localhost.chainId) {
+                  e.preventDefault();
+                  setOpen(false);
+                  await sdk?.wallet.requestFunds(10);
+                  await balanceQuery.refetch();
+                }
+              }}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                fontSize: fontSize.sm,
+              }}
+            >
+              <SecondaryIconContainer>
+                <FundsIcon size={iconSize.sm} />
+              </SecondaryIconContainer>
+              Request Testnet Funds
+            </MenuLink>
+          )}
 
         {/* Export  Wallet */}
         {activeWallet?.walletId === walletIds.localWallet && (
@@ -559,7 +562,9 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   line-height: 1.3;
 
   &:not([disabled]):hover {
-    transition: box-shadow 250ms ease, border-color 250ms ease;
+    transition:
+      box-shadow 250ms ease,
+      border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.link.primary};
     box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
   }
@@ -572,7 +577,9 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 
   &[disabled]:hover {
-    transition: box-shadow 250ms ease, border-color 250ms ease;
+    transition:
+      box-shadow 250ms ease,
+      border-color 250ms ease;
     border: 1px solid ${(props) => props.theme.text.danger};
     box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
   }

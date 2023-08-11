@@ -74,7 +74,7 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
         sdk,
         desiredNetwork: network || "unknown",
         _inProvider: true,
-      } as const),
+      }) as const,
     [sdk, network],
   );
 
