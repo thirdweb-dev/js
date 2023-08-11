@@ -1,5 +1,5 @@
-import { Box, Flex, GridItem, IconButton, SimpleGrid } from "@chakra-ui/react";
-import { ConnectWallet, ThirdwebProvider } from "@thirdweb-dev/react";
+import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { dashboardSupportedWallets } from "components/app-layouts/providers";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
@@ -7,23 +7,9 @@ import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { PageId } from "page-id";
 import React, { useMemo, useState } from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
-import { Card, CodeBlock, Heading, Link, Text } from "tw-components";
+import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-
-const DEFAULT_CODE = `
-import { ThirdwebProvider, ConnectWallet } from "@thirdweb-dev/react";
-
-export default function App() {
-  return (
-    <ThirdwebProvider 
-      clientId="YOUR_CLIENT_ID"
-      supportedWallets={[...]}
-    >
-      <ConnectWallet theme="{{theme}}" />
-    </ThirdwebProvider>
-  );
-}`;
+import { ConnectWalletWithPreview } from "components/wallets/ConnectWalletWithPreview";
 
 const WALLETS = [
   {
@@ -61,15 +47,15 @@ import { Goerli } from "@thirdweb-dev/chains";
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       activeChain={Goerli}
-      supportedWallets={[ 
-        smartWallet({ 
-          factoryAddress: "0x...", 
+      supportedWallets={[
+        smartWallet({
+          factoryAddress: "0x...",
           gasless: true,
           personalWallets={[...]}
-        }) 
+        })
       ]}
     >
       <ConnectWallet />
@@ -81,15 +67,15 @@ import { Goerli } from "@thirdweb-dev/chains";
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       activeChain={Goerli}
-      supportedWallets={[ 
-        smartWallet({ 
-          factoryAddress: "0x...", 
+      supportedWallets={[
+        smartWallet({
+          factoryAddress: "0x...",
           gasless: true,
           personalWallets={[...]}
-        }) 
+        })
       ]}
     >
       <ConnectWallet />
@@ -107,7 +93,7 @@ public async void ConnectWallet()
     var connection = new WalletConnection(
       provider: WalletProvider.SmartWallet,        // The wallet provider you want to connect to (Required)
       chainId: 1,                                  // The chain you want to connect to (Required)
-      password: "myEpicPassword",                  // If using a local wallet as personal wallet (Optional) 
+      password: "myEpicPassword",                  // If using a local wallet as personal wallet (Optional)
       email: "email@email.com",                    // If using an email wallet as personal wallet (Optional)
       personalWallet: WalletProvider.LocalWallet   // The personal wallet you want to use with your Smart Wallet (Optional)
     );
@@ -147,7 +133,7 @@ await wallet.import(exportedWallet, config);`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ localWallet() ]}
     >
@@ -159,7 +145,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ localWallet() ]}
     >
@@ -178,7 +164,7 @@ public async void ConnectWallet()
     var connection = new WalletConnection(
       provider: WalletProvider.LocalWallet,      // The wallet provider you want to connect to (Required)
       chainId: 1,                                // The chain you want to connect to (Required)
-      password: "myEpicPassword"                 // Used to encrypt your Local Wallet, defaults to device uid (Optional) 
+      password: "myEpicPassword"                 // Used to encrypt your Local Wallet, defaults to device uid (Optional)
     );
 
     // Connect the wallet
@@ -203,7 +189,7 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ coinbaseWallet() ]}
     >
@@ -215,7 +201,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ coinbaseWallet() ]}
     >
@@ -229,7 +215,7 @@ public async void ConnectWallet()
 {
     // Reference to your Thirdweb SDK
     var sdk = ThirdwebManager.Instance.SDK;
-    
+
     // Configure the connection
     var connection = new WalletConnection(
       provider: WalletProvider.Coinbase,        // The wallet provider you want to connect to (Required)
@@ -258,7 +244,7 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ metamaskWallet() ]}
     >
@@ -270,7 +256,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ metamaskWallet() ]}
     >
@@ -284,7 +270,7 @@ public async void ConnectWallet()
 {
     // Reference to your Thirdweb SDK
     var sdk = ThirdwebManager.Instance.SDK;
-    
+
     // Configure the connection
     var connection = new WalletConnection(
       provider: WalletProvider.Metamask,       // The wallet provider you want to connect to (Required)
@@ -309,7 +295,7 @@ import { Ethereum } from "@thirdweb-dev/chains";
 
 const wallet = new PaperWallet({
   chain: Ethereum, //  chain to connect to
-  clientId: "client_id", // Paper SDK client ID
+  paperClientId: "PAPER_CLIENT_ID", // Paper SDK client ID
 });
 
 wallet.connect();`,
@@ -317,9 +303,9 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      supportedWallets={[ paperWallet({ clientId: "PAPER_CLIENT_ID" }) ]}
+      supportedWallets={[ paperWallet({ paperClientId: "PAPER_CLIENT_ID" }) ]}
     >
       <ConnectWallet />
     </ThirdwebProvider>
@@ -331,7 +317,7 @@ public async void ConnectWallet()
 {
     // Reference to your Thirdweb SDK
     var sdk = ThirdwebManager.Instance.SDK;
-    
+
     // Configure the connection
     var connection = new WalletConnection(
       provider: WalletProvider.Paper,          // The wallet provider you want to connect to (Required)
@@ -424,7 +410,7 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ rainbowWallet() ]}
     >
@@ -436,7 +422,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ rainbowWallet() ]}
     >
@@ -463,7 +449,7 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ trustWallet() ]}
     >
@@ -475,7 +461,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ trustWallet() ]}
     >
@@ -502,7 +488,7 @@ wallet.connect();`,
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ walletConnect() ]}
     >
@@ -514,7 +500,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ walletConnect() ]}
     >
@@ -528,7 +514,7 @@ public async void ConnectWallet()
 {
     // Reference to your Thirdweb SDK
     var sdk = ThirdwebManager.Instance.SDK;
-    
+
     // Configure the connection
     var connection = new WalletConnection(
       provider: WalletProvider.WalletConnect,     // The wallet provider you want to connect to (Required)
@@ -566,7 +552,7 @@ await wallet.connect({
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ safeWallet() ]}
     >
@@ -606,7 +592,7 @@ wallet.connect({
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ magicWallet({ apiKey: "MAGIC_API_KEY" }) ]}
     >
@@ -618,7 +604,7 @@ return (
 
 export default function App() {
 return (
-    <ThirdwebProvider 
+    <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
       supportedWallets={[ magicWallet({ apiKey: "MAGIC_API_KEY" }) ]}
     >
@@ -632,7 +618,7 @@ public async void ConnectWallet()
 {
     // Reference to your Thirdweb SDK
     var sdk = ThirdwebManager.Instance.SDK;
-    
+
     // Configure the connection
     var connection = new WalletConnection(
       provider: WalletProvider.MagicLink,      // The wallet provider you want to connect to (Required)
@@ -777,7 +763,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
       >
         <Flex flexDir="column" gap={4}>
           <Heading size="title.lg" as="h1">
-            Connect Wallet Button
+            ConnectWallet component
           </Heading>
           <Text>
             One line of code to add a{" "}
@@ -790,7 +776,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
             </Link>{" "}
             to React, React Native and Unity apps.
           </Text>
-          <ConnectWalletWithPreview code={DEFAULT_CODE} />
+          <ConnectWalletWithPreview />
         </Flex>
       </ThirdwebProvider>
       <Flex direction="column" gap={4}>
@@ -899,49 +885,3 @@ DashboardWallets.getLayout = (page, props) => (
 DashboardWallets.pageId = PageId.DashboardWallets;
 
 export default DashboardWallets;
-
-interface ConnectWalletWithPreviewProps {
-  code: string;
-}
-
-const ConnectWalletWithPreview: React.FC<ConnectWalletWithPreviewProps> = ({
-  code,
-}) => {
-  const [selectedTheme, setSelectedTheme] = useState<"light" | "dark">("dark");
-  return (
-    <SimpleGrid columns={{ base: 6, md: 12 }} gap={8} mt={8}>
-      <GridItem colSpan={6}>
-        <Flex direction="column" gap={2}>
-          <Heading size="label.md">Code</Heading>
-          <CodeBlock
-            language="jsx"
-            code={code.replace("{{theme}}", selectedTheme)}
-          />
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={6} gap={2}>
-        <Flex gap={2} direction="column" align="flex-start" h="full">
-          <Heading size="label.md">Preview</Heading>
-          <Box w="full" my="auto" display="grid" placeItems="center">
-            <ThirdwebProvider supportedWallets={dashboardSupportedWallets}>
-              <ConnectWallet
-                theme={selectedTheme}
-                // overrides
-                auth={{ loginOptional: true }}
-              />
-            </ThirdwebProvider>
-          </Box>
-          <IconButton
-            size="sm"
-            onClick={() => {
-              setSelectedTheme(selectedTheme === "light" ? "dark" : "light");
-            }}
-            icon={selectedTheme === "light" ? <FiMoon /> : <FiSun />}
-            aria-label="Toggle button theme"
-            variant="ghost"
-          />
-        </Flex>
-      </GridItem>
-    </SimpleGrid>
-  );
-};
