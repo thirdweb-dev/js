@@ -239,7 +239,7 @@ export class Account<TContract extends IAccountCore>
     return assertEnabled(
       this.accountPermissions,
       FEATURE_ACCOUNT_PERMISSIONS,
-    ).grantPermissions(signerAddress, permissions);
+    ).updatePermissions(signerAddress, permissions);
   }
 
   /**
