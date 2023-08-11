@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.10.49
+
+### Patch Changes
+
+- [#1468](https://github.com/thirdweb-dev/js/pull/1468) [`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Enable dynamic contract deployment with any evm
+
 ## 3.10.48
 
 ### Patch Changes
