@@ -1,6 +1,6 @@
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { WalletConnectV2 } from "./WalletConnectV2";
 import { WCMeta } from "../types/wc";
+import { WalletConnectV2 } from "./wallet-connect/WalletConnectV2";
 
 export class TrustWallet extends WalletConnectV2 {
   static id = "trust" as const;

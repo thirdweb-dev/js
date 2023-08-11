@@ -1,13 +1,13 @@
-import { TW_WC_PROJECT_ID } from "../../constants/walletConnect";
-import { formatWalletConnectDisplayUri } from "../../utils/uri";
 import type {
   WalletConnectOptions,
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import { WalletConnect as WalletConnectV2Wallets } from "@thirdweb-dev/wallets";
 import { Linking } from "react-native";
-import { WCMeta } from "../types/wc";
-import { createAsyncLocalStorage } from "../../../core/AsyncStorage";
+import { TW_WC_PROJECT_ID } from "../../../constants/walletConnect";
+import { createAsyncLocalStorage } from "../../../../core/AsyncStorage";
+import { WCMeta } from "../../types/wc";
+import { formatWalletConnectDisplayUri } from "../../../utils/uri";
 
 export type WC2Options = {
   /**
