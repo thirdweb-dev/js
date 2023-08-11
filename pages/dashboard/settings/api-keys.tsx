@@ -4,6 +4,7 @@ import { Container, Divider, Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
+import { SmartWalletsAccessAlert } from "components/settings/ApiKeyTable/Alerts";
 import { CreateApiKeyButton } from "components/settings/ApiKeyTable/CreateButton";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
@@ -45,6 +46,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           </Heading>
           <CreateApiKeyButton />
         </Flex>
+
         <Text>
           An API key is required to use thirdweb&apos;s services through the SDK
           and CLI. {` `}
@@ -58,6 +60,8 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           </Link>
         </Text>
       </Flex>
+
+      <SmartWalletsAccessAlert />
 
       <ApiKeyTable
         keys={keysQuery.data || []}

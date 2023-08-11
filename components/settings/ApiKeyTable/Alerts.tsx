@@ -5,8 +5,10 @@ import {
   AlertTitle,
   Flex,
 } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
+import { useTrack } from "hooks/analytics/useTrack";
 
-import { Heading, Text } from "tw-components";
+import { Heading, LinkButton, Text } from "tw-components";
 
 export const SecretHandlingAlert = () => {
   return (
@@ -110,6 +112,48 @@ export const NoTargetAddressesAlert = ({
           disable a service or specify allowed contract addresses.
         </Text>
       </Flex>
+    </Alert>
+  );
+};
+
+export const SmartWalletsAccessAlert = () => {
+  const trackEvent = useTrack();
+  const address = useAddress();
+
+  const handleClick = () => {
+    trackEvent({
+      category: "api_keys",
+      action: "bundler",
+      label: "request_access",
+      walletAddress: address,
+    });
+  };
+
+  return (
+    <Alert
+      status="info"
+      borderRadius="md"
+      as={Flex}
+      mb={4}
+      justifyContent={{ base: "center", sm: "start" }}
+      alignItems="center"
+      flexDir={{ base: "column", sm: "row" }}
+      gap={{ base: 3, sm: 0 }}
+    >
+      <AlertIcon />
+      <AlertTitle textAlign={{ base: "center", sm: "left" }}>
+        Smart Wallets service available on mainnet!
+      </AlertTitle>
+      <LinkButton
+        minW={40}
+        ml={2}
+        isExternal
+        onClick={handleClick}
+        size="sm"
+        href={`https://docs.google.com/forms/d/e/1FAIpQLSffFeEw7rPGYA8id7LwL22-W3irT6siXE5EHgD3xrxmxpLKCw/viewform?entry.948574526=${address}`}
+      >
+        Request access
+      </LinkButton>
     </Alert>
   );
 };
