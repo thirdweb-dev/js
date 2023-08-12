@@ -1,4 +1,5 @@
 import { PropsWithChildren, createContext, useContext, useMemo } from "react";
+import invariant from "tiny-invariant";
 
 /**
  * The configuration to use the react SDK with an [auth](https://portal.thirdweb.com/auth) server.
@@ -49,5 +50,10 @@ export const ThirdwebAuthProvider: React.FC<
 };
 
 export function useThirdwebAuthContext() {
-  return useContext(ThirdwebAuthContext);
+  const context = useContext(ThirdwebAuthContext);
+  invariant(
+    context,
+    "useThirdwebAuthContext() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context;
 }
