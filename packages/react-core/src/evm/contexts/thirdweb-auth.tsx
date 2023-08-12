@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react";
-import invariant from "tiny-invariant";
 
 export interface ISecureStorage {
   getItem(key: string): Promise<string | null>;
@@ -44,10 +43,5 @@ export const ThirdwebAuthContext = /* @__PURE__ */ createContext<
 >(undefined);
 
 export function useThirdwebAuthContext() {
-  const context = useContext(ThirdwebAuthContext);
-  invariant(
-    context,
-    "useThirdwebAuthContext() hook must be used within a <ThirdwebProvider/>",
-  );
-  return context;
+  return useContext(ThirdwebAuthContext);
 }
