@@ -2,6 +2,7 @@ export * from "./error";
 export * from "./snapshots";
 export * from "./role";
 export * from "./metadata-resolver";
+export * from "./gas-price";
 
 // feature detection
 export * from "./feature-detection/matchesPrebuiltAbi";
