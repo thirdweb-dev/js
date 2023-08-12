@@ -1,7 +1,4 @@
-import {
-  useSplitBalances,
-  useSplitDistributeFunds,
-} from "@3rdweb-sdk/react/hooks/useSplit";
+import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { UseContractResult } from "@thirdweb-dev/react";
 import type { Split } from "@thirdweb-dev/sdk/evm";
 import { MismatchButton } from "components/buttons/MismatchButton";
@@ -10,24 +7,32 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { Button } from "tw-components";
+import { Balance } from "../page";
 
 export interface DistributeButtonProps {
   contractQuery?: UseContractResult<Split>;
-  balances: ReturnType<typeof useSplitBalances>;
+  balances: Balance[];
+  balancesIsLoading: boolean;
+  balancesIsError: boolean;
 }
 
 export const DistributeButton: React.FC<DistributeButtonProps> = ({
   contractQuery,
   balances,
+  balancesIsLoading,
+  balancesIsError,
   ...restButtonProps
 }) => {
   const trackEvent = useTrack();
   const numTransactions = useMemo(() => {
-    if (!balances.data || balances.isLoading) {
+    if (balances.length === 1 && balances[0].name === "Native Token") {
+      return 1;
+    }
+    if (!balances || balancesIsLoading) {
       return 0;
     }
-    return balances.data?.filter((b) => b.display_balance !== "0.0").length;
-  }, [balances.data, balances.isLoading]);
+    return balances?.filter((b) => b.display_balance !== "0.0").length;
+  }, [balances, balancesIsLoading]);
 
   const distibutedFundsMutation = useSplitDistributeFunds(
     contractQuery?.contract,
@@ -60,7 +65,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     });
   };
 
-  if (balances.isError) {
+  if (balancesIsError) {
     // if we fail to get the balances, we can't know how many transactions there are going to be
     // we still want to show the button, so we'll just show the mismatch button
     return (
@@ -86,7 +91,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   return (
     <TransactionButton
       transactionCount={numTransactions}
-      isLoading={balances.isLoading || distibutedFundsMutation.isLoading}
+      isLoading={distibutedFundsMutation.isLoading}
       colorScheme="primary"
       onClick={distributeFunds}
       {...restButtonProps}

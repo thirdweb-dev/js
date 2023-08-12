@@ -83,8 +83,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
             No Supply/Enumerable extension enabled
           </Heading>
           <Text>
-            To be able to see the list of the NFTs minted on your contract,
-            you will have to extend the{" "}
+            To be able to see the list of the NFTs minted on your contract, you
+            will have to extend the{" "}
             {isErc721 ? "ERC721Supply" : "ERC1155Enumerable"} extension in your
             contract.
           </Text>

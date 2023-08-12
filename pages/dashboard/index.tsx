@@ -24,38 +24,36 @@ const TRACKING_CATEGORY = "dashboard";
 
 const GET_STARTED_SECTIONS = [
   {
-    title: "View contracts",
+    title: "Wallets",
     description:
-      "View smart contracts that you deployed or added to your dashboard.",
-    image: require("public/assets/dashboard/home-view.png"),
-    lightImage: require("public/assets/dashboard/home-view-light.png"),
+      "Onboard, authenticate, and manage users. Connect any wallets to your app and games.",
+    image: require("public/assets/dashboard/home-wallets.png"),
+    lightImage: require("public/assets/dashboard/home-wallets.png"),
+    href: "/dashboard/wallet",
+  },
+  {
+    title: "Contracts",
+    description:
+      "Create, deploy, and manage smart contracts on any EVM network.",
+    image: require("public/assets/dashboard/home-contracts.png"),
+    lightImage: require("public/assets/dashboard/home-contracts.png"),
     href: "/dashboard/contracts",
   },
   {
-    title: "Browse contracts",
+    title: "Storage",
     description:
-      "Explore contracts from world-class web3 protocols & engineers- all deployable with 1-click.",
-    image: require("public/assets/dashboard/home-browse.png"),
-    lightImage: require("public/assets/dashboard/home-browse-light.png"),
-    href: "/explore",
+      "Store and retrieve files from decentralized storage at high speed.",
+    image: require("public/assets/dashboard/home-storage.png"),
+    lightImage: require("public/assets/dashboard/home-storage.png"),
+    href: "/dashboard/storage",
   },
   {
-    title: "Browse templates",
+    title: "RPC Edge",
     description:
-      "Get inspired and start building your own web3 apps on top of our templates.",
-    image: require("public/assets/dashboard/home-templates.png"),
-    lightImage: require("public/assets/dashboard/home-templates-light.png"),
-    href: "https://portal.thirdweb.com/templates",
-    isExternal: true,
-  },
-  {
-    title: "Visit the docs",
-    description:
-      "Find guides, references and resources that will help you build with thirdweb.",
-    image: require("public/assets/dashboard/home-docs.png"),
-    lightImage: require("public/assets/dashboard/home-docs-light.png"),
-    href: "https://portal.thirdweb.com",
-    isExternal: true,
+      "Connect to over 900 networks with a fast and reliable RPC Edge service.",
+    image: require("public/assets/dashboard/home-rpc.png"),
+    lightImage: require("public/assets/dashboard/home-rpc.png"),
+    href: "/dashboard/rpc",
   },
 ];
 
@@ -84,14 +82,7 @@ const Dashboard: ThirdwebNextPage = (
                 {(address || publicKey) && (
                   <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
                     {GET_STARTED_SECTIONS.map(
-                      ({
-                        title,
-                        description,
-                        lightImage,
-                        image,
-                        href,
-                        isExternal,
-                      }) => (
+                      ({ title, description, lightImage, image, href }) => (
                         <LinkBox
                           key={title}
                           role="group"
@@ -106,18 +97,34 @@ const Dashboard: ThirdwebNextPage = (
                               borderColor: "blue.500",
                             }}
                             transitionDuration="200ms"
+                            as={Flex}
+                            flexDir="column"
+                            padding={0}
                           >
-                            <Flex direction="column" gap={3} p={6}>
+                            <ChakraNextImage
+                              pointerEvents="none"
+                              sizes="(max-width: 768px) 100vw,
+                            (max-width: 1200px) 50vw,
+                            33vw"
+                              src={colorMode === "light" ? lightImage : image}
+                              alt=""
+                            />
+                            <Flex
+                              flexDir="column"
+                              gap={6}
+                              p={7}
+                              justifyContent="space-between"
+                              h="full"
+                            >
                               <LinkOverlay
                                 as={TrackedLink}
                                 category={TRACKING_CATEGORY}
                                 label={title}
                                 href={href}
-                                isExternal={isExternal}
                                 _hover={{ textDecor: "none" }}
                               >
                                 <Heading
-                                  size="title.xs"
+                                  size="title.md"
                                   _groupHover={{ color: "blue.500" }}
                                   transitionDuration="200ms"
                                   display="flex"
@@ -128,16 +135,6 @@ const Dashboard: ThirdwebNextPage = (
                                 </Heading>
                               </LinkOverlay>
                               <Text>{description}</Text>
-                            </Flex>
-                            <Flex justifyContent="center" px={6}>
-                              <ChakraNextImage
-                                pointerEvents="none"
-                                sizes="(max-width: 768px) 100vw,
-                            (max-width: 1200px) 50vw,
-                            33vw"
-                                src={colorMode === "light" ? lightImage : image}
-                                alt=""
-                              />
                             </Flex>
                           </Card>
                         </LinkBox>

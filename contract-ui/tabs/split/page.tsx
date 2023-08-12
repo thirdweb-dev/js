@@ -1,5 +1,6 @@
 import { DistributeButton } from "./components/distribute-button";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+import { useBalanceForAddress } from "@3rdweb-sdk/react/hooks/useBalanceForAddress";
 import {
   useSplitBalances,
   useSplitData,
@@ -7,6 +8,7 @@ import {
 import {
   Center,
   Flex,
+  SimpleGrid,
   Spinner,
   Stack,
   Stat,
@@ -14,11 +16,19 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, constants, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+
+export type Balance = {
+  name: string;
+  token_address: string;
+  balance: string;
+  display_balance: string;
+  decimals: number;
+};
 
 interface SplitPageProps {
   contractAddress?: string;
@@ -34,14 +44,33 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
 
   const splitQuery = useSplitData(contractQuery.contract);
+  const nativeBalanceQuery = useBalanceForAddress(contractAddress);
   const balanceQuery = useSplitBalances(contractAddress);
+
+  const balances = useMemo(() => {
+    if (!balanceQuery.data && !nativeBalanceQuery.data) {
+      return [];
+    }
+
+    return [
+      {
+        name: "Native Token",
+        token_address: constants.AddressZero,
+        balance: nativeBalanceQuery?.data?.value?.toString() || "0",
+        display_balance: nativeBalanceQuery?.data?.displayValue || "0.0",
+        decimals: nativeBalanceQuery?.data?.decimals || 18,
+      },
+      ...(balanceQuery.data || []).filter((bl) => bl.name !== "Native Token"),
+    ];
+  }, [balanceQuery.data, nativeBalanceQuery.data]);
+
   const shareOfBalancesForConnectedWallet = useMemo(() => {
     const activeRecipient = splitQuery.data?.find((r) => r.address === address);
-    if (!activeRecipient || !balanceQuery.data) {
+    if (!activeRecipient || !balances) {
       return {};
     }
 
-    return balanceQuery.data.reduce(
+    return balances.reduce(
       (acc, curr) => {
         return {
           ...acc,
@@ -56,7 +85,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
       },
       {} as { [address: string]: string },
     );
-  }, [splitQuery.data, balanceQuery.data, address]);
+  }, [splitQuery.data, balances, address]);
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
@@ -73,27 +102,42 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
         <Heading size="title.sm">Balances</Heading>
         <Flex gap={4}>
           <DistributeButton
-            balances={balanceQuery}
+            balances={balances as Balance[]}
+            balancesIsLoading={
+              balanceQuery.isLoading || nativeBalanceQuery.isLoading
+            }
+            balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
             contractQuery={contractQuery}
           />
         </Flex>
       </Flex>
       <Stack spacing={8}>
         <Flex gap={4} flexDir="column">
-          {balanceQuery.isLoading ? (
-            <Center>
-              <Spinner />
-            </Center>
-          ) : (
-            <Stack direction="row">
-              {balanceQuery.isError ? (
-                <Text color="red.500">
-                  {(balanceQuery?.error as any).message === "Invalid chain!"
-                    ? "Showing live balances for this network is not currently supported."
-                    : "Error loading balances"}
-                </Text>
-              ) : (
-                (balanceQuery?.data || [])?.map((balance) => (
+          <SimpleGrid spacing={{ base: 3, md: 6 }} columns={{ base: 2, md: 4 }}>
+            <Card as={Stat}>
+              <StatLabel mb={{ base: 1, md: 0 }}>
+                {nativeBalanceQuery.data?.symbol}
+              </StatLabel>
+              <StatNumber>{nativeBalanceQuery?.data?.displayValue}</StatNumber>
+              {shareOfBalancesForConnectedWallet[constants.AddressZero] && (
+                <StatNumber>
+                  <Text size="body.md">
+                    <Text as="span" size="label.md">
+                      Your Share:
+                    </Text>{" "}
+                    {shareOfBalancesForConnectedWallet[constants.AddressZero]}
+                  </Text>
+                </StatNumber>
+              )}
+            </Card>
+            {balanceQuery.isLoading ? (
+              <Center>
+                <Spinner />
+              </Center>
+            ) : (
+              (balanceQuery?.data || [])
+                ?.filter((bl) => bl.name !== "Native Token")
+                ?.map((balance) => (
                   <Card as={Stat} key={balance.token_address} maxWidth="2xs">
                     <StatLabel as={Heading} size="label.lg">
                       {balance.name === "Native Token"
@@ -122,10 +166,16 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
                     )}
                   </Card>
                 ))
-              )}
-            </Stack>
+            )}
+          </SimpleGrid>
+          {balanceQuery.isError && (
+            <Text color="red.500">
+              {(balanceQuery?.error as any).message === "Invalid chain!"
+                ? "Showing ERC20 balances for this network is not currently supported. You can distribute ERC20 funds from the Explorer tab."
+                : "Error loading balances"}
+            </Text>
           )}
-          <Text fontStyle="italic" maxW="lg">
+          <Text fontStyle="italic">
             The Split can receive funds in the native token or in any ERC20.
             Balances may take a couple of minutes to display after being
             received.

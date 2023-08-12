@@ -1,11 +1,11 @@
-import { ContractType } from "@thirdweb-dev/sdk";
+import { ContractType, FeatureName } from "@thirdweb-dev/sdk";
 
 type Item = {
   title: string;
   url: string;
 };
 
-const ALL_GUIDES = {
+const ALL_GUIDES: Record<string, Item> = {
   claimErc20TokenNextjs: {
     title: "Build An ERC20 Token Claim App in React",
     url: "https://blog.thirdweb.com/guides/claim-erc20-token-nextjs/",
@@ -119,19 +119,38 @@ const ALL_GUIDES = {
     title: "Build a DAO With a Treasury and a Governance Token",
     url: "https://blog.thirdweb.com/guides/build-treasury-and-governance-for-your-dao/",
   },
+  deploySmartWallet: {
+    title: "How to Deploy a Smart Wallet (ERC-4337)",
+    url: "https://blog.thirdweb.com/guides/how-to-use-erc4337-smart-wallets/",
+  },
+  customSmartWallet: {
+    title:
+      "How to Extend the Base Smart Wallet Contracts Using the Solidity SDK",
+    url: "https://blog.thirdweb.com/guides/custom-smart-wallet-contracts/",
+  },
 };
 
-const GUIDES_FOR_TYPE: { [key: string]: Item[] } = {
+const GUIDES_FOR_TYPE: Record<ContractType, Item[]> = {
   pack: [ALL_GUIDES.createAnNftLootbox],
-  signatureDrop: [ALL_GUIDES.signatureDrop],
+  "signature-drop": [ALL_GUIDES.signatureDrop],
   marketplace: [
     ALL_GUIDES.nftMarketplaceWithTypescriptNext,
     ALL_GUIDES.auctionButtonReact,
   ],
   vote: [ALL_GUIDES.buildTreasuryAndGovernanceForYourDao],
+  custom: [],
+  "edition-drop": [],
+  edition: [],
+  "marketplace-v3": [],
+  multiwrap: [],
+  "nft-collection": [],
+  "nft-drop": [],
+  split: [],
+  "token-drop": [],
+  token: [],
 };
 
-const GUIDES_FOR_FEATURE: { [key: string]: Item[] } = {
+const GUIDES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   ERC20ClaimConditionsV1: [
     ALL_GUIDES.claimErc20TokenNextjs,
     ALL_GUIDES.tokenButtonReact,
@@ -153,7 +172,6 @@ const GUIDES_FOR_FEATURE: { [key: string]: Item[] } = {
     ALL_GUIDES.sellYourInGameCurrencyForCryptoInUnity,
   ],
   ERC20Burnable: [],
-  ERC20SignatureMintable: [],
   ERC20BatchMintable: [],
   ERC20Mintable: [],
   ERC20: [ALL_GUIDES.howToSellNftsInACustomErc20Token],
@@ -236,9 +254,26 @@ const GUIDES_FOR_FEATURE: { [key: string]: Item[] } = {
   ContractMetadata: [],
   AppURI: [],
   Ownable: [],
+  ERC20SignatureMintable: [],
+  ERC20Permit: [],
+  ERC721AQueryable: [],
+  ERC721ClaimZora: [],
+  ERC721SharedMetadata: [],
+  ERC721LoyaltyCard: [],
+  ERC721UpdatableMetadata: [],
+  Gasless: [],
+  PackVRF: [],
+  PluginRouter: [],
+  ExtensionRouter: [],
+  DirectListings: [],
+  EnglishAuctions: [],
+  Offers: [],
+  Account: [],
+  AccountFactory: [ALL_GUIDES.deploySmartWallet, ALL_GUIDES.customSmartWallet],
+  AccountPermissions: [],
 };
 
-const ALL_TEMPLATES = {
+const ALL_TEMPLATES: Record<string, Item> = {
   tokenDrop: {
     title: "Token Drop",
     url: "https://github.com/thirdweb-example/token-drop",
@@ -249,7 +284,7 @@ const ALL_TEMPLATES = {
   },
   nftDrop: {
     title: "NFT Drop Minting Page",
-    url: "https://github.com/thirdweb-example/nft-drop/",
+    url: "https://github.com/thirdweb-example/erc721/",
   },
   burn1155Mint721: {
     title: "Burn an ERC1155 to Mint an ERC721 NFT",
@@ -289,7 +324,7 @@ const ALL_TEMPLATES = {
   },
 };
 
-const TEMPLATES_FOR_TYPE: { [key: string]: Item[] } = {
+const TEMPLATES_FOR_TYPE: Record<ContractType, Item[]> = {
   pack: [ALL_TEMPLATES.packs],
   "signature-drop": [ALL_TEMPLATES.signatureDrop],
   marketplace: [ALL_TEMPLATES.marketplace],
@@ -298,18 +333,20 @@ const TEMPLATES_FOR_TYPE: { [key: string]: Item[] } = {
   "nft-drop": [ALL_TEMPLATES.nftDrop],
   "edition-drop": [ALL_TEMPLATES.editionDrop, ALL_TEMPLATES.nftGatedWebsite],
   "token-drop": [ALL_TEMPLATES.tokenDrop],
+  custom: [],
+  edition: [],
+  "marketplace-v3": [],
+  "nft-collection": [],
+  split: [],
+  token: [],
 };
 
-const TEMPLATES_FOR_FEATURE: { [key: string]: Item[] } = {
+const TEMPLATES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   ERC20ClaimConditionsV1: [ALL_TEMPLATES.tokenDrop],
   ERC20ClaimConditionsV2: [ALL_TEMPLATES.tokenDrop],
   ERC20ClaimPhasesV1: [ALL_TEMPLATES.tokenDrop],
   ERC20ClaimPhasesV2: [ALL_TEMPLATES.tokenDrop],
   ERC20Burnable: [],
-  ERC20Revealable: [],
-  ERC20TieredDrop: [],
-  ERC20ClaimCustom: [],
-  ERC20LazyMintable: [],
   ERC20BatchMintable: [],
   ERC20Mintable: [],
   ERC20: [ALL_TEMPLATES.nftStakingApp],
@@ -363,6 +400,23 @@ const TEMPLATES_FOR_FEATURE: { [key: string]: Item[] } = {
   ContractMetadata: [],
   AppURI: [],
   Ownable: [],
+  ERC20SignatureMintable: [],
+  ERC20Permit: [],
+  ERC721AQueryable: [],
+  ERC721ClaimZora: [],
+  ERC721SharedMetadata: [],
+  ERC721LoyaltyCard: [],
+  ERC721UpdatableMetadata: [],
+  Gasless: [],
+  PackVRF: [],
+  PluginRouter: [],
+  ExtensionRouter: [],
+  DirectListings: [],
+  EnglishAuctions: [],
+  Offers: [],
+  Account: [],
+  AccountFactory: [],
+  AccountPermissions: [],
 };
 
 export function getGuidesAndTemplates(
@@ -374,8 +428,17 @@ export function getGuidesAndTemplates(
 } {
   const data = features.reduce(
     (acc, guide) => ({
-      guides: [...acc.guides, ...(GUIDES_FOR_FEATURE[guide] || [])],
-      templates: [...acc.templates, ...(TEMPLATES_FOR_FEATURE[guide] || [])],
+      guides: [
+        ...acc.guides,
+        ...(GUIDES_FOR_EXTENSION[guide as keyof typeof GUIDES_FOR_EXTENSION] ||
+          []),
+      ],
+      templates: [
+        ...acc.templates,
+        ...(TEMPLATES_FOR_EXTENSION[
+          guide as keyof typeof TEMPLATES_FOR_EXTENSION
+        ] || []),
+      ],
     }),
     {
       guides: GUIDES_FOR_TYPE[contractType] || [],
