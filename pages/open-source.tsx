@@ -141,7 +141,7 @@ const bounties = [
       </>
     ),
     status: "open",
-    amount: "$100 - $20,000",
+    amount: "Up to $50,000",
     link: "https://thirdweb.notion.site/thirdweb-Bug-Bounty-Program-f78d1db776ab4f0e974c9da176fcf706?pvs=4",
     linkText: "Read Guidelines",
   },
