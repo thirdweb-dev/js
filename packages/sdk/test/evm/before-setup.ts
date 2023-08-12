@@ -1,10 +1,8 @@
 import {
-  Abi,
   AbiSchema,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
-  DEFAULT_IPFS_GATEWAY,
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
@@ -62,7 +60,7 @@ import {
   OffersLogic__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ContractInterface, ethers } from "ethers";
+import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
 import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
 
@@ -74,9 +72,32 @@ const RPC_URL = "http://localhost:8545";
 const jsonProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 const defaultProvider = hardhatEthers.provider;
 
+const extendedMetadataMock = {
+  name: "",
+  metadataUri: "",
+  bytecodeUri: "",
+  analytics: {},
+  version: "1.0.0",
+  displayName: "",
+  description: "",
+  changelog: "",
+  isDeployableViaFactory: false,
+  isDeployableViaProxy: false,
+  factoryDeploymentData: {
+    implementationAddresses: {},
+    implementationInitializerFunction: "initialize",
+    factoryAddresses: {},
+  },
+  constructorParams: {},
+  publisher: "",
+  customFactoryInput: {
+    factoryFunction: "",
+    customFactoryAddresses: [],
+  },
+};
+
 let registryAddress: string;
 let sdk: ThirdwebSDK;
-const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
@@ -101,6 +122,7 @@ export const expectError = (e: unknown, message: string) => {
 
 export const mochaHooks = {
   beforeAll: async () => {
+    require("dotenv-mono").load();
     signers = await hardhatEthers.getSigners();
     implementations = {};
 
@@ -270,6 +292,7 @@ export const mochaHooks = {
     sdk = new ThirdwebSDK(
       signer,
       {
+        secretKey: process.env.TW_SECRET_KEY,
         gasSettings: {
           maxPriceInGwei: 10000,
         },
@@ -372,18 +395,18 @@ async function setupMarketplaceV3(): Promise<string> {
   );
 
   // Router
+  const royaltyEngineAddress = constants.AddressZero;
   const marketplaceV3Address = await deployContractAndUploadMetadata(
     MarketplaceV3__factory.abi,
     MarketplaceV3__factory.bytecode,
     signer,
-    [pluginMapAddress],
+    [pluginMapAddress, royaltyEngineAddress],
     "MarketplaceV3",
   );
   return marketplaceV3Address;
 }
 
 export {
-  ipfsGatewayUrl,
   sdk,
   signers,
   jsonProvider,
@@ -394,4 +417,5 @@ export {
   implementations,
   hardhatEthers,
   thirdwebFactory,
+  extendedMetadataMock
 };

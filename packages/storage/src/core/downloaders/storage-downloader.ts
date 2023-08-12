@@ -1,11 +1,12 @@
 import { isTwGatewayUrl } from "../../common/urls";
-import { replaceSchemeWithGatewayUrl } from "../../common/utils";
+import { isBrowser, replaceSchemeWithGatewayUrl } from "../../common/utils";
 import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
+import pkg from "../../../package.json";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -54,7 +55,12 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
-    const resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
+    let resolvedUri = replaceSchemeWithGatewayUrl(
+      uri,
+      gatewayUrls,
+      attempts,
+      this.clientId,
+    );
     // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
     if (!resolvedUri) {
       console.error(
@@ -70,29 +76,50 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
+    let headers: HeadersInit = {};
+    if (isTwGatewayUrl(resolvedUri)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+      if (this.secretKey) {
+        headers = { "x-secret-key": this.secretKey };
+      } else if (this.clientId) {
+        if (!resolvedUri.includes("bundleId")) {
+          resolvedUri = resolvedUri + (bundleId ? `?bundleId=${bundleId}` : "");
+        }
+        headers["x-client-Id"] = this.clientId;
+      }
+      // if we have a authorization token on global context then add that to the headers
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers = {
+          ...headers,
+          authorization: `Bearer ${
+            (globalThis as any).TW_AUTH_TOKEN as string
+          }`,
+        };
+      }
+
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
+    }
+
     if (isTooManyRequests(resolvedUri)) {
       // skip the request if we're getting too many request error from the gateway
       return this.download(uri, gatewayUrls, attempts + 1);
     }
 
-    let headers;
-    if (isTwGatewayUrl(resolvedUri)) {
-      headers = this.secretKey
-        ? { "x-secret-key": this.secretKey }
-        : this.clientId
-        ? {
-            "x-client-Id": this.clientId,
-            // @ts-ignore
-            ...(globalThis.APP_BUNDLE_ID
-              ? // @ts-ignore
-                { "x-bundle-id": globalThis.APP_BUNDLE_ID }
-              : {}),
-          }
-        : undefined;
-    }
-
     const controller = new AbortController();
-    let timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,

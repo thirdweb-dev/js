@@ -18,7 +18,10 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
-  extends Omit<ThirdwebProviderCoreProps<TChains>, "supportedWallets"> {
+  extends Omit<
+    ThirdwebProviderCoreProps<TChains>,
+    "supportedWallets" | "secretKey"
+  > {
   /**
    * Wallets that will be supported by the dApp
    * @defaultValue [MetaMaskWallet, CoinbaseWallet]
@@ -64,6 +67,7 @@ export const ThirdwebProvider = <
   theme,
   storageInterface,
   clientId,
+  sdkOptions,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   useCoinbaseWalletListener(
@@ -79,7 +83,12 @@ export const ThirdwebProvider = <
     <ThirdwebProviderCore
       supportedWallets={supportedWallets}
       storageInterface={
-        storageInterface || new ThirdwebStorage({ clientId: clientId })
+        storageInterface ||
+        new ThirdwebStorage({
+          clientId: clientId,
+          // @ts-expect-error - TODO: fix this (it does exist)
+          gatewayUrls: sdkOptions?.gatewayUrls,
+        })
       }
       authConfig={
         authConfig
@@ -90,6 +99,7 @@ export const ThirdwebProvider = <
       }
       createWalletStorage={createWalletStorage}
       clientId={clientId}
+      {...sdkOptions}
       {...restProps}
     >
       <ThemeProvider theme={theme}>

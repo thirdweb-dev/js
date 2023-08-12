@@ -2,8 +2,12 @@ import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
 import { isTwUrl } from "../../../utils/url";
+import pkg from "../../../../../package.json";
 
 const DEBUG = false;
+function isBrowser() {
+  return typeof window !== "undefined";
+}
 
 export class HttpRpcClient {
   private readonly userOpJsonRpcProvider: providers.JsonRpcProvider;
@@ -27,23 +31,38 @@ export class HttpRpcClient {
     const headers: Record<string, string> = {};
 
     if (isTwUrl(this.bundlerUrl)) {
-      if (secretKey && clientId) {
-        throw new Error(
-          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-        );
-      }
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
 
       if (secretKey) {
         headers["x-secret-key"] = secretKey;
       } else if (clientId) {
         headers["x-client-id"] = clientId;
 
-        // @ts-ignore
-        if (globalThis.APP_BUNDLE_ID) {
-          // @ts-ignore
-          headers["x-bundle-id"] = globalThis.APP_BUNDLE_ID;
+        if (bundleId) {
+          headers["x-bundle-id"] = bundleId;
         }
       }
+
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      }
+
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
     }
 
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(

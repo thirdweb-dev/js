@@ -19,7 +19,7 @@ export function useCoinbaseWallet(callbackURL: string) {
     async (connectOptions?: { chainId?: number; callbackURL: string }) => {
       const { coinbaseWallet } = await import("../wallets/coinbase-wallet");
       return connect(
-        // @ts-ignore
+        // @ts-expect-error - Passing a URL object to callbackURL crashes the function @fixme: @manan
         coinbaseWallet({ callbackURL: callbackURL }),
         connectOptions,
       );

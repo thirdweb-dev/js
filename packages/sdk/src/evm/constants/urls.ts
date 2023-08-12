@@ -8,15 +8,20 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
+import pkg from "../../../package.json";
+import { isBrowser } from "@thirdweb-dev/storage";
 
 /**
  * @internal
  */
 function buildDefaultMap(options: SDKOptionsOutput) {
-  return options.supportedChains.reduce((previousValue, currentValue) => {
-    previousValue[currentValue.chainId] = currentValue;
-    return previousValue;
-  }, {} as Record<number, ChainInfo>);
+  return options.supportedChains.reduce(
+    (previousValue, currentValue) => {
+      previousValue[currentValue.chainId] = currentValue;
+      return previousValue;
+    },
+    {} as Record<number, ChainInfo>,
+  );
 }
 
 /**
@@ -57,7 +62,7 @@ export function getChainProvider(
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
     rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
-      options.clientId
+      options.clientId || ""
     }`;
   }
 
@@ -82,10 +87,13 @@ export function getChainIdFromNetwork(
     return network;
   } else {
     // If it's a string (chain name) return the chain id from the map
-    const chainNameToId = options.supportedChains.reduce((acc, curr) => {
-      acc[curr.slug] = curr.chainId;
-      return acc;
-    }, {} as Record<string, number>);
+    const chainNameToId = options.supportedChains.reduce(
+      (acc, curr) => {
+        acc[curr.slug] = curr.chainId;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     if (network in chainNameToId) {
       return chainNameToId[network];
@@ -152,13 +160,77 @@ export function getProviderFromRpcUrl(
   chainId?: number,
 ) {
   try {
-    const headers: Record<string, string> = {};
+    const headers: HeadersInit = {};
+    // will be used to make sure we don't cache providers with different auth strategies
+    let authStrategy = "none";
+
     if (isTwUrl(rpcUrl)) {
-      if (sdkOptions?.clientId) {
-        headers["x-client-id"] = sdkOptions?.clientId;
-      } else if (sdkOptions?.secretKey) {
-        headers["x-secret-key"] = sdkOptions?.secretKey;
+      // if we have a secret key passed in the SDK options we want to always use that
+      if (sdkOptions?.secretKey) {
+        // compute the clientId from the secret key
+        // should only be used on Node.js in a backend/script context
+        if (typeof window !== "undefined") {
+          throw new Error("Cannot use secretKey in browser context");
+        }
+        // this is on purpose because we're using the crypto module only in node
+        // try to trick webpack :)
+        const pto = "pto";
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const crypto = require("cry" + pto);
+        const hashedSecretKey = crypto
+          .createHash("sha256")
+          .update(sdkOptions.secretKey)
+          .digest("hex");
+        const derivedClientId = hashedSecretKey.slice(0, 32);
+        const utilizedRpcUrl = new URL(rpcUrl);
+        // always set the clientId on the path to the derived client id
+        utilizedRpcUrl.pathname = derivedClientId;
+        // set the headers
+        headers["x-client-id"] = derivedClientId;
+        headers["x-secret-key"] = sdkOptions.secretKey;
+        // set the final rpc url
+        rpcUrl = utilizedRpcUrl.toString();
+        authStrategy = "secretKey";
       }
+      // if we do NOT have a secret key but we have a client id we want to use that
+      else if (sdkOptions?.clientId) {
+        const utilizedRpcUrl = new URL(rpcUrl);
+        // always set the clientId on the path to the client id
+        utilizedRpcUrl.pathname = sdkOptions.clientId;
+        // set the headers
+        headers["x-client-id"] = sdkOptions.clientId;
+        // set the final rpc url
+        rpcUrl = utilizedRpcUrl.toString();
+        authStrategy = "clientId";
+      }
+
+      // if we *also* have a tw auth token on global context add it to the headers (in addition to anything else)
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+        authStrategy = "twAuthToken";
+      }
+
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+      if (!rpcUrl.includes("bundleId")) {
+        rpcUrl = rpcUrl + (bundleId ? `?bundleId=${bundleId}` : "");
+      }
+
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);
     // Try the JSON batch provider if available
@@ -167,7 +239,7 @@ export function getProviderFromRpcUrl(
         case "http":
         case "https":
           // Create a unique cache key for these params
-          const seralizedOpts = `${rpcUrl}-${chainId || -1}`;
+          const seralizedOpts = `${rpcUrl}-${chainId || -1}-${authStrategy}`;
 
           // Check if we have a provider in our cache already
           const existingProvider = RPC_PROVIDER_MAP.get(seralizedOpts);
@@ -197,6 +269,7 @@ export function getProviderFromRpcUrl(
         case "ws":
         case "wss":
           // Use the WebSocketProvider for ws:// URLs
+          // TODO: handle auth for WS at some point
           return new providers.WebSocketProvider(rpcUrl, chainId);
       }
     }

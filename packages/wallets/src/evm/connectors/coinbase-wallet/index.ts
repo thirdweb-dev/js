@@ -15,6 +15,7 @@ import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/Coinbas
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
+import { getValidPublicRPCUrl } from "../../utils/url";
 
 type Options = CoinbaseWalletSDKOptions & {
   /**
@@ -231,7 +232,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: chain.rpc,
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

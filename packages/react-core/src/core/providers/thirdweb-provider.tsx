@@ -78,32 +78,30 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
   const { activeChain } = props;
 
+  const supportedChains = (props.supportedChains || defaultChains) as Chain[];
+
   const supportedChainsNonNull: Chain[] = useMemo(() => {
     const isActiveChainObject =
       typeof activeChain === "object" && activeChain !== null;
 
     if (!isActiveChainObject) {
-      return props.supportedChains || defaultChains;
+      return supportedChains;
     }
 
-    if (!props.supportedChains) {
-      return [...defaultChains, activeChain];
-    }
-
-    const isActiveChainInSupportedChains = props.supportedChains.find(
+    const isActiveChainInSupportedChains = supportedChains.find(
       (c) => c.chainId === activeChain.chainId,
     );
 
     // if activeChain is not in supportedChains - add it
     if (!isActiveChainInSupportedChains) {
-      return [...props.supportedChains, activeChain];
+      return [...supportedChains, activeChain];
     }
 
     // if active chain is in supportedChains - replace it with object in activeChain
-    return props.supportedChains.map((c) =>
+    return supportedChains.map((c) =>
       c.chainId === activeChain.chainId ? activeChain : c,
     );
-  }, [props.supportedChains, activeChain]);
+  }, [supportedChains, activeChain]);
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithClientId(
@@ -163,6 +161,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
           clientId={props.clientId}
+          secretKey={props.secretKey}
         >
           <ThirdwebAuthProvider value={props.authConfig}>
             {props.children}

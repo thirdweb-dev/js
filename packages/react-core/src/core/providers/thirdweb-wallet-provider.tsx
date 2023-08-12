@@ -317,10 +317,11 @@ export function ThirdwebWalletProvider(
               ),
               {
                 ms: autoConnectTimeout,
-                message: "Failed to Auto connect. Auto connect timed out.",
+                message: autoConnectTimeoutErrorMessage,
               },
             );
           } catch (e) {
+            console.error("Failed to auto connect wallet");
             console.error(e);
             setConnectionStatus("disconnected");
             return;
@@ -345,10 +346,11 @@ export function ThirdwebWalletProvider(
         setConnectionStatus("connecting");
         await timeoutPromise(wallet.autoConnect(walletInfo.connectParams), {
           ms: autoConnectTimeout,
-          message: "Failed to Auto connect. Auto connect timed out.",
+          message: autoConnectTimeoutErrorMessage,
         });
         setConnectedWallet(wallet, walletInfo.connectParams, true);
       } catch (e) {
+        console.error("Failed to auto connect wallet");
         console.error(e);
         lastConnectedWalletStorage.removeItem(
           LAST_CONNECTED_WALLET_STORAGE_KEY,
@@ -380,6 +382,14 @@ export function ThirdwebWalletProvider(
       const wallet = createWalletInstance(WalletObj);
       setConnectionStatus("connecting");
       try {
+        // if magic is using social login - it will redirect the page - so need to save walletInfo before connecting
+        // TODO: find a better way to handle this
+        if (WalletObj.id === walletIds.magicLink) {
+          saveLastConnectedWalletInfo({
+            walletId: WalletObj.id,
+            connectParams: _connectedParams,
+          });
+        }
         await wallet.connect(_connectedParams);
         setConnectedWallet(wallet, _connectedParams);
       } catch (e: any) {
@@ -542,3 +552,5 @@ function timeoutPromise<T>(
     );
   });
 }
+
+const autoConnectTimeoutErrorMessage = `Failed to Auto connect. Auto connect timed out. You can increase the timeout duration using the autoConnectTimeout prop on <ThirdwebProvider />`;

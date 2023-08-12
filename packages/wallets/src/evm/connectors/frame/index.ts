@@ -16,6 +16,7 @@ import {
 } from "../../../lib/wagmi-core";
 import { Ethereum } from "../injected/types";
 import { AsyncStorage } from "../../../core";
+import { getValidPublicRPCUrl } from "../../utils/url";
 
 export type FrameConnectorOptions = {
   /**
@@ -241,7 +242,7 @@ export class FrameConnector extends WagmiConnector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpc: [chain.rpc[0] ?? ""],
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

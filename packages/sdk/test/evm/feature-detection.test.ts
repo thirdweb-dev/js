@@ -27,7 +27,9 @@ describe("Custom Contracts", async () => {
 
   before(async () => {
     [adminWallet] = signers;
-    realSDK = new ThirdwebSDK(adminWallet);
+    realSDK = new ThirdwebSDK(adminWallet, {
+      secretKey: process.env.TW_SECRET_KEY,
+    });
   });
 
   beforeEach(async () => {

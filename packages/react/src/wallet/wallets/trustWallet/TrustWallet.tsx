@@ -1,6 +1,8 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { TrustWallet, assertWindowEthereum } from "@thirdweb-dev/wallets";
 import { TrustConnectUI } from "./TrustConnectUI";
+import { trustWalletUris } from "./trustWalletUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type TrustWalletOptions = {
   /**
@@ -19,11 +21,15 @@ export const trustWallet = (
     id: TrustWallet.id,
     meta: TrustWallet.meta,
     create: (walletOptions: WalletOptions) => {
-      return new TrustWallet({
+      const wallet = new TrustWallet({
         ...walletOptions,
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      handelWCSessionRequest(wallet, trustWalletUris);
+
+      return wallet;
     },
     connectUI: TrustConnectUI,
     isInstalled() {

@@ -6,11 +6,12 @@ import {
   UserRejectedRequestError,
   WagmiConnector,
 } from "../../../lib/wagmi-core";
-import type { Chain } from "@thirdweb-dev/chains";
+import { type Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { QRModalOptions } from "./qrModalOptions";
+import { getValidPublicRPCUrl } from "../../utils/url";
 
 const chainsToRequest = new Set([1, 137, 10, 42161, 56]);
 
@@ -171,17 +172,36 @@ export class WalletConnectConnector extends WagmiConnector<
   }
 
   async disconnect() {
-    const provider = await this.getProvider();
-    try {
-      await provider.disconnect();
-    } catch (error) {
-      if (!/No matching key/i.test((error as Error).message)) {
-        throw error;
+    const cleanup = () => {
+      if (typeof localStorage === "undefined") {
+        return;
       }
-    } finally {
-      this.#removeListeners();
-      await this.#setRequestedChainsIds([]);
-    }
+      for (const key in localStorage) {
+        if (key.startsWith("wc@2")) {
+          localStorage.removeItem(key);
+        }
+      }
+    };
+
+    cleanup();
+
+    const provider = await this.getProvider();
+
+    const disconnectProvider = async () => {
+      try {
+        await provider.disconnect();
+      } catch (error) {
+        if (!/No matching key/i.test((error as Error).message)) {
+          throw error;
+        }
+      } finally {
+        this.#removeListeners();
+        await this.#setRequestedChainsIds([]);
+        cleanup();
+      }
+    };
+
+    disconnectProvider();
   }
 
   async getAccount() {
@@ -272,7 +292,7 @@ export class WalletConnectConnector extends WagmiConnector<
               chainId: utils.hexValue(chain.chainId),
               chainName: chain.name,
               nativeCurrency: chain.nativeCurrency,
-              rpcUrls: [...chain.rpc],
+              rpcUrls: getValidPublicRPCUrl(chain), // no clientId on purpose
               ...blockExplorerUrls,
             },
           ],

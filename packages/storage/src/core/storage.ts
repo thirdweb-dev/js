@@ -60,6 +60,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
   private gatewayUrls: GatewayUrls;
+  private clientId?: string;
 
   constructor(options?: ThirdwebStorageOptions<T>) {
     this.uploader =
@@ -67,17 +68,20 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       new IpfsUploader({
         clientId: options?.clientId,
         secretKey: options?.secretKey,
+        uploadServerUrl: options?.uploadServerUrl,
       });
     this.downloader =
       options?.downloader ||
       new StorageDownloader({
         secretKey: options?.secretKey,
+        clientId: options?.clientId,
       });
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),
       options?.clientId,
       options?.secretKey,
     );
+    this.clientId = options?.clientId;
   }
 
   /**
@@ -94,7 +98,12 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * ```
    */
   resolveScheme(url: string): string {
-    return replaceSchemeWithGatewayUrl(url, this.gatewayUrls) as string;
+    return replaceSchemeWithGatewayUrl(
+      url,
+      this.gatewayUrls,
+      0,
+      this.clientId,
+    ) as string;
   }
 
   /**
@@ -131,7 +140,11 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
 
     // If we get a JSON object, recursively replace any schemes with gatewayUrls
     const json = await res.json();
-    return replaceObjectSchemesWithGatewayUrls(json, this.gatewayUrls) as TJSON;
+    return replaceObjectSchemesWithGatewayUrls(
+      json,
+      this.gatewayUrls,
+      this.clientId,
+    ) as TJSON;
   }
 
   /**
@@ -255,6 +268,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       cleaned = replaceObjectSchemesWithGatewayUrls(
         cleaned,
         this.gatewayUrls,
+        this.clientId,
       ) as unknown[];
     }
 
