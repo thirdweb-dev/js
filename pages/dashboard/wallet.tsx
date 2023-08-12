@@ -496,18 +496,6 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, walletConnect } from "@thirdweb-dev/react-native";
-
-export default function App() {
-return (
-    <ThirdwebProvider
-      clientId="YOUR_CLIENT_ID"
-      supportedWallets={[ walletConnect() ]}
-    >
-      <ConnectWallet />
-    </ThirdwebProvider>
-  );
-}`,
       unity: `using Thirdweb;
 
 public async void ConnectWallet()
@@ -594,19 +582,19 @@ export default function App() {
 return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      supportedWallets={[ magicWallet({ apiKey: "MAGIC_API_KEY" }) ]}
+      supportedWallets={[ magicLink({ apiKey: "MAGIC_API_KEY" }) ]}
     >
       <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, magicWallet } from "@thirdweb-dev/react-native";
+      "react-native": `import { ThirdwebProvider, ConnectWallet, magicLink } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      supportedWallets={[ magicWallet({ apiKey: "MAGIC_API_KEY" }) ]}
+      supportedWallets={[ magicLink({ apiKey: "MAGIC_API_KEY" }) ]}
     >
       <ConnectWallet />
     </ThirdwebProvider>
