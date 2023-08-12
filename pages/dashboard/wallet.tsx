@@ -787,10 +787,10 @@ const DashboardWallets: ThirdwebNextPage = () => {
           <Heading size="subtitle.sm" as="h3">
             Step 1: Pick a language to get started
           </Heading>
-          {/* Rendering the code snippet for WalletConnect since it supports all languages */}
+          {/* Rendering the code snippet for LocalWallet since it supports all languages */}
           <CodeSegment
             snippet={
-              WALLETS.find((w) => w.id === "wallet-connect")
+              WALLETS.find((w) => w.id === "local-wallet")
                 ?.supportedLanguages || {}
             }
             environment={selectedLanguage}
