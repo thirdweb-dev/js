@@ -67,6 +67,7 @@ import {
   FEATURE_EXTENSION_ROUTER,
   FEATURE_ACCOUNT,
   FEATURE_ACCOUNT_FACTORY,
+  FEATURE_ACCOUNT_PERMISSIONS,
 } from "./thirdweb-features";
 
 /**
@@ -134,6 +135,7 @@ export type Feature =
   | typeof FEATURE_ENGLISH_AUCTIONS
   | typeof FEATURE_OFFERS
   | typeof FEATURE_ACCOUNT
+  | typeof FEATURE_ACCOUNT_PERMISSIONS
   | typeof FEATURE_ACCOUNT_FACTORY;
 
 export type Extension = Feature;

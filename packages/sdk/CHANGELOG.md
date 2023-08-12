@@ -1,5 +1,19 @@
 # @thirdweb-dev/sdk
 
+## 3.10.50
+
+### Patch Changes
+
+- [#1480](https://github.com/thirdweb-dev/js/pull/1480) [`a5ba9e4f`](https://github.com/thirdweb-dev/js/commit/a5ba9e4fbfee228e5b9ac27cd0157187e3a50117) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Separate Account and AccountPermissions extensions
+
+- [#1484](https://github.com/thirdweb-dev/js/pull/1484) [`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getPolygonGasPriorityFee()
+
+## 3.10.49
+
+### Patch Changes
+
+- [#1468](https://github.com/thirdweb-dev/js/pull/1468) [`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Enable dynamic contract deployment with any evm
+
 ## 3.10.48
 
 ### Patch Changes

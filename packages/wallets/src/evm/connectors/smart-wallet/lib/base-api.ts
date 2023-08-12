@@ -18,7 +18,10 @@ import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
   Celo,
+  Mumbai,
+  Polygon,
 } from "@thirdweb-dev/chains";
+import { getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -291,6 +294,9 @@ export abstract class BaseAccountAPI {
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await this.provider.getFeeData();
+      if (!maxPriorityFeePerGas) {
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+      }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
@@ -303,9 +309,22 @@ export abstract class BaseAccountAPI {
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
-      }
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+
+        if (
+          maxPriorityFeePerGas &&
+          (chainId === Mumbai.chainId || chainId === Polygon.chainId)
+        ) {
+          // for polygon/mumbai, override fee data from gas station
+          const block = await this.provider.getBlock("latest");
+          const baseBlockFee =
+            block && block.baseFeePerGas
+              ? block.baseFeePerGas
+              : utils.parseUnits("1", "gwei");
+          maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
+          // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
+          const baseMaxFeePerGas = baseBlockFee.mul(2);
+          maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
+        }
       }
     }
 
