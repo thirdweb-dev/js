@@ -18,10 +18,6 @@ export class MetaMaskWallet extends WalletConnectBase {
   getMeta(): WCMeta {
     return MetaMaskWallet.meta;
   }
-
-  setMeta(meta: WCMeta) {
-    MetaMaskWallet.meta = meta;
-  }
 }
 
 type MetaMaskWalletConfig = { projectId?: string };
