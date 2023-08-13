@@ -13,13 +13,18 @@ import {
 import { Ethereum } from "@thirdweb-dev/chains";
 
 const App = () => {
-  const activeWallet = Ethereum;
+  const activeChain = Ethereum;
   return (
     <ThirdwebProvider
-      activeChain={activeWallet}
-      supportedChains={[activeWallet]}
+      activeChain={activeChain}
+      supportedChains={[activeChain]}
       clientId="your-client-id"
-      supportedWallets={[localWallet(), walletConnect()]}
+      supportedWallets={[
+        localWallet(),
+        walletConnect({
+          projectId: "your-wallet-connect-project-id", // optional, but we recommend you get your own for production
+        }),
+      ]}
     >
       <AppInner />
     </ThirdwebProvider>
