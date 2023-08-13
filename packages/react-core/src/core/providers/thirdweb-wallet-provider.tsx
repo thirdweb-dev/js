@@ -229,7 +229,11 @@ export function ThirdwebWalletProvider(
 
     try {
       const parsedWallet = JSON.parse(lastConnectedWallet as string);
-      parsedWallet.connectParams.chainId = chainId;
+      if (parsedWallet.connectParams) {
+        parsedWallet.connectParams.chainId = chainId;
+      } else {
+        parsedWallet.connectParams = { chainId };
+      }
       await lastConnectedWalletStorage.setItem(
         LAST_CONNECTED_WALLET_STORAGE_KEY,
         JSON.stringify(parsedWallet),
