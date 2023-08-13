@@ -158,7 +158,11 @@ export function WalletConnectUI({
       <View
         style={[styles.modal, { backgroundColor: theme.colors.background }]}
       >
-        <ConnectWalletHeader onBackPress={goBack} onClose={onClosePress} />
+        <ConnectWalletHeader
+          subHeaderText={""}
+          onBackPress={goBack}
+          onClose={onClosePress}
+        />
         <View style={styles.explorerContainer}>
           {loading ? (
             <ActivityIndicator size={"small"} />

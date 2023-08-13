@@ -15,7 +15,7 @@ interface ConnectWalletHeaderProps {
 
 export const ConnectWalletHeader = ({
   headerText,
-  subHeaderText,
+  subHeaderText = "Connecting your wallet",
   alignHeader = "center",
   walletLogoUrl,
   onClose,
