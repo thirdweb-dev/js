@@ -73,3 +73,10 @@ export abstract class WalletConnectBase extends WalletConnectV2Wallets {
     }
   }
 }
+
+/**
+ * @deprecated There's no longer the need to define V1/V2 for walletConnect.
+ *
+ * Use WalletConnectBase instead.
+ */
+export abstract class WalletConnectV2 extends WalletConnectBase {}
