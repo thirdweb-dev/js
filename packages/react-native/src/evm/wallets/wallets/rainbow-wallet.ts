@@ -2,9 +2,9 @@ import {
   WalletOptions as WalletOptionsRC,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { WalletConnectV2 } from "./wallet-connect/WalletConnectV2";
+import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
 
-export class RainbowWallet extends WalletConnectV2 {
+export class RainbowWallet extends WalletConnectBase {
   static id = "rainbow" as const;
   static meta = {
     name: "Rainbow",

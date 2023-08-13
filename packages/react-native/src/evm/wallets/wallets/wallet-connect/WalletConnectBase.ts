@@ -8,6 +8,7 @@ import { TW_WC_PROJECT_ID } from "../../../constants/walletConnect";
 import { createAsyncLocalStorage } from "../../../../core/AsyncStorage";
 import { WCMeta } from "../../types/wc";
 import { formatWalletConnectDisplayUri } from "../../../utils/uri";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type WC2Options = {
   /**
@@ -24,7 +25,7 @@ export type WC2Options = {
     walletId: NonNullable<WalletOptions["walletId"]>;
   };
 
-export abstract class WalletConnectV2 extends WalletConnectV2Wallets {
+export abstract class WalletConnectBase extends WalletConnectV2Wallets {
   constructor(options: WC2Options) {
     super({
       ...options,
@@ -41,7 +42,19 @@ export abstract class WalletConnectV2 extends WalletConnectV2Wallets {
     this.on("disconnect", () => {
       this.removeListener("display_uri", this._onWCOpenWallet);
       this.removeListener("wc_session_request_sent", this._onWCOpenWallet);
+      this.cleanAsyncStorage();
     });
+  }
+
+  async cleanAsyncStorage() {
+    const allKeys = await AsyncStorage.getAllKeys();
+    for (const key of allKeys) {
+      if (key.includes("wc@2")) {
+        await AsyncStorage.removeItem(key);
+      }
+    }
+
+    await AsyncStorage.removeItem(".sdk-comm");
   }
 
   abstract getMeta(): WCMeta;

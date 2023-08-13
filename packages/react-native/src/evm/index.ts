@@ -19,7 +19,8 @@ export { magicWallet } from "./wallets/wallets/magic-link";
 export { MagicWallet } from "./wallets/wallets/MagicLink";
 export { MagicLink } from "./wallets/wallets/MagicLink";
 export { magicLink } from "./wallets/wallets/magic-link";
-export * from "./wallets/wallets/wallet-connect/WalletConnectV2";
+export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";
+export { walletConnect } from "./wallets/wallets/wallet-connect/wallet-connect";
 export type { WCMeta } from "./wallets/types/wc";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
