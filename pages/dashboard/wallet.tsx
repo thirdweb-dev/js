@@ -496,6 +496,17 @@ return (
     </ThirdwebProvider>
   );
 }`,
+      "react-native": `import { ThirdwebProvider, ConnectWallet, walletConnect } from "@thirdweb-dev/react-native";
+export default function App() {
+  return (
+      <ThirdwebProvider
+        clientId="YOUR_CLIENT_ID"
+        supportedWallets={[ walletConnect() ]}
+      >
+        <ConnectWallet />
+      </ThirdwebProvider>
+    );
+}`,
       unity: `using Thirdweb;
 
 public async void ConnectWallet()
