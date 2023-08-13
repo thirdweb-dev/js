@@ -105,6 +105,20 @@ export const getAllExtensionsAbi = [
   },
 ];
 
+export const coreRouterConstructorAbi = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+];
+
 export const FEATURE_ROYALTY = {
   name: "Royalty",
   namespace: "royalty",
@@ -241,6 +255,18 @@ export const FEATURE_EXTENSION_ROUTER = {
     contracts: "",
   },
   abis: [getAllExtensionsAbi],
+  features: {},
+} as const;
+
+export const FEATURE_CORE_ROUTER = {
+  name: "CoreRouter",
+  namespace: "core.router",
+  docLinks: {
+    sdk: "",
+    //TODO
+    contracts: "",
+  },
+  abis: [getAllExtensionsAbi, coreRouterConstructorAbi],
   features: {},
 } as const;
 

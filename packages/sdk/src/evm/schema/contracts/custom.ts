@@ -167,6 +167,17 @@ export const DeployTypeInput = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
+export const RouterTypeInput = /* @__PURE__ */ (() =>
+  z.union([
+    z.literal("none"),
+    z.literal("plugin"),
+    z.literal("extension"),
+    z.literal("core"),
+  ]))();
+
+/**
+ * @internal
+ */
 export const DeploymentNetworkInput = /* @__PURE__ */ (() =>
   z.object({
     allNetworks: z.boolean().optional(),
@@ -206,6 +217,8 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
       isDeployableViaProxy: z.boolean().optional(),
       factoryDeploymentData: FactoryDeploymentSchema.optional(),
       deployType: DeployTypeInput.optional(),
+      routerType: RouterTypeInput.optional(),
+      extensionUris: z.array(z.string()).optional(),
       networksForDeployment: DeploymentNetworkInput.optional(),
       constructorParams: z
         .record(

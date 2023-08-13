@@ -13,8 +13,6 @@ import {
   generateExtensionFunctions,
   generatePluginFunctions,
 } from "../plugin/generatePluginFunctions";
-import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
-import { getMetadataForExtensions } from "../plugin/getMetadataForExtensions";
 import { Extension } from "../../types/extensions";
 /**
  *
@@ -42,18 +40,19 @@ export async function getDeploymentInfo(
 
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    metadataUri,
-    storage,
-  );
-  const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
-  const extensionMetadata = await getMetadataForExtensions(
-    metadataUri,
-    storage,
-  );
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(metadataUri, storage);
+  const extensionUris = extendedMetadata?.extensionUris;
 
-  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
-  if (pluginMetadata.length > 0) {
+  if (extendedMetadata?.routerType === "plugin" && extensionUris) {
+    const pluginMetadata = (
+      await Promise.all(
+        extensionUris.map(async (uri) => {
+          return fetchAndCacheDeployMetadata(uri, storage);
+        }),
+      )
+    ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+
     // get deployment info for all plugins
     const pluginDeploymentInfo = await Promise.all(
       pluginMetadata.map(async (metadata) => {
@@ -96,7 +95,15 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
-  } else if (extensionMetadata.length > 0) {
+  } else if (extendedMetadata?.routerType === "extension" && extensionUris) {
+    const extensionMetadata = (
+      await Promise.all(
+        extensionUris.map(async (uri) => {
+          return fetchAndCacheDeployMetadata(uri, storage);
+        }),
+      )
+    ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+
     // get deployment info for all extensions
     const extensionDeploymentInfo = await Promise.all(
       extensionMetadata.map(async (metadata) => {
