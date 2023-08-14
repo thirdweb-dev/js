@@ -9,7 +9,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";
 import pkg from "../../../package.json";
-import { isBrowser } from "@thirdweb-dev/storage";
+import { isBrowser } from "../common/utils";
 
 /**
  * @internal
@@ -169,7 +169,7 @@ export function getProviderFromRpcUrl(
       if (sdkOptions?.secretKey) {
         // compute the clientId from the secret key
         // should only be used on Node.js in a backend/script context
-        if (typeof window !== "undefined") {
+        if (isBrowser()) {
           throw new Error("Cannot use secretKey in browser context");
         }
         // this is on purpose because we're using the crypto module only in node

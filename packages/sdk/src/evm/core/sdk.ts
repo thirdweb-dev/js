@@ -115,6 +115,7 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
+import { isBrowser, isNode } from "../common/utils";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -264,13 +265,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage?: IThirdwebStorage,
   ) {
-    const apiKeyType = typeof window !== "undefined" ? "clientId" : "secretKey";
+    const apiKeyType = isBrowser() ? "clientId" : "secretKey";
     let warnMessage = `No API key. Please provide a ${apiKeyType}. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key`;
-    if (
-      typeof window === "undefined" &&
-      !options.secretKey &&
-      options.clientId
-    ) {
+    if (isNode() && !options.secretKey && options.clientId) {
       warnMessage = `Please provide a secret key instead of the clientId. Create a new API Key at https://thirdweb.com/create-api-key`;
     }
     checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);

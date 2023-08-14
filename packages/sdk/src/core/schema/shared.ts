@@ -1,11 +1,8 @@
 import BN from "bn.js";
 import { BigNumber } from "ethers";
 import { z } from "zod";
+import { isBrowser } from "../../evm/common/utils";
 
-/**
- * @internal
- */
-export const isBrowser = () => typeof window !== "undefined";
 /**
  * @internal
  */
