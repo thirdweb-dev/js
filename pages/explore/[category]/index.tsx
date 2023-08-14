@@ -11,6 +11,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { ContractCard } from "components/explore/contract-card";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
+import { SmartWalletsAccessAlert } from "components/settings/ApiKeyTable/Alerts";
 import {
   ALL_CATEGORIES,
   ExploreCategory,
@@ -86,6 +87,8 @@ const ExploreCategoryPage: ThirdwebNextPage = (
               </Link>
             )}
           </Text>
+
+          {props.category.id === "smart-wallet" && <SmartWalletsAccessAlert />}
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
           {props.category.contracts.map((publishedContractId, idx) => {
