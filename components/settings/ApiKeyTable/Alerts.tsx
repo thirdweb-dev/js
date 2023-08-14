@@ -150,7 +150,9 @@ export const SmartWalletsAccessAlert = () => {
         isExternal
         onClick={handleClick}
         size="sm"
-        href={`https://docs.google.com/forms/d/e/1FAIpQLSffFeEw7rPGYA8id7LwL22-W3irT6siXE5EHgD3xrxmxpLKCw/viewform?entry.948574526=${address}`}
+        href={`https://docs.google.com/forms/d/e/1FAIpQLSffFeEw7rPGYA8id7LwL22-W3irT6siXE5EHgD3xrxmxpLKCw/viewform?entry.948574526=${
+          address || ""
+        }`}
       >
         Request access
       </LinkButton>

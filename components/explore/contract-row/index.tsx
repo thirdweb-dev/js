@@ -1,3 +1,4 @@
+import { SmartWalletsAccessAlert } from "components/settings/ApiKeyTable/Alerts";
 import { ContractCard } from "../contract-card";
 import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { ExploreCategory } from "data/explore";
@@ -62,6 +63,9 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
           </LinkButton>
         )}
       </Flex>
+
+      {category.id === "smart-wallet" && <SmartWalletsAccessAlert />}
+
       <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
         {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
           const [publisher, contractId] = publishedContractId.split("/");
