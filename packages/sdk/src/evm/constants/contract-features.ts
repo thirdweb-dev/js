@@ -70,6 +70,7 @@ import {
   FEATURE_AIRDROP_ERC1155,
   FEATURE_ACCOUNT,
   FEATURE_ACCOUNT_FACTORY,
+  FEATURE_ACCOUNT_PERMISSIONS,
 } from "./thirdweb-features";
 
 /**
@@ -140,6 +141,7 @@ export type Feature =
   | typeof FEATURE_AIRDROP_ERC721
   | typeof FEATURE_AIRDROP_ERC1155
   | typeof FEATURE_ACCOUNT
+  | typeof FEATURE_ACCOUNT_PERMISSIONS
   | typeof FEATURE_ACCOUNT_FACTORY;
 
 export type Extension = Feature;

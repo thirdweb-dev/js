@@ -1,6 +1,6 @@
-export type WCMeta = {
-  name: string;
+export type WCWallet = {
   iconURL: string;
+  name: string;
   links: {
     native: string;
     universal: string;

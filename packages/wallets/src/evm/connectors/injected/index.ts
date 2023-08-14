@@ -15,7 +15,7 @@ import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
 import { getValidPublicRPCUrl } from "../../utils/url";
 import { Ethereum } from "./types";
-import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
+import { type Chain } from "@thirdweb-dev/chains";
 import { utils, providers } from "ethers";
 
 export type InjectedConnectorOptions = {
@@ -341,7 +341,6 @@ export class InjectedConnector extends WagmiConnector<
           ?.originalError?.code === 4902
       ) {
         try {
-          console.log("adding chain", getValidChainRPCs(chain));
           // request provider to add chain
           await provider.request({
             method: "wallet_addEthereumChain",
