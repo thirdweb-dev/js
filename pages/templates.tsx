@@ -59,9 +59,9 @@ export const templates: TemplateCardProps[] = [
     id: "nft-gated-website",
     title: "NFT Gated Website",
     homepage: "https://nft-gated-website.thirdweb-example.com/",
-    repo: "https://github.com/thirdweb-example/nft-gated-website3",
+    repo: "https://github.com/thirdweb-example/nft-gated-website",
     description:
-      "Allow holders of your NFTs to trade in a marketplace with a built-in escrow and auctioning system.",
+      "Allow users to access your website only if they own a specific NFT.",
     img: "/assets/templates/nft-gated-site.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["NFT", "React", "Loyalty"],
