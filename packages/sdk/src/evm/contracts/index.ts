@@ -15,11 +15,7 @@ import { Address } from "../schema/shared/Address";
 import { PackContractSchema } from "../schema/contracts/packs";
 import { SDKOptions } from "../schema/sdk-options";
 import { VoteContractSchema } from "../schema/contracts/vote";
-import {
-  Abi,
-  AbiSchema,
-  CustomContractSchema,
-} from "../schema/contracts/custom";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -50,9 +46,6 @@ const prebuiltContractTypes = {
   "signature-drop": "signature-drop",
   split: "split",
   "token-drop": "token-drop",
-  "airdrop-erc20": "airdrop-erc20",
-  "airdrop-erc721": "airdrop-erc721",
-  "airdrop-erc1155": "airdrop-erc1155",
 } as const;
 
 export type PrebuiltContractType = keyof typeof prebuiltContractTypes;
@@ -633,126 +626,6 @@ export const VoteInitializer = {
   },
 };
 
-export const AirdropERC20Initializer = {
-  name: "AirdropERC20" as const,
-  contractType: prebuiltContractTypes["airdrop-erc20"],
-  schema: CustomContractSchema,
-  roles: ADMIN_ROLE,
-  initialize: async (
-    ...[network, address, storage, options]: InitalizeParams
-  ) => {
-    const [, provider] = getSignerAndProvider(network, options);
-    const [abi, contract, _network] = await Promise.all([
-      await AirdropERC20Initializer.getAbi(address, provider, storage),
-      import("./smart-contract"),
-      provider.getNetwork(),
-    ]);
-
-    return new contract.SmartContract(
-      network,
-      address,
-      abi,
-      storage,
-      options,
-      _network.chainId,
-    );
-  },
-  getAbi: async (
-    address: Address,
-    provider: providers.Provider,
-    storage: ThirdwebStorage,
-  ) => {
-    const abi = await fetchAbiFromAddress(address, provider, storage);
-    if (abi) {
-      return abi;
-    }
-    // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
-    return (
-      await import("@thirdweb-dev/contracts-js/dist/abis/AirdropERC20.json")
-    ).default;
-  },
-};
-
-export const AirdropERC721Initializer = {
-  name: "AirdropERC721" as const,
-  contractType: prebuiltContractTypes["airdrop-erc721"],
-  schema: CustomContractSchema,
-  roles: ADMIN_ROLE,
-  initialize: async (
-    ...[network, address, storage, options]: InitalizeParams
-  ) => {
-    const [, provider] = getSignerAndProvider(network, options);
-    const [abi, contract, _network] = await Promise.all([
-      await AirdropERC721Initializer.getAbi(address, provider, storage),
-      import("./smart-contract"),
-      provider.getNetwork(),
-    ]);
-
-    return new contract.SmartContract(
-      network,
-      address,
-      abi,
-      storage,
-      options,
-      _network.chainId,
-    );
-  },
-  getAbi: async (
-    address: Address,
-    provider: providers.Provider,
-    storage: ThirdwebStorage,
-  ) => {
-    const abi = await fetchAbiFromAddress(address, provider, storage);
-    if (abi) {
-      return abi;
-    }
-    // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
-    return (
-      await import("@thirdweb-dev/contracts-js/dist/abis/AirdropERC721.json")
-    ).default;
-  },
-};
-
-export const AirdropERC1155Initializer = {
-  name: "AirdropERC1155" as const,
-  contractType: prebuiltContractTypes["airdrop-erc1155"],
-  schema: CustomContractSchema,
-  roles: ADMIN_ROLE,
-  initialize: async (
-    ...[network, address, storage, options]: InitalizeParams
-  ) => {
-    const [, provider] = getSignerAndProvider(network, options);
-    const [abi, contract, _network] = await Promise.all([
-      await AirdropERC1155Initializer.getAbi(address, provider, storage),
-      import("./smart-contract"),
-      provider.getNetwork(),
-    ]);
-
-    return new contract.SmartContract(
-      network,
-      address,
-      abi,
-      storage,
-      options,
-      _network.chainId,
-    );
-  },
-  getAbi: async (
-    address: Address,
-    provider: providers.Provider,
-    storage: ThirdwebStorage,
-  ) => {
-    const abi = await fetchAbiFromAddress(address, provider, storage);
-    if (abi) {
-      return abi;
-    }
-    // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
-    return (
-      await import("@thirdweb-dev/contracts-js/dist/abis/AirdropERC1155.json")
-    ).default;
-  },
-};
-
 async function getContractInfo(address: Address, provider: providers.Provider) {
   try {
     return await getPrebuiltInfo(address, provider);
@@ -779,9 +652,6 @@ export const PREBUILT_CONTRACTS_MAP = /* @__PURE__ */ {
   [prebuiltContractTypes["token-drop"]]: TokenDropInitializer,
   [prebuiltContractTypes.token]: TokenInitializer,
   [prebuiltContractTypes.vote]: VoteInitializer,
-  [prebuiltContractTypes["airdrop-erc20"]]: AirdropERC20Initializer,
-  [prebuiltContractTypes["airdrop-erc721"]]: AirdropERC721Initializer,
-  [prebuiltContractTypes["airdrop-erc1155"]]: AirdropERC1155Initializer,
 } as const;
 
 export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
@@ -804,9 +674,6 @@ export const PREBUILT_CONTRACTS_APPURI_MAP = /* @__PURE__ */ {
     "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7/erc20.html",
   [prebuiltContractTypes.token]: "",
   [prebuiltContractTypes.vote]: "",
-  [prebuiltContractTypes["airdrop-erc20"]]: "",
-  [prebuiltContractTypes["airdrop-erc721"]]: "",
-  [prebuiltContractTypes["airdrop-erc1155"]]: "",
 } as const;
 
 const SmartContract = {

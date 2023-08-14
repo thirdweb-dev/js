@@ -3,7 +3,6 @@ import {
   Token,
   TokenInitializer,
   SmartContract,
-  AirdropERC20Initializer,
 } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -35,13 +34,9 @@ describe("Airdrop ERC20", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     airdropContract = await sdk.getContract(
-      await sdk.deployer.deployBuiltInContract(
-        AirdropERC20Initializer.contractType,
-        {
-          name: "Test Airdrop ERC20",
-        },
-      ),
-      "airdrop-erc20",
+      await sdk.deployer.deployAirdropERC20({
+        name: "Test Airdrop ERC20",
+      }),
     );
 
     customTokenContract = await sdk.getToken(

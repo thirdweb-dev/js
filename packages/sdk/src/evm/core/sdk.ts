@@ -6,15 +6,16 @@ import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
-  AirdropERC20Initializer,
-  AirdropERC721Initializer,
-  AirdropERC1155Initializer,
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../constants/urls";
-import { Abi, AbiSchema } from "../schema/contracts/custom";
+import {
+  Abi,
+  AbiSchema,
+  CustomContractDeploy,
+} from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractPublisher } from "./classes/contract-publisher";
@@ -92,8 +93,8 @@ import type {
   DeployOptions,
   DeployMetadata,
   DeployEvent,
-  AirdropContractDeployMetadata,
   OpenEditionContractDeployMetadata,
+  AirdropContractDeployMetadata,
 } from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
@@ -119,6 +120,7 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
+import { AirdropContractDeploy } from "../schema/contracts/airdrop";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1423,10 +1425,27 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: AirdropContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      return await this.deployBuiltInContract.prepare(
-        AirdropERC20Initializer.contractType,
-        metadata,
-        "latest",
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC20",
+        deployArgs,
         options,
       );
     },
@@ -1437,10 +1456,27 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: AirdropContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      return await this.deployBuiltInContract.prepare(
-        AirdropERC721Initializer.contractType,
-        metadata,
-        "latest",
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC721",
+        deployArgs,
         options,
       );
     },
@@ -1451,10 +1487,27 @@ export class ContractDeployer extends RPCConnectionHandler {
       metadata: AirdropContractDeployMetadata,
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      return await this.deployBuiltInContract.prepare(
-        AirdropERC1155Initializer.contractType,
-        metadata,
-        "latest",
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC1155",
+        deployArgs,
         options,
       );
     },

@@ -1,9 +1,4 @@
-import {
-  Edition,
-  EditionInitializer,
-  SmartContract,
-  AirdropERC1155Initializer,
-} from "../../src/evm";
+import { Edition, EditionInitializer, SmartContract } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
@@ -33,13 +28,9 @@ describe("Airdrop ERC1155", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     airdropContract = await sdk.getContract(
-      await sdk.deployer.deployBuiltInContract(
-        AirdropERC1155Initializer.contractType,
-        {
-          name: "Test Airdrop ERC1155",
-        },
-      ),
-      "airdrop-erc1155",
+      await sdk.deployer.deployAirdropERC1155({
+        name: "Test Airdrop ERC1155",
+      }),
     );
 
     dummyBundleContract = await sdk.getEdition(

@@ -2,7 +2,6 @@ import {
   NFTCollection,
   NFTCollectionInitializer,
   SmartContract,
-  AirdropERC721Initializer,
 } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -33,13 +32,9 @@ describe("Airdrop ERC721", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     airdropContract = await sdk.getContract(
-      await sdk.deployer.deployBuiltInContract(
-        AirdropERC721Initializer.contractType,
-        {
-          name: "Test Airdrop ERC721",
-        },
-      ),
-      "airdrop-erc721",
+      await sdk.deployer.deployAirdropERC721({
+        name: "Test Airdrop ERC721",
+      }),
     );
 
     dummyNftContract = await sdk.getNFTCollection(
