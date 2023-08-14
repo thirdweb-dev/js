@@ -22,6 +22,22 @@ import { IoChevronBack } from "react-icons/io5";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useState } from "react";
 
+function isValidUrl(possibleUrl?: string | null) {
+  if (!possibleUrl) {
+    return false;
+  }
+  try {
+    new URL(possibleUrl);
+  } catch (_) {
+    if (possibleUrl.startsWith("ipfs://")) {
+      return true;
+    }
+    return false;
+  }
+
+  return true;
+}
+
 interface TokenIdPageProps {
   nft: NFT | undefined;
   tabs: NFTDrawerTab[];
@@ -39,9 +55,13 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
 
   const chainId = useDashboardEVMChainId();
   const url = `/${chainId}/${contractAddress}/nfts`;
-
   if (!nft) {
     return null;
+  }
+
+  // in the case we have an invalud url, we want to remove it
+  if (!isValidUrl(nft.metadata.animation_url)) {
+    nft.metadata.animation_url = undefined;
   }
 
   const properties = nft.metadata.attributes || nft.metadata.properties;
