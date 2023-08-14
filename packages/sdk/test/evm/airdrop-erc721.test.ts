@@ -2,11 +2,26 @@ import {
   NFTCollection,
   NFTCollectionInitializer,
   SmartContract,
+  ThirdwebSDK,
 } from "../../src/evm";
-import { jsonProvider, sdk, signers } from "./before-setup";
+import {
+  extendedMetadataMock,
+  jsonProvider,
+  sdk,
+  signers,
+} from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import {
+  AirdropERC721__factory,
+  Forwarder__factory,
+} from "@thirdweb-dev/contracts-js";
 import { expect, assert } from "chai";
 import { ethers } from "ethers";
+import { mockUploadMetadataWithBytecode } from "./utils";
+import {
+  bytecode as TWCloneFactoryBytecode,
+  abi as TWCloneFactoryAbi,
+} from "./metadata/TWCloneFactory";
 
 global.fetch = require("cross-fetch");
 
@@ -31,11 +46,16 @@ describe("Airdrop ERC721", async () => {
 
     sdk.updateSignerOrProvider(adminWallet);
 
+    const mockPublisher = process.env.contractPublisherAddress;
+    process.env.contractPublisherAddress =
+      "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
+    await mockPublishAirdrop();
     airdropContract = await sdk.getContract(
       await sdk.deployer.deployAirdropERC721({
         name: "Test Airdrop ERC721",
       }),
     );
+    process.env.contractPublisherAddress = mockPublisher;
 
     dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(
@@ -70,6 +90,74 @@ describe("Airdrop ERC721", async () => {
 
     dummyNftContractAddress = dummyNftContract.getAddress();
   });
+
+  before("Mock upload infra contracts", async () => {
+    // mock upload Forwarder
+    await mockUploadMetadataWithBytecode(
+      "Forwarder",
+      Forwarder__factory.abi,
+      Forwarder__factory.bytecode,
+      "",
+      {
+        ...extendedMetadataMock,
+        deployType: "standard",
+        networksForDeployment: {
+          allNetworks: true,
+          networksEnabled: [],
+        },
+      },
+      "ipfs://Qmcu8FaqerUvQYb4qPg7PwkXa6dRtEe45LedLJPN42Jwqe/0",
+      // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
+    );
+
+    // mock upload TWCloneFactory
+    await mockUploadMetadataWithBytecode(
+      "Forwarder",
+      TWCloneFactoryAbi,
+      TWCloneFactoryBytecode,
+      "",
+      {
+        ...extendedMetadataMock,
+        deployType: "standard",
+        networksForDeployment: {
+          allNetworks: true,
+          networksEnabled: [],
+        },
+      },
+      "ipfs://QmYfw13Zykqf9jAmJobNgYrEpatEF9waWcQPUHvJ7sctRb/0",
+      // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
+    );
+  });
+
+  const mockPublishAirdrop = async () => {
+    const publishedContract = await new ThirdwebSDK("polygon", {
+      secretKey: process.env.TW_SECRET_KEY,
+    })
+      .getPublisher()
+      .getVersion(
+        "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+        "AirdropERC721",
+        "latest",
+      );
+
+    // mock publish as a autoFactory-deploy contract
+    await mockUploadMetadataWithBytecode(
+      "AirdropERC721",
+      AirdropERC721__factory.abi,
+      AirdropERC721__factory.bytecode,
+      "",
+      {
+        ...extendedMetadataMock,
+        deployType: "autoFactory",
+        networksForDeployment: {
+          allNetworks: true,
+          networksEnabled: [],
+        },
+        publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+      },
+      publishedContract?.metadataUri,
+    );
+  };
 
   /**
    * =========== Airdrop Tests ============
