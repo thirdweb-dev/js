@@ -11,11 +11,7 @@ import {
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../constants/urls";
-import {
-  Abi,
-  AbiSchema,
-  CustomContractDeploy,
-} from "../schema/contracts/custom";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractPublisher } from "./classes/contract-publisher";
