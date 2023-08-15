@@ -4,6 +4,7 @@ import { signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
 
+// TODO mock upload metadata to deploy this contract isntead of relying on IPFS
 describe("Tiered Drop Contract", async () => {
   let contract: SmartContract;
   let sdk: ThirdwebSDK;
