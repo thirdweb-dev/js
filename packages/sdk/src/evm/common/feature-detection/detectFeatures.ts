@@ -39,7 +39,6 @@ export function detectFeaturesFromBytecode(
   for (const featureKey in features) {
     const feature = features[featureKey];
     const enabled = matchesAbiFromBytecode(bytecode, feature.abis);
-    console.log("featureKey", featureKey, enabled);
     const childResults = detectFeaturesFromBytecode(bytecode, feature.features);
     results[featureKey] = {
       ...feature,

@@ -30,10 +30,6 @@ export function getAllDetectedExtensionsFromBytecode(
 
 export function constructAbiFromBytecode(bytecode: string): AbiInput {
   const extensions = getAllDetectedExtensionsFromBytecode(bytecode);
-  console.log(
-    "extensions",
-    extensions.map((f) => f.name),
-  );
   const abi = joinABIs(extensions.map((f) => joinABIs(f.abis as any)));
   return abi;
 }

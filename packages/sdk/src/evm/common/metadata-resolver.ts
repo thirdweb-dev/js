@@ -90,7 +90,7 @@ export async function fetchContractMetadataFromAddress(
         if (abi && abi.length > 0) {
           // return partial ABI
           metadata = {
-            name: "Unknown",
+            name: "Unknown Contract",
             abi: abi as Abi,
             metadata: {},
             info: {},
