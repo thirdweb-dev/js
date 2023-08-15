@@ -519,6 +519,7 @@ export class ContractWrapper<
         this.readContract.address,
         this.getProvider(),
         this.storage,
+        this.options,
       );
 
       if (metadata.name) {
