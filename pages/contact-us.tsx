@@ -28,6 +28,7 @@ interface FormSchema {
   lastname: string;
   email: string;
   "0-2/name": string;
+  "0-2/website": string;
   jobtitle: string;
   "0-2/size_of_company": string;
   "0-2/product_type": string;
@@ -177,7 +178,7 @@ const ContactUs: ThirdwebNextPage = () => {
                   <Input
                     h={14}
                     borderColor="gray.300"
-                    placeholder="Your Business Email *"
+                    placeholder="Your Company Email *"
                     type="email"
                     color="black"
                     _placeholder={{ color: "black" }}
@@ -192,6 +193,16 @@ const ContactUs: ThirdwebNextPage = () => {
                     color="black"
                     _placeholder={{ color: "black" }}
                     {...form.register("0-2/name", { required: true })}
+                  />
+                </FormControl>
+                <FormControl gap={6} isRequired>
+                  <Input
+                    h={14}
+                    borderColor="gray.300"
+                    placeholder="Your Company Website URL *"
+                    color="black"
+                    _placeholder={{ color: "black" }}
+                    {...form.register("0-2/website", { required: true })}
                   />
                 </FormControl>
                 <FormControl gap={6} isRequired>
