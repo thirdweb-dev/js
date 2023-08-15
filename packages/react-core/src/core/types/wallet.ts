@@ -136,7 +136,6 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
    * @returns
    */
   onSelect: (selectionData: any) => void;
-
   /**
    * `WalletConfig` object of your wallet
    *
