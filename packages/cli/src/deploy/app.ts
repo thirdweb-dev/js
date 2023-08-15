@@ -72,7 +72,7 @@ export async function deployApp(
     const uri = await upload(storage, distPath);
     return `${uri.replace(
       "ipfs://",
-      "http://cf-ipfs.com/ipfs/",
+      "https://cf-ipfs.com/ipfs/",
     )}`;
   } catch (err) {
     console.error("Can't upload project", err);
