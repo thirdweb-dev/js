@@ -1,5 +1,5 @@
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { ThirdwebProvider, useSigner } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { dashboardSupportedWallets } from "components/app-layouts/providers";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
@@ -10,8 +10,10 @@ import React, { useMemo, useState } from "react";
 import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { ConnectWalletWithPreview } from "components/wallets/ConnectWalletWithPreview";
+import { formatSnippet } from "contract-ui/tabs/code/components/code-overview";
+import { useChainSlug } from "hooks/chains/chainSlug";
 
-const WALLETS = [
+export const WALLETS_SNIPPETS = [
   {
     id: "smart-wallet",
     name: "Smart Wallet",
@@ -20,8 +22,8 @@ const WALLETS = [
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
     link: "https://portal.thirdweb.com/wallet/smart-wallet",
     supportedLanguages: {
-      javascript: `import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
-import { Goerli } from "@thirdweb-dev/chains";
+      javascript: `import {{chainName}} from "@thirdweb-dev/chains";
+import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
 
 // First, connect the personal wallet, which can be any wallet (metamask, walletconnect, etc.)
 // Here we're just generating a new local wallet which can be saved later
@@ -31,8 +33,8 @@ await personalWallet.connect();
 
 // Setup the Smart Wallet configuration
 const config = {
-  chain: Goerli, // the chain where your smart wallet will be or is deployed
-  factoryAddress: "0x...", // your own deployed account factory address
+  chain: {{chainName}}, // the chain where your smart wallet will be or is deployed
+  factoryAddress: "{{factory_address}}", // your own deployed account factory address
   clientId: "YOUR_CLIENT_ID", // or use secretKey for no backend/node scripts
   gasless: true, // enable or disable gasless transactions
 };
@@ -42,17 +44,17 @@ const wallet = new SmartWallet(config);
 await wallet.connect({
   personalWallet,
 });`,
-      react: `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react";
-import { Goerli } from "@thirdweb-dev/chains";
+      react: `import {{chainName}} from "@thirdweb-dev/chains";
+import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      activeChain={Goerli}
+      activeChain={{chainName}}
       supportedWallets={[
         smartWallet({
-          factoryAddress: "0x...",
+          factoryAddress: "{{factory_address}}",
           gasless: true,
           personalWallets={[...]}
         })
@@ -62,17 +64,17 @@ return (
     </ThirdwebProvider>
   );
 }`,
-      "react-native": `import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react-native";
-import { Goerli } from "@thirdweb-dev/chains";
+      "react-native": `import {{chainName}} from "@thirdweb-dev/chains";
+import { ThirdwebProvider, ConnectWallet, smartWallet } from "@thirdweb-dev/react-native";
 
 export default function App() {
 return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      activeChain={Goerli}
+      activeChain={{chainName}}
       supportedWallets={[
         smartWallet({
-          factoryAddress: "0x...",
+          factoryAddress: "{{factory_address}}",
           gasless: true,
           personalWallets={[...]}
         })
@@ -634,8 +636,8 @@ public async void ConnectWallet()
 
 interface SupportedWalletsSelectorProps {
   selectedLanguage: CodeEnvironment;
-  selectedWallet: (typeof WALLETS)[number] | null;
-  setSelectedWallet: (wallet: (typeof WALLETS)[number]) => void;
+  selectedWallet: (typeof WALLETS_SNIPPETS)[number] | null;
+  setSelectedWallet: (wallet: (typeof WALLETS_SNIPPETS)[number]) => void;
 }
 
 const SupportedWalletsSelector: React.FC<SupportedWalletsSelectorProps> = ({
@@ -645,14 +647,14 @@ const SupportedWalletsSelector: React.FC<SupportedWalletsSelectorProps> = ({
 }) => {
   const sortedWallets = useMemo(() => {
     // sort by language being supported or not
-    const supportedWallets = WALLETS.filter(
+    const supportedWallets = WALLETS_SNIPPETS.filter(
       (wallet) =>
         selectedLanguage in wallet.supportedLanguages &&
         wallet.supportedLanguages[
           selectedLanguage as keyof typeof wallet.supportedLanguages
         ],
     );
-    const unsupportedWallets = WALLETS.filter(
+    const unsupportedWallets = WALLETS_SNIPPETS.filter(
       (wallet) =>
         !(selectedLanguage in wallet.supportedLanguages) &&
         !wallet.supportedLanguages[
@@ -734,11 +736,15 @@ const SupportedWalletsSelector: React.FC<SupportedWalletsSelectorProps> = ({
 };
 
 const DashboardWallets: ThirdwebNextPage = () => {
+  const signer = useSigner();
+  // make this nicer? somehow?
+  const network = useChainSlug((signer?.provider as any)?._network?.chainId);
+
   const [selectedLanguage, setSelectedLanguage] =
     useState<CodeEnvironment>("javascript");
 
   const [selectedWallet, setSelectedWallet] = useState<
-    (typeof WALLETS)[number] | null
+    (typeof WALLETS_SNIPPETS)[number] | null
   >(null);
 
   const onLanguageSelect = (language: CodeEnvironment) => {
@@ -800,10 +806,14 @@ const DashboardWallets: ThirdwebNextPage = () => {
           </Heading>
           {/* Rendering the code snippet for LocalWallet since it supports all languages */}
           <CodeSegment
-            snippet={
-              WALLETS.find((w) => w.id === "local-wallet")
-                ?.supportedLanguages || {}
-            }
+            snippet={formatSnippet(
+              (WALLETS_SNIPPETS.find((w) => w.id === "local-wallet")
+                ?.supportedLanguages || {}) as any,
+              {
+                contractAddress: "0x...",
+                chainName: "base",
+              },
+            )}
             environment={selectedLanguage}
             setEnvironment={onLanguageSelect}
             onlyTabs
@@ -866,7 +876,10 @@ const DashboardWallets: ThirdwebNextPage = () => {
             .
           </Text>
           <CodeSegment
-            snippet={selectedWallet.supportedLanguages}
+            snippet={formatSnippet(selectedWallet.supportedLanguages as any, {
+              contractAddress: "0x...",
+              chainName: network ? network.toString() : "goerli",
+            })}
             environment={selectedLanguage}
             setEnvironment={setSelectedLanguage}
             hideTabs

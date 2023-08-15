@@ -167,7 +167,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
   );
 };
 
-interface ISupportedEnvironment {
+interface SupportedEnvironmentButtonProps {
   active: boolean;
   icon?: JSX.Element;
   isDisabled?: boolean;
@@ -175,14 +175,14 @@ interface ISupportedEnvironment {
 }
 
 const SupportedEnvironmentButton: ComponentWithChildren<
-  ISupportedEnvironment
+  SupportedEnvironmentButtonProps
 > = ({ active, icon, onClick, children, isDisabled }) => {
   return (
     <Button
       variant={active ? "solid" : "outline"}
       onClick={onClick}
       leftIcon={icon}
-      fill={"red"}
+      fill="red"
       isDisabled={isDisabled}
     >
       {children}

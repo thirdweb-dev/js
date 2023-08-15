@@ -49,6 +49,7 @@ import { constants } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
+import { WALLETS_SNIPPETS } from "pages/dashboard/wallet";
 import { useMemo, useState } from "react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
@@ -264,7 +265,7 @@ interface SnippetOptions {
   address?: string;
 }
 
-function formatSnippet(
+export function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
   { contractAddress, fn, args, chainName, rpcUrl, address }: SnippetOptions,
 ) {
@@ -274,7 +275,8 @@ function formatSnippet(
     const env = key as CodeEnvironment;
 
     code[env] = code[env]
-      ?.replace(/{{contract_address}}/gm, contractAddress)
+      ?.replace(/{{contract_address}}/gm, contractAddress || "0x...")
+      ?.replace(/{{factory_address}}/gm, contractAddress || "0x...")
       ?.replace(/{{wallet_address}}/gm, address)
 
       ?.replace(
@@ -399,38 +401,6 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
         gap={12}
       >
         <Flex flexDirection="column" gap={4}>
-          {isAccountFactory && (
-            <Alert
-              status="info"
-              borderRadius="md"
-              as={Flex}
-              flexDir="column"
-              alignItems="start"
-              gap={2}
-              mb={4}
-            >
-              <Flex justifyContent="start">
-                <AlertIcon />
-                <AlertTitle>Smart Wallet Factory</AlertTitle>
-              </Flex>
-              <AlertDescription>
-                The recommended way to implement your smart wallet factory is by
-                passing the address of the smart wallet factory to the
-                constructor of your smart wallet. This will allow you to use the
-                smart wallet factory to create new smart wallets.{" "}
-                <TrackedLink
-                  href="/dashboard/wallet"
-                  category="code-tab"
-                  label="smart-wallets"
-                  color="primary.500"
-                >
-                  Learn more
-                </TrackedLink>
-                .
-              </AlertDescription>
-            </Alert>
-          )}
-
           <Flex flexDir="column" gap={2} id="getting-started">
             <Heading size="title.md">
               Getting Started {chain ? `with ${chain.name}` : null}
@@ -500,6 +470,59 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             </Text>
           </Flex>
         </Flex>
+        {isAccountFactory && (
+          <Flex flexDirection="column" gap={4}>
+            <Flex flexDir="column" gap={6} id="integrate-smart-wallet">
+              <Heading size="title.md">
+                Integrate your smart wallet factory
+              </Heading>
+              <Alert
+                status="info"
+                borderRadius="md"
+                as={Flex}
+                flexDir="column"
+                alignItems="start"
+                gap={2}
+              >
+                <Flex justifyContent="start">
+                  <AlertIcon />
+                  <AlertTitle>Smart Wallet Factory</AlertTitle>
+                </Flex>
+                <AlertDescription>
+                  The recommended way to implement your smart wallet factory is
+                  by passing the address of the smart wallet factory to the
+                  constructor of your smart wallet. This will allow you to use
+                  the smart wallet factory to create new smart wallets.{" "}
+                  <TrackedLink
+                    href="/dashboard/wallet"
+                    category="code-tab"
+                    label="smart-wallets"
+                    color="primary.500"
+                  >
+                    Learn more
+                  </TrackedLink>
+                  .
+                </AlertDescription>
+              </Alert>
+              <Flex flexDir="column" gap={2}>
+                <CodeSegment
+                  environment={environment}
+                  setEnvironment={setEnvironment}
+                  snippet={formatSnippet(
+                    (WALLETS_SNIPPETS.find((w) => w.id === "smart-wallet")
+                      ?.supportedLanguages || {}) as any,
+                    {
+                      contractAddress,
+                      chainName,
+                      address,
+                    },
+                  )}
+                  hideTabs
+                />
+              </Flex>
+            </Flex>
+          </Flex>
+        )}
         {!onlyInstall ? (
           <>
             {foundExtensions.length > 0 ? (

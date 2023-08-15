@@ -4,6 +4,8 @@ import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useAccounts, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { AccountsCount } from "./components/accounts-count";
+import { AccountsNotice } from "./components/accounts-notice";
 
 interface AccountsPageProps {
   contractAddress?: string;
@@ -58,7 +60,9 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           <CreateAccountButton contractQuery={contractQuery} />
         </ButtonGroup>
       </Flex>
+      <AccountsCount accountsQuery={accountsQuery} />
       <AccountsTable accountsQuery={accountsQuery} />
+      <AccountsNotice />
     </Flex>
   );
 };
