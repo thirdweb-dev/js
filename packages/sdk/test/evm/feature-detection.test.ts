@@ -7,6 +7,8 @@ import {
   IDrop1155__factory,
   TokenERC20__factory,
   ISignatureMintERC20__factory,
+  DropERC1155__factory,
+  IERC1155__factory,
 } from "@thirdweb-dev/contracts-js";
 import {
   ThirdwebSDK,
@@ -116,17 +118,19 @@ describe("Custom Contracts", async () => {
     );
   });
 
-  it("should match abi from bytecode", async () => {
-    const matches = matchesAbiFromBytecode(TokenERC20__factory.bytecode, [
+  it("should match abis from bytecode 2", async () => {
+    let matches = matchesAbiFromBytecode(TokenERC20__factory.bytecode, [
       ISignatureMintERC20__factory.abi,
     ]);
     expect(matches).to.eq(true);
-  });
-
-  it("should match abis from bytecode", async () => {
-    const matches = matchesAbiFromBytecode(DropERC721__factory.bytecode, [
+    matches = matchesAbiFromBytecode(DropERC721__factory.bytecode, [
       IERC721A__factory.abi,
       IDrop__factory.abi,
+    ]);
+    expect(matches).to.eq(true);
+
+    matches = matchesAbiFromBytecode(DropERC1155__factory.bytecode, [
+      IERC1155__factory.abi,
     ]);
     expect(matches).to.eq(true);
   });

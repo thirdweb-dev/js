@@ -115,6 +115,10 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
+import {
+  constructAbiFromBytecode,
+  resolveImplementationBytecode,
+} from "../common";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -588,13 +592,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         );
       } catch (e) {
         // try resolving the contract type (legacy contracts)
-        const resolvedContractType = await this.resolveContractType(address);
+        const resolvedContractType = await this.resolveContractType(
+          resolvedAddress,
+        );
         if (resolvedContractType && resolvedContractType !== "custom") {
           // otherwise if it's a prebuilt contract we can just use the contract type
           const contractAbi = await PREBUILT_CONTRACTS_MAP[
             resolvedContractType
-          ].getAbi(address, this.getProvider(), this.storage);
-          newContract = await this.getContractFromAbi(address, contractAbi);
+          ].getAbi(resolvedAddress, this.getProvider(), this.storage);
+          newContract = await this.getContractFromAbi(
+            resolvedAddress,
+            contractAbi,
+          );
         } else {
           // we cant fetch the ABI, and we don't know the contract type, throw an error
           const chainId = (await this.getProvider().getNetwork()).chainId;

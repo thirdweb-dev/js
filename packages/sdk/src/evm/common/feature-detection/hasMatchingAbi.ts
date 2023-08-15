@@ -46,7 +46,9 @@ export function matchesAbiFromBytecode(
 ) {
   const interfaces = featureAbis.map((abi) => new Interface(abi));
   const selectors = interfaces.flatMap((i) => {
-    return Object.values(i.functions).map((fn) => i.getSighash(fn).slice(2));
+    return Object.values(i.functions).map((fn) =>
+      Number(i.getSighash(fn)).toString(16),
+    );
   });
   const uniqueSelectors = [...new Set(selectors)];
   // checks that all unique selectors are found in the bytecode
