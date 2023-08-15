@@ -22,13 +22,13 @@ export const AccountsNotice = () => {
     >
       <Flex justifyContent="start">
         <AlertIcon />
-        <AlertTitle>Welcome to your own account factory contract!</AlertTitle>
+        <AlertTitle>Welcome to your own account factory contract</AlertTitle>
       </Flex>
       <AlertDescription>
         <Flex flexDir="column" gap={2}>
-          <Text>
+          <AlertDescription>
             This contract is not meant to be interacted directly, instead its
-            meant to be used in your application in conjuction with the{" "}
+            meant to be integrating in your application using the{" "}
             <TrackedLink
               isExternal
               href="https://portal.thirdweb.com/wallet/smart-wallet"
@@ -38,8 +38,9 @@ export const AccountsNotice = () => {
             >
               Wallet SDK
             </TrackedLink>
-            .
-          </Text>
+            . As your application deploys account contracts, they will appear
+            here.
+          </AlertDescription>
           <Text>Once setup, your application will:</Text>
           <UnorderedList>
             <Text as={ListItem}>Let users connect to their smart wallet.</Text>
@@ -54,17 +55,16 @@ export const AccountsNotice = () => {
           </Text>
           <UnorderedList>
             <Text as={ListItem}>
-              Every user (defined as personalWallet) will get a stable,
-              predictable account address (defined as smartWallet).
+              Every connected user will get a stable, predictable account
+              address.
             </Text>
             <Text as={ListItem}>
               This means you can airdrop tokens, NFTs and ETH to the predicted
               addresses safely.
             </Text>
             <Text as={ListItem}>
-              The account contract only needs to be deployed when a user
-              performs its first transaction, saving gas costs since only active
-              users will have to deploy the account.
+              The account contract only gets deployed when a user performs its
+              first transaction, saving on gas costs for inactive users.
             </Text>
           </UnorderedList>
         </Flex>

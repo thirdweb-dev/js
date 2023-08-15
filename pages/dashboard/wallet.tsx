@@ -29,7 +29,6 @@ import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
 // Here we're just generating a new local wallet which can be saved later
 const personalWallet = new LocalWallet();
 await personalWallet.generate();
-await personalWallet.connect();
 
 // Setup the Smart Wallet configuration
 const config = {
