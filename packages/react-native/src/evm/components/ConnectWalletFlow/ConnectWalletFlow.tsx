@@ -89,6 +89,10 @@ export const ConnectWalletFlow = () => {
     setIsConnecting(false);
   };
 
+  const handleClose = useCallback(() => {
+    onClose(true);
+  }, [onClose]);
+
   const getComponentForWallet = useCallback(() => {
     switch (activeWallet?.id) {
       case SmartWallet.id:
@@ -100,7 +104,7 @@ export const ConnectWalletFlow = () => {
         <activeWallet.connectUI
           theme={theme || "dark"}
           goBack={onBackPress}
-          close={() => onClose(true)}
+          close={handleClose}
           isOpen={modalVisible}
           open={onOpenModal}
           walletConfig={activeWallet}
@@ -112,6 +116,7 @@ export const ConnectWalletFlow = () => {
     }
   }, [
     activeWallet,
+    handleClose,
     modalVisible,
     onBackPress,
     onClose,

@@ -750,7 +750,7 @@ export class MarketplaceV3EnglishAuctions<
     const [currentBidBufferBps, winningBid, auction] = await Promise.all([
       this.getBidBufferBps(auctionId),
       this.getWinningBid(auctionId),
-      await this.validateAuction(BigNumber.from(auctionId)),
+      this.validateAuction(BigNumber.from(auctionId)),
     ]);
 
     const currentBidOrReservePrice = winningBid

@@ -1,5 +1,12 @@
-import { useThirdwebConfigContext } from "../contexts/thirdweb-config";
+import { useContext } from "react";
+import invariant from "tiny-invariant";
+import { ThirdwebConfigContext } from "../contexts/thirdweb-config";
 
 export function useSupportedChains() {
-  return useThirdwebConfigContext().chains;
+  const context = useContext(ThirdwebConfigContext);
+  invariant(
+    context,
+    "useSupportedChains() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context.chains;
 }

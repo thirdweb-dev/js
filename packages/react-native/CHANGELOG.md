@@ -1,5 +1,87 @@
 # @thirdweb-dev/react-native
 
+## 0.2.51
+
+### Patch Changes
+
+- [#1489](https://github.com/thirdweb-dev/js/pull/1489) [`07fb1b5f`](https://github.com/thirdweb-dev/js/commit/07fb1b5ffa4c170e252df31070852ddb9a81dec9) Thanks [@iketw](https://github.com/iketw)! - Adding walletConnect as a supportedWallet in React Native
+
+  ```javascript
+  import {
+    localWallet,
+    ThirdwebProvider,
+    walletConnect,
+  } from "@thirdweb-dev/react-native";
+  import { Ethereum } from "@thirdweb-dev/chains";
+
+  const App = () => {
+    const activeChain = Ethereum;
+    return (
+      <ThirdwebProvider
+        activeChain={activeChain}
+        supportedChains={[activeChain]}
+        clientId="your-client-id"
+        supportedWallets={[
+          localWallet(),
+          walletConnect({
+            projectId: "your-wallet-connect-project-id", // optional, but we recommend you get your own for production
+          }),
+        ]}
+      >
+        <AppInner />
+      </ThirdwebProvider>
+    );
+  };
+  ```
+
+- [#1496](https://github.com/thirdweb-dev/js/pull/1496) [`26349f31`](https://github.com/thirdweb-dev/js/commit/26349f311d144d692c69a6c2a7ec0f34949851d4) Thanks [@iketw](https://github.com/iketw)! - Improves loading states when disconnecting and fetching balances
+
+- Updated dependencies [[`07fb1b5f`](https://github.com/thirdweb-dev/js/commit/07fb1b5ffa4c170e252df31070852ddb9a81dec9), [`300a3c6f`](https://github.com/thirdweb-dev/js/commit/300a3c6f04d0ea7e25dfdb0a4c28b3a5796fcadf), [`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346), [`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346), [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf), [`28975765`](https://github.com/thirdweb-dev/js/commit/2897576513eb6f497a9f92e3e473182b4fc9681b), [`b91d3e99`](https://github.com/thirdweb-dev/js/commit/b91d3e990198b77dc1358e738c11dc4acaa67491)]:
+  - @thirdweb-dev/react-core@3.14.32
+  - @thirdweb-dev/wallets@1.1.15
+  - @thirdweb-dev/sdk@3.10.51
+  - @thirdweb-dev/storage@1.2.6
+  - @thirdweb-dev/chains@0.1.44
+
+## 0.2.50
+
+### Patch Changes
+
+- Updated dependencies [[`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74), [`a5ba9e4f`](https://github.com/thirdweb-dev/js/commit/a5ba9e4fbfee228e5b9ac27cd0157187e3a50117), [`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74)]:
+  - @thirdweb-dev/wallets@1.1.14
+  - @thirdweb-dev/sdk@3.10.50
+  - @thirdweb-dev/react-core@3.14.31
+
+## 0.2.49
+
+### Patch Changes
+
+- [#1479](https://github.com/thirdweb-dev/js/pull/1479) [`14d9a71c`](https://github.com/thirdweb-dev/js/commit/14d9a71c928019907618cc8694af0bc631e94b68) Thanks [@iketw](https://github.com/iketw)! - Deprecates magicWallet in favor of magicLink for consistency with our React package
+
+- [#1477](https://github.com/thirdweb-dev/js/pull/1477) [`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass unauth'd RPCs to wallets when adding new chains
+
+- Updated dependencies [[`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2), [`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696)]:
+  - @thirdweb-dev/wallets@1.1.13
+  - @thirdweb-dev/sdk@3.10.49
+  - @thirdweb-dev/react-core@3.14.30
+
+## 0.2.48
+
+### Patch Changes
+
+- [#1458](https://github.com/thirdweb-dev/js/pull/1458) [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add `hideTestnetFaucet` to hide the "Request Testnet funds" button in ConnectWallet details dropdown in `@thirdweb-dev/react-native` and `@thirdweb-dev/react`.
+
+  ```ts
+  <ConnectWallet hideTestnetFaucet={true} />
+  ```
+
+- Updated dependencies [[`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4), [`27c225a5`](https://github.com/thirdweb-dev/js/commit/27c225a51221417592b5940887abd1ccb8b67e47), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed), [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9), [`f0443bd9`](https://github.com/thirdweb-dev/js/commit/f0443bd989dbba50d0836d1cf274bfb2f44a53fd), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76), [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30)]:
+  - @thirdweb-dev/storage@1.2.5
+  - @thirdweb-dev/wallets@1.1.12
+  - @thirdweb-dev/sdk@3.10.48
+  - @thirdweb-dev/chains@0.1.43
+  - @thirdweb-dev/react-core@3.14.29
+
 ## 0.2.47
 
 ### Patch Changes
