@@ -415,8 +415,19 @@ EVMContractPage.fallback = (
 const { slugToChain } = getAllChainRecords();
 export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   const [chainSlug, contractAddress] = ctx.params?.paths as string[];
+
+  let address: string | null = null;
   const queryClient = new QueryClient();
-  const { address } = await queryClient.fetchQuery(ensQuery(contractAddress));
+
+  try {
+    const queryResult = await queryClient.fetchQuery(ensQuery(contractAddress));
+    address = queryResult?.address;
+  } catch {
+    return {
+      notFound: true,
+    };
+  }
+
   // if we cannot get a contract address this becomes a 404
   if (!address) {
     return {
