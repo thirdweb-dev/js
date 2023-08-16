@@ -20,9 +20,7 @@ export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
   featureName = FEATURE_AIRDROP_ERC1155.name;
   protected contractWrapper: ContractWrapper<T>;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>) {
     this.contractWrapper = contractWrapper;
   }
 
@@ -38,7 +36,15 @@ export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
    *******************************/
 
   drop = /* @__PURE__ */ buildTransactionFunction(
-    async (tokenAddress: string, tokenOwner: string, contents: Airdrop1155Content[]): Promise<Transaction<{recipient: string}[]>> => {
+    async (
+      tokenAddress: string,
+      tokenOwner: string,
+      contents: Airdrop1155Content[],
+    ): Promise<
+      Transaction<
+        { failedRecipient: string; tokenId: number; amount: string }[]
+      >
+    > => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdrop",
@@ -49,9 +55,10 @@ export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
             receipt.logs,
           );
           return events.map((e) => {
-            const recipient = e.args.recipient;
             return {
-              recipient,
+              failedRecipient: e.args.recipient,
+              tokenId: e.args.tokenId.toNumber(),
+              amount: e.args.amount.toString(),
             };
           });
         },

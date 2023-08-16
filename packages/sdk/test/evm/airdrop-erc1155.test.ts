@@ -193,5 +193,36 @@ describe("Airdrop ERC1155", async () => {
         ).toNumber(),
       ).to.equal(5);
     });
+
+    it("should correctly return failed airdrop recipients", async () => {
+      const randomContractAsRecipient = process.env
+        .contractPublisherAddress as string;
+
+      const failed = await airdropContract.airdrop1155.drop(
+        dummyBundleContractAddress,
+        adminWallet.address,
+        [
+          { recipient: samWallet.address, tokenId: 0, amount: 10 },
+          { recipient: bobWallet.address, tokenId: 0, amount: 12 },
+          { recipient: randomWallet.address, tokenId: 1, amount: 5 },
+          { recipient: randomContractAsRecipient, tokenId: 1, amount: 1 },
+        ],
+      );
+
+      expect(
+        (await dummyBundleContract.balanceOf(samWallet.address, 0)).toNumber(),
+      ).to.equal(10);
+      expect(
+        (await dummyBundleContract.balanceOf(bobWallet.address, 0)).toNumber(),
+      ).to.equal(12);
+      expect(
+        (
+          await dummyBundleContract.balanceOf(randomWallet.address, 1)
+        ).toNumber(),
+      ).to.equal(5);
+
+      // check failed
+      assert(randomContractAsRecipient === failed[0].failedRecipient);
+    });
   });
 });

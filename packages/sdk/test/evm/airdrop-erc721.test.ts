@@ -186,5 +186,28 @@ describe("Airdrop ERC721", async () => {
       expect(await dummyNftContract.ownerOf(1)).to.equal(bobWallet.address);
       expect(await dummyNftContract.ownerOf(2)).to.equal(randomWallet.address);
     });
+
+    it("should correctly return failed airdrop recipients", async () => {
+      const randomContractAsRecipient = process.env
+        .contractPublisherAddress as string;
+
+      const failed = await airdropContract.airdrop721.drop(
+        dummyNftContractAddress,
+        adminWallet.address,
+        [
+          { recipient: samWallet.address, tokenId: 0 },
+          { recipient: bobWallet.address, tokenId: 1 },
+          { recipient: randomWallet.address, tokenId: 2 },
+          { recipient: randomContractAsRecipient, tokenId: 3 },
+        ],
+      );
+
+      expect(await dummyNftContract.ownerOf(0)).to.equal(samWallet.address);
+      expect(await dummyNftContract.ownerOf(1)).to.equal(bobWallet.address);
+      expect(await dummyNftContract.ownerOf(2)).to.equal(randomWallet.address);
+
+      // check failed
+      assert(randomContractAsRecipient === failed[0].failedRecipient);
+    });
   });
 });

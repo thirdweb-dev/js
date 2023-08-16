@@ -6,10 +6,7 @@ import { Airdrop721Content } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  AirdropERC721,
-  IAirdropERC721,
-} from "@thirdweb-dev/contracts-js";
+import type { AirdropERC721, IAirdropERC721 } from "@thirdweb-dev/contracts-js";
 
 /**
  * @public
@@ -20,9 +17,7 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
   featureName = FEATURE_AIRDROP_ERC721.name;
   protected contractWrapper: ContractWrapper<T>;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>) {
     this.contractWrapper = contractWrapper;
   }
 
@@ -38,7 +33,11 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
    *******************************/
 
   drop = /* @__PURE__ */ buildTransactionFunction(
-    async (tokenAddress: string, tokenOwner: string, contents: Airdrop721Content[]): Promise<Transaction<{recipient: string}[]>> => {
+    async (
+      tokenAddress: string,
+      tokenOwner: string,
+      contents: Airdrop721Content[],
+    ): Promise<Transaction<{ failedRecipient: string; tokenId: number }[]>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdrop",
@@ -49,9 +48,9 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
             receipt.logs,
           );
           return events.map((e) => {
-            const recipient = e.args.recipient;
             return {
-              recipient,
+              failedRecipient: e.args.recipient,
+              tokenId: e.args.tokenId.toNumber(),
             };
           });
         },
