@@ -5,15 +5,15 @@ import { ReactNode } from "react";
 
 type TextInputProps = (typeof Box)["arguments"] &
   TextInputRN["props"] & {
-    icon: ReactNode;
-    position: "left" | "right";
+    rightElement?: ReactNode;
+    leftElement?: ReactNode;
   };
 
 export const TextInput = ({
   onChangeText,
   placeholder,
-  position,
-  icon,
+  rightElement,
+  leftElement,
   ...props
 }: TextInputProps) => {
   const theme = useTheme();
@@ -29,7 +29,7 @@ export const TextInput = ({
       pr="xs"
       {...props}
     >
-      {position === "left" && icon}
+      {leftElement ? leftElement : null}
       <TextInputRN
         style={{ ...styles.textInput, color: theme.colors.textPrimary }}
         returnKeyType={"done"}
@@ -40,7 +40,7 @@ export const TextInput = ({
         onChangeText={onChangeText}
         {...props}
       />
-      {position === "right" && icon}
+      {rightElement ? rightElement : null}
     </Box>
   );
 };
