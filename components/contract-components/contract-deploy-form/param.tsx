@@ -33,7 +33,9 @@ export const Param: React.FC<ParamProps> = ({
       <Flex alignItems="center" my={1}>
         <FormLabel mb={0} flex="1" display="flex">
           <Flex alignItems="baseline" gap={1}>
-            {extraMetadataParam?.displayName || camelToTitle(paramKey)}
+            {extraMetadataParam?.displayName || paramKey === "*"
+              ? "Unnamed"
+              : camelToTitle(paramKey)}
             <Text size="label.sm">({paramKey})</Text>
           </Flex>
         </FormLabel>

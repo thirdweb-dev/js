@@ -105,7 +105,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     ...deployParams.reduce(
       (acc, param) => {
         if (!param.name) {
-          param.name = "_unnamed";
+          param.name = "*";
         }
 
         acc[param.name] = replaceTemplateValues(
