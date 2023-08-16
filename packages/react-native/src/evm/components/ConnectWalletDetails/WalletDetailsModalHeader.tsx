@@ -2,14 +2,14 @@ import { Icon } from "../../assets/icon";
 import { useAppTheme } from "../../styles/hooks";
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
-import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet, useBalance } from "@thirdweb-dev/react-core";
+import { useWallet } from "@thirdweb-dev/react-core";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
 import { useState } from "react";
+import { TextBalance } from "../base/TextBalance";
 
 interface WalletDetailsModalHeaderProps {
   address?: string;
@@ -24,7 +24,6 @@ export const WalletDetailsModalHeader = ({
   onAddressCopied,
 }: WalletDetailsModalHeaderProps) => {
   const theme = useAppTheme();
-  const balanceQuery = useBalance();
   const activeWallet = useWallet();
   const [showLoading, setShowLoading] = useState(false);
 
@@ -38,7 +37,9 @@ export const WalletDetailsModalHeader = ({
 
   const onDisconnectPressInternal = () => {
     setShowLoading(true);
-    onDisconnectPress();
+    setTimeout(() => {
+      onDisconnectPress();
+    }, 0);
   };
 
   return (
@@ -65,12 +66,7 @@ export const WalletDetailsModalHeader = ({
               color={theme.colors.textSecondary}
             />
           </Box>
-          <Text variant="bodySmallSecondary">
-            {balanceQuery.data
-              ? Number(balanceQuery.data.displayValue).toFixed(3)
-              : ""}{" "}
-            {balanceQuery.data?.symbol}
-          </Text>
+          <TextBalance textVariant="bodySmallSecondary" />
         </BaseButton>
         {showLoading ? (
           <ActivityIndicator size="small" color={theme.colors.iconHighlight} />
