@@ -1,188 +1,46 @@
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import { FEATURE_ACCOUNT } from "../../constants/thirdweb-features";
-import { utils, BigNumber } from "ethers";
-import { Transaction } from "./transactions";
-
-import type {
-  IAccountCore,
-  IAccountPermissions,
-} from "@thirdweb-dev/contracts-js";
 import {
-  SignedSignerPermissionsPayload,
-  SignerPermissionsOutput,
+  FEATURE_ACCOUNT,
+  FEATURE_ACCOUNT_PERMISSIONS,
+} from "../../constants/thirdweb-features";
+
+import type { IAccountCore } from "@thirdweb-dev/contracts-js";
+import {
   SignerWithPermissions,
-  SignerPermissions,
   SignerPermissionsInput,
-  SignerPermissionRequest,
-  SignerPermissionsSchema,
   PermissionSnapshotInput,
-  PermissionSnapshotSchema,
-  PermissionSnapshotOutput,
 } from "../../types";
-import invariant from "tiny-invariant";
-import { buildTransactionFunction } from "../../common/transactions";
-import { resolveOrGenerateId } from "../../common/signature-minting";
 import { AddressOrEns } from "../../schema";
-import { resolveAddress } from "../../common";
+import { assertEnabled, detectContractFeature } from "../../common";
+import { AccountPermissions } from "./account-permissions";
 
 export class Account<TContract extends IAccountCore>
   implements DetectableFeature
 {
   featureName = FEATURE_ACCOUNT.name;
   private contractWrapper: ContractWrapper<IAccountCore>;
+  private accountPermissions: AccountPermissions | undefined;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
+    this.accountPermissions = this.detectAccountPermissions();
+  }
+
+  private detectAccountPermissions(): AccountPermissions | undefined {
+    if (
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        "AccountPermissions",
+      )
+    ) {
+      return new AccountPermissions(this.contractWrapper);
+    }
+    return undefined;
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
-  }
-
-  /*********************************
-   * HELPER FUNCTIONS
-   ********************************/
-
-  private hasDuplicateSigners(snapshot: PermissionSnapshotOutput): boolean {
-    const checkedSigner: Record<string, boolean> = {};
-
-    const signers = snapshot.map((item) => item.signer);
-
-    for (const signer of signers) {
-      if (!checkedSigner[signer]) {
-        checkedSigner[signer] = true;
-      } else {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * Format the access restrictions for a given role
-   *
-   * @param restrictions - The access restrictions for a given role
-   * @returns formatted role restrictions
-   *
-   */
-  private parseSignerPermissionsStruct(
-    permissions: IAccountPermissions.SignerPermissionsStruct,
-  ): SignerPermissions {
-    return {
-      startDate: new Date(
-        parseInt(permissions.startTimestamp.toString()) * 1000,
-      ),
-      expirationDate: new Date(
-        parseInt(permissions.endTimestamp.toString()) * 1000,
-      ),
-      nativeTokenLimitPerTransaction: BigNumber.from(
-        permissions.nativeTokenLimitPerTransaction,
-      ),
-      approvedCallTargets: permissions.approvedTargets,
-    };
-  }
-
-  private async sendSignerPermissionRequest(
-    signerAddress: string,
-    permissions: SignerPermissionsOutput,
-  ): Promise<Transaction> {
-    const { payload, signature } = await this.generatePayload(
-      signerAddress,
-      permissions,
-    );
-
-    const { success } =
-      await this.contractWrapper.readContract.verifySignerPermissionRequest(
-        payload,
-        signature,
-      );
-    if (!success) {
-      throw new Error(`Invalid signature.`);
-    }
-
-    return Transaction.fromContractWrapper({
-      contractWrapper: this.contractWrapper,
-      method: "setPermissionsForSigner",
-      args: [payload, signature],
-    });
-  }
-
-  private async buildSignerPermissionRequest(
-    signerAddress: string,
-    permissions: SignerPermissionsOutput,
-  ): Promise<string> {
-    const { payload, signature } = await this.generatePayload(
-      signerAddress,
-      permissions,
-    );
-
-    const isValidSigner =
-      await this.contractWrapper.readContract.verifySignerPermissionRequest(
-        payload,
-        signature,
-      );
-    if (!isValidSigner) {
-      throw new Error(`Invalid signature.`);
-    }
-
-    return this.contractWrapper.writeContract.interface.encodeFunctionData(
-      "setPermissionsForSigner",
-      [payload, signature],
-    );
-  }
-
-  /**
-   * Generate and sign a payload to grant or revoke a signer's access to the account.
-   *
-   * @param signer - The address of the signer
-   * @param roleAction - The address of the signer
-   * @returns The generated payload and signature produced on signing that payload.
-   *
-   */
-  private async generatePayload(
-    signerAddress: string,
-    permissions: SignerPermissionsOutput,
-  ): Promise<SignedSignerPermissionsPayload> {
-    // Get payload struct.
-    const payload: IAccountPermissions.SignerPermissionRequestStruct = {
-      signer: signerAddress,
-      approvedTargets: permissions.approvedCallTargets,
-      nativeTokenLimitPerTransaction: utils.parseEther(
-        permissions.nativeTokenLimitPerTransaction,
-      ),
-      permissionStartTimestamp: permissions.startDate,
-      permissionEndTimestamp: permissions.expirationDate,
-      reqValidityStartTimestamp: 0,
-      // Req validity ends 10 years from now.
-      reqValidityEndTimestamp: BigNumber.from(
-        Math.floor(
-          new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10).getTime() /
-            1000,
-        ),
-      ),
-      uid: resolveOrGenerateId(undefined),
-    };
-
-    // Generate signature
-    const chainId = await this.contractWrapper.getChainID();
-    const connectedSigner = this.contractWrapper.getSigner();
-    invariant(connectedSigner, "No signer available");
-
-    const signature = await this.contractWrapper.signTypedData(
-      connectedSigner,
-      {
-        name: "Account",
-        version: "1",
-        chainId,
-        verifyingContract: this.getAddress(),
-      },
-      { SignerPermissionRequest },
-      payload,
-    );
-
-    return { payload, signature };
   }
 
   /*********************************
@@ -199,13 +57,13 @@ export class Account<TContract extends IAccountCore>
    * @param signer - The address of a signer of the account.
    * @returns whether a signer is an admin on the account.
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
   public async isAdmin(signerAddress: AddressOrEns): Promise<boolean> {
-    const resolvedSignerAddress = await resolveAddress(signerAddress);
-    return await this.contractWrapper.readContract.isAdmin(
-      resolvedSignerAddress,
-    );
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).isAdmin(signerAddress);
   }
 
   /**
@@ -218,13 +76,13 @@ export class Account<TContract extends IAccountCore>
    * @param signer - The address of a signer of the account.
    * @returns whether a signer has permissions to use the account.
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
   public async isSigner(signerAddress: AddressOrEns): Promise<boolean> {
-    const resolvedSignerAddress = await resolveAddress(signerAddress);
-    return await this.contractWrapper.readContract.isActiveSigner(
-      resolvedSignerAddress,
-    );
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).isSigner(signerAddress);
   }
 
   /**
@@ -237,10 +95,13 @@ export class Account<TContract extends IAccountCore>
    *
    * @returns all admins of the account.
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
   public async getAllAdmins(): Promise<string[]> {
-    return await this.contractWrapper.readContract.getAllAdmins();
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).getAllAdmins();
   }
 
   /**
@@ -253,21 +114,13 @@ export class Account<TContract extends IAccountCore>
    *
    * @returns all (non-admin) signers with permissions to use the account.
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
   public async getAllSigners(): Promise<SignerWithPermissions[]> {
-    const activeSignersWithPerms: IAccountPermissions.SignerPermissionsStruct[] =
-      await this.contractWrapper.readContract.getAllActiveSigners();
-
-    return await Promise.all(
-      activeSignersWithPerms.map(async (signerWithPermissions) => {
-        const signer = signerWithPermissions.signer;
-        const permissions = this.parseSignerPermissionsStruct(
-          signerWithPermissions,
-        );
-        return { signer, permissions };
-      }),
-    );
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).getAllSigners();
   }
 
   /**
@@ -280,27 +133,13 @@ export class Account<TContract extends IAccountCore>
    *
    * @returns all admins and non-admin signers with permissions to use the account.
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
   public async getAllAdminsAndSigners(): Promise<SignerWithPermissions[]> {
-    const allAdmins = await this.getAllAdmins();
-    const transformedAdmins: SignerWithPermissions[] = allAdmins.map(
-      (admin) => {
-        return {
-          isAdmin: true,
-          signer: admin,
-          permissions: {
-            startDate: new Date(0),
-            expirationDate: new Date(0),
-            nativeTokenLimitPerTransaction: BigNumber.from(0),
-            approvedCallTargets: [],
-          },
-        };
-      },
-    );
-    const allSigners = await this.getAllSigners();
-
-    return [...transformedAdmins, ...allSigners];
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).getAllAdminsAndSigners();
   }
 
   /*********************************
@@ -320,18 +159,14 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  grantAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
-    async (signerAddress: AddressOrEns): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "setAdmin",
-        args: [resolvedSignerAddress, true],
-      });
-    },
-  );
+  public async grantAdminPermissions(signerAddress: AddressOrEns) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).grantAdminPermissions(signerAddress);
+  }
 
   /**
    * Revoke an address' admin access to the account.
@@ -346,18 +181,14 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  revokeAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
-    async (signerAddress: AddressOrEns): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "setAdmin",
-        args: [resolvedSignerAddress, false],
-      });
-    },
-  );
+  public async revokeAdminPermissions(signerAddress: AddressOrEns) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).revokeAdminPermissions(signerAddress);
+  }
 
   /**
    * Grant a signer permissions to use the account.
@@ -373,36 +204,17 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  grantPermissions = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      signerAddress: AddressOrEns,
-      permissions: SignerPermissionsInput,
-    ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedPermissions = await SignerPermissionsSchema.parseAsync(
-        permissions,
-      );
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot grant permissions to an existing admin.",
-        );
-      }
-
-      if (await this.isSigner(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer already has permissions. Cannot grant permissions to an existing signer. You can update permissions using `updatePermissions`.",
-        );
-      }
-
-      return await this.sendSignerPermissionRequest(
-        resolvedSignerAddress,
-        resolvedPermissions,
-      );
-    },
-  );
+  public async grantPermissions(
+    signerAddress: AddressOrEns,
+    permissions: SignerPermissionsInput,
+  ) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).grantPermissions(signerAddress, permissions);
+  }
 
   /**
    * Update the permissions of a signer for using the account.
@@ -418,36 +230,17 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  updatePermissions = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      signerAddress: AddressOrEns,
-      permissions: SignerPermissionsInput,
-    ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedPermissions = await SignerPermissionsSchema.parseAsync(
-        permissions,
-      );
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot update permissions of an existing admin.",
-        );
-      }
-
-      if (!(await this.isSigner(resolvedSignerAddress))) {
-        throw new Error(
-          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
-        );
-      }
-
-      return await this.sendSignerPermissionRequest(
-        resolvedSignerAddress,
-        resolvedPermissions,
-      );
-    },
-  );
+  public async updatePermissions(
+    signerAddress: AddressOrEns,
+    permissions: SignerPermissionsInput,
+  ) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).updatePermissions(signerAddress, permissions);
+  }
 
   /**
    * Revoke a scoped access address to the account
@@ -462,32 +255,14 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  revokeAccess = /* @__PURE__ */ buildTransactionFunction(
-    async (signerAddress: AddressOrEns): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot revoke permissions of an admin.",
-        );
-      }
-
-      if (!(await this.isSigner(resolvedSignerAddress))) {
-        throw new Error(
-          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
-        );
-      }
-
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(0),
-        expirationDate: BigNumber.from(0),
-        approvedCallTargets: [],
-        nativeTokenLimitPerTransaction: "0",
-      });
-    },
-  );
+  public async revokeAccess(signerAddress: AddressOrEns) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).revokeAccess(signerAddress);
+  }
 
   /**
    * Approve an address as a call target for a given signer on the account
@@ -503,48 +278,17 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  approveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      signerAddress: AddressOrEns,
-      target: AddressOrEns,
-    ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedTarget = await resolveAddress(target);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot approve targets for an admin.",
-        );
-      }
-
-      if (!(await this.isSigner(resolvedSignerAddress))) {
-        throw new Error(
-          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
-        );
-      }
-
-      const permissions: IAccountPermissions.SignerPermissionsStruct =
-        await this.contractWrapper.readContract.getPermissionsForSigner(
-          resolvedSignerAddress,
-        );
-
-      if (permissions.approvedTargets.includes(target)) {
-        throw new Error("Target is already approved");
-      }
-
-      const newTargets = [...permissions.approvedTargets, resolvedTarget];
-
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(permissions.startTimestamp),
-        expirationDate: BigNumber.from(permissions.endTimestamp),
-        approvedCallTargets: newTargets,
-        nativeTokenLimitPerTransaction:
-          permissions.nativeTokenLimitPerTransaction.toString(),
-      });
-    },
-  );
+  public async approveTargetForSigner(
+    signerAddress: AddressOrEns,
+    target: AddressOrEns,
+  ) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).approveTargetForSigner(signerAddress, target);
+  }
 
   /**
    * Disapprove an address as a call target for a given signer on the account
@@ -560,51 +304,17 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  disapproveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      signerAddress: AddressOrEns,
-      target: AddressOrEns,
-    ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedTarget = await resolveAddress(target);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
-        throw new Error(
-          "Signer is already an admin. Cannot approve targets for an admin.",
-        );
-      }
-
-      if (!(await this.isSigner(resolvedSignerAddress))) {
-        throw new Error(
-          "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
-        );
-      }
-
-      const permissions: IAccountPermissions.SignerPermissionsStruct =
-        await this.contractWrapper.readContract.getPermissionsForSigner(
-          resolvedSignerAddress,
-        );
-
-      if (!permissions.approvedTargets.includes(resolvedTarget)) {
-        throw new Error("Target is currently not approved");
-      }
-
-      const newTargets = permissions.approvedTargets.filter(
-        (approvedTarget) =>
-          utils.getAddress(approvedTarget) !== utils.getAddress(resolvedTarget),
-      );
-
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(permissions.startTimestamp),
-        expirationDate: BigNumber.from(permissions.endTimestamp),
-        approvedCallTargets: newTargets,
-        nativeTokenLimitPerTransaction:
-          permissions.nativeTokenLimitPerTransaction.toString(),
-      });
-    },
-  );
+  public async disapproveTargetForSigner(
+    signerAddress: AddressOrEns,
+    target: AddressOrEns,
+  ) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).disapproveTargetForSigner(signerAddress, target);
+  }
 
   /**
    * Set the account's entire snapshot of permissions.
@@ -619,111 +329,14 @@ export class Account<TContract extends IAccountCore>
    * const receipt = tx.receipt();
    * ```
    *
-   * @twfeature Account
+   * @twfeature AccountPermissions
    */
-  resetAllPermissions = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      permissionSnapshot: PermissionSnapshotInput,
-    ): Promise<Transaction> => {
-      const resolvedSnapshot = await PermissionSnapshotSchema.parseAsync(
-        permissionSnapshot,
-      );
-
-      /**
-       * All cases
-       *
-       * - Add new admin :check:
-       * - Remove current admin :check:
-       * - Add new scoped :check:
-       * - Remove current scoped :check:
-       * - Update current scoped :check:
-       * - Current admin -> new scoped :check:
-       * - Current scoped -> new admin :check:
-       **/
-
-      // No duplicate signers in input!
-      if (this.hasDuplicateSigners(resolvedSnapshot)) {
-        throw new Error("Duplicate signers found in input.");
-      }
-
-      const addAdminData: string[] = [];
-      const removeAdminData: string[] = [];
-      const addOrUpdateSignerData: string[] = [];
-      const removeSignerData: string[] = [];
-
-      // Remove all existing admins not included in the passed snapshot.
-      const allAdmins = await this.getAllAdmins();
-      const allToMakeAdmin = resolvedSnapshot
-        .filter((item) => item.makeAdmin)
-        .map((item) => item.signer);
-      allAdmins.forEach((admin) => {
-        if (!allToMakeAdmin.includes(admin)) {
-          removeAdminData.push(
-            this.contractWrapper.writeContract.interface.encodeFunctionData(
-              "setAdmin",
-              [admin, false],
-            ),
-          );
-        }
-      });
-
-      // Remove all existing signers not included in the passed snapshot.
-      const allSigners = await this.getAllSigners();
-      const allToMakeSigners = resolvedSnapshot
-        .filter((item) => {
-          return !item.makeAdmin;
-        })
-        .map((item) => item.signer);
-      await Promise.all(
-        allSigners.map(async (item) => {
-          if (!allToMakeSigners.includes(item.signer)) {
-            const data = await this.buildSignerPermissionRequest(item.signer, {
-              startDate: BigNumber.from(0),
-              expirationDate: BigNumber.from(0),
-              approvedCallTargets: [],
-              nativeTokenLimitPerTransaction: "0",
-            });
-
-            removeSignerData.push(data);
-          }
-        }),
-      );
-
-      for (const member of resolvedSnapshot) {
-        // Add new admin
-        if (member.makeAdmin) {
-          addAdminData.push(
-            this.contractWrapper.writeContract.interface.encodeFunctionData(
-              "setAdmin",
-              [member.signer, true],
-            ),
-          );
-        } else {
-          // Add new scoped
-          const data = await this.buildSignerPermissionRequest(
-            member.signer,
-            member.permissions,
-          );
-          addOrUpdateSignerData.push(data);
-        }
-      }
-
-      const data: string[] = [];
-      removeAdminData.forEach((item) => {
-        data.push(item);
-      });
-      removeSignerData.forEach((item) => {
-        data.push(item);
-      });
-      addOrUpdateSignerData.forEach((item) => {
-        data.push(item);
-      });
-
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "multicall",
-        args: [data],
-      });
-    },
-  );
+  public async resetAllPermissions(
+    permissionSnapshot: PermissionSnapshotInput,
+  ) {
+    return assertEnabled(
+      this.accountPermissions,
+      FEATURE_ACCOUNT_PERMISSIONS,
+    ).resetAllPermissions(permissionSnapshot);
+  }
 }

@@ -260,11 +260,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           (xhr.readyState !== 0 && xhr.readyState !== 4) ||
           xhr.status === 0
         ) {
-          return reject(
-            new Error(
-              "This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.",
-            ),
-          );
+          return reject(new Error("Upload failed due to a network error."));
         }
 
         return reject(new Error("Unknown upload error occured"));

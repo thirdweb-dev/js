@@ -1,5 +1,33 @@
 # @thirdweb-dev/auth
 
+## 3.2.32
+
+### Patch Changes
+
+- Updated dependencies [[`07fb1b5f`](https://github.com/thirdweb-dev/js/commit/07fb1b5ffa4c170e252df31070852ddb9a81dec9)]:
+  - @thirdweb-dev/wallets@1.1.15
+
+## 3.2.31
+
+### Patch Changes
+
+- Updated dependencies [[`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74)]:
+  - @thirdweb-dev/wallets@1.1.14
+
+## 3.2.30
+
+### Patch Changes
+
+- Updated dependencies [[`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2)]:
+  - @thirdweb-dev/wallets@1.1.13
+
+## 3.2.29
+
+### Patch Changes
+
+- Updated dependencies [[`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4), [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed)]:
+  - @thirdweb-dev/wallets@1.1.12
+
 ## 3.2.28
 
 ### Patch Changes

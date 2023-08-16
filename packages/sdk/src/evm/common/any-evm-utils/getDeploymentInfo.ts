@@ -9,8 +9,13 @@ import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { caches } from "./caches";
 import { computeDeploymentInfo } from "./computeDeploymentInfo";
-import { generatePluginFunctions } from "../plugin/generatePluginFunctions";
+import {
+  generateExtensionFunctions,
+  generatePluginFunctions,
+} from "../plugin/generatePluginFunctions";
 import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
+import { getMetadataForExtensions } from "../plugin/getMetadataForExtensions";
+import { Extension } from "../../types/extensions";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.
@@ -42,6 +47,10 @@ export async function getDeploymentInfo(
     storage,
   );
   const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
+  const extensionMetadata = await getMetadataForExtensions(
+    metadataUri,
+    storage,
+  );
 
   // if pluginMetadata is not empty, then it's a plugin-pattern router contract
   if (pluginMetadata.length > 0) {
@@ -87,6 +96,42 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
+  } else if (extensionMetadata.length > 0) {
+    // get deployment info for all extensions
+    const extensionDeploymentInfo = await Promise.all(
+      extensionMetadata.map(async (metadata) => {
+        const info = await computeDeploymentInfo(
+          "extension",
+          provider,
+          storage,
+          create2FactoryAddress,
+          { metadata: metadata },
+        );
+        return info;
+      }),
+    );
+
+    // create constructor param input for BaseRouter
+    const routerInput: Extension[] = [];
+    extensionMetadata.forEach((metadata, index) => {
+      const extensionFunctions = generateExtensionFunctions(metadata.abi);
+      routerInput.push({
+        metadata: {
+          name: metadata.name,
+          metadataURI: "",
+          implementation:
+            extensionDeploymentInfo[index].transaction.predictedAddress,
+        },
+        functions: extensionFunctions,
+      });
+    });
+
+    // routerInput as constructor param for BaseRouter
+    customParams["_extensions"] = {
+      value: routerInput,
+    };
+
+    finalDeploymentInfo.push(...extensionDeploymentInfo);
   }
 
   const implementationDeployInfo = await computeDeploymentInfo(

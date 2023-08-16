@@ -200,13 +200,15 @@ export async function generate(options: GenerateOptions, secretKey: string) {
   }
 
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-  if (packageJson.scripts?.postinstall?.includes("thirdweb generate") || packageJson.scripts?.postinstall?.includes("thirdweb@latest generate")) {
+  if (
+    packageJson.scripts?.postinstall?.includes("thirdweb generate") ||
+    packageJson.scripts?.postinstall?.includes("thirdweb@latest generate")
+  ) {
     return;
   }
 
   const postinstall = packageJson.scripts?.postinstall
-    ? packageJson.scripts.postinstall +
-    `npx --yes thirdweb@latest generate`
+    ? packageJson.scripts.postinstall + `npx --yes thirdweb@latest generate`
     : `npx --yes thirdweb@latest generate`;
 
   fs.writeFileSync(
