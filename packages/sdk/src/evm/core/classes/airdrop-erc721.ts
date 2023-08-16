@@ -32,6 +32,40 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
    * WRITE FUNCTIONS
    *******************************/
 
+  /**
+   * Perform airdrop of ERC721 tokens
+   *
+   * @example
+   * ```javascript
+   * // Airdrop content array, with recipients and tokenIds
+   * const contents = [
+   *      {
+   *        recipient: "0xabc...", // first recipient address
+   *        tokenId: 0
+   *      },
+   *      {
+   *        recipient: "0x123...", // second recipient address
+   *        tokenId: 2
+   *      }
+   *   ]
+   *
+   * const tokenAddress = "0x..." // Address of the ERC721 token being airdropped
+   * const tokenOwner = "0x..." // Address of the owner of the tokens being airdropped
+   *
+   * const failed = await contract.airdrop721.drop(tokenAddress, tokenOwner, contents);
+   *
+   * // the `failed` return value above is an array
+   * // it contains the data of recipients for who the airdrop failed
+   * // empty array means all were successful
+   *
+   * ```
+   * @param tokenAddress
+   * @param tokenOwner
+   * @param contents
+   *
+   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @twfeature AirdropERC721
+   */
   drop = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenAddress: string,

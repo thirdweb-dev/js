@@ -32,6 +32,40 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * WRITE FUNCTIONS
    *******************************/
 
+  /**
+   * Perform airdrop of ERC20 tokens
+   *
+   * @example
+   * ```javascript
+   * // Airdrop content array, with recipients and token amounts
+   * const contents = [
+   *      {
+   *        recipient: "0xabc...", // first recipient address
+   *        amount: "10" // number of tokens in wei units
+   *      },
+   *      {
+   *        recipient: "0x123...", // second recipient address
+   *        amount: "20" // number of tokens in wei units
+   *      }
+   *   ]
+   *
+   * const tokenAddress = "0x..." // Address of the ERC20 token being airdropped
+   * const tokenOwner = "0x..." // Address of the owner of the tokens being airdropped
+   *
+   * const failed = await contract.airdrop20.drop(tokenAddress, tokenOwner, contents);
+   *
+   * // the `failed` return value above is an array
+   * // it contains the data of recipients for who the airdrop failed
+   * // empty array means all were successful
+   *
+   * ```
+   * @param tokenAddress
+   * @param tokenOwner
+   * @param contents
+   *
+   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @twfeature AirdropERC20
+   */
   drop = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenAddress: string,

@@ -35,6 +35,42 @@ export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
    * WRITE FUNCTIONS
    *******************************/
 
+  /**
+   * Perform airdrop of ERC1155 tokens
+   *
+   * @example
+   * ```javascript
+   * // Airdrop content array, with recipients and tokenIds
+   * const contents = [
+   *      {
+   *        recipient: "0xabc...", // first recipient address
+   *        tokenId: 0,
+   *        amount: "10" // number of tokens
+   *      },
+   *      {
+   *        recipient: "0x123...", // second recipient address
+   *        tokenId: 0
+   *        amount: "20" // number of tokens
+   *      }
+   *   ]
+   *
+   * const tokenAddress = "0x..." // Address of the ERC1155 token being airdropped
+   * const tokenOwner = "0x..." // Address of the owner of the tokens being airdropped
+   *
+   * const failed = await contract.airdrop1155.drop(tokenAddress, tokenOwner, contents);
+   *
+   * // the `failed` return value above is an array
+   * // it contains the data of recipients for who the airdrop failed
+   * // empty array means all were successful
+   *
+   * ```
+   * @param tokenAddress
+   * @param tokenOwner
+   * @param contents
+   *
+   * @returns an array of recipients for who the airdrop failed (empty means all transfers were successful)
+   * @twfeature AirdropERC1155
+   */
   drop = /* @__PURE__ */ buildTransactionFunction(
     async (
       tokenAddress: string,
