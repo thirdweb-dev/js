@@ -33,7 +33,7 @@ const NFTS = {
   description:
     "NFT Collections, Editions, Drops and everything else NFT-related.",
   contracts: [
-    "thirdweb.eth/Multiwrap",
+    "thirdweb.eth/LoyaltyCard",
     "doubledev.eth/ERC4907",
     "thirdweb.eth/TokenERC721",
     "thirdweb.eth/TokenERC1155",
@@ -45,6 +45,7 @@ const NFTS = {
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/SignatureDrop",
     "nach.eth/DynamicFreeMint",
+    "thirdweb.eth/Multiwrap",
   ],
 } as const;
 
