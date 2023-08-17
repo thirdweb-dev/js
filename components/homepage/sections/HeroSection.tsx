@@ -1,12 +1,6 @@
 import { AnimatedCLICommand } from "../AnimatedCLICommand/AnimatedCLICommand";
 import { Aurora } from "../Aurora";
-import {
-  Flex,
-  Grid,
-  Icon,
-  LightMode,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Flex, Grid, Icon, LightMode } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -16,7 +10,6 @@ import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton } from "tw-components";
 
 export const HeroSection = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
   const trackEvent = useTrack();
   return (
     <HomepageSection id="home" bottomPattern>
@@ -110,10 +103,22 @@ export const HeroSection = () => {
         </Flex>
 
         <ChakraNextImage
+          display={{ base: "none", lg: "flex" }}
           alt=""
           maxW="100%"
           w={96}
-          src={isMobile ? HeroMobile : Hero}
+          src={Hero}
+          priority
+          quality={95}
+          justifySelf="flex-end"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
+        />
+        <ChakraNextImage
+          display={{ base: "flex", lg: "none" }}
+          alt=""
+          maxW="100%"
+          w={96}
+          src={HeroMobile}
           priority
           quality={95}
           justifySelf="flex-end"
