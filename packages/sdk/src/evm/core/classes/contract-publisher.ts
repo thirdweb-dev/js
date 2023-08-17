@@ -142,6 +142,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       resolvedAddress,
       this.getProvider(),
       this.storage,
+      this.options,
     );
   }
 

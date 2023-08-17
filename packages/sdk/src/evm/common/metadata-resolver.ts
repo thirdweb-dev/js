@@ -1,9 +1,6 @@
 import { Abi, PublishedMetadata } from "../schema/contracts/custom";
 import { Address } from "../schema/shared/Address";
-import {
-  resolveContractUriAndBytecode,
-  resolveContractUriFromAddress,
-} from "./feature-detection/resolveContractUriFromAddress";
+import { resolveContractUriAndBytecode } from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { fetchContractMetadata } from "./fetchContractMetadata";
@@ -12,6 +9,7 @@ import { getMultichainRegistryAddress } from "../constants/addresses/getMulticha
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
+import { SDKOptions } from "../schema";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
@@ -43,6 +41,7 @@ export async function fetchContractMetadataFromAddress(
   address: Address,
   provider: providers.Provider,
   storage: ThirdwebStorage,
+  sdkOptions: SDKOptions = {},
 ): Promise<PublishedMetadata> {
   const chainId = (await provider.getNetwork()).chainId;
   const cached = getFromCache(address, chainId);
@@ -61,16 +60,17 @@ export async function fetchContractMetadataFromAddress(
     metadata = await fetchContractMetadata(compilerMetadataUri, storage);
   } catch (e) {
     console.debug(
-      "Failed to get Contract Metadata from IPFS, defaulting to onchain registry",
+      "Contract Metadata not found on IPFS, defaulting to onchain registry. Original error:",
       (e as any)?.message,
     );
     try {
       // try from multichain registry
       if (!multichainRegistry) {
+        // TODO enforce always passing sdk options for clientId/secretKey
         multichainRegistry = new Contract(
           getMultichainRegistryAddress(),
           TWRegistryABI,
-          getChainProvider("polygon", {}),
+          getChainProvider("polygon", sdkOptions),
         ) as TWMultichainRegistryLogic;
       }
 

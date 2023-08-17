@@ -1765,6 +1765,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         resolvedCustomFactoryAddress,
         this.getProvider(),
         this.storage,
+        this.options,
       );
 
       const factoryFunctionParamTypes = extractFunctionParamsFromAbi(
