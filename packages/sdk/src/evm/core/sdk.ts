@@ -1691,11 +1691,17 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // send each transaction directly to Create2 factory
-      await Promise.all(
-        transactionsforDirectDeploy.map((tx) => {
-          return deployContractDeterministic(signer, tx, options);
-        }),
-      );
+      // process txns one at a time
+      for (const tx of transactionsforDirectDeploy) {
+        try {
+          await deployContractDeterministic(signer, tx, options);
+        } catch (e) {
+          console.debug(
+            `Error deploying contract at ${tx.predictedAddress}`,
+            (e as any)?.message,
+          );
+        }
+      }
 
       const resolvedImplementationAddress = await resolveAddress(
         implementationAddress,
