@@ -168,12 +168,7 @@ export const DeployTypeInput = /* @__PURE__ */ (() =>
  * @internal
  */
 export const RouterTypeInput = /* @__PURE__ */ (() =>
-  z.union([
-    z.literal("none"),
-    z.literal("plugin"),
-    z.literal("extension"),
-    z.literal("core"),
-  ]))();
+  z.union([z.literal("none"), z.literal("plugin"), z.literal("dynamic")]))();
 
 /**
  * @internal
@@ -218,7 +213,15 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
       factoryDeploymentData: FactoryDeploymentSchema.optional(),
       deployType: DeployTypeInput.optional(),
       routerType: RouterTypeInput.optional(),
-      extensionUris: z.array(z.string()).optional(),
+      defaultExtensions: z
+        .array(
+          z.object({
+            extensionName: z.string(),
+            extensionVersion: z.string().default("latest"),
+            publisherAddress: AddressOrEnsSchema,
+          }),
+        )
+        .optional(),
       networksForDeployment: DeploymentNetworkInput.optional(),
       constructorParams: z
         .record(

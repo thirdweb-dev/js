@@ -43,13 +43,14 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   // if pluginMetadata is not empty, then it's a plugin-pattern router contract
   if (
     extendedMetadata?.routerType === "plugin" ||
-    extendedMetadata?.routerType === "extension"
+    extendedMetadata?.routerType === "dynamic"
   ) {
     const deploymentInfo = await getDeploymentInfo(
       publishUri,
       storage,
       provider,
       create2Factory,
+      { clientId, secretKey },
     );
     encodedArgs = deploymentInfo.find(
       (contract) => contract.type === "implementation",

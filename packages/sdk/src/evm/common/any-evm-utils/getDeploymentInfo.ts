@@ -14,6 +14,9 @@ import {
   generatePluginFunctions,
 } from "../plugin/generatePluginFunctions";
 import { Extension } from "../../types/extensions";
+import { fetchPublishedContractFromPolygon } from "./fetchAndCachePublishedContractURI";
+import { SDKOptions } from "../../schema/sdk-options";
+import invariant from "tiny-invariant";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.
@@ -31,6 +34,7 @@ export async function getDeploymentInfo(
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
+  options?: SDKOptions,
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
 
@@ -42,13 +46,25 @@ export async function getDeploymentInfo(
   const finalDeploymentInfo: DeploymentPreset[] = [];
   const { compilerMetadata, extendedMetadata } =
     await fetchAndCacheDeployMetadata(metadataUri, storage);
-  const extensionUris = extendedMetadata?.extensionUris;
+  const defaultExtensions = extendedMetadata?.defaultExtensions;
 
-  if (extendedMetadata?.routerType === "plugin" && extensionUris) {
+  if (extendedMetadata?.routerType === "plugin" && defaultExtensions) {
+    invariant(options, "Require SDK options for Client Id / Secret Key");
+    const publishedExtensions = await Promise.all(
+      defaultExtensions.map((e) => {
+        return fetchPublishedContractFromPolygon(
+          e.publisherAddress,
+          e.extensionName,
+          e.extensionVersion,
+          options,
+        );
+      }),
+    );
+
     const pluginMetadata = (
       await Promise.all(
-        extensionUris.map(async (uri) => {
-          return fetchAndCacheDeployMetadata(uri, storage);
+        publishedExtensions.map(async (c) => {
+          return fetchAndCacheDeployMetadata(c.metadataUri, storage);
         }),
       )
     ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
@@ -95,11 +111,23 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
-  } else if (extendedMetadata?.routerType === "extension" && extensionUris) {
+  } else if (extendedMetadata?.routerType === "dynamic" && defaultExtensions) {
+    invariant(options, "Require SDK options for Client Id / Secret Key");
+    const publishedExtensions = await Promise.all(
+      defaultExtensions.map((e) => {
+        return fetchPublishedContractFromPolygon(
+          e.publisherAddress,
+          e.extensionName,
+          e.extensionVersion,
+          options,
+        );
+      }),
+    );
+
     const extensionMetadata = (
       await Promise.all(
-        extensionUris.map(async (uri) => {
-          return fetchAndCacheDeployMetadata(uri, storage);
+        publishedExtensions.map(async (c) => {
+          return fetchAndCacheDeployMetadata(c.metadataUri, storage);
         }),
       )
     ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);

@@ -36,13 +36,14 @@ export async function predictThirdwebContractAddress(
 
   if (
     extendedMetadata?.routerType === "plugin" ||
-    extendedMetadata?.routerType === "extension"
+    extendedMetadata?.routerType === "dynamic"
   ) {
     const deploymentInfo = await getDeploymentInfo(
       publishUri,
       storage,
       provider,
       create2Factory,
+      { clientId, secretKey },
     );
 
     const implementation = deploymentInfo.find(
