@@ -29,7 +29,11 @@ export function getAllDetectedExtensionsFromBytecode(
 }
 
 export function constructAbiFromBytecode(bytecode: string): AbiInput {
-  const extensions = getAllDetectedExtensionsFromBytecode(bytecode);
+  let extensions = getAllDetectedExtensionsFromBytecode(bytecode);
+  // special deduping for ERC721 and ERC20
+  if (extensions.find((f) => f.name === "ERC721")) {
+    extensions = extensions.filter((f) => f.name !== "ERC20");
+  }
   const abi = joinABIs(extensions.map((f) => joinABIs(f.abis as any)));
   return abi;
 }
