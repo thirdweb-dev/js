@@ -7,7 +7,10 @@ import {
   ContractOptions,
   DeploymentPreset,
 } from "../../types/any-evm/deploy-data";
-import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "./fetchPublishedContractFromPolygon";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
@@ -26,8 +29,12 @@ export async function computeDeploymentInfo(
   storage: ThirdwebStorage,
   create2Factory: string,
   contractOptions?: ContractOptions,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset> {
   const contractName = contractOptions && contractOptions.contractName;
+  const version = contractOptions && contractOptions.version;
+  let publisherAddress = contractOptions && contractOptions.publisherAddress;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -57,9 +64,20 @@ export async function computeDeploymentInfo(
 
   if (!metadata) {
     invariant(contractName, "Require contract name");
-    const uri = await fetchAndCachePublishedContractURI(contractName);
-    metadata = (await fetchAndCacheDeployMetadata(uri, storage))
-      .compilerMetadata;
+    if (!publisherAddress) {
+      publisherAddress = THIRDWEB_DEPLOYER;
+    }
+    const publishedContract = await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      version,
+      storage,
+      clientId,
+      secretKey,
+    );
+    metadata = (
+      await fetchAndCacheDeployMetadata(publishedContract.metadataUri, storage)
+    ).compilerMetadata;
   }
 
   const encodedArgs = await encodeConstructorParamsForImplementation(

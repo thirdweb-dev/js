@@ -115,7 +115,6 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
-import { fetchPublishedContractFromPolygon } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1488,11 +1487,10 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // fetch the publish URI from the ContractPublisher contract
-      const publishedContract = await fetchPublishedContractFromPolygon(
+      const publishedContract = await this.fetchPublishedContractFromPolygon(
         THIRDWEB_DEPLOYER,
         contractName,
         version,
-        this.options,
       );
 
       return this.deployContractFromUri.prepare(
@@ -1533,11 +1531,10 @@ export class ContractDeployer extends RPCConnectionHandler {
       version = "latest",
       options?: DeployOptions,
     ): Promise<DeployTransaction> => {
-      const publishedContract = await fetchPublishedContractFromPolygon(
+      const publishedContract = await this.fetchPublishedContractFromPolygon(
         publisherAddress,
         contractName,
         version,
-        this.options,
       );
       return await this.deployContractFromUri.prepare(
         publishedContract.metadataUri,
@@ -1661,7 +1658,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.storage,
         this.getProvider(),
         create2Factory,
-        this.options,
+        this.options.clientId,
+        this.options.secretKey,
       );
 
       const implementationAddress = deploymentInfo.find(
@@ -2103,7 +2101,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           this.storage,
           this.getProvider(),
           create2FactoryAddress,
-          this.options,
+          this.options.clientId,
+          this.options.secretKey,
         );
 
         const transactionsToSend = deploymentInfo.filter(
@@ -2197,6 +2196,26 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   // PRIVATE METHODS
+
+  private async fetchPublishedContractFromPolygon(
+    publisherAddress: AddressOrEns,
+    contractName: string,
+    version: string,
+  ) {
+    const address = await resolveAddress(publisherAddress);
+    const publishedContract = await new ThirdwebSDK("polygon", {
+      clientId: this.options.clientId,
+      secretKey: this.options.secretKey,
+    })
+      .getPublisher()
+      .getVersion(address, contractName, version);
+    if (!publishedContract) {
+      throw new Error(
+        `No published contract found for '${contractName}' at version '${version}' by '${address}'`,
+      );
+    }
+    return publishedContract;
+  }
 
   private hasLocalFactory() {
     return !!getProcessEnv("factoryAddress");

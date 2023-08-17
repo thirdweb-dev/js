@@ -14,8 +14,7 @@ import {
   generatePluginFunctions,
 } from "../plugin/generatePluginFunctions";
 import { Extension } from "../../types/extensions";
-import { fetchPublishedContractFromPolygon } from "./fetchAndCachePublishedContractURI";
-import { SDKOptions } from "../../schema/sdk-options";
+import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
 import invariant from "tiny-invariant";
 /**
  *
@@ -34,7 +33,8 @@ export async function getDeploymentInfo(
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
-  options?: SDKOptions,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
 
@@ -49,14 +49,16 @@ export async function getDeploymentInfo(
   const defaultExtensions = extendedMetadata?.defaultExtensions;
 
   if (extendedMetadata?.routerType === "plugin" && defaultExtensions) {
-    invariant(options, "Require SDK options for Client Id / Secret Key");
+    invariant(clientId || secretKey, "Require Client Id / Secret Key");
     const publishedExtensions = await Promise.all(
       defaultExtensions.map((e) => {
         return fetchPublishedContractFromPolygon(
           e.publisherAddress,
           e.extensionName,
           e.extensionVersion,
-          options,
+          storage,
+          clientId,
+          secretKey,
         );
       }),
     );
@@ -112,14 +114,16 @@ export async function getDeploymentInfo(
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
   } else if (extendedMetadata?.routerType === "dynamic" && defaultExtensions) {
-    invariant(options, "Require SDK options for Client Id / Secret Key");
+    invariant(clientId || secretKey, "Require Client Id / Secret Key");
     const publishedExtensions = await Promise.all(
       defaultExtensions.map((e) => {
         return fetchPublishedContractFromPolygon(
           e.publisherAddress,
           e.extensionName,
           e.extensionVersion,
-          options,
+          storage,
+          clientId,
+          secretKey,
         );
       }),
     );

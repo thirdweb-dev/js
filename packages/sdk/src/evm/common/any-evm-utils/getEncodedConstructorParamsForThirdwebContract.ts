@@ -3,7 +3,10 @@ import { BytesLike } from "ethers";
 import invariant from "tiny-invariant";
 import { getChainProvider } from "../../constants/urls";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
-import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "./fetchPublishedContractFromPolygon";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { encodeConstructorParamsForImplementation } from "./computeDeploymentInfo";
@@ -20,6 +23,7 @@ export async function getEncodedConstructorParamsForThirdwebContract(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
+  contractVersion: string = "latest",
   clientId?: string,
   secretKey?: string,
   constructorParamMap?: ConstructorParamMap,
@@ -28,7 +32,15 @@ export async function getEncodedConstructorParamsForThirdwebContract(
     clientId,
     secretKey,
   });
-  const publishUri = await fetchAndCachePublishedContractURI(contractName);
+  const publishedContract = await fetchPublishedContractFromPolygon(
+    THIRDWEB_DEPLOYER,
+    contractName,
+    contractVersion,
+    storage,
+    clientId,
+    secretKey,
+  );
+  const publishUri = publishedContract.metadataUri;
   const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
   const create2Factory = await getCreate2FactoryAddress(provider);
   invariant(create2Factory, "Thirdweb stack not found");
@@ -50,7 +62,8 @@ export async function getEncodedConstructorParamsForThirdwebContract(
       storage,
       provider,
       create2Factory,
-      { clientId, secretKey },
+      clientId,
+      secretKey,
     );
     encodedArgs = deploymentInfo.find(
       (contract) => contract.type === "implementation",
