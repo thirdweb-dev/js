@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.44
+
+### Patch Changes
+
+- [#1499](https://github.com/thirdweb-dev/js/pull/1499) [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf) Thanks [@Marfuen](https://github.com/Marfuen)! - Update deploy command from CLI to use show a public gateway url temporarily. Updated chains too.
+
 ## 0.1.43
 
 ### Patch Changes
