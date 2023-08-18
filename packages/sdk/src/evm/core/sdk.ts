@@ -115,10 +115,6 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
-import {
-  constructAbiFromBytecode,
-  resolveImplementationBytecode,
-} from "../common";
 
 /**
  * The main entry point for the thirdweb SDK
