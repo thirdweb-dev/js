@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.10.52
+
+### Patch Changes
+
+- [#1503](https://github.com/thirdweb-dev/js/pull/1503) [`e1962641`](https://github.com/thirdweb-dev/js/commit/e19626417218767a0e44c00f440761d7b86d02eb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass custom storage instances to internal SDKs
+
+- [#1505](https://github.com/thirdweb-dev/js/pull/1505) [`bd1fcbae`](https://github.com/thirdweb-dev/js/commit/bd1fcbae327e788124f5635673511f0b72e9d7ab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose Transaction.populateTransaction()
+
 ## 3.10.51
 
 ### Patch Changes
