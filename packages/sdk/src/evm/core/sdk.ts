@@ -757,13 +757,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       try {
         let chainSDK = sdkMap[chainId];
         if (!chainSDK) {
-          chainSDK = new ThirdwebSDK(chainId, {
-            ...this.options,
-            // need to disable readonly settings for this to work
-            readonlySettings: undefined,
-            // @ts-expect-error - zod doesn't like this
-            supportedChains: chains,
-          });
+          chainSDK = new ThirdwebSDK(
+            chainId,
+            {
+              ...this.options,
+              // need to disable readonly settings for this to work
+              readonlySettings: undefined,
+              // @ts-expect-error - zod doesn't like this
+              supportedChains: chains,
+            },
+            this.storage,
+          );
           sdkMap[chainId] = chainSDK;
         }
 
