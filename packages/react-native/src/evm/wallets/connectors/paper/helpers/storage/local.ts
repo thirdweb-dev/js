@@ -2,21 +2,20 @@ import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
 } from "@paperxyz/embedded-wallet-service-sdk";
+import { MMKV } from "react-native-mmkv";
 
-const getItemFromAsyncStorage = async (key: string) => {
-  // TODO
-  return Promise.resolve(key);
+const storage = new MMKV();
+
+const getItemFromAsyncStorage = (key: string) => {
+  const result = storage.getString(key);
+  return result;
 };
 const setItemInAsyncStorage = async (key: string, value: string) => {
-  // TODO
-  console.log("key, value", key, value);
-  return;
+  storage.set(key, value);
 };
 
 const removeItemInAsyncStorage = async (key: string) => {
-  // TODO
-  console.log("key", key);
-  return;
+  storage.delete(key);
 };
 
 export async function isDeviceSharePresentForUser(
