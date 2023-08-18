@@ -54,6 +54,7 @@ export class HttpRpcClient {
         headers["authorization"] = `Bearer ${
           (globalThis as any).TW_AUTH_TOKEN as string
         }`;
+        headers["x-authorize-wallet"] = "true";
       }
 
       headers["x-sdk-version"] = pkg.version;

@@ -57,9 +57,8 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         "TW_AUTH_TOKEN" in globalThis &&
         typeof (globalThis as any).TW_AUTH_TOKEN === "string"
       ) {
-        headers["authorization"] = `Bearer ${
-          (globalThis as any).TW_AUTH_TOKEN as string
-        }`;
+        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`;
+        headers["x-authorize-wallet"] = "true";
       }
     }
 

@@ -103,8 +103,8 @@ export class StorageDownloader implements IStorageDownloader {
       ) {
         headers = {
           ...headers,
-          authorization: `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
-            }`,
+          authorization: `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
+          "x-authorize-wallet": 'true',
         };
       }
 

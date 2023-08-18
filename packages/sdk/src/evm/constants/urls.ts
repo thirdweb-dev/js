@@ -212,6 +212,7 @@ export function getProviderFromRpcUrl(
         headers["authorization"] = `Bearer ${
           (globalThis as any).TW_AUTH_TOKEN as string
         }`;
+        headers["x-authorize-wallet"] = "true";
         authStrategy = "twAuthToken";
       }
 

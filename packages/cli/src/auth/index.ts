@@ -100,11 +100,12 @@ export const authenticateUser = async (
   // Get or generate a localwallet.
   const wallet = await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
   const walletAddress = await wallet.getAddress();
-  const auth = new ThirdwebAuth(wallet, "thirdweb.com");
+  const domain = "thirdweb.com";
+  const auth = new ThirdwebAuth(wallet, domain);
 
   // Generate the login payload to pass to the dashboard.
   const loggedIn = await auth.login({
-    domain: "thirdweb.com",
+    domain: domain,
     address: walletAddress,
   });
 

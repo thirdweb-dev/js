@@ -18,6 +18,7 @@ export default {
     "https://gnosis.api.onfinality.io/public",
     "https://gnosis.blockpi.network/v1/rpc/public",
     "https://web3endpoints.com/gnosischain-mainnet",
+    "https://gnosis.oat.farm",
     "wss://rpc.gnosischain.com/wss"
   ],
   "faucets": [

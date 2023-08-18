@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kava EVM",
+  "name": "Kava",
   "chain": "KAVA",
   "rpc": [
-    "https://kava-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://kava.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.kava.io",
     "https://evm2.kava.io",
+    "https://kava-rpc.gateway.pokt.network",
+    "https://kava-evm.rpc.thirdweb.com",
     "wss://wevm.kava.io",
     "wss://wevm2.kava.io",
     "https://kava-evm.publicnode.com"
@@ -29,7 +31,7 @@ export default {
   "explorers": [
     {
       "name": "Kava EVM Explorer",
-      "url": "https://explorer.kava.io",
+      "url": "https://kavascan.com",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
@@ -40,5 +42,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "kava-evm"
+  "slug": "kava"
 } as const satisfies Chain;
