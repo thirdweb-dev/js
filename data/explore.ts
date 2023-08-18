@@ -95,6 +95,9 @@ const AIRDROP = {
     "thirdweb.eth/AirdropERC20",
     "thirdweb.eth/AirdropERC721",
     "thirdweb.eth/AirdropERC1155",
+    "thirdweb.eth/AirdropERC20Claimable",
+    "thirdweb.eth/AirdropERC721Claimable",
+    "thirdweb.eth/AirdropERC1155Claimable",
   ],
 } as const;
 
