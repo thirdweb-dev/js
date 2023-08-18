@@ -28,12 +28,17 @@ import pkg from "../../../package.json";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
+  DEFAULT_TIMEOUT_IN_SECONDS = 10;
+
   private secretKey?: string;
   private clientId?: string;
+  private timeoutInSeconds: number;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
     this.clientId = options.clientId;
+    this.timeoutInSeconds =
+      options.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
   }
 
   async download(
@@ -119,7 +124,10 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(
+      () => controller.abort(),
+      this.timeoutInSeconds * 1000,
+    );
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,
@@ -131,7 +139,13 @@ export class StorageDownloader implements IStorageDownloader {
 
     if (!("status" in resOrErr)) {
       // early exit if we don't have a status code
-      return this.download(uri, gatewayUrls, attempts + 1);
+      throw new Error(
+        `Request timed out after ${this.timeoutInSeconds} seconds. ${
+          isTwGatewayUrl(resolvedUri)
+            ? "You can update the timeoutInSeconds option to increase the timeout."
+            : "You're using a public IPFS gateway, pass in a clientId or secretKey for a reliable IPFS gateway."
+        }`,
+      );
     }
 
     // if the request is good we can skip everything else
@@ -172,6 +186,7 @@ export class StorageDownloader implements IStorageDownloader {
       resOrErr.status !== 429 &&
       resOrErr.status < 500
     ) {
+      return resOrErr;
     }
 
     // Since the current gateway failed, recursively try the next one we know about

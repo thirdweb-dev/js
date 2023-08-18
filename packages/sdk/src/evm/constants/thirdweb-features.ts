@@ -12,7 +12,8 @@ import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrima
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
+import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions.json";
+import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
 export const getAllPluginsAbi = [
   {
@@ -291,6 +292,18 @@ export const FEATURE_ACCOUNT_FACTORY = {
   features: {},
 } as const;
 
+export const FEATURE_ACCOUNT_PERMISSIONS = {
+  name: "AccountPermissions",
+  namespace: "accountPermissions",
+  docLinks: {
+    // TODO
+    sdk: "sdk.account",
+    contracts: "",
+  },
+  abis: [IAccountPermissions],
+  features: {},
+} as const;
+
 export const FEATURE_ACCOUNT = {
   name: "Account",
   namespace: "account",
@@ -299,6 +312,6 @@ export const FEATURE_ACCOUNT = {
     sdk: "sdk.account",
     contracts: "",
   },
-  abis: [IAccountCore],
-  features: {},
+  abis: [IAccount],
+  features: { [FEATURE_ACCOUNT_PERMISSIONS.name]: FEATURE_ACCOUNT_PERMISSIONS },
 } as const;

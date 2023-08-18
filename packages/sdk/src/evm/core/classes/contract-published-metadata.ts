@@ -41,6 +41,7 @@ export class ContractPublishedMetadata<TContract extends BaseContract> {
       this.contractWrapper.readContract.address,
       this.contractWrapper.getProvider(),
       this.storage,
+      this.contractWrapper.options,
     );
     return this._cachedMetadata;
   }

@@ -22,6 +22,6 @@ export function useAuth() {
       return undefined;
     }
 
-    return new ThirdwebAuth(wallet, authConfig.domain)
-  }, [wallet, authConfig, authConfig?.domain])
+    return new ThirdwebAuth(wallet, authConfig.domain);
+  }, [wallet, authConfig?.domain]);
 }

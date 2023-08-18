@@ -1,5 +1,27 @@
 # @thirdweb-dev/sdk
 
+## 3.10.51
+
+### Patch Changes
+
+- [#1500](https://github.com/thirdweb-dev/js/pull/1500) [`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass sdk options to fetch contract metadata where possible
+
+- [#1495](https://github.com/thirdweb-dev/js/pull/1495) [`28975765`](https://github.com/thirdweb-dev/js/commit/2897576513eb6f497a9f92e3e473182b4fc9681b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas price for Create2 factory deployment on Cronos testnet
+
+- [#1490](https://github.com/thirdweb-dev/js/pull/1490) [`b91d3e99`](https://github.com/thirdweb-dev/js/commit/b91d3e990198b77dc1358e738c11dc4acaa67491) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Small fix for Promise.all()"
+
+- Updated dependencies [[`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346), [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf)]:
+  - @thirdweb-dev/storage@1.2.6
+  - @thirdweb-dev/chains@0.1.44
+
+## 3.10.50
+
+### Patch Changes
+
+- [#1480](https://github.com/thirdweb-dev/js/pull/1480) [`a5ba9e4f`](https://github.com/thirdweb-dev/js/commit/a5ba9e4fbfee228e5b9ac27cd0157187e3a50117) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Separate Account and AccountPermissions extensions
+
+- [#1484](https://github.com/thirdweb-dev/js/pull/1484) [`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getPolygonGasPriorityFee()
+
 ## 3.10.49
 
 ### Patch Changes
