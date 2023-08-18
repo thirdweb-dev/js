@@ -27,7 +27,7 @@ export async function fetchPublishedContractFromPolygon(
   ) as ContractPublisher;
 
   let publishedContract;
-  if (version === "latest") {
+  if (!version || version === "latest") {
     const model = await contract.getPublishedContract(publisher, contractName);
     publishedContract = PublishedContractSchema.parse({
       id: model.contractId,
