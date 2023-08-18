@@ -1,8 +1,15 @@
-import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
+import {
+  getAllDetectedExtensionNames,
+  getAllDetectedFeatureNames,
+} from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
-import { getChainProvider, isChainConfig } from "../constants/urls";
+import {
+  getChainIdOrName,
+  getChainProvider,
+  isChainConfig,
+} from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
@@ -115,6 +122,12 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
+import fetch from "cross-fetch";
+import {
+  constructAbiFromBytecode,
+  resolveContractUriAndBytecode,
+  resolveImplementationBytecode,
+} from "../common";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -578,15 +591,41 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // we also handle it being "custom" just in case...
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
       try {
-        const metadata =
-          await this.getPublisher().fetchCompilerMetadataFromAddress(
+        const chain = await getChainIdOrName(this.network);
+        const url = `https://chainsaw.thirdweb-dev.com/abi/${resolvedAddress}-${chain}`;
+        console.log("fetching abi from chainsaw", url);
+        const res = await fetch(url);
+        if (res.ok) {
+          const abiJson = await res.json();
+          if (abiJson.abi) {
+            console.log("got abi from chainsaw");
+            newContract = await this.getContractFromAbi(
+              resolvedAddress,
+              abiJson.abi,
+            );
+          } else {
+            console.log("no abi found on chainsaw, resolving from bytecode");
+            // resolve from bytecode if we don't have ABI available
+            const bytecode = await resolveImplementationBytecode(
+              resolvedAddress,
+              this.getProvider(),
+            );
+            const abi = constructAbiFromBytecode(bytecode);
+            newContract = await this.getContractFromAbi(resolvedAddress, abi);
+          }
+        } else {
+          console.log("Chainsaw error, fallback to IPFS");
+          const metadata =
+            await this.getPublisher().fetchCompilerMetadataFromAddress(
+              resolvedAddress,
+            );
+          newContract = await this.getContractFromAbi(
             resolvedAddress,
+            metadata.abi,
           );
-        newContract = await this.getContractFromAbi(
-          resolvedAddress,
-          metadata.abi,
-        );
+        }
       } catch (e) {
+        // fallback to
         // try resolving the contract type (legacy contracts)
         const resolvedContractType = await this.resolveContractType(
           resolvedAddress,
@@ -703,7 +742,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await this.getContract(address)).metadata.get(),
           extensions: async () =>
-            getAllDetectedFeatureNames(
+            getAllDetectedExtensionNames(
               (await this.getContract(address)).abi as Abi,
             ),
         };
@@ -760,7 +799,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await chainSDK.getContract(address)).metadata.get(),
           extensions: async () =>
-            getAllDetectedFeatureNames(
+            getAllDetectedExtensionNames(
               (await chainSDK.getContract(address)).abi as Abi,
             ),
         };
