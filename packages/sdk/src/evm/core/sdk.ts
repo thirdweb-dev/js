@@ -738,13 +738,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       try {
         let chainSDK = sdkMap[chainId];
         if (!chainSDK) {
-          chainSDK = new ThirdwebSDK(chainId, {
-            ...this.options,
-            // need to disable readonly settings for this to work
-            readonlySettings: undefined,
-            // @ts-expect-error - zod doesn't like this
-            supportedChains: chains,
-          });
+          chainSDK = new ThirdwebSDK(
+            chainId,
+            {
+              ...this.options,
+              // need to disable readonly settings for this to work
+              readonlySettings: undefined,
+              // @ts-expect-error - zod doesn't like this
+              supportedChains: chains,
+            },
+            this.storage,
+          );
           sdkMap[chainId] = chainSDK;
         }
 
@@ -2199,10 +2203,14 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
-    const publishedContract = await new ThirdwebSDK("polygon", {
-      clientId: this.options.clientId,
-      secretKey: this.options.secretKey,
-    })
+    const publishedContract = await new ThirdwebSDK(
+      "polygon",
+      {
+        clientId: this.options.clientId,
+        secretKey: this.options.secretKey,
+      },
+      this.storage,
+    )
       .getPublisher()
       .getVersion(address, contractName, version);
     if (!publishedContract) {
