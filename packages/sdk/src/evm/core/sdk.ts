@@ -72,9 +72,9 @@ import {
   SignatureDropInitializer,
   SplitInitializer,
   TokenDropInitializer,
-  TokenInitializer,
   VoteInitializer,
 } from "../contracts";
+import { TokenInitializer } from "../contracts/TokenInitializer";
 import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
 import type {

@@ -1,0 +1,15 @@
+export const prebuiltContractTypes = {
+  vote: "vote",
+  token: "token",
+  "edition-drop": "edition-drop",
+  edition: "edition",
+  marketplace: "marketplace",
+  "marketplace-v3": "marketplace-v3",
+  multiwrap: "multiwrap",
+  "nft-collection": "nft-collection",
+  "nft-drop": "nft-drop",
+  pack: "pack",
+  "signature-drop": "signature-drop",
+  split: "split",
+  "token-drop": "token-drop",
+} as const;

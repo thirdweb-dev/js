@@ -7,7 +7,7 @@ import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { utils, BigNumber } from "ethers";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
-import type { TokenInitializer } from "../../contracts";
+import type { TokenInitializer } from "../../contracts/TokenInitializer";
 import {
   FilledSignaturePayload20,
   MintRequest20,

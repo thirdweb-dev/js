@@ -9,7 +9,6 @@ import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
-import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { Address } from "../schema/shared/Address";
 import { PackContractSchema } from "../schema/contracts/packs";
@@ -31,6 +30,7 @@ import {
   PACK_CONTRACT_ROLES,
   TOKEN_DROP_CONTRACT_ROLES,
 } from "./contractRoles";
+import { TokenInitializer } from "./TokenInitializer";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -543,46 +543,6 @@ export const TokenDropInitializer = {
           .default
       : (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json"))
           .default;
-  },
-};
-
-export const TokenInitializer = {
-  name: "TokenERC20" as const,
-  contractType: prebuiltContractTypes.token,
-  schema: TokenErc20ContractSchema,
-  roles: NFT_BASE_CONTRACT_ROLES,
-  initialize: async (
-    ...[network, address, storage, options]: InitalizeParams
-  ) => {
-    const [, provider] = getSignerAndProvider(network, options);
-    const [abi, contract, _network] = await Promise.all([
-      TokenInitializer.getAbi(address, provider, storage),
-      import("./prebuilt-implementations/token"),
-      provider.getNetwork(),
-    ]);
-
-    return new contract.Token(
-      network,
-      address,
-      storage,
-      options,
-      abi,
-      _network.chainId,
-    );
-  },
-  getAbi: async (
-    address: Address,
-    provider: providers.Provider,
-    storage: ThirdwebStorage,
-  ) => {
-    const abi = await fetchAbiFromAddress(address, provider, storage);
-    if (abi) {
-      return abi;
-    }
-    // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
-    return (
-      await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json")
-    ).default;
   },
 };
 

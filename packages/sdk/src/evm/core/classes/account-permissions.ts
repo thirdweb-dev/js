@@ -19,12 +19,12 @@ import {
   PermissionSnapshotInput,
   PermissionSnapshotSchema,
   PermissionSnapshotOutput,
-} from "../../types";
+} from "../../types/account";
 import invariant from "tiny-invariant";
 import { buildTransactionFunction } from "../../common/transactions";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { AddressOrEns } from "../../schema";
-import { resolveAddress } from "../../common";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 
 export class AccountPermissions implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_PERMISSIONS.name;

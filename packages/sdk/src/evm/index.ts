@@ -37,7 +37,7 @@ export * from "./enums";
 export * from "./common";
 export * from "./constants";
 export * from "./contracts";
-
+export { TokenInitializer } from "./contracts/TokenInitializer";
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
 
 // export integration things

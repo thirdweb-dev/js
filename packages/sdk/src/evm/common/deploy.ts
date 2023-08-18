@@ -8,7 +8,6 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   TokenDropInitializer,
-  TokenInitializer,
   VoteInitializer,
   SplitInitializer,
   MarketplaceInitializer,
@@ -23,6 +22,7 @@ import type {
   PrebuiltContractType,
   DeploySchemaForPrebuiltContractType,
 } from "../contracts";
+import { TokenInitializer } from "../contracts/TokenInitializer";
 
 /**
  *

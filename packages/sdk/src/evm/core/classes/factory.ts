@@ -14,7 +14,6 @@ import {
   SignatureDropInitializer,
   SplitInitializer,
   TokenDropInitializer,
-  TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
 import { Address } from "../../schema/shared/Address";
@@ -43,6 +42,7 @@ import invariant from "tiny-invariant";
 import { z } from "zod";
 import { getApprovedImplementation } from "../../constants/addresses/getApprovedImplementation";
 import { getDefaultTrustedForwarders } from "../../constants/addresses/getDefaultTrustedForwarders";
+import { TokenInitializer } from "../../contracts/TokenInitializer";
 
 /**
  * @internal

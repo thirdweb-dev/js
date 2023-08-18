@@ -4,7 +4,7 @@ import { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_ZORA } from "../../constants/erc721-features";
 import { AddressOrEns } from "../../schema";
-import type { ClaimOptions } from "../../types";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
