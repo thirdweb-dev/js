@@ -75,6 +75,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       new StorageDownloader({
         secretKey: options?.secretKey,
         clientId: options?.clientId,
+        timeoutInSeconds: options?.downloadTimeoutInSeconds,
       });
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),

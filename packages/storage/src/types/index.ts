@@ -5,6 +5,7 @@ export type ThirdwebStorageOptions<T extends UploadOptions> = {
   uploader?: IStorageUploader<T>;
   downloader?: IStorageDownloader;
   gatewayUrls?: GatewayUrls | string[];
+  downloadTimeoutInSeconds?: number;
   uploadServerUrl?: string;
   clientId?: string;
   secretKey?: string;

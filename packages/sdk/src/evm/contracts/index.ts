@@ -67,7 +67,7 @@ export const EditionDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      await EditionDropInitializer.getAbi(address, provider, storage),
+      EditionDropInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/edition-drop"),
       provider.getNetwork(),
     ]);
