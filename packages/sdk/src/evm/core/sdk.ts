@@ -122,7 +122,7 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
-import fetch from "cross-fetch";
+
 import {
   constructAbiFromBytecode,
   resolveContractUriAndBytecode,
@@ -591,39 +591,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // we also handle it being "custom" just in case...
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
       try {
-        const chain = await getChainIdOrName(this.network);
-        const url = `https://chainsaw.thirdweb-dev.com/abi/${resolvedAddress}-${chain}`;
-        console.log("fetching abi from chainsaw", url);
-        const res = await fetch(url);
-        if (res.ok) {
-          const abiJson = await res.json();
-          if (abiJson.abi) {
-            console.log("got abi from chainsaw");
-            newContract = await this.getContractFromAbi(
-              resolvedAddress,
-              abiJson.abi,
-            );
-          } else {
-            console.log("no abi found on chainsaw, resolving from bytecode");
-            // resolve from bytecode if we don't have ABI available
-            const bytecode = await resolveImplementationBytecode(
-              resolvedAddress,
-              this.getProvider(),
-            );
-            const abi = constructAbiFromBytecode(bytecode);
-            newContract = await this.getContractFromAbi(resolvedAddress, abi);
-          }
-        } else {
-          console.log("Chainsaw error, fallback to IPFS");
-          const metadata =
-            await this.getPublisher().fetchCompilerMetadataFromAddress(
-              resolvedAddress,
-            );
-          newContract = await this.getContractFromAbi(
+        const metadata =
+          await this.getPublisher().fetchCompilerMetadataFromAddress(
             resolvedAddress,
-            metadata.abi,
           );
-        }
+        newContract = await this.getContractFromAbi(
+          resolvedAddress,
+          metadata.abi,
+        );
       } catch (e) {
         // fallback to
         // try resolving the contract type (legacy contracts)

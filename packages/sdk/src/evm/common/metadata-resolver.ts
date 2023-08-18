@@ -1,6 +1,9 @@
 import { Abi, PublishedMetadata } from "../schema/contracts/custom";
 import { Address } from "../schema/shared/Address";
-import { resolveContractUriAndBytecode } from "./feature-detection/resolveContractUriFromAddress";
+import {
+  resolveContractUriAndBytecode,
+  resolveImplementationBytecode,
+} from "./feature-detection/resolveContractUriFromAddress";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { fetchContractMetadata } from "./fetchContractMetadata";
@@ -10,6 +13,7 @@ import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema";
+import fetch from "cross-fetch";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
@@ -43,54 +47,39 @@ export async function fetchContractMetadataFromAddress(
   storage: ThirdwebStorage,
   sdkOptions: SDKOptions = {},
 ): Promise<PublishedMetadata> {
-  const chainId = (await provider.getNetwork()).chainId;
+  const chainId = (await provider.getNetwork()).chainId; // TODO resolve from sdk network
   const cached = getFromCache(address, chainId);
   if (cached) {
     return cached;
   }
   let metadata: PublishedMetadata | undefined;
   let bytecode: string | undefined;
-  try {
-    const { uri: compilerMetadataUri, bytecode: resolvedBytecode } =
-      await resolveContractUriAndBytecode(address, provider);
-    bytecode = resolvedBytecode;
-    if (!compilerMetadataUri) {
-      throw new Error(`Could not resolve metadata for contract at ${address}`);
-    }
-    metadata = await fetchContractMetadata(compilerMetadataUri, storage);
-  } catch (e) {
-    console.debug(
-      "Contract Metadata not found on IPFS, defaulting to onchain registry. Original error:",
-      (e as any)?.message,
-    );
-    try {
-      // try from multichain registry
-      if (!multichainRegistry) {
-        // TODO enforce always passing sdk options for clientId/secretKey
-        multichainRegistry = new Contract(
-          getMultichainRegistryAddress(),
-          TWRegistryABI,
-          getChainProvider("polygon", sdkOptions),
-        ) as TWMultichainRegistryLogic;
-      }
 
-      const importedUri = await multichainRegistry.getMetadataUri(
-        chainId,
-        address,
-      );
-      if (!importedUri) {
-        throw new Error(
-          `Could not resolve metadata for contract at ${address}`,
-        );
-      }
-      metadata = await fetchContractMetadata(importedUri, storage);
-    } catch (err) {
+  const url = `https://chainsaw.thirdweb-dev.com/abi/${address}-${chainId}`;
+  console.log("fetching abi from chainsaw", url);
+  const res = await fetch(url);
+  if (res.ok) {
+    const abiJson = await res.json();
+    if (abiJson.abi) {
+      // TODO chainsaw endpoint with full metadata?
+      console.log("got abi from chainsaw");
+      metadata = {
+        name: "",
+        abi: abiJson.abi as Abi,
+        metadata: {},
+        info: {},
+        licenses: [],
+      };
+    } else {
+      console.log("no abi found on chainsaw, resolving from bytecode");
+      // resolve from bytecode if we don't have ABI available
+      bytecode = await resolveImplementationBytecode(address, provider);
       if (bytecode) {
         const abi = constructAbiFromBytecode(bytecode);
         if (abi && abi.length > 0) {
           // return partial ABI
           metadata = {
-            name: "Unknown Contract",
+            name: "Unimported Contract",
             abi: abi as Abi,
             metadata: {},
             info: {},
@@ -106,6 +95,71 @@ export async function fetchContractMetadataFromAddress(
         throw new Error(
           `Could not resolve metadata for contract at ${address}`,
         );
+      }
+    }
+  }
+
+  if (!metadata) {
+    console.log("Couldn't find ABI on chainsaw, resolving from IPFS");
+    try {
+      const { uri: compilerMetadataUri, bytecode: resolvedBytecode } =
+        await resolveContractUriAndBytecode(address, provider);
+      bytecode = resolvedBytecode;
+      if (!compilerMetadataUri) {
+        throw new Error(
+          `Could not resolve metadata for contract at ${address}`,
+        );
+      }
+      metadata = await fetchContractMetadata(compilerMetadataUri, storage);
+    } catch (e) {
+      console.debug(
+        "Contract Metadata not found on IPFS, defaulting to onchain registry. Original error:",
+        (e as any)?.message,
+      );
+      try {
+        // try from multichain registry
+        if (!multichainRegistry) {
+          // TODO enforce always passing sdk options for clientId/secretKey
+          multichainRegistry = new Contract(
+            getMultichainRegistryAddress(),
+            TWRegistryABI,
+            getChainProvider("polygon", sdkOptions),
+          ) as TWMultichainRegistryLogic;
+        }
+
+        const importedUri = await multichainRegistry.getMetadataUri(
+          chainId,
+          address,
+        );
+        if (!importedUri) {
+          throw new Error(
+            `Could not resolve metadata for contract at ${address}`,
+          );
+        }
+        metadata = await fetchContractMetadata(importedUri, storage);
+      } catch (err) {
+        if (bytecode) {
+          const abi = constructAbiFromBytecode(bytecode);
+          if (abi && abi.length > 0) {
+            // return partial ABI
+            metadata = {
+              name: "Unknown Contract",
+              abi: abi as Abi,
+              metadata: {},
+              info: {},
+              licenses: [],
+              isPartialAbi: true,
+            };
+          } else {
+            throw new Error(
+              `Could not resolve metadata for contract at ${address}`,
+            );
+          }
+        } else {
+          throw new Error(
+            `Could not resolve metadata for contract at ${address}`,
+          );
+        }
       }
     }
   }
