@@ -8,8 +8,8 @@ export default {
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "HMND",
-    "symbol": "HMND",
+    "name": "eHMND",
+    "symbol": "eHMND",
     "decimals": 18
   },
   "infoURL": "https://humanode.io",
