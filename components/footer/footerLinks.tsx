@@ -1,5 +1,3 @@
-import { replaceIpfsUrl } from "lib/sdk";
-
 export interface FooterLinkInfo {
   label: string;
   name: string;
@@ -91,9 +89,7 @@ export const RESOURCES: FooterLinkInfo[] = [
   {
     name: "Press Kit",
     label: "press-kit",
-    link: replaceIpfsUrl(
-      "ipfs://QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
-    ),
+    link: "https://ipfs.io/ipfs/QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
   },
   {
     name: "Report Abuse",
