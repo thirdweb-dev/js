@@ -147,7 +147,8 @@ export function getSOLThirdwebSDK(
       clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
       secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
       uploadServerUrl: DASHBOARD_UPLOAD_URL,
-      gatewayUrls: [IPFS_GATEWAY_URL],
+      // purposefully using the ipfs.io gateway here because when we upload with gateway url we want to use the public gateway
+      gatewayUrls: ["https://ipfs.io/ipfs/{cid}/{path}"],
       uploader: new IpfsUploader({
         uploadWithGatewayUrl: true,
         clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
