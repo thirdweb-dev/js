@@ -15,7 +15,7 @@ export default {
   shortName: "xpla",
   chainId: 37,
   icon: {
-    url: "ipfs://Qmf4GoxfpeA5VGqu7KP5eyv1WKaCpNDbvMxq1MjQBwFWxq",
+    url: "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
     width: 512,
     height: 512,
     format: "png",
