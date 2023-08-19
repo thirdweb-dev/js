@@ -29,4 +29,5 @@ export default {
     },
   ],
   testnet: true,
+  redFlags: ["reusedChainId"],
 };
