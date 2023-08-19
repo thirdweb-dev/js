@@ -2222,10 +2222,14 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
-    const publishedContract = await new ThirdwebSDK("polygon", {
-      clientId: this.options.clientId,
-      secretKey: this.options.secretKey,
-    })
+    const publishedContract = await new ThirdwebSDK(
+      "polygon",
+      {
+        clientId: this.options.clientId,
+        secretKey: this.options.secretKey,
+      },
+      this.storage,
+    )
       .getPublisher()
       .getVersion(address, contractName, version);
     if (!publishedContract) {
