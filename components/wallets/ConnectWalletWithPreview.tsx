@@ -28,7 +28,7 @@ import {
   rainbowWallet,
 } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
-import { CodeBlock, FormLabel, Heading, Link, Text, Card } from "tw-components";
+import { CodeBlock, FormLabel, Heading } from "tw-components";
 import { replaceIpfsUrl } from "lib/sdk";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { THIRDWEB_DOMAIN, THIRDWEB_API_HOST } from "constants/urls";
