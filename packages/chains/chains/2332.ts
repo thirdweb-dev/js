@@ -4,7 +4,10 @@ export default {
   "chain": "SOMA",
   "rpc": [
     "https://soma-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://data-mainnet-v1.somanetwork.io/"
+    "https://data-mainnet-v1.somanetwork.io/",
+    "https://id-mainnet.somanetwork.io",
+    "https://hk-mainnet.somanetwork.io",
+    "https://sg-mainnet.somanetwork.io"
   ],
   "faucets": [
     "https://airdrop.somanetwork.io"
