@@ -24,6 +24,8 @@
     "android"
   ],
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.395.0",
+    "@aws-sdk/credential-providers": "^3.395.0",
     "@coinbase/wallet-mobile-sdk": "1.0.7",
     "@magic-sdk/provider": "17.2.0",
     "@magic-sdk/react-native-bare": "^18.5.0",
@@ -45,6 +47,7 @@
     "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
     "react-native-svg": "^13.9.0",
+    "secrets.js-34r7h": "^2.0.2",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {

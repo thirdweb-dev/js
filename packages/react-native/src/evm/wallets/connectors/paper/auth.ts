@@ -14,11 +14,8 @@ import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
 } from "./helpers/auth/cognitoAuth";
-import { prePaperAuth } from "./helpers/auth/middleware";
-import {
-  isDeviceSharePresentForUser,
-  setAuthShareClient,
-} from "./helpers/storage/local";
+import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
+import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 
 export async function sendEmailOTP(
@@ -113,8 +110,7 @@ export async function validateEmailOTP({
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await setAuthShareClient(verifiedTokenJwtString, clientId);
-    // TODO: Handle wallet instantiation
+    postPaperAuth(storedToken, clientId);
 
     return { storedToken };
   } catch (e) {

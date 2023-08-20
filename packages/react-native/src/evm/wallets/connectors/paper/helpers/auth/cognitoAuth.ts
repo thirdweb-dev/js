@@ -1,11 +1,16 @@
 import { Amplify, Auth } from "aws-amplify";
 import crypto from "crypto";
+import {
+  AWS_REGION,
+  COGNITO_APP_CLIENT_ID,
+  COGNITO_USER_POOL_ID,
+} from "../constants";
 
 Amplify.configure({
   Auth: {
-    region: "us-west-2",
-    userPoolId: "us-west-2_UFwLcZIpq",
-    userPoolWebClientId: "2e02ha2ce6du13ldk8pai4h3d0",
+    region: AWS_REGION,
+    userPoolId: COGNITO_USER_POOL_ID,
+    userPoolWebClientId: COGNITO_APP_CLIENT_ID,
   },
 });
 
