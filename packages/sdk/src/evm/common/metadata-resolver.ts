@@ -10,10 +10,8 @@ import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema";
-import fetch from "cross-fetch";
 
-const RESOLVER_URL = "https://contract-importer.nftlabs.co";
-// const RESOLVER_URL = "http://localhost:3000";
+const IPFS_TIMEOUT = 2000;
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
@@ -53,77 +51,65 @@ export async function fetchContractMetadataFromAddress(
     return cached;
   }
   let metadata: PublishedMetadata | undefined;
-  let bytecode: string | undefined;
 
-  const url = `${RESOLVER_URL}/fetch/${chainId}/${address}`;
-  console.log("fetching abi from chainsaw", url);
-  console.time("chainsaw time");
-  const res = await fetch(url);
-  if (res.ok) {
-    const abiJson = await res.json();
-    if (abiJson) {
-      // TODO chainsaw endpoint with full metadata?
-      console.log("got abi from chainsaw");
-      metadata = abiJson;
-    }
-  }
-  console.timeEnd("chainsaw time");
+  console.log("fetching contract metadata for", address, chainId);
+  console.time("fetched metadata in");
 
-  if (metadata) {
-    putInCache(address, chainId, metadata);
-    return metadata;
-  }
-
-  // if (!metadata) {
-  // console.log("Couldn't find ABI on chainsaw, resolving from IPFS");
-  try {
-    console.time("resolve Uri");
-    const [ipfsData, registryData] = await Promise.all([
-      resolveContractUriAndBytecode(address, provider).catch(() => undefined),
-      getMetadataUriFromMultichainRegistry(address, chainId, sdkOptions).then(
-        (uri) => {
-          if (!uri) {
-            return undefined;
-          }
-          return {
-            uri,
-            bytecode: "",
-          };
-        },
-      ),
-    ]);
-    bytecode = ipfsData?.bytecode;
-    console.log("ipfsData", ipfsData?.uri);
-    console.log("registryData", registryData?.uri);
-    const metadataUri = registryData?.uri || ipfsData?.uri;
-    console.timeEnd("resolve Uri");
-    if (!metadataUri) {
-      throw new Error(`Could not resolve metadata for contract at ${address}`);
-    }
-    metadata = await fetchContractMetadata(metadataUri, storage);
-  } catch (e) {
-    if (bytecode) {
-      const abi = constructAbiFromBytecode(bytecode);
-      if (abi && abi.length > 0) {
-        // return partial ABI
-        metadata = {
-          name: "Unknown Contract",
-          abi: abi as Abi,
-          metadata: {},
-          info: {},
-          licenses: [],
-          isPartialAbi: true,
+  const [ipfsData, registryData] = await Promise.all([
+    resolveContractUriAndBytecode(address, provider).catch(() => undefined),
+    getMetadataUriFromMultichainRegistry(address, chainId, sdkOptions)
+      .then((uri) => {
+        if (!uri) {
+          return undefined;
+        }
+        return {
+          uri,
+          bytecode: "",
         };
-      } else {
-        throw new Error(
-          `Could not resolve metadata for contract at ${address}`,
-        );
-      }
-    } else {
-      throw new Error(`Could not resolve metadata for contract at ${address}`);
+      })
+      .catch(() => undefined),
+  ]);
+  const bytecode = ipfsData?.bytecode;
+  const metadataUri = registryData?.uri || ipfsData?.uri;
+  if (!metadataUri && !bytecode) {
+    throw new Error(
+      `Could not fetch bytecode for contract at ${address} on chain ${chainId}, double check that the address and chainId are correct.`,
+    );
+  }
+  // if we can't resolve from IPFS within 2s its very likely the hash was never pinned
+  // TODO ideally this is done with a abort controller, needs to be supported by storage
+  try {
+    metadata = await timeout(
+      IPFS_TIMEOUT,
+      fetchContractMetadata(metadataUri, storage),
+    );
+  } catch (e) {
+    // TODO remove warning
+    console.warn(
+      `Failed to fetch metadata from IPFS for contract at ${address} on chain ${chainId}`,
+      e,
+    );
+  }
+
+  if (!metadata && bytecode) {
+    const abi = constructAbiFromBytecode(bytecode);
+    if (abi && abi.length > 0) {
+      console.warn(
+        `Contract metadata could only be partially resolved, some contract functions might be unavailable. Try importing the contract by visiting: https://thirdweb.com/${chainId}/${address}`,
+      );
+      // return partial ABI
+      metadata = {
+        name: "Unimported Contract",
+        abi: abi as Abi,
+        metadata: {},
+        info: {},
+        licenses: [],
+        isPartialAbi: true,
+      };
     }
   }
-  // }
+  console.timeEnd("fetched metadata in");
+
   if (!metadata) {
     throw new Error(
       `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
@@ -177,4 +163,22 @@ export async function fetchAbiFromAddress(
     // will fallback to embedded ABIs for prebuilts
   }
   return undefined;
+}
+
+function timeout<T>(ms: number, promise: Promise<T>): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`Timed out after ${ms} ms`));
+    }, ms);
+
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
 }

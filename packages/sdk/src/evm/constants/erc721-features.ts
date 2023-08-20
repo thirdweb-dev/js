@@ -19,6 +19,7 @@ import SharedMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/SharedMetada
 import zora_IDropERC721 from "@thirdweb-dev/contracts-js/dist/abis/zora_IERC721Drop.json";
 import ILoyaltyCardAbi from "@thirdweb-dev/contracts-js/dist/abis/ILoyaltyCard.json";
 import INFTMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/INFTMetadata.json";
+import IERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
@@ -257,7 +258,7 @@ export const FEATURE_NFT = /* @__PURE__ */ {
     sdk: "sdk.erc721",
     contracts: "erc721",
   },
-  abis: [Erc721Abi],
+  abis: [Erc721Abi, IERC721MetadataAbi],
   features: {
     [FEATURE_NFT_BURNABLE.name]: FEATURE_NFT_BURNABLE,
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,

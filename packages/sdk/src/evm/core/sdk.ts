@@ -615,11 +615,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             contractAbi,
           );
         } else {
-          // we cant fetch the ABI, and we don't know the contract type, throw an error
-          const chainId = (await this.getProvider().getNetwork()).chainId;
-          throw new Error(
-            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
-          );
+          // we cant fetch the ABI, and we don't know the contract type, throw the original error
+          throw e;
         }
       }
     }
