@@ -10,8 +10,8 @@ export default {
     "https://t.me/HumanodeTestnet5FaucetBot"
   ],
   "nativeCurrency": {
-    "name": "HMND",
-    "symbol": "HMND",
+    "name": "eHMND",
+    "symbol": "eHMND",
     "decimals": 18
   },
   "infoURL": "https://humanode.io",
