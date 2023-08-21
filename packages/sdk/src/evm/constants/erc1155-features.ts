@@ -6,11 +6,43 @@ import DropERC1155_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC1155
 import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155.json";
 import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1.json";
 import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
+import Erc1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json";
+import Erc1155SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Supply.json";
 import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable.json";
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC1155.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC1155.json";
+
+// TODO could be part of IERC1155Metadata even though its not in the spec
+const NAME_SYMBOL_ABI = [
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 
 export const FEATURE_EDITION_BURNABLE = {
   name: "ERC1155Burnable",
@@ -179,7 +211,7 @@ export const FEATURE_EDITION = /* @__PURE__ */ {
     sdk: "sdk.erc1155enumerable",
     contracts: "erc1155",
   },
-  abis: [Erc1155Abi],
+  abis: [Erc1155Abi, Erc1155MetadataAbi, Erc1155SupplyAbi, NAME_SYMBOL_ABI],
   features: {
     [FEATURE_EDITION_BURNABLE.name]: FEATURE_EDITION_BURNABLE,
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
