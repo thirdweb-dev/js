@@ -17,7 +17,7 @@ const itif = (condition: boolean) => (condition ? it : it.skip);
 jest.setTimeout(120_000);
 
 describe("npx thirdweb deploy", () => {
-  itif(!!apiSecretKey || !skipTest)("should return deploy page url", async () => {
+  itif(!!apiSecretKey && !skipTest)("should return deploy page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
 
     await copyFile(

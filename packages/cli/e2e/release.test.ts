@@ -19,7 +19,7 @@ jest.setTimeout(120_000);
 
 describe("npx thirdweb publish", () => {
   // conditionally skip test if there's no api key
-  itif(!!apiSecretKey || !skipTest)("should return publish page url", async () => {
+  itif(!!apiSecretKey && !skipTest)("should return publish page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
 
     await copyFile(
