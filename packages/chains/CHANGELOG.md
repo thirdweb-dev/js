@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.45
+
+### Patch Changes
+
+- [#1506](https://github.com/thirdweb-dev/js/pull/1506) [`f97ddf4c`](https://github.com/thirdweb-dev/js/commit/f97ddf4c7f14854f3b204ad9741b52ddb8dac736) Thanks [@jnsdls](https://github.com/jnsdls)! - add xpla chains & update chains
+
+## 0.1.44
+
+### Patch Changes
+
+- [#1499](https://github.com/thirdweb-dev/js/pull/1499) [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf) Thanks [@Marfuen](https://github.com/Marfuen)! - Update deploy command from CLI to use show a public gateway url temporarily. Updated chains too.
+
 ## 0.1.43
 
 ### Patch Changes
