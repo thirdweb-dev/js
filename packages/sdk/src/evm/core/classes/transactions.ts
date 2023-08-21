@@ -413,6 +413,12 @@ export class Transaction<
    * Get the signed transaction
    */
   async sign(): Promise<string> {
+    const populatedTx = await this.populateTransaction();
+    const signedTx = await this.contract.signer.signTransaction(populatedTx);
+    return signedTx;
+  }
+
+  async populateTransaction(): Promise<providers.TransactionRequest> {
     const gasOverrides = await this.getGasOverrides();
     const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
@@ -426,8 +432,7 @@ export class Transaction<
       overrides,
     );
     const populatedTx = await this.contract.signer.populateTransaction(tx);
-    const signedTx = await this.contract.signer.signTransaction(populatedTx);
-    return signedTx;
+    return populatedTx;
   }
 
   /**
@@ -845,7 +850,7 @@ export class DeployTransaction extends TransactionContext {
     return contractAddress;
   }
 
-  private async populateTransaction(): Promise<providers.TransactionRequest> {
+  public async populateTransaction(): Promise<providers.TransactionRequest> {
     const gasOverrides = await this.getGasOverrides();
     const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
