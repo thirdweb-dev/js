@@ -11,8 +11,6 @@ import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema";
 
-const IPFS_TIMEOUT = 2000;
-
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
 let multichainRegistry: Contract | undefined = undefined;
@@ -55,6 +53,7 @@ export async function fetchContractMetadataFromAddress(
   console.log("fetching contract metadata for", address, chainId);
   console.time("fetched metadata in");
 
+  // we can't race here, because the contract URI might resolve first with a non pinned URI
   const [ipfsData, registryData] = await Promise.all([
     resolveContractUriAndBytecode(address, provider).catch(() => undefined),
     getMetadataUriFromMultichainRegistry(address, chainId, sdkOptions)
@@ -76,19 +75,12 @@ export async function fetchContractMetadataFromAddress(
       `Could not fetch bytecode for contract at ${address} on chain ${chainId}, double check that the address and chainId are correct.`,
     );
   }
-  // if we can't resolve from IPFS within 2s its very likely the hash was never pinned
-  // TODO ideally this is done with a abort controller, needs to be supported by storage
   try {
-    metadata = await timeout(
-      IPFS_TIMEOUT,
-      fetchContractMetadata(metadataUri, storage),
-    );
+    console.time("IPFS fetch");
+    metadata = await fetchContractMetadata(metadataUri, storage);
+    console.timeEnd("IPFS fetch");
   } catch (e) {
-    // TODO remove warning
-    console.warn(
-      `Failed to fetch metadata from IPFS for contract at ${address} on chain ${chainId}`,
-      e,
-    );
+    // Don't warn here, its common to not have IPFS metadata for a contract, fallback to bytecode
   }
 
   if (!metadata && bytecode) {
@@ -112,7 +104,7 @@ export async function fetchContractMetadataFromAddress(
 
   if (!metadata) {
     throw new Error(
-      `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+      `Could not resolve contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
     );
   }
   putInCache(address, chainId, metadata);
