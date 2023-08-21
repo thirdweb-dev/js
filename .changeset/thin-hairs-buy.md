@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Fallback to bytecode extension detection for un-imported contracts
+Optimized fetching contract metadata, and fallback to bytecode extension detection for un-imported contracts
