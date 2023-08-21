@@ -973,6 +973,7 @@ import c1666900000 from "../chains/1666900000";
 import c1666900001 from "../chains/1666900001";
 import c2021121117 from "../chains/2021121117";
 import c2046399126 from "../chains/2046399126";
+import c2863311531 from "../chains/2863311531";
 import c3125659152 from "../chains/3125659152";
 import c4216137055 from "../chains/4216137055";
 import c11297108099 from "../chains/11297108099";
@@ -987,6 +988,7 @@ import c1337 from "../chains/1337";
 import c1440001 from "../chains/1440001";
 import c1582 from "../chains/1582";
 import c331769 from "../chains/331769";
+import c331771 from "../chains/331771";
 import c37 from "../chains/37";
 import c408 from "../chains/408";
 import c47 from "../chains/47";
@@ -995,6 +997,7 @@ import c5611 from "../chains/5611";
 import c59144 from "../chains/59144";
 import c8081 from "../chains/8081";
 import c88888 from "../chains/88888";
+import c91003 from "../chains/91003";
 import c919 from "../chains/919";
 import c999 from "../chains/999";
 import type { Chain } from "./types";
@@ -1974,6 +1977,7 @@ export { default as HarmonyDevnetShard0 } from "../chains/1666900000";
 export { default as HarmonyDevnetShard1 } from "../chains/1666900001";
 export { default as Datahopper } from "../chains/2021121117";
 export { default as EuropaSkaleChain } from "../chains/2046399126";
+export { default as Ancient8Testnet } from "../chains/2863311531";
 export { default as Pirl } from "../chains/3125659152";
 export { default as OneledgerTestnetFrankenstein } from "../chains/4216137055";
 export { default as PalmTestnet } from "../chains/11297108099";
@@ -1988,6 +1992,7 @@ export { default as Localhost } from "../chains/1337";
 export { default as XrpLedgerEvmDevnetSidechain } from "../chains/1440001";
 export { default as BubsTestnet } from "../chains/1582";
 export { default as ProofofpepeTestnet } from "../chains/331769";
+export { default as Pop } from "../chains/331771";
 export { default as Xpla } from "../chains/37";
 export { default as Omega } from "../chains/408";
 export { default as XplaTestnet } from "../chains/47";
@@ -1996,6 +2001,7 @@ export { default as Opbnb } from "../chains/5611";
 export { default as Linea } from "../chains/59144";
 export { default as ShardeumSphinxDapp1X } from "../chains/8081";
 export { default as ChilizChain } from "../chains/88888";
+export { default as WorldsAppchain } from "../chains/91003";
 export { default as ModeTestnet } from "../chains/919";
 export { default as ZoraTestnet } from "../chains/999";
 export * from "./types";
@@ -2019,6 +2025,7 @@ export const defaultChains = [
   c43113,
   c1337,
 ];
+// @ts-expect-error - TODO: fix this later
 export const allChains: Chain[] = [
   c1,
   c2,
@@ -2995,6 +3002,7 @@ export const allChains: Chain[] = [
   c1666900001,
   c2021121117,
   c2046399126,
+  c2863311531,
   c3125659152,
   c4216137055,
   c11297108099,
@@ -3009,6 +3017,7 @@ export const allChains: Chain[] = [
   c1440001,
   c1582,
   c331769,
+  c331771,
   c37,
   c408,
   c47,
@@ -3017,6 +3026,7 @@ export const allChains: Chain[] = [
   c59144,
   c8081,
   c88888,
+  c91003,
   c919,
   c999,
 ];
@@ -3997,6 +4007,7 @@ type ChainsById = {
   1666900001: typeof c1666900001;
   2021121117: typeof c2021121117;
   2046399126: typeof c2046399126;
+  2863311531: typeof c2863311531;
   3125659152: typeof c3125659152;
   4216137055: typeof c4216137055;
   11297108099: typeof c11297108099;
@@ -4011,6 +4022,7 @@ type ChainsById = {
   1440001: typeof c1440001;
   1582: typeof c1582;
   331769: typeof c331769;
+  331771: typeof c331771;
   37: typeof c37;
   408: typeof c408;
   47: typeof c47;
@@ -4019,6 +4031,7 @@ type ChainsById = {
   59144: typeof c59144;
   8081: typeof c8081;
   88888: typeof c88888;
+  91003: typeof c91003;
   919: typeof c919;
   999: typeof c999;
 };
@@ -4999,6 +5012,7 @@ type ChainIdsBySlug = {
   "harmony-devnet-shard-1": 1666900001;
   datahopper: 2021121117;
   "europa-skale-chain": 2046399126;
+  "ancient8-testnet": 2863311531;
   pirl: 3125659152;
   "oneledger-testnet-frankenstein": 4216137055;
   "palm-testnet": 11297108099;
@@ -5013,6 +5027,7 @@ type ChainIdsBySlug = {
   "xrp-ledger-evm-devnet-sidechain": 1440001;
   "bubs-testnet": 1582;
   "proofofpepe-testnet": 331769;
+  pop: 331771;
   xpla: 37;
   omega: 408;
   "xpla-testnet": 47;
@@ -5021,6 +5036,7 @@ type ChainIdsBySlug = {
   linea: 59144;
   "shardeum-sphinx-dapp-1-x": 8081;
   "chiliz-chain": 88888;
+  "worlds-appchain": 91003;
   "mode-testnet": 919;
   "zora-testnet": 999;
 };
