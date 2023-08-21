@@ -1,7 +1,5 @@
 import {
   ChainId,
-  getAllDetectedExtensionNames,
-  isExtensionEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
@@ -13,12 +11,7 @@ import {
 } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  DropERC721__factory,
-  DropERC721_V3__factory,
-  TokenERC721__factory,
-  MarketplaceV3__factory,
-} from "@thirdweb-dev/contracts-js";
+import { MarketplaceV3__factory } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
 import { ethers } from "ethers";

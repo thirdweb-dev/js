@@ -247,7 +247,7 @@ export const FEATURE_NFT_UPDATABLE_METADATA = {
     sdk: "",
     contracts: "",
   },
-  abis: [INFTMetadataAbi],
+  abis: [Erc721Abi, INFTMetadataAbi],
   features: {},
 } as const;
 
