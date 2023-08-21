@@ -35,14 +35,14 @@ export class BaseRouterClass<TContract extends BaseRouter>
    * READ FUNCTIONS
    *******************************/
 
-  public async getAllExtensions(): Promise<Extension[]> {
+  public async getAll(): Promise<Extension[]> {
     const extensions: Extension[] =
       await this.contractWrapper.readContract.getAllExtensions();
 
     return extensions;
   }
 
-  public async getExtension(extensionName: string): Promise<Extension> {
+  public async get(extensionName: string): Promise<Extension> {
     const extension: Extension =
       await this.contractWrapper.readContract.getExtension(extensionName);
 
@@ -58,7 +58,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     return extensionAddress;
   }
 
-  public async getAllFunctionsOfExtension(
+  public async getAllFunctions(
     extensionName: string,
   ): Promise<ExtensionFunction[]> {
     const extensionFunctions: ExtensionFunction[] =
@@ -100,7 +100,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
    * WRITE FUNCTIONS
    *******************************/
 
-  addExtension = /* @__PURE__ */ buildTransactionFunction(
+  add = /* @__PURE__ */ buildTransactionFunction(
     async (extension: Extension): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -110,7 +110,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
-  addExtensionWithAbi = /* @__PURE__ */ buildTransactionFunction(
+  addWithAbi = /* @__PURE__ */ buildTransactionFunction(
     async (
       extensionName: string,
       extensionAddress: string,
@@ -137,7 +137,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
-  updateExtension = /* @__PURE__ */ buildTransactionFunction(
+  update = /* @__PURE__ */ buildTransactionFunction(
     async (extension: Extension): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -147,7 +147,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
-  updateExtensionWithAbi = /* @__PURE__ */ buildTransactionFunction(
+  updateWithAbi = /* @__PURE__ */ buildTransactionFunction(
     async (
       extensionName: string,
       extensionAddress: string,
@@ -174,7 +174,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
-  removeExtension = /* @__PURE__ */ buildTransactionFunction(
+  remove = /* @__PURE__ */ buildTransactionFunction(
     async (extensionName: string): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

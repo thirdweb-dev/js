@@ -338,7 +338,7 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
-  get baseRouter(): BaseRouterClass<BaseRouter> {
+  get extensions(): BaseRouterClass<BaseRouter> {
     return assertEnabled(this.detectBaseRouter(), FEATURE_BASE_ROUTER);
   }
 
