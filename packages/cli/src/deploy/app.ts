@@ -14,10 +14,13 @@ export async function deployApp(
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
     });
   } else {
     // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage();
+    storage = new ThirdwebStorage({
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
+    });
   }
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(

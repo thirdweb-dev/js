@@ -467,9 +467,12 @@ const main = async () => {
       if (secretKey) {
         storage = new ThirdwebStorage({
           secretKey,
+          uploadServerUrl: "https://storage.staging.thirdweb.com"
         });
       } else {
-        storage = new ThirdwebStorage();
+        storage = new ThirdwebStorage({
+          uploadServerUrl: "https://storage.staging.thirdweb.com"
+        });
       }
 
       try {

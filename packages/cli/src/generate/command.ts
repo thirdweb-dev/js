@@ -97,9 +97,12 @@ export async function generate(options: GenerateOptions, secretKey: string) {
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
     });
   } else {
-    storage = new ThirdwebStorage();
+    storage = new ThirdwebStorage({
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
+    });
   }
   const metadata: {
     address: string;

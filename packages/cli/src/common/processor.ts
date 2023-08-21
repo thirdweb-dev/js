@@ -39,10 +39,13 @@ export async function processProject(
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
     });
   } else {
     // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage();
+    storage = new ThirdwebStorage({
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
+    });
   }
 
   logger.setSettings({
@@ -385,10 +388,13 @@ async function formatToExtensions(
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
     });
   } else {
     // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage();
+    storage = new ThirdwebStorage({
+      uploadServerUrl: "https://storage.staging.thirdweb.com"
+    });
   }
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];
