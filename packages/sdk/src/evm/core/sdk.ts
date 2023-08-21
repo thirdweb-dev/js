@@ -1,15 +1,8 @@
-import {
-  getAllDetectedExtensionNames,
-  getAllDetectedFeatureNames,
-} from "../common/feature-detection/getAllDetectedFeatureNames";
+import { getAllDetectedExtensionNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
-import {
-  getChainIdOrName,
-  getChainProvider,
-  isChainConfig,
-} from "../constants/urls";
+import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
 import { NATIVE_TOKEN_ADDRESS } from "../constants/currency";
 import {
@@ -122,12 +115,6 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
-
-import {
-  constructAbiFromBytecode,
-  resolveContractUriAndBytecode,
-  resolveImplementationBytecode,
-} from "../common";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -2219,6 +2206,8 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
+    // TODO don't create a new sdk instance here, instead read from contract directly with provider
+    // this will allow moving deployer out of this file and help with tree shaking
     const publishedContract = await new ThirdwebSDK(
       "polygon",
       {
