@@ -467,11 +467,11 @@ const main = async () => {
       if (secretKey) {
         storage = new ThirdwebStorage({
           secretKey,
-          uploadServerUrl: "https://storage.staging.thirdweb.com"
+          uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
         });
       } else {
         storage = new ThirdwebStorage({
-          uploadServerUrl: "https://storage.staging.thirdweb.com"
+          uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
         });
       }
 
