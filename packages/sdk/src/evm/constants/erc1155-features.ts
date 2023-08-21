@@ -13,6 +13,7 @@ import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC1155.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC1155.json";
+import INFTMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/INFTMetadata.json";
 
 // TODO could be part of IERC1155Metadata even though its not in the spec
 const NAME_SYMBOL_ABI = [
@@ -204,6 +205,18 @@ export const FEATURE_EDITION_ENUMERABLE = {
   features: {},
 } as const;
 
+export const FEATURE_EDITION_UPDATABLE_METADATA = {
+  name: "ERC1155UpdatableMetadata",
+  namespace: "edition.metadata",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [Erc1155Abi, INFTMetadataAbi],
+  features: {},
+} as const;
+
 export const FEATURE_EDITION = /* @__PURE__ */ {
   name: "ERC1155",
   namespace: "edition",
@@ -227,5 +240,7 @@ export const FEATURE_EDITION = /* @__PURE__ */ {
     [FEATURE_EDITION_CLAIM_CONDITIONS_V2.name]:
       FEATURE_EDITION_CLAIM_CONDITIONS_V2,
     [FEATURE_EDITION_CLAIM_PHASES_V2.name]: FEATURE_EDITION_CLAIM_PHASES_V2,
+    [FEATURE_EDITION_UPDATABLE_METADATA.name]:
+      FEATURE_EDITION_UPDATABLE_METADATA,
   },
 } as const;
