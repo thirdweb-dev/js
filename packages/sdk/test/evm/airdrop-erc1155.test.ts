@@ -198,7 +198,7 @@ describe("Airdrop ERC1155", async () => {
       const randomContractAsRecipient = process.env
         .contractPublisherAddress as string;
 
-      const failed = await airdropContract.airdrop1155.drop(
+      const output = await airdropContract.airdrop1155.drop(
         dummyBundleContractAddress,
         adminWallet.address,
         [
@@ -222,7 +222,9 @@ describe("Airdrop ERC1155", async () => {
       ).to.equal(5);
 
       // check failed
-      assert(randomContractAsRecipient === failed[0].failedRecipient);
+      assert(randomContractAsRecipient === output.failedDrops[0].recipient);
+      assert(output.failedDropCount === 1);
+      assert(output.successfulDropCount === 3);
     });
   });
 });

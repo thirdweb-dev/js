@@ -2,7 +2,7 @@ import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC721 } from "../../constants/thirdweb-features";
 import { Address } from "../../schema";
-import { Airdrop721Content } from "../../types";
+import { Airdrop721Content, Airdrop721Output } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -52,11 +52,11 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
    * const tokenAddress = "0x..." // Address of the ERC721 token being airdropped
    * const tokenOwner = "0x..." // Address of the owner of the tokens being airdropped
    *
-   * const failed = await contract.airdrop721.drop(tokenAddress, tokenOwner, contents);
+   * const output = await contract.airdrop721.drop(tokenAddress, tokenOwner, contents);
    *
-   * // the `failed` return value above is an array
-   * // it contains the data of recipients for who the airdrop failed
-   * // empty array means all were successful
+   * // the `output` return value above contains:
+   * //     - count of successful and failed drops
+   * //     - array containing failed drops, if any
    *
    * ```
    * @param tokenAddress
@@ -71,7 +71,7 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
       tokenAddress: string,
       tokenOwner: string,
       contents: Airdrop721Content[],
-    ): Promise<Transaction<{ failedRecipient: string; tokenId: number }[]>> => {
+    ): Promise<Transaction<Airdrop721Output>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "airdrop",
@@ -81,12 +81,18 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
             "AirdropFailed",
             receipt.logs,
           );
-          return events.map((e) => {
+          const failedDrops = events.map((e) => {
             return {
-              failedRecipient: e.args.recipient,
+              recipient: e.args.recipient,
               tokenId: e.args.tokenId.toNumber(),
             };
           });
+
+          return {
+            successfulDropCount: contents.length - failedDrops.length,
+            failedDropCount: failedDrops.length,
+            failedDrops,
+          };
         },
       });
     },
