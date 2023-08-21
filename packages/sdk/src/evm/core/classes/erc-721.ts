@@ -1,4 +1,7 @@
-import type { QueryAllParams } from "../../../core/schema/QueryParams";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  type QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
@@ -403,21 +406,36 @@ export class Erc721<
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getOwned(walletAddress?: AddressOrEns) {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
 
     if (this.query?.owned) {
-      return this.query.owned.all(walletAddress);
+      return this.query.owned.all(walletAddress, queryParams);
     } else {
       const address =
         walletAddress || (await this.contractWrapper.getSignerAddress());
       const allOwners = await this.getAllOwners();
+
+      const start = BigNumber.from(queryParams?.start || 0).toNumber();
+      const count = BigNumber.from(
+        queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+      ).toNumber();
+
+      let ownedTokens = (allOwners || []).filter(
+        (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
+      );
+
+      if (start < ownedTokens.length) {
+        ownedTokens = ownedTokens.slice(start, count);
+      }
+
       return Promise.all(
-        (allOwners || [])
-          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
-          .map(async (i) => await this.get(i.tokenId)),
+        ownedTokens.map(async (i) => await this.get(i.tokenId)),
       );
     }
   }
