@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.2.7
+
+### Patch Changes
+
+- [#1501](https://github.com/thirdweb-dev/js/pull/1501) [`046c9ad6`](https://github.com/thirdweb-dev/js/commit/046c9ad604587ff79bf028c4fe7b1f9c94f4ea54) Thanks [@farhanW3](https://github.com/farhanW3)! - moved res.json() to avoid getting JSON error in console
+
 ## 1.2.6
 
 ### Patch Changes
