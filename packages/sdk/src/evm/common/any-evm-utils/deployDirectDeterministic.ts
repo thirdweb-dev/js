@@ -16,6 +16,7 @@ import { deployCreate2Factory } from "./deployCreate2Factory";
 import { convertParamValues } from "./convertParamValues";
 import { AbiInput } from "../../schema";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
+import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
 
 /**
  * Direct deploy a contract at a deterministic address, using Create2 method
@@ -134,6 +135,60 @@ export async function directDeployDeterministicWithUri(
   );
 }
 
+/**
+ * Direct deploy a contract at a deterministic address, using Create2 method
+ * Address depends on the Create2 factory address and salt (if provided).
+ *
+ * @public
+ *
+ * @param contractName
+ * @param publisherAddress
+ * @param contractVersion
+ * @param constructorArgs
+ * @param signer
+ * @param storage
+ * @param clientId
+ * @param secretKey
+ * @param constructorArgs
+ * @param saltForCreate2
+ */
+export async function directDeployDeterministicPublished(
+  contractName: string,
+  publisherAddress: string,
+  contractVersion: string = "latest",
+  constructorArgs: any[],
+  signer: Signer,
+  storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
+  saltForCreate2?: string,
+  gasLimit: number = 7000000,
+) {
+  const publishMetadataUri = (
+    await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      contractVersion,
+      storage,
+      clientId,
+      secretKey,
+    )
+  ).metadataUri;
+  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+    publishMetadataUri,
+    storage,
+  );
+
+  await directDeployDeterministic(
+    compilerMetadata.bytecode,
+    compilerMetadata.abi,
+    signer,
+    constructorArgs,
+    saltForCreate2,
+    gasLimit,
+  );
+}
+
 export async function predictAddressDeterministic(
   bytecode: string,
   abi: AbiInput,
@@ -188,6 +243,41 @@ export async function predictAddressDeterministicWithUri(
   );
 
   return await predictAddressDeterministic(
+    compilerMetadata.bytecode,
+    compilerMetadata.abi,
+    provider,
+    constructorArgs,
+    saltForCreate2,
+  );
+}
+
+export async function predictAddressDeterministicPublished(
+  contractName: string,
+  publisherAddress: string,
+  contractVersion: string = "latest",
+  constructorArgs: any[],
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
+  saltForCreate2?: string,
+) {
+  const publishMetadataUri = (
+    await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      contractVersion,
+      storage,
+      clientId,
+      secretKey,
+    )
+  ).metadataUri;
+  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+    publishMetadataUri,
+    storage,
+  );
+
+  await predictAddressDeterministic(
     compilerMetadata.bytecode,
     compilerMetadata.abi,
     provider,
