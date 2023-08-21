@@ -98,6 +98,8 @@ export async function fetchContractMetadataFromAddress(
         licenses: [],
         isPartialAbi: true,
       };
+      // return without caching
+      return metadata;
     }
   }
   console.timeEnd("fetched metadata in");
