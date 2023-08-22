@@ -10,6 +10,7 @@ import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema";
+import { getSupportedChains } from "../constants";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
@@ -119,11 +120,12 @@ async function getMetadataUriFromMultichainRegistry(
   sdkOptions: SDKOptions,
 ) {
   if (!multichainRegistry) {
-    // TODO enforce always passing sdk options for clientId/secretKey
+    const chain =
+      getSupportedChains().find((c) => c.chainId === 137)?.rpc[0] || "polygon";
     multichainRegistry = new Contract(
       getMultichainRegistryAddress(),
       TWRegistryABI,
-      getChainProvider("polygon", sdkOptions),
+      getChainProvider(chain, sdkOptions),
     ) as TWMultichainRegistryLogic;
   }
 
