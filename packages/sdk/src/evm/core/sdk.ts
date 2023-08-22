@@ -90,6 +90,7 @@ import type {
   DeployMetadata,
   DeployEvent,
   OpenEditionContractDeployMetadata,
+  AirdropContractDeployMetadata,
 } from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
@@ -115,6 +116,7 @@ import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
+import { AirdropContractDeploy } from "../schema/contracts/airdrop";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1413,6 +1415,99 @@ export class ContractDeployer extends RPCConnectionHandler {
         VoteInitializer.contractType,
         metadata,
         "latest",
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC20 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC20",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC721 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC721",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC1155 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC1155",
+        deployArgs,
         options,
       );
     },
