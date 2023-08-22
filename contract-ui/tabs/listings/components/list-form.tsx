@@ -23,7 +23,6 @@ import {
   useOwnedNFTs,
 } from "@thirdweb-dev/react";
 import {
-  ChainId,
   Marketplace,
   MarketplaceV3,
   NATIVE_TOKEN_ADDRESS,
@@ -51,6 +50,7 @@ import {
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { ListLabel } from "./list-label";
+import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 
 interface ListForm
   extends Omit<NewDirectListing, "type">,
@@ -95,8 +95,10 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
   const chainId = useDashboardEVMChainId();
 
   const isSupportedChain =
-    isAlchemySupported(chainId as ChainId) ||
-    isMoralisSupported(chainId as ChainId);
+    chainId &&
+    (isSimpleHashSupported(chainId) ||
+      isAlchemySupported(chainId) ||
+      isMoralisSupported(chainId));
 
   const { data: contractType } = useContractType(
     contractQuery?.contract?.getAddress(),

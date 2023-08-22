@@ -1,43 +1,25 @@
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
-import { WalletNFT } from "./types";
-import type { NFTMetadata } from "@thirdweb-dev/sdk";
-import { ChainId } from "@thirdweb-dev/sdk/evm";
+import {
+  AlchemySupportedChainId,
+  GenerateURLParams,
+  WalletNFT,
+  alchemySupportedChainIds,
+  alchemySupportedChainIdsMap,
+} from "./types";
+import { type NFTMetadata } from "@thirdweb-dev/sdk";
 import { StorageSingleton } from "lib/sdk";
-
-const alchemyUrlMap = {
-  // eth
-  [ChainId.Mainnet]: `https://eth-mainnet.g.alchemy.com`,
-  [ChainId.Goerli]: `https://eth-goerli.g.alchemy.com`,
-  // sepolia
-  11155111: `https://eth-sepolia.g.alchemy.com`,
-  // polygon
-  [ChainId.Polygon]: `https://polygon-mainnet.g.alchemy.com`,
-  [ChainId.Mumbai]: `https://polygon-mumbai.g.alchemy.com`,
-
-  // optimism
-  [ChainId.Optimism]: `https://opt-mainnet.g.alchemy.com`,
-  // new optimism testnet
-  [ChainId.OptimismGoerli]: `https://opt-goerli.g.alchemy.com`,
-
-  [ChainId.Arbitrum]: `https://arb-mainnet.g.alchemy.com`,
-  // arbitrum testnet
-  [ChainId.ArbitrumGoerli]: `https://arb-goerli.g.alchemy.com`,
-} as const;
-
-type AlchemySupportedChainId = keyof typeof alchemyUrlMap;
 
 export function isAlchemySupported(
   chainId: number,
 ): chainId is AlchemySupportedChainId {
-  return chainId in alchemyUrlMap;
+  return alchemySupportedChainIds.includes(chainId.toString());
 }
 
-export function generateAlchemyUrl(
-  chainId: AlchemySupportedChainId,
-  owner: string,
-) {
+export function generateAlchemyUrl({ chainId, owner }: GenerateURLParams) {
   const url = new URL(
-    `${alchemyUrlMap[chainId]}/nft/v2/${process.env.SSR_ALCHEMY_KEY}/getNFTs`,
+    `https://${
+      alchemySupportedChainIdsMap[chainId as AlchemySupportedChainId]
+    }.g.alchemy.com/nft/v2/${process.env.SSR_ALCHEMY_KEY}/getNFTs`,
   );
   url.searchParams.set("owner", owner);
   return url.toString();

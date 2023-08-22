@@ -1,6 +1,122 @@
 import type { NFT } from "@thirdweb-dev/sdk";
+import {
+  Arbitrum,
+  ArbitrumGoerli,
+  ArbitrumNova,
+  Avalanche,
+  AvalancheFuji,
+  Base,
+  BaseGoerli,
+  Binance,
+  BinanceTestnet,
+  Cronos,
+  Ethereum,
+  Fantom,
+  Gnosis,
+  Godwoken,
+  GodwokenTestnetV1,
+  Goerli,
+  MantaPacificTestnet,
+  Mumbai,
+  Optimism,
+  OptimismGoerli,
+  Palm,
+  PalmTestnet,
+  Polygon,
+  PolygonZkevm,
+  PolygonZkevmTestnet,
+  ScrollAlphaTestnet,
+  ScrollSepoliaTestnet,
+  Sepolia,
+  ZksyncEra,
+  ZksyncEraTestnet,
+  Zora,
+  ZoraTestnet,
+} from "@thirdweb-dev/chains";
 
 export type WalletNFT = NFT & {
   contractAddress: string;
   tokenId: number;
 };
+
+export const alchemySupportedChainIdsMap: Record<number, string> = {
+  [Ethereum.chainId]: "eth-mainnet",
+  [Goerli.chainId]: "eth-goerli",
+  [Sepolia.chainId]: "eth-sepolia",
+  [Polygon.chainId]: "polygon-mainnet",
+  [Mumbai.chainId]: "polygon-mumbai",
+  [Optimism.chainId]: "opt-mainnet",
+  [OptimismGoerli.chainId]: "opt-goerli",
+  [Arbitrum.chainId]: "arb-mainnet",
+  [ArbitrumGoerli.chainId]: "arb-goerli",
+};
+
+export const moralisSupportedChainIdsMap: Record<number, string> = {
+  [Ethereum.chainId]: "",
+  [Goerli.chainId]: "",
+  [Sepolia.chainId]: "",
+  [Polygon.chainId]: "",
+  [Mumbai.chainId]: "",
+  [Binance.chainId]: "",
+  [BinanceTestnet.chainId]: "",
+  [Avalanche.chainId]: "",
+  [Fantom.chainId]: "",
+  [Cronos.chainId]: "",
+  [Palm.chainId]: "",
+  [Arbitrum.chainId]: "",
+};
+
+export const simpleHashSupportedChainIdsMap: Record<number, string> = {
+  [Ethereum.chainId]: "ethereum",
+  [Goerli.chainId]: "ethereum-goerli",
+  [Polygon.chainId]: "polygon",
+  [Mumbai.chainId]: "polygon-mumbai",
+  [Binance.chainId]: "bsc",
+  [BinanceTestnet.chainId]: "bsc-testnet",
+  [Avalanche.chainId]: "avalanche",
+  [AvalancheFuji.chainId]: "avalanche-fuji",
+  [Optimism.chainId]: "optimism",
+  [OptimismGoerli.chainId]: "optimism-goerli",
+  [Arbitrum.chainId]: "arbitrum",
+  [ArbitrumGoerli.chainId]: "arbitrum-goerli",
+  [ArbitrumNova.chainId]: "arbitrum-nova",
+  [Base.chainId]: "base",
+  [BaseGoerli.chainId]: "base-goerli",
+  [Gnosis.chainId]: "gnosis",
+  [Godwoken.chainId]: "godwoken",
+  [Palm.chainId]: "palm",
+  [PolygonZkevm.chainId]: "polygon-zkevm",
+  [ZksyncEra.chainId]: "zksync-era",
+  [Zora.chainId]: "zora",
+  [Sepolia.chainId]: "ethereum-sepolia",
+  [GodwokenTestnetV1.chainId]: "godwoken-testnet",
+  [MantaPacificTestnet.chainId]: "manta-testnet",
+  [PalmTestnet.chainId]: "palm-testnet",
+  [PolygonZkevmTestnet.chainId]: "polygon-zkevm-testnet",
+  [ScrollAlphaTestnet.chainId]: "scroll-testnet",
+  [ScrollSepoliaTestnet.chainId]: "scroll-sepolia",
+  [ZksyncEraTestnet.chainId]: "zksync-era-testnet",
+  [ZoraTestnet.chainId]: "zora-testnet",
+};
+
+export type AlchemySupportedChainId = keyof typeof alchemySupportedChainIdsMap;
+export type MoralisSupportedChainId = keyof typeof moralisSupportedChainIdsMap;
+export type SimpleHashSupportedChainId =
+  keyof typeof simpleHashSupportedChainIdsMap;
+
+export const alchemySupportedChainIds = Object.keys(
+  alchemySupportedChainIdsMap,
+);
+
+export const moralisSupportedChainIds = Object.keys(
+  moralisSupportedChainIdsMap,
+);
+
+export const simpleHashSupportedNetworks = Object.keys(
+  simpleHashSupportedChainIdsMap,
+);
+
+export interface GenerateURLParams {
+  chainId: number;
+  owner: string;
+}

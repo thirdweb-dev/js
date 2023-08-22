@@ -1,44 +1,20 @@
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
-import { WalletNFT } from "./types";
-import { ChainId } from "@thirdweb-dev/sdk/evm";
+import {
+  GenerateURLParams,
+  MoralisSupportedChainId,
+  WalletNFT,
+  moralisSupportedChainIds,
+} from "./types";
 import { StorageSingleton } from "lib/sdk";
-
-const moralisUrlMap = {
-  // fantom
-  [ChainId.Fantom]: `https://deep-index.moralis.io/api/v2/`,
-  // fantom testnet is not supported...
-
-  // avalanche
-  [ChainId.Avalanche]: `https://deep-index.moralis.io/api/v2/`,
-  [ChainId.AvalancheFujiTestnet]: `https://deep-index.moralis.io/api/v2/`,
-
-  // binance
-  [ChainId.BinanceSmartChainMainnet]: `https://deep-index.moralis.io/api/v2/`,
-  [ChainId.BinanceSmartChainTestnet]: `https://deep-index.moralis.io/api/v2/`,
-
-  // Sepolia
-  11155111: `https://deep-index.moralis.io/api/v2/`,
-  // palm
-  11297108109: `https://deep-index.moralis.io/api/v2/`,
-  // cronos
-  25: `https://deep-index.moralis.io/api/v2/`,
-  // cronos testnet
-  338: `https://deep-index.moralis.io/api/v2/`,
-} as const;
-
-type MoralisSupportedChainId = keyof typeof moralisUrlMap;
 
 export function isMoralisSupported(
   chainId: number,
 ): chainId is MoralisSupportedChainId {
-  return chainId in moralisUrlMap;
+  return moralisSupportedChainIds.includes(chainId.toString());
 }
 
-export function generateMoralisURL(
-  chainId: MoralisSupportedChainId,
-  owner: string,
-) {
-  const url = new URL(`${moralisUrlMap[chainId]}/${owner}/nft`);
+export function generateMoralisUrl({ chainId, owner }: GenerateURLParams) {
+  const url = new URL(`https://deep-index.moralis.io/api/v2/${owner}/nft`);
 
   url.searchParams.append("chain", `0x${chainId.toString(16)}`);
   url.searchParams.append("format", "hex");

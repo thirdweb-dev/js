@@ -229,5 +229,5 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     return null;
   }
 
-  return <StepsCard title="Contract checklist" steps={steps} />;
+  return <StepsCard title="Contract checklist" steps={steps} delay={1000} />;
 };

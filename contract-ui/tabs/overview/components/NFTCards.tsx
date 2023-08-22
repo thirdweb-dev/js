@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { NFT } from "@thirdweb-dev/sdk";
 import { WalletNFT } from "lib/wallet/nfts/types";
+import { useMemo } from "react";
 import {
   TrackedLinkProps,
   TrackedLink,
@@ -49,18 +50,18 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
   const isMobile = useBreakpointValue({ base: true, md: false });
   const chainId = useDashboardEVMChainId();
 
-  nfts = isLoading
-    ? Array.from({ length: allNfts ? nfts.length : isMobile ? 2 : 3 }).map(
-        (_, idx) => dummyMetadata(idx),
-      )
-    : nfts;
+  const dummyData = useMemo(() => {
+    return Array.from({
+      length: allNfts ? nfts.length : isMobile ? 2 : 3,
+    }).map((_, idx) => dummyMetadata(idx));
+  }, [nfts.length, isMobile, allNfts]);
 
   return (
     <SimpleGrid
       gap={{ base: 3, md: 6 }}
       columns={allNfts ? { base: 2, md: 4 } : { base: 2, md: 3 }}
     >
-      {nfts.map((token) => (
+      {(isLoading ? dummyData : nfts).map((token) => (
         <GridItem
           key={`${chainId}-${
             (token as WalletNFT)?.contractAddress || contractAddress
