@@ -338,13 +338,19 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
     return [
       {
         Header: "Address",
-        accessor: ({ address }: { address: string }) => {
-          if (utils.isAddress(address)) {
+        accessor: ({ address, isValid }) => {
+          if (isValid) {
             return address;
           } else {
             return (
               <Flex>
-                <Tooltip label="Address is not valid">
+                <Tooltip
+                  label={
+                    address.startsWith("0x")
+                      ? "Address is not valid"
+                      : "Address couldn't be resolved"
+                  }
+                >
                   <Stack direction="row" align="center">
                     <Icon
                       as={IoAlertCircleOutline}
