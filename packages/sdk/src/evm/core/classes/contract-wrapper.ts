@@ -324,7 +324,7 @@ export class ContractWrapper<
 
     if (!functions.length) {
       throw new Error(
-        `Function ${functionName} not found in contract. Check your dashboard for the list of functions available`,
+        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
       );
     }
     const fn = functions.find(
