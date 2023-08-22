@@ -22,6 +22,7 @@ import { BarChart } from "components/analytics/bar-chart";
 import { ChartContainer } from "components/analytics/chart-container";
 import {
   AnalyticsQueryParams,
+  SUPPORTED_ANALYTICS_CHAINS,
   TotalQueryResult,
   useEventsAnalytics,
   useFunctionsAnalytics,
@@ -226,9 +227,11 @@ interface AnalyticsChartProps<
   index: string;
   categories: AreaChartProps<TAnalytics, "time">["categories"] | "auto";
   useAnalytics: (params: AnalyticsQueryParams) => UseQueryResult<TAnalytics[]>;
+  showXAxis?: boolean;
+  showYAxis?: boolean;
 }
 
-const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
+export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
   chainId,
   contractAddress,
   startDate,
@@ -236,6 +239,8 @@ const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
   index,
   categories,
   useAnalytics,
+  showXAxis,
+  showYAxis,
 }) => {
   const analyticsQuery = useAnalytics({
     contractAddress,
@@ -256,9 +261,13 @@ const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
     return (
       <Alert status="info" borderRadius="md" mb={4}>
         <AlertIcon />
-        <AlertDescription>
-          Data for this chart is unavailable for this contract
-        </AlertDescription>
+        {SUPPORTED_ANALYTICS_CHAINS.includes(chainId) ? (
+          <AlertDescription>No recent activity.</AlertDescription>
+        ) : (
+          <AlertDescription>
+            Analytics for this chain not currently supported.
+          </AlertDescription>
+        )}
       </Alert>
     );
   }
@@ -274,8 +283,8 @@ const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
       data={data}
       index={{ id: index }}
       categories={categories}
-      showXAxis
-      showYAxis
+      showXAxis={showXAxis !== undefined ? showXAxis : true}
+      showYAxis={showYAxis !== undefined ? showYAxis : true}
     />
   );
 };

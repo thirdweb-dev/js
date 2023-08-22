@@ -1,3 +1,4 @@
+import { AnalyticsOverview } from "./components/Analytics";
 import { BuildYourApp } from "./components/BuildYourApp";
 import { ContractChecklist } from "./components/ContractChecklist";
 import { Extensions } from "./components/Extensions";
@@ -46,6 +47,13 @@ export const CustomContractOverviewPage: React.FC<
     <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
       <GridItem as={Flex} colSpan={{ xl: 7 }} direction="column" gap={16}>
         {contract && <ContractChecklist contract={contract} />}
+        {contract && (
+          <AnalyticsOverview
+            contractAddress={contractAddress}
+            chainId={contract.chainId}
+            trackingCategory={TRACKING_CATEGORY}
+          />
+        )}
         {contract &&
           (contractTypeData === "marketplace" ||
             ["DirectListings", "EnglishAuctions"].some((type) =>
