@@ -287,7 +287,11 @@ export class ContractWrapper<
   >(
     functionName: FnName,
     args: Param,
-  ): Promise<ReturnType<TContract["functions"][FnName]>> {
+  ): Promise<
+    Awaited<ReturnType<TContract["functions"][FnName]>> extends { length: 1 }
+      ? Awaited<ReturnType<TContract["functions"][FnName]>>[0]
+      : Awaited<ReturnType<TContract["functions"][FnName]>>
+  > {
     const fn = await this.readContract.functions[functionName as string];
     if (!fn) {
       throw new Error(
@@ -295,6 +299,9 @@ export class ContractWrapper<
       );
     }
     const result = await fn(...args);
+    if (Array.isArray(result) && result.length === 1) {
+      return result[0];
+    }
     return result;
   }
 

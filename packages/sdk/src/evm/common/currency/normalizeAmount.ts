@@ -8,6 +8,6 @@ export async function normalizeAmount(
   contractWrapper: ContractWrapper<BaseERC20>,
   amount: Amount,
 ): Promise<BigNumber> {
-  const [decimals] = await contractWrapper.read("decimals", []);
+  const decimals = await contractWrapper.read("decimals", []);
   return utils.parseUnits(AmountSchema.parse(amount), decimals);
 }

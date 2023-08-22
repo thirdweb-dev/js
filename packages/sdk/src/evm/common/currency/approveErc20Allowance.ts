@@ -21,7 +21,7 @@ export async function approveErc20Allowance(
   );
   const owner = await contractToApprove.getSignerAddress();
   const spender = contractToApprove.address;
-  const [allowance] = await erc20.read("allowance", [owner, spender]);
+  const allowance = await erc20.read("allowance", [owner, spender]);
   const totalPrice = BigNumber.from(price)
     .mul(BigNumber.from(quantity))
     .div(utils.parseUnits("1", tokenDecimals));

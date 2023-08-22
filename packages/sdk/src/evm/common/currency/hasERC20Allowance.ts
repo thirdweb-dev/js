@@ -18,6 +18,6 @@ export async function hasERC20Allowance(
   );
   const owner = await contractToApprove.getSignerAddress();
   const spender = contractToApprove.address;
-  const [allowance] = await erc20.read("allowance", [owner, spender]);
+  const allowance = await erc20.read("allowance", [owner, spender]);
   return allowance.gte(value);
 }
