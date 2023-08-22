@@ -37,7 +37,7 @@ export async function loginUser(
   options?: { new: boolean },
   showLogs?: boolean,
 ) {
-  const { credsConfigPath, cliWalletPath, tokenPath } = configPaths;
+  const { credsConfigPath, tokenPath } = configPaths;
   const authToken = await getSession(tokenPath, credsConfigPath);
   if (authToken && !options?.new) {
     if (showLogs) {
@@ -53,7 +53,6 @@ export async function loginUser(
         ),
       );
     }
-    await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
     const token = await authenticateUser({ browser: true, configPaths });
     if (!token) {
       throw new Error("Failed to login");
@@ -209,7 +208,6 @@ export const authenticateUser = async (
 };
 
 async function getOrCreatePassword(configCredsPath: string): Promise<string> {
-  const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
   // Check if the password exists, if not, prompt for it.
   if (!fs.existsSync(configCredsPath)) {
     const response = await prompts({
@@ -222,11 +220,6 @@ async function getOrCreatePassword(configCredsPath: string): Promise<string> {
       throw new Error("No password provided");
     }
 
-    fs.writeFileSync(configCredsPath, JSON.stringify({
-      password: response.password,
-      expiration: newExpiration,
-    }), "utf-8");
-
     return response.password as string;
   }
 
@@ -234,18 +227,27 @@ async function getOrCreatePassword(configCredsPath: string): Promise<string> {
 }
 
 async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
+  const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
+
   // Get or prompt for password.
   const password = await getOrCreatePassword(configCredsPath);
   const wallet = new LocalWallet();
+  const foundWallet = fs.existsSync(cliWalletPath);
 
-  if (fs.existsSync(cliWalletPath)) {
+  if (foundWallet) {
     const walletJson = fs.readFileSync(cliWalletPath, "utf8");
+    try {
+      // See if file is valid before proceeding.
+      JSON.parse(walletJson);
 
-    await wallet.import({
-      encryptedJson: walletJson,
-      password: password,
-    });
-    return wallet;
+      await wallet.import({
+        encryptedJson: walletJson,
+        password: password,
+      });
+      return wallet;
+    } catch (e) {
+      // Wallet file is not valid json, create a new one.
+    }
   }
 
   // Otherwise, generate a new wallet.
@@ -255,10 +257,17 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
     password,
   });
 
+  // write wallet
   fs.writeFileSync(cliWalletPath, walletExported, {
     encoding: "utf8",
     mode: 0o600,
   });
+
+  // write password
+  fs.writeFileSync(configCredsPath, JSON.stringify({
+    password: password,
+    expiration: newExpiration,
+  }), "utf-8");
 
   return wallet;
 }

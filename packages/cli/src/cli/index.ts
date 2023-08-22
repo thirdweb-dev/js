@@ -66,10 +66,6 @@ const main = async () => {
           encoding: "utf-8",
           mode: 0o600,
         });
-        fs.writeFileSync(cliWalletPath, "", {
-          encoding: "utf-8",
-          mode: 0o600,
-        });
       }
 
       // Create cache directory if it doesn't exist
