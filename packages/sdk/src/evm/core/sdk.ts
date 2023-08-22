@@ -1716,6 +1716,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.getProvider(),
         this.storage,
         create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
       );
 
       options?.notifier?.("deploying", "proxy");

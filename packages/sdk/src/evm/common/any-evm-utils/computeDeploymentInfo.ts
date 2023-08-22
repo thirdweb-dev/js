@@ -86,6 +86,8 @@ export async function computeDeploymentInfo(
     storage,
     create2Factory,
     contractOptions?.constructorParams,
+    clientId,
+    secretKey,
   );
   const address = computeDeploymentAddress(
     metadata.bytecode,
@@ -126,6 +128,8 @@ export async function encodeConstructorParamsForImplementation(
   storage: ThirdwebStorage,
   create2Factory: string,
   constructorParamMap?: ConstructorParamMap,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<BytesLike> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
@@ -165,6 +169,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "WETH9",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["WETH9"]) {
             caches.deploymentPresets["WETH9"] = deploymentInfo;
@@ -186,6 +192,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "ForwarderEOAOnly",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
             caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
@@ -201,6 +209,8 @@ export async function encodeConstructorParamsForImplementation(
           {
             contractName: "Forwarder",
           },
+          clientId,
+          secretKey,
         );
         if (!caches.deploymentPresets["Forwarder"]) {
           caches.deploymentPresets["Forwarder"] = deploymentInfo;

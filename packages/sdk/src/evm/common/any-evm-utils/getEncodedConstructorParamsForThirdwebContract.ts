@@ -75,6 +75,8 @@ export async function getEncodedConstructorParamsForThirdwebContract(
       storage,
       create2Factory,
       constructorParamMap,
+      clientId,
+      secretKey,
     );
   }
 

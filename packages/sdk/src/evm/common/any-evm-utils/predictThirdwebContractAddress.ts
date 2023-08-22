@@ -73,6 +73,8 @@ export async function predictThirdwebContractAddress(
     storage,
     create2Factory,
     { contractName: contractName },
+    clientId,
+    secretKey,
   );
 
   return implementation.transaction.predictedAddress;

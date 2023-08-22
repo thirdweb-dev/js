@@ -80,6 +80,8 @@ export async function getDeploymentInfo(
           storage,
           create2FactoryAddress,
           { metadata: metadata },
+          clientId,
+          secretKey,
         );
         return info;
       }),
@@ -105,6 +107,8 @@ export async function getDeploymentInfo(
         contractName: "PluginMap",
         constructorParams: { _pluginsToAdd: { value: mapInput } },
       },
+      clientId,
+      secretKey,
     );
 
     // address of PluginMap is input for MarketplaceV3's constructor
@@ -145,6 +149,8 @@ export async function getDeploymentInfo(
           storage,
           create2FactoryAddress,
           { metadata: metadata },
+          clientId,
+          secretKey,
         );
         return info;
       }),
@@ -182,6 +188,8 @@ export async function getDeploymentInfo(
       metadata: compilerMetadata,
       constructorParams: customParams,
     },
+    clientId,
+    secretKey,
   );
 
   // get clone factory
@@ -191,6 +199,8 @@ export async function getDeploymentInfo(
     storage,
     create2FactoryAddress,
     { contractName: "TWCloneFactory" },
+    clientId,
+    secretKey,
   );
 
   finalDeploymentInfo.push(factoryInfo);

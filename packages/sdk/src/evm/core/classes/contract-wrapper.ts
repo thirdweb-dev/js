@@ -797,11 +797,23 @@ export class ContractWrapper<
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
           ].openzeppelinForwarderEOA ||
-          (await computeEOAForwarderAddress(this.getProvider(), this.storage))
+          (await computeEOAForwarderAddress(
+            this.getProvider(),
+            this.storage,
+            "",
+            this.options.clientId,
+            this.options.secretKey,
+          ))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
           ].openzeppelinForwarder ||
-          (await computeForwarderAddress(this.getProvider(), this.storage)));
+          (await computeForwarderAddress(
+            this.getProvider(),
+            this.storage,
+            "",
+            this.options.clientId,
+            this.options.secretKey,
+          )));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [

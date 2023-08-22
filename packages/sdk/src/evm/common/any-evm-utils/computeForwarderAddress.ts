@@ -14,13 +14,23 @@ export async function computeForwarderAddress(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory?: string,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<string> {
-  if (!create2Factory) {
+  if (!create2Factory || create2Factory === "") {
     create2Factory = await getCreate2FactoryAddress(provider);
   }
   return (
-    await computeDeploymentInfo("infra", provider, storage, create2Factory, {
-      contractName: "Forwarder",
-    })
+    await computeDeploymentInfo(
+      "infra",
+      provider,
+      storage,
+      create2Factory,
+      {
+        contractName: "Forwarder",
+      },
+      clientId,
+      secretKey,
+    )
   ).transaction.predictedAddress;
 }
