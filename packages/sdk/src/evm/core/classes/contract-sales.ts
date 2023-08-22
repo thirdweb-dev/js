@@ -38,7 +38,11 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @twfeature PrimarySale
    */
   public async getRecipient(): Promise<Address> {
-    return await this.contractWrapper.call("", []);
+    const result = await this.contractWrapper.read<
+      IPrimarySale,
+      "primarySaleRecipient"
+    >("primarySaleRecipient", []);
+    return result;
   }
 
   /**

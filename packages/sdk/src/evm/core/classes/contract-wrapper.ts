@@ -280,29 +280,65 @@ export class ContractWrapper<
    * @returns The return value of the function call
    */
   public async read<
-    FnName extends keyof TContract["functions"] = keyof TContract["functions"],
-    Param extends Parameters<TContract["functions"][FnName]> = Parameters<
-      TContract["functions"][FnName]
-    >,
+    OverrideContract extends BaseContract = TContract,
+    FnName extends
+      keyof OverrideContract["functions"] = keyof OverrideContract["functions"],
+    Param extends Parameters<
+      OverrideContract["functions"][FnName]
+    > = Parameters<OverrideContract["functions"][FnName]>,
   >(
     functionName: FnName,
     args: Param,
   ): Promise<
-    Awaited<ReturnType<TContract["functions"][FnName]>> extends { length: 1 }
-      ? Awaited<ReturnType<TContract["functions"][FnName]>>[0]
-      : Awaited<ReturnType<TContract["functions"][FnName]>>
+    Awaited<ReturnType<OverrideContract["functions"][FnName]>> extends {
+      length: 1;
+    }
+      ? Awaited<ReturnType<OverrideContract["functions"][FnName]>>[0]
+      : Awaited<ReturnType<OverrideContract["functions"][FnName]>>
   > {
-    const fn = await this.readContract.functions[functionName as string];
-    if (!fn) {
+    const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
+      (f) => f.name === functionName,
+    );
+
+    if (!functions.length) {
       throw new Error(
-        `Function ${functionName.toString()} not found in contract. Check your dashboard for the list of functions available`,
+        `Function "${functionName.toString()}" not found in contract. Check your dashboard for the list of functions available`,
       );
     }
-    const result = await fn(...args);
-    if (Array.isArray(result) && result.length === 1) {
-      return result[0];
+    const fn = functions.find(
+      (f) => f.name === functionName && f.inputs.length === args.length,
+    );
+
+    // TODO extract this and re-use for deploy function to check constructor args
+    if (!fn) {
+      throw new Error(
+        `Function "${functionName.toString()}" requires ${
+          functions[0].inputs.length
+        } arguments, but ${
+          args.length
+        } were provided.\nExpected function signature: ${
+          functions[0].signature
+        }`,
+      );
     }
-    return result;
+
+    const ethersFnName = `${functionName.toString()}(${fn.inputs
+      .map((i) => i.type)
+      .join()})`;
+
+    // check if the function exists on the contract, otherwise use the name passed in
+    const fnName =
+      ethersFnName in this.readContract.functions ? ethersFnName : functionName;
+
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
+      // read function
+      const result = await (this.readContract as any)[fnName.toString()](
+        ...args,
+      );
+      return result;
+    }
+
+    throw new Error("Cannot call a write function with read()");
   }
 
   /**
