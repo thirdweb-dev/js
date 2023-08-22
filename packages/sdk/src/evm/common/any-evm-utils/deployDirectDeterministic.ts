@@ -37,7 +37,7 @@ export async function directDeployDeterministic(
   constructorArgs: any[],
   saltForCreate2?: string,
   gasLimit: number = 7000000,
-) {
+): Promise<string> {
   invariant(signer.provider, "Provider is required");
 
   const bytecodePrefixed = bytecode.startsWith("0x")
@@ -98,6 +98,8 @@ export async function directDeployDeterministic(
   } else {
     throw new Error(`Contract already deployed at ${address}`);
   }
+
+  return address;
 }
 
 /**
@@ -119,13 +121,16 @@ export async function directDeployDeterministicWithUri(
   constructorArgs: any[],
   saltForCreate2?: string,
   gasLimit: number = 7000000,
-) {
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    publishMetadataUri,
-    storage,
+): Promise<string> {
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
   );
 
-  await directDeployDeterministic(
+  return await directDeployDeterministic(
     compilerMetadata.bytecode,
     compilerMetadata.abi,
     signer,
@@ -163,7 +168,7 @@ export async function directDeployDeterministicPublished(
   secretKey?: string,
   saltForCreate2?: string,
   gasLimit: number = 7000000,
-) {
+): Promise<string> {
   const publishMetadataUri = (
     await fetchPublishedContractFromPolygon(
       publisherAddress,
@@ -174,12 +179,15 @@ export async function directDeployDeterministicPublished(
       secretKey,
     )
   ).metadataUri;
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    publishMetadataUri,
-    storage,
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
   );
 
-  await directDeployDeterministic(
+  return await directDeployDeterministic(
     compilerMetadata.bytecode,
     compilerMetadata.abi,
     signer,
@@ -195,7 +203,7 @@ export async function predictAddressDeterministic(
   provider: providers.Provider,
   constructorArgs: any[],
   saltForCreate2?: string,
-) {
+): Promise<string> {
   const bytecodePrefixed = bytecode.startsWith("0x")
     ? bytecode
     : `0x${bytecode}`;
@@ -237,9 +245,12 @@ export async function predictAddressDeterministicWithUri(
   constructorArgs: any[],
   saltForCreate2?: string,
 ): Promise<string> {
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    publishMetadataUri,
-    storage,
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
   );
 
   return await predictAddressDeterministic(
@@ -261,7 +272,7 @@ export async function predictAddressDeterministicPublished(
   clientId?: string,
   secretKey?: string,
   saltForCreate2?: string,
-) {
+): Promise<string> {
   const publishMetadataUri = (
     await fetchPublishedContractFromPolygon(
       publisherAddress,
@@ -272,12 +283,15 @@ export async function predictAddressDeterministicPublished(
       secretKey,
     )
   ).metadataUri;
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    publishMetadataUri,
-    storage,
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
   );
 
-  await predictAddressDeterministic(
+  return await predictAddressDeterministic(
     compilerMetadata.bytecode,
     compilerMetadata.abi,
     provider,
