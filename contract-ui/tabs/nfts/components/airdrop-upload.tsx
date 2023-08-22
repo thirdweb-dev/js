@@ -23,10 +23,17 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
+import { resolveAddress } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
 import { utils } from "ethers";
 import Papa from "papaparse";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { IoAlertCircleOutline } from "react-icons/io5";
@@ -43,6 +50,7 @@ import { csvMimeTypes } from "utils/batch";
 export interface AirdropAddressInput {
   address: string;
   quantity?: string;
+  isValid?: boolean;
 }
 interface AirdropUploadProps {
   setAirdrop: (airdrop: AirdropAddressInput[]) => void;
@@ -56,6 +64,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   onClose,
 }) => {
   const [validAirdrop, setValidAirdrop] = useState<AirdropAddressInput[]>([]);
+  const [airdropData, setAirdropData] = useState<AirdropAddressInput[]>([]);
   const [noCsv, setNoCsv] = useState(false);
   const [invalidFound, setInvalidFound] = useState(false);
 
@@ -95,39 +104,71 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             }))
             .filter(({ address }) => address !== "");
 
-          // Filter out address duplicates
-          const seen = new Set();
-          const filteredData = data.filter((el) => {
-            const duplicate = seen.has(el.address);
-            seen.add(el.address);
-            return !duplicate;
-          });
-
           if (!data[0]?.address) {
             setNoCsv(true);
             return;
           }
 
-          setValidAirdrop(filteredData);
+          setValidAirdrop(data);
         },
       });
     },
     [],
   );
 
-  const data = useMemo(() => {
-    const valid = validAirdrop.filter(({ address }) =>
-      utils.isAddress(address),
-    );
-    const invalid = validAirdrop.filter(
-      ({ address }) => !utils.isAddress(address),
-    );
-    const ordered = [...invalid, ...valid];
-    if (invalid?.length > 0) {
-      setInvalidFound(true);
+  useEffect(() => {
+    if (validAirdrop.length === 0) {
+      return setAirdropData([]);
     }
-    return ordered;
+
+    const normalizeAddresses = async (snapshot: AirdropAddressInput[]) => {
+      const normalized = await Promise.all(
+        snapshot.map(async ({ address, ...rest }) => {
+          let isValid = true;
+          let resolvedAddress = address;
+
+          try {
+            resolvedAddress = utils.isAddress(address)
+              ? address
+              : await resolveAddress(address);
+            isValid = !!resolvedAddress;
+          } catch {
+            isValid = false;
+          }
+
+          return {
+            address,
+            resolvedAddress,
+            isValid,
+            ...rest,
+          };
+        }),
+      );
+
+      const seen = new Set();
+      const filteredData = normalized.filter((el) => {
+        const duplicate = seen.has(el.resolvedAddress);
+        seen.add(el.resolvedAddress);
+        return !duplicate;
+      });
+
+      const valid = filteredData.filter(({ isValid }) => isValid);
+      const invalid = filteredData.filter(({ isValid }) => !isValid);
+
+      if (invalid?.length > 0) {
+        setInvalidFound(true);
+      }
+      const ordered = [...invalid, ...valid];
+      setAirdropData(ordered);
+    };
+    normalizeAddresses(validAirdrop);
   }, [validAirdrop]);
+
+  const removeInvalid = useCallback(() => {
+    const filteredData = airdropData.filter(({ isValid }) => isValid);
+    setValidAirdrop(filteredData);
+    setInvalidFound(false);
+  }, [airdropData]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -163,7 +204,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
         </Flex>
 
         {validAirdrop.length > 0 ? (
-          <AirdropTable portalRef={paginationPortalRef} data={data} />
+          <AirdropTable portalRef={paginationPortalRef} data={airdropData} />
         ) : (
           <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
@@ -255,15 +296,29 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 >
                   Reset
                 </Button>
-                <Button
-                  borderRadius="md"
-                  colorScheme="primary"
-                  onClick={onSave}
-                  w={{ base: "100%", md: "auto" }}
-                  disabled={invalidFound || validAirdrop.length === 0}
-                >
-                  Next
-                </Button>
+                {invalidFound ? (
+                  <Button
+                    borderRadius="md"
+                    colorScheme="primary"
+                    disabled={validAirdrop.length === 0}
+                    onClick={() => {
+                      removeInvalid();
+                    }}
+                    w={{ base: "100%", md: "auto" }}
+                  >
+                    Remove invalid
+                  </Button>
+                ) : (
+                  <Button
+                    borderRadius="md"
+                    colorScheme="primary"
+                    onClick={onSave}
+                    w={{ base: "100%", md: "auto" }}
+                    isDisabled={validAirdrop.length === 0}
+                  >
+                    Next
+                  </Button>
+                )}
               </Flex>
             </Flex>
           </Container>

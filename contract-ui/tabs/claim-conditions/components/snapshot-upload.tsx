@@ -24,11 +24,11 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { ClaimCondition } from "@thirdweb-dev/sdk/evm";
+import { ClaimCondition, resolveAddress } from "@thirdweb-dev/sdk/evm";
 import { Logo } from "components/logo";
 import { utils } from "ethers";
 import Papa from "papaparse";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiDownload } from "react-icons/fi";
@@ -48,6 +48,7 @@ export interface SnapshotAddressInput {
   maxClaimable?: string;
   price?: string;
   currencyAddress?: string;
+  isValid?: boolean;
 }
 interface SnapshotUploadProps {
   setSnapshot: (snapshot: SnapshotAddressInput[]) => void;
@@ -71,6 +72,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   const [validSnapshot, setValidSnapshot] = useState<SnapshotAddressInput[]>(
     value || [],
   );
+  const [snapshotData, setSnapshotData] = useState<SnapshotAddressInput[]>([]);
   const [noCsv, setNoCsv] = useState(false);
   const [invalidFound, setInvalidFound] = useState(false);
 
@@ -112,39 +114,71 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
             }))
             .filter(({ address }) => address !== "");
 
-          // Filter out address duplicates
-          const seen = new Set();
-          const filteredData = data.filter((el) => {
-            const duplicate = seen.has(el.address);
-            seen.add(el.address);
-            return !duplicate;
-          });
-
           if (!data[0]?.address) {
             setNoCsv(true);
             return;
           }
 
-          setValidSnapshot(filteredData);
+          setValidSnapshot(data);
         },
       });
     },
     [],
   );
 
-  const data = useMemo(() => {
-    const valid = validSnapshot.filter(({ address }) =>
-      utils.isAddress(address),
-    );
-    const invalid = validSnapshot.filter(
-      ({ address }) => !utils.isAddress(address),
-    );
-    if (invalid?.length > 0) {
-      setInvalidFound(true);
+  useEffect(() => {
+    if (validSnapshot.length === 0) {
+      return setSnapshotData([]);
     }
-    const ordered = [...invalid, ...valid];
-    return ordered;
+
+    const normalizeAddresses = async (snapshot: SnapshotAddressInput[]) => {
+      const normalized = await Promise.all(
+        snapshot.map(async ({ address, ...rest }) => {
+          let isValid = true;
+          let resolvedAddress = address;
+
+          try {
+            resolvedAddress = utils.isAddress(address)
+              ? address
+              : await resolveAddress(address);
+            isValid = !!resolvedAddress;
+          } catch {
+            isValid = false;
+          }
+
+          return {
+            address,
+            resolvedAddress,
+            isValid,
+            ...rest,
+          };
+        }),
+      );
+
+      const seen = new Set();
+      const filteredData = normalized.filter((el) => {
+        const duplicate = seen.has(el.resolvedAddress);
+        seen.add(el.resolvedAddress);
+        return !duplicate;
+      });
+
+      const valid = filteredData.filter(({ isValid }) => isValid);
+      const invalid = filteredData.filter(({ isValid }) => !isValid);
+
+      if (invalid?.length > 0) {
+        setInvalidFound(true);
+      }
+      const ordered = [...invalid, ...valid];
+      setSnapshotData(ordered);
+    };
+    normalizeAddresses(validSnapshot);
   }, [validSnapshot]);
+
+  const removeInvalid = useCallback(() => {
+    const filteredData = snapshotData.filter(({ isValid }) => isValid);
+    setValidSnapshot(filteredData);
+    setInvalidFound(false);
+  }, [snapshotData]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -182,7 +216,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
         {validSnapshot.length > 0 ? (
           <SnapshotTable
             portalRef={paginationPortalRef}
-            data={data}
+            data={snapshotData}
             isV1ClaimCondition={isV1ClaimCondition}
           />
         ) : (
@@ -380,17 +414,29 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                 >
                   Reset
                 </Button>
-                <Button
-                  borderRadius="md"
-                  colorScheme="primary"
-                  onClick={onSave}
-                  w={{ base: "100%", md: "auto" }}
-                  disabled={
-                    isDisabled || invalidFound || validSnapshot.length === 0
-                  }
-                >
-                  Next
-                </Button>
+                {invalidFound ? (
+                  <Button
+                    borderRadius="md"
+                    colorScheme="primary"
+                    disabled={isDisabled || validSnapshot.length === 0}
+                    onClick={() => {
+                      removeInvalid();
+                    }}
+                    w={{ base: "100%", md: "auto" }}
+                  >
+                    Remove invalid
+                  </Button>
+                ) : (
+                  <Button
+                    borderRadius="md"
+                    colorScheme="primary"
+                    onClick={onSave}
+                    w={{ base: "100%", md: "auto" }}
+                    isDisabled={isDisabled || validSnapshot.length === 0}
+                  >
+                    Next
+                  </Button>
+                )}
               </Flex>
             </Flex>
           </Container>
@@ -415,13 +461,19 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({
     let cols = [
       {
         Header: "Address",
-        accessor: ({ address }) => {
-          if (utils.isAddress(address)) {
+        accessor: ({ address, isValid }) => {
+          if (isValid) {
             return address;
           } else {
             return (
               <Flex>
-                <Tooltip label="Address is not valid">
+                <Tooltip
+                  label={
+                    address.startsWith("0x")
+                      ? "Address is not valid"
+                      : "Address couldn't be resolved"
+                  }
+                >
                   <Stack direction="row" align="center">
                     <Icon
                       as={IoAlertCircleOutline}
