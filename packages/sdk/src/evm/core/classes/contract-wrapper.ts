@@ -1,8 +1,25 @@
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import fetch from "cross-fetch";
+import {
+  BaseContract,
+  BigNumber,
+  Contract,
+  ContractTransaction,
+  constants,
+  utils,
+  type BytesLike,
+  type CallOverrides,
+  type ContractFunction,
+  type ContractInterface,
+  type Signer,
+  type providers,
+} from "ethers";
+import invariant from "tiny-invariant";
 import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
-import { parseRevertReason, TransactionError } from "../../common/error";
+import { TransactionError, parseRevertReason } from "../../common/error";
 import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
@@ -11,15 +28,18 @@ import {
   getAndIncrementNonce,
 } from "../../common/forwarder";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
-import { Address } from "../../schema/shared/Address";
-import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -27,26 +47,6 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import fetch from "cross-fetch";
-import {
-  BaseContract,
-  BigNumber,
-  type BytesLike,
-  type CallOverrides,
-  Contract,
-  type ContractInterface,
-  type ContractTransaction,
-  utils,
-  type ContractFunction,
-  type providers,
-  type Signer,
-  constants,
-} from "ethers";
-import invariant from "tiny-invariant";
-import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
-import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 /**
  * @internal
@@ -63,6 +63,7 @@ export class ContractWrapper<
   public writeContract;
   public readContract;
   public abi;
+  public address;
 
   constructor(
     network: NetworkInput,
@@ -73,6 +74,7 @@ export class ContractWrapper<
   ) {
     super(network, options);
     this.abi = contractAbi;
+    this.address = contractAddress;
     // set up the contract
     this.writeContract = new Contract(
       contractAddress,
@@ -272,6 +274,24 @@ export class ContractWrapper<
   }
 
   /**
+   *
+   * @param functionName The function name on the contract to call
+   * @param args The arguments to be passed to the functionName
+   * @returns The return value of the function call
+   */
+  public async read<
+    FnName extends keyof TContract["functions"] = keyof TContract["functions"],
+    Param extends Parameters<TContract["functions"][FnName]> = Parameters<
+      TContract["functions"][FnName]
+    >,
+  >(
+    functionName: FnName,
+    args: Param,
+  ): Promise<ReturnType<TContract["functions"][FnName]>> {
+    return this.readContract.functions[functionName as string]?.(...args);
+  }
+
+  /**
    * @internal
    */
   public async call(
@@ -290,7 +310,7 @@ export class ContractWrapper<
 
     if (!functions.length) {
       throw new Error(
-        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
+        `Function ${functionName.toString()} not found in contract. Check your dashboard for the list of functions available`,
       );
     }
     const fn = functions.find(
@@ -300,11 +320,17 @@ export class ContractWrapper<
     // TODO extract this and re-use for deploy function to check constructor args
     if (!fn) {
       throw new Error(
-        `Function "${functionName}" requires ${functions[0].inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${functions[0].signature}`,
+        `Function "${functionName.toString()}" requires ${
+          functions[0].inputs.length
+        } arguments, but ${
+          args.length
+        } were provided.\nExpected function signature: ${
+          functions[0].signature
+        }`,
       );
     }
 
-    const ethersFnName = `${functionName}(${fn.inputs
+    const ethersFnName = `${functionName.toString()}(${fn.inputs
       .map((i) => i.type)
       .join()})`;
 
@@ -367,9 +393,7 @@ export class ContractWrapper<
     } else {
       // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
       if (!this.isValidContract) {
-        const code = await this.getProvider().getCode(
-          this.readContract.address,
-        );
+        const code = await this.getProvider().getCode(this.address);
         this.isValidContract = code !== "0x";
         if (!this.isValidContract) {
           throw new Error(
@@ -476,7 +500,7 @@ export class ContractWrapper<
     // Get metadata for transaction to populate into error
     const network = await provider.getNetwork();
     const from = await (callOverrides.from || this.getSignerAddress());
-    const to = this.readContract.address;
+    const to = this.address;
     const data = this.readContract.interface.encodeFunctionData(
       fn as string,
       args,
@@ -516,7 +540,7 @@ export class ContractWrapper<
     let contractName: string | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
-        this.readContract.address,
+        this.address,
         this.getProvider(),
         this.storage,
         this.options,
@@ -876,7 +900,7 @@ export class ContractWrapper<
       const { r, s, v } = utils.splitSignature(sig);
 
       message = {
-        to: this.readContract.address,
+        to: this.address,
         owner: permit.owner,
         spender: permit.spender,
         value: BigNumber.from(permit.value).toString(),
