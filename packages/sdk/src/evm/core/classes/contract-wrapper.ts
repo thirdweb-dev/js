@@ -288,7 +288,14 @@ export class ContractWrapper<
     functionName: FnName,
     args: Param,
   ): Promise<ReturnType<TContract["functions"][FnName]>> {
-    return this.readContract.functions[functionName as string]?.(...args);
+    const fn = await this.readContract.functions[functionName as string];
+    if (!fn) {
+      throw new Error(
+        `Function ${functionName.toString()} not found in contract. Check your dashboard for the list of functions available`,
+      );
+    }
+    const result = await fn(...args);
+    return result;
   }
 
   /**
@@ -310,7 +317,7 @@ export class ContractWrapper<
 
     if (!functions.length) {
       throw new Error(
-        `Function ${functionName.toString()} not found in contract. Check your dashboard for the list of functions available`,
+        `Function ${functionName} not found in contract. Check your dashboard for the list of functions available`,
       );
     }
     const fn = functions.find(
@@ -320,17 +327,11 @@ export class ContractWrapper<
     // TODO extract this and re-use for deploy function to check constructor args
     if (!fn) {
       throw new Error(
-        `Function "${functionName.toString()}" requires ${
-          functions[0].inputs.length
-        } arguments, but ${
-          args.length
-        } were provided.\nExpected function signature: ${
-          functions[0].signature
-        }`,
+        `Function "${functionName}" requires ${functions[0].inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${functions[0].signature}`,
       );
     }
 
-    const ethersFnName = `${functionName.toString()}(${fn.inputs
+    const ethersFnName = `${functionName}(${fn.inputs
       .map((i) => i.type)
       .join()})`;
 
