@@ -10,7 +10,6 @@ import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema";
-import { getSupportedChains } from "../constants";
 import { Polygon } from "@thirdweb-dev/chains";
 
 // Internal static cache
