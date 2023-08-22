@@ -131,7 +131,9 @@ export async function getChainIdOrName(
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
  */
-export function isChainConfig(network: NetworkInput): network is Chain {
+export function isChainConfig(
+  network: NetworkInput,
+): network is Chain | ChainInfo {
   return (
     typeof network !== "string" &&
     typeof network !== "number" &&
