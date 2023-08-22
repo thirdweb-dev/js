@@ -270,6 +270,7 @@ export class DropErc1155ClaimConditions<
     if (claimCondition.availableSupply !== "unlimited") {
       if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
         reasons.push(ClaimEligibility.NotEnoughSupply);
+        return reasons;
       }
     }
 
@@ -470,6 +471,7 @@ export class DropErc1155ClaimConditions<
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
       }
+      return reasons;
     }
 
     // if not within a browser conetext, check for wallet balance.
