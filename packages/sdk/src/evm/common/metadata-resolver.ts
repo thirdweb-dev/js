@@ -51,9 +51,6 @@ export async function fetchContractMetadataFromAddress(
   }
   let metadata: PublishedMetadata | undefined;
 
-  console.log("fetching contract metadata for", address, chainId);
-  console.time("fetched metadata in");
-
   // we can't race here, because the contract URI might resolve first with a non pinned URI
   const [ipfsData, registryData] = await Promise.all([
     resolveContractUriAndBytecode(address, provider).catch(() => undefined),
@@ -77,9 +74,7 @@ export async function fetchContractMetadataFromAddress(
     );
   }
   try {
-    console.time("IPFS fetch");
     metadata = await fetchContractMetadata(metadataUri, storage);
-    console.timeEnd("IPFS fetch");
   } catch (e) {
     // Don't warn here, its common to not have IPFS metadata for a contract, fallback to bytecode
   }
@@ -103,7 +98,6 @@ export async function fetchContractMetadataFromAddress(
       return metadata;
     }
   }
-  console.timeEnd("fetched metadata in");
 
   if (!metadata) {
     throw new Error(
