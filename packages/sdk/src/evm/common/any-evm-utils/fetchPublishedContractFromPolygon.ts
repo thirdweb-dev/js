@@ -8,6 +8,7 @@ import { resolveAddress } from "../ens/resolveAddress";
 import invariant from "tiny-invariant";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
+import { getSupportedChains } from "../../constants";
 
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -19,11 +20,13 @@ export async function fetchPublishedContractFromPolygon(
   clientId?: string,
   secretKey?: string,
 ) {
+  const chain =
+    getSupportedChains().find((c) => c.chainId === 137)?.rpc[0] || "polygon";
   const publisher = await resolveAddress(publisherAddress);
   const contract = new Contract(
     getContractPublisherAddress(),
     ContractPublisherAbi,
-    getChainProvider("polygon", { clientId, secretKey }),
+    getChainProvider(chain, { clientId, secretKey }),
   ) as ContractPublisher;
 
   let publishedContract;
