@@ -376,3 +376,34 @@ export interface MultiwrapContractDeployMetadata {
    */
   app_uri?: string;
 }
+
+/**
+ * Options for deploying Airdrop contract
+ * @public
+ */
+export interface AirdropContractDeployMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileOrBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: AddressOrEns[];
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
+}
