@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.46
+
+### Patch Changes
+
+- [#1508](https://github.com/thirdweb-dev/js/pull/1508) [`184c325a`](https://github.com/thirdweb-dev/js/commit/184c325ab2ef028022a050c4274f2ab12b1a3a7f) Thanks [@jnsdls](https://github.com/jnsdls)! - update xpla chain icons
+
+- [#1513](https://github.com/thirdweb-dev/js/pull/1513) [`c12f0874`](https://github.com/thirdweb-dev/js/commit/c12f0874b4dac43c263c7edb20d0343c16381c34) Thanks [@jnsdls](https://github.com/jnsdls)! - add additonal chains
+
 ## 0.1.45
 
 ### Patch Changes
