@@ -337,6 +337,7 @@ export const CompilerMetadataFetchedSchema = /* @__PURE__ */ (() =>
       .transform((v) => {
         return v.filter((license) => license !== undefined) as string[];
       }),
+    isPartialAbi: z.boolean().optional(),
   }))();
 
 /**

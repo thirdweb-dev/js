@@ -4,7 +4,7 @@ import {
   SUPPORTED_FEATURES,
 } from "../../constants/contract-features";
 import { AbiInput } from "../../schema/contracts/custom";
-import { hasMatchingAbi } from "./hasMatchingAbi";
+import { hasMatchingAbi, matchesAbiFromBytecode } from "./hasMatchingAbi";
 
 /**
  * Processes ALL supported features and sets whether the passed in abi supports each individual feature
@@ -22,6 +22,24 @@ export function detectFeatures(
     const feature = features[featureKey];
     const enabled = matchesAbiInterface(abi, feature);
     const childResults = detectFeatures(abi, feature.features);
+    results[featureKey] = {
+      ...feature,
+      features: childResults,
+      enabled,
+    } as FeatureWithEnabled;
+  }
+  return results;
+}
+
+export function detectFeaturesFromBytecode(
+  bytecode: string,
+  features: Record<string, Feature> = SUPPORTED_FEATURES,
+): Record<string, FeatureWithEnabled> {
+  const results: Record<string, FeatureWithEnabled> = {};
+  for (const featureKey in features) {
+    const feature = features[featureKey];
+    const enabled = matchesAbiFromBytecode(bytecode, feature.abis);
+    const childResults = detectFeaturesFromBytecode(bytecode, feature.features);
     results[featureKey] = {
       ...feature,
       features: childResults,

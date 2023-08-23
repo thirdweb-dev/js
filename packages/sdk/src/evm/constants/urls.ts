@@ -105,10 +105,35 @@ export function getChainIdFromNetwork(
   );
 }
 
+export async function getChainIdOrName(
+  network: NetworkInput,
+): Promise<number | string> {
+  if (isChainConfig(network)) {
+    // If it's a chain just return the chain id
+    return network.chainId;
+  } else if (typeof network === "number") {
+    // If it's a number (chainId) return it directly
+    return network;
+  } else if (typeof network === "number") {
+    // If it's a string (chain name) return the chain id from the map
+    return network;
+  } else if (isProvider(network)) {
+    return network.getNetwork().then((n) => n.chainId);
+  } else if (isSigner(network)) {
+    if (!network.provider) {
+      throw new Error("Signer does not have a provider");
+    }
+    return network.provider.getNetwork().then((n) => n.chainId);
+  }
+  throw new Error(`Cannot resolve chainId from: ${network}.`);
+}
+
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
  */
-export function isChainConfig(network: NetworkInput): network is Chain {
+export function isChainConfig(
+  network: NetworkInput,
+): network is Chain | ChainInfo {
   return (
     typeof network !== "string" &&
     typeof network !== "number" &&
