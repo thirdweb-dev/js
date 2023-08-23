@@ -272,6 +272,7 @@ export class DropClaimConditions<
 
       if (supplyWithDecimals.lt(quantityWithDecimals)) {
         reasons.push(ClaimEligibility.NotEnoughSupply);
+        return reasons;
       }
     }
 
@@ -464,6 +465,7 @@ export class DropClaimConditions<
         } else {
           reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
         }
+        return reasons;
       }
     }
 

@@ -3,6 +3,7 @@ export * from "./snapshots";
 export * from "./role";
 export * from "./metadata-resolver";
 export * from "./gas-price";
+export * from "./fetchContractMetadata";
 
 // feature detection
 export * from "./feature-detection/matchesPrebuiltAbi";
