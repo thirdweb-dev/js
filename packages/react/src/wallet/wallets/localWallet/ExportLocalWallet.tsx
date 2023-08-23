@@ -172,7 +172,7 @@ export const ExportLocalWallet: React.FC<{
 
         <SavedWalletAddress>{shortenAddress(savedAddress)}</SavedWalletAddress>
 
-        <Spacer y="lg" />
+        <Spacer y="xl" />
 
         {passwordIsRequired && (
           <>
@@ -207,22 +207,21 @@ export const ExportLocalWallet: React.FC<{
               error={isWrongPassword ? "Wrong Password" : ""}
               dataTest="current-password"
             />
-            <Spacer y="xl" />
+            <Spacer y="md" />
           </>
         )}
 
-        <FormFooter>
-          <Button
-            disabled={exportDisabled}
-            variant="inverted"
-            style={{
-              opacity: exportDisabled ? 0.5 : 1,
-            }}
-            type="submit"
-          >
-            Backup
-          </Button>
-        </FormFooter>
+        <Button
+          disabled={exportDisabled}
+          variant="inverted"
+          style={{
+            opacity: exportDisabled ? 0.5 : 1,
+            width: "100%",
+          }}
+          type="submit"
+        >
+          Backup
+        </Button>
       </form>
     </>
   );
