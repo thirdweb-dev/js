@@ -7,7 +7,7 @@ import open from "open";
 import ora from "ora";
 // import prompts from "prompts";
 import url from "url";
-import { logger } from "../core/helpers/logger";
+import { logger, spinner } from "../core/helpers/logger";
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { ICredsConfig } from "../lib/types";
 import { generateStateParameter } from "../lib/utils";
@@ -47,13 +47,6 @@ export async function loginUser(
     globalThis["TW_AUTH_TOKEN"] = authToken;
     return authToken;
   } else {
-    if (showLogs) {
-      console.log(
-        chalk.yellow(
-          "We did not find a session, please connect your wallet through our dashboard to continue",
-        ),
-      );
-    }
     const token = await authenticateUser({ browser: true, configPaths });
     if (!token) {
       throw new Error("Failed to login");
@@ -97,6 +90,7 @@ export const authenticateUser = async (
   props: LoginProps = defaultLoginProps,
 ) => {
   const { credsConfigPath, cliWalletPath, tokenPath } = props.configPaths;
+  const waitForDashboard = spinner("Waiting for a response from the dashboard").clear();
 
   // Get or generate a localwallet.
   const wallet = await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
@@ -154,6 +148,14 @@ export const authenticateUser = async (
       const { pathname, query } = url.parse(req.url, true);
       switch (pathname) {
         case "/auth/callback": {
+          if (query.failed) {
+            res.writeHead(500, "Unable to authenticate with the dashboard!");
+            res.end("Unable to authenticate with the dashboard!", () => {
+              finish(new Error("Unable to authenticate with the dashboard!"));
+            })
+            reject(chalk.red("Something went wrong! Unable to authenticate with the dashboard."));
+            waitForDashboard.stop();
+          }
           if (query.token) {
             const token = Array.isArray(query.token) ? query.token[0] : query.token;
             const theirState = Array.isArray(query.state)
@@ -169,6 +171,7 @@ export const authenticateUser = async (
               reject(
                 new Error(chalk.red("\nUnauthorized request, state mismatch")),
               );
+              waitForDashboard.stop();
             } else {
               // Save the token to the config file.
               // eslint-disable-next-line no-unused-expressions
@@ -177,6 +180,7 @@ export const authenticateUser = async (
                 mode: 0o600,
               };
               res.end(() => {
+                waitForDashboard.succeed();
                 finish();
               });
               logger.info(chalk.green(`\nSuccessfully logged in.`));
@@ -188,6 +192,7 @@ export const authenticateUser = async (
               finish(new Error("No authToken received"));
             });
             reject(new Error(chalk.red("\nNo authToken received")));
+            waitForDashboard.stop();
           }
         }
       }
@@ -196,8 +201,8 @@ export const authenticateUser = async (
     server.listen(8976);
   });
   if (props?.browser) {
-    console.log(`Opening a link in your default browser: ${urlToOpen}`);
-    console.log(chalk.yellow("\nAwaiting response from the dashboard..."));
+    console.log(chalk.yellow(`Automatically opening a link to authenticate with our dashboard...\n`))
+    waitForDashboard.start();
     // Adding this timeout since it feels weird for the browser to open before the spinner.
     setTimeout(async () => {
       await open(urlToOpen);
