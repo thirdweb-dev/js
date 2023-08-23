@@ -13,9 +13,9 @@ import {
   generateExtensionFunctions,
   generatePluginFunctions,
 } from "../plugin/generatePluginFunctions";
-import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
-import { getMetadataForExtensions } from "../plugin/getMetadataForExtensions";
 import { Extension } from "../../types/extensions";
+import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
+import invariant from "tiny-invariant";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.
@@ -33,6 +33,8 @@ export async function getDeploymentInfo(
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
 
@@ -42,18 +44,33 @@ export async function getDeploymentInfo(
 
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    metadataUri,
-    storage,
-  );
-  const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
-  const extensionMetadata = await getMetadataForExtensions(
-    metadataUri,
-    storage,
-  );
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(metadataUri, storage);
+  const defaultExtensions = extendedMetadata?.defaultExtensions;
 
-  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
-  if (pluginMetadata.length > 0) {
+  if (extendedMetadata?.routerType === "plugin" && defaultExtensions) {
+    invariant(clientId || secretKey, "Require Client Id / Secret Key");
+    const publishedExtensions = await Promise.all(
+      defaultExtensions.map((e) => {
+        return fetchPublishedContractFromPolygon(
+          e.publisherAddress,
+          e.extensionName,
+          e.extensionVersion,
+          storage,
+          clientId,
+          secretKey,
+        );
+      }),
+    );
+
+    const pluginMetadata = (
+      await Promise.all(
+        publishedExtensions.map(async (c) => {
+          return fetchAndCacheDeployMetadata(c.metadataUri, storage);
+        }),
+      )
+    ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+
     // get deployment info for all plugins
     const pluginDeploymentInfo = await Promise.all(
       pluginMetadata.map(async (metadata) => {
@@ -63,6 +80,8 @@ export async function getDeploymentInfo(
           storage,
           create2FactoryAddress,
           { metadata: metadata },
+          clientId,
+          secretKey,
         );
         return info;
       }),
@@ -88,6 +107,8 @@ export async function getDeploymentInfo(
         contractName: "PluginMap",
         constructorParams: { _pluginsToAdd: { value: mapInput } },
       },
+      clientId,
+      secretKey,
     );
 
     // address of PluginMap is input for MarketplaceV3's constructor
@@ -96,7 +117,29 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
-  } else if (extensionMetadata.length > 0) {
+  } else if (extendedMetadata?.routerType === "dynamic" && defaultExtensions) {
+    invariant(clientId || secretKey, "Require Client Id / Secret Key");
+    const publishedExtensions = await Promise.all(
+      defaultExtensions.map((e) => {
+        return fetchPublishedContractFromPolygon(
+          e.publisherAddress,
+          e.extensionName,
+          e.extensionVersion,
+          storage,
+          clientId,
+          secretKey,
+        );
+      }),
+    );
+
+    const extensionMetadata = (
+      await Promise.all(
+        publishedExtensions.map(async (c) => {
+          return fetchAndCacheDeployMetadata(c.metadataUri, storage);
+        }),
+      )
+    ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+
     // get deployment info for all extensions
     const extensionDeploymentInfo = await Promise.all(
       extensionMetadata.map(async (metadata) => {
@@ -106,6 +149,8 @@ export async function getDeploymentInfo(
           storage,
           create2FactoryAddress,
           { metadata: metadata },
+          clientId,
+          secretKey,
         );
         return info;
       }),
@@ -143,6 +188,8 @@ export async function getDeploymentInfo(
       metadata: compilerMetadata,
       constructorParams: customParams,
     },
+    clientId,
+    secretKey,
   );
 
   // get clone factory
@@ -152,6 +199,8 @@ export async function getDeploymentInfo(
     storage,
     create2FactoryAddress,
     { contractName: "TWCloneFactory" },
+    clientId,
+    secretKey,
   );
 
   finalDeploymentInfo.push(factoryInfo);

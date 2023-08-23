@@ -16,6 +16,7 @@ export async function getThirdwebContractAddress(
   contractName: string,
   chainId: number,
   storage: ThirdwebStorage,
+  contractVersion: string = "latest",
   clientId?: string,
   secretKey?: string,
 ): Promise<string> {
@@ -27,6 +28,7 @@ export async function getThirdwebContractAddress(
     contractName,
     chainId,
     storage,
+    contractVersion,
     clientId,
     secretKey,
   );

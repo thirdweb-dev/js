@@ -74,7 +74,7 @@ export * from "./any-evm-utils/deployWithThrowawayDeployer";
 export * from "./any-evm-utils/computeDeploymentInfo";
 export * from "./any-evm-utils/convertParamValues";
 export * from "./any-evm-utils/getCreate2FactoryDeploymentInfo";
-export * from "./any-evm-utils/fetchAndCachePublishedContractURI";
+export * from "./any-evm-utils/fetchPublishedContractFromPolygon";
 export * from "./any-evm-utils/fetchAndCacheDeployMetadata";
 export * from "./any-evm-utils/estimateGasForDeploy";
 export * from "./any-evm-utils/createTransactionBatches";

@@ -1,5 +1,6 @@
 import { BytesLike } from "ethers";
 import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
+import { AddressOrEns } from "../../schema";
 
 export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;
@@ -49,6 +50,8 @@ export type ConstructorParamMap = Record<string, ConstructorParam>;
 
 export type ContractOptions = {
   contractName?: string;
+  publisherAddress?: AddressOrEns;
+  version?: string;
   metadata?: PreDeployMetadataFetched;
   constructorParams?: ConstructorParamMap;
 };

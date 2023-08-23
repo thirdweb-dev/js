@@ -98,7 +98,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.32.0",
+    "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/generated-abis": "workspace:^",
     "@thirdweb-dev/sdk": "workspace:*",
