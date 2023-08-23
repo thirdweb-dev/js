@@ -15,6 +15,7 @@ import EventEmitter from "eventemitter3";
 export class RPCConnectionHandler extends EventEmitter {
   private provider: providers.Provider;
   private signer: Signer | undefined;
+  public network: NetworkInput;
   public readonly options: SDKOptionsOutput;
 
   constructor(network: NetworkInput, options: SDKOptions) {
@@ -29,6 +30,7 @@ export class RPCConnectionHandler extends EventEmitter {
       this.options = SDKOptionsSchema.parse({});
     }
     const [signer, provider] = getSignerAndProvider(network, this.options);
+    this.network = network;
     this.signer = signer;
     this.provider = provider;
   }
@@ -39,6 +41,7 @@ export class RPCConnectionHandler extends EventEmitter {
    */
   public updateSignerOrProvider(network: NetworkInput) {
     const [signer, provider] = getSignerAndProvider(network, this.options);
+    this.network = network;
     this.signer = signer;
     this.provider = provider;
   }

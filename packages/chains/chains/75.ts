@@ -4,7 +4,11 @@ export default {
   "chain": "DSC",
   "rpc": [
     "https://decimal-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.decimalchain.com/web3/"
+    "https://node.decimalchain.com/web3/",
+    "https://node1-mainnet.decimalchain.com/web3/",
+    "https://node2-mainnet.decimalchain.com/web3/",
+    "https://node3-mainnet.decimalchain.com/web3/",
+    "https://node4-mainnet.decimalchain.com/web3/"
   ],
   "faucets": [],
   "nativeCurrency": {
