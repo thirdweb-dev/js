@@ -136,7 +136,7 @@ export class SmartContract<
   /**
    * Handle primary sales
    */
-  get sales(): ContractPrimarySale<IPrimarySale> {
+  get sales(): ContractPrimarySale {
     return assertEnabled(this.detectPrimarySales(), FEATURE_PRIMARY_SALE);
   }
 
@@ -317,7 +317,7 @@ export class SmartContract<
   get airdrop1155(): Airdrop1155<AirdropERC1155> {
     return assertEnabled(this.detectAirdrop1155(), FEATURE_AIRDROP_ERC1155);
   }
-    
+
   /**
    * Account Factory
    *
@@ -594,7 +594,10 @@ export class SmartContract<
 
   private detectAirdrop721() {
     if (
-      detectContractFeature<AirdropERC721>(this.contractWrapper, "AirdropERC721")
+      detectContractFeature<AirdropERC721>(
+        this.contractWrapper,
+        "AirdropERC721",
+      )
     ) {
       return new Airdrop721(this.contractWrapper);
     }
@@ -603,7 +606,10 @@ export class SmartContract<
 
   private detectAirdrop1155() {
     if (
-      detectContractFeature<AirdropERC1155>(this.contractWrapper, "AirdropERC1155")
+      detectContractFeature<AirdropERC1155>(
+        this.contractWrapper,
+        "AirdropERC1155",
+      )
     ) {
       return new Airdrop1155(this.contractWrapper);
     }

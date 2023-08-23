@@ -17,13 +17,11 @@ import { Transaction } from "./transactions";
  * ```
  * @public
  */
-export class ContractPrimarySale<TContract extends IPrimarySale>
-  implements DetectableFeature
-{
+export class ContractPrimarySale implements DetectableFeature {
   featureName = FEATURE_PRIMARY_SALE.name;
   private contractWrapper;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<IPrimarySale>) {
     this.contractWrapper = contractWrapper;
   }
 
@@ -38,10 +36,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
    * @twfeature PrimarySale
    */
   public async getRecipient(): Promise<Address> {
-    const result = await this.contractWrapper.read<
-      IPrimarySale,
-      "primarySaleRecipient"
-    >("primarySaleRecipient", []);
+    const result = await this.contractWrapper.read("primarySaleRecipient", []);
     return result;
   }
 
@@ -58,7 +53,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
   setRecipient = /* @__PURE__ */ buildTransactionFunction(
     async (recipient: string): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<IPrimarySale>,
+        contractWrapper: this.contractWrapper,
         method: "setPrimarySaleRecipient",
         args: [recipient],
       });
