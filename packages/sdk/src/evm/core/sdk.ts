@@ -1,4 +1,4 @@
-import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
+import { getAllDetectedExtensionNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
 import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
@@ -589,20 +589,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata.abi,
         );
       } catch (e) {
+        // fallback to
         // try resolving the contract type (legacy contracts)
-        const resolvedContractType = await this.resolveContractType(address);
+        const resolvedContractType = await this.resolveContractType(
+          resolvedAddress,
+        );
         if (resolvedContractType && resolvedContractType !== "custom") {
           // otherwise if it's a prebuilt contract we can just use the contract type
           const contractAbi = await PREBUILT_CONTRACTS_MAP[
             resolvedContractType
-          ].getAbi(address, this.getProvider(), this.storage);
-          newContract = await this.getContractFromAbi(address, contractAbi);
-        } else {
-          // we cant fetch the ABI, and we don't know the contract type, throw an error
-          const chainId = (await this.getProvider().getNetwork()).chainId;
-          throw new Error(
-            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
+          ].getAbi(resolvedAddress, this.getProvider(), this.storage);
+          newContract = await this.getContractFromAbi(
+            resolvedAddress,
+            contractAbi,
           );
+        } else {
+          // we cant fetch the ABI, and we don't know the contract type, throw the original error
+          throw e;
         }
       }
     }
@@ -700,7 +703,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await this.getContract(address)).metadata.get(),
           extensions: async () =>
-            getAllDetectedFeatureNames(
+            getAllDetectedExtensionNames(
               (await this.getContract(address)).abi as Abi,
             ),
         };
@@ -761,7 +764,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await chainSDK.getContract(address)).metadata.get(),
           extensions: async () =>
-            getAllDetectedFeatureNames(
+            getAllDetectedExtensionNames(
               (await chainSDK.getContract(address)).abi as Abi,
             ),
         };
@@ -2298,6 +2301,8 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
+    // TODO don't create a new sdk instance here, instead read from contract directly with provider
+    // this will allow moving deployer out of this file and help with tree shaking
     const publishedContract = await new ThirdwebSDK(
       "polygon",
       {

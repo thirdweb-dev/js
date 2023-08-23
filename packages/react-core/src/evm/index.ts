@@ -251,6 +251,9 @@ export { ThirdwebSDKProvider } from "./providers/thirdweb-sdk-provider";
 export { useSDK, useSDKChainId } from "./hooks/useSDK";
 export type { ThirdwebSDKProviderProps } from "./providers/types";
 
+// utils
+export { invalidateContractAndBalances } from "./utils/cache-keys";
+
 // types
 export type {
   Chain,
