@@ -557,7 +557,7 @@ const main = async () => {
       "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
     )
     .action(async () => {
-      await logoutUser(credsConfigPath);
+      await logoutUser(credsConfigPath, tokenPath);
     });
 
   await program.parseAsync();

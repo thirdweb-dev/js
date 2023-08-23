@@ -5,12 +5,13 @@ import fs from "fs";
 import http from "http";
 import open from "open";
 import ora from "ora";
-import prompts from "prompts";
+// import prompts from "prompts";
 import url from "url";
 import { logger } from "../core/helpers/logger";
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { ICredsConfig } from "../lib/types";
 import { generateStateParameter } from "../lib/utils";
+import crypto from "node:crypto";
 
 type LoginProps = {
   browser: boolean;
@@ -63,15 +64,16 @@ export async function loginUser(
   }
 }
 
-export async function logoutUser(credsConfigPath: string) {
+export async function logoutUser(credsConfigPath: string, tokenPath: string) {
   try {
     ora("Logging out...").start();
-    const dirExists = fs.existsSync(credsConfigPath);
+    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath);
     if (!dirExists) {
       ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
       return;
     }
     fs.unlinkSync(credsConfigPath);
+    fs.unlinkSync(tokenPath);
     ora().succeed(chalk.green("You have been logged out"));
   } catch (error) {
     console.log(chalk.red("Something went wrong", error));
@@ -84,7 +86,7 @@ export async function getSession(tokenPath: string, configCredsPath: string) {
   }
 
   try {
-    await checkPasswordExpiration(configCredsPath);
+    // await checkPasswordExpiration(configCredsPath);
     return fs.readFileSync(tokenPath, "utf8");
   } catch (error) {
     console.log(error);
@@ -120,11 +122,11 @@ export const authenticateUser = async (
   let loginTimeoutHandle: NodeJS.Timeout;
   const timerPromise = new Promise<void>((resolve, reject) => {
     loginTimeoutHandle = setTimeout(() => {
-      logger.error("Login session timed out, server didn't receive a response in 2 minutes. Please try again.");
+      logger.error("Login session timed out, server didn't receive a response in 5 minutes. Please try again.");
       server.close();
       clearTimeout(loginTimeoutHandle);
-      reject(new Error("Login session timed out, server didn't receive a response in 2 minutes. Please try again."));
-    }, 120000);
+      reject(new Error("Login session timed out, server didn't receive a response in 5 minutes. Please try again."));
+    }, 300000);
   });
 
   const loginPromise = new Promise<string>((resolve, reject) => {
@@ -210,24 +212,25 @@ export const authenticateUser = async (
 async function getOrCreatePassword(configCredsPath: string): Promise<string> {
   // Check if the password exists, if not, prompt for it.
   if (!fs.existsSync(configCredsPath)) {
-    const response = await prompts({
-      type: "invisible",
-      name: "password",
-      message: `Please enter a password to start a session with the CLI, this password will be needed to login again in the future, make sure to remember it!`,
-    });
+    // const response = await prompts({
+    //   type: "invisible",
+    //   name: "password",
+    //   message: `Please enter a password to start a session with the CLI, this password will be needed to login again in the future, make sure to remember it!`,
+    // });
 
-    if (!response.password) {
-      throw new Error("No password provided");
-    }
+    // if (!response.password) {
+    //   throw new Error("No password provided");
+    // }
 
-    return response.password as string;
+    // return response.password as string;
+    return crypto.randomUUID();
   }
-
-  return await checkPasswordExpiration(configCredsPath);
+  const configJson = JSON.parse(fs.readFileSync(configCredsPath, "utf-8")) as ICredsConfig;
+  return configJson.password;
 }
 
 async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
-  const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
+  // const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
 
   // Get or prompt for password.
   const password = await getOrCreatePassword(configCredsPath);
@@ -242,7 +245,7 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
 
       await wallet.import({
         encryptedJson: walletJson,
-        password: password,
+        password,
       });
       return wallet;
     } catch (e) {
@@ -266,51 +269,51 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
   // write password
   fs.writeFileSync(configCredsPath, JSON.stringify({
     password: password,
-    expiration: newExpiration,
+    // expiration: newExpiration,
   }), "utf-8");
 
   return wallet;
 }
 
-const checkPasswordExpiration = async (credsConfigPath: string) => {
-  const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
-  const configJson = JSON.parse(fs.readFileSync(credsConfigPath, "utf-8")) as ICredsConfig;
-  const { password, expiration } = configJson;
+// const checkPasswordExpiration = async (credsConfigPath: string) => {
+//   const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
+//   const configJson = JSON.parse(fs.readFileSync(credsConfigPath, "utf-8")) as ICredsConfig;
+//   const { password, expiration } = configJson;
 
-  // Check if the password has expired.
-  if (Date.now() > expiration) {
-    // If it has, prompt for it again.
-    const response = await prompts({
-      type: "invisible",
-      name: "password",
-      message: `Session has expired, please confirm your password to continue`,
-    });
+//   // Check if the password has expired.
+//   if (Date.now() > expiration) {
+//     // If it has, prompt for it again.
+//     const response = await prompts({
+//       type: "invisible",
+//       name: "password",
+//       message: `Session has expired, please confirm your password to continue`,
+//     });
 
-    // Check that input is not empty.
-    if (!response.password) {
-      throw new Error("No password provided");
-    }
+//     // Check that input is not empty.
+//     if (!response.password) {
+//       throw new Error("No password provided");
+//     }
 
-    // Check if the password matches.
-    if (response.password !== password) {
-      throw new Error("Incorrect password, if you forgot your password, please logout and login again.");
-    }
+//     // Check if the password matches.
+//     if (response.password !== password) {
+//       throw new Error("Incorrect password, if you forgot your password, please logout and login again.");
+//     }
 
-    // Reset the expiration date.
-    fs.writeFileSync(credsConfigPath, JSON.stringify({
-      ...configJson,
-      expiration: newExpiration,
-    }), "utf-8");
-  } else {
-    // We will want to extend the expiration date by 2 hours.
-    fs.writeFileSync(credsConfigPath, JSON.stringify({
-      ...configJson,
-      expiration: expiration + 1000 * 60 * 60 * 2, // 2 hours.
-    }), "utf-8");
-  }
+//     // Reset the expiration date.
+//     fs.writeFileSync(credsConfigPath, JSON.stringify({
+//       ...configJson,
+//       expiration: newExpiration,
+//     }), "utf-8");
+//   } else {
+//     // We will want to extend the expiration date by 2 hours.
+//     fs.writeFileSync(credsConfigPath, JSON.stringify({
+//       ...configJson,
+//       expiration: expiration + 1000 * 60 * 60 * 2, // 2 hours.
+//     }), "utf-8");
+//   }
 
-  return password;
-};
+//   return password;
+// };
 
 export const validateKey = async (apiSecretKey: string) => {
   const apiUrl = "https://api.staging.thirdweb.com/v1/keys/use";
