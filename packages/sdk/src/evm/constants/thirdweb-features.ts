@@ -235,9 +235,9 @@ export const FEATURE_PLUGIN_ROUTER = {
   features: {},
 } as const;
 
-export const FEATURE_EXTENSION_ROUTER = {
-  name: "ExtensionRouter",
-  namespace: "extension.router",
+export const FEATURE_DYNAMIC_CONTRACT = {
+  name: "DynamicContract",
+  namespace: "dynamic.contract",
   docLinks: {
     sdk: "",
     //TODO
