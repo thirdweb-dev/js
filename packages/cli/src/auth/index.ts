@@ -180,7 +180,8 @@ export const authenticateUser = async (
                 mode: 0o600,
               };
               res.end(() => {
-                waitForDashboard.succeed();
+                waitForDashboard.clear();
+                console.log(chalk.green(`Successfully linked your account to this device`));
                 finish();
               });
               logger.info(chalk.green(`\nSuccessfully logged in.`));
