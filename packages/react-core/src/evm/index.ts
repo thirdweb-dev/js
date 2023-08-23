@@ -203,7 +203,12 @@ export {
 } from "./hooks/async/account-factory";
 
 // account
-export { useAccountSigners, useSetAccountSigners } from "./hooks/async/account";
+export {
+  useAccountSigners,
+  useSetAccountSigners,
+  useAccountAdmins,
+  useAccountAdminsAndSigners,
+} from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
@@ -245,6 +250,9 @@ export { useAppURI, useSetAppURI } from "./hooks/async/app";
 export { ThirdwebSDKProvider } from "./providers/thirdweb-sdk-provider";
 export { useSDK, useSDKChainId } from "./hooks/useSDK";
 export type { ThirdwebSDKProviderProps } from "./providers/types";
+
+// utils
+export { invalidateContractAndBalances } from "./utils/cache-keys";
 
 // types
 export type {

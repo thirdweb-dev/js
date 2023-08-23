@@ -1,5 +1,51 @@
 # @thirdweb-dev/chains
 
+## 0.1.46
+
+### Patch Changes
+
+- [#1508](https://github.com/thirdweb-dev/js/pull/1508) [`184c325a`](https://github.com/thirdweb-dev/js/commit/184c325ab2ef028022a050c4274f2ab12b1a3a7f) Thanks [@jnsdls](https://github.com/jnsdls)! - update xpla chain icons
+
+- [#1513](https://github.com/thirdweb-dev/js/pull/1513) [`c12f0874`](https://github.com/thirdweb-dev/js/commit/c12f0874b4dac43c263c7edb20d0343c16381c34) Thanks [@jnsdls](https://github.com/jnsdls)! - add additonal chains
+
+## 0.1.45
+
+### Patch Changes
+
+- [#1506](https://github.com/thirdweb-dev/js/pull/1506) [`f97ddf4c`](https://github.com/thirdweb-dev/js/commit/f97ddf4c7f14854f3b204ad9741b52ddb8dac736) Thanks [@jnsdls](https://github.com/jnsdls)! - add xpla chains & update chains
+
+## 0.1.44
+
+### Patch Changes
+
+- [#1499](https://github.com/thirdweb-dev/js/pull/1499) [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf) Thanks [@Marfuen](https://github.com/Marfuen)! - Update deploy command from CLI to use show a public gateway url temporarily. Updated chains too.
+
+## 0.1.43
+
+### Patch Changes
+
+- [#1469](https://github.com/thirdweb-dev/js/pull/1469) [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1474](https://github.com/thirdweb-dev/js/pull/1474) [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9) Thanks [@adam-maj](https://github.com/adam-maj)! - Add back scroll-alpha-testnet
+
+- [#1458](https://github.com/thirdweb-dev/js/pull/1458) [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update chains
+
+- [#1461](https://github.com/thirdweb-dev/js/pull/1461) [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add xai-goerli chain and support BigInteger from Unity
+
+## 0.1.42
+
+### Patch Changes
+
+- [#1450](https://github.com/thirdweb-dev/js/pull/1450) [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update chains
+
+## 0.1.41
+
+### Patch Changes
+
+- [#1436](https://github.com/thirdweb-dev/js/pull/1436) [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated chains
+
+- [#1432](https://github.com/thirdweb-dev/js/pull/1432) [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
 ## 0.1.40
 
 ### Patch Changes

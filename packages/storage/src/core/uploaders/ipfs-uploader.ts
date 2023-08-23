@@ -13,6 +13,7 @@ import {
 } from "../../types";
 import fetch from "cross-fetch";
 import FormData from "form-data";
+import pkg from "../../../package.json";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
@@ -43,11 +44,13 @@ import FormData from "form-data";
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
+  private uploadServerUrl: string;
   private clientId?: string;
   private secretKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
+    this.uploadServerUrl = options?.uploadServerUrl || TW_UPLOAD_SERVER_URL;
     this.clientId = options?.clientId;
     this.secretKey = options?.secretKey;
   }
@@ -239,7 +242,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           if (options?.uploadWithoutDirectory) {
             return resolve([`ipfs://${cid}`]);
           } else {
-            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+            return resolve(fileNames.map((n) => `ipfs://${cid}/${n}`));
           }
         }
 
@@ -258,28 +261,45 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           (xhr.readyState !== 0 && xhr.readyState !== 4) ||
           xhr.status === 0
         ) {
-          return reject(
-            new Error(
-              "This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.",
-            ),
-          );
+          return reject(new Error("Upload failed due to a network error."));
         }
 
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
-
-      if (this.secretKey && this.clientId) {
-        throw new Error(
-          "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-        );
-      }
+      xhr.open("POST", `${this.uploadServerUrl}/ipfs/upload`);
 
       if (this.secretKey) {
         xhr.setRequestHeader("x-secret-key", this.secretKey);
       } else if (this.clientId) {
         xhr.setRequestHeader("x-client-id", this.clientId);
+      }
+
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+      if (bundleId) {
+        xhr.setRequestHeader("x-bundle-id", bundleId);
+      }
+
+      xhr.setRequestHeader("x-sdk-version", pkg.version);
+      xhr.setRequestHeader("x-sdk-name", pkg.name);
+      xhr.setRequestHeader(
+        "x-sdk-platform",
+        bundleId ? "react-native" : isBrowser() ? "browser" : "node",
+      );
+
+      // if we have a authorization token on global context then add that to the headers
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        xhr.setRequestHeader(
+          "authorization",
+          `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
+        );
       }
 
       xhr.send(form as any);
@@ -295,12 +315,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       console.warn("The onProgress option is only supported in the browser");
     }
 
-    if (this.secretKey && this.clientId) {
-      throw new Error(
-        "Cannot use both secret key and client ID. Please use secretKey for server-side applications and clientId for client-side applications.",
-      );
-    }
-
     const headers: HeadersInit = {};
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
@@ -308,7 +322,23 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-client-id"] = this.clientId;
     }
 
-    const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/upload`, {
+    // if we have a bundle id on global context then add that to the headers
+    if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
+      headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
+    }
+
+    // if we have a authorization token on global context then add that to the headers
+    if (
+      typeof globalThis !== "undefined" &&
+      "TW_AUTH_TOKEN" in globalThis &&
+      typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+    ) {
+      headers["authorization"] = `Bearer ${
+        (globalThis as any).TW_AUTH_TOKEN as string
+      }`;
+    }
+
+    const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",
       headers: {
         ...headers,
@@ -316,11 +346,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       },
       body: form.getBuffer(),
     });
-    const body = await res.json();
     if (!res.ok) {
-      console.warn(body);
+      console.warn(await res.text());
       throw new Error("Failed to upload files to IPFS");
     }
+
+    const body = await res.json();
 
     const cid = body.IpfsHash;
     if (!cid) {

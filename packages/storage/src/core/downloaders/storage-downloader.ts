@@ -1,11 +1,13 @@
 import { isTwGatewayUrl } from "../../common/urls";
-import { replaceSchemeWithGatewayUrl } from "../../common/utils";
+import { isBrowser, replaceSchemeWithGatewayUrl } from "../../common/utils";
 import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
+  SingleDownloadOptions,
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
+import pkg from "../../../package.json";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
@@ -27,6 +29,9 @@ import fetch, { Response } from "cross-fetch";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
+  DEFAULT_TIMEOUT_IN_SECONDS = 30;
+  DEFAULT_MAX_RETRIES = 3;
+
   private secretKey?: string;
   private clientId?: string;
 
@@ -38,9 +43,11 @@ export class StorageDownloader implements IStorageDownloader {
   async download(
     uri: string,
     gatewayUrls: GatewayUrls,
+    options?: SingleDownloadOptions,
     attempts = 0,
   ): Promise<Response> {
-    if (attempts > 3) {
+    const maxRetries = options?.maxRetries || this.DEFAULT_MAX_RETRIES;
+    if (attempts > maxRetries) {
       console.error(
         "[FAILED_TO_DOWNLOAD_ERROR] Failed to download from URI - too many attempts failed.",
       );
@@ -54,7 +61,12 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
-    let resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
+    let resolvedUri = replaceSchemeWithGatewayUrl(
+      uri,
+      gatewayUrls,
+      attempts,
+      this.clientId,
+    );
     // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
     if (!resolvedUri) {
       console.error(
@@ -70,32 +82,55 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(`Retrying download with backup gateway URL: ${resolvedUri}`);
     }
 
-    let headers;
+    let headers: HeadersInit = {};
     if (isTwGatewayUrl(resolvedUri)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
       if (this.secretKey) {
         headers = { "x-secret-key": this.secretKey };
       } else if (this.clientId) {
-        if (
-          typeof globalThis !== "undefined" &&
-          "APP_BUNDLE_ID" in globalThis
-        ) {
-          resolvedUri =
-            resolvedUri +
-            `?bundleId=${(globalThis as any).APP_BUNDLE_ID as string}`;
+        if (!resolvedUri.includes("bundleId")) {
+          resolvedUri = resolvedUri + (bundleId ? `?bundleId=${bundleId}` : "");
         }
+        headers["x-client-Id"] = this.clientId;
+      }
+      // if we have a authorization token on global context then add that to the headers
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
         headers = {
-          "x-client-Id": this.clientId,
+          ...headers,
+          authorization: `Bearer ${
+            (globalThis as any).TW_AUTH_TOKEN as string
+          }`,
         };
       }
+
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
     }
 
     if (isTooManyRequests(resolvedUri)) {
       // skip the request if we're getting too many request error from the gateway
-      return this.download(uri, gatewayUrls, attempts + 1);
+      return this.download(uri, gatewayUrls, options, attempts + 1);
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeoutInSeconds =
+      options?.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
+    const timeout = setTimeout(
+      () => controller.abort(),
+      timeoutInSeconds * 1000,
+    );
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,
@@ -107,7 +142,13 @@ export class StorageDownloader implements IStorageDownloader {
 
     if (!("status" in resOrErr)) {
       // early exit if we don't have a status code
-      return this.download(uri, gatewayUrls, attempts + 1);
+      throw new Error(
+        `Request timed out after ${timeoutInSeconds} seconds. ${
+          isTwGatewayUrl(resolvedUri)
+            ? "You can update the timeoutInSeconds option to increase the timeout."
+            : "You're using a public IPFS gateway, pass in a clientId or secretKey for a reliable IPFS gateway."
+        }`,
+      );
     }
 
     // if the request is good we can skip everything else
@@ -119,7 +160,7 @@ export class StorageDownloader implements IStorageDownloader {
       // track that we got a too many requests error
       tooManyRequestsBackOff(resolvedUri, resOrErr);
       // Since the current gateway failed, recursively try the next one we know about
-      return this.download(uri, gatewayUrls, attempts + 1);
+      return this.download(uri, gatewayUrls, options, attempts + 1);
     }
 
     if (resOrErr.status === 410) {
@@ -148,10 +189,11 @@ export class StorageDownloader implements IStorageDownloader {
       resOrErr.status !== 429 &&
       resOrErr.status < 500
     ) {
+      return resOrErr;
     }
 
     // Since the current gateway failed, recursively try the next one we know about
-    return this.download(uri, gatewayUrls, attempts + 1);
+    return this.download(uri, gatewayUrls, options, attempts + 1);
   }
 }
 

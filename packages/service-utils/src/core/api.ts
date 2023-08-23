@@ -24,8 +24,23 @@ export type ApiKeyMetadata = {
   }[];
 };
 
+export type AccountMetadata = {
+  id: string;
+  name: string;
+  creatorWalletAddress: string;
+};
+
 export type ApiResponse = {
   data: ApiKeyMetadata | null;
+  error: {
+    code: string;
+    statusCode: number;
+    message: string;
+  };
+};
+
+export type ApiAccountResponse = {
+  data: AccountMetadata | null;
   error: {
     code: string;
     statusCode: number;
@@ -46,10 +61,34 @@ export async function fetchKeyMetadataFromApi(
       "content-type": "application/json",
     },
   });
-  if (!response.ok) {
-    throw new Error(
-      `Error fetching key metadata from API: ${response.statusText}`,
-    );
+  let json: ApiResponse
+  try {
+    json = await response.json();
+  } catch (e) {
+    throw new Error(`Error fetching key metadata from API: ${response.status} - ${response.statusText} - ${await response.text()}`);
   }
-  return (await response.json()) as ApiResponse;
+  return json;
+}
+
+export async function fetchAccountFromApi(
+  jwt: string,
+  config: CoreServiceConfig,
+): Promise<ApiAccountResponse> {
+  const { apiUrl, serviceApiKey } = config;
+  const url = `${apiUrl}/v1/account/me`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "x-service-api-key": serviceApiKey,
+      "content-type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  });
+  let json: ApiAccountResponse
+  try {
+    json = await response.json();
+  } catch (e) {
+    throw new Error(`Error fetching account from API: ${response.status} - ${response.statusText} - ${await response.text()}`);
+  }
+  return json;
 }

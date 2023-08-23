@@ -1,5 +1,13 @@
-import type { ExecutionContext, KVNamespace } from "@cloudflare/workers-types";
-import type { ApiKeyMetadata, CoreServiceConfig } from "../core/api";
+import type {
+  ExecutionContext,
+  KVNamespace,
+  Response,
+} from "@cloudflare/workers-types";
+import type {
+  ApiKeyMetadata,
+  AccountMetadata,
+  CoreServiceConfig,
+} from "../core/api";
 import { authorize } from "../core/authorize";
 
 import type { Request } from "@cloudflare/workers-types";
@@ -8,6 +16,7 @@ import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
 
 export * from "../core/services";
+export * from "./usage";
 
 type WorkerServiceConfig = CoreServiceConfig & {
   kvStore: KVNamespace;
@@ -47,7 +56,7 @@ export async function authorizeWorker(
 
   return await authorize(authData, serviceConfig, {
     get: async (clientId: string) => serviceConfig.kvStore.get(clientId),
-    put: (clientId: string, apiKeyMeta: ApiKeyMetadata) =>
+    put: (clientId: string, apiKeyMeta: ApiKeyMetadata | AccountMetadata) =>
       serviceConfig.ctx.waitUntil(
         serviceConfig.kvStore.put(
           clientId,
@@ -68,7 +77,7 @@ export async function authorizeWorker(
   });
 }
 
-async function extractAuthorizationData(
+export async function extractAuthorizationData(
   authInput: AuthInput,
 ): Promise<AuthorizationInput> {
   const requestUrl = new URL(authInput.req.url);
@@ -124,7 +133,20 @@ async function extractAuthorizationData(
     clientId = derivedClientId;
   }
 
+  let jwt: string | null = null;
+  if (headers.has("authorization")) {
+    const authHeader = headers.get("authorization");
+    if (authHeader) {
+      const [type, token] = authHeader.split(" ");
+      if (type.toLowerCase() === "bearer" && !!token) {
+        jwt = token;
+      }
+    }
+  }
+
   return {
+    jwt,
+    hashedJWT: jwt ? await hashSecretKey(jwt) : null,
     secretKey,
     clientId,
     origin,
@@ -148,4 +170,38 @@ function bufferToHex(buffer: ArrayBuffer) {
   return [...new Uint8Array(buffer)]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
+}
+
+export async function logHttpRequest({
+  source,
+  clientId,
+  req,
+  res,
+  isAuthed,
+  statusMessage,
+}: AuthInput & {
+  source: string;
+  res: Response;
+  isAuthed?: boolean;
+  statusMessage?: Error | string;
+}) {
+  const authorizationData = await extractAuthorizationData({ req, clientId });
+  const headers = req.headers;
+
+  console.log(
+    JSON.stringify({
+      source,
+      pathname: req.url,
+      hasSecretKey: !!authorizationData.secretKey,
+      hasClientId: !!authorizationData.clientId,
+      hasJwt: !!authorizationData.jwt,
+      clientId: authorizationData.clientId,
+      isAuthed: !!isAuthed ?? null,
+      status: res.status,
+      sdkName: headers.get("x-sdk-name") ?? "unknown",
+      sdkVersion: headers.get("x-sdk-version") ?? "unknown",
+      platform: headers.get("x-sdk-platform") ?? "unknown",
+    }),
+  );
+  console.log(`statusMessage=${statusMessage ?? res.statusText}`);
 }

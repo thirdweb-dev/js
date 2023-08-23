@@ -105,7 +105,8 @@ for (const file of additionalChainsFiles) {
 }
 
 chains = chains
-  .filter((c) => c.status !== "deprecated")
+  // Keep scroll-alpha-testnet for now even though its deprecated
+  .filter((c) => c.status !== "deprecated" || c.chainId === 534353)
   .map((chain) => {
     if (overrides[chain.chainId]) {
       chain = merge(chain, overrides[chain.chainId], {
@@ -343,6 +344,7 @@ ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
 export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
+// @ts-expect-error - TODO: fix this later
 export const allChains: Chain[] = [${exportNames.join(", ")}];
 
 type ChainsById = {

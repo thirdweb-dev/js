@@ -1,5 +1,39 @@
 # @thirdweb-dev/storage
 
+## 1.2.7
+
+### Patch Changes
+
+- [#1501](https://github.com/thirdweb-dev/js/pull/1501) [`046c9ad6`](https://github.com/thirdweb-dev/js/commit/046c9ad604587ff79bf028c4fe7b1f9c94f4ea54) Thanks [@farhanW3](https://github.com/farhanW3)! - moved res.json() to avoid getting JSON error in console
+
+## 1.2.6
+
+### Patch Changes
+
+- [#1500](https://github.com/thirdweb-dev/js/pull/1500) [`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Let users pass their own timeout value, fix fallback gateway logic
+
+## 1.2.5
+
+### Patch Changes
+
+- [#1473](https://github.com/thirdweb-dev/js/pull/1473) [`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4) Thanks [@jnsdls](https://github.com/jnsdls)! - do not pass empty auth tokens
+
+- [#1470](https://github.com/thirdweb-dev/js/pull/1470) [`27c225a5`](https://github.com/thirdweb-dev/js/commit/27c225a51221417592b5940887abd1ccb8b67e47) Thanks [@jnsdls](https://github.com/jnsdls)! - fix storage secretKey and clientId handling
+
+- [#1472](https://github.com/thirdweb-dev/js/pull/1472) [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk information to service request headers
+
+## 1.2.4
+
+### Patch Changes
+
+- [#1455](https://github.com/thirdweb-dev/js/pull/1455) [`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4) Thanks [@jnsdls](https://github.com/jnsdls)! - allow overriding the upload server url for IpfsUploader for advanced usage
+
+## 1.2.3
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
 ## 1.2.2
 
 ### Patch Changes

@@ -50,6 +50,7 @@ import { processClaimConditionInputs } from "../../common/claim-conditions/proce
 import { transformResultToClaimCondition } from "../../common/claim-conditions/transformResultToClaimCondition";
 import { updateExistingClaimConditions } from "../../common/claim-conditions/updateExistingClaimConditions";
 import { fetchSnapshotEntryForAddress } from "../../common/claim-conditions/fetchSnapshotEntryForAddress";
+import { convertQuantityToBigNumber } from "../../common/claim-conditions/convertQuantityToBigNumber";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -269,6 +270,7 @@ export class DropErc1155ClaimConditions<
     if (claimCondition.availableSupply !== "unlimited") {
       if (BigNumber.from(claimCondition.availableSupply).lt(quantity)) {
         reasons.push(ClaimEligibility.NotEnoughSupply);
+        return reasons;
       }
     }
 
@@ -371,7 +373,25 @@ export class DropErc1155ClaimConditions<
             "Merkle proof verification failed:",
             "reason" in e ? e.reason : e,
           );
-          reasons.push(ClaimEligibility.AddressNotAllowed);
+          const reason = (e as any).reason;
+          switch (reason) {
+            case "!Qty":
+              reasons.push(ClaimEligibility.OverMaxClaimablePerWallet);
+              break;
+            case "!PriceOrCurrency":
+              reasons.push(ClaimEligibility.WrongPriceOrCurrency);
+              break;
+            case "!MaxSupply":
+              reasons.push(ClaimEligibility.NotEnoughSupply);
+              break;
+            case "cant claim yet":
+              reasons.push(ClaimEligibility.ClaimPhaseNotStarted);
+              break;
+            default: {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              break;
+            }
+          }
           return reasons;
         }
       }
@@ -381,8 +401,37 @@ export class DropErc1155ClaimConditions<
       this.isNewSinglePhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
+      let claimedSupply = BigNumber.from(0);
+      let maxClaimable = convertQuantityToBigNumber(
+        claimCondition.maxClaimablePerWallet,
+        0,
+      );
+
+      try {
+        claimedSupply = await this.getSupplyClaimedByWallet(
+          tokenId,
+          resolvedAddress,
+        );
+      } catch (e) {
+        // no-op
+      }
+
+      if (allowListEntry) {
+        maxClaimable = convertQuantityToBigNumber(
+          allowListEntry.maxClaimable,
+          0,
+        );
+      }
+
+      if (maxClaimable.gt(0) && maxClaimable.lt(claimedSupply.add(quantity))) {
+        reasons.push(ClaimEligibility.OverMaxClaimablePerWallet);
+        return reasons;
+      }
+
+      // if there is no allowlist, or if there is an allowlist and the address is not in it
+      // if maxClaimable is 0, we consider it as the address is not allowed
       if (!hasAllowList || (hasAllowList && !allowListEntry)) {
-        if (claimCondition.maxClaimablePerWallet === "0") {
+        if (maxClaimable.lte(claimedSupply) || maxClaimable.eq(0)) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
         }
@@ -422,6 +471,7 @@ export class DropErc1155ClaimConditions<
       } else {
         reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
       }
+      return reasons;
     }
 
     // if not within a browser conetext, check for wallet balance.
@@ -481,6 +531,39 @@ export class DropErc1155ClaimConditions<
     } else {
       return null;
     }
+  }
+
+  /**
+   * Get the total supply claimed by a specific wallet
+   * @param walletAddress the wallet address to check
+   * @returns the total supply claimed
+   */
+  public async getSupplyClaimedByWallet(
+    tokenId: BigNumberish,
+    walletAddress: AddressOrEns,
+  ): Promise<BigNumber> {
+    const resolvedAddress = await resolveAddress(walletAddress);
+    if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+      return await this.contractWrapper.readContract.getSupplyClaimedByWallet(
+        tokenId,
+        resolvedAddress,
+      );
+    }
+
+    if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+      const activeClaimConditionId =
+        await this.contractWrapper.readContract.getActiveClaimConditionId(
+          tokenId,
+        );
+      return await this.contractWrapper.readContract.getSupplyClaimedByWallet(
+        tokenId,
+        activeClaimConditionId,
+        resolvedAddress,
+      );
+    }
+    throw new Error(
+      "This contract does not support the getSupplyClaimedByWallet function",
+    );
   }
 
   /** ***************************************

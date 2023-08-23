@@ -14,28 +14,35 @@ export function authorizeClient(
   const { origin, bundleId, secretKeyHash: providedSecretHash } = authOptions;
   const { domains, bundleIds, secretHash } = apiKeyMeta;
 
+  const authResult: AuthorizationResult = {
+    authorized: true,
+    apiKeyMeta,
+    accountMeta: {
+      id: apiKeyMeta.accountId,
+      // TODO update this later
+      name: "",
+      creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+    },
+  };
+
+  // check for public restrictions
+  if (domains.includes("*")) {
+    return authResult;
+  }
+
   // check for secretHash
   if (providedSecretHash) {
     if (secretHash !== providedSecretHash) {
       return {
         authorized: false,
-        errorMessage: "The secret is invalid. Please check you secret-key",
+        errorMessage:
+          "Incorrect key provided. You can view your active API keys at https://thirdweb.com/dashboard/settings",
         errorCode: "SECRET_INVALID",
         status: 401,
       };
     }
-    return {
-      authorized: true,
-      apiKeyMeta,
-    };
-  }
 
-  // check for public restrictions
-  if (domains.includes("*")) {
-    return {
-      authorized: true,
-      apiKeyMeta,
-    };
+    return authResult;
   }
 
   // validate domains
@@ -43,14 +50,22 @@ export function authorizeClient(
     if (
       // find matching domain, or if all domains allowed
       domains.find((d) => {
+        // if any domain is allowed, we'll return true
         if (d === "*") {
+          return true;
+        }
+
+        // special rule for `localhost`
+        // if the domain is localhost, we'll allow any origin that starts with localhost
+        if (d === "localhost" && origin.startsWith("localhost")) {
           return true;
         }
 
         // If the allowedDomain has a wildcard,
         // we'll check that the ending of our domain matches the wildcard
         if (d.startsWith("*.")) {
-          const domainRoot = d.slice(2);
+          // get rid of the * and check if it ends with the `.<domain>.<tld>`
+          const domainRoot = d.slice(1);
           return origin.endsWith(domainRoot);
         }
 
@@ -58,15 +73,12 @@ export function authorizeClient(
         return d === origin;
       })
     ) {
-      return {
-        authorized: true,
-        apiKeyMeta,
-      };
+      return authResult;
     }
 
     return {
       authorized: false,
-      errorMessage: `The domain: ${origin}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
+      errorMessage: `Invalid request: Unauthorized domain: ${origin}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       errorCode: "ORIGIN_UNAUTHORIZED",
       status: 401,
     };
@@ -84,15 +96,12 @@ export function authorizeClient(
         return b === bundleId;
       })
     ) {
-      return {
-        authorized: true,
-        apiKeyMeta,
-      };
+      return authResult;
     }
 
     return {
       authorized: false,
-      errorMessage: `The bundleId: ${bundleId}, is not authorized for this key. Please update your key permissions on the thirdweb dashboard`,
+      errorMessage: `Invalid request: Unauthorized Bundle ID: ${bundleId}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       errorCode: "BUNDLE_UNAUTHORIZED",
       status: 401,
     };

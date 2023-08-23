@@ -1,5 +1,116 @@
 # @thirdweb-dev/wallets
 
+## 1.1.18
+
+### Patch Changes
+
+- Updated dependencies [[`184c325a`](https://github.com/thirdweb-dev/js/commit/184c325ab2ef028022a050c4274f2ab12b1a3a7f), [`c12f0874`](https://github.com/thirdweb-dev/js/commit/c12f0874b4dac43c263c7edb20d0343c16381c34)]:
+  - @thirdweb-dev/chains@0.1.46
+  - @thirdweb-dev/sdk@3.10.54
+
+## 1.1.17
+
+### Patch Changes
+
+- Updated dependencies [[`f97ddf4c`](https://github.com/thirdweb-dev/js/commit/f97ddf4c7f14854f3b204ad9741b52ddb8dac736)]:
+  - @thirdweb-dev/chains@0.1.45
+  - @thirdweb-dev/sdk@3.10.53
+
+## 1.1.16
+
+### Patch Changes
+
+- Updated dependencies [[`e1962641`](https://github.com/thirdweb-dev/js/commit/e19626417218767a0e44c00f440761d7b86d02eb), [`bd1fcbae`](https://github.com/thirdweb-dev/js/commit/bd1fcbae327e788124f5635673511f0b72e9d7ab)]:
+  - @thirdweb-dev/sdk@3.10.52
+
+## 1.1.15
+
+### Patch Changes
+
+- [#1489](https://github.com/thirdweb-dev/js/pull/1489) [`07fb1b5f`](https://github.com/thirdweb-dev/js/commit/07fb1b5ffa4c170e252df31070852ddb9a81dec9) Thanks [@iketw](https://github.com/iketw)! - Cleanup and minor bug fix in ReactCore
+
+- Updated dependencies [[`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346), [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf), [`28975765`](https://github.com/thirdweb-dev/js/commit/2897576513eb6f497a9f92e3e473182b4fc9681b), [`b91d3e99`](https://github.com/thirdweb-dev/js/commit/b91d3e990198b77dc1358e738c11dc4acaa67491)]:
+  - @thirdweb-dev/sdk@3.10.51
+  - @thirdweb-dev/chains@0.1.44
+
+## 1.1.14
+
+### Patch Changes
+
+- [#1484](https://github.com/thirdweb-dev/js/pull/1484) [`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Correct gas estimation for polygon/mumbai
+
+- Updated dependencies [[`a5ba9e4f`](https://github.com/thirdweb-dev/js/commit/a5ba9e4fbfee228e5b9ac27cd0157187e3a50117), [`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74)]:
+  - @thirdweb-dev/sdk@3.10.50
+
+## 1.1.13
+
+### Patch Changes
+
+- [#1477](https://github.com/thirdweb-dev/js/pull/1477) [`34b31599`](https://github.com/thirdweb-dev/js/commit/34b315993c0abaccb9640a5d5804c2c93af569c2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass unauth'd RPCs to wallets when adding new chains
+
+- Updated dependencies [[`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696)]:
+  - @thirdweb-dev/sdk@3.10.49
+
+## 1.1.12
+
+### Patch Changes
+
+- [#1473](https://github.com/thirdweb-dev/js/pull/1473) [`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4) Thanks [@jnsdls](https://github.com/jnsdls)! - do not pass empty auth tokens
+
+- [#1472](https://github.com/thirdweb-dev/js/pull/1472) [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk information to service request headers
+
+- Updated dependencies [[`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed), [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9), [`f0443bd9`](https://github.com/thirdweb-dev/js/commit/f0443bd989dbba50d0836d1cf274bfb2f44a53fd), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76), [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30)]:
+  - @thirdweb-dev/sdk@3.10.48
+  - @thirdweb-dev/chains@0.1.43
+
+## 1.1.11
+
+### Patch Changes
+
+- [#1460](https://github.com/thirdweb-dev/js/pull/1460) [`4b0e63dc`](https://github.com/thirdweb-dev/js/commit/4b0e63dcc0ca871ce9cef76f8a41ff290316741c) Thanks [@MananTank](https://github.com/MananTank)! - Save `oAuthRedirectResult` when autoconnecting Magic Link via social login
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.10.47
+
+## 1.1.10
+
+### Patch Changes
+
+- Updated dependencies [[`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf), [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf)]:
+  - @thirdweb-dev/chains@0.1.42
+  - @thirdweb-dev/sdk@3.10.46
+
+## 1.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`2a91113a`](https://github.com/thirdweb-dev/js/commit/2a91113a760733fcff2aec90041f69e15de33905)]:
+  - @thirdweb-dev/sdk@3.10.45
+
+## 1.1.8
+
+### Patch Changes
+
+- [#1430](https://github.com/thirdweb-dev/js/pull/1430) [`a9f2ff73`](https://github.com/thirdweb-dev/js/commit/a9f2ff73c9f83f05c3e2d3c53b23b2843e8a2576) Thanks [@MananTank](https://github.com/MananTank)! - Handle error on Metamask Disconnect properly
+
+- [#1436](https://github.com/thirdweb-dev/js/pull/1436) [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better gas estimations pre account deploy
+
+- Updated dependencies [[`a5d0be93`](https://github.com/thirdweb-dev/js/commit/a5d0be939a143095e769b68cf86360bfe4720744), [`c0a6d2f1`](https://github.com/thirdweb-dev/js/commit/c0a6d2f18231310d143c9b0cb1b2ff59315087a4), [`becbb637`](https://github.com/thirdweb-dev/js/commit/becbb637367285ed3d8d7d131e1020bf23e38298), [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb), [`c9bf4f05`](https://github.com/thirdweb-dev/js/commit/c9bf4f05c161707c6eb799ecef82f462e4a82405), [`67b145b9`](https://github.com/thirdweb-dev/js/commit/67b145b94dafb2fb1d90553ed4829f0ed22e2907), [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5)]:
+  - @thirdweb-dev/sdk@3.10.44
+  - @thirdweb-dev/chains@0.1.41
+  - @thirdweb-dev/contracts-js@1.3.11
+
+## 1.1.7
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
+- [#1425](https://github.com/thirdweb-dev/js/pull/1425) [`b0ec1d80`](https://github.com/thirdweb-dev/js/commit/b0ec1d80839efccad11b50afbf2216c2c132cf7e) Thanks [@iketw](https://github.com/iketw)! - Adding plugin-transform-flow-strip-types plugin to solve issues with RN FlatList
+
+- Updated dependencies [[`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e)]:
+  - @thirdweb-dev/sdk@3.10.43
+
 ## 1.1.6
 
 ### Patch Changes

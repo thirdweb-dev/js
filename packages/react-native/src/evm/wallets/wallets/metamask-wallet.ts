@@ -1,9 +1,9 @@
 import { walletIds } from "@thirdweb-dev/wallets";
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { WalletConnectV2 } from "./WalletConnectV2";
 import { WCMeta } from "../types/wc";
+import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
 
-export class MetaMaskWallet extends WalletConnectV2 {
+export class MetaMaskWallet extends WalletConnectBase {
   static id = walletIds.metamask;
   static meta = {
     name: "MetaMask",

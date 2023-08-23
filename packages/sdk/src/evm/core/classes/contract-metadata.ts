@@ -121,6 +121,7 @@ export class ContractMetadata<
             this.contractWrapper.readContract.address,
             this.contractWrapper.getProvider(),
             this.storage,
+            this.contractWrapper.options,
           );
         } catch (err) {}
         data = {

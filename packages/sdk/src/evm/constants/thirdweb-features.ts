@@ -1,4 +1,4 @@
-import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context.json";
+import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC2771Context.json";
 import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
 import IDirectListingsAbi from "@thirdweb-dev/contracts-js/dist/abis/IDirectListings.json";
@@ -11,9 +11,12 @@ import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatf
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
+import IAirdropERC20 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC20.json";
+import IAirdropERC721 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC721.json";
+import IAirdropERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC1155.json";
 import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
-import IAccountCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
-import BaseRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/BaseRouter.json";
+import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions.json";
+import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
 export const getAllPluginsAbi = [
   {
@@ -232,9 +235,9 @@ export const FEATURE_PLUGIN_ROUTER = {
   features: {},
 } as const;
 
-export const FEATURE_EXTENSION_ROUTER = {
-  name: "ExtensionRouter",
-  namespace: "extension.router",
+export const FEATURE_DYNAMIC_CONTRACT = {
+  name: "DynamicContract",
+  namespace: "dynamic.contract",
   docLinks: {
     sdk: "",
     //TODO
@@ -292,6 +295,18 @@ export const FEATURE_ACCOUNT_FACTORY = {
   features: {},
 } as const;
 
+export const FEATURE_ACCOUNT_PERMISSIONS = {
+  name: "AccountPermissions",
+  namespace: "accountPermissions",
+  docLinks: {
+    // TODO
+    sdk: "sdk.account",
+    contracts: "",
+  },
+  abis: [IAccountPermissions],
+  features: {},
+} as const;
+
 export const FEATURE_ACCOUNT = {
   name: "Account",
   namespace: "account",
@@ -300,18 +315,42 @@ export const FEATURE_ACCOUNT = {
     sdk: "sdk.account",
     contracts: "",
   },
-  abis: [IAccountCore],
-  features: {},
+  abis: [IAccount],
+  features: { [FEATURE_ACCOUNT_PERMISSIONS.name]: FEATURE_ACCOUNT_PERMISSIONS },
 } as const;
 
-export const FEATURE_BASE_ROUTER = {
-  name: "BaseRouter",
-  namespace: "baseRouter",
+export const FEATURE_AIRDROP_ERC20 = {
+  name: "AirdropERC20",
+  namespace: "airdrop20",
   docLinks: {
     // TODO
     sdk: "",
     contracts: "",
   },
-  abis: [BaseRouterAbi],
+  abis: [IAirdropERC20],
+  features: {},
+} as const;
+
+export const FEATURE_AIRDROP_ERC721 = {
+  name: "AirdropERC721",
+  namespace: "airdrop721",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IAirdropERC721],
+  features: {},
+} as const;
+
+export const FEATURE_AIRDROP_ERC1155 = {
+  name: "AirdropERC1155",
+  namespace: "airdrop1155",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IAirdropERC1155],
   features: {},
 } as const;

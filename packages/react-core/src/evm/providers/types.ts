@@ -45,4 +45,7 @@ export interface ThirdwebSDKProviderProps<TChains extends Chain[]>
 
   // client Id for thirdweb services
   clientId?: string;
+
+  // pass in a secret key when doing server side rendering
+  secretKey?: string;
 }

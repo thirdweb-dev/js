@@ -2,7 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Scroll Alpha Testnet",
   "chain": "ETH",
-  "status": "active",
+  "status": "deprecated",
   "rpc": [
     "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-rpc.scroll.io/l2"
@@ -20,12 +20,7 @@ export default {
   "explorers": [
     {
       "name": "Scroll Alpha Testnet Block Explorer",
-      "url": "https://blockscout.scroll.io",
-      "standard": "EIP3091"
-    },
-    {
-      "name": "Scroll Alpha Testnet Block Explorer",
-      "url": "https://scrollscan.co",
+      "url": "https://alpha-blockscout.scroll.io",
       "standard": "EIP3091"
     }
   ],

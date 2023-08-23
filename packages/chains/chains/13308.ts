@@ -1,10 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Credit Smartchain Mainnet",
+  "name": "Credit Smart Chain",
   "chain": "CREDIT",
   "rpc": [
-    "https://credit-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.cscscan.io"
+    "https://credit-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.creditsmartchain.com"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -23,7 +23,7 @@ export default {
   "infoURL": "https://creditsmartchain.com",
   "shortName": "Credit",
   "chainId": 13308,
-  "networkId": 1,
+  "networkId": 13308,
   "icon": {
     "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
     "width": 1000,
@@ -32,8 +32,8 @@ export default {
   },
   "explorers": [
     {
-      "name": "CSC Scan",
-      "url": "https://explorer.cscscan.io",
+      "name": "Creditscan",
+      "url": "https://scan.creditsmartchain.com",
       "icon": {
         "url": "ipfs://bafkreifbso3gd4wu5wxl27xyurxctmuae2jyuy37guqtzx23nga6ba4ag4",
         "width": 1000,
@@ -44,5 +44,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "credit-smartchain"
+  "slug": "credit-smart-chain"
 } as const satisfies Chain;

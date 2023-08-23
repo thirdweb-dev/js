@@ -1,5 +1,123 @@
 # @thirdweb-dev/sdk
 
+## 3.10.54
+
+### Patch Changes
+
+- Updated dependencies [[`184c325a`](https://github.com/thirdweb-dev/js/commit/184c325ab2ef028022a050c4274f2ab12b1a3a7f), [`046c9ad6`](https://github.com/thirdweb-dev/js/commit/046c9ad604587ff79bf028c4fe7b1f9c94f4ea54), [`c12f0874`](https://github.com/thirdweb-dev/js/commit/c12f0874b4dac43c263c7edb20d0343c16381c34)]:
+  - @thirdweb-dev/chains@0.1.46
+  - @thirdweb-dev/storage@1.2.7
+
+## 3.10.53
+
+### Patch Changes
+
+- Updated dependencies [[`f97ddf4c`](https://github.com/thirdweb-dev/js/commit/f97ddf4c7f14854f3b204ad9741b52ddb8dac736)]:
+  - @thirdweb-dev/chains@0.1.45
+
+## 3.10.52
+
+### Patch Changes
+
+- [#1503](https://github.com/thirdweb-dev/js/pull/1503) [`e1962641`](https://github.com/thirdweb-dev/js/commit/e19626417218767a0e44c00f440761d7b86d02eb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass custom storage instances to internal SDKs
+
+- [#1505](https://github.com/thirdweb-dev/js/pull/1505) [`bd1fcbae`](https://github.com/thirdweb-dev/js/commit/bd1fcbae327e788124f5635673511f0b72e9d7ab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose Transaction.populateTransaction()
+
+## 3.10.51
+
+### Patch Changes
+
+- [#1500](https://github.com/thirdweb-dev/js/pull/1500) [`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass sdk options to fetch contract metadata where possible
+
+- [#1495](https://github.com/thirdweb-dev/js/pull/1495) [`28975765`](https://github.com/thirdweb-dev/js/commit/2897576513eb6f497a9f92e3e473182b4fc9681b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gas price for Create2 factory deployment on Cronos testnet
+
+- [#1490](https://github.com/thirdweb-dev/js/pull/1490) [`b91d3e99`](https://github.com/thirdweb-dev/js/commit/b91d3e990198b77dc1358e738c11dc4acaa67491) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Small fix for Promise.all()"
+
+- Updated dependencies [[`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346), [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf)]:
+  - @thirdweb-dev/storage@1.2.6
+  - @thirdweb-dev/chains@0.1.44
+
+## 3.10.50
+
+### Patch Changes
+
+- [#1480](https://github.com/thirdweb-dev/js/pull/1480) [`a5ba9e4f`](https://github.com/thirdweb-dev/js/commit/a5ba9e4fbfee228e5b9ac27cd0157187e3a50117) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Separate Account and AccountPermissions extensions
+
+- [#1484](https://github.com/thirdweb-dev/js/pull/1484) [`39e2af6f`](https://github.com/thirdweb-dev/js/commit/39e2af6f2f4d933dca1b3de4a37de76375bafd74) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getPolygonGasPriorityFee()
+
+## 3.10.49
+
+### Patch Changes
+
+- [#1468](https://github.com/thirdweb-dev/js/pull/1468) [`7f531122`](https://github.com/thirdweb-dev/js/commit/7f5311222b14da04877df056baae36409dff4696) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Enable dynamic contract deployment with any evm
+
+## 3.10.48
+
+### Patch Changes
+
+- [#1473](https://github.com/thirdweb-dev/js/pull/1473) [`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4) Thanks [@jnsdls](https://github.com/jnsdls)! - do not pass empty auth tokens
+
+- [#1472](https://github.com/thirdweb-dev/js/pull/1472) [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk information to service request headers
+
+- [#1471](https://github.com/thirdweb-dev/js/pull/1471) [`f0443bd9`](https://github.com/thirdweb-dev/js/commit/f0443bd989dbba50d0836d1cf274bfb2f44a53fd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose erc721.claimConditions.getSupplyClaimedByWallet()
+
+- [#1469](https://github.com/thirdweb-dev/js/pull/1469) [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308) Thanks [@jnsdls](https://github.com/jnsdls)! - fix secret key auth strategy for RPC
+
+- Updated dependencies [[`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4), [`27c225a5`](https://github.com/thirdweb-dev/js/commit/27c225a51221417592b5940887abd1ccb8b67e47), [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308), [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed), [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9), [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76), [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30)]:
+  - @thirdweb-dev/storage@1.2.5
+  - @thirdweb-dev/chains@0.1.43
+
+## 3.10.47
+
+### Patch Changes
+
+- Updated dependencies [[`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4)]:
+  - @thirdweb-dev/storage@1.2.4
+
+## 3.10.46
+
+### Patch Changes
+
+- [#1450](https://github.com/thirdweb-dev/js/pull/1450) [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Sanitize description strings for OpenEdition sharedMetadata
+
+- Updated dependencies [[`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf)]:
+  - @thirdweb-dev/chains@0.1.42
+
+## 3.10.45
+
+### Patch Changes
+
+- [#1449](https://github.com/thirdweb-dev/js/pull/1449) [`2a91113a`](https://github.com/thirdweb-dev/js/commit/2a91113a760733fcff2aec90041f69e15de33905) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Revert sanitizing inputs
+
+## 3.10.44
+
+### Patch Changes
+
+- [#1444](https://github.com/thirdweb-dev/js/pull/1444) [`a5d0be93`](https://github.com/thirdweb-dev/js/commit/a5d0be939a143095e769b68cf86360bfe4720744) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize claimConditions.getAll()
+
+- [#1438](https://github.com/thirdweb-dev/js/pull/1438) [`c0a6d2f1`](https://github.com/thirdweb-dev/js/commit/c0a6d2f18231310d143c9b0cb1b2ff59315087a4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk.deployer.deployOpenEdition() convenience function
+
+- [#1441](https://github.com/thirdweb-dev/js/pull/1441) [`becbb637`](https://github.com/thirdweb-dev/js/commit/becbb637367285ed3d8d7d131e1020bf23e38298) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Sanitize NFT description input strings
+
+- [#1433](https://github.com/thirdweb-dev/js/pull/1433) [`c9bf4f05`](https://github.com/thirdweb-dev/js/commit/c9bf4f05c161707c6eb799ecef82f462e4a82405) Thanks [@iketw](https://github.com/iketw)! - Pass empty string when clientId is undefined
+
+- [#1439](https://github.com/thirdweb-dev/js/pull/1439) [`67b145b9`](https://github.com/thirdweb-dev/js/commit/67b145b94dafb2fb1d90553ed4829f0ed22e2907) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose deployPublishContract alias
+
+- [#1437](https://github.com/thirdweb-dev/js/pull/1437) [`5ee700e8`](https://github.com/thirdweb-dev/js/commit/5ee700e80438650fa253c25c0bee6658ce68d2cf) Thanks [@farhanW3](https://github.com/farhanW3)! - Updated the error messages
+
+- Updated dependencies [[`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5), [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5)]:
+  - @thirdweb-dev/chains@0.1.41
+  - @thirdweb-dev/contracts-js@1.3.11
+
+## 3.10.43
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
+- Updated dependencies [[`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e)]:
+  - @thirdweb-dev/storage@1.2.3
+
 ## 3.10.42
 
 ### Patch Changes
