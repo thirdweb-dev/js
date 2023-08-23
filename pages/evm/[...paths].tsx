@@ -3,17 +3,31 @@ import {
   useEVMContractInfo,
   useSetEVMContractInfo,
 } from "@3rdweb-sdk/react";
+import { useImportContract } from "@3rdweb-sdk/react/hooks/useImportContract";
 import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
+  AlertTitle,
   Box,
   Container,
   Flex,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
-import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
-import { useContract, useContractMetadata } from "@thirdweb-dev/react";
+import {
+  DehydratedState,
+  QueryClient,
+  dehydrate,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  invalidateContractAndBalances,
+  useCompilerMetadata,
+  useContract,
+  useContractMetadata,
+} from "@thirdweb-dev/react";
 import { detectContractFeature } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
@@ -37,7 +51,8 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Button } from "tw-components";
 import { getAllChainRecords } from "utils/allChainsRecords";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -151,6 +166,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
   const activeTab = router.query?.paths?.[2] || "overview";
   const contractQuery = useContract(contractAddress);
   const contractMetadataQuery = useContractMetadata(contractQuery.contract);
+  const compilerMetadataQuery = useCompilerMetadata(contractAddress);
   const requiresImport = !!useSingleQueryParam("import");
   const autoAddToDashboard = !!useSingleQueryParam("add");
   const [manuallyImported, setManuallyImported] = useState(false);
@@ -193,6 +209,62 @@ const EVMContractPage: ThirdwebNextPage = () => {
     contractQuery.isSuccess,
     manuallyImported,
     requiresImport,
+  ]);
+
+  const importContract = useImportContract();
+  const client = useQueryClient();
+  const [refetchLoading, setRefetchLoading] = useState(false);
+  const toast = useToast();
+  const handleImportContract = useCallback(() => {
+    if (!chain) {
+      return;
+    }
+
+    importContract.mutate(
+      { contractAddress, chain },
+      {
+        onSuccess: async () => {
+          setRefetchLoading(true);
+          toast({
+            position: "bottom",
+            variant: "solid",
+            title: `Success`,
+            description: `Import Successful`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          await invalidateContractAndBalances(
+            client,
+            contractAddress,
+            chain.chainId,
+          );
+          // reload
+          await compilerMetadataQuery.refetch();
+          await contractQuery.refetch();
+          setRefetchLoading(false);
+        },
+        onError: (error) => {
+          toast({
+            position: "bottom",
+            variant: "solid",
+            title: `Error`,
+            description: `Import Failed: ${(error as any).message}`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        },
+      },
+    );
+  }, [
+    chain,
+    contractAddress,
+    importContract,
+    contractQuery,
+    compilerMetadataQuery,
+    client,
+    toast,
   ]);
 
   if (chainNotFound) {
@@ -278,6 +350,43 @@ const EVMContractPage: ThirdwebNextPage = () => {
       </Flex>
     );
   }
+  const importBanner = (
+    <Alert
+      status="info"
+      borderRadius="md"
+      as={Flex}
+      flexDir="column"
+      alignItems="start"
+      gap={2}
+      marginTop={6}
+    >
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        align={{ base: "inherit", md: "center" }}
+        justify="space-between"
+        w="full"
+        gap={2}
+      >
+        <Flex direction={"column"}>
+          <Flex justifyContent="start">
+            <AlertIcon />
+            <AlertTitle>Contract not imported</AlertTitle>
+          </Flex>
+          <AlertDescription>
+            Some functionality might be unavailable. Import this contract to get
+            access all functions and sources.
+          </AlertDescription>
+        </Flex>
+        <Button
+          onClick={handleImportContract}
+          minW={150}
+          isLoading={importContract.isLoading || refetchLoading}
+        >
+          Import Contract
+        </Button>
+      </Flex>
+    </Alert>
+  );
 
   return (
     <Flex
@@ -287,18 +396,21 @@ const EVMContractPage: ThirdwebNextPage = () => {
     >
       <Box borderColor="borderColor" borderBottomWidth={1} w="full" pb={8}>
         <Container maxW="container.page">
-          <Flex
-            justify="space-between"
-            align={{ base: "inherit", md: "center" }}
-            direction={{ base: "column", md: "row" }}
-            gap={4}
-          >
-            <ContractMetadata
-              contractAddress={contractAddress}
-              metadataQuery={contractMetadataQuery}
-              chain={chain}
-            />
-            <PrimaryDashboardButton contractAddress={contractAddress} />
+          <Flex direction="column">
+            <Flex
+              justify="space-between"
+              align={{ base: "inherit", md: "center" }}
+              direction={{ base: "column", md: "row" }}
+              gap={4}
+            >
+              <ContractMetadata
+                contractAddress={contractAddress}
+                metadataQuery={contractMetadataQuery}
+                chain={chain}
+              />
+              <PrimaryDashboardButton contractAddress={contractAddress} />
+            </Flex>
+            {compilerMetadataQuery?.data?.isPartialAbi ? importBanner : null}
           </Flex>
         </Container>
       </Box>

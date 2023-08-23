@@ -9,6 +9,8 @@ import {
   StorageDownloader,
   IpfsUploader,
   ThirdwebStorage,
+  GatewayUrls,
+  SingleDownloadOptions,
 } from "@thirdweb-dev/storage";
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
@@ -40,9 +42,17 @@ const defaultDownloader = new StorageDownloader({
 });
 
 class SpecialDownloader implements IStorageDownloader {
-  async download(url: string): Promise<Response> {
+  async download(
+    url: string,
+    gatewayUrls?: GatewayUrls,
+    options?: SingleDownloadOptions,
+  ): Promise<Response> {
     if (url.startsWith("ipfs://")) {
-      return defaultDownloader.download(url, { "ipfs://": [IPFS_GATEWAY_URL] });
+      return defaultDownloader.download(
+        url,
+        { "ipfs://": [IPFS_GATEWAY_URL] },
+        options,
+      );
     }
 
     // data urls we always want to just fetch directly
