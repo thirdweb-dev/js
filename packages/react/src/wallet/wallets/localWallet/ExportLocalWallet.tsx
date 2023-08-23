@@ -1,6 +1,6 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
-import { FormFooter, Label } from "../../../components/formElements";
+import { Label } from "../../../components/formElements";
 import {
   ModalTitle,
   ModalDescription,

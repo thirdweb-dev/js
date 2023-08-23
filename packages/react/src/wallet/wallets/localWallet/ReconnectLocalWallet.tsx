@@ -8,7 +8,7 @@ import {
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { FormFooter, Label } from "../../../components/formElements";
+import { Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
 import { shortenAddress } from "../../../evm/utils/addresses";
