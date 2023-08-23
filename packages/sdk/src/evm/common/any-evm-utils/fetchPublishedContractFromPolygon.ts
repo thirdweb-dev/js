@@ -20,8 +20,8 @@ export async function fetchPublishedContractFromPolygon(
   clientId?: string,
   secretKey?: string,
 ) {
-  const chain =
-    getSupportedChains().find((c) => c.chainId === 137)?.rpc[0] || "polygon";
+  const polygonChain = getSupportedChains().find((c) => c.chainId === 137);
+  const chain = polygonChain || "polygon";
   const publisher = await resolveAddress(publisherAddress);
   const contract = new Contract(
     getContractPublisherAddress(),
