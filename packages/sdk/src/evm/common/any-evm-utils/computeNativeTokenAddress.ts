@@ -14,13 +14,23 @@ export async function computeNativeTokenAddress(
   provider: providers.Provider,
   storage: ThirdwebStorage,
   create2Factory?: string,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<string> {
-  if (!create2Factory) {
+  if (!create2Factory || create2Factory === "") {
     create2Factory = await getCreate2FactoryAddress(provider);
   }
   return (
-    await computeDeploymentInfo("infra", provider, storage, create2Factory, {
-      contractName: "WETH9",
-    })
+    await computeDeploymentInfo(
+      "infra",
+      provider,
+      storage,
+      create2Factory,
+      {
+        contractName: "WETH9",
+      },
+      clientId,
+      secretKey,
+    )
   ).transaction.predictedAddress;
 }

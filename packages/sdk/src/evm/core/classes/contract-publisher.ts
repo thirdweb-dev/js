@@ -8,11 +8,9 @@ import { resolveContractUriFromAddress } from "../../common/feature-detection/re
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchContractMetadata } from "../../common/fetchContractMetadata";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import { getCompositePluginABI } from "../../common/plugin/getCompositePluginABI";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
-import { getChainProvider } from "../../constants/urls";
 import {
   AbiFunction,
   AbiSchema,
@@ -44,6 +42,12 @@ import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarat
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
+import {
+  fetchAndCacheDeployMetadata,
+  fetchPublishedContractFromPolygon,
+  isFeatureEnabled,
+} from "../../common";
+import { joinABIs } from "../../common/plugin/joinABIs";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -369,34 +373,59 @@ export class ContractPublisher extends RPCConnectionHandler {
         this.storage,
       );
 
+      const compilerMetadata = await fetchContractMetadata(
+        predeployMetadata.metadataUri,
+        this.storage,
+      );
+      const isPlugin = isFeatureEnabled(
+        AbiSchema.parse(compilerMetadata.abi),
+        "PluginRouter",
+      );
+      const isDynamic = isFeatureEnabled(
+        AbiSchema.parse(compilerMetadata.abi),
+        "DynamicContract",
+      );
+      extraMetadata.routerType = isPlugin
+        ? "plugin"
+        : isDynamic
+        ? "dynamic"
+        : "none";
+
       // For a dynamic contract Router, try to fetch plugin/extension metadata
-      // from the implementation addresses, if any
-      if (extraMetadata.factoryDeploymentData?.implementationAddresses) {
-        const implementationsAddresses = Object.entries(
-          extraMetadata.factoryDeploymentData.implementationAddresses,
-        );
+      if (isDynamic || isPlugin) {
+        const defaultExtensions = extraMetadata.defaultExtensions;
 
-        const entry = implementationsAddresses.find(
-          ([, implementation]) => implementation !== "",
-        );
-        const [network, implementation] = entry ? entry : [];
-
-        if (network && implementation) {
+        if (defaultExtensions && defaultExtensions.length > 0) {
           try {
-            const compilerMetadata = await fetchContractMetadata(
-              predeployMetadata.metadataUri,
-              this.storage,
-            );
-            const composite = await getCompositePluginABI(
-              implementation,
-              compilerMetadata.abi,
-              getChainProvider(parseInt(network), {
-                clientId: this.options.clientId,
-                secretKey: this.options.secretKey,
+            const publishedExtensions = await Promise.all(
+              defaultExtensions.map((e) => {
+                return fetchPublishedContractFromPolygon(
+                  e.publisherAddress,
+                  e.extensionName,
+                  e.extensionVersion,
+                  this.storage,
+                  this.options.clientId,
+                  this.options.secretKey,
+                );
               }),
-              {}, // pass empty object for options instead of this.options
-              this.storage,
             );
+
+            const publishedExtensionUris = publishedExtensions.map(
+              (ext) => ext.metadataUri,
+            );
+
+            const extensionABIs = (
+              await Promise.all(
+                publishedExtensionUris.map(async (uri) => {
+                  return fetchAndCacheDeployMetadata(uri, this.storage);
+                }),
+              )
+            ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata.abi);
+
+            const composite = joinABIs([
+              compilerMetadata.abi,
+              ...extensionABIs,
+            ]);
             extraMetadata.compositeAbi = AbiSchema.parse(composite);
           } catch {}
         }
@@ -430,7 +459,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
       const contractId = predeployMetadata.name;
 
-      const fullMetadata = FullPublishMetadataSchemaInput.parse({
+      const fullMetadata = await FullPublishMetadataSchemaInput.parseAsync({
         ...extraMetadata,
         metadataUri: predeployMetadata.metadataUri,
         bytecodeUri: predeployMetadata.bytecodeUri,

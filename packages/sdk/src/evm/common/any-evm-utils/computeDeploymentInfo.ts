@@ -7,7 +7,10 @@ import {
   ContractOptions,
   DeploymentPreset,
 } from "../../types/any-evm/deploy-data";
-import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "./fetchPublishedContractFromPolygon";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
@@ -26,8 +29,12 @@ export async function computeDeploymentInfo(
   storage: ThirdwebStorage,
   create2Factory: string,
   contractOptions?: ContractOptions,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset> {
   const contractName = contractOptions && contractOptions.contractName;
+  const version = contractOptions && contractOptions.version;
+  let publisherAddress = contractOptions && contractOptions.publisherAddress;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -57,9 +64,20 @@ export async function computeDeploymentInfo(
 
   if (!metadata) {
     invariant(contractName, "Require contract name");
-    const uri = await fetchAndCachePublishedContractURI(contractName);
-    metadata = (await fetchAndCacheDeployMetadata(uri, storage))
-      .compilerMetadata;
+    if (!publisherAddress) {
+      publisherAddress = THIRDWEB_DEPLOYER;
+    }
+    const publishedContract = await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      version,
+      storage,
+      clientId,
+      secretKey,
+    );
+    metadata = (
+      await fetchAndCacheDeployMetadata(publishedContract.metadataUri, storage)
+    ).compilerMetadata;
   }
 
   const encodedArgs = await encodeConstructorParamsForImplementation(
@@ -68,6 +86,8 @@ export async function computeDeploymentInfo(
     storage,
     create2Factory,
     contractOptions?.constructorParams,
+    clientId,
+    secretKey,
   );
   const address = computeDeploymentAddress(
     metadata.bytecode,
@@ -108,6 +128,8 @@ export async function encodeConstructorParamsForImplementation(
   storage: ThirdwebStorage,
   create2Factory: string,
   constructorParamMap?: ConstructorParamMap,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<BytesLike> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
@@ -147,6 +169,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "WETH9",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["WETH9"]) {
             caches.deploymentPresets["WETH9"] = deploymentInfo;
@@ -168,6 +192,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "ForwarderEOAOnly",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
             caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
@@ -183,6 +209,8 @@ export async function encodeConstructorParamsForImplementation(
           {
             contractName: "Forwarder",
           },
+          clientId,
+          secretKey,
         );
         if (!caches.deploymentPresets["Forwarder"]) {
           caches.deploymentPresets["Forwarder"] = deploymentInfo;
