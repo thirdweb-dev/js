@@ -48,6 +48,9 @@ import fetch from "cross-fetch";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
+import { toWei } from "../../common";
+import { BaseGoerli, Optimism } from "@thirdweb-dev/chains";
+import { OP_STACK_CHAINS } from "../../constants/chains/supportedChains";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -243,7 +246,11 @@ abstract class TransactionContext {
           ? block.baseFeePerGas
           : utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
+      const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
+      if (opStackChainIds.includes(chainId)) {
+        // for op stack chains lower the default fee
+        defaultPriorityFee = BigNumber.from(1000000); // 0.001 gwei
+      } else if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
         defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
       } else {
@@ -275,16 +282,6 @@ abstract class TransactionContext {
   ): BigNumber {
     const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
     const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const maxGasPrice = utils.parseUnits("300", "gwei"); // no more than 300 gwei
-    const minGasPrice = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-    if (txGasPrice.lt(minGasPrice)) {
-      return minGasPrice;
-    }
-
     return txGasPrice;
   }
 }

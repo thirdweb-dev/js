@@ -1141,7 +1141,7 @@ export { default as ArmoniaEvaChain } from "../chains/160"
 export { default as ArmoniaEvaChainTestnet } from "../chains/161"
 export { default as LightstreamsTestnet } from "../chains/162"
 export { default as Lightstreams } from "../chains/163"
-export { default as OmniTestnet1 } from "../chains/165"
+export { default as OmniTestnet } from "../chains/165"
 export { default as AtoshiTestnet } from "../chains/167"
 export { default as AiozNetwork } from "../chains/168"
 export { default as HooSmartChainTestnet } from "../chains/170"
@@ -3155,7 +3155,7 @@ type ChainIdsBySlug = {
 "armonia-eva-chain-testnet": 161,
 "lightstreams-testnet": 162,
 "lightstreams": 163,
-"omni-testnet-1": 165,
+"omni-testnet": 165,
 "atoshi-testnet": 167,
 "aioz-network": 168,
 "hoo-smart-chain-testnet": 170,
