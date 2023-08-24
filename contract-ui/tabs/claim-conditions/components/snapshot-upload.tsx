@@ -187,7 +187,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
   const onSave = () => {
-    setSnapshot(validSnapshot);
+    setSnapshot(snapshotData);
     onClose();
   };
 

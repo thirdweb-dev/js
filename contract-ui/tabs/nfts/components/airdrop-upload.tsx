@@ -177,7 +177,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
   const onSave = () => {
-    setAirdrop(validAirdrop);
+    setAirdrop(airdropData);
     onClose();
   };
 
