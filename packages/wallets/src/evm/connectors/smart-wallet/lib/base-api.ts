@@ -21,7 +21,7 @@ import {
   Mumbai,
   Polygon,
 } from "@thirdweb-dev/chains";
-import { getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
+import { OP_STACK_CHAINS, getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -310,9 +310,12 @@ export abstract class BaseAccountAPI {
           maxPriorityFeePerGas = maxFeePerGas;
         }
 
+        const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
         if (
           maxPriorityFeePerGas &&
-          (chainId === Mumbai.chainId || chainId === Polygon.chainId)
+          (chainId === Mumbai.chainId ||
+            chainId === Polygon.chainId ||
+            opStackChainIds.includes(chainId))
         ) {
           // for polygon/mumbai, override fee data from gas station
           const block = await this.provider.getBlock("latest");
@@ -320,13 +323,24 @@ export abstract class BaseAccountAPI {
             block && block.baseFeePerGas
               ? block.baseFeePerGas
               : utils.parseUnits("1", "gwei");
-          maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
+          if (opStackChainIds.includes(chainId)) {
+            // for op stack chains lower the default fee
+            maxPriorityFeePerGas = BigNumber.from(1000000); // 0.001 gwei
+          } else if (
+            chainId === Mumbai.chainId ||
+            chainId === Polygon.chainId
+          ) {
+            maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
+          }
           // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
           const baseMaxFeePerGas = baseBlockFee.mul(2);
           maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
         }
       }
     }
+
+    console.log("maxFeePerGas", maxFeePerGas?.toString());
+    console.log("maxPriorityFeePerGas", maxPriorityFeePerGas?.toString());
 
     const partialUserOp: any = {
       sender: this.getAccountAddress(),
