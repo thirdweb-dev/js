@@ -110,7 +110,7 @@ export async function validateEmailOTP({
       isNewUser: verifiedToken.isNewUser,
     };
 
-    postPaperAuth(storedToken, clientId);
+    await postPaperAuth(storedToken, clientId);
 
     return { storedToken };
   } catch (e) {

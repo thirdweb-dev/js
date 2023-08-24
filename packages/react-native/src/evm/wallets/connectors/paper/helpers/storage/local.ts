@@ -33,19 +33,19 @@ export async function isDeviceSharePresentForUser(
   return !!storedDeviceShare;
 }
 
-export async function getAuthShareClient(clientId: string) {
+export async function getAuthTokenClient(clientId: string) {
   return getItemFromAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
 }
-export async function setAuthShareClient(
+export async function setAuthTokenClient(
   cookieString: string,
   clientId: string,
 ): Promise<void> {
   setItemInAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId), cookieString);
 }
-export async function removeAuthShareInClient(
+export async function removeAuthTokenInClient(
   clientId: string,
 ): Promise<boolean> {
-  const verifiedTokenString = await getAuthShareClient(clientId);
+  const verifiedTokenString = await getAuthTokenClient(clientId);
   if (verifiedTokenString) {
     removeItemInAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
     return true;

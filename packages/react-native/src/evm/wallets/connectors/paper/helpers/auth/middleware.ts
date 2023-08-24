@@ -4,7 +4,7 @@ import {
 } from "@paperxyz/embedded-wallet-service-sdk";
 import {
   getDeviceShare,
-  setAuthShareClient,
+  setAuthTokenClient,
   setWallerUserDetails,
 } from "../storage/local";
 import { setUpNewUserWallet } from "../wallet/creation";
@@ -24,7 +24,7 @@ export async function postPaperAuth(
   clientId: string,
 ) {
   if (storedToken.shouldStoreCookieString) {
-    setAuthShareClient(storedToken.cookieString, clientId);
+    await setAuthTokenClient(storedToken.cookieString, clientId);
   }
 
   await setWallerUserDetails({
