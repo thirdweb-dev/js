@@ -32,10 +32,11 @@ export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
   setScreen: (screen: string | WalletConfig) => void;
   theme?: "light" | "dark";
+  title?: string;
 }) => {
   const { screen, setScreen } = props;
   const modalConfig = useContext(ModalConfigCtx);
-  const title = modalConfig.title;
+  const title = props.title || modalConfig.title;
   const theme = props.theme || modalConfig.theme;
   const walletConfigs = useWallets();
   const initialScreen =
@@ -187,7 +188,8 @@ export const ConnectModal = () => {
 };
 
 export const ConnectModalInline = (props: {
-  theme: "light" | "dark";
+  theme?: "light" | "dark";
+  title?: string;
   className?: string;
 }) => {
   const { screen, setScreen } = useScreen();
@@ -199,6 +201,7 @@ export const ConnectModalInline = (props: {
             screen={screen}
             setScreen={setScreen}
             theme={props.theme}
+            title={props.title}
           />
         </ConnectModalInlineContainer>
       </ThemeProvider>
