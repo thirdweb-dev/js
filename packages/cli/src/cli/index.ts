@@ -62,10 +62,6 @@ const main = async () => {
       // Create config directory if it doesn't exist
       if (regenerateConfig) {
         fs.mkdirSync(configDir, { recursive: true });
-        fs.writeFileSync(credsConfigPath, "", {
-          encoding: "utf-8",
-          mode: 0o600,
-        });
       }
 
       // Create cache directory if it doesn't exist

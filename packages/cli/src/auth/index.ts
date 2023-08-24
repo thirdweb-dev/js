@@ -216,23 +216,22 @@ export const authenticateUser = async (
 };
 
 async function getOrCreatePassword(configCredsPath: string): Promise<string> {
-  // Check if the password exists, if not, prompt for it.
-  if (!fs.existsSync(configCredsPath)) {
-    // const response = await prompts({
-    //   type: "invisible",
-    //   name: "password",
-    //   message: `Please enter a password to start a session with the CLI, this password will be needed to login again in the future, make sure to remember it!`,
-    // });
-
-    // if (!response.password) {
-    //   throw new Error("No password provided");
-    // }
-
-    // return response.password as string;
+  const passwordFileExists = fs.existsSync(configCredsPath);
+  if (!passwordFileExists) {
+    // Generate a random password for the CLI to be able to import / export the wallet.
     return crypto.randomUUID();
+  } else {
+    const file = fs.readFileSync(configCredsPath, "utf8");
+    try {
+      JSON.parse(file);
+    } catch (e) {
+      // If it fails to parse the password we should just delete the file and generate a new password, since this password is not shown to the user.
+      fs.unlinkSync(configCredsPath);
+      return getOrCreatePassword(configCredsPath);
+    }
+    const { password } = JSON.parse(file) as ICredsConfig;
+    return password;
   }
-  const configJson = JSON.parse(fs.readFileSync(configCredsPath, "utf-8")) as ICredsConfig;
-  return configJson.password;
 }
 
 async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
@@ -276,7 +275,7 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
   fs.writeFileSync(configCredsPath, JSON.stringify({
     password: password,
     // expiration: newExpiration,
-  }), "utf-8");
+  }), "utf8");
 
   return wallet;
 }
