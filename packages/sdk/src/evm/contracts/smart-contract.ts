@@ -5,6 +5,9 @@ import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_AIRDROP_ERC20,
+  FEATURE_AIRDROP_ERC721,
+  FEATURE_AIRDROP_ERC1155,
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
@@ -53,13 +56,15 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  AirdropERC20,
   IAccountFactory,
   IAccountCore,
+  AirdropERC721,
+  AirdropERC1155,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
-
 import { NetworkInput } from "../core/types";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractOwner } from "../core/classes/contract-owner";
@@ -68,6 +73,9 @@ import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-engl
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
 import { AccountFactory } from "../core/classes/account-factory";
 import { Account } from "../core/classes/account";
+import { Airdrop20 } from "../core/classes/airdrop-erc20";
+import { Airdrop721 } from "../core/classes/airdrop-erc721";
+import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -128,7 +136,7 @@ export class SmartContract<
   /**
    * Handle primary sales
    */
-  get sales(): ContractPrimarySale<IPrimarySale> {
+  get sales(): ContractPrimarySale {
     return assertEnabled(this.detectPrimarySales(), FEATURE_PRIMARY_SALE);
   }
 
@@ -296,6 +304,18 @@ export class SmartContract<
    */
   get offers(): MarketplaceV3Offers<OffersLogic> {
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
+  }
+
+  get airdrop20(): Airdrop20<AirdropERC20> {
+    return assertEnabled(this.detectAirdrop20(), FEATURE_AIRDROP_ERC20);
+  }
+
+  get airdrop721(): Airdrop721<AirdropERC721> {
+    return assertEnabled(this.detectAirdrop721(), FEATURE_AIRDROP_ERC721);
+  }
+
+  get airdrop1155(): Airdrop1155<AirdropERC1155> {
+    return assertEnabled(this.detectAirdrop1155(), FEATURE_AIRDROP_ERC1155);
   }
 
   /**
@@ -559,6 +579,39 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop20() {
+    if (
+      detectContractFeature<AirdropERC20>(this.contractWrapper, "AirdropERC20")
+    ) {
+      return new Airdrop20(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop721() {
+    if (
+      detectContractFeature<AirdropERC721>(
+        this.contractWrapper,
+        "AirdropERC721",
+      )
+    ) {
+      return new Airdrop721(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop1155() {
+    if (
+      detectContractFeature<AirdropERC1155>(
+        this.contractWrapper,
+        "AirdropERC1155",
+      )
+    ) {
+      return new Airdrop1155(this.contractWrapper);
     }
     return undefined;
   }

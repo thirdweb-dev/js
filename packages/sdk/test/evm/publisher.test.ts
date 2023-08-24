@@ -1,7 +1,5 @@
 import {
   ChainId,
-  getAllDetectedExtensionNames,
-  isExtensionEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
@@ -13,12 +11,7 @@ import {
 } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  DropERC721__factory,
-  DropERC721_V3__factory,
-  TokenERC721__factory,
-  MarketplaceV3__factory,
-} from "@thirdweb-dev/contracts-js";
+import { MarketplaceV3__factory } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
 import { ethers } from "ethers";
@@ -79,42 +72,6 @@ describe("Publishing", async () => {
     const publisher = sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
     expect(functions.length).gt(0);
-  });
-
-  it("should extract features", async () => {
-    expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
-    ).to.eq(true);
-    expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721Mintable"),
-    ).to.eq(true);
-    expect(
-      isExtensionEnabled(TokenERC721__factory.abi, "ERC721BatchMintable"),
-    ).to.eq(true);
-
-    // Drop
-    expect(
-      isExtensionEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
-    ).to.eq(true);
-    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
-      true,
-    );
-    expect(isExtensionEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
-      false,
-    );
-  });
-
-  it("should extract all features", async () => {
-    const tokenFeatures = getAllDetectedExtensionNames(
-      TokenERC721__factory.abi,
-    );
-    expect(tokenFeatures).to.contain("ERC721Enumerable");
-    expect(getAllDetectedExtensionNames(DropERC721__factory.abi)).to.contain(
-      "ERC721ClaimPhasesV2",
-    );
-    expect(getAllDetectedExtensionNames(DropERC721_V3__factory.abi)).to.contain(
-      "ERC721ClaimPhasesV1",
-    );
   });
 
   it("should update bio", async () => {

@@ -112,7 +112,7 @@ export class Vote implements UpdateableNetwork {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -151,7 +151,7 @@ export class Vote implements UpdateableNetwork {
    */
   public async getAll(): Promise<Proposal[]> {
     return Promise.all(
-      (await this.contractWrapper.readContract.getAllProposals()).map(
+      (await this.contractWrapper.read("getAllProposals", [])).map(
         async (data) => ({
           proposalId: data.proposalId,
           proposer: data.proposer,
