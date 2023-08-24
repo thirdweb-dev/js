@@ -20,6 +20,7 @@ import {
   Abi,
   CONTRACT_ADDRESSES,
   ExtraPublishMetadataSchemaInput,
+  isExtensionEnabled,
 } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -142,6 +143,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           ?.publishedMetadata?.factoryDeploymentData?.customFactoryInput
           ?.customFactoryAddresses || {},
       ).map(([key, value]) => ({ key: Number(key), value })),
+      defaultExtensions:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata?.defaultExtensions || [],
     };
   }, [
     configuredChainsIds,
@@ -222,6 +226,27 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     form.watch("deployType") === "standard"
       ? constructorParams
       : initializerParams;
+
+  const isPluginRouter = useMemo(
+    () => isExtensionEnabled(publishMetadata.data?.abi as Abi, "PluginRouter"),
+    [publishMetadata.data?.abi],
+  );
+
+  const isDynamicContract = useMemo(
+    () =>
+      isExtensionEnabled(publishMetadata.data?.abi as Abi, "DynamicContract"),
+    [publishMetadata.data?.abi],
+  );
+
+  const hasExtensionsParam = useMemo(
+    () => constructorParams.some((param) => param.name === "_extensions"),
+    [constructorParams],
+  );
+
+  const shouldShowDynamicFactoryInput = useMemo(
+    () => isPluginRouter || (isDynamicContract && hasExtensionsParam),
+    [isPluginRouter, isDynamicContract, hasExtensionsParam],
+  );
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
@@ -369,6 +394,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
               <FactoryFieldset
                 abi={publishMetadata.data?.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
+                shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
               />
             </Flex>
           )}

@@ -9,11 +9,13 @@ import { Button, Heading } from "tw-components";
 interface FactoryFieldsetProps {
   abi: Abi;
   setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
+  shouldShowDynamicFactoryInput: boolean;
 }
 
 export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
   abi,
   setCustomFactoryAbi,
+  shouldShowDynamicFactoryInput,
 }) => {
   const form = useFormContext();
 
@@ -48,7 +50,10 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
           </Button>
         </ButtonGroup>
         {form.watch("deployType") === "autoFactory" && (
-          <DefaultFactory abi={abi} />
+          <DefaultFactory
+            abi={abi}
+            shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
+          />
         )}
         {form.watch("deployType") === "customFactory" && (
           <CustomFactory setCustomFactoryAbi={setCustomFactoryAbi} />

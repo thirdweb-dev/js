@@ -4,7 +4,7 @@ import {
   Abi,
   AddContractInput,
   ValidContractInstance,
-  isFeatureEnabled,
+  isExtensionEnabled,
 } from "@thirdweb-dev/sdk/evm";
 import { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -24,12 +24,12 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
 
   if (strategy === "any") {
     return features.some((feature) =>
-      isFeatureEnabled(contract.abi as Abi, feature),
+      isExtensionEnabled(contract.abi as Abi, feature),
     );
   }
 
   return features.every((feature) =>
-    isFeatureEnabled(contract.abi as Abi, feature),
+    isExtensionEnabled(contract.abi as Abi, feature),
   );
 }
 
