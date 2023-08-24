@@ -139,7 +139,7 @@ export class SmartContract<
   /**
    * Handle primary sales
    */
-  get sales(): ContractPrimarySale<IPrimarySale> {
+  get sales(): ContractPrimarySale {
     return assertEnabled(this.detectPrimarySales(), FEATURE_PRIMARY_SALE);
   }
 

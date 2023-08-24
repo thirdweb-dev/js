@@ -41,8 +41,11 @@ export function getChainProvider(
   // Add the chain to the supportedChains
   const options = SDKOptionsSchema.parse(sdkOptions);
   if (isChainConfig(network)) {
-    // @ts-expect-error - we know this is a chain and it will work to build the map
-    options.supportedChains = [network, ...options.supportedChains];
+    options.supportedChains = [
+      // @ts-expect-error - we know this is a chain and it will work to build the map
+      network,
+      ...options.supportedChains.filter((c) => c.chainId !== network.chainId),
+    ];
   }
 
   // Build a map of chainId -> ChainInfo based on the supportedChains

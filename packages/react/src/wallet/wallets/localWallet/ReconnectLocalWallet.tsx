@@ -8,7 +8,7 @@ import {
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { FormFooter, Label } from "../../../components/formElements";
+import { Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
 import { shortenAddress } from "../../../evm/utils/addresses";
@@ -131,6 +131,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         meta={meta}
         hideBack={!props.renderBackButton}
       />
+
       <ModalTitle
         style={{
           textAlign: "left",
@@ -138,12 +139,13 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       >
         Guest Wallet
       </ModalTitle>
+
       <Spacer y="xs" />
       <ModalDescription>
         Connect to saved wallet on your device
       </ModalDescription>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       <Label>Saved Wallet</Label>
 
@@ -153,7 +155,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         {savedAddress === "" ? "Loading..." : shortenAddress(savedAddress)}
       </SecondaryText>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       <form
         onSubmit={(e) => {
@@ -190,27 +192,27 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
           value={password}
           error={isWrongPassword ? "Wrong Password" : ""}
           dataTest="current-password"
+          placeholder="Enter your password"
         />
 
-        <Spacer y="lg" />
+        <Spacer y="md" />
 
         {/* Connect Button */}
-        <FormFooter>
-          <Button
-            variant="inverted"
-            type="submit"
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-            }}
-          >
-            Connect
-            {isConnecting && <Spinner size="sm" color="inverted" />}
-          </Button>
-        </FormFooter>
+        <Button
+          variant="inverted"
+          type="submit"
+          style={{
+            display: "flex",
+            gap: spacing.sm,
+            width: "100%",
+          }}
+        >
+          Connect
+          {isConnecting && <Spinner size="sm" color="inverted" />}
+        </Button>
       </form>
 
-      <Spacer y="xxl" />
+      <Spacer y="xl" />
 
       <Button
         variant="link"

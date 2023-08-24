@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.2.8
+
+### Patch Changes
+
+- [#1498](https://github.com/thirdweb-dev/js/pull/1498) [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add single download options for timeouts and retries
+
 ## 1.2.7
 
 ### Patch Changes
