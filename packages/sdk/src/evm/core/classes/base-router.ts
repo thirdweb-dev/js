@@ -1,4 +1,4 @@
-import type { BaseRouter } from "@thirdweb-dev/contracts-js";
+import type { IBaseRouter } from "@thirdweb-dev/contracts-js";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -9,19 +9,19 @@ import {
   ExtensionMetadata,
   FunctionInput,
 } from "../../types/extension";
-import { FEATURE_BASE_ROUTER } from "../../constants/thirdweb-features";
+import { FEATURE_DYNAMIC_CONTRACT } from "../../constants/thirdweb-features";
 import { ContractInterface } from "ethers";
 import { generateExtensionFunctions } from "../../common/plugin/generatePluginFunctions";
 import { AbiSchema } from "../../schema";
 import { utils } from "ethers";
 import invariant from "tiny-invariant";
 
-export class BaseRouterClass<TContract extends BaseRouter>
+export class BaseRouterClass<TContract extends IBaseRouter>
   implements DetectableFeature
 {
-  featureName = FEATURE_BASE_ROUTER.name;
+  featureName = FEATURE_DYNAMIC_CONTRACT.name;
 
-  private contractWrapper: ContractWrapper<BaseRouter>;
+  private contractWrapper: ContractWrapper<IBaseRouter>;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
@@ -175,11 +175,11 @@ export class BaseRouterClass<TContract extends BaseRouter>
   );
 
   remove = /* @__PURE__ */ buildTransactionFunction(
-    async (extensionName: string): Promise<Transaction> => {
+    async (extension: Extension): Promise<Transaction> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "removeExtension",
-        args: [extensionName],
+        args: [extension],
       });
     },
   );

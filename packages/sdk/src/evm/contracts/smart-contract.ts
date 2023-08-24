@@ -19,6 +19,7 @@ import {
   FEATURE_ROYALTY,
   FEATURE_ACCOUNT_FACTORY,
   FEATURE_ACCOUNT,
+  FEATURE_DYNAMIC_CONTRACT,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -61,6 +62,7 @@ import type {
   IAccountCore,
   AirdropERC721,
   AirdropERC1155,
+  IBaseRouter,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -356,8 +358,8 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
-  get extensions(): BaseRouterClass<BaseRouter> {
-    return assertEnabled(this.detectBaseRouter(), FEATURE_BASE_ROUTER);
+  get extensions(): BaseRouterClass<IBaseRouter> {
+    return assertEnabled(this.detectBaseRouter(), FEATURE_DYNAMIC_CONTRACT);
   }
 
   private _chainId: number;
@@ -590,9 +592,9 @@ export class SmartContract<
 
   private detectBaseRouter() {
     if (
-      detectContractFeature<BaseRouter>(
+      detectContractFeature<IBaseRouter>(
         this.contractWrapper,
-        FEATURE_BASE_ROUTER.name,
+        FEATURE_DYNAMIC_CONTRACT.name,
       )
     ) {
       return new BaseRouterClass(this.contractWrapper);
