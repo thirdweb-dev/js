@@ -4,6 +4,7 @@ import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
+  SingleDownloadOptions,
 } from "../../types";
 import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
@@ -28,25 +29,25 @@ import pkg from "../../../package.json";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
-  DEFAULT_TIMEOUT_IN_SECONDS = 10;
+  DEFAULT_TIMEOUT_IN_SECONDS = 30;
+  DEFAULT_MAX_RETRIES = 3;
 
   private secretKey?: string;
   private clientId?: string;
-  private timeoutInSeconds: number;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
     this.clientId = options.clientId;
-    this.timeoutInSeconds =
-      options.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
   }
 
   async download(
     uri: string,
     gatewayUrls: GatewayUrls,
+    options?: SingleDownloadOptions,
     attempts = 0,
   ): Promise<Response> {
-    if (attempts > 3) {
+    const maxRetries = options?.maxRetries || this.DEFAULT_MAX_RETRIES;
+    if (attempts > maxRetries) {
       console.error(
         "[FAILED_TO_DOWNLOAD_ERROR] Failed to download from URI - too many attempts failed.",
       );
@@ -119,13 +120,15 @@ export class StorageDownloader implements IStorageDownloader {
 
     if (isTooManyRequests(resolvedUri)) {
       // skip the request if we're getting too many request error from the gateway
-      return this.download(uri, gatewayUrls, attempts + 1);
+      return this.download(uri, gatewayUrls, options, attempts + 1);
     }
 
     const controller = new AbortController();
+    const timeoutInSeconds =
+      options?.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
     const timeout = setTimeout(
       () => controller.abort(),
-      this.timeoutInSeconds * 1000,
+      timeoutInSeconds * 1000,
     );
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
@@ -139,7 +142,7 @@ export class StorageDownloader implements IStorageDownloader {
     if (!("status" in resOrErr)) {
       // early exit if we don't have a status code
       throw new Error(
-        `Request timed out after ${this.timeoutInSeconds} seconds. ${
+        `Request timed out after ${timeoutInSeconds} seconds. ${
           isTwGatewayUrl(resolvedUri)
             ? "You can update the timeoutInSeconds option to increase the timeout."
             : "You're using a public IPFS gateway, pass in a clientId or secretKey for a reliable IPFS gateway."
@@ -156,7 +159,7 @@ export class StorageDownloader implements IStorageDownloader {
       // track that we got a too many requests error
       tooManyRequestsBackOff(resolvedUri, resOrErr);
       // Since the current gateway failed, recursively try the next one we know about
-      return this.download(uri, gatewayUrls, attempts + 1);
+      return this.download(uri, gatewayUrls, options, attempts + 1);
     }
 
     if (resOrErr.status === 410) {
@@ -189,7 +192,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Since the current gateway failed, recursively try the next one we know about
-    return this.download(uri, gatewayUrls, attempts + 1);
+    return this.download(uri, gatewayUrls, options, attempts + 1);
   }
 }
 

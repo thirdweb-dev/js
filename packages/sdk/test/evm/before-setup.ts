@@ -417,5 +417,5 @@ export {
   implementations,
   hardhatEthers,
   thirdwebFactory,
-  extendedMetadataMock
+  extendedMetadataMock,
 };
