@@ -98,7 +98,6 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(extensions[0].metadata.name === "OffersLogic");
 
     // call function on extension
-    coreRouter = await sdk.getContract(coreRouterAddress, "custom", true); // don't use cached; fetch again
     const totalOffers = await coreRouter.offers.getTotalCount();
     assert(totalOffers.eq(0));
   });
@@ -219,7 +218,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(extensions[0].metadata.implementation === newAddress);
   });
 
-  it.skip("should remove extensions", async () => {
+  it("should remove extensions", async () => {
     // deploy an extension contract
     // Offers
     const offersLogicAddress = await deployContractAndUploadMetadata(
@@ -251,7 +250,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(extensions[0].metadata.name === "OffersLogic");
 
     // remove extension
-    await coreRouter.extensions.remove("OffersLogic");
+    await coreRouter.extensions.remove(routerInput);
 
     // read extension
     extensions = await coreRouter.extensions.getAll();
