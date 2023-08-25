@@ -7,8 +7,6 @@ import { ERROR_MESSAGES } from "../constants/constants";
 require("dotenv-mono").load();
 
 const apiSecretKey = process.env.TW_SECRET_KEY as string;
-// Adding this temporarily, so that we can run on staging
-const skipTest = true;
 
 // function to skip tests based on condition
 const itif = (condition: boolean) => (condition ? it : it.skip);
@@ -17,7 +15,7 @@ const itif = (condition: boolean) => (condition ? it : it.skip);
 jest.setTimeout(120_000);
 
 describe("npx thirdweb deploy", () => {
-  itif(!!apiSecretKey && !skipTest)("should return deploy page url", async () => {
+  itif(!!apiSecretKey)("should return deploy page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
 
     await copyFile(

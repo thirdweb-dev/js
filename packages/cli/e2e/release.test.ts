@@ -8,8 +8,6 @@ require("dotenv-mono").load();
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 const apiSecretKey = process.env.TW_SECRET_KEY as string;
-// Adding this temporarily, so that we can run on staging
-const skipTest = true;
 
 // function to skip tests based on condition
 const itif = (condition: boolean) => (condition ? it : it.skip);
@@ -19,7 +17,7 @@ jest.setTimeout(120_000);
 
 describe("npx thirdweb publish", () => {
   // conditionally skip test if there's no api key
-  itif(!!apiSecretKey && !skipTest)("should return publish page url", async () => {
+  itif(!!apiSecretKey)("should return publish page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
 
     await copyFile(
