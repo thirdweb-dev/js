@@ -13,14 +13,14 @@ const links: Route[] = [
     name: "connect",
   },
   {
-    path: "/dashboard/wallets/wallet-sdk",
-    title: "Wallet SDK",
-    name: "wallet-sdk",
-  },
-  {
     path: "/dashboard/wallets/smart-wallet",
     title: "Smart Wallet",
     name: "smart-wallet",
+  },
+  {
+    path: "/dashboard/wallets/wallet-sdk",
+    title: "Wallet SDK",
+    name: "wallet-sdk",
   },
 ];
 
