@@ -1,10 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kava EVM Testnet",
+  "name": "Kava Testnet",
   "chain": "KAVA",
   "rpc": [
-    "https://kava-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://kava-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.testnet.kava.io",
+    "https://kava-evm-testnet.rpc.thirdweb.com",
     "wss://wevm.testnet.kava.io"
   ],
   "faucets": [
@@ -28,7 +29,7 @@ export default {
   "explorers": [
     {
       "name": "Kava Testnet Explorer",
-      "url": "https://explorer.testnet.kava.io",
+      "url": "http://testnet.kavascan.com",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
@@ -39,5 +40,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "kava-evm-testnet"
+  "slug": "kava-testnet"
 } as const satisfies Chain;

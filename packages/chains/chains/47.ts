@@ -1,36 +1,38 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Acria IntelliChain",
-  "chain": "AIC",
+  "name": "Xpla Testnet",
+  "chain": "XPLA",
   "rpc": [
-    "https://acria-intellichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://aic.acria.ai"
+    "https://xpla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://cube-evm-rpc.xpla.dev"
   ],
-  "faucets": [],
   "nativeCurrency": {
-    "name": "ACRIA",
-    "symbol": "ACRIA",
+    "name": "XPLA",
+    "symbol": "XPLA",
     "decimals": 18
   },
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
+  "faucets": [
+    "https://faucet.xpla.io/"
   ],
-  "infoURL": "https://acria.ai",
-  "shortName": "aic",
+  "infoURL": "https://xpla.io/",
+  "shortName": "xpla-test",
   "chainId": 47,
-  "networkId": 47,
+  "icon": {
+    "url": "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "explorers": [
     {
-      "name": "Acria IntelliChain-Explorer",
-      "url": "https://explorer.acria.ai",
-      "standard": "EIP3091"
+      "name": "XPLA Explorer",
+      "url": "https://explorer.xpla.io/testnet",
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "acria-intellichain"
+  "testnet": true,
+  "redFlags": [
+    "reusedChainId"
+  ],
+  "slug": "xpla-testnet"
 } as const satisfies Chain;
