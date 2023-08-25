@@ -27,6 +27,7 @@ import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
+import { scrollbar } from "../../design-system/styles";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -229,6 +230,14 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   padding: ${spacing.lg};
   border-radius: ${radius.xl};
   max-width: 450px;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
+  max-height: 70vh;
+  overflow-y: auto;
+  ${(p) =>
+    scrollbar({
+      track: "transparent",
+      thumb: p.theme.bg.elevated,
+      hover: p.theme.bg.highlighted,
+    })}
 `;
