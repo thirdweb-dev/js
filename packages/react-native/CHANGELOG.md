@@ -1,5 +1,29 @@
 # @thirdweb-dev/react-native
 
+## 0.2.56
+
+### Patch Changes
+
+- [#1536](https://github.com/thirdweb-dev/js/pull/1536) [`387dddbd`](https://github.com/thirdweb-dev/js/commit/387dddbd87ff6c1a53ffaf663564a44b89a3a2a5) Thanks [@iketw](https://github.com/iketw)! - Adds switchToActiveChain prop to the ConnectWallet button.
+
+  When set to true it will show a "Switch Network" button if the wallet
+  is connected to a different chain than the `activeChain` provided in `ThirdwebProvider`
+
+  **Note:** IF you support multiple networks in your app this prop should
+  be set to `false` to allow users to switch between networks.
+
+  Usage:
+
+  ```javascript
+  <ConnectWallet switchToActiveChain={true} />
+  ```
+
+- Updated dependencies [[`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b), [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c), [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32)]:
+  - @thirdweb-dev/sdk@3.10.56
+  - @thirdweb-dev/chains@0.1.48
+  - @thirdweb-dev/react-core@3.14.37
+  - @thirdweb-dev/wallets@1.1.20
+
 ## 0.2.55
 
 ### Patch Changes
