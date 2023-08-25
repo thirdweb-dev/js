@@ -3,8 +3,11 @@ export default {
   "name": "Xpla Mainnet",
   "chain": "XPLA",
   "rpc": [
-    "https://xpla-xpla.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dimension-evm-rpc.xpla.dev"
+    "https://xpla.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://dimension-rpc.xpla.dev"
+  ],
+  "faucets": [
+    "https://faucet.xpla.io/"
   ],
   "nativeCurrency": {
     "name": "XPLA",
@@ -13,9 +16,10 @@ export default {
   },
   "infoURL": "https://xpla.io/",
   "shortName": "xpla",
-  "chainId": 37,
+  "chainId": 3701,
+  "networkId": 3701,
   "icon": {
-    "url": "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
+    "url": "ipfs://Qmf4GoxfpeA5VGqu7KP5eyv1WKaCpNDbvMxq1MjQBwFWxq",
     "width": 512,
     "height": 512,
     "format": "png"
@@ -28,8 +32,5 @@ export default {
     }
   ],
   "testnet": false,
-  "redFlags": [
-    "reusedChainId"
-  ],
-  "slug": "xpla-xpla"
+  "slug": "xpla"
 } as const satisfies Chain;
