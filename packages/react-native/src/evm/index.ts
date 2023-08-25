@@ -42,6 +42,7 @@ export { ThirdwebStorage } from "../core/storage/storage";
 
 // ui components
 export * from "./components/base";
+export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 
 // assets / icons
 export * from "./assets";

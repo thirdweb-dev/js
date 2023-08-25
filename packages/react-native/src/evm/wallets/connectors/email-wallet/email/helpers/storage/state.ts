@@ -1,4 +1,4 @@
-import { CognitoUser } from "amazon-cognito-identity-js";
+import {CognitoUser} from 'amazon-cognito-identity-js';
 
 // TODO: DO we need to swap this out with a proper state management system?
 let cognitoUserAtom: CognitoUser | undefined;

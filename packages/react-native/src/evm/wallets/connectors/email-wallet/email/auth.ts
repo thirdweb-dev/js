@@ -2,24 +2,21 @@ import {
   AuthProvider,
   AuthStoredTokenWithCookieReturnType,
   SendEmailOtpReturnType,
-} from "@paperxyz/embedded-wallet-service-sdk";
-import type { CognitoUser } from "amazon-cognito-identity-js";
-import { Auth } from "aws-amplify";
+} from '@paperxyz/embedded-wallet-service-sdk';
+import type {CognitoUser} from 'amazon-cognito-identity-js';
+import {Auth} from 'aws-amplify';
 
 import {
   generateAuthTokenFromCognitoEmailOtp,
   getEmbeddedWalletUserDetail,
-} from "./helpers/api/fetchers";
+} from './helpers/api/fetchers';
 import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
-} from "./helpers/auth/cognitoAuth";
-import { prePaperAuth } from "./helpers/auth/middleware";
-import {
-  isDeviceSharePresentForUser,
-  setAuthShareClient,
-} from "./helpers/storage/local";
-import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
+} from './helpers/auth/cognitoAuth';
+import {postPaperAuth, prePaperAuth} from './helpers/auth/middleware';
+import {isDeviceSharePresentForUser} from './helpers/storage/local';
+import {getCognitoUser, setCognitoUser} from './helpers/storage/state';
 
 export async function sendEmailOTP(
   email: string,
@@ -61,7 +58,7 @@ export async function sendEmailOTP(
         isNewUser: result.isNewUser,
         isNewDevice: !(await isDeviceSharePresentForUser(
           clientId,
-          result.walletUserId ?? "",
+          result.walletUserId ?? '',
         )),
       };
 }
@@ -77,7 +74,7 @@ export async function validateEmailOTP({
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   let verifiedToken: Awaited<
     ReturnType<typeof generateAuthTokenFromCognitoEmailOtp>
-  >["verifiedToken"];
+  >['verifiedToken'];
   let verifiedTokenJwtString: string;
 
   console.log(`Validating email OTP for ${email}`);
@@ -85,7 +82,7 @@ export async function validateEmailOTP({
   try {
     let cognitoUser = getCognitoUser();
     if (!cognitoUser) {
-      throw new Error("MISSING COGNITO USER");
+      throw new Error('MISSING COGNITO USER');
     }
     cognitoUser = await Auth.sendCustomChallengeAnswer(cognitoUser, otp);
 
@@ -94,15 +91,15 @@ export async function validateEmailOTP({
     // So we should test if the user is authenticated now
     const session = await Auth.currentSession();
 
-    ({ verifiedToken, verifiedTokenJwtString } =
+    ({verifiedToken, verifiedTokenJwtString} =
       await generateAuthTokenFromCognitoEmailOtp(session, clientId));
   } catch (e) {
-    console.log("Apparently the user did not enter the right code", e);
+    console.log('Apparently the user did not enter the right code', e);
     throw new Error(`Invalid OTP ${e}`);
   }
 
   try {
-    const storedToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+    const storedToken: AuthStoredTokenWithCookieReturnType['storedToken'] = {
       jwtToken: verifiedToken.rawToken,
       authDetails: verifiedToken.authDetails,
       authProvider: verifiedToken.authProvider,
@@ -113,10 +110,10 @@ export async function validateEmailOTP({
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await setAuthShareClient(verifiedTokenJwtString, clientId);
-    // TODO: Handle wallet instantiation
+    await postPaperAuth(storedToken, clientId);
 
-    return { storedToken };
+    console.log('storedToken', storedToken);
+    return {storedToken};
   } catch (e) {
     throw new Error(
       `Malformed response from the verify one time password: ${JSON.stringify(
