@@ -19,7 +19,6 @@ import { ExtensionAddedEvent } from "@thirdweb-dev/contracts-js/dist/declaration
 import { fetchContractMetadataFromAddress } from "../../common";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
-import { SmartContract } from "../../contracts/smart-contract";
 import { ExtensionRemovedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
 import { ExtensionUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
 
