@@ -35,7 +35,11 @@ export type ConnectWalletProps = {
   hideTestnetFaucet?: boolean;
 
   /**
-   * Whether to show "Switch Network" button if wallet connected, but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+   * Whether to show "Switch Network" button if the wallet is connected,
+   * but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+   *
+   * Please, note that if you support multiple networks in your app this prop should
+   * be set to `false` to allow users to switch between networks.
    *
    * @default false
    */
