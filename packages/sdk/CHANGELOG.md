@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.10.56
+
+### Patch Changes
+
+- [#1537](https://github.com/thirdweb-dev/js/pull/1537) [`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix auto-factory deployment: correct bytecode format
+
+- [#1520](https://github.com/thirdweb-dev/js/pull/1520) [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): update read calls to be centralized in contract-wrapper.ts
+
+- Updated dependencies [[`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c)]:
+  - @thirdweb-dev/chains@0.1.48
+
 ## 3.10.55
 
 ### Patch Changes
