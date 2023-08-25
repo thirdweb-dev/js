@@ -1,5 +1,21 @@
 # thirdweb
 
+## 0.11.20
+
+### Patch Changes
+
+- [#1538](https://github.com/thirdweb-dev/js/pull/1538) [`8b82f3c5`](https://github.com/thirdweb-dev/js/commit/8b82f3c59cad6bd1167c13cb0b8a1cdc36475ab8) Thanks [@iketw](https://github.com/iketw)! - Adds support for creating PWA Vite apps
+
+  You can now run:
+
+  ```bash
+  npx thirdweb@nightly create --template pwa-vite-typescript-starter
+  ```
+
+- Updated dependencies [[`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b), [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c), [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32)]:
+  - @thirdweb-dev/sdk@3.10.56
+  - @thirdweb-dev/chains@0.1.48
+
 ## 0.11.19
 
 ### Patch Changes
