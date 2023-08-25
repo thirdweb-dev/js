@@ -106,7 +106,8 @@ export const authenticateUser = async (
   // In this case the state is the loggedIn object.
   const ourState = generateStateParameter(32);
   const payload = encodeURIComponent(JSON.stringify(loggedIn));
-  const urlToOpen = `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
+  // const urlToOpen = `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
+  const urlToOpen = `https://thirdweb-www-git-mariano-cli-auth.thirdweb-preview.com/cli/login?payload=${payload}&#${ourState}`;
 
   let server: http.Server;
   let loginTimeoutHandle: NodeJS.Timeout;
