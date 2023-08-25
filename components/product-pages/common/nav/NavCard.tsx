@@ -12,6 +12,13 @@ export interface NavCardProps {
   icon?: StaticImageData;
   iconType?: IconType;
   comingSoon?: boolean;
+  section:
+    | "contracts"
+    | "wallets"
+    | "infrastructure"
+    | "payments"
+    | "solutions"
+    | "resources";
 }
 
 export const NavCard: React.FC<NavCardProps> = ({

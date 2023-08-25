@@ -6,6 +6,7 @@ import { IoGameControllerOutline } from "react-icons/io5";
 import { MdOutlineLoyalty } from "react-icons/md";
 import { TfiStamp } from "react-icons/tfi";
 import { TrackedLink, TrackedLinkButton } from "tw-components";
+import { ProductHoverMenu } from "./ProductHoverMenu";
 
 export const DesktopMenu: React.FC = () => {
   return (
@@ -19,7 +20,7 @@ export const DesktopMenu: React.FC = () => {
         spacing={10}
         as="nav"
       >
-        <HoverMenu title="Products" items={PRODUCTS} columns={2} />
+        <ProductHoverMenu title="Products" items={PRODUCTS} />
         <HoverMenu title="Solutions" items={SOLUTIONS} />
         <HoverMenu title="Resources" items={RESOURCES} />
         <TrackedLink
@@ -52,6 +53,33 @@ export const DesktopMenu: React.FC = () => {
   );
 };
 
+export const PRODUCT_SECTIONS = [
+  {
+    name: "Smart Contracts",
+    label: "contracts",
+    description: "Create, deploy, and interact with smart contracts",
+    icon: require("public/assets/product-icons/smart-contracts.png"),
+  },
+  {
+    name: "Wallets",
+    label: "wallets",
+    description: "Onboard, authenticate and manage users",
+    icon: require("public/assets/product-icons/wallets.png"),
+  },
+  {
+    name: "Infrastructure",
+    label: "infrastructure",
+    description: "Connect your application to decentralized networks",
+    icon: require("public/assets/product-icons/infrastructure.png"),
+  },
+  {
+    name: "Payments",
+    label: "payments",
+    description: "Facilitate financial transactions on the blockchain",
+    icon: require("public/assets/product-icons/payments.png"),
+  },
+];
+
 export const PRODUCTS: NavCardProps[] = [
   {
     name: "SDKs",
@@ -59,6 +87,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Integrate web3 into your app",
     link: "/sdk",
     icon: require("public/assets/product-icons/sdks.png"),
+    section: "contracts",
   },
   {
     name: "Auth",
@@ -66,6 +95,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Authenticate users with their wallets",
     link: "/auth",
     icon: require("public/assets/product-icons/auth.png"),
+    section: "wallets",
   },
   {
     name: "Explore",
@@ -73,6 +103,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Ready-to-deploy contracts",
     link: "/smart-contracts",
     icon: require("public/assets/product-icons/contracts.png"),
+    section: "contracts",
   },
   {
     name: "Publish",
@@ -80,6 +111,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Publish your contracts on-chain",
     link: "/publish",
     icon: require("public/assets/product-icons/publish.png"),
+    section: "contracts",
   },
   {
     name: "Solidity SDK",
@@ -87,6 +119,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Build your own contract easily",
     link: "/solidity-sdk",
     icon: require("public/assets/product-icons/extensions.png"),
+    section: "contracts",
   },
   {
     name: "Deploy",
@@ -94,6 +127,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Seamless contract deployment for teams",
     link: "/deploy",
     icon: require("public/assets/product-icons/deploy.png"),
+    section: "contracts",
   },
   {
     name: "Dashboards",
@@ -101,6 +135,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Manage and analyze contract activity",
     link: "/dashboards",
     icon: require("public/assets/product-icons/dashboards.png"),
+    section: "contracts",
   },
   {
     name: "Storage",
@@ -108,6 +143,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Secure, fast, decentralized storage",
     link: "/storage",
     icon: require("public/assets/product-icons/storage.png"),
+    section: "infrastructure",
   },
   {
     name: "UI Components",
@@ -115,6 +151,7 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Plug-and-play frontend components",
     link: "/ui-components",
     icon: require("public/assets/product-icons/ui-components.png"),
+    section: "contracts",
   },
   {
     name: "Wallet SDK",
@@ -122,6 +159,15 @@ export const PRODUCTS: NavCardProps[] = [
     description: "Connect any wallet",
     link: "/wallet-sdk",
     icon: require("public/assets/product-icons/wallet-sdk.png"),
+    section: "wallets",
+  },
+  {
+    name: "Payments",
+    label: "payments",
+    link: "https://withpaper.com/",
+    description: "Facilitate financial transactions on the blockchain",
+    icon: require("public/assets/product-icons/payments.png"),
+    section: "payments",
   },
 ];
 
@@ -132,6 +178,7 @@ export const SOLUTIONS: NavCardProps[] = [
     description: "Integrate web3 into commerce apps",
     link: "/solutions/commerce",
     iconType: FiShoppingCart,
+    section: "solutions",
   },
   {
     name: "GamingKit",
@@ -139,6 +186,7 @@ export const SOLUTIONS: NavCardProps[] = [
     description: "Integrate web3 into games",
     link: "/solutions/gaming",
     iconType: IoGameControllerOutline,
+    section: "solutions",
   },
   {
     name: "Minting",
@@ -146,6 +194,7 @@ export const SOLUTIONS: NavCardProps[] = [
     description: "Build and mint NFTs at scale easily",
     link: "/solutions/minting",
     iconType: TfiStamp,
+    section: "solutions",
   },
   {
     name: "Loyalty",
@@ -153,6 +202,7 @@ export const SOLUTIONS: NavCardProps[] = [
     description: "Activate new customer experiences",
     link: "/solutions/loyalty",
     iconType: MdOutlineLoyalty,
+    section: "solutions",
   },
 ];
 
@@ -163,6 +213,7 @@ export const RESOURCES: NavCardProps[] = [
     description: "Learn more about our company",
     link: "/about",
     icon: require("public/assets/tw-icons/general.png"),
+    section: "resources",
   },
   {
     name: "Docs",
@@ -170,6 +221,7 @@ export const RESOURCES: NavCardProps[] = [
     description: "Complete thirdweb documentation",
     link: "https://portal.thirdweb.com",
     icon: require("public/assets/tw-icons/pack.png"),
+    section: "resources",
   },
   {
     name: "Templates",
@@ -177,6 +229,7 @@ export const RESOURCES: NavCardProps[] = [
     description: "Ready-to-ship repositories",
     link: "/templates",
     icon: require("public/assets/tw-icons/dynamic-nft.png"),
+    section: "resources",
   },
   {
     name: "Guides",
@@ -184,6 +237,7 @@ export const RESOURCES: NavCardProps[] = [
     description: "Learn how to build with thirdweb",
     link: "https://blog.thirdweb.com/guides",
     icon: require("public/assets/tw-icons/edition.png"),
+    section: "resources",
   },
   {
     name: "Blog",
@@ -191,6 +245,7 @@ export const RESOURCES: NavCardProps[] = [
     description: "Our latest news and updates",
     link: "https://blog.thirdweb.com",
     icon: require("public/assets/tw-icons/datastore.png"),
+    section: "resources",
   },
   {
     name: "Open Source",
@@ -198,6 +253,7 @@ export const RESOURCES: NavCardProps[] = [
     description: "Learn how to contribute to thirdweb",
     link: "/open-source",
     icon: require("public/assets/tw-icons/advanced-nfts.png"),
+    section: "resources",
   },
   {
     name: "Events",
@@ -205,5 +261,6 @@ export const RESOURCES: NavCardProps[] = [
     description: "Our latest events",
     link: "/events",
     icon: require("public/assets/tw-icons/events.png"),
+    section: "resources",
   },
 ];
