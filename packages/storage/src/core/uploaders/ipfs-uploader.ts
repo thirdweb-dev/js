@@ -350,11 +350,13 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       },
       body: form.getBuffer(),
     });
+
     if (!res.ok) {
-      console.warn(await res.text());
-      console.log("Status: ", res.status);
-      console.log("Status message: ", res.statusText);
-      console.log("Status json: ", await res.json());
+      if (res.status === 401) {
+        throw new Error(
+          "Unauthorized - You don't have permission to use this service.",
+        );
+      }
       throw new Error("Failed to upload files to IPFS");
     }
 
