@@ -1,80 +1,80 @@
+import type {
+  DropERC721,
+  IBurnableERC721,
+  IClaimableERC721,
+  IERC721Supply,
+  ILoyaltyCard,
+  IMintableERC721,
+  INFTMetadata,
+  ISignatureMintERC721,
+  Multiwrap,
+  OpenEditionERC721,
+  SharedMetadata,
+  SignatureDrop,
+  TieredDrop,
+  TokenERC721,
+  Zora_IERC721Drop,
+} from "@thirdweb-dev/contracts-js";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import type { QueryAllParams } from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
 } from "../../../core/schema/nft";
-import { assertEnabled } from "../../common/feature-detection/assertEnabled";
-import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   ExtensionNotImplementedError,
   NotFoundError,
 } from "../../common/error";
-import { resolveAddress } from "../../common/ens/resolveAddress";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
-  FEATURE_NFT_CLAIM_CUSTOM,
   FEATURE_NFT_CLAIM_CONDITIONS_V2,
+  FEATURE_NFT_CLAIM_CUSTOM,
   FEATURE_NFT_LAZY_MINTABLE,
+  FEATURE_NFT_LOYALTY_CARD,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
+  FEATURE_NFT_SHARED_METADATA,
+  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
-  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
-  FEATURE_NFT_SHARED_METADATA,
-  FEATURE_NFT_LOYALTY_CARD,
   FEATURE_NFT_UPDATABLE_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
-import type { UploadProgressEvent } from "../../types/events";
 import type {
   BaseClaimConditionERC721,
   BaseDropERC721,
   BaseERC721,
 } from "../../types/eips";
+import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput, TransactionResultWithId } from "../types";
 import type { ContractWrapper } from "./contract-wrapper";
 import { Erc721Burnable } from "./erc-721-burnable";
-import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
-import { Transaction } from "./transactions";
-import type {
-  DropERC721,
-  IBurnableERC721,
-  IClaimableERC721,
-  IERC721Supply,
-  IMintableERC721,
-  ISignatureMintERC721,
-  Multiwrap,
-  SignatureDrop,
-  TieredDrop,
-  TokenERC721,
-  Zora_IERC721Drop,
-  SharedMetadata,
-  OpenEditionERC721,
-  ILoyaltyCard,
-  INFTMetadata,
-} from "@thirdweb-dev/contracts-js";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
-import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
-import { Erc721Mintable } from "./erc-721-mintable";
-import { Erc721Supply } from "./erc-721-supply";
-import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
-import { Erc721Claimable } from "./erc-721-claimable";
-import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
+import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
 import { Erc721LoyaltyCard } from "./erc-721-loyalty-card";
 import { Erc721UpdatableMetadata } from "./erc-721-metadata";
+import { Erc721Mintable } from "./erc-721-mintable";
+import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
+import { Erc721Supply } from "./erc-721-supply";
+import { Erc721TieredDrop } from "./erc-721-tiered-drop";
+import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
+import { Transaction } from "./transactions";
 
 /**
  * Standard ERC721 NFT functions
@@ -147,7 +147,7 @@ export class Erc721<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   ////// Standard ERC721 Extension //////
@@ -1039,8 +1039,10 @@ export class Erc721<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      let nextTokenIdToMint =
-        await this.contractWrapper.readContract.nextTokenIdToMint();
+      let nextTokenIdToMint = await this.contractWrapper.read(
+        "nextTokenIdToMint",
+        [],
+      );
       // handle open editions and contracts with startTokenId
       if (
         hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)

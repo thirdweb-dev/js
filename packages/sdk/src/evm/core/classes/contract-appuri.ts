@@ -1,3 +1,9 @@
+import type { IAppURI } from "@thirdweb-dev/contracts-js";
+import {
+  replaceGatewayUrlWithScheme,
+  ThirdwebStorage,
+} from "@thirdweb-dev/storage";
+import { BaseContract } from "ethers";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_APPURI } from "../../constants/thirdweb-features";
@@ -6,12 +12,6 @@ import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IAppURI } from "@thirdweb-dev/contracts-js";
-import {
-  replaceGatewayUrlWithScheme,
-  ThirdwebStorage,
-} from "@thirdweb-dev/storage";
-import { BaseContract } from "ethers";
 
 /**
  * Have an official Application URI for this contract.
@@ -56,7 +56,7 @@ export class ContractAppURI<TContract extends BaseContract>
    */
   public async get(): Promise<string> {
     if (detectContractFeature<IAppURI>(this.contractWrapper, "AppURI")) {
-      return await this.contractWrapper.readContract.appURI();
+      return await this.contractWrapper.read("appURI", []);
     }
 
     return replaceGatewayUrlWithScheme(

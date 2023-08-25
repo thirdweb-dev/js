@@ -1,19 +1,34 @@
-import { AuctionHasNotEndedError } from "../../common/error";
+import type {
+  EnglishAuctionsLogic,
+  IEnglishAuctions,
+  IMulticall,
+  MarketplaceV3,
+} from "@thirdweb-dev/contracts-js";
+import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, constants, utils, type BigNumberish } from "ethers";
+import invariant from "tiny-invariant";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { AuctionHasNotEndedError } from "../../common/error";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
 } from "../../schema/marketplacev3/english-auctions";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CurrencyValue, Price } from "../../types/currency";
-import { EnglishAuction, Bid } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
+import { Bid, EnglishAuction } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
@@ -22,21 +37,6 @@ import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
-import type {
-  IEnglishAuctions,
-  EnglishAuctionsLogic,
-  IMulticall,
-  MarketplaceV3,
-} from "@thirdweb-dev/contracts-js";
-import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, type BigNumberish, utils, constants } from "ethers";
-import invariant from "tiny-invariant";
-import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
-import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
-import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 
 /**
  * Handles auctions
@@ -69,7 +69,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************

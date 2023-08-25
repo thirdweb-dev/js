@@ -1,9 +1,9 @@
+import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { BigNumber, constants } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import type { TokenHolderBalance } from "../../types/currency";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
-import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { BigNumber, constants } from "ethers";
 
 /**
  * Manages history for Token contracts
@@ -60,7 +60,7 @@ export class TokenERC20History {
         holder: addr,
         balance: await fetchCurrencyValue(
           this.contractWrapper.getProvider(),
-          this.contractWrapper.readContract.address,
+          this.contractWrapper.address,
           balances[addr],
         ),
       })),

@@ -1,13 +1,33 @@
+import type {
+  IERC1155,
+  IERC165,
+  IERC721,
+  IMarketplace,
+  Marketplace,
+} from "@thirdweb-dev/contracts-js";
+import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
+import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
+import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
+import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
-  ListingNotFoundError,
-  WrongListingTypeError,
-} from "../../common/error";
+  BigNumber,
+  Contract,
+  constants,
+  utils,
+  type BigNumberish,
+} from "ethers";
+import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import {
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
 import {
   handleTokenApproval,
   isTokenApprovedForTransfer,
@@ -28,29 +48,9 @@ import {
   NewDirectListing,
   Offer,
 } from "../../types/marketplace";
+import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  IERC1155,
-  IERC165,
-  IERC721,
-  IMarketplace,
-  Marketplace,
-} from "@thirdweb-dev/contracts-js";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  type BigNumberish,
-  Contract,
-  constants,
-  utils,
-} from "ethers";
-import invariant from "tiny-invariant";
-import { TransactionResultWithId } from "../types";
 
 /**
  * Handles direct listings
@@ -69,7 +69,7 @@ export class MarketplaceDirect {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************

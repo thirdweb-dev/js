@@ -1,18 +1,18 @@
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
 import {
   FEATURE_ACCOUNT,
   FEATURE_ACCOUNT_PERMISSIONS,
 } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractWrapper } from "./contract-wrapper";
 
 import type { IAccountCore } from "@thirdweb-dev/contracts-js";
-import {
-  SignerWithPermissions,
-  SignerPermissionsInput,
-  PermissionSnapshotInput,
-} from "../../types";
-import { AddressOrEns } from "../../schema";
 import { assertEnabled, detectContractFeature } from "../../common";
+import { AddressOrEns } from "../../schema";
+import {
+  PermissionSnapshotInput,
+  SignerPermissionsInput,
+  SignerWithPermissions,
+} from "../../types";
 import { AccountPermissions } from "./account-permissions";
 
 export class Account<TContract extends IAccountCore>
@@ -40,7 +40,7 @@ export class Account<TContract extends IAccountCore>
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /*********************************

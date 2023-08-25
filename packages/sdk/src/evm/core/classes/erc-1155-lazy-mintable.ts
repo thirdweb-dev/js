@@ -1,25 +1,24 @@
+import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { utils, type providers } from "ethers";
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { getPrebuiltInfo } from "../../common/legacy";
+import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
-  FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_LAZY_MINTABLE_V2,
+  FEATURE_EDITION_REVEALABLE,
 } from "../../constants/erc1155-features";
+import { BaseDelayedRevealERC1155, BaseDropERC1155 } from "../../types/eips";
 import type { UploadProgressEvent } from "../../types/events";
-import { BaseDropERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { type providers, utils } from "ethers";
-import { getPrebuiltInfo } from "../../common/legacy";
-import { uploadOrExtractURIs } from "../../common/nft";
-import { BaseDelayedRevealERC1155 } from "../../types/eips";
 import { DelayedReveal } from "./delayed-reveal";
-import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import type { Erc1155 } from "./erc-1155";
+import { Transaction } from "./transactions";
 
 export class Erc1155LazyMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_LAZY_MINTABLE_V2.name;
@@ -143,7 +142,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
       };
 
       const prebuiltInfo = await getPrebuiltInfo(
-        this.contractWrapper.readContract.address,
+        this.contractWrapper.address,
         this.contractWrapper.getProvider(),
       );
       if (

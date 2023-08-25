@@ -1,13 +1,34 @@
+import type {
+  AirdropERC1155,
+  AirdropERC20,
+  AirdropERC721,
+  DirectListingsLogic,
+  EnglishAuctionsLogic,
+  IAccountCore,
+  IAccountFactory,
+  IAppURI,
+  IContractMetadata,
+  IPermissions,
+  IPlatformFee,
+  IPrimarySale,
+  IRoyalty,
+  OffersLogic,
+  Ownable,
+} from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BaseContract, CallOverrides } from "ethers";
 import { assertEnabled } from "../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../common/feature-detection/detectContractFeature";
 import { ALL_ROLES } from "../common/role";
+import { FEATURE_EDITION } from "../constants/erc1155-features";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
-import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_ACCOUNT,
+  FEATURE_ACCOUNT_FACTORY,
+  FEATURE_AIRDROP_ERC1155,
   FEATURE_AIRDROP_ERC20,
   FEATURE_AIRDROP_ERC721,
-  FEATURE_AIRDROP_ERC1155,
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
@@ -17,26 +38,34 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
-  FEATURE_ACCOUNT_FACTORY,
-  FEATURE_ACCOUNT,
 } from "../constants/thirdweb-features";
-import { Transaction } from "../core/classes/transactions";
+import { Account } from "../core/classes/account";
+import { AccountFactory } from "../core/classes/account-factory";
+import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
+import { Airdrop20 } from "../core/classes/airdrop-erc20";
+import { Airdrop721 } from "../core/classes/airdrop-erc721";
 import { ContractAppURI } from "../core/classes/contract-appuri";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractOwner } from "../core/classes/contract-owner";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc1155 } from "../core/classes/erc-1155";
 import { Erc20 } from "../core/classes/erc-20";
 import { Erc721 } from "../core/classes/erc-721";
-import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
+import { Transaction } from "../core/classes/transactions";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema/shared/Address";
+import { NetworkInput } from "../core/types";
 import {
   Abi,
   AbiInput,
@@ -44,38 +73,9 @@ import {
   CustomContractSchema,
 } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
-import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import type {
-  IPermissions,
-  IPlatformFee,
-  IPrimarySale,
-  IRoyalty,
-  Ownable,
-  IAppURI,
-  IContractMetadata,
-  DirectListingsLogic,
-  EnglishAuctionsLogic,
-  OffersLogic,
-  AirdropERC20,
-  IAccountFactory,
-  IAccountCore,
-  AirdropERC721,
-  AirdropERC1155,
-} from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides } from "ethers";
+import { Address } from "../schema/shared/Address";
 import { BaseContractInterface } from "../types/contract";
-import { NetworkInput } from "../core/types";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractOwner } from "../core/classes/contract-owner";
-import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
-import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
-import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
-import { AccountFactory } from "../core/classes/account-factory";
-import { Account } from "../core/classes/account";
-import { Airdrop20 } from "../core/classes/airdrop-erc20";
-import { Airdrop721 } from "../core/classes/airdrop-erc721";
-import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
+import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -401,7 +401,7 @@ export class SmartContract<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /**

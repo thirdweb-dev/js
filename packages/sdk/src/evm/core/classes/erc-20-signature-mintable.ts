@@ -1,12 +1,10 @@
-import { buildTransactionFunction } from "../../common/transactions";
-import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
-import type { DetectableFeature } from "../interfaces/DetectableFeature";
-import type { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { utils, BigNumber } from "ethers";
+import type { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { BigNumber, utils } from "ethers";
+import invariant from "tiny-invariant";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 import type { TokenInitializer } from "../../contracts";
 import {
   FilledSignaturePayload20,
@@ -17,9 +15,10 @@ import {
   Signature20PayloadOutput,
   SignedPayload20,
 } from "../../schema/contracts/common/signature";
+import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractRoles } from "./contract-roles";
-import type { ITokenERC20 } from "@thirdweb-dev/contracts-js";
-import invariant from "tiny-invariant";
+import type { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -220,7 +219,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
             name,
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest20 },
           await this.mapPayloadToContractStruct(finalPayload),

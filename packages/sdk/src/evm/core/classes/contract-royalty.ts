@@ -1,3 +1,10 @@
+import type {
+  ContractMetadata as ContractMetadataContract,
+  IMulticall,
+  IRoyalty,
+} from "@thirdweb-dev/contracts-js";
+import { BigNumberish } from "ethers";
+import { z } from "zod";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
@@ -7,13 +14,6 @@ import { TransactionResult } from "../types";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  ContractMetadata as ContractMetadataContract,
-  IMulticall,
-  IRoyalty,
-} from "@thirdweb-dev/contracts-js";
-import { BigNumberish } from "ethers";
-import { z } from "zod";
 
 /**
  * Handle contract royalties
@@ -30,6 +30,7 @@ import { z } from "zod";
  * @public
  */
 export class ContractRoyalty<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
   TContract extends IRoyalty,
   TSchema extends IGenericSchemaType,
 > implements DetectableFeature
@@ -39,8 +40,8 @@ export class ContractRoyalty<
   private metadata;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
-    metadata: ContractMetadata<TContract, TSchema>,
+    contractWrapper: ContractWrapper<IRoyalty>,
+    metadata: ContractMetadata<IRoyalty, TSchema>,
   ) {
     this.contractWrapper = contractWrapper;
     this.metadata = metadata;
@@ -59,8 +60,10 @@ export class ContractRoyalty<
    * @twfeature Royalty
    */
   public async getDefaultRoyaltyInfo() {
-    const [royaltyRecipient, royaltyBps] =
-      await this.contractWrapper.readContract.getDefaultRoyaltyInfo();
+    const [royaltyRecipient, royaltyBps] = await this.contractWrapper.read(
+      "getDefaultRoyaltyInfo",
+      [],
+    );
     // parse it on the way out to make sure we default things if they are not set
     return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
@@ -81,8 +84,10 @@ export class ContractRoyalty<
    * @twfeature Royalty
    */
   public async getTokenRoyaltyInfo(tokenId: BigNumberish) {
-    const [royaltyRecipient, royaltyBps] =
-      await this.contractWrapper.readContract.getRoyaltyInfoForToken(tokenId);
+    const [royaltyRecipient, royaltyBps] = await this.contractWrapper.read(
+      "getRoyaltyInfoForToken",
+      [tokenId],
+    );
     return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
       seller_fee_basis_points: royaltyBps,
@@ -186,7 +191,7 @@ export class ContractRoyalty<
     ) => {
       const parsedRoyaltyData = CommonRoyaltySchema.parse(royaltyData);
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<IRoyalty>,
+        contractWrapper: this.contractWrapper,
         method: "setRoyaltyInfoForToken",
         args: [
           tokenId,

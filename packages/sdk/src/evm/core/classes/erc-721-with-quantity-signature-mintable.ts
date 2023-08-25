@@ -1,3 +1,14 @@
+import type {
+  ISignatureMintERC721,
+  ITokenERC721,
+  Multicall,
+  SignatureMintERC721,
+  TokenERC721,
+} from "@thirdweb-dev/contracts-js";
+import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, type providers } from "ethers";
+import invariant from "tiny-invariant";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
@@ -18,17 +29,6 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  ISignatureMintERC721,
-  ITokenERC721,
-  Multicall,
-  SignatureMintERC721,
-  TokenERC721,
-} from "@thirdweb-dev/contracts-js";
-import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, type providers } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -352,7 +352,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
               name: "TokenERC721",
               version: "1",
               chainId,
-              verifyingContract: this.contractWrapper.readContract.address,
+              verifyingContract: this.contractWrapper.address,
             },
             { MintRequest: MintRequest721 },
             await this.mapLegacyPayloadToContractStruct(finalPayload),

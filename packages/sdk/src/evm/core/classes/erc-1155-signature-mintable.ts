@@ -1,3 +1,12 @@
+import type {
+  ITokenERC1155,
+  Multicall,
+  TokenERC1155,
+} from "@thirdweb-dev/contracts-js";
+import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, constants } from "ethers";
+import invariant from "tiny-invariant";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
@@ -22,15 +31,6 @@ import { TransactionResultWithId } from "../types";
 import { ContractRoles } from "./contract-roles";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  ITokenERC1155,
-  Multicall,
-  TokenERC1155,
-} from "@thirdweb-dev/contracts-js";
-import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, constants } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -221,8 +221,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
-    const verification: [boolean, string] =
-      await this.contractWrapper.readContract.verify(message, signature);
+    const verification: [boolean, string] = await this.contractWrapper.read(
+      "verify",
+      [message, signature],
+    );
     return verification[0];
   }
 
@@ -364,7 +366,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     invariant(signer, "No signer available");
 
     const contractInfo = await getPrebuiltInfo(
-      this.contractWrapper.readContract.address,
+      this.contractWrapper.address,
       this.contractWrapper.getProvider(),
     );
     const isLegacyContract = contractInfo?.type === "TokenERC1155";
@@ -382,7 +384,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
             name: isLegacyContract ? "TokenERC1155" : "SignatureMintERC1155",
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
           await this.mapPayloadToContractStruct(finalPayload),

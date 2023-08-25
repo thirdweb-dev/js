@@ -1,11 +1,11 @@
+import type { IPlatformFee } from "@thirdweb-dev/contracts-js";
+import { z } from "zod";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
 import { CommonPlatformFeeSchema } from "../../schema/contracts/common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IPlatformFee } from "@thirdweb-dev/contracts-js";
-import { z } from "zod";
 
 /**
  * Handle platform fees and recipients
@@ -21,13 +21,14 @@ import { z } from "zod";
  * ```
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class ContractPlatformFee<TContract extends IPlatformFee>
   implements DetectableFeature
 {
   featureName = FEATURE_PLATFORM_FEE.name;
   private contractWrapper;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<IPlatformFee>) {
     this.contractWrapper = contractWrapper;
   }
 
@@ -44,7 +45,7 @@ export class ContractPlatformFee<TContract extends IPlatformFee>
    */
   public async get() {
     const [platformFeeRecipient, platformFeeBps] =
-      await this.contractWrapper.readContract.getPlatformFeeInfo();
+      await this.contractWrapper.read("getPlatformFeeInfo", []);
     return CommonPlatformFeeSchema.parseAsync({
       platform_fee_recipient: platformFeeRecipient,
       platform_fee_basis_points: platformFeeBps,

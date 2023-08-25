@@ -1,4 +1,9 @@
-import { QueryAllParams } from "../../../core/schema/QueryParams";
+import type { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
+import { BigNumber, BigNumberish } from "ethers";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
@@ -6,9 +11,6 @@ import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import type { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BigNumberish } from "ethers";
-import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc1155 } from "./erc-1155";
 
 /**
@@ -70,7 +72,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    * @public
    */
   public async totalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
+    return await this.contractWrapper.read("nextTokenIdToMint", []);
   }
 
   /**
@@ -83,7 +85,7 @@ export class Erc1155Enumerable implements DetectableFeature {
   public async totalCirculatingSupply(
     tokenId: BigNumberish,
   ): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalSupply(tokenId);
+    return await this.contractWrapper.read("totalSupply", [tokenId]);
   }
 
   /**
@@ -104,11 +106,11 @@ export class Erc1155Enumerable implements DetectableFeature {
     const address = await resolveAddress(
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );
-    const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
-    const balances = await this.contractWrapper.readContract.balanceOfBatch(
+    const maxId = await this.contractWrapper.read("nextTokenIdToMint", []);
+    const balances = await this.contractWrapper.read("balanceOfBatch", [
       Array(maxId.toNumber()).fill(address),
       Array.from(Array(maxId.toNumber()).keys()),
-    );
+    ]);
 
     const ownedBalances = balances
       .map((b, i) => {

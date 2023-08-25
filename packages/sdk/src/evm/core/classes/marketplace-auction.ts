@@ -1,15 +1,23 @@
+import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
 import {
-  ListingNotFoundError,
-  WrongListingTypeError,
-  AuctionAlreadyStartedError,
-  AuctionHasNotEndedError,
-} from "../../common/error";
+  ListingAddedEvent,
+  Marketplace as MarketplaceContract,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants, utils } from "ethers";
+import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import {
+  AuctionAlreadyStartedError,
+  AuctionHasNotEndedError,
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
 import {
   handleTokenApproval,
   isWinningBid,
@@ -29,14 +37,6 @@ import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
-import {
-  ListingAddedEvent,
-  Marketplace as MarketplaceContract,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, utils, constants } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * Handles auction listings
@@ -57,7 +57,7 @@ export class MarketplaceAuction {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************

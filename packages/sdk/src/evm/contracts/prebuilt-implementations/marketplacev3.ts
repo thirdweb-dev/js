@@ -1,3 +1,11 @@
+import type {
+  DirectListingsLogic,
+  EnglishAuctionsLogic,
+  MarketplaceV3 as MarketplaceV3Contract,
+  OffersLogic,
+} from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { CallOverrides } from "ethers";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import {
@@ -24,14 +32,6 @@ import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
-import type {
-  MarketplaceV3 as MarketplaceV3Contract,
-  DirectListingsLogic,
-  EnglishAuctionsLogic,
-  OffersLogic,
-} from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CallOverrides } from "ethers";
 import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -248,7 +248,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /**
