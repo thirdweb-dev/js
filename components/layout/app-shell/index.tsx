@@ -236,7 +236,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Contracts
           </LinkButton>
           <LinkButton
-            href="https://withpaper.com/"
+            href="https://withpaper.com/product/checkouts"
             rounded="lg"
             isExternal
             noIcon

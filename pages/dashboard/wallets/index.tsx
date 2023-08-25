@@ -51,7 +51,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
       w={{ base: "100%", xl: "70%" }}
     >
       <Flex flexDir="column" gap={4}>
-        <Heading size="title.lg">Connect</Heading>
+        <Heading size="title.md">Connect</Heading>
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
           {CONNECT_SECTION.map(({ title, description, image, href }) => (
             <NavigationCard
@@ -66,7 +66,7 @@ const DashboardWallets: ThirdwebNextPage = () => {
         </SimpleGrid>
       </Flex>
       <Flex flexDir="column" gap={4}>
-        <Heading size="title.lg">Create</Heading>
+        <Heading size="title.md">Create</Heading>
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
           {CREATE_SECTION.map(({ title, description, image, href }) => (
             <NavigationCard

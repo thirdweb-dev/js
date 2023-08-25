@@ -19,7 +19,7 @@ const GET_STARTED_SECTIONS = [
     title: "Wallets",
     description:
       "Onboard, authenticate, and manage users. Connect any wallets to your app and games.",
-    image: require("public/assets/dashboard/home-wallets.png"),
+    image: require("public/assets/dashboard/wallets/connect-wallet.png"),
     href: "/dashboard/wallets",
   },
   {

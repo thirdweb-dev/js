@@ -20,7 +20,7 @@ const DashboardWalletsConnect: ThirdwebNextPage = () => {
             Connect Wallet
           </Heading>
           <Text>
-            Fully customizable
+            Fully customizable{" "}
             <Link
               href="https://portal.thirdweb.com/react/react.connectwallet"
               color="blue.400"
@@ -29,7 +29,7 @@ const DashboardWalletsConnect: ThirdwebNextPage = () => {
               Connect Wallet
             </Link>{" "}
             to enable wallets in your app. React, React Native and Unity
-            supported.. iOS/Android coming soon!
+            supported. iOS/Android coming soon!
           </Text>
           <ConnectWalletWithPreview />
         </Flex>
