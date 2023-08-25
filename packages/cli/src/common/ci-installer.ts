@@ -13,9 +13,7 @@ export async function installGithubAction(options: any) {
       : path.resolve(`${projectPath}/${options.path}`);
     projectPath = resolvedPath;
   }
-  const storage = new ThirdwebStorage({
-    uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
-  });
+  const storage = new ThirdwebStorage();
   const log = spinner("Installing thirdweb Github Action...");
   try {
     const ghActionData = await (await storage.download(ghActionHash)).text();

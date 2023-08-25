@@ -39,13 +39,10 @@ export async function processProject(
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
-      uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
     });
   } else {
     // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage({
-      uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
-    });
+    storage = new ThirdwebStorage();
   }
 
   logger.setSettings({
@@ -388,13 +385,10 @@ async function formatToExtensions(
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
-      uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
     });
   } else {
     // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage({
-      uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
-    });
+    storage = new ThirdwebStorage();
   }
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];

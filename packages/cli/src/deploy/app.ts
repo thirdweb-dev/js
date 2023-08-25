@@ -14,13 +14,10 @@ export async function deployApp(
   if (secretKey) {
     storage = new ThirdwebStorage({
       secretKey,
-      uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
     });
   } else {
     // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage({
-      uploadServerUrl: "https://storage-server-staging-vbjq-maria-89daa6.chainsaw-dev.zeet.app"
-    });
+    storage = new ThirdwebStorage();
   }
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(
