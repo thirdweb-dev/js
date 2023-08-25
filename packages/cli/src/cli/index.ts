@@ -493,7 +493,7 @@ const main = async () => {
             ),
           );
         } else {
-          logger.error(chalk.redBright("Failed to upload files"), err);
+          logger.error(chalk.redBright(err.message));
         }
       }
     });
