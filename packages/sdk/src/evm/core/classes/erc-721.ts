@@ -939,7 +939,7 @@ export class Erc721<
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `contract.erc721.signature.generate()` documentation
-   * const signedPayload = contract.erc721.signature().generate(payload);
+   * const signedPayload = contract.erc721.signature.generate(payload);
    *
    * // now anyone can mint the NFT
    * const tx = contract.erc721.signature.mint(signedPayload);
