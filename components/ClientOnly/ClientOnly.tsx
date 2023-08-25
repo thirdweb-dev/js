@@ -9,12 +9,14 @@ interface ClientOnlyProps {
    */
   ssr: ReactNode;
   fadeInDuration?: number;
+  style?: React.CSSProperties;
 }
 
 export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
   children,
   fadeInDuration,
   ssr,
+  style,
 }) => {
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -32,6 +34,7 @@ export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
       style={{
         animationDuration: `${fadeInDuration}ms`,
         opacity: fadeInDuration ? 0 : 1,
+        ...style,
       }}
     >
       {children}

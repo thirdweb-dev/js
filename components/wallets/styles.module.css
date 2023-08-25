@@ -1,0 +1,4 @@
+/* don't let user select any wallets  */
+.ConnectModalInline ul {
+  pointer-events: none;
+}
