@@ -354,9 +354,9 @@ export async function processProject(
     loader.succeed("Upload successful");
 
     return getUrl(combinedURIs, command);
-  } catch (e) {
+  } catch (err: any) {
     loader.fail("Error uploading metadata");
-    throw e;
+    throw new Error(err.message ? err.message : err);
   }
 }
 

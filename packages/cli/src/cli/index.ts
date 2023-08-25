@@ -493,7 +493,7 @@ const main = async () => {
             ),
           );
         } else {
-          logger.error(chalk.redBright(err.message));
+          logger.error(chalk.redBright(err.message ? err.message : err));
         }
       }
     });

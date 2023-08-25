@@ -83,8 +83,8 @@ export async function deployApp(
       "ipfs://",
       "https://cf-ipfs.com/ipfs/",
     )}`;
-  } catch (err) {
-    console.error("Can't upload project", err);
+  } catch (err: any) {
+    console.error(err.message ? err.message : err);
     return Promise.reject("Can't upload project");
   }
 }
