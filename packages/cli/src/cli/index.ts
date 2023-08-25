@@ -390,7 +390,9 @@ const main = async () => {
           url.toString(),
         )}`,
       );
-      await open(url.toString());
+      if (url && !options.ci) {
+        await open(url.toString());
+      }
     });
 
   program
