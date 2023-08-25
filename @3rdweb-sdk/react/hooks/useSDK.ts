@@ -52,15 +52,11 @@ export function useMultiChainRegContractList(walletAddress?: string) {
   return useQuery(
     ["dashboard-registry", walletAddress, "multichain-contract-list"],
     async () => {
-      if (!walletAddress) {
-        return [];
-      }
-
+      invariant(walletAddress, "walletAddress is required");
       const polygonSDK = getEVMThirdwebSDK(
         Polygon.chainId,
         getDashboardChainRpc(Polygon),
       );
-
       const contractList = await polygonSDK.getMultichainContractList(
         walletAddress,
         configuredChains,

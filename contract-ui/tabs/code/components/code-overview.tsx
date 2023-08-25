@@ -49,7 +49,7 @@ import { constants } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { WALLETS_SNIPPETS } from "pages/dashboard/wallet";
+import { WALLETS_SNIPPETS } from "pages/dashboard/wallets/wallet-sdk";
 import { useMemo, useState } from "react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
@@ -263,11 +263,20 @@ interface SnippetOptions {
   chainName?: string;
   rpcUrl?: string;
   address?: string;
+  clientId?: string;
 }
 
 export function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
-  { contractAddress, fn, args, chainName, rpcUrl, address }: SnippetOptions,
+  {
+    contractAddress,
+    fn,
+    args,
+    chainName,
+    rpcUrl,
+    address,
+    clientId,
+  }: SnippetOptions,
 ) {
   const code = { ...snippet };
   const preSupportedSlugs = defaultChains.map((chain) => chain.slug);
@@ -278,6 +287,7 @@ export function formatSnippet(
       ?.replace(/{{contract_address}}/gm, contractAddress || "0x...")
       ?.replace(/{{factory_address}}/gm, contractAddress || "0x...")
       ?.replace(/{{wallet_address}}/gm, address)
+      ?.replace("YOUR_CLIENT_ID", clientId || "YOUR_CLIENT_ID")
 
       ?.replace(
         'import {{chainName}} from "@thirdweb-dev/chains";',

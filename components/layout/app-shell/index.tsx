@@ -211,8 +211,8 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Home
           </LinkButton>
           <LinkButton
-            href="/dashboard/wallet"
-            isActive={pathname === "/dashboard/wallet"}
+            href="/dashboard/wallets"
+            isActive={pathname.startsWith("/dashboard/wallets")}
             _active={{
               bg: "bgBlack",
               color: "bgWhite",
@@ -236,26 +236,23 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Contracts
           </LinkButton>
           <LinkButton
-            href="/dashboard/storage"
-            isActive={pathname === "/dashboard/storage"}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
+            href="https://withpaper.com/"
             rounded="lg"
+            isExternal
+            noIcon
           >
-            Storage
+            Payments
           </LinkButton>
           <LinkButton
-            href="/dashboard/rpc"
-            isActive={pathname === "/dashboard/rpc"}
+            href="/dashboard/infrastructure"
+            isActive={pathname.startsWith("/dashboard/infrastructure")}
             _active={{
               bg: "bgBlack",
               color: "bgWhite",
             }}
             rounded="lg"
           >
-            RPC
+            Infrastructure
           </LinkButton>
           <LinkButton
             href="/dashboard/settings"

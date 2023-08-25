@@ -11,6 +11,7 @@ import {
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworkButton } from "components/contract-components/shared/configure-network-button";
 import { ChainIcon } from "components/icons/ChainIcon";
+import { InfrastructureSidebar } from "core-ui/sidebar/infrastructure";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { PageId } from "page-id";
 import { Card, Heading, Link, Text, TrackedCopyButton } from "tw-components";
@@ -116,7 +117,10 @@ export const DashboardRPC: ThirdwebNextPage = () => {
 };
 
 DashboardRPC.getLayout = (page, props) => (
-  <AppLayout {...props}>{page}</AppLayout>
+  <AppLayout {...props} hasSidebar={true}>
+    <InfrastructureSidebar activePage="rpc-edge" />
+    {page}
+  </AppLayout>
 );
 
 DashboardRPC.pageId = PageId.DashboardRPC;

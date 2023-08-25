@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   Image,
   Tooltip,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import {
   ConnectWallet,
@@ -93,12 +94,17 @@ const wallets: WalletInfo = {
     component: walletConnect(),
     import: "walletConnect",
   },
-  Safe: {
-    code: `safeWallet({ personalWallets: [ metamaskWallet(), coinbaseWallet(), walletConnect() ] })`,
-    component: safeWallet({
-      personalWallets: [metamaskWallet(), coinbaseWallet(), walletConnect()],
+  "Email Wallet": {
+    code: `paperWallet({ paperClientId: "YOUR_PAPER_CLIENT_ID" })`,
+    component: paperWallet({
+      paperClientId: "9a2f6238-c441-4bf4-895f-d13c2faf2ddb",
     }),
-    import: "safeWallet",
+    import: "paperWallet",
+  },
+  "Guest Mode": {
+    code: `localWallet()`,
+    component: localWallet(),
+    import: "localWallet",
   },
   "Smart Wallet": {
     code: `smartWallet({ factoryAddress: "YOUR_FACTORY_ADDRESS", gasless: true, personalWallets: [ metamaskWallet(), coinbaseWallet(), walletConnect() ] })`,
@@ -108,17 +114,12 @@ const wallets: WalletInfo = {
     }),
     import: "smartWallet",
   },
-  "Guest Mode": {
-    code: `localWallet()`,
-    component: localWallet(),
-    import: "localWallet",
-  },
-  "Email Wallet": {
-    code: `paperWallet({ paperClientId: "YOUR_PAPER_CLIENT_ID" })`,
-    component: paperWallet({
-      paperClientId: "9a2f6238-c441-4bf4-895f-d13c2faf2ddb",
+  Safe: {
+    code: `safeWallet({ personalWallets: [ metamaskWallet(), coinbaseWallet(), walletConnect() ] })`,
+    component: safeWallet({
+      personalWallets: [metamaskWallet(), coinbaseWallet(), walletConnect()],
     }),
-    import: "paperWallet",
+    import: "safeWallet",
   },
   "Magic Link": {
     code: `magicLink({ apiKey: "YOUR_MAGIC_API_KEY", oauthOptions: { providers: ["google", "facebook", "twitter", "apple"] }})`,
@@ -235,6 +236,8 @@ export const ConnectWalletWithPreview: React.FC = () => {
     (walletId) => wallets[walletId].component,
   );
 
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   const previewCode = (
     <ThirdwebProvider
       key={enabledWallets.join(",")}
@@ -279,7 +282,7 @@ export const ConnectWalletWithPreview: React.FC = () => {
               label="Wallets"
               description="Wallets to show in ConnectWallet modal"
             >
-              <Flex flexWrap={"wrap"} gap={3}>
+              <SimpleGrid columns={{ base: 6, md: 2 }} gap={2}>
                 {Object.keys(wallets).map((key) => {
                   const walletId = key as WalletId;
                   const walletInfo = wallets[walletId];
@@ -322,11 +325,11 @@ export const ConnectWalletWithPreview: React.FC = () => {
                         alt={walletInfo.component.meta.name}
                         src={replaceIpfsUrl(walletInfo.component.meta.iconURL)}
                       />{" "}
-                      {walletId}
+                      {!isMobile && walletId}
                     </Flex>
                   );
                 })}
-              </Flex>
+              </SimpleGrid>
             </FormItem>
           </Box>
 
@@ -342,9 +345,9 @@ export const ConnectWalletWithPreview: React.FC = () => {
                 setSelectedTheme(event.target.value as Theme);
               }}
             >
-              <option value="default">default (dark)</option>
-              <option value="dark">dark</option>
-              <option value="light">light</option>
+              <option value="default">Default (Dark)</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
             </Select>
           </FormItem>
 
@@ -388,14 +391,14 @@ export const ConnectWalletWithPreview: React.FC = () => {
                 setAuthEnabled(event.target.value as EnabledOrDisabled);
               }}
             >
-              <option value="disabled">disabled</option>
-              <option value="enabled">enabled</option>
+              <option value="disabled">Disabled</option>
+              <option value="enabled">Enabled</option>
             </Select>
           </FormItem>
 
           {/* dropdownPosition */}
           <FormItem
-            label="dropdownPosition"
+            label="Dropdown Position"
             description="Specify where should the details dropdown menu open relative to the ConnectWallet Button."
           >
             <Select
@@ -405,8 +408,8 @@ export const ConnectWalletWithPreview: React.FC = () => {
                 setdropdownPosition(event.target.value as DefaultOrCustom);
               }}
             >
-              <option value="default">default</option>
-              <option value="custom">custom</option>
+              <option value="default">Default</option>
+              <option value="custom">Custom</option>
             </Select>
           </FormItem>
         </Flex>

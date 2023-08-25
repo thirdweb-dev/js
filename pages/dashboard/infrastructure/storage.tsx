@@ -4,6 +4,7 @@ import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { IpfsUploadDropzone } from "components/ipfs-upload/dropzone";
+import { InfrastructureSidebar } from "core-ui/sidebar/infrastructure";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useState } from "react";
@@ -289,7 +290,10 @@ func main() {
 };
 
 DashboardStorage.getLayout = (page, props) => (
-  <AppLayout {...props}>{page}</AppLayout>
+  <AppLayout {...props} hasSidebar={true}>
+    <InfrastructureSidebar activePage="storage" />
+    {page}
+  </AppLayout>
 );
 DashboardStorage.pageId = PageId.DashboardStorage;
 

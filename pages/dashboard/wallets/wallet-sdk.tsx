@@ -1,7 +1,6 @@
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
-import { ThirdwebProvider, useSigner } from "@thirdweb-dev/react";
+import { useSigner } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
-import { dashboardSupportedWallets } from "components/app-layouts/providers";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { ChainIcon } from "components/icons/ChainIcon";
@@ -9,9 +8,9 @@ import { PageId } from "page-id";
 import React, { useMemo, useState } from "react";
 import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-import { ConnectWalletWithPreview } from "components/wallets/ConnectWalletWithPreview";
 import { formatSnippet } from "contract-ui/tabs/code/components/code-overview";
 import { useChainSlug } from "hooks/chains/chainSlug";
+import { WalletsSidebar } from "core-ui/sidebar/wallets";
 
 export const WALLETS_SNIPPETS = [
   {
@@ -34,7 +33,7 @@ await personalWallet.generate();
 const config = {
   chain: {{chainName}}, // the chain where your smart wallet will be or is deployed
   factoryAddress: "{{factory_address}}", // your own deployed account factory address
-  clientId: "YOUR_CLIENT_ID", // or use secretKey for no backend/node scripts
+  clientId: "YOUR_CLIENT_ID", // or use secretKey for backend/node scripts
   gasless: true, // enable or disable gasless transactions
 };
 
@@ -734,7 +733,7 @@ const SupportedWalletsSelector: React.FC<SupportedWalletsSelectorProps> = ({
   );
 };
 
-const DashboardWallets: ThirdwebNextPage = () => {
+const DashboardWalletsWalletSDK: ThirdwebNextPage = () => {
   const signer = useSigner();
   // make this nicer? somehow?
   const network = useChainSlug((signer?.provider as any)?._network?.chainId);
@@ -761,28 +760,6 @@ const DashboardWallets: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={16} mt={{ base: 2, md: 6 }}>
-      <ThirdwebProvider
-        activeChain="goerli"
-        supportedWallets={dashboardSupportedWallets}
-      >
-        <Flex flexDir="column" gap={4}>
-          <Heading size="title.lg" as="h1">
-            ConnectWallet component
-          </Heading>
-          <Text>
-            One line of code to add a{" "}
-            <Link
-              href="https://portal.thirdweb.com/react/react.connectwallet"
-              color="blue.400"
-              isExternal
-            >
-              Connect Wallet UI component
-            </Link>{" "}
-            to React, React Native and Unity apps.
-          </Text>
-          <ConnectWalletWithPreview />
-        </Flex>
-      </ThirdwebProvider>
       <Flex direction="column" gap={4}>
         <Heading size="title.lg" as="h1">
           Wallet SDK
@@ -889,10 +866,13 @@ const DashboardWallets: ThirdwebNextPage = () => {
   );
 };
 
-DashboardWallets.getLayout = (page, props) => (
-  <AppLayout {...props}>{page}</AppLayout>
+DashboardWalletsWalletSDK.getLayout = (page, props) => (
+  <AppLayout {...props} hasSidebar={true}>
+    <WalletsSidebar activePage="wallet-sdk" />
+    {page}
+  </AppLayout>
 );
 
-DashboardWallets.pageId = PageId.DashboardWallets;
+DashboardWalletsWalletSDK.pageId = PageId.DashboardWalletsWalletSDK;
 
-export default DashboardWallets;
+export default DashboardWalletsWalletSDK;

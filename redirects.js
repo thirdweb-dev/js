@@ -134,6 +134,21 @@ function redirects() {
       destination: "/dashboard/settings/api-keys",
       permanent: false,
     },
+    {
+      source: "/dashboard/wallet",
+      destination: "/dashboard/wallets",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/rpc",
+      destination: "/dashboard/infrastructure/rpc-edge",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/storage",
+      destination: "/dashboard/infrastructure/storage",
+      permanent: false,
+    },
   ];
 }
 
