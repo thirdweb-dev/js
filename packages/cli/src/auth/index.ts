@@ -5,7 +5,6 @@ import fs from "fs";
 import http from "http";
 import open from "open";
 import ora from "ora";
-// import prompts from "prompts";
 import url from "url";
 import { logger, spinner } from "../core/helpers/logger";
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
@@ -79,12 +78,10 @@ export async function getSession(tokenPath: string, configCredsPath: string) {
   if (!fs.existsSync(tokenPath) || !fs.existsSync(configCredsPath)) {
     return null;
   }
-
   try {
-    // await checkPasswordExpiration(configCredsPath);
     return fs.readFileSync(tokenPath, "utf8");
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -109,10 +106,7 @@ export const authenticateUser = async (
   // In this case the state is the loggedIn object.
   const ourState = generateStateParameter(32);
   const payload = encodeURIComponent(JSON.stringify(loggedIn));
-  const urlToOpen =
-    // `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
-    `https://thirdweb-www-git-mariano-cli-auth.thirdweb-preview.com/cli/login?payload=${payload}&#${ourState}`;
-  // `http://localhost:3000/cli/login?payload=${payload}&#${ourState}`;
+  const urlToOpen = `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
 
   let server: http.Server;
   let loginTimeoutHandle: NodeJS.Timeout;
@@ -237,8 +231,6 @@ async function getOrCreatePassword(configCredsPath: string): Promise<string> {
 }
 
 async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
-  // const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
-
   // Get or prompt for password.
   const password = await getOrCreatePassword(configCredsPath);
   const wallet = new LocalWallet();
@@ -276,54 +268,13 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
   // write password
   fs.writeFileSync(configCredsPath, JSON.stringify({
     password: password,
-    // expiration: newExpiration,
   }), "utf8");
 
   return wallet;
 }
 
-// const checkPasswordExpiration = async (credsConfigPath: string) => {
-//   const newExpiration = new Date(Date.now()).getTime() + 1000 * 60 * 60 * 2; // 2 days
-//   const configJson = JSON.parse(fs.readFileSync(credsConfigPath, "utf-8")) as ICredsConfig;
-//   const { password, expiration } = configJson;
-
-//   // Check if the password has expired.
-//   if (Date.now() > expiration) {
-//     // If it has, prompt for it again.
-//     const response = await prompts({
-//       type: "invisible",
-//       name: "password",
-//       message: `Session has expired, please confirm your password to continue`,
-//     });
-
-//     // Check that input is not empty.
-//     if (!response.password) {
-//       throw new Error("No password provided");
-//     }
-
-//     // Check if the password matches.
-//     if (response.password !== password) {
-//       throw new Error("Incorrect password, if you forgot your password, please logout and login again.");
-//     }
-
-//     // Reset the expiration date.
-//     fs.writeFileSync(credsConfigPath, JSON.stringify({
-//       ...configJson,
-//       expiration: newExpiration,
-//     }), "utf-8");
-//   } else {
-//     // We will want to extend the expiration date by 2 hours.
-//     fs.writeFileSync(credsConfigPath, JSON.stringify({
-//       ...configJson,
-//       expiration: expiration + 1000 * 60 * 60 * 2, // 2 hours.
-//     }), "utf-8");
-//   }
-
-//   return password;
-// };
-
 export const validateKey = async (apiSecretKey: string) => {
-  const apiUrl = "https://api.staging.thirdweb.com/v1/keys/use";
+  const apiUrl = "https://api.thirdweb.com/v1/keys/use";
   try {
     const response = await fetch(`${apiUrl}?scope=storage`, {
       method: "GET",
