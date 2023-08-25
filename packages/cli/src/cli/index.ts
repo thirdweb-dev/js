@@ -345,7 +345,7 @@ const main = async () => {
         secretKey = options.key;
       }
       const url = await deploy(options, secretKey);
-      if (url) {
+      if (url && !options.ci) {
         await open(url);
       }
     });
