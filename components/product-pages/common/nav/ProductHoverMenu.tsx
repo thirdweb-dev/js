@@ -104,7 +104,7 @@ export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
                   </Stack>
                 ))}
               </Flex>
-              <Flex p={6}>
+              <Flex p={6} bg="#0E0F11">
                 <Stack width="660px">
                   <SimpleGrid columns={2} gap={4}>
                     {items

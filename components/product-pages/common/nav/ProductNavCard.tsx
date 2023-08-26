@@ -1,6 +1,5 @@
-import { Box, Flex, Icon, Stack } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 import { IconType } from "@react-icons/all-files";
-import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { Text } from "tw-components";
 
@@ -17,30 +16,17 @@ export interface ProductNavCardProps {
 export const ProductNavCard: React.FC<ProductNavCardProps> = ({
   name,
   description,
-  icon,
-  iconType,
   comingSoon,
   selected,
 }) => {
   return (
     <Box
-      bgColor={selected ? "whiteAlpha.50" : "inherit"}
-      _hover={{ bg: "whiteAlpha.50" }}
+      bgColor={selected ? "#0E0F11" : "inherit"}
+      _hover={{ bg: "#0E0F11" }}
       p={6}
       cursor="default"
     >
       <Stack direction="row" align="center" spacing={3}>
-        {icon && (
-          <ChakraNextImage boxSize={7} mb="-4px" src={icon} alt="icon" />
-        )}
-        {iconType && (
-          <Icon
-            as={iconType}
-            color={comingSoon ? "whiteAlpha.400" : "white"}
-            boxSize={6}
-            mr={2}
-          />
-        )}
         <Flex direction="column">
           <Text
             fontWeight="bold"
