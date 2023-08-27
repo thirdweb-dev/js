@@ -39,8 +39,10 @@ export * from "./wallets/ethers";
 export * from "./wallets/private-key";
 export * from "./wallets/zerion";
 export * from "./wallets/trust";
+export * from "./wallets/blocto";
 
 export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
+export { getInjectedMetamaskProvider } from "./connectors/metamask/getInjectedMetamaskProvider";

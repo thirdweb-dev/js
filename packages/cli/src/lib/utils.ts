@@ -1,25 +1,27 @@
 import * as toml from "@iarna/toml";
-import { PackageManagerType } from "../core/types/ProjectType";
 import { existsSync, readFileSync } from "fs";
-import { runCommand } from "../create/helpers/run-command";
 import path from "path";
+import { PackageManagerType } from "../core/types/ProjectType";
+import { runCommand } from "../create/helpers/run-command";
 import { IProcessAppTypeArgs, IProcessContractAppTypeArgs } from "./types";
 
 export function convertDependenciesToStringFormat(dependenciesObject: object) {
   return Object.entries(dependenciesObject).map(([pkg, versionDetails]) => {
-    let version = '';
-    if (typeof versionDetails === 'string') {
+    let version = "";
+    if (typeof versionDetails === "string") {
       version = versionDetails;
-    } else if (typeof versionDetails === 'object') {
+    } else if (typeof versionDetails === "object") {
       version = versionDetails.version;
     }
     // Replace '^' with nothing as '^' is not a valid version specifier in Python
-    version = version.replace('^', '');
+    version = version.replace("^", "");
     return `${pkg}==${version}`;
   });
 }
 
-export const parsePackageJson = (packageJson: Buffer): {
+export const parsePackageJson = (
+  packageJson: Buffer,
+): {
   dependencies: {
     [key: string]: string;
   };
@@ -55,10 +57,9 @@ export const parsePipFile = (PipFile: string) => {
 
 export const parsePyProjectToml = (pyProjectToml: string) => {
   const pyProjectFile = toml.parse(pyProjectToml) as any;
-  const dependencies =
-    (pyProjectFile["tool"]["poetry"]["dependencies"]) || [];
+  const dependencies = pyProjectFile["tool"]["poetry"]["dependencies"] || [];
   const devDependencies =
-    (pyProjectFile["tool"]["poetry"]["dev-dependencies"]) || [];
+    pyProjectFile["tool"]["poetry"]["dev-dependencies"] || [];
 
   return {
     dependencies: convertDependenciesToStringFormat(dependencies),
@@ -150,31 +151,37 @@ export const getDependenciesForPython = (
 
 export const getLatestVersion = async (packageName: string): Promise<any> => {
   try {
-    const fetch = (await import('node-fetch')).default;
-    const url = `https://registry.npmjs.org/${packageName}`
+    const fetch = (await import("node-fetch")).default;
+    const url = `https://registry.npmjs.org/${packageName}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: any = await response.json();
-    return data['dist-tags']['latest'];
+    return data["dist-tags"]["latest"];
   } catch (error) {
     console.error(`Failed to get latest version of ${packageName}:`, error);
   }
-}
+};
 
-export const installOrUpdate = async (packageManager: PackageManagerType, dependenciesToAdd: string[], dependenciesToUpdate: string[], typeOfAction: "install" | "update", options?: { oldVersion?: string, debug?: boolean }) => {
-  let runner: string = "";
+export const installOrUpdate = async (
+  packageManager: PackageManagerType,
+  dependenciesToAdd: string[],
+  dependenciesToUpdate: string[],
+  typeOfAction: "install" | "update",
+  options?: { oldVersion?: string; debug?: boolean },
+) => {
+  let runner = "";
   let installCommand: string[] = [];
   let updateCommand: string[] = [];
   let deleteCommand: string[] = [];
-  let printLogs = options?.debug || false;
+  const printLogs = options?.debug || false;
 
   switch (packageManager) {
     case "npm":
       runner = "npm";
       installCommand = ["install"];
-      updateCommand = ["update"]
+      updateCommand = ["install", "--legacy-peer-deps"];
       break;
     case "yarn":
       runner = "yarn";
@@ -208,9 +215,9 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
       break;
     case "brownie":
       runner = "brownie";
-      installCommand = ["pm", "install"]
-      updateCommand = ["pm", "update"]
-      deleteCommand = ["pm", "delete"]
+      installCommand = ["pm", "install"];
+      updateCommand = ["pm", "update"];
+      deleteCommand = ["pm", "delete"];
       break;
     case "foundry":
       runner = "forge";
@@ -223,17 +230,25 @@ export const installOrUpdate = async (packageManager: PackageManagerType, depend
   }
 
   if (typeOfAction === "install") {
-    if (!dependenciesToAdd.length) {return;}
+    if (!dependenciesToAdd.length) {
+      return;
+    }
     const commands = [...installCommand, ...dependenciesToAdd];
 
     await runCommand(runner, commands, printLogs);
 
     if (options?.oldVersion) {
-      await runCommand(runner, [...deleteCommand, options.oldVersion], printLogs);
+      await runCommand(
+        runner,
+        [...deleteCommand, options.oldVersion],
+        printLogs,
+      );
     }
   }
   if (typeOfAction === "update") {
-    if (!dependenciesToUpdate.length) {return;}
+    if (!dependenciesToUpdate.length) {
+      return;
+    }
     const commands = [...updateCommand, ...dependenciesToUpdate];
     await runCommand(runner, commands, printLogs);
   }
@@ -259,13 +274,16 @@ export const getDependenciesForBrownie = async () => {
   let deps = "";
   await runCommand("brownie", ["pm", "list"], true, (data) => {
     deps += data.toString();
-  })
+  });
   // strip out colors from output
-  deps = deps.replace(/\u001b\[\d+(;\d+)*m/g, '');
+  deps = deps.replace(/\u001b\[\d+(;\d+)*m/g, "");
   return deps;
 };
 
-export const getDependenciesForFoundry = async (filePath: string, libName: string) => {
+export const getDependenciesForFoundry = async (
+  filePath: string,
+  libName: string,
+) => {
   const fullPath = path.join(filePath, "lib", libName);
   return existsSync(fullPath);
 };
@@ -275,15 +293,14 @@ type GoModule = {
   version: string;
 };
 
-
 export const getDependenciesForGo = (filePath: string): GoModule[] => {
   const content = readFileSync(filePath + "/go.mod", "utf-8");
   const lines = content.split("\n");
   const modules: GoModule[] = [];
 
   for (const line of lines) {
-    if (line.includes('github.com/thirdweb-dev')) {
-      const words = line.split(/\s+/);  // split on any amount of whitespace
+    if (line.includes("github.com/thirdweb-dev")) {
+      const words = line.split(/\s+/); // split on any amount of whitespace
       const name = words[1].trim();
       const version = words[2];
       modules.push({ name, version });
@@ -291,10 +308,17 @@ export const getDependenciesForGo = (filePath: string): GoModule[] => {
   }
 
   return modules;
-}
+};
 
-export const processContractAppType = async (args: IProcessContractAppTypeArgs): Promise<void> => {
-  const { detectedPackageManager, thirdwebDepsToUpdate, thirdwebDepsToInstall, isJSPackageManager } = args;
+export const processContractAppType = async (
+  args: IProcessContractAppTypeArgs,
+): Promise<void> => {
+  const {
+    detectedPackageManager,
+    thirdwebDepsToUpdate,
+    thirdwebDepsToInstall,
+    isJSPackageManager,
+  } = args;
 
   if (isJSPackageManager) {
     if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/contracts`)) {
@@ -303,15 +327,29 @@ export const processContractAppType = async (args: IProcessContractAppTypeArgs):
   }
 
   if (detectedPackageManager === "brownie") {
-    const latestThirdwebContractVersion = await getLatestVersion("@thirdweb-dev/contracts");
+    const latestThirdwebContractVersion = await getLatestVersion(
+      "@thirdweb-dev/contracts",
+    );
 
     // Exit out early if the user already has the latest version of thirdweb installed.
-    if (thirdwebDepsToUpdate.has(`thirdweb-dev/contracts@${latestThirdwebContractVersion}`)) {
-      return Promise.reject("You already have the latest version of thirdweb-dev/contracts installed.");
+    if (
+      thirdwebDepsToUpdate.has(
+        `thirdweb-dev/contracts@${latestThirdwebContractVersion}`,
+      )
+    ) {
+      return Promise.reject(
+        "You already have the latest version of thirdweb-dev/contracts installed.",
+      );
     }
 
-    if (!thirdwebDepsToUpdate.has(`thirdweb-dev/contracts@${latestThirdwebContractVersion}`)) {
-      thirdwebDepsToInstall.add(`thirdweb-dev/contracts@${latestThirdwebContractVersion}`);
+    if (
+      !thirdwebDepsToUpdate.has(
+        `thirdweb-dev/contracts@${latestThirdwebContractVersion}`,
+      )
+    ) {
+      thirdwebDepsToInstall.add(
+        `thirdweb-dev/contracts@${latestThirdwebContractVersion}`,
+      );
     }
   }
 
@@ -322,8 +360,20 @@ export const processContractAppType = async (args: IProcessContractAppTypeArgs):
   }
 };
 
-export const processAppType = async (args: IProcessAppTypeArgs): Promise<void> => {
-  const { detectedFramework, thirdwebDepsToUpdate, thirdwebDepsToInstall, hasEthers, isJSPackageManager, otherDeps, isPythonPackageManager, isGoPackageManager, detectedLibrary } = args;
+export const processAppType = async (
+  args: IProcessAppTypeArgs,
+): Promise<void> => {
+  const {
+    detectedFramework,
+    thirdwebDepsToUpdate,
+    thirdwebDepsToInstall,
+    hasEthers,
+    isJSPackageManager,
+    otherDeps,
+    isPythonPackageManager,
+    isGoPackageManager,
+    detectedLibrary,
+  } = args;
 
   const reactlibs = [
     "react",
@@ -335,21 +385,35 @@ export const processAppType = async (args: IProcessAppTypeArgs): Promise<void> =
     "vue",
     "vite",
     "svelte",
-  ]
-  const shouldInstallThirdwebReact = reactlibs.includes(detectedFramework as string);
+  ];
+  const shouldInstallThirdwebReact = reactlibs.includes(
+    detectedFramework as string,
+  );
   const shouldInstallThirdwebReactNative = detectedLibrary === "react-native";
 
   if (isJSPackageManager) {
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react`) && shouldInstallThirdwebReact) {
+    if (
+      !thirdwebDepsToUpdate.has(`@thirdweb-dev/react`) &&
+      shouldInstallThirdwebReact
+    ) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/react`);
     }
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`) && !shouldInstallThirdwebReactNative) {
+    if (
+      !thirdwebDepsToUpdate.has(`@thirdweb-dev/sdk`) &&
+      !shouldInstallThirdwebReactNative
+    ) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/sdk`);
     }
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react-native`) && shouldInstallThirdwebReactNative) {
+    if (
+      !thirdwebDepsToUpdate.has(`@thirdweb-dev/react-native`) &&
+      shouldInstallThirdwebReactNative
+    ) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/react-native`);
     }
-    if (!thirdwebDepsToUpdate.has(`@thirdweb-dev/react-native-compat`) && shouldInstallThirdwebReactNative) {
+    if (
+      !thirdwebDepsToUpdate.has(`@thirdweb-dev/react-native-compat`) &&
+      shouldInstallThirdwebReactNative
+    ) {
       thirdwebDepsToInstall.add(`@thirdweb-dev/react-native-compat`);
     }
     if (!hasEthers) {

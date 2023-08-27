@@ -54,7 +54,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   >;
   public encoder: ContractEncoder<PrebuiltTokenDrop>;
   public estimator: GasCostEstimator<PrebuiltTokenDrop>;
-  public sales: ContractPrimarySale<PrebuiltTokenDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltTokenDrop>;
   public events: ContractEvents<PrebuiltTokenDrop>;
   /**
@@ -97,6 +97,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -297,7 +298,8 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
+    TMethod extends
+      keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltTokenDrop["functions"][TMethod]>,
@@ -315,7 +317,8 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
+    TMethod extends
+      keyof PrebuiltTokenDrop["functions"] = keyof PrebuiltTokenDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltTokenDrop["functions"][TMethod]>,

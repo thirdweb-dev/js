@@ -1,8 +1,8 @@
+import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ChainId } from "../constants/chains/ChainId";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
 import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
-import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 // import fetch from "cross-fetch";
 import invariant from "tiny-invariant";
 
@@ -143,7 +143,8 @@ export type PaperCreateCheckoutLinkIntentParams<
         contractArgs: SignedPayload721WithQuantitySignature;
       }
     : TContract extends PrebuiltNFTDrop
-    ? {}
+    ? // eslint-disable-next-line @typescript-eslint/ban-types
+      {}
     : never);
 
 /**
@@ -212,7 +213,7 @@ export class PaperCheckout<
 
   private async getCheckoutId(): Promise<string> {
     return fetchRegisteredCheckoutId(
-      this.contractWrapper.readContract.address,
+      this.contractWrapper.address,
       await this.contractWrapper.getChainID(),
     );
   }

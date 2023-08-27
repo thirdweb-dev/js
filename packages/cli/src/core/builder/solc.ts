@@ -16,11 +16,14 @@ export class SolcBuilder extends BaseBuilder {
     const inputPaths: string[] = [];
     findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
 
-    const sources = inputPaths.reduce((acc, curr) => {
-      const source = readFileSync(curr, "utf-8");
-      acc[basename(curr)] = { content: source };
-      return acc;
-    }, {} as Record<string, { content: string }>);
+    const sources = inputPaths.reduce(
+      (acc, curr) => {
+        const source = readFileSync(curr, "utf-8");
+        acc[basename(curr)] = { content: source };
+        return acc;
+      },
+      {} as Record<string, { content: string }>,
+    );
 
     const input = {
       language: "Solidity",
@@ -87,7 +90,7 @@ export class SolcBuilder extends BaseBuilder {
         }
 
         const contractNamesInNamespace = Object.keys(contract);
-        for (let c of contractNamesInNamespace) {
+        for (const c of contractNamesInNamespace) {
           const contractFile = contract[c];
           const contractFilePath = join(contractPath, c + ".json");
           writeFileSync(

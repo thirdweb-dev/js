@@ -1,25 +1,25 @@
-import { GENERATE_MESSAGES } from "../../constants/constants";
+import { allChains } from "@thirdweb-dev/chains";
 import {
   DeployedContract,
   fetchContractMetadataFromAddress,
   getChainProvider,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { info } from "../core/helpers/logger";
-import { allChains } from "@thirdweb-dev/chains";
 import fs from "fs";
-import prompts from "prompts";
-import { findMatches } from "../common/file-helper";
 import ora from "ora";
+import prompts from "prompts";
+import { GENERATE_MESSAGES } from "../../constants/constants";
+import { findMatches } from "../common/file-helper";
+import { info } from "../core/helpers/logger";
 import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
-export async function generate(options: GenerateOptions) {
-  let projectPath: string = options.path?.replace(/\/$/, "") || ".";
+export async function generate(options: GenerateOptions, apiSecretKey: string) {
+  const projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
   // Find all addresses in this project
-  let addresses: string[] = [];
+  const addresses: string[] = [];
   findMatches(projectPath, /(0x[a-fA-F0-9]{40})/g, addresses);
 
   // We check if there's a thirdweb.json config file present
@@ -96,7 +96,9 @@ export async function generate(options: GenerateOptions) {
 
   // Attempt to download the ABI for each contract
   ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
-  const storage = new ThirdwebStorage();
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
   const metadata: {
     address: string;
     metadata: Awaited<ReturnType<typeof fetchContractMetadataFromAddress>>;
@@ -147,10 +149,13 @@ export async function generate(options: GenerateOptions) {
 
     const file = fs.readFileSync(filePath, "utf-8");
     const abiRegex = /GENERATED_ABI = \{.*\};\n\n/s;
-    const contractAbis = metadata.reduce((acc, contract) => {
-      acc[contract.address] = contract.metadata.abi;
-      return acc;
-    }, {} as Record<string, any>);
+    const contractAbis = metadata.reduce(
+      (acc, contract) => {
+        acc[contract.address] = contract.metadata.abi;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
     const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(
       abiRegex,
@@ -169,10 +174,13 @@ export async function generate(options: GenerateOptions) {
 
     const file = fs.readFileSync(typeFilePath, "utf-8");
     const abiRegex = /GENERATED_ABI: \{.*\}/s;
-    const contractAbis = metadata.reduce((acc, contract) => {
-      acc[contract.address] = contract.metadata.abi;
-      return acc;
-    }, {} as Record<string, any>);
+    const contractAbis = metadata.reduce(
+      (acc, contract) => {
+        acc[contract.address] = contract.metadata.abi;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
     const updatedAbis = JSON.stringify(contractAbis, null, 2);
     const updatedFile = file.replace(abiRegex, `GENERATED_ABI: ${updatedAbis}`);
     fs.writeFileSync(typeFilePath, updatedFile);
@@ -191,14 +199,16 @@ export async function generate(options: GenerateOptions) {
   }
 
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-  if (packageJson.scripts?.postinstall?.includes("thirdweb generate")) {
+  if (
+    packageJson.scripts?.postinstall?.includes("thirdweb generate") ||
+    packageJson.scripts?.postinstall?.includes("thirdweb@latest generate")
+  ) {
     return;
   }
 
   const postinstall = packageJson.scripts?.postinstall
-    ? packageJson.scripts.postinstall +
-      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`
-    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`;
+    ? packageJson.scripts.postinstall + `npx --yes thirdweb@latest generate`
+    : `npx --yes thirdweb@latest generate`;
 
   fs.writeFileSync(
     packageJsonPath,

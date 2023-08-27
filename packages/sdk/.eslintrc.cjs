@@ -24,6 +24,7 @@ module.exports = {
       files: "./test/**/*",
       rules: {
         "@typescript-eslint/no-restricted-imports": "off",
+        "better-tree-shaking/no-top-level-side-effects": "off",
       },
     },
   ],

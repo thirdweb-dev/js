@@ -10,6 +10,8 @@ export const ERROR_SUBSTRINGS = [
   "recovered sender mismatch",
   "transaction hash mismatch",
   "chainid no support",
+  "chainid (0)",
+  "chainid(0)",
 ];
 
 export const ERROR_SUBSTRINGS_COMPOSITE = [
@@ -38,6 +40,18 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
   [365]: {
     name: "Theta Testnet",
     gasPrice: 4000 * 10 ** 9,
+  },
+  [7700]: {
+    name: "Canto",
+    gasPrice: 1000 * 10 ** 9,
+  },
+  [7701]: {
+    name: "Canto Testnet",
+    gasPrice: 1000 * 10 ** 9,
+  },
+  [338]: {
+    name: "Cronos Testnet",
+    gasPrice: 2000 * 10 ** 9,
   },
 };
 /* eslint-enable no-useless-computed-key */

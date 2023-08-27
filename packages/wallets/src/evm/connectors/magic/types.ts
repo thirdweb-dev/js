@@ -17,10 +17,6 @@ export interface MagicWalletConnectionArgs {}
 
 export interface MagicOptions {
   apiKey: string;
-  // accentColor?: string;
-  // isDarkMode?: boolean;
-  // customLogo?: string;
-  // customHeaderText?: string;
 }
 
 export interface MagicAuthOptions extends MagicOptions {
@@ -40,10 +36,10 @@ export interface MagicAuthOptions extends MagicOptions {
    */
   type?: "auth" | "connect";
 
-  // oauthOptions?: {
-  //   providers: OAuthProvider[];
-  //   callbackUrl?: string;
-  // };
+  oauthOptions?: {
+    providers: OAuthProvider[];
+    redirectURI?: string;
+  };
   magicSdkConfiguration?: Omit<
     MagicSDKAdditionalConfiguration<string, OAuthExtension[]>,
     "extensions" | "network"
@@ -52,6 +48,7 @@ export interface MagicAuthOptions extends MagicOptions {
 
 export interface MagicConnectorBaseOptions {
   apiKey: string;
+
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration;
   /**
    * Specify whether to use the Magic Auth or Magic Connect.

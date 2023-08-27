@@ -1,5 +1,4 @@
-import { BigNumber, providers, constants } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { BigNumber, providers, constants, utils } from "ethers";
 import { extractIPFSHashFromBytecode } from "./extractIPFSHashFromBytecode";
 import { extractMinimalProxyImplementationAddress } from "./extractMinimalProxyImplementationAddress";
 
@@ -12,6 +11,22 @@ export async function resolveContractUriFromAddress(
   address: string,
   provider: providers.Provider,
 ): Promise<string | undefined> {
+  const bytecode = await resolveImplementationBytecode(address, provider);
+  return extractIPFSHashFromBytecode(bytecode);
+}
+
+export async function resolveContractUriAndBytecode(
+  address: string,
+  provider: providers.Provider,
+): Promise<{ uri: string | undefined; bytecode: string }> {
+  const bytecode = await resolveImplementationBytecode(address, provider);
+  return { uri: extractIPFSHashFromBytecode(bytecode), bytecode };
+}
+
+export async function resolveImplementationBytecode(
+  address: string,
+  provider: providers.Provider,
+): Promise<string> {
   let bytecode;
   try {
     bytecode = await provider.getCode(address);
@@ -27,10 +42,11 @@ export async function resolveContractUriFromAddress(
   }
 
   try {
+    // TODO support other types of proxies
     const implementationAddress =
       extractMinimalProxyImplementationAddress(bytecode);
     if (implementationAddress) {
-      return await resolveContractUriFromAddress(
+      return await resolveImplementationBytecode(
         implementationAddress,
         provider,
       );
@@ -49,10 +65,10 @@ export async function resolveContractUriFromAddress(
     );
     const implementationAddress = `0x${proxyStorage.slice(-40)}`;
     if (
-      isAddress(implementationAddress) &&
+      utils.isAddress(implementationAddress) &&
       implementationAddress !== constants.AddressZero
     ) {
-      return await resolveContractUriFromAddress(
+      return await resolveImplementationBytecode(
         implementationAddress,
         provider,
       );
@@ -60,6 +76,8 @@ export async function resolveContractUriFromAddress(
   } catch (e) {
     // ignore
   }
-  // TODO support other types of proxies
-  return await extractIPFSHashFromBytecode(bytecode);
+  if (!bytecode) {
+    throw new Error(`Error fetching bytecode for ${address}`);
+  }
+  return bytecode;
 }

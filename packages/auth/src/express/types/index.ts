@@ -1,5 +1,5 @@
 import { ThirdwebAuth } from "../../core";
-import { Json, LoginPayloadOutputSchema, User } from "../../core/schema";
+import { Json, LoginPayloadOutputSchema, User } from "../../core";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
 import { z } from "zod";
@@ -44,6 +44,7 @@ export type ThirdwebAuthConfig<
     validateTokenId?:
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
+    loginPayloadDurationInSeconds?: number;
     tokenDurationInSeconds?: number;
     refreshIntervalInSeconds?: number;
   };

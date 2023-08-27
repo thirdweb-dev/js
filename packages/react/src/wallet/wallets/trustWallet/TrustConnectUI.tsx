@@ -5,13 +5,16 @@ import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { TrustScan } from "./TrustScan";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { trustWalletUris } from "./trustWalletUris";
 
 export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
+  const hideBackButton = props.supportedWallets.length === 1;
 
   const { goBack } = props;
 
@@ -42,7 +45,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
       else {
         // on mobile, open trust app link
         if (isMobile()) {
-          window.open("https://link.trustwallet.com");
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the trust scan qr code
           setScreen("scanning");
@@ -54,10 +57,24 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
         supportLink="https://community.trustwallet.com/c/helpcenter/8"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        appUriPrefix={trustWalletUris}
+        supportLink="https://support.trustwallet.com/en/support/home"
       />
     );
   }
@@ -70,7 +87,9 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={props.goBack}
+        onBack={() => {
+          setScreen("scanning");
+        }}
       />
     );
   }
@@ -78,6 +97,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "scanning") {
     return (
       <TrustScan
+        hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         onGetStarted={() => {

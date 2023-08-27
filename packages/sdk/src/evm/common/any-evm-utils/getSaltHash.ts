@@ -8,7 +8,10 @@ import { utils } from "ethers";
  * @param bytecode: Creation bytecode of the contract to deploy
  */
 export function getSaltHash(bytecode: string): string {
-  const bytecodeHash = utils.id(bytecode);
+  const bytecodePrefixed = bytecode.startsWith("0x")
+    ? bytecode
+    : `0x${bytecode}`;
+  const bytecodeHash = utils.id(bytecodePrefixed);
   const salt = `tw.${bytecodeHash}`;
   const saltHash = utils.id(salt);
 

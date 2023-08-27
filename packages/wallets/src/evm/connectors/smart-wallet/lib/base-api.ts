@@ -1,11 +1,10 @@
-import { ethers, BigNumber, BigNumberish, providers } from "ethers";
+import { ethers, BigNumber, BigNumberish, providers, utils } from "ethers";
 import {
   EntryPoint,
   EntryPoint__factory,
   UserOperationStruct,
 } from "@account-abstraction/contracts";
 
-import { resolveProperties } from "ethers/lib/utils";
 import { NotPromise, packUserOp } from "@account-abstraction/utils";
 import {
   GasOverheads,
@@ -15,7 +14,14 @@ import {
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
-import { CeloAlfajoresTestnet, CeloBaklavaTestnet, Celo } from "@thirdweb-dev/chains"
+import {
+  CeloAlfajoresTestnet,
+  CeloBaklavaTestnet,
+  Celo,
+  Mumbai,
+  Polygon,
+} from "@thirdweb-dev/chains";
+import { getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -169,7 +175,7 @@ export abstract class BaseAccountAPI {
   async getPreVerificationGas(
     userOp: Partial<UserOperationStruct>,
   ): Promise<number> {
-    const p = await resolveProperties(userOp);
+    const p = await utils.resolveProperties(userOp);
     return calcPreVerificationGas(p, this.overheads);
   }
 
@@ -203,9 +209,16 @@ export abstract class BaseAccountAPI {
     let callGasLimit;
     const isPhantom = await this.checkAccountPhantom();
     if (isPhantom) {
-      // when the account is not deployed yet, the estimation will return something like 25k gas (revert cost)
-      // there's no way to know the actual cost, so we just use a fixed value of 500k which should cover most txcosts.
-      callGasLimit = BigNumber.from(500_000);
+      // when the account is not deployed yet, we simulate the call to the target contract directly
+      callGasLimit = await this.provider.estimateGas({
+        from: this.getAccountAddress(),
+        to: detailsForUserOp.target,
+        data: detailsForUserOp.data,
+      });
+      // if the estimation is too low, we use a fixed value of 500k
+      if (callGasLimit.lt(30000)) {
+        callGasLimit = BigNumber.from(500000);
+      }
     } else {
       callGasLimit =
         parseNumber(detailsForUserOp.gasLimit) ??
@@ -281,17 +294,37 @@ export abstract class BaseAccountAPI {
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
       const feeData = await this.provider.getFeeData();
+      if (!maxPriorityFeePerGas) {
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+      }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
         const chainId = network.chainId;
 
-        if (chainId === Celo.chainId || chainId === CeloAlfajoresTestnet.chainId || chainId === CeloBaklavaTestnet.chainId) {
+        if (
+          chainId === Celo.chainId ||
+          chainId === CeloAlfajoresTestnet.chainId ||
+          chainId === CeloBaklavaTestnet.chainId
+        ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
-      }
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+
+        if (
+          maxPriorityFeePerGas &&
+          (chainId === Mumbai.chainId || chainId === Polygon.chainId)
+        ) {
+          // for polygon/mumbai, override fee data from gas station
+          const block = await this.provider.getBlock("latest");
+          const baseBlockFee =
+            block && block.baseFeePerGas
+              ? block.baseFeePerGas
+              : utils.parseUnits("1", "gwei");
+          maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
+          // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
+          const baseMaxFeePerGas = baseBlockFee.mul(2);
+          maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
+        }
       }
     }
 

@@ -1,11 +1,11 @@
-import { StyleSheet, View } from "react-native";
+import { Dimensions, Linking, StyleSheet, View } from "react-native";
 import Box from "../base/Box";
 import { Toast } from "../base/Toast";
 import { ExportLocalWalletModal } from "./ExportLocalWalletModal";
 import { NetworkButton } from "../base/NetworkButton";
 import { WalletDetailsModalHeader } from "./WalletDetailsModalHeader";
 import {
-  useActiveChain,
+  useChain,
   useDisconnect,
   useSetConnectedWallet,
   useWallet,
@@ -18,22 +18,36 @@ import { useSmartWallet } from "../../providers/context-provider";
 import BaseButton from "../base/BaseButton";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 import Text from "../base/Text";
-import { useModalState } from "../../providers/ui-context-provider";
-import { CLOSE_MODAL_STATE, WalletDetailsModal } from "../../utils/modalTypes";
 import { useAppTheme } from "../../styles/hooks";
 import { LocalWalletImportModal } from "../ConnectWalletFlow/LocalWalletImportModal";
+import { IconTextButton } from "../base/IconTextButton";
+import MoneyIcon from "../../assets/money";
+import { TWModal } from "../base/modal/TWModal";
 
-export const ConnectWalletDetailsModal = () => {
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
+const DEVICE_WIDTH = Dimensions.get("window").width;
+
+export const ConnectWalletDetailsModal = ({
+  isVisible,
+  onClosePress,
+  extraRows,
+  address,
+  hideTestnetFaucet,
+}: {
+  isVisible: boolean;
+  onClosePress: () => void;
+  extraRows?: React.FC;
+  address?: string;
+  hideTestnetFaucet?: boolean;
+}) => {
   const theme = useAppTheme();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const activeWallet = useWallet();
-  const chain = useActiveChain();
+  const chain = useChain();
   const disconnect = useDisconnect();
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [addressCopied, setAddressCopied] = useState(false);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
-  const { modalState, setModalState } = useModalState();
-  const { address } = (modalState as WalletDetailsModal).data;
   const setConnectedWallet = useSetConnectedWallet();
 
   useEffect(() => {
@@ -48,15 +62,9 @@ export const ConnectWalletDetailsModal = () => {
 
   const onDisconnectPress = () => {
     disconnect().finally(() => {
-      setModalState(CLOSE_MODAL_STATE("ConnectWalletDetailsModal"));
       setSmartWallet?.(undefined);
+      onClosePress();
     });
-  };
-
-  const onChangeNetworkPress = () => {
-    // TODO: implement this
-    // setIsDetailsModalVisible(false);
-    // setIsNetworkSelectorModalVisible(true);
   };
 
   const onExportLocalWalletPress = useCallback(() => {
@@ -153,7 +161,7 @@ export const ConnectWalletDetailsModal = () => {
           />
 
           {activeWallet?.walletId === LocalWallet.id ? (
-            <Text variant="error">
+            <Text variant="error" textAlign="left">
               {
                 "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
               }
@@ -174,33 +182,61 @@ export const ConnectWalletDetailsModal = () => {
   ]);
 
   return (
-    <Box>
-      <ExportLocalWalletModal
-        isVisible={isExportModalVisible}
-        onClose={onExportModalClose}
-      />
-      <WalletDetailsModalHeader
-        address={address}
-        onDisconnectPress={onDisconnectPress}
-        onAddressCopied={onAddressCopied}
-      />
-      <View style={styles.currentNetwork}>
-        <Text variant="bodySmallSecondary">Current Network</Text>
+    <TWModal isVisible={isVisible} onBackdropPress={onClosePress}>
+      <View
+        style={[styles.modal, { backgroundColor: theme.colors.background }]}
+      >
+        <Box style={styles.contentContainer}>
+          <ExportLocalWalletModal
+            isVisible={isExportModalVisible}
+            onClose={onExportModalClose}
+          />
+          <WalletDetailsModalHeader
+            address={address}
+            onDisconnectPress={onDisconnectPress}
+            onAddressCopied={onAddressCopied}
+          />
+          <View style={styles.currentNetwork}>
+            <Text variant="bodySmallSecondary">Current Network</Text>
+          </View>
+          <NetworkButton chain={chain} enableSwitchModal={true} />
+          {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
+            <IconTextButton
+              mt="xs"
+              text="Request Testnet Funds"
+              icon={<MoneyIcon height={10} width={10} />}
+              onPress={() => {
+                if (chain?.faucets?.[0]) {
+                  Linking.openURL(chain.faucets[0]);
+                }
+              }}
+            />
+          ) : null}
+          {getAdditionalActions()}
+          {extraRows ? extraRows({}) : null}
+          {addressCopied === true ? (
+            <Toast text={"Address copied to clipboard"} />
+          ) : null}
+        </Box>
       </View>
-      <NetworkButton
-        chainIconUrl={chain?.icon?.url || ""}
-        chainName={chain?.name || "Unknown Network"}
-        onPress={onChangeNetworkPress}
-      />
-      {getAdditionalActions()}
-      {addressCopied === true ? (
-        <Toast text={"Address copied to clipboard"} />
-      ) : null}
-    </Box>
+    </TWModal>
   );
 };
 
 const styles = StyleSheet.create({
+  modal: {
+    position: "absolute",
+    bottom: -20,
+    left: -20,
+    width: DEVICE_WIDTH,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+  },
+  contentContainer: {
+    maxHeight: MODAL_HEIGHT,
+    display: "flex",
+  },
   exportWalletInfo: {
     flex: 1,
     justifyContent: "flex-start",

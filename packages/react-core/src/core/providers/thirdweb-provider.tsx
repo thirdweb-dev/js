@@ -1,5 +1,5 @@
 import { ThirdwebAuthProvider } from "../../evm/contexts/ThirdwebAuthProvider";
-import { useUpdateChainsWithApiKeys } from "../../evm/hooks/chain-hooks";
+import { useUpdateChainsWithClientId } from "../../evm/hooks/chain-hooks";
 import { ThirdwebSDKProvider } from "../../evm/providers/thirdweb-sdk-provider";
 import { ThirdwebSDKProviderProps } from "../../evm/providers/types";
 import { WalletConfig } from "../types/wallet";
@@ -61,6 +61,15 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    * Whether or not to automatically switch to wallet's network to active chain
    */
   autoSwitch?: boolean;
+
+  /**
+   * Timeout for auto-connecting wallet in milliseconds
+   *
+   * If wallet fails to connect in this time, it will stop trying to connect and user will have to manually connect
+   *
+   * @defaultValue 15000
+   */
+  autoConnectTimeout?: number;
 }
 
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
@@ -69,40 +78,36 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
 }: React.PropsWithChildren<ThirdwebProviderCoreProps<TChains>>) => {
   const { activeChain } = props;
 
+  const supportedChains = (props.supportedChains || defaultChains) as Chain[];
+
   const supportedChainsNonNull: Chain[] = useMemo(() => {
     const isActiveChainObject =
       typeof activeChain === "object" && activeChain !== null;
 
     if (!isActiveChainObject) {
-      return props.supportedChains || defaultChains;
+      return supportedChains;
     }
 
-    if (!props.supportedChains) {
-      return [...defaultChains, activeChain];
-    }
-
-    const isActiveChainInSupportedChains = props.supportedChains.find(
+    const isActiveChainInSupportedChains = supportedChains.find(
       (c) => c.chainId === activeChain.chainId,
     );
 
     // if activeChain is not in supportedChains - add it
     if (!isActiveChainInSupportedChains) {
-      return [...props.supportedChains, activeChain];
+      return [...supportedChains, activeChain];
     }
 
     // if active chain is in supportedChains - replace it with object in activeChain
-    return props.supportedChains.map((c) =>
+    return supportedChains.map((c) =>
       c.chainId === activeChain.chainId ? activeChain : c,
     );
-  }, [props.supportedChains, activeChain]);
+  }, [supportedChains, activeChain]);
 
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
-    useUpdateChainsWithApiKeys(
+    useUpdateChainsWithClientId(
       supportedChainsNonNull,
       props.activeChain || supportedChainsNonNull[0],
-      props.thirdwebApiKey,
-      props.alchemyApiKey,
-      props.infuraApiKey,
+      props.clientId,
     );
 
   const activeChainWithKey = useMemo(() => {
@@ -145,6 +150,9 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         dAppMeta={dAppMeta}
         activeChain={activeChainWithKey}
         autoSwitch={props.autoSwitch}
+        autoConnectTimeout={props.autoConnectTimeout}
+        clientId={props.clientId}
+        activeChainSetExplicitly={!!props.activeChain}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}
@@ -153,9 +161,8 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
           activeChain={activeChainWithKey}
           storageInterface={props.storageInterface}
           authConfig={props.authConfig}
-          thirdwebApiKey={props.thirdwebApiKey}
-          alchemyApiKey={props.alchemyApiKey}
-          infuraApiKey={props.infuraApiKey}
+          clientId={props.clientId}
+          secretKey={props.secretKey}
         >
           <ThirdwebAuthProvider value={props.authConfig}>
             {props.children}

@@ -1,5 +1,4 @@
-import { getCIDForUpload, isUploaded } from "../../common";
-import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
+import { TW_UPLOAD_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
@@ -14,15 +13,22 @@ import {
 } from "../../types";
 import fetch from "cross-fetch";
 import FormData from "form-data";
+import pkg from "../../../package.json";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
  *
  * @example
  * ```jsx
- * // Can instantiate the uploader with default configuration
+ * // Can instantiate the uploader with default configuration and your client ID when used in client-side applications
  * const uploader = new StorageUploader();
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
+ *
+ * // Can instantiate the uploader with default configuration and your secret key when used in server-side applications
+ * const uploader = new StorageUploader();
+ * const secretKey = "your-secret-key";
+ * const storage = new ThirdwebStorage({ secretKey, uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
@@ -30,16 +36,23 @@ import FormData from "form-data";
  *   uploadWithGatewayUrl: true,
  * }
  * const uploader = new StorageUploader(options);
- * const storage = new ThirdwebStorage({ uploader });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader });
  * ```
  *
  * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public uploadWithGatewayUrl: boolean;
+  private uploadServerUrl: string;
+  private clientId?: string;
+  private secretKey?: string;
 
   constructor(options?: IpfsUploaderOptions) {
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
+    this.uploadServerUrl = options?.uploadServerUrl || TW_UPLOAD_SERVER_URL;
+    this.clientId = options?.clientId;
+    this.secretKey = options?.secretKey;
   }
 
   async uploadBatch(
@@ -55,59 +68,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const formData = new FormData();
     const { form, fileNames } = this.buildFormData(formData, data, options);
 
-    try {
-      const cid = await getCIDForUpload(
-        data,
-        fileNames.map((name) => decodeURIComponent(name)),
-        !options?.uploadWithoutDirectory,
-      );
-      if ((await isUploaded(cid)) && !options?.alwaysUpload) {
-        if (options?.onProgress) {
-          options?.onProgress({
-            progress: 100,
-            total: 100,
-          });
-        }
-
-        if (options?.uploadWithoutDirectory) {
-          return [`ipfs://${cid}`];
-        } else {
-          return fileNames.map((name) => `ipfs://${cid}/${name}`);
-        }
-      }
-    } catch {
-      // no-op
-    }
-
     if (isBrowser()) {
       return this.uploadBatchBrowser(form, fileNames, options);
     } else {
       return this.uploadBatchNode(form, fileNames, options);
     }
-  }
-
-  /**
-   * Fetches a one-time-use upload token that can used to upload
-   * a file to storage.
-   *
-   * @returns - The one time use token that can be passed to the Pinata API.
-   */
-  private async getUploadToken(): Promise<string> {
-    const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
-      method: "GET",
-      headers: {
-        "X-APP-NAME":
-          // eslint-disable-next-line turbo/no-undeclared-env-vars
-          process.env.NODE_ENV === "test" || !!process.env.CI
-            ? "Storage SDK CI"
-            : "Storage SDK",
-      },
-    });
-    if (!res.ok) {
-      throw new Error(`Failed to get upload token`);
-    }
-    const body = await res.text();
-    return body;
   }
 
   private buildFormData(
@@ -211,8 +176,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
-    const token = await this.getUploadToken();
-
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -279,7 +242,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           if (options?.uploadWithoutDirectory) {
             return resolve([`ipfs://${cid}`]);
           } else {
-            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+            return resolve(fileNames.map((n) => `ipfs://${cid}/${n}`));
           }
         }
 
@@ -298,18 +261,46 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           (xhr.readyState !== 0 && xhr.readyState !== 4) ||
           xhr.status === 0
         ) {
-          return reject(
-            new Error(
-              "This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.",
-            ),
-          );
+          return reject(new Error("Upload failed due to a network error."));
         }
 
         return reject(new Error("Unknown upload error occured"));
       });
 
-      xhr.open("POST", PINATA_IPFS_URL);
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.open("POST", `${this.uploadServerUrl}/ipfs/upload`);
+
+      if (this.secretKey) {
+        xhr.setRequestHeader("x-secret-key", this.secretKey);
+      } else if (this.clientId) {
+        xhr.setRequestHeader("x-client-id", this.clientId);
+      }
+
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+      if (bundleId) {
+        xhr.setRequestHeader("x-bundle-id", bundleId);
+      }
+
+      xhr.setRequestHeader("x-sdk-version", pkg.version);
+      xhr.setRequestHeader("x-sdk-name", pkg.name);
+      xhr.setRequestHeader(
+        "x-sdk-platform",
+        bundleId ? "react-native" : isBrowser() ? "browser" : "node",
+      );
+
+      // if we have a authorization token on global context then add that to the headers
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        xhr.setRequestHeader(
+          "authorization",
+          `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
+        );
+      }
 
       xhr.send(form as any);
     });
@@ -320,24 +311,47 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
   ) {
-    const token = await this.getUploadToken();
-
     if (options?.onProgress) {
       console.warn("The onProgress option is only supported in the browser");
     }
-    const res = await fetch(PINATA_IPFS_URL, {
+
+    const headers: HeadersInit = {};
+    if (this.secretKey) {
+      headers["x-secret-key"] = this.secretKey;
+    } else if (this.clientId) {
+      headers["x-client-id"] = this.clientId;
+    }
+
+    // if we have a bundle id on global context then add that to the headers
+    if (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis) {
+      headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
+    }
+
+    // if we have a authorization token on global context then add that to the headers
+    if (
+      typeof globalThis !== "undefined" &&
+      "TW_AUTH_TOKEN" in globalThis &&
+      typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+    ) {
+      headers["authorization"] = `Bearer ${
+        (globalThis as any).TW_AUTH_TOKEN as string
+      }`;
+    }
+
+    const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...headers,
         ...form.getHeaders(),
       },
       body: form.getBuffer(),
     });
-    const body = await res.json();
     if (!res.ok) {
-      console.warn(body);
+      console.warn(await res.text());
       throw new Error("Failed to upload files to IPFS");
     }
+
+    const body = await res.json();
 
     const cid = body.IpfsHash;
     if (!cid) {

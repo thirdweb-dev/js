@@ -5,6 +5,9 @@ import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_AIRDROP_ERC20,
+  FEATURE_AIRDROP_ERC721,
+  FEATURE_AIRDROP_ERC1155,
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
@@ -14,8 +17,8 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
-  FEATURE_SMART_WALLET_FACTORY,
-  FEATURE_SMART_WALLET,
+  FEATURE_ACCOUNT_FACTORY,
+  FEATURE_ACCOUNT,
 } from "../constants/thirdweb-features";
 import { Transaction } from "../core/classes/transactions";
 import { ContractAppURI } from "../core/classes/contract-appuri";
@@ -53,21 +56,26 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  AirdropERC20,
   IAccountFactory,
-  IAccountCore
+  IAccountCore,
+  AirdropERC721,
+  AirdropERC1155,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
-
 import { NetworkInput } from "../core/types";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractOwner } from "../core/classes/contract-owner";
 import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
-import { SmartWalletFactory } from "../core/classes/smart-wallet-factory";
-import { SmartWallet } from "../core/classes/smart-wallet";
+import { AccountFactory } from "../core/classes/account-factory";
+import { Account } from "../core/classes/account";
+import { Airdrop20 } from "../core/classes/airdrop-erc20";
+import { Airdrop721 } from "../core/classes/airdrop-erc721";
+import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -109,7 +117,7 @@ export class SmartContract<
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
   public abi: Abi;
-  public metadata: ContractMetadata<BaseContract, any>;
+  public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
 
   /**
    * Handle royalties
@@ -128,7 +136,7 @@ export class SmartContract<
   /**
    * Handle primary sales
    */
-  get sales(): ContractPrimarySale<IPrimarySale> {
+  get sales(): ContractPrimarySale {
     return assertEnabled(this.detectPrimarySales(), FEATURE_PRIMARY_SALE);
   }
 
@@ -298,47 +306,53 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  get airdrop20(): Airdrop20<AirdropERC20> {
+    return assertEnabled(this.detectAirdrop20(), FEATURE_AIRDROP_ERC20);
+  }
+
+  get airdrop721(): Airdrop721<AirdropERC721> {
+    return assertEnabled(this.detectAirdrop721(), FEATURE_AIRDROP_ERC721);
+  }
+
+  get airdrop1155(): Airdrop1155<AirdropERC1155> {
+    return assertEnabled(this.detectAirdrop1155(), FEATURE_AIRDROP_ERC1155);
+  }
+
   /**
-   * Smart Wallet Factory
+   * Account Factory
    *
-   * @remarks Create smart wallets and fetch data about them.
+   * @remarks Create accounts and fetch data about them.
    * @example
    * ```javascript
    *
-   * // Predict the address of the smart wallet that will be created for an admin.
-   * const deterministicAddress = await contract.smartWalletFactory.predictWalletAddress(admin, extraData);
+   * // Predict the address of the account that will be created for an admin.
+   * const deterministicAddress = await contract.accountFactory.predictAccountAddress(admin, extraData);
    *
-   * // Create smart wallets
-   * const tx = await contract.smartWalletFactory.createWallet(admin, extraData);
+   * // Create accounts
+   * const tx = await contract.accountFactory.createAccount(admin, extraData);
    * // the same as `deterministicAddress`
-   * const smartWalletAddress = tx.address;
+   * const accountAddress = tx.address;
    *
-   * // Get all smart wallets created by the factory
-   * const allWallets = await contract.smartWalletFactory.getAllWallets();
+   * // Get all accounts created by the factory
+   * const allAccounts = await contract.accountFactory.getAllAccounts();
    *
-   * // Get all smart wallets on which a signer has been given authority.
-   * const associatedWallets = await contract.smartWalletFactory.getAssociatedWallets(signer);
+   * // Get all accounts on which a signer has been given authority.
+   * const associatedAccounts = await contract.accountFactory.getAssociatedAccounts(signer);
    *
-   * // Get all signers who have been given authority on a smart wallet.
-   * const associatedSigners = await contract.smartWalletFactory.getAssociatedSigners(smartWalletAddress);
+   * // Get all signers who have been given authority on a account.
+   * const associatedSigners = await contract.accountFactory.getAssociatedSigners(accountAddress);
    *
-   * // Check whether a smart wallet has already been created for a given admin.
-   * const isWalletDeployed = await contract.smartWalletFactory.isWalletDeployed(admin, extraData);
+   * // Check whether a account has already been created for a given admin.
+   * const isAccountDeployed = await contract.accountFactory.isAccountDeployed(admin, extraData);
    * ```
    */
-  get smartWalletFactory(): SmartWalletFactory<IAccountFactory> {
-    return assertEnabled(
-      this.detectSmartWalletFactory(),
-      FEATURE_SMART_WALLET_FACTORY,
-    );
+  get accountFactory(): AccountFactory<IAccountFactory> {
+    return assertEnabled(this.detectAccountFactory(), FEATURE_ACCOUNT_FACTORY);
   }
 
   // TODO documentation
-  get smartWallet(): SmartWallet<IAccountCore> {
-    return assertEnabled(
-      this.detectSmartWallet(),
-      FEATURE_SMART_WALLET,
-    )
+  get account(): Account<IAccountCore> {
+    return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
   private _chainId: number;
@@ -358,6 +372,7 @@ export class SmartContract<
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;
@@ -568,25 +583,61 @@ export class SmartContract<
     return undefined;
   }
 
-  // ========== Smart account features ==========
-
-  private detectSmartWalletFactory() {
+  private detectAirdrop20() {
     if (
-      detectContractFeature<IAccountFactory>(
-        this.contractWrapper,
-        FEATURE_SMART_WALLET_FACTORY.name,
-      )
+      detectContractFeature<AirdropERC20>(this.contractWrapper, "AirdropERC20")
     ) {
-      return new SmartWalletFactory(this.contractWrapper);
+      return new Airdrop20(this.contractWrapper);
     }
     return undefined;
   }
 
-  private detectSmartWallet() {
+  private detectAirdrop721() {
     if (
-      detectContractFeature<IAccountCore>(this.contractWrapper, FEATURE_SMART_WALLET.name)
+      detectContractFeature<AirdropERC721>(
+        this.contractWrapper,
+        "AirdropERC721",
+      )
     ) {
-      return new SmartWallet(this.contractWrapper);
+      return new Airdrop721(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop1155() {
+    if (
+      detectContractFeature<AirdropERC1155>(
+        this.contractWrapper,
+        "AirdropERC1155",
+      )
+    ) {
+      return new Airdrop1155(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  // ========== Account features ==========
+
+  private detectAccountFactory() {
+    if (
+      detectContractFeature<IAccountFactory>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT_FACTORY.name,
+      )
+    ) {
+      return new AccountFactory(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAccount() {
+    if (
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        FEATURE_ACCOUNT.name,
+      )
+    ) {
+      return new Account(this.contractWrapper);
     }
     return undefined;
   }

@@ -1,22 +1,18 @@
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { WC2Options, WalletConnectV2 } from "./WalletConnectV2";
 import { WCMeta } from "../types/wc";
+import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
 
-export class TrustWallet extends WalletConnectV2 {
+export class TrustWallet extends WalletConnectBase {
   static id = "trust" as const;
   static meta = {
     name: "Trust Wallet",
     iconURL:
-      "https://registry.walletconnect.org/v2/logo/md/0528ee7e-16d1-4089-21e3-bbfb41933100",
+      "ipfs://QmNigQbXk7wKZwDcgN38Znj1ZZQ3JEG3DD6fUKLBU8SUTP/trust%20wallet.svg",
     links: {
       native: "trust:",
       universal: "https://link.trustwallet.com",
     },
   };
-
-  constructor(options: WC2Options) {
-    super(options);
-  }
 
   getMeta(): WCMeta {
     return TrustWallet.meta;
@@ -35,5 +31,5 @@ export const trustWallet = (config?: TrustWalletConfig) => {
         walletId: "trust",
         projectId: config?.projectId,
       }),
-  } satisfies WalletConfig<WalletConnectV2>;
+  } satisfies WalletConfig<WalletConnectBase>;
 };

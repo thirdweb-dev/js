@@ -1,5 +1,4 @@
-import { ThirdwebAuth } from "../../core";
-import { Json, LoginPayloadOutputSchema, User } from "../../core/schema";
+import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
 import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
@@ -55,6 +54,7 @@ export type ThirdwebAuthConfig<
     validateTokenId?:
       | ((tokenId: string) => void)
       | ((tokenId: string) => Promise<void>);
+    loginPayloadDurationInSeconds?: number;
     tokenDurationInSeconds?: number;
     refreshIntervalInSeconds?: number;
   };

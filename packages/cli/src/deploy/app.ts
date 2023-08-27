@@ -1,30 +1,67 @@
-import NPMDetector from "../core/detection/npm";
-import ViteDetector from "../core/detection/vite";
-import YarnDetector from "../core/detection/yarn";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import detectFramework from "../core/detection/detectFramework";
+import detectPackageManager from "../core/detection/detectPackageManager";
+import { logger } from "../core/helpers/logger";
 import { runCommand } from "../create/helpers/run-command";
 import { upload } from "../storage/command";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-export async function deployApp(distPath = "dist", projectPath = ".") {
-  const storage = new ThirdwebStorage();
-  const supportedFrameworks = [new ViteDetector()];
+export async function deployApp(
+  distPath = "dist",
+  projectPath = ".",
+  apiSecretKey: string,
+) {
+  const storage = new ThirdwebStorage({
+    secretKey: apiSecretKey,
+  });
+  const detectedPackageManager = await detectPackageManager(projectPath, {});
+  const detectedFramework = await detectFramework(
+    projectPath,
+    {},
+    detectedPackageManager,
+  );
 
-  const possibleProjects = supportedFrameworks
-    .filter((detector) => detector.matches(projectPath))
-    .map((detector) => detector.projectType);
-
-  const hasYarn = new YarnDetector().matches(".");
-  const hasNPM = new NPMDetector().matches(".");
-
-  if (possibleProjects.length === 0) {
+  if (detectedFramework === "none") {
     throw new Error("No supported project detected");
   }
 
+  switch (detectedFramework) {
+    case "next":
+      distPath = "out";
+      break;
+    case "cra":
+      distPath = "build";
+      break;
+    default:
+      break;
+  }
+
+  logger.info(`Detected project type: ${detectedFramework}`);
+  logger.info(`Detected package manager: ${detectedPackageManager}`);
+  logger.info(`distPath: ${distPath}`);
+  logger.info(`projectPath: ${projectPath}`);
+
   try {
-    if (hasYarn) {
-      await runCommand("yarn", ["build"]);
-    } else if (hasNPM) {
-      await runCommand("npm", ["build"]);
+    switch (detectedPackageManager) {
+      case "yarn":
+        await runCommand("yarn", ["build"], true);
+        if (detectedFramework === "next") {
+          await runCommand("yarn", ["next", "export"], true);
+        }
+        break;
+      case "npm":
+        await runCommand("npm", ["run", "build"], true);
+        if (detectedFramework === "next") {
+          await runCommand("npx", ["next", "export"], true);
+        }
+        break;
+      case "pnpm":
+        await runCommand("pnpm", ["build"], true);
+        if (detectedFramework === "next") {
+          await runCommand("pnpm", ["next", "export"], true);
+        }
+        break;
+      default:
+        throw new Error("No supported package manager detected");
     }
   } catch (err) {
     console.error("Can't build project");
@@ -33,9 +70,12 @@ export async function deployApp(distPath = "dist", projectPath = ".") {
 
   try {
     const uri = await upload(storage, distPath);
-    return `https://thirdweb.com/app/deploy/${uri.replace("ipfs://", "")}`;
+    return `${uri.replace(
+      "ipfs://",
+      "https://cf-ipfs.com/ipfs/",
+    )}`;
   } catch (err) {
-    console.error("Can't upload project");
+    console.error("Can't upload project", err);
     return Promise.reject("Can't upload project");
   }
 }

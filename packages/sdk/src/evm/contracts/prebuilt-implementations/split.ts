@@ -1,3 +1,11 @@
+import type {
+  IERC20,
+  Split as SplitContract,
+} from "@thirdweb-dev/contracts-js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, CallOverrides, Contract } from "ethers";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
@@ -11,21 +19,13 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { SplitsContractSchema } from "../../schema/contracts/splits";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SplitRecipient } from "../../types/SplitRecipient";
 import { CurrencyValue } from "../../types/currency";
-import type {
-  IERC20,
-  Split as SplitContract,
-} from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, Contract } from "ethers";
-import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { ADMIN_ROLE } from "../contractRoles";
 
 /**
@@ -81,6 +81,7 @@ export class Split implements UpdateableNetwork {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     this._chainId = chainId;
@@ -406,7 +407,8 @@ export class Split implements UpdateableNetwork {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+    TMethod extends
+      keyof SplitContract["functions"] = keyof SplitContract["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<SplitContract["functions"][TMethod]>,
@@ -424,7 +426,8 @@ export class Split implements UpdateableNetwork {
    * @internal
    */
   public async call<
-    TMethod extends keyof SplitContract["functions"] = keyof SplitContract["functions"],
+    TMethod extends
+      keyof SplitContract["functions"] = keyof SplitContract["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<SplitContract["functions"][TMethod]>,

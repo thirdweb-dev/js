@@ -59,6 +59,7 @@ export class ContractVerifier extends RPCConnectionHandler {
     contractName: string,
     explorerAPIUrl: string,
     explorerAPIKey: string,
+    contractVersion: string = "latest",
     constructorArgs?: ConstructorParamMap,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
@@ -68,6 +69,9 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
+      contractVersion,
+      this.options.clientId,
+      this.options.secretKey,
       constructorArgs,
     );
 
@@ -123,10 +127,7 @@ export class ContractVerifier extends RPCConnectionHandler {
         return arg.value;
       });
 
-      encodedArgs = utils.defaultAbiCoder.encode(
-        paramTypes,
-        paramValues,
-      );
+      encodedArgs = utils.defaultAbiCoder.encode(paramTypes, paramValues);
     }
 
     const guid = await verify(

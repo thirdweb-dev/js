@@ -137,10 +137,10 @@ export class FoundryBuilder extends BaseBuilder {
       // Not to sort the array
       return object;
     }
-    var keys = Object.keys(object);
+    const keys = Object.keys(object);
     keys.sort();
-    var newObject: any = {};
-    for (var i = 0; i < keys.length; i++) {
+    const newObject: any = {};
+    for (let i = 0; i < keys.length; i++) {
       newObject[keys[i]] = this.sort(object[keys[i]]);
     }
     return newObject;

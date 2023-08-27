@@ -1,4 +1,3 @@
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebProviderCore,
   ThirdwebProviderCoreProps,
@@ -18,15 +17,15 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
     "createWalletStorage" | "supportedWallets"
   > {
   /**
-   * Wallets that will be supported by the dApp
-   * @defaultValue [metamaskWallet(), coinbaseWallet(), walletConnectV1()]
+   * Wallets supported by the dApp
+   * @defaultValue `[ metamaskWallet(), coinbaseWallet(), walletConnect() ]`
    *
    * @example
    * ```jsx
-   * import { metamaskWallet, coinbaseWallet, walletConnectV1 } from "@thirdweb-dev/react";
+   * import { metamaskWallet, coinbaseWallet, walletConnect } from "@thirdweb-dev/react";
    *
    * <ThirdwebProvider
-   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnectV1()]}
+   *  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
    * />
    * ```
    */
@@ -57,7 +56,6 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
-  thirdwebApiKey = DEFAULT_API_KEY,
   supportedWallets,
   theme,
   children,
@@ -70,7 +68,6 @@ export const ThirdwebProvider = <
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}
-          thirdwebApiKey={thirdwebApiKey}
           supportedWallets={wallets}
           {...restProps}
         >

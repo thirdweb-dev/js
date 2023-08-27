@@ -1,6 +1,9 @@
 import { DAppMetaData } from "../types/dAppMeta";
-import type { WalletConfig, WalletInstance } from "../types/wallet";
-import { ThirdwebThemeContext } from "./theme-context";
+import type {
+  WalletConfig,
+  WalletInstance,
+  WalletOptions,
+} from "../types/wallet";
 import { Chain } from "@thirdweb-dev/chains";
 import {
   AbstractClientWallet,
@@ -86,6 +89,7 @@ type ThirdwebWalletContextData = {
    * Get wallet config object from wallet instance
    */
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
+  activeChainSetExplicitly: boolean;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -101,11 +105,16 @@ export function ThirdwebWalletProvider(
     dAppMeta?: DAppMetaData;
     chains: Chain[];
     autoSwitch?: boolean;
+    autoConnectTimeout?: number;
+    clientId?: string;
+    activeChainSetExplicitly: boolean;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("unknown");
+
+  const autoConnectTimeout = props.autoConnectTimeout || 15000;
 
   const [activeWallet, setActiveWallet] = useState<
     WalletInstance | undefined
@@ -127,21 +136,14 @@ export function ThirdwebWalletProvider(
   // if autoSwitch is enabled - enforce connection to activeChain
   const chainToConnect = props.autoSwitch ? props.activeChain : undefined;
 
-  const theme = useContext(ThirdwebThemeContext);
-
-  const walletParams = useMemo(() => {
-    const walletChains = props.chains;
-    const walletOptions = {
-      chains: walletChains,
-      dappMetadata: props.dAppMeta,
-    };
-
+  const walletParams: WalletOptions = useMemo(() => {
     return {
-      ...walletOptions,
+      chains: props.chains,
+      dappMetadata: props.dAppMeta,
       chain: props.activeChain || props.chains[0],
-      theme: theme || "dark",
+      clientId: props.clientId,
     };
-  }, [props.chains, props.dAppMeta, props.activeChain, theme]);
+  }, [props.chains, props.dAppMeta, props.activeChain, props.clientId]);
 
   const createWalletInstance = useCallback(
     <I extends WalletInstance>(walletConfig: WalletConfig<I>): I => {
@@ -229,7 +231,11 @@ export function ThirdwebWalletProvider(
 
     try {
       const parsedWallet = JSON.parse(lastConnectedWallet as string);
-      parsedWallet.connectParams.chainId = chainId;
+      if (parsedWallet.connectParams) {
+        parsedWallet.connectParams.chainId = chainId;
+      } else {
+        parsedWallet.connectParams = { chainId };
+      }
       await lastConnectedWalletStorage.setItem(
         LAST_CONNECTED_WALLET_STORAGE_KEY,
         JSON.stringify(parsedWallet),
@@ -311,10 +317,17 @@ export function ThirdwebWalletProvider(
           const personalWalletInstance = createWalletInstance(personalWalleObj);
 
           try {
-            await personalWalletInstance.autoConnect(
-              personalWalletInfo.connectParams,
+            await timeoutPromise(
+              personalWalletInstance.autoConnect(
+                personalWalletInfo.connectParams,
+              ),
+              {
+                ms: autoConnectTimeout,
+                message: autoConnectTimeoutErrorMessage,
+              },
             );
           } catch (e) {
+            console.error("Failed to auto connect wallet");
             console.error(e);
             setConnectionStatus("disconnected");
             return;
@@ -337,9 +350,13 @@ export function ThirdwebWalletProvider(
 
       try {
         setConnectionStatus("connecting");
-        await wallet.autoConnect(walletInfo.connectParams);
+        await timeoutPromise(wallet.autoConnect(walletInfo.connectParams), {
+          ms: autoConnectTimeout,
+          message: autoConnectTimeoutErrorMessage,
+        });
         setConnectedWallet(wallet, walletInfo.connectParams, true);
       } catch (e) {
+        console.error("Failed to auto connect wallet");
         console.error(e);
         lastConnectedWalletStorage.removeItem(
           LAST_CONNECTED_WALLET_STORAGE_KEY,
@@ -356,6 +373,7 @@ export function ThirdwebWalletProvider(
     props.shouldAutoConnect,
     activeWallet,
     connectionStatus,
+    autoConnectTimeout,
   ]);
 
   const connectWallet = useCallback(
@@ -370,6 +388,14 @@ export function ThirdwebWalletProvider(
       const wallet = createWalletInstance(WalletObj);
       setConnectionStatus("connecting");
       try {
+        // if magic is using social login - it will redirect the page - so need to save walletInfo before connecting
+        // TODO: find a better way to handle this
+        if (WalletObj.id === walletIds.magicLink) {
+          saveLastConnectedWalletInfo({
+            walletId: WalletObj.id,
+            connectParams: _connectedParams,
+          });
+        }
         await wallet.connect(_connectedParams);
         setConnectedWallet(wallet, _connectedParams);
       } catch (e: any) {
@@ -456,6 +482,7 @@ export function ThirdwebWalletProvider(
         getWalletConfig: (walletInstance: WalletInstance) => {
           return walletInstanceToConfig.get(walletInstance);
         },
+        activeChainSetExplicitly: props.activeChainSetExplicitly,
       }}
     >
       {props.children}
@@ -481,7 +508,14 @@ async function getLastConnectedWalletInfo() {
     return null;
   }
 
-  return JSON.parse(str) as LastConnectedWalletInfo;
+  try {
+    return JSON.parse(str) as LastConnectedWalletInfo;
+  } catch {
+    await lastConnectedWalletStorage.removeItem(
+      LAST_CONNECTED_WALLET_STORAGE_KEY,
+    );
+    return null;
+  }
 }
 
 async function saveLastConnectedWalletInfo(
@@ -496,3 +530,34 @@ async function saveLastConnectedWalletInfo(
     console.error("Error saving the last connected wallet info", e);
   }
 }
+
+/**
+ * Timeout a promise with a given Error message if the promise does not resolve in given time
+ *
+ * @param promise - Promise to track for timeout
+ * @param option - timeout options
+ * @returns
+ */
+function timeoutPromise<T>(
+  promise: Promise<T>,
+  option: { ms: number; message: string },
+) {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(option.message));
+    }, option.ms);
+
+    promise.then(
+      (res) => {
+        clearTimeout(timeoutId);
+        resolve(res);
+      },
+      (err) => {
+        clearTimeout(timeoutId);
+        reject(err);
+      },
+    );
+  });
+}
+
+const autoConnectTimeoutErrorMessage = `Failed to Auto connect. Auto connect timed out. You can increase the timeout duration using the autoConnectTimeout prop on <ThirdwebProvider />`;

@@ -10,10 +10,12 @@ import {
 import {
   FileOrBufferOrString,
   GatewayUrls,
-  IpfsUploadBatchOptions,
   IStorageDownloader,
-  ThirdwebStorageOptions,
   IStorageUploader,
+  IThirdwebStorage,
+  IpfsUploadBatchOptions,
+  SingleDownloadOptions,
+  ThirdwebStorageOptions,
   UploadOptions,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
@@ -24,8 +26,13 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  *
  * @example
  * ```jsx
- * // Create a default storage class without any configuration
- * const storage = new ThirdwebStorage();
+ * // Create a default storage class with a client ID when used in client-side applications
+ * const storage = new ThirdwebStorage({ clientId: "your-client-id" });
+ *
+ * // Create a default storage class with a secret key when used in server-side applications
+ * const storage = new ThirdwebStorage({ secretKey: "your-secret-key" });
+ *
+ * You can get a clientId and secretKey from https://thirdweb.com/create-api-key
  *
  * // Upload any file or JSON object
  * const uri = await storage.upload(data);
@@ -42,22 +49,40 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  * };
  * const downloader = new StorageDownloader();
  * const uploader = new IpfsUploader();
- * const storage = new ThirdwebStorage({ uploader, downloader, gatewayUrls });
+ * const clientId = "your-client-id";
+ * const storage = new ThirdwebStorage({ clientId, uploader, downloader, gatewayUrls });
  * ```
  *
  * @public
  */
-export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
+export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
+  implements IThirdwebStorage
+{
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
-  public gatewayUrls: GatewayUrls;
+  private gatewayUrls: GatewayUrls;
+  private clientId?: string;
 
   constructor(options?: ThirdwebStorageOptions<T>) {
-    this.uploader = options?.uploader || new IpfsUploader();
-    this.downloader = options?.downloader || new StorageDownloader();
+    this.uploader =
+      options?.uploader ||
+      new IpfsUploader({
+        clientId: options?.clientId,
+        secretKey: options?.secretKey,
+        uploadServerUrl: options?.uploadServerUrl,
+      });
+    this.downloader =
+      options?.downloader ||
+      new StorageDownloader({
+        secretKey: options?.secretKey,
+        clientId: options?.clientId,
+      });
     this.gatewayUrls = prepareGatewayUrls(
       parseGatewayUrls(options?.gatewayUrls),
+      options?.clientId,
+      options?.secretKey,
     );
+    this.clientId = options?.clientId;
   }
 
   /**
@@ -74,7 +99,12 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
    * ```
    */
   resolveScheme(url: string): string {
-    return replaceSchemeWithGatewayUrl(url, this.gatewayUrls) as string;
+    return replaceSchemeWithGatewayUrl(
+      url,
+      this.gatewayUrls,
+      0,
+      this.clientId,
+    ) as string;
   }
 
   /**
@@ -89,8 +119,11 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
    * const data = await storage.download(uri);
    * ```
    */
-  async download(url: string): Promise<Response> {
-    return this.downloader.download(url, this.gatewayUrls);
+  async download(
+    url: string,
+    options?: SingleDownloadOptions,
+  ): Promise<Response> {
+    return this.downloader.download(url, this.gatewayUrls, options);
   }
 
   /**
@@ -106,12 +139,19 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
    * const json = await storage.downloadJSON(uri);
    * ```
    */
-  async downloadJSON<TJSON = any>(url: string): Promise<TJSON> {
-    const res = await this.download(url);
+  async downloadJSON<TJSON = any>(
+    url: string,
+    options?: SingleDownloadOptions,
+  ): Promise<TJSON> {
+    const res = await this.download(url, options);
 
     // If we get a JSON object, recursively replace any schemes with gatewayUrls
     const json = await res.json();
-    return replaceObjectSchemesWithGatewayUrls(json, this.gatewayUrls) as TJSON;
+    return replaceObjectSchemesWithGatewayUrls(
+      json,
+      this.gatewayUrls,
+      this.clientId,
+    ) as TJSON;
   }
 
   /**
@@ -203,6 +243,10 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     }
   }
 
+  getGatewayUrls(): GatewayUrls {
+    return this.gatewayUrls;
+  }
+
   private async uploadAndReplaceFilesWithHashes(
     data: unknown[],
     options?: T,
@@ -231,6 +275,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
       cleaned = replaceObjectSchemesWithGatewayUrls(
         cleaned,
         this.gatewayUrls,
+        this.clientId,
       ) as unknown[];
     }
 

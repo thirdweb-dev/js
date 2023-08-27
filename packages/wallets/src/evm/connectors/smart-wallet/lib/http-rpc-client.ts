@@ -1,9 +1,13 @@
-import { providers } from "ethers";
-import { resolveProperties } from "ethers/lib/utils";
+import { providers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { deepHexlify } from "@account-abstraction/utils";
+import { isTwUrl } from "../../../utils/url";
+import pkg from "../../../../../package.json";
 
 const DEBUG = false;
+function isBrowser() {
+  return typeof window !== "undefined";
+}
 
 export class HttpRpcClient {
   private readonly userOpJsonRpcProvider: providers.JsonRpcProvider;
@@ -17,17 +21,54 @@ export class HttpRpcClient {
     bundlerUrl: string,
     entryPointAddress: string,
     chainId: number,
-    apiKey: string,
+    clientId?: string,
+    secretKey?: string,
   ) {
     this.bundlerUrl = bundlerUrl;
     this.entryPointAddress = entryPointAddress;
     this.chainId = chainId;
+
+    const headers: Record<string, string> = {};
+
+    if (isTwUrl(this.bundlerUrl)) {
+      const bundleId =
+        typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
+          ? ((globalThis as any).APP_BUNDLE_ID as string)
+          : undefined;
+
+      if (secretKey) {
+        headers["x-secret-key"] = secretKey;
+      } else if (clientId) {
+        headers["x-client-id"] = clientId;
+
+        if (bundleId) {
+          headers["x-bundle-id"] = bundleId;
+        }
+      }
+
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      }
+
+      headers["x-sdk-version"] = pkg.version;
+      headers["x-sdk-name"] = pkg.name;
+      headers["x-sdk-platform"] = bundleId
+        ? "react-native"
+        : isBrowser()
+        ? "browser"
+        : "node";
+    }
+
     this.userOpJsonRpcProvider = new providers.JsonRpcProvider(
       {
         url: this.bundlerUrl,
-        headers: {
-          "x-api-key": apiKey,
-        },
+        headers,
       },
       {
         name: "Connected bundler network",
@@ -55,7 +96,7 @@ export class HttpRpcClient {
    */
   async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -71,7 +112,7 @@ export class HttpRpcClient {
     userOp1: Partial<UserOperationStruct>,
   ): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const hexifiedUserOp = deepHexlify(await utils.resolveProperties(userOp1));
     const jsonRequestData: [UserOperationStruct, string] = [
       hexifiedUserOp,
       this.entryPointAddress,
@@ -93,7 +134,7 @@ export class HttpRpcClient {
     if (!DEBUG) {
       return;
     }
-    const userOp = await resolveProperties(userOp1);
+    const userOp = await utils.resolveProperties(userOp1);
     console.debug(
       "sending",
       method,

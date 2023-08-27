@@ -1,23 +1,8 @@
 import mime from "mime/lite.js";
-import {
-  parseGatewayUrls,
-  prepareGatewayUrls,
-  replaceSchemeWithGatewayUrl,
-} from "@thirdweb-dev/storage";
 
 // TODO legacy remove this when possible
 export interface IPFSResolverOptions {
   gatewayUrl: string;
-}
-
-export function resolveIpfsUri(uri?: string, options?: IPFSResolverOptions) {
-  if (!uri) {
-    return undefined;
-  }
-  const gatewayUrls = prepareGatewayUrls(
-    parseGatewayUrls(options?.gatewayUrl ? [options?.gatewayUrl] : undefined),
-  );
-  return replaceSchemeWithGatewayUrl(uri, gatewayUrls);
 }
 
 export async function resolveMimeType(url?: string) {

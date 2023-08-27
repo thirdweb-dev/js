@@ -7,6 +7,8 @@ export { useSafe } from "./connectors/gnosis";
 export { useMagic } from "./connectors/magic";
 
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
+export { ConnectModalInline } from "../wallet/ConnectWallet/ConnectModal";
+
 export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
 export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
 
@@ -20,9 +22,12 @@ export { ThirdwebProvider } from "./providers/thirdweb-provider";
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
 
 // wallet connection hooks
+export { useRainbowWallet } from "./hooks/wallets/useRainbowWallet";
+export { useTrustWallet } from "./hooks/wallets/useTrustWallet";
 export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
 export { useFrameWallet } from "./hooks/wallets/useFrame";
+export { useBloctoWallet } from "./hooks/wallets/useBloctoWallet";
 
 export {
   usePaperWalletUserEmail,

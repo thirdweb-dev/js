@@ -11,7 +11,7 @@ import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
 } from "../../schema/marketplacev3/english-auctions";
-import type { MarketplaceFilter } from "../../types/marketplace";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
 import { CurrencyValue, Price } from "../../types/currency";
 import { EnglishAuction, Bid } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -104,18 +104,20 @@ export class MarketplaceV3EnglishAuctions<
    * @returns the Auction object array
    * @twfeature EnglishAuctions
    */
-  public async getAll(filter?: MarketplaceFilter): Promise<EnglishAuction[]> {
+  public async getAll(
+    filter?: MarketplaceFilterWithoutOfferor,
+  ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalAuctions.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalAuctions.toNumber();
 
     if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllAuctions,
@@ -142,19 +144,19 @@ export class MarketplaceV3EnglishAuctions<
    * @twfeature EnglishAuctions
    */
   public async getAllValid(
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutOfferor,
   ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalAuctions.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalAuctions.toNumber();
 
     if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidAuctions,
@@ -748,7 +750,7 @@ export class MarketplaceV3EnglishAuctions<
     const [currentBidBufferBps, winningBid, auction] = await Promise.all([
       this.getBidBufferBps(auctionId),
       this.getWinningBid(auctionId),
-      await this.validateAuction(BigNumber.from(auctionId)),
+      this.validateAuction(BigNumber.from(auctionId)),
     ]);
 
     const currentBidOrReservePrice = winningBid
@@ -885,7 +887,7 @@ export class MarketplaceV3EnglishAuctions<
 
   private async applyFilter(
     auctions: IEnglishAuctions.AuctionStructOutput[],
-    filter?: MarketplaceFilter,
+    filter?: MarketplaceFilterWithoutOfferor,
   ) {
     let rawAuctions = [...auctions];
 

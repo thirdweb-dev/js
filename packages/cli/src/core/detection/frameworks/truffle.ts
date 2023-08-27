@@ -16,10 +16,7 @@ export default class TruffleDetector implements FrameworkDetector {
     const packageJson = readFileSync(packageJsonPath);
     const { dependencies, devDependencies } = parsePackageJson(packageJson);
 
-    const additionalFilesToCheck = [
-      "/truffle.config.js",
-      "/truffle.js",
-    ];
+    const additionalFilesToCheck = ["/truffle.config.js", "/truffle.js"];
     const additionalFilesExist = additionalFilesToCheck.some((file) =>
       existsSync(path + file),
     );

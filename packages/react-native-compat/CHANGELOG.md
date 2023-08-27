@@ -1,5 +1,87 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.2.56
+
+## 0.2.55
+
+## 0.2.54
+
+## 0.2.53
+
+## 0.2.52
+
+## 0.2.51
+
+## 0.2.50
+
+## 0.2.49
+
+## 0.2.48
+
+## 0.2.47
+
+## 0.2.46
+
+## 0.2.45
+
+## 0.2.44
+
+## 0.2.43
+
+## 0.2.42
+
+## 0.2.41
+
+## 0.2.40
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.2.39
+
+## 0.2.38
+
+## 0.2.37
+
+## 0.2.36
+
+### Patch Changes
+
+- [#1316](https://github.com/thirdweb-dev/js/pull/1316) [`d8447146`](https://github.com/thirdweb-dev/js/commit/d8447146092c1962f410155ab2047225453aaa2b) Thanks [@iketw](https://github.com/iketw)! - Adds support for clientId / secretKey
+
+## 0.2.35
+
+## 0.2.34
+
+## 0.2.33
+
+## 0.2.32
+
+## 0.2.31
+
+## 0.2.30
+
+## 0.2.29
+
+## 0.2.28
+
+## 0.2.27
+
+### Patch Changes
+
+- [#1278](https://github.com/thirdweb-dev/js/pull/1278) [`8a389f12`](https://github.com/thirdweb-dev/js/commit/8a389f1295d2bf726059997ea0ca10cf0424f2a2) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+## 0.2.26
+
+## 0.2.25
+
+## 0.2.24
+
+## 0.2.23
+
+## 0.2.22
+
 ## 0.2.21
 
 ## 0.2.20

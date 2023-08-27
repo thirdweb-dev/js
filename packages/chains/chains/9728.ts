@@ -7,7 +7,9 @@ export default {
     "https://testnet.bnb.boba.network",
     "wss://wss.testnet.bnb.boba.network",
     "https://replica.testnet.bnb.boba.network",
-    "wss://replica-wss.testnet.bnb.boba.network"
+    "wss://replica-wss.testnet.bnb.boba.network",
+    "https://boba-bnb-testnet.gateway.tenderly.co",
+    "wss://boba-bnb-testnet.gateway.tenderly.co"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -26,6 +28,15 @@ export default {
       "standard": "none"
     }
   ],
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "testnet": true,
   "slug": "boba-bnb-testnet"
 } as const satisfies Chain;

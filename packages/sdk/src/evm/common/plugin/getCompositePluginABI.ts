@@ -29,16 +29,17 @@ export async function getCompositePluginABI(
       AbiSchema.parse(abi),
       "PluginRouter",
     );
-    const isExtensionRouter: boolean = isFeatureEnabled(
+    const isbaseRouter: boolean = isFeatureEnabled(
       AbiSchema.parse(abi),
-      "ExtensionRouter",
+      "DynamicContract",
     );
-    if (isExtensionRouter) {
+    if (isbaseRouter) {
       const contract = new ContractWrapper(
         provider,
         address,
         getAllExtensionsAbi,
         options,
+        storage,
       );
 
       const plugins = await contract.call("getAllExtensions");
@@ -56,6 +57,7 @@ export async function getCompositePluginABI(
         address,
         getAllPluginsAbi,
         options,
+        storage,
       );
 
       const pluginMap = await contract.call("getAllPlugins");

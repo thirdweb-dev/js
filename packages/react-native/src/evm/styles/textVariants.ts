@@ -36,7 +36,7 @@ export const textVariants = {
     color: "textSecondary",
     textAlign: "left",
     fontWeight: "600",
-    fontSize: 13,
+    fontSize: 14,
     lineHeight: 16,
   },
   error: {

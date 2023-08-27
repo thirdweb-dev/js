@@ -1,8 +1,11 @@
 import { CREATE_MESSAGES } from "../constants/constants";
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 
+// load env variables
+require("dotenv-mono").load();
+
 // this creates an app, can take some time that's fine
-jest.setTimeout(120_000);
+jest.setTimeout(240_000);
 
 describe("npx thirdweb detect", () => {
   it("should detect ERC721Base extensions", async () => {

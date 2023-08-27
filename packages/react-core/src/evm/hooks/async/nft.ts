@@ -1,9 +1,9 @@
-import { BasicNFTInput } from "@thirdweb-dev/sdk/dist/declarations/src/core/schema/nft";
+import type { BasicNFTInput } from "@thirdweb-dev/sdk";
 import {
   requiredParamInvariant,
   RequiredParam,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
+import { useSDKChainId } from "../useSDK";
 import {
   AirdropNFTParams,
   BurnNFTParams,
@@ -256,7 +256,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
       invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
+      enabled: (!!erc721 || !!erc1155) && !!ownerWalletAddress,
     },
   );
 }

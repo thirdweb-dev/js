@@ -4,7 +4,12 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://boba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.boba.network/"
+    "https://mainnet.boba.network",
+    "https://replica.boba.network",
+    "https://boba-ethereum.gateway.tenderly.co",
+    "https://gateway.tenderly.co/public/boba-ethereum",
+    "wss://boba-ethereum.gateway.tenderly.co/",
+    "wss://gateway.tenderly.co/public/boba-ethereum"
   ],
   "faucets": [],
   "nativeCurrency": {

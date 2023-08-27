@@ -11,4 +11,7 @@ export interface MagicConnectorOptions {
   phoneNumber?: string;
 }
 
-export type MagicLinkOptions = WalletOptions<MagicConnectorOptions>;
+export type MagicLinkOptions = Omit<
+  WalletOptions<MagicConnectorOptions>,
+  "clientId"
+>;

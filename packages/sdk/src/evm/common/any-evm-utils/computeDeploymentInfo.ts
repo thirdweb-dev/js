@@ -7,7 +7,10 @@ import {
   ContractOptions,
   DeploymentPreset,
 } from "../../types/any-evm/deploy-data";
-import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "./fetchPublishedContractFromPolygon";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
@@ -18,6 +21,7 @@ import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
 import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
+import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
 
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
@@ -25,8 +29,12 @@ export async function computeDeploymentInfo(
   storage: ThirdwebStorage,
   create2Factory: string,
   contractOptions?: ContractOptions,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset> {
-  let contractName = contractOptions && contractOptions.contractName;
+  const contractName = contractOptions && contractOptions.contractName;
+  const version = contractOptions && contractOptions.version;
+  let publisherAddress = contractOptions && contractOptions.publisherAddress;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -56,9 +64,20 @@ export async function computeDeploymentInfo(
 
   if (!metadata) {
     invariant(contractName, "Require contract name");
-    const uri = await fetchAndCachePublishedContractURI(contractName);
-    metadata = (await fetchAndCacheDeployMetadata(uri, storage))
-      .compilerMetadata;
+    if (!publisherAddress) {
+      publisherAddress = THIRDWEB_DEPLOYER;
+    }
+    const publishedContract = await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      version,
+      storage,
+      clientId,
+      secretKey,
+    );
+    metadata = (
+      await fetchAndCacheDeployMetadata(publishedContract.metadataUri, storage)
+    ).compilerMetadata;
   }
 
   const encodedArgs = await encodeConstructorParamsForImplementation(
@@ -67,6 +86,8 @@ export async function computeDeploymentInfo(
     storage,
     create2Factory,
     contractOptions?.constructorParams,
+    clientId,
+    secretKey,
   );
   const address = computeDeploymentAddress(
     metadata.bytecode,
@@ -107,11 +128,13 @@ export async function encodeConstructorParamsForImplementation(
   storage: ThirdwebStorage,
   create2Factory: string,
   constructorParamMap?: ConstructorParamMap,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<BytesLike> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
   );
-  let constructorParamTypes = constructorParams.map((p) => {
+  const constructorParamTypes = constructorParams.map((p) => {
     if (p.type === "tuple[]") {
       return utils.ParamType.from(p);
     } else {
@@ -146,6 +169,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "WETH9",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["WETH9"]) {
             caches.deploymentPresets["WETH9"] = deploymentInfo;
@@ -167,6 +192,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "ForwarderEOAOnly",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
             caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
@@ -182,12 +209,17 @@ export async function encodeConstructorParamsForImplementation(
           {
             contractName: "Forwarder",
           },
+          clientId,
+          secretKey,
         );
         if (!caches.deploymentPresets["Forwarder"]) {
           caches.deploymentPresets["Forwarder"] = deploymentInfo;
         }
 
         return deploymentInfo.transaction.predictedAddress;
+      } else if (p.name && p.name.includes("royaltyEngineAddress")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        return getRoyaltyEngineV1ByChainId(chainId);
       } else {
         throw new Error("Can't resolve constructor arguments");
       }

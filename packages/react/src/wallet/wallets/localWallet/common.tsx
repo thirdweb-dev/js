@@ -11,10 +11,14 @@ export const LocalWalletModalHeader: React.FC<{
 }> = (props) => {
   return (
     <>
-      {!props.hideBack && <BackButton onClick={props.onBack} />}
-      <Spacer y="md" />
+      {!props.hideBack && (
+        <>
+          <BackButton onClick={props.onBack} />
+          <Spacer y="md" />
+        </>
+      )}
       <Img src={props.meta.iconURL} width={iconSize.xl} height={iconSize.xl} />
-      <Spacer y="sm" />
+      <Spacer y="md" />
     </>
   );
 };

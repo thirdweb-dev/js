@@ -2,10 +2,9 @@ import { type Theme, fontSize, media } from "../design-system";
 import { iconSize } from "../design-system";
 import { IconButton } from "./buttons";
 import styled from "@emotion/styled";
-import { Title } from "@radix-ui/react-dialog";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = /* @__PURE__ */ styled(Title)<{
+export const ModalTitle = /* @__PURE__ */ styled.h2<{
   theme?: Theme;
   centerOnMobile?: boolean;
 }>`

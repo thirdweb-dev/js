@@ -29,7 +29,7 @@ export class RpcError<T = undefined> extends Error {
       throw new Error('"message" must be a nonempty string.');
     }
 
-    super(`${message}. Cause: ${cause}`);
+    super(`${message}. Cause: ${JSON.stringify(cause)}`);
     this.cause = cause;
     this.code = code;
     this.data = data;

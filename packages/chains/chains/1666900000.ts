@@ -4,11 +4,9 @@ export default {
   "chain": "Harmony",
   "rpc": [
     "https://harmony-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.s1.ps.hmny.io"
+    "https://api.s0.ps.hmny.io"
   ],
-  "faucets": [
-    "http://dev.faucet.easynode.one/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "ONE",
     "symbol": "ONE",
@@ -18,13 +16,7 @@ export default {
   "shortName": "hmy-ps-s0",
   "chainId": 1666900000,
   "networkId": 1666900000,
-  "explorers": [
-    {
-      "name": "Harmony Block Explorer",
-      "url": "https://explorer.ps.hmny.io",
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "testnet": false,
   "slug": "harmony-devnet-shard-0"
 } as const satisfies Chain;

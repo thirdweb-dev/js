@@ -4,6 +4,8 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "wss://base-goerli.gateway.tenderly.co",
+    "https://base-goerli.gateway.tenderly.co",
     "https://goerli.base.org"
   ],
   "faucets": [
@@ -18,11 +20,23 @@ export default {
   "shortName": "basegor",
   "chainId": 84531,
   "networkId": 84531,
+  "icon": {
+    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png"
+  },
   "explorers": [
     {
       "name": "basescout",
       "url": "https://base-goerli.blockscout.com",
-      "standard": "none"
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     },
     {
       "name": "basescan",
@@ -31,11 +45,5 @@ export default {
     }
   ],
   "testnet": true,
-  "icon": {
-    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
   "slug": "base-goerli"
 } as const satisfies Chain;

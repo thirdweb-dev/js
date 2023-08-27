@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/unity-js-bridge",
-  "version": "0.2.39",
+  "version": "0.2.74",
   "main": "dist/thirdweb-unity-bridge.js",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/unity-js-bridge",
   "license": "Apache-2.0",
@@ -13,19 +13,19 @@
   ],
   "dependencies": {
     "@thirdweb-dev/auth": "workspace:*",
+    "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/pay": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
-    "@thirdweb-dev/chains": "workspace:*",
     "ethers": "^5.7.2"
   },
   "devDependencies": {
+    "@thirdweb-dev/tsconfig": "workspace:*",
     "esbuild": "0.15.17",
-    "node-stdlib-browser": "^1.2.0",
-    "typescript": "^4.7.4",
     "eslint-config-thirdweb": "workspace:*",
-    "@thirdweb-dev/tsconfig": "workspace:*"
+    "node-stdlib-browser": "^1.2.0",
+    "typescript": "^5.1.6"
   },
   "sideEffects": false,
   "scripts": {

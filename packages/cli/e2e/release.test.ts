@@ -1,13 +1,23 @@
-import { ERROR_MESSAGES } from "../constants/constants";
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 import { copyFile } from "fs/promises";
 import { resolve } from "path";
+import { ERROR_MESSAGES } from "../constants/constants";
+
+// load env variables
+require("dotenv-mono").load();
+
+// eslint-disable-next-line turbo/no-undeclared-env-vars
+const apiSecretKey = process.env.TW_SECRET_KEY as string;
+
+// function to skip tests based on condition
+const itif = (condition: boolean) => (condition ? it : it.skip);
 
 // this creates an app, can take some time that's fine
 jest.setTimeout(120_000);
 
 describe("npx thirdweb publish", () => {
-  it("should return publish page url", async () => {
+  // conditionally skip test if there's no api key
+  itif(!!apiSecretKey)("should return publish page url", async () => {
     const { spawn, cleanup, exists, path } = await prepareEnvironment();
 
     await copyFile(
@@ -16,7 +26,7 @@ describe("npx thirdweb publish", () => {
     );
 
     const { waitForText, waitForFinish, getExitCode, writeText, getStderr } =
-      await spawn("node", "./dist/cli/index.js publish");
+      await spawn("node", `./dist/cli/index.js publish -k ${apiSecretKey}`);
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 

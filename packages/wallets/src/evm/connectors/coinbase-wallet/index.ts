@@ -13,9 +13,9 @@ import type {
 } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
 import type { Chain } from "@thirdweb-dev/chains";
-import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils.js";
+import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
+import { getValidPublicRPCUrl } from "../../utils/url";
 
 type Options = CoinbaseWalletSDKOptions & {
   /**
@@ -61,7 +61,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
       this.emit("message", { type: "connecting" });
 
       const accounts = await provider.enable();
-      const account = getAddress(accounts[0] as string);
+      const account = utils.getAddress(accounts[0] as string);
       // Switch to chain if provided
       let id = await this.getChainId();
       let unsupported = this.isChainUnsupported(id);
@@ -120,7 +120,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
       throw new Error("No accounts found");
     }
     // return checksum address
-    return getAddress(accounts[0] as string);
+    return utils.getAddress(accounts[0] as string);
   }
 
   async getChainId() {
@@ -197,7 +197,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
   async switchChain(chainId: number): Promise<Chain> {
     const provider = await this.getProvider();
-    const id = hexValue(chainId);
+    const id = utils.hexValue(chainId);
 
     try {
       await provider.request({
@@ -232,7 +232,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: chain.rpc,
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
@@ -257,7 +257,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: getAddress(accounts[0] as string) });
+      this.emit("change", { account: utils.getAddress(accounts[0] as string) });
     }
   };
 

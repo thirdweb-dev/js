@@ -15,10 +15,13 @@ export { TrustWallet, trustWallet } from "./wallets/wallets/trust-wallet";
 export { smartWallet } from "./wallets/wallets/smart-wallet";
 export { localWallet } from "./wallets/wallets/local-wallet";
 export { LocalWallet } from "./wallets/wallets/LocalWallet";
-export { magicWallet } from "./wallets/wallets/magic-wallet";
-export { MagicWallet } from "./wallets/wallets/MagicWallet";
-export * from "./wallets/wallets/WalletConnectV1";
-export * from "./wallets/wallets/WalletConnectV2";
+export { magicWallet } from "./wallets/wallets/magic-link";
+export { MagicWallet } from "./wallets/wallets/MagicLink";
+export { MagicLink } from "./wallets/wallets/MagicLink";
+export { magicLink } from "./wallets/wallets/magic-link";
+export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
+export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";
+export { walletConnect } from "./wallets/wallets/wallet-connect/wallet-connect";
 export type { WCMeta } from "./wallets/types/wc";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
@@ -35,6 +38,7 @@ export * from "./utils/addresses";
 export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
+export { ThirdwebStorage } from "../core/storage/storage";
 
 // ui components
 export * from "./components/base";
@@ -48,3 +52,6 @@ export * from "./providers/thirdweb-provider";
 
 // re-export everything from react-core
 export * from "@thirdweb-dev/react-core";
+
+// ThirdwebSDK RN
+export { ThirdwebSDK } from "./sdk/ThirdwebSDK";

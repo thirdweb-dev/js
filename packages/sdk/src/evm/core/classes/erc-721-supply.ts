@@ -6,6 +6,7 @@ import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
 import type {
+  IERC721AQueryableUpgradeable,
   IERC721Enumerable,
   IERC721Supply,
   OpenEditionERC721,
@@ -15,6 +16,7 @@ import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { Erc721AQueryable } from "./erc-721a-queryable";
 
 /**
  * List ERC721 NFTs
@@ -32,7 +34,7 @@ export class Erc721Supply implements DetectableFeature {
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
   private erc721: Erc721;
 
-  public owned: Erc721Enumerable | undefined;
+  public owned: Erc721Enumerable | Erc721AQueryable | undefined;
 
   constructor(
     erc721: Erc721,
@@ -87,11 +89,17 @@ export class Erc721Supply implements DetectableFeature {
    */
   public async allOwners() {
     let totalCount: BigNumber;
+    let startTokenId = BigNumber.from(0);
+    if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
+      startTokenId = await this.contractWrapper.readContract.startTokenId();
+    }
     try {
       totalCount = await this.erc721.totalClaimedSupply();
     } catch (e) {
       totalCount = await this.totalCount();
     }
+
+    totalCount = totalCount.add(startTokenId);
 
     // TODO use multicall3 if available
     // TODO can't call toNumber() here, this can be a very large number
@@ -127,7 +135,7 @@ export class Erc721Supply implements DetectableFeature {
     return await this.contractWrapper.readContract.totalSupply();
   }
 
-  private detectErc721Owned(): Erc721Enumerable | undefined {
+  private detectErc721Owned(): Erc721Enumerable | Erc721AQueryable | undefined {
     if (
       detectContractFeature<BaseERC721 & IERC721Enumerable>(
         this.contractWrapper,
@@ -135,6 +143,13 @@ export class Erc721Supply implements DetectableFeature {
       )
     ) {
       return new Erc721Enumerable(this.erc721, this.contractWrapper);
+    } else if (
+      detectContractFeature<BaseERC721 & IERC721AQueryableUpgradeable>(
+        this.contractWrapper,
+        "ERC721AQueryable",
+      )
+    ) {
+      return new Erc721AQueryable(this.erc721, this.contractWrapper);
     }
     return undefined;
   }

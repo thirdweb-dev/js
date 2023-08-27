@@ -60,7 +60,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     typeof DropErc721ContractSchema
   >;
   public app: ContractAppURI<PrebuiltNFTDrop>;
-  public sales: ContractPrimarySale<PrebuiltNFTDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
   public events: ContractEvents<PrebuiltNFTDrop>;
   public roles: ContractRoles<
@@ -168,6 +168,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -593,7 +594,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+    TMethod extends
+      keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltNFTDrop["functions"][TMethod]>,
@@ -614,7 +616,8 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
+    TMethod extends
+      keyof PrebuiltNFTDrop["functions"] = keyof PrebuiltNFTDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltNFTDrop["functions"][TMethod]>,

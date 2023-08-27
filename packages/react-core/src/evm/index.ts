@@ -1,4 +1,4 @@
-export { resolveIpfsUri, resolveMimeType } from "../core/utils/ipfs";
+export { resolveMimeType } from "../core/utils/ipfs";
 
 export { ThirdwebThemeContext } from "../core/providers/theme-context";
 export { ThirdwebProviderCore } from "../core/providers/thirdweb-provider";
@@ -194,13 +194,21 @@ export {
   useBurnToken,
 } from "./hooks/async/token";
 
-// smart wallet factory
+// account factory
 export {
-  useIsSmartWalletDeployed,
-  useSmartWallets,
-  useCreateSmartWallet,
-  useSmartWalletsForAddress,
-} from "./hooks/async/smart-wallet-factory";
+  useIsAccountDeployed,
+  useAccounts,
+  useCreateAccount,
+  useAccountsForAddress,
+} from "./hooks/async/account-factory";
+
+// account
+export {
+  useAccountSigners,
+  useSetAccountSigners,
+  useAccountAdmins,
+  useAccountAdminsAndSigners,
+} from "./hooks/async/account";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSdkProvider>` is used)
 
@@ -239,12 +247,12 @@ export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
 
 // sdk provider
-export {
-  ThirdwebSDKProvider,
-  useSDK,
-  useSDKChainId,
-} from "./providers/thirdweb-sdk-provider";
+export { ThirdwebSDKProvider } from "./providers/thirdweb-sdk-provider";
+export { useSDK, useSDKChainId } from "./hooks/useSDK";
 export type { ThirdwebSDKProviderProps } from "./providers/types";
+
+// utils
+export { invalidateContractAndBalances } from "./utils/cache-keys";
 
 // types
 export type {

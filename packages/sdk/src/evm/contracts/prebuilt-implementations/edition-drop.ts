@@ -48,7 +48,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   private static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
-  public sales: ContractPrimarySale<PrebuiltEditionDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltEditionDrop>;
   public encoder: ContractEncoder<PrebuiltEditionDrop>;
   public estimator: GasCostEstimator<PrebuiltEditionDrop>;
@@ -131,6 +131,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
       address,
       abi,
       options,
+      storage,
     ),
   ) {
     super(contractWrapper, storage, chainId);
@@ -395,7 +396,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @internal
    */
   public async prepare<
-    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+    TMethod extends
+      keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     method: string & TMethod,
     args: any[] & Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
@@ -413,7 +415,8 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    * @internal
    */
   public async call<
-    TMethod extends keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
+    TMethod extends
+      keyof PrebuiltEditionDrop["functions"] = keyof PrebuiltEditionDrop["functions"],
   >(
     functionName: string & TMethod,
     args?: Parameters<PrebuiltEditionDrop["functions"][TMethod]>,
