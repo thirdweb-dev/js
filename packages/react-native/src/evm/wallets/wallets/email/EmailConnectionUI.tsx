@@ -117,7 +117,8 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
     clearCode();
     setErrorMessage("");
     setRequestingNewOtp(true);
-    sendEmailOTP(selectionData.email, selectionData.clientId)
+    (selectionData.emailWallet as EmailWallet)
+      .sendEmailOTP(selectionData.email)
       .then(() => {})
       .catch((error) => {
         clearCode();
