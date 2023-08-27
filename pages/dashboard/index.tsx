@@ -1,6 +1,6 @@
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useAddress, useConnectionStatus } from "@thirdweb-dev/react";
+import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
@@ -48,11 +48,14 @@ const GET_STARTED_SECTIONS = [
 const Dashboard: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
-  const address = useAddress();
   const { publicKey } = useWallet();
   const connectionStatus = useConnectionStatus();
-  const isLoading =
-    connectionStatus === "unknown" || connectionStatus === "connecting";
+  const showFTUX =
+    connectionStatus !== "connected" &&
+    connectionStatus !== "connecting" &&
+    !publicKey;
+  const isLoading = connectionStatus === "unknown";
+
   return (
     <Flex flexDir="column" gap={4}>
       <AnnouncementCard />
@@ -62,31 +65,29 @@ const Dashboard: ThirdwebNextPage = (
         mt={{ base: 2, md: 10 }}
       >
         <GridItem colSpan={{ lg: 3 }}>
-          <ClientOnly fadeInDuration={600} ssr={null}>
-            {!isLoading && (
-              <>
-                <Heading mb={8}>Get started quickly</Heading>
-                {(address || publicKey) && (
-                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
-                    {GET_STARTED_SECTIONS.map(
-                      ({ title, description, image, href }) => (
-                        <NavigationCard
-                          key={title}
-                          title={title}
-                          description={description}
-                          image={image}
-                          href={href}
-                          TRACKING_CATEGORY={TRACKING_CATEGORY}
-                        />
-                      ),
-                    )}
-                  </SimpleGrid>
-                )}
-
-                {connectionStatus === "disconnected" && !publicKey && <FTUX />}
-              </>
-            )}
-          </ClientOnly>
+          <Heading mb={8}>Get started quickly</Heading>
+          {!isLoading && (
+            <ClientOnly fadeInDuration={600} ssr={null}>
+              {showFTUX ? (
+                <FTUX />
+              ) : (
+                <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+                  {GET_STARTED_SECTIONS.map(
+                    ({ title, description, image, href }) => (
+                      <NavigationCard
+                        key={title}
+                        title={title}
+                        description={description}
+                        image={image}
+                        href={href}
+                        TRACKING_CATEGORY={TRACKING_CATEGORY}
+                      />
+                    ),
+                  )}
+                </SimpleGrid>
+              )}
+            </ClientOnly>
+          )}
         </GridItem>
         <GridItem as={Flex} direction="column" gap={6}>
           <Heading size="title.sm">Latest changes</Heading>

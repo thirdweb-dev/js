@@ -652,8 +652,8 @@ const ConnectModalInlinePreview = (props: {
         >
           <Text mb={2}>
             {" "}
-            Can not show Modal UI for selected configuration because the it
-            triggers wallet connection{" "}
+            Can not show Modal UI for selected configuration because it triggers
+            wallet connection{" "}
           </Text>
           <Text> See Live Preview instead </Text>
         </Box>
