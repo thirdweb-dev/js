@@ -1,5 +1,5 @@
 import type { ERC20Base, PackVRFDirect } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import {
   ITokenBundle,
@@ -59,7 +59,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.address;
+    return this.contractWrapper.readContract.address;
   }
 
   /**
@@ -249,7 +249,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     const address = await resolveAddress(
       claimerAddress || (await this.contractWrapper.getSignerAddress()),
     );
-    return await this.contractWrapper.read("canClaimRewards", [address]);
+    return await this.contractWrapper.readContract.canClaimRewards(address);
   }
 
   /**
@@ -309,7 +309,9 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async getLinkBalance(): Promise<CurrencyValue> {
-    return this.getLinkContract().balanceOf(this.contractWrapper.address);
+    return this.getLinkContract().balanceOf(
+      this.contractWrapper.readContract.address,
+    );
   }
 
   /**
@@ -325,7 +327,10 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async transferLink(amount: Amount) {
-    await this.getLinkContract().transfer(this.contractWrapper.address, amount);
+    await this.getLinkContract().transfer(
+      this.contractWrapper.readContract.address,
+      amount,
+    );
   }
 
   private getLinkContract(): Erc20 {
