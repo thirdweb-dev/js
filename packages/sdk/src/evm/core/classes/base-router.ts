@@ -117,13 +117,13 @@ export class BaseRouterClass<TContract extends IBaseRouter>
    *******************************/
 
   add = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      extension: Extension,
-    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+    async (inputArgs: {
+      extension: Extension;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "addExtension",
-        args: [extension],
+        args: [inputArgs.extension],
 
         parse: async (receipt) => {
           const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
@@ -137,13 +137,16 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
           const extensionAbi = (
             await fetchContractMetadataFromAddress(
-              extension.metadata.implementation,
+              inputArgs.extension.metadata.implementation,
               this.contractWrapper.getProvider(),
               this.contractWrapper.storage,
             )
           ).abi;
 
-          const abiToAdd = this.filterAbiForAdd(extensionAbi, extension);
+          const abiToAdd = this.filterAbiForAdd(
+            extensionAbi,
+            inputArgs.extension,
+          );
 
           const updatedAbi = joinABIs([
             AbiSchema.parse(this.contractWrapper.abi),
@@ -159,22 +162,23 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   );
 
   addPublished = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      extensionName: string,
-      publisherAddress: string,
-      version: string = "latest",
-      extensionMetadata: DynamicContractExtensionMetadata,
-    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+    async (inputArgs: {
+      extensionName: string;
+      publisherAddress: string;
+      version?: string;
+      extensionMetadata: DynamicContractExtensionMetadata;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const version = inputArgs.version || "latest";
       const parsedMetadata = await CommonContractSchema.parseAsync(
-        extensionMetadata,
+        inputArgs.extensionMetadata,
       );
       const extensionMetadataUri = await this.contractWrapper.storage.upload(
         parsedMetadata,
       );
 
       const deployedExtensionAddress = await this.deployExtension(
-        extensionName,
-        publisherAddress,
+        inputArgs.extensionName,
+        inputArgs.publisherAddress,
         version,
       );
 
@@ -193,7 +197,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
       const extension: Extension = {
         metadata: {
-          name: extensionName,
+          name: inputArgs.extensionName,
           metadataURI: extensionMetadataUri,
           implementation: deployedExtensionAddress,
         },
@@ -234,22 +238,23 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   );
 
   addWithAbi = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      extensionName: string,
-      extensionAddress: string,
-      extensionMetadata: DynamicContractExtensionMetadata,
-      extensionAbi?: ContractInterface,
-    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+    async (inputArgs: {
+      extensionName: string;
+      extensionAddress: string;
+      extensionMetadata: DynamicContractExtensionMetadata;
+      extensionAbi?: ContractInterface;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       const parsedMetadata = await CommonContractSchema.parseAsync(
-        extensionMetadata,
+        inputArgs.extensionMetadata,
       );
       const extensionMetadataUri = await this.contractWrapper.storage.upload(
         parsedMetadata,
       );
 
+      let extensionAbi = inputArgs.extensionAbi;
       if (!extensionAbi) {
         const metadata = await fetchContractMetadataFromAddress(
-          extensionAddress,
+          inputArgs.extensionAddress,
           this.contractWrapper.getProvider(),
           this.contractWrapper.storage,
           this.contractWrapper.options,
@@ -265,9 +270,9 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
       const extension: Extension = {
         metadata: {
-          name: extensionName,
+          name: inputArgs.extensionName,
           metadataURI: extensionMetadataUri,
-          implementation: extensionAddress,
+          implementation: inputArgs.extensionAddress,
         },
         functions: extensionFunctions,
       };
@@ -306,13 +311,13 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   );
 
   update = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      extension: Extension,
-    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+    async (inputArgs: {
+      extension: Extension;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "updateExtension",
-        args: [extension],
+        args: [inputArgs.extension],
 
         parse: async (receipt) => {
           const events = this.contractWrapper.parseLogs<ExtensionUpdatedEvent>(
@@ -326,11 +331,87 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
           const extensionAbi = (
             await fetchContractMetadataFromAddress(
-              extension.metadata.implementation,
+              inputArgs.extension.metadata.implementation,
               this.contractWrapper.getProvider(),
               this.contractWrapper.storage,
             )
           ).abi;
+
+          const contractAbi = this.filterAbiForRemove(
+            AbiSchema.parse(this.contractWrapper.abi),
+            extensionAbi,
+          );
+          const abiToAdd = this.filterAbiForAdd(
+            extensionAbi,
+            inputArgs.extension,
+          );
+          const updatedAbi = joinABIs([contractAbi, abiToAdd]);
+
+          this.contractWrapper.updateAbi(updatedAbi);
+
+          return receipt;
+        },
+      });
+    },
+  );
+
+  updatePublished = /* @__PURE__ */ buildTransactionFunction(
+    async (inputArgs: {
+      extensionName: string;
+      publisherAddress: string;
+      version?: string;
+      extensionMetadata: DynamicContractExtensionMetadata;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const version = inputArgs.version || "latest";
+      const parsedMetadata = await CommonContractSchema.parseAsync(
+        inputArgs.extensionMetadata,
+      );
+      const extensionMetadataUri = await this.contractWrapper.storage.upload(
+        parsedMetadata,
+      );
+
+      const deployedExtensionAddress = await this.deployExtension(
+        inputArgs.extensionName,
+        inputArgs.publisherAddress,
+        version,
+      );
+
+      const metadata = await fetchContractMetadataFromAddress(
+        deployedExtensionAddress,
+        this.contractWrapper.getProvider(),
+        this.contractWrapper.storage,
+        this.contractWrapper.options,
+      );
+
+      const extensionAbi = metadata.abi;
+      invariant(extensionAbi, "Require extension ABI");
+
+      const extensionFunctions: ExtensionFunction[] =
+        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
+
+      const extension: Extension = {
+        metadata: {
+          name: inputArgs.extensionName,
+          metadataURI: extensionMetadataUri,
+          implementation: deployedExtensionAddress,
+        },
+        functions: extensionFunctions,
+      };
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "updateExtension",
+        args: [extension],
+
+        parse: async (receipt) => {
+          const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
+            "ExtensionUpdated",
+            receipt.logs,
+          );
+
+          if (events.length < 1) {
+            throw new Error("No ExtensionUpdated event found");
+          }
 
           const contractAbi = this.filterAbiForRemove(
             AbiSchema.parse(this.contractWrapper.abi),
@@ -348,22 +429,23 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   );
 
   updateWithAbi = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      extensionName: string,
-      extensionAddress: string,
-      extensionMetadata: DynamicContractExtensionMetadata,
-      extensionAbi?: ContractInterface,
-    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+    async (inputArgs: {
+      extensionName: string;
+      extensionAddress: string;
+      extensionMetadata: DynamicContractExtensionMetadata;
+      extensionAbi?: ContractInterface;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       const parsedMetadata = await CommonContractSchema.parseAsync(
-        extensionMetadata,
+        inputArgs.extensionMetadata,
       );
       const extensionMetadataUri = await this.contractWrapper.storage.upload(
         parsedMetadata,
       );
 
+      let extensionAbi = inputArgs.extensionAbi;
       if (!extensionAbi) {
         const metadata = await fetchContractMetadataFromAddress(
-          extensionAddress,
+          inputArgs.extensionAddress,
           this.contractWrapper.getProvider(),
           this.contractWrapper.storage,
           this.contractWrapper.options,
@@ -379,9 +461,9 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
       const extension: Extension = {
         metadata: {
-          name: extensionName,
+          name: inputArgs.extensionName,
           metadataURI: extensionMetadataUri,
-          implementation: extensionAddress,
+          implementation: inputArgs.extensionAddress,
         },
         functions: extensionFunctions,
       };
@@ -418,13 +500,13 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   );
 
   remove = /* @__PURE__ */ buildTransactionFunction(
-    async (
-      extension: Extension,
-    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+    async (inputArgs: {
+      extension: Extension;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "removeExtension",
-        args: [extension],
+        args: [inputArgs.extension],
 
         parse: async (receipt) => {
           const events = this.contractWrapper.parseLogs<ExtensionRemovedEvent>(
@@ -438,7 +520,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
           const extensionAbi = (
             await fetchContractMetadataFromAddress(
-              extension.metadata.implementation,
+              inputArgs.extension.metadata.implementation,
               this.contractWrapper.getProvider(),
               this.contractWrapper.storage,
             )
@@ -447,6 +529,66 @@ export class BaseRouterClass<TContract extends IBaseRouter>
           const updatedAbi = this.filterAbiForRemove(
             AbiSchema.parse(this.contractWrapper.abi),
             extensionAbi,
+          );
+
+          this.contractWrapper.updateAbi(updatedAbi);
+
+          return receipt;
+        },
+      });
+    },
+  );
+
+  removeWithAbi = /* @__PURE__ */ buildTransactionFunction(
+    async (inputArgs: {
+      extensionName: string;
+      extensionAddress: string;
+      extensionAbi?: ContractInterface;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      let extensionAbi = inputArgs.extensionAbi;
+      if (extensionAbi) {
+        const metadata = await fetchContractMetadataFromAddress(
+          inputArgs.extensionAddress,
+          this.contractWrapper.getProvider(),
+          this.contractWrapper.storage,
+          this.contractWrapper.options,
+        );
+
+        extensionAbi = metadata.abi;
+      }
+
+      invariant(extensionAbi, "Require extension ABI");
+
+      const extensionFunctions: ExtensionFunction[] =
+        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
+
+      const extension: Extension = {
+        metadata: {
+          name: inputArgs.extensionName,
+          metadataURI: "",
+          implementation: inputArgs.extensionAddress,
+        },
+        functions: extensionFunctions,
+      };
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "removeExtension",
+        args: [extension],
+
+        parse: async (receipt) => {
+          const events = this.contractWrapper.parseLogs<ExtensionUpdatedEvent>(
+            "ExtensionRemoved",
+            receipt.logs,
+          );
+
+          if (events.length < 1) {
+            throw new Error("No ExtensionRemoved event found");
+          }
+
+          const updatedAbi = this.filterAbiForRemove(
+            AbiSchema.parse(this.contractWrapper.abi),
+            AbiSchema.parse(extensionAbi),
           );
 
           this.contractWrapper.updateAbi(updatedAbi);
