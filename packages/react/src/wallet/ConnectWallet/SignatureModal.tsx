@@ -10,6 +10,7 @@ import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
+import { modalMaxWidth } from "./constants";
 
 export const SignatureModal: React.FC<{
   open: boolean;
@@ -21,7 +22,7 @@ export const SignatureModal: React.FC<{
     <Modal
       open={props.open}
       style={{
-        maxWidth: "450px",
+        maxWidth: modalMaxWidth,
       }}
       setOpen={props.setOpen}
     >

@@ -1,7 +1,7 @@
 import { walletIds } from "@thirdweb-dev/wallets";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import { Steps } from "../../../components/Steps";
+// import { Steps } from "../../../components/Steps";
 import { Flex } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import {
@@ -70,8 +70,8 @@ export const SelectpersonalWallet: React.FC<{
       </ModalDescription>
 
       <Spacer y="xl" />
-      <Steps step={1} />
-      <Spacer y="lg" />
+      {/* <Steps step={1} /> */}
+      {/* <Spacer y="lg" /> */}
 
       <WalletSelection
         walletConfigs={personalWallets}

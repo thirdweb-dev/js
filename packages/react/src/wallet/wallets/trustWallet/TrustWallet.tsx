@@ -19,7 +19,11 @@ export const trustWallet = (
 ): WalletConfig<TrustWallet> => {
   return {
     id: TrustWallet.id,
-    meta: TrustWallet.meta,
+    meta: {
+      ...TrustWallet.meta,
+      iconURL:
+        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMzMzc1QkIiLz4KPHBhdGggZD0iTTQwLjUzMDMgMTcuMTQyNUM0OC4yNDc3IDIzLjY4NTcgNTcuMTU2IDIzLjM1MTggNTkuNzAwMyAyMy4zNzA3QzU4Ljg2OTggNjAuMjUxMyA1NC42ODM1IDUyLjkwNTggNDAuMTg4NyA2My4xNDEyQzI1Ljg0NzQgNTIuNjkxNiAyMS41NzkgNTkuOTc0NCAyMS4yOTY0IDIzLjA4NTVDMjMuODE0MiAyMy4xMDQyIDMyLjcxNjUgMjMuNTcwNCA0MC41MzAzIDE3LjE0MjVaIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=",
+    },
     create: (walletOptions: WalletOptions) => {
       const wallet = new TrustWallet({
         ...walletOptions,

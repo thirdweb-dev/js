@@ -28,6 +28,7 @@ import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
 import type { NetworkSelectorProps } from "./NetworkSelector";
+import { defaultModalTitle } from "./constants";
 
 type ConnectWalletProps = {
   className?: string;
@@ -35,7 +36,7 @@ type ConnectWalletProps = {
   btnTitle?: string;
   /**
    * Set a custom title for the modal
-   * @default "Choose your wallet"
+   * @default "Connect"
    */
   modalTitle?: string;
   /**
@@ -145,7 +146,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               }
               onClick={() => {
                 setModalConfig({
-                  title: props.modalTitle || "Choose your wallet",
+                  title: props.modalTitle || defaultModalTitle,
                   theme,
                   data: undefined,
                 });

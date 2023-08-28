@@ -24,7 +24,7 @@ import {
 } from "../../design-system";
 import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
-import { reservedScreens } from "./constants";
+import { modalMaxHeight, modalMaxWidth, reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
 import { scrollbar } from "../../design-system/styles";
@@ -168,8 +168,8 @@ export const ConnectModal = () => {
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <Modal
         style={{
-          maxWidth: "450px",
-          maxHeight: "70vh",
+          maxWidth: modalMaxWidth,
+          maxHeight: modalMaxHeight,
         }}
         open={isWalletModalOpen}
         setOpen={(value) => {
@@ -229,10 +229,10 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   background: ${(p) => p.theme.bg.base};
   padding: ${spacing.lg};
   border-radius: ${radius.xl};
-  max-width: 450px;
+  max-width: ${modalMaxWidth};
   width: 100%;
   box-sizing: border-box;
-  max-height: 70vh;
+  max-height: ${modalMaxHeight};
   overflow-y: auto;
   ${(p) =>
     scrollbar({

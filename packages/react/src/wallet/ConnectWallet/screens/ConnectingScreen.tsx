@@ -7,7 +7,7 @@ import {
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
-import { iconSize, media, spacing } from "../../../design-system";
+import { fontSize, iconSize, media, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import styled from "@emotion/styled";
 
@@ -67,6 +67,7 @@ const IconContainer = styled.div`
 `;
 
 const Desc = /* @__PURE__ */ styled(ModalDescription)`
+  font-size: ${fontSize.md};
   ${media.mobile} {
     padding: 0 ${spacing.lg};
   }

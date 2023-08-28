@@ -94,8 +94,7 @@ export const SmartWalletConnecting: React.FC<{
           alignItems: "center",
         }}
       >
-        <ModalTitle>Connecting to Smart Wallet </ModalTitle>
-        <Spinner color="link" size="lg" />
+        <Spinner color="link" size="xl" />
       </Flex>
     );
   }

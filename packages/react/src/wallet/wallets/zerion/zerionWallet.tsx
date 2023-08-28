@@ -19,7 +19,11 @@ export const zerionWallet = (
 ): WalletConfig<ZerionWallet> => {
   return {
     id: ZerionWallet.id,
-    meta: ZerionWallet.meta,
+    meta: {
+      ...ZerionWallet.meta,
+      iconURL:
+        "ipfs://QmaZbKFD2LjAvGyFdfVyzuGjC6brdmMamwGaxFMEMiEY94/zerion.png",
+    },
     create: (walletOptions: WalletOptions) => {
       const wallet = new ZerionWallet({
         ...walletOptions,

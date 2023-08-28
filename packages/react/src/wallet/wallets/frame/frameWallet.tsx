@@ -6,8 +6,7 @@ export const frameWallet = (): WalletConfig<FrameWallet> => ({
   id: FrameWallet.id,
   meta: {
     name: "Frame",
-    iconURL:
-      "https://frame.nyc3.digitaloceanspaces.com/bundle/home/favicon.8f0e1342.png",
+    iconURL: "ipfs://QmW8sXz6e6hbwJdiPvqX64rVy4uQ7SkW2MYUxR1fJXRFpT/frame.png",
     urls: {
       chrome:
         "https://chrome.google.com/webstore/detail/frame-companion/ldcoohedfbjoobcadoglnnmmfbdlmmhf",

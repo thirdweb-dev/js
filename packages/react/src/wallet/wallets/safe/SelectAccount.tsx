@@ -12,7 +12,7 @@ import {
 } from "../../../components/modalElements";
 import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
 import { useIsHeadlessWallet } from "../../hooks/useIsHeadlessWallet";
-import { Steps } from "../../../components/Steps";
+// import { Steps } from "../../../components/Steps";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -137,8 +137,8 @@ export const SelectAccount: React.FC<{
         </HelperLink>
       </ModalDescription>
 
-      <Spacer y="lg" />
-      <Steps step={2} />
+      {/* <Spacer y="lg" /> */}
+      {/* <Steps step={2} /> */}
 
       <Spacer y="xl" />
 

@@ -1,4 +1,5 @@
 import { useState, createContext, useContext } from "react";
+import { defaultModalTitle } from "../../wallet/ConnectWallet/constants";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -29,7 +30,7 @@ export const WalletUIStatesProvider = (
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
-    title: "Choose your wallet",
+    title: defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
   });
