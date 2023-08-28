@@ -18,8 +18,16 @@ import {
   Th,
   Thead,
   Tr,
+  Image,
 } from "@chakra-ui/react";
-import { AbiEvent, AbiFunction, SmartContract } from "@thirdweb-dev/sdk/evm";
+import {
+  AbiEvent,
+  AbiFunction,
+  SmartContract,
+  extractFunctionsFromAbi,
+  joinABIs,
+} from "@thirdweb-dev/sdk/evm";
+import { useContractEnabledExtensions } from "components/contract-components/hooks";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
@@ -144,27 +152,78 @@ interface ContractFunctionsPanelProps {
   contract?: SmartContract;
 }
 
+type ExtensionFunctions = {
+  extension: string;
+  functions: AbiFunction[];
+};
+
 export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   fnsOrEvents,
   contract,
 }) => {
+  const extensions = useContractEnabledExtensions(contract?.abi);
   const isFunction = "stateMutability" in fnsOrEvents[0];
+  const functionsWithExtension = useMemo(() => {
+    let allFunctions = fnsOrEvents as AbiFunction[];
+    const results: ExtensionFunctions[] = [];
+    const processedFunctions: string[] = [];
+    extensions.forEach((ext) => {
+      let functions = extractFunctionsFromAbi(joinABIs(ext.abis as any));
+      allFunctions = allFunctions.filter(
+        (fn) => !functions.map((f) => f.name).includes(fn.name),
+      );
+      functions = functions.filter(
+        (fn) => !processedFunctions.includes(fn.name),
+      );
+      processedFunctions.push(...functions.map((fn) => fn.name));
+      results.push({
+        extension: ext.name as string,
+        functions,
+      });
+    });
+    results.push({
+      extension: "",
+      functions: allFunctions,
+    });
+    return results;
+  }, [fnsOrEvents, extensions]);
 
-  const writeFunctions: AbiFunction[] = useMemo(() => {
-    return fnsOrEvents.filter(
-      (fn) =>
-        (fn as AbiFunction).stateMutability !== "pure" &&
-        (fn as AbiFunction).stateMutability !== "view" &&
-        "stateMutability" in fn,
-    ) as AbiFunction[];
-  }, [fnsOrEvents]);
-  const viewFunctions: AbiFunction[] = useMemo(() => {
-    return fnsOrEvents.filter(
-      (fn) =>
-        (fn as AbiFunction).stateMutability === "pure" ||
-        (fn as AbiFunction).stateMutability === "view",
-    ) as AbiFunction[];
-  }, [fnsOrEvents]);
+  const writeFunctions: ExtensionFunctions[] = useMemo(() => {
+    return functionsWithExtension
+      .map((e) => {
+        const filteredFunctions = e.functions.filter(
+          (fn) =>
+            (fn as AbiFunction).stateMutability !== "pure" &&
+            (fn as AbiFunction).stateMutability !== "view",
+        );
+        if (filteredFunctions.length === 0) {
+          return undefined;
+        }
+        return {
+          extension: e.extension,
+          functions: filteredFunctions,
+        };
+      })
+      .filter((e) => e !== undefined) as ExtensionFunctions[];
+  }, [functionsWithExtension]);
+  const viewFunctions: ExtensionFunctions[] = useMemo(() => {
+    return functionsWithExtension
+      .map((e) => {
+        const filteredFunctions = e.functions.filter(
+          (fn) =>
+            (fn as AbiFunction).stateMutability === "pure" ||
+            (fn as AbiFunction).stateMutability === "view",
+        );
+        if (filteredFunctions.length === 0) {
+          return undefined;
+        }
+        return {
+          extension: e.extension,
+          functions: filteredFunctions,
+        };
+      })
+      .filter((e) => e !== undefined) as ExtensionFunctions[];
+  }, [functionsWithExtension]);
   const events = useMemo(() => {
     return fnsOrEvents.filter((fn) => !("stateMutability" in fn)) as AbiEvent[];
   }, [fnsOrEvents]);
@@ -172,6 +231,36 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   const [selectedFunction, setSelectedFunction] = useState<
     AbiFunction | AbiEvent
   >(fnsOrEvents[0]);
+
+  const functionSection = (e: ExtensionFunctions) => (
+    <Flex key={e.extension} flexDir={"column"} mb={6}>
+      {e.extension ? (
+        <>
+          <Flex alignItems="center" alignContent={"center"} gap={2}>
+            <Image
+              src="/assets/dashboard/extension-check.svg"
+              alt="Extension detected"
+              objectFit="contain"
+              mb="2px"
+            />
+            <Heading as="label" size="label.md">
+              {e.extension}
+            </Heading>
+          </Flex>
+          <Divider my={2} />
+        </>
+      ) : null}
+      {e.functions.map((fn) => (
+        <FunctionsOrEventsListItem
+          key={fn.signature}
+          fn={fn}
+          isFunction={isFunction}
+          selectedFunction={selectedFunction}
+          setSelectedFunction={setSelectedFunction}
+        />
+      ))}
+    </Flex>
+  );
 
   return (
     <SimpleGrid height="100%" columns={12} gap={3}>
@@ -211,26 +300,10 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
               </TabList>
               <TabPanels h="auto" overflow="auto">
                 <TabPanel>
-                  {writeFunctions.map((fn) => (
-                    <FunctionsOrEventsListItem
-                      key={fn.signature}
-                      fn={fn}
-                      isFunction={isFunction}
-                      selectedFunction={selectedFunction}
-                      setSelectedFunction={setSelectedFunction}
-                    />
-                  ))}
+                  {writeFunctions.map((e) => functionSection(e))}
                 </TabPanel>
                 <TabPanel>
-                  {viewFunctions.map((fn) => (
-                    <FunctionsOrEventsListItem
-                      key={fn.name}
-                      fn={fn}
-                      isFunction={isFunction}
-                      selectedFunction={selectedFunction}
-                      setSelectedFunction={setSelectedFunction}
-                    />
-                  ))}
+                  {viewFunctions.map((e) => functionSection(e))}
                 </TabPanel>
               </TabPanels>
             </Tabs>
