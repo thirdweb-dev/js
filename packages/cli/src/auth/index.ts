@@ -281,7 +281,7 @@ async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: 
 }
 
 export const validateKey = async (apiSecretKey: string) => {
-  const apiUrl = "https://api.thirdweb.com/v1/keys/use";
+  const apiUrl = "https://api.staging.thirdweb.com/v1/keys/use";
   try {
     const response = await fetch(`${apiUrl}?scope=storage`, {
       method: "GET",
