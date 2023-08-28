@@ -90,7 +90,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     };
 
     // add extension
-    await coreRouter.extensions.add(routerInput);
+    await coreRouter.extensions.add({ extension: routerInput });
 
     // read extension
     const extensions = await coreRouter.extensions.getAll();
@@ -113,12 +113,12 @@ describe("Base Router for Dynamic Contracts", async () => {
     );
 
     // add extension
-    await coreRouter.extensions.addWithAbi(
-      "OffersLogic",
-      offersLogicAddress,
-      { name: "Offers" },
-      OffersLogic__factory.abi,
-    );
+    await coreRouter.extensions.addWithAbi({
+      extensionName: "OffersLogic",
+      extensionAddress: offersLogicAddress,
+      extensionMetadata: { name: "Offers" },
+      extensionAbi: OffersLogic__factory.abi,
+    });
 
     // read extension
     const extensions = await coreRouter.extensions.getAll();
@@ -137,12 +137,12 @@ describe("Base Router for Dynamic Contracts", async () => {
     );
 
     // add extension
-    await coreRouter.extensions.addWithAbi(
-      "OffersLogic",
-      offersLogicAddress,
-      { name: "Offers" },
-      OffersLogic__factory.abi,
-    );
+    await coreRouter.extensions.addWithAbi({
+      extensionName: "OffersLogic",
+      extensionAddress: offersLogicAddress,
+      extensionMetadata: { name: "Offers" },
+      extensionAbi: OffersLogic__factory.abi,
+    });
 
     // read extension
     let extensions = await coreRouter.extensions.getAll();
@@ -169,7 +169,7 @@ describe("Base Router for Dynamic Contracts", async () => {
       },
       functions: newFunctions,
     };
-    await coreRouter.extensions.update(routerInput);
+    await coreRouter.extensions.update({ extension: routerInput });
 
     // read extension
     extensions = await coreRouter.extensions.getAll();
@@ -193,12 +193,12 @@ describe("Base Router for Dynamic Contracts", async () => {
     );
 
     // add extension
-    await coreRouter.extensions.addWithAbi(
-      "OffersLogic",
-      offersLogicAddress,
-      { name: "Offers" },
-      OffersLogic__factory.abi,
-    );
+    await coreRouter.extensions.addWithAbi({
+      extensionName: "OffersLogic",
+      extensionAddress: offersLogicAddress,
+      extensionMetadata: { name: "Offers" },
+      extensionAbi: OffersLogic__factory.abi,
+    });
 
     // read extension
     let extensions = await coreRouter.extensions.getAll();
@@ -212,12 +212,12 @@ describe("Base Router for Dynamic Contracts", async () => {
       adminWallet,
       [],
     );
-    await coreRouter.extensions.updateWithAbi(
-      "OffersLogic",
-      newAddress,
-      { name: "DirectListings" },
-      DirectListingsLogic__factory.abi,
-    );
+    await coreRouter.extensions.updateWithAbi({
+      extensionName: "OffersLogic",
+      extensionAddress: newAddress,
+      extensionMetadata: { name: "DirectListings" },
+      extensionAbi: DirectListingsLogic__factory.abi,
+    });
 
     // read extension
     extensions = await coreRouter.extensions.getAll();
@@ -250,7 +250,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     };
 
     // add extension
-    await coreRouter.extensions.add(routerInput);
+    await coreRouter.extensions.add({ extension: routerInput });
 
     // read extension
     let extensions = await coreRouter.extensions.getAll();
@@ -259,7 +259,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(isExtensionEnabled(coreRouter.abi, "Offers"));
 
     // remove extension
-    await coreRouter.extensions.remove(routerInput);
+    await coreRouter.extensions.remove({ extension: routerInput });
 
     // read extension
     extensions = await coreRouter.extensions.getAll();
@@ -294,7 +294,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     };
 
     // add extension
-    await coreRouter.extensions.add(routerInput);
+    await coreRouter.extensions.add({ extension: routerInput });
 
     // read extension
     const extension = await coreRouter.extensions.getExtensionForFunction({
