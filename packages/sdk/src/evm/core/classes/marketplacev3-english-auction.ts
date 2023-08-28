@@ -4,7 +4,7 @@ import type {
   IMulticall,
   MarketplaceV3,
 } from "@thirdweb-dev/contracts-js";
-import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
+import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/EnglishAuctionsLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, constants, utils, type BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
@@ -117,10 +117,8 @@ export class MarketplaceV3EnglishAuctions<
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.read("getAllAuctions", []),
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllAuctions", [startId, endId]),
     );
     rawAuctions = batches.flat();
 
@@ -156,10 +154,8 @@ export class MarketplaceV3EnglishAuctions<
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.read("getAllValidAuctions", []),
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllValidAuctions", [startId, endId]),
     );
     rawAuctions = batches.flat();
 

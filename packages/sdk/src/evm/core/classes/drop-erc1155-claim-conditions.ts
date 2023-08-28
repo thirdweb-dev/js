@@ -958,12 +958,14 @@ export class DropErc1155ClaimConditions<
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "claim",
-      args: await this.getClaimArguments(
+      args: (await this.getClaimArguments(
         tokenId,
         destinationAddress,
         quantity,
         claimVerification,
-      ),
+      )) as Parameters<
+        ContractWrapper<BaseClaimConditionERC1155>["readContract"]["functions"]["claim"]
+      >,
       overrides: claimVerification.overrides,
     });
   }
