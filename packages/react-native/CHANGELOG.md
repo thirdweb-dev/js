@@ -1,5 +1,40 @@
 # @thirdweb-dev/react-native
 
+## 0.2.56
+
+### Patch Changes
+
+- [#1536](https://github.com/thirdweb-dev/js/pull/1536) [`387dddbd`](https://github.com/thirdweb-dev/js/commit/387dddbd87ff6c1a53ffaf663564a44b89a3a2a5) Thanks [@iketw](https://github.com/iketw)! - Adds switchToActiveChain prop to the ConnectWallet button.
+
+  When set to true it will show a "Switch Network" button if the wallet
+  is connected to a different chain than the `activeChain` provided in `ThirdwebProvider`
+
+  **Note:** IF you support multiple networks in your app this prop should
+  be set to `false` to allow users to switch between networks.
+
+  Usage:
+
+  ```javascript
+  <ConnectWallet switchToActiveChain={true} />
+  ```
+
+- Updated dependencies [[`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b), [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c), [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32)]:
+  - @thirdweb-dev/sdk@3.10.56
+  - @thirdweb-dev/chains@0.1.48
+  - @thirdweb-dev/react-core@3.14.37
+  - @thirdweb-dev/wallets@1.1.20
+
+## 0.2.55
+
+### Patch Changes
+
+- Updated dependencies [[`586e91db`](https://github.com/thirdweb-dev/js/commit/586e91dbe610588cc7b24fade59172fed6481074), [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8), [`91f0245b`](https://github.com/thirdweb-dev/js/commit/91f0245be78ae523e1faea26b1032bfb283467d9), [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5), [`5a373a75`](https://github.com/thirdweb-dev/js/commit/5a373a75090da7e1e05724ed1a3a3a6aa9f7fd21), [`ae74b8ef`](https://github.com/thirdweb-dev/js/commit/ae74b8ef6200dba8affa8b52e7d834c5552350d0), [`bc003c2f`](https://github.com/thirdweb-dev/js/commit/bc003c2fef33fcf7ce5981d8634911ac4bcaa927), [`447d9846`](https://github.com/thirdweb-dev/js/commit/447d984653f77af6860ae907072e768b584b263d), [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5), [`088547f7`](https://github.com/thirdweb-dev/js/commit/088547f763294f1641c01ffe1aabac585f255dc0)]:
+  - @thirdweb-dev/sdk@3.10.55
+  - @thirdweb-dev/chains@0.1.47
+  - @thirdweb-dev/storage@1.2.8
+  - @thirdweb-dev/react-core@3.14.36
+  - @thirdweb-dev/wallets@1.1.19
+
 ## 0.2.54
 
 ### Patch Changes
