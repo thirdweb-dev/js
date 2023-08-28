@@ -7,4 +7,5 @@
 "@thirdweb-dev/sdk": minor
 ---
 
-Update sdk's and cli to be able to use authToken as an optional parameter
+CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
