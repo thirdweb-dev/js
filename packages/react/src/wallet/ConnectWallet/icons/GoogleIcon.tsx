@@ -1,4 +1,4 @@
-import { IconFC } from "../../../../package/dist/declarations/src/wallet/ConnectWallet/icons/types";
+import { IconFC } from "./types";
 
 export const GoogleIcon: IconFC = (props) => {
   return (
