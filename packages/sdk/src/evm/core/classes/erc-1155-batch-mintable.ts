@@ -1,20 +1,20 @@
+import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
+import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { constants } from "ethers";
 import { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { IMintableERC1155 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { constants } from "ethers";
-import { uploadOrExtractURIs } from "../../common/nft";
-import type { IMulticall } from "@thirdweb-dev/contracts-js";
-import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
 import type { Erc1155 } from "./erc-1155";
+import { Transaction } from "./transactions";
 
 /**
  * Mint Many ERC1155 NFTs at once
@@ -85,12 +85,15 @@ export class Erc1155BatchMintable implements DetectableFeature {
       const supplies = metadataWithSupply.map((a) => a.supply);
       const uris = await uploadOrExtractURIs(metadatas, this.storage);
       const resolvedAddress = await resolveAddress(to);
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = await Promise.all(
         uris.map(async (uri, index) =>
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "mintTo",
-            [resolvedAddress, constants.MaxUint256, uri, supplies[index]],
-          ),
+          contractEncoder.encode("mintTo", [
+            resolvedAddress,
+            constants.MaxUint256,
+            uri,
+            supplies[index],
+          ]),
         ),
       );
       return Transaction.fromContractWrapper({

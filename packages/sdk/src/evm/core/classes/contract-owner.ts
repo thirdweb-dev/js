@@ -19,7 +19,7 @@ export class ContractOwner<TContract extends Ownable>
   private contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<Ownable>) {
-    this.contractWrapper = contractWrapper as ContractWrapper<Ownable>;
+    this.contractWrapper = contractWrapper;
   }
 
   /**

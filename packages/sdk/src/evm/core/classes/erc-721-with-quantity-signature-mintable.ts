@@ -27,6 +27,7 @@ import {
 } from "../../schema/contracts/common/signature";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
@@ -170,17 +171,15 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
           };
         }),
       );
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
         if (isLegacyNFTContract) {
-          const contract = this.contractWrapper.readContract as TokenERC721;
-          return contract.interface.encodeFunctionData("mintWithSignature", [
+          return contractEncoder.encode("mintWithSignature", [
             p.message as ITokenERC721.MintRequestStructOutput,
             p.signature,
           ]);
         } else {
-          const contract = this.contractWrapper
-            .readContract as SignatureMintERC721;
-          return contract.interface.encodeFunctionData("mintWithSignature", [
+          return contractEncoder.encode("mintWithSignature", [
             p.message as ISignatureMintERC721.MintRequestStructOutput,
             p.signature,
           ]);

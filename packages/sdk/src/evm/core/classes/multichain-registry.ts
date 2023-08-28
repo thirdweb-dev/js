@@ -18,6 +18,7 @@ import type {
   DeployedContract,
 } from "../../types/registry";
 import type { NetworkInput, TransactionResult } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
@@ -114,9 +115,10 @@ export class MultichainRegistry {
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.registryRouter.getSignerAddress();
       const encoded: string[] = [];
+      const contractEncoder = new ContractEncoder(this.registryLogic);
       contracts.forEach((contact) => {
         encoded.push(
-          this.registryLogic.readContract.interface.encodeFunctionData("add", [
+          contractEncoder.encode("add", [
             deployerAddress,
             contact.address,
             contact.chainId,
@@ -146,16 +148,15 @@ export class MultichainRegistry {
       contracts: ContractInput[],
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.registryRouter.getSignerAddress();
+      const contractEncoder = new ContractEncoder(this.registryLogic);
+
       const encoded: string[] = await Promise.all(
         contracts.map(async (contract) =>
-          this.registryLogic.readContract.interface.encodeFunctionData(
-            "remove",
-            [
-              deployerAddress,
-              await resolveAddress(contract.address),
-              contract.chainId,
-            ],
-          ),
+          contractEncoder.encode("remove", [
+            deployerAddress,
+            await resolveAddress(contract.address),
+            contract.chainId,
+          ]),
         ),
       );
 

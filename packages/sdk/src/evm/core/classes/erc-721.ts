@@ -1051,10 +1051,9 @@ export class Erc721<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      let nextTokenIdToMint = await this.contractWrapper.read(
-        "nextTokenIdToMint",
-        [],
-      );
+      let nextTokenIdToMint = await (
+        this.contractWrapper as ContractWrapper<TokenERC721>
+      ).read("nextTokenIdToMint", []);
       // handle open editions and contracts with startTokenId
       if (
         hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)

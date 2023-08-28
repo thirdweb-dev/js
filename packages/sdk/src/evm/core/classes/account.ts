@@ -15,6 +15,7 @@ import {
 } from "../../types";
 import { AccountPermissions } from "./account-permissions";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class Account<TContract extends IAccountCore>
   implements DetectableFeature
 {
@@ -22,7 +23,7 @@ export class Account<TContract extends IAccountCore>
   private contractWrapper: ContractWrapper<IAccountCore>;
   private accountPermissions: AccountPermissions | undefined;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<IAccountCore>) {
     this.contractWrapper = contractWrapper;
     this.accountPermissions = this.detectAccountPermissions();
   }

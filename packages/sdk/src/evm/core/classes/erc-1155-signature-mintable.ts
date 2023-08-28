@@ -28,6 +28,7 @@ import {
 import { BaseSignatureMintERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -151,11 +152,12 @@ export class Erc1155SignatureMintable implements DetectableFeature {
           };
         }),
       );
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintWithSignature",
-          [p.message, p.signature],
-        );
+        return contractEncoder.encode("mintWithSignature", [
+          p.message,
+          p.signature,
+        ]);
       });
 
       if (hasFunction<Multicall>("multicall", this.contractWrapper)) {

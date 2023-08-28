@@ -11,6 +11,7 @@ import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -30,7 +31,6 @@ import { Transaction } from "./transactions";
  * @public
  */
 export class ContractRoyalty<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
   TContract extends IRoyalty,
   TSchema extends IGenericSchemaType,
 > implements DetectableFeature
@@ -41,7 +41,7 @@ export class ContractRoyalty<
 
   constructor(
     contractWrapper: ContractWrapper<IRoyalty>,
-    metadata: ContractMetadata<IRoyalty, TSchema>,
+    metadata: ContractMetadata<TContract, TSchema>,
   ) {
     this.contractWrapper = contractWrapper;
     this.metadata = metadata;
@@ -135,19 +135,14 @@ export class ContractRoyalty<
           this.contractWrapper,
         )
       ) {
+        const contractEncoder = new ContractEncoder(this.contractWrapper);
         // encode both the functions we want to send
         const encoded = [
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setDefaultRoyaltyInfo",
-            [
-              mergedMetadata.fee_recipient,
-              mergedMetadata.seller_fee_basis_points,
-            ],
-          ),
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setContractURI",
-            [contractURI],
-          ),
+          contractEncoder.encode("setDefaultRoyaltyInfo", [
+            mergedMetadata.fee_recipient,
+            mergedMetadata.seller_fee_basis_points,
+          ]),
+          contractEncoder.encode("setContractURI", [contractURI]),
         ];
         // actually send the transaction and return the receipt + a way to get the new royalty info
 

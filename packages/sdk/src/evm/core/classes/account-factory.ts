@@ -11,6 +11,7 @@ import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class AccountFactory<TContract extends IAccountFactory>
   implements DetectableFeature
 {
@@ -20,7 +21,7 @@ export class AccountFactory<TContract extends IAccountFactory>
   // utilities
   public events: ContractEvents<IAccountFactory>;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<IAccountFactory>) {
     this.contractWrapper = contractWrapper;
 
     this.events = new ContractEvents(this.contractWrapper);

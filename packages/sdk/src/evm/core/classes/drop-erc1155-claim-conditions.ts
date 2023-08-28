@@ -7,6 +7,7 @@ import type {
   IDropSinglePhase,
   IDropSinglePhase_V1,
   IERC20,
+  Multicall,
 } from "@thirdweb-dev/contracts-js";
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -46,6 +47,7 @@ import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,
 } from "../../types/eips";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -62,7 +64,9 @@ export class DropErc1155ClaimConditions<
   private storage: ThirdwebStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper: ContractWrapper<
+      PrebuiltEditionDrop | BaseClaimConditionERC1155
+    >,
     metadata: ContractMetadata<TContract, any>,
     storage: ThirdwebStorage,
   ) {
@@ -118,17 +122,18 @@ export class DropErc1155ClaimConditions<
       );
       return legacyContractModelToAbstract(contractModel);
     } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
-      const contractModel = await this.contractWrapper.read("claimCondition", [
-        tokenId,
-      ]);
+      const contractModel = await (
+        this.contractWrapper as ContractWrapper<DropSinglePhase1155>
+      ).read("claimCondition", [tokenId]);
       return newContractModelToAbstract(contractModel);
     } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
       const id =
         conditionId !== undefined
           ? conditionId
-          : await this.contractWrapper.read("getActiveClaimConditionId", [
-              tokenId,
-            ]);
+          : await (this.contractWrapper as ContractWrapper<Drop1155>).read(
+              "getActiveClaimConditionId",
+              [tokenId],
+            );
       const contractModel = await this.contractWrapper.read(
         "getClaimConditionById",
         [tokenId, id],
@@ -767,12 +772,8 @@ export class DropErc1155ClaimConditions<
             this.contractWrapper,
           )
         ) {
-          encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              "setContractURI",
-              [contractURI],
-            ),
-          );
+          const contractEncoder = new ContractEncoder(this.contractWrapper);
+          encoded.push(contractEncoder.encode("setContractURI", [contractURI]));
         } else {
           throw new Error(
             "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
@@ -781,60 +782,55 @@ export class DropErc1155ClaimConditions<
       }
 
       processedClaimConditions.forEach(({ tokenId, sortedConditions }) => {
+        const baseContractEncoder = new ContractEncoder(this.contractWrapper);
         if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+          const legacyContractEncoder = new ContractEncoder(
+            this.contractWrapper,
+          );
           encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              "setClaimConditions",
-              [
-                tokenId,
-                abstractContractModelToLegacy(sortedConditions[0]),
-                resetClaimEligibilityForAll,
-              ],
-            ),
+            legacyContractEncoder.encode("setClaimConditions", [
+              tokenId,
+              abstractContractModelToLegacy(sortedConditions[0]),
+              resetClaimEligibilityForAll,
+            ]),
           );
         } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
           encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              "setClaimConditions",
-              [
-                tokenId,
-                sortedConditions.map(abstractContractModelToLegacy),
-                resetClaimEligibilityForAll,
-              ],
-            ),
+            baseContractEncoder.encode("setClaimConditions", [
+              tokenId,
+              sortedConditions.map(abstractContractModelToLegacy),
+              resetClaimEligibilityForAll,
+            ]),
           );
         } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
           encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              "setClaimConditions",
-              [
-                tokenId,
-                abstractContractModelToNew(sortedConditions[0]),
-                resetClaimEligibilityForAll,
-              ],
-            ),
+            baseContractEncoder.encode("setClaimConditions", [
+              tokenId,
+              abstractContractModelToNew(sortedConditions[0]),
+              resetClaimEligibilityForAll,
+            ]),
           );
         } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
           encoded.push(
-            this.contractWrapper.readContract.interface.encodeFunctionData(
-              "setClaimConditions",
-              [
-                tokenId,
-                sortedConditions.map(abstractContractModelToNew),
-                resetClaimEligibilityForAll,
-              ],
-            ),
+            baseContractEncoder.encode("setClaimConditions", [
+              tokenId,
+              sortedConditions.map(abstractContractModelToNew),
+              resetClaimEligibilityForAll,
+            ]),
           );
         } else {
           throw new Error("Contract does not support claim conditions");
         }
       });
 
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "multicall",
-        args: [encoded],
-      });
+      if (hasFunction<Multicall>("multicall", this.contractWrapper)) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "multicall",
+          args: [encoded],
+        });
+      }
+      throw new Error("Contract does not support multicall");
     },
   );
 

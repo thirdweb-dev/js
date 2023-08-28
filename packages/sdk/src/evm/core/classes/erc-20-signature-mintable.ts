@@ -16,6 +16,7 @@ import {
   SignedPayload20,
 } from "../../schema/contracts/common/signature";
 import type { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
 import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
@@ -104,11 +105,13 @@ export class Erc20SignatureMintable implements DetectableFeature {
           };
         }),
       );
+
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintWithSignature",
-          [p.message, p.signature],
-        );
+        return contractEncoder.encode("mintWithSignature", [
+          p.message,
+          p.signature,
+        ]);
       });
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

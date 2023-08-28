@@ -7,6 +7,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { NetworkInput, TransactionResult } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
@@ -46,10 +47,10 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
       contractAddresses: AddressOrEns[],
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
-
+      const contractEncoder = new ContractEncoder(this);
       const encoded: string[] = await Promise.all(
         contractAddresses.map(async (address) =>
-          this.readContract.interface.encodeFunctionData("add", [
+          contractEncoder.encode("add", [
             deployerAddress,
             await resolveAddress(address),
           ]),
@@ -77,10 +78,10 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
       contractAddresses: AddressOrEns[],
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
-
+      const contractEncoder = new ContractEncoder(this);
       const encoded: string[] = await Promise.all(
         contractAddresses.map(async (address) =>
-          this.readContract.interface.encodeFunctionData("remove", [
+          contractEncoder.encode("remove", [
             deployerAddress,
             await resolveAddress(address),
           ]),

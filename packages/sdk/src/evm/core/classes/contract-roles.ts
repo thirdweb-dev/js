@@ -13,6 +13,7 @@ import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
@@ -136,6 +137,8 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
     async (rolesWithAddresses: {
       [key in TRole]?: AddressOrEns[];
     }): Promise<Transaction> => {
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
+
       const roles = Object.keys(rolesWithAddresses) as TRole[];
       invariant(roles.length, "you must provide at least one role to set");
       invariant(
@@ -168,10 +171,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
         if (toAdd.length) {
           toAdd.forEach((address) => {
             encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                "grantRole",
-                [getRoleHash(role), address],
-              ),
+              contractEncoder.encode("grantRole", [getRoleHash(role), address]),
             );
           });
         }
@@ -182,10 +182,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
               address,
             )) as any;
             encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                revokeFunctionName,
-                [getRoleHash(role), address],
-              ),
+              contractEncoder.encode(revokeFunctionName, [
+                getRoleHash(role),
+                address,
+              ]),
             );
           }
         }

@@ -37,6 +37,7 @@ import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
 import { normalizeAmount } from "../../common/currency/normalizeAmount";
+import { ContractEncoder } from "./contract-encoder";
 import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
@@ -338,13 +339,14 @@ export class Erc20<
    */
   transferBatch = /* @__PURE__ */ buildTransactionFunction(
     async (args: TokenMintInput[]) => {
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = await Promise.all(
         args.map(async (arg) => {
           const amountWithDecimals = await this.normalizeAmount(arg.amount);
-          return this.contractWrapper.readContract.interface.encodeFunctionData(
-            "transfer",
-            [await resolveAddress(arg.toAddress), amountWithDecimals],
-          );
+          return contractEncoder.encode("transfer", [
+            await resolveAddress(arg.toAddress),
+            amountWithDecimals,
+          ]);
         }),
       );
       return Transaction.fromContractWrapper({

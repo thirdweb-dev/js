@@ -59,6 +59,7 @@ import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-condit
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Transaction } from "./transactions";
 
+import { ContractEncoder } from "./contract-encoder";
 import { Erc1155Burnable } from "./erc-1155-burnable";
 import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155LazyMintable } from "./erc-1155-lazy-mintable";
@@ -379,11 +380,15 @@ export class Erc1155<
         );
       }
 
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = input.map(({ address: to, quantity }) => {
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "safeTransferFrom",
-          [from, to, tokenId, quantity, data],
-        );
+        return contractEncoder.encode("safeTransferFrom", [
+          from,
+          to,
+          tokenId,
+          quantity,
+          data,
+        ]);
       });
 
       return Transaction.fromContractWrapper({
@@ -400,7 +405,10 @@ export class Erc1155<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC1155>("nextTokenIdToMint", this.contractWrapper)) {
-      return await this.contractWrapper.read("nextTokenIdToMint", []);
+      return await (this.contractWrapper as ContractWrapper<TokenERC1155>).read(
+        "nextTokenIdToMint",
+        [],
+      );
     } else {
       throw new Error(
         "Contract requires the `nextTokenIdToMint` function available to determine the next token ID to mint",

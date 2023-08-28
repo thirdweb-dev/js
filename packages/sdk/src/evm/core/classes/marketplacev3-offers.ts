@@ -434,9 +434,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       this.storage,
     );
 
-    const offerorBalance = await erc20.readContract.balanceOf(
+    const offerorBalance = await erc20.read("balanceOf", [
       offer.offerorAddress,
-    );
+    ]);
     if (offerorBalance.lt(offer.totalPrice)) {
       return {
         valid: false,
@@ -444,10 +444,10 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       };
     }
 
-    const offerorAllowance = await erc20.readContract.allowance(
+    const offerorAllowance = await erc20.read("allowance", [
       offer.offerorAddress,
       this.getAddress(),
-    );
+    ]);
     if (offerorAllowance.lt(offer.totalPrice)) {
       return {
         valid: false,

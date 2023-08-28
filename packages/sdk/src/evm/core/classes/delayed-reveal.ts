@@ -341,7 +341,9 @@ export class DelayedReveal<
       hasFunction<IThirdwebContract>("contractVersion", this.contractWrapper)
     ) {
       try {
-        const version = await this.contractWrapper.read("contractVersion", []);
+        const version = await (
+          this.contractWrapper as ContractWrapper<IThirdwebContract>
+        ).read("contractVersion", []);
         return version <= 2;
       } catch (e) {
         return false;
