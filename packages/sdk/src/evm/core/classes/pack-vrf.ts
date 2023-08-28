@@ -59,7 +59,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /**
@@ -249,7 +249,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     const address = await resolveAddress(
       claimerAddress || (await this.contractWrapper.getSignerAddress()),
     );
-    return await this.contractWrapper.readContract.canClaimRewards(address);
+    return await this.contractWrapper.read("canClaimRewards", [address]);
   }
 
   /**
@@ -309,9 +309,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async getLinkBalance(): Promise<CurrencyValue> {
-    return this.getLinkContract().balanceOf(
-      this.contractWrapper.readContract.address,
-    );
+    return this.getLinkContract().balanceOf(this.contractWrapper.address);
   }
 
   /**
@@ -327,10 +325,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async transferLink(amount: Amount) {
-    await this.getLinkContract().transfer(
-      this.contractWrapper.readContract.address,
-      amount,
-    );
+    await this.getLinkContract().transfer(this.contractWrapper.address, amount);
   }
 
   private getLinkContract(): Erc20 {
