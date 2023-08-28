@@ -1,9 +1,19 @@
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
-import { apiKeys } from "../cache-keys";
+import { apiKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@thirdweb-dev/react";
 import invariant from "tiny-invariant";
+
+export type AuthorizedWallet = {
+  id: string;
+  accountId: string;
+  walletAddress: string;
+  revoked: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deviceName: string;
+};
 
 export type ApiKeyService = {
   id: string;
@@ -249,4 +259,96 @@ export async function fetchAuthToken() {
   }
 
   return json.data.jwt;
+}
+
+export function useAuthorizeWalletWithAccount() {
+  const { user } = useUser();
+
+  return useMutationWithInvalidate(
+    async (variables: { token: string; deviceName?: string }) => {
+      invariant(user, "No user is logged in");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/jwt/authorize-wallet`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${variables.token}`,
+        },
+        body: JSON.stringify({
+          deviceName: variables.deviceName,
+        }),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data;
+    },
+  );
+}
+
+export function useRevokeAuthorizedWallet() {
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (variables: { authorizedWalletId: string }) => {
+      const { authorizedWalletId } = variables;
+      invariant(user, "No user is logged in");
+
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/authorized-wallets/${authorizedWalletId}/revoke`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}),
+        },
+      );
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          authorizedWallets.authorizedWallets(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+export function useAuthorizedWallets() {
+  const { user } = useUser();
+
+  return useQuery(
+    authorizedWallets.authorizedWallets(user?.address as string),
+    async () => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/authorized-wallets`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data as AuthorizedWallet[];
+    },
+    { enabled: !!user?.address, cacheTime: 0 },
+  );
 }

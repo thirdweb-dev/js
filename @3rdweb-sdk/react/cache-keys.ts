@@ -16,6 +16,14 @@ export const apiKeys = {
     [...apiKeys.keys(walletAddress), id] as const,
 };
 
+export const authorizedWallets = {
+  all: ["authorizedWallets"] as const,
+  wallet: (walletAddress: string) =>
+    [...authorizedWallets.all, walletAddress] as const,
+  authorizedWallets: (walletAddress: string) =>
+    [...authorizedWallets.wallet(walletAddress), "authorizedWallets"] as const,
+};
+
 export const contractKeys = {
   all: ["contract"] as const,
   lists: () => [...contractKeys.all, "list"] as const,

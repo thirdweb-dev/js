@@ -28,6 +28,9 @@ export enum PageId {
   // thirdweb.com/auth
   AuthenticationLanding = "auth-landing",
 
+  // thirdweb.com/cli/login
+  CliLoginPage = "cli-login-page",
+
   // thirdweb.com/publish
   PublishLanding = "publish-landing",
 
@@ -115,6 +118,9 @@ export enum PageId {
 
   // thirdweb.com/settings/api-keys
   SettingsApiKeys = "settings-api-keys",
+
+  // thirdweb.com/settings/account
+  SettingsAccount = "settings-account",
 
   // ---------------------------------------------------------------------------
   //  solutions pages
