@@ -5,7 +5,7 @@ import { getProcessEnv } from "./process";
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
 const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
 const TW_GATEWAY_URLS = [
-  `https://{clientId}${TW_HOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
+  `https://{clientId}${TW_STAGINGHOSTNAME_SUFFIX}/ipfs/{cid}/{path}`,
 ];
 
 /**
