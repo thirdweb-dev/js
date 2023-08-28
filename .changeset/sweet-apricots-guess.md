@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-internal(sdk): update read calls to be centralized in contract-wrapper.ts
+internal(sdk): centralize access of the ethers contract within the js SDK.
