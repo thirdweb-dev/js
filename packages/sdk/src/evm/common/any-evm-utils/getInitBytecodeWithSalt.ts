@@ -15,11 +15,14 @@ export function getInitBytecodeWithSalt(
   encodedArgs: BytesLike,
   salt?: string,
 ): string {
-  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecode);
+  const bytecodePrefixed = bytecode.startsWith("0x")
+    ? bytecode
+    : `0x${bytecode}`;
+  const saltHash = salt ? utils.id(salt) : getSaltHash(bytecodePrefixed);
 
   const initBytecodeWithSalt = utils.solidityPack(
     ["bytes32", "bytes", "bytes"],
-    [saltHash, bytecode, encodedArgs],
+    [saltHash, bytecodePrefixed, encodedArgs],
   );
 
   return initBytecodeWithSalt;

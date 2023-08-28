@@ -4,7 +4,11 @@ export default {
   "chain": "SOMA",
   "rpc": [
     "https://soma-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://data-testnet-v1.somanetwork.io/"
+    "https://data-testnet-v1.somanetwork.io/",
+    "https://testnet-au-server-2.somanetwork.io",
+    "https://testnet-au-server-1.somanetwork.io",
+    "https://testnet-sg-server-1.somanetwork.io",
+    "https://testnet-sg-server-2.somanetwork.io"
   ],
   "faucets": [
     "https://faucet.somanetwork.io"

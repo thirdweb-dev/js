@@ -1,5 +1,17 @@
 # @thirdweb-dev/storage
 
+## 1.2.8
+
+### Patch Changes
+
+- [#1498](https://github.com/thirdweb-dev/js/pull/1498) [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add single download options for timeouts and retries
+
+## 1.2.7
+
+### Patch Changes
+
+- [#1501](https://github.com/thirdweb-dev/js/pull/1501) [`046c9ad6`](https://github.com/thirdweb-dev/js/commit/046c9ad604587ff79bf028c4fe7b1f9c94f4ea54) Thanks [@farhanW3](https://github.com/farhanW3)! - moved res.json() to avoid getting JSON error in console
+
 ## 1.2.6
 
 ### Patch Changes

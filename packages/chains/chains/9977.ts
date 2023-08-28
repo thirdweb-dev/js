@@ -10,7 +10,8 @@ export default {
   },
   "rpc": [
     "https://mind-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-msc.mindchain.info/"
+    "https://testnet-msc.mindchain.info/",
+    "wss://testnet-msc.mindchain.info/ws"
   ],
   "faucets": [
     "https://faucet.mindchain.info/"

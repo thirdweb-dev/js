@@ -1,5 +1,31 @@
 # @thirdweb-dev/chains
 
+## 0.1.48
+
+### Patch Changes
+
+- [#1530](https://github.com/thirdweb-dev/js/pull/1530) [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add Chiliz Spicy testnet
+
+## 0.1.47
+
+### Patch Changes
+
+- [#1518](https://github.com/thirdweb-dev/js/pull/1518) [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8) Thanks [@nkrishang](https://github.com/nkrishang)! - Update contracts package
+
+## 0.1.46
+
+### Patch Changes
+
+- [#1508](https://github.com/thirdweb-dev/js/pull/1508) [`184c325a`](https://github.com/thirdweb-dev/js/commit/184c325ab2ef028022a050c4274f2ab12b1a3a7f) Thanks [@jnsdls](https://github.com/jnsdls)! - update xpla chain icons
+
+- [#1513](https://github.com/thirdweb-dev/js/pull/1513) [`c12f0874`](https://github.com/thirdweb-dev/js/commit/c12f0874b4dac43c263c7edb20d0343c16381c34) Thanks [@jnsdls](https://github.com/jnsdls)! - add additonal chains
+
+## 0.1.45
+
+### Patch Changes
+
+- [#1506](https://github.com/thirdweb-dev/js/pull/1506) [`f97ddf4c`](https://github.com/thirdweb-dev/js/commit/f97ddf4c7f14854f3b204ad9741b52ddb8dac736) Thanks [@jnsdls](https://github.com/jnsdls)! - add xpla chains & update chains
+
 ## 0.1.44
 
 ### Patch Changes

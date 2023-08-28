@@ -4,7 +4,10 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://base.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.base.org/"
+    "https://mainnet.base.org/",
+    "https://developer-access-mainnet.base.org/",
+    "https://base.gateway.tenderly.co",
+    "wss://base.gateway.tenderly.co"
   ],
   "faucets": [],
   "nativeCurrency": {

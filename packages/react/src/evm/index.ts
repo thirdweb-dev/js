@@ -7,6 +7,8 @@ export { useSafe } from "./connectors/gnosis";
 export { useMagic } from "./connectors/magic";
 
 export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
+export { ConnectModalInline } from "../wallet/ConnectWallet/ConnectModal";
+
 export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
 export type { NetworkSelectorProps } from "../wallet/ConnectWallet/NetworkSelector";
 
