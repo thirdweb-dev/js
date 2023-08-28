@@ -137,8 +137,8 @@ export const WalletSelection: React.FC<{
               >
                 <Img
                   src={walletConfig.meta.iconURL}
-                  width={"75"}
-                  height={"75"}
+                  width={"80"}
+                  height={"80"}
                   loading="eager"
                 />
                 <WalletName>{walletConfig.meta.name}</WalletName>
