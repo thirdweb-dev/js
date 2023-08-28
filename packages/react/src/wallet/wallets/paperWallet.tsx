@@ -341,7 +341,10 @@ const LoginWithEmailOTP: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
       )}
 
       {sentEmailInfo && (
-        <LinkButton onClick={sendEmail}> Request new code </LinkButton>
+        <LinkButton onClick={sendEmail} type="button">
+          {" "}
+          Request new code{" "}
+        </LinkButton>
       )}
     </form>
   );
