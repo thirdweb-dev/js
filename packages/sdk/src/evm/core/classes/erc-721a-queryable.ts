@@ -1,12 +1,12 @@
+import type { IERC721AQueryableUpgradeable } from "@thirdweb-dev/contracts-js";
+import { BigNumber } from "ethers";
 import type { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { FEATURE_NFT_QUERYABLE } from "../../constants/erc721-features";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { IERC721AQueryableUpgradeable } from "@thirdweb-dev/contracts-js";
-import { BigNumber } from "ethers";
-import { FEATURE_NFT_QUERYABLE } from "../../constants/erc721-features";
 import type { Erc721 } from "./erc-721";
 
 /**
@@ -66,6 +66,6 @@ export class Erc721AQueryable implements DetectableFeature {
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );
 
-    return await this.contractWrapper.readContract.tokensOfOwner(address);
+    return await this.contractWrapper.read("tokensOfOwner", [address]);
   }
 }

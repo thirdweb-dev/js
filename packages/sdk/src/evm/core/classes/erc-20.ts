@@ -155,8 +155,9 @@ export class Erc20<
    */
   public async balanceOf(address: AddressOrEns): Promise<CurrencyValue> {
     return this.getValue(
-      await this.contractWrapper.readContract.balanceOf(
-        await resolveAddress(address),
+      await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
+        "balanceOf",
+        [await resolveAddress(address)],
       ),
     );
   }
@@ -172,7 +173,10 @@ export class Erc20<
    */
   public async totalSupply(): Promise<CurrencyValue> {
     return await this.getValue(
-      await this.contractWrapper.readContract.totalSupply(),
+      await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
+        "totalSupply",
+        [],
+      ),
     );
   }
 
@@ -220,9 +224,9 @@ export class Erc20<
     spender: AddressOrEns,
   ): Promise<CurrencyValue> {
     return await this.getValue(
-      await this.contractWrapper.readContract.allowance(
-        await resolveAddress(owner),
-        await resolveAddress(spender),
+      await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
+        "allowance",
+        [await resolveAddress(owner), await resolveAddress(spender)],
       ),
     );
   }

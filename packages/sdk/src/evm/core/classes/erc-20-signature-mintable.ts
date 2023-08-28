@@ -145,8 +145,10 @@ export class Erc20SignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
-    const verification: [boolean, string] =
-      await this.contractWrapper.readContract.verify(message, signature);
+    const verification: [boolean, string] = await this.contractWrapper.read(
+      "verify",
+      [message, signature],
+    );
     return verification[0];
   }
 
@@ -208,7 +210,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
     invariant(signer, "No signer available");
 
     // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
-    const name = await this.contractWrapper.readContract.name();
+    const name = await this.contractWrapper.read("name", []);
 
     return await Promise.all(
       parsedRequests.map(async (m) => {
@@ -253,7 +255,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
     );
     const amountWithDecimals = utils.parseUnits(
       mintRequest.quantity,
-      await this.contractWrapper.readContract.decimals(),
+      await this.contractWrapper.read("decimals", []),
     );
     return {
       to: mintRequest.to,

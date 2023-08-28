@@ -184,7 +184,10 @@ export class Erc721<
    * @twfeature ERC721
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return await this.contractWrapper.readContract.ownerOf(tokenId);
+    return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
+      "ownerOf",
+      [tokenId],
+    );
   }
 
   /**
@@ -201,8 +204,9 @@ export class Erc721<
    * @twfeature ERC721
    */
   public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(
-      await resolveAddress(address),
+    return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
+      "balanceOf",
+      [await resolveAddress(address)],
     );
   }
 
@@ -222,9 +226,9 @@ export class Erc721<
     address: AddressOrEns,
     operator: AddressOrEns,
   ): Promise<boolean> {
-    return await this.contractWrapper.readContract.isApprovedForAll(
-      await resolveAddress(address),
-      await resolveAddress(operator),
+    return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
+      "isApprovedForAll",
+      [await resolveAddress(address), await resolveAddress(operator)],
     );
   }
 
@@ -861,10 +865,16 @@ export class Erc721<
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
-      return contract.readContract.totalMinted();
+      return (this.contractWrapper as ContractWrapper<SignatureDrop>).read(
+        "totalMinted",
+        [],
+      );
     }
     if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
+      return (this.contractWrapper as ContractWrapper<DropERC721>).read(
+        "nextTokenIdToClaim",
+        [],
+      );
     }
     throw new Error(
       "No function found on contract to get total claimed supply",
@@ -1026,7 +1036,9 @@ export class Erc721<
    * @internal
    */
   async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
+    const tokenUri = await (
+      this.contractWrapper as ContractWrapper<BaseERC721>
+    ).read("tokenURI", [tokenId]);
     if (!tokenUri) {
       throw new NotFoundError();
     }
@@ -1048,12 +1060,17 @@ export class Erc721<
         hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)
       ) {
         nextTokenIdToMint = nextTokenIdToMint.sub(
-          await this.contractWrapper.readContract.startTokenId(),
+          await (
+            this.contractWrapper as ContractWrapper<OpenEditionERC721>
+          ).read("startTokenId", []),
         );
       }
       return nextTokenIdToMint;
     } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.totalSupply();
+      return await (this.contractWrapper as ContractWrapper<TokenERC721>).read(
+        "totalSupply",
+        [],
+      );
     } else {
       throw new Error(
         "Contract requires either `nextTokenIdToMint` or `totalSupply` function available to determine the next token ID to mint",

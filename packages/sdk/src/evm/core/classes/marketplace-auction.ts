@@ -71,7 +71,7 @@ export class MarketplaceAuction {
    * @returns the Auction listing object
    */
   public async getListing(listingId: BigNumberish): Promise<AuctionListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
+    const listing = await this.contractWrapper.read("listings", [listingId]);
 
     if (listing.listingId.toString() !== listingId.toString()) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
@@ -108,9 +108,7 @@ export class MarketplaceAuction {
     listingId: BigNumberish,
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
-    const offers = await this.contractWrapper.readContract.winningBid(
-      listingId,
-    );
+    const offers = await this.contractWrapper.read("winningBid", [listingId]);
     if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
@@ -139,9 +137,7 @@ export class MarketplaceAuction {
    */
   public async getWinner(listingId: BigNumberish): Promise<string> {
     const listing = await this.validateListing(BigNumber.from(listingId));
-    const offers = await this.contractWrapper.readContract.winningBid(
-      listingId,
-    );
+    const offers = await this.contractWrapper.read("winningBid", [listingId]);
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
 
@@ -371,7 +367,7 @@ export class MarketplaceAuction {
       if (normalizedPrice.eq(BigNumber.from(0))) {
         throw new Error("Cannot make a bid with 0 value");
       }
-      const bidBuffer = await this.contractWrapper.readContract.bidBufferBps();
+      const bidBuffer = await this.contractWrapper.read("bidBufferBps", []);
       const winningBid = await this.getWinningBid(listingId);
       if (winningBid) {
         const isWinner = isWinningBid(
@@ -438,9 +434,7 @@ export class MarketplaceAuction {
       const now = BigNumber.from(Math.floor(Date.now() / 1000));
       const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-      const offers = await this.contractWrapper.readContract.winningBid(
-        listingId,
-      );
+      const offers = await this.contractWrapper.read("winningBid", [listingId]);
       if (now.gt(startTime) && offers.offeror !== constants.AddressZero) {
         throw new AuctionAlreadyStartedError(listingId.toString());
       }
@@ -568,7 +562,7 @@ export class MarketplaceAuction {
    * Get the buffer in basis points between offers
    */
   public async getBidBufferBps(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.bidBufferBps();
+    return this.contractWrapper.read("bidBufferBps", []);
   }
 
   /**

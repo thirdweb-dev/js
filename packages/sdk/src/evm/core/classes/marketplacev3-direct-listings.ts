@@ -101,7 +101,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @twfeature DirectListings
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalListings();
+    return await this.contractWrapper.read("totalListings", []);
   }
 
   /**
@@ -129,10 +129,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllListings,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllListings", [startId, endId]),
     );
     rawListings = batches.flat();
 
@@ -170,10 +168,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllValidListings,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllValidListings", [startId, endId]),
     );
     rawListings = batches.flat();
 
@@ -204,9 +200,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @twfeature DirectListings
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListingV3> {
-    const listing = await this.contractWrapper.readContract.getListing(
-      listingId,
-    );
+    const listing = await this.contractWrapper.read("getListing", [listingId]);
 
     return await this.mapListing(listing);
   }
@@ -233,10 +227,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       throw new Error(`Listing ${listingId} is not a reserved listing.`);
     }
 
-    return await this.contractWrapper.readContract.isBuyerApprovedForListing(
+    return await this.contractWrapper.read("isBuyerApprovedForListing", [
       listingId,
       await resolveAddress(buyer),
-    );
+    ]);
   }
 
   /**
@@ -259,10 +253,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   ): Promise<boolean> {
     await this.validateListing(BigNumber.from(listingId));
 
-    return await this.contractWrapper.readContract.isCurrencyApprovedForListing(
+    return await this.contractWrapper.read("isCurrencyApprovedForListing", [
       listingId,
       await resolveAddress(currency),
-    );
+    ]);
   }
 
   /**
@@ -303,10 +297,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       );
     }
 
-    return await this.contractWrapper.readContract.currencyPriceForListing(
+    return await this.contractWrapper.read("currencyPriceForListing", [
       listingId,
       resolvedCurrencyAddress,
-    );
+    ]);
   }
 
   /** ******************************
@@ -735,11 +729,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         );
       }
 
-      const currencyPrice =
-        await this.contractWrapper.readContract.currencyPriceForListing(
-          listingId,
-          resolvedCurrencyAddress,
-        );
+      const currencyPrice = await this.contractWrapper.read(
+        "currencyPriceForListing",
+        [listingId, resolvedCurrencyAddress],
+      );
       invariant(
         pricePerTokenInCurrency === currencyPrice,
         "Currency already approved with this price.",
@@ -780,11 +773,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         throw new Error(`Can't revoke approval for main listing currency.`);
       }
 
-      const currencyPrice =
-        await this.contractWrapper.readContract.currencyPriceForListing(
-          listingId,
-          resolvedCurrencyAddress,
-        );
+      const currencyPrice = await this.contractWrapper.read(
+        "currencyPriceForListing",
+        [listingId, resolvedCurrencyAddress],
+      );
       invariant(!currencyPrice.isZero(), "Currency not approved.");
 
       return Transaction.fromContractWrapper({

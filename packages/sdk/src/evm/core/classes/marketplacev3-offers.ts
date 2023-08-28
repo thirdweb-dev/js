@@ -81,7 +81,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @twfeature Offers
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalOffers();
+    return await this.contractWrapper.read("totalOffers", []);
   }
 
   /**
@@ -109,10 +109,8 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllOffers,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllOffers", [startId, endId]),
     );
     rawOffers = batches.flat();
 
@@ -148,10 +146,8 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllValidOffers,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllValidOffers", [startId, endId]),
     );
     rawOffers = batches.flat();
 
@@ -176,7 +172,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @twfeature Offers
    */
   public async getOffer(offerId: BigNumberish): Promise<OfferV3> {
-    const offer = await this.contractWrapper.readContract.getOffer(offerId);
+    const offer = await this.contractWrapper.read("getOffer", [offerId]);
 
     return await this.mapOffer(offer);
   }

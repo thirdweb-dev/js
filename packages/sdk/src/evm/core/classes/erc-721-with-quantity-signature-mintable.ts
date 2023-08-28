@@ -258,13 +258,17 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     let verification: [boolean, string];
 
     if (isLegacyNFTContract) {
-      const contract = this.contractWrapper.readContract as TokenERC721;
       message = await this.mapLegacyPayloadToContractStruct(mintRequest);
-      verification = await contract.verify(message, signature);
+      verification = await this.contractWrapper.read("verify", [
+        message,
+        signature,
+      ]);
     } else {
-      const contract = this.contractWrapper.readContract as SignatureMintERC721;
       message = await this.mapPayloadToContractStruct(mintRequest);
-      verification = await contract.verify(message, signature);
+      verification = await this.contractWrapper.read("verify", [
+        message,
+        signature,
+      ]);
     }
 
     return verification[0];
@@ -364,8 +368,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
               name: "SignatureMintERC721",
               version: "1",
               chainId,
-              verifyingContract: await this.contractWrapper.readContract
-                .address,
+              verifyingContract: await this.contractWrapper.address,
             },
             { MintRequest: MintRequest721withQuantity }, // TYPEHASH
             await this.mapPayloadToContractStruct(finalPayload),

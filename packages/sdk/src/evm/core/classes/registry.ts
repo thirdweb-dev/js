@@ -1,14 +1,14 @@
+import type { TWRegistry } from "@thirdweb-dev/contracts-js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { constants, utils } from "ethers";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { TWRegistry } from "@thirdweb-dev/contracts-js";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
-import { constants, utils } from "ethers";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * @internal
@@ -26,7 +26,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
   public async getContractAddresses(walletAddress: AddressOrEns) {
     // TODO @fixme the filter here is necessary because for some reason getAll returns a 0x0 address for the first entry
     return (
-      await this.readContract.getAll(await resolveAddress(walletAddress))
+      await this.read("getAll", [await resolveAddress(walletAddress)])
     ).filter(
       (adr) =>
         utils.isAddress(adr) && adr.toLowerCase() !== constants.AddressZero,

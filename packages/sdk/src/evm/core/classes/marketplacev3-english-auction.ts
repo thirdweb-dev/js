@@ -89,7 +89,7 @@ export class MarketplaceV3EnglishAuctions<
    * @twfeature EnglishAuctions
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalAuctions();
+    return await this.contractWrapper.read("totalAuctions", []);
   }
 
   /**
@@ -120,7 +120,7 @@ export class MarketplaceV3EnglishAuctions<
     const batches = await getAllInBatches(
       start,
       end,
-      this.contractWrapper.readContract.getAllAuctions,
+      this.contractWrapper.read("getAllAuctions", []),
     );
     rawAuctions = batches.flat();
 
@@ -159,7 +159,7 @@ export class MarketplaceV3EnglishAuctions<
     const batches = await getAllInBatches(
       start,
       end,
-      this.contractWrapper.readContract.getAllValidAuctions,
+      this.contractWrapper.read("getAllValidAuctions", []),
     );
     rawAuctions = batches.flat();
 
@@ -184,9 +184,7 @@ export class MarketplaceV3EnglishAuctions<
    * @twfeature EnglishAuctions
    */
   public async getAuction(auctionId: BigNumberish): Promise<EnglishAuction> {
-    const auction = await this.contractWrapper.readContract.getAuction(
-      auctionId,
-    );
+    const auction = await this.contractWrapper.read("getAuction", [auctionId]);
 
     return await this.mapAuction(auction);
   }
@@ -209,9 +207,7 @@ export class MarketplaceV3EnglishAuctions<
     auctionId: BigNumberish,
   ): Promise<Bid | undefined> {
     await this.validateAuction(BigNumber.from(auctionId));
-    const bid = await this.contractWrapper.readContract.getWinningBid(
-      auctionId,
-    );
+    const bid = await this.contractWrapper.read("getWinningBid", [auctionId]);
     if (bid._bidder === constants.AddressZero) {
       return undefined;
     }
@@ -242,10 +238,10 @@ export class MarketplaceV3EnglishAuctions<
     auctionId: BigNumberish,
     bidAmount: BigNumberish,
   ): Promise<boolean> {
-    return await this.contractWrapper.readContract.isNewWinningBid(
+    return await this.contractWrapper.read("isNewWinningBid", [
       auctionId,
       bidAmount,
-    );
+    ]);
   }
 
   /**
@@ -265,9 +261,7 @@ export class MarketplaceV3EnglishAuctions<
    */
   public async getWinner(auctionId: BigNumberish): Promise<Address> {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
-    const bid = await this.contractWrapper.readContract.getWinningBid(
-      auctionId,
-    );
+    const bid = await this.contractWrapper.read("getWinningBid", [auctionId]);
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const endTime = BigNumber.from(auction.endTimeInSeconds);
 

@@ -1,25 +1,25 @@
-import { resolveAddress } from "../../common/ens/resolveAddress";
-import { buildTransactionFunction } from "../../common/transactions";
-import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { PublishedMetadata } from "../../schema/contracts/custom";
-import { SDKOptions } from "../../schema/sdk-options";
 import type {
-  DeployedContract,
-  AddContractInput,
-  ContractInput,
-} from "../../types/registry";
-import { ContractWrapper } from "./contract-wrapper";
-import type {
-  TWMultichainRegistryRouter,
   TWMultichainRegistryLogic,
+  TWMultichainRegistryRouter,
 } from "@thirdweb-dev/contracts-js";
 import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
 import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
-import { Transaction } from "./transactions";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { buildTransactionFunction } from "../../common/transactions";
+import { getMultichainRegistryAddress } from "../../constants/addresses/getMultichainRegistryAddress";
+import { PublishedMetadata } from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type {
+  AddContractInput,
+  ContractInput,
+  DeployedContract,
+} from "../../types/registry";
 import type { NetworkInput, TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * @internal
@@ -61,10 +61,10 @@ export class MultichainRegistry {
     chainId: number,
     address: AddressOrEns,
   ): Promise<string> {
-    return await this.registryLogic.readContract.getMetadataUri(
+    return await this.registryLogic.read("getMetadataUri", [
       chainId,
       await resolveAddress(address),
-    );
+    ]);
   }
 
   public async getContractMetadata(
@@ -85,9 +85,9 @@ export class MultichainRegistry {
     walletAddress: AddressOrEns,
   ): Promise<DeployedContract[]> {
     return (
-      await this.registryLogic.readContract.getAll(
+      await this.registryLogic.read("getAll", [
         await resolveAddress(walletAddress),
-      )
+      ])
     )
       .filter(
         (result) =>

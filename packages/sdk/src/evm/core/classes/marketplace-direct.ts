@@ -83,7 +83,7 @@ export class MarketplaceDirect {
    * @returns the Direct listing object
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
+    const listing = await this.contractWrapper.read("listings", [listingId]);
 
     if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
@@ -112,10 +112,10 @@ export class MarketplaceDirect {
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
     invariant(utils.isAddress(address), "Address must be a valid address");
-    const offers = await this.contractWrapper.readContract.offers(
+    const offers = await this.contractWrapper.read("offers", [
       listingId,
       await resolveAddress(address),
-    );
+    ]);
     if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
@@ -374,10 +374,10 @@ export class MarketplaceDirect {
        */
       await this.validateListing(BigNumber.from(listingId));
       const resolvedAddress = await resolveAddress(addressOfOfferor);
-      const offer = await this.contractWrapper.readContract.offers(
+      const offer = await this.contractWrapper.read("offers", [
         listingId,
         resolvedAddress,
-      );
+      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

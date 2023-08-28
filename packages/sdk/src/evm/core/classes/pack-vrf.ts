@@ -249,7 +249,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     const address = await resolveAddress(
       claimerAddress || (await this.contractWrapper.getSignerAddress()),
     );
-    return await this.contractWrapper.readContract.canClaimRewards(address);
+    return await this.contractWrapper.read("canClaimRewards", [address]);
   }
 
   /**
