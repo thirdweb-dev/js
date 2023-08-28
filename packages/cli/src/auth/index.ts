@@ -129,7 +129,6 @@ export const authenticateUser = async (
           }
         });
       }
-
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Access-Control-Allow-Origin', "https://thirdweb.com");
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
