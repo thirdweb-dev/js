@@ -357,7 +357,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           "Unauthorized - You don't have permission to use this service.",
         );
       }
-      throw new Error(`Failed to upload files to IPFS - ${res.status} - ${res.statusText}`);
+      throw new Error(`Failed to upload files to IPFS - ${res.status} - ${res.statusText} - ${this.uploadServerUrl}/ipfs/upload`);
     }
 
     const body = await res.json();
