@@ -96,9 +96,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
               extensions = file.name.substring(extensionStartIndex);
             }
           }
-          fileName = `${
-            i + options.rewriteFileNames.fileStartNumber
-          }${extensions}`;
+          fileName = `${i + options.rewriteFileNames.fileStartNumber
+            }${extensions}`;
         } else {
           fileName = `${file.name}`;
         }
@@ -300,6 +299,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           "authorization",
           `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
         );
+        xhr.setRequestHeader(
+          "x-authorize-wallet",
+          `true`,
+        );
       }
 
       xhr.send(form as any);
@@ -316,6 +319,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     const headers: HeadersInit = {};
+
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
     } else if (this.clientId) {
@@ -333,9 +337,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       "TW_AUTH_TOKEN" in globalThis &&
       typeof (globalThis as any).TW_AUTH_TOKEN === "string"
     ) {
-      headers["authorization"] = `Bearer ${
-        (globalThis as any).TW_AUTH_TOKEN as string
-      }`;
+      headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+      headers["x-authorize-wallet"] = "true";
     }
 
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
@@ -346,8 +350,13 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       },
       body: form.getBuffer(),
     });
+
     if (!res.ok) {
-      console.warn(await res.text());
+      if (res.status === 401) {
+        throw new Error(
+          "Unauthorized - You don't have permission to use this service.",
+        );
+      }
       throw new Error("Failed to upload files to IPFS");
     }
 
