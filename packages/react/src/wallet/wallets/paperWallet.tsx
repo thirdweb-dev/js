@@ -8,11 +8,21 @@ import {
   SelectUIProps,
   ConnectUIProps,
   useConnect,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
+import { OTPInput } from "../../components/OTPInput";
+import { ModalTitle } from "../../components/modalElements";
+import { Spacer } from "../../components/Spacer";
+import { DangerText, NeutralText, SecondaryText } from "../../components/text";
+import { Button } from "../../components/buttons";
+import styled from "@emotion/styled";
+import { Theme, fontSize } from "../../design-system";
+import { FadeIn } from "../../components/FadeIn";
+import { Input } from "../../components/formElements";
 
 type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
 
@@ -30,26 +40,38 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
 
 const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
   return (
-    <InputSelectionUI
-      onSelect={props.onSelect}
-      placeholder="Enter your email address"
-      name="email"
-      type="email"
-      errorMessage={(_input) => {
-        const input = _input.replace(/\+/g, "");
-        const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-        const isValidEmail = emailRegex.test(input);
-        if (!isValidEmail) {
-          return "Invalid email address";
-        }
-      }}
-      emptyErrorMessage="email address is required"
-      supportedWallets={props.supportedWallets}
-    />
+    <div>
+      <InputSelectionUI
+        onSelect={props.onSelect}
+        placeholder="Enter your email address"
+        name="email"
+        type="email"
+        errorMessage={(_input) => {
+          const input = _input.replace(/\+/g, "");
+          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+          const isValidEmail = emailRegex.test(input);
+          if (!isValidEmail) {
+            return "Invalid email address";
+          }
+        }}
+        emptyErrorMessage="email address is required"
+        supportedWallets={props.supportedWallets}
+      />
+    </div>
   );
 };
 
-const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
+const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
+  // login with google
+  if (!props.selectionData) {
+    return <LoginWithGoogle {...props} />;
+  }
+
+  // login with email OTP
+  return <LoginWithEmailOTP {...props} />;
+};
+
+const LoginWithGoogle: React.FC<ConnectUIProps<PaperWallet>> = ({
   close,
   walletConfig,
   open,
@@ -59,6 +81,7 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
   const connectPrompted = useRef(false);
   const connect = useConnect();
   const singleWallet = supportedWallets.length === 1;
+
   useEffect(() => {
     if (connectPrompted.current) {
       return;
@@ -90,3 +113,253 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
     </Flex>
   );
 };
+
+type SentEmailInfo = {
+  isNewDevice: boolean;
+  isNewUser: boolean;
+};
+
+const LoginWithEmailOTP: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
+  const email = props.selectionData;
+  const [otpInput, setOtpInput] = useState("");
+  const [recoveryCode, setRecoveryCode] = useState("");
+  const { createWalletInstance, setConnectedWallet } = useWalletContext();
+
+  const [wallet, setWallet] = useState<PaperWallet | null>(null);
+
+  const [verifyStatus, setVerifyStatus] = useState<
+    "verifying" | "invalid" | "valid" | "idle"
+  >("idle");
+
+  const [sentEmailInfo, setSentEmailInfo] = useState<SentEmailInfo | null>(
+    null,
+  );
+
+  const recoveryCodeRequired = !!(sentEmailInfo && sentEmailInfo.isNewDevice);
+
+  const sendEmail = useCallback(async () => {
+    setOtpInput("");
+    setVerifyStatus("idle");
+    setSentEmailInfo(null);
+
+    const _wallet = createWalletInstance(props.walletConfig);
+    setWallet(_wallet);
+    const _paperSDK = await _wallet.getPaperSDK();
+
+    try {
+      const { isNewDevice, isNewUser } =
+        await _paperSDK.auth.sendPaperEmailLoginOtp({
+          email: email,
+        });
+
+      setSentEmailInfo({ isNewDevice, isNewUser });
+    } catch {
+      setVerifyStatus("idle");
+      setSentEmailInfo(null);
+    }
+  }, [createWalletInstance, email, props.walletConfig]);
+
+  const handleSubmit = () => {
+    if (recoveryCodeRequired && !recoveryCode) {
+      return;
+    }
+
+    if (!sentEmailInfo || otpInput.length !== 6) {
+      return;
+    }
+
+    verifyCodes();
+  };
+
+  const verifyCodes = async () => {
+    setVerifyStatus("idle");
+
+    if (!wallet) {
+      return;
+    }
+
+    try {
+      setVerifyStatus("verifying");
+      await wallet.connect({
+        email,
+        otp: otpInput,
+        recoveryCode: recoveryCodeRequired ? recoveryCode : undefined,
+      });
+
+      setConnectedWallet(wallet);
+      setVerifyStatus("valid");
+      props.close();
+    } catch (e) {
+      setVerifyStatus("invalid");
+      console.error(e);
+    }
+  };
+
+  // send email on mount
+  const emailSentOnMount = useRef(false);
+  useEffect(() => {
+    if (!emailSentOnMount.current) {
+      emailSentOnMount.current = true;
+      sendEmail();
+    }
+  }, [sendEmail]);
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <ModalTitle
+        style={{
+          textAlign: "center",
+        }}
+      >
+        Sign in
+      </ModalTitle>
+
+      <div
+        style={{
+          textAlign: "center",
+        }}
+      >
+        <Spacer y="xl" />
+        <SecondaryText>Enter the OTP sent to</SecondaryText>
+        <Spacer y="sm" />
+        <NeutralText>{email}</NeutralText>
+        <Spacer y="xl" />
+      </div>
+
+      <OTPInput
+        isInvalid={verifyStatus === "invalid"}
+        digits={6}
+        value={otpInput}
+        setValue={(value) => {
+          setOtpInput(value);
+          setVerifyStatus("idle");
+        }}
+        onEnter={handleSubmit}
+      />
+
+      {recoveryCodeRequired && (
+        <div
+          style={{
+            textAlign: "center",
+          }}
+        >
+          <Spacer y="xl" />
+          <Line />
+          <Spacer y="xl" />
+
+          <NeutralText>New device detected</NeutralText>
+          <Spacer y="sm" />
+          <SecondaryText
+            style={{
+              lineHeight: "1.5",
+              maxWidth: "350px",
+            }}
+          >
+            Enter the recovery code emailed to you <br /> when you first signed
+            up
+          </SecondaryText>
+
+          <Spacer y="md" />
+          <Input
+            autoComplete="off"
+            required
+            data-error={verifyStatus === "invalid"}
+            id="recovery-code"
+            variant="outline"
+            style={{
+              textAlign: "center",
+            }}
+            value={recoveryCode}
+            onChange={(e) => setRecoveryCode(e.target.value)}
+            placeholder="Enter your recovery code"
+          />
+        </div>
+      )}
+
+      {verifyStatus === "invalid" && (
+        <FadeIn>
+          <Spacer y="sm" />
+          <Flex justifyContent="center">
+            <DangerText
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
+            </DangerText>
+          </Flex>
+        </FadeIn>
+      )}
+
+      <Spacer y="xl" />
+
+      {verifyStatus === "verifying" ? (
+        <>
+          <Spacer y="md" />
+          <Flex justifyContent="center">
+            <Spinner size="md" color="primary" />
+          </Flex>
+          <Spacer y="md" />
+        </>
+      ) : (
+        <Button
+          onClick={handleSubmit}
+          variant="inverted"
+          type="submit"
+          style={{
+            width: "100%",
+          }}
+        >
+          Verify
+        </Button>
+      )}
+
+      <Spacer y="lg" />
+
+      {!sentEmailInfo && (
+        <Flex
+          gap="xs"
+          alignItems="center"
+          justifyContent="center"
+          style={{
+            textAlign: "center",
+          }}
+        >
+          <SecondaryText
+            style={{
+              fontSize: "14px",
+            }}
+          >
+            Sending OTP
+          </SecondaryText>
+          <Spinner size="xs" color="secondary" />
+        </Flex>
+      )}
+
+      {sentEmailInfo && (
+        <LinkButton onClick={sendEmail}> Request new code </LinkButton>
+      )}
+    </form>
+  );
+};
+
+const LinkButton = styled.button<{ theme?: Theme }>`
+  all: unset;
+  color: ${(p) => p.theme.link.primary};
+  font-size: ${fontSize.sm};
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  &:hover {
+    color: ${(p) => p.theme.link.primaryHover};
+  }
+`;
+
+const Line = styled.div<{ theme?: Theme }>`
+  height: 2px;
+  background: ${(p) => p.theme.bg.baseHover};
+`;

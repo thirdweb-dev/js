@@ -82,6 +82,17 @@ export const Input = styled.input<{
   &[disabled] {
     cursor: not-allowed;
   }
+
+  &[type="number"]::-webkit-outer-spin-button,
+  &[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    appearance: none;
+    -moz-appearance: textfield;
+  }
 `;
 
 // for rendering a input and a button side by side

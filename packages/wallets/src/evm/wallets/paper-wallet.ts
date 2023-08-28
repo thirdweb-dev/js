@@ -62,4 +62,9 @@ export class PaperWallet extends AbstractClientWallet<
     const connector = (await this.getConnector()) as PaperWalletConnector;
     return connector.getEmail();
   }
+
+  async getPaperSDK() {
+    const connector = (await this.getConnector()) as PaperWalletConnector;
+    return connector.getPaperSDK();
+  }
 }
