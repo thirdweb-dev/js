@@ -65,7 +65,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     typeof DropErc721ContractSchema
   >;
   public app: ContractAppURI<SignatureDropContract>;
-  public sales: ContractPrimarySale;
+  public sales: ContractPrimarySale<SignatureDropContract>;
   public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
@@ -308,9 +308,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     );
     const maxId = BigNumber.from(
       Math.min(
-        (
-          await 
-        ).toNumber(),
+        (await this.contractWrapper.read("nextTokenIdToMint", [])).toNumber(),
         firstTokenId.toNumber() + count,
       ),
     );
@@ -361,7 +359,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    ])
+    ]);
     return !anyoneCanTransfer;
   }
 
