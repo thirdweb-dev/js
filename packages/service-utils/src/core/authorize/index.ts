@@ -18,6 +18,8 @@ export type AuthorizationInput = {
   jwt: string | null;
   hashedJWT: string | null;
   targetAddress?: string | string[];
+  // IMPORTANT: this is a stringified boolean! Only pass in true or false here. IK it's not ideal, but it's required to pass it in the headers.
+  useWalletAuth?: string | null;
 };
 
 type CacheOptions = {
@@ -31,16 +33,16 @@ type CacheOptions = {
 
 type ApiKeyCacheWithPossibleTTL =
   | {
-      apiKeyMeta: ApiKeyMetadata;
-      updatedAt: number;
-    }
+    apiKeyMeta: ApiKeyMetadata;
+    updatedAt: number;
+  }
   | ApiKeyMetadata;
 
 type AccountCacheWithPossibleTTL =
   | {
-      apiKeyMeta: AccountMetadata;
-      updatedAt: number;
-    }
+    apiKeyMeta: AccountMetadata;
+    updatedAt: number;
+  }
   | AccountMetadata;
 
 export async function authorize(
@@ -48,7 +50,7 @@ export async function authorize(
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
-  const { clientId, targetAddress, secretKeyHash, jwt, hashedJWT } = authData;
+  const { clientId, targetAddress, secretKeyHash, jwt, hashedJWT, useWalletAuth } = authData;
   const { enforceAuth } = serviceConfig;
 
   // BACKWARDS COMPAT: if auth not enforced and we don't have auth credentials bypass
@@ -89,7 +91,7 @@ export async function authorize(
     }
     if (!accountMeta) {
       try {
-        const { data, error } = await fetchAccountFromApi(jwt, serviceConfig);
+        const { data, error } = await fetchAccountFromApi(jwt, serviceConfig, useWalletAuth?.toLowerCase() === "true");
         if (error) {
           return {
             authorized: false,
