@@ -65,7 +65,7 @@ import type {
   IBaseRouter,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides, ContractInterface } from "ethers";
+import { BaseContract, CallOverrides } from "ethers";
 import { BaseContractInterface } from "../types/contract";
 import { NetworkInput } from "../core/types";
 import { ContractEncoder } from "../core/classes/contract-encoder";
@@ -119,8 +119,12 @@ export class SmartContract<
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public abi: Abi;
+  // public abi: Abi;
   public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
+
+  get abi(): Abi {
+    return AbiSchema.parse(this.contractWrapper.abi || []);
+  }
 
   /**
    * Handle royalties
@@ -385,7 +389,6 @@ export class SmartContract<
     this._chainId = chainId;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.abi = AbiSchema.parse(abi || []);
 
     this.events = new ContractEvents(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -405,17 +408,6 @@ export class SmartContract<
 
   onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
-  }
-
-  async onAbiUpdated(updatedAbi: ContractInterface): Promise<void> {
-    this.contractWrapper = new ContractWrapper<TContract>(
-      this.contractWrapper.getSignerOrProvider(),
-      this.getAddress(),
-      updatedAbi,
-      this.contractWrapper.options,
-      this.storage,
-    );
-    this.abi = AbiSchema.parse(updatedAbi);
   }
 
   getAddress(): Address {
@@ -608,7 +600,7 @@ export class SmartContract<
         FEATURE_DYNAMIC_CONTRACT.name,
       )
     ) {
-      return new BaseRouterClass(this.contractWrapper, this, this.onAbiUpdated);
+      return new BaseRouterClass(this.contractWrapper);
     }
     return undefined;
   }

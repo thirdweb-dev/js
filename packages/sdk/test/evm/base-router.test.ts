@@ -116,6 +116,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     await coreRouter.extensions.addWithAbi(
       "OffersLogic",
       offersLogicAddress,
+      { name: "Offers" },
       OffersLogic__factory.abi,
     );
 
@@ -139,6 +140,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     await coreRouter.extensions.addWithAbi(
       "OffersLogic",
       offersLogicAddress,
+      { name: "Offers" },
       OffersLogic__factory.abi,
     );
 
@@ -155,7 +157,7 @@ describe("Base Router for Dynamic Contracts", async () => {
       [],
     );
     const newFunctions: ExtensionFunction[] = generateExtensionFunctions(
-      AbiSchema.parse(DirectListingsLogic__factory.abi), // arbitrary set of functions
+      AbiSchema.parse(OffersLogic__factory.abi),
     );
 
     invariant(newFunctions, "");
@@ -174,6 +176,10 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(extensions.length === 1);
     assert(extensions[0].metadata.name === "OffersLogic");
     assert(extensions[0].metadata.implementation === newAddress);
+
+    // call function on extension
+    const totalOffers = await coreRouter.offers.getTotalCount();
+    assert(totalOffers.eq(0));
   });
 
   it("should update extensions with abi", async () => {
@@ -190,6 +196,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     await coreRouter.extensions.addWithAbi(
       "OffersLogic",
       offersLogicAddress,
+      { name: "Offers" },
       OffersLogic__factory.abi,
     );
 
@@ -208,6 +215,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     await coreRouter.extensions.updateWithAbi(
       "OffersLogic",
       newAddress,
+      { name: "DirectListings" },
       DirectListingsLogic__factory.abi,
     );
 
@@ -248,6 +256,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     let extensions = await coreRouter.extensions.getAll();
     assert(extensions.length === 1);
     assert(extensions[0].metadata.name === "OffersLogic");
+    assert(isExtensionEnabled(coreRouter.abi, "Offers"));
 
     // remove extension
     await coreRouter.extensions.remove(routerInput);
@@ -255,6 +264,9 @@ describe("Base Router for Dynamic Contracts", async () => {
     // read extension
     extensions = await coreRouter.extensions.getAll();
     assert(extensions.length === 0);
+
+    // call function on extension
+    assert(!isExtensionEnabled(coreRouter.abi, "Offers"));
   });
 
   it("should get extension for function", async () => {

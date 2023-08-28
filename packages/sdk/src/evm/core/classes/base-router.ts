@@ -12,15 +12,23 @@ import {
 import { FEATURE_DYNAMIC_CONTRACT } from "../../constants/thirdweb-features";
 import { ContractInterface } from "ethers";
 import { generateExtensionFunctions } from "../../common/plugin/generatePluginFunctions";
-import { Abi, AbiSchema } from "../../schema";
+import { Abi, AbiSchema, CommonContractSchema } from "../../schema";
 import { utils } from "ethers";
 import invariant from "tiny-invariant";
 import { ExtensionAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
-import { fetchContractMetadataFromAddress } from "../../common";
+import {
+  deployContractDeterministic,
+  deployWithThrowawayDeployer,
+  fetchContractMetadataFromAddress,
+  fetchPublishedContractFromPolygon,
+  getDeploymentInfo,
+  resolveAddress,
+} from "../../common";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { ExtensionRemovedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
 import { ExtensionUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
+import { DynamicContractExtensionMetadata } from "../../types";
 
 export class BaseRouterClass<TContract extends IBaseRouter>
   implements DetectableFeature
@@ -30,25 +38,14 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   private contractWrapper: ContractWrapper<IBaseRouter>;
   private onAbiUpdated: any;
 
-  constructor(
-    contractWrapper: ContractWrapper<TContract>,
-    contractInstance: any,
-    onAbiUpdated: any,
-  ) {
+  constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
-    this.onAbiUpdated = onAbiUpdated.bind(contractInstance);
+    // this.onAbiUpdated = onAbiUpdated.bind(contractInstance);
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
-
-  // /**
-  //  * @internal
-  //  */
-  // onAbiUpdated(updatedAbi: ContractInterface): void {
-  //   this.contractWrapper.updateABI(updatedAbi);
-  // }
 
   /** ******************************
    * READ FUNCTIONS
@@ -153,7 +150,82 @@ export class BaseRouterClass<TContract extends IBaseRouter>
             abiToAdd,
           ]);
 
-          await this.onAbiUpdated(updatedAbi);
+          this.contractWrapper.updateAbi(updatedAbi);
+
+          return receipt;
+        },
+      });
+    },
+  );
+
+  addPublished = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      extensionName: string,
+      publisherAddress: string,
+      version: string = "latest",
+      extensionMetadata: DynamicContractExtensionMetadata,
+    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const parsedMetadata = await CommonContractSchema.parseAsync(
+        extensionMetadata,
+      );
+      const extensionMetadataUri = await this.contractWrapper.storage.upload(
+        parsedMetadata,
+      );
+
+      const deployedExtensionAddress = await this.deployExtension(
+        extensionName,
+        publisherAddress,
+        version,
+      );
+
+      const metadata = await fetchContractMetadataFromAddress(
+        deployedExtensionAddress,
+        this.contractWrapper.getProvider(),
+        this.contractWrapper.storage,
+        this.contractWrapper.options,
+      );
+
+      const extensionAbi = metadata.abi;
+      invariant(extensionAbi, "Require extension ABI");
+
+      const extensionFunctions: ExtensionFunction[] =
+        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
+
+      const extension: Extension = {
+        metadata: {
+          name: extensionName,
+          metadataURI: extensionMetadataUri,
+          implementation: deployedExtensionAddress,
+        },
+        functions: extensionFunctions,
+      };
+
+      return Transaction.fromContractWrapper({
+        contractWrapper: this.contractWrapper,
+        method: "addExtension",
+        args: [extension],
+
+        parse: async (receipt) => {
+          const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
+            "ExtensionAdded",
+            receipt.logs,
+          );
+
+          if (events.length < 1) {
+            throw new Error("No ExtensionAdded event found");
+          }
+
+          const abiToAdd = this.filterAbiForAdd(
+            AbiSchema.parse(extensionAbi),
+            extension,
+          );
+
+          const updatedAbi = joinABIs([
+            AbiSchema.parse(this.contractWrapper.abi),
+            abiToAdd,
+          ]);
+
+          this.contractWrapper.updateAbi(updatedAbi);
 
           return receipt;
         },
@@ -165,9 +237,29 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     async (
       extensionName: string,
       extensionAddress: string,
+      extensionMetadata: DynamicContractExtensionMetadata,
       extensionAbi?: ContractInterface,
-      extensionMetadataUri: string = "",
-    ): Promise<Transaction> => {
+    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const parsedMetadata = await CommonContractSchema.parseAsync(
+        extensionMetadata,
+      );
+      const extensionMetadataUri = await this.contractWrapper.storage.upload(
+        parsedMetadata,
+      );
+
+      if (!extensionAbi) {
+        const metadata = await fetchContractMetadataFromAddress(
+          extensionAddress,
+          this.contractWrapper.getProvider(),
+          this.contractWrapper.storage,
+          this.contractWrapper.options,
+        );
+
+        extensionAbi = metadata.abi;
+      }
+
+      invariant(extensionAbi, "Require extension ABI");
+
       const extensionFunctions: ExtensionFunction[] =
         generateExtensionFunctions(AbiSchema.parse(extensionAbi));
 
@@ -184,6 +276,31 @@ export class BaseRouterClass<TContract extends IBaseRouter>
         contractWrapper: this.contractWrapper,
         method: "addExtension",
         args: [extension],
+
+        parse: async (receipt) => {
+          const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
+            "ExtensionAdded",
+            receipt.logs,
+          );
+
+          if (events.length < 1) {
+            throw new Error("No ExtensionAdded event found");
+          }
+
+          const abiToAdd = this.filterAbiForAdd(
+            AbiSchema.parse(extensionAbi),
+            extension,
+          );
+
+          const updatedAbi = joinABIs([
+            AbiSchema.parse(this.contractWrapper.abi),
+            abiToAdd,
+          ]);
+
+          this.contractWrapper.updateAbi(updatedAbi);
+
+          return receipt;
+        },
       });
     },
   );
@@ -222,7 +339,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
           const abiToAdd = this.filterAbiForAdd(extensionAbi, extension);
           const updatedAbi = joinABIs([contractAbi, abiToAdd]);
 
-          await this.onAbiUpdated(updatedAbi);
+          this.contractWrapper.updateAbi(updatedAbi);
 
           return receipt;
         },
@@ -234,9 +351,29 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     async (
       extensionName: string,
       extensionAddress: string,
+      extensionMetadata: DynamicContractExtensionMetadata,
       extensionAbi?: ContractInterface,
-      extensionMetadataUri: string = "",
-    ): Promise<Transaction> => {
+    ): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const parsedMetadata = await CommonContractSchema.parseAsync(
+        extensionMetadata,
+      );
+      const extensionMetadataUri = await this.contractWrapper.storage.upload(
+        parsedMetadata,
+      );
+
+      if (!extensionAbi) {
+        const metadata = await fetchContractMetadataFromAddress(
+          extensionAddress,
+          this.contractWrapper.getProvider(),
+          this.contractWrapper.storage,
+          this.contractWrapper.options,
+        );
+
+        extensionAbi = metadata.abi;
+      }
+
+      invariant(extensionAbi, "Require extension ABI");
+
       const extensionFunctions: ExtensionFunction[] =
         generateExtensionFunctions(AbiSchema.parse(extensionAbi));
 
@@ -253,6 +390,29 @@ export class BaseRouterClass<TContract extends IBaseRouter>
         contractWrapper: this.contractWrapper,
         method: "updateExtension",
         args: [extension],
+
+        parse: async (receipt) => {
+          const events = this.contractWrapper.parseLogs<ExtensionUpdatedEvent>(
+            "ExtensionUpdated",
+            receipt.logs,
+          );
+
+          if (events.length < 1) {
+            throw new Error("No ExtensionUpdated event found");
+          }
+
+          const parsedAbi = AbiSchema.parse(extensionAbi);
+          const contractAbi = this.filterAbiForRemove(
+            AbiSchema.parse(this.contractWrapper.abi),
+            parsedAbi,
+          );
+          const abiToAdd = this.filterAbiForAdd(parsedAbi, extension);
+          const updatedAbi = joinABIs([contractAbi, abiToAdd]);
+
+          this.contractWrapper.updateAbi(updatedAbi);
+
+          return receipt;
+        },
       });
     },
   );
@@ -289,7 +449,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
             extensionAbi,
           );
 
-          await this.onAbiUpdated(updatedAbi);
+          this.contractWrapper.updateAbi(updatedAbi);
 
           return receipt;
         },
@@ -339,5 +499,79 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     });
 
     return filtered;
+  }
+
+  private async deployExtension(
+    extensionName: string,
+    publisherAddress: string,
+    version: string = "latest",
+  ): Promise<string> {
+    const published = await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      extensionName,
+      version,
+      this.contractWrapper.storage,
+      this.contractWrapper.options.clientId,
+      this.contractWrapper.options.secretKey,
+    );
+
+    const deploymentInfo = await getDeploymentInfo(
+      published.metadataUri,
+      this.contractWrapper.storage,
+      this.contractWrapper.getProvider(),
+      "",
+      this.contractWrapper.options.clientId,
+      this.contractWrapper.options.secretKey,
+    );
+
+    const implementationAddress = deploymentInfo.find(
+      (i) => i.type === "implementation",
+    )?.transaction.predictedAddress as string;
+
+    // deploy infra + plugins + implementation using a throwaway Deployer contract
+
+    // filter out already deployed contracts (data is empty)
+    const transactionsToSend = deploymentInfo.filter(
+      (i) => i.transaction.data && i.transaction.data.length > 0,
+    );
+    const transactionsforDirectDeploy = transactionsToSend
+      .filter((i) => {
+        return i.type !== "infra";
+      })
+      .map((i) => i.transaction);
+    const transactionsForThrowawayDeployer = transactionsToSend
+      .filter((i) => {
+        return i.type === "infra";
+      })
+      .map((i) => i.transaction);
+
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "Signer is required");
+
+    // deploy via throwaway deployer, multiple infra contracts in one transaction
+    await deployWithThrowawayDeployer(
+      signer,
+      transactionsForThrowawayDeployer,
+      {},
+    );
+
+    // send each transaction directly to Create2 factory
+    // process txns one at a time
+    for (const tx of transactionsforDirectDeploy) {
+      try {
+        await deployContractDeterministic(signer, tx, {});
+      } catch (e) {
+        console.debug(
+          `Error deploying contract at ${tx.predictedAddress}`,
+          (e as any)?.message,
+        );
+      }
+    }
+
+    const resolvedImplementationAddress = await resolveAddress(
+      implementationAddress,
+    );
+
+    return resolvedImplementationAddress;
   }
 }

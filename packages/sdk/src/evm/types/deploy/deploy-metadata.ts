@@ -407,3 +407,25 @@ export interface AirdropContractDeployMetadata {
    */
   app_uri?: string;
 }
+
+/**
+ * @public
+ */
+export interface DynamicContractExtensionMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileOrBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+}
