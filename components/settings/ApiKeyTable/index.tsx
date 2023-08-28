@@ -53,6 +53,20 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
       },
     }),
 
+    columnHelper.accessor("lastAccessedAt", {
+      header: "Last accessed",
+      cell: (cell) => {
+        const value = cell.getValue();
+
+        if (!value) {
+          return;
+        }
+
+        const createdDate = format(new Date(value), "MMM dd, yyyy");
+        return <Text>{createdDate}</Text>;
+      },
+    }),
+
     columnHelper.accessor("services", {
       header: "Enabled Services",
       cell: (cell) => {
