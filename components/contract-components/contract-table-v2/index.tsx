@@ -373,7 +373,6 @@ const WrappedSolanaDeployDrawer: React.FC<
       size="lg"
       isOpen={disclosure.isOpen}
       onClose={disclosure.onClose}
-      hideCloseButton
       header={{
         children: (
           <Flex gap={4} align="center">

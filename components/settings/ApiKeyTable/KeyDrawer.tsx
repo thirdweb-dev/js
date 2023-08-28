@@ -150,6 +150,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
 
   return (
     <Drawer
+      closeOnOverlayClick={false}
       allowPinchZoom
       preserveScrollBarGap
       onClose={onClose}
