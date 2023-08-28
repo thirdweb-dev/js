@@ -131,19 +131,28 @@ export const authenticateUser = async (
       }
 
       const allowedDomains = [
-        "https://www.thirdweb.com",
-      ]
+        "https://www.thirdweb.com"
+      ];
+
       const origin = req.headers.origin as string;
 
       if (allowedDomains.includes(origin) || (origin && origin.endsWith('.thirdweb-preview.com'))) {
         res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Methods', '*');
-      }
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-      if (req.method === 'OPTIONS') {
-        res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
-        res.writeHead(200);
-        res.end();
+        // Define the specific HTTP methods you want to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
+        if (req.method === 'OPTIONS') {
+          res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
+          res.writeHead(200);
+          res.end();
+          return;
+        }
+      } else {
+        // If the origin isn't allowed, respond accordingly.
+        res.writeHead(403, "Forbidden");
+        res.end("The CORS policy for this site does not allow access from the specified origin.");
         return;
       }
 
