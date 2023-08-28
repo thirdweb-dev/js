@@ -20,7 +20,7 @@ export async function authorizeNode(
   authInput: AuthInput,
   serviceConfig: NodeServiceConfig,
 ): Promise<AuthorizationResult> {
-  let authData;
+  let authData: AuthorizationInput;
   try {
     authData = extractAuthorizationData(authInput);
   } catch (e) {
@@ -121,12 +121,18 @@ export function extractAuthorizationData(
   }
 
   let jwt: null | string = null;
+  let useWalletAuth: null | string = null;
   // check for authorization header on the request
   const authorizationHeader = getHeader(headers, "authorization");
   if (authorizationHeader) {
     const [type, token] = authorizationHeader.split(" ");
     if (type.toLowerCase() === "bearer" && !!token) {
       jwt = token;
+      const walletAuthHeader = getHeader(headers, "x-authorize-wallet");
+      // IK a stringified boolean is not ideal, but it's required to pass it in the headers.
+      if (walletAuthHeader?.toLowerCase() === "true") {
+        useWalletAuth = walletAuthHeader;
+      }
     }
   }
 
@@ -139,6 +145,7 @@ export function extractAuthorizationData(
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,
+    useWalletAuth,
   };
 }
 

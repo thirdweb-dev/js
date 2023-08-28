@@ -1,5 +1,17 @@
 # @thirdweb-dev/chains
 
+## 0.1.48
+
+### Patch Changes
+
+- [#1530](https://github.com/thirdweb-dev/js/pull/1530) [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add Chiliz Spicy testnet
+
+## 0.1.47
+
+### Patch Changes
+
+- [#1518](https://github.com/thirdweb-dev/js/pull/1518) [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8) Thanks [@nkrishang](https://github.com/nkrishang)! - Update contracts package
+
 ## 0.1.46
 
 ### Patch Changes

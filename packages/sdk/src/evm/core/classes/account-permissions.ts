@@ -1,30 +1,30 @@
+import { BigNumber, utils } from "ethers";
+import { FEATURE_ACCOUNT_PERMISSIONS } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
-import { FEATURE_ACCOUNT_PERMISSIONS } from "../../constants/thirdweb-features";
-import { utils, BigNumber } from "ethers";
 import { Transaction } from "./transactions";
 
 import type {
   IAccountCore,
   IAccountPermissions,
 } from "@thirdweb-dev/contracts-js";
+import invariant from "tiny-invariant";
+import { resolveAddress } from "../../common";
+import { resolveOrGenerateId } from "../../common/signature-minting";
+import { buildTransactionFunction } from "../../common/transactions";
+import { AddressOrEns } from "../../schema";
 import {
+  PermissionSnapshotInput,
+  PermissionSnapshotOutput,
+  PermissionSnapshotSchema,
   SignedSignerPermissionsPayload,
-  SignerPermissionsOutput,
-  SignerWithPermissions,
+  SignerPermissionRequest,
   SignerPermissions,
   SignerPermissionsInput,
-  SignerPermissionRequest,
+  SignerPermissionsOutput,
   SignerPermissionsSchema,
-  PermissionSnapshotInput,
-  PermissionSnapshotSchema,
-  PermissionSnapshotOutput,
+  SignerWithPermissions,
 } from "../../types";
-import invariant from "tiny-invariant";
-import { buildTransactionFunction } from "../../common/transactions";
-import { resolveOrGenerateId } from "../../common/signature-minting";
-import { AddressOrEns } from "../../schema";
-import { resolveAddress } from "../../common";
 
 export class AccountPermissions implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_PERMISSIONS.name;
@@ -91,11 +91,11 @@ export class AccountPermissions implements DetectableFeature {
       permissions,
     );
 
-    const { success } =
-      await this.contractWrapper.readContract.verifySignerPermissionRequest(
-        payload,
-        signature,
-      );
+    const [success] = await this.contractWrapper.read(
+      "verifySignerPermissionRequest",
+      [payload, signature],
+    );
+
     if (!success) {
       throw new Error(`Invalid signature.`);
     }
