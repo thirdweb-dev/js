@@ -11,7 +11,7 @@ export default {
     "decimals": 18
   },
   "rpc": [
-    "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://opbnb-opBNB.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-testnet-rpc.bnbchain.org"
   ],
   "explorers": [
@@ -31,5 +31,5 @@ export default {
     "width": 512,
     "format": "svg"
   },
-  "slug": "opbnb"
+  "slug": "opbnb-opBNB"
 } as const satisfies Chain;

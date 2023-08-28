@@ -28,6 +28,7 @@ export * from "./feature-detection/isFeatureEnabled";
 export * from "./feature-detection/assertEnabled";
 export * from "./feature-detection/detectContractFeature";
 export * from "./feature-detection/hasFunction";
+export * from "./plugin/joinABIs";
 
 export * from "./version-checker";
 export * from "./fetchSourceFilesFromMetadata";

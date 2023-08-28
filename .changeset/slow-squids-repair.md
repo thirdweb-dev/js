@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Airdrops
+Expose joinAbis() utility function

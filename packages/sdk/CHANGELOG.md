@@ -1,5 +1,41 @@
 # @thirdweb-dev/sdk
 
+## 3.10.56
+
+### Patch Changes
+
+- [#1537](https://github.com/thirdweb-dev/js/pull/1537) [`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix auto-factory deployment: correct bytecode format
+
+- [#1520](https://github.com/thirdweb-dev/js/pull/1520) [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): update read calls to be centralized in contract-wrapper.ts
+
+- Updated dependencies [[`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c)]:
+  - @thirdweb-dev/chains@0.1.48
+
+## 3.10.55
+
+### Patch Changes
+
+- [#1488](https://github.com/thirdweb-dev/js/pull/1488) [`586e91db`](https://github.com/thirdweb-dev/js/commit/586e91dbe610588cc7b24fade59172fed6481074) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Dynamic contract detection and deployment using updated publish metadata
+
+- [#1518](https://github.com/thirdweb-dev/js/pull/1518) [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8) Thanks [@nkrishang](https://github.com/nkrishang)! - Update contracts package
+
+- [#1526](https://github.com/thirdweb-dev/js/pull/1526) [`91f0245b`](https://github.com/thirdweb-dev/js/commit/91f0245be78ae523e1faea26b1032bfb283467d9) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix supported chains map in getChainProvider
+
+- [#1525](https://github.com/thirdweb-dev/js/pull/1525) [`5a373a75`](https://github.com/thirdweb-dev/js/commit/5a373a75090da7e1e05724ed1a3a3a6aa9f7fd21) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Correct chain / polygon rpc for fetching published contract
+
+- [#1523](https://github.com/thirdweb-dev/js/pull/1523) [`ae74b8ef`](https://github.com/thirdweb-dev/js/commit/ae74b8ef6200dba8affa8b52e7d834c5552350d0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Separate ERC1155Supply extension
+
+- [#1516](https://github.com/thirdweb-dev/js/pull/1516) [`bc003c2f`](https://github.com/thirdweb-dev/js/commit/bc003c2fef33fcf7ce5981d8634911ac4bcaa927) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return early for claim checks when possible
+
+- [#1288](https://github.com/thirdweb-dev/js/pull/1288) [`447d9846`](https://github.com/thirdweb-dev/js/commit/447d984653f77af6860ae907072e768b584b263d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Airdrops
+
+- [#1498](https://github.com/thirdweb-dev/js/pull/1498) [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimized fetching contract metadata, and fallback to bytecode extension detection for un-imported contracts
+
+- Updated dependencies [[`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8), [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5)]:
+  - @thirdweb-dev/contracts-js@1.3.12
+  - @thirdweb-dev/chains@0.1.47
+  - @thirdweb-dev/storage@1.2.8
+
 ## 3.10.54
 
 ### Patch Changes

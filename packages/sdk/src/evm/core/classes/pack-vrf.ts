@@ -1,4 +1,4 @@
-import type { ERC20, PackVRFDirect } from "@thirdweb-dev/contracts-js";
+import type { ERC20Base, PackVRFDirect } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import {
@@ -335,7 +335,7 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
         `No LINK token address found for chainId ${this.chainId}`,
       );
     }
-    const contract = new ContractWrapper<ERC20>(
+    const contract = new ContractWrapper<ERC20Base>(
       this.contractWrapper.getSignerOrProvider(),
       linkAddress,
       ERC20Abi,

@@ -3,11 +3,11 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { exec, spawn } from "child_process";
 import { Command } from "commander";
+import fs from "fs";
 import open from "open";
-import os from "os";
 import path from "path";
 import prompts from "prompts";
-import Cache, { CacheEntry } from "sync-disk-cache";
+import xdgAppPaths from "xdg-app-paths";
 import { loginUser, logoutUser, validateKey } from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
@@ -24,11 +24,17 @@ import { upload } from "../storage/command";
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   const skipIntro = process.env.THIRDWEB_CLI_SKIP_INTRO === "true";
+  const configDir = xdgAppPaths(".thirdweb").config();
+  const cacheDir = xdgAppPaths(".thirdweb").cache();
+  const lastVersionCheckCachePath = path.join(
+    cacheDir,
+    "last-version-check.txt",
+  );
+  const credsConfigPath = path.join(configDir, "creds.json");
+  const cliWalletPath = path.join(configDir, "wallet.json");
+  const tokenPath = path.join(configDir, "auth-token.txt");
 
   const program = new Command();
-  const cache = new Cache("thirdweb-cli", {
-    location: path.join(os.homedir(), ".thirdweb", "creds"),
-  });
 
   // yes this has to look like this, eliminates whitespace
   if (!skipIntro) {
@@ -50,16 +56,32 @@ const main = async () => {
     .version(cliVersion, "-v, --version")
     .option("--skip-update-check", "Skip check for auto updates")
     .hook("preAction", async () => {
+      const regenerateConfig = !fs.existsSync(configDir);
+      const regenerateCache = !fs.existsSync(cacheDir);
+
+      // Create config directory if it doesn't exist
+      if (regenerateConfig) {
+        fs.mkdirSync(configDir, { recursive: true });
+      }
+
+      // Create cache directory if it doesn't exist
+      if (regenerateCache) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      }
+
       if (skipIntro || program.opts().skipUpdateCheck) {
         return;
       }
 
       let shouldCheckVersion = true;
       try {
-        const lastCheckCache: CacheEntry = cache.get("last-version-check");
+        const lastVersionCheckCache = fs.readFileSync(
+          lastVersionCheckCachePath,
+          "utf-8",
+        );
 
-        if (lastCheckCache.isCached) {
-          const lastVersionCheck = new Date(lastCheckCache.value);
+        if (lastVersionCheckCache) {
+          const lastVersionCheck = new Date(lastVersionCheckCache);
           // Don't check for updates if already checked within past 24 hours
           if (Date.now() - lastVersionCheck.getTime() < 1000 * 60 * 60 * 24) {
             shouldCheckVersion = false;
@@ -88,7 +110,14 @@ const main = async () => {
 
           try {
             // Set cache to prevent checking for updates again for 24 hours
-            cache.set("last-version-check", new Date().toISOString());
+            fs.writeFileSync(
+              lastVersionCheckCachePath,
+              new Date().toISOString(),
+              {
+                encoding: "utf-8",
+                mode: 0o600,
+              },
+            );
           } catch {
             // no-op
           }
@@ -300,17 +329,22 @@ const main = async () => {
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
     .option("--zksync", "Deploy on ZKSync")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(cache);
+        await loginUser({
+          credsConfigPath,
+          cliWalletPath,
+          tokenPath,
+        });
       } else {
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
         await validateKey(options.key);
-        apiSecretKey = options.key;
+        secretKey = options.key;
       }
-      const url = await deploy(options, apiSecretKey);
+      const url = await deploy(options, secretKey);
       if (url && !options.ci) {
         await open(url);
       }
@@ -332,20 +366,25 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(cache);
+        await loginUser({
+          credsConfigPath,
+          cliWalletPath,
+          tokenPath,
+        });
       } else {
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
         await validateKey(options.key);
-        apiSecretKey = options.key;
+        secretKey = options.key;
       }
       logger.warn(
         "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
       );
-      const url = await processProject(options, "publish", apiSecretKey);
+      const url = await processProject(options, "publish", secretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -374,17 +413,22 @@ const main = async () => {
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(cache);
+        await loginUser({
+          credsConfigPath,
+          cliWalletPath,
+          tokenPath,
+        });
       } else {
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
         await validateKey(options.key);
-        apiSecretKey = options.key;
+        secretKey = options.key;
       }
-      const url = await processProject(options, "publish", apiSecretKey);
+      const url = await processProject(options, "publish", secretKey);
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -399,19 +443,31 @@ const main = async () => {
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (_path, options) => {
-      let apiSecretKey = "";
+      let secretKey = "";
+      let storage: ThirdwebStorage;
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(cache);
+        await loginUser({
+          credsConfigPath,
+          cliWalletPath,
+          tokenPath,
+        });
       } else {
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
         await validateKey(options.key);
-        apiSecretKey = options.key;
+        secretKey = options.key;
       }
-      const storage = new ThirdwebStorage({
-        secretKey: apiSecretKey,
-      });
+
+      if (secretKey) {
+        storage = new ThirdwebStorage({
+          secretKey,
+        });
+      } else {
+        storage = new ThirdwebStorage();
+      }
+
       try {
         const uri = await upload(storage, _path);
         info(
@@ -438,7 +494,7 @@ const main = async () => {
             ),
           );
         } else {
-          logger.error(chalk.redBright("Failed to upload files"), err);
+          logger.error(chalk.redBright(err.message ? err.message : err));
         }
       }
     });
@@ -460,17 +516,22 @@ const main = async () => {
       "Preload ABIs and generate types for your smart contract to strongly type the thirdweb SDK",
     )
     .option("-p, --path <project-path>", "path to project", ".")
-    .option("-k, --key <key>", "API key to authorize usage")
+    .option("-k, --key <key>", "API secret key to authorize usage")
     .action(async (options) => {
-      let apiSecretKey = "";
+      let secretKey = "";
       // If no key is passed in, prompt the user to login. If it is passed in, use it.
       if (!options.key) {
-        apiSecretKey = await loginUser(cache);
+        await loginUser({
+          credsConfigPath,
+          cliWalletPath,
+          tokenPath,
+        });
       } else {
+        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
         await validateKey(options.key);
-        apiSecretKey = options.key;
+        secretKey = options.key;
       }
-      await generate(options, apiSecretKey);
+      await generate(options, secretKey);
     });
 
   program
@@ -480,7 +541,11 @@ const main = async () => {
     )
     .option("-n, --new", "Login with a new API secret key", false)
     .action(async (options) => {
-      await loginUser(cache, options, true);
+      await loginUser({
+        credsConfigPath,
+        cliWalletPath,
+        tokenPath,
+      }, options, true);
     });
 
   program
@@ -489,7 +554,7 @@ const main = async () => {
       "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
     )
     .action(async () => {
-      await logoutUser(cache);
+      await logoutUser(credsConfigPath, tokenPath, cliWalletPath);
     });
 
   await program.parseAsync();

@@ -36,6 +36,7 @@ import {
   FEATURE_EDITION_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
+  FEATURE_EDITION_SUPPLY,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { Address } from "../../schema/shared/Address";
@@ -176,11 +177,14 @@ export class Erc1155<
    * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
-    return await (
-      this.contractWrapper as ContractWrapper<
-        BaseERC1155 | BaseSignatureMintERC1155
-      >
-    ).read("totalSupply", [tokenId]);
+    if (detectContractFeature(this.contractWrapper, "ERC1155Supply")) {
+      return await (this.contractWrapper as ContractWrapper<BaseERC1155>).read(
+        "totalSupply",
+        [tokenId],
+      );
+    } else {
+      throw new ExtensionNotImplementedError(FEATURE_EDITION_SUPPLY);
+    }
   }
 
   /**
