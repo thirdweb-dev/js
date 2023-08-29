@@ -11,6 +11,8 @@ describe("authorizeService", () => {
     domains: [],
     bundleIds: [],
     accountId: "test-account-id",
+    accountStatus: "noCustomer",
+    accountPlan: "free",
     services: [
       {
         name: "storage",
