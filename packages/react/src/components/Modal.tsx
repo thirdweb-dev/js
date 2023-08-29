@@ -5,7 +5,6 @@ import {
   shadow,
   radius,
   iconSize,
-  fontSize,
 } from "../design-system";
 import { scrollbar } from "../design-system/styles";
 import { Overlay } from "./Overlay";
@@ -20,7 +19,6 @@ export const Modal: React.FC<{
   open?: boolean;
   setOpen?: (open: boolean) => void;
   children: React.ReactNode;
-  title?: string;
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
 }> = (props) => {
@@ -39,8 +37,6 @@ export const Modal: React.FC<{
         </Dialog.Overlay>
         <Dialog.Content asChild>
           <DialogContent style={props.style}>
-            {props.title && <DialogTitle> {props.title}</DialogTitle>}
-
             {props.children}
 
             {/* Close Icon */}
@@ -119,7 +115,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   animation: ${modalAnimationDesktop} 200ms ease;
   box-shadow: ${shadow.lg};
   line-height: 1;
-  border: 1px solid ${(p) => p.theme.bg.elevated};
+  border: 1px solid ${(p) => p.theme.bg.elevatedHover};
 
   &:focus {
     outline: none;
@@ -152,13 +148,4 @@ const DialogContent = styled.div<{ theme?: Theme }>`
     background-color: ${(p) => p.theme.bg.inverted};
     color: ${(p) => p.theme.text.inverted};
   }
-`;
-
-const DialogTitle = /* @__PURE__ */ styled.h2<{
-  theme?: Theme;
-}>`
-  margin: 0;
-  font-weight: 500;
-  color: ${(p) => p.theme.text.neutral};
-  font-size: ${fontSize.lg};
 `;

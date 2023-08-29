@@ -11,6 +11,7 @@ import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import { modalMaxWidth } from "./constants";
+import { ScreenContainer } from "../../components/basic";
 
 export const SignatureModal: React.FC<{
   open: boolean;
@@ -26,32 +27,37 @@ export const SignatureModal: React.FC<{
       }}
       setOpen={props.setOpen}
     >
-      <Container>
-        {walletConfig && (
-          <Img
-            height={iconSize.xl}
-            src={walletConfig.meta.iconURL}
-            width={iconSize.xl}
-          />
-        )}
+      <ScreenContainer>
+        <Container>
+          {walletConfig && (
+            <Img
+              height={iconSize.xl}
+              src={walletConfig.meta.iconURL}
+              width={iconSize.xl}
+            />
+          )}
 
-        <Spacer y="xl" />
+          <Spacer y="xl" />
 
-        <TitleContainer>
-          <ModalTitle>Signature Request</ModalTitle>
-          <Spinner size="md" color="link" />
-        </TitleContainer>
+          <TitleContainer>
+            <ModalTitle>Signature Request</ModalTitle>
+            <Spinner size="md" color="link" />
+          </TitleContainer>
 
-        <Spacer y="md" />
+          <Spacer y="md" />
 
-        <Desc>Sign the signature request pop-up in your wallet</Desc>
+          <Desc>Sign the signature request pop-up in your wallet</Desc>
 
-        <Spacer y="xxl" />
+          <Spacer y="xxl" />
 
-        <HelperLink target="_blank" href="https://support.thirdweb.com/contact">
-          Having troubles connecting to wallet
-        </HelperLink>
-      </Container>
+          <HelperLink
+            target="_blank"
+            href="https://support.thirdweb.com/contact"
+          >
+            Having troubles connecting to wallet
+          </HelperLink>
+        </Container>
+      </ScreenContainer>
     </Modal>
   );
 };

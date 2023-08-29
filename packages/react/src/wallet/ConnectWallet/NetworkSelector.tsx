@@ -37,8 +37,10 @@ import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
-import { Flex } from "../../components/basic";
+import { Flex, ScreenContainer } from "../../components/basic";
 import { SecondaryText } from "../../components/text";
+import { modalMaxWidth } from "./constants";
+import { ModalTitle } from "../../components/modalElements";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -150,136 +152,138 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             onClose();
           }
         }}
-        title="Select Network"
         style={{
-          maxWidth: "480px",
+          maxWidth: modalMaxWidth,
           paddingBottom: props.onCustomClick ? spacing.md : "0px",
         }}
       >
-        <Spacer y="xl" />
+        <ScreenContainer>
+          <ModalTitle>Select Network</ModalTitle>
+          <Spacer y="xl" />
 
-        <Tabs.Root className="TabsRoot" defaultValue="all">
-          <Tabs.List
-            className="TabsList"
-            aria-label="Manage your account"
-            style={{
-              display: "flex",
-              gap: spacing.xxs,
-            }}
-          >
-            <TabButton className="TabsTrigger" value="all">
-              All
-            </TabButton>
-            <TabButton className="TabsTrigger" value="mainnet">
-              Mainnets
-            </TabButton>
-            <TabButton className="TabsTrigger" value="testnet">
-              Testnets
-            </TabButton>
-          </Tabs.List>
-
-          <Spacer y="lg" />
-
-          {/* Search */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            <StyledMagnifyingGlassIcon
-              width={iconSize.md}
-              height={iconSize.md}
-            />
-
-            <SearchInput
+          <Tabs.Root className="TabsRoot" defaultValue="all">
+            <Tabs.List
+              className="TabsList"
+              aria-label="Manage your account"
               style={{
-                boxShadow: "none",
+                display: "flex",
+                gap: spacing.xxs,
               }}
-              tabIndex={isMobile() ? -1 : 0}
-              variant="secondary"
-              placeholder="Search Network or Chain ID"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
+            >
+              <TabButton className="TabsTrigger" value="all">
+                All
+              </TabButton>
+              <TabButton className="TabsTrigger" value="mainnet">
+                Mainnets
+              </TabButton>
+              <TabButton className="TabsTrigger" value="testnet">
+                Testnets
+              </TabButton>
+            </Tabs.List>
+
+            <Spacer y="lg" />
+
+            {/* Search */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
               }}
-            />
+            >
+              <StyledMagnifyingGlassIcon
+                width={iconSize.md}
+                height={iconSize.md}
+              />
 
-            {/* Searching Spinner */}
-            {deferredSearchTerm !== searchTerm && (
-              <div
+              <SearchInput
                 style={{
-                  position: "absolute",
-                  right: spacing.md,
-                }}
-              >
-                <Spinner size="md" color="link" />
-              </div>
-            )}
-          </div>
-
-          <Spacer y="lg" />
-
-          <Tabs.Content className="TabsContent" value="all">
-            <NetworkTab
-              allChains={allChains}
-              type="all"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content className="TabsContent" value="mainnet">
-            <NetworkTab
-              allChains={allChains}
-              type="mainnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content className="TabsContent" value="testnet">
-            <NetworkTab
-              allChains={allChains}
-              type="testnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          {onCustomClick && (
-            <>
-              <Spacer y="sm" />
-              <Button
-                fullWidth
-                variant="link"
-                onClick={() => {
-                  onCustomClick();
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                style={{
-                  display: "flex",
-                  fontSize: fontSize.sm,
                   boxShadow: "none",
                 }}
-              >
-                Add Custom Network
-              </Button>
-            </>
-          )}
-        </Tabs.Root>
+                tabIndex={isMobile() ? -1 : 0}
+                variant="secondary"
+                placeholder="Search Network or Chain ID"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                }}
+              />
+
+              {/* Searching Spinner */}
+              {deferredSearchTerm !== searchTerm && (
+                <div
+                  style={{
+                    position: "absolute",
+                    right: spacing.md,
+                  }}
+                >
+                  <Spinner size="md" color="link" />
+                </div>
+              )}
+            </div>
+
+            <Spacer y="lg" />
+
+            <Tabs.Content className="TabsContent" value="all">
+              <NetworkTab
+                allChains={allChains}
+                type="all"
+                popularChains={popularChains}
+                recentChains={recentChains}
+                onSwitch={handleSwitch}
+                renderChain={props.renderChain}
+                close={props.onClose}
+              />
+            </Tabs.Content>
+
+            <Tabs.Content className="TabsContent" value="mainnet">
+              <NetworkTab
+                allChains={allChains}
+                type="mainnet"
+                popularChains={popularChains}
+                recentChains={recentChains}
+                onSwitch={handleSwitch}
+                renderChain={props.renderChain}
+                close={props.onClose}
+              />
+            </Tabs.Content>
+
+            <Tabs.Content className="TabsContent" value="testnet">
+              <NetworkTab
+                allChains={allChains}
+                type="testnet"
+                popularChains={popularChains}
+                recentChains={recentChains}
+                onSwitch={handleSwitch}
+                renderChain={props.renderChain}
+                close={props.onClose}
+              />
+            </Tabs.Content>
+
+            {onCustomClick && (
+              <>
+                <Spacer y="sm" />
+                <Button
+                  fullWidth
+                  variant="link"
+                  onClick={() => {
+                    onCustomClick();
+                    if (onClose) {
+                      onClose();
+                    }
+                  }}
+                  style={{
+                    display: "flex",
+                    fontSize: fontSize.sm,
+                    boxShadow: "none",
+                  }}
+                >
+                  Add Custom Network
+                </Button>
+              </>
+            )}
+          </Tabs.Root>
+        </ScreenContainer>
       </Modal>
     </ThemeProvider>
   );

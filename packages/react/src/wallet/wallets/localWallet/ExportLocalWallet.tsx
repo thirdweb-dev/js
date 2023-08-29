@@ -147,14 +147,14 @@ export const ExportLocalWallet: React.FC<{
 
       <Spacer y="md" />
 
-      <ModalDescription>
+      <ModalDescription sm>
         This will download a JSON file containing the wallet information onto
         your device encrypted with the password
       </ModalDescription>
 
       <Spacer y="sm" />
 
-      <ModalDescription>
+      <ModalDescription sm>
         You can use this JSON file to import the account in MetaMask using the
         same password
       </ModalDescription>
