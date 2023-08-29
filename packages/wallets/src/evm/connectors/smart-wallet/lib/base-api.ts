@@ -36,6 +36,12 @@ export interface UserOpResult {
   success: boolean;
 }
 
+type FeeData = {
+  maxFeePerGas: null | BigNumber;
+  maxPriorityFeePerGas: null | BigNumber;
+  gasPrice: null | BigNumber;
+};
+
 /**
  * Base class for all Smart Wallet ERC-4337 Clients to implement.
  * Subclass should inherit 5 methods to support a specific wallet contract:
@@ -293,6 +299,8 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
+      // testing dynamic estimation
+      await this.getFeeDataWithDynamicMaxPriorityFeePerGas();
       const feeData = await this.provider.getFeeData();
       if (!maxPriorityFeePerGas) {
         maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
@@ -326,6 +334,12 @@ export abstract class BaseAccountAPI {
           maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
         }
       }
+
+      console.log(
+        "STATIC: eth_maxPriorityFeePerGas",
+        maxPriorityFeePerGas?.toString(),
+      );
+      console.log("STATIC: maxFeePerGas", maxFeePerGas?.toString());
     }
 
     const partialUserOp: any = {
@@ -441,5 +455,32 @@ export abstract class BaseAccountAPI {
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
     return null;
+  }
+
+  async getFeeDataWithDynamicMaxPriorityFeePerGas(): Promise<FeeData> {
+    let maxFeePerGas: null | BigNumber = null;
+    let maxPriorityFeePerGas: null | BigNumber = null;
+    const gasPrice: null | BigNumber = null;
+
+    const provider = this.provider as providers.JsonRpcProvider;
+
+    const [block, eth_maxPriorityFeePerGas] = await Promise.all([
+      await provider.getBlock("latest"),
+      await provider.send("eth_maxPriorityFeePerGas", []),
+    ]);
+
+    if (block && block.baseFeePerGas) {
+      maxPriorityFeePerGas = BigNumber.from(eth_maxPriorityFeePerGas);
+      if (maxPriorityFeePerGas) {
+        maxFeePerGas = block.baseFeePerGas.mul(2).add(maxPriorityFeePerGas);
+      }
+    }
+    console.log(
+      "DYNAMIC: eth_maxPriorityFeePerGas",
+      maxPriorityFeePerGas?.toString(),
+    );
+    console.log("DYNAMIC: maxFeePerGas", maxFeePerGas?.toString());
+
+    return { maxFeePerGas, maxPriorityFeePerGas, gasPrice };
   }
 }
