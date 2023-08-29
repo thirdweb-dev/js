@@ -9,7 +9,7 @@ import {
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_COGNITO_OTP,
 } from "../constants";
-import { getAuthShareClient } from "../storage/local";
+import { getAuthTokenClient } from "../storage/local";
 
 const EMBEDDED_WALLET_TOKEN = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-paper-client-id";
@@ -19,7 +19,7 @@ export const authFetchEmbeddedWalletUser = async (
   url: Parameters<typeof fetch>[0],
   props: Parameters<typeof fetch>[1],
 ): Promise<Response> => {
-  const authShareClient = await getAuthShareClient(clientId);
+  const authTokenClient = await getAuthTokenClient(clientId);
   // console.log('authShareClient', authShareClient);
   // console.log('url', url);
   const params = { ...props };
@@ -27,13 +27,13 @@ export const authFetchEmbeddedWalletUser = async (
     ? {
         ...params.headers,
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
-          authShareClient || ""
+          authTokenClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
-          authShareClient || ""
+          authTokenClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       };

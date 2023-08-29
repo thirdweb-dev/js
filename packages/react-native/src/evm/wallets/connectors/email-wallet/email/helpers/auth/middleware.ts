@@ -4,7 +4,7 @@ import {
 } from "@paperxyz/embedded-wallet-service-sdk";
 import {
   getDeviceShare,
-  setAuthShareClient as setAuthTokenClient,
+  setAuthTokenClient,
   setWallerUserDetails,
 } from "../storage/local";
 import { setUpNewUserWallet } from "../wallet/creation";

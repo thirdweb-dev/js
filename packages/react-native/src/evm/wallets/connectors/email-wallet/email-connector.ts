@@ -106,12 +106,12 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
     try {
       signer = await getEthersSigner(this.options.clientId);
     } catch (error) {
-      throw new Error("Signer not found");
+      console.error(`Error while getting the signer: ${error}`);
     }
 
     // console.log("getSigner", !!signer);
     if (!signer) {
-      throw new Error("Signer not found");
+      throw new Error("Error fetching the signer");
     }
 
     this.signer = signer;

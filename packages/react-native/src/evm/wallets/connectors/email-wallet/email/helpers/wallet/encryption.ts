@@ -50,7 +50,8 @@ export async function encryptShareWeb(
   // console.log("share", share);
   const normalizedShare = new TextEncoder().encode(share);
 
-  const salt = getRandomValues(new Uint8Array(16));
+  // why 12 bytes for iv https://crypto.stackexchange.com/questions/41601/aes-gcm-recommended-iv-size-why-12-bytes
+  const salt = getRandomValues(new Uint8Array(12));
   const key = await getEncryptionKey(pwd, salt);
   const keyBase64 = Buffer.from(key).toString("base64");
 

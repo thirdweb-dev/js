@@ -76,8 +76,8 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
           })
           .catch((error) => {
             clearCode();
-            console.error(error);
-            setErrorMessage(`Error: ${error.message}`);
+            console.error("Error validating otp: ", error);
+            setErrorMessage("Error validating the code");
             setCheckingOtp(false);
             setFocusedIndex(undefined);
             // await (selectionData.emailWallet as EmailWallet).disconnect();
@@ -128,7 +128,8 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
       .then(() => {})
       .catch((error) => {
         clearCode();
-        setErrorMessage(`Error requesting new code: ${error.message}`);
+        console.error("Error requesting code: ", error);
+        setErrorMessage("Error requesting a new code");
       })
       .finally(() => {
         setRequestingNewOtp(false);

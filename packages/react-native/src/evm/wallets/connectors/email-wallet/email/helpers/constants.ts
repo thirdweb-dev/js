@@ -1,25 +1,25 @@
 export const AUTH_SHARE_ID = 3;
 export const AUTH_SHARE_INDEX = AUTH_SHARE_ID - 1;
 export const NO_EXISTING_WALLET_FOUND_FOR_USER =
-  'User does not have an existing wallet. Create a wallet first';
+  "User does not have an existing wallet. Create a wallet first";
 
 export const DEVICE_SHARE_ID = 1;
 export const DEVICE_SHARE_INDEX = DEVICE_SHARE_ID - 1;
-export const DEVICE_SHARE_MISSING_MESSAGE = 'Missing device share.';
+export const DEVICE_SHARE_MISSING_MESSAGE = "Missing device share.";
 
 export const RECOVERY_SHARE_ID = 2;
 export const RECOVERY_SHARE_INDEX = RECOVERY_SHARE_ID - 1;
 
-export const AWS_REGION = 'us-west-2';
+export const AWS_REGION = "us-west-2";
 
-export const COGNITO_USER_POOL_ID = 'us-west-2_UFwLcZIpq';
-export const COGNITO_APP_CLIENT_ID = '2e02ha2ce6du13ldk8pai4h3d0';
+export const COGNITO_USER_POOL_ID = "us-west-2_UFwLcZIpq";
+export const COGNITO_APP_CLIENT_ID = "2e02ha2ce6du13ldk8pai4h3d0";
 export const COGNITO_IDENTITY_POOL_ID =
-  'us-west-2:2ad7ab1e-f48b-48a6-adfa-ac1090689c26';
+  "us-west-2:2ad7ab1e-f48b-48a6-adfa-ac1090689c26";
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
-  'arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil';
+  "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 
-const BASE_URL = 'https://withpaper.com';
+const BASE_URL = "https://withpaper.com";
 const ROUTE_2022_08_12_API_BASE_PATH = `${BASE_URL}/api/2022-08-12`;
 
 export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/user-wallet-details`;
