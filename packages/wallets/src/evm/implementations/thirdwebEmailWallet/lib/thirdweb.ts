@@ -24,7 +24,7 @@ export class ThirdwebEmbeddedWalletSdk {
   /**
    * @example
    * const Paper = new ThirdwebEmbeddedWalletSdk({ clientId: "", chain: "Goerli" });
-   * @param {string} initParams.clientId the clientId found on the {@link https://withpaper.com/dashboard/developers developer's dashboard}
+   * @param {string} initParams.clientId the clientId found on the {@link https://thirdweb.com/dashboard/settings dashboard settings}
    * @param {Chain} initParams.chain sets the default chain that the EmbeddedWallet will live on.
    * @param {CustomizationOptionsType} initParams.styles sets the default style override for any modal that pops up asking for user's details when creating wallet or logging in.
    */

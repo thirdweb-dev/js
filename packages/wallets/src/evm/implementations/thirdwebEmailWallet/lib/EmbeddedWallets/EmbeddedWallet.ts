@@ -1,5 +1,3 @@
-import type { Networkish } from "@ethersproject/providers";
-import { getDefaultProvider } from "@ethersproject/providers";
 import type { Chain } from "@paperxyz/sdk-common-utilities";
 import { ChainToPublicRpc } from "@paperxyz/sdk-common-utilities";
 import type {
@@ -11,9 +9,9 @@ import type {
 } from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
 import { UserWalletStatus } from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
 
-import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
+import { getDefaultProvider } from "ethers";
 import { LocalStorage } from "../../utils/Storage/LocalStorage";
-import { GaslessTransactionMaker } from "./GaslessTransactionMaker";
+import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 import { EthersSigner } from "./Signer";
 
 export type WalletManagementTypes = {
@@ -36,8 +34,6 @@ export class EmbeddedWallet {
   >;
   protected localStorage: LocalStorage;
 
-  public gasless: GaslessTransactionMaker;
-
   /**
    * Not meant to be initialized directly. Call {@link .initializeUser} to get an instance
    * @param param0
@@ -46,12 +42,6 @@ export class EmbeddedWallet {
     this.clientId = clientId;
     this.chain = chain;
     this.walletManagerQuerier = querier;
-
-    this.gasless = new GaslessTransactionMaker({
-      chain,
-      clientId,
-      querier,
-    });
 
     this.localStorage = new LocalStorage({ clientId });
   }
@@ -143,11 +133,6 @@ export class EmbeddedWallet {
    */
   async setChain({ chain }: { chain: Chain }): Promise<void> {
     this.chain = chain;
-    this.gasless = new GaslessTransactionMaker({
-      chain,
-      clientId: this.clientId,
-      querier: this.walletManagerQuerier,
-    });
   }
 
   /**
@@ -166,7 +151,7 @@ export class EmbeddedWallet {
    * @returns A signer that is compatible with Ether.js. Defaults to the public rpc on the chain specified when initializing the {@link ThirdwebEmbeddedWalletSdk} instance
    */
   async getEthersJsSigner(network?: {
-    rpcEndpoint: Networkish;
+    rpcEndpoint: string;
   }): Promise<EthersSigner> {
     const signer = new EthersSigner({
       clientId: this.clientId,

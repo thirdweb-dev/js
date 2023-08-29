@@ -63,4 +63,4 @@ export function createEmbeddedWalletIframeLink({
   embeddedWalletUrl.searchParams.set("clientId", clientId);
   return embeddedWalletUrl;
 }
-export const EMBEDDED_WALLET_IFRAME_ID = "paper-embedded-wallet-iframe";
+export const EMBEDDED_WALLET_IFRAME_ID = "thirdweb-embedded-wallet-iframe";

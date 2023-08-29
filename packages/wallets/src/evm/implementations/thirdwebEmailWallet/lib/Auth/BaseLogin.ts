@@ -8,8 +8,8 @@ export class BaseLogin extends AbstractLogin<
   {
     getRecoveryCode: (userWalletId: string) => Promise<string | undefined>;
   },
-  { email: string; recoveryCode?: string },
-  { email: string; otp: string; recoveryCode?: string }
+  { email: string },
+  { email: string; otp: string }
 > {
   override async loginWithThirdwebModal(args?: {
     getRecoveryCode: (userWalletId: string) => Promise<string | undefined>;
@@ -28,15 +28,13 @@ export class BaseLogin extends AbstractLogin<
   }
   override async loginWithPaperThirdwebOtp({
     email,
-    recoveryCode,
   }: {
     email: string;
-    recoveryCode?: string | undefined;
   }): Promise<AuthLoginReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "loginWithThirdwebModal",
-      params: { email, recoveryCode },
+      params: { email },
       showIframe: true,
       injectRecoveryCode: {
         isInjectRecoveryCode: true,
@@ -47,15 +45,13 @@ export class BaseLogin extends AbstractLogin<
   override async verifyPaperEmailLoginOtp({
     email,
     otp,
-    recoveryCode,
   }: {
     email: string;
     otp: string;
-    recoveryCode?: string | undefined;
   }): Promise<AuthLoginReturnType> {
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "verifyThirdwebEmailLoginOtp",
-      params: { email, otp, recoveryCode },
+      params: { email, otp },
       injectRecoveryCode: {
         isInjectRecoveryCode: true,
       },

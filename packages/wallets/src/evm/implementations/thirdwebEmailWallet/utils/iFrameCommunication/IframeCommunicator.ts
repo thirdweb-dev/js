@@ -47,12 +47,12 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
     const hrefLink = new URL(link);
-    const sdkVersion = process.env.SDK_VERSION;
+    const sdkVersion = process.env.THIRDWEB_EWS_SDK_VERSION;
     if (!sdkVersion) {
-      throw new Error("Missing SDK_VERSION env var");
+      throw new Error("Missing THIRDWEB_EWS_SDK_VERSION env var");
     }
     hrefLink.searchParams.set("sdkVersion", sdkVersion);
-    if (!iframe || iframe.src != hrefLink.href) {
+    if (!iframe || iframe.src !== hrefLink.href) {
       // ! Do not update the hrefLink here or it'll cause multiple re-renders
       if (!iframe) {
         iframe = document.createElement("iframe");
@@ -67,6 +67,19 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
       }
       iframe.src = hrefLink.href;
       iframe.setAttribute("data-version", sdkVersion);
+
+      const onIframeLoaded = (event: MessageEvent<any>) => {
+        console.log("event.origin", event.origin);
+        console.log("event.data", event.data);
+        if (event.data.eventType === "ewsIframeLoaded") {
+          window.removeEventListener("message", onIframeLoaded);
+        }
+        if (!iframe) {
+          console.warn("thirdweb Iframe not found");
+        }
+      };
+      window.addEventListener("message", onIframeLoaded);
+
       iframe.onload = this.onIframeLoadHandler(
         iframe,
         this.POST_LOAD_BUFFER_SECONDS,
@@ -124,7 +137,6 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     procedureName,
     params,
     showIframe = false,
-    injectRecoveryCode = { isInjectRecoveryCode: false },
   }: {
     procedureName: keyof T;
     params: T[keyof T];
@@ -143,29 +155,6 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
       await sleep(0.005);
     }
     const promise = new Promise<ReturnData>((res, rej) => {
-      if (injectRecoveryCode.isInjectRecoveryCode) {
-        const injectRecoveryCodeListener = async (
-          e: MessageEvent<{ type: string; userWalletId: string }>,
-        ) => {
-          if (
-            e.origin !== getPaperOriginUrl() ||
-            e.data.type !== "paper_getRecoveryCode" ||
-            typeof e.data.userWalletId !== "string"
-          ) {
-            return;
-          }
-          const recoveryCode = await injectRecoveryCode.getRecoveryCode?.(
-            e.data.userWalletId,
-          );
-          this.iframe.contentWindow?.postMessage(
-            { type: "paper_getRecoveryCode_response", recoveryCode },
-            getPaperOriginUrl(),
-          );
-          window.removeEventListener("message", injectRecoveryCodeListener);
-        };
-        window.addEventListener("message", injectRecoveryCodeListener);
-      }
-
       const channel = new MessageChannel();
       channel.port1.onmessage = async (
         event: MessageEvent<MessageType<ReturnData>>,

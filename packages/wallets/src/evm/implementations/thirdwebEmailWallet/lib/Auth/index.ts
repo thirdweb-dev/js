@@ -33,10 +33,9 @@ export class Auth {
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link PaperEmbeddedWalletSdk.auth} instead.
+   * Call {@link ThirdwebEmbeddedWalletSdk.auth} instead.
    *
-   * Authentication settings can be managed via the [authentication settings dashboard](https://withpaper.com/dashboard/embedded-wallets/auth-settings)
-   * @param {string} params.clientId the clientId associated with the various authentication settings
+   * @param {string} params.clientId the clientId from your thirdweb dashboard
    */
   constructor({
     clientId,
@@ -83,33 +82,6 @@ export class Auth {
 
   /**
    * @description
-   * Used to log the user in with an oauth login flow
-   *
-   * Note that you have to either enable "Auth0" or "Custom JSON Web Token" in the [auth setting dashboard](https://withpaper.com/dashboard/auth-settings) in order to use this
-   * @param {string} jwtParams.token The associate token from the oauth callback
-   * @param {AuthProvider} jwtParams.provider The Auth provider that is being used
-   * @param {string} jwtParams.recoveryCode This has to be passed in if the user is not logging in for the first time in order for us to decrypt and recover the users wallet
-   * @returns {{user: InitializedUser}} An InitializedUser object containing the user's status, wallet, authDetails, and more
-   */
-  async loginWithJwtAuth({
-    token,
-    authProvider,
-    recoveryCode,
-  }: AuthQuerierTypes["loginWithJwtAuthCallback"]): Promise<AuthLoginReturnType> {
-    await this.preLogin();
-    const result = await this.AuthQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithJwtAuthCallback",
-      params: {
-        token,
-        authProvider,
-        recoveryCode,
-      },
-    });
-    return this.postLogin(result);
-  }
-
-  /**
-   * @description
    * Used to log the user into their Paper wallet on your platform via a myriad of auth providers
    *
    * @example
@@ -126,7 +98,7 @@ export class Auth {
    *
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link PaperEmbeddedWalletSdk.getUser} for more
    */
-  async loginWithPaperModal(
+  async loginWithThirdwebModal(
     args?: Parameters<BaseLogin["loginWithThirdwebModal"]>[0],
   ): Promise<AuthLoginReturnType> {
     await this.preLogin();
@@ -176,7 +148,7 @@ export class Auth {
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
    * @param {string} props.recoveryCode Only present when using RecoveryShareManagement.USER_MANAGED recovery share management. Specifies the recoveryCode for the given email. This will set recoveryCode as the code for the user if they are new, or user recoveryCode for the user if they are an existing user
-   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link PaperEmbeddedWalletSdk.getUser} for more
+   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
    */
   async loginWithPaperEmailOtp(
     args: Parameters<BaseLogin["loginWithPaperThirdwebOtp"]>[0],

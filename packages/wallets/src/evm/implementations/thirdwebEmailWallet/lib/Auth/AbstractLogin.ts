@@ -9,12 +9,11 @@ import type {
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 type LoginQuerierTypes = {
-  loginWithThirdwebModal: undefined | { email: string; recoveryCode?: string };
+  loginWithThirdwebModal: undefined | { email: string };
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
     email: string;
     otp: string;
-    recoveryCode?: string;
   };
 };
 
@@ -34,9 +33,8 @@ export abstract class AbstractLogin<
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link PaperEmbeddedWalletSdk.auth} instead.
+   * Call {@link ThirdwebEmbeddedWalletSdk.auth} instead.
    *
-   * Authentication settings can be managed via the [authentication settings dashboard](https://withpaper.com/dashboard/embedded-wallets/auth-settings)
    */
   constructor({
     querier,
