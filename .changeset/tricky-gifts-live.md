@@ -1,10 +1,10 @@
 ---
-"@thirdweb-dev/service-utils": minor
-"@thirdweb-dev/storage": minor
-"@thirdweb-dev/wallets": minor
-"@thirdweb-dev/chains": minor
+"@thirdweb-dev/service-utils": patch
+"@thirdweb-dev/storage": patch
+"@thirdweb-dev/wallets": patch
+"@thirdweb-dev/chains": patch
 "thirdweb": minor
-"@thirdweb-dev/sdk": minor
+"@thirdweb-dev/sdk": patch
 ---
 
 CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
