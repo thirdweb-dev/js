@@ -2032,7 +2032,7 @@ export { default as XplaXpla } from "../chains/37"
 export { default as Omega } from "../chains/408"
 export { default as XplaTestnet } from "../chains/47"
 export { default as XaiGoerliOrbit } from "../chains/47279324479"
-export { default as OpbnbOpBNB } from "../chains/5611"
+export { default as OpbnbTestnet } from "../chains/5611"
 export { default as Linea } from "../chains/59144"
 export { default as ShardeumSphinxDapp1X } from "../chains/8081"
 export { default as SpicyChain } from "../chains/88882"
@@ -4082,7 +4082,7 @@ type ChainIdsBySlug = {
 "omega": 408,
 "xpla-testnet": 47,
 "xai-goerli-orbit": 47279324479,
-"opbnb-opBNB": 5611,
+"opbnb-testnet": 5611,
 "linea": 59144,
 "shardeum-sphinx-dapp-1-x": 8081,
 "spicy-chain": 88882,
