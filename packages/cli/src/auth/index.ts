@@ -129,16 +129,9 @@ export const authenticateUser = async (
           }
         });
       }
-
-      const allowedDomains = [
-        "https://www.thirdweb.com",
-      ]
-      const origin = req.headers.origin as string;
-
-      if (allowedDomains.includes(origin) || (origin && origin.endsWith('.thirdweb-preview.com'))) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Methods', '*');
-      }
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Origin', "https://thirdweb.com");
+      res.setHeader('Access-Control-Allow-Methods', 'POST');
 
       if (req.method === 'OPTIONS') {
         res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
