@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -197,6 +197,13 @@
       },
       "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.cjs.js"
     },
+    "./evm/wallets/rainbow-wallet": {
+      "module": {
+        "browser": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.browser.esm.js",
+        "default": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.esm.js"
+      },
+      "default": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.cjs.js"
+    },
     "./evm/wallets/wallet-connect": {
       "module": {
         "browser": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.browser.esm.js",
@@ -231,6 +238,13 @@
         "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.esm.js"
       },
       "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
+    },
+    "./evm/connectors/rainbow": {
+      "module": {
+        "browser": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.browser.esm.js",
+        "default": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.esm.js"
+      },
+      "default": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.cjs.js"
     },
     "./evm/connectors/injected": {
       "module": {
