@@ -59,7 +59,7 @@ export async function loginUser(
 export async function logoutUser(credsConfigPath: string, tokenPath: string, cliWalletPath: string) {
   try {
     ora("Logging out...").start();
-    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath);
+    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath) && fs.existsSync(cliWalletPath);
     if (!dirExists) {
       ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
       return;
