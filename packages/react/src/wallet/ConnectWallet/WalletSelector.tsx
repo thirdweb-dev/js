@@ -189,6 +189,8 @@ const WalletGrid = styled.ul<{ theme?: Theme }>`
   /* to show the box-shadow of inputs that overflows  */
   padding: 2px;
   margin: -2px;
+  padding-bottom: 0;
+  margin-bottom: 0;
   padding-bottom: ${spacing.xl};
 
   &::-webkit-scrollbar {

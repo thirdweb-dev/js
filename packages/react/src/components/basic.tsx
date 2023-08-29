@@ -35,4 +35,7 @@ export const ScreenContainer = styled.div`
 export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
   border-top: 1px solid ${(p) => p.theme.border.elevated};
   padding: ${spacing.lg};
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  position: relative;
 `;

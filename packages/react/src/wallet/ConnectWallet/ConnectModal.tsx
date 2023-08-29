@@ -245,4 +245,5 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   box-sizing: border-box;
   box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.05);
   position: relative;
+  border: 1px solid ${(p) => p.theme.bg.elevated};
 `;
