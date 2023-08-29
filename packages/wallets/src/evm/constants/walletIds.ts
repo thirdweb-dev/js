@@ -10,6 +10,7 @@ export const walletIds = {
   smartWallet: "smartWallet",
   safe: "safe",
   trust: "trust",
+  thirdweb: "thirdweb",
   walletConnectV1: "walletConnectV1",
   walletConnect: "walletConnect",
   // add new ids sorted alphabetically
