@@ -35,6 +35,7 @@ import {
 } from "../../types/marketplace";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
@@ -148,18 +149,17 @@ export class MarketplaceAuction {
     // otherwise fall back to query filter things
 
     // TODO this should be via indexer or direct contract call
-    const closedAuctions = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.AuctionClosed(),
-    );
+    const contractEvents = new ContractEvents(this.contractWrapper);
+    const closedAuctions = await contractEvents.getEvents("AuctionClosed");
     const auction = closedAuctions.find((a) =>
-      a.args.listingId.eq(BigNumber.from(listingId)),
+      a.data.listingId.eq(BigNumber.from(listingId)),
     );
     if (!auction) {
       throw new Error(
         `Could not find auction with listingId ${listingId} in closed auctions`,
       );
     }
-    return auction.args.winningBidder;
+    return auction.data.winningBidder;
   }
 
   /** ******************************

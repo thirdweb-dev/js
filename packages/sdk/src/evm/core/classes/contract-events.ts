@@ -264,18 +264,14 @@ export class ContractEvents<TContract extends BaseContract> {
       order: "desc",
     },
   ): Promise<ContractEvent<TEvent>[]> {
-    const event = this.contractWrapper.readContract.interface.getEvent(
-      eventName as string,
-    );
-
     const eventInterface =
       this.contractWrapper.readContract.interface.getEvent(eventName);
     const args = options.filters
       ? eventInterface.inputs.map((e) => (options.filters as TFilter)[e.name])
       : [];
-    const filter = this.contractWrapper.readContract.filters[event.name](
-      ...args,
-    );
+    const filter = this.contractWrapper.readContract.filters[
+      eventInterface.name
+    ](...args);
 
     const events = await this.contractWrapper.readContract.queryFilter(
       filter,

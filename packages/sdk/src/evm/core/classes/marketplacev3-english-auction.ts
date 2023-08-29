@@ -268,18 +268,17 @@ export class MarketplaceV3EnglishAuctions<
     // otherwise fall back to query filter things
 
     // TODO this should be via indexer or direct contract call
-    const closedAuctions = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.AuctionClosed(),
-    );
+    const contractEvent = new ContractEvents(this.contractWrapper);
+    const closedAuctions = await contractEvent.getEvents("AuctionClosed");
     const closed = closedAuctions.find((a) =>
-      a.args.auctionId.eq(BigNumber.from(auctionId)),
+      a.data.auctionId.eq(BigNumber.from(auctionId)),
     );
     if (!closed) {
       throw new Error(
         `Could not find auction with ID ${auctionId} in closed auctions`,
       );
     }
-    return closed.args.winningBidder;
+    return closed.data.winningBidder;
   }
 
   /** ******************************
