@@ -1,13 +1,8 @@
-export const AWS_REGION = 'us-west-2';
-export const PAPER_BASE_PATH =
-  process.env.NEXT_PUBLIC_NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : process.env.NEXT_PUBLIC_NODE_ENV === 'staging'
-    ? `https://${process.env.ZEET_DEPLOYMENT_URL}`
-    : 'https://withpaper.com';
+export const AWS_REGION = "us-west-2";
+export const PAPER_BASE_PATH = "https://withpaper.com";
 
 export const ROUTE_2022_08_12_API_BASE_PATH =
-  'https://withpaper.com/api/2022-08-12';
+  "https://withpaper.com/api/2022-08-12";
 export const ROUTE_SEND_OTP = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/send-otp`;
 export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/user-wallet-details`;
 export const ROUTE_INIT_RECOVERY_CODE_FREE_WALLET = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/init-recovery-code-free-wallet`;
