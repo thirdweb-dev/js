@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 3.10.58
+
+### Patch Changes
+
+- [#1557](https://github.com/thirdweb-dev/js/pull/1557) [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19) Thanks [@MananTank](https://github.com/MananTank)! - Use default export for EventEmitter to fix issue with Nuxt/Vite + Yarn to fix the "Named export 'EventEmitter' not found" error
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005)]:
+  - @thirdweb-dev/chains@0.1.50
+
 ## 3.10.57
 
 ### Patch Changes

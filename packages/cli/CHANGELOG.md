@@ -1,5 +1,17 @@
 # thirdweb
 
+## 0.12.1
+
+### Patch Changes
+
+- [#1558](https://github.com/thirdweb-dev/js/pull/1558) [`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005) Thanks [@Marfuen](https://github.com/Marfuen)! - Updated descriptions for publish and deploy. Print out the login url for users without browsers. Remove the Release command (Use "Publish" instead).
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005), [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19)]:
+  - @thirdweb-dev/chains@0.1.50
+  - @thirdweb-dev/sdk@3.10.58
+  - @thirdweb-dev/wallets@1.1.22
+  - @thirdweb-dev/auth@3.2.39
+
 ## 0.12.0
 
 ### Minor Changes
