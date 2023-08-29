@@ -70,7 +70,7 @@ export const Modal: React.FC<{
   );
 };
 
-const CrossContainer = styled.div`
+export const CrossContainer = styled.div`
   position: absolute;
   top: ${spacing.lg};
   right: ${spacing.lg};

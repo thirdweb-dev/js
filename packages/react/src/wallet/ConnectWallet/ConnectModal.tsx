@@ -1,4 +1,4 @@
-import { Modal } from "../../components/Modal";
+import { CrossContainer, Modal } from "../../components/Modal";
 import { WalletSelector } from "./WalletSelector";
 import {
   WalletConfig,
@@ -15,12 +15,20 @@ import {
   useSetIsWalletModalOpen,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { ThemeProvider } from "@emotion/react";
-import { Theme, darkTheme, lightTheme, radius } from "../../design-system";
+import {
+  Theme,
+  darkTheme,
+  iconSize,
+  lightTheme,
+  radius,
+} from "../../design-system";
 import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import { modalMaxWidth, reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { IconButton } from "../../components/buttons";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -196,6 +204,18 @@ export const ConnectModalInline = (props: {
             theme={props.theme}
             title={props.title}
           />
+
+          <CrossContainer>
+            <IconButton variant="secondary" type="button" aria-label="Close">
+              <Cross2Icon
+                style={{
+                  width: iconSize.md,
+                  height: iconSize.md,
+                  color: "inherit",
+                }}
+              />
+            </IconButton>
+          </CrossContainer>
         </ConnectModalInlineContainer>
       </ThemeProvider>
     </WalletUIStatesProvider>
@@ -224,4 +244,5 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   width: 100%;
   box-sizing: border-box;
   box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.05);
+  position: relative;
 `;
