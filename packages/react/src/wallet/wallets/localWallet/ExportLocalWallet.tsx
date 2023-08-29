@@ -16,7 +16,7 @@ import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { Img } from "../../../components/Img";
 import { Spinner } from "../../../components/Spinner";
-import { Flex } from "../../../components/basic";
+import { Flex, ScreenContainer } from "../../../components/basic";
 import {
   useAddress,
   useCreateWalletInstance,
@@ -134,7 +134,7 @@ export const ExportLocalWallet: React.FC<{
   const exportDisabled = isWrongPassword;
 
   return (
-    <>
+    <ScreenContainer>
       <Img src={localWalletIcon} width={iconSize.xl} height={iconSize.xl} />
       <Spacer y="lg" />
       <ModalTitle
@@ -214,16 +214,16 @@ export const ExportLocalWallet: React.FC<{
         <Button
           disabled={exportDisabled}
           variant="inverted"
+          fullWidth
           style={{
             opacity: exportDisabled ? 0.5 : 1,
-            width: "100%",
           }}
           type="submit"
         >
           Backup
         </Button>
       </form>
-    </>
+    </ScreenContainer>
   );
 };
 

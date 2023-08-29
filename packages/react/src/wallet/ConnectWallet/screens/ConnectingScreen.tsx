@@ -1,6 +1,7 @@
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
+import { ScreenContainer } from "../../../components/basic";
 import {
   BackButton,
   HelperLink,
@@ -19,7 +20,7 @@ export const ConnectingScreen: React.FC<{
   hideBackButton: boolean;
 }> = (props) => {
   return (
-    <>
+    <ScreenContainer>
       {!props.hideBackButton && <BackButton onClick={props.onBack} />}
       <IconContainer>
         <Img
@@ -42,7 +43,7 @@ export const ConnectingScreen: React.FC<{
       <HelperLink target="_blank" href={props.supportLink}>
         Having troubles connecting to {props.walletName}?
       </HelperLink>
-    </>
+    </ScreenContainer>
   );
 };
 

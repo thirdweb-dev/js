@@ -31,6 +31,7 @@ import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
 import { SafeWalletConfig } from "./types";
+import { ScreenContainer } from "../../../components/basic";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -106,7 +107,7 @@ export const SelectAccount: React.FC<{
   const switchChain = useSwitchChain();
 
   return (
-    <>
+    <ScreenContainer>
       {props.renderBackButton && (
         <>
           <BackButton onClick={props.onBack} />
@@ -362,7 +363,7 @@ export const SelectAccount: React.FC<{
           <ConfirmMessage> Confirm in your wallet </ConfirmMessage>
         )}
       </form>
-    </>
+    </ScreenContainer>
   );
 };
 

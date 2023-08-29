@@ -112,9 +112,6 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   transform: translate(-50%, -50%);
   width: calc(100vw - 40px);
   box-sizing: border-box;
-  overflow-y: auto;
-  padding: ${spacing.lg};
-  padding-bottom: ${spacing.xl};
   animation: ${modalAnimationDesktop} 200ms ease;
   box-shadow: ${shadow.lg};
   line-height: 1;

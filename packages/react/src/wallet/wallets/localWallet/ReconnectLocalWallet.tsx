@@ -19,6 +19,7 @@ import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
+import { ScreenContainer } from "../../../components/basic";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -125,7 +126,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   };
 
   return (
-    <>
+    <ScreenContainer>
       <LocalWalletModalHeader
         onBack={props.goBack}
         meta={meta}
@@ -201,10 +202,10 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         <Button
           variant="inverted"
           type="submit"
+          fullWidth
           style={{
             display: "flex",
             gap: spacing.sm,
-            width: "100%",
           }}
         >
           Connect
@@ -216,9 +217,9 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Button
         variant="link"
+        fullWidth
         style={{
           textAlign: "center",
-          width: "100%",
           padding: "2px",
         }}
         onClick={() => {
@@ -227,6 +228,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       >
         Create a new wallet
       </Button>
-    </>
+    </ScreenContainer>
   );
 };

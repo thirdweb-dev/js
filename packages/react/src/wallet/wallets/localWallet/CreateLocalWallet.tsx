@@ -11,7 +11,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
 import { LocalWalletModalHeader } from "./common";
-import { Flex } from "../../../components/basic";
+import { Flex, ScreenContainer } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
@@ -84,7 +84,7 @@ export const CreateLocalWallet_Password: React.FC<{
   };
 
   return (
-    <>
+    <ScreenContainer>
       <LocalWalletModalHeader
         onBack={props.goBack}
         meta={meta}
@@ -96,7 +96,7 @@ export const CreateLocalWallet_Password: React.FC<{
       </Flex>
 
       <Spacer y="sm" />
-      <ModalDescription>
+      <ModalDescription sm>
         Choose a password for your wallet, you{`'`}ll be able to access and
         export this wallet with the same password.
       </ModalDescription>
@@ -162,8 +162,8 @@ export const CreateLocalWallet_Password: React.FC<{
         <Button
           variant="inverted"
           type="submit"
+          fullWidth
           style={{
-            width: "100%",
             gap: spacing.sm,
           }}
           data-test="create-new-wallet-button"
@@ -173,7 +173,7 @@ export const CreateLocalWallet_Password: React.FC<{
         </Button>
       </form>
 
-      <Spacer y="xxl" />
+      <Spacer y="xl" />
 
       <TextDivider>
         <span>OR</span>
@@ -192,7 +192,7 @@ export const CreateLocalWallet_Password: React.FC<{
           Import wallet
         </Button>
       </Flex>
-    </>
+    </ScreenContainer>
   );
 };
 

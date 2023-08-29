@@ -32,7 +32,7 @@ export const GetStartedWithWallets: React.FC<{
           <ModalTitle> Get started with EVM wallets </ModalTitle>
           <Spacer y="md" />
 
-          <ModalDescription>
+          <ModalDescription sm>
             An EVM Wallet is your gateway to interact with web3 apps on Ethereum
             and other custom blockchains.
           </ModalDescription>

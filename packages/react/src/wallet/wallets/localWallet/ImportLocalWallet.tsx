@@ -17,6 +17,7 @@ import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import { LocalWalletModalHeader } from "./common";
 import type { LocalWalletConfig } from "./types";
+import { ScreenContainer } from "../../../components/basic";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
@@ -70,7 +71,7 @@ export const ImportLocalWallet: React.FC<{
   };
 
   return (
-    <>
+    <ScreenContainer>
       <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
       <ModalTitle
         style={{
@@ -81,7 +82,7 @@ export const ImportLocalWallet: React.FC<{
       </ModalTitle>
       <Spacer y="md" />
 
-      <ModalDescription>
+      <ModalDescription sm>
         The application can authorize any transactions on behalf of the wallet
         without any approvals. We recommend only connecting to trusted
         applications.
@@ -161,6 +162,6 @@ export const ImportLocalWallet: React.FC<{
           </Button>
         </FormFooter>
       </form>
-    </>
+    </ScreenContainer>
   );
 };

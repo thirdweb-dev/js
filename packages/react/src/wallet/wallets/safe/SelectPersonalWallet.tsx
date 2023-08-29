@@ -2,12 +2,14 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 // import { Steps } from "../../../components/Steps";
-import { Flex } from "../../../components/basic";
+import {
+  ScreenBottomContainer,
+  ScreenContainer,
+} from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import {
   BackButton,
   ModalTitle,
-  ModalDescription,
   HelperLink,
 } from "../../../components/modalElements";
 import { iconSize } from "../../../design-system";
@@ -50,40 +52,46 @@ export const SelectpersonalWallet: React.FC<{
 
   return (
     <>
-      {props.renderBackButton && (
-        <>
-          <BackButton onClick={props.onBack} />
-          <Spacer y="md" />
-        </>
-      )}
-      <Img
-        src={props.safeWallet.meta.iconURL}
-        width={iconSize.xl}
-        height={iconSize.xl}
-      />
-      <Spacer y="lg" />
-      <ModalTitle>Link Personal Wallet</ModalTitle>
-      <Spacer y="sm" />
+      <ScreenContainer
+        style={{
+          paddingBottom: 0,
+        }}
+      >
+        {props.renderBackButton && (
+          <>
+            <BackButton onClick={props.onBack} />
+            <Spacer y="md" />
+          </>
+        )}
+        <Img
+          src={props.safeWallet.meta.iconURL}
+          width={iconSize.xl}
+          height={iconSize.xl}
+        />
+        <Spacer y="lg" />
+        <ModalTitle>Link Personal Wallet</ModalTitle>
+        {/* <Spacer y="sm" /> */}
 
-      <ModalDescription>
-        Select a personal wallet to connect to your Safe
-      </ModalDescription>
+        {/* <ModalDescription>
+          Select a personal wallet to connect to your Safe
+        </ModalDescription> */}
 
-      <Spacer y="xl" />
-      {/* <Steps step={1} /> */}
-      {/* <Spacer y="lg" /> */}
+        <Spacer y="lg" />
+        {/* <Steps step={1} /> */}
+        {/* <Spacer y="lg" /> */}
 
-      <WalletSelection
-        walletConfigs={personalWallets}
-        selectWallet={props.selectWallet}
-      />
+        <WalletSelection
+          maxHeight="300px"
+          walletConfigs={personalWallets}
+          selectWallet={props.selectWallet}
+        />
+      </ScreenContainer>
 
-      <Spacer y="xl" />
-
-      {guestWallet ? (
-        <Flex justifyContent="center">
+      <ScreenBottomContainer>
+        {guestWallet && (
           <Button
-            variant="link"
+            variant="secondary"
+            fullWidth
             onClick={() => {
               props.selectWallet(guestWallet);
             }}
@@ -91,18 +99,20 @@ export const SelectpersonalWallet: React.FC<{
           >
             Continue as guest
           </Button>
-        </Flex>
-      ) : (
-        <HelperLink
-          target="_blank"
-          href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
-          style={{
-            textAlign: "center",
-          }}
-        >
-          What is a Safe?
-        </HelperLink>
-      )}
+        )}
+
+        {!guestWallet && (
+          <HelperLink
+            target="_blank"
+            href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
+            style={{
+              textAlign: "center",
+            }}
+          >
+            What is a Safe?
+          </HelperLink>
+        )}
+      </ScreenBottomContainer>
     </>
   );
 };

@@ -4,6 +4,5 @@ export const reservedScreens = {
 };
 
 export const modalMaxWidth = "360px";
-export const modalMaxHeight = "min(70vh, 650px)";
 
 export const defaultModalTitle = "Connect";

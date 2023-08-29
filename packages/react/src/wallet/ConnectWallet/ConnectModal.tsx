@@ -15,19 +15,12 @@ import {
   useSetIsWalletModalOpen,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { ThemeProvider } from "@emotion/react";
-import {
-  Theme,
-  darkTheme,
-  lightTheme,
-  radius,
-  spacing,
-} from "../../design-system";
+import { Theme, darkTheme, lightTheme, radius } from "../../design-system";
 import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
-import { modalMaxHeight, modalMaxWidth, reservedScreens } from "./constants";
+import { modalMaxWidth, reservedScreens } from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
-import { scrollbar } from "../../design-system/styles";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -169,7 +162,6 @@ export const ConnectModal = () => {
       <Modal
         style={{
           maxWidth: modalMaxWidth,
-          maxHeight: modalMaxHeight,
         }}
         open={isWalletModalOpen}
         setOpen={(value) => {
@@ -227,17 +219,9 @@ function useScreen() {
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   background: ${(p) => p.theme.bg.base};
-  padding: ${spacing.lg};
   border-radius: ${radius.xl};
   max-width: ${modalMaxWidth};
   width: 100%;
   box-sizing: border-box;
-  max-height: ${modalMaxHeight};
-  overflow-y: auto;
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
-    })}
+  box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.05);
 `;

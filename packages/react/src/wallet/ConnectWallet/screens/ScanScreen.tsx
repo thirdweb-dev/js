@@ -2,6 +2,7 @@ import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
+import { ScreenContainer } from "../../../components/basic";
 import {
   BackButton,
   ModalDescription,
@@ -23,7 +24,7 @@ export const ScanScreen: React.FC<{
     ? props.walletName
     : `${props.walletName} wallet`;
   return (
-    <>
+    <ScreenContainer>
       {!props.hideBackButton && (
         <BackButton
           onClick={props.onBack}
@@ -84,7 +85,7 @@ export const ScanScreen: React.FC<{
           {`Don't`} have {walletName}?
         </LinkButton>
       </div>
-    </>
+    </ScreenContainer>
   );
 };
 

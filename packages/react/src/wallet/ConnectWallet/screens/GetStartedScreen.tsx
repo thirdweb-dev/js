@@ -1,13 +1,14 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import { Flex } from "../../../components/basic";
+import { Flex, ScreenContainer } from "../../../components/basic";
 import {
   BackButton,
   HelperLink,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
+import { NeutralText } from "../../../components/text";
 import { iconSize, radius, spacing } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
@@ -43,7 +44,7 @@ export const GetStartedScreen: React.FC<{
     showScreen === "android-scan" || showScreen === "ios-scan";
 
   return (
-    <>
+    <ScreenContainer>
       <BackButton
         style={
           isScanScreen
@@ -176,15 +177,16 @@ export const GetStartedScreen: React.FC<{
               textAlign: "center",
               display: "block",
               width: "100%",
+              lineHeight: 1.5,
             }}
           >
-            I{`'`}ve finished setting up my {walletName} on mobile
+            I{`'`}ve finished setting up <br /> {walletName} on mobile
           </HelperLink>
         </>
       )}
 
       {!isScanScreen && footer}
-    </>
+    </ScreenContainer>
   );
 };
 
@@ -216,21 +218,14 @@ const ScanScreen: React.FC<{
       />
       <Spacer y="xl" />
 
-      <div
-        style={{
-          display: "flex",
-          gap: spacing.sm,
-          alignItems: "center",
-        }}
-      >
-        {props.platformIcon}
-        <ModalTitle>
-          Install {props.walletName} on {props.platform}
-        </ModalTitle>
-      </div>
+      {/* {props.platformIcon} */}
+
+      <NeutralText>
+        Install {props.walletName} on {props.platform}
+      </NeutralText>
 
       <Spacer y="lg" />
-      <ModalDescription>
+      <ModalDescription sm>
         Scan QR with your phone to download <br /> {props.walletName} for{" "}
         {props.platform}
       </ModalDescription>

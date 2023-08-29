@@ -5,6 +5,7 @@ import { ModalTitle } from "../../../components/modalElements";
 import { LocalWalletModalHeader } from "./common";
 import { FormFooter } from "../../../components/formElements";
 import { WalletConfig } from "@thirdweb-dev/react-core";
+import { ScreenContainer } from "../../../components/basic";
 
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
@@ -12,7 +13,7 @@ export const OverrideConfirmation: React.FC<{
   meta: WalletConfig["meta"];
 }> = (props) => {
   return (
-    <>
+    <ScreenContainer>
       <LocalWalletModalHeader onBack={props.onBack} meta={props.meta} />
       <ModalTitle>Backup your wallet</ModalTitle>
 
@@ -35,6 +36,6 @@ export const OverrideConfirmation: React.FC<{
           </Button>
         </FormFooter>
       </div>
-    </>
+    </ScreenContainer>
   );
 };

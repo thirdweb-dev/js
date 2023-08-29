@@ -1,10 +1,14 @@
 import { useContext } from "react";
 import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
-import { Flex } from "../../components/basic";
-import { Button, IconButton } from "../../components/buttons";
+import {
+  ScreenBottomContainer,
+  Flex,
+  ScreenContainer,
+} from "../../components/basic";
+import { Button } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
-import { fontSize, iconSize, media, spacing, Theme } from "../../design-system";
+import { fontSize, iconSize, spacing, Theme } from "../../design-system";
 import styled from "@emotion/styled";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
@@ -12,8 +16,8 @@ import {
   ModalConfigCtx,
   SetModalConfigCtx,
 } from "../../evm/providers/wallet-ui-states-provider";
-import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { TWIcon } from "./icons/twIcon";
+import { SecondaryText } from "../../components/text";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -30,61 +34,78 @@ export const WalletSelector: React.FC<{
 
   return (
     <>
-      <Flex gap="xs" alignItems="center">
-        <TWIcon size={iconSize.md} />
-        <ModalTitle> {props.title} </ModalTitle>
-      </Flex>
+      <ScreenContainer
+        style={{
+          paddingBottom: 0,
+        }}
+      >
+        <TitleContainer>
+          <Flex gap="xs" alignItems="center">
+            <TWIcon size={iconSize.md} />
 
-      <Spacer y="xl" />
-
-      <WalletSelection
-        walletConfigs={walletConfigs}
-        selectWallet={props.selectWallet}
-      />
-
-      <HelpIconContainer>
-        <IconButton
-          onClick={props.onGetStarted}
-          variant="secondary"
-          type="button"
-          aria-label="Help"
-        >
-          <QuestionMarkCircledIcon
-            style={{
-              width: iconSize.md,
-              height: iconSize.md,
-              color: "inherit",
-            }}
-          />
-        </IconButton>
-      </HelpIconContainer>
-
-      {localWalletInfo && (
-        <>
-          <Spacer y="xl" />
-          <Flex justifyContent="center">
-            <Button
-              style={{
-                width: "100%",
-              }}
-              variant="secondary"
-              onClick={() => {
-                props.selectWallet(localWalletInfo);
-              }}
-              data-test="continue-as-guest-button"
-            >
-              Continue as Guest
-            </Button>
+            <ModalTitle> {props.title} </ModalTitle>
           </Flex>
-        </>
-      )}
+        </TitleContainer>
+
+        <Spacer y="xl" />
+
+        <WalletSelection
+          walletConfigs={walletConfigs}
+          selectWallet={props.selectWallet}
+        />
+      </ScreenContainer>
+
+      <ScreenBottomContainer>
+        <Flex justifyContent="space-between">
+          <SecondaryText
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            {" "}
+            New to wallets?
+          </SecondaryText>
+          <Button
+            variant="link"
+            onClick={props.onGetStarted}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            Get started
+          </Button>
+        </Flex>
+
+        {localWalletInfo && (
+          <>
+            <Spacer y="lg" />
+            <Flex justifyContent="center">
+              <Button
+                fullWidth
+                variant="secondary"
+                onClick={() => {
+                  props.selectWallet(localWalletInfo);
+                }}
+                data-test="continue-as-guest-button"
+              >
+                Continue as Guest
+              </Button>
+            </Flex>
+          </>
+        )}
+      </ScreenBottomContainer>
     </>
   );
 };
 
+const TitleContainer = /* @__PURE__ */ styled.div<{ theme?: Theme }>`
+  color: ${(p) => p.theme.text.neutral};
+`;
+
 export const WalletSelection: React.FC<{
   walletConfigs: WalletConfig[];
   selectWallet: (wallet: WalletConfig) => void;
+  maxHeight?: string;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
@@ -114,7 +135,11 @@ export const WalletSelection: React.FC<{
     });
 
   return (
-    <WalletGrid>
+    <WalletGrid
+      style={{
+        maxHeight: props.maxHeight,
+      }}
+    >
       {walletConfigs.map((walletConfig) => {
         return (
           <li key={walletConfig.id} data-full-width={!!walletConfig.selectUI}>
@@ -151,13 +176,25 @@ export const WalletSelection: React.FC<{
   );
 };
 
-const WalletGrid = styled.ul`
+const WalletGrid = styled.ul<{ theme?: Theme }>`
   all: unset;
   list-style-type: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: ${spacing.lg} ${spacing.sm};
   box-sizing: border-box;
+  max-height: 400px;
+  overflow: auto;
+  scrollbar-width: none;
+  /* to show the box-shadow of inputs that overflows  */
+  padding: 2px;
+  margin: -2px;
+  padding-bottom: ${spacing.xl};
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+  }
 
   & [data-full-width="true"] {
     grid-column: 1/-1;
@@ -189,16 +226,7 @@ const WalletButton = styled.button<{ theme?: Theme }>`
 `;
 
 const WalletName = styled.span<{ theme?: Theme }>`
-  font-size: ${fontSize.xs};
-  font-weight: 400;
+  font-size: ${fontSize.sm};
+  font-weight: 500;
   transition: color 200ms ease;
-`;
-
-const HelpIconContainer = styled.div`
-  position: absolute;
-  top: ${spacing.lg};
-  right: 64px;
-  ${media.mobile} {
-    right: 60px;
-  }
 `;

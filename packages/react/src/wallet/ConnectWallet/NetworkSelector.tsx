@@ -261,6 +261,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             <>
               <Spacer y="sm" />
               <Button
+                fullWidth
                 variant="link"
                 onClick={() => {
                   onCustomClick();
@@ -270,7 +271,6 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                 }}
                 style={{
                   display: "flex",
-                  width: "100%",
                   fontSize: fontSize.sm,
                   boxShadow: "none",
                 }}

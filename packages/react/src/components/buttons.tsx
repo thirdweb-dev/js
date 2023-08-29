@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 export const Button = styled.button<{
   variant: "inverted" | "secondary" | "link" | "danger";
   theme?: Theme;
+  fullWidth?: boolean;
 }>`
   all: unset;
   display: inline-flex;
@@ -18,6 +19,8 @@ export const Button = styled.button<{
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
   flex-shrink: 0;
+
+  ${(p) => p.fullWidth && `width: 100%;`}
 
   &:focus {
     box-shadow: 0 0 0 3px

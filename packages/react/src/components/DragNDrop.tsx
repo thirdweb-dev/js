@@ -91,9 +91,17 @@ export const DragNDrop: React.FC<{
           {!uploaded ? (
             <>
               {" "}
-              <UploadIconSecondary width={iconSize.xl} height={iconSize.xl} />
+              <UploadIconSecondary width={iconSize.lg} height={iconSize.lg} />
               <Spacer y="md" />
-              <Message>{message}</Message>
+              <Message
+                style={{
+                  textAlign: "center",
+                  lineHeight: 1.5,
+                }}
+              >
+                {" "}
+                {message}
+              </Message>
               <Spacer y="md" />
               {error ? (
                 <ErrorMessage>

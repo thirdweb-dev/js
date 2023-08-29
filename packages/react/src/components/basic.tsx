@@ -1,4 +1,5 @@
-import { spacing } from "../design-system";
+import styled from "@emotion/styled";
+import { Theme, spacing } from "../design-system";
 
 export const Flex = (props: {
   flexDirection?: "row" | "column";
@@ -26,3 +27,12 @@ export const Flex = (props: {
     </div>
   );
 };
+
+export const ScreenContainer = styled.div`
+  padding: ${spacing.lg};
+`;
+
+export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
+  border-top: 1px solid ${(p) => p.theme.border.elevated};
+  padding: ${spacing.lg};
+`;
