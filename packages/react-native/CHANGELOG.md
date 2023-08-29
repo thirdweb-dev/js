@@ -1,5 +1,17 @@
 # @thirdweb-dev/react-native
 
+## 0.2.58
+
+### Patch Changes
+
+- [#1546](https://github.com/thirdweb-dev/js/pull/1546) [`cdc08c55`](https://github.com/thirdweb-dev/js/commit/cdc08c55282d5873972b85217c42ba2f97a1ffed) Thanks [@iketw](https://github.com/iketw)! - Use regular import for coinbase connector in React Native
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005), [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19)]:
+  - @thirdweb-dev/chains@0.1.50
+  - @thirdweb-dev/sdk@3.10.58
+  - @thirdweb-dev/react-core@3.14.39
+  - @thirdweb-dev/wallets@1.1.22
+
 ## 0.2.57
 
 ### Patch Changes
