@@ -12,6 +12,7 @@ export const ModalTitle = /* @__PURE__ */ styled.h2<{
   font-weight: 600;
   font-size: ${fontSize.lg};
   color: ${(p) => p.theme.text.neutral};
+  line-height: 1.3;
   text-align: left;
   ${media.mobile} {
     text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};

@@ -104,7 +104,11 @@ const modalAnimationMobile = keyframes`
 
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
-  background-color: ${(p) => p.theme.bg.base};
+  background: linear-gradient(
+    to top,
+    ${(p) => p.theme.bg.base},
+    ${(p) => p.theme.bg.baseHover}
+  );
   border-radius: ${radius.xl};
   position: fixed;
   top: 50%;

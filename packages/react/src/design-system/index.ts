@@ -2,14 +2,14 @@ import { blue, green, mauve, mauveDark, tomato } from "@radix-ui/colors";
 
 export const darkTheme = {
   overlay: {
-    subdued: "rgba(0, 0, 0, 0.74)",
+    subdued: "rgba(0, 0, 0, 0.3)",
   },
   bg: {
-    base: mauveDark.mauve1,
-    baseHover: mauveDark.mauve2,
-    elevated: mauveDark.mauve3,
-    elevatedHover: mauveDark.mauve4,
-    highlighted: mauveDark.mauve5,
+    base: "hsl(300deg 4.17% 5%)",
+    baseHover: "hsl(300deg 7.14% 7%)",
+    elevated: "hsl(288deg 6.02% 12%)",
+    elevatedHover: "hsl(280deg 6% 15%)",
+    highlighted: "hsl(280deg 5.26% 18%)",
     inverted: mauveDark.mauve12,
     invertedFocused: mauveDark.mauve7,
     danger: tomato.tomato12,

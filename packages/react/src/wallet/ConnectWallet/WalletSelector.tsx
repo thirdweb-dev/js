@@ -40,7 +40,7 @@ export const WalletSelector: React.FC<{
         }}
       >
         <TitleContainer>
-          <Flex gap="xs" alignItems="center">
+          <Flex gap="xxs" alignItems="center">
             <TWIcon size={iconSize.md} />
 
             <ModalTitle> {props.title} </ModalTitle>
