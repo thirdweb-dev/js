@@ -780,6 +780,9 @@ importers:
       '@magic-sdk/react-native-bare':
         specifier: ^18.5.0
         version: 18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0)
+      '@paperxyz/embedded-wallet-service-sdk':
+        specifier: ^1.1.3
+        version: 1.1.3
       '@react-native-community/netinfo':
         specifier: ^9.4.1
         version: 9.4.1(react-native@0.71.11)
@@ -807,6 +810,9 @@ importers:
       abitype:
         specifier: ^0.2.5
         version: 0.2.5(typescript@5.1.6)(zod@3.21.4)
+      amazon-cognito-identity-js:
+        specifier: ^6.3.3
+        version: 6.3.5
       aws-amplify:
         specifier: ^5.3.8
         version: 5.3.10(react-native@0.71.11)
@@ -866,9 +872,6 @@ importers:
       '@babel/preset-env':
         specifier: ^7.22.9
         version: 7.22.9(@babel/core@7.22.9)
-      '@paperxyz/embedded-wallet-service-sdk':
-        specifier: ^1.1.3
-        version: 1.1.3
       '@react-native-async-storage/async-storage':
         specifier: ^1.18.2
         version: 1.18.2(react-native@0.71.11)
@@ -893,9 +896,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.2.0
         version: 6.2.0(eslint@8.45.0)(typescript@5.1.6)
-      amazon-cognito-identity-js:
-        specifier: ^6.3.3
-        version: 6.3.5
       babel-jest:
         specifier: ^29.6.2
         version: 29.6.2(@babel/core@7.22.9)
@@ -1954,6 +1954,7 @@ packages:
       '@aws-crypto/util': 1.2.2
       '@aws-sdk/types': 3.398.0
       tslib: 1.14.1
+    dev: false
 
   /@aws-crypto/sha256-js@2.0.0:
     resolution: {integrity: sha512-VZY+mCY4Nmrs5WGfitmNqXzaE873fcIZDu54cbaDaaamsaTOP1DBImV9F4pICc3EHjQXujyE8jig+PFCaew9ig==}
@@ -1993,6 +1994,7 @@ packages:
       '@aws-sdk/types': 3.398.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
+    dev: false
 
   /@aws-crypto/util@2.0.2:
     resolution: {integrity: sha512-Lgu5v/0e/BcrZ5m/IWqzPUf3UYFTy/PpeED+uc9SWUR1iZQL8XXbGQg10UfllwwBryO3hFF5dizK+78aoXC1eA==}
@@ -9832,9 +9834,11 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
 
   /@paperxyz/sdk-common-utilities@0.0.5:
     resolution: {integrity: sha512-Udx/CKGBKDicHqYKvcE5K+6B+scHOgx+s6eNNMAOLMnuawuzbvJbMmzIap9qyeUBIDCrKQaOpwnXxFctAu5WTA==}
+    dev: false
 
   /@particle-network/auth@0.5.6:
     resolution: {integrity: sha512-QhRr76BamasIatyWc68Whk/JpjomKUFbxT4KoHxrSWD8lmyWTOP5T8Jo8hQliyjtO2Iuzv9KLpuJ55w7mgaC/A==}
@@ -15155,6 +15159,7 @@ packages:
       fast-base64-decode: 1.0.0
       isomorphic-unfetch: 3.1.0
       js-cookie: 2.2.1
+    dev: false
 
   /anser@1.4.10:
     resolution: {integrity: sha512-hCv9AqTQ8ycjpSd3upOJd7vFwW1JaoYQ7tpham03GJ1ca8/65rqn0RpaWpItOAd6ylW9wAw6luXYPJIyPFVOww==}
@@ -20090,6 +20095,7 @@ packages:
 
   /fast-base64-decode@1.0.0:
     resolution: {integrity: sha512-qwaScUgUGBYeDNRnbc/KyllVU88Jk1pRHPStuF/lO7B0/RTRLj7U0lkdTAutlBblY08rwZDff6tNU9cjv6j//Q==}
+    dev: false
 
   /fast-deep-equal@2.0.1:
     resolution: {integrity: sha512-bCK/2Z4zLidyB4ReuIsvALH6w31YfAQDmXMqMx6FyfHqvBxtjC0eRumeSu4Bs3XtXwpyIywtSTrVT99BxY1f9w==}
@@ -22086,6 +22092,7 @@ packages:
     dependencies:
       node-fetch: 3.3.2
       unfetch: 4.2.0
+    dev: false
 
   /isomorphic-ws@4.0.1(ws@7.5.9):
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
@@ -23271,6 +23278,7 @@ packages:
 
   /js-cookie@2.2.1:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+    dev: false
 
   /js-sdsl@4.4.1:
     resolution: {integrity: sha512-6Gsx8R0RucyePbWqPssR8DyfuXmLBooYN5cZFZKjHGnQuaf7pEzhtpceagJxVu4LqhYY5EYA7nko3FmeHZ1KbA==}
@@ -30341,6 +30349,7 @@ packages:
 
   /unfetch@4.2.0:
     resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
+    dev: false
 
   /unicode-canonical-property-names-ecmascript@2.0.0:
     resolution: {integrity: sha512-yY5PpDlfVIU5+y/BSCxAJRBIS1Zc2dDG3Ujq+sR0U+JjUevW2JhocOF+soROYDSaAezOzOKuyyixhD6mBknSmQ==}
