@@ -10,17 +10,8 @@ export enum RecoveryShareManagement {
 }
 
 export enum AuthProvider {
-  PAPER_EMAIL_OTP = "PaperEmailOTP",
-  GOOGLE = "Google",
-  TWITTER = "Twitter",
   COGNITO = "Cognito",
-  AUTH0 = "Auth0",
-  CUSTOM_JWT = "CustomJWT",
 }
-
-export type GetSocialLoginClientIdReturnType = {
-  clientId: string;
-};
 
 // TODO: Clean up tech debt of random type Objects
 // E.g. StoredTokenType is really not used anywhere but it exists as this object for legacy reason

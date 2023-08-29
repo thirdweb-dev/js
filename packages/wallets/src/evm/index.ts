@@ -65,7 +65,6 @@ export type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
   AuthStoredTokenWithCookieReturnType,
-  GetSocialLoginClientIdReturnType,
   StoredTokenType,
 } from "./implementations/thirdwebEmbeddedWallet/interfaces/Auth";
 export { UserStatus } from "./implementations/thirdwebEmbeddedWallet/interfaces/EmbeddedWallets/EmbeddedWallets";
