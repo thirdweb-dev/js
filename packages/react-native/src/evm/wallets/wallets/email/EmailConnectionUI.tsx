@@ -55,7 +55,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
       setCheckingOtp(true);
       setErrorMessage("");
       const otp = values.join("");
-      console.log("OTP: ", otp);
+      // console.log("OTP: ", otp);
 
       setTimeout(() => {
         (selectionData.emailWallet as EmailWallet)
@@ -151,7 +151,9 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
         {Array.from({ length: OTP_LENGTH }, (_, index) => (
           <Box
             key={index.toString()}
+            flex={1}
             borderColor="border"
+            marginHorizontal="xxs"
             borderWidth={3}
             justifyContent="center"
             alignItems="center"
@@ -159,7 +161,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
           >
             <TextInput
               ref={(ref) => (inputRefs.current[index] = ref)}
-              style={styles.textInput}
+              style={{ ...styles.textInput, color: theme.colors.textPrimary }}
               keyboardType="number-pad"
               editable={!checkingOtp}
               selectTextOnFocus={true}
@@ -204,5 +206,5 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
 };
 
 const styles = StyleSheet.create({
-  textInput: { fontSize: 20, color: "white", textAlign: "center", height: 50 },
+  textInput: { fontSize: 20, textAlign: "center", height: 50 },
 });

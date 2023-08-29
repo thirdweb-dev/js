@@ -38,7 +38,7 @@ export const EmailSelectionUI: React.FC<
   };
 
   const handleNetworkCall = () => {
-    console.log("handleNetworkCall");
+    // console.log("handleNetworkCall");
     if (validateEmail(email)) {
       setErrorMessage("");
       setIsFetching(true);
@@ -46,7 +46,7 @@ export const EmailSelectionUI: React.FC<
       emailWallet
         ?.sendEmailOTP(email)
         .then((response) => {
-          console.log("EmailSelectionUI.response", response);
+          // console.log("EmailSelectionUI.response", response);
           onSelect({
             ...response,
             email,

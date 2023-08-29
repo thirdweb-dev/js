@@ -1,43 +1,43 @@
 import {
   AuthProvider,
   RecoveryShareManagement,
-} from '@paperxyz/embedded-wallet-service-sdk';
-import {CognitoUserSession} from 'amazon-cognito-identity-js';
+} from "@paperxyz/embedded-wallet-service-sdk";
+import { CognitoUserSession } from "amazon-cognito-identity-js";
 import {
   ROUTE_GET_EMBEDDED_WALLET_DETAILS,
   ROUTE_INIT_RECOVERY_CODE_FREE_WALLET,
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_COGNITO_OTP,
-} from '../constants';
-import {getAuthShareClient} from '../storage/local';
+} from "../constants";
+import { getAuthShareClient } from "../storage/local";
 
-const EMBEDDED_WALLET_TOKEN = 'embedded-wallet-token';
-const PAPER_CLIENT_ID_HEADER = 'x-paper-client-id';
+const EMBEDDED_WALLET_TOKEN = "embedded-wallet-token";
+const PAPER_CLIENT_ID_HEADER = "x-paper-client-id";
 
 export const authFetchEmbeddedWalletUser = async (
-  {clientId}: {clientId: string},
+  { clientId }: { clientId: string },
   url: Parameters<typeof fetch>[0],
   props: Parameters<typeof fetch>[1],
 ): Promise<Response> => {
   const authShareClient = await getAuthShareClient(clientId);
-  console.log('authShareClient', authShareClient);
-  console.log('url', url);
-  const params = {...props};
+  // console.log('authShareClient', authShareClient);
+  // console.log('url', url);
+  const params = { ...props };
   params.headers = params?.headers
     ? {
         ...params.headers,
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
-          authShareClient || ''
+          authShareClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
-          authShareClient || ''
+          authShareClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       };
-  console.log('params', {params});
+  // console.log("params", { params });
   return fetch(url, params);
 };
 
@@ -49,22 +49,22 @@ export async function getEmbeddedWalletUserDetail(args: {
   const url = new URL(ROUTE_GET_EMBEDDED_WALLET_DETAILS);
   if (args) {
     if (args.email) {
-      url.searchParams.append('email', args.email);
+      url.searchParams.append("email", args.email);
     }
     if (args.userWalletId) {
-      url.searchParams.append('userWalletId', args.userWalletId);
+      url.searchParams.append("userWalletId", args.userWalletId);
     }
-    url.searchParams.append('clientId', args.clientId);
+    url.searchParams.append("clientId", args.clientId);
   }
   const resp = await authFetchEmbeddedWalletUser(
-    {clientId: args.clientId},
+    { clientId: args.clientId },
     url.href,
     {
-      method: 'GET',
+      method: "GET",
     },
   );
   if (!resp.ok) {
-    const {error} = await resp.json();
+    const { error } = await resp.json();
     throw new Error(`Something went wrong determining wallet type. ${error}`);
   }
   const result = (await resp.json()) as
@@ -84,19 +84,19 @@ export async function generateAuthTokenFromCognitoEmailOtp(
   clientId: string,
 ) {
   const resp = await fetch(ROUTE_VERIFY_COGNITO_OTP, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       access_token: session.getAccessToken().getJwtToken(),
       refresh_token: session.getRefreshToken().getToken(),
       id_token: session.getIdToken().getJwtToken(),
       developerClientId: clientId,
-      otpMethod: 'email',
+      otpMethod: "email",
       recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
     }),
   });
   if (!resp.ok) {
-    const {error} = await resp.json();
+    const { error } = await resp.json();
     throw new Error(
       `Something went wrong generating auth token from user cognito email otp. ${error}`,
     );
@@ -125,23 +125,23 @@ export async function initWalletWithoutRecoveryCode({
   clientId: string;
 }) {
   const resp = await authFetchEmbeddedWalletUser(
-    {clientId},
+    { clientId },
     ROUTE_INIT_RECOVERY_CODE_FREE_WALLET,
     {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         clientId,
       }),
     },
   );
   if (!resp.ok) {
-    const {error} = await resp.json();
+    const { error } = await resp.json();
     console.error(`Error initializing wallet: ${error} `);
-    return {success: false};
+    return { success: false };
   }
 
-  return {success: true};
+  return { success: true };
 }
 
 export async function storeUserShares({
@@ -159,11 +159,11 @@ export async function storeUserShares({
   authShare?: string;
 }) {
   const resp = await authFetchEmbeddedWalletUser(
-    {clientId},
+    { clientId },
     ROUTE_STORE_USER_SHARES,
     {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         walletAddress,
         maybeEncryptedRecoveryShares,
@@ -172,7 +172,7 @@ export async function storeUserShares({
     },
   );
   if (!resp.ok) {
-    const {error} = await resp.json();
+    const { error } = await resp.json();
     throw new Error(
       `Something went wrong creating user wallet: ${JSON.stringify(
         error,
@@ -184,13 +184,17 @@ export async function storeUserShares({
 }
 
 export async function getUserShares(clientId: string, getShareUrl: URL) {
-  console.log('getUserShares.url', getShareUrl.href);
-  console.log('getUserShares.clientId', clientId);
-  const resp = await authFetchEmbeddedWalletUser({clientId}, getShareUrl.href, {
-    method: 'GET',
-  });
+  // console.log("getUserShares.url", getShareUrl.href);
+  // console.log("getUserShares.clientId", clientId);
+  const resp = await authFetchEmbeddedWalletUser(
+    { clientId },
+    getShareUrl.href,
+    {
+      method: "GET",
+    },
+  );
   if (!resp.ok) {
-    const {error} = await resp.json();
+    const { error } = await resp.json();
     throw new Error(
       `Something went wrong getting user's wallet: ${JSON.stringify(
         error,

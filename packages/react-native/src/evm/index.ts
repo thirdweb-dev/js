@@ -19,6 +19,8 @@ export { magicWallet } from "./wallets/wallets/magic-link";
 export { MagicWallet } from "./wallets/wallets/MagicLink";
 export { MagicLink } from "./wallets/wallets/MagicLink";
 export { magicLink } from "./wallets/wallets/magic-link";
+export { EmailWallet } from "./wallets/wallets/email/EmailWallet";
+export { emailWallet } from "./wallets/wallets/email/email-wallet";
 export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
 export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";
 export { walletConnect } from "./wallets/wallets/wallet-connect/wallet-connect";

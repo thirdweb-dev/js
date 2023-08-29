@@ -1,30 +1,30 @@
-import {SetUpWalletRpcReturnType} from '@paperxyz/embedded-wallet-service-sdk';
-import {ethers} from 'ethers';
-import * as secrets from 'secrets.js-34r7h';
-import {getUserShares} from '../api/fetchers';
+import { SetUpWalletRpcReturnType } from "@paperxyz/embedded-wallet-service-sdk";
+import { ethers } from "ethers";
+import * as secrets from "secrets.js-34r7h";
+import { getUserShares } from "../api/fetchers";
 import {
   DEVICE_SHARE_ID,
   DEVICE_SHARE_MISSING_MESSAGE,
   ROUTE_GET_USER_SHARES,
-} from '../constants';
-import {getDeviceShare} from '../storage/local';
-import {storeShares} from './creation';
-import {decryptShareWeb} from './encryption';
+} from "../constants";
+import { getDeviceShare } from "../storage/local";
+import { storeShares } from "./creation";
+import { decryptShareWeb } from "./encryption";
 
 function getWalletPrivateKeyFromShares(shares: string[]) {
   const privateKeyHex = secrets.combine(shares);
-  const prefixPrivateKey = Buffer.from(privateKeyHex, 'hex').toString('utf-8');
-  if (!prefixPrivateKey.startsWith('thirdweb_')) {
-    throw new Error('Invalid private key reconstructed from shares');
+  const prefixPrivateKey = Buffer.from(privateKeyHex, "hex").toString("utf-8");
+  if (!prefixPrivateKey.startsWith("thirdweb_")) {
+    throw new Error("Invalid private key reconstructed from shares");
   }
-  const privateKey = prefixPrivateKey.replace('thirdweb_', '');
+  const privateKey = prefixPrivateKey.replace("thirdweb_", "");
   return privateKey;
 }
 
 export function getUserEtherJsWalletFromShares(args: {
   shares: string[];
 }): ethers.Wallet {
-  const {shares} = args;
+  const { shares } = args;
   return new ethers.Wallet(getWalletPrivateKeyFromShares(shares));
 }
 
@@ -33,13 +33,14 @@ export function getUserEtherJsWalletFromShares(args: {
  * Will throw if called on a new device // user not logged in
  */
 export async function getExistingUserEtherJsWallet(clientId: string) {
-  const {authShare, deviceShare} = await getShares({
+  // console.log("getExistingUserEtherJsWallet");
+  const { authShare, deviceShare } = await getShares({
     clientId,
-    authShare: {toRetrieve: true},
-    deviceShare: {toRetrieve: true},
-    recoveryShare: {toRetrieve: false},
+    authShare: { toRetrieve: true },
+    deviceShare: { toRetrieve: true },
+    recoveryShare: { toRetrieve: false },
   });
-  console.log('authShare', authShare);
+  // console.log("authShare", authShare);
   return getUserEtherJsWalletFromShares({
     shares: [authShare, deviceShare],
   });
@@ -62,7 +63,7 @@ export async function getShares<
   recoveryShare,
 }: {
   clientId: string;
-  authShare: {toRetrieve: A};
+  authShare: { toRetrieve: A };
   recoveryShare: R extends true
     ? {
         toRetrieve: R;
@@ -71,7 +72,7 @@ export async function getShares<
     : {
         toRetrieve: R;
       };
-  deviceShare: {toRetrieve: D};
+  deviceShare: { toRetrieve: D };
 }): Promise<{
   authShare: A extends true ? string : undefined;
   recoveryShare: R extends true ? string : undefined;
@@ -95,23 +96,23 @@ export async function getShares<
     getShareUrl.searchParams.append(queryKey, queryParams[queryKey].toString());
   }
 
-  console.log('calling getUserShares', getShareUrl);
-  const {authShare: _authShare, maybeEncryptedRecoveryShares} =
+  // console.log("calling getUserShares", getShareUrl);
+  const { authShare: _authShare, maybeEncryptedRecoveryShares } =
     await getUserShares(clientId, getShareUrl);
 
-  console.log('after getUserShares', _authShare);
+  // console.log("after getUserShares", _authShare);
   let recoverShareToReturn: string | undefined;
   if (recoveryShare.toRetrieve) {
     if (!maybeEncryptedRecoveryShares?.length) {
-      throw new Error('Missing recovery share.');
+      throw new Error("Missing recovery share.");
     }
     for (const maybeEncryptedRecoveryShare of maybeEncryptedRecoveryShares) {
       try {
         if (recoveryShare.recoveryCode) {
           // for client encrypted share, we attempt to decrypt them
           recoverShareToReturn = await decryptShareWeb(
-            maybeEncryptedRecoveryShare || '',
-            recoveryShare.recoveryCode || '',
+            maybeEncryptedRecoveryShare || "",
+            recoveryShare.recoveryCode || "",
           );
         } else {
           recoverShareToReturn = maybeEncryptedRecoveryShare;
@@ -121,7 +122,7 @@ export async function getShares<
       } catch {}
     }
     if (!recoverShareToReturn) {
-      throw new Error('Invalid recovery code.');
+      throw new Error("Invalid recovery code.");
     }
   }
 
@@ -138,7 +139,7 @@ export async function getShares<
   // see: https://github.com/microsoft/TypeScript/issues/22735
   // see: https://github.com/microsoft/TypeScript/issues/22735
   return {
-    authShare: authShare.toRetrieve ? ((_authShare || '') as any) : undefined,
+    authShare: authShare.toRetrieve ? ((_authShare || "") as any) : undefined,
     deviceShare: deviceShareToReturn as any,
     recoveryShare: recoverShareToReturn as any,
   };
@@ -165,11 +166,12 @@ export async function setUpShareForNewDevice({
   recoveryCode: string;
   clientId: string;
 }): Promise<SetUpWalletRpcReturnType> {
-  const {recoveryShare, authShare} = await getShares({
+  // console.log("setupsharefornewdevice");
+  const { recoveryShare, authShare } = await getShares({
     clientId,
-    authShare: {toRetrieve: true},
-    recoveryShare: {toRetrieve: true, recoveryCode},
-    deviceShare: {toRetrieve: false},
+    authShare: { toRetrieve: true },
+    recoveryShare: { toRetrieve: true, recoveryCode },
+    deviceShare: { toRetrieve: false },
   });
   const shares = [recoveryShare, authShare];
   const deviceShare = getWalletShareById(shares, DEVICE_SHARE_ID);

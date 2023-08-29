@@ -2,23 +2,15 @@ import {
   EmailWalletConnectionArgs,
   EmailWalletConnectorOptions,
 } from "./types";
-import type { InitializedUser } from "@paperxyz/embedded-wallet-service-sdk";
-import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
 import { Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import { sendEmailOTP, validateEmailOTP } from "./email/auth";
-import {
-  removeAuthShareInClient,
-  removeLoggedInWalletUserId,
-} from "./email/helpers/storage/local";
 import { getEthersSigner } from "./email/signer";
+import { logoutUser } from "./email/helpers/auth/logout";
 
 export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
-  private user: InitializedUser | { status: UserStatus.LOGGED_OUT } = {
-    status: UserStatus.LOGGED_OUT,
-  };
   private options: EmailWalletConnectorOptions;
 
   signer?: Signer;
@@ -50,17 +42,17 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
       throw new Error("Email is required to connect");
     }
 
-    let response;
     try {
-      response = await validateEmailOTP({
+      await validateEmailOTP({
         clientId: this.options.clientId,
         otp,
         email: this.email,
       });
 
-      console.log("EmailCOnnector.response", !!response);
+      // console.log("EmailCOnnector.response", !!response);
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
+      return;
     }
 
     try {
@@ -77,10 +69,9 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
   }
 
   async disconnect(): Promise<void> {
-    await removeAuthShareInClient(this.options.clientId);
-    await removeLoggedInWalletUserId(this.options.clientId);
+    await logoutUser(this.options.clientId);
+    await this.onDisconnect();
     this.signer = undefined;
-    this.onDisconnect();
   }
 
   async getAddress(): Promise<string> {
@@ -110,10 +101,15 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
       return this.signer;
     }
 
-    console.log("clientId", this.options.clientId);
-    const signer = await getEthersSigner(this.options.clientId);
+    // console.log("clientId", this.options.clientId);
+    let signer;
+    try {
+      signer = await getEthersSigner(this.options.clientId);
+    } catch (error) {
+      throw new Error("Signer not found");
+    }
 
-    console.log("getSigner", !!signer);
+    // console.log("getSigner", !!signer);
     if (!signer) {
       throw new Error("Signer not found");
     }
@@ -152,6 +148,11 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
   }
 
   async removeListeners() {
+    // console.log("removeListeners", !!this.signer);
+    if (!this.signer) {
+      return;
+    }
+
     const provider = await this.getProvider();
     if (provider.off) {
       provider.off("accountsChanged", this.onAccountsChanged);

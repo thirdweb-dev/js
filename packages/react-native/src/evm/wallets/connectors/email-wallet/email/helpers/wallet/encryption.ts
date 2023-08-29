@@ -1,10 +1,11 @@
-import Aes from 'react-native-aes-crypto';
-import AesGcmCrypto from 'react-native-aes-gcm-crypto';
+import Aes from "react-native-aes-crypto";
+import AesGcmCrypto from "react-native-aes-gcm-crypto";
+import { getRandomValues } from "../getRandomValues";
 
 // const {Crypto} = require('@peculiar/webcrypto');
 // const crypto = new Crypto();
 
-const ENCRYPTION_SEPARATOR = ':';
+const ENCRYPTION_SEPARATOR = ":";
 
 // Client Side Share encryption and decryption
 // export function getKeyMaterial(pwd: string) {
@@ -35,23 +36,23 @@ export async function getEncryptionKey(pwd: string, salt: ArrayBuffer) {
 }
 
 function bufferToBase64(arrayBuffer: ArrayBuffer): string {
-  return Buffer.from(arrayBuffer).toString('base64');
+  return Buffer.from(arrayBuffer).toString("base64");
 }
 
 function base64ToBuffer(base64String: string): ArrayBuffer {
-  return Buffer.from(base64String, 'base64');
+  return Buffer.from(base64String, "base64");
 }
 
 export async function encryptShareWeb(
   share: string,
   pwd: string,
 ): Promise<string> {
-  console.log('share', share);
+  // console.log("share", share);
   const normalizedShare = new TextEncoder().encode(share);
 
-  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const salt = getRandomValues(new Uint8Array(16));
   const key = await getEncryptionKey(pwd, salt);
-  const keyBase64 = Buffer.from(key).toString('base64');
+  const keyBase64 = Buffer.from(key).toString("base64");
 
   const encryptedValue = await AesGcmCrypto.encrypt(
     bufferToBase64(normalizedShare),
@@ -64,7 +65,7 @@ export async function encryptShareWeb(
   //   normalizedShare,
   // );
 
-  console.log('Calling bufferToBase64', pwd);
+  // console.log("Calling bufferToBase64", pwd);
 
   const returnValue = `${encryptedValue.content}${ENCRYPTION_SEPARATOR}${
     encryptedValue.iv
@@ -72,7 +73,7 @@ export async function encryptShareWeb(
     encryptedValue.tag
   }`;
 
-  console.log('returnValue', returnValue);
+  // console.log("returnValue", returnValue);
 
   return returnValue;
 }
@@ -86,7 +87,7 @@ export async function decryptShareWeb(
 
   const key = await getEncryptionKey(pwd, base64ToBuffer(salt));
 
-  console.log('Calling decrypt', pwd);
+  // console.log("Calling decrypt", pwd);
   const normalizedShare = await AesGcmCrypto.decrypt(
     encryptedShare,
     key,
