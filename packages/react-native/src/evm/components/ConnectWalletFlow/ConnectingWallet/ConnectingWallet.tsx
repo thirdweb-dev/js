@@ -1,4 +1,5 @@
 import { useAppTheme } from "../../../styles/hooks";
+import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
@@ -33,7 +34,9 @@ export function ConnectingWallet({
     <View>
       <ConnectWalletHeader
         onBackPress={onBackPress}
-        walletLogoUrl={wallet.meta.iconURL}
+        middleContent={
+          <ImageSvgUri width={56} height={56} imageUrl={wallet.meta.iconURL} />
+        }
         subHeaderText={subHeaderText}
         onClose={onClose}
       />

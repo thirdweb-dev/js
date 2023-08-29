@@ -36,6 +36,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const setConnectedWallet = useSetConnectedWallet();
   const setConnectionStatus = useSetConnectionStatus();
+  const [focusedIndex, setFocusedIndex] = useState<number | undefined>();
 
   const address = useAddress();
 
@@ -54,8 +55,9 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
     ) {
       setCheckingOtp(true);
       setErrorMessage("");
+      setFocusedIndex(undefined);
       const otp = values.join("");
-      // console.log("OTP: ", otp);
+      console.log("OTP: ", otp);
 
       setTimeout(() => {
         (selectionData.emailWallet as EmailWallet)
@@ -77,6 +79,8 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
             console.error(error);
             setErrorMessage(`Error: ${error.message}`);
             setCheckingOtp(false);
+            setFocusedIndex(undefined);
+            // await (selectionData.emailWallet as EmailWallet).disconnect();
           });
       }, 0);
     }
@@ -108,6 +112,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
 
   const clearCode = () => {
     setValues([]);
+    setFocusedIndex(undefined);
     for (const inputRef of inputRefs.current) {
       inputRef?.clear();
     }
@@ -116,6 +121,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
   const onRequestNewCodePress = () => {
     clearCode();
     setErrorMessage("");
+    setFocusedIndex(undefined);
     setRequestingNewOtp(true);
     (selectionData.emailWallet as EmailWallet)
       .sendEmailOTP(selectionData.email)
@@ -130,14 +136,19 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
   };
 
   return (
-    <Box minHeight={250}>
+    <Box>
       <ConnectWalletHeader
+        middleContent={<Text variant="header">Sign In</Text>}
         subHeaderText={"Please enter the code sent to"}
-        walletLogoUrl="https://thirdweb.com/favicon.ico"
         onBackPress={goBack}
         onClose={close}
       />
-      <Text variant="subHeader" textAlign="center" fontWeight="800">
+      <Text
+        variant="subHeader"
+        textAlign="center"
+        fontWeight="700"
+        color="white"
+      >
         {selectionData?.email}
       </Text>
       <Box
@@ -145,6 +156,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
         flexDirection="row"
         height={50}
         width={"100%"}
+        marginTop="xl"
         mb="md"
         justifyContent="space-evenly"
       >
@@ -152,19 +164,20 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
           <Box
             key={index.toString()}
             flex={1}
-            borderColor="border"
+            borderColor={focusedIndex === index ? "white" : "iconPrimary"}
             marginHorizontal="xxs"
-            borderWidth={3}
+            borderWidth={2}
             justifyContent="center"
             alignItems="center"
             borderRadius="md"
           >
             <TextInput
               ref={(ref) => (inputRefs.current[index] = ref)}
-              style={{ ...styles.textInput, color: theme.colors.textPrimary }}
+              style={styles.textInput}
               keyboardType="number-pad"
               editable={!checkingOtp}
               selectTextOnFocus={true}
+              onFocus={() => setFocusedIndex(index)}
               maxLength={1}
               returnKeyType={index === 5 ? "done" : "next"}
               onChangeText={(value) => handleInputChange(value, index)}
@@ -184,9 +197,9 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
         <ActivityIndicator size="small" />
       ) : (
         <BaseButton
-          flex={1}
           mt="sm"
           alignItems="center"
+          height={theme.textVariants.bodySmallSecondary.fontSize}
           onPress={onRequestNewCodePress}
         >
           {requestingNewOtp ? (
@@ -206,5 +219,5 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
 };
 
 const styles = StyleSheet.create({
-  textInput: { fontSize: 20, textAlign: "center", height: 50 },
+  textInput: { fontSize: 20, color: "white", textAlign: "center", height: 50 },
 });
