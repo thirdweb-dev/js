@@ -14,6 +14,12 @@ module.exports = {
             message:
               "Do not import entire ethers object, Use named imports instead.",
           },
+          {
+            name: "eventemitter3",
+            importNames: ["EventEmitter"],
+            message:
+              "Do not use named import for importing EventEmitter, Use default import instead.",
+          },
         ],
       },
     ],
