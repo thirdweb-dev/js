@@ -239,7 +239,11 @@ function useScreen() {
 }
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: ${(p) => p.theme.bg.base};
+  background: linear-gradient(
+    to top,
+    ${(p) => p.theme.bg.base},
+    ${(p) => p.theme.bg.baseHover}
+  );
   border-radius: ${radius.xl};
   max-width: ${modalMaxWidth};
   width: 100%;
