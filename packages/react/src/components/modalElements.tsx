@@ -62,6 +62,7 @@ export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
   font-size: ${(p) => (p.md ? fontSize.md : fontSize.sm)};
   text-decoration: none;
   display: block;
+  line-height: 1.5;
   ${media.mobile} {
     text-align: center;
   }
