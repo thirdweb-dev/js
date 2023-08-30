@@ -34,6 +34,7 @@ interface FormSchema {
   "0-2/product_type": string;
   products: string;
   "0-2/when_do_you_expect_to_launch_": string;
+  how_did_you_hear_about_us_: string;
 }
 
 const ContactUs: ThirdwebNextPage = () => {
@@ -279,6 +280,27 @@ const ContactUs: ThirdwebNextPage = () => {
                     <option value="3-6 months">3-6 months</option>
                     <option value="6-12 months">6-12 months</option>
                     <option value="1+ year">1+ year</option>
+                  </Select>
+                </FormControl>
+                <FormControl gap={6} isRequired>
+                  <Select
+                    h={14}
+                    borderColor="gray.300"
+                    placeholder="How did you hear about us? *"
+                    color="black"
+                    {...form.register("how_did_you_hear_about_us_", {
+                      required: true,
+                    })}
+                  >
+                    <option value="Socials (Twitter, LinkedIn)">
+                      Socials (Twitter, LinkedIn)
+                    </option>
+                    <option value="thirdweb Website">thirdweb Website</option>
+                    <option value="Newsletter">Newsletter</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Other">Other</option>
+                    <option value="Event">Event</option>
                   </Select>
                 </FormControl>
                 <Box color="white" mx={{ base: "auto", lg: "inherit" }}>

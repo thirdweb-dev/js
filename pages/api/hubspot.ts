@@ -31,6 +31,11 @@ const handler = async (req: NextRequest) => {
     },
   );
 
+  if (!response.ok) {
+    const body = await response.json();
+    console.error("error", body);
+  }
+
   return NextResponse.json(
     { status: response.statusText },
     {
