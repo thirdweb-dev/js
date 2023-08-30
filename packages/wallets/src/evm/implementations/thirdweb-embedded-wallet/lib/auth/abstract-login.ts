@@ -52,7 +52,7 @@ export abstract class AbstractLogin<
   }
 
   abstract loginWithThirdwebModal(args?: MODAL): Promise<AuthLoginReturnType>;
-  abstract loginWithPaperThirdwebOtp(
+  abstract loginWithThirdwebOtp(
     args: EMAIL_MODAL,
   ): Promise<AuthLoginReturnType>;
 
@@ -67,7 +67,7 @@ export abstract class AbstractLogin<
     return result;
   }
 
-  abstract verifyPaperEmailLoginOtp(
+  abstract verifyThirdwebEmailLoginOtp(
     args: EMAIL_VERIFICATION,
   ): Promise<AuthLoginReturnType>;
 }

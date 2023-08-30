@@ -26,7 +26,7 @@ export class BaseLogin extends AbstractLogin<
     });
     return this.postLogin(result);
   }
-  override async loginWithPaperThirdwebOtp({
+  override async loginWithThirdwebOtp({
     email,
   }: {
     email: string;
@@ -42,7 +42,8 @@ export class BaseLogin extends AbstractLogin<
     });
     return this.postLogin(result);
   }
-  override async verifyPaperEmailLoginOtp({
+
+  override async verifyThirdwebEmailLoginOtp({
     email,
     otp,
   }: {

@@ -29,7 +29,7 @@ export class Auth {
   protected onAuthSuccess: (
     authResults: AuthAndWalletRpcReturnType,
   ) => Promise<AuthLoginReturnType>;
-  public BaseLogin: BaseLogin;
+  private BaseLogin: BaseLogin;
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
@@ -150,16 +150,16 @@ export class Auth {
    * @param {string} props.recoveryCode Only present when using RecoveryShareManagement.USER_MANAGED recovery share management. Specifies the recoveryCode for the given email. This will set recoveryCode as the code for the user if they are new, or user recoveryCode for the user if they are an existing user
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
    */
-  async loginWithPaperEmailOtp(
-    args: Parameters<BaseLogin["loginWithPaperThirdwebOtp"]>[0],
+  async loginWithThirdwebEmailOtp(
+    args: Parameters<BaseLogin["loginWithThirdwebOtp"]>[0],
   ): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithPaperThirdwebOtp(args);
+    return this.BaseLogin.loginWithThirdwebOtp(args);
   }
 
   /**
    * @description
    * A headless way to send the users at {email} an OTP code.
-   * You need to then call {@link Auth.verifyPaperEmailLoginOtp} in order to complete the login process
+   * You need to then call {@link Auth.verifyThirdwebEmailLoginOtp} in order to complete the login process
    *
    * @example
    *  const Paper = new PaperEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
@@ -182,7 +182,7 @@ export class Auth {
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
    * @returns {{ success: boolean, isNewUser: boolean }} Success: indicating if the email was successfully sent (Note the email could still end up in the user's spam folder). IsNewUser indicates if the user is a new user to your platform
    */
-  async sendPaperEmailLoginOtp({
+  async sendThirdwebEmailLoginOtp({
     email,
   }: AuthQuerierTypes["sendPaperEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
     return this.BaseLogin.sendThirdwebEmailLoginOtp({
@@ -194,17 +194,17 @@ export class Auth {
    *  @description
    * Used to verify the otp that the user receives from  Paper
    *
-   * See {@link Auth.sendPaperEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithPaperEmailOtp` with `verifyPaperEmailLoginOtp`
+   * See {@link Auth.sendThirdwebEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithPaperEmailOtp` with `verifyPaperEmailLoginOtp`
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
    * @param {string} props.otp The code that the user received in their email
-   * @param {string} props.recoveryCode The code that is first sent to the user when they sign up. Required if user is an existing user. i.e. !isNewUser from return params of {@link Auth.sendPaperEmailLoginOtp}
+   * @param {string} props.recoveryCode The code that is first sent to the user when they sign up. Required if user is an existing user. i.e. !isNewUser from return params of {@link Auth.sendThirdwebEmailLoginOtp}
    * @returns {{user: InitializedUser}} An InitializedUser object containing the user's status, wallet, authDetails, and more
    */
-  async verifyPaperEmailLoginOtp(
-    args: Parameters<BaseLogin["verifyPaperEmailLoginOtp"]>[0],
+  async verifyThirdwebEmailLoginOtp(
+    args: Parameters<BaseLogin["verifyThirdwebEmailLoginOtp"]>[0],
   ) {
-    return this.BaseLogin.verifyPaperEmailLoginOtp(args);
+    return this.BaseLogin.verifyThirdwebEmailLoginOtp(args);
   }
 
   /**
