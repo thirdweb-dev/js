@@ -1,13 +1,12 @@
 import type { ServiceName } from "./services";
 
-type ServiceActions = "read" | "write";
 
 export type CoreServiceConfig = {
   enforceAuth: boolean;
   apiUrl: string;
   serviceScope: ServiceName;
   serviceApiKey: string;
-  serviceAction?: ServiceActions;
+  serviceAction?: string;
   useWalletAuth?: boolean;
 };
 
@@ -25,7 +24,7 @@ export type ApiKeyMetadata = {
   services: {
     name: string;
     targetAddresses: string[];
-    actions: ServiceActions[];
+    actions: string[];
   }[];
 };
 
