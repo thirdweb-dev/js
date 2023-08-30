@@ -48,8 +48,6 @@ import fetch from "cross-fetch";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
-import { toWei } from "../../common";
-import { BaseGoerli, Optimism } from "@thirdweb-dev/chains";
 import { OP_STACK_CHAINS } from "../../constants/chains/supportedChains";
 
 abstract class TransactionContext {
