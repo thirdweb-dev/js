@@ -21,6 +21,14 @@ export class ThirdwebEmbeddedWalletSdk {
    */
   auth: Auth;
 
+  private isClientIdLegacyPaper(clientId: string): boolean {
+    if (clientId.indexOf("-") > 0 && clientId.length === 36) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * @example
    * const Paper = new ThirdwebEmbeddedWalletSdk({ clientId: "", chain: "Goerli" });
@@ -29,6 +37,11 @@ export class ThirdwebEmbeddedWalletSdk {
    * @param {CustomizationOptionsType} initParams.styles sets the default style override for any modal that pops up asking for user's details when creating wallet or logging in.
    */
   constructor({ clientId, chain, styles }: ThirdwebConstructorType) {
+    if (this.isClientIdLegacyPaper(clientId)) {
+      throw new Error(
+        "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
+      );
+    }
     this.clientId = clientId;
     this.querier = new EmbeddedWalletIframeCommunicator({
       clientId,
@@ -42,7 +55,6 @@ export class ThirdwebEmbeddedWalletSdk {
 
     this.auth = new Auth({
       clientId,
-
       querier: this.querier,
       onAuthSuccess: async (authResult) => {
         await this.wallet.postWalletSetUp({
