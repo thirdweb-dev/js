@@ -29,6 +29,8 @@ export type AuthInput = CoreAuthInput & {
  * @param {NodeServiceConfig['apiUrl']} serviceConfig.apiUrl - The url of the api server to fetch information for verification. `https://api.thirdweb.com` for production and `https://api.staging.thirdweb.com` for staging
  * @param {NodeServiceConfig['serviceApiKey']} serviceConfig.serviceApiKey - secret key to be used authenticate the caller of the api-server. Check the api-server's env variable for the keys.
  * @param {NodeServiceConfig['serviceScope']} serviceConfig.serviceScope - The service that we are requesting authorization for. E.g. `relayer`, `rpc`, 'bundler', 'storage' etc.
+ * @param {NodeServiceConfig['serviceAction']} serviceConfig.serviceAction - Needed when the `serviceScope` is `storage`. Can be either `read` or `write`.
+ * @param {NodeServiceConfig['useWalletAuth']} serviceConfig.useWalletAuth - If true it pings the `wallet/me` or else, `account/me`. You most likely can leave this as false.
  * @returns {AuthorizationResult} authorizationResult - contains if the request is authorized, and information about the account if it is authorized. Otherwise, it contains the error message and status code.
  */
 export async function authorizeNode(
