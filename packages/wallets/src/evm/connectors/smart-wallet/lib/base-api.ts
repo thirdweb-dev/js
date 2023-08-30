@@ -339,9 +339,6 @@ export abstract class BaseAccountAPI {
       }
     }
 
-    console.log("maxFeePerGas", maxFeePerGas?.toString());
-    console.log("maxPriorityFeePerGas", maxPriorityFeePerGas?.toString());
-
     const partialUserOp: any = {
       sender: this.getAccountAddress(),
       nonce: info.nonce ?? this.getNonce(),
