@@ -31,8 +31,8 @@ export const ConnectingScreen: React.FC<{
       </IconContainer>
       <Spacer y="lg" />
       <TitleContainer>
-        <ModalTitle>Connecting your wallet</ModalTitle>
-        <Spinner size="md" color="link" />
+        <ModalTitle>Connecting</ModalTitle>
+        <Spinner size="md" color="accent" />
       </TitleContainer>
       <Spacer y="md" />
       <Desc centerOnMobile>

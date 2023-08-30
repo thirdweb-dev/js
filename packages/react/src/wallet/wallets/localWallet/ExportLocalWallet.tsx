@@ -126,7 +126,7 @@ export const ExportLocalWallet: React.FC<{
           height: "300px",
         }}
       >
-        <Spinner size="md" color="link" />
+        <Spinner size="md" color="accent" />
       </Flex>
     );
   }

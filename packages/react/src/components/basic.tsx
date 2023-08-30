@@ -33,7 +33,7 @@ export const ScreenContainer = styled.div`
 `;
 
 export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
-  border-top: 1px solid ${(p) => p.theme.border.elevated};
+  border-top: 1px solid ${(p) => p.theme.bg.elevatedHover};
   padding: ${spacing.lg};
   z-index: 10;
   position: relative;

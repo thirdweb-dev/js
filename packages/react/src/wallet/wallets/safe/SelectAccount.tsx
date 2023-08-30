@@ -200,7 +200,7 @@ export const SelectAccount: React.FC<{
             id="safeNetwork"
             value={safeChainId}
             disabled={disableNetworkSelection}
-            placeholder="Select Network your safe is deployed to"
+            placeholder="Network your safe is deployed to"
             onChange={(e) => {
               setSafeConnectError(false);
               setSwitchError(false);
@@ -209,7 +209,7 @@ export const SelectAccount: React.FC<{
           >
             {!disableNetworkSelection && (
               <option value="" hidden>
-                Select network your safe is deployed on
+                Network your safe is deployed to
               </option>
             )}
 
@@ -338,7 +338,7 @@ export const SelectAccount: React.FC<{
             >
               {" "}
               {switchingNetwork ? "Switching" : "Switch Network"}
-              {switchingNetwork && <Spinner size="sm" color="primary" />}
+              {switchingNetwork && <Spinner size="sm" color="neutral" />}
             </Button>
           ) : (
             <Button
@@ -369,7 +369,7 @@ export const SelectAccount: React.FC<{
 
 const ConfirmMessage = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.link.primary};
+  color: ${(p) => p.theme.bg.accent};
   text-align: right;
 `;
 
@@ -381,7 +381,7 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   border: none;
   border-radius: 6px;
   color: ${(p) => p.theme.text.neutral};
-  background: transparent;
+  background: ${(p) => p.theme.input.bg};
   font-size: ${fontSize.md};
   box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.outline};
   appearance: none;
@@ -406,5 +406,5 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
 const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
   theme?: Theme;
 }>`
-  color: ${(p) => p.theme.icon.secondary};
+  color: ${(p) => p.theme.text.secondary};
 `;

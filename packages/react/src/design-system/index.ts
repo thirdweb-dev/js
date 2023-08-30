@@ -1,106 +1,68 @@
 import { blue, green, mauve, mauveDark, tomato } from "@radix-ui/colors";
 
+const darkColors = {
+  base: "hsl(300deg 4.17% 0%)",
+  baseHover: "hsl(300deg 7.14% 5%)",
+  elevated: "hsl(288deg 6.02% 8%)",
+  elevatedHover: "hsl(280deg 6% 13%)",
+  highlighted: "hsl(280deg 5.26% 18%)",
+  inverted: mauveDark.mauve12,
+  invertedFocused: mauveDark.mauve7,
+  danger: tomato.tomato9,
+  accent: blue.blue9,
+  success: green.green7,
+};
+
+const lightColors = {
+  base: mauve.mauve1,
+  baseHover: mauve.mauve2,
+  elevated: mauve.mauve5,
+  elevatedHover: mauve.mauve6,
+  highlighted: mauve.mauve7,
+  inverted: mauve.mauve12,
+  invertedFocused: mauve.mauve9,
+  danger: tomato.tomato9,
+  accent: blue.blue11,
+  success: green.green9,
+};
+
 export const darkTheme = {
-  overlay: {
-    subdued: "rgba(0, 0, 0, 0.3)",
-  },
-  bg: {
-    base: "hsl(300deg 4.17% 5%)",
-    baseHover: "hsl(300deg 7.14% 7%)",
-    elevated: "hsl(288deg 6.02% 12%)",
-    elevatedHover: "hsl(280deg 6% 15%)",
-    highlighted: "hsl(280deg 5.26% 18%)",
-    inverted: mauveDark.mauve12,
-    invertedFocused: mauveDark.mauve7,
-    danger: tomato.tomato12,
-  },
-  border: {
-    base: mauveDark.mauve3,
-    elevated: mauveDark.mauve4,
-  },
-  badge: {
-    secondary: mauveDark.mauve6,
-  },
+  overlay: "rgba(0, 0, 0, 0.8)",
+  bg: darkColors,
   text: {
-    neutral: mauveDark.mauve12,
-    inverted: mauveDark.mauve1,
-    secondary: mauveDark.mauve9,
-    danger: tomato.tomato9,
-  },
-  icon: {
-    secondary: mauveDark.mauve11,
-    primary: mauveDark.mauve12,
-    inverted: mauveDark.mauve1,
-    danger: tomato.tomato9,
-    success: green.green7,
-    link: blue.blue9,
-  },
-  link: {
-    primary: blue.blue9,
-    primaryHover: mauveDark.mauve12,
+    neutral: darkColors.inverted,
+    inverted: darkColors.base,
+    secondary: mauveDark.mauve9, // new color
+    danger: darkColors.danger,
+    success: darkColors.success,
+    accent: darkColors.accent,
   },
   input: {
-    bg: mauveDark.mauve3,
-    bgHover: mauveDark.mauve5,
-    outline: mauveDark.mauve5,
-    focusRing: blue.blue9,
-    errorRing: tomato.tomato9,
-  },
-  tooltip: {
-    bg: "black",
-    text: "white",
+    bg: darkColors.elevated,
+    bgHover: darkColors.elevatedHover,
+    outline: darkColors.elevatedHover,
+    focusRing: darkColors.accent,
+    errorRing: darkColors.danger,
   },
 };
 
 export const lightTheme: typeof darkTheme = {
-  overlay: {
-    subdued: "rgba(0, 0, 0, 0.4)",
-  },
-  bg: {
-    base: mauve.mauve1,
-    baseHover: mauve.mauve2,
-    elevated: mauve.mauve3,
-    elevatedHover: mauve.mauve4,
-    highlighted: mauve.mauve5,
-    inverted: mauve.mauve12,
-    invertedFocused: mauve.mauve7,
-    danger: tomato.tomato4,
-  },
-  border: {
-    base: mauve.mauve6,
-    elevated: mauve.mauve7,
-  },
-  badge: {
-    secondary: mauve.mauve1,
-  },
+  overlay: "rgba(0, 0, 0, 0.8)",
+  bg: lightColors,
   text: {
-    neutral: mauve.mauve12,
-    inverted: mauve.mauve1,
-    secondary: mauve.mauve10,
-    danger: tomato.tomato9,
-  },
-  icon: {
-    secondary: mauve.mauve10,
-    primary: mauve.mauve12,
-    inverted: mauve.mauve1,
-    danger: tomato.tomato9,
-    success: green.green9,
-    link: blue.blue11,
-  },
-  link: {
-    primary: blue.blue11,
-    primaryHover: mauve.mauve12,
+    neutral: lightColors.inverted,
+    inverted: lightColors.base,
+    secondary: mauve.mauve10, // new color
+    danger: lightColors.danger,
+    success: lightColors.success,
+    accent: lightColors.accent,
   },
   input: {
-    bg: mauve.mauve3,
-    bgHover: mauveDark.mauve5,
-    outline: mauve.mauve7,
-    focusRing: blue.blue11,
-    errorRing: tomato.tomato10,
-  },
-  tooltip: {
-    bg: "black",
-    text: "white",
+    bg: lightColors.elevated,
+    bgHover: lightColors.elevatedHover,
+    outline: lightColors.elevatedHover,
+    focusRing: lightColors.accent,
+    errorRing: lightColors.danger,
   },
 };
 

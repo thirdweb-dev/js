@@ -28,10 +28,10 @@ const Circle = styled.div<{ theme?: Theme }>`
     0 0 0 5px ${(p) => p.theme.bg.highlighted};
 
   &[data-active="true"] {
-    background-color: ${(p) => p.theme.link.primary};
+    background-color: ${(p) => p.theme.bg.accent};
     box-shadow:
       0 0 0 3px ${(p) => p.theme.bg.base},
-      0 0 0 5px ${(p) => p.theme.link.primary};
+      0 0 0 5px ${(p) => p.theme.bg.accent};
 
     position: relative;
     z-index: 2;
@@ -43,6 +43,6 @@ const Line = styled.div<{ theme?: Theme }>`
   height: 4px;
   background-color: ${(p) => p.theme.bg.highlighted};
   &[data-active="true"] {
-    background-color: ${(p) => p.theme.link.primary};
+    background-color: ${(p) => p.theme.bg.accent};
   }
 `;

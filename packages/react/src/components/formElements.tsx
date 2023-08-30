@@ -43,7 +43,7 @@ export const Input = styled.input<{
         case "transparent":
           return "transparent";
         case "secondary":
-          return p.theme.bg.elevated;
+          return p.theme.bg.elevatedHover;
       }
     }};
 

@@ -37,7 +37,7 @@ export const GetStartedWithWallets: React.FC<{
             and other custom blockchains.
           </ModalDescription>
 
-          <Spacer y="xl" />
+          <Spacer y="md" />
 
           {/* Recommendation */}
           <div
@@ -47,7 +47,13 @@ export const GetStartedWithWallets: React.FC<{
               alignItems: "center",
             }}
           >
-            <SecondaryText>We recommend</SecondaryText>
+            <SecondaryText
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              We recommend
+            </SecondaryText>
             <div
               style={{
                 display: "flex",
@@ -67,7 +73,7 @@ export const GetStartedWithWallets: React.FC<{
       }
       footer={
         <>
-          <Spacer y="xl" />
+          <Spacer y="lg" />
           <HelperLink
             target="_blank"
             href="https://ethereum.org/en/wallets/find-wallet/"

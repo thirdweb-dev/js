@@ -234,7 +234,7 @@ export const CreateLocalWallet_Guest: React.FC<{
         height: "300px",
       }}
     >
-      <Spinner size="lg" color="link" />
+      <Spinner size="lg" color="accent" />
     </Flex>
   );
 };

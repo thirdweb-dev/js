@@ -14,7 +14,7 @@ export const Button = styled.button<{
   border-radius: ${radius.md};
   padding: ${spacing.sm} ${spacing.sm};
   font-size: ${fontSize.md};
-  font-weight: 500;
+  font-weight: ${(p) => (p.variant === "link" ? 400 : 500)};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
@@ -68,7 +68,7 @@ export const Button = styled.button<{
       case "secondary":
         return p.theme.text.neutral;
       case "link":
-        return p.theme.link.primary;
+        return p.theme.bg.accent;
       case "danger":
         return p.theme.text.danger;
     }

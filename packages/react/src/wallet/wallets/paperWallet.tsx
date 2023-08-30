@@ -91,7 +91,7 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
         minHeight: "250px",
       }}
     >
-      <Spinner size="md" color="primary" />
+      <Spinner size="md" color="neutral" />
     </Flex>
   );
 };

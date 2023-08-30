@@ -18,3 +18,9 @@ export const DangerText = styled.span<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.danger};
   margin: 0;
 `;
+
+export const AccentText = styled.span<{ theme?: Theme }>`
+  font-size: ${fontSize.md};
+  color: ${(p) => p.theme.text.accent};
+  margin: 0;
+`;

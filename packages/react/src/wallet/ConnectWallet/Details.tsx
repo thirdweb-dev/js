@@ -465,14 +465,14 @@ const dropdownContentFade = keyframes`
 const DropDownContent = /* @__PURE__ */ styled(
   /* @__PURE__ */ DropdownMenu.Content,
 )<{ theme?: Theme }>`
-  width: 360px;
+  width: 320px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
   padding: ${spacing.lg};
   animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.border.base};
+  border: 1px solid ${(props) => props.theme.bg.elevated};
   background-color: ${(props) => props.theme.bg.base};
   z-index: 1000000;
   line-height: 1;
@@ -481,7 +481,7 @@ const DropDownContent = /* @__PURE__ */ styled(
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.border.base};
+  border: 1px solid ${(props) => props.theme.bg.elevated};
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
@@ -549,7 +549,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.md};
   background-color: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.border.elevated};
+  border: 1px solid ${(props) => props.theme.bg.elevatedHover};
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -566,8 +566,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     transition:
       box-shadow 250ms ease,
       border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.link.primary};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
+    border: 1px solid ${(props) => props.theme.bg.accent};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.bg.accent};
   }
 
   &[disabled] {
@@ -607,9 +607,9 @@ const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
 }>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
-  color: ${(props) => props.theme.icon.secondary};
+  color: ${(props) => props.theme.text.secondary};
   &:hover {
-    color: ${(props) => props.theme.icon.danger};
+    color: ${(props) => props.theme.text.danger};
     background: none;
   }
 `;
@@ -618,7 +618,7 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.icon.secondary};
+  color: ${(props) => props.theme.text.secondary};
 `;
 
 function WalletSwitcher({

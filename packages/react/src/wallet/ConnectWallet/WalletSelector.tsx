@@ -8,7 +8,13 @@ import {
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
-import { fontSize, iconSize, spacing, Theme } from "../../design-system";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+  Theme,
+} from "../../design-system";
 import styled from "@emotion/styled";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
@@ -17,7 +23,8 @@ import {
   SetModalConfigCtx,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { TWIcon } from "./icons/twIcon";
-import { SecondaryText } from "../../components/text";
+import { AccentText, SecondaryText } from "../../components/text";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -47,7 +54,7 @@ export const WalletSelector: React.FC<{
           </Flex>
         </TitleContainer>
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         <WalletSelection
           walletConfigs={walletConfigs}
@@ -135,7 +142,7 @@ export const WalletSelection: React.FC<{
     });
 
   return (
-    <WalletGrid
+    <WalletList
       style={{
         maxHeight: props.maxHeight,
       }}
@@ -162,28 +169,53 @@ export const WalletSelection: React.FC<{
               >
                 <Img
                   src={walletConfig.meta.iconURL}
-                  width={"80"}
-                  height={"80"}
+                  width={iconSize.xl}
+                  height={iconSize.xl}
                   loading="eager"
                 />
-                <WalletName>{walletConfig.meta.name}</WalletName>
+                <WalletNameContainer>
+                  <Flex flexDirection="column" gap="xxs">
+                    <WalletName>{walletConfig.meta.name}</WalletName>
+                    {walletConfig.isInstalled && walletConfig.isInstalled() && (
+                      <AccentText
+                        style={{
+                          fontSize: fontSize.sm,
+                        }}
+                      >
+                        Installed
+                      </AccentText>
+                    )}
+                  </Flex>
+                  <ChevronRightIcon
+                    data-chveron
+                    width={iconSize.sm}
+                    height={iconSize.sm}
+                  />
+                </WalletNameContainer>
               </WalletButton>
             )}
           </li>
         );
       })}
-    </WalletGrid>
+    </WalletList>
   );
 };
 
-const WalletGrid = styled.ul<{ theme?: Theme }>`
+const WalletNameContainer = styled.div<{ theme?: Theme }>`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+`;
+
+const WalletList = styled.ul<{ theme?: Theme }>`
   all: unset;
   list-style-type: none;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: ${spacing.lg} ${spacing.sm};
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.md};
   box-sizing: border-box;
-  max-height: 400px;
+  max-height: 350px;
   overflow: auto;
   scrollbar-width: none;
   /* to show the box-shadow of inputs that overflows  */
@@ -197,38 +229,34 @@ const WalletGrid = styled.ul<{ theme?: Theme }>`
     width: 0px;
     display: none;
   }
-
-  & [data-full-width="true"] {
-    grid-column: 1/-1;
-  }
 `;
 
 const WalletButton = styled.button<{ theme?: Theme }>`
   all: unset;
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: ${spacing.sm};
   cursor: pointer;
   box-sizing: border-box;
   width: 100%;
   color: ${(p) => p.theme.text.secondary};
+  border-radius: ${radius.md};
+  position: relative;
 
-  &:hover {
-    color: ${(p) => p.theme.text.neutral};
+  & svg[data-chveron] {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 200ms ease;
   }
 
-  img {
-    transition: transform 200ms ease;
-  }
-
-  &:hover img {
-    transform: scale(1.05);
+  &:hover svg[data-chveron] {
+    opacity: 1;
+    transform: translateX(-10px);
   }
 `;
 
 const WalletName = styled.span<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
+  font-size: ${fontSize.md};
   font-weight: 500;
-  transition: color 200ms ease;
+  color: ${(p) => p.theme.text.neutral};
 `;

@@ -41,7 +41,7 @@ export const SignatureModal: React.FC<{
 
           <TitleContainer>
             <ModalTitle>Signature Request</ModalTitle>
-            <Spinner size="md" color="link" />
+            <Spinner size="md" color="accent" />
           </TitleContainer>
 
           <Spacer y="md" />

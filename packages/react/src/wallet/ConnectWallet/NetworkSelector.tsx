@@ -217,7 +217,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                     right: spacing.md,
                   }}
                 >
-                  <Spinner size="md" color="link" />
+                  <Spinner size="md" color="accent" />
                 </div>
               )}
             </div>
@@ -496,7 +496,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                     {confirming && (
                       <>
                         <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
-                        <Spinner size="sm" color="link" />
+                        <Spinner size="sm" color="accent" />
                       </>
                     )}
 
@@ -608,7 +608,7 @@ const SearchInput = /* @__PURE__ */ styled(Input)<{ theme?: Theme }>`
 
 const ConfirmMessage = styled.div<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.link.primary};
+  color: ${(p) => p.theme.bg.accent};
 `;
 
 const ErrorMessage = styled.div<{ theme?: Theme }>`

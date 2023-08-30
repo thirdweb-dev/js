@@ -58,7 +58,7 @@ export const BackButton: React.FC<{
 export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
   all: unset;
   cursor: pointer;
-  color: ${(p) => p.theme.link.primary};
+  color: ${(p) => p.theme.bg.accent};
   font-size: ${(p) => (p.md ? fontSize.md : fontSize.sm)};
   text-decoration: none;
   display: block;
@@ -66,7 +66,7 @@ export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
     text-align: center;
   }
   &:hover {
-    color: ${(p) => p.theme.link.primaryHover};
+    color: ${(p) => p.theme.text.neutral};
     text-decoration: none;
   }
 `;

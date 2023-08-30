@@ -21,6 +21,7 @@ import {
   iconSize,
   lightTheme,
   radius,
+  shadow,
 } from "../../design-system";
 import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
@@ -243,7 +244,7 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   max-width: ${modalMaxWidth};
   width: 100%;
   box-sizing: border-box;
-  box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.05);
+  box-shadow: ${shadow.lg};
   position: relative;
   border: 1px solid ${(p) => p.theme.bg.elevated};
 `;

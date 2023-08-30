@@ -76,7 +76,7 @@ export const ScanScreen: React.FC<{
             justifyContent: "center",
           }}
         >
-          <Spinner size="md" color="link" />
+          <Spinner size="md" color="accent" />
         </div>
 
         <Spacer y="xl" />
@@ -91,10 +91,10 @@ export const ScanScreen: React.FC<{
 
 const LinkButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  color: ${(p) => p.theme.link.primary};
+  color: ${(p) => p.theme.text.accent};
   font-size: ${fontSize.sm};
   cursor: pointer;
   &:hover {
-    color: ${(p) => p.theme.link.primaryHover};
+    color: ${(p) => p.theme.text.neutral};
   }
 `;

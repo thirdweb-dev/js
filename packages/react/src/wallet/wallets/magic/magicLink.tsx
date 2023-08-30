@@ -247,7 +247,7 @@ const MagicConnectionUI: React.FC<
         minHeight: "250px",
       }}
     >
-      <Spinner size="md" color="primary" />
+      <Spinner size="md" color="neutral" />
     </Flex>
   );
 };

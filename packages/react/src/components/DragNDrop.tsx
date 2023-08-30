@@ -146,9 +146,9 @@ const DropContainer = styled.div<{ theme?: Theme }>`
 
   &:hover,
   &[data-is-dragging="true"] {
-    border-color: ${(p) => p.theme.link.primary};
+    border-color: ${(p) => p.theme.text.accent};
     svg {
-      color: ${(p) => p.theme.link.primary};
+      color: ${(p) => p.theme.text.accent};
     }
   }
 

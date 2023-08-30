@@ -11,6 +11,7 @@ import {
   BackButton,
   ModalTitle,
   HelperLink,
+  ModalDescription,
 } from "../../../components/modalElements";
 import { iconSize } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
@@ -70,11 +71,11 @@ export const SelectpersonalWallet: React.FC<{
         />
         <Spacer y="lg" />
         <ModalTitle>Link Personal Wallet</ModalTitle>
-        {/* <Spacer y="sm" /> */}
+        <Spacer y="sm" />
 
-        {/* <ModalDescription>
+        <ModalDescription>
           Select a personal wallet to connect to your Safe
-        </ModalDescription> */}
+        </ModalDescription>
 
         <Spacer y="lg" />
         {/* <Steps step={1} /> */}
