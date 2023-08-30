@@ -2,6 +2,7 @@ export type Palette = {
   buttonBackgroundColor: string;
   buttonTextColor: string;
 
+  backgroundInverted: string;
   background: string;
   backgroundHighlight: string;
 
@@ -39,6 +40,7 @@ export const paletteLight: Palette = {
   buttonBackgroundColor: "white",
   buttonTextColor: "black",
 
+  backgroundInverted: "#131417",
   background: "#F7F7F9",
   backgroundHighlight: "#FFFFFF",
 
@@ -61,6 +63,7 @@ export const paletteDark: Palette = {
   buttonBackgroundColor: "white",
   buttonTextColor: "black",
 
+  backgroundInverted: "white",
   background: "#131417",
   backgroundHighlight: "#232429",
 

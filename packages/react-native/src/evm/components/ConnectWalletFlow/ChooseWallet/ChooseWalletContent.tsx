@@ -1,9 +1,16 @@
 import { useMemo } from "react";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
-import { StyleSheet, View, FlatList } from "react-native";
-import { WalletButton } from "../../base/WalletButton";
+import { FlatList, Dimensions } from "react-native";
 import Box from "../../base/Box";
 import { useTheme } from "@shopify/restyle";
+import { WalletButtonSquare } from "../../base/WalletButtonSquare";
+import Text from "../../base/Text";
+
+const SCREEN_WIDTH = Dimensions.get("screen").width;
+const SCREEN_HEIGHT = Dimensions.get("screen").height;
+const MAX_HEIGHT = SCREEN_HEIGHT * 0.4;
+const NUM_COLUMNS = 3;
+const TILE_SIZE = SCREEN_WIDTH / NUM_COLUMNS;
 
 interface ChooseWalletContentProps {
   wallets: WalletConfig[];
@@ -24,57 +31,62 @@ export const ChooseWalletContent = ({
   const theme = useTheme();
 
   return (
-    <View style={styles.explorerContainer}>
+    <Box marginTop="sm" flexDirection="column">
+      {walletsToDisplay.map((wallet) => {
+        if (!wallet.selectUI) {
+          return null;
+        }
+
+        return (
+          <Box
+            key={wallet.id}
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            borderRadius="sm"
+          >
+            <wallet.selectUI
+              theme={theme}
+              supportedWallets={wallets}
+              onSelect={(data) => {
+                onChooseWallet(wallet, data);
+              }}
+              walletConfig={wallet}
+            />
+          </Box>
+        );
+      })}
       <FlatList
         keyExtractor={(item) => item.meta.name}
         data={walletsToDisplay}
-        renderItem={({ item, index }) => {
-          const marginBottom =
-            index === walletsToDisplay.length - 1 ? "none" : "xxs";
-
-          return (
-            <>
-              {item.selectUI ? (
-                <Box
-                  mb={marginBottom}
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderRadius="sm"
-                >
-                  <item.selectUI
-                    theme={theme}
-                    supportedWallets={wallets}
-                    onSelect={(data) => {
-                      onChooseWallet(item, data);
-                    }}
-                    walletConfig={item}
-                  />
-                </Box>
-              ) : (
-                <WalletButton
-                  walletIconUrl={item.meta.iconURL}
-                  name={item.meta.name}
-                  onPress={() => onChooseWallet(item)}
-                  mb={marginBottom}
-                />
-              )}
-            </>
-          );
+        numColumns={NUM_COLUMNS}
+        style={{ maxHeight: MAX_HEIGHT }}
+        fadingEdgeLength={10}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => {
+          return !item.selectUI ? (
+            <WalletButtonSquare
+              walletIconUrl={item.meta.iconURL}
+              name={item.meta.name}
+              size={TILE_SIZE}
+              onPress={() => onChooseWallet(item)}
+            />
+          ) : null;
         }}
       />
-    </View>
+      <Box
+        height={60}
+        borderTopColor="border"
+        borderTopWidth={1}
+        borderBottomColor="border"
+        borderBottomWidth={1}
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text variant="bodySmall">New to wallets?</Text>
+        <Text variant="link">Get started</Text>
+      </Box>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  explorerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 4,
-    marginTop: 25,
-  },
-});
