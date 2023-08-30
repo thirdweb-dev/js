@@ -113,14 +113,20 @@ export enum PageId {
   // ---------------------------------------------------------------------------
   //  settings pages
   // ---------------------------------------------------------------------------
-  // thirdweb.com/settings
+  // thirdweb.com/dashboard/settings
   Settings = "settings",
 
-  // thirdweb.com/settings/api-keys
+  // thirdweb.com/dashboard/settings/api-keys
   SettingsApiKeys = "settings-api-keys",
 
-  // thirdweb.com/settings/account
-  SettingsAccount = "settings-account",
+  // thirdweb.com/dashboard/settings/devices
+  SettingsDevices = "settings-devices",
+
+  // thirdweb.com/dashboard/settings/billing
+  SettingsBilling = "settings-billing",
+
+  // thirdweb.com/dashboard/settings/usage
+  SettingsUsage = "settings-usage",
 
   // ---------------------------------------------------------------------------
   //  solutions pages

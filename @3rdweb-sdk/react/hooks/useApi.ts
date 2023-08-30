@@ -1,5 +1,5 @@
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
-import { apiKeys, authorizedWallets } from "../cache-keys";
+import { apiKeys, accountKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@thirdweb-dev/react";
@@ -14,6 +14,25 @@ export type AuthorizedWallet = {
   updatedAt: string;
   deviceName: string;
 };
+
+// Account
+export type Account = {
+  id: string;
+  isStaff: boolean;
+  creatorWalletAddress: string;
+  status: string;
+  plan: string;
+  name?: string;
+  email?: string;
+  currentBillingPeriodStartsAt: string;
+  currentBillingPeriodEndsAt: string;
+  onboardedAt?: string;
+};
+
+export interface UpdateAccountInput {
+  name?: string;
+  email?: string;
+}
 
 export type ApiKeyService = {
   id: string;
@@ -61,6 +80,135 @@ export interface UpdateKeyInput {
   bundleIds: string[];
   walletAddresses?: string[];
   services?: UpdateKeyServiceInput[];
+}
+
+// FIXME: We keep repeating types, API server should provide them
+export interface UsageBundler {
+  chainId: number;
+  sumTransactionFee: number;
+  sumTransactionFeeUsd: number;
+  billableUsd: number;
+}
+export interface UsageByService {
+  bundler: UsageBundler[];
+}
+
+export function useAccount() {
+  const { user } = useUser();
+
+  return useQuery(
+    accountKeys.me(user?.address as string),
+    async () => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data as Account;
+    },
+    { enabled: !!user?.address },
+  );
+}
+
+export function useAccountUsage() {
+  const { user } = useUser();
+
+  return useQuery(
+    accountKeys.usage(user?.address as string),
+    async () => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/usage`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data as UsageByService;
+    },
+    { enabled: !!user?.address },
+  );
+}
+
+export function useUpdateAccount() {
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (input: UpdateAccountInput) => {
+      invariant(user, "No user is logged in");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          accountKeys.me(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+export function useCreateAccountPlan() {
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async () => {
+      invariant(user, "No user is logged in");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error?.message || json.error);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          accountKeys.me(user?.address as string),
+        );
+      },
+    },
+  );
 }
 
 export function useApiKeys() {

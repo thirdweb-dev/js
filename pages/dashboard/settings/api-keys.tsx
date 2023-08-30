@@ -1,36 +1,43 @@
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
-import { Container, Divider, Flex } from "@chakra-ui/react";
+import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { Flex } from "@chakra-ui/react";
+import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
-import { SmartWalletsAccessAlert } from "components/settings/ApiKeyTable/Alerts";
+import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
 import { CreateApiKeyButton } from "components/settings/ApiKeyTable/CreateButton";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { Card, Heading, Link, Text } from "tw-components";
+import { useMemo } from "react";
+import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
+  // FIXME: Remove when ff is lifted
+  const [isSmartWalletsBeta] = useLocalStorage("beta-smart-wallets-v1", false);
   const address = useAddress();
   const keysQuery = useApiKeys();
+  const meQuery = useAccount();
+
+  const apiKeys = keysQuery?.data;
+  const account = meQuery?.data;
+
+  const hasSmartWalletsWithoutBilling = useMemo(() => {
+    if (!account || !apiKeys) {
+      return;
+    }
+
+    return apiKeys.find(
+      (k) =>
+        k.services?.find(
+          (s) => account.status !== "validPayment" && s.name === "bundler",
+        ),
+    );
+  }, [apiKeys, account]);
 
   if (!address) {
-    return (
-      <Container maxW="lg">
-        <Card p={6} as={Flex} flexDir="column" gap={2}>
-          <Heading as="h2" size="title.sm">
-            Connect your wallet to get started
-          </Heading>
-          <Text>
-            In order to create and manage your developer API keys, you need to
-            sign-in with a wallet.
-          </Text>
-          <Divider my={4} />
-          <ConnectWallet ecosystem="evm" />
-        </Card>
-      </Container>
-    );
+    return <ConnectWalletPrompt />;
   }
 
   return (
@@ -40,6 +47,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           justifyContent="space-between"
           direction={{ base: "column", md: "row" }}
           gap={4}
+          h={10}
         >
           <Heading size="title.lg" as="h1">
             API Keys
@@ -61,10 +69,12 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      <SmartWalletsAccessAlert />
+      {isSmartWalletsBeta && hasSmartWalletsWithoutBilling && (
+        <SmartWalletsBillingAlert />
+      )}
 
       <ApiKeyTable
-        keys={keysQuery.data || []}
+        keys={apiKeys || []}
         isLoading={keysQuery.isLoading}
         isFetched={keysQuery.isFetched}
       />

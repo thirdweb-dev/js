@@ -1,4 +1,4 @@
-import { ApiKeyKeyForm } from "./KeyForm";
+import { ApiKeyForm } from "./KeyForm";
 import { ApiKeyValidationSchema } from "./validations";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Modal, ModalOverlay } from "@chakra-ui/react";
@@ -24,7 +24,7 @@ export const ApiKeysCreateModal: React.FC<ApiKeysCreateModalProps> = ({
   const renderCreateForm = () => {
     if (form && onSubmit) {
       return (
-        <ApiKeyKeyForm
+        <ApiKeyForm
           form={form}
           onSubmit={onSubmit}
           onClose={onClose}

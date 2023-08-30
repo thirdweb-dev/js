@@ -20,7 +20,6 @@ import { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { useRouter } from "next/router";
 import { VerificationStatus, blockExplorerMap } from "pages/api/verify";
 import { useMemo } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";

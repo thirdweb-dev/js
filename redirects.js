@@ -119,6 +119,12 @@ function redirects() {
       destination: "/dashboard/settings/api-keys",
       permanent: false,
     },
+    // backwards compat: page moved to pages/settings/devices
+    {
+      source: "/dashboard/settings/account",
+      destination: "/dashboard/settings/devices",
+      permanent: false,
+    },
     {
       source: "/template/nft-drop",
       destination: "/template/erc721",

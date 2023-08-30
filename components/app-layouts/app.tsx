@@ -4,7 +4,6 @@ import {
 } from "./providers";
 import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
 import {
@@ -15,15 +14,13 @@ import {
   ConnectWallet,
   shouldNeverPersistQuery,
   useAddress,
-  useBalance,
-  useChainId,
-  useWallet,
 } from "@thirdweb-dev/react";
-import { useSDK } from "@thirdweb-dev/react/solana";
 import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
-import { PrivacyNotice } from "components/notices/PrivacyNotice";
+import { Onboarding as OnboardingModal } from "components/onboarding";
+import { SignInModal } from "components/onboarding/SignIn";
+import { PosthogIdentifier } from "components/wallets/PosthogIdentifier";
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
@@ -34,8 +31,7 @@ import {
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
 import { del, get, set } from "idb-keyval";
-import posthog from "posthog-js";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Heading } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
@@ -134,10 +130,12 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                 <EVMContractInfoProvider value={props.contractInfo}>
                   <DashboardThirdwebProvider>
                     <SanctionedAddressesChecker>
-                      <PHIdentifier />
-                      <PrivacyNotice />
-                      <AppShell {...props} />
+                      <PosthogIdentifier />
+                      <SignInModal />
                       <ConfigModal />
+                      <OnboardingModal />
+
+                      <AppShell {...props} />
                     </SanctionedAddressesChecker>
                   </DashboardThirdwebProvider>
                 </EVMContractInfoProvider>
@@ -195,58 +193,3 @@ function ConfigModal() {
     />
   );
 }
-
-const walletIdToPHName: Record<string, string> = {
-  metamask: "metamask",
-  walletConnectV1: "WalletConnect",
-  walletConnectV2: "WalletConnect",
-  "paper-wallet": "Paper Wallet",
-  coinbaseWallet: "Coinbase Wallet",
-  injected: "Injected",
-};
-
-const PHIdentifier: React.FC = () => {
-  const publicKey = useSolanaWallet().publicKey;
-  const address = useAddress();
-  const chainId = useChainId();
-  const balance = useBalance();
-  const solSDKNetwork = useSDK()?.network;
-  const wallet = useWallet();
-
-  useEffect(() => {
-    if (wallet) {
-      const connector = walletIdToPHName[wallet.walletId] || wallet.walletId;
-      posthog.register({ connector });
-      posthog.capture("wallet_connected", { connector });
-    }
-  }, [wallet]);
-
-  useEffect(() => {
-    if (address) {
-      posthog.identify(address);
-    } else if (publicKey) {
-      posthog.identify(publicKey.toBase58());
-    }
-  }, [address, publicKey]);
-
-  useEffect(() => {
-    if (chainId) {
-      posthog.unregister("network");
-      posthog.register({ chain_id: chainId, ecosystem: "evm" });
-    } else if (solSDKNetwork) {
-      posthog.unregister("chain_id");
-      posthog.register({
-        network: solSDKNetwork || "unknown_network",
-        ecosystem: "solana",
-      });
-    }
-  }, [chainId, solSDKNetwork]);
-
-  useEffect(() => {
-    if (balance?.data?.displayValue) {
-      posthog.register({ balance: balance.data.displayValue });
-    }
-  }, [balance]);
-
-  return null;
-};

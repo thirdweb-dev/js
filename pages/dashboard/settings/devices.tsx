@@ -9,7 +9,7 @@ import { PageId } from "page-id";
 import { Card, Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
-const SettingsAccountPage: ThirdwebNextPage = () => {
+const SettingsDevicesPage: ThirdwebNextPage = () => {
   const address = useAddress();
   const authorizedWalletsQuery = useAuthorizedWallets();
 
@@ -43,7 +43,8 @@ const SettingsAccountPage: ThirdwebNextPage = () => {
             Authorized Devices
           </Heading>
           <Text>
-            Devices authorized to perform actions linked to this account
+            List of authorized devices that can perform actions on behalf of
+            your account.
           </Text>
           <AuthorizedWalletsTable
             authorizedWallets={authorizedWalletsQuery.data || []}
@@ -56,14 +57,14 @@ const SettingsAccountPage: ThirdwebNextPage = () => {
   );
 };
 
-SettingsAccountPage.getLayout = (page, props) => (
+SettingsDevicesPage.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <SettingsSidebar activePage="account" />
+    <SettingsSidebar activePage="devices" />
 
     {page}
   </AppLayout>
 );
 
-SettingsAccountPage.pageId = PageId.SettingsAccount;
+SettingsDevicesPage.pageId = PageId.SettingsDevices;
 
-export default SettingsAccountPage;
+export default SettingsDevicesPage;

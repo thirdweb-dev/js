@@ -53,7 +53,7 @@ import {
   NoTargetAddressesAlert,
 } from "./Alerts";
 
-interface ApiKeyKeyFormProps {
+interface ApiKeyFormProps {
   form: UseFormReturn<ApiKeyValidationSchema, any>;
   selectedSection?: number;
   apiKey?: ApiKey | null;
@@ -66,7 +66,7 @@ interface ApiKeyKeyFormProps {
 
 type FormStep = "name" | "services" | "permissions" | "keys";
 
-export const ApiKeyKeyForm: React.FC<ApiKeyKeyFormProps> = ({
+export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
   form,
   selectedSection,
   apiKey,

@@ -1,5 +1,14 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["rdweb", "solana", "tanstack", "Thirdweb", "usedapp"]
+  "cSpell.words": [
+    "hookform",
+    "onboarded",
+    "Posthog",
+    "rdweb",
+    "solana",
+    "tanstack",
+    "Thirdweb",
+    "usedapp"
+  ]
 }

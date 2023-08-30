@@ -8,7 +8,7 @@ import {
 import { useAddress } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 
-import { Heading, LinkButton, Text } from "tw-components";
+import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
 export const SecretHandlingAlert = () => {
   return (
@@ -112,6 +112,37 @@ export const NoTargetAddressesAlert = ({
           disable a service or specify allowed contract addresses.
         </Text>
       </Flex>
+    </Alert>
+  );
+};
+
+export const SmartWalletsBillingAlert = () => {
+  return (
+    <Alert
+      status="info"
+      borderRadius="md"
+      as={Flex}
+      flexDir="column"
+      alignItems="start"
+      gap={2}
+    >
+      <Flex justifyContent="start">
+        <AlertIcon />
+        <AlertTitle>Smart Wallets on Mainnet</AlertTitle>
+      </Flex>
+      <AlertDescription>
+        You&apos;ve enabled Smart Wallets for one of your API keys and
+        haven&apos;t added a payment method. To use them on Mainnet:{" "}
+        <TrackedLink
+          href="/dashboard/settings/billing"
+          category="api_keys"
+          label="smart_wallets_missing_billing"
+          textDecor="underline"
+          fontWeight="medium"
+        >
+          Add a Payment method
+        </TrackedLink>
+      </AlertDescription>
     </Alert>
   );
 };
