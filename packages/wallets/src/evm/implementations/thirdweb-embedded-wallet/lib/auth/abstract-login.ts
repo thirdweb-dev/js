@@ -1,11 +1,11 @@
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
-} from "../../interfaces/Auth";
+} from "../../interfaces/auth";
 import type {
   ClientIdWithQuerierType,
   SendEmailOtpReturnType,
-} from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
+} from "../../interfaces/embedded-wallets/embedded-wallets";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 type LoginQuerierTypes = {

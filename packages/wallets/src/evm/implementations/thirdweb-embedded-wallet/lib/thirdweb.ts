@@ -1,15 +1,15 @@
 import type {
   GetUser,
   ThirdwebConstructorType,
-} from "../interfaces/EmbeddedWallets/EmbeddedWallets";
+} from "../interfaces/embedded-wallets/embedded-wallets";
 import {
   UserStatus,
   UserWalletStatus,
-} from "../interfaces/EmbeddedWallets/EmbeddedWallets";
+} from "../interfaces/embedded-wallets/embedded-wallets";
 import { EmbeddedWalletIframeCommunicator } from "../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
-import type { AuthQuerierTypes } from "./Auth";
-import { Auth } from "./Auth";
-import { EmbeddedWallet } from "./EmbeddedWallets/EmbeddedWallet";
+import type { AuthQuerierTypes } from "./auth";
+import { Auth } from "./auth";
+import { EmbeddedWallet } from "./embedded-wallets/embedded-wallet";
 
 export class ThirdwebEmbeddedWalletSdk {
   protected clientId: string;

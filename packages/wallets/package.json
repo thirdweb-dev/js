@@ -316,6 +316,20 @@
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
     },
+    "./evm/implementations/thirdweb-embedded-wallet": {
+      "module": {
+        "browser": "./evm/implementations/thirdweb-embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet.browser.esm.js",
+        "default": "./evm/implementations/thirdweb-embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet.esm.js"
+      },
+      "default": "./evm/implementations/thirdweb-embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet.cjs.js"
+    },
+    "./evm/implementations/thirdweb-embedded-wallet/lib/auth": {
+      "module": {
+        "browser": "./evm/implementations/thirdweb-embedded-wallet/lib/auth/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet-lib-auth.browser.esm.js",
+        "default": "./evm/implementations/thirdweb-embedded-wallet/lib/auth/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet-lib-auth.esm.js"
+      },
+      "default": "./evm/implementations/thirdweb-embedded-wallet/lib/auth/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet-lib-auth.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
@@ -335,6 +349,7 @@
       "evm/index.ts",
       "evm/connectors/*/index.ts",
       "evm/wallets/**",
+      "evm/implementations/**/index.ts",
       "solana/index.ts",
       "solana/wallets/**"
     ],

@@ -50,39 +50,4 @@ export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRain
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
 
 // ThirdwebEmbeddedWalletSdk
-export {
-  AUTH_TOKEN_LOCAL_STORAGE_NAME,
-  DEVICE_SHARE_LOCAL_STORAGE_NAME,
-  DEVICE_SHARE_LOCAL_STORAGE_NAME_DEPRECATED,
-  WALLET_USER_DETAILS_LOCAL_STORAGE_NAME,
-  WALLET_USER_ID_LOCAL_STORAGE_NAME,
-} from "./implementations/thirdwebEmbeddedWallet/constants/settings";
-export {
-  AuthProvider,
-  RecoveryShareManagement,
-} from "./implementations/thirdwebEmbeddedWallet/interfaces/Auth";
-export type {
-  AuthAndWalletRpcReturnType,
-  AuthLoginReturnType,
-  AuthStoredTokenWithCookieReturnType,
-  StoredTokenType,
-} from "./implementations/thirdwebEmbeddedWallet/interfaces/Auth";
-export { UserStatus } from "./implementations/thirdwebEmbeddedWallet/interfaces/EmbeddedWallets/EmbeddedWallets";
-export type {
-  AuthDetails,
-  GetAuthDetailsReturnType,
-  GetUser,
-  GetUserWalletStatusRpcReturnType,
-  InitializedUser,
-  LogoutReturnType,
-  SendEmailOtpReturnType,
-  SetUpWalletRpcReturnType,
-  ThirdwebConstructorType,
-} from "./implementations/thirdwebEmbeddedWallet/interfaces/EmbeddedWallets/EmbeddedWallets";
-export type {
-  GetAddressReturnType,
-  SignMessageReturnType,
-  SignTransactionReturnType,
-  SignedTypedDataReturnType,
-} from "./implementations/thirdwebEmbeddedWallet/interfaces/EmbeddedWallets/Signer";
-export { ThirdwebEmbeddedWalletSdk } from "./implementations/thirdwebEmbeddedWallet/lib/thirdweb";
+export * from "./implementations/thirdweb-embedded-wallet";

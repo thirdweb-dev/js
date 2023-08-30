@@ -2,7 +2,7 @@ import type {
   AuthDetails,
   InitializedUser,
   SetUpWalletRpcReturnType,
-} from "./EmbeddedWallets/EmbeddedWallets";
+} from "./embedded-wallets/embedded-wallets";
 
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",

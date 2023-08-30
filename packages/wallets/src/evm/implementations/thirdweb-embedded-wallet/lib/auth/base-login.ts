@@ -1,8 +1,8 @@
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
-} from "../../interfaces/Auth";
-import { AbstractLogin } from "./AbstractLogin";
+} from "../../interfaces/auth";
+import { AbstractLogin } from "./abstract-login";
 
 export class BaseLogin extends AbstractLogin<
   {

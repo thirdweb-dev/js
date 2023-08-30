@@ -2,15 +2,15 @@ import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
   AuthProvider,
-} from "../../interfaces/Auth";
+} from "../../interfaces/auth";
 import type {
   ClientIdWithQuerierType,
   LogoutReturnType,
   SendEmailOtpReturnType,
-} from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
+} from "../../interfaces/embedded-wallets/embedded-wallets";
 import { LocalStorage } from "../../utils/Storage/LocalStorage";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
-import { BaseLogin } from "./BaseLogin";
+import { BaseLogin } from "./base-login";
 
 export type AuthQuerierTypes = {
   loginWithJwtAuthCallback: {

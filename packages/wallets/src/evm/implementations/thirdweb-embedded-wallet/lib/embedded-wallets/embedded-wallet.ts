@@ -6,13 +6,13 @@ import type {
   GetUserWalletStatusRpcReturnType,
   SetUpWalletRpcReturnType,
   WalletAddressObjectType,
-} from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
-import { UserWalletStatus } from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
+} from "../../interfaces/embedded-wallets/embedded-wallets";
+import { UserWalletStatus } from "../../interfaces/embedded-wallets/embedded-wallets";
 
 import { getDefaultProvider } from "ethers";
 import { LocalStorage } from "../../utils/Storage/LocalStorage";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
-import { EthersSigner } from "./Signer";
+import { EthersSigner } from "./signer";
 
 export type WalletManagementTypes = {
   createWallet: void;

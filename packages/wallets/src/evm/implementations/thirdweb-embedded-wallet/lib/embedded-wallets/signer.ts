@@ -6,13 +6,13 @@ import {
   providers,
 } from "ethers";
 import { Deferrable, defineReadOnly } from "ethers/lib/utils";
-import type { ClientIdWithQuerierType } from "../../interfaces/EmbeddedWallets/EmbeddedWallets";
+import type { ClientIdWithQuerierType } from "../../interfaces/embedded-wallets/embedded-wallets";
 import type {
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
   SignedTypedDataReturnType,
-} from "../../interfaces/EmbeddedWallets/Signer";
+} from "../../interfaces/embedded-wallets/signer";
 
 import Provider from "ethereum-provider";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
