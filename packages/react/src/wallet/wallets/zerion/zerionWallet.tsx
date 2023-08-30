@@ -21,7 +21,6 @@ export const zerionWallet = (
     id: ZerionWallet.id,
     meta: {
       ...ZerionWallet.meta,
-      name: "Zerion",
       iconURL:
         "ipfs://QmaZbKFD2LjAvGyFdfVyzuGjC6brdmMamwGaxFMEMiEY94/zerion.png",
     },
