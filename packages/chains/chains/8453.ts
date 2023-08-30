@@ -7,7 +7,8 @@ export default {
     "https://mainnet.base.org/",
     "https://developer-access-mainnet.base.org/",
     "https://base.gateway.tenderly.co",
-    "wss://base.gateway.tenderly.co"
+    "wss://base.gateway.tenderly.co",
+    "https://base.publicnode.com"
   ],
   "faucets": [],
   "nativeCurrency": {
