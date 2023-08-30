@@ -1,6 +1,5 @@
 import type { MessageType, StyleObject } from "@paperxyz/sdk-common-utilities";
-import { getPaperOriginUrl } from "@paperxyz/sdk-common-utilities";
-import { EMBEDDED_WALLET_PATH } from "../../constants/settings";
+import { GET_IFRAME_BASE_URL } from "../../constants/settings";
 
 type IFrameCommunicatorProps = {
   link: string;
@@ -36,7 +35,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
   private iframe: HTMLIFrameElement;
   private POLLING_INTERVAL_SECONDS = 1.4;
   private POST_LOAD_BUFFER_SECONDS = 1;
-
+  private iframeBaseUrl;
   constructor({
     link,
     iframeId,
@@ -44,6 +43,8 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     iframeStyles,
     onIframeInitialize,
   }: IFrameCommunicatorProps) {
+    this.iframeBaseUrl = GET_IFRAME_BASE_URL();
+
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
     const hrefLink = new URL(link);
@@ -69,8 +70,6 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
       iframe.setAttribute("data-version", sdkVersion);
 
       const onIframeLoaded = (event: MessageEvent<any>) => {
-        console.log("event.origin", event.origin);
-        console.log("event.data", event.data);
         if (event.data.eventType === "ewsIframeLoaded") {
           window.removeEventListener("message", onIframeLoaded);
         }
@@ -125,7 +124,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
             eventType: INIT_IFRAME_EVENT,
             data: await this.onIframeLoadedInitVariables(),
           },
-          `${getPaperOriginUrl()}${EMBEDDED_WALLET_PATH}`,
+          this.iframeBaseUrl,
           [channel.port2],
         );
       });
@@ -174,7 +173,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
       };
       this.iframe.contentWindow?.postMessage(
         { eventType: procedureName, data: params },
-        `${getPaperOriginUrl()}${EMBEDDED_WALLET_PATH}`,
+        this.iframeBaseUrl,
         [channel.port2],
       );
     });

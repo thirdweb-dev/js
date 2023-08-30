@@ -1,6 +1,8 @@
 import type { CustomizationOptionsType } from "@paperxyz/sdk-common-utilities";
-import { getPaperOriginUrl } from "@paperxyz/sdk-common-utilities";
-import { EMBEDDED_WALLET_PATH } from "../../constants/settings";
+import {
+  EMBEDDED_WALLET_PATH,
+  GET_IFRAME_BASE_URL,
+} from "../../constants/settings";
 import { LocalStorage } from "../Storage/LocalStorage";
 import { IframeCommunicator } from "./IframeCommunicator";
 
@@ -51,7 +53,7 @@ export function createEmbeddedWalletIframeLink({
   path: string;
   queryParams?: { [key: string]: string | number };
 }) {
-  const embeddedWalletUrl = new URL(path, getPaperOriginUrl());
+  const embeddedWalletUrl = new URL(path, GET_IFRAME_BASE_URL());
   if (queryParams) {
     for (const queryKey of Object.keys(queryParams)) {
       embeddedWalletUrl.searchParams.set(

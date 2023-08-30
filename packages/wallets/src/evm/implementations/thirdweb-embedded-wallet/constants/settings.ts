@@ -1,4 +1,11 @@
+import { getPaperOriginUrl } from "@paperxyz/sdk-common-utilities";
+
 export const EMBEDDED_WALLET_PATH = "/sdk/2022-08-12/embedded-wallet";
+export const GET_IFRAME_BASE_URL = () =>
+  `${getPaperOriginUrl().replace(
+    "withpaper.com",
+    "ews.thirdweb.com",
+  )}${EMBEDDED_WALLET_PATH}`;
 
 export const WALLET_USER_DETAILS_LOCAL_STORAGE_NAME = (clientId: string) =>
   `thirdwebEwsWalletUserDetails-${clientId}`;
