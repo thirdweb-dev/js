@@ -1,5 +1,37 @@
 # @thirdweb-dev/sdk
 
+## 3.10.58
+
+### Patch Changes
+
+- [#1557](https://github.com/thirdweb-dev/js/pull/1557) [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19) Thanks [@MananTank](https://github.com/MananTank)! - Use default export for EventEmitter to fix issue with Nuxt/Vite + Yarn to fix the "Named export 'EventEmitter' not found" error
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005)]:
+  - @thirdweb-dev/chains@0.1.50
+
+## 3.10.57
+
+### Patch Changes
+
+- [#1545](https://github.com/thirdweb-dev/js/pull/1545) [`adec589e`](https://github.com/thirdweb-dev/js/commit/adec589ead8ceff1b57169e05a3e6733b4652cc7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose joinAbis() utility function
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+- Updated dependencies [[`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d), [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3), [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5)]:
+  - @thirdweb-dev/chains@0.1.49
+  - @thirdweb-dev/storage@1.2.9
+
+## 3.10.56
+
+### Patch Changes
+
+- [#1537](https://github.com/thirdweb-dev/js/pull/1537) [`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix auto-factory deployment: correct bytecode format
+
+- [#1520](https://github.com/thirdweb-dev/js/pull/1520) [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): update read calls to be centralized in contract-wrapper.ts
+
+- Updated dependencies [[`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c)]:
+  - @thirdweb-dev/chains@0.1.48
+
 ## 3.10.55
 
 ### Patch Changes

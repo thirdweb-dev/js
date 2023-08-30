@@ -29,15 +29,18 @@ import pkg from "../../../package.json";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
-  DEFAULT_TIMEOUT_IN_SECONDS = 30;
+  DEFAULT_TIMEOUT_IN_SECONDS = 60;
   DEFAULT_MAX_RETRIES = 3;
 
   private secretKey?: string;
   private clientId?: string;
+  private defaultTimeout: number;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
     this.clientId = options.clientId;
+    this.defaultTimeout =
+      options.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
   }
 
   async download(
@@ -107,6 +110,7 @@ export class StorageDownloader implements IStorageDownloader {
           authorization: `Bearer ${
             (globalThis as any).TW_AUTH_TOKEN as string
           }`,
+          "x-authorize-wallet": "true",
         };
       }
 
@@ -125,8 +129,7 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     const controller = new AbortController();
-    const timeoutInSeconds =
-      options?.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
+    const timeoutInSeconds = options?.timeoutInSeconds || this.defaultTimeout;
     const timeout = setTimeout(
       () => controller.abort(),
       timeoutInSeconds * 1000,

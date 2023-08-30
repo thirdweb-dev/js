@@ -4,6 +4,9 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://base-goerli.publicnode.com",
+    "wss://base-goerli.gateway.tenderly.co",
+    "https://base-goerli.gateway.tenderly.co",
     "https://goerli.base.org"
   ],
   "faucets": [

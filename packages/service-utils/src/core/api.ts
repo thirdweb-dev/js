@@ -6,12 +6,15 @@ export type CoreServiceConfig = {
   serviceScope: ServiceName;
   serviceApiKey: string;
   serviceAction?: string;
+  useWalletAuth?: boolean;
 };
 
 export type ApiKeyMetadata = {
   id: string;
   key: string;
   accountId: string;
+  accountStatus: "noCustomer" | "noPayment" | "validPayment" | "invalidPayment";
+  accountPlan: "free" | "enterprise";
   creatorWalletAddress: string;
   secretHash: string;
   walletAddresses: string[];
@@ -73,9 +76,10 @@ export async function fetchKeyMetadataFromApi(
 export async function fetchAccountFromApi(
   jwt: string,
   config: CoreServiceConfig,
+  useWalletAuth: boolean,
 ): Promise<ApiAccountResponse> {
   const { apiUrl, serviceApiKey } = config;
-  const url = `${apiUrl}/v1/account/me`;
+  const url = useWalletAuth ? `${apiUrl}/v1/wallet/me` : `${apiUrl}/v1/account/me`
   const response = await fetch(url, {
     method: "GET",
     headers: {
