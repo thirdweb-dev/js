@@ -140,10 +140,6 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     procedureName: keyof T;
     params: T[keyof T];
     showIframe?: boolean;
-    injectRecoveryCode?: {
-      getRecoveryCode?: (userWalletId: string) => Promise<string | undefined>;
-      isInjectRecoveryCode: boolean;
-    };
   }) {
     while (!isIframeLoaded.get(this.iframe.src)) {
       await sleep(this.POLLING_INTERVAL_SECONDS);

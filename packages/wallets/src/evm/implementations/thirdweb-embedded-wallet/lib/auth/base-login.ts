@@ -11,18 +11,12 @@ export class BaseLogin extends AbstractLogin<
   { email: string },
   { email: string; otp: string }
 > {
-  override async loginWithThirdwebModal(args?: {
-    getRecoveryCode: (userWalletId: string) => Promise<string | undefined>;
-  }): Promise<AuthLoginReturnType> {
+  override async loginWithThirdwebModal(): Promise<AuthLoginReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "loginWithThirdwebModal",
       params: undefined,
       showIframe: true,
-      injectRecoveryCode: {
-        isInjectRecoveryCode: true,
-        getRecoveryCode: args?.getRecoveryCode,
-      },
     });
     return this.postLogin(result);
   }
@@ -36,9 +30,6 @@ export class BaseLogin extends AbstractLogin<
       procedureName: "loginWithThirdwebModal",
       params: { email },
       showIframe: true,
-      injectRecoveryCode: {
-        isInjectRecoveryCode: true,
-      },
     });
     return this.postLogin(result);
   }
@@ -53,9 +44,6 @@ export class BaseLogin extends AbstractLogin<
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "verifyThirdwebEmailLoginOtp",
       params: { email, otp },
-      injectRecoveryCode: {
-        isInjectRecoveryCode: true,
-      },
     });
     return this.postLogin(result);
   }

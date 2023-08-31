@@ -1,7 +1,6 @@
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
-  AuthProvider,
 } from "../../interfaces/auth";
 import type {
   ClientIdWithQuerierType,
@@ -13,13 +12,7 @@ import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommuni
 import { BaseLogin } from "./base-login";
 
 export type AuthQuerierTypes = {
-  loginWithJwtAuthCallback: {
-    token: string;
-    authProvider: AuthProvider;
-    recoveryCode?: string;
-  };
   logout: void;
-  sendPaperEmailLoginOtp: { email: string };
 };
 
 export class Auth {
@@ -98,12 +91,10 @@ export class Auth {
    *
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link PaperEmbeddedWalletSdk.getUser} for more
    */
-  async loginWithThirdwebModal(
-    args?: Parameters<BaseLogin["loginWithThirdwebModal"]>[0],
-  ): Promise<AuthLoginReturnType> {
+  async loginWithThirdwebModal(): Promise<AuthLoginReturnType> {
     await this.preLogin();
 
-    return this.BaseLogin.loginWithThirdwebModal(args);
+    return this.BaseLogin.loginWithThirdwebModal();
   }
 
   /**
@@ -184,7 +175,9 @@ export class Auth {
    */
   async sendThirdwebEmailLoginOtp({
     email,
-  }: AuthQuerierTypes["sendPaperEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
+  }: Parameters<
+    BaseLogin["sendThirdwebEmailLoginOtp"]
+  >[0]): Promise<SendEmailOtpReturnType> {
     return this.BaseLogin.sendThirdwebEmailLoginOtp({
       email,
     });
