@@ -27,14 +27,12 @@ import {
   ForwardRequest,
   getAndIncrementNonce,
 } from "../../common/forwarder";
-import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { getDefaultGasOverrides } from "../../common/gas-price";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
-import { isBrowser } from "../../common/utils";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
-import { ChainId } from "../../constants/chains/ChainId";
 import { EventType } from "../../constants/events";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -47,7 +45,6 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { OP_STACK_CHAINS } from "../../constants";
 
 /**
  * @internal
@@ -134,88 +131,7 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
-    if (isBrowser()) {
-      // When running in the browser, let the wallet suggest gas estimates
-      // this means that the gas speed preferences set in the SDK options are ignored in a browser context
-      // but it also allows users to select their own gas speed prefs per tx from their wallet directly
-      return {};
-    }
-    const feeData = await this.getProvider().getFeeData();
-    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
-    if (supports1559) {
-      const chainId = await this.getChainID();
-      const block = await this.getProvider().getBlock("latest");
-      const baseBlockFee =
-        block && block.baseFeePerGas
-          ? block.baseFeePerGas
-          : utils.parseUnits("1", "gwei");
-      let defaultPriorityFee: BigNumber;
-      const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
-      if (opStackChainIds.includes(chainId)) {
-        // for op stack chains lower the default fee
-        defaultPriorityFee = BigNumber.from(1000000); // 0.001 gwei
-      } else if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
-        // for polygon, get fee data from gas station
-        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
-      } else {
-        // otherwise get it from ethers
-        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
-      }
-      // then add additional fee based on user preferences
-      const maxPriorityFeePerGas =
-        this.getPreferredPriorityFee(defaultPriorityFee);
-      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-      const baseMaxFeePerGas = baseBlockFee.mul(2);
-      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-      };
-    } else {
-      return {
-        gasPrice: await this.getPreferredGasPrice(),
-      };
-    }
-  }
-
-  /**
-   * Calculates the priority fee per gas according to user preferences
-   * @param defaultPriorityFeePerGas - the base priority fee
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
-    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    return txGasPrice;
-  }
-
-  /**
-   * Calculates the gas price for transactions according to user preferences
-   */
-  public async getPreferredGasPrice(): Promise<BigNumber> {
-    const gasPrice = await this.getProvider().getGasPrice();
-    const speed = this.options.gasSettings.speed;
-    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
-    let txGasPrice = gasPrice;
-    let extraTip;
-    switch (speed) {
-      case "standard":
-        extraTip = BigNumber.from(1); // min 1 wei
-        break;
-      case "fast":
-        extraTip = gasPrice.div(100).mul(5); // + 5%
-        break;
-      case "fastest":
-        extraTip = gasPrice.div(100).mul(10); // + 10%
-        break;
-    }
-    txGasPrice = txGasPrice.add(extraTip);
-    const max = utils.parseUnits(maxGasPrice.toString(), "gwei");
-    if (txGasPrice.gt(max)) {
-      txGasPrice = max;
-    }
-    return txGasPrice;
+    return getDefaultGasOverrides(this.getProvider());
   }
 
   /**

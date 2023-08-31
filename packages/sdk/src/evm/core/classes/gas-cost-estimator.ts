@@ -1,3 +1,4 @@
+import { getGasPrice } from "../../common";
 import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract, BigNumber, utils } from "ethers";
 
@@ -35,7 +36,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
-    const price = await this.contractWrapper.getPreferredGasPrice();
+    const price = await getGasPrice(this.contractWrapper.getProvider());
     const gasUnits = await this.contractWrapper.estimateGas(fn, args);
     return utils.formatEther(gasUnits.mul(price));
   }

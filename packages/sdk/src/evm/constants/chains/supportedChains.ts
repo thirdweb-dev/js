@@ -30,12 +30,3 @@ export function setSupportedChains(chains: ChainInfo[] | undefined) {
 export function getSupportedChains() {
   return supportedChains;
 }
-
-export const OP_STACK_CHAINS = [
-  Optimism,
-  Base,
-  Zora,
-  OptimismGoerli,
-  BaseGoerli,
-  ZoraTestnet,
-];

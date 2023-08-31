@@ -18,10 +18,8 @@ import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
   Celo,
-  Mumbai,
-  Polygon,
 } from "@thirdweb-dev/chains";
-import { OP_STACK_CHAINS, getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
+import { getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -35,12 +33,6 @@ export interface UserOpResult {
   transactionHash: string;
   success: boolean;
 }
-
-type FeeData = {
-  maxFeePerGas: null | BigNumber;
-  maxPriorityFeePerGas: null | BigNumber;
-  gasPrice: null | BigNumber;
-};
 
 /**
  * Base class for all Smart Wallet ERC-4337 Clients to implement.
@@ -299,9 +291,9 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      // testing dynamic estimation
-      await this.getFeeDataWithDynamicMaxPriorityFeePerGas();
-      const feeData = await this.provider.getFeeData();
+      const feeData = await getDynamicFeeData(
+        this.provider as providers.JsonRpcProvider,
+      );
       if (!maxPriorityFeePerGas) {
         maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
       }
@@ -317,40 +309,7 @@ export abstract class BaseAccountAPI {
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
-
-        const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
-        if (
-          maxPriorityFeePerGas &&
-          (chainId === Mumbai.chainId ||
-            chainId === Polygon.chainId ||
-            opStackChainIds.includes(chainId))
-        ) {
-          // for polygon/mumbai, override fee data from gas station
-          const block = await this.provider.getBlock("latest");
-          const baseBlockFee =
-            block && block.baseFeePerGas
-              ? block.baseFeePerGas
-              : utils.parseUnits("1", "gwei");
-          if (opStackChainIds.includes(chainId)) {
-            // for op stack chains lower the default fee
-            maxPriorityFeePerGas = BigNumber.from(1000000); // 0.001 gwei
-          } else if (
-            chainId === Mumbai.chainId ||
-            chainId === Polygon.chainId
-          ) {
-            maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
-          }
-          // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-          const baseMaxFeePerGas = baseBlockFee.mul(2);
-          maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-        }
       }
-
-      console.log(
-        "STATIC: eth_maxPriorityFeePerGas",
-        maxPriorityFeePerGas?.toString(),
-      );
-      console.log("STATIC: maxFeePerGas", maxFeePerGas?.toString());
     }
 
     const partialUserOp: any = {
@@ -466,32 +425,5 @@ export abstract class BaseAccountAPI {
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
     return null;
-  }
-
-  async getFeeDataWithDynamicMaxPriorityFeePerGas(): Promise<FeeData> {
-    let maxFeePerGas: null | BigNumber = null;
-    let maxPriorityFeePerGas: null | BigNumber = null;
-    const gasPrice: null | BigNumber = null;
-
-    const provider = this.provider as providers.JsonRpcProvider;
-
-    const [block, eth_maxPriorityFeePerGas] = await Promise.all([
-      await provider.getBlock("latest"),
-      await provider.send("eth_maxPriorityFeePerGas", []),
-    ]);
-
-    if (block && block.baseFeePerGas) {
-      maxPriorityFeePerGas = BigNumber.from(eth_maxPriorityFeePerGas);
-      if (maxPriorityFeePerGas) {
-        maxFeePerGas = block.baseFeePerGas.mul(2).add(maxPriorityFeePerGas);
-      }
-    }
-    console.log(
-      "DYNAMIC: eth_maxPriorityFeePerGas",
-      maxPriorityFeePerGas?.toString(),
-    );
-    console.log("DYNAMIC: maxFeePerGas", maxFeePerGas?.toString());
-
-    return { maxFeePerGas, maxPriorityFeePerGas, gasPrice };
   }
 }
