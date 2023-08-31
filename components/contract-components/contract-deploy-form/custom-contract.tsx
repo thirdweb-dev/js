@@ -23,10 +23,15 @@ import {
   AccordionPanel,
   Divider,
   Flex,
+  FormControl,
+  HStack,
+  Icon,
+  Tooltip,
 } from "@chakra-ui/react";
 import { LineaTestnet } from "@thirdweb-dev/chains";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { verifyContract } from "contract-ui/tabs/sources/page";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -35,8 +40,17 @@ import { replaceTemplateValues } from "lib/deployment/template-values";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { FiHelpCircle } from "react-icons/fi";
 import invariant from "tiny-invariant";
-import { Checkbox, Heading, Text, TrackedLink } from "tw-components";
+import {
+  Card,
+  Checkbox,
+  FormHelperText,
+  FormLabel,
+  Heading,
+  Text,
+  TrackedLink,
+} from "tw-components";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -135,6 +149,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const form = useForm<{
     addToDashboard: boolean;
+    deployDeterministic: boolean;
+    saltForCreate2: string;
+    signerAsSalt: boolean;
     deployParams: Record<string, string>;
     contractMetadata?: {
       name: string;
@@ -146,10 +163,16 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   }>({
     defaultValues: {
       addToDashboard: shouldDefaulCheckAddToDashboard,
+      deployDeterministic: false,
+      saltForCreate2: "",
+      signerAsSalt: true,
       deployParams: parseDeployParams,
     },
     values: {
       addToDashboard: shouldDefaulCheckAddToDashboard,
+      deployDeterministic: false,
+      saltForCreate2: "",
+      signerAsSalt: true,
       deployParams: parseDeployParams,
     },
     resetOptions: {
@@ -239,6 +262,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     (transactions?.length || 0) +
     (form.watch("addToDashboard") ? 1 : 0) +
     (isErc721SharedMetadadata ? 1 : 0);
+
+  const isCreate2Deployment = form.watch("deployDeterministic");
 
   return (
     <FormProvider {...form}>
@@ -472,6 +497,88 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             .
           </Text>
         </Flex>
+
+        {fullPublishMetadata.data?.deployType === "standard" && (
+          <Flex gap={4} flexDir="column">
+            <Accordion allowToggle>
+              <AccordionItem borderColor="borderColor" borderBottom="none">
+                <AccordionButton px={0}>
+                  <Text flex="1" textAlign="left">
+                    Advanced deployment options
+                  </Text>
+                  <AccordionIcon />
+                </AccordionButton>
+
+                <AccordionPanel
+                  py={4}
+                  px={0}
+                  as={Flex}
+                  flexDir="column"
+                  gap={4}
+                >
+                  <Flex alignItems="center" gap={3}>
+                    <Checkbox
+                      {...form.register("deployDeterministic")}
+                      isChecked={form.watch("deployDeterministic")}
+                    />
+                    <Tooltip
+                      label={
+                        <Card py={2} px={4} bgColor="backgroundHighlight">
+                          <Text fontSize="small" lineHeight={6}>
+                            Allows having the same contract address on multiple
+                            chains. You can control the address by specifying a
+                            salt for create2 deployment below.
+                          </Text>
+                        </Card>
+                      }
+                      isDisabled={false}
+                      p={0}
+                      bg="transparent"
+                      boxShadow="none"
+                    >
+                      <HStack>
+                        <Heading as="label" size="label.md">
+                          Deterministic address
+                        </Heading>
+                        <Icon as={FiHelpCircle} />
+                      </HStack>
+                    </Tooltip>
+                    {/* <Text mt={1}></Text> */}
+                  </Flex>
+
+                  {isCreate2Deployment && (
+                    <FormControl>
+                      <Flex alignItems="center" my={1}>
+                        <FormLabel mb={0} flex="1" display="flex">
+                          <Flex alignItems="baseline" gap={1}>
+                            Optional Salt Input
+                            <Text size="label.sm">(saltForCreate2)</Text>
+                          </Flex>
+                        </FormLabel>
+                        <FormHelperText mt={0}>string</FormHelperText>
+                      </Flex>
+                      <SolidityInput
+                        defaultValue={""}
+                        solidityType={"string"}
+                        {...form.register(`saltForCreate2`)}
+                      />
+                      <Flex alignItems="center" gap={3}>
+                        <Checkbox
+                          {...form.register("signerAsSalt")}
+                          isChecked={form.watch("signerAsSalt")}
+                        />
+
+                        <Text mt={1}>
+                          Include deployer wallet address in salt (recommended)
+                        </Text>
+                      </Flex>
+                    </FormControl>
+                  )}
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </Flex>
+        )}
 
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <NetworkSelectorButton
