@@ -146,13 +146,14 @@ const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
     "verifying" | "invalid" | "valid" | "idle"
   >("idle");
 
-  const [sentEmailInfo, setSentEmailInfo] = useState<SentEmailInfo | null>(
-    null,
-  );
+  const [sentEmailInfo, setSentEmailInfo] = useState<
+    SentEmailInfo | null | "error"
+  >(null);
 
   const recoveryCodeRequired = !!(
     props.recoveryShareManagement !== "AWS_MANAGED" &&
     sentEmailInfo &&
+    sentEmailInfo !== "error" &&
     sentEmailInfo.isNewDevice
   );
 
@@ -172,9 +173,10 @@ const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
         });
 
       setSentEmailInfo({ isNewDevice, isNewUser });
-    } catch {
+    } catch (e) {
+      console.error(e);
       setVerifyStatus("idle");
-      setSentEmailInfo(null);
+      setSentEmailInfo("error");
     }
   }, [createWalletInstance, email, props.walletConfig]);
 
@@ -342,6 +344,22 @@ const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
 
       <Spacer y="lg" />
 
+      {sentEmailInfo === "error" && (
+        <>
+          <DangerText
+            style={{
+              fontSize: fontSize.sm,
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            Failed to send OTP
+          </DangerText>
+          <Spacer y="md" />
+        </>
+      )}
+
       {!sentEmailInfo && (
         <Flex
           gap="xs"
@@ -353,7 +371,7 @@ const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
         >
           <SecondaryText
             style={{
-              fontSize: "14px",
+              fontSize: fontSize.sm,
             }}
           >
             Sending OTP
@@ -364,8 +382,7 @@ const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
 
       {sentEmailInfo && (
         <LinkButton onClick={sendEmail} type="button">
-          {" "}
-          Request new code{" "}
+          Resend OTP
         </LinkButton>
       )}
     </form>
