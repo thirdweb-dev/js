@@ -154,7 +154,8 @@ const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
     props.recoveryShareManagement !== "AWS_MANAGED" &&
     sentEmailInfo &&
     sentEmailInfo !== "error" &&
-    sentEmailInfo.isNewDevice
+    sentEmailInfo.isNewDevice &&
+    !sentEmailInfo.isNewUser
   );
 
   const sendEmail = useCallback(async () => {
