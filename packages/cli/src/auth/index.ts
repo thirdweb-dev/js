@@ -43,7 +43,7 @@ export async function loginUser(
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
-    globalThis["TW_AUTH_TOKEN"] = authToken;
+    globalThis["TW_CLI_AUTH_TOKEN"] = authToken;
     return authToken;
   } else {
     const token = await authenticateUser({ browser: true, configPaths });
@@ -51,7 +51,7 @@ export async function loginUser(
       throw new Error("Failed to login");
     }
 
-    globalThis["TW_AUTH_TOKEN"] = token;
+    globalThis["TW_CLI_AUTH_TOKEN"] = token;
     return token;
   }
 }
