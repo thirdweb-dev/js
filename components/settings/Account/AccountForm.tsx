@@ -37,6 +37,7 @@ interface AccountFormProps {
   padded?: boolean;
   optional?: boolean;
   trackingCategory?: string;
+  disableUnchanged?: boolean;
   onSave?: () => void;
 }
 
@@ -49,6 +50,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   horizontal = false,
   previewEnabled = false,
   hideBillingButton = false,
+  disableUnchanged = false,
   padded = true,
   optional = false,
 }) => {
@@ -222,7 +224,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
                 colorScheme="blue"
                 isDisabled={
                   updateMutation.isLoading ||
-                  (!optional && !form.formState.isDirty)
+                  (disableUnchanged && !form.formState.isDirty)
                 }
                 isLoading={updateMutation.isLoading}
               >

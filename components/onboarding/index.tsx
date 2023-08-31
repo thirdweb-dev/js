@@ -5,7 +5,6 @@ import { AccountForm } from "components/settings/Account/AccountForm";
 import { useEffect, useState } from "react";
 import { Heading, Text } from "tw-components";
 import { OnboardingModal } from "./Modal";
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { useRouter } from "next/router";
 
 export const Onboarding: React.FC = () => {

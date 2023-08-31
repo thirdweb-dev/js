@@ -9,11 +9,9 @@ import {
   HStack,
   Icon,
   Input,
-  List,
   ListItem,
   OrderedList,
   Switch,
-  Tooltip,
   VStack,
 } from "@chakra-ui/react";
 import { ConnectWallet, useAddress, useAuth } from "@thirdweb-dev/react";

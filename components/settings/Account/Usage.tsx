@@ -1,26 +1,29 @@
-import { UsageByService } from "@3rdweb-sdk/react/hooks/useApi";
+import { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
 import { SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
 import { UsageCard } from "./UsageCard";
 import { useMemo } from "react";
 import { Heading } from "tw-components";
 
 interface UsageProps {
-  usage: UsageByService | undefined;
+  usage: UsageBillableByService | undefined;
   usageLoading: boolean;
 }
 
-export const Usage: React.FC<UsageProps> = ({ usage, usageLoading }) => {
+export const Usage: React.FC<UsageProps> = ({
+  usage: usageData,
+  usageLoading,
+}) => {
   const bundlerTotal = useMemo(() => {
-    if (!usage?.bundler || usage.bundler.length === 0) {
+    if (!usageData?.billableUsd?.bundler) {
       return <i>N/A</i>;
     }
-    const total = usage.bundler?.[0].billableUsd || 0;
+    const total = usageData.billableUsd.bundler;
 
     return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: "USD",
     }).format(total);
-  }, [usage]);
+  }, [usageData]);
 
   return (
     <VStack gap={8} w="full">

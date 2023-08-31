@@ -6,7 +6,6 @@ import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
 import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
 import { NavigationCard } from "components/dashboard/NavigationCard";
-import { AnnouncementCard } from "components/notices/AnnouncementCard";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
@@ -58,7 +57,7 @@ const Dashboard: ThirdwebNextPage = (
 
   return (
     <Flex flexDir="column" gap={4}>
-      <AnnouncementCard />
+      {/* Any announcements: <AnnouncementCard /> */}
       <SimpleGrid
         columns={{ base: 1, lg: 4 }}
         gap={16}

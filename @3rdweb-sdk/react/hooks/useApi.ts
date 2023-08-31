@@ -86,11 +86,14 @@ export interface UpdateKeyInput {
 export interface UsageBundler {
   chainId: number;
   sumTransactionFee: number;
-  sumTransactionFeeUsd: number;
-  billableUsd: number;
 }
-export interface UsageByService {
-  bundler: UsageBundler[];
+export interface UsageBillableByService {
+  usage: {
+    bundler: UsageBundler[];
+  };
+  billableUsd: {
+    bundler: number;
+  };
 }
 
 export function useAccount() {
@@ -137,7 +140,7 @@ export function useAccountUsage() {
         throw new Error(json.error?.message || json.error);
       }
 
-      return json.data as UsageByService;
+      return json.data as UsageBillableByService;
     },
     { enabled: !!user?.address },
   );

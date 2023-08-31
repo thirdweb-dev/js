@@ -5,15 +5,11 @@ import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { Badge, Heading, Text } from "tw-components";
+import { Heading } from "tw-components";
 import { Usage } from "components/settings/Account/Usage";
 import { BillingPeriod } from "components/settings/Account/BillingPeriod";
 import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-
-const PLAN_TITLE = {
-  free: "Starter",
-  enterprise: "Pro",
-};
+import { BillingUsage } from "components/settings/Account/BillingUsage";
 
 const SettingsUsagePage: ThirdwebNextPage = () => {
   const address = useAddress();
@@ -44,19 +40,7 @@ const SettingsUsagePage: ThirdwebNextPage = () => {
           </Heading>
         </Flex>
         <HStack justifyContent="space-between">
-          <HStack>
-            <Text size="body.md">Your current plan:</Text>
-            <Badge
-              borderRadius="full"
-              size="label.sm"
-              variant="subtle"
-              px={3}
-              py={1.5}
-            >
-              {(PLAN_TITLE as any)[account.plan]}
-            </Badge>
-          </HStack>
-
+          <BillingUsage account={account} usage={usageQuery.data} />
           <BillingPeriod account={account} />
         </HStack>
       </Flex>
