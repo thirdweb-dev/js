@@ -47,11 +47,11 @@ const main = async () => {
     $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
     \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
      \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
-    console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
+    console.info(`\n 💎 thirdweb v${cliVersion} 💎\n`);
   }
 
   program
-    .name("thirdweb-cli")
+    .name("thirdweb")
     .description("Official thirdweb command line interface")
     .version(cliVersion, "-v, --version")
     .option("--skip-update-check", "Skip check for auto updates")
@@ -296,7 +296,7 @@ const main = async () => {
 
   program
     .command("deploy")
-    .description("Deploy your (or team) contracts securely to blockchains")
+    .description("Securely deploy your contract to any EVM network without having to deal with scripts, private keys, or ABIs")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
@@ -351,54 +351,9 @@ const main = async () => {
     });
 
   program
-    .command("release")
-    .description("[Deprecated] use 'publish' instead.")
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option(
-      "-f, --file [name]",
-      "Filter for contract files that contain the file name",
-    )
-    .option(
-      "-cn, --contract-name [name]",
-      "Filter for contracts that contain this contract name",
-    )
-    .option("--clean", "clear the cache before building")
-    .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-d, --debug", "show debug logs")
-    .option("--ci", "Continuous Integration mode")
-    .option("-k, --key <key>", "API secret key to authorize usage")
-    .action(async (options) => {
-      let secretKey = "";
-      // If no key is passed in, prompt the user to login. If it is passed in, use it.
-      if (!options.key) {
-        await loginUser({
-          credsConfigPath,
-          cliWalletPath,
-          tokenPath,
-        });
-      } else {
-        // Don't need to validate anymore? Also, should probably rely on the underlying service to throw that error.
-        await validateKey(options.key);
-        secretKey = options.key;
-      }
-      logger.warn(
-        "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
-      );
-      const url = await processProject(options, "publish", secretKey);
-      info(
-        `Open this link to publish your contracts: ${chalk.blueBright(
-          url.toString(),
-        )}`,
-      );
-      if (url && !options.ci) {
-        await open(url.toString());
-      }
-    });
-
-  program
     .command("publish")
     .description(
-      "Publish your protocol so other devs can deploy them and unlock SDKs, Dashboards and Analytics",
+      "Get a shareable page for your contract with a README, changelog, and version control. Enable one-click deploys to any EVM network",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option(
@@ -537,9 +492,8 @@ const main = async () => {
   program
     .command("login")
     .description(
-      "Authenticate with the thirdweb CLI using your API secret key or replace an existing API secret key",
+      "Authorize your device to use the thirdweb CLI by authenticating with your wallet from our dashboard",
     )
-    .option("-n, --new", "Login with a new API secret key", false)
     .action(async (options) => {
       await loginUser({
         credsConfigPath,
@@ -551,7 +505,7 @@ const main = async () => {
   program
     .command("logout")
     .description(
-      "Logout of the thirdweb CLI, effectively removing your API secret key from your machine",
+      "Logout of the thirdweb CLI",
     )
     .action(async () => {
       await logoutUser(credsConfigPath, tokenPath, cliWalletPath);

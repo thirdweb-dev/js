@@ -43,7 +43,7 @@ export async function loginUser(
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
-    globalThis["TW_AUTH_TOKEN"] = authToken;
+    globalThis["TW_CLI_AUTH_TOKEN"] = authToken;
     return authToken;
   } else {
     const token = await authenticateUser({ browser: true, configPaths });
@@ -51,7 +51,7 @@ export async function loginUser(
       throw new Error("Failed to login");
     }
 
-    globalThis["TW_AUTH_TOKEN"] = token;
+    globalThis["TW_CLI_AUTH_TOKEN"] = token;
     return token;
   }
 }
@@ -59,7 +59,7 @@ export async function loginUser(
 export async function logoutUser(credsConfigPath: string, tokenPath: string, cliWalletPath: string) {
   try {
     ora("Logging out...").start();
-    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath);
+    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath) && fs.existsSync(cliWalletPath);
     if (!dirExists) {
       ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
       return;
@@ -129,16 +129,9 @@ export const authenticateUser = async (
           }
         });
       }
-
-      const allowedDomains = [
-        "https://www.thirdweb.com",
-      ]
-      const origin = req.headers.origin as string;
-
-      if (allowedDomains.includes(origin) || (origin && origin.endsWith('.thirdweb-preview.com'))) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Methods', '*');
-      }
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Origin', "https://thirdweb.com");
+      res.setHeader('Access-Control-Allow-Methods', 'POST');
 
       if (req.method === 'OPTIONS') {
         res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
@@ -204,16 +197,15 @@ export const authenticateUser = async (
 
     server.listen(8976);
   });
-  if (props?.browser) {
-    console.log(chalk.yellow(`Automatically opening a link to authenticate with our dashboard...\n`))
-    waitForDashboard.start();
-    // Adding this timeout since it feels weird for the browser to open before the spinner.
-    setTimeout(async () => {
-      await open(urlToOpen);
-    }, 2000);
-  } else {
-    logger.info(`Visit this link to authenticate: ${urlToOpen}`);
-  }
+  console.log(`Automatically attempting to open a link to authenticate with our dashboard...\n`);
+  waitForDashboard.start();
+  // Adding this timeout since it feels weird for the browser to open before the spinner.
+  setTimeout(async () => {
+    await open(urlToOpen);
+  }, 2000);
+
+  console.log(chalk.yellow(`If the browser doesn't open, please use this link to authenticate:\n`));
+  console.log(chalk.yellow(urlToOpen + '\n'));
 
   return Promise.race([timerPromise, loginPromise]);
 };
