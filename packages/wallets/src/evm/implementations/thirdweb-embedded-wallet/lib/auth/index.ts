@@ -75,12 +75,12 @@ export class Auth {
 
   /**
    * @description
-   * Used to log the user into their Paper wallet on your platform via a myriad of auth providers
+   * Used to log the user into their thirdweb wallet on your platform via a myriad of auth providers
    *
    * @example
-   * const Paper = new PaperEmbeddedWalletSdk({clientId: "YOUR_CLIENT_ID", chain: "Polygon"})
+   * const thirdweb = new ThirdwebEmbeddedWalletSdk({clientId: "YOUR_CLIENT_ID", chain: "Polygon"})
    * try {
-   *   const user = await Paper.auth.loginWithPaperModal();
+   *   const user = await Thirdweb.auth.loginWithThirdwebModal();
    *   // user is now logged in
    * } catch (e) {
    *   // User closed modal or something else went wrong during the authentication process
@@ -89,7 +89,7 @@ export class Auth {
    *
    * @param {(userWalletId: string) => Promise<string | undefined>} args.getRecoveryCode Only present when using RecoveryShareManagement.USER_MANAGED recovery share management. A function that returns the recovery code for a given userWalletId.
    *
-   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link PaperEmbeddedWalletSdk.getUser} for more
+   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
    */
   async loginWithThirdwebModal(): Promise<AuthLoginReturnType> {
     await this.preLogin();
@@ -99,46 +99,21 @@ export class Auth {
 
   /**
    * @description
-   * Used to log the user into their Paper wallet using email OTP
+   * Used to log the user into their thirdweb wallet using email OTP
    *
    * @example
    *  // Basic Flow
-   *  const Paper = new PaperEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
+   *  const thirdweb = new ThirdwebEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
    *  try {
    *    // prompts user to enter the code they received
-   *    const user = await Paper.auth.loginWithPaperEmailOtp({ email : "you@example.com" });
+   *    const user = await thirdweb.auth.loginWithThirdwebEmailOtp({ email : "you@example.com" });
    *    // user is now logged in
-   *  } catch (e) {
-   *    // User closed the OTP modal or something else went wrong during the authentication process
-   *    console.error(e)
-   *  }
-   *
-   * @example
-   *  // If you want users to never be prompted for a recovery code.
-   *  const Paper = new PaperEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
-   *  try {
-   *    const email = "you@example.com";
-   *
-   *    // getRecoveryCodeForUser is a function to get a recovery code based on an email
-   *    // you write the function below
-   *    const recoveryCode: string | undefined = await getRecoveryCodeForUser(email);
-   *
-   *    // prompts user to enter the code they received
-   *    // Because you pass in a recovery code wherever possible, for existing users on a new device, they would not be prompted to enter the recovery code flow
-   *    const user = await Paper.auth.loginWithPaperEmailOtp({ email, recoveryCode });
-   *    // user is now logged in
-   *    if (user.authDetails.recoveryCode) {
-   *      // user has a recovery code that you can store to pass in to the function above
-   *      // you write the function below
-   *      await storeRecoveryCodeForUser(email, user.authDetails.recoveryCode);
-   *    }
    *  } catch (e) {
    *    // User closed the OTP modal or something else went wrong during the authentication process
    *    console.error(e)
    *  }
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
-   * @param {string} props.recoveryCode Only present when using RecoveryShareManagement.USER_MANAGED recovery share management. Specifies the recoveryCode for the given email. This will set recoveryCode as the code for the user if they are new, or user recoveryCode for the user if they are an existing user
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
    */
   async loginWithThirdwebEmailOtp(
@@ -153,10 +128,10 @@ export class Auth {
    * You need to then call {@link Auth.verifyThirdwebEmailLoginOtp} in order to complete the login process
    *
    * @example
-   *  const Paper = new PaperEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
+   *  const thirdweb = new ThirdwebEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
    *  // sends user an OTP code
    * try {
-   *    const { isNewUser } = await Paper.auth.sendPaperEmailLoginOtp({ email : "you@example.com" });
+   *    await thirdweb.auth.sendThirdwebEmailLoginOtp({ email : "you@example.com" });
    * } catch(e) {
    *    // Error Sending user's email an OTP code
    *    console.error(e);
@@ -164,7 +139,7 @@ export class Auth {
    *
    * // Then when your user is ready to verify their OTP
    * try {
-   *    const user = await Paper.auth.verifyPaperEmailLoginOtp({ email: "you@example.com", otp: "6-DIGIT_CODE_HERE", recoveryCode: "Required if user is an existing user. i.e. !isNewUser"});
+   *    const user = await thirdweb.auth.verifyThirdwebEmailLoginOtp({ email: "you@example.com", otp: "6-DIGIT_CODE_HERE" });
    * } catch(e) {
    *    // Error verifying the OTP code
    *    console.error(e)
@@ -185,13 +160,12 @@ export class Auth {
 
   /**
    *  @description
-   * Used to verify the otp that the user receives from  Paper
+   * Used to verify the otp that the user receives from thirdweb
    *
-   * See {@link Auth.sendThirdwebEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithPaperEmailOtp` with `verifyPaperEmailLoginOtp`
+   * See {@link Auth.sendThirdwebEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithThirdwebEmailOtp` with `verifyThirdwebEmailLoginOtp`
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
    * @param {string} props.otp The code that the user received in their email
-   * @param {string} props.recoveryCode The code that is first sent to the user when they sign up. Required if user is an existing user. i.e. !isNewUser from return params of {@link Auth.sendThirdwebEmailLoginOtp}
    * @returns {{user: InitializedUser}} An InitializedUser object containing the user's status, wallet, authDetails, and more
    */
   async verifyThirdwebEmailLoginOtp(
