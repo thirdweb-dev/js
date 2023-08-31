@@ -97,10 +97,10 @@ export async function getShares<
   }
 
   // console.log("calling getUserShares", getShareUrl);
-  const { authShare: _authShare, maybeEncryptedRecoveryShares } =
-    await getUserShares(clientId, getShareUrl);
+  const userShares = await getUserShares(clientId, getShareUrl);
+  console.log("after getUserShares", userShares);
+  const { authShare: _authShare, maybeEncryptedRecoveryShares } = userShares;
 
-  console.log("after getUserShares", _authShare, maybeEncryptedRecoveryShares);
   let recoverShareToReturn: string | undefined;
   if (recoveryShare.toRetrieve) {
     if (!maybeEncryptedRecoveryShares?.length) {
