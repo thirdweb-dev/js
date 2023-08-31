@@ -12,6 +12,8 @@ describe("authorizeClient", () => {
     bundleIds: ["com.example.app"],
     services: [],
     accountId: "test-account-id",
+    accountStatus: "noCustomer",
+    accountPlan: "free",
   };
 
   const validAuthOptions: ClientAuthorizationPayload = {

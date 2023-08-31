@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Horizen EON",
+  "name": "Horizen EON Mainnet",
   "shortName": "EON",
   "chain": "EON",
   "icon": {
@@ -11,7 +11,8 @@ export default {
   },
   "rpc": [
     "https://horizen-eon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eon-rpc.horizenlabs.io/ethv1"
+    "https://eon-rpc.horizenlabs.io/ethv1",
+    "https://rpc.ankr.com/horizen_eon"
   ],
   "features": [
     {

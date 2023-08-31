@@ -12,10 +12,7 @@ export * from "./addresses/getDefaultTrustedForwarders";
 export * from "./chains/ChainId";
 export * from "./chains/SUPPORTED_CHAIN_ID";
 export * from "./chains/SUPPORTED_CHAIN_IDS";
-export {
-  setSupportedChains,
-  getSupportedChains,
-} from "./chains/supportedChains";
+export * from "./chains/supportedChains";
 
 export * from "./contract";
 export * from "./currency";
