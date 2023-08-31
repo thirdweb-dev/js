@@ -289,7 +289,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         bundleId ? "react-native" : isBrowser() ? "browser" : "node",
       );
 
-      // if we have a authorization token on global context then add that to the headers
+      // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
       if (
         typeof globalThis !== "undefined" &&
         "TW_AUTH_TOKEN" in globalThis &&
@@ -298,6 +298,18 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.setRequestHeader(
           "authorization",
           `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
+        );
+      }
+
+      // CLI auth token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        xhr.setRequestHeader(
+          "authorization",
+          `Bearer ${(globalThis as any).TW_CLI_AUTH_TOKEN as string}`,
         );
         xhr.setRequestHeader(
           "x-authorize-wallet",
@@ -331,13 +343,23 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
     }
 
-    // if we have a authorization token on global context then add that to the headers
+    // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
     if (
       typeof globalThis !== "undefined" &&
       "TW_AUTH_TOKEN" in globalThis &&
       typeof (globalThis as any).TW_AUTH_TOKEN === "string"
     ) {
       headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
+        }`;
+    }
+
+    // CLI auth token
+    if (
+      typeof globalThis !== "undefined" &&
+      "TW_CLI_AUTH_TOKEN" in globalThis &&
+      typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+    ) {
+      headers["authorization"] = `Bearer ${(globalThis as any).TW_CLI_AUTH_TOKEN as string
         }`;
       headers["x-authorize-wallet"] = "true";
     }
@@ -357,14 +379,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           "Unauthorized - You don't have permission to use this service.",
         );
       }
-      throw new Error("Failed to upload files to IPFS");
+      throw new Error(`Failed to upload files to IPFS - ${res.status} - ${res.statusText} - ${await res.text()}`);
     }
 
     const body = await res.json();
 
     const cid = body.IpfsHash;
     if (!cid) {
-      throw new Error("Failed to upload files to IPFS");
+      throw new Error("Failed to upload files to IPFS - Bad CID");
     }
 
     if (options?.uploadWithoutDirectory) {

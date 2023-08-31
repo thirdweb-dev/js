@@ -1,5 +1,6 @@
 import type { ServiceName } from "./services";
 
+
 export type CoreServiceConfig = {
   enforceAuth: boolean;
   apiUrl: string;
@@ -64,11 +65,15 @@ export async function fetchKeyMetadataFromApi(
       "content-type": "application/json",
     },
   });
-  let json: ApiResponse
+  let json: ApiResponse;
   try {
     json = await response.json();
   } catch (e) {
-    throw new Error(`Error fetching key metadata from API: ${response.status} - ${response.statusText} - ${await response.text()}`);
+    throw new Error(
+      `Error fetching key metadata from API: ${response.status} - ${
+        response.statusText
+      } - ${await response.text()}`,
+    );
   }
   return json;
 }
@@ -79,7 +84,9 @@ export async function fetchAccountFromApi(
   useWalletAuth: boolean,
 ): Promise<ApiAccountResponse> {
   const { apiUrl, serviceApiKey } = config;
-  const url = useWalletAuth ? `${apiUrl}/v1/wallet/me` : `${apiUrl}/v1/account/me`
+  const url = useWalletAuth
+    ? `${apiUrl}/v1/wallet/me`
+    : `${apiUrl}/v1/account/me`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -88,11 +95,15 @@ export async function fetchAccountFromApi(
       authorization: `Bearer ${jwt}`,
     },
   });
-  let json: ApiAccountResponse
+  let json: ApiAccountResponse;
   try {
     json = await response.json();
   } catch (e) {
-    throw new Error(`Error fetching account from API: ${response.status} - ${response.statusText} - ${await response.text()}`);
+    throw new Error(
+      `Error fetching account from API: ${response.status} - ${
+        response.statusText
+      } - ${await response.text()}`,
+    );
   }
   return json;
 }
