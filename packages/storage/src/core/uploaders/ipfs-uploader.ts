@@ -379,14 +379,14 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           "Unauthorized - You don't have permission to use this service.",
         );
       }
-      throw new Error("Failed to upload files to IPFS");
+      throw new Error(`Failed to upload files to IPFS - ${res.status} - ${res.statusText} - ${await res.text()}`);
     }
 
     const body = await res.json();
 
     const cid = body.IpfsHash;
     if (!cid) {
-      throw new Error("Failed to upload files to IPFS");
+      throw new Error("Failed to upload files to IPFS - Bad CID");
     }
 
     if (options?.uploadWithoutDirectory) {
