@@ -75,7 +75,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
             console.warn("thirdweb Iframe not found");
             return;
           }
-          this.onIframeLoadHandler(iframe, onIframeInitialize);
+          this.onIframeLoadHandler(iframe, onIframeInitialize)();
         }
       };
       window.addEventListener("message", onIframeLoaded);
