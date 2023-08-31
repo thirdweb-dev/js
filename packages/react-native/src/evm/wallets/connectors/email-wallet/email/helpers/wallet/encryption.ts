@@ -55,6 +55,8 @@ export async function encryptShareWeb(
   const key = await getEncryptionKey(pwd, salt);
   const keyBase64 = Buffer.from(key).toString("base64");
 
+  console.log("Calling encrypt:", pwd, keyBase64, salt, normalizedShare);
+
   const encryptedValue = await AesGcmCrypto.encrypt(
     bufferToBase64(normalizedShare),
     false,
@@ -88,7 +90,7 @@ export async function decryptShareWeb(
 
   const key = await getEncryptionKey(pwd, base64ToBuffer(salt));
 
-  // console.log("Calling decrypt", pwd);
+  console.log("Calling decrypt", pwd);
   const normalizedShare = await AesGcmCrypto.decrypt(
     encryptedShare,
     key,
@@ -105,6 +107,8 @@ export async function decryptShareWeb(
   //   normalizedEncryptedShare,
   // );
   // const result = new TextDecoder().decode(normalizedShare);
+
+  console.log("decrypted share", normalizedShare);
 
   return normalizedShare;
 }

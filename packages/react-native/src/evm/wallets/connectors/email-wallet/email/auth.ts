@@ -94,7 +94,7 @@ export async function validateEmailOTP({
     ({ verifiedToken, verifiedTokenJwtString } =
       await generateAuthTokenFromCognitoEmailOtp(session, clientId));
   } catch (e) {
-    // console.log("Apparently the user did not enter the right code", e);
+    console.log("Apparently the user did not enter the right code", e);
     throw new Error(`Invalid OTP ${e}`);
   }
 
@@ -112,7 +112,7 @@ export async function validateEmailOTP({
 
     await postPaperAuth(storedToken, clientId);
 
-    // console.log("storedToken", storedToken);
+    console.log("storedToken", storedToken);
     return { storedToken };
   } catch (e) {
     throw new Error(

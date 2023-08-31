@@ -27,7 +27,7 @@ export async function postPaperAuth(
     await setAuthTokenClient(storedToken.cookieString, clientId);
   }
 
-  // console.log('setWalletUserDetails', !!storedToken.cookieString);
+  console.log("setWalletUserDetails", !!storedToken.cookieString);
 
   await setWallerUserDetails({
     clientId,
@@ -35,15 +35,15 @@ export async function postPaperAuth(
     email: storedToken.authDetails.email,
   });
 
-  // console.log('setWalletUserDetails done');
+  console.log("setWalletUserDetails done");
 
   if (storedToken.isNewUser) {
-    // console.log('isNewUser');
+    console.log("isNewUser");
     const recoveryCode = await getCognitoRecoveryPassword(clientId);
     await setUpNewUserWallet(recoveryCode, clientId);
   } else {
     try {
-      // console.log('not new user', clientId);
+      console.log("not new user", clientId);
       // existing device share
       await getDeviceShare(clientId);
     } catch (e) {
@@ -53,7 +53,7 @@ export async function postPaperAuth(
         e,
       );
       const recoveryCode = await getCognitoRecoveryPassword(clientId);
-      // console.log('recoveryCode', recoveryCode);
+      console.log("recoveryCode", recoveryCode);
 
       try {
         await setUpShareForNewDevice({

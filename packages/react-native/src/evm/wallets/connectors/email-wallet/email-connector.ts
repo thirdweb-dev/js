@@ -48,8 +48,6 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
         otp,
         email: this.email,
       });
-
-      // console.log("EmailCOnnector.response", !!response);
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
       return;
@@ -101,7 +99,6 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
       return this.signer;
     }
 
-    // console.log("clientId", this.options.clientId);
     let signer;
     try {
       signer = await getEthersSigner(this.options.clientId);

@@ -20,8 +20,8 @@ export const authFetchEmbeddedWalletUser = async (
   props: Parameters<typeof fetch>[1],
 ): Promise<Response> => {
   const authTokenClient = await getAuthTokenClient(clientId);
-  // console.log('authShareClient', authShareClient);
-  // console.log('url', url);
+  console.log("authShareClient", authTokenClient);
+  console.log("url", url);
   const params = { ...props };
   params.headers = params?.headers
     ? {
@@ -37,7 +37,7 @@ export const authFetchEmbeddedWalletUser = async (
         }`,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       };
-  // console.log("params", { params });
+  console.log("params", { params });
   return fetch(url, params);
 };
 
@@ -101,7 +101,9 @@ export async function generateAuthTokenFromCognitoEmailOtp(
       `Something went wrong generating auth token from user cognito email otp. ${error}`,
     );
   }
-  return (await resp.json()) as {
+  const respJ = await resp.json();
+  console.log("verify cognito respJ", respJ);
+  return respJ as {
     verifiedToken: {
       rawToken: string;
       authDetails: {
@@ -184,8 +186,8 @@ export async function storeUserShares({
 }
 
 export async function getUserShares(clientId: string, getShareUrl: URL) {
-  // console.log("getUserShares.url", getShareUrl.href);
-  // console.log("getUserShares.clientId", clientId);
+  console.log("getUserShares.url", getShareUrl.href);
+  console.log("getUserShares.clientId", clientId);
   const resp = await authFetchEmbeddedWalletUser(
     { clientId },
     getShareUrl.href,
@@ -193,6 +195,7 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
       method: "GET",
     },
   );
+  console.log("fetchEbmeddedWalletUser.resp.ok", resp.ok);
   if (!resp.ok) {
     const { error } = await resp.json();
     throw new Error(
@@ -204,8 +207,10 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
     );
   }
 
+  const respJ = await resp.json();
+  console.log("fetchEbmeddedWalletUser.resp.ok", { respJ });
   try {
-    return (await resp.json()) as {
+    return respJ as {
       authShare?: string;
       maybeEncryptedRecoveryShares?: string[];
     };

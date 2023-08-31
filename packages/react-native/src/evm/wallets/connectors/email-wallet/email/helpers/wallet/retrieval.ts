@@ -33,14 +33,14 @@ export function getUserEtherJsWalletFromShares(args: {
  * Will throw if called on a new device // user not logged in
  */
 export async function getExistingUserEtherJsWallet(clientId: string) {
-  // console.log("getExistingUserEtherJsWallet");
+  console.log("getExistingUserEtherJsWallet");
   const { authShare, deviceShare } = await getShares({
     clientId,
     authShare: { toRetrieve: true },
     deviceShare: { toRetrieve: true },
     recoveryShare: { toRetrieve: false },
   });
-  // console.log("authShare", authShare);
+  console.log("authShare", authShare);
   return getUserEtherJsWalletFromShares({
     shares: [authShare, deviceShare],
   });
@@ -96,11 +96,11 @@ export async function getShares<
     getShareUrl.searchParams.append(queryKey, queryParams[queryKey].toString());
   }
 
-  // console.log("calling getUserShares", getShareUrl);
+  console.log("calling getUserShares", getShareUrl);
   const { authShare: _authShare, maybeEncryptedRecoveryShares } =
     await getUserShares(clientId, getShareUrl);
 
-  // console.log("after getUserShares", _authShare);
+  console.log("after getUserShares", _authShare);
   let recoverShareToReturn: string | undefined;
   if (recoveryShare.toRetrieve) {
     if (!maybeEncryptedRecoveryShares?.length) {
@@ -125,6 +125,8 @@ export async function getShares<
       throw new Error("Invalid recovery code.");
     }
   }
+
+  console.log("recoverShareToReturn", recoverShareToReturn);
 
   let deviceShareToReturn: string | undefined;
   try {
@@ -166,7 +168,7 @@ export async function setUpShareForNewDevice({
   recoveryCode: string;
   clientId: string;
 }): Promise<SetUpWalletRpcReturnType> {
-  // console.log("setupsharefornewdevice");
+  console.log("setupsharefornewdevice");
   const { recoveryShare, authShare } = await getShares({
     clientId,
     authShare: { toRetrieve: true },
@@ -176,6 +178,8 @@ export async function setUpShareForNewDevice({
   const shares = [recoveryShare, authShare];
   const deviceShare = getWalletShareById(shares, DEVICE_SHARE_ID);
   const walletAddress = getWalletAddressFromShares([recoveryShare, authShare]);
+
+  console.log("DeviceShare", deviceShare);
   const maybeDeviceShare = await storeShares({
     clientId,
     walletAddress,

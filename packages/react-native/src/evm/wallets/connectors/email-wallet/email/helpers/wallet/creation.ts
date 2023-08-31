@@ -85,13 +85,13 @@ function createWalletShares(): {
   const privateKeyHex = Buffer.from(`thirdweb_${wallet.privateKey}`).toString(
     "hex",
   );
-  // console.log('privateKeyHex', privateKeyHex);
+  console.log("privateKeyHex", privateKeyHex);
   // Potential source of share corruption through tampering
   // https://hackerone.com/reports/1884071
   const shares = secrets.share(privateKeyHex, 3, 2);
 
-  // console.log('shares', shares);
-  // console.log('address', wallet.address);
+  console.log("shares", shares);
+  console.log("address", wallet.address);
   return {
     publicAddress: wallet.address,
     shares: [shares[0], shares[1], shares[2]],
