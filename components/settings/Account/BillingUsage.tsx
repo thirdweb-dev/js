@@ -34,7 +34,11 @@ export const BillingUsage: React.FC<BillingUsageProps> = ({
   }, [usageData]);
 
   return (
-    <HStack gap={4}>
+    <HStack
+      flexDir={{ base: "column", lg: "row" }}
+      alignItems={{ base: "flex-start", lg: "center" }}
+      gap={4}
+    >
       <HStack>
         <Text size="label.md">Your current plan:</Text>
         <Badge

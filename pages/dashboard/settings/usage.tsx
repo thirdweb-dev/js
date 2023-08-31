@@ -39,7 +39,11 @@ const SettingsUsagePage: ThirdwebNextPage = () => {
             Usage
           </Heading>
         </Flex>
-        <HStack justifyContent="space-between">
+        <HStack
+          justifyContent="space-between"
+          flexDir={{ base: "column", lg: "row" }}
+          alignItems={{ base: "flex-start", lg: "center" }}
+        >
           <BillingUsage account={account} usage={usageQuery.data} />
           <BillingPeriod account={account} />
         </HStack>
