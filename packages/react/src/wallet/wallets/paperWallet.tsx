@@ -15,7 +15,7 @@ import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
 import { OTPInput } from "../../components/OTPInput";
-import { ModalTitle } from "../../components/modalElements";
+import { BackButton, ModalTitle } from "../../components/modalElements";
 import { Spacer } from "../../components/Spacer";
 import { DangerText, NeutralText, SecondaryText } from "../../components/text";
 import { Button } from "../../components/buttons";
@@ -25,6 +25,10 @@ import { FadeIn } from "../../components/FadeIn";
 import { Input } from "../../components/formElements";
 
 type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
+type RecoveryShareManagement = Exclude<
+  PaperWalletAdditionalOptions["advancedOptions"],
+  undefined
+>["recoveryShareManagement"];
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
@@ -34,7 +38,14 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
       return new PaperWallet({ ...options, ...config });
     },
     selectUI: PaperSelectionUI,
-    connectUI: PaperConnectionUI,
+    connectUI: (props) => (
+      <PaperConnectionUI
+        {...props}
+        recoveryShareManagement={
+          config.advancedOptions?.recoveryShareManagement
+        }
+      />
+    ),
   };
 };
 
@@ -61,7 +72,11 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
   );
 };
 
-const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
+type ConnectUIPropsWithOptions = ConnectUIProps<PaperWallet> & {
+  recoveryShareManagement: RecoveryShareManagement;
+};
+
+const PaperConnectionUI: React.FC<ConnectUIPropsWithOptions> = (props) => {
   // login with google
   if (!props.selectionData) {
     return <LoginWithGoogle {...props} />;
@@ -71,7 +86,7 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
   return <LoginWithEmailOTP {...props} />;
 };
 
-const LoginWithGoogle: React.FC<ConnectUIProps<PaperWallet>> = ({
+const LoginWithGoogle: React.FC<ConnectUIPropsWithOptions> = ({
   close,
   walletConfig,
   open,
@@ -119,7 +134,7 @@ type SentEmailInfo = {
   isNewUser: boolean;
 };
 
-const LoginWithEmailOTP: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
+const LoginWithEmailOTP: React.FC<ConnectUIPropsWithOptions> = (props) => {
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");
@@ -135,7 +150,11 @@ const LoginWithEmailOTP: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
     null,
   );
 
-  const recoveryCodeRequired = !!(sentEmailInfo && sentEmailInfo.isNewDevice);
+  const recoveryCodeRequired = !!(
+    props.recoveryShareManagement !== "AWS_MANAGED" &&
+    sentEmailInfo &&
+    sentEmailInfo.isNewDevice
+  );
 
   const sendEmail = useCallback(async () => {
     setOtpInput("");
@@ -210,6 +229,9 @@ const LoginWithEmailOTP: React.FC<ConnectUIProps<PaperWallet>> = (props) => {
         e.preventDefault();
       }}
     >
+      <BackButton onClick={props.goBack} />
+      <Spacer y="lg" />
+
       <ModalTitle
         style={{
           textAlign: "center",
