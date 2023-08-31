@@ -1,7 +1,7 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
 import { getProcessEnv } from "./process";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
 const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
