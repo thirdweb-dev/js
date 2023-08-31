@@ -47,6 +47,7 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { OP_STACK_CHAINS } from "../../constants";
 
 /**
  * @internal
@@ -149,7 +150,11 @@ export class ContractWrapper<
           ? block.baseFeePerGas
           : utils.parseUnits("1", "gwei");
       let defaultPriorityFee: BigNumber;
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
+      const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
+      if (opStackChainIds.includes(chainId)) {
+        // for op stack chains lower the default fee
+        defaultPriorityFee = BigNumber.from(1000000); // 0.001 gwei
+      } else if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
         // for polygon, get fee data from gas station
         defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
       } else {
@@ -180,29 +185,8 @@ export class ContractWrapper<
   private getPreferredPriorityFee(
     defaultPriorityFeePerGas: BigNumber,
   ): BigNumber {
-    const speed = this.options.gasSettings.speed;
-    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
-    let extraTip;
-    switch (speed) {
-      case "standard":
-        extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
-        break;
-      case "fast":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 5% - 2.625 gwei / 32.5 gwei
-        break;
-      case "fastest":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34.1 gwei
-        break;
-    }
-    let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
-    const min = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-    if (txGasPrice.gt(max)) {
-      txGasPrice = max;
-    }
-    if (txGasPrice.lt(min)) {
-      txGasPrice = min;
-    }
+    const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
+    const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
     return txGasPrice;
   }
 
