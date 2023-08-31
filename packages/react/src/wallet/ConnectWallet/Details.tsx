@@ -49,7 +49,7 @@ import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
-import { modalMaxWidth } from "./constants";
+import { modalMaxWidthCompact } from "./constants";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -433,7 +433,7 @@ export const ConnectedWalletDetails: React.FC<{
           open={true}
           setOpen={setShowExportModal}
           style={{
-            maxWidth: modalMaxWidth,
+            maxWidth: modalMaxWidthCompact,
           }}
         >
           <ExportLocalWallet

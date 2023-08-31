@@ -25,7 +25,11 @@ import {
 } from "../../design-system";
 import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
-import { modalMaxWidth, reservedScreens } from "./constants";
+import {
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+  reservedScreens,
+} from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -119,47 +123,57 @@ export const ConnectModalContent = (props: {
           : darkTheme
       }
     >
-      {screen === reservedScreens.main && (
-        <WalletSelector
-          title={title}
-          walletConfigs={walletConfigs}
-          onGetStarted={() => {
-            setScreen(reservedScreens.getStarted);
-          }}
-          selectWallet={setScreen}
-        />
-      )}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "300px 1fr",
+        }}
+      >
+        <LeftContainer>
+          <WalletSelector
+            title={title}
+            walletConfigs={walletConfigs}
+            onGetStarted={() => {
+              setScreen(reservedScreens.getStarted);
+            }}
+            selectWallet={setScreen}
+          />
+        </LeftContainer>
 
-      {screen === reservedScreens.getStarted && (
-        <GetStartedWithWallets onBack={handleBack} />
-      )}
+        <div>
+          {(screen === reservedScreens.main ||
+            screen === reservedScreens.getStarted) && (
+            <GetStartedWithWallets onBack={handleBack} />
+          )}
 
-      {WalletConnectUI && (
-        <WalletConnectUI
-          supportedWallets={walletConfigs}
-          theme={theme}
-          goBack={handleBack}
-          close={handleClose}
-          isOpen={isWalletModalOpen}
-          open={() => {
-            setIsWalletModalOpen(true);
-          }}
-          walletConfig={screen}
-          selectionData={walletModalConfig.data}
-          setSelectionData={(data) => {
-            setWalletModalConfig((config) => ({
-              ...config,
-              data,
-            }));
-          }}
-        />
-      )}
+          {WalletConnectUI && (
+            <WalletConnectUI
+              supportedWallets={walletConfigs}
+              theme={theme}
+              goBack={handleBack}
+              close={handleClose}
+              isOpen={isWalletModalOpen}
+              open={() => {
+                setIsWalletModalOpen(true);
+              }}
+              walletConfig={screen}
+              selectionData={walletModalConfig.data}
+              setSelectionData={(data) => {
+                setWalletModalConfig((config) => ({
+                  ...config,
+                  data,
+                }));
+              }}
+            />
+          )}
+        </div>
+      </div>
     </ThemeProvider>
   );
 };
 
 export const ConnectModal = () => {
-  const { theme } = useContext(ModalConfigCtx);
+  const { theme, modalSize, title } = useContext(ModalConfigCtx);
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -170,7 +184,9 @@ export const ConnectModal = () => {
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <Modal
         style={{
-          maxWidth: modalMaxWidth,
+          maxWidth:
+            modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
+          height: modalSize === "compact" ? "auto" : "600px",
         }}
         open={isWalletModalOpen}
         setOpen={(value) => {
@@ -183,22 +199,39 @@ export const ConnectModal = () => {
           }
         }}
       >
-        <ConnectModalContent screen={screen} setScreen={setScreen} />
+        <ConnectModalContent
+          screen={screen}
+          setScreen={setScreen}
+          title={title}
+        />
       </Modal>
     </ThemeProvider>
   );
 };
 
+const LeftContainer = styled.div<{ theme?: Theme }>`
+  border-right: 1px solid ${(p) => p.theme.bg.elevated};
+`;
+
 export const ConnectModalInline = (props: {
   theme?: "light" | "dark";
   title?: string;
   className?: string;
+  modalSize?: "wide" | "compact";
 }) => {
   const { screen, setScreen } = useScreen();
   return (
     <WalletUIStatesProvider theme={props.theme}>
       <ThemeProvider theme={props.theme === "light" ? lightTheme : darkTheme}>
-        <ConnectModalInlineContainer className={props.className}>
+        <ConnectModalInlineContainer
+          className={props.className}
+          style={{
+            maxWidth:
+              props.modalSize === "compact"
+                ? modalMaxWidthCompact
+                : modalMaxWidthWide,
+          }}
+        >
           <ConnectModalContent
             screen={screen}
             setScreen={setScreen}
@@ -245,7 +278,6 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
     ${(p) => p.theme.bg.baseHover}
   );
   border-radius: ${radius.xl};
-  max-width: ${modalMaxWidth};
   width: 100%;
   box-sizing: border-box;
   box-shadow: ${shadow.lg};

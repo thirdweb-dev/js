@@ -69,6 +69,15 @@ type ConnectWalletProps = {
    * @default false
    */
   switchToActiveChain?: boolean;
+
+  /**
+   * Set the size of the modal - `compact` or `wide` on desktop
+   *
+   * Modal size is always `compact` on mobile
+   *
+   * @default "wide"
+   */
+  modalSize?: "compact" | "wide";
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -149,6 +158,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   title: props.modalTitle || defaultModalTitle,
                   theme,
                   data: undefined,
+                  modalSize: props.modalSize || "wide",
                 });
                 setIsWalletModalOpen(true);
               }}

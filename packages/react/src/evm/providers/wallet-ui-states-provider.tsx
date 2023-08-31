@@ -7,6 +7,7 @@ type ModalConfig = {
   title: string;
   theme: "light" | "dark";
   data: any;
+  modalSize: "wide" | "compact";
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -18,6 +19,7 @@ export const ModalConfigCtx = /* @__PURE__ */ createContext<ModalConfig>({
   title: "",
   theme: "dark",
   data: undefined,
+  modalSize: "wide",
 });
 
 export const SetModalConfigCtx = /* @__PURE__ */ createContext<
@@ -33,6 +35,7 @@ export const WalletUIStatesProvider = (
     title: defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
+    modalSize: "wide",
   });
 
   return (

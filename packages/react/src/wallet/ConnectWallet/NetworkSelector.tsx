@@ -39,7 +39,7 @@ import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
 import { Flex, ScreenContainer } from "../../components/basic";
 import { SecondaryText } from "../../components/text";
-import { modalMaxWidth } from "./constants";
+import { modalMaxWidthCompact } from "./constants";
 import { ModalTitle } from "../../components/modalElements";
 
 type RenderChain = React.FC<{
@@ -153,7 +153,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
           }
         }}
         style={{
-          maxWidth: modalMaxWidth,
+          maxWidth: modalMaxWidthCompact,
           paddingBottom: props.onCustomClick ? spacing.md : "0px",
         }}
       >
