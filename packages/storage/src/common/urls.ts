@@ -1,6 +1,7 @@
 import { GatewayUrls } from "../types";
 import CIDTool from "cid-tool";
 import { getProcessEnv } from "./process";
+import crypto from "crypto";
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
 const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
@@ -134,9 +135,6 @@ export function prepareGatewayUrls(
           if (typeof window !== "undefined") {
             throw new Error("Cannot use secretKey in browser context");
           }
-          // this is on purpose because we're using the crypto module only in node
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const crypto = require("crypto");
           const hashedSecretKey = crypto
             .createHash("sha256")
             .update(secretKey)
