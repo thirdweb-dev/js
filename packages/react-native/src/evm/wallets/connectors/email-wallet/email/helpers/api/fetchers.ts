@@ -20,8 +20,8 @@ export const authFetchEmbeddedWalletUser = async (
   props: Parameters<typeof fetch>[1],
 ): Promise<Response> => {
   const authTokenClient = await getAuthTokenClient(clientId);
-  console.log("authShareClient", authTokenClient);
-  console.log("url", url);
+  console.log("url being called", url);
+  console.log("authTokenClient", authTokenClient?.slice(0, 10));
   const params = { ...props };
   params.headers = params?.headers
     ? {
