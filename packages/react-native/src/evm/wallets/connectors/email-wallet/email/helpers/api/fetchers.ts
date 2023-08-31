@@ -20,8 +20,8 @@ export const authFetchEmbeddedWalletUser = async (
   props: Parameters<typeof fetch>[1],
 ): Promise<Response> => {
   const authTokenClient = await getAuthTokenClient(clientId);
-  // console.log('authShareClient', authShareClient);
-  // console.log('url', url);
+  console.log("url being called", url);
+  console.log("authTokenClient", authTokenClient?.slice(0, 10));
   const params = { ...props };
   params.headers = params?.headers
     ? {
@@ -37,7 +37,6 @@ export const authFetchEmbeddedWalletUser = async (
         }`,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       };
-  // console.log("params", { params });
   return fetch(url, params);
 };
 
@@ -184,8 +183,6 @@ export async function storeUserShares({
 }
 
 export async function getUserShares(clientId: string, getShareUrl: URL) {
-  // console.log("getUserShares.url", getShareUrl.href);
-  // console.log("getUserShares.clientId", clientId);
   const resp = await authFetchEmbeddedWalletUser(
     { clientId },
     getShareUrl.href,

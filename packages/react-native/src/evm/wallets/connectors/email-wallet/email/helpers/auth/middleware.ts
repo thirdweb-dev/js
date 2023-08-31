@@ -27,25 +27,22 @@ export async function postPaperAuth(
     await setAuthTokenClient(storedToken.cookieString, clientId);
   }
 
-  // console.log('setWalletUserDetails', !!storedToken.cookieString);
-
   await setWallerUserDetails({
     clientId,
     userId: storedToken.authDetails.userWalletId,
     email: storedToken.authDetails.email,
   });
 
-  // console.log('setWalletUserDetails done');
-
   if (storedToken.isNewUser) {
-    // console.log('isNewUser');
+    console.log("========== New User ==========");
     const recoveryCode = await getCognitoRecoveryPassword(clientId);
+    console.log("New User recovery code", recoveryCode);
     await setUpNewUserWallet(recoveryCode, clientId);
   } else {
     try {
-      // console.log('not new user', clientId);
       // existing device share
       await getDeviceShare(clientId);
+      console.log("========== Existing user with device share ==========");
     } catch (e) {
       // trying to recreate device share from recovery code to derive wallet
       console.warn(
@@ -53,7 +50,8 @@ export async function postPaperAuth(
         e,
       );
       const recoveryCode = await getCognitoRecoveryPassword(clientId);
-      // console.log('recoveryCode', recoveryCode);
+      console.log("========== Existing user on new device ==========");
+      console.log("recoveryCode for existing user", recoveryCode);
 
       try {
         await setUpShareForNewDevice({
@@ -61,7 +59,7 @@ export async function postPaperAuth(
           recoveryCode,
         });
       } catch (error) {
-        console.error("Error settign up wallet on device", error);
+        console.error("Error setting up wallet on device", error);
         throw error;
       }
     }

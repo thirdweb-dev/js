@@ -100,7 +100,7 @@ export async function getShares<
   const { authShare: _authShare, maybeEncryptedRecoveryShares } =
     await getUserShares(clientId, getShareUrl);
 
-  // console.log("after getUserShares", _authShare);
+  console.log("after getUserShares", _authShare, maybeEncryptedRecoveryShares);
   let recoverShareToReturn: string | undefined;
   if (recoveryShare.toRetrieve) {
     if (!maybeEncryptedRecoveryShares?.length) {
@@ -166,7 +166,6 @@ export async function setUpShareForNewDevice({
   recoveryCode: string;
   clientId: string;
 }): Promise<SetUpWalletRpcReturnType> {
-  // console.log("setupsharefornewdevice");
   const { recoveryShare, authShare } = await getShares({
     clientId,
     authShare: { toRetrieve: true },
