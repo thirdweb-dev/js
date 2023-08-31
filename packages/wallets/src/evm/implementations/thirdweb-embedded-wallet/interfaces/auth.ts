@@ -6,7 +6,7 @@ import type {
 
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
-  KMS_MANAGED = "KMS_MANAGED",
+  AWS_MANAGED = "AWS_MANAGED",
 }
 
 export enum AuthProvider {
