@@ -18,10 +18,8 @@ import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
   Celo,
-  Mumbai,
-  Polygon,
 } from "@thirdweb-dev/chains";
-import { OP_STACK_CHAINS, getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
+import { getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -293,7 +291,9 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      const feeData = await this.provider.getFeeData();
+      const feeData = await getDynamicFeeData(
+        this.provider as providers.JsonRpcProvider,
+      );
       if (!maxPriorityFeePerGas) {
         maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
       }
@@ -308,33 +308,6 @@ export abstract class BaseAccountAPI {
           chainId === CeloBaklavaTestnet.chainId
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
-        }
-
-        const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
-        if (
-          maxPriorityFeePerGas &&
-          (chainId === Mumbai.chainId ||
-            chainId === Polygon.chainId ||
-            opStackChainIds.includes(chainId))
-        ) {
-          // for polygon/mumbai, override fee data from gas station
-          const block = await this.provider.getBlock("latest");
-          const baseBlockFee =
-            block && block.baseFeePerGas
-              ? block.baseFeePerGas
-              : utils.parseUnits("1", "gwei");
-          if (opStackChainIds.includes(chainId)) {
-            // for op stack chains lower the default fee
-            maxPriorityFeePerGas = BigNumber.from(1000000); // 0.001 gwei
-          } else if (
-            chainId === Mumbai.chainId ||
-            chainId === Polygon.chainId
-          ) {
-            maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
-          }
-          // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-          const baseMaxFeePerGas = baseBlockFee.mul(2);
-          maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
         }
       }
     }

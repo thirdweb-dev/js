@@ -1,6 +1,108 @@
 import { ChainId } from "../constants/chains/ChainId";
 import fetch from "cross-fetch";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, utils, providers } from "ethers";
+import { Mumbai, Polygon } from "@thirdweb-dev/chains";
+import { isBrowser } from "./utils";
+
+type FeeData = {
+  maxFeePerGas: null | BigNumber;
+  maxPriorityFeePerGas: null | BigNumber;
+};
+
+export async function getDefaultGasOverrides(provider: providers.Provider) {
+  // If we're running in the browser, let users configure gas price in their wallet UI
+  if (isBrowser()) {
+    return {};
+  }
+
+  // handle smart wallet provider
+  if ((provider as any).originalProvider) {
+    provider = (provider as any).originalProvider;
+  }
+
+  const feeData = await getDynamicFeeData(
+    provider as providers.JsonRpcProvider,
+  );
+  if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+    return {
+      maxFeePerGas: feeData.maxPriorityFeePerGas,
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+    };
+  } else {
+    return {
+      gasPrice: await getGasPrice(provider),
+    };
+  }
+}
+
+export async function getDynamicFeeData(
+  provider: providers.JsonRpcProvider,
+): Promise<FeeData> {
+  let maxFeePerGas: null | BigNumber = null;
+  let maxPriorityFeePerGas: null | BigNumber = null;
+
+  const [chainId, block, eth_maxPriorityFeePerGas] = await Promise.all([
+    (await provider.getNetwork()).chainId,
+    await provider.getBlock("latest"),
+    await provider.send("eth_maxPriorityFeePerGas", []).catch(() => null),
+  ]);
+
+  const baseBlockFee =
+    block && block.baseFeePerGas
+      ? block.baseFeePerGas
+      : utils.parseUnits("100", "wei");
+
+  if (chainId === Mumbai.chainId || chainId === Polygon.chainId) {
+    // for polygon, get fee data from gas station
+    maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
+    console.log(
+      "DYNAMIC: polygon fee",
+      utils.formatUnits(maxPriorityFeePerGas, "gwei"),
+    );
+  } else if (eth_maxPriorityFeePerGas) {
+    // prioritize fee from eth_maxPriorityFeePerGas
+    maxPriorityFeePerGas = BigNumber.from(eth_maxPriorityFeePerGas);
+  } else {
+    // if eth_maxPriorityFeePerGas is not available, use 1.5 gwei default
+    const feeData = await provider.getFeeData();
+    maxPriorityFeePerGas = feeData.maxPriorityFeePerGas;
+    if (!maxPriorityFeePerGas) {
+      // chain does not support eip-1559, return null for both
+      return { maxFeePerGas: null, maxPriorityFeePerGas: null };
+    }
+  }
+
+  // eip-1559 formula, with an extra 10% tip to account for gas volatility
+  maxFeePerGas = baseBlockFee
+    .mul(2)
+    .add(getPreferredPriorityFee(maxPriorityFeePerGas));
+
+  return { maxFeePerGas, maxPriorityFeePerGas };
+}
+
+function getPreferredPriorityFee(
+  defaultPriorityFeePerGas: BigNumber,
+  percentMultiplier: number = 10,
+): BigNumber {
+  const extraTip = defaultPriorityFeePerGas.div(100).mul(percentMultiplier); // + 10%
+  const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
+  return txGasPrice;
+}
+
+export async function getGasPrice(
+  provider: providers.Provider,
+): Promise<BigNumber> {
+  const gasPrice = await provider.getGasPrice();
+  const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
+  const extraTip = gasPrice.div(100).mul(10); // + 10%
+  const txGasPrice = gasPrice.add(extraTip);
+
+  if (txGasPrice.gt(maxGasPrice)) {
+    return maxGasPrice;
+  }
+
+  return txGasPrice;
+}
 
 /**
  * @internal
