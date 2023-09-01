@@ -34,6 +34,8 @@ const isIframeLoaded = new Map<string, boolean>();
 export class IframeCommunicator<T extends { [key: string]: any }> {
   private iframe: HTMLIFrameElement;
   private POLLING_INTERVAL_SECONDS = 1.4;
+  private POST_LOAD_BUFFER_SECONDS = 1;
+
   private iframeBaseUrl;
   constructor({
     link,
@@ -75,11 +77,20 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
             console.warn("thirdweb Iframe not found");
             return;
           }
-          this.onIframeLoadHandler(iframe, onIframeInitialize)();
+          this.onIframeLoadHandler(
+            iframe,
+            this.POST_LOAD_BUFFER_SECONDS,
+            onIframeInitialize,
+          )();
         }
       };
       window.addEventListener("message", onIframeLoaded);
     }
+    iframe.onload = this.onIframeLoadHandler(
+      iframe,
+      this.POST_LOAD_BUFFER_SECONDS,
+      onIframeInitialize,
+    );
     this.iframe = iframe;
   }
 
@@ -89,6 +100,8 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
 
   onIframeLoadHandler(
     iframe: HTMLIFrameElement,
+    prePostMessageSleepInSeconds: number,
+
     onIframeInitialize?: () => void,
   ) {
     return async () => {
@@ -107,7 +120,11 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
           return res(true);
         };
 
+        // iFrame takes a bit of time after loading to be ready for message receiving
+        // This is hacky
+        await sleep(prePostMessageSleepInSeconds);
         const INIT_IFRAME_EVENT = "initIframe";
+        console.log("posting message to iframe");
         iframe?.contentWindow?.postMessage(
           // ? We initialise the iframe with a bunch
           // of useful information so that we don't have to pass it
