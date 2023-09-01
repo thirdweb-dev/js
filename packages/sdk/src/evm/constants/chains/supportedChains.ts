@@ -1,13 +1,5 @@
 import type { ChainInfo } from "../../schema/shared/ChainInfo";
-import {
-  Base,
-  BaseGoerli,
-  Optimism,
-  OptimismGoerli,
-  Zora,
-  ZoraTestnet,
-  defaultChains,
-} from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains";
 
 // @ts-expect-error - readonly vs not
 let supportedChains: ChainInfo[] = defaultChains;
