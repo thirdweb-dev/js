@@ -4,6 +4,8 @@ import {
   getInjectedRainbowProvider,
 } from "@thirdweb-dev/wallets";
 import { RainbowConnectUI } from "./RainbowConnectUI";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { rainbowWalletUris } from "./rainbowWalletUris";
 
 type RainbowWalletOptions = {
   /**
@@ -27,6 +29,8 @@ export const rainbowWallet = (
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      handelWCSessionRequest(wallet, rainbowWalletUris);
 
       return wallet;
     },

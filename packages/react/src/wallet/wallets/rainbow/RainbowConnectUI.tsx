@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { RainbowScan } from "./RainbowScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { RainbowWallet } from "@thirdweb-dev/wallets";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { rainbowWalletUris } from "./rainbowWalletUris";
 
 export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
@@ -44,9 +46,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
       else {
         // on mobile, open rainbow app link
         if (isMobile()) {
-          window.open(
-            `https://rainbow.app.link/dapp/${window.location.toString()}`,
-          );
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the rainbow scan qr code
           setScreen("scanning");
@@ -63,6 +63,19 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
         supportLink="https://support.rainbow.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        supportLink="https://support.rainbow.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
+        appUriPrefix={rainbowWalletUris}
       />
     );
   }
