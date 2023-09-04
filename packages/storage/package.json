@@ -57,7 +57,7 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "chai": "^4.3.6",
-    "eslint": "^8.45.0",
+    "eslint": "^8.48.0",
     "eslint-config-thirdweb": "workspace:*",
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
