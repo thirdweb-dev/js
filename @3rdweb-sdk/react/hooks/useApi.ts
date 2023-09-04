@@ -87,12 +87,22 @@ export interface UsageBundler {
   chainId: number;
   sumTransactionFee: number;
 }
+
+export interface UsageStorage {
+  sumFileSizeBytes: number;
+}
+
 export interface UsageBillableByService {
   usage: {
     bundler: UsageBundler[];
+    storage: UsageStorage;
   };
   billableUsd: {
     bundler: number;
+    storage: number;
+  };
+  limits: {
+    storage: number;
   };
 }
 

@@ -1,6 +1,7 @@
 import {
   Box,
   Icon,
+  Progress,
   Tooltip,
   VStack,
   useColorModeValue,
@@ -10,16 +11,27 @@ import { FiHelpCircle } from "react-icons/fi";
 import { Heading, Card, Text } from "tw-components";
 
 interface UsageCardProps {
-  title: string;
-  description: string;
-  total: string | JSX.Element;
+  name: string;
+  metrics: {
+    title: string;
+    total: string | JSX.Element;
+    progress?: number;
+  }[];
   tooltip?: string;
 }
 
+const getProgressColor = (percent: number) => {
+  if (percent > 90) {
+    return "red";
+  } else if (percent > 50) {
+    return "yellow";
+  }
+  return "blue";
+};
+
 export const UsageCard: React.FC<UsageCardProps> = ({
-  title,
-  description,
-  total,
+  name,
+  metrics,
   tooltip,
 }) => {
   const bg = useColorModeValue("backgroundCardHighlight", "transparent");
@@ -28,7 +40,7 @@ export const UsageCard: React.FC<UsageCardProps> = ({
     <Card minH={36} p={6} bg={bg}>
       <VStack gap={6} alignItems="flex-start">
         <Heading as="h3" size="label.lg">
-          {title}
+          {name}
 
           {tooltip && (
             <Tooltip
@@ -53,11 +65,31 @@ export const UsageCard: React.FC<UsageCardProps> = ({
           )}
         </Heading>
 
-        <VStack gap={1} alignItems="flex-start">
-          <Text size="body.md">{description}</Text>
-          <Heading size="label.lg" fontWeight="normal">
-            {total}
-          </Heading>
+        <VStack gap={6} alignItems="flex-start" w="full">
+          {metrics.map(({ total, title, progress }, i) => {
+            return (
+              <VStack
+                key={`metric-${i}`}
+                gap={2}
+                alignItems="flex-start"
+                w="full"
+              >
+                <Text size="body.md">{title}</Text>
+                <Heading size="label.md" fontWeight="normal" mb={2}>
+                  {total}
+                </Heading>
+                {progress !== undefined && (
+                  <Progress
+                    w="full"
+                    size="xs"
+                    value={progress}
+                    rounded="full"
+                    colorScheme={getProgressColor(progress)}
+                  />
+                )}
+              </VStack>
+            );
+          })}
         </VStack>
       </VStack>
     </Card>
