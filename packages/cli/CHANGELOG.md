@@ -1,5 +1,19 @@
 # thirdweb
 
+## 0.12.2
+
+### Patch Changes
+
+- [#1562](https://github.com/thirdweb-dev/js/pull/1562) [`04b6ef73`](https://github.com/thirdweb-dev/js/commit/04b6ef73e4641c5284353bffc43dbc5c597405de) Thanks [@Marfuen](https://github.com/Marfuen)! - Logout underlying wallet on logout
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- Updated dependencies [[`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f), [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0), [`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25), [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40), [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/storage@1.2.10
+  - @thirdweb-dev/sdk@3.10.59
+  - @thirdweb-dev/wallets@1.1.23
+  - @thirdweb-dev/auth@3.2.40
+
 ## 0.12.1
 
 ### Patch Changes
