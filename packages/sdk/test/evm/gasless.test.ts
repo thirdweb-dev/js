@@ -13,6 +13,7 @@ describe("Gasless Forwarder", async () => {
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
     const sdk = new ThirdwebSDK(wallet, {
+      secretKey: process.env.TW_SECRET_KEY,
       gasless: {
         biconomy: {
           apiKey: process.env.BICONOMY_API_KEY as string,
@@ -28,6 +29,7 @@ describe("Gasless Forwarder", async () => {
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
     const sdk = new ThirdwebSDK(wallet, {
+      secretKey: process.env.TW_SECRET_KEY,
       gasless: {
         openzeppelin: {
           relayerUrl: "",
@@ -54,6 +56,7 @@ describe("Gasless Forwarder", async () => {
     // const wallet = Wallet.createRandom().connect(provider);
     const wallet = new Wallet("<PRIVATE KEY>", provider);
     const sdk = new ThirdwebSDK(wallet, {
+      secretKey: process.env.TW_SECRET_KEY,
       gasless: {
         openzeppelin: {
           relayerUrl: "<RELAYER URL>",

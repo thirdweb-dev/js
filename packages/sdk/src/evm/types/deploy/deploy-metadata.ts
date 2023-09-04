@@ -59,6 +59,53 @@ export interface NFTContractDeployMetadata {
 }
 
 /**
+ * Options for deploying an OpenEdition contract
+ * @public
+ */
+export interface OpenEditionContractDeployMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileOrBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
+   * Symbol for the NFTs
+   */
+  symbol?: string;
+  /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: AddressOrEns[];
+  /**
+   * The address that will receive the proceeds from primary sales
+   */
+  primary_sale_recipient: AddressOrEns;
+  /**
+   * The address that will receive the proceeds from secondary sales (royalties)
+   */
+  fee_recipient?: AddressOrEns;
+  /**
+   * The percentage (in basis points) of royalties for secondary sales
+   */
+  seller_fee_basis_points?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
+}
+
+/**
  * Options for deploying a Token contract
  * @public
  */
@@ -324,6 +371,37 @@ export interface MultiwrapContractDeployMetadata {
    * The percentage (in basis points) of royalties for secondary sales
    */
   seller_fee_basis_points?: number;
+  /**
+   * The default app for this contract
+   */
+  app_uri?: string;
+}
+
+/**
+ * Options for deploying Airdrop contract
+ * @public
+ */
+export interface AirdropContractDeployMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileOrBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: AddressOrEns[];
   /**
    * The default app for this contract
    */

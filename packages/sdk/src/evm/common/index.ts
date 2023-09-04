@@ -2,6 +2,8 @@ export * from "./error";
 export * from "./snapshots";
 export * from "./role";
 export * from "./metadata-resolver";
+export * from "./gas-price";
+export * from "./fetchContractMetadata";
 
 // feature detection
 export * from "./feature-detection/matchesPrebuiltAbi";
@@ -26,6 +28,7 @@ export * from "./feature-detection/isFeatureEnabled";
 export * from "./feature-detection/assertEnabled";
 export * from "./feature-detection/detectContractFeature";
 export * from "./feature-detection/hasFunction";
+export * from "./plugin/joinABIs";
 
 export * from "./version-checker";
 export * from "./fetchSourceFilesFromMetadata";
@@ -72,7 +75,7 @@ export * from "./any-evm-utils/deployWithThrowawayDeployer";
 export * from "./any-evm-utils/computeDeploymentInfo";
 export * from "./any-evm-utils/convertParamValues";
 export * from "./any-evm-utils/getCreate2FactoryDeploymentInfo";
-export * from "./any-evm-utils/fetchAndCachePublishedContractURI";
+export * from "./any-evm-utils/fetchPublishedContractFromPolygon";
 export * from "./any-evm-utils/fetchAndCacheDeployMetadata";
 export * from "./any-evm-utils/estimateGasForDeploy";
 export * from "./any-evm-utils/createTransactionBatches";

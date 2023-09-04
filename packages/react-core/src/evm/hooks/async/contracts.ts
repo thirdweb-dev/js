@@ -21,7 +21,6 @@ import {
 } from "@tanstack/react-query";
 import { getCachedAbiForContract, TransactionResult } from "@thirdweb-dev/sdk";
 import type {
-  Abi,
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
@@ -33,6 +32,7 @@ import type {
   ThirdwebSDK,
   ValidContractInstance,
   BaseContractForAddress,
+  PublishedMetadata,
 } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface, providers } from "ethers";
 import { useEffect, useMemo } from "react";
@@ -88,19 +88,11 @@ export const contractType = {
 
 // end contract type
 
-type FetchCompilerMetadataReturnType = {
-  name: string;
-  metadata: Record<string, any>;
-  abi: Abi;
-  info: Record<string, any>;
-  licenses: string[];
-};
-
 // contract compiler metadata
 function fetchCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,
-): Promise<FetchCompilerMetadataReturnType> | null {
+): Promise<PublishedMetadata> | null {
   if (!contractAddress || !sdk) {
     return null;
   }
@@ -114,7 +106,7 @@ function fetchCompilerMetadata(
 
 export function useCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
-): UseQueryResult<FetchCompilerMetadataReturnType | null> {
+): UseQueryResult<PublishedMetadata | null> {
   const sdk = useSDK();
 
   return useQueryWithNetwork(

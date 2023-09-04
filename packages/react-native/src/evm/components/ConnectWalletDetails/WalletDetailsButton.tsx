@@ -3,27 +3,29 @@ import BaseButton from "../base/BaseButton";
 import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet, useBalance, useChain } from "@thirdweb-dev/react-core";
+import { useWallet, useChain } from "@thirdweb-dev/react-core";
 import { StyleSheet, View } from "react-native";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import Box from "../base/Box";
 import { ConnectWalletDetailsModal } from "./ConnectWalletDetailsModal";
 import { useState } from "react";
+import { TextBalance } from "../base/TextBalance";
 
 export type ConnectWalletDetailsProps = {
   address?: string;
   detailsButton?: React.FC<{ onPress: () => void }>;
   extraRows?: React.FC;
+  hideTestnetFaucet?: boolean;
 };
 
 export const WalletDetailsButton = ({
   address,
   detailsButton,
   extraRows,
+  hideTestnetFaucet,
 }: ConnectWalletDetailsProps) => {
   const activeWallet = useWallet();
   const chain = useChain();
-  const balanceQuery = useBalance();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onPress = () => {
@@ -46,6 +48,7 @@ export const WalletDetailsButton = ({
         onClosePress={onPress}
         extraRows={extraRows}
         address={address}
+        hideTestnetFaucet={hideTestnetFaucet}
       />
       {detailsButton ? (
         detailsButton({ onPress })
@@ -61,12 +64,7 @@ export const WalletDetailsButton = ({
               <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
             </View>
             <Box justifyContent="center" alignItems="flex-start">
-              <Text variant="bodySmall">
-                {balanceQuery.data
-                  ? Number(balanceQuery.data.displayValue).toFixed(3)
-                  : ""}{" "}
-                {balanceQuery.data?.symbol}
-              </Text>
+              <TextBalance textVariant="bodySmall" />
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="error">Guest</Text>
               ) : (

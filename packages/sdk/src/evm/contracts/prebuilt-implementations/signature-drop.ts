@@ -65,7 +65,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     typeof DropErc721ContractSchema
   >;
   public app: ContractAppURI<SignatureDropContract>;
-  public sales: ContractPrimarySale<SignatureDropContract>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<

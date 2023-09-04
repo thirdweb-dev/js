@@ -60,7 +60,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     typeof DropErc721ContractSchema
   >;
   public app: ContractAppURI<PrebuiltNFTDrop>;
-  public sales: ContractPrimarySale<PrebuiltNFTDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
   public events: ContractEvents<PrebuiltNFTDrop>;
   public roles: ContractRoles<

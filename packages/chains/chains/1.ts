@@ -15,7 +15,9 @@ export default {
     "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://api.mycryptoapi.com/eth",
     "https://cloudflare-eth.com",
-    "https://ethereum.publicnode.com"
+    "https://ethereum.publicnode.com",
+    "https://mainnet.gateway.tenderly.co",
+    "wss://mainnet.gateway.tenderly.co"
   ],
   "features": [
     {
@@ -43,6 +45,17 @@ export default {
     {
       "name": "etherscan",
       "url": "https://etherscan.io",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://eth.blockscout.com",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      },
       "standard": "EIP3091"
     }
   ],

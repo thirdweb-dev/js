@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "opBNB",
+  "name": "Opbnb Testnet",
   "chain": "opBNB",
   "shortName": "opBNB",
   "chainId": 5611,
@@ -11,7 +11,7 @@ export default {
     "decimals": 18
   },
   "rpc": [
-    "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://opbnb-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-testnet-rpc.bnbchain.org"
   ],
   "explorers": [
@@ -31,5 +31,5 @@ export default {
     "width": 512,
     "format": "svg"
   },
-  "slug": "opbnb"
+  "slug": "opbnb-testnet"
 } as const satisfies Chain;

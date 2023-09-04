@@ -1,5 +1,76 @@
 # @thirdweb-dev/storage
 
+## 1.2.10
+
+### Patch Changes
+
+- [#1565](https://github.com/thirdweb-dev/js/pull/1565) [`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [Storage] Up default download timeout to 60s + expose option to override
+
+- [#1564](https://github.com/thirdweb-dev/js/pull/1564) [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0) Thanks [@nessup](https://github.com/nessup)! - Improve IPFS upload error logging in Node
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+## 1.2.9
+
+### Patch Changes
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
+## 1.2.8
+
+### Patch Changes
+
+- [#1498](https://github.com/thirdweb-dev/js/pull/1498) [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add single download options for timeouts and retries
+
+## 1.2.7
+
+### Patch Changes
+
+- [#1501](https://github.com/thirdweb-dev/js/pull/1501) [`046c9ad6`](https://github.com/thirdweb-dev/js/commit/046c9ad604587ff79bf028c4fe7b1f9c94f4ea54) Thanks [@farhanW3](https://github.com/farhanW3)! - moved res.json() to avoid getting JSON error in console
+
+## 1.2.6
+
+### Patch Changes
+
+- [#1500](https://github.com/thirdweb-dev/js/pull/1500) [`d248aa2c`](https://github.com/thirdweb-dev/js/commit/d248aa2c5a89a297dd2623c961793026de1de346) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Let users pass their own timeout value, fix fallback gateway logic
+
+## 1.2.5
+
+### Patch Changes
+
+- [#1473](https://github.com/thirdweb-dev/js/pull/1473) [`73462ef1`](https://github.com/thirdweb-dev/js/commit/73462ef10800aeeb5976634e2bc6fb5d3e8501e4) Thanks [@jnsdls](https://github.com/jnsdls)! - do not pass empty auth tokens
+
+- [#1470](https://github.com/thirdweb-dev/js/pull/1470) [`27c225a5`](https://github.com/thirdweb-dev/js/commit/27c225a51221417592b5940887abd1ccb8b67e47) Thanks [@jnsdls](https://github.com/jnsdls)! - fix storage secretKey and clientId handling
+
+- [#1472](https://github.com/thirdweb-dev/js/pull/1472) [`70c4a119`](https://github.com/thirdweb-dev/js/commit/70c4a119d691a37ec999d9f6087902d532cc82ed) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add sdk information to service request headers
+
+## 1.2.4
+
+### Patch Changes
+
+- [#1455](https://github.com/thirdweb-dev/js/pull/1455) [`4c37af49`](https://github.com/thirdweb-dev/js/commit/4c37af49aa4fa66beb8ffe8ef556068a29f3c5d4) Thanks [@jnsdls](https://github.com/jnsdls)! - allow overriding the upload server url for IpfsUploader for advanced usage
+
+## 1.2.3
+
+### Patch Changes
+
+- [#1411](https://github.com/thirdweb-dev/js/pull/1411) [`3b6b0746`](https://github.com/thirdweb-dev/js/commit/3b6b0746b3fc792f4c5092814a7abfabcbc9801e) Thanks [@jnsdls](https://github.com/jnsdls)! - add auth token
+
+## 1.2.2
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
+## 1.2.1
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1404](https://github.com/thirdweb-dev/js/pull/1404) [`51b36040`](https://github.com/thirdweb-dev/js/commit/51b3604021ca7b52fd00fd07c5a648a73464a61b) Thanks [@iketw](https://github.com/iketw)! - Read custom upload url from env
+
 ## 1.2.0
 
 ### Minor Changes

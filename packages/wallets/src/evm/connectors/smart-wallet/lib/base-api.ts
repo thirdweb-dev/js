@@ -19,6 +19,7 @@ import {
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
+import { getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -206,9 +207,16 @@ export abstract class BaseAccountAPI {
     let callGasLimit;
     const isPhantom = await this.checkAccountPhantom();
     if (isPhantom) {
-      // when the account is not deployed yet, the estimation will return something like 25k gas (revert cost)
-      // there's no way to know the actual cost, so we just use a fixed value of 500k which should cover most txcosts.
-      callGasLimit = BigNumber.from(500_000);
+      // when the account is not deployed yet, we simulate the call to the target contract directly
+      callGasLimit = await this.provider.estimateGas({
+        from: this.getAccountAddress(),
+        to: detailsForUserOp.target,
+        data: detailsForUserOp.data,
+      });
+      // if the estimation is too low, we use a fixed value of 500k
+      if (callGasLimit.lt(30000)) {
+        callGasLimit = BigNumber.from(500000);
+      }
     } else {
       callGasLimit =
         parseNumber(detailsForUserOp.gasLimit) ??
@@ -283,7 +291,12 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      const feeData = await this.provider.getFeeData();
+      const feeData = await getDynamicFeeData(
+        this.provider as providers.JsonRpcProvider,
+      );
+      if (!maxPriorityFeePerGas) {
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+      }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
@@ -296,9 +309,6 @@ export abstract class BaseAccountAPI {
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
-      }
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
       }
     }
 

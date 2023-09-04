@@ -4,6 +4,11 @@ import path from "path";
 import { PackageManagerType } from "../core/types/ProjectType";
 import { runCommand } from "../create/helpers/run-command";
 import { IProcessAppTypeArgs, IProcessContractAppTypeArgs } from "./types";
+import crypto from "crypto";
+
+export function generateStateParameter(length: number) {
+  return crypto.randomBytes(length).toString("hex");
+}
 
 export function convertDependenciesToStringFormat(dependenciesObject: object) {
   return Object.entries(dependenciesObject).map(([pkg, versionDetails]) => {
@@ -171,11 +176,11 @@ export const installOrUpdate = async (
   typeOfAction: "install" | "update",
   options?: { oldVersion?: string; debug?: boolean },
 ) => {
-  let runner: string = "";
+  let runner = "";
   let installCommand: string[] = [];
   let updateCommand: string[] = [];
   let deleteCommand: string[] = [];
-  let printLogs = options?.debug || false;
+  const printLogs = options?.debug || false;
 
   switch (packageManager) {
     case "npm":

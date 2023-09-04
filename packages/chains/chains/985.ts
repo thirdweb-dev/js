@@ -15,7 +15,6 @@ export default {
     "symbol": "CMEMO",
     "decimals": 18
   },
-  "infoURL": "www.memolabs.org",
   "shortName": "memochain",
   "chainId": 985,
   "networkId": 985,

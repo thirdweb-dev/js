@@ -109,15 +109,15 @@ export class MarketplaceV3EnglishAuctions<
   ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalAuctions.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalAuctions.toNumber();
 
     if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllAuctions,
@@ -148,15 +148,15 @@ export class MarketplaceV3EnglishAuctions<
   ): Promise<EnglishAuction[]> {
     const totalAuctions = await this.getTotalCount();
 
-    let start = BigNumber.from(filter?.start || 0).toNumber();
-    let end = totalAuctions.toNumber();
+    const start = BigNumber.from(filter?.start || 0).toNumber();
+    const end = totalAuctions.toNumber();
 
     if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    let batches = await getAllInBatches(
+    const batches = await getAllInBatches(
       start,
       end,
       this.contractWrapper.readContract.getAllValidAuctions,
@@ -750,7 +750,7 @@ export class MarketplaceV3EnglishAuctions<
     const [currentBidBufferBps, winningBid, auction] = await Promise.all([
       this.getBidBufferBps(auctionId),
       this.getWinningBid(auctionId),
-      await this.validateAuction(BigNumber.from(auctionId)),
+      this.validateAuction(BigNumber.from(auctionId)),
     ]);
 
     const currentBidOrReservePrice = winningBid

@@ -7,6 +7,7 @@ import type {
   Signer,
   providers,
 } from "ethers";
+import { ChainInfo } from "../schema";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -25,10 +26,12 @@ type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
 export type InfraContractsMap = typeof INFRA_CONTRACTS_MAP;
 export type InfraContractType = keyof InfraContractsMap;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ChainOrRpc = ChainSlug | (string & {});
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type ChainIdOrNumber = ChainId | (number & {});
 export type ChainIdOrName = ChainIdOrNumber | ChainOrRpc;
-export type ChainOrRpcUrl = ChainIdOrName | Chain;
+export type ChainOrRpcUrl = ChainIdOrName | Chain | ChainInfo;
 export type NetworkInput = ChainOrRpcUrl | Signer | providers.Provider;
 
 export type ValueOf<T> = T[keyof T];

@@ -9,7 +9,11 @@ export interface IStorageDownloader {
    * @param gatewayUrls - The gateway URLs to use for this download
    * @returns The response object of the fetch
    */
-  download(url: string, gatewayUrls?: GatewayUrls): Promise<Response>;
+  download(
+    url: string,
+    gatewayUrls?: GatewayUrls,
+    options?: SingleDownloadOptions,
+  ): Promise<Response>;
 }
 
 /**
@@ -27,6 +31,21 @@ export type IpfsDownloaderOptions = {
    * You can get a clientId here: https://thirdweb.com/create-api-key
    */
   clientId?: string;
+  /**
+   * Optional timeout in seconds for the download request, overrides the default timeout
+   */
+  timeoutInSeconds?: number;
+};
+
+export type SingleDownloadOptions = {
+  /**
+   * Optional timeout in seconds for the download request, overrides the default timeout
+   */
+  timeoutInSeconds?: number;
+  /**
+   * Number of different gateways to attempt on failure
+   */
+  maxRetries?: number;
 };
 
 /**

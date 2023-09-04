@@ -14,6 +14,7 @@ import {
   IStorageUploader,
   IThirdwebStorage,
   IpfsUploadBatchOptions,
+  SingleDownloadOptions,
   ThirdwebStorageOptions,
   UploadOptions,
 } from "../types";
@@ -60,6 +61,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
   private gatewayUrls: GatewayUrls;
+  private clientId?: string;
 
   constructor(options?: ThirdwebStorageOptions<T>) {
     this.uploader =
@@ -67,6 +69,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       new IpfsUploader({
         clientId: options?.clientId,
         secretKey: options?.secretKey,
+        uploadServerUrl: options?.uploadServerUrl,
       });
     this.downloader =
       options?.downloader ||
@@ -79,6 +82,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       options?.clientId,
       options?.secretKey,
     );
+    this.clientId = options?.clientId;
   }
 
   /**
@@ -95,7 +99,12 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * ```
    */
   resolveScheme(url: string): string {
-    return replaceSchemeWithGatewayUrl(url, this.gatewayUrls) as string;
+    return replaceSchemeWithGatewayUrl(
+      url,
+      this.gatewayUrls,
+      0,
+      this.clientId,
+    ) as string;
   }
 
   /**
@@ -110,8 +119,11 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * const data = await storage.download(uri);
    * ```
    */
-  async download(url: string): Promise<Response> {
-    return this.downloader.download(url, this.gatewayUrls);
+  async download(
+    url: string,
+    options?: SingleDownloadOptions,
+  ): Promise<Response> {
+    return this.downloader.download(url, this.gatewayUrls, options);
   }
 
   /**
@@ -127,12 +139,19 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * const json = await storage.downloadJSON(uri);
    * ```
    */
-  async downloadJSON<TJSON = any>(url: string): Promise<TJSON> {
-    const res = await this.download(url);
+  async downloadJSON<TJSON = any>(
+    url: string,
+    options?: SingleDownloadOptions,
+  ): Promise<TJSON> {
+    const res = await this.download(url, options);
 
     // If we get a JSON object, recursively replace any schemes with gatewayUrls
     const json = await res.json();
-    return replaceObjectSchemesWithGatewayUrls(json, this.gatewayUrls) as TJSON;
+    return replaceObjectSchemesWithGatewayUrls(
+      json,
+      this.gatewayUrls,
+      this.clientId,
+    ) as TJSON;
   }
 
   /**
@@ -256,6 +275,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
       cleaned = replaceObjectSchemesWithGatewayUrls(
         cleaned,
         this.gatewayUrls,
+        this.clientId,
       ) as unknown[];
     }
 

@@ -14,12 +14,12 @@ import { info } from "../core/helpers/logger";
 import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
 
-export async function generate(options: GenerateOptions, apiSecretKey: string) {
-  let projectPath: string = options.path?.replace(/\/$/, "") || ".";
+export async function generate(options: GenerateOptions, secretKey: string) {
+  const projectPath: string = options.path?.replace(/\/$/, "") || ".";
   let contracts: DeployedContract[] = [];
 
   // Find all addresses in this project
-  let addresses: string[] = [];
+  const addresses: string[] = [];
   findMatches(projectPath, /(0x[a-fA-F0-9]{40})/g, addresses);
 
   // We check if there's a thirdweb.json config file present
@@ -55,8 +55,7 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
         const numberOfNewContracts =
           contracts.length - thirdwebConfig.contracts.length;
         info(
-          `Updated thirdweb.json with ${numberOfNewContracts} new contract${
-            numberOfNewContracts === 1 ? "" : "s"
+          `Updated thirdweb.json with ${numberOfNewContracts} new contract${numberOfNewContracts === 1 ? "" : "s"
           }`,
         );
       }
@@ -86,19 +85,22 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
     );
 
     info(
-      `Created a thirdweb.json file with configuration for ${
-        contracts.length
-      } contract${
-        contracts.length === 1 ? "" : "s"
+      `Created a thirdweb.json file with configuration for ${contracts.length
+      } contract${contracts.length === 1 ? "" : "s"
       } detected in your project.\n\n - You can also update this configuration manually by editing the file.\n`,
     );
   }
 
   // Attempt to download the ABI for each contract
   ora(`Downloading ABIs for contracts configured in 'thirdweb.json'`).info();
-  const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    storage = new ThirdwebStorage();
+  }
   const metadata: {
     address: string;
     metadata: Awaited<ReturnType<typeof fetchContractMetadataFromAddress>>;
@@ -187,8 +189,7 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
   }
 
   ora(
-    `Downloaded and cached ABIs for ${metadata.length} smart contract${
-      metadata.length === 1 ? "" : "s"
+    `Downloaded and cached ABIs for ${metadata.length} smart contract${metadata.length === 1 ? "" : "s"
     }`,
   ).succeed();
 
@@ -199,14 +200,16 @@ export async function generate(options: GenerateOptions, apiSecretKey: string) {
   }
 
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-  if (packageJson.scripts?.postinstall?.includes("thirdweb generate")) {
+  if (
+    packageJson.scripts?.postinstall?.includes("thirdweb generate") ||
+    packageJson.scripts?.postinstall?.includes("thirdweb@latest generate")
+  ) {
     return;
   }
 
   const postinstall = packageJson.scripts?.postinstall
-    ? packageJson.scripts.postinstall +
-      ` && export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`
-    : `export THIRDWEB_CLI_SKIP_INTRO=true && npx --yes thirdweb@latest generate`;
+    ? packageJson.scripts.postinstall + `npx --yes thirdweb@latest generate`
+    : `npx --yes thirdweb@latest generate`;
 
   fs.writeFileSync(
     packageJsonPath,

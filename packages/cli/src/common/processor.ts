@@ -32,12 +32,18 @@ import {
 export async function processProject(
   options: any,
   command: "deploy" | "publish",
-  apiSecretKey: string,
+  secretKey: string,
 ) {
   // TODO: allow overriding the default storage
-  const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    // Since the auth key is being set in the global context, we don't need to pass anything here.
+    storage = new ThirdwebStorage();
+  }
 
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
@@ -127,7 +133,7 @@ export async function processProject(
       return { title: key, value: key };
     });
 
-    let routerType: string = "";
+    let routerType = "";
     const res = await createRouterPrompt(choices, "Choose a router to deploy");
     if (typeof res.routerType === "string") {
       routerType = res.routerType.trim();
@@ -240,7 +246,7 @@ export async function processProject(
     } else {
       const deployArgs: RouterParams = await formatToExtensions(
         selectedContracts,
-        apiSecretKey,
+        secretKey,
       );
 
       const outputDeployArgs = JSON.stringify(deployArgs, undefined, 2);
@@ -345,9 +351,9 @@ export async function processProject(
     loader.succeed("Upload successful");
 
     return getUrl(combinedURIs, command);
-  } catch (e) {
+  } catch (err: any) {
     loader.fail("Error uploading metadata");
-    throw e;
+    throw new Error(err.message ? err.message : err);
   }
 }
 
@@ -356,12 +362,12 @@ export function getUrl(hashes: string[], command: string) {
   if (hashes.length === 1) {
     url = new URL(
       THIRDWEB_URL +
-        `/contracts/${command}/` +
-        encodeURIComponent(hashes[0].replace("ipfs://", "")),
+      `/contracts/${command}/` +
+      encodeURIComponent(hashes[0].replace("ipfs://", "")),
     );
   } else {
     url = new URL(THIRDWEB_URL + "/contracts/" + command);
-    for (let hash of hashes) {
+    for (const hash of hashes) {
       url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
     }
   }
@@ -370,20 +376,26 @@ export function getUrl(hashes: string[], command: string) {
 
 async function formatToExtensions(
   contracts: ContractPayload[],
-  apiSecretKey: string,
+  secretKey: string,
 ): Promise<{
   extensions: Extension[];
   extensionDeployArgs: ExtensionDeployArgs[];
 }> {
-  const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    // Since the auth key is being set in the global context, we don't need to pass anything here.
+    storage = new ThirdwebStorage();
+  }
   const extensions: Extension[] = [];
   const extensionDeployArgs: ExtensionDeployArgs[] = [];
 
   for (const contract of contracts) {
     // Prepare extension metadata.
-    let metadata: ExtensionMetadata = {
+    const metadata: ExtensionMetadata = {
       name: contract.name,
       metadataURI: await getMetadataURIForExtension(contract, storage),
       implementation: ethers.constants.AddressZero,

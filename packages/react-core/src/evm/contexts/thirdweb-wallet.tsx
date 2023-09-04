@@ -11,6 +11,7 @@ import React, {
   useState,
 } from "react";
 import { useSDK } from "../hooks/useSDK";
+import invariant from "tiny-invariant";
 
 interface ThirdwebConnectedWalletContext {
   wallet: UserWallet | undefined;
@@ -26,10 +27,9 @@ const INITIAL_CONTEXT_VALUE: ThirdwebConnectedWalletContext = {
   signer: undefined,
 };
 
-const ThirdwebConnectedWalletContext =
-  /* @__PURE__ */ createContext<ThirdwebConnectedWalletContext>(
-    INITIAL_CONTEXT_VALUE,
-  );
+export const ThirdwebConnectedWalletContext = /* @__PURE__ */ createContext<
+  ThirdwebConnectedWalletContext | undefined
+>(undefined);
 
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
@@ -115,5 +115,10 @@ export const ThirdwebConnectedWalletProvider: React.FC<
 };
 
 export function useThirdwebConnectedWalletContext() {
-  return useContext(ThirdwebConnectedWalletContext);
+  const context = useContext(ThirdwebConnectedWalletContext);
+  invariant(
+    context,
+    "useThirdwebConnectedWalletContext() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context;
 }

@@ -1,5 +1,10 @@
 module.exports = {
-  extends: ["next", "turbo", "prettier"],
+  extends: [
+    "next",
+    "turbo",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+  ],
   plugins: ["@typescript-eslint"],
   rules: {
     "@next/next/no-html-link-for-pages": "off",
@@ -10,7 +15,6 @@ module.exports = {
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "error",
-    "@typescript-eslint/no-parameter-properties": "error",
     // making this an error going forward
     "@typescript-eslint/no-unused-vars": "error",
 

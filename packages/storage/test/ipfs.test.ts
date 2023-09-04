@@ -4,20 +4,22 @@ import { readFileSync } from "fs";
 import { getGatewayUrlForCid, IpfsUploader, ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS, prepareGatewayUrls } from "../src/common/urls";
 
-describe("IPFS", async () => {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  const apiSecretKey = process.env.CLI_E2E_API_KEY as string;
+// load env variables
+require("dotenv-mono").load();
 
-  if (!apiSecretKey) {
-    throw new Error("CLI_E2E_API_KEY is not set in the environment variables");
+const secretKey = process.env.TW_SECRET_KEY as string;
+
+describe("IPFS", async () => {
+  if (!secretKey) {
+    throw new Error("TW_SECRET_KEY is not set in the environment variables");
   }
   const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
+    secretKey: secretKey,
   });
   const authorizedUrls = prepareGatewayUrls(
     DEFAULT_GATEWAY_URLS,
     undefined,
-    apiSecretKey,
+    secretKey,
   );
 
   it("Should replace tokens in tokenized gateway URL", async () => {
@@ -93,37 +95,6 @@ describe("IPFS", async () => {
     expect(data.name).to.equal("Goku");
     expect(data.description).to.equal("The strongest human in the world");
     expect(data.properties.length).to.equal(1);
-  });
-
-  it("Should retry download if gateways fail", async () => {
-    const storageWithBadGateways = new ThirdwebStorage({
-      gatewayUrls: {
-        "ipfs://": [
-          "http://thisshouldneverwork/",
-          "http://thisshouldalsoneverwork/",
-          ...DEFAULT_GATEWAY_URLS["ipfs://"],
-        ],
-      },
-    });
-
-    const uri = await storageWithBadGateways.upload(
-      {
-        name: "Goku",
-        description: "The strongest human in the world",
-        properties: [
-          {
-            name: "Strength",
-            value: "100",
-          },
-        ],
-      },
-      {
-        alwaysUpload: true,
-      },
-    );
-
-    const data = await storageWithBadGateways.download(uri);
-    expect(data.status).to.equal(200);
   });
 
   it("Should batch upload strings with names", async () => {
@@ -364,16 +335,16 @@ describe("IPFS", async () => {
   it("Should upload files with gateway URLs if specified on class", async () => {
     const uploader = new IpfsUploader({
       uploadWithGatewayUrl: true,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const singleStorage = new ThirdwebStorage({
       uploader,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const _authorizedUrls = prepareGatewayUrls(
       DEFAULT_GATEWAY_URLS,
       undefined,
-      apiSecretKey,
+      secretKey,
     );
 
     const uri = await singleStorage.upload(
@@ -455,7 +426,7 @@ describe("IPFS", async () => {
       getGatewayUrlForCid(
         authorizedUrls["ipfs://"][0],
         // CID changes based on file contents (prod gateway vs staging gateway since they get written)
-        `bafybeidnzwz6rm3jdf6vx5z7eb5ssfmeq64b5ihhjc7ioivxtc2x3f5r4m/0`,
+        `bafybeicn4fmtzb7kcg5idlzoo7ahomt5khqyz7lrpv2r5zz5n7sb4s2uvm/0`,
       ),
     );
   });
@@ -463,16 +434,16 @@ describe("IPFS", async () => {
   it("Should return URIs with gateway URLs if specified on class", async () => {
     const uploader = new IpfsUploader({
       uploadWithGatewayUrl: true,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const storageSingleton = new ThirdwebStorage({
       uploader,
-      secretKey: apiSecretKey,
+      secretKey,
     });
     const _authorizedUrls = prepareGatewayUrls(
       DEFAULT_GATEWAY_URLS,
       undefined,
-      apiSecretKey,
+      secretKey,
     );
 
     const uri = await storageSingleton.upload(

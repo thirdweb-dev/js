@@ -21,7 +21,7 @@ export default {
   "explorers": [
     {
       "name": "Harmony Testnet Block Explorer",
-      "url": "https://explorer.pops.one",
+      "url": "https://explorer.testnet.harmony.one",
       "standard": "EIP3091"
     }
   ],

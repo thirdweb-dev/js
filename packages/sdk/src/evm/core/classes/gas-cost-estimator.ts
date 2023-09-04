@@ -31,10 +31,11 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @public
    */
   public async gasCostOf(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<string> {
-    const price = await this.contractWrapper.getPreferredGasPrice();
+    const price = await this.contractWrapper.getProvider().getGasPrice();
     const gasUnits = await this.contractWrapper.estimateGas(fn, args);
     return utils.formatEther(gasUnits.mul(price));
   }
@@ -58,6 +59,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    * @public
    */
   public async gasLimitOf(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     fn: keyof TContract["functions"] | (string & {}),
     args: Parameters<TContract["functions"][typeof fn]> | any[],
   ): Promise<BigNumber> {

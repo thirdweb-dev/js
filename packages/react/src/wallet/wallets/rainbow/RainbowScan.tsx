@@ -4,14 +4,14 @@ import {
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef, useState } from "react";
-import type { WalletConnect } from "@thirdweb-dev/wallets";
+import type { RainbowWallet } from "@thirdweb-dev/wallets";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
 
 export const RainbowScan: React.FC<{
   onBack: () => void;
   onGetStarted: () => void;
   onConnected: () => void;
-  walletConfig: WalletConfig<WalletConnect>;
+  walletConfig: WalletConfig<RainbowWallet>;
   hideBackButton: boolean;
 }> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
   const createInstance = useCreateWalletInstance();

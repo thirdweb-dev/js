@@ -1,5 +1,49 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.2.59
+
+## 0.2.58
+
+## 0.2.57
+
+## 0.2.56
+
+## 0.2.55
+
+## 0.2.54
+
+## 0.2.53
+
+## 0.2.52
+
+## 0.2.51
+
+## 0.2.50
+
+## 0.2.49
+
+## 0.2.48
+
+## 0.2.47
+
+## 0.2.46
+
+## 0.2.45
+
+## 0.2.44
+
+## 0.2.43
+
+## 0.2.42
+
+## 0.2.41
+
+## 0.2.40
+
+### Patch Changes
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
 ## 0.2.39
 
 ## 0.2.38

@@ -69,6 +69,9 @@ export async function twCreate(
     if (options.reactNative) {
       framework = "react-native";
     }
+    if (options.pwaVite) {
+      framework = "pwa-vite";
+    }
 
     if (options.solana) {
       chain = "solana";
@@ -239,6 +242,7 @@ export async function twCreate(
                   { title: "Next.js", value: "next" },
                   { title: "Create React App", value: "cra" },
                   { title: "Vite", value: "vite" },
+                  { title: "PWA Vite", value: "pwa-vite" },
                   { title: "React Native", value: "react-native" },
                   { title: "Node.js", value: "node" },
                   { title: "Express", value: "express" },
@@ -265,6 +269,8 @@ export async function twCreate(
           if (typeof res.project === "string") {
             language = res.project.trim();
           }
+        } else if (framework === "pwa-vite" || framework === "pwa-next") {
+          language = "typescript";
         } else {
           const res = await prompts({
             type: "select",

@@ -89,6 +89,7 @@ type ThirdwebWalletContextData = {
    * Get wallet config object from wallet instance
    */
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
+  activeChainSetExplicitly: boolean;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -106,6 +107,7 @@ export function ThirdwebWalletProvider(
     autoSwitch?: boolean;
     autoConnectTimeout?: number;
     clientId?: string;
+    activeChainSetExplicitly: boolean;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -229,7 +231,11 @@ export function ThirdwebWalletProvider(
 
     try {
       const parsedWallet = JSON.parse(lastConnectedWallet as string);
-      parsedWallet.connectParams.chainId = chainId;
+      if (parsedWallet.connectParams) {
+        parsedWallet.connectParams.chainId = chainId;
+      } else {
+        parsedWallet.connectParams = { chainId };
+      }
       await lastConnectedWalletStorage.setItem(
         LAST_CONNECTED_WALLET_STORAGE_KEY,
         JSON.stringify(parsedWallet),
@@ -317,10 +323,11 @@ export function ThirdwebWalletProvider(
               ),
               {
                 ms: autoConnectTimeout,
-                message: "Failed to Auto connect. Auto connect timed out.",
+                message: autoConnectTimeoutErrorMessage,
               },
             );
           } catch (e) {
+            console.error("Failed to auto connect wallet");
             console.error(e);
             setConnectionStatus("disconnected");
             return;
@@ -345,10 +352,11 @@ export function ThirdwebWalletProvider(
         setConnectionStatus("connecting");
         await timeoutPromise(wallet.autoConnect(walletInfo.connectParams), {
           ms: autoConnectTimeout,
-          message: "Failed to Auto connect. Auto connect timed out.",
+          message: autoConnectTimeoutErrorMessage,
         });
         setConnectedWallet(wallet, walletInfo.connectParams, true);
       } catch (e) {
+        console.error("Failed to auto connect wallet");
         console.error(e);
         lastConnectedWalletStorage.removeItem(
           LAST_CONNECTED_WALLET_STORAGE_KEY,
@@ -474,6 +482,7 @@ export function ThirdwebWalletProvider(
         getWalletConfig: (walletInstance: WalletInstance) => {
           return walletInstanceToConfig.get(walletInstance);
         },
+        activeChainSetExplicitly: props.activeChainSetExplicitly,
       }}
     >
       {props.children}
@@ -550,3 +559,5 @@ function timeoutPromise<T>(
     );
   });
 }
+
+const autoConnectTimeoutErrorMessage = `Failed to Auto connect. Auto connect timed out. You can increase the timeout duration using the autoConnectTimeout prop on <ThirdwebProvider />`;

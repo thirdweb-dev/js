@@ -21,6 +21,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   clientId,
+  secretKey,
 }: React.PropsWithChildren<
   { supportedChains: Readonly<TChains> } & Omit<
     ThirdwebSDKProviderProps<TChains>,
@@ -92,7 +93,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
       // sdk from chainId
       sdk_ = new ThirdwebSDK(
         chainId,
-        { ...mergedOptions, clientId },
+        { ...mergedOptions, clientId, secretKey },
         storageInterface,
       );
     }
@@ -113,7 +114,14 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [activeChainId, supportedChains, sdkOptions, storageInterface, clientId]);
+  }, [
+    activeChainId,
+    supportedChains,
+    sdkOptions,
+    storageInterface,
+    clientId,
+    secretKey,
+  ]);
 
   useEffect(() => {
     // if we have an sdk and a signer update the signer
@@ -156,21 +164,43 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>({
   signer,
   children,
   queryClient,
-  supportedChains,
+  supportedChains: _supportedChains,
   activeChain,
   clientId,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   if (!clientId) {
     checkClientIdOrSecretKey(
-      "No clientId provided in ThirdwebSDK. You will have limited access to thirdweb's services for storage, RPC, and account abstraction. You can get a clientId from https://thirdweb.com/create-api-key",
+      "No API key. Please provide a clientId. It is required to access thirdweb's services. You can create a key at https://thirdweb.com/create-api-key",
       clientId,
       undefined,
     );
   }
-  const supportedChainsNonNull = useMemo(() => {
-    return supportedChains || (defaultChains as any as TChains);
-  }, [supportedChains]);
+  const supportedChains = (_supportedChains || defaultChains) as Chain[];
+
+  const supportedChainsNonNull: Chain[] = useMemo(() => {
+    const isActiveChainObject =
+      typeof activeChain === "object" && activeChain !== null;
+
+    if (!isActiveChainObject) {
+      return supportedChains;
+    }
+
+    const isActiveChainInSupportedChains = supportedChains.find(
+      (c) => c.chainId === activeChain.chainId,
+    );
+
+    // if activeChain is not in supportedChains - add it
+    if (!isActiveChainInSupportedChains) {
+      return [...supportedChains, activeChain];
+    }
+
+    // if active chain is in supportedChains - replace it with object in activeChain
+    return supportedChains.map((c) =>
+      c.chainId === activeChain.chainId ? activeChain : c,
+    );
+  }, [supportedChains, activeChain]);
+
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithClientId(
       supportedChainsNonNull,

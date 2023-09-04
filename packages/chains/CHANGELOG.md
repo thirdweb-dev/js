@@ -1,5 +1,106 @@
 # @thirdweb-dev/chains
 
+## 0.1.50
+
+### Patch Changes
+
+- [#1558](https://github.com/thirdweb-dev/js/pull/1558) [`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005) Thanks [@Marfuen](https://github.com/Marfuen)! - Updating chains list
+
+## 0.1.49
+
+### Patch Changes
+
+- [#1540](https://github.com/thirdweb-dev/js/pull/1540) [`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - updated chains
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
+- [#1551](https://github.com/thirdweb-dev/js/pull/1551) [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.48
+
+### Patch Changes
+
+- [#1530](https://github.com/thirdweb-dev/js/pull/1530) [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add Chiliz Spicy testnet
+
+## 0.1.47
+
+### Patch Changes
+
+- [#1518](https://github.com/thirdweb-dev/js/pull/1518) [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8) Thanks [@nkrishang](https://github.com/nkrishang)! - Update contracts package
+
+## 0.1.46
+
+### Patch Changes
+
+- [#1508](https://github.com/thirdweb-dev/js/pull/1508) [`184c325a`](https://github.com/thirdweb-dev/js/commit/184c325ab2ef028022a050c4274f2ab12b1a3a7f) Thanks [@jnsdls](https://github.com/jnsdls)! - update xpla chain icons
+
+- [#1513](https://github.com/thirdweb-dev/js/pull/1513) [`c12f0874`](https://github.com/thirdweb-dev/js/commit/c12f0874b4dac43c263c7edb20d0343c16381c34) Thanks [@jnsdls](https://github.com/jnsdls)! - add additonal chains
+
+## 0.1.45
+
+### Patch Changes
+
+- [#1506](https://github.com/thirdweb-dev/js/pull/1506) [`f97ddf4c`](https://github.com/thirdweb-dev/js/commit/f97ddf4c7f14854f3b204ad9741b52ddb8dac736) Thanks [@jnsdls](https://github.com/jnsdls)! - add xpla chains & update chains
+
+## 0.1.44
+
+### Patch Changes
+
+- [#1499](https://github.com/thirdweb-dev/js/pull/1499) [`8f3b685a`](https://github.com/thirdweb-dev/js/commit/8f3b685ad2bd73cb4d5d8c8aa25c04ffc10fb7cf) Thanks [@Marfuen](https://github.com/Marfuen)! - Update deploy command from CLI to use show a public gateway url temporarily. Updated chains too.
+
+## 0.1.43
+
+### Patch Changes
+
+- [#1469](https://github.com/thirdweb-dev/js/pull/1469) [`cb1c9937`](https://github.com/thirdweb-dev/js/commit/cb1c9937fadb2d06eb148cf9819f2b3601376308) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1474](https://github.com/thirdweb-dev/js/pull/1474) [`a1732663`](https://github.com/thirdweb-dev/js/commit/a17326634e758c3bf42f0cc3869b8792f1e18cc9) Thanks [@adam-maj](https://github.com/adam-maj)! - Add back scroll-alpha-testnet
+
+- [#1458](https://github.com/thirdweb-dev/js/pull/1458) [`588b2106`](https://github.com/thirdweb-dev/js/commit/588b21060139a7c0bf5805e2c629a16792ed2c76) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update chains
+
+- [#1461](https://github.com/thirdweb-dev/js/pull/1461) [`269e68c0`](https://github.com/thirdweb-dev/js/commit/269e68c0a15e8f78cb5b68c9456ca8094b9e1f30) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add xai-goerli chain and support BigInteger from Unity
+
+## 0.1.42
+
+### Patch Changes
+
+- [#1450](https://github.com/thirdweb-dev/js/pull/1450) [`262edc6a`](https://github.com/thirdweb-dev/js/commit/262edc6a46792da88f49ff6ef0a756a932a6a0cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update chains
+
+## 0.1.41
+
+### Patch Changes
+
+- [#1436](https://github.com/thirdweb-dev/js/pull/1436) [`fd981655`](https://github.com/thirdweb-dev/js/commit/fd9816556fe595b0c764e34dbcf15b0ad1677edb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated chains
+
+- [#1432](https://github.com/thirdweb-dev/js/pull/1432) [`9f5adc5c`](https://github.com/thirdweb-dev/js/commit/9f5adc5c5c2782ffb878759df481e5fb1e1740e5) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+## 0.1.40
+
+### Patch Changes
+
+- [#1415](https://github.com/thirdweb-dev/js/pull/1415) [`256ee0d5`](https://github.com/thirdweb-dev/js/commit/256ee0d5ec9c8598aa79cd4cb1fd839c6cc7d390) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade preconstruct to 2.7.0
+
+## 0.1.39
+
+### Patch Changes
+
+- [#1407](https://github.com/thirdweb-dev/js/pull/1407) [`0a5eb19d`](https://github.com/thirdweb-dev/js/commit/0a5eb19d672909027bb6c7e79ea76d431535559c) Thanks [@jnsdls](https://github.com/jnsdls)! - remove non-standard urls
+
+- [#1409](https://github.com/thirdweb-dev/js/pull/1409) [`b1e8c8e2`](https://github.com/thirdweb-dev/js/commit/b1e8c8e231013182eb46c16d0c441ee0f3bdfdb2) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#1376](https://github.com/thirdweb-dev/js/pull/1376) [`48ca58b7`](https://github.com/thirdweb-dev/js/commit/48ca58b7aa45348b928932b9c7b76b3dc233e429) Thanks [@iketw](https://github.com/iketw)! - Pass bundleId if present
+
+- [#1399](https://github.com/thirdweb-dev/js/pull/1399) [`3152d4e9`](https://github.com/thirdweb-dev/js/commit/3152d4e9b42e2777316b1b58513657f4430cb79a) Thanks [@jnsdls](https://github.com/jnsdls)! - update chains
+
+- [#1387](https://github.com/thirdweb-dev/js/pull/1387) [`aa6bdd08`](https://github.com/thirdweb-dev/js/commit/aa6bdd0809d1d5536c837c59b2d407ee974c1f9c) Thanks [@nkrishang](https://github.com/nkrishang)! - Simplify account permissions
+
+- [#1405](https://github.com/thirdweb-dev/js/pull/1405) [`75587c8b`](https://github.com/thirdweb-dev/js/commit/75587c8b38bbbcf68d2101526e9792349cce728f) Thanks [@jnsdls](https://github.com/jnsdls)! - sort explorers (etherscan -> blockscout -> other)
+
+- [#1385](https://github.com/thirdweb-dev/js/pull/1385) [`cc5e2ec5`](https://github.com/thirdweb-dev/js/commit/cc5e2ec51fce09af05be33811eb46980825829ee) Thanks [@iketw](https://github.com/iketw)! - Adds chains and improve error messages
+
+- [#1378](https://github.com/thirdweb-dev/js/pull/1378) [`5a02c5ec`](https://github.com/thirdweb-dev/js/commit/5a02c5ec0288fd6dfb2b765ef70bb18e714aca19) Thanks [@MananTank](https://github.com/MananTank)! - add icon in MinimalChain
+
 ## 0.1.38
 
 ### Patch Changes
