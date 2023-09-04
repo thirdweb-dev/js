@@ -101,7 +101,7 @@
     "@ethersproject/abstract-provider": "^5.7.0",
     "@metaplex-foundation/amman": "^0.12.1",
     "@metaplex-foundation/amman-client": "^0.2.4",
-    "@metaplex-foundation/js": "^0.19.2",
+    "@metaplex-foundation/js": "^0.19.4",
     "@metaplex-foundation/mpl-token-metadata": "^2.12.0",
     "@microsoft/api-documenter": "^7.22.30",
     "@microsoft/api-extractor": "^7.36.3",
