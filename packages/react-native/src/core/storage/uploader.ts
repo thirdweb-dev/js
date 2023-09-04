@@ -21,7 +21,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
   async uploadBatch(
     data: UploadDataValue[],
-    options?: IpfsUploadBatchOptions | undefined,
+    options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
     if (data.length === 0) {
       throw new Error("[UPLOAD_BATCH_ERROR] No files or objects to upload.");
