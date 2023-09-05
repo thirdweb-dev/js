@@ -70,14 +70,6 @@ export const WalletSelector: React.FC<{
     showBottomContainer = false;
   }
 
-  console.log({
-    socialLogins,
-    walletConfigs,
-    modalConfig,
-    shouldGroupWallets,
-    isWalletGroupExpanded,
-  });
-
   return (
     <>
       <ScreenContainer>
@@ -314,6 +306,7 @@ const WalletList = styled.ul<{ theme?: Theme }>`
   gap: ${spacing.md};
   box-sizing: border-box;
   overflow-y: auto;
+  flex: 1;
   ${noScrollBar}
 
   /* to show the box-shadow of inputs that overflows  */

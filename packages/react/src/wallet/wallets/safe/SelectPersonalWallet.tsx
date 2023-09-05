@@ -13,7 +13,7 @@ import {
   HelperLink,
   ModalDescription,
 } from "../../../components/modalElements";
-import { iconSize } from "../../../design-system";
+import { fontSize, iconSize } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { SafeWalletConfig } from "./types";
@@ -56,6 +56,7 @@ export const SelectpersonalWallet: React.FC<{
       <ScreenContainer
         style={{
           paddingBottom: 0,
+          flex: 1,
         }}
       >
         {props.renderBackButton && (
@@ -108,6 +109,8 @@ export const SelectpersonalWallet: React.FC<{
             href="https://docs.safe.global/learn/what-is-a-smart-contract-account"
             style={{
               textAlign: "center",
+              fontSize: fontSize.md,
+              lineHeight: 1,
             }}
           >
             What is a Safe?
