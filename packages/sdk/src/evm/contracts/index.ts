@@ -489,7 +489,6 @@ export const SplitInitializer = {
       import("./prebuilt-implementations/split"),
       provider.getNetwork(),
     ]);
-    console.log("abi", abi);
 
     return new contract.Split(
       network,
