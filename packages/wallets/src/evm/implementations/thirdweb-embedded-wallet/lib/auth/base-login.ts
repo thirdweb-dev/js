@@ -34,6 +34,16 @@ export class BaseLogin extends AbstractLogin<
     return this.postLogin(result);
   }
 
+  override async loginWithGoogle(): Promise<AuthLoginReturnType> {
+    await this.preLogin();
+    const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "loginWithGoogle",
+      params: undefined,
+      showIframe: true,
+    });
+    return this.postLogin(result);
+  }
+
   override async verifyThirdwebEmailLoginOtp({
     email,
     otp,

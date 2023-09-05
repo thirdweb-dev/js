@@ -10,6 +10,7 @@ import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommuni
 
 type LoginQuerierTypes = {
   loginWithThirdwebModal: undefined | { email: string };
+  loginWithGoogle: undefined;
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
     email: string;
@@ -55,6 +56,8 @@ export abstract class AbstractLogin<
   abstract loginWithThirdwebOtp(
     args: EMAIL_MODAL,
   ): Promise<AuthLoginReturnType>;
+
+  abstract loginWithGoogle(): Promise<AuthLoginReturnType>;
 
   async sendThirdwebEmailLoginOtp({
     email,

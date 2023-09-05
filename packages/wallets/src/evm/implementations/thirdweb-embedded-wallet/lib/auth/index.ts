@@ -122,6 +122,10 @@ export class Auth {
     return this.BaseLogin.loginWithThirdwebOtp(args);
   }
 
+  async loginWithGoogle(): Promise<AuthLoginReturnType> {
+    return this.BaseLogin.loginWithGoogle();
+  }
+
   /**
    * @description
    * A headless way to send the users at {email} an OTP code.
