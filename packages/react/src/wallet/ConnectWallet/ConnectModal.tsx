@@ -178,7 +178,7 @@ export const ConnectModalContent = (props: {
           <FlexScrollContainer>{screenContent}</FlexScrollContainer>
         </div>
       ) : (
-        <div
+        <FlexScrollContainer
           style={
             props.modalSize === "compact"
               ? {
@@ -190,7 +190,7 @@ export const ConnectModalContent = (props: {
           }
         >
           {screenContent}
-        </div>
+        </FlexScrollContainer>
       )}
     </ThemeProvider>
   );
