@@ -21,7 +21,6 @@ import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider
 import { Button, IconButton } from "../../../components/buttons";
 import { keyframes } from "@emotion/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { fadeInAnimation } from "../../../components/FadeIn";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -65,8 +64,9 @@ export const ConnectingScreen: React.FC<{
         }}
       >
         <div>
-          <SpinningGradientContainer>
+          <SpinningGradientContainer data-error={props.errorConnecting}>
             <div
+              data-container
               style={{
                 position: "relative",
               }}
@@ -116,7 +116,8 @@ export const ConnectingScreen: React.FC<{
               }}
             >
               {" "}
-              You cancelled the request <br /> Click above to try again
+              You cancelled the request <br /> click on button above to try
+              again
             </Desc>
           )}
           <Spacer y="xl" />
@@ -139,8 +140,15 @@ export const ConnectingScreen: React.FC<{
   );
 };
 
+const retryFadeIn = keyframes`
+  from {
+    transform: translate(50%, 50%) scale(0.5) rotate(-180deg);
+    opacity: 0;
+  }
+`;
+
 const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  animation: ${fadeInAnimation} 0.2s ease;
+  animation: ${retryFadeIn} 0.3s ease;
   position: absolute;
   background: ${(p) => p.theme.bg.danger};
   color: ${(p) => p.theme.text.neutral};
@@ -175,9 +183,31 @@ const rotateAnimation = keyframes`
   }
 `;
 
+const shakeErrorAnimation = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+`;
+
 const SpinningGradientContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   justify-content: center;
+
+  &[data-error="true"] [data-container] {
+    animation: ${shakeErrorAnimation} 0.25s linear;
+  }
 
   [data-gradient] {
     padding: 3px; /* width of ring */
