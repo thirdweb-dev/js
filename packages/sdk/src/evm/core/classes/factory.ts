@@ -9,7 +9,7 @@ import {
   utils,
   type ContractInterface,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import { getDeployArguments } from "../../common/deploy";
