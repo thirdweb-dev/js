@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-connectors-thirdweb.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-connectors-thirdweb.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-connectors-thirdweb.esm.js": "./dist/thirdweb-dev-wallets-evm-connectors-thirdweb.browser.esm.js"
+  }
+}
