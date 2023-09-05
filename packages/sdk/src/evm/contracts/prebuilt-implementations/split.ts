@@ -261,10 +261,10 @@ export class Split implements UpdateableNetwork {
     const value = await this._pendingPayment(
       resolvedWallet,
       totalReceived,
-      await this.contractWrapper.read("released(address,address)", [
-        resolvedToken,
-        resolvedWallet,
-      ]),
+      await this.contractWrapper.read(
+        "released" as "released(address,address)",
+        [resolvedToken, resolvedWallet],
+      ),
     );
     return await fetchCurrencyValue(
       this.contractWrapper.getProvider(),
