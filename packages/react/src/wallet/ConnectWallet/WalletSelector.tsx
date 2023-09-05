@@ -70,6 +70,14 @@ export const WalletSelector: React.FC<{
     showBottomContainer = false;
   }
 
+  console.log({
+    socialLogins,
+    walletConfigs,
+    modalConfig,
+    shouldGroupWallets,
+    isWalletGroupExpanded,
+  });
+
   return (
     <>
       <ScreenContainer>

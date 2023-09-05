@@ -61,7 +61,9 @@ export const ConnectModalContent = (props: {
   const walletModalConfig = useContext(ModalConfigCtx);
   const setWalletModalConfig = useContext(SetModalConfigCtx);
   const disconnect = useDisconnect();
-  const isWideModal = props.modalSize === "wide";
+
+  const modalSize = modalConfig.modalSize || props.modalSize;
+  const isWideModal = modalSize === "wide";
 
   const handleClose = useCallback(
     (reset = true) => {
@@ -180,7 +182,7 @@ export const ConnectModalContent = (props: {
       ) : (
         <FlexScrollContainer
           style={
-            props.modalSize === "compact"
+            modalSize === "compact"
               ? {
                   maxHeight: modalMaxHeight,
                   display: "flex",

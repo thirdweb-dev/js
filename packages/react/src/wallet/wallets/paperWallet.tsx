@@ -37,6 +37,8 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
     },
     selectUI: PaperSelectionUI,
     connectUI(props) {
+      console.log("paper connectUI props", props);
+
       if (props.modalSize === "wide") {
         return <PaperConnectionUIWide {...props} />;
       }
@@ -94,6 +96,8 @@ const PaperInputUI = (props: {
 };
 
 const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
+  console.log("PaperSelectionUI props", props);
+
   if (props.modalSize === "wide") {
     return (
       <div>
