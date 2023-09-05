@@ -29,6 +29,7 @@ import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
 import type { NetworkSelectorProps } from "./NetworkSelector";
 import { defaultModalTitle } from "./constants";
+import { isMobile } from "../../evm/utils/isMobile";
 
 type ConnectWalletProps = {
   className?: string;
@@ -69,6 +70,15 @@ type ConnectWalletProps = {
    * @default false
    */
   switchToActiveChain?: boolean;
+
+  /**
+   * Set the size of the modal - `compact` or `wide` on desktop
+   *
+   * Modal size is always `compact` on mobile
+   *
+   * @default "wide"
+   */
+  modalSize?: "compact" | "wide";
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -116,10 +126,20 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     setShowSignatureModal(false);
   };
 
+  const modalSize = props.modalSize || "wide";
+
+  const modalConfig = {
+    title: props.modalTitle || defaultModalTitle,
+    theme,
+    data: undefined,
+    modalSize: isMobile() ? "compact" : modalSize,
+  };
+
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       {showSignatureModal && (
         <SignatureModal
+          modalSize="compact"
           open={showSignatureModal}
           setOpen={setShowSignatureModal}
         />
@@ -145,11 +165,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 connectionStatus === "connecting" ? "Connecting" : btnTitle
               }
               onClick={() => {
-                setModalConfig({
-                  title: props.modalTitle || defaultModalTitle,
-                  theme,
-                  data: undefined,
-                });
+                setModalConfig(modalConfig);
                 setIsWalletModalOpen(true);
               }}
               data-test="connect-wallet-button"

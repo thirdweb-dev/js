@@ -6,8 +6,13 @@ import {
   radius,
   iconSize,
 } from "../design-system";
-import { scrollbar } from "../design-system/styles";
+import {
+  modalMaxHeight,
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+} from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
+import { noScrollBar } from "./basic";
 import { IconButton } from "./buttons";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -21,6 +26,7 @@ export const Modal: React.FC<{
   children: React.ReactNode;
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
+  size: "wide" | "compact";
 }> = (props) => {
   return (
     <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
@@ -36,7 +42,15 @@ export const Modal: React.FC<{
           <Overlay />
         </Dialog.Overlay>
         <Dialog.Content asChild>
-          <DialogContent style={props.style}>
+          <DialogContent
+            style={{
+              height: props.size === "compact" ? "auto" : modalMaxHeight,
+              maxWidth:
+                props.size === "compact"
+                  ? modalMaxWidthCompact
+                  : modalMaxWidthWide,
+            }}
+          >
             {props.children}
 
             {/* Close Icon */}
@@ -100,11 +114,7 @@ const modalAnimationMobile = keyframes`
 
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
-  background: linear-gradient(
-    to top,
-    ${(p) => p.theme.bg.base},
-    ${(p) => p.theme.bg.baseHover}
-  );
+  background: ${(p) => p.theme.bg.base};
   border-radius: ${radius.xl};
   position: fixed;
   top: 50%;
@@ -112,21 +122,13 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   transform: translate(-50%, -50%);
   width: calc(100vw - 40px);
   box-sizing: border-box;
-  animation: ${modalAnimationDesktop} 200ms ease;
+  animation: ${modalAnimationDesktop} 300ms ease;
   box-shadow: ${shadow.lg};
   line-height: 1;
   border: 1px solid ${(p) => p.theme.bg.elevatedHover};
+  outline: none;
 
-  &:focus {
-    outline: none;
-  }
-
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
-    })}
+  ${noScrollBar}
 
   /* open from bottom on mobile */
   ${media.mobile} {

@@ -172,6 +172,7 @@ export const SmartWalletFlow = ({
   if (showLocalWalletFlow) {
     return (
       <LocalWalletFlow
+        modalSize="compact"
         theme={colorScheme || "dark"}
         close={onClose}
         goBack={onLocalWalletBackPress}

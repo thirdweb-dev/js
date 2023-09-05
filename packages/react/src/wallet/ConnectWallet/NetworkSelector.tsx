@@ -39,7 +39,7 @@ import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
 import { Flex, ScreenContainer } from "../../components/basic";
 import { SecondaryText } from "../../components/text";
-import { modalMaxWidth } from "./constants";
+import { modalMaxWidthCompact } from "./constants";
 import { ModalTitle } from "../../components/modalElements";
 
 type RenderChain = React.FC<{
@@ -52,6 +52,7 @@ type RenderChain = React.FC<{
 
 export type NetworkSelectorProps = {
   theme?: "dark" | "light";
+  modalSize: "compact" | "wide";
   onClose?: () => void;
   chains?: Chain[];
   popularChains?: Chain[];
@@ -146,6 +147,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <Modal
+        size={props.modalSize}
         open={true}
         setOpen={(value) => {
           if (!value && onClose) {
@@ -153,7 +155,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
           }
         }}
         style={{
-          maxWidth: modalMaxWidth,
+          maxWidth: modalMaxWidthCompact,
           paddingBottom: props.onCustomClick ? spacing.md : "0px",
         }}
       >

@@ -11,8 +11,15 @@ import {
 } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
 import { Spinner } from "../../components/Spinner";
-import { Flex } from "../../components/basic";
+import { Flex, ScreenContainer } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
+import { Button } from "../../components/buttons";
+import { BackButton, ModalTitle } from "../../components/modalElements";
+import { Spacer } from "../../components/Spacer";
+import { TextDivider } from "../../components/TextDivider";
+import styled from "@emotion/styled";
+import { Theme, iconSize, spacing } from "../../design-system";
+import { GoogleIcon } from "../ConnectWallet/icons/GoogleIcon";
 
 type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
 
@@ -28,32 +35,99 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
       return new PaperWallet({ ...options, ...config });
     },
     selectUI: PaperSelectionUI,
-    connectUI: PaperConnectionUI,
+    connectUI(props) {
+      if (props.modalSize === "wide") {
+        return <PaperConnectionUIWide {...props} />;
+      }
+
+      return <PaperConnectionUICompact {...props} />;
+    },
   };
 };
 
-const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
+const PaperInputUI = (props: {
+  onSelect: (input: any) => void;
+  showOrSeparator?: boolean;
+  submitType: "inline" | "button";
+}) => {
   return (
-    <InputSelectionUI
+    <div>
+      <OutlineButton
+        variant="secondary"
+        fullWidth
+        onClick={() => {
+          props.onSelect(undefined);
+        }}
+      >
+        <GoogleIcon size={iconSize.md} />
+        Sign in with Google
+      </OutlineButton>
+
+      <Spacer y="lg" />
+
+      <TextDivider>
+        <span> OR </span>
+      </TextDivider>
+
+      <Spacer y="lg" />
+
+      <InputSelectionUI
+        submitType={props.submitType}
+        onSelect={props.onSelect}
+        placeholder="Enter your email address"
+        name="email"
+        type="email"
+        errorMessage={(_input) => {
+          const input = _input.replace(/\+/g, "");
+          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+          const isValidEmail = emailRegex.test(input);
+          if (!isValidEmail) {
+            return "Invalid email address";
+          }
+        }}
+        emptyErrorMessage="email address is required"
+        showOrSeparator={props.showOrSeparator}
+      />
+    </div>
+  );
+};
+
+const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
+  if (props.modalSize === "wide") {
+    return (
+      <div>
+        <Button
+          variant="secondary"
+          fullWidth
+          onClick={props.onSelect}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: spacing.sm,
+          }}
+        >
+          <GoogleIcon size={iconSize.md} />
+          Email or Google
+        </Button>
+        <Spacer y="lg" />
+        <TextDivider>
+          <span> OR </span>
+        </TextDivider>
+        <Spacer y="md" />
+      </div>
+    );
+  }
+
+  return (
+    <PaperInputUI
+      showOrSeparator={props.supportedWallets.length > 1}
       onSelect={props.onSelect}
-      placeholder="Enter your email address"
-      name="email"
-      type="email"
-      errorMessage={(_input) => {
-        const input = _input.replace(/\+/g, "");
-        const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-        const isValidEmail = emailRegex.test(input);
-        if (!isValidEmail) {
-          return "Invalid email address";
-        }
-      }}
-      emptyErrorMessage="email address is required"
-      supportedWallets={props.supportedWallets}
+      submitType="inline"
     />
   );
 };
 
-const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
+const PaperConnectionUICompact: React.FC<ConnectUIProps<PaperWallet>> = ({
   close,
   walletConfig,
   open,
@@ -63,6 +137,7 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
   const connectPrompted = useRef(false);
   const connect = useConnect();
   const singleWallet = supportedWallets.length === 1;
+
   useEffect(() => {
     if (connectPrompted.current) {
       return;
@@ -94,3 +169,45 @@ const PaperConnectionUI: React.FC<ConnectUIProps<PaperWallet>> = ({
     </Flex>
   );
 };
+
+const PaperConnectionUIWide: React.FC<ConnectUIProps<PaperWallet>> = ({
+  close,
+  walletConfig,
+  open,
+  supportedWallets,
+}) => {
+  const connect = useConnect();
+  const singleWallet = supportedWallets.length === 1;
+
+  const handleConnect = async (selectionData: string) => {
+    close();
+    try {
+      await connect(walletConfig, { email: selectionData });
+    } catch (e) {
+      if (!singleWallet) {
+        open();
+      }
+      console.error(e);
+    }
+  };
+
+  return (
+    <ScreenContainer>
+      <BackButton onClick={close} />
+      <Spacer y="lg" />
+      <ModalTitle>Sign in</ModalTitle>
+      <Spacer y="lg" />
+      <PaperInputUI
+        onSelect={handleConnect}
+        showOrSeparator={false}
+        submitType="button"
+      />
+    </ScreenContainer>
+  );
+};
+
+const OutlineButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
+  display: flex;
+  justify-content: center;
+  gap: ${spacing.sm};
+`;

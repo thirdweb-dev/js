@@ -100,11 +100,17 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        errorConnecting={false}
+        onRetry={() => {
+          // NOOP
+        }}
+        onGetStarted={() => {
+          // NOOP - TODO
+        }}
         hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink={supportLink}
       />
     );
   }

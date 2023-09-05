@@ -18,7 +18,7 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 
 export const GetStartedScreen: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   walletName: string;
   walletIconURL: string;
   chromeExtensionLink?: string;
@@ -26,6 +26,7 @@ export const GetStartedScreen: React.FC<{
   appleStoreLink?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
+  showBack?: boolean;
 }> = ({
   walletName,
   walletIconURL,
@@ -45,24 +46,26 @@ export const GetStartedScreen: React.FC<{
 
   return (
     <ScreenContainer>
-      <BackButton
-        style={
-          isScanScreen
-            ? {
-                position: "absolute",
-                top: spacing.lg,
-                left: spacing.lg,
-              }
-            : undefined
-        }
-        onClick={() => {
-          if (showScreen === "base") {
-            onBack();
-          } else {
-            setShowScreen("base");
+      {onBack && (
+        <BackButton
+          style={
+            isScanScreen
+              ? {
+                  position: "absolute",
+                  top: spacing.lg,
+                  left: spacing.lg,
+                }
+              : undefined
           }
-        }}
-      />
+          onClick={() => {
+            if (showScreen === "base") {
+              onBack();
+            } else {
+              setShowScreen("base");
+            }
+          }}
+        />
+      )}
 
       {showScreen === "android-scan" && googlePlayStoreLink && (
         <ScanScreen
@@ -90,7 +93,7 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "base" && (
         <>
-          <Spacer y="lg" />
+          {onBack && <Spacer y="lg" />}
 
           {header || (
             <>
@@ -248,7 +251,7 @@ export const ButtonLink = styled.button<{ theme?: Theme }>`
   background: ${(p) => p.theme.bg.elevated};
   transition: 100ms ease;
   &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
+    background: ${(p) => p.theme.bg.elevatedHover};
     text-decoration: none;
     color: ${(p) => p.theme.text.neutral};
   }

@@ -3,6 +3,9 @@ export const reservedScreens = {
   getStarted: "getStarted",
 };
 
-export const modalMaxWidth = "360px";
+export const modalMaxWidthCompact = "360px";
+export const modalMaxWidthWide = "730px";
 
 export const defaultModalTitle = "Connect";
+
+export const modalMaxHeight = "550px";

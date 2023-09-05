@@ -10,18 +10,20 @@ import { GetStartedScreen } from "./GetStartedScreen";
 import styled from "@emotion/styled";
 import { SecondaryText } from "../../../components/text";
 import { useWallets } from "@thirdweb-dev/react-core";
+import { useContext } from "react";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const GetStartedWithWallets: React.FC<{
   onBack: () => void;
 }> = ({ onBack }) => {
   const walletConfigs = useWallets();
   const { meta } = walletConfigs[0];
+  const modalConfig = useContext(ModalConfigCtx);
+  const isCompact = modalConfig.modalSize === "compact";
 
   return (
     <GetStartedScreen
-      onBack={() => {
-        onBack();
-      }}
+      onBack={isCompact ? onBack : undefined}
       walletIconURL={meta.iconURL}
       walletName={meta.name}
       appleStoreLink={meta.urls?.ios}
@@ -32,7 +34,7 @@ export const GetStartedWithWallets: React.FC<{
           <ModalTitle> Get started with EVM wallets </ModalTitle>
           <Spacer y="md" />
 
-          <ModalDescription sm>
+          <ModalDescription sm={isCompact}>
             An EVM Wallet is your gateway to interact with web3 apps on Ethereum
             and other custom blockchains.
           </ModalDescription>
@@ -48,9 +50,13 @@ export const GetStartedWithWallets: React.FC<{
             }}
           >
             <SecondaryText
-              style={{
-                fontSize: fontSize.sm,
-              }}
+              style={
+                isCompact
+                  ? {
+                      fontSize: fontSize.sm,
+                    }
+                  : undefined
+              }
             >
               We recommend
             </SecondaryText>

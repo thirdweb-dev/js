@@ -57,6 +57,7 @@ export const SmartConnectUI = (
       supportedWallets: props.personalWallets,
       selectionData: props.selectionData,
       setSelectionData: props.setSelectionData,
+      modalSize: props.modalSize,
     };
 
     if (personalWalletConfig.connectUI) {

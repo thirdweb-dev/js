@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 // for rendering a conventional button
 export const Button = styled.button<{
-  variant: "inverted" | "secondary" | "link" | "danger";
+  variant: "inverted" | "secondary" | "link" | "danger" | "accent";
   theme?: Theme;
   fullWidth?: boolean;
 }>`
@@ -20,50 +20,36 @@ export const Button = styled.button<{
   line-height: 1;
   flex-shrink: 0;
 
-  ${(p) => p.fullWidth && `width: 100%;`}
-
-  &:focus {
-    box-shadow: 0 0 0 3px
-      ${(p) => {
-        switch (p.variant) {
-          case "inverted":
-            return p.theme.bg.invertedFocused;
-          case "secondary":
-            return p.theme.bg.highlighted;
-          case "link":
-            return "none";
-          case "danger":
-            return p.theme.text.danger;
-        }
-      }};
-  }
-
-  box-shadow: ${(p) => {
-    switch (p.variant) {
-      case "danger":
-        return `0 0 0 2px ${p.theme.text.danger}`;
-      case "link":
-        return "none";
-      default:
-        return "none";
-    }
-  }};
+  ${(p) => p.fullWidth && `width: 100%;`};
 
   background: ${(p) => {
     switch (p.variant) {
       case "inverted":
         return p.theme.bg.inverted;
+      case "accent":
+        return p.theme.bg.accent;
       case "secondary":
         return p.theme.bg.elevated;
-      case "link":
-        return "transparent";
       case "danger":
         return "none";
     }
   }};
+
+  &:hover {
+    ${(p) => {
+      if (p.variant === "secondary") {
+        return `
+      background: ${p.theme.bg.elevatedHover};
+      `;
+      }
+    }}
+  }
+
   color: ${(p) => {
     switch (p.variant) {
       case "inverted":
+        return p.theme.text.inverted;
+      case "accent":
         return p.theme.text.inverted;
       case "secondary":
         return p.theme.text.neutral;

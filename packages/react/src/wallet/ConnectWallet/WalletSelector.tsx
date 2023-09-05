@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Img } from "../../components/Img";
-import { Spacer } from "../../components/Spacer";
 import {
   ScreenBottomContainer,
   Flex,
   ScreenContainer,
+  noScrollBar,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
@@ -32,6 +32,8 @@ export const WalletSelector: React.FC<{
   onGetStarted: () => void;
   title: string;
 }> = (props) => {
+  const modalConfig = useContext(ModalConfigCtx);
+
   const localWalletInfo = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
   );
@@ -39,71 +41,96 @@ export const WalletSelector: React.FC<{
     (w) => w.id !== walletIds.localWallet,
   );
 
+  const showBottomContainer =
+    localWalletInfo || modalConfig.modalSize === "compact";
+
   return (
     <>
-      <ScreenContainer
-        style={{
-          paddingBottom: 0,
-        }}
-      >
+      <ScreenContainer>
         <TitleContainer>
           <Flex gap="xxs" alignItems="center">
             <TWIcon size={iconSize.md} />
-
             <ModalTitle> {props.title} </ModalTitle>
           </Flex>
         </TitleContainer>
+      </ScreenContainer>
 
-        <Spacer y="lg" />
-
+      <ScrollableContainer>
         <WalletSelection
           walletConfigs={walletConfigs}
           selectWallet={props.selectWallet}
         />
-      </ScreenContainer>
+      </ScrollableContainer>
 
-      <ScreenBottomContainer>
-        <Flex justifyContent="space-between">
-          <SecondaryText
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            {" "}
-            New to wallets?
-          </SecondaryText>
-          <Button
-            variant="link"
-            onClick={props.onGetStarted}
-            style={{
-              fontSize: fontSize.sm,
-            }}
-          >
-            Get started
-          </Button>
-        </Flex>
-
-        {localWalletInfo && (
-          <>
-            <Spacer y="lg" />
-            <Flex justifyContent="center">
-              <Button
-                fullWidth
-                variant="secondary"
-                onClick={() => {
-                  props.selectWallet(localWalletInfo);
+      {showBottomContainer && (
+        <ScreenBottomContainer
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: spacing.lg,
+          }}
+        >
+          {modalConfig.modalSize === "compact" && (
+            <Flex justifyContent="space-between">
+              <SecondaryText
+                style={{
+                  fontSize: fontSize.sm,
                 }}
-                data-test="continue-as-guest-button"
               >
-                Continue as Guest
+                {" "}
+                New to wallets?
+              </SecondaryText>
+              <Button
+                variant="link"
+                onClick={props.onGetStarted}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                Get started
               </Button>
             </Flex>
-          </>
-        )}
-      </ScreenBottomContainer>
+          )}
+
+          {localWalletInfo && (
+            <>
+              <Flex justifyContent="center">
+                <Button
+                  fullWidth
+                  variant={
+                    modalConfig.modalSize === "wide" ? "link" : "secondary"
+                  }
+                  style={
+                    modalConfig.modalSize === "wide"
+                      ? {
+                          textAlign: "left",
+                          justifyContent: "flex-start",
+                        }
+                      : undefined
+                  }
+                  onClick={() => {
+                    props.selectWallet(localWalletInfo);
+                  }}
+                  data-test="continue-as-guest-button"
+                >
+                  Continue as Guest
+                </Button>
+              </Flex>
+            </>
+          )}
+        </ScreenBottomContainer>
+      )}
     </>
   );
 };
+
+const ScrollableContainer = /* @__PURE__ */ styled(ScreenContainer)`
+  padding-bottom: 0;
+  padding-top: 2px;
+  /* flex: 1; */
+  overflow: auto;
+  ${noScrollBar};
+`;
 
 const TitleContainer = /* @__PURE__ */ styled.div<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.neutral};
@@ -142,16 +169,13 @@ export const WalletSelection: React.FC<{
     });
 
   return (
-    <WalletList
-      style={{
-        maxHeight: props.maxHeight,
-      }}
-    >
+    <WalletList>
       {walletConfigs.map((walletConfig) => {
         return (
           <li key={walletConfig.id} data-full-width={!!walletConfig.selectUI}>
             {walletConfig.selectUI ? (
               <walletConfig.selectUI
+                modalSize={modalConfig.modalSize}
                 theme={modalConfig.theme}
                 supportedWallets={props.walletConfigs}
                 onSelect={(data) => {
@@ -215,20 +239,15 @@ const WalletList = styled.ul<{ theme?: Theme }>`
   flex-direction: column;
   gap: ${spacing.md};
   box-sizing: border-box;
-  max-height: 350px;
-  overflow: auto;
-  scrollbar-width: none;
+  overflow-y: auto;
+  ${noScrollBar}
+
   /* to show the box-shadow of inputs that overflows  */
   padding: 2px;
   margin: -2px;
   padding-bottom: 0;
   margin-bottom: 0;
   padding-bottom: ${spacing.xl};
-
-  &::-webkit-scrollbar {
-    width: 0px;
-    display: none;
-  }
 `;
 
 const WalletButton = styled.button<{ theme?: Theme }>`
@@ -245,13 +264,13 @@ const WalletButton = styled.button<{ theme?: Theme }>`
 
   & svg[data-chveron] {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-10px);
     transition: all 200ms ease;
   }
 
   &:hover svg[data-chveron] {
     opacity: 1;
-    transform: translateX(-10px);
+    transform: translateX(0px);
   }
 `;
 

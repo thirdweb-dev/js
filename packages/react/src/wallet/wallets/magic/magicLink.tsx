@@ -121,7 +121,8 @@ const MagicSelectionUI: React.FC<
             }
           }
         }}
-        supportedWallets={props.supportedWallets}
+        submitType="inline"
+        showOrSeparator={props.supportedWallets.length > 1}
         footer={
           props.oauthProviders && (
             <>

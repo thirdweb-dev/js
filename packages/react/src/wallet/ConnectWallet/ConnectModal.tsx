@@ -25,17 +25,24 @@ import {
 } from "../../design-system";
 import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
-import { modalMaxWidth, reservedScreens } from "./constants";
+import {
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+  reservedScreens,
+  modalMaxHeight,
+} from "./constants";
 import { HeadlessConnectUI } from "../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { IconButton } from "../../components/buttons";
+import { FlexScrollContainer } from "../../components/basic";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
   setScreen: (screen: string | WalletConfig) => void;
   theme?: "light" | "dark";
   title?: string;
+  modalSize: "wide" | "compact";
 }) => {
   const { screen, setScreen } = props;
   const modalConfig = useContext(ModalConfigCtx);
@@ -54,6 +61,7 @@ export const ConnectModalContent = (props: {
   const walletModalConfig = useContext(ModalConfigCtx);
   const setWalletModalConfig = useContext(SetModalConfigCtx);
   const disconnect = useDisconnect();
+  const isWideModal = props.modalSize === "wide";
 
   const handleClose = useCallback(
     (reset = true) => {
@@ -109,25 +117,23 @@ export const ConnectModalContent = (props: {
   const WalletConnectUI =
     typeof screen !== "string" && (screen.connectUI || HeadlessConnectUI);
 
-  return (
-    <ThemeProvider
-      theme={
-        typeof theme === "object"
-          ? theme
-          : theme === "light"
-          ? lightTheme
-          : darkTheme
-      }
-    >
-      {screen === reservedScreens.main && (
-        <WalletSelector
-          title={title}
-          walletConfigs={walletConfigs}
-          onGetStarted={() => {
-            setScreen(reservedScreens.getStarted);
-          }}
-          selectWallet={setScreen}
-        />
+  const walletList = (
+    <WalletSelector
+      title={title}
+      walletConfigs={walletConfigs}
+      onGetStarted={() => {
+        setScreen(reservedScreens.getStarted);
+      }}
+      selectWallet={setScreen}
+    />
+  );
+
+  const screenContent = (
+    <>
+      {screen === reservedScreens.main && !isWideModal && walletList}
+
+      {isWideModal && screen === reservedScreens.main && (
+        <GetStartedWithWallets onBack={handleBack} />
       )}
 
       {screen === reservedScreens.getStarted && (
@@ -145,6 +151,7 @@ export const ConnectModalContent = (props: {
             setIsWalletModalOpen(true);
           }}
           walletConfig={screen}
+          modalSize={modalConfig.modalSize}
           selectionData={walletModalConfig.data}
           setSelectionData={(data) => {
             setWalletModalConfig((config) => ({
@@ -154,12 +161,43 @@ export const ConnectModalContent = (props: {
           }}
         />
       )}
+    </>
+  );
+
+  return (
+    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+      {isWideModal ? (
+        <div
+          style={{
+            height: "100%",
+            display: "grid",
+            gridTemplateColumns: "300px 1fr",
+          }}
+        >
+          <LeftContainer> {walletList} </LeftContainer>
+          <FlexScrollContainer>{screenContent}</FlexScrollContainer>
+        </div>
+      ) : (
+        <div
+          style={
+            props.modalSize === "compact"
+              ? {
+                  maxHeight: modalMaxHeight,
+                  display: "flex",
+                  flexDirection: "column",
+                }
+              : undefined
+          }
+        >
+          {screenContent}
+        </div>
+      )}
     </ThemeProvider>
   );
 };
 
 export const ConnectModal = () => {
-  const { theme } = useContext(ModalConfigCtx);
+  const { theme, modalSize, title } = useContext(ModalConfigCtx);
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -169,9 +207,7 @@ export const ConnectModal = () => {
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <Modal
-        style={{
-          maxWidth: modalMaxWidth,
-        }}
+        size={modalSize}
         open={isWalletModalOpen}
         setOpen={(value) => {
           setIsWalletModalOpen(value);
@@ -183,29 +219,52 @@ export const ConnectModal = () => {
           }
         }}
       >
-        <ConnectModalContent screen={screen} setScreen={setScreen} />
+        <ConnectModalContent
+          screen={screen}
+          setScreen={setScreen}
+          title={title}
+          modalSize={modalSize}
+        />
       </Modal>
     </ThemeProvider>
   );
 };
 
+const LeftContainer = /* @__PURE__ */ styled(FlexScrollContainer)<{
+  theme?: Theme;
+}>`
+  border-right: 1px solid ${(p) => p.theme.bg.elevatedHover};
+`;
+
 export const ConnectModalInline = (props: {
   theme?: "light" | "dark";
   title?: string;
   className?: string;
+  modalSize: "wide" | "compact";
 }) => {
   const { screen, setScreen } = useScreen();
   return (
-    <WalletUIStatesProvider theme={props.theme}>
+    <WalletUIStatesProvider theme={props.theme} modalSize={props.modalSize}>
       <ThemeProvider theme={props.theme === "light" ? lightTheme : darkTheme}>
-        <ConnectModalInlineContainer className={props.className}>
+        <ConnectModalInlineContainer
+          className={props.className}
+          style={{
+            height: props.modalSize === "compact" ? "auto" : modalMaxHeight,
+            maxWidth:
+              props.modalSize === "compact"
+                ? modalMaxWidthCompact
+                : modalMaxWidthWide,
+          }}
+        >
           <ConnectModalContent
             screen={screen}
             setScreen={setScreen}
             theme={props.theme}
             title={props.title}
+            modalSize={props.modalSize}
           />
 
+          {/* close icon */}
           <CrossContainer>
             <IconButton variant="secondary" type="button" aria-label="Close">
               <Cross2Icon
@@ -239,17 +298,13 @@ function useScreen() {
 }
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: linear-gradient(
-    to top,
-    ${(p) => p.theme.bg.base},
-    ${(p) => p.theme.bg.baseHover}
-  );
+  background: ${(p) => p.theme.bg.base};
+  transition: background 0.2s ease;
   border-radius: ${radius.xl};
-  max-width: ${modalMaxWidth};
   width: 100%;
   box-sizing: border-box;
   box-shadow: ${shadow.lg};
   position: relative;
-  border: 1px solid ${(p) => p.theme.bg.elevated};
+  border: 1px solid ${(p) => p.theme.bg.elevatedHover};
   line-height: 1;
 `;

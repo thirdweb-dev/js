@@ -102,6 +102,7 @@ export const ConnectWalletFlow = () => {
     if (activeWallet?.connectUI) {
       return (
         <activeWallet.connectUI
+          modalSize="compact"
           theme={theme || "dark"}
           goBack={onBackPress}
           close={handleClose}

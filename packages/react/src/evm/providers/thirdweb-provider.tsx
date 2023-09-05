@@ -64,7 +64,7 @@ export const ThirdwebProvider = <
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
 
   return (
-    <WalletUIStatesProvider theme={theme}>
+    <WalletUIStatesProvider theme={theme} modalSize="wide">
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
         <ThirdwebProviderCore
           theme={theme}

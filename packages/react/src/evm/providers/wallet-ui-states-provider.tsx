@@ -1,5 +1,6 @@
 import { useState, createContext, useContext } from "react";
 import { defaultModalTitle } from "../../wallet/ConnectWallet/constants";
+import { isMobile } from "../utils/isMobile";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -7,6 +8,7 @@ type ModalConfig = {
   title: string;
   theme: "light" | "dark";
   data: any;
+  modalSize: "wide" | "compact";
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -18,6 +20,7 @@ export const ModalConfigCtx = /* @__PURE__ */ createContext<ModalConfig>({
   title: "",
   theme: "dark",
   data: undefined,
+  modalSize: "wide",
 });
 
 export const SetModalConfigCtx = /* @__PURE__ */ createContext<
@@ -25,14 +28,19 @@ export const SetModalConfigCtx = /* @__PURE__ */ createContext<
 >(() => {});
 
 export const WalletUIStatesProvider = (
-  props: React.PropsWithChildren<{ theme?: "light" | "dark" }>,
+  props: React.PropsWithChildren<{
+    theme?: "light" | "dark";
+    modalSize: "wide" | "compact";
+  }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const _isMobile = isMobile();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
     title: defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
+    modalSize: _isMobile ? "compact" : props.modalSize,
   });
 
   return (

@@ -127,6 +127,11 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
    * List of all supported wallets including your wallet.
    */
   supportedWallets: WalletConfig[];
+
+  /**
+   * Size of the modal
+   */
+  modalSize: "compact" | "wide";
 };
 
 export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
@@ -156,4 +161,9 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
    * theme of the connect wallet modal
    */
   theme: "dark" | "light";
+
+  /**
+   * Size of the modal
+   */
+  modalSize: "compact" | "wide";
 };

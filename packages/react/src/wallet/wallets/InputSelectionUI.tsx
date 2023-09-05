@@ -4,9 +4,8 @@ import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Theme, iconSize, spacing } from "../../design-system";
-import { InputButton } from "../../components/buttons";
+import { Button, InputButton } from "../../components/buttons";
 import styled from "@emotion/styled";
-import { WalletConfig } from "@thirdweb-dev/react-core";
 
 export function InputSelectionUI(props: {
   onSelect: (data: any) => void;
@@ -15,12 +14,12 @@ export function InputSelectionUI(props: {
   type: string;
   errorMessage?: (input: string) => string | undefined;
   emptyErrorMessage?: string;
-  supportedWallets: WalletConfig[];
+  showOrSeparator?: boolean;
   footer?: React.ReactNode;
   noInput?: boolean;
+  submitType: "inline" | "button";
 }) {
   const [input, setInput] = useState("");
-  const singleWallet = props.supportedWallets.length === 1;
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);
 
@@ -48,7 +47,7 @@ export function InputSelectionUI(props: {
           <Input
             tabIndex={-1}
             placeholder={props.placeholder}
-            variant="secondary"
+            variant="outline"
             type={props.type}
             name={props.name}
             value={input}
@@ -68,15 +67,17 @@ export function InputSelectionUI(props: {
             }}
           />
 
-          <CircleInputButton
-            onClick={() => {
-              handleSelect();
-            }}
-            color="inverted"
-            type="button"
-          >
-            <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
-          </CircleInputButton>
+          {props.submitType === "inline" && (
+            <CircleInputButton
+              onClick={() => {
+                handleSelect();
+              }}
+              color="inverted"
+              type="button"
+            >
+              <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
+            </CircleInputButton>
+          )}
         </div>
       )}
 
@@ -97,9 +98,18 @@ export function InputSelectionUI(props: {
           </>
         )}
 
+      {props.submitType === "button" && (
+        <>
+          <Spacer y="md" />
+          <Button variant="accent" onClick={handleSelect} fullWidth>
+            Continue
+          </Button>
+        </>
+      )}
+
       {props.footer}
 
-      {!singleWallet && (
+      {props.showOrSeparator && (
         <>
           <Spacer y="lg" />
           <TextDivider>

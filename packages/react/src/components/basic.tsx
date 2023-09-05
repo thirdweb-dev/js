@@ -35,6 +35,20 @@ export const ScreenContainer = styled.div`
 export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
   border-top: 1px solid ${(p) => p.theme.bg.elevatedHover};
   padding: ${spacing.lg};
-  z-index: 10;
+`;
+
+export const noScrollBar = `
+scrollbar-width: none;
+&::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+`;
+
+export const FlexScrollContainer = styled.div<{ theme?: Theme }>`
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  ${noScrollBar}
   position: relative;
 `;

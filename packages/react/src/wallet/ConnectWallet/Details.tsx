@@ -42,14 +42,14 @@ import {
 import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
 import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
-import { Flex } from "../../components/basic";
+import { Flex, ScreenContainer } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
-import { modalMaxWidth } from "./constants";
+import { modalMaxWidthCompact } from "./constants";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -390,6 +390,7 @@ export const ConnectedWalletDetails: React.FC<{
     <>
       {isMobile() ? (
         <Modal
+          size={"compact"}
           trigger={trigger}
           open={open}
           setOpen={setOpen}
@@ -397,10 +398,10 @@ export const ConnectedWalletDetails: React.FC<{
         >
           <div
             style={{
-              minHeight: "200px",
+              minHeight: "220px",
             }}
           >
-            {content}
+            <ScreenContainer>{content}</ScreenContainer>
           </div>
         </Modal>
       ) : (
@@ -421,6 +422,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
+          modalSize={"compact"}
           theme={props.theme}
           chains={chains}
           {...props.networkSelector}
@@ -430,10 +432,11 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showExportModal && (
         <Modal
+          size={"compact"}
           open={true}
           setOpen={setShowExportModal}
           style={{
-            maxWidth: modalMaxWidth,
+            maxWidth: modalMaxWidthCompact,
           }}
         >
           <ExportLocalWallet
