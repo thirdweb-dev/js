@@ -26,16 +26,20 @@ export const PublishedBy: React.FC<PublishedByProps> = ({
   const address = useAddress();
 
   const publishedContractToShow = useMemo(() => {
+    const reversedPublishedContractsFromDeploy = [
+      ...(publishedContractsFromDeploy.data || []),
+    ].reverse();
+
     return (
-      publishedContractsFromDeploy.data?.find(
+      reversedPublishedContractsFromDeploy.find(
         (publishedContract) => publishedContract.publisher === address,
       ) ||
-      publishedContractsFromDeploy.data?.find(
+      reversedPublishedContractsFromDeploy.find(
         (publishedContract) =>
           publishedContract.publisher === THIRDWEB_DEPLOYER_ADDRESS,
       ) ||
-      publishedContractsFromDeploy.data?.[
-        publishedContractsFromDeploy.data.length - 1
+      reversedPublishedContractsFromDeploy[
+        reversedPublishedContractsFromDeploy.length - 1
       ] ||
       undefined
     );
