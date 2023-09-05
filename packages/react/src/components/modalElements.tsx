@@ -42,7 +42,7 @@ export const BackButton: React.FC<{
     <IconButton
       variant="secondary"
       onClick={props.onClick}
-      style={props.style}
+      style={{ transform: "translateX(-25%)", ...props.style }}
       type="button"
     >
       <ChevronLeftIcon

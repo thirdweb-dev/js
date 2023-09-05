@@ -181,15 +181,11 @@ export const ConnectModalContent = (props: {
         </div>
       ) : (
         <FlexScrollContainer
-          style={
-            modalSize === "compact"
-              ? {
-                  maxHeight: modalMaxHeight,
-                  display: "flex",
-                  flexDirection: "column",
-                }
-              : undefined
-          }
+          style={{
+            maxHeight: modalMaxHeight,
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
           {screenContent}
         </FlexScrollContainer>
