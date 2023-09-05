@@ -43,7 +43,7 @@ export async function loginUser(
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
-    globalThis["TW_AUTH_TOKEN"] = authToken;
+    globalThis["TW_CLI_AUTH_TOKEN"] = authToken;
     return authToken;
   } else {
     const token = await authenticateUser({ browser: true, configPaths });
@@ -51,7 +51,7 @@ export async function loginUser(
       throw new Error("Failed to login");
     }
 
-    globalThis["TW_AUTH_TOKEN"] = token;
+    globalThis["TW_CLI_AUTH_TOKEN"] = token;
     return token;
   }
 }
@@ -59,7 +59,7 @@ export async function loginUser(
 export async function logoutUser(credsConfigPath: string, tokenPath: string, cliWalletPath: string) {
   try {
     ora("Logging out...").start();
-    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath);
+    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath) && fs.existsSync(cliWalletPath);
     if (!dirExists) {
       ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
       return;

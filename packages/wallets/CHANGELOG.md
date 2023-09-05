@@ -1,5 +1,18 @@
 # @thirdweb-dev/wallets
 
+## 1.1.23
+
+### Patch Changes
+
+- [#1568](https://github.com/thirdweb-dev/js/pull/1568) [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better fee calculations for OP stack
+
+- [#1572](https://github.com/thirdweb-dev/js/pull/1572) [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dynamic gas fee estimations
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- Updated dependencies [[`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25), [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40), [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/sdk@3.10.59
+
 ## 1.1.22
 
 ### Patch Changes

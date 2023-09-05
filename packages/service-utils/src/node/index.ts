@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto";
 import { authorize } from "../core/authorize";
 
+import type { ServerResponse } from "http";
 import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
-import type { AuthorizationInput } from "../core/authorize";
 import type { CoreServiceConfig } from "../core/api";
+import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
-import type { ServerResponse } from "http";
 
 export * from "../core/services";
 
@@ -16,6 +16,23 @@ export type AuthInput = CoreAuthInput & {
   req: IncomingMessage;
 };
 
+/**
+ *
+ * @param {AuthInput['req']} authInput.req - The incoming request from which information will be pulled from. These information includes (checks are in order and terminates on first match):
+ * - clientId: Checks header `x-client-id`, search param `clientId`
+ * - bundleId: Checks header `x-bundle-id`, search param `bundleId`
+ * - secretKey: Checks header `x-secret-key`
+ * - origin (the requesting domain): Checks header `origin`, `referer`
+ * @param {AuthInput['clientId']} authInput.clientId - Overrides any clientId found on the `req` object
+ * @param {AuthInput['targetAddress']} authInput.targetAddress - Only used in smart wallets to determine if the request is authorized to interact with the target address.
+ * @param {NodeServiceConfig['enforceAuth']} serviceConfig - Always `true` unless you need to turn auth off. Tells the service whether or not to enforce auth.
+ * @param {NodeServiceConfig['apiUrl']} serviceConfig.apiUrl - The url of the api server to fetch information for verification. `https://api.thirdweb.com` for production and `https://api.staging.thirdweb.com` for staging
+ * @param {NodeServiceConfig['serviceApiKey']} serviceConfig.serviceApiKey - secret key to be used authenticate the caller of the api-server. Check the api-server's env variable for the keys.
+ * @param {NodeServiceConfig['serviceScope']} serviceConfig.serviceScope - The service that we are requesting authorization for. E.g. `relayer`, `rpc`, 'bundler', 'storage' etc.
+ * @param {NodeServiceConfig['serviceAction']} serviceConfig.serviceAction - Needed when the `serviceScope` is `storage`. Can be either `read` or `write`.
+ * @param {NodeServiceConfig['useWalletAuth']} serviceConfig.useWalletAuth - If true it pings the `wallet/me` or else, `account/me`. You most likely can leave this as false.
+ * @returns {AuthorizationResult} authorizationResult - contains if the request is authorized, and information about the account if it is authorized. Otherwise, it contains the error message and status code.
+ */
 export async function authorizeNode(
   authInput: AuthInput,
   serviceConfig: NodeServiceConfig,

@@ -1,4 +1,5 @@
+/* eslint-disable no-var */
 declare module globalThis {
-  // eslint-disable-next-line no-var
   var TW_AUTH_TOKEN: string;
+  var TW_CLI_AUTH_TOKEN: string;
 }
