@@ -17,6 +17,7 @@ export type WalletClass<I extends WalletInstance = WalletInstance> = {
 };
 
 export type WalletConfig<I extends WalletInstance = WalletInstance> = {
+  category?: "socialLogin" | "walletLogin";
   id: string;
   meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;

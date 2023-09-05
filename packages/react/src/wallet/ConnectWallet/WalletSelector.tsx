@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Img } from "../../components/Img";
 import {
   ScreenBottomContainer,
@@ -7,7 +7,7 @@ import {
   noScrollBar,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
-import { ModalTitle } from "../../components/modalElements";
+import { BackButton, ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
   iconSize,
@@ -25,6 +25,8 @@ import {
 import { TWIcon } from "./icons/twIcon";
 import { AccentText, SecondaryText } from "../../components/text";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { Spacer } from "../../components/Spacer";
+import { TextDivider } from "../../components/TextDivider";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -37,12 +39,36 @@ export const WalletSelector: React.FC<{
   const localWalletInfo = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
   );
+
   const walletConfigs = props.walletConfigs.filter(
     (w) => w.id !== walletIds.localWallet,
   );
 
-  const showBottomContainer =
+  const socialLogins = props.walletConfigs.filter(
+    (w) => w.category === "socialLogin",
+  );
+
+  const otherLogins = sortWalletConfigs(
+    props.walletConfigs.filter((w) => w.category !== "socialLogin"),
+  );
+
+  const otherLoginCount = props.walletConfigs.length - socialLogins.length;
+  const shouldGroupWallets = socialLogins.length >= 1 && otherLoginCount >= 2;
+
+  // if there is a socialLogin category wallet and 2 or more of other wallet, do not show all the wallets in list directly
+
+  const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
+
+  const isCompact = modalConfig.modalSize === "compact";
+
+  const hasBottomContainerContent =
     localWalletInfo || modalConfig.modalSize === "compact";
+
+  let showBottomContainer = hasBottomContainerContent;
+
+  if (isCompact && shouldGroupWallets && !isWalletGroupExpanded) {
+    showBottomContainer = false;
+  }
 
   return (
     <>
@@ -56,10 +82,69 @@ export const WalletSelector: React.FC<{
       </ScreenContainer>
 
       <ScrollableContainer>
-        <WalletSelection
-          walletConfigs={walletConfigs}
-          selectWallet={props.selectWallet}
-        />
+        {isCompact && shouldGroupWallets ? (
+          <>
+            {isWalletGroupExpanded && (
+              <>
+                <BackButton
+                  onClick={() => {
+                    setIsWalletGroupExpanded(false);
+                  }}
+                />
+                <Spacer y="md" />
+                <WalletSelection
+                  walletConfigs={otherLogins.filter(
+                    (w) => w.id !== walletIds.localWallet,
+                  )}
+                  selectWallet={props.selectWallet}
+                />
+              </>
+            )}
+
+            {!isWalletGroupExpanded && (
+              <>
+                <WalletSelection
+                  walletConfigs={socialLogins}
+                  selectWallet={props.selectWallet}
+                />
+                <TextDivider>
+                  <span> OR </span>
+                </TextDivider>
+                <Spacer y="lg" />
+                <Button
+                  fullWidth
+                  variant="secondary"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: spacing.sm,
+                  }}
+                  onClick={() => {
+                    setIsWalletGroupExpanded(true);
+                  }}
+                >
+                  <Flex gap="xxs">
+                    {otherLogins.slice(0, 2).map((w) => (
+                      <Img
+                        key={w.id}
+                        width={iconSize.sm}
+                        height={iconSize.sm}
+                        src={w.meta.iconURL}
+                      />
+                    ))}
+                  </Flex>
+                  Connect a wallet
+                </Button>
+                <Spacer y="xl" />
+              </>
+            )}
+          </>
+        ) : (
+          <WalletSelection
+            walletConfigs={walletConfigs}
+            selectWallet={props.selectWallet}
+          />
+        )}
       </ScrollableContainer>
 
       {showBottomContainer && (
@@ -143,30 +228,7 @@ export const WalletSelection: React.FC<{
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   const setModalConfig = useContext(SetModalConfigCtx);
-  const walletConfigs = props.walletConfigs
-    // show the installed wallets first
-    .sort((a, b) => {
-      const aInstalled = a.isInstalled ? a.isInstalled() : false;
-      const bInstalled = b.isInstalled ? b.isInstalled() : false;
-
-      if (aInstalled && !bInstalled) {
-        return -1;
-      }
-      if (!aInstalled && bInstalled) {
-        return 1;
-      }
-      return 0;
-    })
-    // show the wallets with selectUI first before others
-    .sort((a, b) => {
-      if (a.selectUI && !b.selectUI) {
-        return -1;
-      }
-      if (!a.selectUI && b.selectUI) {
-        return 1;
-      }
-      return 0;
-    });
+  const walletConfigs = sortWalletConfigs(props.walletConfigs);
 
   return (
     <WalletList>
@@ -279,3 +341,32 @@ const WalletName = styled.span<{ theme?: Theme }>`
   font-weight: 500;
   color: ${(p) => p.theme.text.neutral};
 `;
+
+function sortWalletConfigs(walletConfigs: WalletConfig[]) {
+  return (
+    walletConfigs
+      // show the installed wallets first
+      .sort((a, b) => {
+        const aInstalled = a.isInstalled ? a.isInstalled() : false;
+        const bInstalled = b.isInstalled ? b.isInstalled() : false;
+
+        if (aInstalled && !bInstalled) {
+          return -1;
+        }
+        if (!aInstalled && bInstalled) {
+          return 1;
+        }
+        return 0;
+      })
+      // show the wallets with selectUI first before others
+      .sort((a, b) => {
+        if (a.selectUI && !b.selectUI) {
+          return -1;
+        }
+        if (!a.selectUI && b.selectUI) {
+          return 1;
+        }
+        return 0;
+      })
+  );
+}

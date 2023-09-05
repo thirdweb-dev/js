@@ -82,6 +82,7 @@ export function magicLink(
   const type = config.type || "auth";
 
   return {
+    category: "socialLogin",
     id: MagicLink.id,
     meta: {
       ...MagicLink.meta,

@@ -25,6 +25,7 @@ type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
+    category: "socialLogin",
     id: PaperWallet.id,
     meta: {
       ...PaperWallet.meta,
@@ -74,7 +75,7 @@ const PaperInputUI = (props: {
       <InputSelectionUI
         submitType={props.submitType}
         onSelect={props.onSelect}
-        placeholder="Enter your email address"
+        placeholder="Sign in with email address"
         name="email"
         type="email"
         errorMessage={(_input) => {

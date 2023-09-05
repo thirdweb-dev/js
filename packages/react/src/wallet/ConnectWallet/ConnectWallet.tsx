@@ -13,6 +13,7 @@ import {
   useUser,
   useWallet,
   useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { useContext, useState } from "react";
 import {
@@ -94,6 +95,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const theme = props.theme || themeFromProvider || "dark";
   const connectionStatus = useConnectionStatus();
 
+  const walletConfigs = useWallets();
   const isLoading =
     connectionStatus === "connecting" || connectionStatus === "unknown";
 
@@ -126,13 +128,17 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     setShowSignatureModal(false);
   };
 
-  const modalSize = props.modalSize || "wide";
+  let modalSize = props.modalSize || "wide";
+
+  if (isMobile() || walletConfigs.length === 1) {
+    modalSize = "compact";
+  }
 
   const modalConfig = {
     title: props.modalTitle || defaultModalTitle,
     theme,
     data: undefined,
-    modalSize: isMobile() ? "compact" : modalSize,
+    modalSize,
   };
 
   return (

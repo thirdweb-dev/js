@@ -4,7 +4,7 @@ import { isMobile } from "../utils/isMobile";
 
 type BoolSetter = (value: boolean) => void;
 
-type ModalConfig = {
+export type ModalConfig = {
   title: string;
   theme: "light" | "dark";
   data: any;
