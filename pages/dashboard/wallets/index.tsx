@@ -10,7 +10,7 @@ const TRACKING_CATEGORY = "dashboard-wallets";
 
 const CONNECT_SECTION = [
   {
-    title: "Connect Wallet Button",
+    title: "Connect Wallet",
     description:
       "Powerful UI component that enables you to integrate wallets into your app.",
     image: require("public/assets/dashboard/wallets/connect-wallet.png"),

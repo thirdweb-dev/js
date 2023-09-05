@@ -11,7 +11,15 @@ import { AppLayout } from "components/app-layouts/app";
 import { WalletsSidebar } from "core-ui/sidebar/wallets";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
-import { Heading, Text } from "tw-components";
+import {
+  Card,
+  Heading,
+  Link,
+  LinkButton,
+  Text,
+  TrackedLink,
+  TrackedLinkButton,
+} from "tw-components";
 import { ContractWithMetadata, useAddress } from "@thirdweb-dev/react";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
@@ -32,6 +40,7 @@ import { getChainByChainId } from "@thirdweb-dev/chains";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { useRouter } from "next/router";
 import { ContractCard } from "components/explore/contract-card";
+import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 
 type ContractWithExtensions = {
   contract: ContractWithMetadata;
@@ -84,6 +93,113 @@ const accountFactories = [
   "thirdweb.eth/ManagedAccountFactory",
 ];
 
+const CONNECT_SNIPPET = WALLETS_SNIPPETS.find((s) => s.id === "smart-wallet");
+const INTERACT_SNIPPET = {
+  javascript: `import {{chainName}} from "@thirdweb-dev/chains";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+
+// Simply initialize your SDK with the created smart wallet
+const sdk = await ThirdwebSDK.fromWallet(smartWallet, {{chainName}}, {
+  clientId: "YOUR_CLIENT_ID"
+});
+
+// You can now interact with the blockchain as you would with a regular EOA
+const smartWalletAddress = await sdk.wallet.getAddress();
+
+// gas free wallet actions
+await sdk.wallet.transfer("{{contract_address}}", "0.01");
+
+// gas free contract deployments
+const contractAddress = await sdk.deployer.deployNFTCollection({ 
+  name: "My NFT Collection", 
+  primary_sale_recipient: smartWalletAddress 
+});
+
+// gas free contract interactions
+const contract = await sdk.getContract(contractAddress);
+await contract.erc721.mint({ 
+  name: "My NFT",
+  description: "My NFT description",
+  image: "https://example.com/image.png",
+});
+`,
+  react: `import {{chainName}} from "@thirdweb-dev/chains";
+import { useAddress, useContract, useOwnedNFTs, Web3Button } from "@thirdweb-dev/react";
+
+// The ThirdwebProvider setup above already handles connection to the smart wallet
+// Within the provider, you can use the react SDK hooks to interact with the blockchain
+export default function MyComponent() {
+  // Get the connected smart wallet address
+  const smartWalletAddress = useAddress();
+
+  // Fetch owned NFTs
+  const { contract } = useContract("{{contract_address}}");
+  const { data, isLoading } = useOwnedNFTs(contract, smartWalletAddress);
+
+  // Mint a new NFT
+  return (
+    <Web3Button
+      contractAddress={"{{contract_address}}"}
+      action={(contract) => contract.erc721.mint({ 
+          name: "My NFT",
+          description: "My NFT description",
+          image: "https://example.com/image.png",
+        })
+      }
+    >
+      Mint NFT
+    </Web3Button>
+  );
+}`,
+  "react-native": `import {{chainName}} from "@thirdweb-dev/chains";
+import { useAddress, useContract, useOwnedNFTs, Web3Button } from "@thirdweb-dev/react-native";
+
+// The ThirdwebProvider setup above already handles connection to the smart wallet
+// Within the provider, you can use the react SDK hooks to interact with the blockchain
+export default function MyComponent() {
+  // Get the connected smart wallet address
+  const smartWalletAddress = useAddress();
+
+  // Fetch owned NFTs
+  const { contract } = useContract("{{contract_address}}");
+  const { data, isLoading } = useOwnedNFTs(contract, smartWalletAddress);
+
+  // Mint a new NFT
+  return (
+    <Web3Button
+      contractAddress={"{{contract_address}}"}
+      action={(contract) => contract.erc721.mint({ 
+          name: "My NFT",
+          description: "My NFT description",
+          image: "https://example.com/image.png",
+        })
+      }
+    >
+      Mint NFT
+    </Web3Button>
+  );
+}`,
+  unity: `using Thirdweb;
+
+public async void MintNFT()
+{
+  // The ThirdwebManger prefab holds the smart wallet connection state
+  var sdk = ThirdwebManager.Instance.SDK;
+
+  // Get the connected smart wallet address
+  var smartWalletAddress = await sdk.Wallet.GetAddress();
+
+  // Interact with contracts
+  Contract contract = sdk.GetContract("{{contract_address}}");
+  await contract.ERC721.Mint(new NFTMetadata()
+  {
+      name = "My NFT",
+      description = "My NFT description",
+      image = "https://example.com/image.png",
+  });
+}`,
+};
+
 const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   const address = useAddress();
   const factories = useFactories();
@@ -91,13 +207,12 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   const form = useForm<SmartWalletFormData>();
   const [selectedLanguage, setSelectedLanguage] =
     useState<CodeEnvironment>("javascript");
-  const snippet = WALLETS_SNIPPETS.find((s) => s.id === "smart-wallet");
 
   const chainId = form.watch("chainAndFactoryAddress")?.split("-")[0];
   const chainSlug = useChainSlug(chainId);
 
   return (
-    <Flex flexDir="column" gap={16} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={12} mt={{ base: 2, md: 6 }}>
       <Flex flexDir="column" gap={4}>
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={12}>
           <Flex flexDir="column" gap={4}>
@@ -136,11 +251,95 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
       </Flex>
       <Flex flexDir={"column"} gap={4}>
         <Heading size="title.md" as="h1">
+          Bundler and Paymaster Infrastructure
+        </Heading>
+        <Text>
+          The thirdweb SDK handles all the heavy lifting of bundling operations
+          and covering gas fees with a turn key infrastructure.
+        </Text>
+        <UnorderedList>
+          <Text as={ListItem}>
+            On testnets, the only requirement is to obtain a{" "}
+            <TrackedLink
+              color={"blue.500"}
+              href="/dashboard/settings/api-keys"
+              category="smart-wallet"
+              label="api-key"
+              isExternal
+            >
+              free client id
+            </TrackedLink>{" "}
+            to get started.
+          </Text>
+          <Text as={ListItem}>
+            Once you&apos;re ready to deploy on mainnets, you will require an
+            active billing account.
+          </Text>
+          <Text as={ListItem}>
+            You can configure your client id to restrict interactions only with
+            your own contracts or with any contract.
+          </Text>
+        </UnorderedList>
+      </Flex>
+      <Flex flexDir={"column"} gap={4}>
+        <Heading size="title.md" as="h1">
+          Supported chains
+        </Heading>
+        <Text>
+          We continuously add support for new chains. Looking for a chain not
+          listed below?{" "}
+          <TrackedLink
+            color={"blue.500"}
+            category="smart-wallet"
+            label="chain-request"
+            href={`https://docs.google.com/forms/d/e/1FAIpQLSffFeEw7rPGYA8id7LwL22-W3irT6siXE5EHgD3xrxmxpLKCw/viewform?entry.948574526=${
+              address || ""
+            }`}
+            isExternal
+          >
+            Contact us.
+          </TrackedLink>
+        </Text>
+        <Flex flexDir="row" gap={12}>
+          <Flex flexDir="column" gap={2}>
+            <Text size="label.lg">Mainnets</Text>
+            <UnorderedList>
+              <Text as={ListItem}>Polygon</Text>
+              <Text as={ListItem}>Optimism</Text>
+              <Text as={ListItem}>Arbitrum</Text>
+              <Text as={ListItem}>Base</Text>
+            </UnorderedList>
+          </Flex>
+          <Flex flexDir="column" gap={2}>
+            <Text size="label.lg">Testnets</Text>
+            <UnorderedList>
+              <Text as={ListItem}>Goerli</Text>
+              <Text as={ListItem}>Mumbai</Text>
+              <Text as={ListItem}>Optimism Goerli</Text>
+              <Text as={ListItem}>Arbitrum Goerli</Text>
+              <Text as={ListItem}>Base Goerli</Text>
+            </UnorderedList>
+          </Flex>
+        </Flex>
+      </Flex>
+      <Flex flexDir={"column"} gap={4}>
+        <Heading size="title.md" as="h1">
           Deploy Account Factories
         </Heading>
         <Text>
-          Account Factory contracts do the heavy lifting of deploying individual
-          accounts for your users when needed.
+          Ready to use Account Factory contracts that can deploy individual
+          accounts gas-efficiently and provide on chain data about your user
+          base.
+          <br />
+          <TrackedLink
+            color={"blue.500"}
+            category="smart-wallet"
+            label="account-factory-blog"
+            isExternal
+            href="https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/"
+          >
+            Read about our different account factory contracts.
+          </TrackedLink>
         </Text>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
           {accountFactories.map((publishedContractId, idx) => {
@@ -151,7 +350,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
                 publisher={publisher}
                 contractId={contractId}
                 tracking={{
-                  source: "smart-wallet",
+                  source: "smart-wallet-tab",
                   itemIndex: `${idx}`,
                 }}
               />
@@ -164,10 +363,84 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         <Heading size="title.md" as="h1">
           Integrate Smart Wallets into your apps
         </Heading>
+        <Text>Get started quickly by cloning one of the starter templates</Text>
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+          <TrackedLink
+            category="smart-wallet"
+            label="node-template"
+            href="https://github.com/thirdweb-example/smart-wallet-script"
+            isExternal
+            _hover={{ textDecor: "none" }}
+          >
+            <Card
+              as={Flex}
+              flexDir={"row"}
+              gap={4}
+              flex={1}
+              transition="150ms border-color ease-in-out"
+              _hover={{
+                _dark: {
+                  borderColor: "blue.400",
+                },
+                _light: {
+                  borderColor: "blue.600",
+                },
+              }}
+              overflow="hidden"
+              bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+            >
+              <SiGithub size={"42"} />
+              <Flex flexDir={"column"} gap={2}>
+                <Heading size="title.sm" as="h1">
+                  Node.js template
+                </Heading>
+                <Text>
+                  Simple Node.js script that connects to a smart wallet and
+                  mints ERC20 tokens.
+                </Text>
+              </Flex>
+            </Card>
+          </TrackedLink>
+          <TrackedLink
+            category="smart-wallet"
+            label="react-template"
+            href="https://github.com/thirdweb-example/smart-wallet-react"
+            isExternal
+            _hover={{ textDecor: "none" }}
+          >
+            <Card
+              as={Flex}
+              flexDir={"row"}
+              gap={4}
+              flex={1}
+              transition="150ms border-color ease-in-out"
+              _hover={{
+                _dark: {
+                  borderColor: "blue.400",
+                },
+                _light: {
+                  borderColor: "blue.600",
+                },
+              }}
+              overflow="hidden"
+              bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+            >
+              <SiGithub size={"42"} />
+              <Flex flexDir={"column"} gap={2}>
+                <Heading size="title.sm" as="h1">
+                  React template
+                </Heading>
+                <Text>
+                  Simple web application that lets users connects to their smart
+                  wallet and mint NFTs.
+                </Text>
+              </Flex>
+            </Card>
+          </TrackedLink>
+        </SimpleGrid>
         <Text>
-          Use the following code to integrate smart wallets into your apps. This
-          will handle: from the app will only deploy the individual account
-          contracts for your users when they do their first onchain transaction.
+          Or use the following code to integrate smart wallets into your apps.
+          This will handle:
         </Text>
         <UnorderedList>
           <Text as={ListItem}>
@@ -184,7 +457,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         </UnorderedList>
         <Text>
           Select your deployed account factory and client ID to get a fully
-          funcitonal code snippet.
+          functional code snippet.
         </Text>
         <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
           <FormControl as={Flex} flexDir="column" gap={4}>
@@ -243,12 +516,84 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           </FormControl>
         </Flex>
         <CodeSegment
-          snippet={formatSnippet(snippet?.supportedLanguages as any, {
+          snippet={formatSnippet(CONNECT_SNIPPET?.supportedLanguages as any, {
             contractAddress: form
               .watch("chainAndFactoryAddress")
               ?.split("-")[1],
             clientId: form.watch("clientId"),
-            chainName: chainSlug?.toString() || "ethereum",
+            chainName: chainSlug?.toString() || "goerli",
+          })}
+          environment={selectedLanguage}
+          setEnvironment={setSelectedLanguage}
+        />
+        <TrackedLinkButton
+          category="smart-wallet"
+          label="docs-wallets"
+          href="https://portal.thirdweb.com/wallet/smart-wallet"
+          colorScheme="primary"
+          variant={"ghost"}
+          w={"fit-content"}
+          size="md"
+          isExternal
+        >
+          View Smart Wallet documentation
+        </TrackedLinkButton>
+      </Flex>
+      <Flex flexDir={"column"} gap={4}>
+        <Heading size="title.md" as="h1">
+          Executing gas free transactions with Smart Wallets
+        </Heading>
+        <Text>
+          Once setup, you can use the thirdweb{" "}
+          <TrackedLink
+            category="smart-wallet"
+            label="docs-typescript"
+            href="https://portal.thirdweb.com/typescript"
+            color={"blue.500"}
+            isExternal
+          >
+            TypeScript
+          </TrackedLink>
+          ,{" "}
+          <TrackedLink
+            category="smart-wallet"
+            label="docs-react"
+            href="https://portal.thirdweb.com/react"
+            color={"blue.500"}
+            isExternal
+          >
+            React
+          </TrackedLink>
+          ,{" "}
+          <TrackedLink
+            category="smart-wallet"
+            label="docs-react-native"
+            href="https://portal.thirdweb.com/react-native"
+            color={"blue.500"}
+            isExternal
+          >
+            React Native
+          </TrackedLink>{" "}
+          and{" "}
+          <TrackedLink
+            category="smart-wallet"
+            label="docs-unity"
+            href="https://portal.thirdweb.com/unity"
+            color={"blue.500"}
+            isExternal
+          >
+            Unity
+          </TrackedLink>{" "}
+          SDKs to deploy contracts, perform transactions, and manipulate wallets
+          just like you would with any other wallet.
+        </Text>
+        <CodeSegment
+          snippet={formatSnippet(INTERACT_SNIPPET as any, {
+            contractAddress: form
+              .watch("chainAndFactoryAddress")
+              ?.split("-")[1],
+            clientId: form.watch("clientId"),
+            chainName: chainSlug?.toString() || "goerli",
           })}
           environment={selectedLanguage}
           setEnvironment={setSelectedLanguage}
