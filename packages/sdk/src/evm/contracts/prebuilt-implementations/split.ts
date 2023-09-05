@@ -254,7 +254,7 @@ export class Split implements UpdateableNetwork {
     ) as IERC20;
     const walletBalance = await erc20.balanceOf(this.getAddress());
     const totalReleased = await this.contractWrapper.read(
-      "totalReleased(address)",
+      "totalReleased" as "totalReleased(address)",
       [resolvedToken],
     );
     const totalReceived = walletBalance.add(totalReleased);

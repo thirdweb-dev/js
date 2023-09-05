@@ -1,5 +1,5 @@
 import type { BaseContract, Event, providers, utils } from "ethers";
-import type { EventEmitter } from "eventemitter3";
+import type EventEmitter from "eventemitter3";
 import { EventType } from "../../constants/events";
 import type { ContractEvent, EventQueryOptions } from "../../types/events";
 import { ContractWrapper } from "./contract-wrapper";
