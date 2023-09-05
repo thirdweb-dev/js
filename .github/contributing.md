@@ -109,9 +109,9 @@ In your test project, you need to:
 
 #### Testing from npm
 
-You can also test your changes by publishing a dev package to NPM and adding your package as you normally do in your projects.
+You can also test your changes by publishing a dev package to npm and adding your package as you normally do in your projects.
 
-Once you have your PR up you can add a comment with the text: `/release-pr`. This will trigger a GitHub action that will publish a dev version to NPM.
+Once you have your PR up you can add a comment with the text: `/release-pr`. This will trigger a GitHub action that will publish a dev version to npm.
 
 You can see the action progress in GitHub's `Actions` tab, look for the workflow: `release-pr`.
 
@@ -124,7 +124,7 @@ success packages published successfully:
 ...
 ```
 
-These are the versions the GH action published to NPM for testing purposes. Let's assume you're working on the `@thirdweb-dev/react` package, you can then run:
+These are the versions the GH action published to npm for testing purposes. Let's assume you're working on the `@thirdweb-dev/react` package, you can then run:
 
 `yarn add @thirdweb-dev/react@0.0.0-dev-06a7cb1-20230901190619` to install the dev package.
 
