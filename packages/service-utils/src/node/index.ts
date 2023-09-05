@@ -9,6 +9,8 @@ import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
 
 export * from "../core/services";
+export * from "../core/rateLimit";
+export * from "../core/usageLimit";
 
 type NodeServiceConfig = CoreServiceConfig;
 
