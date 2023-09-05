@@ -332,7 +332,7 @@ export class Vote implements UpdateableNetwork {
       this.contractWrapper.read("votingDelay", []),
       this.contractWrapper.read("votingPeriod", []),
       this.contractWrapper.read("token", []),
-      this.contractWrapper.read("quorumNumerator()", []),
+      this.contractWrapper.read("quorumNumerator" as "quorumNumerator()", []),
       this.contractWrapper.read("proposalThreshold", []),
     ]);
     const votingTokenMetadata = await fetchCurrencyMetadata(

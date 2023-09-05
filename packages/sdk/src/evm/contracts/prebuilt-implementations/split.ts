@@ -211,7 +211,7 @@ export class Split implements UpdateableNetwork {
       .getProvider()
       .getBalance(this.getAddress());
     const totalReleased = await this.contractWrapper.read(
-      "totalReleased()",
+      "totalReleased" as "totalReleased()",
       [],
     );
     const totalReceived = walletBalance.add(totalReleased);
@@ -219,7 +219,9 @@ export class Split implements UpdateableNetwork {
     return this._pendingPayment(
       resolvedAddress,
       totalReceived,
-      await this.contractWrapper.read("released(address)", [resolvedAddress]),
+      await this.contractWrapper.read("released" as "released(address)", [
+        resolvedAddress,
+      ]),
     );
   }
 
