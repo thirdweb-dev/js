@@ -1,10 +1,8 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
-import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
-import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
@@ -48,7 +46,6 @@ import fetch from "cross-fetch";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
-import { OP_STACK_CHAINS } from "../../constants/chains/supportedChains";
 
 abstract class TransactionContext {
   protected args: any[];
@@ -206,16 +203,7 @@ abstract class TransactionContext {
    * Calculates the gas price for transactions (adding a 10% tip buffer)
    */
   public async getGasPrice(): Promise<BigNumber> {
-    const gasPrice = await this.provider.getGasPrice();
-    const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
-    const extraTip = gasPrice.div(100).mul(10); // + 10%
-    const txGasPrice = gasPrice.add(extraTip);
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-
-    return txGasPrice;
+    return getGasPrice(this.provider);
   }
 
   /**
@@ -229,47 +217,7 @@ abstract class TransactionContext {
    * Get gas overrides for the transaction
    */
   protected async getGasOverrides() {
-    // If we're running in the browser, let users configure gas price in their wallet UI
-    if (isBrowser()) {
-      return {};
-    }
-
-    const feeData = await this.provider.getFeeData();
-    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
-    if (supports1559) {
-      const chainId = (await this.provider.getNetwork()).chainId;
-      const block = await this.provider.getBlock("latest");
-      const baseBlockFee =
-        block && block.baseFeePerGas
-          ? block.baseFeePerGas
-          : utils.parseUnits("1", "gwei");
-      let defaultPriorityFee: BigNumber;
-      const opStackChainIds: number[] = OP_STACK_CHAINS.map((c) => c.chainId);
-      if (opStackChainIds.includes(chainId)) {
-        // for op stack chains lower the default fee
-        defaultPriorityFee = BigNumber.from(1000000); // 0.001 gwei
-      } else if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
-        // for polygon, get fee data from gas station
-        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
-      } else {
-        // otherwise get it from ethers
-        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
-      }
-      // then add additional fee based on user preferences
-      const maxPriorityFeePerGas =
-        this.getPreferredPriorityFee(defaultPriorityFee);
-      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-      const baseMaxFeePerGas = baseBlockFee.mul(2);
-      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-      };
-    } else {
-      return {
-        gasPrice: await this.getGasPrice(),
-      };
-    }
+    return getDefaultGasOverrides(this.provider);
   }
 
   /**
