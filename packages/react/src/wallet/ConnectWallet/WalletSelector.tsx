@@ -81,7 +81,11 @@ export const WalletSelector: React.FC<{
         </TitleContainer>
       </ScreenContainer>
 
-      <ScrollableContainer>
+      <ScrollableContainer
+        style={{
+          flex: 1,
+        }}
+      >
         {isCompact && shouldGroupWallets ? (
           <>
             {isWalletGroupExpanded && (
