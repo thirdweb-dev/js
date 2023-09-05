@@ -3,7 +3,7 @@ import { SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
 import { UsageCard } from "./UsageCard";
 import { useMemo } from "react";
 import { Heading } from "tw-components";
-import { toSize, toUSD } from "utils/number";
+import { toNumber, toPercent, toSize } from "utils/number";
 
 interface UsageProps {
   usage: UsageBillableByService | undefined;
@@ -15,58 +15,93 @@ export const Usage: React.FC<UsageProps> = ({
   usageLoading,
 }) => {
   const bundlerMetrics = useMemo(() => {
-    const metric = [
-      {
-        title: "Total USD consumed",
-        total: <i>N/A</i>,
-      },
-    ];
+    const metric = {
+      title: "Total sponsored fees",
+      total: 0,
+    };
 
-    if (!usageData?.billableUsd.bundler) {
+    if (!usageData) {
       return metric;
     }
 
-    return [
-      {
-        title: metric[0].title,
-        total: toUSD(usageData.billableUsd.bundler),
-      },
-    ];
+    return {
+      title: metric.title,
+      total: usageData.billableUsd.bundler,
+    };
   }, [usageData]);
 
   const storageMetrics = useMemo(() => {
-    const metric = [
-      {
-        title: "Total GB pinned",
-        total: <i>N/A</i>,
-      },
-    ];
-
-    if (!usageData?.limits.storage || !usageData?.usage.storage) {
-      return metric;
+    if (!usageData) {
+      return {};
     }
 
     const consumedBytes = usageData.usage.storage.sumFileSizeBytes;
     const limitBytes = usageData.limits.storage;
-    const percent = Math.round(((consumedBytes / limitBytes) * 100 * 10) / 10);
+    const percent = toPercent(consumedBytes, limitBytes);
 
-    const metrics = [
-      {
-        title: metric[0].title,
-        total: `${toSize(consumedBytes)} / ${toSize(limitBytes)} (${percent}%)`,
-        progress: percent,
-      },
+    return {
+      total: `${toSize(consumedBytes)} / ${toSize(limitBytes)} (${percent}%)`,
+      progress: percent,
       ...(usageData.billableUsd.storage > 0
-        ? [
-            {
-              title: "Overage USD",
-              total: toUSD(usageData.billableUsd.storage),
-            },
-          ]
-        : []),
-    ];
+        ? {
+            overage: usageData.billableUsd.storage,
+          }
+        : {}),
+    };
+  }, [usageData]);
 
-    return metrics;
+  const walletsMetrics = useMemo(() => {
+    if (!usageData) {
+      return {};
+    }
+
+    const numOfWallets = usageData.usage.embeddedWallets.countWalletAddresses;
+    const limitWallets = usageData.limits.embeddedWallets;
+    const percent = toPercent(numOfWallets, limitWallets);
+
+    return {
+      total: `${toNumber(numOfWallets)} / ${toNumber(
+        limitWallets,
+      )} (${percent}%)`,
+      progress: percent,
+      ...(usageData.billableUsd.embeddedWallets > 0
+        ? {
+            overage: usageData.billableUsd.embeddedWallets,
+          }
+        : {}),
+    };
+  }, [usageData]);
+
+  const rpcMetrics = useMemo(() => {
+    if (!usageData) {
+      return {};
+    }
+
+    const peakRequests = usageData.peakRate.rpc || 0;
+    const limitRequests = usageData.rateLimits.rpc;
+
+    return {
+      total: `${toNumber(peakRequests)} / ${toNumber(
+        limitRequests,
+      )} (peak requests per second)`,
+      progress: toPercent(peakRequests, limitRequests),
+    };
+  }, [usageData]);
+
+  const gatewayMetrics = useMemo(() => {
+    if (!usageData) {
+      return {};
+    }
+
+    const peakRequests = usageData.peakRate.storage || 0;
+    const limitRequests = usageData.rateLimits.storage;
+
+    return {
+      total: `${toNumber(peakRequests)} / ${toNumber(
+        limitRequests,
+      )} (peak requests per second)`,
+      progress: toPercent(peakRequests, limitRequests),
+    };
   }, [usageData]);
 
   return (
@@ -84,22 +119,38 @@ export const Usage: React.FC<UsageProps> = ({
               gap={6}
               w="full"
             >
-              {/* <UsageCard
-                title="RPC"
-                description="Peak reqs/sec made"
-                total={<i>N/A</i>}
-                tooltip="Explain here how we calculate and charge for RPC?"
-              /> */}
-              {/* <UsageCard
-                title="Storage Gateway"
-                description="Peak reqs/min made"
-                total={<i>N/A</i>}
-                tooltip="Explain here how we calculate and charge for Gateway?"
-              /> */}
               <UsageCard
+                {...rpcMetrics}
+                name="RPC"
+                tooltip="RPC usage is calculated by requests per second."
+              />
+              <UsageCard
+                {...gatewayMetrics}
+                name="Storage Gateway"
+                tooltip="Storage gateway usage is calculated by GB per file size."
+              />
+              <UsageCard
+                {...storageMetrics}
                 name="Storage Pinning"
-                metrics={storageMetrics}
-                tooltip="Each additional GB over your plan limit costs $0.10."
+                tooltip="Storage pinning usage is calculated by GB per file size."
+              />
+            </SimpleGrid>
+          </VStack>
+
+          <VStack alignItems="flex-start" gap={6} w="full">
+            <Heading as="h4" size="title.sm">
+              Wallets
+            </Heading>
+
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 2, xl: 3 }}
+              gap={6}
+              w="full"
+            >
+              <UsageCard
+                {...walletsMetrics}
+                name="Email Wallets"
+                tooltip="Email wallet (with managed recovery code) usage is calculated by monthly active wallets (i.e. active as defined by at least 1 user log-in via email or social within the billing period month)."
               />
             </SimpleGrid>
           </VStack>
@@ -115,31 +166,12 @@ export const Usage: React.FC<UsageProps> = ({
               w="full"
             >
               <UsageCard
+                {...bundlerMetrics}
                 name="Smart Wallets"
-                metrics={bundlerMetrics}
-                tooltip="An additional 10% premium is applied to your transactions."
+                tooltip="Smart Wallets (Gasless, Paymaster, Bundler) usage is calculated by sponsored network fees."
               />
             </SimpleGrid>
           </VStack>
-
-          {/* <VStack alignItems="flex-start" gap={6} w="full">
-            <Heading as="h4" size="title.sm">
-              Wallets
-            </Heading>
-
-            <SimpleGrid
-              columns={{ base: 1, md: 2, lg: 2, xl: 3 }}
-              gap={6}
-              w="full"
-            >
-              <UsageCard
-                title="Embedded Wallets"
-                description="Monthly active logins"
-                total={<i>N/A</i>}
-                tooltip="Explain here how we calculate and charge for Embedded Wallets?"
-              />
-            </SimpleGrid>
-          </VStack> */}
         </VStack>
       )}
     </VStack>

@@ -11,6 +11,7 @@ import {
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
+import { BillingAlert } from "components/settings/Account/BillingAlert";
 import { SIDEBAR_TUNNEL_ID, SIDEBAR_WIDTH } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
 import { FiFile, FiGlobe, FiHelpCircle } from "react-icons/fi";
@@ -68,6 +69,10 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         rowSpan={1}
         overflowX="auto"
       >
+        <Container maxW="container.page">
+          <BillingAlert />
+        </Container>
+
         {layout === "custom-contract" ? (
           children
         ) : (

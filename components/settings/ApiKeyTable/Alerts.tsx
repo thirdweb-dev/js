@@ -8,11 +8,11 @@ import {
 import { useAddress } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 
-import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
+import { Heading, LinkButton, Text } from "tw-components";
 
 export const SecretHandlingAlert = () => {
   return (
-    <Alert status="warning" variant="left-accent">
+    <Alert status="warning" variant="left-accent" borderRadius="md">
       <AlertIcon />
       <Flex direction="column" gap={2}>
         <Heading as={AlertTitle} size="label.md">
@@ -30,7 +30,7 @@ export const SecretHandlingAlert = () => {
 
 export const NoDomainsAlert = () => {
   return (
-    <Alert status="error" variant="left-accent">
+    <Alert status="error" variant="left-accent" borderRadius="md">
       <Flex direction="column" gap={1.5}>
         <Heading size="label.md" as={AlertTitle}>
           No Domains Configured
@@ -47,7 +47,7 @@ export const NoDomainsAlert = () => {
 
 export const AnyDomainAlert = () => {
   return (
-    <Alert status="warning" variant="left-accent">
+    <Alert status="warning" variant="left-accent" borderRadius="md">
       <Flex direction="column" gap={1.5}>
         <Heading size="label.md" as={AlertTitle}>
           Unrestricted Web Access
@@ -63,7 +63,7 @@ export const AnyDomainAlert = () => {
 
 export const NoBundleIdsAlert = () => {
   return (
-    <Alert status="error" variant="left-accent">
+    <Alert status="error" variant="left-accent" borderRadius="md">
       <Flex direction="column" gap={1.5}>
         <Heading size="label.md" as={AlertTitle}>
           No Bundle IDs Configured
@@ -80,7 +80,7 @@ export const NoBundleIdsAlert = () => {
 
 export const AnyBundleIdAlert = () => {
   return (
-    <Alert status="warning" variant="left-accent">
+    <Alert status="warning" variant="left-accent" borderRadius="md">
       <Flex direction="column" gap={1.5}>
         <Heading size="label.md" as={AlertTitle}>
           Unrestricted App Access
@@ -102,7 +102,7 @@ export const NoTargetAddressesAlert = ({
   serviceDesc: string;
 }) => {
   return (
-    <Alert status="warning" variant="left-accent">
+    <Alert status="warning" variant="left-accent" borderRadius="md">
       <Flex direction="column" gap={1.5}>
         <Heading size="label.md" as={AlertTitle}>
           No Contract Addresses Configured
@@ -112,37 +112,6 @@ export const NoTargetAddressesAlert = ({
           disable a service or specify allowed contract addresses.
         </Text>
       </Flex>
-    </Alert>
-  );
-};
-
-export const SmartWalletsBillingAlert = () => {
-  return (
-    <Alert
-      status="info"
-      borderRadius="md"
-      as={Flex}
-      flexDir="column"
-      alignItems="start"
-      gap={2}
-    >
-      <Flex justifyContent="start">
-        <AlertIcon />
-        <AlertTitle>Smart Wallets on Mainnet</AlertTitle>
-      </Flex>
-      <AlertDescription>
-        You&apos;ve enabled Smart Wallets for one of your API keys and
-        haven&apos;t added a payment method. To use them on Mainnet:{" "}
-        <TrackedLink
-          href="/dashboard/settings/billing"
-          category="api_keys"
-          label="smart_wallets_missing_billing"
-          textDecor="underline"
-          fontWeight="medium"
-        >
-          Add a Payment method
-        </TrackedLink>
-      </AlertDescription>
     </Alert>
   );
 };
