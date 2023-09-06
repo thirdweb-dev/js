@@ -1,11 +1,13 @@
 import { keyframes } from "@emotion/react";
-import { spacing } from "../design-system";
 
 export const flyingAnimation = keyframes`
-  from {
+  0% {
     transform: translateY(0);
   }
-  to {
-    transform: translateY(-${spacing.sm});
+  50% {
+    transform: translateY(-5%);
+  }
+  100% {
+    transform: translateY(0);
   }
 `;
