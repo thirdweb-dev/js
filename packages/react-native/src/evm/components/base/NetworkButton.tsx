@@ -56,7 +56,7 @@ export const NetworkButton = ({
         }
 
         try {
-          await switchChain(chain?.chainId);
+          await switchChain(chain.chainId);
           setIsSwitching(false);
           onChainSwitched?.();
         } catch (error) {
