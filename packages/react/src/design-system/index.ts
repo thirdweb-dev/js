@@ -1,11 +1,11 @@
 import { blue, green, mauve, mauveDark, tomato } from "@radix-ui/colors";
 
 const darkColors = {
-  base: "hsl(300deg 4.17% 0%)",
-  baseHover: "hsl(300deg 7.14% 6%)",
-  elevated: "hsl(288deg 6.02% 10%)",
-  elevatedHover: "hsl(280deg 6% 15%)",
-  highlighted: "hsl(280deg 5.26% 18%)",
+  base: "hsl(228deg 11.63% 8.43%)",
+  baseHover: "hsl(228deg 11.63% 10%)",
+  elevated: "hsl(228deg 11.63% 12%)",
+  elevatedHover: "hsl(228deg 11.63% 17%)",
+  highlighted: "hsl(228deg 11.63% 20%)",
   inverted: mauveDark.mauve12,
   invertedFocused: mauveDark.mauve7,
   danger: tomato.tomato9,

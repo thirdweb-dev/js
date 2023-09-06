@@ -65,7 +65,11 @@ export const Button = styled.button<{
   ${(p) => {
     if (p.variant === "outline") {
       return `
-      border: 1px solid ${p.theme.bg.elevatedHover};`;
+      border: 1px solid ${p.theme.bg.elevatedHover};
+      &:hover {
+        border-color: ${p.theme.bg.inverted};
+      }
+    `;
     }
   }}
 

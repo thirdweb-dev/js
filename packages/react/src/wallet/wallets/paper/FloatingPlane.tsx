@@ -8,7 +8,7 @@ export function FloatingPlane(props: { size: number }) {
     <PlaneIconContainer
       style={
         {
-          "--shadow-size": props.size / 5 + "px",
+          "--shadow-size": props.size / 12 + "px",
         } as React.CSSProperties
       }
     >
@@ -21,6 +21,6 @@ const PlaneIconContainer = styled.div`
   padding: ${spacing.xl};
   display: flex;
   justify-content: center;
-  filter: drop-shadow(0 0 var(--shadow-size) hsl(195.93deg 83.7% 73.53% / 45%));
+  filter: drop-shadow(0 0 var(--shadow-size) hsl(195.93deg 83.7% 73.53% / 35%));
   animation: ${flyingAnimation} 2s ease infinite alternate;
 `;
