@@ -50,7 +50,7 @@ export const Button = styled.button<{
       case "inverted":
         return p.theme.text.inverted;
       case "accent":
-        return p.theme.text.inverted;
+        return p.theme.text.neutral;
       case "secondary":
         return p.theme.text.neutral;
       case "link":

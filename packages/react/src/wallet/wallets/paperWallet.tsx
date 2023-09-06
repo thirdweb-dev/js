@@ -123,7 +123,7 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
     <PaperInputUI
       showOrSeparator={props.supportedWallets.length > 1}
       onSelect={props.onSelect}
-      submitType="inline"
+      submitType="button"
     />
   );
 };
