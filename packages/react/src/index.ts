@@ -3,7 +3,7 @@ export { localWallet } from "./wallet/wallets/localWallet/localWallet";
 export { coinbaseWallet } from "./wallet/wallets/coinbase/coinbaseWallet";
 export { frameWallet } from "./wallet/wallets/frame/frameWallet";
 export { metamaskWallet } from "./wallet/wallets/metamask/metamaskWallet";
-export { paperWallet } from "./wallet/wallets/paperWallet";
+export { paperWallet } from "./wallet/wallets/paper/paperWallet";
 export { rainbowWallet } from "./wallet/wallets/rainbow/RainbowWallet";
 export { safeWallet } from "./wallet/wallets/safe/safeWallet";
 export { trustWallet } from "./wallet/wallets/trustWallet/TrustWallet";

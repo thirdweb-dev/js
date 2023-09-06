@@ -18,7 +18,7 @@ export function usePaperWallet() {
   return useCallback(
     async (options: { chainId?: number; email?: string } & PaperConfig) => {
       const { paperWallet } = await import(
-        "../../../wallet/wallets/paperWallet"
+        "../../../wallet/wallets/paper/paperWallet"
       );
       return connect(paperWallet({ paperClientId: options.paperClientId }), {
         chainId: options.chainId,
