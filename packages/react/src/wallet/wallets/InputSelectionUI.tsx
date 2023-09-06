@@ -8,7 +8,7 @@ import { Button, InputButton } from "../../components/buttons";
 import styled from "@emotion/styled";
 
 export function InputSelectionUI(props: {
-  onSelect: (data: any) => void;
+  onSelect: (data: string) => void;
   placeholder: string;
   name: string;
   type: string;

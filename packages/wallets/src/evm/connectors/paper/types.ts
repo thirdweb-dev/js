@@ -25,4 +25,6 @@ export interface PaperWalletConnectorOptions {
 
 export interface PaperWalletConnectionArgs {
   email?: string;
+  otp?: string;
+  recoveryCode?: string;
 }
