@@ -45,7 +45,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   account,
   onSave,
   buttonProps,
-  trackingCategory = "account",
   buttonText = "Save",
   horizontal = false,
   previewEnabled = false,
@@ -82,7 +81,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     }
 
     trackEvent({
-      category: trackingCategory,
+      category: "account",
       action: "update",
       label: "attempt",
       data: values,
@@ -100,7 +99,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         }
 
         trackEvent({
-          category: trackingCategory,
+          category: "account",
           action: "update",
           label: "success",
           data,
@@ -113,7 +112,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         }
 
         trackEvent({
-          category: trackingCategory,
+          category: "account",
           action: "update",
           label: "error",
           error: err,

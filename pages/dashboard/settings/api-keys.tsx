@@ -1,6 +1,5 @@
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
-import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
@@ -14,8 +13,6 @@ import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
-  // FIXME: Remove when ff is lifted
-  const [isSmartWalletsBeta] = useLocalStorage("beta-smart-wallets-v1", false);
   const address = useAddress();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
@@ -69,7 +66,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      {isSmartWalletsBeta && hasSmartWalletsWithoutBilling && (
+      {hasSmartWalletsWithoutBilling && (
         <SmartWalletsBillingAlert dismissable />
       )}
 

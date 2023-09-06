@@ -44,7 +44,7 @@ export const BillingPlan: React.FC<BillingPlanProps> = ({
 
         <TrackedLink
           href="/pricing"
-          category="billing"
+          category="billingAccount"
           label="learn-more-pricing"
           color="blue.500"
         >

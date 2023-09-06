@@ -40,7 +40,6 @@ import { useRouter } from "next/router";
 import { ContractCard } from "components/explore/contract-card";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
-import { useLocalStorage } from "@solana/wallet-adapter-react";
 
 type ContractWithExtensions = {
   contract: ContractWithMetadata;
@@ -205,8 +204,6 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   const factories = useFactories();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
-  // FIXME: Remove when ff is lifted
-  const [isSmartWalletsBeta] = useLocalStorage("beta-smart-wallets-v1", false);
   const form = useForm<SmartWalletFormData>();
   const [selectedLanguage, setSelectedLanguage] =
     useState<CodeEnvironment>("javascript");
@@ -231,9 +228,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={12} mt={{ base: 2, md: 6 }}>
-      {isSmartWalletsBeta && hasSmartWalletsWithoutBilling && (
-        <SmartWalletsBillingAlert />
-      )}
+      {hasSmartWalletsWithoutBilling && <SmartWalletsBillingAlert />}
       <Flex flexDir="column" gap={4}>
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={12}>
           <Flex flexDir="column" gap={4}>

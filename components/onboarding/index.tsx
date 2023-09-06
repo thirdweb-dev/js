@@ -5,14 +5,12 @@ import { AccountForm } from "components/settings/Account/AccountForm";
 import { useEffect, useState } from "react";
 import { Heading, Text } from "tw-components";
 import { OnboardingModal } from "./Modal";
-import { useRouter } from "next/router";
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
   const { isLoggedIn } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [saved, setSaved] = useState(false);
-  const router = useRouter();
 
   const handleSave = () => {
     setSaved(true);
@@ -20,22 +18,11 @@ export const Onboarding: React.FC = () => {
   };
 
   useEffect(() => {
-    // FIXME: Remove when ff is lifted
-    if (router.isReady) {
-      const { smartWalletsBeta } = router.query;
-
-      // open modal only when user hasn't onboarded and not saved already
-      if (
-        smartWalletsBeta &&
-        !saved &&
-        isLoggedIn &&
-        meQuery?.data &&
-        !meQuery.data.onboardedAt
-      ) {
-        onOpen();
-      }
+    // open modal only when user hasn't onboarded and not saved already
+    if (!saved && isLoggedIn && meQuery?.data && !meQuery.data.onboardedAt) {
+      onOpen();
     }
-  }, [router, isLoggedIn, meQuery, onOpen, saved]);
+  }, [isLoggedIn, meQuery, onOpen, saved]);
 
   return (
     <OnboardingModal isOpen={isOpen} onClose={handleSave}>
