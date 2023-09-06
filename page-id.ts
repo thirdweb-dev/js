@@ -28,6 +28,9 @@ export enum PageId {
   // thirdweb.com/auth
   AuthenticationLanding = "auth-landing",
 
+  // thirdweb..com/pricing
+  Pricing = "pricing-page",
+
   // thirdweb.com/cli/login
   CliLoginPage = "cli-login-page",
 

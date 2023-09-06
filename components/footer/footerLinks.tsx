@@ -42,6 +42,11 @@ export const COMMUNITY: FooterLinkInfo[] = [
 
 export const RESOURCES: FooterLinkInfo[] = [
   {
+    label: "pricing",
+    name: "Pricing",
+    link: "/pricing",
+  },
+  {
     label: "about",
     name: "About",
     link: "/about",

@@ -22,7 +22,21 @@ export const DesktopMenu: React.FC = () => {
       >
         <ProductHoverMenu title="Products" items={PRODUCTS} />
         <HoverMenu title="Solutions" items={SOLUTIONS} />
-        <HoverMenu title="Resources" items={RESOURCES} />
+        <HoverMenu
+          title="Resources"
+          items={RESOURCES.filter(({ label }) => label !== "pricing")}
+        />
+        <TrackedLink
+          fontWeight={400}
+          href="/pricing"
+          category="landing-page"
+          label="pricing"
+          _hover={{
+            textDecor: "none",
+          }}
+        >
+          Pricing
+        </TrackedLink>
         <TrackedLink
           fontWeight={400}
           isExternal
@@ -207,6 +221,14 @@ export const SOLUTIONS: NavCardProps[] = [
 ];
 
 export const RESOURCES: NavCardProps[] = [
+  {
+    name: "Pricing",
+    label: "pricing",
+    description: "Simple, transparent & flexible pricing",
+    link: "/pricing",
+    icon: require("public/assets/tw-icons/access-nft.png"),
+    section: "resources",
+  },
   {
     name: "About",
     label: "about",
