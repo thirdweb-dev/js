@@ -105,7 +105,7 @@ export const SelectPersonalWallet: React.FC<{
           <ScreenBottomContainer>
             <Flex justifyContent="center">
               <Button
-                variant="secondary"
+                variant="outline"
                 fullWidth
                 onClick={() => {
                   props.selectWallet(guestWallet);

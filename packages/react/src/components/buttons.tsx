@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 
 // for rendering a conventional button
 export const Button = styled.button<{
-  variant: "inverted" | "secondary" | "link" | "danger" | "accent";
+  variant: "inverted" | "secondary" | "link" | "danger" | "accent" | "outline";
   theme?: Theme;
   fullWidth?: boolean;
 }>`
@@ -12,7 +12,7 @@ export const Button = styled.button<{
   align-items: center;
   justify-content: center;
   border-radius: ${radius.md};
-  padding: ${spacing.sm} ${spacing.sm};
+  padding: ${fontSize.sm} ${fontSize.sm};
   font-size: ${fontSize.md};
   font-weight: ${(p) => (p.variant === "link" ? 400 : 500)};
   box-sizing: border-box;
@@ -30,7 +30,7 @@ export const Button = styled.button<{
         return p.theme.bg.accent;
       case "secondary":
         return p.theme.bg.elevated;
-      case "danger":
+      default:
         return "none";
     }
   }};
@@ -57,8 +57,17 @@ export const Button = styled.button<{
         return p.theme.bg.accent;
       case "danger":
         return p.theme.text.danger;
+      default:
+        return p.theme.text.neutral;
     }
   }};
+
+  ${(p) => {
+    if (p.variant === "outline") {
+      return `
+      border: 1px solid ${p.theme.bg.elevatedHover};`;
+    }
+  }}
 
   ${(p) => {
     if (p.variant === "link") {

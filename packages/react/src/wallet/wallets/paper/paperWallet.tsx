@@ -6,14 +6,13 @@ import {
   ConnectUIProps,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { Spacer } from "../../../components/Spacer";
-import { TextDivider } from "../../../components/TextDivider";
-import { Button } from "../../../components/buttons";
-import { spacing } from "../../../design-system";
 import { PaperFormUI, PaperFormUIScreen } from "./PaperFormUI";
 import { PaperOTPLoginUI } from "./PaperOTPLoginUI";
 import { PaperConfig, RecoveryShareManagement } from "./PaperConfig";
 import { HeadlessConnectUI } from "../headlessConnectUI";
+import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
+import { Spacer } from "../../../components/Spacer";
+import { FloatingPlane } from "./FloatingPlane";
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
@@ -21,8 +20,9 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
     id: PaperWallet.id,
     meta: {
       ...PaperWallet.meta,
+      name: "Email",
       iconURL:
-        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMwMjEwMTMiLz4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzFfODMpIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01MyAyNC4zMTE1QzUzIDIzLjczODEgNTIuNjMzMSAyMy4yMzA3IDUyLjA5MzEgMjMuMDU3M0wyNyAxNVYyNy4wMzdMNDEuODU3MiAzMS42MDgyTDI5Ljc4NTcgNDBWNTAuMTg1MUwzMi42MDYxIDUzLjEzOTVMMzAuMjEwMSA1NS4zNDkzQzI5LjkzOTggNTUuNTk4NyAyOS43ODU3IDU1Ljk1MTcgMjkuNzg1NyA1Ni4zMjE4VjY1TDM4LjE0MjkgNTguNTE4NlY0OC4zMzMzTDM1LjY0MjQgNDYuMTQzNkw1MyAzNS4zNzA0VjI0LjMxMTVaIiBmaWxsPSIjMTlBOEQ2Ii8+CjxwYXRoIGQ9Ik01MyAyNC4zMTE1QzUzIDIzLjczODEgNTIuNjMzMSAyMy4yMzA3IDUyLjA5MzEgMjMuMDU3M0wyNyAxNVYyNy4wMzdMNTMgMzUuMzcwNFYyNC4zMTE1WiIgZmlsbD0iIzM5RDBGRiIvPgo8cGF0aCBkPSJNMzguMTQyOCA0OC4zMzMzTDI5Ljc4NTcgNDBWNTAuMTg1MUwzOC4xNDI4IDU4LjUxODZWNDguMzMzM1oiIGZpbGw9IiMzOUQwRkYiLz4KPC9nPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8xXzgzIj4KPHJlY3Qgd2lkdGg9IjI2IiBoZWlnaHQ9IjUwIiBmaWxsPSJ3aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjcgMTUpIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==",
+        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzM0ODVfMTM4MDIpIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzM0ODVfMTM4MDIpIi8+CjxyZWN0IHg9Ii0xIiB5PSItMSIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iOS44IiBmaWxsPSJ1cmwoI3BhaW50MV9saW5lYXJfMzQ4NV8xMzgwMikiLz4KPHBhdGggZD0iTTI0IDMyQzI0Ljg5NDQgMzIgMjUuNzg4OCAzMS42Njg0IDI2LjIzNiAzMS4zMzY4TDQwLjk5MzggMjAuMzkzOEM0Mi4zMzU0IDE5LjM5OSA0Mi4zMzU0IDE3Ljc0MDkgNDAuOTkzOCAxNi43NDYxQzM5LjY1MjIgMTUuNzUxMyAzNy40MTYyIDE1Ljc1MTMgMzYuMDc0NSAxNi43NDYxTDI0IDI1LjY5OTVMMTEuOTI1NSAxNi43NDYxQzEwLjU4MzkgMTUuNzUxMyA4LjM0NzgzIDE1Ljc1MTMgNy4wMDYyMSAxNi43NDYxQzUuNjY0NiAxNy43NDA5IDUuNjY0NiAxOS4zOTkgNy4wMDYyMSAyMC4zOTM4TDIxLjMxNjggMzEuMDA1MkMyMi4yMTEyIDMxLjY2ODQgMjMuMTA1NiAzMiAyNCAzMloiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8zNDg1XzEzODAyIiB4MT0iMjUuNSIgeTE9Ii02LjI5NTcyZS0wNiIgeDI9IjMwLjIwMTYiIHkyPSI0Ny41MzUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzgzNThCQSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QjFDRjciLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDFfbGluZWFyXzM0ODVfMTM4MDIiIHgxPSIyNS41NjI1IiB5MT0iLTEuMDAwMDEiIHgyPSIzMC40NiIgeTI9IjQ4LjUxNTYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzgzNThCQSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QjFDRjciLz4KPC9saW5lYXJHcmFkaWVudD4KPGNsaXBQYXRoIGlkPSJjbGlwMF8zNDg1XzEzODAyIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K",
     },
     create(options: WalletOptions) {
       return new PaperWallet({ ...options, ...config });
@@ -45,34 +45,26 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
   if (props.modalSize === "wide") {
     return (
       <div>
-        <Button
-          variant="secondary"
-          fullWidth
-          onClick={props.onSelect}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: spacing.sm,
+        <WalletEntryButton
+          walletConfig={props.walletConfig}
+          selectWallet={() => {
+            props.onSelect(undefined);
           }}
-        >
-          {/* <GoogleIcon size={iconSize.md} /> */}
-          Email Login
-        </Button>
-        <Spacer y="lg" />
-        <TextDivider>
-          <span> OR </span>
-        </TextDivider>
-        <Spacer y="md" />
+        />
       </div>
     );
   }
 
   return (
-    <PaperFormUI
-      showOrSeparator={props.supportedWallets.length > 1}
-      onSelect={props.onSelect}
-      submitType="button"
-    />
+    <div>
+      <FloatingPlane size={100} />
+      <Spacer y="lg" />
+      <PaperFormUI
+        showOrSeparator={props.supportedWallets.length > 1}
+        onSelect={props.onSelect}
+        submitType="button"
+      />
+    </div>
   );
 };
 

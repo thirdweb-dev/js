@@ -1,7 +1,9 @@
 import { Spacer } from "../../../components/Spacer";
 import { InputSelectionUI } from "../InputSelectionUI";
-import { ScreenContainer } from "../../../components/basic";
+import { Flex, ScreenContainer } from "../../../components/basic";
 import { BackButton, ModalTitle } from "../../../components/modalElements";
+import { spacing } from "../../../design-system";
+import { FloatingPlane } from "./FloatingPlane";
 
 export const PaperFormUI = (props: {
   onSelect: (input: string | undefined) => void;
@@ -55,16 +57,49 @@ export const PaperFormUIScreen: React.FC<{
   onBack: () => void;
 }> = (props) => {
   return (
-    <ScreenContainer>
-      <BackButton onClick={props.onBack} />
-      <Spacer y="lg" />
-      <ModalTitle>Sign in</ModalTitle>
-      <Spacer y="lg" />
-      <PaperFormUI
-        onSelect={(email) => props.onEmail(email)}
-        showOrSeparator={false}
-        submitType="button"
-      />
+    <ScreenContainer
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          position: "relative",
+        }}
+      >
+        <BackButton
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+          }}
+          onClick={props.onBack}
+        />
+
+        <ModalTitle>Sign in</ModalTitle>
+      </Flex>
+
+      <Spacer y="xl" />
+
+      <div
+        style={{
+          padding: spacing.lg,
+        }}
+      >
+        <div>
+          <FloatingPlane size={120} />
+          <Spacer y="xl" />
+          <PaperFormUI
+            onSelect={(email) => props.onEmail(email)}
+            showOrSeparator={false}
+            submitType="button"
+          />
+        </div>
+      </div>
     </ScreenContainer>
   );
 };

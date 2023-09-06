@@ -134,11 +134,12 @@ export const WalletSelector: React.FC<{
                 <Spacer y="lg" />
                 <Button
                   fullWidth
-                  variant="secondary"
+                  variant="outline"
                   style={{
                     display: "flex",
                     justifyContent: "center",
                     gap: spacing.sm,
+                    padding: spacing.md,
                   }}
                   onClick={() => {
                     setIsWalletGroupExpanded(true);
@@ -204,7 +205,7 @@ export const WalletSelector: React.FC<{
                 <Button
                   fullWidth
                   variant={
-                    modalConfig.modalSize === "wide" ? "link" : "secondary"
+                    modalConfig.modalSize === "wide" ? "link" : "outline"
                   }
                   style={
                     modalConfig.modalSize === "wide"
@@ -268,38 +269,12 @@ export const WalletSelection: React.FC<{
                 walletConfig={walletConfig}
               />
             ) : (
-              <WalletButton
-                type="button"
-                onClick={() => {
+              <WalletEntryButton
+                walletConfig={walletConfig}
+                selectWallet={() => {
                   props.selectWallet(walletConfig);
                 }}
-              >
-                <Img
-                  src={walletConfig.meta.iconURL}
-                  width={iconSize.xl}
-                  height={iconSize.xl}
-                  loading="eager"
-                />
-                <WalletNameContainer>
-                  <Flex flexDirection="column" gap="xxs">
-                    <WalletName>{walletConfig.meta.name}</WalletName>
-                    {walletConfig.isInstalled && walletConfig.isInstalled() && (
-                      <AccentText
-                        style={{
-                          fontSize: fontSize.sm,
-                        }}
-                      >
-                        Installed
-                      </AccentText>
-                    )}
-                  </Flex>
-                  <ChevronRightIcon
-                    data-chveron
-                    width={iconSize.sm}
-                    height={iconSize.sm}
-                  />
-                </WalletNameContainer>
-              </WalletButton>
+              />
             )}
           </li>
         );
@@ -307,6 +282,47 @@ export const WalletSelection: React.FC<{
     </WalletList>
   );
 };
+
+export function WalletEntryButton(props: {
+  walletConfig: WalletConfig<any>;
+  selectWallet: () => void;
+}) {
+  return (
+    <WalletButton
+      type="button"
+      onClick={() => {
+        props.selectWallet();
+      }}
+    >
+      <Img
+        src={props.walletConfig.meta.iconURL}
+        width={iconSize.xl}
+        height={iconSize.xl}
+        loading="eager"
+      />
+      <WalletNameContainer>
+        <Flex flexDirection="column" gap="xxs">
+          <WalletName>{props.walletConfig.meta.name}</WalletName>
+          {props.walletConfig.isInstalled &&
+            props.walletConfig.isInstalled() && (
+              <AccentText
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                Installed
+              </AccentText>
+            )}
+        </Flex>
+        <ChevronRightIcon
+          data-chveron
+          width={iconSize.sm}
+          height={iconSize.sm}
+        />
+      </WalletNameContainer>
+    </WalletButton>
+  );
+}
 
 const WalletNameContainer = styled.div<{ theme?: Theme }>`
   display: flex;

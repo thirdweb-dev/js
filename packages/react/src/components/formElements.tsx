@@ -13,7 +13,7 @@ export const Input = styled.input<{
 }>`
   font-size: ${fontSize.md};
   display: block;
-  padding: ${spacing.sm};
+  padding: ${fontSize.sm};
   box-sizing: border-box;
   width: 100%;
   outline: none;
