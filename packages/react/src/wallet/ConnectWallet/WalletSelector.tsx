@@ -70,15 +70,40 @@ export const WalletSelector: React.FC<{
     showBottomContainer = false;
   }
 
+  const twTitle = (
+    <Flex gap="xxs" alignItems="center">
+      <TWIcon size={iconSize.md} />
+      <ModalTitle> {props.title} </ModalTitle>
+    </Flex>
+  );
+
   return (
     <>
       <ScreenContainer>
-        <TitleContainer>
-          <Flex gap="xxs" alignItems="center">
-            <TWIcon size={iconSize.md} />
-            <ModalTitle> {props.title} </ModalTitle>
-          </Flex>
-        </TitleContainer>
+        {isWalletGroupExpanded ? (
+          <TitleContainer
+            style={{
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <BackButton
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+              }}
+              onClick={() => {
+                setIsWalletGroupExpanded(false);
+              }}
+            />
+
+            {twTitle}
+          </TitleContainer>
+        ) : (
+          <TitleContainer>{twTitle}</TitleContainer>
+        )}
       </ScreenContainer>
 
       <ScrollableContainer
@@ -89,20 +114,12 @@ export const WalletSelector: React.FC<{
         {isCompact && shouldGroupWallets ? (
           <>
             {isWalletGroupExpanded && (
-              <>
-                <BackButton
-                  onClick={() => {
-                    setIsWalletGroupExpanded(false);
-                  }}
-                />
-                <Spacer y="md" />
-                <WalletSelection
-                  walletConfigs={otherLogins.filter(
-                    (w) => w.id !== walletIds.localWallet,
-                  )}
-                  selectWallet={props.selectWallet}
-                />
-              </>
+              <WalletSelection
+                walletConfigs={otherLogins.filter(
+                  (w) => w.id !== walletIds.localWallet,
+                )}
+                selectWallet={props.selectWallet}
+              />
             )}
 
             {!isWalletGroupExpanded && (
