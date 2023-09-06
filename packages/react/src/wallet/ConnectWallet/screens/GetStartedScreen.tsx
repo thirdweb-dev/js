@@ -25,6 +25,7 @@ export const GetStartedScreen: React.FC<{
   appleStoreLink?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
+  hideBackButton?: boolean;
 }> = ({
   walletName,
   walletIconURL,
@@ -34,6 +35,7 @@ export const GetStartedScreen: React.FC<{
   header,
   footer,
   onBack,
+  hideBackButton,
 }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
@@ -42,26 +44,30 @@ export const GetStartedScreen: React.FC<{
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
 
+  const hideBack = hideBackButton && showScreen === "base";
+
   return (
     <>
-      <BackButton
-        style={
-          isScanScreen
-            ? {
-                position: "absolute",
-                top: spacing.lg,
-                left: spacing.lg,
-              }
-            : undefined
-        }
-        onClick={() => {
-          if (showScreen === "base") {
-            onBack();
-          } else {
-            setShowScreen("base");
+      {!hideBack && (
+        <BackButton
+          style={
+            isScanScreen
+              ? {
+                  position: "absolute",
+                  top: spacing.lg,
+                  left: spacing.lg,
+                }
+              : undefined
           }
-        }}
-      />
+          onClick={() => {
+            if (showScreen === "base") {
+              onBack();
+            } else {
+              setShowScreen("base");
+            }
+          }}
+        />
+      )}
 
       {showScreen === "android-scan" && googlePlayStoreLink && (
         <ScanScreen
@@ -89,7 +95,7 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "base" && (
         <>
-          <Spacer y="lg" />
+          {!hideBack && <Spacer y="lg" />}
 
           {header || (
             <>
