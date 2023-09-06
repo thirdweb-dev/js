@@ -15,7 +15,7 @@ export const ModalHeaderTextClose = ({
   subHeaderText,
   onClose,
   ...props
-}: ModalHeaderTextCloseProps & (typeof Box)["arguments"]) => {
+}: ModalHeaderTextCloseProps & React.ComponentProps<typeof Box>) => {
   const theme = useAppTheme();
 
   return (

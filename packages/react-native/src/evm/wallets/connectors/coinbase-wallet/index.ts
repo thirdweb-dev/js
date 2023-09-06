@@ -17,7 +17,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
 import { providers, utils } from "ethers";
-import { getValidPublicRPCUrl } from "evm/utils/uri";
+import { getValidPublicRPCUrl } from "../../../utils/uri";
 
 export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
   ConfigurationParams & {
