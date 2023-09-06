@@ -102,10 +102,6 @@ export interface UsageBillableByService {
     storage: UsageStorage;
     embeddedWallets: UsageEmbeddedWallets;
   };
-  peakRate: {
-    rpc: number | undefined;
-    storage: number | undefined;
-  };
   billableUsd: {
     bundler: number;
     storage: number;

@@ -9,7 +9,7 @@ import { Heading } from "tw-components";
 import { Usage } from "components/settings/Account/Usage";
 import { BillingPeriod } from "components/settings/Account/BillingPeriod";
 import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-import { BillingUsage } from "components/settings/Account/BillingUsage";
+import { BillingPlan } from "components/settings/Account/BillingPlan";
 
 const SettingsUsagePage: ThirdwebNextPage = () => {
   const address = useAddress();
@@ -28,7 +28,7 @@ const SettingsUsagePage: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
-      <Flex direction="column" gap={2}>
+      <Flex direction="column">
         <Flex
           justifyContent="space-between"
           direction={{ base: "column", md: "row" }}
@@ -44,8 +44,8 @@ const SettingsUsagePage: ThirdwebNextPage = () => {
           flexDir={{ base: "column", lg: "row" }}
           alignItems={{ base: "flex-start", lg: "center" }}
         >
-          <BillingUsage account={account} usage={usageQuery.data} />
-          <BillingPeriod account={account} />
+          <BillingPlan account={account} />
+          <BillingPeriod account={account} usage={usageQuery.data} />
         </HStack>
       </Flex>
 

@@ -14,8 +14,6 @@ import { ThirdwebNextPage } from "utils/types";
 import {
   Card,
   Heading,
-  Link,
-  LinkButton,
   Text,
   TrackedLink,
   TrackedLinkButton,
@@ -24,11 +22,11 @@ import { ContractWithMetadata, useAddress } from "@thirdweb-dev/react";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { formatSnippet } from "contract-ui/tabs/code/components/code-overview";
 import { WALLETS_SNIPPETS } from "./wallet-sdk";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -41,6 +39,8 @@ import { shortenIfAddress } from "utils/usedapp-external";
 import { useRouter } from "next/router";
 import { ContractCard } from "components/explore/contract-card";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
+import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
+import { useLocalStorage } from "@solana/wallet-adapter-react";
 
 type ContractWithExtensions = {
   contract: ContractWithMetadata;
@@ -204,15 +204,36 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   const address = useAddress();
   const factories = useFactories();
   const keysQuery = useApiKeys();
+  const meQuery = useAccount();
+  // FIXME: Remove when ff is lifted
+  const [isSmartWalletsBeta] = useLocalStorage("beta-smart-wallets-v1", false);
   const form = useForm<SmartWalletFormData>();
   const [selectedLanguage, setSelectedLanguage] =
     useState<CodeEnvironment>("javascript");
 
+  const account = meQuery?.data;
   const chainId = form.watch("chainAndFactoryAddress")?.split("-")[0];
   const chainSlug = useChainSlug(chainId);
+  const apiKeys = keysQuery?.data;
+
+  const hasSmartWalletsWithoutBilling = useMemo(() => {
+    if (!account || !apiKeys) {
+      return;
+    }
+
+    return apiKeys.find(
+      (k) =>
+        k.services?.find(
+          (s) => account.status !== "validPayment" && s.name === "bundler",
+        ),
+    );
+  }, [apiKeys, account]);
 
   return (
     <Flex flexDir="column" gap={12} mt={{ base: 2, md: 6 }}>
+      {isSmartWalletsBeta && hasSmartWalletsWithoutBilling && (
+        <SmartWalletsBillingAlert />
+      )}
       <Flex flexDir="column" gap={4}>
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={12}>
           <Flex flexDir="column" gap={4}>
@@ -495,18 +516,17 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
               borderRadius="lg"
             >
               <Select
-                isDisabled={!address || (keysQuery?.data || []).length === 0}
+                isDisabled={!address || (apiKeys || []).length === 0}
                 {...form.register("clientId")}
                 placeholder={
                   !address
                     ? "Not connected"
-                    : keysQuery.isFetched &&
-                      (keysQuery?.data || []).length === 0
+                    : keysQuery.isFetched && (apiKeys || []).length === 0
                     ? "No client IDs found"
                     : "Select client ID"
                 }
               >
-                {keysQuery?.data?.map((f) => (
+                {apiKeys?.map((f) => (
                   <option key={f.key} value={f.key}>
                     {f.name} - {f.key}
                   </option>

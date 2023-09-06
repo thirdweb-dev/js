@@ -15,7 +15,7 @@ interface UsageCardProps {
   name: string;
   overage?: number;
   title?: string;
-  total?: string | number;
+  total?: string | number | JSX.Element;
   progress?: number;
   tooltip?: string;
 }

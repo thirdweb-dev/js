@@ -5,13 +5,14 @@ import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { Button, Heading, Text, Badge } from "tw-components";
+import { Button, Heading, Text, Badge, Card } from "tw-components";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { ManageBillingButton } from "components/settings/Account/ManageBillingButton";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useEffect, useMemo, useState } from "react";
 import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { BillingPlan } from "components/settings/Account/BillingPlan";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const address = useAddress();
@@ -121,6 +122,16 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }} maxW="3xl">
+      <Card>
+        <BillingPlan
+          account={account}
+          direction="column"
+          description="Free of charge with pay as you-go pricing"
+          titleSize="label.lg"
+          titleColor="bgBlack"
+        />
+      </Card>
+
       {showSteps ? (
         <StepsCard title="Get started with billing" steps={steps} />
       ) : (

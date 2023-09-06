@@ -4,11 +4,12 @@ import {
   AlertDescription,
   AlertTitle,
   Flex,
+  IconButton,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
-import { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
+import { FiX } from "react-icons/fi";
 
-import { Heading, LinkButton, Text } from "tw-components";
+import { Heading, Text, TrackedLink } from "tw-components";
 
 export const SecretHandlingAlert = () => {
   return (
@@ -116,46 +117,69 @@ export const NoTargetAddressesAlert = ({
   );
 };
 
-export const SmartWalletsAccessAlert = () => {
-  const trackEvent = useTrack();
-  const address = useAddress();
+export const SmartWalletsBillingAlert = ({
+  dismissable = false,
+}: {
+  dismissable?: boolean;
+}) => {
+  const [dismissed, setDismissed] = useLocalStorage(
+    "dismissed-smart-wallets-billing-alert",
+    false,
+    true,
+  );
 
-  const handleClick = () => {
-    trackEvent({
-      category: "api_keys",
-      action: "bundler",
-      label: "request_access",
-      walletAddress: address,
-    });
-  };
+  if (dismissable && dismissed) {
+    return true;
+  }
 
   return (
     <Alert
-      status="info"
+      status="warning"
       borderRadius="md"
       as={Flex}
+      alignItems="start"
+      justifyContent="space-between"
       mb={4}
-      justifyContent={{ base: "center", sm: "start" }}
-      alignItems="center"
-      flexDir={{ base: "column", sm: "row" }}
-      gap={{ base: 3, sm: 0 }}
+      variant="left-accent"
+      bg="backgroundCardHighlight"
     >
-      <AlertIcon />
-      <AlertTitle textAlign={{ base: "center", sm: "left" }}>
-        Smart Wallets service available on mainnet!
-      </AlertTitle>
-      <LinkButton
-        minW={40}
-        ml={2}
-        isExternal
-        onClick={handleClick}
-        size="sm"
-        href={`https://docs.google.com/forms/d/e/1FAIpQLSffFeEw7rPGYA8id7LwL22-W3irT6siXE5EHgD3xrxmxpLKCw/viewform?entry.948574526=${
-          address || ""
-        }`}
-      >
-        Request access
-      </LinkButton>
+      <Flex>
+        <AlertIcon boxSize={4} mt={1} ml={1} />
+        <Flex flexDir="column" gap={1} pl={1}>
+          <AlertTitle>Smart Wallets on Mainnet</AlertTitle>
+          <AlertDescription>
+            <Text as="span" pr={1}>
+              You&apos;ve enabled Smart Wallets for one of your API keys and
+              haven&apos;t added a payment method.
+              <br />
+              To use them on Mainnet,
+            </Text>
+            <TrackedLink
+              href="/dashboard/settings/billing"
+              category="api_keys"
+              label="smart_wallets_missing_billing"
+              fontWeight="medium"
+              color="blue.500"
+            >
+              <Text as="span" color="blue.500">
+                add a payment method.
+              </Text>
+            </TrackedLink>
+          </AlertDescription>
+        </Flex>
+      </Flex>
+
+      <IconButton
+        size="xs"
+        aria-label="Close notice"
+        icon={<FiX />}
+        colorScheme="blackAlpha"
+        color="white"
+        variant="ghost"
+        opacity={0.6}
+        _hover={{ opacity: 1 }}
+        onClick={() => setDismissed(true)}
+      />
     </Alert>
   );
 };

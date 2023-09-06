@@ -109,9 +109,7 @@ export const BillingAlert = () => {
               To ensure there are no future interruptions to your services,
             </Text>
             {router.pathname.startsWith("/dashboard/settings/billing") ? (
-              <Text size="label.md" as="span">
-                add a payment method
-              </Text>
+              <Text as="span">add a payment method</Text>
             ) : (
               <TrackedLink
                 href="/dashboard/settings/billing"
@@ -120,7 +118,7 @@ export const BillingAlert = () => {
                 fontWeight="medium"
                 color="blue.500"
               >
-                <Text size="label.md" as="span" color="blue.500">
+                <Text as="span" color="blue.500">
                   add a payment method
                 </Text>
               </TrackedLink>

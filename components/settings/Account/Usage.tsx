@@ -2,7 +2,7 @@ import { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
 import { SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
 import { UsageCard } from "./UsageCard";
 import { useMemo } from "react";
-import { Heading } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { toNumber, toPercent, toSize } from "utils/number";
 
 interface UsageProps {
@@ -77,14 +77,16 @@ export const Usage: React.FC<UsageProps> = ({
       return {};
     }
 
-    const peakRequests = usageData.peakRate.rpc || 0;
-    const limitRequests = usageData.rateLimits.rpc;
-
     return {
-      total: `${toNumber(peakRequests)} / ${toNumber(
-        limitRequests,
-      )} (peak requests per second)`,
-      progress: toPercent(peakRequests, limitRequests),
+      title: "Unlimited requests",
+      total: (
+        <>
+          Max rate:{" "}
+          <Text color="bgBlack" as="span">
+            {usageData.rateLimits.rpc} requests per second
+          </Text>
+        </>
+      ),
     };
   }, [usageData]);
 
@@ -93,14 +95,16 @@ export const Usage: React.FC<UsageProps> = ({
       return {};
     }
 
-    const peakRequests = usageData.peakRate.storage || 0;
-    const limitRequests = usageData.rateLimits.storage;
-
     return {
-      total: `${toNumber(peakRequests)} / ${toNumber(
-        limitRequests,
-      )} (peak requests per second)`,
-      progress: toPercent(peakRequests, limitRequests),
+      title: "Unlimited requests",
+      total: (
+        <>
+          Max rate:{" "}
+          <Text color="bgBlack" as="span">
+            {usageData.rateLimits.storage} requests per second
+          </Text>
+        </>
+      ),
     };
   }, [usageData]);
 
