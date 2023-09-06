@@ -28,12 +28,12 @@ export const WalletButton = ({
       paddingHorizontal="md"
       paddingVertical="sm"
       borderRadius="sm"
-      backgroundColor="backgroundHighlight"
+      backgroundColor="background"
       onPress={onPress}
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
-        <ImageSvgUri imageUrl={walletIconUrl} width={32} height={32} />
-        <Text ml="md" variant="bodyLarge">
+        <ImageSvgUri imageUrl={walletIconUrl} width={48} height={48} />
+        <Text ml="sm" variant="bodyLarge">
           {name}
         </Text>
       </Box>

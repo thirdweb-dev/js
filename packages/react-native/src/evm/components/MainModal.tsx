@@ -9,7 +9,7 @@ import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal"
 import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
 import { TWModal } from "./base/modal/TWModal";
 
-const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.6;
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 export const MainModal = () => {
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     width: DEVICE_WIDTH,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    padding: 24,
-    paddingBottom: 40,
+    paddingTop: 32,
+    paddingBottom: 28,
   },
   contentContainer: {
     maxHeight: MODAL_HEIGHT,

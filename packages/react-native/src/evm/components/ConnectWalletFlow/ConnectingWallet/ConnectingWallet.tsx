@@ -1,4 +1,5 @@
 import { useAppTheme } from "../../../styles/hooks";
+import { Box } from "../../base";
 import Text from "../../base/Text";
 import { ModalFooter } from "../../base/modal/ModalFooter";
 import { ConnectWalletHeader } from "./ConnectingWalletHeader";
@@ -30,7 +31,7 @@ export function ConnectingWallet({
   };
 
   return (
-    <View>
+    <Box padding="lg">
       <ConnectWalletHeader
         onBackPress={onBackPress}
         walletLogoUrl={wallet.meta.iconURL}
@@ -55,7 +56,7 @@ export function ConnectingWallet({
           onPress={onFooterPress}
         />
       )}
-    </View>
+    </Box>
   );
 }
 
