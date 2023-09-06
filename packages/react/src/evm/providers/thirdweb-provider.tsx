@@ -14,7 +14,7 @@ import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "createWalletStorage" | "supportedWallets"
+    "createWalletStorage" | "supportedWallets" | "signer"
   > {
   /**
    * Wallets supported by the dApp

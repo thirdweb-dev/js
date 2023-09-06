@@ -48,17 +48,24 @@ export async function directDeployDeterministic(
   const create2Factory = await deployCreate2Factory(signer);
 
   // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
-    (p) => {
-      return p.type;
-    },
-  );
+  const constructorParams = extractConstructorParamsFromAbi(abi);
+  const constructorParamTypes = constructorParams.map((p) => {
+    return p.type;
+  });
   const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
   );
+
+  const paramTypesForEncoder = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const encodedArgs = utils.defaultAbiCoder.encode(
-    constructorParamTypes,
+    paramTypesForEncoder,
     paramValues,
   );
 
@@ -212,18 +219,24 @@ export async function predictAddressDeterministic(
   const create2Factory = await getCreate2FactoryAddress(provider);
 
   // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
-    (p) => {
-      return p.type;
-    },
-  );
-
+  const constructorParams = extractConstructorParamsFromAbi(abi);
+  const constructorParamTypes = constructorParams.map((p) => {
+    return p.type;
+  });
   const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
   );
+
+  const paramTypesForEncoder = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const encodedArgs = utils.defaultAbiCoder.encode(
-    constructorParamTypes,
+    paramTypesForEncoder,
     paramValues,
   );
 

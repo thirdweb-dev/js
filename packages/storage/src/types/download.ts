@@ -31,6 +31,10 @@ export type IpfsDownloaderOptions = {
    * You can get a clientId here: https://thirdweb.com/create-api-key
    */
   clientId?: string;
+  /**
+   * Optional timeout in seconds for the download request, overrides the default timeout
+   */
+  timeoutInSeconds?: number;
 };
 
 export type SingleDownloadOptions = {

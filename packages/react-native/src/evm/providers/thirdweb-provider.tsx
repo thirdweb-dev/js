@@ -20,7 +20,7 @@ import { ThirdwebStorage } from "../../core/storage/storage";
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "supportedWallets" | "secretKey"
+    "supportedWallets" | "secretKey" | "signer"
   > {
   /**
    * Wallets that will be supported by the dApp
