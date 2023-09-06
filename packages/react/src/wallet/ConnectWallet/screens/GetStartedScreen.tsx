@@ -13,9 +13,11 @@ import { iconSize, radius, spacing } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { openWindow } from "../../utils/openWindow";
-import { Apple, Chrome, GooglePlay } from "../iconURLs";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { AppleIcon } from "../icons/AppleIcon";
+import { ChromeIcon } from "../icons/ChromeIcon";
+import { PlayStoreIcon } from "../icons/PlayStoreIcon";
 
 export const GetStartedScreen: React.FC<{
   onBack?: () => void;
@@ -69,9 +71,7 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "android-scan" && googlePlayStoreLink && (
         <ScanScreen
-          platformIcon={
-            <Img src={GooglePlay} width={iconSize.md} height={iconSize.md} />
-          }
+          platformIcon={<PlayStoreIcon size={iconSize.md} />}
           url={googlePlayStoreLink}
           platform="Google Play"
           walletName={walletName}
@@ -81,9 +81,7 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "ios-scan" && appleStoreLink && (
         <ScanScreen
-          platformIcon={
-            <Img width={iconSize.md} height={iconSize.md} src={Apple} />
-          }
+          platformIcon={<AppleIcon size={iconSize.md} />}
           url={appleStoreLink}
           platform="App Store"
           walletName={walletName}
@@ -124,7 +122,7 @@ export const GetStartedScreen: React.FC<{
                   openWindow(chromeExtensionLink);
                 }}
               >
-                <Img width={iconSize.lg} height={iconSize.lg} src={Chrome} />
+                <ChromeIcon size={iconSize.lg} />
                 <span>Download Chrome Extension</span>
               </ButtonLink>
             )}
@@ -141,11 +139,7 @@ export const GetStartedScreen: React.FC<{
                   }
                 }}
               >
-                <Img
-                  width={iconSize.lg}
-                  height={iconSize.lg}
-                  src={GooglePlay}
-                />
+                <PlayStoreIcon size={iconSize.lg} />
                 <span>Download on Google Play</span>
               </ButtonLink>
             )}
@@ -162,7 +156,7 @@ export const GetStartedScreen: React.FC<{
                   }
                 }}
               >
-                <Img width={iconSize.lg} height={iconSize.lg} src={Apple} />
+                <AppleIcon size={iconSize.lg} />
                 <span>Download on App Store</span>
               </ButtonLink>
             )}
