@@ -48,9 +48,7 @@ export const magicLink = (
           <TextInput
             placeholder="Enter your email or phone number"
             placeholderTextColor="gray"
-            onEndEditing={(
-              e: (typeof TextInput)["arguments"]["onEndEditing"],
-            ) => {
+            onEndEditing={(e: any) => {
               props.onSelect(e.nativeEvent.text);
             }}
           />

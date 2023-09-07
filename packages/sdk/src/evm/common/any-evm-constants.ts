@@ -53,6 +53,10 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     name: "Cronos Testnet",
     gasPrice: 2000 * 10 ** 9,
   },
+  [199]: {
+    name: "BitTorrent Chain",
+    gasPrice: 300_000 * 10 ** 9,
+  },
 };
 /* eslint-enable no-useless-computed-key */
 
