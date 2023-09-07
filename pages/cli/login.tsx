@@ -24,6 +24,8 @@ import { PiWarningFill } from "react-icons/pi";
 import { Button, Card, FormLabel, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
+const CLI_LOGIN_TOKEN_DURATION_IN_SECONDS = 60 * 60 * 24 * 365;
+
 const LoginPage: ThirdwebNextPage = () => {
   const { payload } = useRouter().query;
   const { mutateAsync: authorizeWallet } = useAuthorizeWalletWithAccount();
@@ -69,7 +71,11 @@ const LoginPage: ThirdwebNextPage = () => {
     const parsedPayload = JSON.parse(decodedPayload);
     let token;
     try {
-      token = await auth?.generate(parsedPayload);
+      token = await auth?.generate(parsedPayload, {
+        expirationTime: new Date(
+          Date.now() + 1000 * CLI_LOGIN_TOKEN_DURATION_IN_SECONDS,
+        ),
+      });
     } catch (e) {
       setLoading(false);
       setRejected(true);
