@@ -12,6 +12,8 @@ import {
   ConnectWalletFlowModal,
 } from "../../utils/modalTypes";
 import Box from "../base/Box";
+import { ThemeProvider } from "../../styles/ThemeProvider";
+import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
@@ -24,6 +26,7 @@ export const ConnectWalletFlow = () => {
   const [selectionData, setSelectionData] = useState<any>();
   const supportedWallets = useWallets();
   const theme = useColorScheme();
+  const appTheme = useAppTheme();
   const connect = useConnect();
 
   const onClose = useCallback(
@@ -128,33 +131,35 @@ export const ConnectWalletFlow = () => {
   ]);
 
   return (
-    <Box flexDirection="column">
-      {activeWallet ? (
-        isConnecting ? (
-          <ConnectingWallet
-            subHeaderText=""
-            content={
-              activeWallet.id === walletIds.localWallet ? (
-                <Text variant="bodySmallSecondary" mt="md">
-                  Creating, encrypting and securing your device wallet.
-                </Text>
-              ) : undefined
-            }
-            wallet={activeWallet}
-            onClose={onClose}
-            onBackPress={onBackPress}
-          />
+    <ThemeProvider theme={appTheme}>
+      <Box flexDirection="column">
+        {activeWallet ? (
+          isConnecting ? (
+            <ConnectingWallet
+              subHeaderText=""
+              content={
+                activeWallet.id === walletIds.localWallet ? (
+                  <Text variant="bodySmallSecondary" mt="md">
+                    Creating, encrypting and securing your device wallet.
+                  </Text>
+                ) : undefined
+              }
+              wallet={activeWallet}
+              onClose={onClose}
+              onBackPress={onBackPress}
+            />
+          ) : (
+            getComponentForWallet()
+          )
         ) : (
-          getComponentForWallet()
-        )
-      ) : (
-        <ChooseWallet
-          headerText={modalTitle}
-          wallets={supportedWallets}
-          onChooseWallet={onChooseWallet}
-          onClose={onClose}
-        />
-      )}
-    </Box>
+          <ChooseWallet
+            headerText={modalTitle}
+            wallets={supportedWallets}
+            onChooseWallet={onChooseWallet}
+            onClose={onClose}
+          />
+        )}
+      </Box>
+    </ThemeProvider>
   );
 };

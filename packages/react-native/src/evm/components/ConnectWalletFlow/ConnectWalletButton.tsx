@@ -4,6 +4,7 @@ import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
 import { useState, useEffect } from "react";
 import { useModalState } from "../../providers/ui-context-provider";
 import { ThemeProvider, ThemeProviderProps } from "../../styles/ThemeProvider";
+import { useAppTheme } from "../../styles/hooks";
 
 export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
@@ -24,6 +25,7 @@ export const ConnectWalletButton = ({
   buttonTitle,
   theme,
 }: ConnectWalletButtonProps) => {
+  const appTheme = useAppTheme();
   const connectionStatus = useConnectionStatus();
   const isWalletConnecting = connectionStatus === "connecting";
 
@@ -67,7 +69,7 @@ export const ConnectWalletButton = ({
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme ? theme : appTheme}>
       <BaseButton
         backgroundColor="buttonBackgroundColor"
         onPress={onConnectWalletPress}

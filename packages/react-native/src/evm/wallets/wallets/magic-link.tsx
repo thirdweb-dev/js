@@ -68,6 +68,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
       <TextInput
         placeholder="Enter your email address"
         placeholderTextColor={theme.colors.textSecondary}
+        paddingHorizontal="sm"
         style={{
           height: 50,
           fontSize: 16,

@@ -4,17 +4,15 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import { useMemo } from "react";
 import { CLOSE_MODAL_STATE } from "../utils/modalTypes";
 import { ThemeProvider } from "../styles/ThemeProvider";
-import { useAppTheme } from "../styles/hooks";
 import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal";
 import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
 import { TWModal } from "./base/modal/TWModal";
+import Box from "./base/Box";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.6;
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 export const MainModal = () => {
-  const theme = useAppTheme();
-
   const { modalState, setModalState } = useModalState();
 
   const { isOpen, isSheet } = modalState;
@@ -39,14 +37,12 @@ export const MainModal = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <TWModal isVisible={isOpen} onBackdropPress={onBackdropPress}>
         {isSheet ? (
-          <View
-            style={[styles.modal, { backgroundColor: theme.colors.background }]}
-          >
+          <Box backgroundColor="background" style={styles.modal}>
             <View style={styles.contentContainer}>{view}</View>
-          </View>
+          </Box>
         ) : (
           view
         )}

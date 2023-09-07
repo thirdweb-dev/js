@@ -1,4 +1,3 @@
-import { ThemeProvider } from "../styles/ThemeProvider";
 import {
   ConnectWalletDetailsProps,
   WalletDetailsButton,
@@ -15,6 +14,8 @@ import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
+import { useUIContext } from "../providers/ui-context-provider";
+import { ThemeProvider } from "../styles/ThemeProvider";
 
 export type ConnectWalletProps = {
   /**
@@ -62,6 +63,7 @@ export const ConnectWallet = ({
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
   const [switching, setSwitching] = useState(false);
+  const setTheme = useUIContext().setTheme;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -70,6 +72,12 @@ export const ConnectWallet = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+
+  useEffect(() => {
+    if (theme) {
+      setTheme(theme);
+    }
+  }, [setTheme, theme]);
 
   return (
     <ThemeProvider theme={theme}>

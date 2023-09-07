@@ -29,7 +29,7 @@ export const ChooseWalletContent = ({
     <View style={{ flexDirection: "column", maxHeight: MAX_HEIGHT }}>
       <ScrollView
         style={{
-          marginTop: 16,
+          marginVertical: 16,
           paddingHorizontal: 16,
         }}
       >
