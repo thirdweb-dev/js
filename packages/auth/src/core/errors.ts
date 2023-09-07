@@ -4,7 +4,7 @@ export interface ThirdwebErrorConstructorArgs<Variables = undefined> {
   code: string;
   message: string
   name?: string
-  cause?: Error;
+  innerError?: Error;
   variables: Variables;
 }
 
@@ -18,13 +18,13 @@ export function createError<Variables>(options: Omit<ThirdwebErrorConstructorArg
   class ThirdwebAuthError extends Error {
     public code: string;
     public message: string;
-    public cause: Error | null;
+    public innerError: Error | null;
     public variables: any;
 
     constructor(overrideOptions?: Partial<ThirdwebErrorConstructorArgs<Variables>>) {
       const code = overrideOptions?.code ?? options.code;
       const name = overrideOptions?.name ?? 'ThirdwebAuthError';
-      const cause = overrideOptions?.cause ?? null;
+      const innerError = overrideOptions?.innerError ?? null;
       const variables = overrideOptions?.variables ?? {}
 
       const unformattedMessage = overrideOptions?.message ?? options.message;
@@ -35,7 +35,7 @@ export function createError<Variables>(options: Omit<ThirdwebErrorConstructorArg
       this.code = code;
       this.message = message;
       this.name = name;
-      this.cause = cause;
+      this.innerError = innerError;
       this.variables = variables;
 
       Error.stackTraceLimit !== 0 && Error.captureStackTrace(this, ThirdwebAuthError)
