@@ -32,7 +32,7 @@ export async function getEncryptionKey(pwd: string, salt: ArrayBuffer) {
   //   true,
   //   ['encrypt', 'decrypt'],
   // );
-  return Aes.pbkdf2(pwd, bufferToBase64(salt), 10000, 64);
+  return Aes.pbkdf2(pwd, bufferToBase64(salt), 100000, 256, "sha256");
 }
 
 function bufferToBase64(arrayBuffer: ArrayBuffer): string {

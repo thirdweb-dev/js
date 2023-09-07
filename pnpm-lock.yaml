@@ -832,8 +832,8 @@ importers:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
       react-native-aes-crypto:
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^3.0.0
+        version: 3.0.0
       react-native-aes-gcm-crypto:
         specifier: ^0.2.2
         version: 0.2.2(react-native@0.71.11)(react@18.2.0)
@@ -27396,8 +27396,8 @@ packages:
       warning: 4.0.3
     dev: true
 
-  /react-native-aes-crypto@2.1.1:
-    resolution: {integrity: sha512-huAt7k43myFiY0bPnvoaCP0oBjTMw4VsL2mjkmCPzzDA56Sm3ps5xXIejPo5Z9qfnei9iijHzATV8eRNMEPtbQ==}
+  /react-native-aes-crypto@3.0.0:
+    resolution: {integrity: sha512-tZMAncLV6aGM/6nguQEvVtftC9ADhIao3d6p13PPw5n2sSZ+tiXhYlfkpGFSp606u+zsc1A5U1gABb104RAUBg==}
     dev: false
 
   /react-native-aes-gcm-crypto@0.2.2(react-native@0.71.11)(react@18.2.0):
