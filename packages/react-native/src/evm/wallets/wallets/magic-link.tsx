@@ -46,51 +46,6 @@ export const magicLink = (
      * UI for selecting wallet - this UI is rendered in the wallet selection screen
      */
     selectUI: MagicSelectionUI,
-    // (props: SelectUIProps<MagicLink>) => {
-    //   return (
-    //     <Box paddingHorizontal="xl" mt="lg">
-    //       <TextInput
-    //         placeholder="Enter your email address"
-    //         placeholderTextColor={theme.colors.textSecondary}
-    //         style={{
-    //           height: 50,
-    //           paddingHorizontal: theme.spacing.xl,
-    //           fontSize: 16,
-    //           color: theme.colors.textPrimary,
-    //         }}
-    //       />
-    //       <BaseButton
-    //         mt="md"
-    //         mb="lg"
-    //         paddingVertical="md"
-    //         borderRadius="lg"
-    //         borderWidth={1}
-    //         borderColor="border"
-    //         backgroundColor="linkPrimary"
-    //       >
-    //         <Text variant="bodyLarge" color="white" fontWeight="700">
-    //           Sign in
-    //         </Text>
-    //       </BaseButton>
-    //     </Box>
-    //     // // <Box flex={1}>
-    //     // //   <TextInput
-    //     // //     placeholder="Enter your email or phone number"
-    //     // //     placeholderTextColor="gray"
-    //     // //     onEndEditing={(e: any) => {
-    //     // //       props.onSelect(e.nativeEvent.text);
-    //     // //     }}
-    //     // //   />
-    //     // //   <Text
-    //     // //     marginVertical="sm"
-    //     // //     variant="bodySmallSecondary"
-    //     // //     textAlign="center"
-    //     // //   >
-    //     // //     ---- OR ----
-    //     // //   </Text>
-    //     // </Box>
-    //   );
-    // },
     isInstalled: () => {
       return true;
     },

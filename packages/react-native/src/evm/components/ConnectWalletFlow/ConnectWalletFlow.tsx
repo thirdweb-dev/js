@@ -40,14 +40,13 @@ export const ConnectWalletFlow = () => {
   const connectActiveWallet = useCallback(
     async (wallet: WalletConfig, data?: any) => {
       setIsConnecting(true);
-      // try {
-      //   await connect(wallet, { ...data });
-      // } catch (error) {
-      //   console.error("Error connecting to the wallet", error);
-      // } finally {
-      //   onClose(true);
-      // }
-      console.log(connect, onClose, wallet, data);
+      try {
+        await connect(wallet, { ...data });
+      } catch (error) {
+        console.error("Error connecting to the wallet", error);
+      } finally {
+        onClose(true);
+      }
     },
     [connect, onClose],
   );
