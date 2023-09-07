@@ -493,12 +493,12 @@ const Pricing: ThirdwebNextPage = () => {
                 </Flex>
                 {!isMobile && (
                   <>
-                    <Text size="body.xl" color="gray.700" textAlign="center">
+                    <Text size="body.xl" color="gray.600" textAlign="center">
                       Starter
                     </Text>
                     <Text
                       size="body.xl"
-                      color="gray.700"
+                      color="gray.600"
                       textAlign="center"
                       bgGradient="linear(to-r, #4830A4, #9786DF)"
                       bgClip="text"
@@ -519,7 +519,6 @@ const Pricing: ThirdwebNextPage = () => {
                       borderRadius="none"
                       borderColor={{ base: "transparent", md: "gray.900" }}
                       borderLeft="none"
-                      h="full"
                       as={Flex}
                       alignItems="center"
                     >
@@ -542,7 +541,7 @@ const Pricing: ThirdwebNextPage = () => {
                           borderRight="none"
                         >
                           <Text
-                            color="gray.700"
+                            color="gray.600"
                             size="body.lg"
                             textAlign="center"
                           >
@@ -573,7 +572,7 @@ const Pricing: ThirdwebNextPage = () => {
                             {isMobile && <Text size="body.lg">Starter</Text>}
                             <Text
                               w="full"
-                              color="gray.700"
+                              color="gray.600"
                               size="body.lg"
                               textAlign={{ base: "right", md: "center" }}
                             >
@@ -602,7 +601,7 @@ const Pricing: ThirdwebNextPage = () => {
                           >
                             {isMobile && <Text size="body.lg">Pro</Text>}
                             <Text
-                              color="gray.700"
+                              color="gray.600"
                               size="body.lg"
                               textAlign={{ base: "right", md: "center" }}
                               w="full"
