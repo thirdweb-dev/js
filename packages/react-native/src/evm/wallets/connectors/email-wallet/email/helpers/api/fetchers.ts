@@ -176,7 +176,7 @@ export async function storeUserShares({
   if (!resp.ok) {
     const { error } = await resp.json();
     throw new Error(
-      `Something went wrong creating user wallet: ${JSON.stringify(
+      `Something went wrong storing user wallet shares: ${JSON.stringify(
         error,
         null,
         2,
