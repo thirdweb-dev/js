@@ -77,14 +77,12 @@ export class BaseLogin extends AbstractLogin<
 
         switch (event.data.eventType) {
           case "userLoginSuccess": {
-            win?.close();
             if (event.data.authResult) {
               resolve(event.data.authResult);
             }
             break;
           }
           case "userLoginFailure": {
-            win?.close();
             reject(new Error(event.data.error));
             break;
           }
