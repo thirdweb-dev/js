@@ -14,6 +14,7 @@ import {
 import { GenerateOptionsSchema } from "../schema/generate";
 import { RefreshOptionsSchema } from "../schema/refresh";
 import { verifyLoginPayload } from "./login";
+import {ThirdwebAuthErrors} from "../errors";
 
 function isBrowser() {
   return typeof window !== "undefined";
@@ -162,30 +163,39 @@ export async function authenticateJWT<TSession extends Json = Json>({
     try {
       await parsedOptions.validateTokenId(payload.jti);
     } catch (err) {
-      throw new Error(`Token ID is invalid`);
+      throw new ThirdwebAuthErrors.InvalidTokenId();
     }
   }
 
   // Check that the token audience matches the domain
   if (payload.aud !== parsedOptions.domain) {
-    throw new Error(
-      `Expected token to be for the domain '${parsedOptions.domain}', but found token with domain '${payload.aud}'`,
-    );
+    throw new ThirdwebAuthErrors.InvalidTokenDomain({
+      variables: {
+        expectedDomain: parsedOptions.domain,
+        actualDomain: payload.aud,
+      }
+    })
   }
 
   // Check that the token is past the invalid before time
   const currentTime = Math.floor(new Date().getTime() / 1000);
   if (currentTime < payload.nbf) {
-    throw new Error(
-      `This token is invalid before epoch time '${payload.nbf}', current epoch time is '${currentTime}'`,
-    );
+    throw new ThirdwebAuthErrors.InvalidTokenTimeBefore({
+      variables: {
+        notBeforeTime: payload.nbf,
+        currentTime
+      }
+    })
   }
 
   // Check that the token hasn't expired
   if (currentTime > payload.exp) {
-    throw new Error(
-      `This token expired at epoch time '${payload.exp}', current epoch time is '${currentTime}'`,
-    );
+    throw new ThirdwebAuthErrors.ExpiredToken({
+      variables: {
+        expirationTime: payload.exp,
+        currentTime
+      }
+    })
   }
 
   // Check that the connected wallet matches the token issuer
@@ -193,9 +203,12 @@ export async function authenticateJWT<TSession extends Json = Json>({
     ? parsedOptions.issuerAddress
     : await wallet.getAddress();
   if (issuerAddress.toLowerCase() !== payload.iss.toLowerCase()) {
-    throw new Error(
-      `The expected issuer address '${issuerAddress}' did not match the token issuer address '${payload.iss}'`,
-    );
+    throw new ThirdwebAuthErrors.TokenIssuerMismatch({
+      variables: {
+        expectedIssuer: issuerAddress,
+        actualIssuer: payload.iss
+      }
+    })
   }
 
   let chainId: number | undefined = undefined;
@@ -214,9 +227,11 @@ export async function authenticateJWT<TSession extends Json = Json>({
     chainId,
   );
   if (!verified) {
-    throw new Error(
-      `The expected signer address '${issuerAddress}' did not sign the token`,
-    );
+    throw new ThirdwebAuthErrors.TokenInvalidSignature({
+      variables: {
+        signerAddress: issuerAddress
+      }
+    })
   }
 
   return {
