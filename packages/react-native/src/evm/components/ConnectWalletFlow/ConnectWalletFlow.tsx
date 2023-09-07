@@ -11,6 +11,7 @@ import {
   CLOSE_MODAL_STATE,
   ConnectWalletFlowModal,
 } from "../../utils/modalTypes";
+import Box from "../base/Box";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
@@ -39,13 +40,14 @@ export const ConnectWalletFlow = () => {
   const connectActiveWallet = useCallback(
     async (wallet: WalletConfig, data?: any) => {
       setIsConnecting(true);
-      try {
-        await connect(wallet, { ...data });
-      } catch (error) {
-        console.error("Error connecting to the wallet", error);
-      } finally {
-        onClose(true);
-      }
+      // try {
+      //   await connect(wallet, { ...data });
+      // } catch (error) {
+      //   console.error("Error connecting to the wallet", error);
+      // } finally {
+      //   onClose(true);
+      // }
+      console.log(connect, onClose, wallet, data);
     },
     [connect, onClose],
   );
@@ -127,10 +129,11 @@ export const ConnectWalletFlow = () => {
   ]);
 
   return (
-    <>
+    <Box flexDirection="column">
       {activeWallet ? (
         isConnecting ? (
           <ConnectingWallet
+            subHeaderText=""
             content={
               activeWallet.id === walletIds.localWallet ? (
                 <Text variant="bodySmallSecondary" mt="md">
@@ -153,6 +156,6 @@ export const ConnectWalletFlow = () => {
           onClose={onClose}
         />
       )}
-    </>
+    </Box>
   );
 };
