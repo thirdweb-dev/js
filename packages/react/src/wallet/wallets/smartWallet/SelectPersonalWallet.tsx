@@ -1,19 +1,16 @@
 import { walletIds } from "@thirdweb-dev/wallets";
-import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import {
   ScreenBottomContainer,
   Flex,
   ScreenContainer,
+  ModalHeader,
 } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import {
-  BackButton,
-  ModalTitle,
   ModalDescription,
   HelperLink,
 } from "../../../components/modalElements";
-import { iconSize } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import { SmartWalletConfig } from "./types";
 import { WalletConfig } from "@thirdweb-dev/react-core";
@@ -60,20 +57,12 @@ export const SelectPersonalWallet: React.FC<{
           paddingBottom: 0,
         }}
       >
-        {props.renderBackButton && (
-          <>
-            <BackButton onClick={props.onBack} />
-            <Spacer y="md" />
-          </>
-        )}
-        <Img
-          src={props.smartWallet.meta.iconURL}
-          width={iconSize.xl}
-          height={iconSize.xl}
+        <ModalHeader
+          title={props.smartWallet.meta.name}
+          onBack={props.renderBackButton ? props.onBack : undefined}
         />
+
         <Spacer y="lg" />
-        <ModalTitle>Link Personal Wallet</ModalTitle>
-        <Spacer y="sm" />
 
         <ModalDescription>
           Select a personal wallet to access your account.{" "}

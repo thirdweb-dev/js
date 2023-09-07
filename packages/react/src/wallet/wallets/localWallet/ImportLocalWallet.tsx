@@ -1,10 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
   useCreateWalletInstance,
@@ -72,15 +69,11 @@ export const ImportLocalWallet: React.FC<{
 
   return (
     <ScreenContainer>
-      <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Import Wallet
-      </ModalTitle>
-      <Spacer y="md" />
+      <LocalWalletModalHeader
+        onBack={props.goBack}
+        meta={meta}
+        title="Import Wallet"
+      />
 
       <ModalDescription sm>
         The application can authorize any transactions on behalf of the wallet

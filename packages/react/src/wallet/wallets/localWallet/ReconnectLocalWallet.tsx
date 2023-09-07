@@ -1,10 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
@@ -131,17 +128,9 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         onBack={props.goBack}
         meta={meta}
         hideBack={!props.renderBackButton}
+        title="Guest Wallet"
       />
 
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Guest Wallet
-      </ModalTitle>
-
-      <Spacer y="xs" />
       <ModalDescription>
         Connect to saved wallet on your device
       </ModalDescription>

@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Theme, spacing } from "../design-system";
+import { BackButton, ModalTitle } from "./modalElements";
 
 export const Flex = (props: {
   flexDirection?: "row" | "column";
@@ -51,4 +52,35 @@ export const FlexScrollContainer = styled.div<{ theme?: Theme }>`
   overflow-y: auto;
   ${noScrollBar}
   position: relative;
+`;
+
+export function ModalHeader(props: { onBack?: () => void; title: string }) {
+  const { onBack, title } = props;
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+      }}
+    >
+      {onBack && (
+        <BackButton
+          onClick={onBack}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+          }}
+        />
+      )}
+      <ModalTitle>{title}</ModalTitle>
+    </div>
+  );
+}
+
+export const Line = styled.div<{ theme?: Theme }>`
+  height: 2px;
+  background: ${(p) => p.theme.bg.elevated};
 `;

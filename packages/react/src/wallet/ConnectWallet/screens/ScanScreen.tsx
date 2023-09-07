@@ -2,13 +2,12 @@ import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import { ScreenContainer } from "../../../components/basic";
+import { ModalHeader, ScreenContainer } from "../../../components/basic";
 import {
-  BackButton,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
-import { fontSize, iconSize, spacing } from "../../../design-system";
+import { fontSize, iconSize } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import styled from "@emotion/styled";
 
@@ -25,17 +24,9 @@ export const ScanScreen: React.FC<{
     : `${props.walletName} wallet`;
   return (
     <ScreenContainer>
-      {!props.hideBackButton && (
-        <BackButton
-          onClick={props.onBack}
-          style={{
-            position: "absolute",
-            zIndex: 10,
-            left: spacing.lg,
-            top: spacing.lg,
-          }}
-        />
-      )}
+      <ModalHeader onBack={props.onBack} title={props.walletName} />
+      <Spacer y="xl" />
+
       <div
         style={{
           textAlign: "center",

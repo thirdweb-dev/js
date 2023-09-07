@@ -5,10 +5,14 @@ import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import { Flex, ScreenContainer } from "../../../components/basic";
+import {
+  Flex,
+  Line,
+  ModalHeader,
+  ScreenContainer,
+} from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
-import { BackButton, ModalTitle } from "../../../components/modalElements";
 import {
   SecondaryText,
   NeutralText,
@@ -123,27 +127,19 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
         height: "100%",
       }}
     >
+      <ModalHeader title="Sign in" onBack={props.goBack} />
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
         }}
       >
-        <BackButton onClick={props.goBack} />
-
-        <ModalTitle
-          style={{
-            textAlign: "center",
-          }}
-        >
-          Sign in
-        </ModalTitle>
-
         <div
           style={{
             textAlign: "center",
           }}
         >
-          <Spacer y="xl" />
+          <Spacer y="xxl" />
           <SecondaryText>Enter the OTP sent to</SecondaryText>
           <Spacer y="sm" />
           <NeutralText>{email}</NeutralText>
@@ -296,9 +292,4 @@ const LinkButton = styled.button<{ theme?: Theme }>`
   &:hover {
     color: ${(p) => p.theme.text.neutral};
   }
-`;
-
-const Line = styled.div<{ theme?: Theme }>`
-  height: 2px;
-  background: ${(p) => p.theme.bg.baseHover};
 `;

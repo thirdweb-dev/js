@@ -1,10 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -89,14 +86,10 @@ export const CreateLocalWallet_Password: React.FC<{
         onBack={props.goBack}
         meta={meta}
         hideBack={!props.renderBackButton}
+        title="Guest Wallet"
       />
 
-      <Flex alignItems="center" gap="xs">
-        <ModalTitle>Guest Wallet</ModalTitle>
-      </Flex>
-
-      <Spacer y="sm" />
-      <ModalDescription sm>
+      <ModalDescription>
         Choose a password for your wallet, you{`'`}ll be able to access and
         export this wallet with the same password.
       </ModalDescription>

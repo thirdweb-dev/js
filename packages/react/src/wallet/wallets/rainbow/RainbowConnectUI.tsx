@@ -71,7 +71,6 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        // supportLink="https://support.rainbow.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
   }
@@ -95,7 +94,6 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
           android: "https://rnbwapp.com/",
           other: "https://rnbwapp.com/",
         }}
-        // supportLink="https://support.trustwallet.com/en/support/home"
       />
     );
   }

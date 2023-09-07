@@ -80,7 +80,7 @@ export const FormField: React.FC<{
       <Spacer y="sm" />
 
       <Input
-        variant="secondary"
+        variant="outline"
         required={props.required}
         name={props.name}
         autoComplete={props.autocomplete}

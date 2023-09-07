@@ -145,64 +145,67 @@ export const SmartWalletConnecting: React.FC<{
       </ScreenContainer>
 
       <ScreenBottomContainer>
-        <Button
-          type="button"
-          fullWidth
-          variant="secondary"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: spacing.sm,
-          }}
-          onClick={async () => {
-            if (!activeWallet) {
-              throw new Error("No active wallet");
-            }
-            setConnectError(false);
-            setSwitchError(false);
-            setSwitchingNetwork(true);
-            try {
-              await switchChain(targetChain.chainId);
-            } catch (e) {
-              setSwitchError(true);
-            } finally {
-              setSwitchingNetwork(false);
-            }
-          }}
-        >
-          {" "}
-          {switchingNetwork ? "Switching" : "Switch Network"}
-          {switchingNetwork && <Spinner size="sm" color="neutral" />}
-        </Button>
-
-        <Spacer y="md" />
-
-        {switchingNetwork && requiresConfirmation && (
-          <ConfirmMessage
+        <Flex flexDirection="column" gap="md">
+          <Button
+            type="button"
+            fullWidth
+            variant="secondary"
             style={{
-              textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              gap: spacing.sm,
+            }}
+            onClick={async () => {
+              if (!activeWallet) {
+                throw new Error("No active wallet");
+              }
+              setConnectError(false);
+              setSwitchError(false);
+              setSwitchingNetwork(true);
+              try {
+                await switchChain(targetChain.chainId);
+              } catch (e) {
+                setSwitchError(true);
+              } finally {
+                setSwitchingNetwork(false);
+              }
             }}
           >
             {" "}
-            Confirm in your wallet{" "}
-          </ConfirmMessage>
-        )}
+            {switchingNetwork ? "Switching" : "Switch Network"}
+            {switchingNetwork && <Spinner size="sm" color="neutral" />}
+          </Button>
 
-        {switchError && (
-          <ErrorMessage
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>Failed to switch network.</span>
-          </ErrorMessage>
-        )}
+          {switchingNetwork && requiresConfirmation && (
+            <ConfirmMessage
+              style={{
+                textAlign: "center",
+              }}
+            >
+              {" "}
+              Confirm in your wallet{" "}
+            </ConfirmMessage>
+          )}
+
+          {switchError && (
+            <ErrorMessage
+              style={{
+                display: "flex",
+                gap: spacing.sm,
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                fontSize: fontSize.sm,
+              }}
+            >
+              <ExclamationTriangleIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+              />
+              <span>Failed to switch network.</span>
+            </ErrorMessage>
+          )}
+        </Flex>
       </ScreenBottomContainer>
     </>
   );

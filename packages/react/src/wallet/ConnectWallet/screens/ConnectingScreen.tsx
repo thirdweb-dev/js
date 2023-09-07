@@ -1,9 +1,7 @@
-import { useContext } from "react";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import { Flex, ScreenContainer } from "../../../components/basic";
+import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
 import {
-  BackButton,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
@@ -17,7 +15,6 @@ import {
 } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import styled from "@emotion/styled";
-import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { Button, IconButton } from "../../../components/buttons";
 import { keyframes } from "@emotion/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -31,28 +28,18 @@ export const ConnectingScreen: React.FC<{
   errorConnecting: boolean;
   onRetry: () => void;
 }> = (props) => {
-  const modalConfig = useContext(ModalConfigCtx);
-
   return (
     <ScreenContainer
       style={{
         height: "100%",
       }}
     >
-      {!props.hideBackButton && (
-        <>
-          <BackButton
-            onClick={props.onBack}
-            style={
-              modalConfig.modalSize === "wide"
-                ? {
-                    position: "absolute",
-                  }
-                : undefined
-            }
-          />
-        </>
-      )}
+      <ModalHeader
+        title={props.walletName}
+        onBack={props.hideBackButton ? undefined : props.onBack}
+      />
+
+      <Spacer y="xl" />
 
       <div
         style={{

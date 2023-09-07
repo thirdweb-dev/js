@@ -1,11 +1,9 @@
-import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
 import { ErrorMessage, Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
 import {
-  BackButton,
   ModalTitle,
   ModalDescription,
   HelperLink,
@@ -31,7 +29,7 @@ import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useState } from "react";
 import { SafeWalletConfig } from "./types";
-import { ScreenContainer } from "../../../components/basic";
+import { ModalHeader, ScreenContainer } from "../../../components/basic";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -108,19 +106,11 @@ export const SelectAccount: React.FC<{
 
   return (
     <ScreenContainer>
-      {props.renderBackButton && (
-        <>
-          <BackButton onClick={props.onBack} />
-          <Spacer y="md" />
-        </>
-      )}
-
-      <Img
-        src={props.safeWalletConfig.meta.iconURL}
-        width={iconSize.xl}
-        height={iconSize.xl}
+      <ModalHeader
+        title={props.safeWalletConfig.meta.name}
+        onBack={props.renderBackButton ? props.onBack : undefined}
       />
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       <ModalTitle>Enter your Safe Address & Network </ModalTitle>
       <Spacer y="md" />
@@ -132,6 +122,7 @@ export const SelectAccount: React.FC<{
           href="https://app.safe.global/home"
           style={{
             display: "inline",
+            whiteSpace: "nowrap",
           }}
         >
           Safe Dashboard
@@ -187,7 +178,7 @@ export const SelectAccount: React.FC<{
 
         {/* Select Safe Netowrk */}
         <Label htmlFor="safeNetwork">Safe Network</Label>
-        <Spacer y="xs" />
+        <Spacer y="sm" />
         <div
           style={{
             position: "relative",
@@ -267,10 +258,9 @@ export const SelectAccount: React.FC<{
               {" "}
               Can not use Safe: No Safe supported chains are configured in App
             </ErrorMessage>
+            <Spacer y="sm" />
           </>
         )}
-
-        <Spacer y="sm" />
 
         {safeConnectError && (
           <ErrorMessage
@@ -381,7 +371,7 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   border: none;
   border-radius: 6px;
   color: ${(p) => p.theme.text.neutral};
-  background: ${(p) => p.theme.input.bg};
+  background: none;
   font-size: ${fontSize.md};
   box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.outline};
   appearance: none;

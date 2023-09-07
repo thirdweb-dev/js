@@ -1,11 +1,8 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
-import {
-  ModalTitle,
-  ModalDescription,
-} from "../../../components/modalElements";
-import { Theme, iconSize } from "../../../design-system";
+import { ModalDescription } from "../../../components/modalElements";
+import { Theme } from "../../../design-system";
 import styled from "@emotion/styled";
 import { fontSize } from "../../../design-system";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
@@ -14,18 +11,14 @@ import { useEffect, useRef, useState } from "react";
 import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
-import { Img } from "../../../components/Img";
 import { Spinner } from "../../../components/Spinner";
-import { Flex, ScreenContainer } from "../../../components/basic";
+import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
 import {
   useAddress,
   useCreateWalletInstance,
   useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
-
-const localWalletIcon =
-  "ipfs://QmbQzSNGvmNYZzem9jZRuYeLe9K2W4pqbdnVUp7Y6edQ8Y/local-wallet.svg";
 
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
@@ -135,17 +128,9 @@ export const ExportLocalWallet: React.FC<{
 
   return (
     <ScreenContainer>
-      <Img src={localWalletIcon} width={iconSize.xl} height={iconSize.xl} />
-      <Spacer y="lg" />
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Backup Wallet
-      </ModalTitle>
+      <ModalHeader onBack={props.onBack} title="Backup Wallet" />
 
-      <Spacer y="md" />
+      <Spacer y="lg" />
 
       <ModalDescription sm>
         This will download a JSON file containing the wallet information onto

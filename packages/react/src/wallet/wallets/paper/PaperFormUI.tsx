@@ -1,7 +1,6 @@
 import { Spacer } from "../../../components/Spacer";
 import { InputSelectionUI } from "../InputSelectionUI";
-import { Flex, ScreenContainer } from "../../../components/basic";
-import { BackButton, ModalTitle } from "../../../components/modalElements";
+import { ModalHeader, ScreenContainer } from "../../../components/basic";
 import { spacing } from "../../../design-system";
 import { FloatingPlane } from "./FloatingPlane";
 
@@ -64,24 +63,7 @@ export const PaperFormUIScreen: React.FC<{
         flexDirection: "column",
       }}
     >
-      <Flex
-        justifyContent="center"
-        alignItems="center"
-        style={{
-          position: "relative",
-        }}
-      >
-        <BackButton
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-          }}
-          onClick={props.onBack}
-        />
-
-        <ModalTitle>Sign in</ModalTitle>
-      </Flex>
+      <ModalHeader onBack={props.onBack} title="Sign in" />
 
       <Spacer y="xl" />
 

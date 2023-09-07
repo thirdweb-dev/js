@@ -1,7 +1,6 @@
 import { Button } from "../../../components/buttons";
 import { SecondaryText } from "../../../components/text";
 import { Spacer } from "../../../components/Spacer";
-import { ModalTitle } from "../../../components/modalElements";
 import { LocalWalletModalHeader } from "./common";
 import { FormFooter } from "../../../components/formElements";
 import { WalletConfig } from "@thirdweb-dev/react-core";
@@ -14,10 +13,12 @@ export const OverrideConfirmation: React.FC<{
 }> = (props) => {
   return (
     <ScreenContainer>
-      <LocalWalletModalHeader onBack={props.onBack} meta={props.meta} />
-      <ModalTitle>Backup your wallet</ModalTitle>
+      <LocalWalletModalHeader
+        onBack={props.onBack}
+        meta={props.meta}
+        title="Warning"
+      />
 
-      <Spacer y="md" />
       <div
         style={{
           lineHeight: 1.5,
@@ -31,7 +32,7 @@ export const OverrideConfirmation: React.FC<{
         <Spacer y="xl" />
 
         <FormFooter>
-          <Button variant="inverted" onClick={props.onBackup}>
+          <Button variant="inverted" fullWidth onClick={props.onBackup}>
             Backup wallet
           </Button>
         </FormFooter>

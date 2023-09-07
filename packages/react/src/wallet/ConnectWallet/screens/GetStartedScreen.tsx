@@ -1,12 +1,10 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import { Flex, ScreenContainer } from "../../../components/basic";
+import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
 import {
-  BackButton,
   HelperLink,
   ModalDescription,
-  ModalTitle,
 } from "../../../components/modalElements";
 import { NeutralText } from "../../../components/text";
 import { iconSize, radius, spacing } from "../../../design-system";
@@ -46,72 +44,43 @@ export const GetStartedScreen: React.FC<{
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
 
+  const handleBack = onBack
+    ? () => {
+        if (showScreen === "base") {
+          onBack();
+        } else {
+          setShowScreen("base");
+        }
+      }
+    : undefined;
+
   return (
     <ScreenContainer>
-      {onBack && (
-        <BackButton
-          style={
-            isScanScreen
-              ? {
-                  position: "absolute",
-                  top: spacing.lg,
-                  left: spacing.lg,
-                }
-              : undefined
-          }
-          onClick={() => {
-            if (showScreen === "base") {
-              onBack();
-            } else {
-              setShowScreen("base");
-            }
-          }}
-        />
-      )}
-
       {showScreen === "android-scan" && googlePlayStoreLink && (
-        <ScanScreen
+        <InstallScanScreen
           platformIcon={<PlayStoreIcon size={iconSize.md} />}
           url={googlePlayStoreLink}
           platform="Google Play"
           walletName={walletName}
           walletIconURL={walletIconURL}
+          onBack={handleBack}
         />
       )}
 
       {showScreen === "ios-scan" && appleStoreLink && (
-        <ScanScreen
+        <InstallScanScreen
           platformIcon={<AppleIcon size={iconSize.md} />}
           url={appleStoreLink}
           platform="App Store"
           walletName={walletName}
           walletIconURL={walletIconURL}
+          onBack={handleBack}
         />
       )}
 
       {showScreen === "base" && (
         <>
-          {onBack && <Spacer y="lg" />}
-
-          {header || (
-            <>
-              <Img
-                src={walletIconURL}
-                width={iconSize.xl}
-                height={iconSize.xl}
-                alt=""
-              />
-
-              <Spacer y="lg" />
-
-              <ModalTitle>Get started with {walletName}</ModalTitle>
-              <Spacer y="sm" />
-
-              <ModalDescription>
-                Download your preferred option and refresh this page
-              </ModalDescription>
-            </>
-          )}
+          {header || <ModalHeader onBack={handleBack} title={walletName} />}
           <Spacer y="xl" />
 
           <Flex flexDirection="column" gap="xs">
@@ -187,45 +156,52 @@ export const GetStartedScreen: React.FC<{
   );
 };
 
-const ScanScreen: React.FC<{
+const InstallScanScreen: React.FC<{
   url: string;
   platform: string;
   walletName: string;
   platformIcon: React.ReactNode;
   walletIconURL: string;
+  onBack?: () => void;
 }> = (props) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      <QRCode
-        qrCodeUri={props.url}
-        QRIcon={
-          <Img
-            src={props.walletIconURL}
-            width={iconSize.lg}
-            height={iconSize.lg}
-          />
-        }
-      />
-      <Spacer y="xl" />
-
-      {/* {props.platformIcon} */}
-
-      <NeutralText>
-        Install {props.walletName} on {props.platform}
-      </NeutralText>
+    <div>
+      <ModalHeader title={props.walletName} onBack={props.onBack} />
 
       <Spacer y="lg" />
-      <ModalDescription sm>
-        Scan QR with your phone to download <br /> {props.walletName} for{" "}
-        {props.platform}
-      </ModalDescription>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <QRCode
+          qrCodeUri={props.url}
+          QRIcon={
+            <Img
+              src={props.walletIconURL}
+              width={iconSize.lg}
+              height={iconSize.lg}
+            />
+          }
+        />
+        <Spacer y="xl" />
+
+        {/* {props.platformIcon} */}
+
+        <NeutralText>
+          Install {props.walletName} on {props.platform}
+        </NeutralText>
+
+        <Spacer y="lg" />
+        <ModalDescription sm>
+          Scan QR with your phone to download <br /> {props.walletName} for{" "}
+          {props.platform}
+        </ModalDescription>
+      </div>
     </div>
   );
 };
