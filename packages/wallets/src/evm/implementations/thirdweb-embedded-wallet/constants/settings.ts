@@ -1,7 +1,7 @@
 import { getPaperOriginUrl } from "@paperxyz/sdk-common-utilities";
 
 export const EMBEDDED_WALLET_PATH = "/sdk/2022-08-12/embedded-wallet";
-export const HEADLESS_GOOGLE_OAUTH_ROUTE = `${EMBEDDED_WALLET_PATH}/auth/headless-google-login-managed`;
+export const HEADLESS_GOOGLE_OAUTH_ROUTE = `/auth/headless-google-login-managed`;
 
 export const GET_IFRAME_BASE_URL = () =>
   `${getPaperOriginUrl().replace(
