@@ -49,7 +49,6 @@ import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
-import { modalMaxWidthCompact } from "./constants";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -422,7 +421,6 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
-          modalSize={"compact"}
           theme={props.theme}
           chains={chains}
           {...props.networkSelector}
@@ -431,14 +429,7 @@ export const ConnectedWalletDetails: React.FC<{
       )}
 
       {showExportModal && (
-        <Modal
-          size={"compact"}
-          open={true}
-          setOpen={setShowExportModal}
-          style={{
-            maxWidth: modalMaxWidthCompact,
-          }}
-        >
+        <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
           <ExportLocalWallet
             localWalletConfig={activeWalletConfig as LocalWalletConfig}
             onBack={() => {

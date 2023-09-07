@@ -10,25 +10,16 @@ import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
-import { modalMaxWidthCompact } from "./constants";
 import { ScreenContainer } from "../../components/basic";
 
 export const SignatureModal: React.FC<{
   open: boolean;
   setOpen: (open: boolean) => void;
-  modalSize: "compact" | "wide";
 }> = (props) => {
   const walletConfig = useWalletConfig();
 
   return (
-    <Modal
-      size={props.modalSize}
-      open={props.open}
-      style={{
-        maxWidth: modalMaxWidthCompact,
-      }}
-      setOpen={props.setOpen}
-    >
+    <Modal size="compact" open={props.open} setOpen={props.setOpen}>
       <ScreenContainer>
         <Container>
           {walletConfig && (

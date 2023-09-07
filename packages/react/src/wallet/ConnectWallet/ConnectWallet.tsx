@@ -145,7 +145,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       {showSignatureModal && (
         <SignatureModal
-          modalSize="compact"
           open={showSignatureModal}
           setOpen={setShowSignatureModal}
         />
