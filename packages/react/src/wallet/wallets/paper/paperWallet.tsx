@@ -13,6 +13,8 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 import { Spacer } from "../../../components/Spacer";
 import { FloatingPlane } from "./FloatingPlane";
+import { useScreenContext } from "../../ConnectWallet/ConnectModal";
+import { reservedScreens } from "../../ConnectWallet/constants";
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
@@ -42,7 +44,12 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
 };
 
 const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
-  if (props.modalSize === "wide") {
+  const screen = useScreenContext();
+
+  if (
+    props.modalSize === "wide" ||
+    (screen !== reservedScreens.main && props.modalSize === "compact")
+  ) {
     return (
       <div>
         <WalletEntryButton
@@ -74,13 +81,19 @@ const PaperConnectUI = (
   },
 ) => {
   const [email, setEmail] = useState<string | undefined>(props.selectionData);
+  const screenCtx = useScreenContext();
+
   const [screen, setScreen] = useState<"base" | "next">(
-    props.modalSize === "wide" ? "base" : "next",
+    props.modalSize === "wide" ||
+      (props.modalSize === "compact" && screenCtx !== reservedScreens.main)
+      ? "base"
+      : "next",
   );
 
   if (screen === "base") {
     return (
       <PaperFormUIScreen
+        modalSize={props.modalSize}
         onEmail={(_email) => {
           setEmail(_email);
           setScreen("next");

@@ -23,7 +23,14 @@ import {
   radius,
   shadow,
 } from "../../design-system";
-import { useState, useCallback, useEffect, useRef, useContext } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+  createContext,
+} from "react";
 import { GetStartedWithWallets } from "./screens/GetStartedWithWallets";
 import {
   modalMaxWidthCompact,
@@ -139,28 +146,30 @@ export const ConnectModalContent = (props: {
 
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-      {isWideModal ? (
-        <div
-          style={{
-            height: "100%",
-            display: "grid",
-            gridTemplateColumns: "300px 1fr",
-          }}
-        >
-          <LeftContainer> {walletList} </LeftContainer>
-          <FlexScrollContainer>{screenContent}</FlexScrollContainer>
-        </div>
-      ) : (
-        <FlexScrollContainer
-          style={{
-            maxHeight: modalMaxHeight,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {screenContent}
-        </FlexScrollContainer>
-      )}
+      <ScreenContext.Provider value={screen}>
+        {isWideModal ? (
+          <div
+            style={{
+              height: "100%",
+              display: "grid",
+              gridTemplateColumns: "300px 1fr",
+            }}
+          >
+            <LeftContainer> {walletList} </LeftContainer>
+            <FlexScrollContainer>{screenContent}</FlexScrollContainer>
+          </div>
+        ) : (
+          <FlexScrollContainer
+            style={{
+              maxHeight: modalMaxHeight,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {screenContent}
+          </FlexScrollContainer>
+        )}
+      </ScreenContext.Provider>
     </ThemeProvider>
   );
 };
@@ -279,6 +288,12 @@ export const ConnectModalInline = (props: {
   );
 };
 
+type Screen = string | WalletConfig;
+
+export const ScreenContext = /* @__PURE__ */ createContext<Screen | undefined>(
+  undefined,
+);
+
 function useScreen() {
   const walletConfigs = useWallets();
   const initialScreen =
@@ -292,6 +307,16 @@ function useScreen() {
     setScreen,
     initialScreen,
   };
+}
+
+export function useScreenContext() {
+  const screen = useContext(ScreenContext);
+  if (!screen) {
+    throw new Error(
+      "useScreenContext must be used within a <ScreenProvider />",
+    );
+  }
+  return screen;
 }
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`

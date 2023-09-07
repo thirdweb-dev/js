@@ -54,6 +54,7 @@ export const PaperFormUI = (props: {
 export const PaperFormUIScreen: React.FC<{
   onEmail: (email: string | undefined) => void;
   onBack: () => void;
+  modalSize: "compact" | "wide";
 }> = (props) => {
   return (
     <ScreenContainer
@@ -68,9 +69,13 @@ export const PaperFormUIScreen: React.FC<{
       <Spacer y="xl" />
 
       <div
-        style={{
-          padding: spacing.lg,
-        }}
+        style={
+          props.modalSize === "wide"
+            ? {
+                padding: spacing.lg,
+              }
+            : undefined
+        }
       >
         <div>
           <FloatingPlane size={120} />
