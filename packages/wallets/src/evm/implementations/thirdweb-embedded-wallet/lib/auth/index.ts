@@ -52,6 +52,7 @@ export class Auth {
         await this.preLogin();
       },
       querier: querier,
+      clientId,
     });
   }
 
@@ -122,6 +123,11 @@ export class Auth {
     return this.BaseLogin.loginWithThirdwebOtp(args);
   }
 
+  /**
+   * A headless way to initiate login with google.
+   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
+
+   */
   async loginWithGoogle(): Promise<AuthLoginReturnType> {
     return this.BaseLogin.loginWithGoogle();
   }

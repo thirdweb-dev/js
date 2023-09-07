@@ -31,7 +31,7 @@ export abstract class AbstractLogin<
   protected postLogin: (
     authResults: AuthAndWalletRpcReturnType,
   ) => Promise<AuthLoginReturnType>;
-
+  protected clientId;
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
    * Call {@link ThirdwebEmbeddedWalletSdk.auth} instead.
@@ -41,7 +41,8 @@ export abstract class AbstractLogin<
     querier,
     preLogin,
     postLogin,
-  }: Omit<ClientIdWithQuerierType, "clientId"> & {
+    clientId,
+  }: ClientIdWithQuerierType & {
     preLogin: () => Promise<void>;
     postLogin: (
       authDetails: AuthAndWalletRpcReturnType,
@@ -50,6 +51,7 @@ export abstract class AbstractLogin<
     this.LoginQuerier = querier;
     this.preLogin = preLogin;
     this.postLogin = postLogin;
+    this.clientId = clientId;
   }
 
   abstract loginWithThirdwebModal(args?: MODAL): Promise<AuthLoginReturnType>;
