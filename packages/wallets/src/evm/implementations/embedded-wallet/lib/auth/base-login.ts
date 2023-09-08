@@ -70,6 +70,10 @@ export class BaseLogin extends AbstractLogin<
           error?: string;
         }>,
       ) => {
+        console.log("GET_IFRAME_BASE_URL()", GET_IFRAME_BASE_URL());
+        console.log("event.origin", event.origin);
+        console.log("event.data", event.data);
+        console.log("!!event.data.authResult", !!event.data.authResult);
         if (event.origin !== GET_IFRAME_BASE_URL()) {
           return;
         }
