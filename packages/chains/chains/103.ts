@@ -2,6 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Worldland Mainnet",
   "chain": "Worldland",
+  "icon": {
+    "url": "ipfs://QmYZNTfK3byhgLsTjXP8vPubVHRz2CWsBrTJxZrQmKq6JZ",
+    "width": 3509,
+    "height": 2482,
+    "format": "png"
+  },
   "rpc": [
     "https://worldland.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seoul.worldland.foundation"
