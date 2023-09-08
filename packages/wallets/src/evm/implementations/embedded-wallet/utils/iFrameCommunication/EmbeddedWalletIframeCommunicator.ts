@@ -53,10 +53,7 @@ export function createEmbeddedWalletIframeLink({
   path: string;
   queryParams?: { [key: string]: string | number };
 }) {
-  const embeddedWalletUrl = new URL(
-    `${EMBEDDED_WALLET_PATH}${path}`,
-    GET_IFRAME_BASE_URL(),
-  );
+  const embeddedWalletUrl = new URL(`${path}`, GET_IFRAME_BASE_URL());
   if (queryParams) {
     for (const queryKey of Object.keys(queryParams)) {
       embeddedWalletUrl.searchParams.set(
