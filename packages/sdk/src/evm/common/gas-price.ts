@@ -55,10 +55,6 @@ export async function getDynamicFeeData(
   if (chainId === Mumbai.chainId || chainId === Polygon.chainId) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
-    console.log(
-      "DYNAMIC: polygon fee",
-      utils.formatUnits(maxPriorityFeePerGas, "gwei"),
-    );
   } else if (eth_maxPriorityFeePerGas) {
     // prioritize fee from eth_maxPriorityFeePerGas
     maxPriorityFeePerGas = BigNumber.from(eth_maxPriorityFeePerGas);
