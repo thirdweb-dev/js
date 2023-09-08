@@ -153,7 +153,7 @@ const Loyalty: ThirdwebNextPage = () => {
           title="Build the future of loyalty programs"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://thirdweb.com/explore"
+          ctaLink="https://thirdweb.com/thirdweb.eth/LoyaltyCard"
           gradient="linear(to-r, #BFA3DA, #84309C, #C735B0)"
         />
       </Container>
