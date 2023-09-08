@@ -242,7 +242,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           justifyContent={!showBillingButton ? "space-between" : "flex-end"}
           w="full"
         >
-          {!showBillingButton && <ManageBillingButton account={account} />}
+          {showBillingButton && <ManageBillingButton account={account} />}
 
           {!previewEnabled && (
             <Button
