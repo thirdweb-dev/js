@@ -128,19 +128,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     setShowSignatureModal(false);
   };
 
-  let modalSize = props.modalSize || "wide";
-
-  if (isMobile() || walletConfigs.length === 1) {
-    modalSize = "compact";
-  }
-
-  const modalConfig = {
-    title: props.modalTitle || defaultModalTitle,
-    theme,
-    data: undefined,
-    modalSize,
-  };
-
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       {showSignatureModal && (
@@ -170,7 +157,18 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 connectionStatus === "connecting" ? "Connecting" : btnTitle
               }
               onClick={() => {
-                setModalConfig(modalConfig);
+                let modalSize = props.modalSize || "wide";
+
+                if (isMobile() || walletConfigs.length === 1) {
+                  modalSize = "compact";
+                }
+
+                setModalConfig({
+                  title: props.modalTitle || defaultModalTitle,
+                  theme,
+                  data: undefined,
+                  modalSize,
+                });
                 setIsWalletModalOpen(true);
               }}
               data-test="connect-wallet-button"
