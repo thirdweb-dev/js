@@ -119,6 +119,21 @@ const GAMING = {
   showInExplore: false,
 } as const;
 
+const LOYALTY = {
+  id: "loyalty",
+  name: "Loyalty",
+  displayName: "Loyalty",
+  description:
+    "A collection of contracts that are popular for building loyalty programs.",
+  contracts: [
+    "thirdweb.eth/LoyaltyCard",
+    "unlock-protocol.eth/PublicLock",
+    "thirdweb.eth/Marketplace",
+    "thirdweb.eth/TokenERC20",
+  ],
+  showInExplore: false,
+} as const;
+
 const COMMERCE = {
   id: "commerce",
   name: "Commerce",
@@ -169,6 +184,7 @@ const CATEGORIES = {
   [SMART_WALLET.id]: SMART_WALLET,
   [AIRDROP.id]: AIRDROP,
   [GAMING.id]: GAMING,
+  [LOYALTY.id]: LOYALTY,
   [COMMERCE.id]: COMMERCE,
   [STAKING.id]: STAKING,
   [GOVERNANCE.id]: GOVERNANCE,
