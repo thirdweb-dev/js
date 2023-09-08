@@ -9,15 +9,14 @@ import { fontSize, iconSize, spacing, Theme } from "../../../design-system";
 import { GetStartedScreen } from "./GetStartedScreen";
 import styled from "@emotion/styled";
 import { SecondaryText } from "../../../components/text";
-import { useWallets } from "@thirdweb-dev/react-core";
+import { WalletConfig } from "@thirdweb-dev/react-core";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const GetStartedWithWallets: React.FC<{
   onBack: () => void;
-}> = ({ onBack }) => {
-  const walletConfigs = useWallets();
-  const { meta } = walletConfigs[0];
+  meta: WalletConfig["meta"];
+}> = ({ onBack, meta }) => {
   const modalConfig = useContext(ModalConfigCtx);
   const isCompact = modalConfig.modalSize === "compact";
 

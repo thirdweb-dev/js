@@ -16,11 +16,14 @@ import {
 import { ThemeProvider } from "@emotion/react";
 import { Theme, darkTheme, lightTheme } from "../../../design-system";
 import { useCallback, useEffect, useContext } from "react";
-import { GetStartedWithWallets } from "../screens/GetStartedWithWallets";
 import { reservedScreens, modalMaxHeight } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
-import { FlexScrollContainer } from "../../../components/basic";
+import {
+  FlexScrollContainer,
+  ModalHeader,
+  ScreenContainer,
+} from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
 
 export const ConnectModalContent = (props: {
@@ -68,9 +71,6 @@ export const ConnectModalContent = (props: {
     setScreen(initialScreen);
   }, [setScreen, initialScreen]);
 
-  const WalletConnectUI =
-    typeof screen !== "string" && (screen.connectUI || HeadlessConnectUI);
-
   const walletList = (
     <WalletSelector
       title={title}
@@ -82,41 +82,55 @@ export const ConnectModalContent = (props: {
     />
   );
 
-  const screenContent = (
-    <>
-      {screen === reservedScreens.main && !isWideModal && walletList}
-
-      {isWideModal && screen === reservedScreens.main && (
-        <GetStartedWithWallets onBack={handleBack} />
-      )}
-
-      {screen === reservedScreens.getStarted && (
-        <GetStartedWithWallets onBack={handleBack} />
-      )}
-
-      {WalletConnectUI && (
-        <WalletConnectUI
-          supportedWallets={walletConfigs}
-          theme={theme}
-          goBack={handleBack}
-          close={handleClose}
-          isOpen={isWalletModalOpen}
-          open={() => {
-            setIsWalletModalOpen(true);
-          }}
-          walletConfig={screen}
-          modalSize={modalConfig.modalSize}
-          selectionData={modalConfig.data}
-          setSelectionData={(data) => {
-            setModalConfig((config) => ({
-              ...config,
-              data,
-            }));
-          }}
-        />
-      )}
-    </>
+  const todoScreen = (
+    <ScreenContainer
+      style={{
+        height: "100%",
+        minHeight: "300px",
+      }}
+    >
+      <ModalHeader
+        title="TODO"
+        onBack={
+          modalSize === "wide"
+            ? undefined
+            : () => {
+                setScreen(initialScreen);
+              }
+        }
+      />
+    </ScreenContainer>
   );
+
+  const getStarted = todoScreen;
+
+  const getWalletUI = (walletConfig: WalletConfig) => {
+    const ConnectUI = walletConfig.connectUI || HeadlessConnectUI;
+
+    return (
+      <ConnectUI
+        supportedWallets={walletConfigs}
+        theme={theme}
+        goBack={handleBack}
+        close={handleClose}
+        isOpen={isWalletModalOpen}
+        open={() => {
+          setIsWalletModalOpen(true);
+        }}
+        walletConfig={walletConfig}
+        modalSize={modalConfig.modalSize}
+        selectionData={modalConfig.data}
+        setSelectionData={(data) => {
+          setModalConfig((config) => ({
+            ...config,
+            data,
+          }));
+        }}
+      />
+    );
+  };
+
+  const socialLogin = walletConfigs.find((w) => w.category === "socialLogin");
 
   return (
     <ScreenContext.Provider value={screen}>
@@ -129,7 +143,13 @@ export const ConnectModalContent = (props: {
           }}
         >
           <LeftContainer> {walletList} </LeftContainer>
-          <FlexScrollContainer>{screenContent}</FlexScrollContainer>
+          <FlexScrollContainer>
+            {screen === reservedScreens.main && (
+              <>{socialLogin ? getWalletUI(socialLogin) : getStarted}</>
+            )}
+            {screen === reservedScreens.getStarted && getStarted}
+            {typeof screen !== "string" && getWalletUI(screen)}
+          </FlexScrollContainer>
         </div>
       ) : (
         <FlexScrollContainer
@@ -137,7 +157,9 @@ export const ConnectModalContent = (props: {
             maxHeight: modalMaxHeight,
           }}
         >
-          {screenContent}
+          {screen === reservedScreens.main && walletList}
+          {screen === reservedScreens.getStarted && getStarted}
+          {typeof screen !== "string" && getWalletUI(screen)}
         </FlexScrollContainer>
       )}
     </ScreenContext.Provider>
