@@ -10,10 +10,12 @@ import {
   UserStatus,
 } from "../../implementations/embedded-wallet";
 import { Connector } from "../../interfaces/connector";
-import { PaperWalletConnectionArgs } from "../paper/types";
-import { EmbeddedWalletConnectorOptions } from "./types";
+import {
+  EmbeddedWalletConnectionArgs,
+  EmbeddedWalletConnectorOptions,
+} from "./types";
 
-export class ThirdwebWalletConnector extends Connector<PaperWalletConnectionArgs> {
+export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready = true;

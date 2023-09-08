@@ -15,6 +15,7 @@ export type {
 export { UserStatus } from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
   AuthDetails,
+  EmbeddedWalletConstructorType,
   GetAuthDetailsReturnType,
   GetUser,
   GetUserWalletStatusRpcReturnType,
@@ -22,7 +23,6 @@ export type {
   LogoutReturnType,
   SendEmailOtpReturnType,
   SetUpWalletRpcReturnType,
-  ThirdwebConstructorType,
 } from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
   GetAddressReturnType,

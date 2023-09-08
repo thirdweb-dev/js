@@ -1,8 +1,8 @@
-import { ThirdwebWalletConnector } from "../connectors/thirdweb";
+import { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
 import {
   EmbeddedWalletAdditionalOptions,
   EmbeddedWalletConnectionArgs,
-} from "../connectors/thirdweb/types";
+} from "../connectors/embedded-wallet/types";
 import { walletIds } from "../constants/walletIds";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
@@ -10,7 +10,7 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 export type ThirdwebWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
 
-export class ThirdwebWallet extends AbstractClientWallet<
+export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletAdditionalOptions,
   EmbeddedWalletConnectionArgs
 > {
@@ -32,7 +32,7 @@ export class ThirdwebWallet extends AbstractClientWallet<
   chain: EmbeddedWalletAdditionalOptions["chain"];
 
   constructor(options: ThirdwebWalletOptions) {
-    super(ThirdwebWallet.id, {
+    super(EmbeddedWallet.id, {
       ...options,
     });
 
@@ -41,7 +41,7 @@ export class ThirdwebWallet extends AbstractClientWallet<
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      this.connector = new ThirdwebWalletConnector({
+      this.connector = new EmbeddedWalletConnector({
         clientId: this.options?.clientId ?? "",
         chain: this.chain,
         chains: this.chains,
@@ -52,7 +52,7 @@ export class ThirdwebWallet extends AbstractClientWallet<
   }
 
   async getEmail() {
-    const connector = (await this.getConnector()) as ThirdwebWalletConnector;
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.getEmail();
   }
 }

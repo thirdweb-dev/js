@@ -239,12 +239,12 @@
       },
       "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
     },
-    "./evm/wallets/thirdweb-wallet": {
+    "./evm/wallets/embedded-wallet": {
       "module": {
-        "browser": "./evm/wallets/thirdweb-wallet/dist/thirdweb-dev-wallets-evm-wallets-thirdweb-wallet.browser.esm.js",
-        "default": "./evm/wallets/thirdweb-wallet/dist/thirdweb-dev-wallets-evm-wallets-thirdweb-wallet.esm.js"
+        "browser": "./evm/wallets/embedded-wallet/dist/thirdweb-dev-wallets-evm-wallets-embedded-wallet.browser.esm.js",
+        "default": "./evm/wallets/embedded-wallet/dist/thirdweb-dev-wallets-evm-wallets-embedded-wallet.esm.js"
       },
-      "default": "./evm/wallets/thirdweb-wallet/dist/thirdweb-dev-wallets-evm-wallets-thirdweb-wallet.cjs.js"
+      "default": "./evm/wallets/embedded-wallet/dist/thirdweb-dev-wallets-evm-wallets-embedded-wallet.cjs.js"
     },
     "./evm/connectors/rainbow": {
       "module": {
@@ -266,13 +266,6 @@
         "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.esm.js"
       },
       "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.cjs.js"
-    },
-    "./evm/connectors/thirdweb": {
-      "module": {
-        "browser": "./evm/connectors/thirdweb/dist/thirdweb-dev-wallets-evm-connectors-thirdweb.browser.esm.js",
-        "default": "./evm/connectors/thirdweb/dist/thirdweb-dev-wallets-evm-connectors-thirdweb.esm.js"
-      },
-      "default": "./evm/connectors/thirdweb/dist/thirdweb-dev-wallets-evm-connectors-thirdweb.cjs.js"
     },
     "./evm/wallets/local-wallet-node": {
       "module": {
@@ -323,6 +316,13 @@
       },
       "default": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.cjs.js"
     },
+    "./evm/connectors/embedded-wallet": {
+      "module": {
+        "browser": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.browser.esm.js",
+        "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.esm.js"
+      },
+      "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.cjs.js"
+    },
     "./evm/connectors/wallet-connect-v1": {
       "module": {
         "browser": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.browser.esm.js",
@@ -330,12 +330,12 @@
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
     },
-    "./evm/implementations/thirdweb-embedded-wallet": {
+    "./evm/implementations/embedded-wallet": {
       "module": {
-        "browser": "./evm/implementations/thirdweb-embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet.browser.esm.js",
-        "default": "./evm/implementations/thirdweb-embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet.esm.js"
+        "browser": "./evm/implementations/embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-embedded-wallet.browser.esm.js",
+        "default": "./evm/implementations/embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-embedded-wallet.esm.js"
       },
-      "default": "./evm/implementations/thirdweb-embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-thirdweb-embedded-wallet.cjs.js"
+      "default": "./evm/implementations/embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-embedded-wallet.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -356,7 +356,7 @@
       "evm/index.ts",
       "evm/connectors/*/index.ts",
       "evm/wallets/**",
-      "evm/implementations/thirdweb-embedded-wallet/index.ts",
+      "evm/implementations/embedded-wallet/index.ts",
       "solana/index.ts",
       "solana/wallets/**"
     ],
