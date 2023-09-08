@@ -4,10 +4,7 @@ export const EMBEDDED_WALLET_PATH = "/sdk/2022-08-12/embedded-wallet";
 export const HEADLESS_GOOGLE_OAUTH_ROUTE = `/auth/headless-google-login-managed`;
 
 export const GET_IFRAME_BASE_URL = () =>
-  `${getPaperOriginUrl().replace(
-    "withpaper.com",
-    "ews.thirdweb.com",
-  )}${EMBEDDED_WALLET_PATH}`;
+  `${getPaperOriginUrl().replace("withpaper.com", "ews.thirdweb.com")}`;
 
 export const WALLET_USER_DETAILS_LOCAL_STORAGE_NAME = (clientId: string) =>
   `thirdwebEwsWalletUserDetails-${clientId}`;

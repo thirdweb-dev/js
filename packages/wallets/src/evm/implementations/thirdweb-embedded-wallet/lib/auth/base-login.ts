@@ -1,4 +1,5 @@
 import {
+  EMBEDDED_WALLET_PATH,
   GET_IFRAME_BASE_URL,
   HEADLESS_GOOGLE_OAUTH_ROUTE,
 } from "../../constants/settings";
@@ -40,7 +41,7 @@ export class BaseLogin extends AbstractLogin<
 
   override async loginWithGoogle(): Promise<AuthLoginReturnType> {
     await this.preLogin();
-    const googleOauthUrl = `${GET_IFRAME_BASE_URL()}${HEADLESS_GOOGLE_OAUTH_ROUTE}?developerClientId=${
+    const googleOauthUrl = `${GET_IFRAME_BASE_URL()}${EMBEDDED_WALLET_PATH}${HEADLESS_GOOGLE_OAUTH_ROUTE}?developerClientId=${
       this.clientId
     }`;
     const win = window.open(googleOauthUrl, "Login", "width=350, height=500");
