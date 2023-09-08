@@ -2,7 +2,7 @@ import { SidebarNav } from "./nav";
 import { Route } from "./types";
 
 type SettingsSidebarProps = {
-  activePage: "apiKeys" | "devices" | "usage" | "billing";
+  activePage: "apiKeys" | "devices" | "usage" | "billing" | "notifications";
 };
 
 const links: Route[] = [
@@ -14,6 +14,11 @@ const links: Route[] = [
     name: "billing",
   },
   { path: "/dashboard/settings/usage", title: "Usage", name: "usage" },
+  {
+    path: "/dashboard/settings/notifications",
+    title: "Notifications",
+    name: "notifications",
+  },
 ];
 
 export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({

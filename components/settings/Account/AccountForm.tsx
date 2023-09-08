@@ -14,6 +14,7 @@ import {
   VStack,
   HStack,
   useColorModeValue,
+  Switch,
 } from "@chakra-ui/react";
 import {
   Button,
@@ -26,12 +27,14 @@ import {
 import { Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ManageBillingButton } from "components/settings/Account/ManageBillingButton";
+import { useState } from "react";
 
 interface AccountFormProps {
   account: Account;
   horizontal?: boolean;
   previewEnabled?: boolean;
-  hideBillingButton?: boolean;
+  showBillingButton?: boolean;
+  showSubscription?: boolean;
   buttonProps?: ButtonProps;
   buttonText?: string;
   padded?: boolean;
@@ -48,11 +51,15 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   buttonText = "Save",
   horizontal = false,
   previewEnabled = false,
-  hideBillingButton = false,
+  showBillingButton = true,
+  showSubscription = false,
   disableUnchanged = false,
   padded = true,
   optional = false,
 }) => {
+  const [isSubscribing, setIsSubscribing] = useState(
+    showSubscription && !!account.email?.length,
+  );
   const trackEvent = useTrack();
   const bg = useColorModeValue("backgroundCardHighlight", "transparent");
 
@@ -80,14 +87,23 @@ export const AccountForm: React.FC<AccountFormProps> = ({
       onSave();
     }
 
+    const formData = {
+      ...values,
+      ...(showSubscription
+        ? {
+            subscribeToUpdates: isSubscribing,
+          }
+        : {}),
+    };
+
     trackEvent({
       category: "account",
       action: "update",
       label: "attempt",
-      data: values,
+      data: formData,
     });
 
-    updateMutation.mutate(values, {
+    updateMutation.mutate(formData, {
       onSuccess: (data) => {
         if (!optional) {
           onSuccess();
@@ -105,17 +121,17 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           data,
         });
       },
-      onError: (err) => {
+      onError: (error) => {
         // don't show errors when form is optional
         if (!optional) {
-          onError(err);
+          onError(error);
         }
 
         trackEvent({
           category: "account",
           action: "update",
           label: "error",
-          error: err,
+          error,
         });
       },
     });
@@ -206,32 +222,44 @@ export const AccountForm: React.FC<AccountFormProps> = ({
               </FormErrorMessage>
             )}
           </FormControl>
+
+          {showSubscription && (
+            <HStack gap={2} justifyContent="center">
+              <Text>Subscribe to new features and key product updates</Text>
+              <Switch
+                isDisabled={
+                  !form.getValues("email").length ||
+                  !!form.getFieldState("email", form.formState).error
+                }
+                isChecked={isSubscribing}
+                onChange={(e) => setIsSubscribing(e.target.checked)}
+              />
+            </HStack>
+          )}
         </Flex>
 
-        <VStack w="full" gap={3}>
-          <HStack
-            justifyContent={!hideBillingButton ? "space-between" : "flex-end"}
-            w="full"
-          >
-            {!hideBillingButton && <ManageBillingButton account={account} />}
+        <HStack
+          justifyContent={!showBillingButton ? "space-between" : "flex-end"}
+          w="full"
+        >
+          {!showBillingButton && <ManageBillingButton account={account} />}
 
-            {!previewEnabled && (
-              <Button
-                {...buttonProps}
-                type="button"
-                onClick={handleSubmit}
-                colorScheme="blue"
-                isDisabled={
-                  updateMutation.isLoading ||
-                  (disableUnchanged && !form.formState.isDirty)
-                }
-                isLoading={updateMutation.isLoading}
-              >
-                {buttonText}
-              </Button>
-            )}
-          </HStack>
-        </VStack>
+          {!previewEnabled && (
+            <Button
+              {...buttonProps}
+              type="button"
+              onClick={handleSubmit}
+              colorScheme="blue"
+              isDisabled={
+                updateMutation.isLoading ||
+                (disableUnchanged && !form.formState.isDirty)
+              }
+              isLoading={updateMutation.isLoading}
+            >
+              {buttonText}
+            </Button>
+          )}
+        </HStack>
       </VStack>
     </form>
   );

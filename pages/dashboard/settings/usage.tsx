@@ -29,16 +29,9 @@ const SettingsUsagePage: ThirdwebNextPage = () => {
   return (
     <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
       <Flex direction="column">
-        <Flex
-          justifyContent="space-between"
-          direction={{ base: "column", md: "row" }}
-          gap={4}
-          h={10}
-        >
-          <Heading size="title.lg" as="h1">
-            Usage
-          </Heading>
-        </Flex>
+        <Heading size="title.lg" as="h1">
+          Usage
+        </Heading>
         <HStack
           justifyContent="space-between"
           flexDir={{ base: "column", lg: "row" }}

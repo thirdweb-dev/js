@@ -38,7 +38,7 @@ export const Onboarding: React.FC = () => {
 
       <AccountForm
         account={meQuery.data as Account}
-        hideBillingButton
+        showSubscription
         buttonText="Continue to Dashboard"
         trackingCategory="onboarding"
         padded={false}

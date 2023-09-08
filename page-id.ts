@@ -131,6 +131,9 @@ export enum PageId {
   // thirdweb.com/dashboard/settings/usage
   SettingsUsage = "settings-usage",
 
+  // thirdweb.com/dashboard/settings/notifications
+  SettingsNotifications = "settings-notifications",
+
   // ---------------------------------------------------------------------------
   //  solutions pages
   // ---------------------------------------------------------------------------

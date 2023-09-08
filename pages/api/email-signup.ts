@@ -20,19 +20,21 @@ const handler = async (req: NextRequest) => {
   const { email, send_welcome_email = false } = requestBody;
   invariant(process.env.BEEHIIV_API_KEY, "missing BEEHIIV_API_KEY");
 
-  const response = await fetch("https://api.beehiiv.com/v1/subscribers", {
-    headers: {
-      "Content-Type": "application/json",
-      "X-ApiKey": process.env.BEEHIIV_API_KEY,
+  const response = await fetch(
+    "https://api.beehiiv.com/v2/publications/9f54090a-6d14-406b-adfd-dbb30574f664/subscriptions",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-ApiKey": process.env.BEEHIIV_API_KEY,
+      },
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        send_welcome_email,
+        utm_source: "thirdweb.com",
+      }),
     },
-    method: "POST",
-    body: JSON.stringify({
-      email,
-      publication_id: "9f54090a-6d14-406b-adfd-dbb30574f664",
-      send_welcome_email,
-      utm_source: "thirdweb.com",
-    }),
-  });
+  );
 
   return NextResponse.json(
     { status: response.statusText },
