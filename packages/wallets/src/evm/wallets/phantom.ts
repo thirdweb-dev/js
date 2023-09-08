@@ -37,8 +37,6 @@ export class PhantomWallet extends AbstractClientWallet {
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      // if phantom is injected, use the injected connector
-      // otherwise, use the wallet connect connector for using the phantom app on mobile via QR code scan
 
       if (this.isInjected) {
         // import the connector dynamically
@@ -54,31 +52,6 @@ export class PhantomWallet extends AbstractClientWallet {
         this.phantomConnector = phantomConnector;
 
         this.connector = new WagmiAdapter(phantomConnector);
-      } else {
-        const { WalletConnectConnector } = await import(
-          "../connectors/wallet-connect"
-        );
-
-        const walletConnectConnector = new WalletConnectConnector({
-          chains: this.chains,
-          options: {
-            projectId: this.options?.projectId || TW_WC_PROJECT_ID, // TODO,
-            storage: this.walletStorage,
-            qrcode: this.options?.qrcode,
-            dappMetadata: this.dappMetadata,
-            qrModalOptions: this.options?.qrModalOptions,
-          },
-        });
-
-        walletConnectConnector.getProvider().then((provider) => {
-          provider.signer.client.on("session_request_sent", () => {
-            this.emit("wc_session_request_sent");
-          });
-        });
-
-        // need to save this for getting the QR code URI
-        this.walletConnectConnector = walletConnectConnector;
-        this.connector = new WagmiAdapter(walletConnectConnector);
       }
     }
 
