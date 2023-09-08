@@ -18,6 +18,8 @@ import styled from "@emotion/styled";
 import { Button, IconButton } from "../../../components/buttons";
 import { keyframes } from "@emotion/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { useContext } from "react";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -28,10 +30,13 @@ export const ConnectingScreen: React.FC<{
   errorConnecting: boolean;
   onRetry: () => void;
 }> = (props) => {
+  const modalConfig = useContext(ModalConfigCtx);
   return (
     <ScreenContainer
       style={{
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <ModalHeader
@@ -39,7 +44,7 @@ export const ConnectingScreen: React.FC<{
         onBack={props.hideBackButton ? undefined : props.onBack}
       />
 
-      <Spacer y="xl" />
+      {modalConfig.modalSize === "compact" && <Spacer y="xxl" />}
 
       <div
         style={{
@@ -47,7 +52,7 @@ export const ConnectingScreen: React.FC<{
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100%",
+          flex: 1,
         }}
       >
         <div>
