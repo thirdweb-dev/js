@@ -12,6 +12,11 @@ type ZerionkWalletOptions = {
    * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
    */
   projectId?: string;
+
+  /**
+   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
 };
 
 export const zerionWallet = (
@@ -19,6 +24,7 @@ export const zerionWallet = (
 ): WalletConfig<ZerionWallet> => {
   return {
     id: ZerionWallet.id,
+    recommended: options?.recommended,
     meta: {
       ...ZerionWallet.meta,
       iconURL:

@@ -13,6 +13,11 @@ type MetamaskWalletOptions = {
    * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
    */
   projectId?: string;
+
+  /**
+   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
 };
 
 export const metamaskWallet = (
@@ -20,6 +25,7 @@ export const metamaskWallet = (
 ): WalletConfig<MetaMaskWallet> => {
   return {
     id: MetaMaskWallet.id,
+    recommended: options?.recommended,
     meta: {
       ...MetaMaskWallet.meta,
       iconURL:

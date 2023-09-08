@@ -24,7 +24,7 @@ import {
   SetModalConfigCtx,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { TWIcon } from "./icons/twIcon";
-import { AccentText, SecondaryText } from "../../components/text";
+import { SecondaryText } from "../../components/text";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
@@ -274,31 +274,44 @@ export function WalletEntryButton(props: {
   walletConfig: WalletConfig<any>;
   selectWallet: () => void;
 }) {
+  const { walletConfig, selectWallet } = props;
+  const isRecommended = walletConfig.recommended;
   return (
     <WalletButton
       type="button"
       onClick={() => {
-        props.selectWallet();
+        selectWallet();
       }}
     >
       <Img
-        src={props.walletConfig.meta.iconURL}
+        src={walletConfig.meta.iconURL}
         width={iconSize.xl}
         height={iconSize.xl}
         loading="eager"
       />
       <WalletNameContainer>
         <Flex flexDirection="column" gap="xxs">
-          <WalletName>{props.walletConfig.meta.name}</WalletName>
-          {props.walletConfig.isInstalled &&
-            props.walletConfig.isInstalled() && (
-              <AccentText
+          <WalletName>{walletConfig.meta.name}</WalletName>
+          {isRecommended && (
+            <SecondaryText
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              Recommended
+            </SecondaryText>
+          )}
+
+          {!isRecommended &&
+            walletConfig.isInstalled &&
+            walletConfig.isInstalled() && (
+              <SecondaryText
                 style={{
                   fontSize: fontSize.sm,
                 }}
               >
                 Installed
-              </AccentText>
+              </SecondaryText>
             )}
         </Flex>
         <ChevronRightIcon
@@ -379,6 +392,16 @@ function sortWalletConfigs(walletConfigs: WalletConfig[]) {
           return -1;
         }
         if (!aInstalled && bInstalled) {
+          return 1;
+        }
+        return 0;
+      })
+      // show the reccomended wallets even before that
+      .sort((a, b) => {
+        if (a.recommended && !b.recommended) {
+          return -1;
+        }
+        if (!a.recommended && b.recommended) {
           return 1;
         }
         return 0;

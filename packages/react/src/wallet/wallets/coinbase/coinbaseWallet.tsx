@@ -10,7 +10,16 @@ import {
 import { useEffect, useRef } from "react";
 
 type CoinbaseWalletOptions = {
+  /**
+   * Whether to use the Coinbase's default QR Code modal or show the custom UI in ConnectWallet Modal
+   * @default "custom"
+   */
   qrmodal?: "coinbase" | "custom";
+
+  /**
+   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
 };
 
 export const coinbaseWallet = (
@@ -20,6 +29,7 @@ export const coinbaseWallet = (
 
   return {
     id: CoinbaseWallet.id,
+    recommended: options?.recommended,
     meta: {
       name: "Coinbase Wallet",
       iconURL:

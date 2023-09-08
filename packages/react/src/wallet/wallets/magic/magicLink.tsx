@@ -20,7 +20,12 @@ import { TextDivider } from "../../../components/TextDivider";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 
 export function magicLink(
-  config: MagicLinkAdditionalOptions,
+  config: MagicLinkAdditionalOptions & {
+    /**
+     * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+     */
+    recommended?: boolean;
+  },
 ): ConfiguredMagicLinkWallet {
   const emailLoginEnabled = config.emailLogin !== false;
   const smsLoginEnabled = config.smsLogin !== false;
@@ -52,6 +57,7 @@ export function magicLink(
   return {
     category: "socialLogin",
     id: MagicLink.id,
+    recommended: config?.recommended,
     meta: {
       ...MagicLink.meta,
       iconURL:

@@ -15,6 +15,11 @@ type RainbowWalletOptions = {
    * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
    */
   projectId?: string;
+
+  /**
+   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
 };
 
 export const rainbowWallet = (
@@ -22,6 +27,7 @@ export const rainbowWallet = (
 ): WalletConfig<RainbowWallet> => {
   return {
     id: RainbowWallet.id,
+    recommended: options?.recommended,
     meta: {
       ...RainbowWallet.meta,
       name: "Rainbow",

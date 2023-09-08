@@ -20,6 +20,7 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
     category: "socialLogin",
     id: PaperWallet.id,
+    recommended: config?.recommended,
     meta: {
       ...PaperWallet.meta,
       name: "Email",

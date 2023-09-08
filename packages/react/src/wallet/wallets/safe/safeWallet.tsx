@@ -14,11 +14,17 @@ import { SelectAccount } from "./SelectAccount";
 import { HeadlessConnectUI } from "../headlessConnectUI";
 
 export const safeWallet = (
-  config?: SafeWalletConfigOptions,
+  config?: SafeWalletConfigOptions & {
+    /**
+     * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+     */
+    recommended?: boolean;
+  },
 ): SafeWalletConfig => {
   const personalWallets = config?.personalWallets || defaultWallets;
   return {
     id: SafeWallet.id,
+    recommended: config?.recommended,
     meta: {
       ...SafeWallet.meta,
       iconURL:

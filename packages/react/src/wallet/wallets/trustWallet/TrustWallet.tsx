@@ -12,6 +12,11 @@ type TrustWalletOptions = {
    * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
    */
   projectId?: string;
+
+  /**
+   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
 };
 
 export const trustWallet = (
@@ -19,6 +24,7 @@ export const trustWallet = (
 ): WalletConfig<TrustWallet> => {
   return {
     id: TrustWallet.id,
+    recommended: options?.recommended,
     meta: {
       ...TrustWallet.meta,
       iconURL:

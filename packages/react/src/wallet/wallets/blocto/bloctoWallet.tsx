@@ -9,12 +9,18 @@ export type BloctoAdditionalOptions = {
    * https://docs.blocto.app/blocto-sdk/register-app-id
    */
   appId?: string;
+
+  /**
+   * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+   */
+  recommended?: boolean;
 };
 
 export const bloctoWallet = (
   options?: BloctoAdditionalOptions,
 ): WalletConfig<BloctoWallet> => ({
   id: BloctoWallet.id,
+  recommended: options?.recommended,
   meta: {
     ...BloctoWallet.meta,
     iconURL:
