@@ -8,7 +8,7 @@ import {
   ModalHeader,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
-import { ModalTitle } from "../../components/modalElements";
+import { HelperLink, ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
   iconSize,
@@ -203,15 +203,16 @@ export const WalletSelector: React.FC<{
                 {" "}
                 New to wallets?
               </SecondaryText>
-              <Button
-                variant="link"
-                onClick={props.onGetStarted}
+              <HelperLink
+                target="_blank"
+                href="https://ethereum.org/en/wallets/find-wallet/"
                 style={{
+                  lineHeight: 1,
                   fontSize: fontSize.sm,
                 }}
               >
                 Get started
-              </Button>
+              </HelperLink>
             </Flex>
           )}
 

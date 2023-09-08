@@ -44,6 +44,12 @@ export const darkTheme = {
     focusRing: darkColors.accent,
     errorRing: darkColors.danger,
   },
+  btn: {
+    accent: {
+      bg: darkColors.accent,
+      color: darkColors.inverted,
+    },
+  },
 };
 
 export const lightTheme: typeof darkTheme = {
@@ -63,6 +69,12 @@ export const lightTheme: typeof darkTheme = {
     outline: lightColors.elevatedHover,
     focusRing: lightColors.accent,
     errorRing: lightColors.danger,
+  },
+  btn: {
+    accent: {
+      bg: lightColors.accent,
+      color: lightColors.base,
+    },
   },
 };
 

@@ -19,12 +19,9 @@ import { useCallback, useEffect, useContext } from "react";
 import { reservedScreens, modalMaxHeight } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
-import {
-  FlexScrollContainer,
-  ModalHeader,
-  ScreenContainer,
-} from "../../../components/basic";
+import { FlexScrollContainer } from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
+import { StartScreen } from "../screens/StartScreen";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -82,27 +79,7 @@ export const ConnectModalContent = (props: {
     />
   );
 
-  const todoScreen = (
-    <ScreenContainer
-      style={{
-        height: "100%",
-        minHeight: "300px",
-      }}
-    >
-      <ModalHeader
-        title="TODO"
-        onBack={
-          modalSize === "wide"
-            ? undefined
-            : () => {
-                setScreen(initialScreen);
-              }
-        }
-      />
-    </ScreenContainer>
-  );
-
-  const getStarted = todoScreen;
+  const getStarted = <StartScreen />;
 
   const getWalletUI = (walletConfig: WalletConfig) => {
     const ConnectUI = walletConfig.connectUI || HeadlessConnectUI;
@@ -130,8 +107,6 @@ export const ConnectModalContent = (props: {
     );
   };
 
-  const socialLogin = walletConfigs.find((w) => w.category === "socialLogin");
-
   return (
     <ScreenContext.Provider value={screen}>
       {isWideModal ? (
@@ -144,9 +119,7 @@ export const ConnectModalContent = (props: {
         >
           <LeftContainer> {walletList} </LeftContainer>
           <FlexScrollContainer>
-            {screen === reservedScreens.main && (
-              <>{socialLogin ? getWalletUI(socialLogin) : getStarted}</>
-            )}
+            {screen === reservedScreens.main && <>{getStarted}</>}
             {screen === reservedScreens.getStarted && getStarted}
             {typeof screen !== "string" && getWalletUI(screen)}
           </FlexScrollContainer>

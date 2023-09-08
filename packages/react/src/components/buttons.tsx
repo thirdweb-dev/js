@@ -14,7 +14,7 @@ export const Button = styled.button<{
   border-radius: ${radius.md};
   padding: ${fontSize.sm} ${fontSize.sm};
   font-size: ${fontSize.md};
-  font-weight: ${(p) => (p.variant === "link" ? 400 : 600)};
+  font-weight: ${(p) => (p.variant === "link" ? 400 : 500)};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
@@ -27,7 +27,7 @@ export const Button = styled.button<{
       case "inverted":
         return p.theme.bg.inverted;
       case "accent":
-        return p.theme.bg.accent;
+        return p.theme.btn.accent.bg;
       case "secondary":
         return p.theme.bg.elevated;
       default:
@@ -50,7 +50,7 @@ export const Button = styled.button<{
       case "inverted":
         return p.theme.text.inverted;
       case "accent":
-        return p.theme.text.neutral;
+        return p.theme.btn.accent.color;
       case "secondary":
         return p.theme.text.neutral;
       case "link":
