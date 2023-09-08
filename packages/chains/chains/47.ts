@@ -3,7 +3,7 @@ export default {
   "name": "Xpla Testnet",
   "chain": "XPLA",
   "rpc": [
-    "https://xpla-testnet-xpla-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://xpla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cube-evm-rpc.xpla.dev"
   ],
   "nativeCurrency": {
@@ -34,5 +34,5 @@ export default {
   "redFlags": [
     "reusedChainId"
   ],
-  "slug": "xpla-testnet-xpla-test"
+  "slug": "xpla-testnet"
 } as const satisfies Chain;
