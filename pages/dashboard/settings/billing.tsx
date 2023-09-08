@@ -13,7 +13,6 @@ import { StepsCard } from "components/dashboard/StepsCard";
 import { useEffect, useMemo, useState } from "react";
 import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { BillingPlan } from "components/settings/Account/BillingPlan";
-import { Notifications } from "components/settings/Account/Notifications";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const address = useAddress();
