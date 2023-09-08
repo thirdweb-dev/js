@@ -195,9 +195,15 @@ export class StandardErc1155<
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,
+      fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      return this.erc1155.airdrop.prepare(tokenId, addresses, data);
+      return this.erc1155.airdrop.prepare(
+        tokenId,
+        addresses,
+        fromAddress,
+        data,
+      );
     },
   );
 }
