@@ -2,6 +2,7 @@ import { ThirdwebAuth } from "../src/core";
 import { Keypair } from "@solana/web3.js";
 import { KeypairWallet } from "@thirdweb-dev/wallets/solana/wallets/keypair";
 import { expect } from "chai";
+import {ThirdwebAuthError, ThirdwebAuthErrors} from "../src/core/errors";
 
 describe("Wallet Authentication - Solana", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
@@ -222,9 +223,7 @@ describe("Wallet Authentication - Solana", async () => {
       await auth.authenticate(token, { domain: "test.thirdweb.com" });
       expect.fail();
     } catch (err: any) {
-      expect(err.message).to.contain(
-        "Expected token to be for the domain 'test.thirdweb.com', but found token with domain 'thirdweb.com'",
-      );
+      expect(err.code).to.equal('INVALID_TOKEN_DOMAIN');
     }
   });
 
@@ -271,8 +270,8 @@ describe("Wallet Authentication - Solana", async () => {
       await auth.authenticate(token);
       expect.fail();
     } catch (err: any) {
-      expect(err.message).to.contain(
-        `The expected issuer address '${await signerWallet.getAddress()}' did not match the token issuer address '${await adminWallet.getAddress()}'`,
+      expect(err.code).to.equal(
+        'TOKEN_ISSUER_MISMATCH',
       );
     }
   });
@@ -314,7 +313,7 @@ describe("Wallet Authentication - Solana", async () => {
       });
       expect.fail();
     } catch (err: any) {
-      expect(err.message).to.contain("Token ID is invalid");
+      expect(err.code).to.equal("INVALID_TOKEN_ID");
     }
   });
 

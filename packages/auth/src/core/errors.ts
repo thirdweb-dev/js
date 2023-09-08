@@ -1,44 +1,60 @@
-import { format } from 'util';
-
-export interface ThirdwebErrorConstructorArgs<Variables = undefined> {
+export interface ThirdwebCreateErrorConstructorArgs {
   code: string;
-  message: string
-  name?: string
+  message: string;
+}
+export interface ThirdwebErrorConstructorArgs<Variables = undefined> {
   innerError?: Error;
   variables: Variables;
 }
 
-function formatString(template: string, substitutions: { [key: string]: any }): string {
+function formatString(
+  template: string,
+  substitutions: { [key: string]: any }
+): string {
   return template.replace(/\$\{(\w+)\}/g, (_match, p1) => {
     return substitutions[p1] !== undefined ? substitutions[p1] : _match;
   });
 }
 
-export function createError<Variables>(options: Omit<ThirdwebErrorConstructorArgs<Variables>, 'variables'>) {
+type OverrideOptions<Variables> = Partial<
+  ThirdwebErrorConstructorArgs<Variables>
+>;
+type OverrideOptionsWithVariables<Variables> =
+  ThirdwebErrorConstructorArgs<Variables>;
+
+export type ThirdwebAuthError = ReturnType<typeof createError>
+
+export function createError<Variables = undefined>(
+  options: ThirdwebCreateErrorConstructorArgs
+) {
   class ThirdwebAuthError extends Error {
     public code: string;
     public message: string;
     public innerError: Error | null;
     public variables: any;
 
-    constructor(overrideOptions?: Partial<ThirdwebErrorConstructorArgs<Variables>>) {
-      const code = overrideOptions?.code ?? options.code;
-      const name = overrideOptions?.name ?? 'ThirdwebAuthError';
+    constructor(
+      ...[overrideOptions]: Variables extends undefined
+        ? [OverrideOptions<Variables>?]
+        : [OverrideOptionsWithVariables<Variables>]
+    ) {
+      const code = options.code;
       const innerError = overrideOptions?.innerError ?? null;
-      const variables = overrideOptions?.variables ?? {}
+      const variables = overrideOptions?.variables ?? {};
 
-      const unformattedMessage = overrideOptions?.message ?? options.message;
+      const unformattedMessage = options.message;
       const message = formatString(unformattedMessage, variables);
 
       super(message);
 
       this.code = code;
       this.message = message;
-      this.name = name;
+      this.name = 'ThirdwebAuthError';
       this.innerError = innerError;
       this.variables = variables;
 
-      Error.stackTraceLimit !== 0 && Error.captureStackTrace(this, ThirdwebAuthError)
+      Error.stackTraceLimit !== 0 &&
+      Error.captureStackTrace(this, ThirdwebAuthError);
     }
   }
 

@@ -271,8 +271,8 @@ describe("Wallet Authentication - EVM", async () => {
       await auth.authenticate(token);
       expect.fail();
     } catch (err: any) {
-      expect(err.message).to.contain(
-        `The expected issuer address '${await signerWallet.getAddress()}' did not match the token issuer address '${await adminWallet.getAddress()}'`,
+      expect(err.code).to.equal(
+        'TOKEN_ISSUER_MISMATCH'
       );
     }
   });
@@ -314,7 +314,7 @@ describe("Wallet Authentication - EVM", async () => {
       });
       expect.fail();
     } catch (err: any) {
-      expect(err.message).to.contain("Token ID is invalid");
+      expect(err.code).to.equal('INVALID_TOKEN_ID');
     }
   });
 
@@ -362,7 +362,7 @@ describe("Wallet Authentication - EVM", async () => {
       await auth.authenticate(token);
       expect.fail();
     } catch (err: any) {
-      expect(err.message).to.contain("The expected issuer address");
+      expect(err.code).to.equal('TOKEN_ISSUER_MISMATCH');
     }
 
     const user = await auth.authenticate(token, {
