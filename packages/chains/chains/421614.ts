@@ -5,7 +5,7 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://arbitrum-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia-rollup.abitrum.io/rpc"
+    "https://sepolia-rollup.arbitrum.io/rpc"
   ],
   "faucets": [],
   "nativeCurrency": {

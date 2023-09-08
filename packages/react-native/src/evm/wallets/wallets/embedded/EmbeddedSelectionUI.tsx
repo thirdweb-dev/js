@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { EmailWallet } from "./EmailWallet";
+import { EmbeddedWallet } from "./EmbeddedWallet";
 import { ActivityIndicator, StyleSheet, TextInput } from "react-native";
 import { useAppTheme } from "../../../styles/hooks";
 import {
@@ -13,7 +13,7 @@ import Text from "../../../components/base/Text";
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
 export const EmailSelectionUI: React.FC<
-  SelectUIProps<EmailWallet> & {
+  SelectUIProps<EmbeddedWallet> & {
     clientId: string;
   }
 > = ({ onSelect, clientId, walletConfig }) => {
@@ -22,12 +22,12 @@ export const EmailSelectionUI: React.FC<
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
-  const [emailWallet, setEmailWallet] = useState<EmailWallet | null>(null);
+  const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
       walletConfig,
-    ) as EmailWallet;
+    ) as EmbeddedWallet;
 
     setEmailWallet(emailWalletInstance);
   }, [createWalletInstance, walletConfig]);

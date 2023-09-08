@@ -1,23 +1,23 @@
 import {
-  EmailWalletConnectionArgs,
-  EmailWalletConnectorOptions,
+  EmbeddedWalletConnectionArgs,
+  EmbeddedWalletConnectorOptions,
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
 import { Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
-import { sendEmailOTP, validateEmailOTP } from "./email/auth";
-import { getEthersSigner } from "./email/signer";
-import { logoutUser } from "./email/helpers/auth/logout";
+import { sendEmailOTP, validateEmailOTP } from "./embedded/auth";
+import { getEthersSigner } from "./embedded/signer";
+import { logoutUser } from "./embedded/helpers/auth/logout";
 
-export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
-  private options: EmailWalletConnectorOptions;
+export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
+  private options: EmbeddedWalletConnectorOptions;
 
   signer?: Signer;
 
   email?: string;
 
-  constructor(options: EmailWalletConnectorOptions) {
+  constructor(options: EmbeddedWalletConnectorOptions) {
     super();
     this.options = options;
   }

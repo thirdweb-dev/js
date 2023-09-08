@@ -4,7 +4,7 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { EmailWallet } from "./EmailWallet";
+import { EmbeddedWallet } from "./EmbeddedWallet";
 import React, { useRef, useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -20,7 +20,7 @@ import BaseButton from "../../../components/base/BaseButton";
 
 const OTP_LENGTH = 6;
 
-export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
+export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   close,
   goBack,
   selectionData,
@@ -58,7 +58,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
       const otp = values.join("");
 
       setTimeout(() => {
-        (selectionData.emailWallet as EmailWallet)
+        (selectionData.emailWallet as EmbeddedWallet)
           .validateEmailOTP(otp)
           .then(async () => {
             await setConnectedWallet(selectionData.emailWallet);
@@ -112,7 +112,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
     setErrorMessage("");
     setFocusedIndex(undefined);
     setRequestingNewOtp(true);
-    (selectionData.emailWallet as EmailWallet)
+    (selectionData.emailWallet as EmbeddedWallet)
       .sendEmailOTP(selectionData.email)
       .then(() => {})
       .catch((error) => {

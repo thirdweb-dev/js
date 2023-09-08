@@ -6,37 +6,37 @@ import type {
   PaperConstructorType,
 } from "@paperxyz/embedded-wallet-service-sdk";
 
-export interface EmailConnectorOptions {
+export interface EmbeddedConnectorOptions {
   chains?: Chain[];
   chainId?: number;
   email?: string;
   phoneNumber?: string;
 }
 
-export type EmailWalletOptions = Omit<
-  WalletOptions<EmailConnectorOptions>,
+export type EmbeddedWalletOptions = Omit<
+  WalletOptions<EmbeddedConnectorOptions>,
   "clientId"
 >;
 
-type EmailAdvanceOptions = {
+type EmbeddedAdvanceOptions = {
   recoveryShareManagement?: "USER_MANAGED" | "AWS_MANAGED";
 };
 
-export type EmailWalletAdditionalOptions = {
+export type EmbeddedWalletAdditionalOptions = {
   emailClientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
-  advancedOptions?: EmailAdvanceOptions;
+  advancedOptions?: EmbeddedAdvanceOptions;
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 };
 
-export interface EmailWalletConnectorOptions {
+export interface EmbeddedWalletConnectorOptions {
   clientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
   chains: Chain[];
-  advancedOptions?: EmailAdvanceOptions;
+  advancedOptions?: EmbeddedAdvanceOptions;
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 
-export interface EmailWalletConnectionArgs {
+export interface EmbeddedWalletConnectionArgs {
   email?: string;
 }

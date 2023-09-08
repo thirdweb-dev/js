@@ -828,9 +828,6 @@ importers:
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
-      react-native-mmkv:
-        specifier: 2.5.1
-        version: 2.5.1(react-native@0.71.11)(react@18.2.0)
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.71.11)(react@18.2.0)
@@ -938,6 +935,9 @@ importers:
       react-native:
         specifier: ^0.71.11
         version: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
+      react-native-mmkv:
+        specifier: 2.5.1
+        version: 2.5.1(react-native@0.71.11)(react@18.2.0)
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -27491,7 +27491,7 @@ packages:
     dependencies:
       react: 18.2.0
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
-    dev: false
+    dev: true
 
   /react-native-modal@13.0.1(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-UB+mjmUtf+miaG/sDhOikRfBOv0gJdBU2ZE1HtFWp6UixW9jCk/bhGdHUgmZljbPpp0RaO/6YiMmQSSK3kkMaw==}

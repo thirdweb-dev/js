@@ -3,18 +3,18 @@ import {
   PaperWalletAdditionalOptions,
   AbstractClientWallet,
 } from "@thirdweb-dev/wallets";
-import type { EmailWalletConnector as EmailConnectorType } from "../../connectors/email-wallet/email-connector";
-import { EmailWalletConnectionArgs } from "../../connectors/email-wallet/types";
-import { EmailWalletConnector } from "../../connectors/email-wallet/email-connector";
+import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
+import { EmbeddedWalletConnectionArgs } from "../../connectors/embedded-wallet/types";
+import { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 
-export type EmailWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
+export type EmbeddedWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
 
-export class EmailWallet extends AbstractClientWallet<
-  EmailWalletOptions,
-  EmailWalletConnectionArgs
+export class EmbeddedWallet extends AbstractClientWallet<
+  EmbeddedWalletOptions,
+  EmbeddedWalletConnectionArgs
 > {
-  connector?: EmailConnectorType;
-  options: EmailWalletOptions;
+  connector?: EmbeddedConnectorType;
+  options: EmbeddedWalletOptions;
 
   static meta = {
     name: "Email Wallet",
@@ -23,8 +23,8 @@ export class EmailWallet extends AbstractClientWallet<
 
   static id = "email-wallet";
 
-  constructor(options: EmailWalletOptions) {
-    super(EmailWallet.id, options);
+  constructor(options: EmbeddedWalletOptions) {
+    super(EmbeddedWallet.id, options);
 
     this.options = options;
 
@@ -33,7 +33,7 @@ export class EmailWallet extends AbstractClientWallet<
     this.setupListeners();
   }
 
-  async getConnector(): Promise<EmailConnectorType> {
+  async getConnector(): Promise<EmbeddedConnectorType> {
     if (!this.connector) {
       return await this.initializeConnector();
     }
@@ -43,7 +43,7 @@ export class EmailWallet extends AbstractClientWallet<
   // my methods
 
   initializeConnector() {
-    this.connector = new EmailWalletConnector({
+    this.connector = new EmbeddedWalletConnector({
       ...this.options,
       clientId: this.options.paperClientId,
       chains: this.chains,
