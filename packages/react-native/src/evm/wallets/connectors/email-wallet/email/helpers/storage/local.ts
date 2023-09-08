@@ -9,13 +9,10 @@ import { DEVICE_SHARE_MISSING_MESSAGE } from "../constants";
 const storage = new MMKV();
 
 const getItemFromAsyncStorage = (key: string) => {
-  const result = storage.getString(key);
-  console.log("get item from local storage", key, result);
-  return result;
+  return storage.getString(key);
 };
 const setItemInAsyncStorage = async (key: string, value: string) => {
   storage.set(key, value);
-  console.log("set item in local storage", key, value);
 };
 
 const removeItemInAsyncStorage = async (key: string) => {
@@ -36,10 +33,6 @@ export async function isDeviceSharePresentForUser(
 }
 
 export async function getAuthTokenClient(clientId: string) {
-  console.log(
-    "getAuthShareClient: clientId",
-    AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId),
-  );
   return getItemFromAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
 }
 export async function setAuthTokenClient(
@@ -47,7 +40,6 @@ export async function setAuthTokenClient(
   clientId: string,
 ): Promise<void> {
   const authToken = AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId);
-  console.log("setAuthShareClient: authToken", authToken, !!cookieString);
   setItemInAsyncStorage(authToken, cookieString);
 }
 export async function removeAuthTokenInClient(
@@ -78,7 +70,6 @@ export async function setWallerUserDetails({
   }
 
   const name = WALLET_USER_DETAILS_LOCAL_STORAGE_NAME(clientId);
-  // console.log("setWallerUserDetails: name", name);
 
   await setItemInAsyncStorage(
     // ! Keep this in sync with getWalletUserDetails function below
@@ -117,16 +108,13 @@ export async function setDeviceShare({
   clientId: string;
   deviceShare: string;
 }): Promise<string> {
-  // console.log("setDeviceShare");
   const userDetails = await getWalletUserDetails(clientId);
 
-  // console.log("setDeviceShare: userDetails");
   if (!userDetails) {
     throw new Error("Missing wallet user ID");
   }
 
   const name = DEVICE_SHARE_LOCAL_STORAGE_NAME(clientId, userDetails.userId);
-  // console.log("setDeviceShare: name, deviceShare", name, deviceShare);
   await setWallerUserDetails({ userId: userDetails.userId, clientId });
   await setItemInAsyncStorage(name, deviceShare);
   return deviceShare;
@@ -134,7 +122,6 @@ export async function setDeviceShare({
 
 export async function getDeviceShare(clientId: string) {
   const cachedWalletUserId = await getWalletUserDetails(clientId);
-  // console.log("getDeviceShare: cachedWalletUserId", cachedWalletUserId);
   if (!cachedWalletUserId) {
     throw new Error("Missing wallet user ID");
   }
@@ -142,9 +129,7 @@ export async function getDeviceShare(clientId: string) {
     clientId,
     cachedWalletUserId.userId,
   );
-  // console.log("getDeviceShare: name", name);
   const deviceShareString = getItemFromAsyncStorage(name);
-  // console.log("getDeviceShare: deviceShareString", deviceShareString);
   if (!deviceShareString) {
     throw new Error(DEVICE_SHARE_MISSING_MESSAGE);
   }

@@ -46,7 +46,6 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
       await validateEmailOTP({
         clientId: this.options.clientId,
         otp,
-        email: this.email,
       });
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
@@ -106,7 +105,6 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
       console.error(`Error while getting the signer: ${error}`);
     }
 
-    // console.log("getSigner", !!signer);
     if (!signer) {
       throw new Error("Error fetching the signer");
     }
@@ -145,7 +143,6 @@ export class EmailWalletConnector extends Connector<EmailWalletConnectionArgs> {
   }
 
   async removeListeners() {
-    // console.log("removeListeners", !!this.signer);
     if (!this.signer) {
       return;
     }

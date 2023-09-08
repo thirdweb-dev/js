@@ -810,9 +810,6 @@ importers:
       abitype:
         specifier: ^0.2.5
         version: 0.2.5(typescript@5.1.6)(zod@3.21.4)
-      amazon-cognito-identity-js:
-        specifier: ^6.3.3
-        version: 6.3.5
       aws-amplify:
         specifier: ^5.3.8
         version: 5.3.10(react-native@0.71.11)
@@ -831,12 +828,6 @@ importers:
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
-      react-native-aes-crypto:
-        specifier: ^3.0.0
-        version: 3.0.0
-      react-native-aes-gcm-crypto:
-        specifier: ^0.2.2
-        version: 0.2.2(react-native@0.71.11)(react@18.2.0)
       react-native-mmkv:
         specifier: 2.5.1
         version: 2.5.1(react-native@0.71.11)(react@18.2.0)
@@ -853,12 +844,24 @@ importers:
         specifier: ^1.2.0
         version: 1.3.1
     optionalDependencies:
+      amazon-cognito-identity-js:
+        specifier: ^6.3.3
+        version: 6.3.5
+      react-native-aes-gcm-crypto:
+        specifier: ^0.2.2
+        version: 0.2.2(react-native@0.71.11)(react@18.2.0)
       react-native-camera:
         specifier: ^4.2.1
         version: 4.2.1
       react-native-device-info:
         specifier: 10.6.0
         version: 10.6.0(react-native@0.71.11)
+      react-native-quick-base64:
+        specifier: ^2.0.7
+        version: 2.0.7(react-native@0.71.11)(react@18.2.0)
+      react-native-quick-crypto:
+        specifier: ^0.6.1
+        version: 0.6.1(react-native@0.71.11)(react@18.2.0)
       react-native-safe-area-context:
         specifier: 4.5.3
         version: 4.5.3(react-native@0.71.11)(react@18.2.0)
@@ -945,7 +948,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@walletconnect/react-native-compat':
-        specifier: ^2.8.6
+        specifier: 2.8.6
         version: 2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0)
       base-64:
         specifier: ^1.0.0
@@ -6679,6 +6682,18 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+  /@craftzdog/react-native-buffer@6.0.5(react-native@0.71.11)(react@18.2.0):
+    resolution: {integrity: sha512-Av+YqfwA9e7jhgI9GFE/gTpwl/H+dRRLmZyJPOpKTy107j9Oj7oXlm3/YiMNz+C/CEGqcKAOqnXDLs4OL6AAFw==}
+    requiresBuild: true
+    dependencies:
+      ieee754: 1.2.1
+      react-native-quick-base64: 2.0.7(react-native@0.71.11)(react@18.2.0)
+    transitivePeerDependencies:
+      - react
+      - react-native
+    dev: false
+    optional: true
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -13749,6 +13764,12 @@ packages:
   /@types/node@12.20.55:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
+  /@types/node@17.0.45:
+    resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
   /@types/node@18.17.1:
     resolution: {integrity: sha512-xlR1jahfizdplZYRU59JlUx9uzF1ARa8jbhM11ccpCJya8kvos5jwdm2ZAgxSCwOl0fq21svP18EVwPBXMQudw==}
 
@@ -15464,7 +15485,6 @@ packages:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
       safer-buffer: 2.1.2
-    dev: true
 
   /assert@2.0.0:
     resolution: {integrity: sha512-se5Cd+js9dXJnu6Ag2JFc00t+HmHOen+8Q+L7O9zI0PqQXr20uk2J0XQqMxZEeo5U50o8Nvmmx7dZrl+Ufr35A==}
@@ -16326,7 +16346,6 @@ packages:
       browserify-aes: 1.2.0
       browserify-des: 1.0.2
       evp_bytestokey: 1.0.3
-    dev: true
 
   /browserify-des@1.0.2:
     resolution: {integrity: sha512-BioO1xf3hFwz4kc6iBhI3ieDFompMhrMlnDFC4/0/vd5MokpuAc3R+LYbwTA9A5Yc9pq9UYPqffKpW2ObuwX5A==}
@@ -16335,14 +16354,12 @@ packages:
       des.js: 1.0.1
       inherits: 2.0.4
       safe-buffer: 5.2.1
-    dev: true
 
   /browserify-rsa@4.1.0:
     resolution: {integrity: sha512-AdEER0Hkspgno2aR97SAf6vi0y0k8NuOpGnVH3O99rcA5Q6sh8QxcngtHuJ6uXwnfAXNM4Gn1Gb7/MV1+Ymbog==}
     dependencies:
       bn.js: 5.2.1
       randombytes: 2.1.0
-    dev: true
 
   /browserify-sign@4.2.1:
     resolution: {integrity: sha512-/vrA5fguVAKKAVTNJjgSm1tRQDHUU6DbwO9IROu/0WAzC8PKhucDSh18J0RMvVeHAn5puMd+QHC2erPRNf8lmg==}
@@ -16356,7 +16373,6 @@ packages:
       parse-asn1: 5.1.6
       readable-stream: 3.6.2
       safe-buffer: 5.2.1
-    dev: true
 
   /browserify-zlib@0.2.0:
     resolution: {integrity: sha512-Z942RysHXmJrhqk88FmKBVq/v5tqmSkDz7p54G/MGyjMnCFFnC79XWNbg+Vta8W6Wb2qtSZTSxIGkJrRpCFEiA==}
@@ -17355,7 +17371,6 @@ packages:
     dependencies:
       bn.js: 4.12.0
       elliptic: 6.5.4
-    dev: true
 
   /create-hash@1.2.0:
     resolution: {integrity: sha512-z00bCGNHDG8mHAkP7CtT1qVu+bFQUPjYq/4Iv3C3kWjTFV10zIjfSoeqXo9Asws8gwSHDGj/hl2u4OGIjapeCg==}
@@ -17430,7 +17445,6 @@ packages:
       public-encrypt: 4.0.3
       randombytes: 2.1.0
       randomfill: 1.0.4
-    dev: true
 
   /crypto-hash@1.3.0:
     resolution: {integrity: sha512-lyAZ0EMyjDkVvz8WOeVnuCPvKVBXcMv1l5SVqO1yC7PzTwrD/pPje/BIRbWhMoPe436U+Y2nD7f5bFx0kt+Sbg==}
@@ -18027,7 +18041,6 @@ packages:
     dependencies:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
-    dev: true
 
   /destroy@1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
@@ -18123,7 +18136,6 @@ packages:
       bn.js: 4.12.0
       miller-rabin: 4.0.1
       randombytes: 2.1.0
-    dev: true
 
   /dijkstrajs@1.0.2:
     resolution: {integrity: sha512-QV6PMaHTCNmKSeP6QoXhVTw9snc9VD8MulTT0Bd99Pacp4SS1cjcrYPgBPmibqKVtMJJfqC6XvOXgPMEEPH/fg==}
@@ -23273,6 +23285,7 @@ packages:
 
   /js-cookie@2.2.1:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+    requiresBuild: true
     dev: false
 
   /js-sdsl@4.4.1:
@@ -24522,7 +24535,6 @@ packages:
     dependencies:
       bn.js: 4.12.0
       brorand: 1.1.0
-    dev: true
 
   /mime-db@1.33.0:
     resolution: {integrity: sha512-BHJ/EKruNIqJf/QahvxwQZXKygOQ256myeN/Ew+THcAa5q+PjyTTMMeNQC4DZw5AwfvelsUrA6B67NKMqXDbzQ==}
@@ -25783,7 +25795,6 @@ packages:
       evp_bytestokey: 1.0.3
       pbkdf2: 3.1.2
       safe-buffer: 5.2.1
-    dev: true
 
   /parse-filepath@1.0.2:
     resolution: {integrity: sha512-FwdRXKCohSVeXqwtYonZTXtbGJKrn+HNyWDYVcp5yuJlesTwNH4rsmRZ+GrKAPJ5bLpRxESMeS+Rl0VCHRvB2Q==}
@@ -27090,7 +27101,6 @@ packages:
       parse-asn1: 5.1.6
       randombytes: 2.1.0
       safe-buffer: 5.2.1
-    dev: true
 
   /pump@3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
@@ -27242,7 +27252,6 @@ packages:
     dependencies:
       randombytes: 2.1.0
       safe-buffer: 5.2.1
-    dev: true
 
   /range-parser@1.2.0:
     resolution: {integrity: sha512-kA5WQoNVo4t9lNx2kQNFCxKeBl5IbbSNBl1M/tLkw9WCn+hxNBAW5Qh8gdhs63CJnhjJ2zQWFoqPJP2sK1AV5A==}
@@ -27396,12 +27405,9 @@ packages:
       warning: 4.0.3
     dev: true
 
-  /react-native-aes-crypto@3.0.0:
-    resolution: {integrity: sha512-tZMAncLV6aGM/6nguQEvVtftC9ADhIao3d6p13PPw5n2sSZ+tiXhYlfkpGFSp606u+zsc1A5U1gABb104RAUBg==}
-    dev: false
-
   /react-native-aes-gcm-crypto@0.2.2(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-vUwkh2zBiIQMRY191IfZhDmhHVT+nV4sxet/A0V8J35lVShCA4kuFzBL+QVB06RM2EF8oZSnNMt/uvFkKAx6QQ==}
+    requiresBuild: true
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -27409,6 +27415,7 @@ packages:
       react: 18.2.0
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
     dev: false
+    optional: true
 
   /react-native-animatable@1.3.3:
     resolution: {integrity: sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==}
@@ -27487,6 +27494,38 @@ packages:
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
       react-native-animatable: 1.3.3
     dev: false
+
+  /react-native-quick-base64@2.0.7(react-native@0.71.11)(react@18.2.0):
+    resolution: {integrity: sha512-QmOon3zXAWFi3KvQVCJjCC7N66rwfl1R4nLPuJ+OVs8nWysvKlaU8mKxe2BV4Ud1nB3nTDgyi2VCJFpjtjJxKw==}
+    requiresBuild: true
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      base64-js: 1.5.1
+      react: 18.2.0
+      react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
+    dev: false
+    optional: true
+
+  /react-native-quick-crypto@0.6.1(react-native@0.71.11)(react@18.2.0):
+    resolution: {integrity: sha512-s6uFo7tcI3syo8/y5j+t6Rf+KVSuRKDp6tH04A0vjaHptJC6Iu7DVgkNYO7aqtfrYn8ZUgQ/Kqaq+m4i9TxgIQ==}
+    requiresBuild: true
+    peerDependencies:
+      react: '*'
+      react-native: '>=0.71.0'
+    dependencies:
+      '@craftzdog/react-native-buffer': 6.0.5(react-native@0.71.11)(react@18.2.0)
+      '@types/node': 17.0.45
+      crypto-browserify: 3.12.0
+      events: 3.3.0
+      react: 18.2.0
+      react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
+      react-native-quick-base64: 2.0.7(react-native@0.71.11)(react@18.2.0)
+      stream-browserify: 3.0.0
+      string_decoder: 1.3.0
+    dev: false
+    optional: true
 
   /react-native-safe-area-context@4.5.3(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-ihYeGDEBSkYH+1aWnadNhVtclhppVgd/c0tm4mj0+HV11FoiWJ8N6ocnnZnRLvM5Fxc+hUqxR9bm5AXU3rXiyA==}

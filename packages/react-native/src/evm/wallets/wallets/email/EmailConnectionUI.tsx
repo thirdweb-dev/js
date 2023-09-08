@@ -9,7 +9,6 @@ import React, { useRef, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   NativeSyntheticEvent,
-  StyleSheet,
   TextInput,
   TextInputKeyPressEventData,
 } from "react-native";
@@ -57,22 +56,13 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
       setErrorMessage("");
       setFocusedIndex(undefined);
       const otp = values.join("");
-      console.log("OTP: ", otp);
 
       setTimeout(() => {
         (selectionData.emailWallet as EmailWallet)
           .validateEmailOTP(otp)
-          .then(async (response) => {
-            console.log("EmailConnectionUI.response", !!response);
-
+          .then(async () => {
             await setConnectedWallet(selectionData.emailWallet);
             setConnectionStatus("connected");
-
-            // console.log('getSigner', selectionData.clientId);
-            // const signer = await getEthersSigner(selectionData.clientId);
-            // console.log('signer.sign', !!signer);
-            // const tx = await signer.signMessage('hello!!');
-            // console.log('after sign', tx);
           })
           .catch((error) => {
             clearCode();
@@ -80,7 +70,6 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
             setErrorMessage("Error validating the code");
             setCheckingOtp(false);
             setFocusedIndex(undefined);
-            // await (selectionData.emailWallet as EmailWallet).disconnect();
           });
       }, 0);
     }
@@ -148,7 +137,7 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
         variant="subHeader"
         textAlign="center"
         fontWeight="700"
-        color="white"
+        color="textPrimary"
       >
         {selectionData?.email}
       </Text>
@@ -174,7 +163,12 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
           >
             <TextInput
               ref={(ref) => (inputRefs.current[index] = ref)}
-              style={styles.textInput}
+              style={{
+                fontSize: 20,
+                color: theme.colors.textPrimary,
+                textAlign: "center",
+                height: 50,
+              }}
               keyboardType="number-pad"
               editable={!checkingOtp}
               selectTextOnFocus={true}
@@ -218,7 +212,3 @@ export const EmailConnectionUI: React.FC<ConnectUIProps<EmailWallet>> = ({
     </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: { fontSize: 20, color: "white", textAlign: "center", height: 50 },
-});

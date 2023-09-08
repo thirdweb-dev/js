@@ -15,8 +15,6 @@ Amplify.configure({
 });
 
 export async function cognitoEmailSignUp(email: string, clientId: string) {
-  console.log("cognito sign up email", email, clientId);
-  console.log("Auth", Auth.signUp);
   await Auth.signUp({
     username: `${email}:email:${clientId}`,
     password: getRandomString(30),
@@ -35,7 +33,6 @@ function getRandomString(bytes: number) {
 }
 
 export async function cognitoEmailSignIn(email: string, clientId: string) {
-  console.log("cognito sign in email", email);
   const cognitoUser = await Auth.signIn(`${email}:email:${clientId}`);
   return cognitoUser;
 }

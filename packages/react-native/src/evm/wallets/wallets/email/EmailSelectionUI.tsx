@@ -38,7 +38,6 @@ export const EmailSelectionUI: React.FC<
   };
 
   const handleNetworkCall = () => {
-    // console.log("handleNetworkCall");
     if (validateEmail(email)) {
       setErrorMessage("");
       setIsFetching(true);

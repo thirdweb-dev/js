@@ -52,7 +52,6 @@ async function createEmbeddedWallet({
   } & SetUpWalletRpcReturnType
 > {
   const walletDetails = createWalletShares();
-  console.log(`storing user shares ${walletDetails}`);
   const maybeDeviceShare = await storeShares({
     clientId,
     walletAddress: walletDetails.publicAddress,
@@ -65,7 +64,7 @@ async function createEmbeddedWallet({
       },
     ],
   });
-  console.log("Done storing user wallet shares");
+
   if (!maybeDeviceShare?.deviceShareStored) {
     throw new Error(DEVICE_SHARE_MISSING_MESSAGE);
   }
@@ -87,13 +86,10 @@ function createWalletShares(): {
   const privateKeyHex = Buffer.from(`thirdweb_${wallet.privateKey}`).toString(
     "hex",
   );
-  console.log("privateKeyHex", privateKeyHex);
   // Potential source of share corruption through tampering
   // https://hackerone.com/reports/1884071
   const shares = secrets.share(privateKeyHex, 3, 2);
 
-  console.log("shares", shares);
-  console.log("address", wallet.address);
   return {
     publicAddress: wallet.address,
     shares: [shares[0], shares[1], shares[2]],
@@ -138,14 +134,7 @@ export async function storeShares<R extends string | undefined>({
       }),
     );
   }
-  console.log("calling the store share api with the following args");
-  console.log(
-    "authShare, clientId, maybeEncryptedRecoveryShares, walletAddress,",
-    authShare,
-    clientId,
-    maybeEncryptedRecoveryShares,
-    walletAddress,
-  );
+
   await storeUserShares({
     authShare,
     clientId,

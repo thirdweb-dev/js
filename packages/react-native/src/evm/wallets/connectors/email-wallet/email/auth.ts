@@ -35,7 +35,6 @@ export async function sendEmailOTP(
     await cognitoEmailSignUp(email, clientId);
     cognitoUser = await cognitoEmailSignIn(email, clientId);
   }
-  console.log("cognitoUserName", cognitoUser.getUsername);
   setCognitoUser(cognitoUser);
 
   let result: Awaited<ReturnType<typeof getEmbeddedWalletUserDetail>>;
@@ -44,7 +43,6 @@ export async function sendEmailOTP(
       email,
       clientId,
     });
-    console.log("current user's wallet detail", result);
   } catch (e) {
     throw new Error(
       `Malformed response from the send email OTP API: ${JSON.stringify(e)}`,
@@ -68,9 +66,7 @@ export async function sendEmailOTP(
 export async function validateEmailOTP({
   clientId,
   otp,
-  email,
 }: {
-  email: string;
   otp: string;
   clientId: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
@@ -78,8 +74,6 @@ export async function validateEmailOTP({
     ReturnType<typeof generateAuthTokenFromCognitoEmailOtp>
   >["verifiedToken"];
   let verifiedTokenJwtString: string;
-
-  console.log(`Validating email OTP for ${email}`);
 
   try {
     let cognitoUser = getCognitoUser();
@@ -96,12 +90,10 @@ export async function validateEmailOTP({
     ({ verifiedToken, verifiedTokenJwtString } =
       await generateAuthTokenFromCognitoEmailOtp(session, clientId));
   } catch (e) {
-    console.log("Apparently the user did not enter the right code", e);
     throw new Error(`Invalid OTP ${e}`);
   }
 
   try {
-    console.log("Authenticated user", verifiedToken.authDetails.email);
     const storedToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
       jwtToken: verifiedToken.rawToken,
       authDetails: verifiedToken.authDetails,
@@ -115,7 +107,6 @@ export async function validateEmailOTP({
 
     await postPaperAuth(storedToken, clientId);
 
-    console.log("storedToken", storedToken);
     return { storedToken };
   } catch (e) {
     throw new Error(
