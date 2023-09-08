@@ -296,6 +296,7 @@ export function WalletEntryButton(props: {
             <SecondaryText
               style={{
                 fontSize: fontSize.sm,
+                fontWeight: 500,
               }}
             >
               Recommended
@@ -308,6 +309,7 @@ export function WalletEntryButton(props: {
               <SecondaryText
                 style={{
                   fontSize: fontSize.sm,
+                  fontWeight: 500,
                 }}
               >
                 Installed

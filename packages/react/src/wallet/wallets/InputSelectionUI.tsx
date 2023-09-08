@@ -101,8 +101,8 @@ export function InputSelectionUI(props: {
       {props.submitType === "button" && (
         <>
           <Spacer y="md" />
-          <Button variant="inverted" onClick={handleSelect} fullWidth>
-            Continue
+          <Button variant="accent" onClick={handleSelect} fullWidth>
+            Sign in
           </Button>
         </>
       )}

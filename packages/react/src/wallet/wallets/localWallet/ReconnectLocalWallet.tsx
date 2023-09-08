@@ -189,7 +189,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
         {/* Connect Button */}
         <Button
-          variant="inverted"
+          variant="accent"
           type="submit"
           fullWidth
           style={{

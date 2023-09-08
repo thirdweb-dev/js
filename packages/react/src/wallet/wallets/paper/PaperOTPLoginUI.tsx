@@ -224,7 +224,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
         ) : (
           <Button
             onClick={handleSubmit}
-            variant="inverted"
+            variant="accent"
             type="submit"
             style={{
               width: "100%",

@@ -143,7 +143,7 @@ export const ImportLocalWallet: React.FC<{
 
         <FormFooter>
           <Button
-            variant="inverted"
+            variant="accent"
             type="submit"
             disabled={!jsonString}
             style={{

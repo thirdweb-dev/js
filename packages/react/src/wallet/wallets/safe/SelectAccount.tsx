@@ -332,7 +332,7 @@ export const SelectAccount: React.FC<{
             </Button>
           ) : (
             <Button
-              variant="inverted"
+              variant="accent"
               type="submit"
               style={{
                 display: "flex",

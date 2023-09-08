@@ -9,7 +9,7 @@ const darkColors = {
   inverted: mauveDark.mauve12,
   invertedFocused: mauveDark.mauve7,
   danger: tomato.tomato9,
-  accent: blue.blue9,
+  accent: "#3385FF",
   success: green.green7,
 };
 
@@ -27,7 +27,7 @@ const lightColors = {
 };
 
 export const darkTheme = {
-  overlay: "rgba(0, 0, 0, 0.8)",
+  overlay: "rgba(0, 0, 0, 0.7)",
   bg: darkColors,
   text: {
     neutral: darkColors.inverted,
@@ -47,7 +47,7 @@ export const darkTheme = {
 };
 
 export const lightTheme: typeof darkTheme = {
-  overlay: "rgba(0, 0, 0, 0.8)",
+  overlay: "rgba(0, 0, 0, 0.7)",
   bg: lightColors,
   text: {
     neutral: lightColors.inverted,

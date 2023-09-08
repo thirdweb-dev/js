@@ -42,7 +42,7 @@ export const PaperFormUI = (props: {
       <InputSelectionUI
         submitType={props.submitType}
         onSelect={(email) => props.onSelect({ email })}
-        placeholder="Sign in with email address"
+        placeholder="Sign in with your email address"
         name="email"
         type="email"
         errorMessage={(_input) => {

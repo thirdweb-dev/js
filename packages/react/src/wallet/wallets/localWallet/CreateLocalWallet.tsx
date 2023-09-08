@@ -153,7 +153,7 @@ export const CreateLocalWallet_Password: React.FC<{
 
         {/* Create */}
         <Button
-          variant="inverted"
+          variant="accent"
           type="submit"
           fullWidth
           style={{
