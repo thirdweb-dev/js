@@ -5,9 +5,10 @@ import {
   Flex,
   ScreenContainer,
   noScrollBar,
+  ModalHeader,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
-import { BackButton, ModalTitle } from "../../components/modalElements";
+import { ModalTitle } from "../../components/modalElements";
 import {
   fontSize,
   iconSize,
@@ -35,40 +36,60 @@ export const WalletSelector: React.FC<{
   title: string;
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
+  const isCompact = modalConfig.modalSize === "compact";
+  const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
 
-  const localWalletInfo = props.walletConfigs.find(
+  const localWalletConfig = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
   );
 
-  const walletConfigs = props.walletConfigs.filter(
+  const nonLocalWalletConfigs = props.walletConfigs.filter(
     (w) => w.id !== walletIds.localWallet,
   );
 
-  const socialLogins = props.walletConfigs.filter(
+  const socialWallets = nonLocalWalletConfigs.filter(
     (w) => w.category === "socialLogin",
   );
 
-  const otherLogins = sortWalletConfigs(
-    props.walletConfigs.filter((w) => w.category !== "socialLogin"),
+  const eoaWallets = sortWalletConfigs(
+    nonLocalWalletConfigs.filter((w) => w.category !== "socialLogin"),
   );
 
-  const otherLoginCount = props.walletConfigs.length - socialLogins.length;
-  const shouldGroupWallets = socialLogins.length >= 1 && otherLoginCount >= 2;
+  const showNewToWallets =
+    isCompact && (socialWallets.length === 0 || isWalletGroupExpanded);
 
-  // if there is a socialLogin category wallet and 2 or more of other wallet, do not show all the wallets in list directly
+  // groups UI is showing a social login + grouping all eoa wallets together in a group
+  // do this if there is social login and more than 2 eoa wallets
+  const showGroupsUI =
+    isCompact && socialWallets.length >= 1 && eoaWallets.length >= 2;
 
-  const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
+  // show Bottom container if
+  // not showing the "groups UI"
+  const showBottomContainer =
+    (!showGroupsUI && localWalletConfig) || showNewToWallets;
 
-  const isCompact = modalConfig.modalSize === "compact";
-
-  const hasBottomContainerContent =
-    localWalletInfo || modalConfig.modalSize === "compact";
-
-  let showBottomContainer = hasBottomContainerContent;
-
-  if (isCompact && shouldGroupWallets && !isWalletGroupExpanded) {
-    showBottomContainer = false;
-  }
+  const continueAsGuest = localWalletConfig && (
+    <Flex justifyContent="center">
+      <Button
+        fullWidth
+        variant={isCompact ? "outline" : "link"}
+        style={
+          !isCompact
+            ? {
+                textAlign: "left",
+                justifyContent: "flex-start",
+              }
+            : undefined
+        }
+        onClick={() => {
+          props.selectWallet(localWalletConfig);
+        }}
+        data-test="continue-as-guest-button"
+      >
+        Continue as Guest
+      </Button>
+    </Flex>
+  );
 
   const twTitle = (
     <Flex gap="xxs" alignItems="center">
@@ -81,28 +102,14 @@ export const WalletSelector: React.FC<{
     <>
       <ScreenContainer>
         {isWalletGroupExpanded ? (
-          <TitleContainer
-            style={{
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
+          <ModalHeader
+            title={twTitle}
+            onBack={() => {
+              setIsWalletGroupExpanded(false);
             }}
-          >
-            <BackButton
-              style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-              }}
-              onClick={() => {
-                setIsWalletGroupExpanded(false);
-              }}
-            />
-
-            {twTitle}
-          </TitleContainer>
+          />
         ) : (
-          <TitleContainer>{twTitle}</TitleContainer>
+          twTitle
         )}
       </ScreenContainer>
 
@@ -111,27 +118,27 @@ export const WalletSelector: React.FC<{
           flex: 1,
         }}
       >
-        {isCompact && shouldGroupWallets ? (
+        {showGroupsUI ? (
           <>
-            {isWalletGroupExpanded && (
+            {isWalletGroupExpanded ? (
               <WalletSelection
-                walletConfigs={otherLogins.filter(
-                  (w) => w.id !== walletIds.localWallet,
-                )}
+                walletConfigs={eoaWallets}
                 selectWallet={props.selectWallet}
               />
-            )}
-
-            {!isWalletGroupExpanded && (
+            ) : (
               <>
                 <WalletSelection
-                  walletConfigs={socialLogins}
+                  walletConfigs={socialWallets}
                   selectWallet={props.selectWallet}
                 />
+
                 <TextDivider>
                   <span> OR </span>
                 </TextDivider>
+
                 <Spacer y="lg" />
+
+                {/* connect a wallet */}
                 <Button
                   fullWidth
                   variant="outline"
@@ -146,7 +153,7 @@ export const WalletSelector: React.FC<{
                   }}
                 >
                   <Flex gap="xxs">
-                    {otherLogins.slice(0, 2).map((w) => (
+                    {eoaWallets.slice(0, 2).map((w) => (
                       <Img
                         key={w.id}
                         width={iconSize.sm}
@@ -157,13 +164,22 @@ export const WalletSelector: React.FC<{
                   </Flex>
                   Connect a wallet
                 </Button>
-                <Spacer y="xl" />
+
+                {continueAsGuest ? (
+                  <>
+                    <Spacer y="md" />
+                    {continueAsGuest}
+                    <Spacer y="lg" />
+                  </>
+                ) : (
+                  <Spacer y="lg" />
+                )}
               </>
             )}
           </>
         ) : (
           <WalletSelection
-            walletConfigs={walletConfigs}
+            walletConfigs={nonLocalWalletConfigs}
             selectWallet={props.selectWallet}
           />
         )}
@@ -177,7 +193,7 @@ export const WalletSelector: React.FC<{
             gap: spacing.lg,
           }}
         >
-          {modalConfig.modalSize === "compact" && (
+          {showNewToWallets && (
             <Flex justifyContent="space-between">
               <SecondaryText
                 style={{
@@ -199,32 +215,7 @@ export const WalletSelector: React.FC<{
             </Flex>
           )}
 
-          {localWalletInfo && (
-            <>
-              <Flex justifyContent="center">
-                <Button
-                  fullWidth
-                  variant={
-                    modalConfig.modalSize === "wide" ? "link" : "outline"
-                  }
-                  style={
-                    modalConfig.modalSize === "wide"
-                      ? {
-                          textAlign: "left",
-                          justifyContent: "flex-start",
-                        }
-                      : undefined
-                  }
-                  onClick={() => {
-                    props.selectWallet(localWalletInfo);
-                  }}
-                  data-test="continue-as-guest-button"
-                >
-                  Continue as Guest
-                </Button>
-              </Flex>
-            </>
-          )}
+          {!showGroupsUI && continueAsGuest}
         </ScreenBottomContainer>
       )}
     </>
@@ -237,10 +228,6 @@ const ScrollableContainer = /* @__PURE__ */ styled(ScreenContainer)`
   /* flex: 1; */
   overflow: auto;
   ${noScrollBar};
-`;
-
-const TitleContainer = /* @__PURE__ */ styled.div<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.neutral};
 `;
 
 export const WalletSelection: React.FC<{

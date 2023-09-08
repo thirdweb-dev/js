@@ -1,8 +1,8 @@
 import { Spacer } from "../../../components/Spacer";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { ModalHeader, ScreenContainer } from "../../../components/basic";
-import { spacing } from "../../../design-system";
 import { FloatingPlane } from "./FloatingPlane";
+import { spacing } from "../../../design-system";
 
 export const PaperFormUI = (props: {
   onSelect: (input: string | undefined) => void;
@@ -56,6 +56,7 @@ export const PaperFormUIScreen: React.FC<{
   onBack: () => void;
   modalSize: "compact" | "wide";
 }> = (props) => {
+  const isCompact = props.modalSize === "compact";
   return (
     <ScreenContainer
       style={{
@@ -65,20 +66,19 @@ export const PaperFormUIScreen: React.FC<{
       }}
     >
       <ModalHeader onBack={props.onBack} title="Sign in" />
-
-      <Spacer y="xl" />
+      {isCompact ? <Spacer y="xxl" /> : null}
 
       <div
-        style={
-          props.modalSize === "wide"
-            ? {
-                padding: spacing.lg,
-              }
-            : undefined
-        }
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: isCompact ? "0" : spacing.lg,
+        }}
       >
         <div>
-          <FloatingPlane size={120} />
+          <FloatingPlane size={isCompact ? 100 : 120} />
           <Spacer y="xl" />
           <PaperFormUI
             onSelect={(email) => props.onEmail(email)}

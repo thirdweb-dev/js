@@ -115,6 +115,7 @@ const modalAnimationMobile = keyframes`
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
   background: ${(p) => p.theme.bg.base};
+  color: ${(p) => p.theme.text.neutral};
   border-radius: ${radius.xl};
   position: fixed;
   top: 50%;

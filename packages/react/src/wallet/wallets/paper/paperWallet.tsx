@@ -46,19 +46,20 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
 const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
   const screen = useScreenContext();
 
+  // show the icon + text if
+  // wide -
+  // compact + not main screen (safe/smart wallet list screen)
   if (
     props.modalSize === "wide" ||
     (screen !== reservedScreens.main && props.modalSize === "compact")
   ) {
     return (
-      <div>
-        <WalletEntryButton
-          walletConfig={props.walletConfig}
-          selectWallet={() => {
-            props.onSelect(undefined);
-          }}
-        />
-      </div>
+      <WalletEntryButton
+        walletConfig={props.walletConfig}
+        selectWallet={() => {
+          props.onSelect(undefined);
+        }}
+      />
     );
   }
 

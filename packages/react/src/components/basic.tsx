@@ -54,7 +54,10 @@ export const FlexScrollContainer = styled.div<{ theme?: Theme }>`
   position: relative;
 `;
 
-export function ModalHeader(props: { onBack?: () => void; title: string }) {
+export function ModalHeader(props: {
+  onBack?: () => void;
+  title: React.ReactNode;
+}) {
   const { onBack, title } = props;
   return (
     <div
@@ -75,7 +78,7 @@ export function ModalHeader(props: { onBack?: () => void; title: string }) {
           }}
         />
       )}
-      <ModalTitle>{title}</ModalTitle>
+      {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
     </div>
   );
 }

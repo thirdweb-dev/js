@@ -15,7 +15,6 @@ import { Img } from "../../../components/Img";
 import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
-import { Spacer } from "../../../components/Spacer";
 import styled from "@emotion/styled";
 import { TextDivider } from "../../../components/TextDivider";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
@@ -354,7 +353,6 @@ const MagicConnectionUIWide: React.FC<
       }}
     >
       <ModalHeader onBack={props.goBack} title="Sign in" />
-      <Spacer y="xl" />
       <div
         style={{
           flex: 1,

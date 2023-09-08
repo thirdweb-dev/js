@@ -97,8 +97,8 @@ export const SelectpersonalWallet: React.FC<{
         />
       </ScreenContainer>
 
-      <ScreenBottomContainer>
-        {guestWallet && (
+      {guestWallet && (
+        <ScreenBottomContainer>
           <Button
             variant="outline"
             fullWidth
@@ -109,8 +109,8 @@ export const SelectpersonalWallet: React.FC<{
           >
             Continue as guest
           </Button>
-        )}
-      </ScreenBottomContainer>
+        </ScreenBottomContainer>
+      )}
     </>
   );
 };

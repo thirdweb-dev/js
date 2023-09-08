@@ -76,6 +76,7 @@ export const ConnectModalInline = (props: {
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   background: ${(p) => p.theme.bg.base};
+  color: ${(p) => p.theme.text.neutral};
   transition: background 0.2s ease;
   border-radius: ${radius.xl};
   width: 100%;
