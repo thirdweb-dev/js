@@ -14,3 +14,5 @@ export type RecoveryShareManagement = Exclude<
   PaperWalletAdditionalOptions["advancedOptions"],
   undefined
 >["recoveryShareManagement"];
+
+export type PaperLoginType = { email: string } | { google: true };

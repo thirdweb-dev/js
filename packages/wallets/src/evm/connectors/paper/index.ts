@@ -77,6 +77,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     chainId?: number;
     otp?: string;
     recoveryCode?: string;
+    googleLogin?: true;
   }) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
@@ -87,8 +88,13 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
 
-        // Headless login
-        if (options?.email && options?.otp) {
+        // Show Google popup
+        if (options?.googleLogin) {
+          authResult = await paperSDK.auth.loginWithGoogle();
+        }
+
+        // Headless
+        else if (options?.email && options?.otp) {
           authResult = await paperSDK.auth.verifyPaperEmailLoginOtp({
             email: options.email,
             otp: options.otp,
@@ -96,12 +102,15 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
           });
         }
 
-        // Modal login
+        // Show OTP modal
         else if (options?.email) {
           authResult = await paperSDK.auth.loginWithPaperEmailOtp({
             email: options.email,
           });
-        } else {
+        }
+
+        // Show Full Modal
+        else {
           authResult = await paperSDK.auth.loginWithPaperModal();
         }
 

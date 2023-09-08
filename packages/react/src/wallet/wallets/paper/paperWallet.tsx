@@ -8,13 +8,11 @@ import {
 import { useState } from "react";
 import { PaperFormUI, PaperFormUIScreen } from "./PaperFormUI";
 import { PaperOTPLoginUI } from "./PaperOTPLoginUI";
-import { PaperConfig, RecoveryShareManagement } from "./PaperConfig";
-import { HeadlessConnectUI } from "../headlessConnectUI";
+import { PaperConfig, PaperLoginType, RecoveryShareManagement } from "./types";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
-import { Spacer } from "../../../components/Spacer";
-import { FloatingPlane } from "./FloatingPlane";
 import { reservedScreens } from "../../ConnectWallet/constants";
 import { useScreenContext } from "../../ConnectWallet/Modal/screen";
+import { PaperGoogleLogin } from "./PaperGoogleLogin";
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
@@ -30,7 +28,16 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
     create(options: WalletOptions) {
       return new PaperWallet({ ...options, ...config });
     },
-    selectUI: PaperSelectionUI,
+    selectUI(props) {
+      return (
+        <PaperSelectionUI
+          {...props}
+          recoveryShareManagement={
+            config.advancedOptions?.recoveryShareManagement
+          }
+        />
+      );
+    },
     connectUI(props) {
       return (
         <PaperConnectUI
@@ -44,7 +51,11 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   };
 };
 
-const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
+const PaperSelectionUI: React.FC<
+  SelectUIProps<PaperWallet> & {
+    recoveryShareManagement: RecoveryShareManagement;
+  }
+> = (props) => {
   const screen = useScreenContext();
 
   // show the icon + text if
@@ -66,9 +77,8 @@ const PaperSelectionUI: React.FC<SelectUIProps<PaperWallet>> = (props) => {
 
   return (
     <div>
-      <FloatingPlane size={100} />
-      <Spacer y="lg" />
       <PaperFormUI
+        googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
         showOrSeparator={props.supportedWallets.length > 1}
         onSelect={props.onSelect}
         submitType="button"
@@ -82,54 +92,48 @@ const PaperConnectUI = (
     recoveryShareManagement: RecoveryShareManagement;
   },
 ) => {
-  const [email, setEmail] = useState<string | undefined>(props.selectionData);
-  const screenCtx = useScreenContext();
-
-  const [screen, setScreen] = useState<"base" | "next">(
-    props.modalSize === "wide" ||
-      (props.modalSize === "compact" && screenCtx !== reservedScreens.main)
-      ? "base"
-      : "next",
+  const [loginType, setLoginType] = useState<PaperLoginType | undefined>(
+    props.selectionData as PaperLoginType,
   );
 
-  if (screen === "base") {
-    return (
-      <PaperFormUIScreen
-        modalSize={props.modalSize}
-        onEmail={(_email) => {
-          setEmail(_email);
-          setScreen("next");
-        }}
-        onBack={props.goBack}
-      />
-    );
-  }
+  if (loginType) {
+    const handleBack = () => {
+      // go back to base screen
+      if (props.modalSize === "wide") {
+        setLoginType(undefined);
+      }
 
-  if (screen === "next") {
-    if (email) {
+      // go to main screen
+      else {
+        props.goBack();
+      }
+    };
+
+    if ("email" in loginType) {
       return (
         <PaperOTPLoginUI
           {...props}
           recoveryShareManagement={props.recoveryShareManagement}
-          selectionData={email}
-          goBack={() => {
-            // go back to base screen
-            if (props.modalSize === "wide") {
-              setEmail(undefined);
-              setScreen("base");
-            }
-
-            // go to main screen
-            else {
-              props.goBack();
-            }
-          }}
+          selectionData={loginType.email}
+          goBack={handleBack}
         />
       );
     }
 
-    return <HeadlessConnectUI {...props} />;
+    // google
+    else {
+      return <PaperGoogleLogin {...props} goBack={handleBack} />;
+    }
   }
 
-  return null;
+  return (
+    <PaperFormUIScreen
+      googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
+      modalSize={props.modalSize}
+      onSelect={(_loginType) => {
+        setLoginType(_loginType);
+      }}
+      onBack={props.goBack}
+    />
+  );
 };

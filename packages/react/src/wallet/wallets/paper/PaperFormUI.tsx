@@ -1,38 +1,47 @@
 import { Spacer } from "../../../components/Spacer";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { ModalHeader, ScreenContainer } from "../../../components/basic";
-import { FloatingPlane } from "./FloatingPlane";
-import { spacing } from "../../../design-system";
+import { Theme, iconSize, spacing } from "../../../design-system";
+import styled from "@emotion/styled";
+import { TextDivider } from "../../../components/TextDivider";
+import { Button } from "../../../components/buttons";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { PaperLoginType } from "./types";
 
 export const PaperFormUI = (props: {
-  onSelect: (input: string | undefined) => void;
+  onSelect: (loginType: PaperLoginType) => void;
   showOrSeparator?: boolean;
+  googleLoginSupported: boolean;
   submitType: "inline" | "button";
 }) => {
   return (
     <div>
-      {/* <SocialButton
-        variant="secondary"
-        fullWidth
-        onClick={() => {
-          props.onSelect(undefined);
-        }}
-      >
-        <GoogleIcon size={iconSize.md} />
-        Sign in with Google
-      </SocialButton>
+      {props.googleLoginSupported && (
+        <>
+          <SocialButton
+            variant="secondary"
+            fullWidth
+            onClick={() => {
+              props.onSelect({ google: true });
+            }}
+          >
+            <GoogleIcon size={iconSize.md} />
+            Sign in with Google
+          </SocialButton>
 
-      <Spacer y="lg" />
+          <Spacer y="lg" />
 
-      <TextDivider>
-        <span> OR </span>
-      </TextDivider> */}
+          <TextDivider>
+            <span> OR </span>
+          </TextDivider>
 
-      {/* <Spacer y="lg" /> */}
+          <Spacer y="lg" />
+        </>
+      )}
 
       <InputSelectionUI
         submitType={props.submitType}
-        onSelect={props.onSelect}
+        onSelect={(email) => props.onSelect({ email })}
         placeholder="Sign in with email address"
         name="email"
         type="email"
@@ -52,9 +61,10 @@ export const PaperFormUI = (props: {
 };
 
 export const PaperFormUIScreen: React.FC<{
-  onEmail: (email: string | undefined) => void;
+  onSelect: (loginType: PaperLoginType) => void;
   onBack: () => void;
   modalSize: "compact" | "wide";
+  googleLoginSupported: boolean;
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   return (
@@ -66,7 +76,7 @@ export const PaperFormUIScreen: React.FC<{
       }}
     >
       <ModalHeader onBack={props.onBack} title="Sign in" />
-      {isCompact ? <Spacer y="xxl" /> : null}
+      {isCompact ? <Spacer y="xl" /> : null}
 
       <div
         style={{
@@ -78,10 +88,9 @@ export const PaperFormUIScreen: React.FC<{
         }}
       >
         <div>
-          <FloatingPlane size={isCompact ? 100 : 120} />
-          <Spacer y="xl" />
           <PaperFormUI
-            onSelect={(email) => props.onEmail(email)}
+            googleLoginSupported={props.googleLoginSupported}
+            onSelect={props.onSelect}
             showOrSeparator={false}
             submitType="button"
           />
@@ -91,8 +100,8 @@ export const PaperFormUIScreen: React.FC<{
   );
 };
 
-// const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
-//   display: flex;
-//   justify-content: center;
-//   gap: ${spacing.sm};
-// `;
+const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
+  display: flex;
+  justify-content: center;
+  gap: ${spacing.sm};
+`;

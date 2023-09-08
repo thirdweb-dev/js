@@ -1342,8 +1342,8 @@ importers:
         specifier: ^13.6.2
         version: 13.6.2(localforage@1.10.0)
       '@paperxyz/embedded-wallet-service-sdk':
-        specifier: ^1.1.3
-        version: 1.1.3
+        specifier: ^1.2.0
+        version: 1.2.0
       '@paperxyz/sdk-common-utilities':
         specifier: ^0.1.0
         version: 0.1.0
@@ -7193,8 +7193,8 @@ packages:
     resolution: {integrity: sha512-003xWiCuvePbLaPHT+CRuaV4GlyCAVm6XYSbBZDHoWZGn1mNkVKFaDbGJjjxmEFvizUwlCoM6O18FCBMMky2zQ==}
     dev: true
 
-  /@paperxyz/embedded-wallet-service-sdk@1.1.3:
-    resolution: {integrity: sha512-3lPiUjFYTikj/amsBo+TlTDd+jFIUZ0+4BVFmROwM6qL4zecB2LQojcUq3I0Td8ho9yevdI+EQ57p6XWaq18yg==}
+  /@paperxyz/embedded-wallet-service-sdk@1.2.0:
+    resolution: {integrity: sha512-LkxYXWUfYuzlj8G2efHqk5iGIaP7uxJxA/XHhZR+QVAh2LCzkq9+5XYEv/qzMo/FxHWYzlXkYbYUnRG2WWNOlw==}
     dependencies:
       '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/bytes': 5.7.0

@@ -20,7 +20,7 @@ import {
 } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
 import styled from "@emotion/styled";
-import { RecoveryShareManagement } from "./PaperConfig";
+import { RecoveryShareManagement } from "./types";
 
 type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
   recoveryShareManagement: RecoveryShareManagement;
