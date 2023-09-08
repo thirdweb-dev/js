@@ -79,7 +79,7 @@ export function LocalWalletFlow({
           )}
         </BaseButton>
         <Text variant="subHeader" mt="lg">
-          -------- Or --------
+          -------- OR --------
         </Text>
         <ModalFooter footer={"Import a wallet"} onPress={onImportPress} />
       </View>
