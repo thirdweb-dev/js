@@ -239,7 +239,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         </Flex>
 
         <HStack
-          justifyContent={!showBillingButton ? "space-between" : "flex-end"}
+          justifyContent={showBillingButton ? "space-between" : "flex-end"}
           w="full"
         >
           {showBillingButton && <ManageBillingButton account={account} />}
