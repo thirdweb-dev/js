@@ -948,8 +948,8 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@walletconnect/react-native-compat':
-        specifier: 2.8.6
-        version: 2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0)
+        specifier: 2.9.2
+        version: 2.9.2(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0)
       base-64:
         specifier: ^1.0.0
         version: 1.0.0
@@ -14605,8 +14605,8 @@ packages:
       qrcode: 1.4.4
     dev: true
 
-  /@walletconnect/react-native-compat@2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0):
-    resolution: {integrity: sha512-jC7Sgr/vGMZIWW+9vP+y0EKj3DL+Y6YIAszb2o3ZBACynAebr5s0r7y9SaKi1jlKNppoeg4iNt3yIt811B7Q0w==}
+  /@walletconnect/react-native-compat@2.9.2(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0):
+    resolution: {integrity: sha512-TH+26R0SQNA7LqUx1XaNx4jJLjdKhu3gCvci7FHRuX8Y/s18Ri6V3iRKRvtkixlAfLQlhOmJjbgaxlffn60wCQ==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
       react-native-get-random-values: '*'
