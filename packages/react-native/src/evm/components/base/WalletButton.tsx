@@ -10,6 +10,7 @@ type WalletButtonProps = {
   walletIconUrl: string;
   name: string;
   labelText?: string;
+  recommended?: boolean;
 } & React.ComponentProps<typeof BaseButton>;
 
 export const WalletButton = ({
@@ -18,6 +19,7 @@ export const WalletButton = ({
   walletIconUrl,
   name,
   labelText,
+  recommended,
 }: WalletButtonProps) => {
   return (
     <BaseButton
@@ -33,9 +35,12 @@ export const WalletButton = ({
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
         <ImageSvgUri imageUrl={walletIconUrl} width={48} height={48} />
-        <Text ml="sm" variant="bodyLarge">
-          {name}
-        </Text>
+        <Box ml="sm">
+          <Text variant="bodyLarge">{name}</Text>
+          {recommended ? (
+            <Text variant="bodySmallSecondary">Recommended</Text>
+          ) : null}
+        </Box>
       </Box>
       {labelText ? <Label text={labelText} /> : <View />}
     </BaseButton>

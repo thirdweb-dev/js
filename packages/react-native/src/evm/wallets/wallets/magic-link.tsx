@@ -22,7 +22,7 @@ import React from "react";
 import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
 
 export const magicLink = (
-  magicLinkOptions: MagicLinkOptions,
+  magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
 ): WalletConfig<MagicLink> => {
   return {
     id: walletIds.magicLink,
@@ -49,6 +49,7 @@ export const magicLink = (
     isInstalled: () => {
       return true;
     },
+    recommended: magicLinkOptions?.recommended,
   };
 };
 

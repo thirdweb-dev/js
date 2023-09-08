@@ -18,12 +18,23 @@ export const ChooseWalletContent = ({
   excludeWalletIds,
   onChooseWallet,
 }: ChooseWalletContentProps) => {
+  const theme = useTheme();
+
   const walletsToDisplay = useMemo(() => {
-    return wallets.filter(
+    const filteredWallets = wallets.filter(
       (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
     );
+
+    const trueItems = filteredWallets.filter(
+      (item) => item.recommended === true,
+    );
+    const falseItems = filteredWallets.filter(
+      (item) => item.recommended !== true,
+    );
+    const sortedWallets = [...trueItems, ...falseItems];
+
+    return sortedWallets;
   }, [wallets, excludeWalletIds]);
-  const theme = useTheme();
 
   return (
     <View style={{ flexDirection: "column", maxHeight: MAX_HEIGHT }}>
@@ -59,6 +70,7 @@ export const ChooseWalletContent = ({
                 <WalletButton
                   walletIconUrl={item.meta.iconURL}
                   name={item.meta.name}
+                  recommended={item.recommended}
                   onPress={() => onChooseWallet(item)}
                   mb={marginBottom}
                 />

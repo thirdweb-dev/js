@@ -9,7 +9,7 @@ import ThirdwebLogo from "../../../assets/thirdweb-logo";
 import { useAppTheme } from "../../../styles/hooks";
 import { ChooseWalletContent } from "./ChooseWalletContent";
 import { BaseButton, ImageSvgUri } from "../../base";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
 
 export type ChooseWalletProps = {
@@ -57,6 +57,10 @@ export function ChooseWallet({
 
   const onBackPress = () => {
     setIsConnectAWalletEnabled(false);
+  };
+
+  const onGetStartedPress = () => {
+    Linking.openURL("https://ethereum.org/en/wallets/find-wallet/");
   };
 
   return (
@@ -117,7 +121,7 @@ export function ChooseWallet({
             alignItems="center"
           >
             <Text variant="bodySmall">New to wallets?</Text>
-            <BaseButton>
+            <BaseButton onPress={onGetStartedPress}>
               <Text variant="link">Get started</Text>
             </BaseButton>
           </Box>
