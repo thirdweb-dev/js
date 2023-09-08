@@ -19,29 +19,31 @@ export const Titles: React.FC<SlideStateProps> = ({
         textAlign="center"
         h="100%"
       >
-        {["Build", "Launch", "Manage"].map((heading, i) => (
-          <Heading
-            key={heading}
-            cursor="pointer"
-            onClick={() => setStep(i + 1)}
-            size="title.2xl"
-            transition="all 0.2s"
-            color="white"
-            {...(step === i + 1
-              ? {
-                  opacity: 1,
-                  fontWeight: 700,
-                  letterSpacing: "0em",
-                }
-              : {
-                  opacity: 0.5,
-                  fontWeight: 400,
-                  letterSpacing: "0.02em",
-                })}
-          >
-            {heading}
-          </Heading>
-        ))}
+        {["Wallets", "Contracts", "Payments", "Infrastructure"].map(
+          (heading, i) => (
+            <Heading
+              key={heading}
+              cursor="pointer"
+              onClick={() => setStep(i + 1)}
+              size="title.2xl"
+              transition="all 0.2s"
+              color="white"
+              {...(step === i + 1
+                ? {
+                    opacity: 1,
+                    fontWeight: 700,
+                    letterSpacing: "0em",
+                  }
+                : {
+                    opacity: 0.5,
+                    fontWeight: 400,
+                    letterSpacing: "0.02em",
+                  })}
+            >
+              {heading}
+            </Heading>
+          ),
+        )}
       </Flex>
     </motion.div>
   );
