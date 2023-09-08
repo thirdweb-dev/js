@@ -100,7 +100,6 @@ export function useTransactionAnalytics(params: AnalyticsQueryParams) {
       return await getTransactionAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -137,7 +136,6 @@ export function useTotalTransactionAnalytics(params: AnalyticsQueryParams) {
       return await getTotalTransactionAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -175,7 +173,6 @@ export function useLogsAnalytics(params: AnalyticsQueryParams) {
       return await getLogsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -208,7 +205,6 @@ export function useTotalLogsAnalytics(params: AnalyticsQueryParams) {
       return await getTotalLogsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -271,7 +267,6 @@ export function useFunctionsAnalytics(params: AnalyticsQueryParams) {
       return getFunctionsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -334,7 +329,6 @@ export function useEventsAnalytics(params: AnalyticsQueryParams) {
       return getEventsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -377,7 +371,6 @@ export function useValueAnalytics(params: AnalyticsQueryParams) {
       return getValueAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -420,7 +413,6 @@ export function useUniqueWalletsAnalytics(params: AnalyticsQueryParams) {
       return getUniqueWalletsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -458,7 +450,6 @@ export function useCumulativeWalletsAnalytics(params: AnalyticsQueryParams) {
       return getCumulativeWalletsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
 
@@ -491,6 +482,5 @@ export function useTotalWalletsAnalytics(params: AnalyticsQueryParams) {
       return getTotalWalletsAnalytics(params);
     },
     enabled: !!params.contractAddress && !!params.chainId,
-    suspense: true,
   });
 }
