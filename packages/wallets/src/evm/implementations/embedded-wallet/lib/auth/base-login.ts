@@ -25,7 +25,7 @@ export class BaseLogin extends AbstractLogin<
     });
     return this.postLogin(result);
   }
-  override async loginWithOtp({
+  override async loginWithEmailOtp({
     email,
   }: {
     email: string;

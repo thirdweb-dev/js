@@ -124,9 +124,9 @@ export class Auth {
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
    */
   async loginWithEmailOtp(
-    args: Parameters<BaseLogin["loginWithOtp"]>[0],
+    args: Parameters<BaseLogin["loginWithEmailOtp"]>[0],
   ): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithOtp(args);
+    return this.BaseLogin.loginWithEmailOtp(args);
   }
 
   /**
