@@ -9,34 +9,34 @@ import { walletIds } from "../../constants/walletIds";
 import { InjectedConnector, InjectedConnectorOptions } from "../injected";
 import type { Chain } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
-import { getInjectedMetamaskProvider } from "./getInjectedMetamaskProvider";
+import { getInjectedPhantomProvider } from "./getInjectedPhantomProvider";
 
-export type MetaMaskConnectorOptions = Pick<
+export type PhantomConnectorOptions = Pick<
   InjectedConnectorOptions,
   "shimDisconnect"
 > & {
   /**
-   * While "disconnected" with `shimDisconnect`, allows user to select a different MetaMask account (than the currently connected account) when trying to connect.
+   * While "disconnected" with `shimDisconnect`, allows user to select a different Phantom account (than the currently connected account) when trying to connect.
    */
   UNSTABLE_shimOnConnectSelectAccount?: boolean;
 };
 
-type MetamaskConnectorConstructorArg = {
+type PhantomConnectorConstructorArg = {
   chains?: Chain[];
   connectorStorage: AsyncStorage;
-  options?: MetaMaskConnectorOptions;
+  options?: PhantomConnectorOptions;
 };
 
-export class MetaMaskConnector extends InjectedConnector {
-  readonly id = walletIds.metamask;
-  #UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
+export class PhantomConnector extends InjectedConnector {
+  readonly id = walletIds.phantom;
+  #UNSTABLE_shimOnConnectSelectAccount: PhantomConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
 
-  constructor(arg: MetamaskConnectorConstructorArg) {
+  constructor(arg: PhantomConnectorConstructorArg) {
     const defaultOptions = {
-      name: "MetaMask",
+      name: "Phantom",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
-      getProvider: getInjectedMetamaskProvider,
+      getProvider: getInjectedPhantomProvider,
     };
 
     const options = {
@@ -55,7 +55,7 @@ export class MetaMaskConnector extends InjectedConnector {
   }
 
   /**
-   * Connect to injected MetaMask provider
+   * Connect to injected Phantom provider
    */
   async connect(options: { chainId?: number } = {}) {
     try {
@@ -87,7 +87,6 @@ export class MetaMaskConnector extends InjectedConnector {
               params: [{ eth_accounts: {} }],
             });
           } catch (error) {
-            // Not all MetaMask injected providers support `wallet_requestPermissions` (e.g. MetaMask iOS).
             // Only bubble up error if user rejects request
             if (this.isUserRejectedRequestError(error)) {
               throw new UserRejectedRequestError(error);

@@ -1,13 +1,10 @@
 import type { WalletConnectConnector as WalletConnectConnectorType } from "../connectors/wallet-connect";
-import type { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
-import { AbstractClientWallet, WalletOptions } from "./base";
+import { AbstractClientWallet } from "./base";
 import type { PhantomConnector as PhantomConnectorType } from "../connectors/phantom";
 import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
 import { getInjectedPhantomProvider } from "../connectors/phantom/getInjectedPhantomProvider";
-
-
 
 
 export class PhantomWallet extends AbstractClientWallet {
@@ -18,13 +15,12 @@ export class PhantomWallet extends AbstractClientWallet {
 
   static meta = {
     name: "Phantom",
-    iconURL:
-      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/phantom.svg",
+    iconURL: "ipfs://bafybeibkpca5nwxpsjrtuxmz2ckb5lyc2sl2abg5f7dnvxku637vvffjti",
     urls: {
       chrome:
-        "https://chrome.google.com/webstore/detail/phantom/nkbihfbeogaeaoehlefnkodbefgpgknn",
-      android: "https://play.google.com/store/apps/details?id=io.phantom",
-      ios: "https://apps.apple.com/us/app/phantom-blockchain-wallet/id1438144202",
+        "https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa",
+      android: "https://play.google.com/store/apps/details?id=app.phantom",
+      ios: "https://apps.apple.com/us/app/phantom-crypto-wallet/id1598432977",
     },
   };
 
