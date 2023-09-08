@@ -13,6 +13,12 @@ import { BaseLogin } from "./base-login";
 
 export type AuthQuerierTypes = {
   logout: void;
+  initIframe: {
+    clientId: string;
+    authCookie: string;
+    walletUserId: string;
+    deviceShareStored: string;
+  };
 };
 
 export class Auth {

@@ -61,6 +61,15 @@ export class EmbeddedWalletSdk {
           ...authResult.walletDetails,
           walletUserId: authResult.storedToken.authDetails.userWalletId,
         });
+        await this.querier.call({
+          procedureName: "initIframe",
+          params: {
+            deviceShareStored: authResult.walletDetails.deviceShareStored,
+            clientId: this.clientId,
+            walletUserId: authResult.storedToken.authDetails.userWalletId,
+            authCookie: authResult.storedToken.cookieString,
+          },
+        });
         return {
           user: {
             status: UserStatus.LOGGED_IN_WALLET_INITIALIZED,

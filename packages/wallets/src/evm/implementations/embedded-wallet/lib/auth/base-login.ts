@@ -47,59 +47,61 @@ export class BaseLogin extends AbstractLogin<
     const win = window.open(googleOauthUrl, "Login", "width=350, height=500");
 
     // listen to result from the login window
-    return new Promise<AuthLoginReturnType>((resolve, reject) => {
-      // detect when the user closes the login window
-      const pollTimer = window.setInterval(async () => {
-        if (!win) {
-          return;
-        }
-        try {
-          if (win.closed) {
-            clearInterval(pollTimer);
-            reject(new Error("User closed login window"));
+    const result = await new Promise<AuthAndWalletRpcReturnType>(
+      (resolve, reject) => {
+        // detect when the user closes the login window
+        const pollTimer = window.setInterval(async () => {
+          if (!win) {
+            return;
           }
-        } catch (e) {
-          // silence the error since it'll throw when the user closes it on the google auth page
-        }
-      }, 1000);
-
-      const messageListener = async (
-        event: MessageEvent<{
-          eventType: string;
-          authResult?: AuthLoginReturnType;
-          error?: string;
-        }>,
-      ) => {
-        console.log("GET_IFRAME_BASE_URL()", GET_IFRAME_BASE_URL());
-        console.log("event.origin", event.origin);
-        console.log("event.data", event.data);
-        console.log("!!event.data.authResult", !!event.data.authResult);
-        if (event.origin !== GET_IFRAME_BASE_URL()) {
-          return;
-        }
-        if (typeof event.data !== "object") {
-          reject(new Error("Invalid event data"));
-          return;
-        }
-        window.removeEventListener("message", messageListener);
-        clearInterval(pollTimer);
-
-        switch (event.data.eventType) {
-          case "userLoginSuccess": {
-            win?.close();
-            if (event.data.authResult) {
-              resolve(event.data.authResult);
+          try {
+            if (win.closed) {
+              clearInterval(pollTimer);
+              reject(new Error("User closed login window"));
             }
-            break;
+          } catch (e) {
+            // silence the error since it'll throw when the user closes it on the google auth page
           }
-          case "userLoginFailed": {
-            win?.close();
-            reject(new Error(event.data.error));
-            break;
+        }, 1000);
+
+        const messageListener = async (
+          event: MessageEvent<{
+            eventType: string;
+            authResult?: AuthAndWalletRpcReturnType;
+            error?: string;
+          }>,
+        ) => {
+          if (event.origin !== GET_IFRAME_BASE_URL()) {
+            return;
           }
-        }
-      };
-      window.addEventListener("message", messageListener);
+          if (typeof event.data !== "object") {
+            reject(new Error("Invalid event data"));
+            return;
+          }
+          window.removeEventListener("message", messageListener);
+          clearInterval(pollTimer);
+
+          switch (event.data.eventType) {
+            case "userLoginSuccess": {
+              win?.close();
+              if (event.data.authResult) {
+                resolve(event.data.authResult);
+              }
+              break;
+            }
+            case "userLoginFailed": {
+              win?.close();
+              reject(new Error(event.data.error));
+              break;
+            }
+          }
+        };
+        window.addEventListener("message", messageListener);
+      },
+    );
+    return this.postLogin({
+      storedToken: { ...result.storedToken, shouldStoreCookieString: true },
+      walletDetails: { ...result.walletDetails, isIframeStorageEnabled: false },
     });
   }
 
