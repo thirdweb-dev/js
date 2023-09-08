@@ -27,7 +27,6 @@ import {
   useState,
   useCallback,
   useEffect,
-  useRef,
   useContext,
   createContext,
 } from "react";
@@ -184,7 +183,6 @@ export const ConnectModal = () => {
 
   const wallet = useWallet();
   const isWrapperConnected = !!wallet?.getPersonalWallet();
-  const prevConnectionStatus = useRef(connectionStatus);
 
   const isWrapperScreen =
     typeof screen !== "string" && !!screen.personalWallets;
@@ -195,13 +193,10 @@ export const ConnectModal = () => {
       !isWrapperConnected &&
       isWrapperScreen &&
       !isWalletModalOpen &&
-      connectionStatus === "connected" &&
-      prevConnectionStatus.current === "connecting"
+      connectionStatus === "connected"
     ) {
       setIsWalletModalOpen(true);
     }
-
-    prevConnectionStatus.current = connectionStatus;
   }, [
     isWalletModalOpen,
     connectionStatus,
