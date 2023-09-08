@@ -12,7 +12,6 @@ export function getInjectedPhantomProvider(): Ethereum | undefined {
     if (!isPhantom) {
       return;
     }
-    // Brave tries to make itself look like MetaMask
 
     return ethereum;
   }
