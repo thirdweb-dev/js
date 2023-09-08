@@ -9,10 +9,10 @@ import type {
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 type LoginQuerierTypes = {
-  loginWithThirdwebModal: undefined | { email: string };
+  loginWithModal: undefined | { email: string };
   loginWithGoogle: undefined;
-  sendThirdwebEmailLoginOtp: { email: string };
-  verifyThirdwebEmailLoginOtp: {
+  sendEmailLoginOtp: { email: string };
+  verifyEmailLoginOtp: {
     email: string;
     otp: string;
   };
@@ -34,7 +34,7 @@ export abstract class AbstractLogin<
   protected clientId;
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link ThirdwebEmbeddedWalletSdk.auth} instead.
+   * Call {@link EmbeddedWalletSdk.auth} instead.
    *
    */
   constructor({
@@ -54,25 +54,23 @@ export abstract class AbstractLogin<
     this.clientId = clientId;
   }
 
-  abstract loginWithThirdwebModal(args?: MODAL): Promise<AuthLoginReturnType>;
-  abstract loginWithThirdwebOtp(
-    args: EMAIL_MODAL,
-  ): Promise<AuthLoginReturnType>;
+  abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
+  abstract loginWithOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
 
   abstract loginWithGoogle(): Promise<AuthLoginReturnType>;
 
-  async sendThirdwebEmailLoginOtp({
+  async sendEmailLoginOtp({
     email,
-  }: LoginQuerierTypes["sendThirdwebEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
+  }: LoginQuerierTypes["sendEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
-      procedureName: "sendThirdwebEmailLoginOtp",
+      procedureName: "sendEmailLoginOtp",
       params: { email },
     });
     return result;
   }
 
-  abstract verifyThirdwebEmailLoginOtp(
+  abstract verifyEmailLoginOtp(
     args: EMAIL_VERIFICATION,
   ): Promise<AuthLoginReturnType>;
 }

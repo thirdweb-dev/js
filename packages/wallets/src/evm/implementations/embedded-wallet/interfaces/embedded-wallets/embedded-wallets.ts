@@ -2,7 +2,7 @@ import type {
   Chain,
   CustomizationOptionsType,
 } from "@paperxyz/sdk-common-utilities";
-import type { EmbeddedWallet } from "../../lib/embedded-wallets/embedded-wallet";
+import type { EmbeddedWallet } from "../../lib/core/embedded-wallet";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 // Class constructor types

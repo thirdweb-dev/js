@@ -3,14 +3,14 @@ export {
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME_DEPRECATED,
   WALLET_USER_DETAILS_LOCAL_STORAGE_NAME,
-  WALLET_USER_ID_LOCAL_STORAGE_NAME
+  WALLET_USER_ID_LOCAL_STORAGE_NAME,
 } from "./constants/settings";
 export { AuthProvider, RecoveryShareManagement } from "./interfaces/auth";
 export type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
   AuthStoredTokenWithCookieReturnType,
-  StoredTokenType
+  StoredTokenType,
 } from "./interfaces/auth";
 export { UserStatus } from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
@@ -22,13 +22,12 @@ export type {
   LogoutReturnType,
   SendEmailOtpReturnType,
   SetUpWalletRpcReturnType,
-  ThirdwebConstructorType
+  ThirdwebConstructorType,
 } from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
-  SignedTypedDataReturnType
+  SignedTypedDataReturnType,
 } from "./interfaces/embedded-wallets/signer";
-export { ThirdwebEmbeddedWalletSdk } from "./lib/thirdweb";
-
+export { EmbeddedWalletSdk } from "./lib/embedded-wallet";

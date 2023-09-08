@@ -9,9 +9,9 @@ import {
 import { EmbeddedWalletIframeCommunicator } from "../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 import type { AuthQuerierTypes } from "./auth";
 import { Auth } from "./auth";
-import { EmbeddedWallet } from "./embedded-wallets/embedded-wallet";
+import { EmbeddedWallet } from "./core/embedded-wallet";
 
-export class ThirdwebEmbeddedWalletSdk {
+export class EmbeddedWalletSdk {
   protected clientId: string;
   protected querier: EmbeddedWalletIframeCommunicator<AuthQuerierTypes>;
 
@@ -31,7 +31,7 @@ export class ThirdwebEmbeddedWalletSdk {
 
   /**
    * @example
-   * const Paper = new ThirdwebEmbeddedWalletSdk({ clientId: "", chain: "Goerli" });
+   * const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({ clientId: "", chain: "Goerli" });
    * @param {string} initParams.clientId the clientId found on the {@link https://thirdweb.com/dashboard/settings dashboard settings}
    * @param {Chain} initParams.chain sets the default chain that the EmbeddedWallet will live on.
    * @param {CustomizationOptionsType} initParams.styles sets the default style override for any modal that pops up asking for user's details when creating wallet or logging in.
@@ -76,10 +76,10 @@ export class ThirdwebEmbeddedWalletSdk {
   /**
    * Gets the usr if they are logged in
    * @example
-   *  const user = await Paper.getUser();
+   *  const user = await thirdwebEmbeddedWallet.getUser();
    *  switch (user.status) {
    *     case UserStatus.LOGGED_OUT: {
-   *       // User is logged out, call one of the auth methods on Paper.auth to authenticate the user
+   *       // User is logged out, call one of the auth methods on thirdwebEmbeddedWallet.auth to authenticate the user
    *       break;
    *     }
    *     case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {

@@ -8,7 +8,7 @@ import {
   InitializedUser,
   ThirdwebEmbeddedWalletSdk,
   UserStatus,
-} from "../../implementations/thirdweb-embedded-wallet";
+} from "../../implementations/embedded-wallet";
 import { Connector } from "../../interfaces/connector";
 import { PaperWalletConnectionArgs } from "../paper/types";
 import { ThirdwebWalletConnectorOptions } from "./types";

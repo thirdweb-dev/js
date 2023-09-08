@@ -1,5 +1,5 @@
 import type { Chain } from "@thirdweb-dev/chains";
-import { ThirdwebConstructorType } from "../../implementations/thirdweb-embedded-wallet";
+import { ThirdwebConstructorType } from "../../implementations/embedded-wallet";
 
 export type ThirdwebWalletAdditionalOptions = {
   thirdwebClientId: string;

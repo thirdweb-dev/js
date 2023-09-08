@@ -26,7 +26,7 @@ export class Auth {
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link ThirdwebEmbeddedWalletSdk.auth} instead.
+   * Call {@link EmbeddedWalletSdk.auth} instead.
    *
    * @param {string} params.clientId the clientId from your thirdweb dashboard
    */
@@ -79,9 +79,9 @@ export class Auth {
    * Used to log the user into their thirdweb wallet on your platform via a myriad of auth providers
    *
    * @example
-   * const thirdweb = new ThirdwebEmbeddedWalletSdk({clientId: "YOUR_CLIENT_ID", chain: "Polygon"})
+   * const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({clientId: "YOUR_CLIENT_ID", chain: "Polygon"})
    * try {
-   *   const user = await Thirdweb.auth.loginWithThirdwebModal();
+   *   const user = await thirdwebEmbeddedWallet.auth.loginWithModal();
    *   // user is now logged in
    * } catch (e) {
    *   // User closed modal or something else went wrong during the authentication process
@@ -90,12 +90,12 @@ export class Auth {
    *
    * @param {(userWalletId: string) => Promise<string | undefined>} args.getRecoveryCode Only present when using RecoveryShareManagement.USER_MANAGED recovery share management. A function that returns the recovery code for a given userWalletId.
    *
-   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
+   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
    */
-  async loginWithThirdwebModal(): Promise<AuthLoginReturnType> {
+  async loginWithModal(): Promise<AuthLoginReturnType> {
     await this.preLogin();
 
-    return this.BaseLogin.loginWithThirdwebModal();
+    return this.BaseLogin.loginWithModal();
   }
 
   /**
@@ -104,10 +104,10 @@ export class Auth {
    *
    * @example
    *  // Basic Flow
-   *  const thirdweb = new ThirdwebEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
+   *  const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({clientId: "", chain: "Polygon"});
    *  try {
    *    // prompts user to enter the code they received
-   *    const user = await thirdweb.auth.loginWithThirdwebEmailOtp({ email : "you@example.com" });
+   *    const user = await thirdwebEmbeddedWallet.auth.loginWithThirdwebEmailOtp({ email : "you@example.com" });
    *    // user is now logged in
    *  } catch (e) {
    *    // User closed the OTP modal or something else went wrong during the authentication process
@@ -115,17 +115,17 @@ export class Auth {
    *  }
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
-   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
+   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
    */
-  async loginWithThirdwebEmailOtp(
-    args: Parameters<BaseLogin["loginWithThirdwebOtp"]>[0],
+  async loginWithEmailOtp(
+    args: Parameters<BaseLogin["loginWithOtp"]>[0],
   ): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithThirdwebOtp(args);
+    return this.BaseLogin.loginWithOtp(args);
   }
 
   /**
    * A headless way to initiate login with google.
-   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link ThirdwebEmbeddedWalletSdk.getUser} for more
+   * @returns {{user: InitializedUser}} An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
 
    */
   async loginWithGoogle(): Promise<AuthLoginReturnType> {
@@ -135,13 +135,13 @@ export class Auth {
   /**
    * @description
    * A headless way to send the users at {email} an OTP code.
-   * You need to then call {@link Auth.verifyThirdwebEmailLoginOtp} in order to complete the login process
+   * You need to then call {@link Auth.verifyEmailLoginOtp} in order to complete the login process
    *
    * @example
-   *  const thirdweb = new ThirdwebEmbeddedWalletSdk({clientId: "", chain: "Polygon"});
+   *  const thirdwebEmbeddedWallet = new EmbeddedWalletSdk({clientId: "", chain: "Polygon"});
    *  // sends user an OTP code
    * try {
-   *    await thirdweb.auth.sendThirdwebEmailLoginOtp({ email : "you@example.com" });
+   *    await thirdwebEmbeddedWallet.auth.sendEmailLoginOtp({ email : "you@example.com" });
    * } catch(e) {
    *    // Error Sending user's email an OTP code
    *    console.error(e);
@@ -149,21 +149,21 @@ export class Auth {
    *
    * // Then when your user is ready to verify their OTP
    * try {
-   *    const user = await thirdweb.auth.verifyThirdwebEmailLoginOtp({ email: "you@example.com", otp: "6-DIGIT_CODE_HERE" });
+   *    const user = await thirdwebEmbeddedWallet.auth.verifyEmailLoginOtp({ email: "you@example.com", otp: "6-DIGIT_CODE_HERE" });
    * } catch(e) {
    *    // Error verifying the OTP code
    *    console.error(e)
    * }
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
-   * @returns {{ success: boolean, isNewUser: boolean }} Success: indicating if the email was successfully sent (Note the email could still end up in the user's spam folder). IsNewUser indicates if the user is a new user to your platform
+   * @returns {{ isNewUser: boolean }} IsNewUser indicates if the user is a new user to your platform
    */
-  async sendThirdwebEmailLoginOtp({
+  async sendEmailLoginOtp({
     email,
   }: Parameters<
-    BaseLogin["sendThirdwebEmailLoginOtp"]
+    BaseLogin["sendEmailLoginOtp"]
   >[0]): Promise<SendEmailOtpReturnType> {
-    return this.BaseLogin.sendThirdwebEmailLoginOtp({
+    return this.BaseLogin.sendEmailLoginOtp({
       email,
     });
   }
@@ -172,16 +172,16 @@ export class Auth {
    *  @description
    * Used to verify the otp that the user receives from thirdweb
    *
-   * See {@link Auth.sendThirdwebEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithThirdwebEmailOtp` with `verifyThirdwebEmailLoginOtp`
+   * See {@link Auth.sendEmailLoginOtp} for how the headless call flow looks like. Simply swap out the calls to `loginWithThirdwebEmailOtp` with `verifyThirdwebEmailLoginOtp`
    *
    * @param {string} props.email We will send the email an OTP that needs to be entered in order for them to be logged in.
    * @param {string} props.otp The code that the user received in their email
    * @returns {{user: InitializedUser}} An InitializedUser object containing the user's status, wallet, authDetails, and more
    */
-  async verifyThirdwebEmailLoginOtp(
-    args: Parameters<BaseLogin["verifyThirdwebEmailLoginOtp"]>[0],
+  async verifyEmailLoginOtp(
+    args: Parameters<BaseLogin["verifyEmailLoginOtp"]>[0],
   ) {
-    return this.BaseLogin.verifyThirdwebEmailLoginOtp(args);
+    return this.BaseLogin.verifyEmailLoginOtp(args);
   }
 
   /**
