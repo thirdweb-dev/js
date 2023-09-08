@@ -9,7 +9,7 @@ import {
 import type { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect, useCallback } from "react";
 import { Spinner } from "../../../components/Spinner";
-import { Flex, ScreenContainer } from "../../../components/basic";
+import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { Img } from "../../../components/Img";
 import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
@@ -18,7 +18,7 @@ import { ToolTip } from "../../../components/Tooltip";
 import { Spacer } from "../../../components/Spacer";
 import styled from "@emotion/styled";
 import { TextDivider } from "../../../components/TextDivider";
-import { BackButton, ModalTitle } from "../../../components/modalElements";
+import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 
 export function magicLink(
   config: MagicLinkAdditionalOptions,
@@ -27,44 +27,13 @@ export function magicLink(
   const smsLoginEnabled = config.smsLogin !== false;
   const oauthProviders = config.oauthOptions?.providers;
 
-  const iconURLs = oauthProviders
-    ?.map((provider) => providerImages[provider])
-    .slice(0, 2);
-
   const selectUI = (props: SelectUIProps<MagicLink>) => {
     if (props.modalSize === "wide") {
       return (
-        <div>
-          <Button
-            variant="secondary"
-            fullWidth
-            onClick={props.onSelect}
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              gap: spacing.sm,
-            }}
-          >
-            <Flex gap="xxs">
-              {iconURLs &&
-                iconURLs.map((url) => (
-                  <Img
-                    src={url}
-                    width={iconSize.sm}
-                    height={iconSize.sm}
-                    alt=""
-                    key={url}
-                  />
-                ))}
-            </Flex>
-            Magic Login
-          </Button>
-          <Spacer y="lg" />
-          <TextDivider>
-            <span> OR </span>
-          </TextDivider>
-          <Spacer y="md" />
-        </div>
+        <WalletEntryButton
+          walletConfig={props.walletConfig}
+          selectWallet={() => props.onSelect(undefined)}
+        />
       );
     }
 
@@ -377,25 +346,38 @@ const MagicConnectionUIWide: React.FC<
   const connectMagic = useConnectMagic();
 
   return (
-    <ScreenContainer>
-      <BackButton onClick={props.close} />
-      <Spacer y="lg" />
-      <ModalTitle>Sign in</ModalTitle>
-      <Spacer y="lg" />
-      <MagicUI
-        {...props}
-        onSelect={(data) => {
-          connectMagic({
-            selectionData: data,
-            close: props.close,
-            open: props.open,
-            singleWallet: props.supportedWallets.length === 1,
-            type: props.type,
-            walletConfig: props.walletConfig,
-          });
+    <ScreenContainer
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <ModalHeader onBack={props.goBack} title="Sign in" />
+      <Spacer y="xl" />
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
         }}
-        showOrSeparator={false}
-      />
+      >
+        <MagicUI
+          {...props}
+          onSelect={(data) => {
+            connectMagic({
+              selectionData: data,
+              close: props.close,
+              open: props.open,
+              singleWallet: props.supportedWallets.length === 1,
+              type: props.type,
+              walletConfig: props.walletConfig,
+            });
+          }}
+          showOrSeparator={false}
+        />
+      </div>
     </ScreenContainer>
   );
 };
