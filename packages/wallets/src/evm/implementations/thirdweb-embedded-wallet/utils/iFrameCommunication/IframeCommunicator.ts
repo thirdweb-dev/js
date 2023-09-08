@@ -109,7 +109,6 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
         };
 
         const INIT_IFRAME_EVENT = "initIframe";
-        console.log("posting message to iframe");
         iframe?.contentWindow?.postMessage(
           // ? We initialise the iframe with a bunch
           // of useful information so that we don't have to pass it
