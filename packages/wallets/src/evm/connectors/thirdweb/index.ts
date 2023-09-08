@@ -5,13 +5,13 @@ import { normalizeChainId } from "../../../lib/wagmi-core";
 import { walletIds } from "../../constants/walletIds";
 import {
   AuthLoginReturnType,
+  EmbeddedWalletSdk,
   InitializedUser,
-  ThirdwebEmbeddedWalletSdk,
   UserStatus,
 } from "../../implementations/embedded-wallet";
 import { Connector } from "../../interfaces/connector";
 import { PaperWalletConnectionArgs } from "../paper/types";
-import { ThirdwebWalletConnectorOptions } from "./types";
+import { EmbeddedWalletConnectorOptions } from "./types";
 
 export class ThirdwebWalletConnector extends Connector<PaperWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
@@ -19,29 +19,29 @@ export class ThirdwebWalletConnector extends Connector<PaperWalletConnectionArgs
   ready = true;
 
   private user: InitializedUser | null = null;
-  #thirdweb?: ThirdwebEmbeddedWalletSdk;
-  private options: ThirdwebWalletConnectorOptions;
+  #embeddedWalletSdk?: EmbeddedWalletSdk;
+  private options: EmbeddedWalletConnectorOptions;
 
   #signer?: Signer;
 
-  constructor(options: ThirdwebWalletConnectorOptions) {
+  constructor(options: EmbeddedWalletConnectorOptions) {
     super();
     this.options = options;
   }
 
-  private getThirdwebSDK(): ThirdwebEmbeddedWalletSdk {
-    if (!this.#thirdweb) {
-      this.#thirdweb = new ThirdwebEmbeddedWalletSdk({
+  private getEmbeddedWalletSDK(): EmbeddedWalletSdk {
+    if (!this.#embeddedWalletSdk) {
+      this.#embeddedWalletSdk = new EmbeddedWalletSdk({
         clientId: this.options.clientId,
         chain: "Ethereum",
         styles: this.options.styles,
       });
     }
-    return this.#thirdweb;
+    return this.#embeddedWalletSdk;
   }
 
   async connect(options?: { email?: string; chainId?: number }) {
-    const thirdwebSDK = await this.getThirdwebSDK();
+    const thirdwebSDK = await this.getEmbeddedWalletSDK();
     if (!thirdwebSDK) {
       throw new Error("Paper SDK not initialized");
     }
@@ -51,11 +51,11 @@ export class ThirdwebWalletConnector extends Connector<PaperWalletConnectionArgs
         let authResult: AuthLoginReturnType;
 
         if (options?.email) {
-          authResult = await thirdwebSDK.auth.loginWithThirdwebEmailOtp({
+          authResult = await thirdwebSDK.auth.loginWithEmailOtp({
             email: options.email,
           });
         } else {
-          authResult = await thirdwebSDK.auth.loginWithThirdwebModal();
+          authResult = await thirdwebSDK.auth.loginWithModal();
         }
         this.user = authResult.user;
         break;
@@ -78,7 +78,7 @@ export class ThirdwebWalletConnector extends Connector<PaperWalletConnectionArgs
   }
 
   async disconnect(): Promise<void> {
-    const paper = await this.#thirdweb;
+    const paper = await this.#embeddedWalletSdk;
     await paper?.auth.logout();
     this.#signer = undefined;
     this.user = null;
@@ -112,8 +112,8 @@ export class ThirdwebWalletConnector extends Connector<PaperWalletConnectionArgs
     }
 
     if (!this.user) {
-      const thirdwebSDK = await this.getThirdwebSDK();
-      const user = await thirdwebSDK.getUser();
+      const embeddedWalletSdk = await this.getEmbeddedWalletSDK();
+      const user = await embeddedWalletSdk.getUser();
       switch (user.status) {
         case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
           this.user = user;

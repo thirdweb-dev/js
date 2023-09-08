@@ -1,19 +1,18 @@
 import type { Chain } from "@thirdweb-dev/chains";
-import { ThirdwebConstructorType } from "../../implementations/embedded-wallet";
+import type { EmbeddedWalletConstructorType } from "../../implementations/embedded-wallet/interfaces/embedded-wallets/embedded-wallets";
 
-export type ThirdwebWalletAdditionalOptions = {
-  thirdwebClientId: string;
+export type EmbeddedWalletAdditionalOptions = {
   chain: Pick<Chain, "chainId" | "rpc">;
-  styles?: ThirdwebConstructorType["styles"];
+  styles?: EmbeddedWalletConstructorType["styles"];
 };
 
-export interface ThirdwebWalletConnectorOptions {
+export interface EmbeddedWalletConnectorOptions {
   clientId: string;
-  chain: Pick<Chain, "chainId" | "rpc">;
   chains: Chain[];
-  styles?: ThirdwebConstructorType["styles"];
+  chain: Pick<Chain, "chainId" | "rpc">;
+  styles?: EmbeddedWalletConstructorType["styles"];
 }
 
-export interface ThirdwebWalletConnectionArgs {
+export interface EmbeddedWalletConnectionArgs {
   email?: string;
 }

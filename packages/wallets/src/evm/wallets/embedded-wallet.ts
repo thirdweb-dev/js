@@ -1,50 +1,48 @@
 import { ThirdwebWalletConnector } from "../connectors/thirdweb";
 import {
-  ThirdwebWalletAdditionalOptions,
-  ThirdwebWalletConnectionArgs,
+  EmbeddedWalletAdditionalOptions,
+  EmbeddedWalletConnectionArgs,
 } from "../connectors/thirdweb/types";
 import { walletIds } from "../constants/walletIds";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type ThirdwebWalletOptions =
-  WalletOptions<ThirdwebWalletAdditionalOptions>;
+  WalletOptions<EmbeddedWalletAdditionalOptions>;
 
 export class ThirdwebWallet extends AbstractClientWallet<
-  ThirdwebWalletAdditionalOptions,
-  ThirdwebWalletConnectionArgs
+  EmbeddedWalletAdditionalOptions,
+  EmbeddedWalletConnectionArgs
 > {
   connector?: Connector;
 
-  static id = walletIds.thirdweb;
+  static id = walletIds.embeddedWallet;
 
   static meta = {
-    name: "thirdweb wallet",
+    name: "Embedded Wallet",
     iconURL:
       // TODO: replace with thirdweb logo
-      "ipfs://QmNrLXtPoFrh4yjZbXui39zUMozS1oetpgU8dvZhFAxfRa/paper-logo-icon.svg",
+      "ipfs://QmNrLXtPoFrh4yjZbXui39zUMozS1oetpgU8dvZhFAxfRa/thirdweb-logo-icon.svg",
   };
 
   public get walletName() {
-    return "thirdweb Wallet" as const;
+    return "Embedded Wallet" as const;
   }
 
-  thirdwebClientId: ThirdwebWalletAdditionalOptions["thirdwebClientId"];
-  chain: ThirdwebWalletAdditionalOptions["chain"];
+  chain: EmbeddedWalletAdditionalOptions["chain"];
 
   constructor(options: ThirdwebWalletOptions) {
     super(ThirdwebWallet.id, {
       ...options,
     });
 
-    this.thirdwebClientId = options.thirdwebClientId;
     this.chain = options.chain;
   }
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
       this.connector = new ThirdwebWalletConnector({
-        clientId: this.thirdwebClientId,
+        clientId: this.options?.clientId ?? "",
         chain: this.chain,
         chains: this.chains,
         styles: this.options?.styles,
