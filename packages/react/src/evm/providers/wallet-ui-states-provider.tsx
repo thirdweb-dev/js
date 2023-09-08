@@ -31,13 +31,14 @@ export const WalletUIStatesProvider = (
   props: React.PropsWithChildren<{
     theme?: "light" | "dark";
     modalSize: "wide" | "compact";
+    title?: string;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const _isMobile = isMobile();
 
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
-    title: defaultModalTitle,
+    title: props.title || defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
     modalSize: _isMobile ? "compact" : props.modalSize,

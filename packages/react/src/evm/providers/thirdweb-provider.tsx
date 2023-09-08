@@ -4,7 +4,7 @@ import {
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
-import { ConnectModal } from "../../wallet/ConnectWallet/ConnectModal";
+import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
 import { ThemeProvider } from "@emotion/react";
 import { darkTheme, lightTheme } from "../../design-system";
 import { PropsWithChildren } from "react";

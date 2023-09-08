@@ -13,8 +13,8 @@ import { HeadlessConnectUI } from "../headlessConnectUI";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 import { Spacer } from "../../../components/Spacer";
 import { FloatingPlane } from "./FloatingPlane";
-import { useScreenContext } from "../../ConnectWallet/ConnectModal";
 import { reservedScreens } from "../../ConnectWallet/constants";
+import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
