@@ -55,6 +55,15 @@ export class PaperWallet extends AbstractClientWallet<
     if (!options.clientId && !options.paperClientId) {
       throw new Error("clientId or paperClientId is required");
     }
+    if (
+      options.paperClientId &&
+      !this.isClientIdLegacyPaper(options.paperClientId)
+    ) {
+      throw new Error("paperClientId must be a legacy paper client ID");
+    }
+    if (options.clientId && this.isClientIdLegacyPaper(options.clientId)) {
+      throw new Error("clientId must be a thirdweb client ID");
+    }
 
     // cast is okay because we assert that either clientId or paperClientId is defined above
     this.paperClientId = (options.paperClientId ?? options.clientId) as string;
