@@ -17,7 +17,9 @@ import { InputSelectionUI } from "./InputSelectionUI";
 
 type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain">;
 
-export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
+export const paperWallet = (
+  config?: PaperConfig,
+): WalletConfig<PaperWallet> => {
   return {
     id: PaperWallet.id,
     meta: PaperWallet.meta,
