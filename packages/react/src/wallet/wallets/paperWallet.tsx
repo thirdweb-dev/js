@@ -15,7 +15,7 @@ import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
 
-type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
+type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain">;
 
 export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
   return {
