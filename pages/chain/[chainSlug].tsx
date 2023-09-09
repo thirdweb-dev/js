@@ -103,7 +103,8 @@ function useChainStats(
 
 const lineaTestnetPopularContracts = [
   "thirdweb.eth/DropERC721",
-  "thirdweb.eth/Marketplace",
+  // TODO bring back when we have new versions ready
+  // "thirdweb.eth/Marketplace",
   "thirdweb.eth/TokenERC721",
   "thirdweb.eth/DropERC1155",
   "thirdweb.eth/DropERC20",
@@ -574,7 +575,8 @@ const CHAIN_PAGE_CONTRACTS_CATEGORY = {
   description: "",
   contracts: [
     "thirdweb.eth/DropERC721",
-    "thirdweb.eth/Marketplace",
+    // TODO bring back when we have new versions ready
+    // "thirdweb.eth/Marketplace",
     "thirdweb.eth/TokenERC721",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/TokenERC20",

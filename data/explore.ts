@@ -19,7 +19,7 @@ const POPULAR = {
   description: "A collection of our most deployed contracts.",
   contracts: [
     "thirdweb.eth/DropERC721",
-    "thirdweb.eth/MarketplaceV3",
+    // "thirdweb.eth/MarketplaceV3",
     "unlock-protocol.eth/PublicLock",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/TokenERC20",
@@ -73,17 +73,17 @@ const DROPS = {
   ],
 } as const;
 
-const MARKETS = {
-  id: "marketplace",
-  name: "Marketplace",
-  displayName: "Marketplaces",
-  description: "Quickly spin up your own on-chain marketplace for NFTs.",
-  contracts: [
-    "thirdweb.eth/MarketplaceV3",
-    "thirdweb.eth/TokenERC20",
-    "thirdweb.eth/Split",
-  ],
-} as const;
+// const MARKETS = {
+//   id: "marketplace",
+//   name: "Marketplace",
+//   displayName: "Marketplaces",
+//   description: "Quickly spin up your own on-chain marketplace for NFTs.",
+//   contracts: [
+//     // "thirdweb.eth/MarketplaceV3",
+//     "thirdweb.eth/TokenERC20",
+//     "thirdweb.eth/Split",
+//   ],
+// } as const;
 
 const AIRDROP = {
   id: "airdrop",
@@ -108,7 +108,7 @@ const GAMING = {
   description:
     "A collection of contracts that are popular for building play-to-earn and free-to-own web3 games.",
   contracts: [
-    "thirdweb.eth/Marketplace",
+    // "thirdweb.eth/Marketplace",
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/TokenERC1155",
@@ -128,7 +128,7 @@ const LOYALTY = {
   contracts: [
     "thirdweb.eth/LoyaltyCard",
     "unlock-protocol.eth/PublicLock",
-    "thirdweb.eth/Marketplace",
+    // "thirdweb.eth/Marketplace",
     "thirdweb.eth/TokenERC20",
   ],
   showInExplore: false,
@@ -179,7 +179,7 @@ const SMART_WALLET = {
 const CATEGORIES = {
   [POPULAR.id]: POPULAR,
   [NFTS.id]: NFTS,
-  [MARKETS.id]: MARKETS,
+  // [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,
   [SMART_WALLET.id]: SMART_WALLET,
   [AIRDROP.id]: AIRDROP,

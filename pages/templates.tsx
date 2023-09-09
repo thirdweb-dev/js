@@ -43,18 +43,18 @@ export const templates: TemplateCardProps[] = [
     tags: ["ERC721", "Custom Claim Conditions"],
     author: "thirdweb",
   },
-  {
-    id: "marketplace-v3",
-    title: "Marketplace",
-    homepage: "https://marketplace-v3.thirdweb-example.com/",
-    repo: "https://github.com/thirdweb-example/marketplace-v3",
-    description:
-      "Allow holders of your NFTs to trade in a marketplace with a built-in escrow and auctioning system.",
-    img: "/assets/templates/marketplace.png",
-    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
-    tags: ["Multi-currency", "Buy & Sell"],
-    author: "thirdweb",
-  },
+  // {
+  //   id: "marketplace-v3",
+  //   title: "Marketplace",
+  //   homepage: "https://marketplace-v3.thirdweb-example.com/",
+  //   repo: "https://github.com/thirdweb-example/marketplace-v3",
+  //   description:
+  //     "Allow holders of your NFTs to trade in a marketplace with a built-in escrow and auctioning system.",
+  //   img: "/assets/templates/marketplace.png",
+  //   hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+  //   tags: ["Multi-currency", "Buy & Sell"],
+  //   author: "thirdweb",
+  // },
   {
     id: "nft-gated-website",
     title: "NFT Gated Website",

@@ -235,110 +235,110 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
         }
       />
     ),
-    "marketplace-v3": (
-      <TemplateContents
-        overview={
-          <>
-            <Text
-              fontWeight={400}
-              fontSize={16}
-              lineHeight={1.5}
-              opacity={0.7}
-              color="whiteAlpha.900"
-            >
-              Create your own NFT marketplace where users can buy and sell NFTs
-              from your NFT collection. This template provides the foundation
-              for building an NFT marketplace application.
-            </Text>
-          </>
-        }
-        featurePoints={[
-          <>
-            Built with our{" "}
-            <Link
-              fontWeight="500"
-              isExternal
-              href="https://portal.thirdweb.com/react"
-              color="blue.300"
-            >
-              React SDK
-            </Link>
-            .
-          </>,
-          <>Uses Next.js, TypeScript, and CSS Modules.</>,
-          <>
-            Display all NFTs from your collection using the{" "}
-            <Link
-              fontWeight="500"
-              isExternal
-              href="https://portal.thirdweb.com/react/react.thirdwebnftmedia"
-              color="blue.300"
-            >
-              NFT Media Renderer
-            </Link>{" "}
-            UI component.
-          </>,
-          <>
-            Allow users to buy, sell and make offers on NFTs in your collection.
-          </>,
-          <>Supports both direct listings and english auction sales.</>,
-          <>
-            You control the platform fees of each sale made on the smart
-            contract.
-          </>,
-          <>Compatible with all EVM chains.</>,
-        ]}
-        runningLocally={
-          <div>
-            Deploy a new{" "}
-            <Link
-              href="https://thirdweb.com/thirdweb.eth/MarketplaceV3"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
-              Marketplace V3
-            </Link>{" "}
-            smart contract using the{" "}
-            <Link
-              href="https://thirdweb.com/dashboard"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
-              dashboard
-            </Link>
-            .
-            <br />
-            <br />
-            Configure your smart contract address and chain name in the{" "}
-            <Link
-              href="https://github.com/thirdweb-example/marketplace-v3/blob/main/const/contractAddresses.ts"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
-              const/contractAddresses.ts
-            </Link>{" "}
-            file.
-            <br />
-            <br />
-            Run the application from the command line:
-            <CodeBlock text={"npm run dev"} />
-            This will make the application available to preview at{" "}
-            <Link
-              href="http://localhost:3000"
-              isExternal
-              color="blue.300"
-              fontWeight="500"
-            >
-              http://localhost:3000
-            </Link>
-            .
-          </div>
-        }
-      />
-    ),
+    // "marketplace-v3": (
+    //   <TemplateContents
+    //     overview={
+    //       <>
+    //         <Text
+    //           fontWeight={400}
+    //           fontSize={16}
+    //           lineHeight={1.5}
+    //           opacity={0.7}
+    //           color="whiteAlpha.900"
+    //         >
+    //           Create your own NFT marketplace where users can buy and sell NFTs
+    //           from your NFT collection. This template provides the foundation
+    //           for building an NFT marketplace application.
+    //         </Text>
+    //       </>
+    //     }
+    //     featurePoints={[
+    //       <>
+    //         Built with our{" "}
+    //         <Link
+    //           fontWeight="500"
+    //           isExternal
+    //           href="https://portal.thirdweb.com/react"
+    //           color="blue.300"
+    //         >
+    //           React SDK
+    //         </Link>
+    //         .
+    //       </>,
+    //       <>Uses Next.js, TypeScript, and CSS Modules.</>,
+    //       <>
+    //         Display all NFTs from your collection using the{" "}
+    //         <Link
+    //           fontWeight="500"
+    //           isExternal
+    //           href="https://portal.thirdweb.com/react/react.thirdwebnftmedia"
+    //           color="blue.300"
+    //         >
+    //           NFT Media Renderer
+    //         </Link>{" "}
+    //         UI component.
+    //       </>,
+    //       <>
+    //         Allow users to buy, sell and make offers on NFTs in your collection.
+    //       </>,
+    //       <>Supports both direct listings and english auction sales.</>,
+    //       <>
+    //         You control the platform fees of each sale made on the smart
+    //         contract.
+    //       </>,
+    //       <>Compatible with all EVM chains.</>,
+    //     ]}
+    //     runningLocally={
+    //       <div>
+    //         Deploy a new{" "}
+    //         <Link
+    //           href="https://thirdweb.com/thirdweb.eth/MarketplaceV3"
+    //           isExternal
+    //           color="blue.300"
+    //           fontWeight="500"
+    //         >
+    //           Marketplace V3
+    //         </Link>{" "}
+    //         smart contract using the{" "}
+    //         <Link
+    //           href="https://thirdweb.com/dashboard"
+    //           isExternal
+    //           color="blue.300"
+    //           fontWeight="500"
+    //         >
+    //           dashboard
+    //         </Link>
+    //         .
+    //         <br />
+    //         <br />
+    //         Configure your smart contract address and chain name in the{" "}
+    //         <Link
+    //           href="https://github.com/thirdweb-example/marketplace-v3/blob/main/const/contractAddresses.ts"
+    //           isExternal
+    //           color="blue.300"
+    //           fontWeight="500"
+    //         >
+    //           const/contractAddresses.ts
+    //         </Link>{" "}
+    //         file.
+    //         <br />
+    //         <br />
+    //         Run the application from the command line:
+    //         <CodeBlock text={"npm run dev"} />
+    //         This will make the application available to preview at{" "}
+    //         <Link
+    //           href="http://localhost:3000"
+    //           isExternal
+    //           color="blue.300"
+    //           fontWeight="500"
+    //         >
+    //           http://localhost:3000
+    //         </Link>
+    //         .
+    //       </div>
+    //     }
+    //   />
+    // ),
     "nft-gallery": (
       <TemplateContents
         overview={
