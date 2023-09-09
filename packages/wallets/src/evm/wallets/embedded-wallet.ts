@@ -7,8 +7,10 @@ import { walletIds } from "../constants/walletIds";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
-export type ThirdwebWalletOptions =
+export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
+
+export type { EmbeddedWalletAdditionalOptions } from "../connectors/embedded-wallet/types";
 
 export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletAdditionalOptions,
@@ -31,7 +33,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   chain: EmbeddedWalletAdditionalOptions["chain"];
 
-  constructor(options: ThirdwebWalletOptions) {
+  constructor(options: EmbeddedWalletOptions) {
     super(EmbeddedWallet.id, {
       ...options,
     });

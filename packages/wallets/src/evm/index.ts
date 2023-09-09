@@ -27,6 +27,7 @@ export { AbstractClientWallet } from "./wallets/base";
 export type { WalletOptions } from "./wallets/base";
 export * from "./wallets/blocto";
 export * from "./wallets/coinbase-wallet";
+export * from "./wallets/embedded-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/frame";
 export * from "./wallets/injected";
