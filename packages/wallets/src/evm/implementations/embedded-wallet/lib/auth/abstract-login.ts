@@ -9,10 +9,10 @@ import type {
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 type LoginQuerierTypes = {
-  loginWithModal: undefined | { email: string };
+  loginWithThirdwebModal: undefined | { email: string };
   loginWithGoogle: undefined;
-  sendEmailLoginOtp: { email: string };
-  verifyEmailLoginOtp: {
+  sendThirdwebEmailLoginOtp: { email: string };
+  verifyThirdwebEmailLoginOtp: {
     email: string;
     otp: string;
   };
@@ -55,16 +55,16 @@ export abstract class AbstractLogin<
   }
 
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
-  abstract loginWithOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
+  abstract loginWithEmailOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
 
   abstract loginWithGoogle(): Promise<AuthLoginReturnType>;
 
   async sendEmailLoginOtp({
     email,
-  }: LoginQuerierTypes["sendEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
+  }: LoginQuerierTypes["sendThirdwebEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
-      procedureName: "sendEmailLoginOtp",
+      procedureName: "sendThirdwebEmailLoginOtp",
       params: { email },
     });
     return result;

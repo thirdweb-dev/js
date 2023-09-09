@@ -19,20 +19,20 @@ export class BaseLogin extends AbstractLogin<
   override async loginWithModal(): Promise<AuthLoginReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithModal",
+      procedureName: "loginWithThirdwebModal",
       params: undefined,
       showIframe: true,
     });
     return this.postLogin(result);
   }
-  override async loginWithOtp({
+  override async loginWithEmailOtp({
     email,
   }: {
     email: string;
   }): Promise<AuthLoginReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithModal",
+      procedureName: "loginWithThirdwebModal",
       params: { email },
       showIframe: true,
     });
@@ -113,7 +113,7 @@ export class BaseLogin extends AbstractLogin<
     otp: string;
   }): Promise<AuthLoginReturnType> {
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "verifyEmailLoginOtp",
+      procedureName: "verifyThirdwebEmailLoginOtp",
       params: { email, otp },
     });
     return this.postLogin(result);
