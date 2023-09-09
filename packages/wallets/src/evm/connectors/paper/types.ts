@@ -8,19 +8,13 @@ type PaperAdvanceOptions = {
   recoveryShareManagement?: "USER_MANAGED" | "AWS_MANAGED";
 };
 
-export type PaperWalletAdditionalOptions =
-  | {
-      chain: Pick<Chain, "chainId" | "rpc">;
-      advancedOptions?: PaperAdvanceOptions;
-      styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
-      paperClientId: string;
-    }
-  | {
-      chain: Pick<Chain, "chainId" | "rpc">;
-      advancedOptions?: PaperAdvanceOptions;
-      styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
-      clientId: string;
-    };
+export type PaperWalletAdditionalOptions = {
+  chain: Pick<Chain, "chainId" | "rpc">;
+  advancedOptions?: PaperAdvanceOptions;
+  styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
+  paperClientId?: string;
+  clientId?: string;
+};
 
 export interface PaperWalletConnectorOptions {
   clientId: string;

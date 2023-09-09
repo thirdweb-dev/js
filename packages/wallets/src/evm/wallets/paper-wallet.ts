@@ -44,7 +44,7 @@ export class PaperWallet extends AbstractClientWallet<
       if (
         (options.clientId &&
           !this.isClientIdLegacyPaper(options.clientId ?? "")) ||
-        ("paperClientId" in options &&
+        (options.paperClientId &&
           !this.isClientIdLegacyPaper(options.paperClientId))
       ) {
         throw new Error(
@@ -52,9 +52,12 @@ export class PaperWallet extends AbstractClientWallet<
         );
       }
     }
+    if (!options.clientId && !options.paperClientId) {
+      throw new Error("clientId or paperClientId is required");
+    }
 
-    this.paperClientId =
-      "paperClientId" in options ? options.paperClientId : options.clientId;
+    // cast is okay because we assert that either clientId or paperClientId is defined above
+    this.paperClientId = (options.paperClientId ?? options.clientId) as string;
     this.chain = options.chain;
   }
   private isClientIdLegacyPaper(clientId: string): boolean {
