@@ -4,13 +4,13 @@ import { AppLayout } from "components/app-layouts/app";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { ChainIcon } from "components/icons/ChainIcon";
+import { formatSnippet } from "contract-ui/tabs/code/components/code-overview";
+import { WalletsSidebar } from "core-ui/sidebar/wallets";
+import { useChainSlug } from "hooks/chains/chainSlug";
 import { PageId } from "page-id";
 import React, { useMemo, useState } from "react";
 import { Card, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-import { formatSnippet } from "contract-ui/tabs/code/components/code-overview";
-import { useChainSlug } from "hooks/chains/chainSlug";
-import { WalletsSidebar } from "core-ui/sidebar/wallets";
 
 export const WALLETS_SNIPPETS = [
   {
@@ -295,7 +295,7 @@ import { Ethereum } from "@thirdweb-dev/chains";
 
 const wallet = new PaperWallet({
   chain: Ethereum, //  chain to connect to
-  paperClientId: "PAPER_CLIENT_ID", // Paper SDK client ID
+  clientId: "YOUR_CLIENT_ID", // Your thirdweb client ID
 });
 
 wallet.connect();`,
@@ -305,7 +305,7 @@ export default function App() {
 return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      supportedWallets={[ paperWallet({ paperClientId: "PAPER_CLIENT_ID" }) ]}
+      supportedWallets={[ paperWallet() ]}
     >
       <ConnectWallet />
     </ThirdwebProvider>
