@@ -330,12 +330,12 @@
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
     },
-    "./evm/implementations/embedded-wallet": {
+    "./evm/connectors/embedded-wallet/implementations": {
       "module": {
-        "browser": "./evm/implementations/embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-embedded-wallet.browser.esm.js",
-        "default": "./evm/implementations/embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-embedded-wallet.esm.js"
+        "browser": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet-implementations.browser.esm.js",
+        "default": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet-implementations.esm.js"
       },
-      "default": "./evm/implementations/embedded-wallet/dist/thirdweb-dev-wallets-evm-implementations-embedded-wallet.cjs.js"
+      "default": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet-implementations.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -355,8 +355,8 @@
       "index.ts",
       "evm/index.ts",
       "evm/connectors/*/index.ts",
+      "evm/connectors/embedded-wallet/implementations/index.ts",
       "evm/wallets/**",
-      "evm/implementations/embedded-wallet/index.ts",
       "solana/index.ts",
       "solana/wallets/**"
     ],

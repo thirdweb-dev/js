@@ -3,13 +3,14 @@ import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
 import { normalizeChainId } from "../../../lib/wagmi-core";
 import { walletIds } from "../../constants/walletIds";
+import { Connector } from "../../interfaces/connector";
+
 import {
   AuthLoginReturnType,
   EmbeddedWalletSdk,
   InitializedUser,
   UserStatus,
-} from "../../implementations/embedded-wallet";
-import { Connector } from "../../interfaces/connector";
+} from "./implementations";
 import {
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,

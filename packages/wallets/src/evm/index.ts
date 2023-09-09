@@ -51,4 +51,4 @@ export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRain
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
 
 // ThirdwebEmbeddedWalletSdk
-export * from "./implementations/embedded-wallet";
+export * from "./connectors/embedded-wallet/implementations";

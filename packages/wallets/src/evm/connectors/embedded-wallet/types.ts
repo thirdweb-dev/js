@@ -1,5 +1,5 @@
 import type { Chain } from "@thirdweb-dev/chains";
-import type { EmbeddedWalletConstructorType } from "../../implementations/embedded-wallet/interfaces/embedded-wallets/embedded-wallets";
+import { EmbeddedWalletConstructorType } from "./implementations";
 
 export type EmbeddedWalletAdditionalOptions = {
   chain: Pick<Chain, "chainId" | "rpc">;
