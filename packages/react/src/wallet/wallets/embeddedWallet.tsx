@@ -16,8 +16,7 @@ import { InputSelectionUI } from "./InputSelectionUI";
 
 type EmbeddedWalletConfig = Omit<
   EmbeddedWalletAdditionalOptions,
-  "chain"|
-  "clientId"
+  "chain" | "clientId"
 >;
 
 export const embeddedWallet = (
@@ -27,7 +26,14 @@ export const embeddedWallet = (
     id: EmbeddedWallet.id,
     meta: EmbeddedWallet.meta,
     create(options: WalletOptions) {
-      return new EmbeddedWallet({ ...options, ...config });
+      if (!options.clientId) {
+        throw new Error("clientId is required");
+      }
+      return new EmbeddedWallet({
+        ...options,
+        ...config,
+        clientId: options.clientId,
+      });
     },
     selectUI: EmbeddedWalletSelectionUI,
     connectUI: EmbeddedWalletConnectionUI,
