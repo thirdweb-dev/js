@@ -14,7 +14,11 @@ import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
 import { InputSelectionUI } from "./InputSelectionUI";
 
-type EmbeddedWalletConfig = Omit<EmbeddedWalletAdditionalOptions, "chain">;
+type EmbeddedWalletConfig = Omit<
+  EmbeddedWalletAdditionalOptions,
+  "chain"|
+  "clientId"
+>;
 
 export const embeddedWallet = (
   config?: EmbeddedWalletConfig,

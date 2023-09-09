@@ -3,6 +3,7 @@ import type { EmbeddedWalletConstructorType } from "../../implementations/embedd
 
 export type EmbeddedWalletAdditionalOptions = {
   chain: Pick<Chain, "chainId" | "rpc">;
+  clientId: string;
   styles?: EmbeddedWalletConstructorType["styles"];
 };
 
