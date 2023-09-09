@@ -17,7 +17,7 @@ import { InputSelectionUI } from "./InputSelectionUI";
 type EmbeddedWalletConfig = Omit<EmbeddedWalletAdditionalOptions, "chain">;
 
 export const embeddedWallet = (
-  config: EmbeddedWalletConfig,
+  config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
   return {
     id: EmbeddedWallet.id,
