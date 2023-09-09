@@ -16,7 +16,7 @@ import {
 import { ThemeProvider } from "@emotion/react";
 import { Theme, darkTheme, lightTheme } from "../../../design-system";
 import { useCallback, useEffect, useContext } from "react";
-import { reservedScreens, modalMaxHeight } from "../constants";
+import { modalMaxHeight, reservedScreens } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
 import { FlexScrollContainer } from "../../../components/basic";

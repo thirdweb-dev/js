@@ -18,6 +18,7 @@ import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { DynamicHeight } from "./DynamicHeight";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
@@ -51,7 +52,13 @@ export const Modal: React.FC<{
                   : modalMaxWidthWide,
             }}
           >
-            {props.children}
+            {props.size === "compact" ? (
+              <DynamicHeight maxHeight={modalMaxHeight}>
+                {props.children}{" "}
+              </DynamicHeight>
+            ) : (
+              props.children
+            )}
 
             {/* Close Icon */}
             {!props.hideCloseIcon && (

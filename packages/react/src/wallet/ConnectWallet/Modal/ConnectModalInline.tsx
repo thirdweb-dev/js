@@ -21,6 +21,7 @@ import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useWallets } from "@thirdweb-dev/react-core";
+import { DynamicHeight } from "../../../components/DynamicHeight";
 
 export const ConnectModalInline = (props: {
   theme: "light" | "dark";
@@ -32,6 +33,29 @@ export const ConnectModalInline = (props: {
   const walletConfigs = useWallets();
   const modalSize =
     isMobile() || walletConfigs.length === 1 ? "compact" : props.modalSize;
+
+  const content = (
+    <>
+      <ConnectModalContent
+        initialScreen={initialScreen}
+        screen={screen}
+        setScreen={setScreen}
+      />
+
+      {/* close icon */}
+      <CrossContainer>
+        <IconButton variant="secondary" type="button" aria-label="Close">
+          <Cross2Icon
+            style={{
+              width: iconSize.md,
+              height: iconSize.md,
+              color: "inherit",
+            }}
+          />
+        </IconButton>
+      </CrossContainer>
+    </>
+  );
 
   return (
     <WalletUIStatesProvider
@@ -50,24 +74,11 @@ export const ConnectModalInline = (props: {
                 : modalMaxWidthWide,
           }}
         >
-          <ConnectModalContent
-            initialScreen={initialScreen}
-            screen={screen}
-            setScreen={setScreen}
-          />
-
-          {/* close icon */}
-          <CrossContainer>
-            <IconButton variant="secondary" type="button" aria-label="Close">
-              <Cross2Icon
-                style={{
-                  width: iconSize.md,
-                  height: iconSize.md,
-                  color: "inherit",
-                }}
-              />
-            </IconButton>
-          </CrossContainer>
+          {props.modalSize === "compact" ? (
+            <DynamicHeight> {content} </DynamicHeight>
+          ) : (
+            content
+          )}
         </ConnectModalInlineContainer>
       </ThemeProvider>
     </WalletUIStatesProvider>
