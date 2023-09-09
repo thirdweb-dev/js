@@ -114,7 +114,7 @@ export const ConnectModalContent = (props: {
           style={{
             height: "100%",
             display: "grid",
-            gridTemplateColumns: "300px 1fr",
+            gridTemplateColumns: "310px 1fr",
           }}
         >
           <LeftContainer> {walletList} </LeftContainer>

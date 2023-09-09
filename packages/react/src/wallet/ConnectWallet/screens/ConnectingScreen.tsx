@@ -1,10 +1,7 @@
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { Container, ModalHeader, Separator } from "../../../components/basic";
+import { ModalDescription } from "../../../components/modalElements";
 import {
   Theme,
   fontSize,
@@ -18,6 +15,7 @@ import styled from "@emotion/styled";
 import { Button, IconButton } from "../../../components/buttons";
 import { keyframes } from "@emotion/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Text } from "../../../components/text";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
@@ -32,65 +30,56 @@ export const ConnectingScreen: React.FC<{
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   return (
-    <ScreenContainer
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <ModalHeader
-        title={props.walletName}
-        onBack={props.hideBackButton ? undefined : props.onBack}
-      />
+    <Container animate="fadein" fullHeight flex="column">
+      <Container p="lg">
+        <ModalHeader
+          title={props.walletName}
+          onBack={props.hideBackButton ? undefined : props.onBack}
+        />
+      </Container>
 
-      {modalConfig.modalSize === "compact" && <Spacer y="xxl" />}
+      <Spacer y="lg" />
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          flex: 1,
-        }}
-      >
-        <div>
-          <SpinningGradientContainer data-error={props.errorConnecting}>
-            <div
-              data-container
-              style={{
-                position: "relative",
-              }}
-            >
-              <div data-gradient data-error={props.errorConnecting}>
-                <div data-blocker>
-                  <Img src={props.walletIconURL} width={"80"} height={"80"} />
-                </div>
-              </div>
-
-              {props.errorConnecting && (
-                <RetryButton
-                  variant="secondary"
-                  onClick={props.onRetry}
-                  aria-label="retry"
-                >
-                  <ReloadIcon width={iconSize.md} height={iconSize.md} />
-                </RetryButton>
-              )}
-            </div>
-          </SpinningGradientContainer>
-          <Spacer y="xxl" />
-          <ModalTitle
+      <Container flex="column" center="both" expand p="lg" relative>
+        <LogoContainer data-error={props.errorConnecting}>
+          <div
+            data-container
             style={{
-              textAlign: "center",
+              position: "relative",
             }}
           >
-            {props.errorConnecting
-              ? "Request Cancelled"
-              : "Connecting your wallet"}
-          </ModalTitle>
-          <Spacer y="md" />
+            <div data-gradient data-error={props.errorConnecting}>
+              <div data-blocker>
+                <Img src={props.walletIconURL} width={"80"} height={"80"} />
+              </div>
+            </div>
+
+            {props.errorConnecting && (
+              <RetryButton
+                variant="secondary"
+                onClick={props.onRetry}
+                aria-label="retry"
+              >
+                <ReloadIcon width={iconSize.md} height={iconSize.md} />
+              </RetryButton>
+            )}
+          </div>
+        </LogoContainer>
+
+        <Spacer y="xxl" />
+
+        <Container
+          animate="fadein"
+          style={{
+            animationDuration: "200ms",
+          }}
+        >
+          <Text center color="neutral" size="lg">
+            {props.errorConnecting ? "Connection Failed" : "Connecting"}
+          </Text>
+
+          <Spacer y="lg" />
+
           {!props.errorConnecting ? (
             <Desc
               style={{
@@ -107,28 +96,27 @@ export const ConnectingScreen: React.FC<{
                 textAlign: "center",
               }}
             >
-              {" "}
-              You cancelled the request <br /> click on button above to try
-              again
+              click on button above to try again
             </Desc>
           )}
-          <Spacer y="xl" />
-          <Flex justifyContent="center">
-            <Button
-              variant="link"
-              onClick={props.onGetStarted}
-              // target="_blank"
-              // href={props.supportLink}
-              style={{
-                textAlign: "center",
-              }}
-            >
-              Don{`'`}t have {props.walletName}?
-            </Button>
-          </Flex>
-        </div>
-      </div>
-    </ScreenContainer>
+        </Container>
+      </Container>
+
+      <Spacer y="lg" />
+      {modalConfig.modalSize === "compact" && <Separator />}
+
+      <Container flex="row" center="x" p="lg">
+        <Button
+          variant="link"
+          onClick={props.onGetStarted}
+          style={{
+            textAlign: "center",
+          }}
+        >
+          Don{`'`}t have {props.walletName}?
+        </Button>
+      </Container>
+    </Container>
   );
 };
 
@@ -142,7 +130,7 @@ const retryFadeIn = keyframes`
 const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
   animation: ${retryFadeIn} 0.3s ease;
   position: absolute;
-  background: ${(p) => p.theme.bg.danger};
+  background: ${(p) => p.theme.bg.elevatedHover};
   color: ${(p) => p.theme.text.neutral};
   bottom: 5px;
   right: 5px;
@@ -150,7 +138,7 @@ const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
   z-index: 100;
   padding: ${spacing.xs};
   border-radius: 50%;
-  transition: transform 200ms ease;
+  transition: all 200ms ease;
 
   &:hover {
     background: ${(p) => p.theme.bg.danger};
@@ -193,19 +181,42 @@ const shakeErrorAnimation = keyframes`
   }
 `;
 
-const SpinningGradientContainer = styled.div<{ theme?: Theme }>`
+const scaleFadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(80px) scale(0.2) ;
+  }
+`;
+
+const pulseAnimation = keyframes`
+  from {
+    transform: translateY(5px);
+  }
+  to {
+    transform: translateY(-5px);
+  }
+`;
+
+const LogoContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   justify-content: center;
+  animation: ${scaleFadeIn} 400ms cubic-bezier(0.15, 1.15, 0.6, 1);
+  position: relative;
+  border-radius: ${radius.xl};
 
   &[data-error="true"] [data-container] {
     animation: ${shakeErrorAnimation} 0.25s linear;
   }
 
   [data-gradient] {
-    padding: 3px; /* width of ring */
+    padding: 2px; /* width of ring */
     position: relative;
     overflow: hidden;
     border-radius: ${radius.xl};
+  }
+
+  [data-gradient]:not([data-error="true"]) {
+    animation: ${pulseAnimation} 1.2s ease infinite alternate;
   }
 
   [data-gradient]::before {
@@ -228,6 +239,7 @@ const SpinningGradientContainer = styled.div<{ theme?: Theme }>`
   [data-gradient][data-error="true"]::before {
     animation: none;
     background: ${(p) => p.theme.bg.danger};
+    box-shadow: 0 0 10px ${(p) => p.theme.bg.danger};
   }
 
   [data-blocker] {

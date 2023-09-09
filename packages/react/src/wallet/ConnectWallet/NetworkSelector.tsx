@@ -38,7 +38,7 @@ import { Button } from "../../components/buttons";
 import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
 import { Flex, ScreenContainer } from "../../components/basic";
-import { SecondaryText } from "../../components/text";
+import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 
 type RenderChain = React.FC<{
@@ -433,7 +433,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
         }}
       >
         {/* Don't put a spinner here - it's gonna freeze */}
-        <SecondaryText>Loading</SecondaryText>
+        <Text>Loading</Text>
       </Flex>
     );
   }

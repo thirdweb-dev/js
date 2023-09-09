@@ -1,7 +1,6 @@
 import { fontSize, radius, spacing, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
-// for rendering a conventional button
 export const Button = styled.button<{
   variant: "inverted" | "secondary" | "link" | "danger" | "accent" | "outline";
   theme?: Theme;
@@ -95,7 +94,6 @@ export const Button = styled.button<{
   }
 `;
 
-// for rendering a button with an icon
 export const IconButton = styled.button<{
   variant: "neutral" | "secondary";
   theme?: Theme;
@@ -125,7 +123,6 @@ export const IconButton = styled.button<{
   }
 `;
 
-// for rendering a button next to input
 export const InputButton = styled.button<{ theme?: Theme }>`
   all: unset;
   display: flex;

@@ -8,7 +8,7 @@ import {
 import { fontSize, iconSize, spacing, Theme } from "../../../design-system";
 import { GetStartedScreen } from "./GetStartedScreen";
 import styled from "@emotion/styled";
-import { SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
@@ -48,17 +48,7 @@ export const GetStartedWithWallets: React.FC<{
               alignItems: "center",
             }}
           >
-            <SecondaryText
-              style={
-                isCompact
-                  ? {
-                      fontSize: fontSize.sm,
-                    }
-                  : undefined
-              }
-            >
-              We recommend
-            </SecondaryText>
+            <Text size={isCompact ? "sm" : "md"}>We recommend</Text>
             <div
               style={{
                 display: "flex",

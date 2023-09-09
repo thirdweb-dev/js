@@ -16,7 +16,7 @@ const darkColors = {
 const lightColors = {
   base: mauve.mauve1,
   baseHover: mauve.mauve2,
-  elevated: mauve.mauve5,
+  elevated: mauve.mauve4,
   elevatedHover: mauve.mauve6,
   highlighted: mauve.mauve7,
   inverted: mauve.mauve12,

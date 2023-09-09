@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { wait } from "../../../utils/wait";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
@@ -21,6 +22,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
       connectPrompted.current = true;
       setErrorConnecting(false);
       setScreen("connecting");
+      await wait(1000);
       await connect(walletConfig);
       close();
     } catch (e) {

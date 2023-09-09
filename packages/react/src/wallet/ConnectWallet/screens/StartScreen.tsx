@@ -1,58 +1,43 @@
 import styled from "@emotion/styled";
-import {
-  ScreenContainer,
-  Flex,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { ScreenBottomContainer, Container } from "../../../components/basic";
 import { HelperLink } from "../../../components/modalElements";
 import { Spacer } from "../../../components/Spacer";
-import { NeutralText, SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { fontSize, Theme } from "../../../design-system";
 import { EthIcon } from "../icons/EthIcon";
-import { flyingAnimation } from "../../../components/animations";
 
 export function StartScreen() {
   return (
     <>
-      <ScreenContainer
+      <Container
+        fullHeight
+        flex="column"
+        center="both"
         style={{
-          height: "100%",
           minHeight: "300px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
-        <Flex
-          justifyContent="center"
-          style={{
-            position: "relative",
-            animation: `${flyingAnimation} 1s ease inifinite`,
-          }}
-        >
+        <Container flex="row" center="x">
           <EthIcon size="150" />
-        </Flex>
+        </Container>
         <Spacer y="xxl" />
-        <NeutralText
-          style={{
-            textAlign: "center",
-            display: "block",
-            fontWeight: 500,
-          }}
-        >
+
+        <Text center color="neutral" weight={500}>
           Your gateway to the decentralized world
-        </NeutralText>
+        </Text>
+
         <Spacer y="md" />
-        <SecondaryText
+
+        <Text
+          color="secondary"
           style={{
             textAlign: "center",
             display: "block",
           }}
         >
           Connect a wallet to get started
-        </SecondaryText>
-      </ScreenContainer>
+        </Text>
+      </Container>
 
       <ScreenBottomContainer
         style={{

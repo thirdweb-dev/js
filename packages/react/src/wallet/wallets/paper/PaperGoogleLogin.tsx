@@ -8,13 +8,9 @@ import {
 } from "../../../components/basic";
 import { Spinner } from "../../../components/Spinner";
 import { PaperWallet } from "@thirdweb-dev/wallets";
-import {
-  DangerText,
-  NeutralText,
-  SecondaryText,
-} from "../../../components/text";
+import { Text } from "../../../components/text";
 import { Spacer } from "../../../components/Spacer";
-import { fontSize, iconSize } from "../../../design-system";
+import { iconSize } from "../../../design-system";
 import { Button } from "../../../components/buttons";
 import { HelperLink, ModalTitle } from "../../../components/modalElements";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
@@ -82,14 +78,15 @@ export const PaperGoogleLogin = ({
         >
           {status === "connecting" && (
             <>
-              <NeutralText
+              <Text
+                color="neutral"
+                multiline
                 style={{
-                  lineHeight: 1.5,
                   maxWidth: "250px",
                 }}
               >
                 Select your Google account in the pop-up
-              </NeutralText>
+              </Text>
               <Spacer y="xl" />
               <Flex justifyContent="center">
                 <Spinner size="lg" color="accent" />
@@ -100,7 +97,7 @@ export const PaperGoogleLogin = ({
           )}
           {status === "failed" && (
             <>
-              <DangerText>Failed to sign in</DangerText>
+              <Text color="danger">Failed to sign in</Text>
               <Spacer y="lg" />
               <Button variant="inverted" onClick={googleLogin}>
                 {" "}
@@ -118,48 +115,32 @@ export const PaperGoogleLogin = ({
             textAlign: "center",
           }}
         >
-          <SecondaryText
-            style={{
-              lineHeight: 1.5,
-              fontSize: fontSize.sm,
-            }}
-          >
+          <Text size="sm" multiline>
             Make sure you have enabled <br /> pop-ups for this site
-          </SecondaryText>
+          </Text>
 
           <Spacer y="sm" />
 
-          <SecondaryText
-            style={{
-              lineHeight: 1.5,
-              fontSize: fontSize.sm,
-            }}
-          >
+          <Text size="sm" multiline>
             The option to enable pop-ups can <br /> be found in {`browser's`}{" "}
             address bar
-          </SecondaryText>
+          </Text>
 
           <Spacer y="sm" />
 
-          <SecondaryText
-            style={{
-              lineHeight: 1.5,
-              fontSize: fontSize.sm,
-            }}
-          >
+          <Text size="sm" multiline>
             Once you have enabled pop-ups, <br />
-            click on{" "}
+            click on
             <HelperLink
               onClick={googleLogin}
               style={{
                 display: "inline",
               }}
             >
-              {" "}
               Retry
-            </HelperLink>{" "}
+            </HelperLink>
             to try again.
-          </SecondaryText>
+          </Text>
         </div>
       </ScreenBottomContainer>
     </>

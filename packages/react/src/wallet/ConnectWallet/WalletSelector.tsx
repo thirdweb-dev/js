@@ -1,21 +1,15 @@
 import { useContext, useState } from "react";
 import { Img } from "../../components/Img";
 import {
-  ScreenBottomContainer,
   Flex,
-  ScreenContainer,
   noScrollBar,
   ModalHeader,
+  Container,
+  Separator,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
-import { HelperLink, ModalTitle } from "../../components/modalElements";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-  Theme,
-} from "../../design-system";
+import { ModalTitle } from "../../components/modalElements";
+import { iconSize, radius, spacing, Theme } from "../../design-system";
 import styled from "@emotion/styled";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
@@ -24,8 +18,7 @@ import {
   SetModalConfigCtx,
 } from "../../evm/providers/wallet-ui-states-provider";
 import { TWIcon } from "./icons/twIcon";
-import { SecondaryText } from "../../components/text";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { Link, Text } from "../../components/text";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 
@@ -63,10 +56,7 @@ export const WalletSelector: React.FC<{
   const showGroupsUI =
     isCompact && socialWallets.length >= 1 && eoaWallets.length >= 2;
 
-  // show Bottom container if
-  // not showing the "groups UI"
-  const showBottomContainer =
-    (!showGroupsUI && localWalletConfig) || showNewToWallets;
+  const showFooter = (!showGroupsUI && localWalletConfig) || showNewToWallets;
 
   const continueAsGuest = localWalletConfig && (
     <Flex justifyContent="center">
@@ -99,8 +89,9 @@ export const WalletSelector: React.FC<{
   );
 
   return (
-    <>
-      <ScreenContainer>
+    <Container scrollY flex="column" animate="fadein">
+      {/* Header */}
+      <Container p="lg">
         {isWalletGroupExpanded ? (
           <ModalHeader
             title={twTitle}
@@ -111,13 +102,10 @@ export const WalletSelector: React.FC<{
         ) : (
           twTitle
         )}
-      </ScreenContainer>
+      </Container>
 
-      <ScrollableContainer
-        style={{
-          flex: 1,
-        }}
-      >
+      {/* Body */}
+      <Container expand scrollY px="md">
         {showGroupsUI ? (
           <>
             {isWalletGroupExpanded ? (
@@ -126,7 +114,7 @@ export const WalletSelector: React.FC<{
                 selectWallet={props.selectWallet}
               />
             ) : (
-              <>
+              <Container px="xs">
                 <WalletSelection
                   walletConfigs={socialWallets}
                   selectWallet={props.selectWallet}
@@ -174,7 +162,7 @@ export const WalletSelector: React.FC<{
                 ) : (
                   <Spacer y="lg" />
                 )}
-              </>
+              </Container>
             )}
           </>
         ) : (
@@ -183,53 +171,35 @@ export const WalletSelector: React.FC<{
             selectWallet={props.selectWallet}
           />
         )}
-      </ScrollableContainer>
+      </Container>
 
-      {showBottomContainer && (
-        <ScreenBottomContainer
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: spacing.lg,
-          }}
-        >
-          {showNewToWallets && (
-            <Flex justifyContent="space-between">
-              <SecondaryText
-                style={{
-                  fontSize: fontSize.sm,
-                }}
-              >
-                {" "}
-                New to wallets?
-              </SecondaryText>
-              <HelperLink
-                target="_blank"
-                href="https://ethereum.org/en/wallets/find-wallet/"
-                style={{
-                  lineHeight: 1,
-                  fontSize: fontSize.sm,
-                }}
-              >
-                Get started
-              </HelperLink>
-            </Flex>
-          )}
+      {/* Footer */}
+      {showFooter && (
+        <>
+          <Separator />
+          <Container flex="column" gap="lg" p="lg">
+            {showNewToWallets && (
+              <Flex justifyContent="space-between">
+                <Text color="secondary" size="sm">
+                  New to wallets?
+                </Text>
+                <Link
+                  small
+                  target="_blank"
+                  href="https://ethereum.org/en/wallets/find-wallet/"
+                >
+                  Get started
+                </Link>
+              </Flex>
+            )}
 
-          {!showGroupsUI && continueAsGuest}
-        </ScreenBottomContainer>
+            {!showGroupsUI && continueAsGuest}
+          </Container>
+        </>
       )}
-    </>
+    </Container>
   );
 };
-
-const ScrollableContainer = /* @__PURE__ */ styled(ScreenContainer)`
-  padding-bottom: 0;
-  padding-top: 2px;
-  /* flex: 1; */
-  overflow: auto;
-  ${noScrollBar};
-`;
 
 export const WalletSelection: React.FC<{
   walletConfigs: WalletConfig[];
@@ -292,36 +262,19 @@ export function WalletEntryButton(props: {
       />
       <WalletNameContainer>
         <Flex flexDirection="column" gap="xxs">
-          <WalletName>{walletConfig.meta.name}</WalletName>
+          <Text color="neutral" weight={500}>
+            {walletConfig.meta.name}
+          </Text>
           {isRecommended && (
-            <SecondaryText
-              style={{
-                fontSize: fontSize.sm,
-                fontWeight: 500,
-              }}
-            >
+            <Text size="sm" color="accent">
               Recommended
-            </SecondaryText>
+            </Text>
           )}
 
           {!isRecommended &&
             walletConfig.isInstalled &&
-            walletConfig.isInstalled() && (
-              <SecondaryText
-                style={{
-                  fontSize: fontSize.sm,
-                  fontWeight: 500,
-                }}
-              >
-                Installed
-              </SecondaryText>
-            )}
+            walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
         </Flex>
-        <ChevronRightIcon
-          data-chveron
-          width={iconSize.sm}
-          height={iconSize.sm}
-        />
       </WalletNameContainer>
     </WalletButton>
   );
@@ -339,7 +292,7 @@ const WalletList = styled.ul<{ theme?: Theme }>`
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  gap: ${spacing.md};
+  gap: 2px;
   box-sizing: border-box;
   overflow-y: auto;
   flex: 1;
@@ -362,25 +315,19 @@ const WalletButton = styled.button<{ theme?: Theme }>`
   box-sizing: border-box;
   width: 100%;
   color: ${(p) => p.theme.text.secondary};
-  border-radius: ${radius.md};
   position: relative;
+  border-radius: ${radius.md};
+  padding: ${spacing.xs} ${spacing.xs};
+  transition: background 300ms ease;
 
-  & svg[data-chveron] {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 200ms ease;
+  &:hover {
+    background-color: ${(p) => p.theme.bg.elevated};
   }
 
-  &:hover svg[data-chveron] {
-    opacity: 1;
-    transform: translateX(0px);
+  transition: transform 200ms ease;
+  &:hover {
+    transform: scale(1.01);
   }
-`;
-
-const WalletName = styled.span<{ theme?: Theme }>`
-  font-size: ${fontSize.md};
-  font-weight: 500;
-  color: ${(p) => p.theme.text.neutral};
 `;
 
 function sortWalletConfigs(walletConfigs: WalletConfig[]) {

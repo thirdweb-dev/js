@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { CoinbaseScan } from "./CoinbaseScan";
 import type { CoinbaseWallet } from "@thirdweb-dev/wallets";
+import { wait } from "../../../utils/wait";
 
 export const CoinbaseConnectUI = ({
   walletConfig,
@@ -25,6 +26,7 @@ export const CoinbaseConnectUI = ({
     try {
       setErrorConnecting(false);
       connectPrompted.current = true;
+      await wait(1000);
       setScreen("connecting");
       await connect(walletConfig);
       close();

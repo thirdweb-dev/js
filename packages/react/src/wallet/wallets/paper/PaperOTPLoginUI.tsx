@@ -13,11 +13,7 @@ import {
 } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
-import {
-  SecondaryText,
-  NeutralText,
-  DangerText,
-} from "../../../components/text";
+import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
 import styled from "@emotion/styled";
 import { RecoveryShareManagement } from "./types";
@@ -140,9 +136,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
           }}
         >
           <Spacer y="xxl" />
-          <SecondaryText>Enter the OTP sent to</SecondaryText>
+          <Text>Enter the OTP sent to</Text>
           <Spacer y="sm" />
-          <NeutralText>{email}</NeutralText>
+          <Text color="neutral">{email}</Text>
           <Spacer y="xl" />
         </div>
 
@@ -164,20 +160,20 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             }}
           >
             <Spacer y="xl" />
-            <Line />
+            <Line color="elevated" height={2} />
             <Spacer y="xl" />
 
-            <NeutralText>New device detected</NeutralText>
+            <Text color="neutral">New device detected</Text>
             <Spacer y="sm" />
-            <SecondaryText
+            <Text
+              multiline
               style={{
-                lineHeight: "1.5",
                 maxWidth: "350px",
               }}
             >
               Enter the recovery code emailed to you <br /> when you first
               signed up
-            </SecondaryText>
+            </Text>
 
             <Spacer y="md" />
             <Input
@@ -200,13 +196,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
           <FadeIn>
             <Spacer y="sm" />
             <Flex justifyContent="center">
-              <DangerText
-                style={{
-                  fontSize: fontSize.sm,
-                }}
-              >
+              <Text size="sm" color="danger">
                 Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
-              </DangerText>
+              </Text>
             </Flex>
           </FadeIn>
         )}
@@ -238,16 +230,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
         {sentEmailInfo === "error" && (
           <>
-            <DangerText
-              style={{
-                fontSize: fontSize.sm,
-                textAlign: "center",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
+            <Text size="sm" center color="danger">
               Failed to send OTP
-            </DangerText>
+            </Text>
             <Spacer y="md" />
           </>
         )}
@@ -261,13 +246,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
               textAlign: "center",
             }}
           >
-            <SecondaryText
-              style={{
-                fontSize: fontSize.sm,
-              }}
-            >
-              Sending OTP
-            </SecondaryText>
+            <Text size="sm">Sending OTP</Text>
             <Spinner size="xs" color="secondary" />
           </Flex>
         )}

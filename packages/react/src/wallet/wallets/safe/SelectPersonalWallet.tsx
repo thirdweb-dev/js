@@ -2,18 +2,16 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
 // import { Steps } from "../../../components/Steps";
 import {
+  Container,
   ModalHeader,
   ScreenBottomContainer,
-  ScreenContainer,
 } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { HelperLink } from "../../../components/modalElements";
-import { fontSize } from "../../../design-system";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { SafeWalletConfig } from "./types";
 import { useEffect, useRef } from "react";
-import { SecondaryText } from "../../../components/text";
+import { Link, Text } from "../../../components/text";
 
 export const SelectpersonalWallet: React.FC<{
   onBack: () => void;
@@ -48,11 +46,12 @@ export const SelectpersonalWallet: React.FC<{
   }
 
   return (
-    <>
-      <ScreenContainer
+    <Container flex="column" scrollY animate="fadein">
+      {/* header */}
+      <Container
+        p="lg"
         style={{
           paddingBottom: 0,
-          flex: 1,
         }}
       >
         <ModalHeader
@@ -60,45 +59,24 @@ export const SelectpersonalWallet: React.FC<{
           onBack={props.renderBackButton ? props.onBack : undefined}
         />
 
-        <Spacer y="lg" />
+        <Spacer y="xl" />
 
-        <div
-          style={{
-            maxWidth: "290px",
-          }}
-        >
-          <SecondaryText
-            style={{
-              lineHeight: 1.5,
-            }}
-          >
-            Select a personal wallet to connect to your Safe.{" "}
-          </SecondaryText>
+        <Text multiline>Select your wallet to connect to Safe </Text>
+      </Container>
 
-          <HelperLink
-            target="_blank"
-            href="https://docs.safe.global/getting-started/readme"
-            style={{
-              fontSize: fontSize.md,
-              display: "inline",
-              lineHeight: 1.5,
-            }}
-          >
-            Learn More
-          </HelperLink>
-        </div>
+      <Spacer y="lg" />
 
-        <Spacer y="lg" />
-
+      {/* list */}
+      <Container expand px="md" scrollY>
         <WalletSelection
           maxHeight="300px"
           walletConfigs={personalWallets}
           selectWallet={props.selectWallet}
         />
-      </ScreenContainer>
+      </Container>
 
-      {guestWallet && (
-        <ScreenBottomContainer>
+      <ScreenBottomContainer>
+        {guestWallet && (
           <Button
             variant="outline"
             fullWidth
@@ -109,8 +87,16 @@ export const SelectpersonalWallet: React.FC<{
           >
             Continue as guest
           </Button>
-        </ScreenBottomContainer>
-      )}
-    </>
+        )}
+
+        <Link
+          center
+          target="_blank"
+          href="https://docs.safe.global/getting-started/readme"
+        >
+          What is a Safe?
+        </Link>
+      </ScreenBottomContainer>
+    </Container>
   );
 };

@@ -10,7 +10,7 @@ import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
 import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWalletModalHeader } from "./common";
-import { SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
@@ -141,9 +141,9 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Spacer y="sm" />
 
-      <SecondaryText>
+      <Text>
         {savedAddress === "" ? "Loading..." : shortenAddress(savedAddress)}
-      </SecondaryText>
+      </Text>
 
       <Spacer y="xl" />
 

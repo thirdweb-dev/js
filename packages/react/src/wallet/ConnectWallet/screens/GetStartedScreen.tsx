@@ -6,7 +6,7 @@ import {
   HelperLink,
   ModalDescription,
 } from "../../../components/modalElements";
-import { NeutralText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { iconSize, radius, spacing } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
@@ -192,9 +192,9 @@ const InstallScanScreen: React.FC<{
 
         {/* {props.platformIcon} */}
 
-        <NeutralText>
+        <Text color="neutral">
           Install {props.walletName} on {props.platform}
-        </NeutralText>
+        </Text>
 
         <Spacer y="lg" />
         <ModalDescription sm>

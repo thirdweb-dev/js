@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Input } from "./formElements";
-import { Flex } from "./basic";
+import { Container } from "./basic";
 import { media, fontSize, spacing } from "../design-system";
 import styled from "@emotion/styled";
 
@@ -29,7 +29,7 @@ export function OTPInput(props: {
   }, [inputToFocusIndex]);
 
   return (
-    <Flex justifyContent="center" gap="sm">
+    <Container center="x" gap="sm">
       {new Array(props.digits).fill(null).map((_, i) => {
         return (
           <OTPInputBox
@@ -111,7 +111,7 @@ export function OTPInput(props: {
           />
         );
       })}
-    </Flex>
+    </Container>
   );
 }
 

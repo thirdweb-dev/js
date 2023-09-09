@@ -9,7 +9,7 @@ export const ModalTitle = /* @__PURE__ */ styled.h2<{
   centerOnMobile?: boolean;
 }>`
   margin: 0;
-  font-weight: 600;
+  font-weight: 500;
   font-size: ${fontSize.lg};
   color: ${(p) => p.theme.text.neutral};
   line-height: 1.3;

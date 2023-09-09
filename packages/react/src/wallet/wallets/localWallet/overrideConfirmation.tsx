@@ -1,5 +1,5 @@
 import { Button } from "../../../components/buttons";
-import { SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { Spacer } from "../../../components/Spacer";
 import { LocalWalletModalHeader } from "./common";
 import { FormFooter } from "../../../components/formElements";
@@ -24,10 +24,10 @@ export const OverrideConfirmation: React.FC<{
           lineHeight: 1.5,
         }}
       >
-        <SecondaryText>
+        <Text>
           Your current wallet will be deleted if you create a new wallet. Backup
           wallet to your device before creating a new wallet
-        </SecondaryText>
+        </Text>
 
         <Spacer y="xl" />
 
