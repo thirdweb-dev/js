@@ -1,14 +1,15 @@
 import {
-  PaperWallet,
-  PaperWalletAdditionalOptions,
-} from "@thirdweb-dev/wallets";
-import {
+  ConnectUIProps,
+  SelectUIProps,
   WalletConfig,
   WalletOptions,
-  SelectUIProps,
-  ConnectUIProps,
   useConnect,
 } from "@thirdweb-dev/react-core";
+import {
+  PaperWallet,
+  PaperWalletAdditionalOptions,
+  RecoveryShareManagement,
+} from "@thirdweb-dev/wallets";
 import { useEffect, useRef } from "react";
 import { Spinner } from "../../components/Spinner";
 import { Flex } from "../../components/basic";
@@ -21,7 +22,14 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
     id: PaperWallet.id,
     meta: PaperWallet.meta,
     create(options: WalletOptions) {
-      return new PaperWallet({ ...options, ...config });
+      return new PaperWallet({
+        ...options,
+        ...config,
+        advancedOptions: {
+          recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
+          ...config.advancedOptions,
+        },
+      });
     },
     selectUI: PaperSelectionUI,
     connectUI: PaperConnectionUI,

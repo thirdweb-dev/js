@@ -1,19 +1,26 @@
-import type { Chain } from "@thirdweb-dev/chains";
 import type {
-  RecoveryShareManagement,
   PaperConstructorType,
+  RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
+import type { Chain } from "@thirdweb-dev/chains";
 
 type PaperAdvanceOptions = {
   recoveryShareManagement?: "USER_MANAGED" | "AWS_MANAGED";
 };
 
-export type PaperWalletAdditionalOptions = {
-  paperClientId: string;
-  chain: Pick<Chain, "chainId" | "rpc">;
-  advancedOptions?: PaperAdvanceOptions;
-  styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
-};
+export type PaperWalletAdditionalOptions =
+  | {
+      chain: Pick<Chain, "chainId" | "rpc">;
+      advancedOptions?: PaperAdvanceOptions;
+      styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
+      paperClientId: string;
+    }
+  | {
+      chain: Pick<Chain, "chainId" | "rpc">;
+      advancedOptions?: PaperAdvanceOptions;
+      styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
+      clientId: string;
+    };
 
 export interface PaperWalletConnectorOptions {
   clientId: string;

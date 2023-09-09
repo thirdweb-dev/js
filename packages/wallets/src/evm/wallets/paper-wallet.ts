@@ -1,11 +1,11 @@
+import type { PaperWalletConnector } from "../connectors/paper";
 import {
-  PaperWalletConnectionArgs,
   PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,
+  PaperWalletConnectionArgs,
 } from "../connectors/paper/types";
+import { walletIds } from "../constants/walletIds";
 import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { PaperWalletConnector } from "../connectors/paper";
-import { walletIds } from "../constants/walletIds";
 
 export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
 
@@ -29,16 +29,35 @@ export class PaperWallet extends AbstractClientWallet<
     return "Paper Wallet" as const;
   }
 
-  paperClientId: PaperWalletAdditionalOptions_["paperClientId"];
+  paperClientId: string;
   chain: PaperWalletAdditionalOptions_["chain"];
 
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
       ...options,
     });
+    if (
+      options.advancedOptions &&
+      options.advancedOptions?.recoveryShareManagement === "USER_MANAGED"
+    ) {
+      if (
+        (options.clientId &&
+          !this.isClientIdLegacyPaper(options.clientId ?? "")) ||
+        ("paperClientId" in options &&
+          !this.isClientIdLegacyPaper(options.paperClientId))
+      ) {
+        throw new Error(
+          'RecoveryShareManagement option "USER_MANAGED" is not supported with thirdweb client ID',
+        );
+      }
+    }
 
-    this.paperClientId = options.paperClientId;
+    this.paperClientId =
+      "paperClientId" in options ? options.paperClientId : options.clientId;
     this.chain = options.chain;
+  }
+  private isClientIdLegacyPaper(clientId: string): boolean {
+    return clientId.indexOf("-") > 0 && clientId.length === 36;
   }
 
   protected async getConnector(): Promise<Connector> {
