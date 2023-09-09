@@ -29,7 +29,7 @@ export const paperWallet = (
         ...config,
         advancedOptions: {
           recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
-          ...config.advancedOptions,
+          ...config?.advancedOptions,
         },
       });
     },
