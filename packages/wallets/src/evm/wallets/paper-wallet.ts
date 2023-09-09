@@ -36,6 +36,7 @@ export class PaperWallet extends AbstractClientWallet<
     super(PaperWallet.id, {
       ...options,
     });
+    // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
     if (
       options.advancedOptions &&
       options.advancedOptions?.recoveryShareManagement === "USER_MANAGED"
