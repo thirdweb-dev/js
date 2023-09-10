@@ -4,8 +4,7 @@ export function DynamicHeight(props: {
   children: React.ReactNode;
   maxHeight?: string;
 }) {
-  const contentRef = useRef(null);
-  const height = useHeightObserver(contentRef);
+  const { height, elementRef } = useHeightObserver();
 
   return (
     <div
@@ -17,7 +16,7 @@ export function DynamicHeight(props: {
       }}
     >
       <div
-        ref={contentRef}
+        ref={elementRef}
         style={{
           maxHeight: props.maxHeight,
         }}
@@ -28,39 +27,27 @@ export function DynamicHeight(props: {
   );
 }
 
-export function useHeightObserver(contentRef: React.RefObject<HTMLElement>) {
-  const [element, setElement] = useState<HTMLElement | null>(null);
+export function useHeightObserver() {
+  const elementRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>();
-  const observer = useRef<ResizeObserver | null>(null);
 
-  //Clean up observer
-  const cleanOb = () => {
-    if (observer.current) {
-      observer.current.disconnect();
-    }
-  };
-
-  useEffect(() => {
-    setElement(contentRef.current);
-  }, [contentRef]);
+  const element = elementRef.current;
 
   useEffect(() => {
     if (!element) {
       return;
     }
-    // Element has changed, disconnect old observer
-    cleanOb();
 
-    const ob = (observer.current = new ResizeObserver(([entry]) => {
-      setHeight(entry.target.scrollHeight);
-    }));
-    ob.observe(element);
+    const resizeObserver = new ResizeObserver(() => {
+      setHeight(element.scrollHeight);
+    });
 
-    // disconnect when component is unmounted
+    resizeObserver.observe(element);
+
     return () => {
-      cleanOb();
+      resizeObserver.disconnect();
     };
   }, [element]);
 
-  return height;
+  return { height, elementRef: elementRef };
 }
