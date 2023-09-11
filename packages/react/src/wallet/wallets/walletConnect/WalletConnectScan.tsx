@@ -58,7 +58,13 @@ export const WalletConnectScan: React.FC<{
   ]);
 
   return (
-    <Container fullHeight flex="column">
+    <Container
+      fullHeight
+      flex="column"
+      style={{
+        minHeight: "450px",
+      }}
+    >
       <Container p="lg" flex="column" expand>
         <ModalHeader onBack={onBack} title="WalletConnect" />
         {modalSize === "compact" && <Spacer y="xl" />}
@@ -75,15 +81,19 @@ export const WalletConnectScan: React.FC<{
             }
           />
 
-          <Spacer y="lg" />
+          <Spacer y="md" />
         </Container>
       </Container>
+
       <ScreenBottomContainer
         style={{
           borderTop: modalSize === "wide" ? "none" : undefined,
         }}
       >
-        <Text center>Scan this with your wallet app </Text>
+        <Text multiline center>
+          Scan this with your wallet <br />
+          or camera app to connect{" "}
+        </Text>
       </ScreenBottomContainer>
     </Container>
   );

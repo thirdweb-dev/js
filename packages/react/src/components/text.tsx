@@ -9,6 +9,7 @@ export const Text = styled.span<{
   size?: keyof typeof fontSize;
   weight?: 400 | 500 | 600 | 700;
   multiline?: boolean;
+  balance?: boolean;
 }>`
   font-size: ${(p) => fontSize[p.size || "md"]};
   color: ${(p) => p.theme.text[p.color || "secondary"]};
@@ -17,6 +18,7 @@ export const Text = styled.span<{
   font-weight: ${(p) => p.weight || 400};
   line-height: ${(p) => (p.multiline ? 1.5 : 1)};
   ${(p) => (p.center ? `text-align: center;` : "")};
+  text-wrap: ${(p) => (p.balance ? "balance" : "auto")};
 `;
 
 export const Link = styled.a<{
