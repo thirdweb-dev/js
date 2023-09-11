@@ -2,4 +2,4 @@
 "@thirdweb-dev/react-native": patch
 ---
 
-Fix React Native issue with uploading to IPFS
+Pass options to download an correctly pass clientId to RN storage.

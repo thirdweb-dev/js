@@ -149,7 +149,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       return new Promise(async (resolve, reject) => {
         const fetchBody = JSON.stringify({
           metadata: metadata,
-          content: data.length === 1 ? data[0] : data,
+          content: data,
         });
 
         try {
