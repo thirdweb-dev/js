@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import { Theme, spacing } from "../design-system";
+import { Theme, iconSize, spacing } from "../design-system";
 import { BackButton, ModalTitle } from "./modalElements";
 import { fadeInAnimation } from "./FadeIn";
 import { keyframes } from "@emotion/react";
+import { Img } from "./Img";
 
 export const Flex = (props: {
   flexDirection?: "row" | "column";
@@ -54,8 +55,9 @@ scrollbar-width: none;
 export function ModalHeader(props: {
   onBack?: () => void;
   title: React.ReactNode;
+  imgSrc?: string;
 }) {
-  const { onBack, title } = props;
+  const { onBack, title, imgSrc } = props;
   return (
     <div
       style={{
@@ -75,7 +77,12 @@ export function ModalHeader(props: {
           }}
         />
       )}
-      {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
+      <Container flex="row" gap="xs" center="both">
+        {imgSrc && (
+          <Img src={imgSrc} width={iconSize.md} height={iconSize.md} />
+        )}
+        {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
+      </Container>
     </div>
   );
 }

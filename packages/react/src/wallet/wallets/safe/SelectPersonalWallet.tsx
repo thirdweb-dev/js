@@ -48,20 +48,22 @@ export const SelectpersonalWallet: React.FC<{
   return (
     <Container flex="column" scrollY animate="fadein">
       {/* header */}
-      <Container
-        p="lg"
-        style={{
-          paddingBottom: 0,
-        }}
-      >
+
+      <Container p="lg">
         <ModalHeader
           title={props.safeWallet.meta.name}
           onBack={props.renderBackButton ? props.onBack : undefined}
+          imgSrc={props.safeWallet.meta.iconURL}
         />
+      </Container>
 
-        <Spacer y="xl" />
-
-        <Text multiline>Select your wallet to connect to Safe </Text>
+      <Container px="lg">
+        <Spacer y="sm" />
+        <Text size="lg" color="neutral" weight={500}>
+          Link personal wallet
+        </Text>
+        <Spacer y="sm" />
+        <Text>Select your wallet to connect to Safe </Text>
       </Container>
 
       <Spacer y="lg" />
@@ -90,6 +92,7 @@ export const SelectpersonalWallet: React.FC<{
         )}
 
         <Link
+          small
           center
           target="_blank"
           href="https://docs.safe.global/getting-started/readme"

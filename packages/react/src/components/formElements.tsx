@@ -120,7 +120,7 @@ export const ErrorMessage = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
   display: block;
   color: ${(p) => p.theme.input.errorRing};
-  line-height: 1.5;
+  line-height: 1;
 `;
 
 export const FormFooter = styled.div`
