@@ -264,6 +264,9 @@ class ThirdwebBridge implements TWBridge {
             dappMetadata,
             chains: supportedChains,
             clientId: sdkOptions.clientId,
+            advancedOptions: {
+              recoveryShareManagement: "USER_MANAGED",
+            },
           });
           break;
         case walletIds.smartWallet:
