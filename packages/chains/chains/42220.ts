@@ -15,9 +15,7 @@ export default {
     "https://forno.celo.org",
     "wss://forno.celo.org/ws"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "infoURL": "https://docs.celo.org/",
   "explorers": [
     {

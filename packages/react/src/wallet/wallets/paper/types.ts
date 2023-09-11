@@ -1,9 +1,6 @@
 import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
-export type PaperConfig = Omit<
-  PaperWalletAdditionalOptions,
-  "chain" | "chains"
-> & {
+export type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain"> & {
   /**
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
    */
@@ -11,8 +8,11 @@ export type PaperConfig = Omit<
 };
 
 export type RecoveryShareManagement = Exclude<
-  PaperWalletAdditionalOptions["advancedOptions"],
+  Exclude<
+    PaperWalletAdditionalOptions["advancedOptions"],
+    undefined
+  >["recoveryShareManagement"],
   undefined
->["recoveryShareManagement"];
+>;
 
 export type PaperLoginType = { email: string } | { google: true };

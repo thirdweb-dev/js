@@ -7,7 +7,7 @@ export default {
     "https://pangolin-rpc.darwinia.network"
   ],
   "faucets": [
-    "https://docs.crab.network/dvm/wallets/dvm-metamask#apply-for-the-test-token"
+    "https://docs.darwinia.network/pangolin-testnet-1e9ac8b09e874e8abd6a7f18c096ca6a"
   ],
   "nativeCurrency": {
     "name": "Pangolin Network Native Token",

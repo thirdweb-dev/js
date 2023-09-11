@@ -1,9 +1,3 @@
-import { normalizeChainId } from "../../../lib/wagmi-core";
-import { Connector } from "../../interfaces/connector";
-import {
-  PaperWalletConnectionArgs,
-  PaperWalletConnectorOptions,
-} from "./types";
 import type {
   AuthLoginReturnType,
   InitializedUser,
@@ -14,11 +8,14 @@ import {
   RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
-import type { providers, Signer } from "ethers";
+import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
+import { normalizeChainId } from "../../../lib/wagmi-core";
 import { walletIds } from "../../constants/walletIds";
+import { Connector } from "../../interfaces/connector";
+import { PaperWalletConnectorOptions } from "./types";
 
-export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
+export class PaperWalletConnector extends Connector<Record<string, never>> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready = true;
