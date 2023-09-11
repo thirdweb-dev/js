@@ -31,9 +31,8 @@ export function useHeightObserver() {
   const elementRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | undefined>();
 
-  const element = elementRef.current;
-
   useEffect(() => {
+    const element = elementRef.current;
     if (!element) {
       return;
     }
@@ -47,7 +46,7 @@ export function useHeightObserver() {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [element]);
+  }, [elementRef]);
 
   return { height, elementRef: elementRef };
 }
