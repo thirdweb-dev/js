@@ -31,7 +31,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
   return (
     <ProductSection>
       <Flex flexDir="column" py={16} align="center" gap={{ base: 6, lg: 8 }}>
-        <Flex flexDir="column" gap={2} justifyContent="start">
+        <Flex flexDir="column" gap={2} alignItems="center">
           <Heading
             as="h2"
             size="display.sm"
