@@ -5,12 +5,7 @@ import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import {
-  Flex,
-  Line,
-  ModalHeader,
-  ScreenContainer,
-} from "../../../components/basic";
+import { Container, Flex, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
@@ -54,11 +49,11 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
     setVerifyStatus("idle");
     setSentEmailInfo(null);
 
-    const _wallet = createWalletInstance(props.walletConfig);
-    setWallet(_wallet);
-    const _paperSDK = await _wallet.getPaperSDK();
-
     try {
+      const _wallet = createWalletInstance(props.walletConfig);
+      setWallet(_wallet);
+      const _paperSDK = await _wallet.getPaperSDK();
+
       const { isNewDevice, isNewUser } =
         await _paperSDK.auth.sendPaperEmailLoginOtp({
           email: email,
@@ -66,6 +61,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
       setSentEmailInfo({ isNewDevice, isNewUser });
     } catch (e) {
+      debugger;
       console.error(e);
       setVerifyStatus("idle");
       setSentEmailInfo("error");
@@ -118,146 +114,144 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   }, [sendEmail]);
 
   return (
-    <ScreenContainer
-      style={{
-        height: "100%",
-      }}
-    >
+    <Container fullHeight flex="column" p="lg" animate="fadein">
       <ModalHeader title="Sign in" onBack={props.goBack} />
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
+      <Container expand flex="column" center="y">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
           }}
         >
-          <Spacer y="xxl" />
-          <Text>Enter the OTP sent to</Text>
-          <Spacer y="sm" />
-          <Text color="neutral">{email}</Text>
-          <Spacer y="xl" />
-        </div>
-
-        <OTPInput
-          isInvalid={verifyStatus === "invalid"}
-          digits={6}
-          value={otpInput}
-          setValue={(value) => {
-            setOtpInput(value);
-            setVerifyStatus("idle");
-          }}
-          onEnter={handleSubmit}
-        />
-
-        {recoveryCodeRequired && (
           <div
             style={{
               textAlign: "center",
             }}
           >
-            <Spacer y="xl" />
-            <Line color="elevated" height={2} />
-            <Spacer y="xl" />
-
-            <Text color="neutral">New device detected</Text>
+            <Spacer y="xxl" />
+            <Text>Enter the OTP sent to</Text>
             <Spacer y="sm" />
-            <Text
-              multiline
-              style={{
-                maxWidth: "350px",
-              }}
-            >
-              Enter the recovery code emailed to you <br /> when you first
-              signed up
-            </Text>
+            <Text color="neutral">{email}</Text>
+            <Spacer y="xl" />
+          </div>
 
-            <Spacer y="md" />
-            <Input
-              autoComplete="off"
-              required
-              data-error={verifyStatus === "invalid"}
-              id="recovery-code"
-              variant="outline"
+          <OTPInput
+            isInvalid={verifyStatus === "invalid"}
+            digits={6}
+            value={otpInput}
+            setValue={(value) => {
+              setOtpInput(value);
+              setVerifyStatus("idle");
+            }}
+            onEnter={handleSubmit}
+          />
+
+          {recoveryCodeRequired && (
+            <div
               style={{
                 textAlign: "center",
               }}
-              value={recoveryCode}
-              onChange={(e) => setRecoveryCode(e.target.value)}
-              placeholder="Enter your recovery code"
-            />
-          </div>
-        )}
+            >
+              <Spacer y="xl" />
+              <Line color="elevated" height={2} />
+              <Spacer y="xl" />
 
-        {verifyStatus === "invalid" && (
-          <FadeIn>
-            <Spacer y="sm" />
-            <Flex justifyContent="center">
-              <Text size="sm" color="danger">
-                Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
+              <Text color="neutral">New device detected</Text>
+              <Spacer y="sm" />
+              <Text
+                multiline
+                style={{
+                  maxWidth: "350px",
+                }}
+              >
+                Enter the recovery code emailed to you <br /> when you first
+                signed up
               </Text>
+
+              <Spacer y="md" />
+              <Input
+                autoComplete="off"
+                required
+                data-error={verifyStatus === "invalid"}
+                id="recovery-code"
+                variant="outline"
+                style={{
+                  textAlign: "center",
+                }}
+                value={recoveryCode}
+                onChange={(e) => setRecoveryCode(e.target.value)}
+                placeholder="Enter your recovery code"
+              />
+            </div>
+          )}
+
+          {verifyStatus === "invalid" && (
+            <FadeIn>
+              <Spacer y="sm" />
+              <Flex justifyContent="center">
+                <Text size="sm" color="danger">
+                  Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
+                </Text>
+              </Flex>
+            </FadeIn>
+          )}
+
+          <Spacer y="xl" />
+
+          {verifyStatus === "verifying" ? (
+            <>
+              <Spacer y="md" />
+              <Flex justifyContent="center">
+                <Spinner size="md" color="accent" />
+              </Flex>
+              <Spacer y="md" />
+            </>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              variant="accent"
+              type="submit"
+              style={{
+                width: "100%",
+              }}
+            >
+              Verify
+            </Button>
+          )}
+
+          <Spacer y="lg" />
+
+          {sentEmailInfo === "error" && (
+            <>
+              <Text size="sm" center color="danger">
+                Failed to send OTP
+              </Text>
+              <Spacer y="md" />
+            </>
+          )}
+
+          {!sentEmailInfo && (
+            <Flex
+              gap="xs"
+              alignItems="center"
+              justifyContent="center"
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <Text size="sm">Sending OTP</Text>
+              <Spinner size="xs" color="secondary" />
             </Flex>
-          </FadeIn>
-        )}
+          )}
 
-        <Spacer y="xl" />
-
-        {verifyStatus === "verifying" ? (
-          <>
-            <Spacer y="md" />
-            <Flex justifyContent="center">
-              <Spinner size="md" color="accent" />
-            </Flex>
-            <Spacer y="md" />
-          </>
-        ) : (
-          <Button
-            onClick={handleSubmit}
-            variant="accent"
-            type="submit"
-            style={{
-              width: "100%",
-            }}
-          >
-            Verify
-          </Button>
-        )}
-
-        <Spacer y="lg" />
-
-        {sentEmailInfo === "error" && (
-          <>
-            <Text size="sm" center color="danger">
-              Failed to send OTP
-            </Text>
-            <Spacer y="md" />
-          </>
-        )}
-
-        {!sentEmailInfo && (
-          <Flex
-            gap="xs"
-            alignItems="center"
-            justifyContent="center"
-            style={{
-              textAlign: "center",
-            }}
-          >
-            <Text size="sm">Sending OTP</Text>
-            <Spinner size="xs" color="secondary" />
-          </Flex>
-        )}
-
-        {sentEmailInfo && (
-          <LinkButton onClick={sendEmail} type="button">
-            Resend OTP
-          </LinkButton>
-        )}
-      </form>
-    </ScreenContainer>
+          {sentEmailInfo && (
+            <LinkButton onClick={sendEmail} type="button">
+              Resend OTP
+            </LinkButton>
+          )}
+        </form>
+      </Container>
+    </Container>
   );
 };
 

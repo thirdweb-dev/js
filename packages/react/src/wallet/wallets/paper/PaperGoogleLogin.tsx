@@ -1,10 +1,10 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Container,
   Flex,
   ModalHeader,
   ScreenBottomContainer,
-  ScreenContainer,
 } from "../../../components/basic";
 import { Spinner } from "../../../components/Spinner";
 import { PaperWallet } from "@thirdweb-dev/wallets";
@@ -47,12 +47,12 @@ export const PaperGoogleLogin = ({
   }, [googleLogin]);
 
   return (
-    <>
-      <ScreenContainer
+    <Container animate="fadein" flex="column" fullHeight>
+      <Container
+        flex="column"
+        expand
+        p="lg"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
           paddingBottom: 0,
         }}
       >
@@ -107,9 +107,13 @@ export const PaperGoogleLogin = ({
             </>
           )}
         </div>
-      </ScreenContainer>
+      </Container>
 
-      <ScreenBottomContainer>
+      <ScreenBottomContainer
+        style={{
+          borderTop: modalSize === "wide" ? "none" : undefined,
+        }}
+      >
         <div
           style={{
             textAlign: "center",
@@ -143,6 +147,6 @@ export const PaperGoogleLogin = ({
           </Text>
         </div>
       </ScreenBottomContainer>
-    </>
+    </Container>
   );
 };

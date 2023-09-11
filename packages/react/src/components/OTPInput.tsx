@@ -29,7 +29,7 @@ export function OTPInput(props: {
   }, [inputToFocusIndex]);
 
   return (
-    <Container center="x" gap="sm">
+    <Container center="x" gap="sm" flex="row">
       {new Array(props.digits).fill(null).map((_, i) => {
         return (
           <OTPInputBox

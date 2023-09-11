@@ -105,7 +105,14 @@ export const WalletSelector: React.FC<{
       </Container>
 
       {/* Body */}
-      <Container expand scrollY px="md">
+      <Container
+        expand
+        scrollY
+        px="md"
+        style={{
+          paddingTop: "2px",
+        }}
+      >
         {showGroupsUI ? (
           <>
             {isWalletGroupExpanded ? (

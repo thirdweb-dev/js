@@ -1,6 +1,6 @@
 import { Spacer } from "../../../components/Spacer";
 import { InputSelectionUI } from "../InputSelectionUI";
-import { ModalHeader, ScreenContainer } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import styled from "@emotion/styled";
 import { TextDivider } from "../../../components/TextDivider";
@@ -68,35 +68,24 @@ export const PaperFormUIScreen: React.FC<{
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   return (
-    <ScreenContainer
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Container fullHeight flex="column" p="lg" animate="fadein">
       <ModalHeader onBack={props.onBack} title="Sign in" />
       {isCompact ? <Spacer y="xl" /> : null}
 
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: isCompact ? "0" : spacing.lg,
-        }}
+      <Container
+        expand
+        flex="column"
+        center="y"
+        p={isCompact ? undefined : "lg"}
       >
-        <div>
-          <PaperFormUI
-            googleLoginSupported={props.googleLoginSupported}
-            onSelect={props.onSelect}
-            showOrSeparator={false}
-            submitType="button"
-          />
-        </div>
-      </div>
-    </ScreenContainer>
+        <PaperFormUI
+          googleLoginSupported={props.googleLoginSupported}
+          onSelect={props.onSelect}
+          showOrSeparator={false}
+          submitType="button"
+        />
+      </Container>
+    </Container>
   );
 };
 

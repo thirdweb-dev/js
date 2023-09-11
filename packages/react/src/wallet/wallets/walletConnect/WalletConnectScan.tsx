@@ -65,7 +65,14 @@ export const WalletConnectScan: React.FC<{
         minHeight: "450px",
       }}
     >
-      <Container p="lg" flex="column" expand>
+      <Container
+        p="lg"
+        flex="column"
+        expand
+        style={{
+          paddingBottom: 0,
+        }}
+      >
         <ModalHeader onBack={onBack} title="WalletConnect" />
         {modalSize === "compact" && <Spacer y="xl" />}
 
