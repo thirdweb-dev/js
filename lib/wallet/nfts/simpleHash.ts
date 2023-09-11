@@ -31,7 +31,7 @@ export async function transformSimpleHashResponseToNFT(
         try {
           return {
             contractAddress: simpleHashNft.contract_address,
-            tokenId: parseInt(simpleHashNft.token_id, 16),
+            tokenId: parseInt(simpleHashNft.token_id),
             metadata: {
               name: simpleHashNft.name,
               description: simpleHashNft.description,
