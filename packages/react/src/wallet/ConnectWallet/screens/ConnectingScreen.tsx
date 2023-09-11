@@ -111,6 +111,7 @@ export const ConnectingScreen: React.FC<{
           onClick={props.onGetStarted}
           style={{
             textAlign: "center",
+            fontSize: fontSize.sm,
           }}
         >
           Don{`'`}t have {props.walletName}?

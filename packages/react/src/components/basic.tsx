@@ -199,17 +199,17 @@ const floatDownAnimation = keyframes`
 const Box = styled.div<{ theme?: Theme }>`
   &[data-animate="fadein"] {
     opacity: 0;
-    animation: ${fadeInAnimation} 400ms ease forwards;
+    animation: ${fadeInAnimation} 350ms ease forwards;
   }
 
   &[data-animate="floatup"] {
     opacity: 0;
-    animation: ${floatUpAnimation} 400ms ease forwards;
+    animation: ${floatUpAnimation} 350ms ease forwards;
   }
 
   &[data-animate="floatdown"] {
     opacity: 0;
-    animation: ${floatDownAnimation} 400ms ease forwards;
+    animation: ${floatDownAnimation} 350ms ease forwards;
   }
 
   &[data-scrolly="true"] {
