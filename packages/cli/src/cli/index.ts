@@ -8,7 +8,7 @@ import open from "open";
 import path from "path";
 import prompts from "prompts";
 import xdgAppPaths from "xdg-app-paths";
-import { loginUser, logoutUser, validateKey } from "../auth";
+import {loginUser, logoutUser, requireLogin, validateKey} from "../auth";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { detectProject } from "../common/project-detector";
@@ -344,9 +344,15 @@ const main = async () => {
         await validateKey(options.key);
         secretKey = options.key;
       }
-      const url = await deploy(options, secretKey);
-      if (url && !options.ci) {
-        await open(url);
+      try {
+        const url = await deploy(options, secretKey);
+        if (url && !options.ci) {
+          await open(url);
+        }
+      } catch (e: any) {
+        if (e.message.includes("Unauthorized")) {
+          await requireLogin({ credsConfigPath, cliWalletPath, tokenPath });
+        }
       }
     });
 
@@ -383,7 +389,15 @@ const main = async () => {
         await validateKey(options.key);
         secretKey = options.key;
       }
-      const url = await processProject(options, "publish", secretKey);
+      let url: URL | string
+      try {
+        url = await processProject(options, "publish", secretKey);
+      } catch (e: any) {
+        if (e.message.includes("Unauthorized")) {
+          await requireLogin({ credsConfigPath, cliWalletPath, tokenPath });
+        }
+        return
+      }
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
@@ -451,6 +465,16 @@ const main = async () => {
         } else {
           logger.error(chalk.redBright(err.message ? err.message : err));
         }
+
+        if (
+          err.toString().includes("Unauthorized")
+        ) {
+          await requireLogin({
+            credsConfigPath,
+            cliWalletPath,
+            tokenPath,
+          })
+        }
       }
     });
 
@@ -508,7 +532,7 @@ const main = async () => {
       "Logout of the thirdweb CLI",
     )
     .action(async () => {
-      await logoutUser(credsConfigPath, tokenPath, cliWalletPath);
+      await logoutUser({credsConfigPath, tokenPath, cliWalletPath});
     });
 
   await program.parseAsync();
