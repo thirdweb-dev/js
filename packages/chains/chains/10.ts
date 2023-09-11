@@ -8,6 +8,7 @@ export default {
     "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.optimism.io",
     "https://optimism.publicnode.com",
+    "wss://optimism.publicnode.com",
     "https://optimism.gateway.tenderly.co",
     "wss://optimism.gateway.tenderly.co"
   ],

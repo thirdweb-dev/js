@@ -48,7 +48,6 @@ export const ConnectModalContent = (props: {
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
-  const wallet = useWallet();
   const walletModalConfig = useContext(ModalConfigCtx);
   const setWalletModalConfig = useContext(SetModalConfigCtx);
   const disconnect = useDisconnect();
@@ -75,34 +74,6 @@ export const ConnectModalContent = (props: {
   const handleBack = useCallback(() => {
     setScreen(initialScreen);
   }, [setScreen, initialScreen]);
-
-  const isWrapperConnected = !!wallet?.getPersonalWallet();
-
-  const isWrapperScreen =
-    typeof screen !== "string" && !!screen.personalWallets;
-
-  const prevConnectionStatus = useRef(connectionStatus);
-
-  // reopen the screen to complete wrapper wallet's next step after connecting a personal wallet
-  useEffect(() => {
-    if (
-      !isWrapperConnected &&
-      isWrapperScreen &&
-      !isWalletModalOpen &&
-      connectionStatus === "connected" &&
-      prevConnectionStatus.current === "connecting"
-    ) {
-      setIsWalletModalOpen(true);
-    }
-
-    prevConnectionStatus.current = connectionStatus;
-  }, [
-    isWalletModalOpen,
-    connectionStatus,
-    setIsWalletModalOpen,
-    isWrapperScreen,
-    isWrapperConnected,
-  ]);
 
   const WalletConnectUI =
     typeof screen !== "string" && (screen.connectUI || HeadlessConnectUI);
@@ -163,6 +134,34 @@ export const ConnectModal = () => {
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
   const disconnect = useDisconnect();
+
+  const wallet = useWallet();
+  const isWrapperConnected = !!wallet?.getPersonalWallet();
+  const prevConnectionStatus = useRef(connectionStatus);
+
+  const isWrapperScreen =
+    typeof screen !== "string" && !!screen.personalWallets;
+
+  // reopen the screen to complete wrapper wallet's next step after connecting a personal wallet
+  useEffect(() => {
+    if (
+      !isWrapperConnected &&
+      isWrapperScreen &&
+      !isWalletModalOpen &&
+      connectionStatus === "connected" &&
+      prevConnectionStatus.current === "connecting"
+    ) {
+      setIsWalletModalOpen(true);
+    }
+
+    prevConnectionStatus.current = connectionStatus;
+  }, [
+    isWalletModalOpen,
+    connectionStatus,
+    setIsWalletModalOpen,
+    isWrapperScreen,
+    isWrapperConnected,
+  ]);
 
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>

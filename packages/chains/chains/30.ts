@@ -7,9 +7,7 @@ export default {
     "https://public-node.rsk.co",
     "https://mycrypto.rsk.co"
   ],
-  "faucets": [
-    "https://faucet.rsk.co/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Smart Bitcoin",
     "symbol": "RBTC",
