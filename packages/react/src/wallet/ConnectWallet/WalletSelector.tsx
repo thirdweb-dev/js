@@ -5,7 +5,7 @@ import {
   noScrollBar,
   ModalHeader,
   Container,
-  Separator,
+  ScreenBottomContainer,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
@@ -89,7 +89,7 @@ export const WalletSelector: React.FC<{
   );
 
   return (
-    <Container scrollY flex="column" animate="fadein">
+    <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
       <Container p="lg">
         {isWalletGroupExpanded ? (
@@ -175,27 +175,24 @@ export const WalletSelector: React.FC<{
 
       {/* Footer */}
       {showFooter && (
-        <>
-          <Separator />
-          <Container flex="column" gap="lg" p="lg">
-            {showNewToWallets && (
-              <Flex justifyContent="space-between">
-                <Text color="secondary" size="sm">
-                  New to wallets?
-                </Text>
-                <Link
-                  small
-                  target="_blank"
-                  href="https://ethereum.org/en/wallets/find-wallet/"
-                >
-                  Get started
-                </Link>
-              </Flex>
-            )}
+        <ScreenBottomContainer>
+          {showNewToWallets && (
+            <Flex justifyContent="space-between">
+              <Text color="secondary" size="sm">
+                New to wallets?
+              </Text>
+              <Link
+                small
+                target="_blank"
+                href="https://ethereum.org/en/wallets/find-wallet/"
+              >
+                Get started
+              </Link>
+            </Flex>
+          )}
 
-            {!showGroupsUI && continueAsGuest}
-          </Container>
-        </>
+          {!showGroupsUI && continueAsGuest}
+        </ScreenBottomContainer>
       )}
     </Container>
   );
