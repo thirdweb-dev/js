@@ -2,11 +2,7 @@ import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
-import {
-  HelperLink,
-  ModalDescription,
-} from "../../../components/modalElements";
-import { Text } from "../../../components/text";
+import { ModalDescription } from "../../../components/modalElements";
 import { iconSize, radius, spacing } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
@@ -133,24 +129,6 @@ export const GetStartedScreen: React.FC<{
         </>
       )}
 
-      {isScanScreen && (
-        <>
-          <Spacer y="xl" />
-          <HelperLink
-            as="button"
-            onClick={onBack}
-            style={{
-              textAlign: "center",
-              display: "block",
-              width: "100%",
-              lineHeight: 1.5,
-            }}
-          >
-            I{`'`}ve finished setting up <br /> {walletName} on mobile
-          </HelperLink>
-        </>
-      )}
-
       {!isScanScreen && footer}
     </ScreenContainer>
   );
@@ -167,8 +145,7 @@ const InstallScanScreen: React.FC<{
   return (
     <div>
       <ModalHeader title={props.walletName} onBack={props.onBack} />
-
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       <div
         style={{
@@ -183,22 +160,15 @@ const InstallScanScreen: React.FC<{
           QRIcon={
             <Img
               src={props.walletIconURL}
-              width={iconSize.lg}
-              height={iconSize.lg}
+              width={iconSize.xxl}
+              height={iconSize.xxl}
             />
           }
         />
-        <Spacer y="xl" />
+        <Spacer y="xxl" />
 
-        {/* {props.platformIcon} */}
-
-        <Text color="neutral">
-          Install {props.walletName} on {props.platform}
-        </Text>
-
-        <Spacer y="lg" />
         <ModalDescription sm>
-          Scan QR with your phone to download <br /> {props.walletName} for{" "}
+          Scan QR with your phone to download <br /> {props.walletName} from{" "}
           {props.platform}
         </ModalDescription>
       </div>

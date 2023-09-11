@@ -43,8 +43,8 @@ export const ScanScreen: React.FC<{
             qrCodeUri={props.qrCodeUri}
             QRIcon={
               <Img
-                width={iconSize.lg}
-                height={iconSize.lg}
+                width={iconSize.xxl}
+                height={iconSize.xxl}
                 src={props.walletIconURL}
               />
             }

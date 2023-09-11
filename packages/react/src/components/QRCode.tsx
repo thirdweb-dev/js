@@ -1,78 +1,305 @@
-import { media, radius, shadow, spacing } from "../design-system";
-import { FadeIn } from "./FadeIn";
-import { Skeleton } from "./Skeleton";
+import { keyframes } from "@emotion/react";
+import { Theme, radius } from "../design-system";
+import { fadeInAnimation } from "./FadeIn";
 import styled from "@emotion/styled";
-import ReactQrCode from "react-qr-code";
+import QRCodeUtil from "qrcode";
+import React, { ReactElement, useMemo } from "react";
 
 export const QRCode: React.FC<{
   qrCodeUri?: string;
   QRIcon?: React.ReactNode;
+  size?: number;
 }> = (props) => {
+  const size = props.size || 280;
+
   return (
     <div
       style={{
         position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
       {props.qrCodeUri ? (
-        <FadeIn>
-          <QRCodeContainer>
-            <StyledReactQrCode value={props.qrCodeUri} />
-          </QRCodeContainer>
-        </FadeIn>
+        <QRCodeContainer>
+          <QRCodeRenderer
+            uri={props.qrCodeUri}
+            size={size + 20}
+            ecl="M"
+            clearSize={70}
+          />
+        </QRCodeContainer>
       ) : (
-        <QRSkeleton height="200px" width="200px" />
+        <QRPlaceholder
+          style={{
+            width: `${size}px`,
+            height: `${size}px`,
+          }}
+        >
+          <span data-v1 />
+          <span data-v2 />
+          <span data-v3 />
+          <div />
+        </QRPlaceholder>
       )}
-      {props.QRIcon && (
-        <QrCodeIconContainer>{props.QRIcon}</QrCodeIconContainer>
-      )}
+
+      {props.QRIcon && <IconContainer>{props.QRIcon}</IconContainer>}
     </div>
   );
 };
 
-const QrCodeIconContainer = styled.div`
+const IconContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
-  border-radius: ${radius.md};
   display: flex;
   justify-content: center;
   align-content: center;
-  padding: 4px;
+  z-index: 10;
 `;
 
-const QRCodeContainer = styled.div`
-  background: white;
-  padding: ${spacing.xxs};
+const QRCodeContainer = styled.div<{ theme?: Theme }>`
+  animation: ${fadeInAnimation} 600ms ease;
+  --ck-qr-dot-color: ${(p) => p.theme.bg.inverted};
+  --ck-body-background: ${(p) => p.theme.bg.base};
+  --ck-qr-background: ${(p) => p.theme.bg.base};
+`;
+
+const generateMatrix = (
+  value: string,
+  errorCorrectionLevel: QRCodeUtil.QRCodeErrorCorrectionLevel,
+) => {
+  const arr = Array.prototype.slice.call(
+    QRCodeUtil.create(value, { errorCorrectionLevel }).modules.data,
+    0,
+  );
+  const sqrt = Math.sqrt(arr.length);
+  return arr.reduce(
+    (rows, key, index) =>
+      (index % sqrt === 0
+        ? rows.push([key])
+        : rows[rows.length - 1].push(key)) && rows,
+    [],
+  );
+};
+
+type Props = {
+  ecl?: QRCodeUtil.QRCodeErrorCorrectionLevel;
+  size?: number;
+  uri: string;
+  clearSize?: number;
+  image?: React.ReactNode;
+  imageBackground?: string;
+};
+
+export const PlaceholderKeyframes = keyframes`
+  0%{ background-position: 100% 0; }
+  100%{ background-position: -100% 0; }
+`;
+
+export const QRPlaceholder = styled.div<{ theme?: Theme }>`
+  --color: ${(p) => p.theme.bg.highlighted};
+  --bg: ${(p) => p.theme.bg.base};
+
+  overflow: hidden;
+  position: relative;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-content: center;
-  border-radius: ${radius.md};
-  box-shadow: ${shadow.md};
-`;
-
-const StyledReactQrCode = /* @__PURE__ */ styled(ReactQrCode)`
-  width: 200px;
-  height: 200px;
   border-radius: ${radius.md};
 
-  ${media.mobile} {
-    width: 150px;
-    height: 150px;
+  > div {
+    z-index: 4;
+    position: relative;
+    width: 28%;
+    height: 28%;
+    border-radius: 5px;
+    background: var(--bg);
+    box-shadow: 0 0 0 7px var(--bg);
+  }
+
+  > span {
+    z-index: 4;
+    position: absolute;
+    background: var(--color);
+    border-radius: 12px;
+    width: 13.25%;
+    height: 13.25%;
+    box-shadow: 0 0 0 4px var(--bg);
+    &:before {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 3px;
+      box-shadow: 0 0 0 4px var(--bg);
+    }
+    &[data-v1] {
+      top: 0;
+      left: 0;
+    }
+    &[data-v2] {
+      top: 0;
+      right: 0;
+    }
+    &[data-v3] {
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  &:before {
+    z-index: 3;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeat;
+    background-size: 1.888% 1.888%;
+    background-image: radial-gradient(var(--color) 41%, transparent 41%);
+  }
+
+  &:after {
+    z-index: 100;
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: scale(1.5) rotate(45deg);
+    background-image: linear-gradient(
+      90deg,
+      transparent 50%,
+      ${(p) => p.theme.bg.elevatedHover},
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: ${PlaceholderKeyframes} 1000ms linear infinite both;
   }
 `;
 
-const QRSkeleton = /* @__PURE__ */ styled(Skeleton)`
-  width: 200px;
-  height: 200px;
-  border-radius: ${radius.md};
-  ${media.mobile} {
-    width: 150px;
-    height: 150px;
-  }
-`;
+export function QRCodeRenderer({
+  ecl = "M",
+  size: sizeProp = 200,
+  uri,
+  clearSize = 0,
+  image,
+  imageBackground = "transparent",
+}: Props) {
+  const logoSize = clearSize;
+  const size = sizeProp - 10 * 2;
+
+  const dots = useMemo(() => {
+    const dotsArray: ReactElement[] = [];
+    const matrix = generateMatrix(uri, ecl);
+    const cellSize = size / matrix.length;
+    const qrList = [
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 0, y: 1 },
+    ];
+
+    qrList.forEach(({ x, y }) => {
+      const x1 = (matrix.length - 7) * cellSize * x;
+      const y1 = (matrix.length - 7) * cellSize * y;
+      for (let i = 0; i < 3; i++) {
+        dotsArray.push(
+          <rect
+            key={`${i}-${x}-${y}`}
+            fill={
+              i % 2 !== 0
+                ? "var(--ck-qr-background, var(--ck-body-background))"
+                : "var(--ck-qr-dot-color)"
+            }
+            rx={(i - 2) * -5 + (i === 0 ? 2 : 3)}
+            ry={(i - 2) * -5 + (i === 0 ? 2 : 3)}
+            width={cellSize * (7 - i * 2)}
+            height={cellSize * (7 - i * 2)}
+            x={x1 + cellSize * i}
+            y={y1 + cellSize * i}
+          />,
+        );
+      }
+    });
+
+    if (image) {
+      const x1 = (matrix.length - 7) * cellSize * 1;
+      const y1 = (matrix.length - 7) * cellSize * 1;
+      dotsArray.push(
+        <>
+          <rect
+            fill={imageBackground}
+            rx={(0 - 2) * -5 + 2}
+            ry={(0 - 2) * -5 + 2}
+            width={cellSize * (7 - 0 * 2)}
+            height={cellSize * (7 - 0 * 2)}
+            x={x1 + cellSize * 0}
+            y={y1 + cellSize * 0}
+          />
+          <foreignObject
+            width={cellSize * (7 - 0 * 2)}
+            height={cellSize * (7 - 0 * 2)}
+            x={x1 + cellSize * 0}
+            y={y1 + cellSize * 0}
+          >
+            <div style={{ borderRadius: (0 - 2) * -5 + 2, overflow: "hidden" }}>
+              {image}
+            </div>
+          </foreignObject>
+        </>,
+      );
+    }
+
+    const clearArenaSize = Math.floor((logoSize + 25) / cellSize);
+    const matrixMiddleStart = matrix.length / 2 - clearArenaSize / 2;
+    const matrixMiddleEnd = matrix.length / 2 + clearArenaSize / 2 - 1;
+
+    matrix.forEach((row: QRCodeUtil.QRCode[], i: number) => {
+      row.forEach((_: any, j: number) => {
+        if (matrix[i][j]) {
+          // Do not render dots under position squares
+          if (
+            !(
+              (i < 7 && j < 7) ||
+              (i > matrix.length - 8 && j < 7) ||
+              (i < 7 && j > matrix.length - 8)
+            )
+          ) {
+            //if (image && i > matrix.length - 9 && j > matrix.length - 9) return;
+            if (
+              image ||
+              !(
+                i > matrixMiddleStart &&
+                i < matrixMiddleEnd &&
+                j > matrixMiddleStart &&
+                j < matrixMiddleEnd
+              )
+            ) {
+              dotsArray.push(
+                <circle
+                  key={`circle-${i}-${j}`}
+                  cx={i * cellSize + cellSize / 2}
+                  cy={j * cellSize + cellSize / 2}
+                  fill="var(--ck-qr-dot-color)"
+                  r={cellSize / 3}
+                />,
+              );
+            }
+          }
+        }
+      });
+    });
+
+    return dotsArray;
+  }, [ecl, image, imageBackground, logoSize, size, uri]);
+
+  return (
+    <svg
+      height={size}
+      width={size}
+      viewBox={`0 0 ${size} ${size}`}
+      style={{
+        width: size,
+        height: size,
+      }}
+    >
+      <rect fill="transparent" height={size} width={size} />
+      {dots}
+    </svg>
+  );
+}

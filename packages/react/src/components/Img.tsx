@@ -7,6 +7,7 @@ export const Img: React.FC<{
   alt?: string;
   loading?: "eager" | "lazy";
   className?: string;
+  style?: React.CSSProperties;
 }> = (props) => {
   const storage = useStorage();
   return (
@@ -24,7 +25,9 @@ export const Img: React.FC<{
       style={{
         height: props.height + "px",
         width: props.width + "px",
+        userSelect: "none",
       }}
+      draggable={false}
       className={props.className}
     />
   );
