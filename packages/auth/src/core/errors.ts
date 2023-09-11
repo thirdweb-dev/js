@@ -53,8 +53,10 @@ export function createError<Variables = undefined>(
       this.innerError = innerError;
       this.variables = variables;
 
-      Error.stackTraceLimit !== 0 &&
-      Error.captureStackTrace(this, ThirdwebAuthError);
+      // @ts-ignore
+      if (Error.stackTraceLimit !== 0) {
+        Error.captureStackTrace(this, ThirdwebAuthError)
+      }
     }
   }
 
