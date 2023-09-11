@@ -116,7 +116,7 @@
     "next-sitemap": "^4.0.0",
     "next-unused": "^0.0.6",
     "tailwindcss": "^3.3.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.2.2"
   },
   "resolutions": {
     "@types/react": "^18.0.26",
