@@ -145,7 +145,7 @@ const buildIframeSrc = (
   if (biconomyApiId) {
     url.searchParams.append("biconomyApiId", biconomyApiId);
   }
-  if (theme && theme !== "light") {
+  if (theme) {
     url.searchParams.append("theme", theme);
   }
   if (primaryColor && primaryColor !== "default") {
