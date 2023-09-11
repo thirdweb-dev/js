@@ -4,6 +4,7 @@ export default {
   "chain": "BSC",
   "rpc": [
     "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "wss://bsc-testnet.publicnode.com",
     "https://bsc-testnet.publicnode.com",
     "https://data-seed-prebsc-2-s3.bnbchain.org:8545",
     "https://data-seed-prebsc-1-s3.bnbchain.org:8545",

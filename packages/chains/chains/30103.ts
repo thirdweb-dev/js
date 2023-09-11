@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Canxium Mainnet",
+  "name": "Cerium Testnet",
   "chain": "CAU",
   "icon": {
     "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
@@ -9,8 +9,8 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.canxium.org"
+    "https://cerium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://cerium-rpc.canxium.net"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -19,16 +19,16 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://canxium.org",
-  "shortName": "cau",
-  "chainId": 3003,
-  "networkId": 3003,
+  "shortName": "ceri",
+  "chainId": 30103,
+  "networkId": 30103,
   "explorers": [
     {
       "name": "canxium explorer",
-      "url": "https://explorer.canxium.org",
+      "url": "https://cerium-explorer.canxium.net",
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "canxium"
+  "testnet": true,
+  "slug": "cerium-testnet"
 } as const satisfies Chain;

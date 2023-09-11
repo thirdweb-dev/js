@@ -8,10 +8,7 @@ export default {
     "https://kcc.mytokenpocket.vip",
     "https://public-rpc.blockpi.io/http/kcc"
   ],
-  "faucets": [
-    "https://faucet.kcc.io/",
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "KuCoin Token",
     "symbol": "KCS",
