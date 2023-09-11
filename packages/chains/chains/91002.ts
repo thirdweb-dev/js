@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nautilus Chain",
+  "name": "Nautilus Trition Chain",
   "title": "Nautilus Trition Testnet",
   "chain": "ETH",
   "icon": {
@@ -10,7 +10,7 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://nautilus-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://nautilus-trition-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://triton.api.nautchain.xyz"
   ],
   "faucets": [
@@ -33,5 +33,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "nautilus-chain"
+  "slug": "nautilus-trition-chain"
 } as const satisfies Chain;
