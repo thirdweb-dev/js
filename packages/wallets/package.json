@@ -92,6 +92,13 @@
       },
       "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.cjs.js"
     },
+    "./evm/wallets/phantom": {
+      "module": {
+        "browser": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.browser.esm.js",
+        "default": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.esm.js"
+      },
+      "default": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.cjs.js"
+    },
     "./solana/wallets/base": {
       "module": {
         "browser": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.browser.esm.js",
@@ -238,6 +245,13 @@
         "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.esm.js"
       },
       "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
+    },
+    "./evm/connectors/phantom": {
+      "module": {
+        "browser": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.browser.esm.js",
+        "default": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.esm.js"
+      },
+      "default": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.cjs.js"
     },
     "./evm/connectors/rainbow": {
       "module": {
