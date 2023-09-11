@@ -322,13 +322,15 @@ const WalletButton = styled.button<{ theme?: Theme }>`
   position: relative;
   border-radius: ${radius.md};
   padding: ${spacing.xs} ${spacing.xs};
-  transition: background 300ms ease;
 
   &:hover {
     background-color: ${(p) => p.theme.bg.elevated};
   }
 
-  transition: transform 200ms ease;
+  transition:
+    transform 200ms ease,
+    background-color 100ms ease;
+
   &:hover {
     transform: scale(1.01);
   }

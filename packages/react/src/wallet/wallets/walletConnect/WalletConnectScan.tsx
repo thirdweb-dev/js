@@ -81,14 +81,14 @@ export const WalletConnectScan: React.FC<{
             qrCodeUri={qrCodeUri}
             QRIcon={
               <Img
-                width={iconSize.lg}
-                height={iconSize.lg}
+                width={iconSize.xxl}
+                height={iconSize.xxl}
                 src={walletConfig.meta.iconURL}
               />
             }
           />
 
-          <Spacer y="md" />
+          <Spacer y="xl" />
         </Container>
       </Container>
 
