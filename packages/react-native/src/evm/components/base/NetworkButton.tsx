@@ -18,13 +18,13 @@ import { useAppTheme } from "../../styles/hooks";
 import { Chain } from "@thirdweb-dev/chains";
 
 type NetworkButtonProps = {
-  chain: Chain;
+  chain?: Chain;
   padding?: keyof Theme["spacing"];
   onPress?: () => void;
   enableSwitchModal?: boolean;
   switchChainOnPress?: boolean;
   onChainSwitched?: () => void;
-} & (typeof BaseButton)["arguments"];
+} & React.ComponentProps<typeof Box>;
 
 export const NetworkButton = ({
   onPress,
@@ -51,6 +51,10 @@ export const NetworkButton = ({
     } else if (switchChainOnPress) {
       setIsSwitching(true);
       setTimeout(async () => {
+        if (!chain?.chainId) {
+          throw new Error(`Empty chainId for chain: ${chain?.name}`);
+        }
+
         try {
           await switchChain(chain.chainId);
           setIsSwitching(false);
@@ -78,20 +82,14 @@ export const NetworkButton = ({
         {...props}
       >
         <Box flexDirection="row" alignItems="center">
-          {chain.icon.url ? (
-            <ChainIcon
-              chainIconUrl={chain.icon.url || ""}
-              size={32}
-              active={false}
-            />
-          ) : null}
+          <ChainIcon chainIconUrl={chain?.icon?.url} size={32} active={false} />
           <Box
             ml="md"
             alignItems="flex-start"
             justifyContent="center"
             height={36}
           >
-            <Text variant="bodyLarge">{chain.name || "Unknown Network"}</Text>
+            <Text variant="bodyLarge">{chain?.name || "Unknown Network"}</Text>
             {isSwitching ? (
               <Box flexDirection="row" alignItems="center">
                 <Text

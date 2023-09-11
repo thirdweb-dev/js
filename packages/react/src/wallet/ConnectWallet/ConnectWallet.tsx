@@ -7,9 +7,12 @@ import {
   useConnectionStatus,
   useLogin,
   useLogout,
+  useNetworkMismatch,
+  useSwitchChain,
   useThirdwebAuthContext,
   useUser,
   useWallet,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { useContext, useState } from "react";
 import {
@@ -54,6 +57,17 @@ type ConnectWalletProps = {
    * @default false
    */
   hideTestnetFaucet?: boolean;
+
+  /**
+   * Whether to show "Switch Network" button if the wallet is connected,
+   * but it is not connected to the `activeChain` provided in `ThirdwebProvider`
+   *
+   * Please, note that if you support multiple networks in your app this prop should
+   * be set to `false` to allow users to switch between networks.
+   *
+   * @default false
+   */
+  switchToActiveChain?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -83,6 +97,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const { user } = useUser();
   const { login } = useLogin();
   const { logout } = useLogout();
+  const isNetworkMismatch = useNetworkMismatch();
+  const { activeChainSetExplicitly } = useWalletContext();
 
   const requiresSignIn = props.auth?.loginOptional
     ? false
@@ -108,61 +124,87 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         />
       )}
 
-      {/* Sign In Button */}
-      {requiresSignIn && (
-        <Button
-          variant="inverted"
-          onClick={signIn}
-          data-theme={theme}
-          className={`${TW_CONNECT_WALLET}--sign-in ${props.className || ""}}`}
-          style={props.style}
-        >
-          <Flex
-            alignItems="center"
-            gap="sm"
-            style={{
-              paddingRight: spacing.xs,
-              borderRight: "1px solid",
-              marginRight: spacing.xs,
-            }}
-          >
-            <LockIcon size={iconSize.sm} />
-            <span> Sign in </span>
-          </Flex>
-          <span>{shortenAddress(address || "", true)}</span>
-        </Button>
-      )}
+      {(() => {
+        // wallet is not connected
+        if (!activeWallet) {
+          // Connect Wallet button
+          return (
+            <AnimatedButton
+              disabled={isLoading}
+              className={`${props.className || ""} ${TW_CONNECT_WALLET}`}
+              data-theme={theme}
+              data-is-loading={isLoading}
+              variant="inverted"
+              type="button"
+              style={{
+                minWidth: "140px",
+                ...props.style,
+              }}
+              aria-label={
+                connectionStatus === "connecting" ? "Connecting" : btnTitle
+              }
+              onClick={() => {
+                setModalConfig({
+                  title: props.modalTitle || "Choose your wallet",
+                  theme,
+                  data: undefined,
+                });
+                setIsWalletModalOpen(true);
+              }}
+              data-test="connect-wallet-button"
+            >
+              {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
+            </AnimatedButton>
+          );
+        }
 
-      {!requiresSignIn &&
-        (!activeWallet ? (
-          // connect wallet button
-          <AnimatedButton
-            disabled={isLoading}
-            className={`${props.className || ""} ${TW_CONNECT_WALLET}`}
-            data-theme={theme}
-            data-is-loading={isLoading}
-            variant="inverted"
-            type="button"
-            style={{
-              minWidth: "140px",
-              ...props.style,
-            }}
-            aria-label={
-              connectionStatus === "connecting" ? "Connecting" : btnTitle
-            }
-            onClick={() => {
-              setModalConfig({
-                title: props.modalTitle || "Choose your wallet",
-                theme,
-                data: undefined,
-              });
-              setIsWalletModalOpen(true);
-            }}
-            data-test="connect-wallet-button"
-          >
-            {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
-          </AnimatedButton>
-        ) : (
+        // switch network button
+        if (
+          props.switchToActiveChain &&
+          isNetworkMismatch &&
+          activeChainSetExplicitly
+        ) {
+          return (
+            <SwitchNetworkButton
+              style={props.style}
+              theme={theme}
+              className={props.className}
+            />
+          );
+        }
+
+        // sign in button
+        else if (requiresSignIn) {
+          return (
+            <Button
+              variant="inverted"
+              onClick={signIn}
+              data-theme={theme}
+              className={`${TW_CONNECT_WALLET}--sign-in ${
+                props.className || ""
+              }`}
+              style={props.style}
+              data-test="sign-in-button"
+            >
+              <Flex
+                alignItems="center"
+                gap="sm"
+                style={{
+                  paddingRight: spacing.xs,
+                  borderRight: "1px solid",
+                  marginRight: spacing.xs,
+                }}
+              >
+                <LockIcon size={iconSize.sm} />
+                <span> Sign in </span>
+              </Flex>
+              <span>{shortenAddress(address || "", true)}</span>
+            </Button>
+          );
+        }
+
+        // wallet details button
+        return (
           <ConnectedWalletDetails
             networkSelector={props.networkSelector}
             dropdownPosition={props.dropdownPosition}
@@ -178,10 +220,51 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               }
             }}
           />
-        ))}
+        );
+      })()}
     </ThemeProvider>
   );
 };
+
+function SwitchNetworkButton(props: {
+  style?: React.CSSProperties;
+  className?: string;
+  theme: "dark" | "light";
+}) {
+  const { activeChain } = useWalletContext();
+  const switchChain = useSwitchChain();
+  const [switching, setSwitching] = useState(false);
+
+  return (
+    <AnimatedButton
+      className={`${TW_CONNECT_WALLET}--switch-network ${
+        props.className || ""
+      }`}
+      variant="inverted"
+      type="button"
+      data-theme={props.theme}
+      data-is-loading={switching}
+      data-test="switch-network-button"
+      disabled={switching}
+      onClick={async () => {
+        setSwitching(true);
+        try {
+          await switchChain(activeChain.chainId);
+        } catch {
+          // ignore
+        }
+        setSwitching(false);
+      }}
+      style={{
+        minWidth: "140px",
+        ...props.style,
+      }}
+      aria-label={switching ? "Switching Network" : undefined}
+    >
+      {switching ? <Spinner size="sm" color="inverted" /> : "Switch Network"}
+    </AnimatedButton>
+  );
+}
 
 const AnimatedButton = /* @__PURE__ */ styled(Button)`
   animation: ${fadeInAnimation} 300ms ease;

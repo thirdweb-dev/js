@@ -5,8 +5,8 @@ export default {
   "rpc": [
     "https://boba-bnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bnb.boba.network",
-    "http://boba-bnb.gateway.tenderly.co/",
-    "http://gateway.tenderly.co/public/boba-bnb",
+    "https://boba-bnb.gateway.tenderly.co/",
+    "https://gateway.tenderly.co/public/boba-bnb",
     "https://replica.bnb.boba.network",
     "wss://boba-bnb.gateway.tenderly.co/",
     "wss://gateway.tenderly.co/public/boba-bnb"

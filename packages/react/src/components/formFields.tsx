@@ -18,6 +18,7 @@ export const FormFieldWithIconButton: React.FC<{
   error?: string;
   noSave?: boolean;
   dataTest?: string;
+  placeholder?: string;
 }> = (props) => {
   return (
     <div>
@@ -42,6 +43,7 @@ export const FormFieldWithIconButton: React.FC<{
               : undefined
           }
           data-test={props.dataTest}
+          placeholder={props.placeholder}
         />
 
         <InputButton type="button" onClick={props.right.onClick}>

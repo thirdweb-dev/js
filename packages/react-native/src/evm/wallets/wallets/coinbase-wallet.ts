@@ -1,8 +1,9 @@
 import { noopStorage } from "../../../core/AsyncStorage";
 import type {
-  CoinbaseWalletConnector,
+  CoinbaseWalletConnector as CoinbaseWalletConnectorType,
   CoinbaseWalletConnectorOptions,
 } from "../connectors/coinbase-wallet";
+import { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
 import {
   AbstractClientWallet,
   Connector,
@@ -28,8 +29,8 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   };
 
   connector?: Connector;
-  coinbaseConnector?: CoinbaseWalletConnector;
-  provider?: CoinbaseWalletConnector["provider"];
+  coinbaseConnector?: CoinbaseWalletConnectorType;
+  provider?: CoinbaseWalletConnectorType["provider"];
 
   static id = walletIds.coinbase;
   public get walletName() {
@@ -50,11 +51,6 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { CoinbaseWalletConnector: CoinbaseWalletConnector } = await import(
-        "../connectors/coinbase-wallet"
-      );
-
       const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {

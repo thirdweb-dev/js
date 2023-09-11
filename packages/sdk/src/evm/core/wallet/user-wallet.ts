@@ -29,6 +29,7 @@ import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractWrapper } from "../classes/contract-wrapper";
+import { getDefaultGasOverrides } from "../../common";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -282,9 +283,33 @@ export class UserWallet {
    */
   public async sendRawTransaction(
     transactionRequest: providers.TransactionRequest,
-  ): Promise<TransactionResult> {
+  ): Promise<providers.TransactionResponse> {
     const signer = this.requireWallet();
-    const tx = await signer.sendTransaction(transactionRequest);
+    const hasGasPrice = !!transactionRequest.gasPrice;
+    const hasFeeData =
+      !!transactionRequest.maxFeePerGas &&
+      !!transactionRequest.maxPriorityFeePerGas;
+    const hasGasData = hasGasPrice || hasFeeData;
+    if (!hasGasData) {
+      // set default gas values
+      const defaultGas = await getDefaultGasOverrides(
+        this.connection.getProvider(),
+      );
+      transactionRequest.maxFeePerGas = defaultGas.maxFeePerGas;
+      transactionRequest.maxPriorityFeePerGas = defaultGas.maxPriorityFeePerGas;
+      transactionRequest.gasPrice = defaultGas.gasPrice;
+    }
+    return signer.sendTransaction(transactionRequest);
+  }
+
+  /**
+   * Execute a raw transaction to the blockchain from the connected wallet and wait for it to be mined
+   * @param transactionRequest - raw transaction data to send to the blockchain
+   */
+  public async executeRawTransaction(
+    transactionRequest: providers.TransactionRequest,
+  ): Promise<TransactionResult> {
+    const tx = await this.sendRawTransaction(transactionRequest);
     return {
       receipt: await tx.wait(),
     };

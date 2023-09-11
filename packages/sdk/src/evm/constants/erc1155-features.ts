@@ -217,6 +217,17 @@ export const FEATURE_EDITION_UPDATABLE_METADATA = {
   features: {},
 } as const;
 
+export const FEATURE_EDITION_SUPPLY = {
+  name: "ERC1155Supply",
+  namespace: "edition.supply",
+  docLinks: {
+    sdk: "",
+    contracts: "",
+  },
+  abis: [Erc1155Abi, Erc1155SupplyAbi],
+  features: {},
+} as const;
+
 export const FEATURE_EDITION = /* @__PURE__ */ {
   name: "ERC1155",
   namespace: "edition",
@@ -224,8 +235,9 @@ export const FEATURE_EDITION = /* @__PURE__ */ {
     sdk: "sdk.erc1155enumerable",
     contracts: "erc1155",
   },
-  abis: [Erc1155Abi, Erc1155MetadataAbi, Erc1155SupplyAbi, NAME_SYMBOL_ABI],
+  abis: [Erc1155Abi, Erc1155MetadataAbi, NAME_SYMBOL_ABI],
   features: {
+    [FEATURE_EDITION_SUPPLY.name]: FEATURE_EDITION_SUPPLY,
     [FEATURE_EDITION_BURNABLE.name]: FEATURE_EDITION_BURNABLE,
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,

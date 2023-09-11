@@ -27,7 +27,9 @@ export function generatePluginFunctions(
   const pluginFunctions: Plugin[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {
-    const fn = pluginInterface.getFunction(fnFragment.name);
+    const fn = pluginInterface.getFunction(
+      pluginInterface.getSighash(fnFragment),
+    );
     if (fn.name.includes("_")) {
       continue;
     }

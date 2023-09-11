@@ -113,7 +113,7 @@ export const WalletSelection: React.FC<{
     });
 
   return (
-    <WalletList>
+    <WalletListContainer>
       {walletConfigs.map((walletConfig) => {
         const isInstalled = walletConfig.isInstalled
           ? walletConfig.isInstalled()
@@ -150,11 +150,11 @@ export const WalletSelection: React.FC<{
           </li>
         );
       })}
-    </WalletList>
+    </WalletListContainer>
   );
 };
 
-const WalletList = styled.ul`
+const WalletListContainer = styled.ul`
   all: unset;
   list-style-type: none;
   display: flex;

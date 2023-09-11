@@ -48,7 +48,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   private static contractRoles = NFT_BASE_CONTRACT_ROLES;
 
   public abi: Abi;
-  public sales: ContractPrimarySale<PrebuiltEditionDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltEditionDrop>;
   public encoder: ContractEncoder<PrebuiltEditionDrop>;
   public estimator: GasCostEstimator<PrebuiltEditionDrop>;

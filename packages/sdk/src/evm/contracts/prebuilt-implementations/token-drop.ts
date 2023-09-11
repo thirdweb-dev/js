@@ -54,7 +54,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   >;
   public encoder: ContractEncoder<PrebuiltTokenDrop>;
   public estimator: GasCostEstimator<PrebuiltTokenDrop>;
-  public sales: ContractPrimarySale<PrebuiltTokenDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltTokenDrop>;
   public events: ContractEvents<PrebuiltTokenDrop>;
   /**

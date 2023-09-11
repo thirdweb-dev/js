@@ -1,5 +1,22 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.4
+
+### Patch Changes
+
+- [#1566](https://github.com/thirdweb-dev/js/pull/1566) [`d378106a`](https://github.com/thirdweb-dev/js/commit/d378106a852f941779bb72ac1841bddf34fc15a6) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - docs(service-utils): Add documentation for authorizeNode for node auth function
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- [#1559](https://github.com/thirdweb-dev/js/pull/1559) [`13ef6a50`](https://github.com/thirdweb-dev/js/commit/13ef6a50cf10b442b2b54b780e42210cab2db762) Thanks [@assimovt](https://github.com/assimovt)! - expose account status in api key metadata
+
+## 0.4.3
+
+### Patch Changes
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
 ## 0.4.2
 
 ### Patch Changes

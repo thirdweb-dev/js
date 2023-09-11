@@ -15,7 +15,9 @@ export default {
     "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://api.mycryptoapi.com/eth",
     "https://cloudflare-eth.com",
-    "https://ethereum.publicnode.com"
+    "https://ethereum.publicnode.com",
+    "https://mainnet.gateway.tenderly.co",
+    "wss://mainnet.gateway.tenderly.co"
   ],
   "features": [
     {

@@ -17,8 +17,14 @@ export default {
     "symbol": "MC",
     "decimals": 18
   },
-  "infoURL": "https://gaming.meritcircle.io",
-  "shortName": "BEAM",
+  "infoURL": "https://www.onbeam.com",
+  "shortName": "beam-testnet",
+  "icon": {
+    "url": "ipfs://QmQJ21NWyGGDraicVEzS1Uqq1yXahM9NCuNZgnfYvtspdt",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "chainId": 13337,
   "networkId": 13337,
   "explorers": [

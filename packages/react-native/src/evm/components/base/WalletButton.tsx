@@ -10,7 +10,7 @@ type WalletButtonProps = {
   walletIconUrl: string;
   name: string;
   labelText?: string;
-} & (typeof BaseButton)["arguments"];
+} & React.ComponentProps<typeof BaseButton>;
 
 export const WalletButton = ({
   mb,

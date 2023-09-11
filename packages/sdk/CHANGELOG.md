@@ -1,5 +1,77 @@
 # @thirdweb-dev/sdk
 
+## 3.10.59
+
+### Patch Changes
+
+- [#1567](https://github.com/thirdweb-dev/js/pull/1567) [`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix constructor param encoding for deterministic deployments
+
+- [#1568](https://github.com/thirdweb-dev/js/pull/1568) [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better fee calculations for OP stack
+
+- [#1572](https://github.com/thirdweb-dev/js/pull/1572) [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dynamic gas fee estimations
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- Updated dependencies [[`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f), [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/storage@1.2.10
+
+## 3.10.58
+
+### Patch Changes
+
+- [#1557](https://github.com/thirdweb-dev/js/pull/1557) [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19) Thanks [@MananTank](https://github.com/MananTank)! - Use default export for EventEmitter to fix issue with Nuxt/Vite + Yarn to fix the "Named export 'EventEmitter' not found" error
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005)]:
+  - @thirdweb-dev/chains@0.1.50
+
+## 3.10.57
+
+### Patch Changes
+
+- [#1545](https://github.com/thirdweb-dev/js/pull/1545) [`adec589e`](https://github.com/thirdweb-dev/js/commit/adec589ead8ceff1b57169e05a3e6733b4652cc7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose joinAbis() utility function
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+- Updated dependencies [[`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d), [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3), [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5)]:
+  - @thirdweb-dev/chains@0.1.49
+  - @thirdweb-dev/storage@1.2.9
+
+## 3.10.56
+
+### Patch Changes
+
+- [#1537](https://github.com/thirdweb-dev/js/pull/1537) [`f59b729f`](https://github.com/thirdweb-dev/js/commit/f59b729f8b09aa86655b8e8a70fba644fc52009b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix auto-factory deployment: correct bytecode format
+
+- [#1520](https://github.com/thirdweb-dev/js/pull/1520) [`cd6b07b5`](https://github.com/thirdweb-dev/js/commit/cd6b07b591606d2671794cebebf8edcb59076c32) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): update read calls to be centralized in contract-wrapper.ts
+
+- Updated dependencies [[`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c)]:
+  - @thirdweb-dev/chains@0.1.48
+
+## 3.10.55
+
+### Patch Changes
+
+- [#1488](https://github.com/thirdweb-dev/js/pull/1488) [`586e91db`](https://github.com/thirdweb-dev/js/commit/586e91dbe610588cc7b24fade59172fed6481074) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Dynamic contract detection and deployment using updated publish metadata
+
+- [#1518](https://github.com/thirdweb-dev/js/pull/1518) [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8) Thanks [@nkrishang](https://github.com/nkrishang)! - Update contracts package
+
+- [#1526](https://github.com/thirdweb-dev/js/pull/1526) [`91f0245b`](https://github.com/thirdweb-dev/js/commit/91f0245be78ae523e1faea26b1032bfb283467d9) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix supported chains map in getChainProvider
+
+- [#1525](https://github.com/thirdweb-dev/js/pull/1525) [`5a373a75`](https://github.com/thirdweb-dev/js/commit/5a373a75090da7e1e05724ed1a3a3a6aa9f7fd21) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Correct chain / polygon rpc for fetching published contract
+
+- [#1523](https://github.com/thirdweb-dev/js/pull/1523) [`ae74b8ef`](https://github.com/thirdweb-dev/js/commit/ae74b8ef6200dba8affa8b52e7d834c5552350d0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Separate ERC1155Supply extension
+
+- [#1516](https://github.com/thirdweb-dev/js/pull/1516) [`bc003c2f`](https://github.com/thirdweb-dev/js/commit/bc003c2fef33fcf7ce5981d8634911ac4bcaa927) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return early for claim checks when possible
+
+- [#1288](https://github.com/thirdweb-dev/js/pull/1288) [`447d9846`](https://github.com/thirdweb-dev/js/commit/447d984653f77af6860ae907072e768b584b263d) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Airdrops
+
+- [#1498](https://github.com/thirdweb-dev/js/pull/1498) [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimized fetching contract metadata, and fallback to bytecode extension detection for un-imported contracts
+
+- Updated dependencies [[`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8), [`f65578d6`](https://github.com/thirdweb-dev/js/commit/f65578d637decc8b87cada5b5b0c8c504064d9d5)]:
+  - @thirdweb-dev/contracts-js@1.3.12
+  - @thirdweb-dev/chains@0.1.47
+  - @thirdweb-dev/storage@1.2.8
+
 ## 3.10.54
 
 ### Patch Changes

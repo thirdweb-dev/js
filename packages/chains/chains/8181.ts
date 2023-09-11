@@ -1,19 +1,17 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BeOne Chain Testnet",
-  "chain": "BOC",
+  "name": "Testnet BeOne Chain",
+  "chain": "tBOC",
   "rpc": [
-    "https://beone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pre-boc1.beonechain.com",
-    "https://pre-boc2.beonechain.com",
-    "https://pre-boc3.beonechain.com"
+    "https://testnet-beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://pre-boc1.beonechain.com"
   ],
   "faucets": [
     "https://testnet.beonescan.com/faucet"
   ],
   "nativeCurrency": {
-    "name": "BeOne Chain Testnet",
-    "symbol": "BOC",
+    "name": "Testnet BeOne Chain",
+    "symbol": "tBOC",
     "decimals": 18
   },
   "infoURL": "https://testnet.beonescan.com",
@@ -28,7 +26,7 @@ export default {
   },
   "explorers": [
     {
-      "name": "BeOne Chain Testnet",
+      "name": "Testnet BeOne Chain",
       "url": "https://testnet.beonescan.com",
       "icon": {
         "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
@@ -40,5 +38,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "beone-chain-testnet"
+  "slug": "testnet-beone-chain"
 } as const satisfies Chain;

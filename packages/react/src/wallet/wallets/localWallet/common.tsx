@@ -18,7 +18,7 @@ export const LocalWalletModalHeader: React.FC<{
         </>
       )}
       <Img src={props.meta.iconURL} width={iconSize.xl} height={iconSize.xl} />
-      <Spacer y="sm" />
+      <Spacer y="md" />
     </>
   );
 };

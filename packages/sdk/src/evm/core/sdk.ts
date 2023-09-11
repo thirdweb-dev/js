@@ -103,7 +103,7 @@ import {
   utils,
   ContractFactory as ethersContractFactory,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import {
@@ -117,6 +117,10 @@ import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
 import { AirdropContractDeploy } from "../schema/contracts/airdrop";
+import {
+  directDeployDeterministicPublished,
+  predictAddressDeterministicPublished,
+} from "../common";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -1657,6 +1661,68 @@ export class ContractDeployer extends RPCConnectionHandler {
   deployPublishedContract = this.deployReleasedContract;
 
   /**
+   * Deploy any published contract by its name
+   * @param contractName the name of the contract to deploy
+   * @param constructorParams the constructor params to pass to the contract
+   * @param publisherAddress the address of the publisher
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   */
+  async deployPublishedContractDeterministic(
+    contractName: string,
+    constructorParams: any[],
+    publisherAddress: string = THIRDWEB_DEPLOYER,
+    contractVersion: string = "latest",
+    saltForCreate2?: string,
+  ): Promise<string> {
+    const signer = this.getSigner();
+    invariant(signer, "Signer is required");
+
+    return directDeployDeterministicPublished(
+      contractName,
+      publisherAddress,
+      contractVersion,
+      constructorParams,
+      signer,
+      this.storage,
+      this.options.clientId,
+      this.options.secretKey,
+      saltForCreate2,
+    );
+  }
+
+  /**
+   * Predict Create2 address of a contract
+   * @param contractName the name of the contract
+   * @param constructorParams the constructor params to pass to the contract
+   * @param publisherAddress the address of the publisher
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   */
+  async predictAddressDeterministic(
+    contractName: string,
+    constructorParams: any[],
+    publisherAddress: string = THIRDWEB_DEPLOYER,
+    contractVersion: string = "latest",
+    saltForCreate2?: string,
+  ): Promise<string> {
+    const provider = this.getProvider();
+    invariant(provider, "Provider is required");
+
+    return predictAddressDeterministicPublished(
+      contractName,
+      publisherAddress,
+      contractVersion,
+      constructorParams,
+      provider,
+      this.storage,
+      this.options.clientId,
+      this.options.secretKey,
+      saltForCreate2,
+    );
+  }
+
+  /**
    * Deploy a proxy contract of a given implementation via the given factory
    * @param factoryAddress
    * @param implementationAddress
@@ -1760,6 +1826,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.storage,
         this.getProvider(),
         create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
       );
 
       const implementationAddress = deploymentInfo.find(
@@ -1791,11 +1859,17 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // send each transaction directly to Create2 factory
-      await Promise.all(
-        transactionsforDirectDeploy.map((tx) => {
-          return deployContractDeterministic(signer, tx, options);
-        }),
-      );
+      // process txns one at a time
+      for (const tx of transactionsforDirectDeploy) {
+        try {
+          await deployContractDeterministic(signer, tx, options);
+        } catch (e) {
+          console.debug(
+            `Error deploying contract at ${tx.predictedAddress}`,
+            (e as any)?.message,
+          );
+        }
+      }
 
       const resolvedImplementationAddress = await resolveAddress(
         implementationAddress,
@@ -1806,6 +1880,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.getProvider(),
         this.storage,
         create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
       );
 
       options?.notifier?.("deploying", "proxy");
@@ -2201,6 +2277,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           this.storage,
           this.getProvider(),
           create2FactoryAddress,
+          this.options.clientId,
+          this.options.secretKey,
         );
 
         const transactionsToSend = deploymentInfo.filter(

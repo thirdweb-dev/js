@@ -1,8 +1,11 @@
 import type { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
-import { WalletConnect } from "@thirdweb-dev/wallets";
+import {
+  RainbowWallet,
+  getInjectedRainbowProvider,
+} from "@thirdweb-dev/wallets";
 import { RainbowConnectUI } from "./RainbowConnectUI";
-import { rainbowWalletUris } from "./rainbowWalletUris";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import { rainbowWalletUris } from "./rainbowWalletUris";
 
 type RainbowWalletOptions = {
   /**
@@ -16,22 +19,13 @@ type RainbowWalletOptions = {
 
 export const rainbowWallet = (
   options?: RainbowWalletOptions,
-): WalletConfig<WalletConnect> => {
+): WalletConfig<RainbowWallet> => {
   return {
-    id: "rainbow",
-    meta: {
-      name: "Rainbow Wallet",
-      iconURL:
-        "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
-      urls: {
-        android: "https://rnbwapp.com/e/Va41HWS6Oxb",
-        ios: "https://rnbwapp.com/e/OeMdmkJ6Oxb",
-      },
-    },
+    id: RainbowWallet.id,
+    meta: RainbowWallet.meta,
     create: (walletOptions: WalletOptions) => {
-      const wallet = new WalletConnect({
+      const wallet = new RainbowWallet({
         ...walletOptions,
-        walletId: "rainbow",
         projectId: options?.projectId,
         qrcode: false,
       });
@@ -42,7 +36,7 @@ export const rainbowWallet = (
     },
     connectUI: RainbowConnectUI,
     isInstalled() {
-      return false;
+      return !!getInjectedRainbowProvider();
     },
   };
 };

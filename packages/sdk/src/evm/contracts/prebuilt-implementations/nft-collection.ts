@@ -58,7 +58,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
   public events: ContractEvents<TokenERC721>;
-  public sales: ContractPrimarySale<TokenERC721>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<TokenERC721>;
   /**
    * Configure royalties

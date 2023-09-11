@@ -7,7 +7,9 @@ export default {
     "https://testnet.bnb.boba.network",
     "wss://wss.testnet.bnb.boba.network",
     "https://replica.testnet.bnb.boba.network",
-    "wss://replica-wss.testnet.bnb.boba.network"
+    "wss://replica-wss.testnet.bnb.boba.network",
+    "https://boba-bnb-testnet.gateway.tenderly.co",
+    "wss://boba-bnb-testnet.gateway.tenderly.co"
   ],
   "faucets": [],
   "nativeCurrency": {

@@ -1,10 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Omni Testnet 1",
+  "name": "Omni Testnet",
   "chain": "Omni",
   "rpc": [
-    "https://omni-testnet-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-1.omni.network"
+    "https://omni-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.omni.network"
   ],
   "features": [
     {
@@ -24,10 +24,10 @@ export default {
   "explorers": [
     {
       "name": "Omni Explorer",
-      "url": "https://testnet-1.explorer.omni.network",
+      "url": "https://testnet.explorer.omni.network",
       "standard": "EIP3091"
     }
   ],
   "testnet": true,
-  "slug": "omni-testnet-1"
+  "slug": "omni-testnet"
 } as const satisfies Chain;

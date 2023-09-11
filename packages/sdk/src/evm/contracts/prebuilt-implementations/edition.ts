@@ -56,7 +56,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     TokenERC1155,
     (typeof Edition.contractRoles)[number]
   >;
-  public sales: ContractPrimarySale<TokenERC1155>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;

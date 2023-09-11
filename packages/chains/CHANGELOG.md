@@ -1,5 +1,34 @@
 # @thirdweb-dev/chains
 
+## 0.1.50
+
+### Patch Changes
+
+- [#1558](https://github.com/thirdweb-dev/js/pull/1558) [`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005) Thanks [@Marfuen](https://github.com/Marfuen)! - Updating chains list
+
+## 0.1.49
+
+### Patch Changes
+
+- [#1540](https://github.com/thirdweb-dev/js/pull/1540) [`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - updated chains
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
+- [#1551](https://github.com/thirdweb-dev/js/pull/1551) [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update chains
+
+## 0.1.48
+
+### Patch Changes
+
+- [#1530](https://github.com/thirdweb-dev/js/pull/1530) [`911e14fc`](https://github.com/thirdweb-dev/js/commit/911e14fcac743b07fa1a66440c72d662c08e971c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add Chiliz Spicy testnet
+
+## 0.1.47
+
+### Patch Changes
+
+- [#1518](https://github.com/thirdweb-dev/js/pull/1518) [`34a3bb8a`](https://github.com/thirdweb-dev/js/commit/34a3bb8ae3c1d7a506e5568a9e79ab7e469557a8) Thanks [@nkrishang](https://github.com/nkrishang)! - Update contracts package
+
 ## 0.1.46
 
 ### Patch Changes

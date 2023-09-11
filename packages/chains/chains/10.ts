@@ -7,7 +7,9 @@ export default {
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.optimism.io",
-    "https://optimism.publicnode.com"
+    "https://optimism.publicnode.com",
+    "https://optimism.gateway.tenderly.co",
+    "wss://optimism.gateway.tenderly.co"
   ],
   "faucets": [],
   "nativeCurrency": {

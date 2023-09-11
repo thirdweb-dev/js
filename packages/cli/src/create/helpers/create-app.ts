@@ -220,7 +220,7 @@ export async function createApp({
   }
 
   let startOrDev: string | undefined;
-  if (framework && (framework === "next" || framework === "vite")) {
+  if (framework && (framework.includes("next") || framework.includes("vite"))) {
     startOrDev = "dev";
   } else if (template) {
     startOrDev = await getStartOrDev(template);

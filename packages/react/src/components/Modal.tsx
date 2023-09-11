@@ -152,7 +152,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   }
 `;
 
-const DialogTitle = /* @__PURE__ */ styled(/* @__PURE__ */ Dialog.Title)<{
+const DialogTitle = /* @__PURE__ */ styled.h2<{
   theme?: Theme;
 }>`
   margin: 0;

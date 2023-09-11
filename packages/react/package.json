@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.14.35",
+  "version": "3.14.40",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -131,7 +131,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.6",
     "@react-icons/all-files": "^4.1.0",
-    "@tanstack/react-query": "^4.32.0",
+    "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/react-core": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",

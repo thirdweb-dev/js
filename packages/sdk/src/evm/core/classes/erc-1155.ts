@@ -21,6 +21,7 @@ import {
   FEATURE_EDITION_CLAIM_CUSTOM,
   FEATURE_EDITION_CLAIM_CONDITIONS_V2,
   FEATURE_EDITION_LAZY_MINTABLE_V2,
+  FEATURE_EDITION_SUPPLY,
 } from "../../constants/erc1155-features";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Address } from "../../schema/shared/Address";
@@ -171,7 +172,11 @@ export class Erc1155<
    * @twfeature ERC1155
    */
   public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalSupply(tokenId);
+    if (detectContractFeature(this.contractWrapper, "ERC1155Supply")) {
+      return await this.contractWrapper.readContract.totalSupply(tokenId);
+    } else {
+      throw new ExtensionNotImplementedError(FEATURE_EDITION_SUPPLY);
+    }
   }
 
   /**
@@ -348,9 +353,12 @@ export class Erc1155<
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,
+      fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const from = fromAddress
+        ? await resolveAddress(fromAddress)
+        : await this.contractWrapper.getSignerAddress();
 
       const balanceOf = await this.balanceOf(from, tokenId);
 

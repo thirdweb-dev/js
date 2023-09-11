@@ -1,4 +1,7 @@
-import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "../common/any-evm-utils/fetchPublishedContractFromPolygon";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import { ALL_ROLES } from "../common/role";
@@ -194,7 +197,7 @@ export const MarketplaceV3Initializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      MarketplaceV3Initializer.getAbi(address, provider, storage),
+      MarketplaceV3Initializer.getAbi(address, provider, storage, options),
       import("./prebuilt-implementations/marketplacev3"),
       provider.getNetwork(),
     ]);
@@ -212,6 +215,7 @@ export const MarketplaceV3Initializer = {
     address: Address,
     provider: providers.Provider,
     storage: ThirdwebStorage,
+    options?: SDKOptions,
   ) => {
     const chainId = (await provider.getNetwork()).chainId;
     const isZkSync = chainId === 280 || chainId === 324;
@@ -219,7 +223,15 @@ export const MarketplaceV3Initializer = {
     // Can't resolve IPFS hash from plugin bytecode on ZkSync
     // Thus, pull the composite ABI from the release page
     if (isZkSync) {
-      const uri = await fetchAndCachePublishedContractURI("MarketplaceV3");
+      const publishedContract = await fetchPublishedContractFromPolygon(
+        THIRDWEB_DEPLOYER,
+        "MarketplaceV3",
+        "latest",
+        storage,
+        options?.clientId,
+        options?.secretKey,
+      );
+      const uri = publishedContract.metadataUri;
       const compositeAbi = await getCompositeABIfromRelease(uri, storage);
 
       return compositeAbi;

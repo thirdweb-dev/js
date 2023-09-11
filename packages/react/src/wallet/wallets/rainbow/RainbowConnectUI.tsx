@@ -1,13 +1,14 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
-import { WalletConnect } from "@thirdweb-dev/wallets";
-import { useEffect, useRef, useState } from "react";
-import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
-import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { isMobile } from "../../../evm/utils/isMobile";
+import { useEffect, useRef, useState } from "react";
 import { RainbowScan } from "./RainbowScan";
+import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { RainbowWallet } from "@thirdweb-dev/wallets";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { rainbowWalletUris } from "./rainbowWalletUris";
 
-export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
+export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
@@ -24,14 +25,32 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
       return;
     }
 
+    const isInstalled = walletConfig.isInstalled
+      ? walletConfig.isInstalled()
+      : false;
+
     // if loading
     (async () => {
-      // on mobile, open rainbow app link
-      if (isMobile()) {
-        setScreen("open-wc-uri");
-      } else {
-        // on desktop, show the rainbow scan qr code
-        setScreen("scanning");
+      if (isInstalled) {
+        try {
+          connectPrompted.current = true;
+          setScreen("connecting");
+          await connect(walletConfig);
+          close();
+        } catch (e) {
+          goBack();
+        }
+      }
+
+      // if rainbow is not injected
+      else {
+        // on mobile, open rainbow app link
+        if (isMobile()) {
+          setScreen("open-wc-uri");
+        } else {
+          // on desktop, show the rainbow scan qr code
+          setScreen("scanning");
+        }
       }
     })();
   }, [walletConfig, close, connect, goBack]);
@@ -43,7 +62,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://rainbow.me/"
+        supportLink="https://support.rainbow.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
   }
@@ -55,12 +74,8 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        supportLink="https://rainbow.me/"
-        appUriPrefix={{
-          ios: "rainbow://",
-          android: "https://rnbwapp.com/",
-          other: "https://rnbwapp.com/",
-        }}
+        supportLink="https://support.rainbow.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
+        appUriPrefix={rainbowWalletUris}
       />
     );
   }
@@ -83,7 +98,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
   if (screen === "scanning") {
     return (
       <RainbowScan
-        onBack={props.goBack}
+        onBack={goBack}
         onConnected={close}
         onGetStarted={() => {
           setScreen("get-started");

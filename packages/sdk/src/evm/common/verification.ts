@@ -61,6 +61,7 @@ export async function verifyThirdwebPrebuiltImplementation(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
+  contractVersion: string = "latest",
   clientId?: string,
   secretKey?: string,
   constructorArgs?: ConstructorParamMap,
@@ -69,6 +70,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     contractName,
     chainId,
     storage,
+    contractVersion,
     clientId,
     secretKey,
   );
@@ -76,6 +78,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     contractName,
     chainId,
     storage,
+    contractVersion,
     clientId,
     secretKey,
     constructorArgs,
