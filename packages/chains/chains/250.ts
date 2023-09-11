@@ -4,12 +4,11 @@ export default {
   "chain": "FTM",
   "rpc": [
     "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "wss://fantom.publicnode.com",
     "https://fantom.publicnode.com",
     "https://rpc.ftm.tools"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Fantom",
     "symbol": "FTM",

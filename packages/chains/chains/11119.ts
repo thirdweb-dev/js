@@ -7,9 +7,7 @@ export default {
     "https://mainnet-rpc.hashbit.org",
     "https://rpc.hashbit.org"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "HashBit Native Token",
     "symbol": "HBIT",
