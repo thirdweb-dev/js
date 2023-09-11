@@ -163,11 +163,13 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
             </HStack>
           </Flex>
 
-          <AccountForm
-            account={meQuery.data}
-            disableUnchanged
-            showBillingButton
-          />
+          {meQuery.data && (
+            <AccountForm
+              account={meQuery.data}
+              disableUnchanged
+              showBillingButton
+            />
+          )}
         </>
       )}
     </Flex>

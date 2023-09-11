@@ -1,4 +1,4 @@
-import { Account, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useDisclosure } from "@chakra-ui/react";
 import { useUser } from "@thirdweb-dev/react";
 import { AccountForm } from "components/settings/Account/AccountForm";
@@ -36,20 +36,22 @@ export const Onboarding: React.FC = () => {
           : "Sign in with your wallet"}
       </Text>
 
-      <AccountForm
-        account={meQuery.data as Account}
-        showSubscription
-        buttonText="Continue to Dashboard"
-        trackingCategory="onboarding"
-        padded={false}
-        optional
-        buttonProps={{
-          w: "full",
-          size: "lg",
-          fontSize: "md",
-        }}
-        onSave={handleSave}
-      />
+      {meQuery.data && (
+        <AccountForm
+          account={meQuery.data}
+          showSubscription
+          buttonText="Continue to Dashboard"
+          trackingCategory="onboarding"
+          padded={false}
+          optional
+          buttonProps={{
+            w: "full",
+            size: "lg",
+            fontSize: "md",
+          }}
+          onSave={handleSave}
+        />
+      )}
     </OnboardingModal>
   );
 };
