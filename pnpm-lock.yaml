@@ -1344,6 +1344,9 @@ importers:
       '@paperxyz/embedded-wallet-service-sdk':
         specifier: ^1.1.3
         version: 1.1.3
+      '@paperxyz/sdk-common-utilities':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@safe-global/safe-core-sdk':
         specifier: ^3.3.4
         version: 3.3.4
@@ -1435,6 +1438,9 @@ importers:
       abitype:
         specifier: ^0.2.5
         version: 0.2.5(typescript@5.1.6)(zod@3.21.4)
+      babel-plugin-transform-inline-environment-variables:
+        specifier: ^0.4.4
+        version: 0.4.4
       bs58:
         specifier: ^5.0.0
         version: 5.0.0
@@ -7194,14 +7200,14 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/providers': 5.7.2
-      '@paperxyz/sdk-common-utilities': 0.0.5
+      '@paperxyz/sdk-common-utilities': 0.1.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@paperxyz/sdk-common-utilities@0.0.5:
-    resolution: {integrity: sha512-Udx/CKGBKDicHqYKvcE5K+6B+scHOgx+s6eNNMAOLMnuawuzbvJbMmzIap9qyeUBIDCrKQaOpwnXxFctAu5WTA==}
+  /@paperxyz/sdk-common-utilities@0.1.0:
+    resolution: {integrity: sha512-+zE2wp9gI5kjI6yHdrigeqLRDueAFz70v6hUKOT98Nyy4yL8YUR3OvXFAnAyZLXrr0v1uLlDYQdBz0fI2StmGg==}
     dev: false
 
   /@particle-network/auth@0.5.6:
@@ -12928,6 +12934,10 @@ packages:
 
   /babel-plugin-syntax-trailing-function-commas@7.0.0-beta.0:
     resolution: {integrity: sha512-Xj9XuRuz3nTSbaTXWv3itLOcxyF4oPD8douBBmj7U9BBC6nEBYfyOJYQMf/8PJAFotC62UY5dFfIGEPr7WswzQ==}
+
+  /babel-plugin-transform-inline-environment-variables@0.4.4:
+    resolution: {integrity: sha512-bJILBtn5a11SmtR2j/3mBOjX4K3weC6cq+NNZ7hG22wCAqpc3qtj/iN7dSe9HDiS46lgp1nHsQgeYrea/RUe+g==}
+    dev: true
 
   /babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
