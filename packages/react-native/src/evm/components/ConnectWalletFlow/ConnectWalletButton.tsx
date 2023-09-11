@@ -18,10 +18,21 @@ export type ConnectWalletButtonProps = {
    * @default "Choose your wallet"
    */
   modalTitle?: string;
+  /**
+   * Set a custom terms of service url
+   */
+  termsOfServiceUrl?: string;
+
+  /**
+   * Set a custom privacy policy url
+   */
+  privacyPolicyUrl?: string;
 };
 
 export const ConnectWalletButton = ({
   modalTitle,
+  termsOfServiceUrl,
+  privacyPolicyUrl,
   buttonTitle,
   theme,
 }: ConnectWalletButtonProps) => {
@@ -61,6 +72,8 @@ export const ConnectWalletButton = ({
       view: "ConnectWalletFlow",
       data: {
         modalTitle,
+        termsOfServiceUrl,
+        privacyPolicyUrl,
         walletConfig:
           supportedWallets.length === 1 ? supportedWallets[0] : undefined,
       },

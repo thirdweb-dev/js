@@ -19,6 +19,8 @@ export type ChooseWalletProps = {
   onClose: () => void;
   wallets: WalletConfig<any>[];
   excludeWalletIds?: string[];
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
 };
 
 export function ChooseWallet({
@@ -28,6 +30,8 @@ export function ChooseWallet({
   onChooseWallet,
   onClose,
   excludeWalletIds = [],
+  termsOfServiceUrl,
+  privacyPolicyUrl,
 }: ChooseWalletProps) {
   const theme = useAppTheme();
   const themeLightDark = useTheme();
@@ -43,6 +47,8 @@ export function ChooseWallet({
         wallet.id !== walletIds.localWallet,
     )
     .slice(0, 2);
+
+  const showToSPrivacyPolicy = termsOfServiceUrl || privacyPolicyUrl;
 
   const onContinueAsGuestPress = () => {
     setIsConnecting(true);
@@ -61,6 +67,18 @@ export function ChooseWallet({
 
   const onGetStartedPress = () => {
     Linking.openURL("https://ethereum.org/en/wallets/find-wallet/");
+  };
+
+  const onToSPressed = () => {
+    if (termsOfServiceUrl) {
+      Linking.openURL(termsOfServiceUrl);
+    }
+  };
+
+  const onPrivacyPolicyPress = () => {
+    if (privacyPolicyUrl) {
+      Linking.openURL(privacyPolicyUrl);
+    }
   };
 
   return (
@@ -157,7 +175,6 @@ export function ChooseWallet({
       !isConnectAWalletEnabled &&
       connectionWallets.length > 0 ? (
         <BaseButton
-          mt="sm"
           marginHorizontal="xl"
           justifyContent="center"
           borderRadius="lg"
@@ -199,6 +216,42 @@ export function ChooseWallet({
             <Text variant="bodySmall">Continue as guest</Text>
           )}
         </BaseButton>
+      ) : null}
+      {showToSPrivacyPolicy ? (
+        <Box
+          mt="md"
+          pt="md"
+          height={50}
+          marginHorizontal={!isConnectAWalletEnabled ? "xl" : "none"}
+          borderTopColor="border"
+          borderTopWidth={1}
+          alignItems="center"
+        >
+          <Text variant="bodySmallSecondary" fontSize={10}>
+            By connecting, you agree to the
+          </Text>
+          <Box flexDirection="row" alignItems="center" justifyContent="center">
+            {termsOfServiceUrl ? (
+              <BaseButton onPress={onToSPressed} flexDirection="row">
+                <Text variant="link" fontSize={10}>
+                  Terms of Service
+                </Text>
+              </BaseButton>
+            ) : null}
+            {termsOfServiceUrl && privacyPolicyUrl ? (
+              <Text variant="bodySmall" fontSize={10}>
+                {" & "}
+              </Text>
+            ) : null}
+            {privacyPolicyUrl ? (
+              <BaseButton onPress={onPrivacyPolicyPress} flexDirection="row">
+                <Text variant="link" fontSize={10}>
+                  Privacy Policy
+                </Text>
+              </BaseButton>
+            ) : null}
+          </Box>
+        </Box>
       ) : null}
     </Box>
   );

@@ -55,6 +55,8 @@ export const ConnectWallet = ({
   extraRows,
   hideTestnetFaucet,
   switchToActiveChain,
+  termsOfServiceUrl,
+  privacyPolicyUrl,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
@@ -120,6 +122,8 @@ export const ConnectWallet = ({
             modalTitle={modalTitle}
             buttonTitle={buttonTitle}
             theme={theme}
+            termsOfServiceUrl={termsOfServiceUrl}
+            privacyPolicyUrl={privacyPolicyUrl}
           />
         )}
       </Animated.View>

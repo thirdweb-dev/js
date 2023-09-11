@@ -11,7 +11,7 @@ interface ChooseWalletContentProps {
   onChooseWallet: (wallet: WalletConfig, data?: any) => void;
 }
 
-const MAX_HEIGHT = Dimensions.get("window").height * 0.4;
+const MAX_HEIGHT = Dimensions.get("window").height * 0.3;
 
 export const ChooseWalletContent = ({
   wallets,

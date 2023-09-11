@@ -17,8 +17,9 @@ import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
-  const { modalTitle, walletConfig } = (modalState as ConnectWalletFlowModal)
-    .data;
+  const { modalTitle, privacyPolicyUrl, termsOfServiceUrl, walletConfig } = (
+    modalState as ConnectWalletFlowModal
+  ).data;
 
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
@@ -154,6 +155,8 @@ export const ConnectWalletFlow = () => {
         ) : (
           <ChooseWallet
             headerText={modalTitle}
+            privacyPolicyUrl={privacyPolicyUrl}
+            termsOfServiceUrl={termsOfServiceUrl}
             wallets={supportedWallets}
             onChooseWallet={onChooseWallet}
             onClose={onClose}
