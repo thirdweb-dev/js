@@ -77,8 +77,13 @@ export const ImportLocalWallet: React.FC<{
 
       <ModalDescription sm>
         The application can authorize any transactions on behalf of the wallet
-        without any approvals. We recommend only connecting to trusted
-        applications.
+        without any approvals.
+      </ModalDescription>
+
+      <Spacer y="xs" />
+
+      <ModalDescription sm>
+        We recommend only connecting to trusted applications.
       </ModalDescription>
 
       <Spacer y="lg" />

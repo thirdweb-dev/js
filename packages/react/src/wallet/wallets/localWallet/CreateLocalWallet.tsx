@@ -89,9 +89,9 @@ export const CreateLocalWallet_Password: React.FC<{
         title="Guest Wallet"
       />
 
-      <ModalDescription>
-        Choose a password for your wallet, you{`'`}ll be able to access and
-        export this wallet with the same password.
+      <ModalDescription sm>
+        Choose a password for your wallet <br /> you{`'`}ll be able to access
+        and export this wallet with the same password.
       </ModalDescription>
 
       <Spacer y="lg" />
@@ -177,7 +177,8 @@ export const CreateLocalWallet_Password: React.FC<{
       {/* Import */}
       <Flex justifyContent="center">
         <Button
-          variant="link"
+          fullWidth
+          variant="outline"
           onClick={() => {
             setShowImportScreen(true);
           }}
