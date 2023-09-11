@@ -7,7 +7,7 @@ export { paperWallet } from "./wallet/wallets/paper/paperWallet";
 export { rainbowWallet } from "./wallet/wallets/rainbow/RainbowWallet";
 export { safeWallet } from "./wallet/wallets/safe/safeWallet";
 export { trustWallet } from "./wallet/wallets/trustWallet/TrustWallet";
-export { walletConnect } from "./wallet/wallets/walletConnect";
+export { walletConnect } from "./wallet/wallets/walletConnect/walletConnect";
 export { walletConnectV1 } from "./wallet/wallets/walletConnectV1";
 export { smartWallet } from "./wallet/wallets/smartWallet/smartWallet";
 export { magicLink } from "./wallet/wallets/magic/magicLink";

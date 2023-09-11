@@ -1,7 +1,6 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import { Spinner } from "../../../components/Spinner";
 import { ModalHeader, ScreenContainer } from "../../../components/basic";
 import {
   ModalDescription,
@@ -58,17 +57,6 @@ export const ScanScreen: React.FC<{
           Scan this QR code with your phone <br />
           camera or {walletName} to connect
         </ModalDescription>
-
-        <Spacer y="md" />
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Spinner size="md" color="accent" />
-        </div>
 
         <Spacer y="xl" />
 

@@ -1,4 +1,4 @@
-import { walletConnect } from "./walletConnect";
+import { walletConnect } from "./walletConnect/walletConnect";
 
 /**
  * @deprecated Use `walletConnect` instead

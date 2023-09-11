@@ -1,7 +1,10 @@
 import { WalletConnect } from "@thirdweb-dev/wallets";
 import type { WalletConfig, WalletOptions } from "@thirdweb-dev/react-core";
-import { TW_WC_PROJECT_ID } from "../constants/wc";
+import { TW_WC_PROJECT_ID } from "../../constants/wc";
 import type { WC2_QRModalOptions } from "@thirdweb-dev/wallets";
+import { WalletConnectScan } from "./WalletConnectScan";
+import { HeadlessConnectUI } from "../headlessConnectUI";
+import { isMobile } from "../../../evm/utils/isMobile";
 
 type walletConnectConfig = {
   /**
@@ -41,10 +44,25 @@ export const walletConnect = (
     create(options: WalletOptions) {
       return new WalletConnect({
         ...options,
-        qrcode: true,
+        qrcode: isMobile() ? true : false,
         projectId,
         qrModalOptions: config?.qrModalOptions,
       });
+    },
+    connectUI(props) {
+      if (isMobile()) {
+        return <HeadlessConnectUI {...props} />;
+      }
+
+      return (
+        <WalletConnectScan
+          onBack={props.goBack}
+          onConnected={props.close}
+          walletConfig={props.walletConfig}
+          hideBackButton={props.supportedWallets.length > 1}
+          modalSize={props.modalSize}
+        />
+      );
     },
   };
 };
