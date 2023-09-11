@@ -54,8 +54,9 @@ export function createThirdwebError<Variables = undefined>(
       this.variables = variables;
       this.statusCode = options.statusCode;
 
-      Error.stackTraceLimit !== 0 &&
-      Error.captureStackTrace(this, ThirdwebError);
+      if (Error.stackTraceLimit !== 0) {
+        Error.captureStackTrace(this, ThirdwebError)
+      }
     }
   }
 
