@@ -7,9 +7,7 @@ export default {
     "https://api.posichain.org",
     "https://api.s0.posichain.org"
   ],
-  "faucets": [
-    "https://faucet.posichain.org/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Posichain Native Token",
     "symbol": "POSI",

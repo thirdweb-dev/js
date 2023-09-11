@@ -7,9 +7,7 @@ export default {
     "https://http-mainnet.hecochain.com",
     "wss://ws-mainnet.hecochain.com"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Huobi ECO Chain Native Token",
     "symbol": "HT",

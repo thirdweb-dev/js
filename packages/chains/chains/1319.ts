@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aitd Mainnet",
-  "chain": "AITD",
+  "name": "AIA Mainnet",
+  "chain": "AIA",
   "icon": {
     "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
     "width": 160,
@@ -9,27 +9,29 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://aitd.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://walletrpc.aitd.io",
-    "https://node.aitd.io"
+    "https://aia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://aia-dataseed1.aiachain.org",
+    "https://aia-dataseed2.aiachain.org",
+    "https://aia-dataseed3.aiachain.org",
+    "https://aia-dataseed4.aiachain.org"
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "AITD Mainnet",
-    "symbol": "AITD",
+    "name": "AIA Mainnet",
+    "symbol": "AIA",
     "decimals": 18
   },
-  "infoURL": "https://www.aitd.io/",
-  "shortName": "aitd",
+  "infoURL": "https://aiachain.org/",
+  "shortName": "aia",
   "chainId": 1319,
   "networkId": 1319,
   "explorers": [
     {
-      "name": "AITD Chain Explorer Mainnet",
-      "url": "https://aitd-explorer-new.aitd.io",
+      "name": "AIA Chain Explorer Mainnet",
+      "url": "https://aiascan.com",
       "standard": "EIP3091"
     }
   ],
   "testnet": false,
-  "slug": "aitd"
+  "slug": "aia"
 } as const satisfies Chain;

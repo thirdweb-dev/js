@@ -12,7 +12,8 @@ export default {
     "https://avalanche-fuji.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-fuji.infura.io/v3/${INFURA_API_KEY}",
     "https://api.avax-test.network/ext/bc/C/rpc",
-    "https://avalanche-fuji-c-chain.publicnode.com"
+    "https://avalanche-fuji-c-chain.publicnode.com",
+    "wss://avalanche-fuji-c-chain.publicnode.com"
   ],
   "faucets": [
     "https://faucet.avax.network/",
