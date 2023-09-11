@@ -92,7 +92,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/airtable": "^0.10.1",
     "@types/color": "^3.0.2",
-    "@types/cors": "^2.8.13",
+    "@types/cors": "^2.8.14",
     "@types/flat": "^5.0.2",
     "@types/nprogress": "^0.2.0",
     "@types/papaparse": "^5.3.1",
