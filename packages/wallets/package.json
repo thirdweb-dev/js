@@ -92,6 +92,13 @@
       },
       "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.cjs.js"
     },
+    "./evm/wallets/phantom": {
+      "module": {
+        "browser": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.browser.esm.js",
+        "default": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.esm.js"
+      },
+      "default": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.cjs.js"
+    },
     "./solana/wallets/base": {
       "module": {
         "browser": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.browser.esm.js",
@@ -238,6 +245,13 @@
         "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.esm.js"
       },
       "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
+    },
+    "./evm/connectors/phantom": {
+      "module": {
+        "browser": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.browser.esm.js",
+        "default": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.esm.js"
+      },
+      "default": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.cjs.js"
     },
     "./evm/connectors/rainbow": {
       "module": {
@@ -430,6 +444,7 @@
     "abitype": "^0.2.5",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "bs58": "^5.0.0",
+    "cross-env": "^7.0.3",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.3",
     "ethereum-provider": "^0.7.7",
@@ -443,7 +458,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "build": "tsc && THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",
+    "build": "tsc && cross-env THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",
     "preconstruct:fix": "preconstruct fix",
     "push": "yalc push"
   }

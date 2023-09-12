@@ -12,5 +12,6 @@ export const walletIds = {
   trust: "trust",
   walletConnectV1: "walletConnectV1",
   walletConnect: "walletConnect",
+  phantom: "phantom",
   // add new ids sorted alphabetically
 };
