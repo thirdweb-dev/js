@@ -8,9 +8,9 @@ import { EthIcon } from "../icons/EthIcon";
 
 export function StartScreen() {
   return (
-    <>
+    <Container fullHeight animate="fadein" flex="column">
       <Container
-        fullHeight
+        expand
         flex="column"
         center="both"
         style={{
@@ -22,14 +22,14 @@ export function StartScreen() {
         </Container>
         <Spacer y="xxl" />
 
-        <Text center color="neutral" weight={500}>
+        <Text center color="primaryText" weight={500}>
           Your gateway to the decentralized world
         </Text>
 
         <Spacer y="md" />
 
         <Text
-          color="secondary"
+          color="secondaryText"
           style={{
             textAlign: "center",
             display: "block",
@@ -56,14 +56,14 @@ export function StartScreen() {
           New to wallets?
         </SecondaryLink>
       </ScreenBottomContainer>
-    </>
+    </Container>
   );
 }
 
 const SecondaryLink = /* @__PURE__ */ styled(HelperLink)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   transition: color 200ms ease;
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;

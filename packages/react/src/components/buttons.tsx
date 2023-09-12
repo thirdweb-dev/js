@@ -24,11 +24,11 @@ export const Button = styled.button<{
   background: ${(p) => {
     switch (p.variant) {
       case "inverted":
-        return p.theme.bg.inverted;
+        return p.theme.colors.primaryText;
       case "accent":
-        return p.theme.btn.accent.bg;
+        return p.theme.colors.accentBg;
       case "secondary":
-        return p.theme.bg.elevated;
+        return p.theme.colors.base3;
       default:
         return "none";
     }
@@ -38,7 +38,7 @@ export const Button = styled.button<{
     ${(p) => {
       if (p.variant === "secondary") {
         return `
-      background: ${p.theme.bg.elevatedHover};
+      background: ${p.theme.colors.base3};
       `;
       }
     }}
@@ -47,26 +47,26 @@ export const Button = styled.button<{
   color: ${(p) => {
     switch (p.variant) {
       case "inverted":
-        return p.theme.text.inverted;
+        return p.theme.colors.base1;
       case "accent":
-        return p.theme.btn.accent.color;
+        return p.theme.colors.textOnAccentBg;
       case "secondary":
-        return p.theme.text.neutral;
+        return p.theme.colors.primaryText;
       case "link":
-        return p.theme.bg.accent;
+        return p.theme.colors.accentText;
       case "danger":
-        return p.theme.text.danger;
+        return p.theme.colors.danger;
       default:
-        return p.theme.text.neutral;
+        return p.theme.colors.primaryText;
     }
   }};
 
   ${(p) => {
     if (p.variant === "outline") {
       return `
-      border: 1px solid ${p.theme.bg.elevatedHover};
+      border: 1.5px solid ${p.theme.colors.base4};
       &:hover {
-        border-color: ${p.theme.bg.inverted};
+        border-color: ${p.theme.colors.primaryText};
       }
     `;
     }
@@ -77,7 +77,7 @@ export const Button = styled.button<{
       return `
       padding: 0;
       &:hover {
-        color: ${p.theme.text.neutral};
+        color: ${p.theme.colors.primaryText};
       }`;
     }
   }}
@@ -108,9 +108,9 @@ export const IconButton = styled.button<{
   color: ${(p) => {
     switch (p.variant) {
       case "neutral":
-        return p.theme.text.neutral;
+        return p.theme.colors.primaryText;
       case "secondary":
-        return p.theme.text.secondary;
+        return p.theme.colors.secondaryText;
     }
   }};
   padding: 2px;
@@ -118,8 +118,8 @@ export const IconButton = styled.button<{
     background 0.2s ease,
     color 0.2s ease;
   &:hover {
-    background: ${(p) => p.theme.bg.elevated};
-    color: ${(p) => p.theme.text.neutral};
+    background: ${(p) => p.theme.colors.base3};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;
 
@@ -132,9 +132,9 @@ export const InputButton = styled.button<{ theme?: Theme }>`
   padding: ${spacing.sm};
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
   &[disabled] {
     cursor: not-allowed;

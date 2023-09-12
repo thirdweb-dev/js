@@ -46,20 +46,20 @@ const PopoverContent = /* @__PURE__ */ styled(
 )<{ theme?: Theme }>`
   border-radius: ${radius.sm};
   padding: ${spacing.sm} ${spacing.md};
-  background-color: ${(p) => p.theme.bg.inverted};
+  background-color: ${(p) => p.theme.colors.primaryText};
   box-shadow: ${shadow.md};
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
   animation-name: ${slideUpAndFade};
-  color: ${(p) => p.theme.text.inverted};
+  color: ${(p) => p.theme.colors.base1};
   font-size: ${fontSize.md};
 `;
 
 const PopoverArrow = /* @__PURE__ */ styled(/* @__PURE__ */ RXPopover.Arrow)<{
   theme?: Theme;
 }>`
-  fill: ${(p) => p.theme.bg.inverted};
+  fill: ${(p) => p.theme.colors.primaryText};
 `;
 
 const FlexWrapper = styled.div`

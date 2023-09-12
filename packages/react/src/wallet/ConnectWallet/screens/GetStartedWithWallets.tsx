@@ -86,6 +86,6 @@ export const GetStartedWithWallets: React.FC<{
 
 const NeutralText = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.md};
-  color: ${(p) => p.theme.text.neutral};
+  color: ${(p) => p.theme.colors.primaryText};
   margin: 0;
 `;

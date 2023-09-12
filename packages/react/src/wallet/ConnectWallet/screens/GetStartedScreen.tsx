@@ -187,12 +187,12 @@ export const ButtonLink = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   box-sizing: border-box;
   width: 100%;
-  color: ${(p) => p.theme.text.neutral};
-  background: ${(p) => p.theme.bg.elevated};
+  color: ${(p) => p.theme.colors.primaryText};
+  background: ${(p) => p.theme.colors.base3};
   transition: 100ms ease;
   &:hover {
-    background: ${(p) => p.theme.bg.elevatedHover};
+    background: ${(p) => p.theme.colors.base3};
     text-decoration: none;
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;

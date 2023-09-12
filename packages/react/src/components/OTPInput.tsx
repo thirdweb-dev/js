@@ -128,7 +128,7 @@ const OTPInputBox = /* @__PURE__ */ styled(Input)`
     height: 35px;
   }
   &[data-verify-status="invalid"] {
-    color: ${(p) => p.theme.text.danger};
-    border-color: ${(p) => p.theme.text.danger};
+    color: ${(p) => p.theme.colors.danger};
+    border-color: ${(p) => p.theme.colors.danger};
   }
 `;

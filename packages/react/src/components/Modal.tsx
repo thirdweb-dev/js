@@ -121,8 +121,8 @@ const modalAnimationMobile = keyframes`
 
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
-  background: ${(p) => p.theme.bg.base};
-  color: ${(p) => p.theme.text.neutral};
+  background: ${(p) => p.theme.colors.base1};
+  color: ${(p) => p.theme.colors.primaryText};
   border-radius: ${radius.xl};
   position: fixed;
   top: 50%;
@@ -133,7 +133,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   animation: ${modalAnimationDesktop} 300ms ease;
   box-shadow: ${shadow.lg};
   line-height: 1;
-  border: 1px solid ${(p) => p.theme.bg.elevatedHover};
+  border: 1px solid ${(p) => p.theme.colors.base3};
   outline: none;
 
   ${noScrollBar}
@@ -155,7 +155,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   }
 
   & *::selection {
-    background-color: ${(p) => p.theme.bg.inverted};
-    color: ${(p) => p.theme.text.inverted};
+    background-color: ${(p) => p.theme.colors.primaryText};
+    color: ${(p) => p.theme.colors.base1};
   }
 `;

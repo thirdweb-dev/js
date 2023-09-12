@@ -119,7 +119,7 @@ export const ExportLocalWallet: React.FC<{
           height: "300px",
         }}
       >
-        <Spinner size="md" color="accent" />
+        <Spinner size="md" color="accentText" />
       </Flex>
     );
   }
@@ -230,6 +230,6 @@ function downloadJsonWalletFile(data: string) {
 
 const SavedWalletAddress = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.md};
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   margin: 0;
 `;

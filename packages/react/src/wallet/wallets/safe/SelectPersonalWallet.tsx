@@ -59,7 +59,7 @@ export const SelectpersonalWallet: React.FC<{
 
       <Container px="lg">
         <Spacer y="sm" />
-        <Text size="lg" color="neutral" weight={500}>
+        <Text size="lg" color="primaryText" weight={500}>
           Link personal wallet
         </Text>
         <Spacer y="sm" />

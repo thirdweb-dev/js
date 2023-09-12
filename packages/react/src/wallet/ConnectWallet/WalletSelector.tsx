@@ -185,7 +185,7 @@ export const WalletSelector: React.FC<{
         <ScreenBottomContainer>
           {showNewToWallets && (
             <Flex justifyContent="space-between">
-              <Text color="secondary" size="sm">
+              <Text color="secondaryText" size="sm">
                 New to wallets?
               </Text>
               <Link
@@ -266,11 +266,11 @@ export function WalletEntryButton(props: {
       />
       <WalletNameContainer>
         <Flex flexDirection="column" gap="xxs">
-          <Text color="neutral" weight={500}>
+          <Text color="primaryText" weight={500}>
             {walletConfig.meta.name}
           </Text>
           {isRecommended && (
-            <Text size="sm" color="accent">
+            <Text size="sm" color="accentText">
               Recommended
             </Text>
           )}
@@ -318,18 +318,18 @@ const WalletButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   box-sizing: border-box;
   width: 100%;
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   position: relative;
   border-radius: ${radius.md};
   padding: ${spacing.xs} ${spacing.xs};
 
   &:hover {
-    background-color: ${(p) => p.theme.bg.elevated};
+    background-color: ${(p) => p.theme.colors.base2};
   }
 
   transition:
-    transform 200ms ease,
-    background-color 100ms ease;
+    background-color 200ms ease,
+    transform 200ms ease;
 
   &:hover {
     transform: scale(1.01);

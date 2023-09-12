@@ -34,7 +34,7 @@ export const LocalWalletConnectUI = (
           height: "300px",
         }}
       >
-        <Spinner size="lg" color="neutral" />
+        <Spinner size="lg" color="primaryText" />
       </Flex>
     );
   }

@@ -139,7 +139,7 @@ export const SelectAccount: React.FC<{
         >
           <Spacer y="md" />
 
-          <Text color="neutral" size="lg" weight={500}>
+          <Text color="primaryText" size="lg" weight={500}>
             Enter your safe details
           </Text>
           <Spacer y="sm" />
@@ -364,7 +364,7 @@ export const SelectAccount: React.FC<{
                 >
                   {" "}
                   {switchingNetwork ? "Switching" : "Switch Network"}
-                  {switchingNetwork && <Spinner size="sm" color="inverted" />}
+                  {switchingNetwork && <Spinner size="sm" color="base1" />}
                 </Button>
               ) : (
                 <Button
@@ -382,7 +382,7 @@ export const SelectAccount: React.FC<{
                     ? "Connecting"
                     : "Connect to Safe"}
                   {connectionStatus === "connecting" && (
-                    <Spinner size="sm" color="neutral" />
+                    <Spinner size="sm" color="primaryText" />
                   )}
                 </Button>
               )}
@@ -403,7 +403,7 @@ export const SelectAccount: React.FC<{
                         }
                   }
                 >
-                  <Text size="sm" color="accent">
+                  <Text size="sm" color="accentText">
                     {" "}
                     Confirm in your wallet{" "}
                   </Text>
@@ -424,21 +424,21 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   outline: none;
   border: none;
   border-radius: 6px;
-  color: ${(p) => p.theme.text.neutral};
+  color: ${(p) => p.theme.colors.primaryText};
   background: none;
   font-size: ${fontSize.md};
-  box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.outline};
+  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.base3};
   appearance: none;
 
   &:focus {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.input.focusRing};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.colors.accentText};
   }
 
   &:invalid {
-    color: ${(p) => p.theme.text.secondary};
+    color: ${(p) => p.theme.colors.secondaryText};
   }
   &[data-error="true"] {
-    box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.errorRing};
+    box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.danger};
   }
 
   &[disabled] {
@@ -450,5 +450,5 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
 const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
   theme?: Theme;
 }>`
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
 `;

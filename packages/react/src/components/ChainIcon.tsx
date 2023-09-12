@@ -60,5 +60,5 @@ const ActiveDot = styled.div<{ theme?: Theme }>`
   top: 60%;
   right: 0px;
   background-color: #00d395;
-  box-shadow: 0 0 0 2px ${(p) => p.theme.bg.elevated};
+  box-shadow: 0 0 0 2px ${(p) => p.theme.colors.base2};
 `;

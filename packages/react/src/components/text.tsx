@@ -3,7 +3,7 @@ import { fontSize, Theme } from "../design-system";
 
 export const Text = styled.span<{
   theme?: Theme;
-  color?: keyof Theme["text"];
+  color?: keyof Theme["colors"];
   center?: boolean;
   inline?: boolean;
   size?: keyof typeof fontSize;
@@ -12,7 +12,7 @@ export const Text = styled.span<{
   balance?: boolean;
 }>`
   font-size: ${(p) => fontSize[p.size || "md"]};
-  color: ${(p) => p.theme.text[p.color || "secondary"]};
+  color: ${(p) => p.theme.colors[p.color || "secondaryText"]};
   margin: 0;
   display: ${(p) => (p.inline ? "inline" : "block")};
   font-weight: ${(p) => p.weight || 400};
@@ -30,7 +30,8 @@ export const Link = styled.a<{
 }>`
   all: unset;
   cursor: pointer;
-  color: ${(p) => (p.secondary ? p.theme.text.secondary : p.theme.text.accent)};
+  color: ${(p) =>
+    p.secondary ? p.theme.colors.secondaryText : p.theme.colors.accentText};
   font-size: ${(p) => (p.small ? fontSize.sm : fontSize.md)};
   text-decoration: none;
   text-align: ${(p) => (p.center ? "center" : "left")};
@@ -38,7 +39,7 @@ export const Link = styled.a<{
   line-height: 1;
 
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
     text-decoration: none;
   }
 `;

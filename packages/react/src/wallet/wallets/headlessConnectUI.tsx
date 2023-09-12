@@ -40,7 +40,7 @@ export const HeadlessConnectUI = ({
         minHeight: "250px",
       }}
     >
-      <Spinner size="md" color="neutral" />
+      <Spinner size="md" color="primaryText" />
     </Flex>
   );
 };

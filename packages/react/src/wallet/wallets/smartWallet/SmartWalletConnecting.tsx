@@ -98,7 +98,7 @@ export const SmartWalletConnecting: React.FC<{
           alignItems: "center",
         }}
       >
-        <Spinner color="accent" size="xl" />
+        <Spinner color="accentText" size="xl" />
       </Flex>
     );
   }
@@ -173,7 +173,7 @@ export const SmartWalletConnecting: React.FC<{
           >
             {" "}
             {switchingNetwork ? "Switching" : "Switch Network"}
-            {switchingNetwork && <Spinner size="sm" color="neutral" />}
+            {switchingNetwork && <Spinner size="sm" color="primaryText" />}
           </Button>
 
           {switchingNetwork && requiresConfirmation && (
@@ -214,5 +214,5 @@ export const SmartWalletConnecting: React.FC<{
 const ConfirmMessage = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
   margin: 0;
-  color: ${(p) => p.theme.bg.accent};
+  color: ${(p) => p.theme.colors.accentText};
 `;

@@ -86,14 +86,14 @@ export const ConnectModalInline = (props: {
 };
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: ${(p) => p.theme.bg.base};
-  color: ${(p) => p.theme.text.neutral};
+  background: ${(p) => p.theme.colors.base1};
+  color: ${(p) => p.theme.colors.primaryText};
   transition: background 0.2s ease;
   border-radius: ${radius.xl};
   width: 100%;
   box-sizing: border-box;
   box-shadow: ${shadow.lg};
   position: relative;
-  border: 1px solid ${(p) => p.theme.bg.elevatedHover};
+  border: 1px solid ${(p) => p.theme.colors.base3};
   line-height: 1;
 `;

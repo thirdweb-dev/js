@@ -128,14 +128,14 @@ export const DragNDrop: React.FC<{
 const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)<{
   theme?: Theme;
 }>`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   transition:
     transform 200ms ease,
     color 200ms ease;
 `;
 
 const DropContainer = styled.div<{ theme?: Theme }>`
-  border: 2px solid ${(p) => p.theme.bg.elevated};
+  border: 2px solid ${(p) => p.theme.colors.base3};
   border-radius: ${radius.md};
   padding: ${spacing.xl} ${spacing.md};
   display: flex;
@@ -146,25 +146,25 @@ const DropContainer = styled.div<{ theme?: Theme }>`
 
   &:hover,
   &[data-is-dragging="true"] {
-    border-color: ${(p) => p.theme.text.accent};
+    border-color: ${(p) => p.theme.colors.accentText};
     svg {
-      color: ${(p) => p.theme.text.accent};
+      color: ${(p) => p.theme.colors.accentText};
     }
   }
 
   &[data-error="true"] {
-    border-color: ${(p) => p.theme.input.errorRing};
+    border-color: ${(p) => p.theme.colors.danger};
   }
 `;
 
 const ErrorMessage = styled.p<{ theme?: Theme }>`
-  color: ${(p) => p.theme.input.errorRing};
+  color: ${(p) => p.theme.colors.danger};
   font-size: ${fontSize.sm};
   margin: 0;
 `;
 
 const ExtensionText = styled.span<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   font-size: ${fontSize.sm};
 `;
 
@@ -194,7 +194,7 @@ const CheckCircleIcon: IconFC = (props) => (
 );
 
 const Message = styled.p<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.neutral};
+  color: ${(p) => p.theme.colors.primaryText};
   font-size: ${fontSize.md};
   margin: 0;
   font-weight: 600;

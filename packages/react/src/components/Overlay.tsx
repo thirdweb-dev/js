@@ -12,7 +12,7 @@ const overlayEnter = keyframes`
 `;
 
 export const Overlay = styled.div<{ theme?: Theme }>`
-  background-color: ${(p) => p.theme.overlay};
+  background-color: ${(p) => p.theme.colors.overlay};
   z-index: 9999;
   position: fixed;
   inset: 0;

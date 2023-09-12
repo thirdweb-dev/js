@@ -131,7 +131,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             <Spacer y="xxl" />
             <Text>Enter the OTP sent to</Text>
             <Spacer y="sm" />
-            <Text color="neutral">{email}</Text>
+            <Text color="primaryText">{email}</Text>
             <Spacer y="xl" />
           </div>
 
@@ -153,10 +153,10 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
               }}
             >
               <Spacer y="xl" />
-              <Line color="elevated" height={2} />
+              <Line color="base3" height={2} />
               <Spacer y="xl" />
 
-              <Text color="neutral">New device detected</Text>
+              <Text color="primaryText">New device detected</Text>
               <Spacer y="sm" />
               <Text
                 multiline
@@ -202,7 +202,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             <>
               <Spacer y="md" />
               <Flex justifyContent="center">
-                <Spinner size="md" color="accent" />
+                <Spinner size="md" color="accentText" />
               </Flex>
               <Spacer y="md" />
             </>
@@ -240,7 +240,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
               }}
             >
               <Text size="sm">Sending OTP</Text>
-              <Spinner size="xs" color="secondary" />
+              <Spinner size="xs" color="secondaryText" />
             </Flex>
           )}
 
@@ -257,12 +257,12 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
 const LinkButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  color: ${(p) => p.theme.text.accent};
+  color: ${(p) => p.theme.colors.accentText};
   font-size: ${fontSize.sm};
   cursor: pointer;
   text-align: center;
   width: 100%;
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;

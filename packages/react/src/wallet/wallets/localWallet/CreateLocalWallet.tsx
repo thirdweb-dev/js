@@ -162,7 +162,7 @@ export const CreateLocalWallet_Password: React.FC<{
           data-test="create-new-wallet-button"
         >
           {isConnecting ? "Connecting" : "Create new wallet"}
-          {isConnecting && <Spinner size="sm" color="inverted" />}
+          {isConnecting && <Spinner size="sm" color="base1" />}
         </Button>
       </form>
 
@@ -228,7 +228,7 @@ export const CreateLocalWallet_Guest: React.FC<{
         height: "300px",
       }}
     >
-      <Spinner size="lg" color="accent" />
+      <Spinner size="lg" color="accentText" />
     </Flex>
   );
 };

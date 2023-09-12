@@ -11,7 +11,7 @@ export const ModalTitle = /* @__PURE__ */ styled.h2<{
   margin: 0;
   font-weight: 500;
   font-size: ${fontSize.lg};
-  color: ${(p) => p.theme.text.neutral};
+  color: ${(p) => p.theme.colors.primaryText};
   line-height: 1.3;
   text-align: left;
   ${media.mobile} {
@@ -27,7 +27,7 @@ export const ModalDescription = styled.p<{
   all: unset;
   display: block;
   font-size: ${(p) => (p.sm ? fontSize.sm : fontSize.md)};
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   line-height: 1.5;
   ${media.mobile} {
     text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
@@ -58,7 +58,7 @@ export const BackButton: React.FC<{
 export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
   all: unset;
   cursor: pointer;
-  color: ${(p) => p.theme.bg.accent};
+  color: ${(p) => p.theme.colors.accentText};
   font-size: ${(p) => (p.md ? fontSize.md : fontSize.sm)};
   text-decoration: none;
   display: block;
@@ -67,7 +67,7 @@ export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
     text-align: center;
   }
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
     text-decoration: none;
   }
 `;

@@ -81,9 +81,9 @@ export const ScanScreen: React.FC<{
 
 const LinkButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  color: ${(p) => p.theme.text.accent};
+  color: ${(p) => p.theme.colors.accentText};
   cursor: pointer;
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;

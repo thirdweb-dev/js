@@ -79,7 +79,7 @@ export const PaperGoogleLogin = ({
           {status === "connecting" && (
             <>
               <Text
-                color="neutral"
+                color="primaryText"
                 multiline
                 style={{
                   maxWidth: "250px",
@@ -89,7 +89,7 @@ export const PaperGoogleLogin = ({
               </Text>
               <Spacer y="xl" />
               <Flex justifyContent="center">
-                <Spinner size="lg" color="accent" />
+                <Spinner size="lg" color="accentText" />
               </Flex>
 
               <Spacer y="xxl" />

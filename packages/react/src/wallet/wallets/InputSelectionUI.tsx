@@ -125,15 +125,15 @@ export function InputSelectionUI(props: {
 const CircleInputButton = /* @__PURE__ */ styled(InputButton)<{
   theme?: Theme;
 }>`
-  background: ${(p) => p.theme.bg.highlighted};
+  background: ${(p) => p.theme.colors.base4};
   border-radius: 50%;
   padding: ${spacing.xxs};
-  color: ${(p) => p.theme.text.neutral};
+  color: ${(p) => p.theme.colors.primaryText};
   position: absolute;
   top: 50%;
   right: ${spacing.sm};
   transform: translateY(-50%);
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;

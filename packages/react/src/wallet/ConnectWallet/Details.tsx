@@ -466,16 +466,16 @@ const DropDownContent = /* @__PURE__ */ styled(
   padding: ${spacing.lg};
   animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.bg.elevated};
-  background-color: ${(props) => props.theme.bg.base};
+  border: 1px solid ${(props) => props.theme.colors.base3};
+  background-color: ${(props) => props.theme.colors.base1};
   z-index: 1000000;
   line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  background: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.bg.elevated};
+  background: ${(props) => props.theme.colors.base1};
+  border: 1px solid ${(props) => props.theme.colors.base3};
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
@@ -498,13 +498,13 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
 
   &:hover {
     transition: background 250ms ease;
-    background: ${(props) => props.theme.bg.baseHover};
-    border-color: ${(props) => props.theme.bg.highlighted};
+    background: ${(props) => props.theme.colors.base3};
+    border-color: ${(props) => props.theme.colors.base4};
   }
 `;
 
 const WalletAddress = styled.span<{ theme?: Theme }>`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   font-size: ${fontSize.xs};
   font-weight: 500;
 `;
@@ -515,26 +515,26 @@ const ColFlex = styled.div<{ theme?: Theme }>`
 `;
 
 const WalletBalance = styled.span<{ theme?: Theme }>`
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.colors.primaryText};
   font-size: ${fontSize.sm};
   font-weight: 500;
 `;
 
 const AccountAddress = styled.span<{ theme?: Theme }>`
   font-size: ${fontSize.md};
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.colors.primaryText};
   font-weight: 500;
 `;
 
 const AccountBalance = styled.span<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   font-weight: 500;
 `;
 
 const DropdownLabel = styled.label<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   font-weight: 500;
 `;
 
@@ -542,8 +542,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   all: unset;
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.md};
-  background-color: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.bg.elevatedHover};
+  background-color: ${(props) => props.theme.colors.base1};
+  border: 1px solid ${(props) => props.theme.colors.base3};
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -551,7 +551,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   font-size: ${fontSize.md};
   font-weight: 500;
-  color: ${(props) => props.theme.text.neutral} !important;
+  color: ${(props) => props.theme.colors.primaryText} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
   line-height: 1.3;
@@ -560,8 +560,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     transition:
       box-shadow 250ms ease,
       border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.bg.accent};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.bg.accent};
+    border: 1px solid ${(props) => props.theme.colors.accentText};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.accentText};
   }
 
   &[disabled] {
@@ -575,8 +575,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     transition:
       box-shadow 250ms ease,
       border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.text.danger};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
+    border: 1px solid ${(props) => props.theme.colors.danger};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.danger};
   }
 `;
 
@@ -593,7 +593,7 @@ export const StyledChevronRightIcon = /* @__PURE__ */ styled(
 )<{
   theme?: Theme;
 }>`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
 `;
 
 const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
@@ -601,9 +601,9 @@ const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
 }>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   &:hover {
-    color: ${(props) => props.theme.text.danger};
+    color: ${(props) => props.theme.colors.danger};
     background: none;
   }
 `;
@@ -612,7 +612,7 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
 `;
 
 function WalletSwitcher({

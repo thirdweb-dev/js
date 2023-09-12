@@ -199,5 +199,5 @@ export const ConnectModal = () => {
 const LeftContainer = /* @__PURE__ */ styled(FlexScrollContainer)<{
   theme?: Theme;
 }>`
-  border-right: 1px solid ${(p) => p.theme.bg.elevatedHover};
+  border-right: 1px solid ${(p) => p.theme.colors.base3};
 `;

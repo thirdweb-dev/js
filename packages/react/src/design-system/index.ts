@@ -1,81 +1,48 @@
-import { blue, green, mauve, mauveDark, tomato } from "@radix-ui/colors";
+import { green, mauve, mauveDark, tomato } from "@radix-ui/colors";
 
 const darkColors = {
-  base: "hsl(228deg 11.63% 8.43%)",
-  baseHover: "hsl(228deg 11.63% 10%)",
-  elevated: "hsl(228deg 11.63% 12%)",
-  elevatedHover: "hsl(228deg 11.63% 17%)",
-  highlighted: "hsl(228deg 11.63% 20%)",
-  inverted: mauveDark.mauve12,
-  invertedFocused: mauveDark.mauve7,
+  base1: "hsl(230deg 11.63% 8.43%)",
+  base2: "hsl(230deg 11.63% 12%)",
+  base3: "hsl(230deg 11.63% 15%)",
+  base4: "hsl(230deg 11.63% 17%)",
+  base5: "hsl(230deg 11.63% 20%)",
+
+  primaryText: mauveDark.mauve12,
+  secondaryText: mauveDark.mauve10,
+  accentText: "#3385FF",
+  accentBg: "hsl(216 100% 50%)",
+  textOnAccentBg: mauveDark.mauve12,
+
   danger: tomato.tomato9,
-  accent: "#3385FF",
   success: green.green7,
+  overlay: "rgba(0, 0, 0, 0.7)",
 };
 
-const lightColors = {
-  base: mauve.mauve1,
-  baseHover: mauve.mauve2,
-  elevated: mauve.mauve4,
-  elevatedHover: mauve.mauve6,
-  highlighted: mauve.mauve7,
-  inverted: mauve.mauve12,
-  invertedFocused: mauve.mauve9,
-  danger: tomato.tomato9,
-  accent: blue.blue11,
+const lightColors: typeof darkColors = {
+  base1: mauve.mauve1,
+  base2: mauve.mauve3,
+  base3: mauve.mauve4,
+  base4: mauve.mauve6,
+  base5: mauve.mauve7,
+
+  primaryText: mauve.mauve12,
+  secondaryText: mauveDark.mauve10,
+
+  accentText: "hsl(216 100% 45%)",
+  accentBg: "hsl(216 100% 50%)",
+  textOnAccentBg: mauve.mauve1,
+
   success: green.green9,
+  danger: tomato.tomato9,
+  overlay: "rgba(0, 0, 0, 0.7)",
 };
 
 export const darkTheme = {
-  overlay: "rgba(0, 0, 0, 0.7)",
-  bg: darkColors,
-  text: {
-    neutral: darkColors.inverted,
-    inverted: darkColors.base,
-    secondary: mauveDark.mauve9, // new color
-    danger: darkColors.danger,
-    success: darkColors.success,
-    accent: darkColors.accent,
-  },
-  input: {
-    bg: darkColors.elevated,
-    bgHover: darkColors.elevatedHover,
-    outline: darkColors.elevatedHover,
-    focusRing: darkColors.accent,
-    errorRing: darkColors.danger,
-  },
-  btn: {
-    accent: {
-      bg: darkColors.accent,
-      color: darkColors.inverted,
-    },
-  },
+  colors: darkColors,
 };
 
 export const lightTheme: typeof darkTheme = {
-  overlay: "rgba(0, 0, 0, 0.7)",
-  bg: lightColors,
-  text: {
-    neutral: lightColors.inverted,
-    inverted: lightColors.base,
-    secondary: mauve.mauve10, // new color
-    danger: lightColors.danger,
-    success: lightColors.success,
-    accent: lightColors.accent,
-  },
-  input: {
-    bg: lightColors.elevated,
-    bgHover: lightColors.elevatedHover,
-    outline: lightColors.elevatedHover,
-    focusRing: lightColors.accent,
-    errorRing: lightColors.danger,
-  },
-  btn: {
-    accent: {
-      bg: lightColors.accent,
-      color: lightColors.base,
-    },
-  },
+  colors: lightColors,
 };
 
 export type Theme = typeof darkTheme;
@@ -120,6 +87,7 @@ export const media = {
   mobile: `@media (max-width: 640px)`,
 };
 
+// TODO - move to theme
 export const shadow = {
   sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
   md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",

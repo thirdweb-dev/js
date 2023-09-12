@@ -335,7 +335,7 @@ const MagicConnectionUICompact: React.FC<
         minHeight: "250px",
       }}
     >
-      <Spinner size="md" color="neutral" />
+      <Spinner size="md" color="primaryText" />
     </Flex>
   );
 };
@@ -422,7 +422,7 @@ const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
   font-size: ${fontSize.md};
   transition: background-color 0.2s ease;
   &:hover {
-    background-color: ${(p) => p.theme.bg.elevatedHover};
+    background-color: ${(p) => p.theme.colors.base3};
   }
   &:active {
     box-shadow: none;
@@ -430,6 +430,6 @@ const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
 `;
 
 const SocialIconButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 1px solid ${(p) => p.theme.bg.elevated};
+  border: 1px solid ${(p) => p.theme.colors.base3};
   padding: ${spacing.xs};
 `;

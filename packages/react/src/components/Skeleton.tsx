@@ -2,7 +2,7 @@ import { radius, Theme } from "../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 
-type Gradient = { c1: keyof Theme["bg"]; c2: keyof Theme["bg"] };
+type Gradient = { c1: keyof Theme["colors"]; c2: keyof Theme["colors"] };
 
 export const Skeleton: React.FC<{
   height: string;
@@ -31,8 +31,8 @@ const skeletonAnimation = keyframes`
 
 const SkeletonDiv = styled.div<{ theme?: Theme; gradient?: Gradient }>`
   background-size: 200% 200%;
-  --skeleton-c-1: ${(p) => p.theme.bg[p.gradient?.c1 || "elevated"]};
-  --skeleton-c-2: ${(p) => p.theme.bg[p.gradient?.c2 || "highlighted"]};
+  --skeleton-c-1: ${(p) => p.theme.colors[p.gradient?.c1 || "base3"]};
+  --skeleton-c-2: ${(p) => p.theme.colors[p.gradient?.c2 || "base4"]};
   animation: ${skeletonAnimation} 500ms ease-in-out infinite alternate;
   border-radius: ${radius.sm};
 `;

@@ -29,5 +29,5 @@ export const CopyIcon: React.FC<{
 };
 
 const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.text.success};
+  color: ${(p) => p.theme.colors.success};
 `;

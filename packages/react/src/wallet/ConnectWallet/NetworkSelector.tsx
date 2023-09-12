@@ -216,7 +216,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                     right: spacing.md,
                   }}
                 >
-                  <Spinner size="md" color="accent" />
+                  <Spinner size="md" color="accentText" />
                 </div>
               )}
             </div>
@@ -495,7 +495,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                     {confirming && (
                       <>
                         <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
-                        <Spinner size="sm" color="accent" />
+                        <Spinner size="sm" color="accentText" />
                       </>
                     )}
 
@@ -523,7 +523,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
   all: unset;
   font-size: ${fontSize.md};
   font-weight: 500;
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   cursor: pointer;
   padding: ${spacing.sm} ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
@@ -532,14 +532,14 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
     background 0.2s ease,
     color 0.2s ease;
   &[data-state="active"] {
-    background: ${(p) => p.theme.bg.elevated};
-    color: ${(p) => p.theme.text.neutral};
+    background: ${(p) => p.theme.colors.base3};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;
 
 const SectionLabel = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   margin: 0;
 `;
 
@@ -554,8 +554,8 @@ const ScrollContainer = styled.div<{ theme?: Theme }>`
   ${(p) =>
     scrollbar({
       track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
+      thumb: p.theme.colors.base2,
+      hover: p.theme.colors.base4,
     })}
 `;
 
@@ -580,12 +580,12 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   border-radius: ${radius.md};
   cursor: pointer;
   transition: background 0.2s ease;
-  background: ${(p) => p.theme.bg.elevated};
-  color: ${(p) => p.theme.text.neutral};
+  background: ${(p) => p.theme.colors.base2};
+  color: ${(p) => p.theme.colors.primaryText};
   font-weight: 600;
   font-size: ${fontSize.md};
   &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
+    background: ${(p) => p.theme.colors.base4};
   }
 
   ${media.mobile} {
@@ -596,7 +596,7 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   position: absolute;
   left: 18px;
 `;
@@ -607,10 +607,10 @@ const SearchInput = /* @__PURE__ */ styled(Input)<{ theme?: Theme }>`
 
 const ConfirmMessage = styled.div<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.bg.accent};
+  color: ${(p) => p.theme.colors.accentText};
 `;
 
 const ErrorMessage = styled.div<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.danger};
+  color: ${(p) => p.theme.colors.danger};
 `;

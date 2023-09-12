@@ -198,7 +198,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
           }}
         >
           Connect
-          {isConnecting && <Spinner size="sm" color="inverted" />}
+          {isConnecting && <Spinner size="sm" color="base1" />}
         </Button>
       </form>
 

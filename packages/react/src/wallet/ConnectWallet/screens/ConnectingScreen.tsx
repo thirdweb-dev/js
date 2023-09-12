@@ -74,7 +74,7 @@ export const ConnectingScreen: React.FC<{
             animationDuration: "200ms",
           }}
         >
-          <Text center color="neutral" size="lg">
+          <Text center color="primaryText" size="lg">
             {props.errorConnecting ? "Connection Failed" : "Connecting"}
           </Text>
 
@@ -131,8 +131,8 @@ const retryFadeIn = keyframes`
 const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
   animation: ${retryFadeIn} 0.3s ease;
   position: absolute;
-  background: ${(p) => p.theme.bg.elevatedHover};
-  color: ${(p) => p.theme.text.neutral};
+  background: ${(p) => p.theme.colors.base3};
+  color: ${(p) => p.theme.colors.primaryText};
   bottom: 5px;
   right: 5px;
   transform: translate(50%, 50%);
@@ -142,8 +142,8 @@ const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
   transition: all 200ms ease;
 
   &:hover {
-    background: ${(p) => p.theme.bg.danger};
-    color: ${(p) => p.theme.text.neutral};
+    background: ${(p) => p.theme.colors.danger};
+    color: ${(p) => p.theme.colors.primaryText};
     transform: translate(50%, 50%) scale(1.2) rotate(35deg);
   }
 `;
@@ -231,7 +231,7 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
     background: linear-gradient(
       to right,
       transparent 60%,
-      ${(p) => p.theme.bg.accent}
+      ${(p) => p.theme.colors.accentText}
     );
 
     animation: ${rotateAnimation} 1.2s linear infinite;
@@ -239,13 +239,13 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
 
   [data-gradient][data-error="true"]::before {
     animation: none;
-    background: ${(p) => p.theme.bg.danger};
-    box-shadow: 0 0 10px ${(p) => p.theme.bg.danger};
+    background: ${(p) => p.theme.colors.danger};
+    box-shadow: 0 0 10px ${(p) => p.theme.colors.danger};
   }
 
   [data-blocker] {
     padding: ${spacing.xs};
-    background: ${(p) => p.theme.bg.base};
+    background: ${(p) => p.theme.colors.base1};
     position: relative;
     z-index: 1;
     border-radius: ${radius.xl};
