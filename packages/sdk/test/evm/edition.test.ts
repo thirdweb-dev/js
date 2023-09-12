@@ -81,7 +81,7 @@ describe("Edition Contract", async () => {
     expect(page2[1].metadata.name).to.eq("Test21");
   });
 
-  it("mint additional suply", async () => {
+  it("mint additional supply", async () => {
     const tx = await bundleContract.mint({
       metadata: {
         name: "Bundle 1",
@@ -153,6 +153,18 @@ describe("Edition Contract", async () => {
       bobWallet.address,
     );
     expect(bobsNftsAfterTransfer[0].quantityOwned).to.be.equal("20");
+  });
+
+  it("should respect pagination for getOwned", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({
+      metadata: {
+        name: `Bundle ${num}`,
+      },
+      supply: 100,
+    }));
+    await bundleContract.mintBatch(metadata);
+
   });
 
   it("should airdrop edition tokens to different wallets", async () => {

@@ -68,6 +68,40 @@ describe("NFT Contract", async () => {
     expect(nfts).to.be.an("array").length(2);
   });
 
+  it("should respect pagination for getOwned", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    // Test: getOwnedTokenIds()
+    const idsPage1 = await nftContract.getOwnedTokenIds(undefined, {
+      count: 2,
+      start: 0,
+    });
+    expect(idsPage1).to.be.an("array").length(2);
+    const idsPage2 = await nftContract.getOwnedTokenIds(undefined, {
+      count: 5,
+      start: 1,
+    });
+    console.log({ idsPage2 });
+    expect(idsPage2).to.be.an("array").length(5);
+    expect(idsPage2[0].toNumber()).to.eq(5);
+    expect(idsPage2[1].toNumber()).to.eq(6);
+
+    // Test: getOwned()
+    const nftPage1 = await nftContract.getOwned(undefined, {
+      count: 2,
+      start: 0,
+    });
+    expect(nftPage1).to.be.an("array").length(2);
+    const nftPage2 = await nftContract.getOwned(undefined, {
+      count: 5,
+      start: 1,
+    });
+    expect(nftPage2).to.be.an("array").length(5);
+    expect(nftPage2[0].metadata.name).to.eq("Test5");
+    expect(nftPage2[1].metadata.name).to.eq("Test6");
+  });
+
   it("should respect pagination", async () => {
     const nfts = [] as NFTMetadataInput[];
     for (let i = 0; i < 100; i++) {

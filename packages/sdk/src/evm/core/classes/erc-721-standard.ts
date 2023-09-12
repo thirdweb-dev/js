@@ -95,26 +95,32 @@ export class StandardErc721<
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
-    return this.erc721.getOwned(walletAddress);
+    return this.erc721.getOwned(walletAddress, queryParams);
   }
 
   /**
    * Get Owned Token Ids
    * @remarks Get all the token ids of NFTs owned by a specific wallet (no metadata)
+   * @param queryParams - optional filtering to only fetch a subset of results.
    */
   public async getOwnedTokenIds(
     walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
   ): Promise<BigNumber[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
-    return this.erc721.getOwnedTokenIds(walletAddress);
+    return this.erc721.getOwnedTokenIds(walletAddress, queryParams);
   }
 
   /**

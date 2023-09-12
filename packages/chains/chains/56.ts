@@ -5,6 +5,7 @@ export default {
   "rpc": [
     "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://bsc-ws-node.nariox.org",
+    "wss://bsc.publicnode.com",
     "https://bsc.publicnode.com",
     "https://bsc-dataseed4.ninicoin.io",
     "https://bsc-dataseed3.ninicoin.io",
@@ -19,9 +20,7 @@ export default {
     "https://bsc-dataseed2.bnbchain.org",
     "https://bsc-dataseed1.bnbchain.org"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "BNB Chain Native Token",
     "symbol": "BNB",

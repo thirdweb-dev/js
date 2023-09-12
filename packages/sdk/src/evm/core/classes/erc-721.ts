@@ -403,6 +403,7 @@ export class Erc721<
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC721Supply | ERC721Enumerable
    */
@@ -430,7 +431,7 @@ export class Erc721<
         (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
       );
 
-      if (start < ownedTokens.length) {
+      if (start < ownedTokens.length && count) {
         ownedTokens = ownedTokens.slice(start, count);
       }
 
@@ -443,21 +444,37 @@ export class Erc721<
   /**
    * Get all token ids of NFTs owned by a specific wallet.
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    */
-  public async getOwnedTokenIds(walletAddress?: AddressOrEns) {
+  public async getOwnedTokenIds(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
 
     if (this.query?.owned) {
-      return this.query.owned.tokenIds(walletAddress);
+      return this.query.owned.tokenIds(walletAddress, queryParams);
     } else {
       const address =
         walletAddress || (await this.contractWrapper.getSignerAddress());
       const allOwners = await this.getAllOwners();
-      return (allOwners || [])
+
+      const start = BigNumber.from(queryParams?.start || 0).toNumber();
+      const count = BigNumber.from(
+        queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+      ).toNumber();
+
+      let ownedTokenIds = (allOwners || [])
         .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
         .map((i) => BigNumber.from(i.tokenId));
+
+      if (start < ownedTokenIds.length && count) {
+        ownedTokenIds = ownedTokenIds.slice(start, count);
+      }
+
+      return ownedTokenIds;
     }
   }
 
