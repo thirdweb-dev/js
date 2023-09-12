@@ -3,6 +3,7 @@ import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { PhantomWallet } from "@thirdweb-dev/wallets";
+import { wait } from "../../../utils/wait";
 
 export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   const [screen, setScreen] = useState<"connecting" | "get-started">(
@@ -20,14 +21,14 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
       connectPrompted.current = true;
       setScreen("connecting");
       setErrorConnecting(false);
+      await wait(1000);
       await connect(walletConfig);
       close();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
-      goBack();
     }
-  }, [walletConfig, close, connect, goBack]);
+  }, [walletConfig, close, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
