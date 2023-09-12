@@ -159,6 +159,7 @@ export function ChooseWallet({
       (guestWallet || connectionWallets.length > 0) ? (
         <Box
           mb="md"
+          mt="md"
           marginHorizontal="xl"
           flexDirection="row"
           justifyContent="center"
@@ -178,7 +179,7 @@ export function ChooseWallet({
           marginHorizontal="xl"
           justifyContent="center"
           borderRadius="lg"
-          height={50}
+          paddingVertical="xmd"
           borderColor="border"
           flexDirection="row"
           alignItems="center"
@@ -196,16 +197,18 @@ export function ChooseWallet({
               </Box>
             );
           })}
-          <Text variant="bodySmall">Connect a wallet</Text>
+          <Text variant="bodySmall" fontWeight="700">
+            Connect a wallet
+          </Text>
         </BaseButton>
       ) : null}
       {guestWallet ? (
         <BaseButton
           marginHorizontal="xl"
           mt="sm"
+          paddingVertical="xmd"
           justifyContent="center"
           borderRadius="lg"
-          height={50}
           borderColor="border"
           borderWidth={1}
           onPress={onContinueAsGuestPress}
@@ -213,7 +216,9 @@ export function ChooseWallet({
           {isConnecting ? (
             <ActivityIndicator size={"small"} />
           ) : (
-            <Text variant="bodySmall">Continue as guest</Text>
+            <Text variant="bodySmall" fontWeight="700">
+              Continue as guest
+            </Text>
           )}
         </BaseButton>
       ) : null}
@@ -223,29 +228,50 @@ export function ChooseWallet({
           pt="md"
           height={50}
           marginHorizontal={!isConnectAWalletEnabled ? "xl" : "none"}
-          borderTopColor="border"
-          borderTopWidth={1}
           alignItems="center"
         >
-          <Text variant="bodySmallSecondary" fontSize={10}>
+          <Text variant="bodySmallSecondary" fontSize={10} lineHeight={14}>
             By connecting, you agree to the
           </Text>
           <Box flexDirection="row" alignItems="center" justifyContent="center">
             {termsOfServiceUrl ? (
-              <BaseButton onPress={onToSPressed} flexDirection="row">
-                <Text variant="link" fontSize={10}>
+              <BaseButton
+                onPress={onToSPressed}
+                flexDirection="row"
+                padding="none"
+              >
+                <Text
+                  variant="link"
+                  fontSize={10}
+                  padding="none"
+                  lineHeight={14}
+                >
                   Terms of Service
                 </Text>
               </BaseButton>
             ) : null}
             {termsOfServiceUrl && privacyPolicyUrl ? (
-              <Text variant="bodySmall" fontSize={10}>
+              <Text
+                variant="bodySmallSecondary"
+                fontSize={10}
+                padding="none"
+                lineHeight={14}
+              >
                 {" & "}
               </Text>
             ) : null}
             {privacyPolicyUrl ? (
-              <BaseButton onPress={onPrivacyPolicyPress} flexDirection="row">
-                <Text variant="link" fontSize={10}>
+              <BaseButton
+                onPress={onPrivacyPolicyPress}
+                flexDirection="row"
+                padding="none"
+              >
+                <Text
+                  variant="link"
+                  fontSize={10}
+                  padding="none"
+                  lineHeight={14}
+                >
                   Privacy Policy
                 </Text>
               </BaseButton>

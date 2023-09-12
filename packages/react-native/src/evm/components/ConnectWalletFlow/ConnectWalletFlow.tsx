@@ -72,7 +72,7 @@ export const ConnectWalletFlow = () => {
 
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
-    if (walletConfig) {
+    if (walletConfig && !walletConfig.connectUI) {
       onChooseWallet(walletConfig);
     }
   }, [onChooseWallet, walletConfig]);

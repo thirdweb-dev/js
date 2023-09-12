@@ -35,11 +35,9 @@ export const WalletButton = ({
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
         <ImageSvgUri imageUrl={walletIconUrl} width={48} height={48} />
-        <Box ml="sm">
+        <Box ml="sm" alignItems="flex-start">
           <Text variant="bodyLarge">{name}</Text>
-          {recommended ? (
-            <Text variant="bodySmallSecondary">Recommended</Text>
-          ) : null}
+          {recommended ? <Text variant="link">Recommended</Text> : null}
         </Box>
       </Box>
       {labelText ? <Label text={labelText} /> : <View />}

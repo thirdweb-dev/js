@@ -74,29 +74,31 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
             setEmail(text);
           },
           style: {
-            height: 50,
-            fontSize: 16,
+            fontSize: 14,
             color: theme.colors.textPrimary,
+            lineHeight: 16,
+            padding: 0,
           },
         }}
         containerProps={{
           paddingHorizontal: "sm",
-          style: {
-            height: 50,
-          },
+          paddingVertical: "md",
         }}
       />
       <BaseButton
         mt="md"
-        mb="lg"
-        paddingVertical="md"
+        paddingVertical="xmd"
         borderRadius="lg"
         borderWidth={1}
         borderColor="border"
-        backgroundColor="linkPrimary"
+        backgroundColor="accentButtonColor"
         onPress={onContinuePress}
       >
-        <Text variant="bodyLarge" color="white" fontWeight="700">
+        <Text
+          variant="bodySmall"
+          color="accentButtonTextColor"
+          fontWeight="700"
+        >
           Continue
         </Text>
       </BaseButton>
