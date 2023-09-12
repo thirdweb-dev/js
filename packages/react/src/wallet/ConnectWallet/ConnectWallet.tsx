@@ -31,6 +31,7 @@ import type { NetworkSelectorProps } from "./NetworkSelector";
 import { defaultModalTitle } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { WelcomeScreen } from "./screens/types";
 
 type ConnectWalletProps = {
   className?: string;
@@ -96,6 +97,15 @@ type ConnectWalletProps = {
    * If provided, Modal will show a Privacy Policy message at the bottom with below link
    */
   privacyPolicyUrl?: string;
+
+  /**
+   * Customize the welcome screen
+   *
+   * Either provide a component to replace the default screen entirely
+   *
+   * or an object with title, subtitle and imgSrc to change the content of the default screen
+   */
+  welcomeScreen?: WelcomeScreen;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -187,6 +197,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   themeOptions: props.themeOptions,
                   termsOfServiceUrl: props.termsOfServiceUrl,
                   privacyPolicyUrl: props.privacyPolicyUrl,
+                  welcomeScreen: props.welcomeScreen,
                 });
                 setIsWalletModalOpen(true);
               }}

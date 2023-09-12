@@ -2,6 +2,7 @@ import { useState, createContext, useContext } from "react";
 import { defaultModalTitle } from "../../wallet/ConnectWallet/constants";
 import { isMobile } from "../utils/isMobile";
 import { ThemeOptions } from "../../design-system";
+import { WelcomeScreen } from "../../wallet/ConnectWallet/screens/types";
 
 type BoolSetter = (value: boolean) => void;
 
@@ -13,6 +14,7 @@ export type ModalConfig = {
   modalSize: "wide" | "compact";
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
+  welcomeScreen?: WelcomeScreen;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -39,6 +41,7 @@ export const WalletUIStatesProvider = (
     title?: string;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    welcomeScreen?: WelcomeScreen;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -52,6 +55,7 @@ export const WalletUIStatesProvider = (
     themeOptions: props.themeOptions,
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
+    welcomeScreen: props.welcomeScreen,
   });
 
   return (

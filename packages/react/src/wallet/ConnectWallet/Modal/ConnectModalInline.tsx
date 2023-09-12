@@ -16,6 +16,7 @@ import { isMobile } from "../../../evm/utils/isMobile";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
+import { WelcomeScreen } from "../screens/types";
 
 export const ConnectModalInline = (props: {
   theme: "light" | "dark";
@@ -25,6 +26,7 @@ export const ConnectModalInline = (props: {
   themeOptions?: ThemeOptions;
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
+  welcomeScreen?: WelcomeScreen;
 }) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
@@ -62,6 +64,7 @@ export const ConnectModalInline = (props: {
       themeOptions={props.themeOptions}
       termsOfServiceUrl={props.termsOfServiceUrl}
       privacyPolicyUrl={props.privacyPolicyUrl}
+      welcomeScreen={props.welcomeScreen}
     >
       <CustomThemeProvider
         theme={props.theme}
@@ -99,4 +102,5 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   position: relative;
   border: 1px solid ${(p) => p.theme.colors.base3};
   line-height: 1;
+  overflow: hidden;
 `;

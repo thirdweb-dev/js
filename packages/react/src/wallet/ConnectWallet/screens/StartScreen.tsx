@@ -6,11 +6,35 @@ import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider
 import { TOS } from "../Modal/TOS";
 import { GlobeIcon } from "../icons/GlobalIcon";
 import styled from "@emotion/styled";
-import { Theme } from "../../../design-system";
+import { Theme, spacing } from "../../../design-system";
 import { keyframes } from "@emotion/react";
+import { Img } from "../../../components/Img";
 
 export function StartScreen() {
-  const { termsOfServiceUrl, privacyPolicyUrl } = useContext(ModalConfigCtx);
+  const {
+    termsOfServiceUrl,
+    privacyPolicyUrl,
+    welcomeScreen: WelcomeScreen,
+  } = useContext(ModalConfigCtx);
+
+  if (WelcomeScreen) {
+    if (typeof WelcomeScreen === "function") {
+      return <WelcomeScreen />;
+    }
+  }
+
+  const title =
+    (typeof WelcomeScreen === "object" ? WelcomeScreen?.title : undefined) ||
+    "Your gateway to the decentralized world";
+
+  const subtitle =
+    (typeof WelcomeScreen === "object" ? WelcomeScreen?.subtitle : undefined) ||
+    "Connect a wallet to get started";
+
+  const img =
+    typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;
+
+  const showTOS = termsOfServiceUrl || privacyPolicyUrl;
 
   return (
     <Container fullHeight animate="fadein" flex="column">
@@ -23,14 +47,23 @@ export function StartScreen() {
         }}
       >
         <Container flex="row" center="x">
-          <GlobalContainer>
-            <GlobeIcon size={"150"} />
-          </GlobalContainer>
+          {img ? (
+            <Img
+              src={img.src}
+              width={img.width ? String(img.width) : undefined}
+              height={img.height ? String(img.height) : undefined}
+            />
+          ) : (
+            <GlobalContainer>
+              <GlobeIcon size={"150"} />
+            </GlobalContainer>
+          )}
         </Container>
+
         <Spacer y="xxl" />
 
         <Text center color="primaryText" weight={600}>
-          Your gateway to the decentralized world
+          {title}
         </Text>
 
         <Spacer y="md" />
@@ -43,22 +76,23 @@ export function StartScreen() {
             display: "block",
           }}
         >
-          Connect a wallet to get started
+          {subtitle}
         </Text>
-
-        <Spacer y="xl" />
-
-        <Link
-          target="_blank"
-          size="sm"
-          center
-          href="https://ethereum.org/en/wallets/find-wallet/"
-        >
-          New to wallets?
-        </Link>
       </Container>
 
-      {(termsOfServiceUrl || privacyPolicyUrl) && (
+      <Container px="xl">
+        <LinkContainer data-seperator={!!showTOS}>
+          <Link
+            target="_blank"
+            center
+            href="https://ethereum.org/en/wallets/find-wallet/"
+          >
+            New to wallets?
+          </Link>
+        </LinkContainer>
+      </Container>
+
+      {showTOS && (
         <Container p="lg">
           <TOS
             termsOfServiceUrl={termsOfServiceUrl}
@@ -69,6 +103,17 @@ export function StartScreen() {
     </Container>
   );
 }
+
+const LinkContainer = styled.div<{ theme?: Theme }>`
+  &[data-seperator="true"] {
+    padding-bottom: ${spacing.lg};
+    border-bottom: 1px solid ${(p) => p.theme.colors.base3};
+  }
+
+  &[data-seperator="false"] {
+    padding: ${spacing.lg};
+  }
+`;
 
 const floatingAnimation = keyframes`
   from {

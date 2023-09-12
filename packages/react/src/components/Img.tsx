@@ -1,8 +1,8 @@
 import { useStorage } from "@thirdweb-dev/react-core";
 
 export const Img: React.FC<{
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
   src: string;
   alt?: string;
   loading?: "eager" | "lazy";
@@ -23,8 +23,8 @@ export const Img: React.FC<{
       loading={props.loading}
       decoding="async"
       style={{
-        height: props.height + "px",
-        width: props.width + "px",
+        height: props.height ? props.height + "px" : undefined,
+        width: props.width ? props.width + "px" : undefined,
         userSelect: "none",
       }}
       draggable={false}
