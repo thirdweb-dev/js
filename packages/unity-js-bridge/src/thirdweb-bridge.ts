@@ -259,11 +259,16 @@ class ThirdwebBridge implements TWBridge {
           break;
         case walletIds.paper:
           walletInstance = new PaperWallet({
-            paperClientId: sdkOptions.wallet?.paperClientId,
+            paperClientId:
+              sdkOptions.wallet?.paperClientId ??
+              "00000000-0000-0000-0000-000000000000",
             chain: Ethereum,
             dappMetadata,
             chains: supportedChains,
             clientId: sdkOptions.clientId,
+            advancedOptions: {
+              recoveryShareManagement: "USER_MANAGED",
+            },
           });
           break;
         case walletIds.smartWallet:
@@ -434,7 +439,7 @@ class ThirdwebBridge implements TWBridge {
       }
     }
 
-    // contract call
+    // contract tx
     if (addrOrSDK.startsWith("0x")) {
       let typeOrAbi: string | ContractInterface | undefined;
       if (firstArg.length > 1) {
@@ -447,6 +452,58 @@ class ThirdwebBridge implements TWBridge {
       const contract = typeOrAbi
         ? await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
         : await this.activeSDK.getContract(addrOrSDK);
+
+      // tx
+      if (routeArgs.length === 3 && routeArgs[1] === "tx") {
+        const txInput = parsedArgs[0];
+        const fnName = parsedArgs[1];
+        const args = parsedArgs[2];
+
+        const tx = contract.prepare(fnName, args, {
+          value: txInput?.value,
+          gasLimit: txInput?.gas,
+          gasPrice: txInput?.gasPrice,
+          maxFeePerGas: txInput?.maxFeePerGas,
+          maxPriorityFeePerGas: txInput?.maxPriorityFeePerGas,
+          nonce: txInput?.nonce,
+          type: txInput?.type?.toNumber(),
+          accessList: txInput?.accessList,
+          // customData: txInput.data,
+          // ccipReadEnabled: txInput.ccipReadEnabled,
+        });
+
+        if (routeArgs[2].includes("send")) {
+          tx.setGaslessOptions(
+            routeArgs[2] === "sendGasless"
+              ? this.activeSDK.options.gasless
+              : undefined,
+          );
+          const result = await tx.send();
+          return JSON.stringify({ result: result.hash }, bigNumberReplacer);
+        } else if (routeArgs[2].includes("execute")) {
+          tx.setGaslessOptions(
+            routeArgs[2] === "executeGasless"
+              ? this.activeSDK.options.gasless
+              : undefined,
+          );
+          const result = await tx.execute();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs[2].includes("estimateGasLimit")) {
+          const result = await tx.estimateGasLimit();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs[2].includes("estimateGasCosts")) {
+          const result = await tx.estimateGasCost();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs[2].includes("simulate")) {
+          const result = await tx.simulate();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs[2].includes("getGasPrice")) {
+          const result = await tx.getGasPrice();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        }
+      }
+
+      // call
       if (routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
         const result = await contract[routeArgs[1]](...parsedArgs);
