@@ -7,9 +7,10 @@ import {
   iconSize,
 } from "../design-system";
 import {
-  modalMaxHeight,
+  widemodalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
+  compactmodalMaxHeight,
 } from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
 import { noScrollBar } from "./basic";
@@ -45,7 +46,7 @@ export const Modal: React.FC<{
         <Dialog.Content asChild>
           <DialogContent
             style={{
-              height: props.size === "compact" ? "auto" : modalMaxHeight,
+              height: props.size === "compact" ? "auto" : widemodalMaxHeight,
               maxWidth:
                 props.size === "compact"
                   ? modalMaxWidthCompact
@@ -53,7 +54,7 @@ export const Modal: React.FC<{
             }}
           >
             {props.size === "compact" ? (
-              <DynamicHeight maxHeight={modalMaxHeight}>
+              <DynamicHeight maxHeight={compactmodalMaxHeight}>
                 {props.children}{" "}
               </DynamicHeight>
             ) : (

@@ -54,7 +54,7 @@ const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-content: center;
-  z-index: 10;
+  z-index: 1000;
 `;
 
 const QRCodeContainer = styled.div<{ theme?: Theme }>`

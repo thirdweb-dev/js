@@ -74,7 +74,7 @@ export const ConnectingScreen: React.FC<{
             animationDuration: "200ms",
           }}
         >
-          <Text center color="primaryText" size="lg">
+          <Text center color="primaryText" size="lg" weight={600}>
             {props.errorConnecting ? "Connection Failed" : "Connecting"}
           </Text>
 

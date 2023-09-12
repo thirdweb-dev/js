@@ -11,6 +11,8 @@ export type ModalConfig = {
   themeOptions?: ThemeOptions;
   data: any;
   modalSize: "wide" | "compact";
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -35,6 +37,8 @@ export const WalletUIStatesProvider = (
     themeOptions?: ThemeOptions;
     modalSize: "wide" | "compact";
     title?: string;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   }>,
 ) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -46,6 +50,8 @@ export const WalletUIStatesProvider = (
     data: undefined,
     modalSize: _isMobile ? "compact" : props.modalSize,
     themeOptions: props.themeOptions,
+    termsOfServiceUrl: props.termsOfServiceUrl,
+    privacyPolicyUrl: props.privacyPolicyUrl,
   });
 
   return (

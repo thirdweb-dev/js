@@ -23,7 +23,7 @@ export const Text = styled.span<{
 
 export const Link = styled.a<{
   theme?: Theme;
-  small?: boolean;
+  size?: keyof typeof fontSize;
   secondary?: boolean;
   inline?: boolean;
   center?: boolean;
@@ -32,7 +32,7 @@ export const Link = styled.a<{
   cursor: pointer;
   color: ${(p) =>
     p.secondary ? p.theme.colors.secondaryText : p.theme.colors.accentText};
-  font-size: ${(p) => (p.small ? fontSize.sm : fontSize.md)};
+  font-size: ${(p) => fontSize[p.size || "md"]};
   text-decoration: none;
   text-align: ${(p) => (p.center ? "center" : "left")};
   display: ${(p) => (p.inline ? "inline" : "block")};

@@ -1,12 +1,14 @@
-import styled from "@emotion/styled";
-import { ScreenBottomContainer, Container } from "../../../components/basic";
-import { HelperLink } from "../../../components/modalElements";
+import { Container } from "../../../components/basic";
 import { Spacer } from "../../../components/Spacer";
-import { Text } from "../../../components/text";
-import { fontSize, Theme } from "../../../design-system";
+import { Link, Text } from "../../../components/text";
 import { EthIcon } from "../icons/EthIcon";
+import { useContext } from "react";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { TOS } from "../Modal/TOS";
 
 export function StartScreen() {
+  const { termsOfServiceUrl, privacyPolicyUrl } = useContext(ModalConfigCtx);
+
   return (
     <Container fullHeight animate="fadein" flex="column">
       <Container
@@ -22,13 +24,14 @@ export function StartScreen() {
         </Container>
         <Spacer y="xxl" />
 
-        <Text center color="primaryText" weight={500}>
+        <Text center color="primaryText" weight={600}>
           Your gateway to the decentralized world
         </Text>
 
         <Spacer y="md" />
 
         <Text
+          weight={500}
           color="secondaryText"
           style={{
             textAlign: "center",
@@ -37,33 +40,27 @@ export function StartScreen() {
         >
           Connect a wallet to get started
         </Text>
-      </Container>
 
-      <ScreenBottomContainer
-        style={{
-          border: "none",
-        }}
-      >
-        <SecondaryLink
+        <Spacer y="xl" />
+
+        <Link
           target="_blank"
+          size="sm"
+          center
           href="https://ethereum.org/en/wallets/find-wallet/"
-          style={{
-            lineHeight: 1,
-            fontSize: fontSize.md,
-            textAlign: "center",
-          }}
         >
           New to wallets?
-        </SecondaryLink>
-      </ScreenBottomContainer>
+        </Link>
+      </Container>
+
+      {(termsOfServiceUrl || privacyPolicyUrl) && (
+        <Container p="lg">
+          <TOS
+            termsOfServiceUrl={termsOfServiceUrl}
+            privacyPolicyUrl={privacyPolicyUrl}
+          />
+        </Container>
+      )}
     </Container>
   );
 }
-
-const SecondaryLink = /* @__PURE__ */ styled(HelperLink)<{ theme?: Theme }>`
-  color: ${(p) => p.theme.colors.secondaryText};
-  transition: color 200ms ease;
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;

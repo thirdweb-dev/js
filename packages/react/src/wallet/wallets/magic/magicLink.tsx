@@ -16,7 +16,6 @@ import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
 import styled from "@emotion/styled";
-import { TextDivider } from "../../../components/TextDivider";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
 
 export function magicLink(
@@ -124,9 +123,6 @@ const MagicUI: React.FC<{
     );
   }
 
-  const noInput = !isEmailEnabled && !isSMSEnabled;
-  const showOrInMiddle = !noInput;
-
   const socialIconSize =
     props.modalSize === "compact" ? iconSize.md : iconSize.lg;
 
@@ -190,11 +186,7 @@ const MagicUI: React.FC<{
           )}
         </>
       )}
-      {showOrInMiddle && (
-        <TextDivider>
-          <span> OR </span>
-        </TextDivider>
-      )}
+
       <InputSelectionUI
         onSelect={props.onSelect}
         placeholder={placeholder}

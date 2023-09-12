@@ -86,6 +86,16 @@ type ConnectWalletProps = {
    * @default "wide"
    */
   modalSize?: "compact" | "wide";
+
+  /**
+   * If provided, Modal will show a Terms of Service message at the bottom with below link
+   */
+  termsOfServiceUrl?: string;
+
+  /**
+   * If provided, Modal will show a Privacy Policy message at the bottom with below link
+   */
+  privacyPolicyUrl?: string;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -175,6 +185,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   data: undefined,
                   modalSize,
                   themeOptions: props.themeOptions,
+                  termsOfServiceUrl: props.termsOfServiceUrl,
+                  privacyPolicyUrl: props.privacyPolicyUrl,
                 });
                 setIsWalletModalOpen(true);
               }}

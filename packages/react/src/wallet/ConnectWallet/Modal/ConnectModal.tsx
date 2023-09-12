@@ -14,7 +14,7 @@ import {
   useSetIsWalletModalOpen,
 } from "../../../evm/providers/wallet-ui-states-provider";
 import { useCallback, useEffect, useContext } from "react";
-import { modalMaxHeight, reservedScreens } from "../constants";
+import { reservedScreens, compactmodalMaxHeight } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
 import { FlexScrollContainer } from "../../../components/basic";
@@ -66,7 +66,10 @@ export const ConnectModalContent = (props: {
 
   const handleBack = useCallback(() => {
     setScreen(initialScreen);
-  }, [setScreen, initialScreen]);
+    if (connectionStatus === "connecting") {
+      disconnect();
+    }
+  }, [setScreen, initialScreen, connectionStatus, disconnect]);
 
   const walletList = (
     <WalletSelector
@@ -127,7 +130,7 @@ export const ConnectModalContent = (props: {
       ) : (
         <FlexScrollContainer
           style={{
-            maxHeight: modalMaxHeight,
+            maxHeight: compactmodalMaxHeight,
           }}
         >
           {screen === reservedScreens.main && walletList}

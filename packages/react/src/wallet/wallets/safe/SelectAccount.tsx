@@ -1,7 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { ErrorMessage, Label } from "../../../components/formElements";
+import { Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
 import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
@@ -279,11 +279,10 @@ export const SelectAccount: React.FC<{
 
           {supportedChains.length === 0 && (
             <>
-              <Spacer y="sm" />
-              <ErrorMessage>
+              <Text color="danger" multiline size="xs">
                 {" "}
                 Can not use Safe: No Safe supported chains are configured in App
-              </ErrorMessage>
+              </Text>
               <Spacer y="sm" />
             </>
           )}

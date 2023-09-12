@@ -101,7 +101,7 @@ export function InputSelectionUI(props: {
         <>
           <Spacer y="md" />
           <Button variant="accent" onClick={handleSelect} fullWidth>
-            Sign in
+            Continue
           </Button>
         </>
       )}

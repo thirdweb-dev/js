@@ -6,12 +6,17 @@ import {
   ModalHeader,
   Container,
   ScreenBottomContainer,
+  Line,
 } from "../../components/basic";
 import { Button } from "../../components/buttons";
 import { ModalTitle } from "../../components/modalElements";
 import { iconSize, radius, spacing, Theme } from "../../design-system";
 import styled from "@emotion/styled";
-import { WalletConfig } from "@thirdweb-dev/react-core";
+import {
+  WalletConfig,
+  useConnectionStatus,
+  useDisconnect,
+} from "@thirdweb-dev/react-core";
 import { walletIds } from "@thirdweb-dev/wallets";
 import {
   ModalConfigCtx,
@@ -21,6 +26,7 @@ import { TWIcon } from "./icons/twIcon";
 import { Link, Text } from "../../components/text";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
+import { TOS } from "./Modal/TOS";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -30,7 +36,10 @@ export const WalletSelector: React.FC<{
 }> = (props) => {
   const modalConfig = useContext(ModalConfigCtx);
   const isCompact = modalConfig.modalSize === "compact";
+  const { termsOfServiceUrl, privacyPolicyUrl } = modalConfig;
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
+  const disconnect = useDisconnect();
+  const connectionStatus = useConnectionStatus();
 
   const localWalletConfig = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
@@ -56,7 +65,11 @@ export const WalletSelector: React.FC<{
   const showGroupsUI =
     isCompact && socialWallets.length >= 1 && eoaWallets.length >= 2;
 
-  const showFooter = (!showGroupsUI && localWalletConfig) || showNewToWallets;
+  const showTOS = isCompact && (termsOfServiceUrl || privacyPolicyUrl);
+
+  const showFooter = Boolean(
+    (!showGroupsUI && localWalletConfig) || showNewToWallets,
+  );
 
   const continueAsGuest = localWalletConfig && (
     <Flex justifyContent="center">
@@ -88,6 +101,15 @@ export const WalletSelector: React.FC<{
     </Flex>
   );
 
+  const handleSelect = async (wallet: WalletConfig) => {
+    if (connectionStatus !== "disconnected") {
+      await disconnect();
+    }
+    props.selectWallet(wallet);
+  };
+
+  const showSeperatorLine = showNewToWallets && !continueAsGuest && showTOS;
+
   return (
     <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
@@ -118,13 +140,13 @@ export const WalletSelector: React.FC<{
             {isWalletGroupExpanded ? (
               <WalletSelection
                 walletConfigs={eoaWallets}
-                selectWallet={props.selectWallet}
+                selectWallet={handleSelect}
               />
             ) : (
               <Container px="xs">
                 <WalletSelection
                   walletConfigs={socialWallets}
-                  selectWallet={props.selectWallet}
+                  selectWallet={handleSelect}
                 />
 
                 <TextDivider>
@@ -164,10 +186,10 @@ export const WalletSelector: React.FC<{
                   <>
                     <Spacer y="md" />
                     {continueAsGuest}
-                    <Spacer y="lg" />
+                    <Spacer y="xl" />
                   </>
                 ) : (
-                  <Spacer y="lg" />
+                  <Spacer y="xl" />
                 )}
               </Container>
             )}
@@ -175,7 +197,7 @@ export const WalletSelector: React.FC<{
         ) : (
           <WalletSelection
             walletConfigs={nonLocalWalletConfigs}
-            selectWallet={props.selectWallet}
+            selectWallet={handleSelect}
           />
         )}
       </Container>
@@ -189,7 +211,7 @@ export const WalletSelector: React.FC<{
                 New to wallets?
               </Text>
               <Link
-                small
+                size="sm"
                 target="_blank"
                 href="https://ethereum.org/en/wallets/find-wallet/"
               >
@@ -200,6 +222,30 @@ export const WalletSelector: React.FC<{
 
           {!showGroupsUI && continueAsGuest}
         </ScreenBottomContainer>
+      )}
+
+      {showTOS && (
+        <div>
+          {showSeperatorLine && <Line height={1} color="base3" />}
+
+          <Container
+            p="md"
+            style={
+              !showSeperatorLine
+                ? {
+                    paddingTop: 0,
+                  }
+                : undefined
+            }
+          >
+            {isCompact && (
+              <TOS
+                termsOfServiceUrl={termsOfServiceUrl}
+                privacyPolicyUrl={privacyPolicyUrl}
+              />
+            )}
+          </Container>
+        </div>
       )}
     </Container>
   );
@@ -266,18 +312,22 @@ export function WalletEntryButton(props: {
       />
       <WalletNameContainer>
         <Flex flexDirection="column" gap="xxs">
-          <Text color="primaryText" weight={500}>
+          <Text color="primaryText" weight={600}>
             {walletConfig.meta.name}
           </Text>
           {isRecommended && (
-            <Text size="sm" color="accentText">
+            <Text size="sm" color="accentText" weight={500}>
               Recommended
             </Text>
           )}
 
           {!isRecommended &&
             walletConfig.isInstalled &&
-            walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
+            walletConfig.isInstalled() && (
+              <Text size="sm" weight={500}>
+                Installed
+              </Text>
+            )}
         </Flex>
       </WalletNameContainer>
     </WalletButton>

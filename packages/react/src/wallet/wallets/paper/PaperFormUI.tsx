@@ -3,7 +3,6 @@ import { InputSelectionUI } from "../InputSelectionUI";
 import { Container, ModalHeader } from "../../../components/basic";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import styled from "@emotion/styled";
-import { TextDivider } from "../../../components/TextDivider";
 import { Button } from "../../../components/buttons";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { PaperLoginType } from "./types";
@@ -30,19 +29,13 @@ export const PaperFormUI = (props: {
           </SocialButton>
 
           <Spacer y="lg" />
-
-          <TextDivider>
-            <span> OR </span>
-          </TextDivider>
-
-          <Spacer y="lg" />
         </>
       )}
 
       <InputSelectionUI
         submitType={props.submitType}
         onSelect={(email) => props.onSelect({ email })}
-        placeholder="Sign in with your email address"
+        placeholder="Enter your email address"
         name="email"
         type="email"
         errorMessage={(_input) => {

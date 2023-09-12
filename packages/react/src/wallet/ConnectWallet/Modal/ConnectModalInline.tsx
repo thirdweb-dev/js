@@ -6,7 +6,7 @@ import { IconButton } from "../../../components/buttons";
 import { iconSize, radius, shadow } from "../../../design-system";
 import { WalletUIStatesProvider } from "../../../evm/providers/wallet-ui-states-provider";
 import {
-  modalMaxHeight,
+  widemodalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
 } from "../constants";
@@ -23,6 +23,8 @@ export const ConnectModalInline = (props: {
   className?: string;
   modalSize: "wide" | "compact";
   themeOptions?: ThemeOptions;
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
 }) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
@@ -58,6 +60,8 @@ export const ConnectModalInline = (props: {
       modalSize={modalSize}
       title={props.title}
       themeOptions={props.themeOptions}
+      termsOfServiceUrl={props.termsOfServiceUrl}
+      privacyPolicyUrl={props.privacyPolicyUrl}
     >
       <CustomThemeProvider
         theme={props.theme}
@@ -66,7 +70,7 @@ export const ConnectModalInline = (props: {
         <ConnectModalInlineContainer
           className={props.className}
           style={{
-            height: modalSize === "compact" ? "auto" : modalMaxHeight,
+            height: modalSize === "compact" ? "auto" : widemodalMaxHeight,
             maxWidth:
               modalSize === "compact"
                 ? modalMaxWidthCompact
