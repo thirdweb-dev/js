@@ -58,12 +58,24 @@ export const SelectpersonalWallet: React.FC<{
       </Container>
 
       <Container px="lg">
-        <Spacer y="sm" />
+        <Spacer y="md" />
         <Text size="lg" color="primaryText" weight={500}>
           Link personal wallet
         </Text>
         <Spacer y="sm" />
-        <Text>Select your wallet to connect to Safe </Text>
+        <Text multiline>
+          Connect your personal wallet to use Safe.{" "}
+          <Link
+            inline
+            target="_blank"
+            href="https://docs.safe.global/getting-started/readme"
+            style={{
+              whiteSpace: "nowrap",
+            }}
+          >
+            Learn more
+          </Link>{" "}
+        </Text>
       </Container>
 
       <Spacer y="lg" />
@@ -90,15 +102,6 @@ export const SelectpersonalWallet: React.FC<{
             Continue as guest
           </Button>
         )}
-
-        <Link
-          small
-          center
-          target="_blank"
-          href="https://docs.safe.global/getting-started/readme"
-        >
-          What is a Safe?
-        </Link>
       </ScreenBottomContainer>
     </Container>
   );

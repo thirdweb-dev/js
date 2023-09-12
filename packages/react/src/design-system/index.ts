@@ -21,7 +21,7 @@ const darkColors = {
 const lightColors: typeof darkColors = {
   base1: mauve.mauve1,
   base2: mauve.mauve3,
-  base3: mauve.mauve4,
+  base3: mauve.mauve5,
   base4: mauve.mauve6,
   base5: mauve.mauve7,
 

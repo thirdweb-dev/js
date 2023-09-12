@@ -39,7 +39,7 @@ export const Input = styled.input<{
     ${(p) => {
       switch (p.variant) {
         case "outline":
-          return p.theme.colors.base3;
+          return p.theme.colors.base4;
         case "transparent":
           return "transparent";
         case "secondary":

@@ -3,18 +3,16 @@ import { Spacer } from "../../../components/Spacer";
 import {
   ScreenBottomContainer,
   Flex,
-  ScreenContainer,
   ModalHeader,
+  Container,
 } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import {
-  ModalDescription,
-  HelperLink,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { WalletSelection } from "../../ConnectWallet/WalletSelector";
 import { SmartWalletConfig } from "./types";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
+import { Link, Text } from "../../../components/text";
 
 export const SelectPersonalWallet: React.FC<{
   onBack: () => void;
@@ -51,8 +49,9 @@ export const SelectPersonalWallet: React.FC<{
   }
 
   return (
-    <>
-      <ScreenContainer
+    <Container fullHeight flex="column" animate="fadein" scrollY>
+      <Container
+        p="lg"
         style={{
           paddingBottom: 0,
         }}
@@ -63,50 +62,56 @@ export const SelectPersonalWallet: React.FC<{
         />
 
         <Spacer y="lg" />
+        <Spacer y="md" />
+
+        <Text size="lg" weight={500} color="primaryText">
+          Link personal wallet
+        </Text>
+
+        <Spacer y="sm" />
 
         <ModalDescription>
-          Select a personal wallet to access your account.{" "}
-          <HelperLink
-            md
+          Connect your personal wallet to access your account.{" "}
+          <Link
+            inline
             href="https://portal.thirdweb.com/glossary/smart-wallet"
             target="_blank"
             style={{
-              display: "inline",
               whiteSpace: "nowrap",
             }}
           >
             {" "}
             Learn More{" "}
-          </HelperLink>
+          </Link>
         </ModalDescription>
 
         <Spacer y="lg" />
+      </Container>
 
+      <Container px="md" flex="column" expand scrollY>
         <WalletSelection
           maxHeight="300px"
           walletConfigs={personalWallets}
           selectWallet={props.selectWallet}
         />
-      </ScreenContainer>
+      </Container>
 
       {guestWallet && (
-        <>
-          <ScreenBottomContainer>
-            <Flex justifyContent="center">
-              <Button
-                variant="outline"
-                fullWidth
-                onClick={() => {
-                  props.selectWallet(guestWallet);
-                }}
-                data-test="continue-as-guest-button"
-              >
-                Continue as guest
-              </Button>
-            </Flex>
-          </ScreenBottomContainer>
-        </>
+        <ScreenBottomContainer>
+          <Flex justifyContent="center">
+            <Button
+              variant="outline"
+              fullWidth
+              onClick={() => {
+                props.selectWallet(guestWallet);
+              }}
+              data-test="continue-as-guest-button"
+            >
+              Continue as guest
+            </Button>
+          </Flex>
+        </ScreenBottomContainer>
       )}
-    </>
+    </Container>
   );
 };

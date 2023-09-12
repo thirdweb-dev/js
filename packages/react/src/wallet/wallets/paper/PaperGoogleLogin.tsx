@@ -134,7 +134,7 @@ export const PaperGoogleLogin = ({
 
           <Text size="sm" multiline>
             Once you have enabled pop-ups, <br />
-            click on
+            click on{" "}
             <HelperLink
               onClick={googleLogin}
               style={{
