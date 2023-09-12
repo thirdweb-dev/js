@@ -10,6 +10,7 @@ export default {
     "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://rpc.goerli.mudit.blog/",
     "https://ethereum-goerli.publicnode.com",
+    "wss://ethereum-goerli.publicnode.com",
     "https://goerli.gateway.tenderly.co",
     "wss://goerli.gateway.tenderly.co"
   ],

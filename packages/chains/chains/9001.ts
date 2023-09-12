@@ -4,7 +4,8 @@ export default {
   "chain": "Evmos",
   "rpc": [
     "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evmos-evm.publicnode.com"
+    "https://evmos-evm.publicnode.com",
+    "wss://evmos-evm.publicnode.com"
   ],
   "faucets": [],
   "nativeCurrency": {

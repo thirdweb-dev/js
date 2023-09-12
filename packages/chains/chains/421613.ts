@@ -16,7 +16,8 @@ export default {
     "https://arbitrum-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli-rollup.arbitrum.io/rpc",
-    "https://arbitrum-goerli.publicnode.com"
+    "https://arbitrum-goerli.publicnode.com",
+    "wss://arbitrum-goerli.publicnode.com"
   ],
   "faucets": [],
   "infoURL": "https://arbitrum.io/",
