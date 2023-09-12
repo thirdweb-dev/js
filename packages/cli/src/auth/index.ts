@@ -59,17 +59,17 @@ export async function loginUser(
 export async function logoutUser({ credsConfigPath, tokenPath, cliWalletPath }: ConfigPaths, options?: { showLogs?: boolean }) {
   const showLogs = options?.showLogs ?? true;
   try {
-    showLogs && ora("Logging out...").start();
+    if (showLogs) ora("Logging out...").start();
     const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath) && fs.existsSync(cliWalletPath);
     if (!dirExists) {
-      showLogs && ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
+      if (showLogs) ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
       return;
     }
     fs.unlinkSync(credsConfigPath);
     fs.unlinkSync(tokenPath);
     // TODO: We can consider not removing this on logout later, once we want to implement teams. For now this wallet will be ephemeral.
     fs.unlinkSync(cliWalletPath);
-    showLogs && ora().succeed(chalk.green("You have been logged out"));
+    if (showLogs) ora().succeed(chalk.green("You have been logged out"));
   } catch (error) {
     console.log(chalk.red("Something went wrong", error));
   }
