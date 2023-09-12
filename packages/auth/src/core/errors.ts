@@ -8,6 +8,10 @@ export interface ThirdwebErrorConstructorArgs<Variables = undefined> {
   variables: Variables;
 }
 
+/**
+ * Replaces all instances of ${key} with the corresponding value in substitutions
+ * Eg: formatString("Hello ${name}", { name: "John" }) => "Hello John"
+ */
 function formatString(
   template: string,
   substitutions: { [key: string]: any }
