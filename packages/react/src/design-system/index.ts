@@ -38,7 +38,7 @@ const lightColors: typeof darkColors = {
   overlay: "rgba(0, 0, 0, 0.7)",
 
   accentButtonBg: "hsl(216 100% 50%)",
-  accentButtonText: mauve.mauve12,
+  accentButtonText: mauveDark.mauve12,
 
   primaryButtonBg: mauve.mauve12,
   primaryButtonText: mauve.mauve1,
