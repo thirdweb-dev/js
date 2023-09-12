@@ -189,7 +189,7 @@ const scaleFadeIn = keyframes`
   }
 `;
 
-const pulseAnimation = keyframes`
+const floatingAnimation = keyframes`
   from {
     transform: translateY(5px);
   }
@@ -217,7 +217,7 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   }
 
   [data-gradient]:not([data-error="true"]) {
-    animation: ${pulseAnimation} 1.2s ease infinite alternate;
+    animation: ${floatingAnimation} 1.2s ease infinite alternate;
   }
 
   [data-gradient]::before {
