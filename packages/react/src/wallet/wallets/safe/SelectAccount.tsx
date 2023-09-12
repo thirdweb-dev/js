@@ -338,7 +338,7 @@ export const SelectAccount: React.FC<{
               {mismatch ? (
                 <Button
                   type="button"
-                  variant="inverted"
+                  variant="primary"
                   style={{
                     display: "flex",
                     alignItems: "center",

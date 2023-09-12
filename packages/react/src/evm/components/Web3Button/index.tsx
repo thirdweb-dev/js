@@ -160,7 +160,7 @@ export const Web3Button = <TAction extends ActionFn>({
   if (hasMismatch && !isDisabled) {
     const _button = (
       <Button
-        variant="inverted"
+        variant="primary"
         type={type}
         className={`${className || ""} ${TW_WEB3BUTTON}--switch-network`}
         onClick={handleSwitchChain}
@@ -205,7 +205,7 @@ export const Web3Button = <TAction extends ActionFn>({
   ) {
     button = (
       <Button
-        variant="inverted"
+        variant="primary"
         type={type}
         className={`${className || ""} ${TW_WEB3BUTTON}`}
         disabled
@@ -222,7 +222,7 @@ export const Web3Button = <TAction extends ActionFn>({
   else {
     button = (
       <Button
-        variant="inverted"
+        variant="primary"
         type={type}
         className={`${className || ""} ${TW_WEB3BUTTON}`}
         onClick={() => actionMutation.mutate()}

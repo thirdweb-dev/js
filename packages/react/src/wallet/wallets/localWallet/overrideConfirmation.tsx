@@ -32,7 +32,7 @@ export const OverrideConfirmation: React.FC<{
         <Spacer y="xl" />
 
         <FormFooter>
-          <Button variant="inverted" fullWidth onClick={props.onBackup}>
+          <Button variant="primary" fullWidth onClick={props.onBackup}>
             Backup wallet
           </Button>
         </FormFooter>

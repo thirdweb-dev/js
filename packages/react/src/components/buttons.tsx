@@ -2,7 +2,7 @@ import { fontSize, radius, spacing, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
 export const Button = styled.button<{
-  variant: "inverted" | "secondary" | "link" | "danger" | "accent" | "outline";
+  variant: "primary" | "secondary" | "link" | "accent" | "outline";
   theme?: Theme;
   fullWidth?: boolean;
 }>`
@@ -23,10 +23,10 @@ export const Button = styled.button<{
 
   background: ${(p) => {
     switch (p.variant) {
-      case "inverted":
-        return p.theme.colors.primaryText;
+      case "primary":
+        return p.theme.colors.primaryButtonBg;
       case "accent":
-        return p.theme.colors.accentBg;
+        return p.theme.colors.accentButtonBg;
       case "secondary":
         return p.theme.colors.base3;
       default:
@@ -34,28 +34,16 @@ export const Button = styled.button<{
     }
   }};
 
-  &:hover {
-    ${(p) => {
-      if (p.variant === "secondary") {
-        return `
-      background: ${p.theme.colors.base3};
-      `;
-      }
-    }}
-  }
-
   color: ${(p) => {
     switch (p.variant) {
-      case "inverted":
-        return p.theme.colors.base1;
+      case "primary":
+        return p.theme.colors.primaryButtonText;
       case "accent":
-        return p.theme.colors.textOnAccentBg;
+        return p.theme.colors.accentButtonText;
       case "secondary":
         return p.theme.colors.primaryText;
       case "link":
         return p.theme.colors.accentText;
-      case "danger":
-        return p.theme.colors.danger;
       default:
         return p.theme.colors.primaryText;
     }

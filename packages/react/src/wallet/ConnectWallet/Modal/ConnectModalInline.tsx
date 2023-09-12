@@ -1,16 +1,9 @@
-import { ThemeProvider } from "@emotion/react";
-import { Theme } from "../../../design-system";
+import { Theme, ThemeOptions } from "../../../design-system";
 import styled from "@emotion/styled";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { CrossContainer } from "../../../components/Modal";
 import { IconButton } from "../../../components/buttons";
-import {
-  lightTheme,
-  darkTheme,
-  iconSize,
-  radius,
-  shadow,
-} from "../../../design-system";
+import { iconSize, radius, shadow } from "../../../design-system";
 import { WalletUIStatesProvider } from "../../../evm/providers/wallet-ui-states-provider";
 import {
   modalMaxHeight,
@@ -22,12 +15,14 @@ import { useScreen } from "./screen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
+import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
 
 export const ConnectModalInline = (props: {
   theme: "light" | "dark";
   title?: string;
   className?: string;
   modalSize: "wide" | "compact";
+  themeOptions?: ThemeOptions;
 }) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
@@ -62,8 +57,12 @@ export const ConnectModalInline = (props: {
       theme={props.theme}
       modalSize={modalSize}
       title={props.title}
+      themeOptions={props.themeOptions}
     >
-      <ThemeProvider theme={props.theme === "light" ? lightTheme : darkTheme}>
+      <CustomThemeProvider
+        theme={props.theme}
+        themeOptions={props.themeOptions}
+      >
         <ConnectModalInlineContainer
           className={props.className}
           style={{
@@ -80,7 +79,7 @@ export const ConnectModalInline = (props: {
             content
           )}
         </ConnectModalInlineContainer>
-      </ThemeProvider>
+      </CustomThemeProvider>
     </WalletUIStatesProvider>
   );
 };

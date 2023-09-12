@@ -10,12 +10,16 @@ const darkColors = {
   primaryText: mauveDark.mauve12,
   secondaryText: mauveDark.mauve10,
   accentText: "#3385FF",
-  accentBg: "hsl(216 100% 50%)",
-  textOnAccentBg: mauveDark.mauve12,
 
   danger: tomato.tomato9,
   success: green.green7,
   overlay: "rgba(0, 0, 0, 0.7)",
+
+  accentButtonBg: "hsl(216 100% 50%)",
+  accentButtonText: mauveDark.mauve12,
+
+  primaryButtonBg: mauveDark.mauve12,
+  primaryButtonText: "hsl(230deg 11.63% 8.43%)",
 };
 
 const lightColors: typeof darkColors = {
@@ -27,14 +31,17 @@ const lightColors: typeof darkColors = {
 
   primaryText: mauve.mauve12,
   secondaryText: mauveDark.mauve10,
-
   accentText: "hsl(216 100% 45%)",
-  accentBg: "hsl(216 100% 50%)",
-  textOnAccentBg: mauve.mauve1,
 
   success: green.green9,
   danger: tomato.tomato9,
   overlay: "rgba(0, 0, 0, 0.7)",
+
+  accentButtonBg: "hsl(216 100% 50%)",
+  accentButtonText: mauve.mauve12,
+
+  primaryButtonBg: mauve.mauve12,
+  primaryButtonText: mauve.mauve1,
 };
 
 export const darkTheme = {
@@ -46,6 +53,10 @@ export const lightTheme: typeof darkTheme = {
 };
 
 export type Theme = typeof darkTheme;
+
+export type ThemeOptions = {
+  [key in keyof Theme]?: Partial<Theme[key]>;
+};
 
 export const fontSize = {
   xs: "12px",

@@ -99,7 +99,7 @@ export const PaperGoogleLogin = ({
             <>
               <Text color="danger">Failed to sign in</Text>
               <Spacer y="lg" />
-              <Button variant="inverted" onClick={googleLogin}>
+              <Button variant="primary" onClick={googleLogin}>
                 {" "}
                 Retry{" "}
               </Button>

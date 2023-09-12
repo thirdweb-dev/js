@@ -198,7 +198,7 @@ export const ExportLocalWallet: React.FC<{
 
         <Button
           disabled={exportDisabled}
-          variant="inverted"
+          variant="primary"
           fullWidth
           style={{
             opacity: exportDisabled ? 0.5 : 1,

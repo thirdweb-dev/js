@@ -72,7 +72,6 @@ export function InputSelectionUI(props: {
               onClick={() => {
                 handleSelect();
               }}
-              color="inverted"
               type="button"
             >
               <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />

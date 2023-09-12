@@ -13,8 +13,6 @@ import {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "../../../evm/providers/wallet-ui-states-provider";
-import { ThemeProvider } from "@emotion/react";
-import { Theme, darkTheme, lightTheme } from "../../../design-system";
 import { useCallback, useEffect, useContext } from "react";
 import { modalMaxHeight, reservedScreens } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
@@ -22,6 +20,8 @@ import styled from "@emotion/styled";
 import { FlexScrollContainer } from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
+import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
+import { Theme } from "../../../design-system";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
@@ -140,7 +140,7 @@ export const ConnectModalContent = (props: {
 };
 
 export const ConnectModal = () => {
-  const { theme, modalSize } = useContext(ModalConfigCtx);
+  const { theme, modalSize, themeOptions } = useContext(ModalConfigCtx);
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -172,7 +172,7 @@ export const ConnectModal = () => {
   ]);
 
   return (
-    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+    <CustomThemeProvider theme={theme} themeOptions={themeOptions}>
       <Modal
         size={modalSize}
         open={isWalletModalOpen}
@@ -192,7 +192,7 @@ export const ConnectModal = () => {
           setScreen={setScreen}
         />
       </Modal>
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 };
 

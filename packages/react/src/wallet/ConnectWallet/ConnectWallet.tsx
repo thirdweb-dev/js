@@ -1,6 +1,5 @@
-import { darkTheme, iconSize, lightTheme, spacing } from "../../design-system";
+import { ThemeOptions, iconSize, spacing } from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
-import { ThemeProvider } from "@emotion/react";
 import {
   ThirdwebThemeContext,
   useAddress,
@@ -31,10 +30,17 @@ import { SignatureModal } from "./SignatureModal";
 import type { NetworkSelectorProps } from "./NetworkSelector";
 import { defaultModalTitle } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 
 type ConnectWalletProps = {
   className?: string;
   theme?: "dark" | "light";
+
+  /**
+   * Customize the theme colors of the ConnectWallet button and modal
+   */
+  themeOptions?: ThemeOptions;
+
   btnTitle?: string;
   /**
    * Set a custom title for the modal
@@ -129,7 +135,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   };
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+    <CustomThemeProvider theme={theme} themeOptions={props.themeOptions}>
       {showSignatureModal && (
         <SignatureModal
           open={showSignatureModal}
@@ -147,7 +153,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               className={`${props.className || ""} ${TW_CONNECT_WALLET}`}
               data-theme={theme}
               data-is-loading={isLoading}
-              variant="inverted"
+              variant="primary"
               type="button"
               style={{
                 minWidth: "140px",
@@ -168,6 +174,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   theme,
                   data: undefined,
                   modalSize,
+                  themeOptions: props.themeOptions,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -197,7 +204,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         else if (requiresSignIn) {
           return (
             <Button
-              variant="inverted"
+              variant="primary"
               onClick={signIn}
               data-theme={theme}
               className={`${TW_CONNECT_WALLET}--sign-in ${
@@ -242,7 +249,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           />
         );
       })()}
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 };
 
@@ -260,7 +267,7 @@ function SwitchNetworkButton(props: {
       className={`${TW_CONNECT_WALLET}--switch-network ${
         props.className || ""
       }`}
-      variant="inverted"
+      variant="primary"
       type="button"
       data-theme={props.theme}
       data-is-loading={switching}
