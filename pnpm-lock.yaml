@@ -918,8 +918,8 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@walletconnect/react-native-compat':
-        specifier: ^2.8.6
-        version: 2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0)
+        specifier: ^2.10.0
+        version: 2.10.0(@react-native-async-storage/async-storage@1.18.2)(@react-native-community/netinfo@9.4.1)(react-native-get-random-values@1.9.0)(react-native@0.71.11)
       base-64:
         specifier: ^1.0.0
         version: 1.0.0
@@ -8349,6 +8349,14 @@ packages:
     resolution: {integrity: sha512-+zDZ20NUnSWghj7Ku5aFphMzuM9JulqCW+aPXT6IfIXFbb8tzYTTOSeRFOtuekJ99ibW2fUCSsjuKNlwDIbHFg==}
     dev: true
 
+  /@react-native-community/netinfo@9.4.1(react-native@0.71.11):
+    resolution: {integrity: sha512-dAbY5mfw+6Kas/GJ6QX9AZyY+K+eq9ad4Su6utoph/nxyH3whp5cMSgRNgE2VhGQVRZ/OG0qq3IaD3+wzoqJXw==}
+    peerDependencies:
+      react-native: '>=0.59'
+    dependencies:
+      react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
+    dev: false
+
   /@react-native/assets@1.0.0:
     resolution: {integrity: sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ==}
 
@@ -11708,16 +11716,21 @@ packages:
       qrcode: 1.4.4
     dev: true
 
-  /@walletconnect/react-native-compat@2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0):
-    resolution: {integrity: sha512-jC7Sgr/vGMZIWW+9vP+y0EKj3DL+Y6YIAszb2o3ZBACynAebr5s0r7y9SaKi1jlKNppoeg4iNt3yIt811B7Q0w==}
+  /@walletconnect/react-native-compat@2.10.0(@react-native-async-storage/async-storage@1.18.2)(@react-native-community/netinfo@9.4.1)(react-native-get-random-values@1.9.0)(react-native@0.71.11):
+    resolution: {integrity: sha512-7u0ykp1gz+7UoYp3miAfm6fTjsDUEHjGB2RXSeYjCX5ikVN6rJl0USMzBmM52pYTtAVFG9QT25Tt2bGk2rHOjw==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
+      '@react-native-community/netinfo': '*'
       react-native-get-random-values: '*'
     dependencies:
       '@react-native-async-storage/async-storage': 1.18.2(react-native@0.71.11)
+      '@react-native-community/netinfo': 9.4.1(react-native@0.71.11)
       events: 3.3.0
       fast-text-encoding: 1.0.6
       react-native-get-random-values: 1.9.0(react-native@0.71.11)
+      react-native-url-polyfill: 2.0.0(react-native@0.71.11)
+    transitivePeerDependencies:
+      - react-native
     dev: false
 
   /@walletconnect/relay-api@1.0.9:
@@ -12389,7 +12402,7 @@ packages:
       algosdk: 1.24.1
       arweave: 1.13.3
       arweave-stream-tx: 1.2.2(arweave@1.13.3)
-      avsc: github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef
+      avsc: git@github.com+Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef
       axios: 0.21.4(debug@4.3.4)
       base64url: 3.0.1
       bs58: 4.0.1
@@ -29047,8 +29060,8 @@ packages:
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
 
-  github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
-    resolution: {tarball: https://codeload.github.com/Bundlr-Network/avsc/tar.gz/a730cc8018b79e114b6a3381bbb57760a24c6cef}
+  git@github.com+Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
+    resolution: {commit: a730cc8018b79e114b6a3381bbb57760a24c6cef, repo: git@github.com:Bundlr-Network/avsc.git, type: git}
     name: avsc
     version: 5.4.7
     engines: {node: '>=0.11'}
