@@ -259,7 +259,9 @@ class ThirdwebBridge implements TWBridge {
           break;
         case walletIds.paper:
           walletInstance = new PaperWallet({
-            paperClientId: sdkOptions.wallet?.paperClientId,
+            paperClientId:
+              sdkOptions.wallet?.paperClientId ??
+              "00000000-0000-0000-0000-000000000000",
             chain: Ethereum,
             dappMetadata,
             chains: supportedChains,
