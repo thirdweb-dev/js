@@ -229,7 +229,7 @@ export function useContractRouteConfig(
       component: LazyContractAccountsPage,
     },
     {
-      title: "Account",
+      title: "Balance",
       path: "account",
       isEnabled: extensionDetectedState({
         contractQuery,

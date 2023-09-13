@@ -176,6 +176,14 @@ export const PRODUCTS: NavCardProps[] = [
     section: "wallets",
   },
   {
+    name: "Smart Wallet",
+    label: "smart-wallet",
+    description: "Transform UX with Account Abstraction",
+    link: "/smart-wallet",
+    icon: require("public/assets/product-icons/smart-wallet.svg"),
+    section: "wallets",
+  },
+  {
     name: "NFT Checkout",
     label: "nft-checkout",
     description: "Accept credit card checkout for NFTs",

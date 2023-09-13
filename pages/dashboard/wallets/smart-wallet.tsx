@@ -18,9 +18,9 @@ import {
   TrackedLink,
   TrackedLinkButton,
 } from "tw-components";
-import { ContractWithMetadata, useAddress } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
@@ -32,19 +32,9 @@ import { useChainSlug } from "hooks/chains/chainSlug";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { ChakraNextImage } from "components/Image";
 import invariant from "tiny-invariant";
-import { createColumnHelper } from "@tanstack/react-table";
-import { TWTable } from "components/shared/TWTable";
-import { getChainByChainId } from "@thirdweb-dev/chains";
-import { shortenIfAddress } from "utils/usedapp-external";
-import { useRouter } from "next/router";
 import { ContractCard } from "components/explore/contract-card";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
-
-type ContractWithExtensions = {
-  contract: ContractWithMetadata;
-  extensions: string[];
-};
 
 const useFactories = () => {
   const walletAddress = useAddress();
@@ -265,116 +255,44 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           />
         </SimpleGrid>
       </Flex>
-      <Flex flexDir={"column"} gap={4}>
-        <Heading size="title.md" as="h1">
-          Bundler and Paymaster Infrastructure
-        </Heading>
-        <Text>
-          The thirdweb SDK handles all the heavy lifting of bundling operations
-          and covering gas fees with a turn key infrastructure.
-        </Text>
-        <UnorderedList>
-          <Text as={ListItem}>
-            On testnets, the only requirement is to obtain a{" "}
+      {accountFactories.length === 0 ? (
+        <Flex flexDir={"column"} gap={4}>
+          <Heading size="title.md" as="h1">
+            Deploy Account Factories
+          </Heading>
+          <Text>
+            Ready to use Account Factory contracts that can deploy individual
+            accounts gas-efficiently and provide on chain data about your user
+            base.
+            <br />
             <TrackedLink
               color={"blue.500"}
-              href="/dashboard/settings/api-keys"
               category="smart-wallet"
-              label="api-key"
+              label="account-factory-blog"
               isExternal
+              href="https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/"
             >
-              free client id
-            </TrackedLink>{" "}
-            to get started.
+              Read about our different account factory contracts.
+            </TrackedLink>
           </Text>
-          <Text as={ListItem}>
-            Once you&apos;re ready to deploy on mainnets, you will require an
-            active billing account.
-          </Text>
-          <Text as={ListItem}>
-            You can configure your client id to restrict interactions only with
-            your own contracts or with any contract.
-          </Text>
-        </UnorderedList>
-      </Flex>
-      <Flex flexDir={"column"} gap={4}>
-        <Heading size="title.md" as="h1">
-          Supported chains
-        </Heading>
-        <Text>
-          We continuously add support for new chains. Looking for a chain not
-          listed below?{" "}
-          <TrackedLink
-            color={"blue.500"}
-            category="smart-wallet"
-            label="chain-request"
-            href={`https://docs.google.com/forms/d/e/1FAIpQLSffFeEw7rPGYA8id7LwL22-W3irT6siXE5EHgD3xrxmxpLKCw/viewform?entry.948574526=${
-              address || ""
-            }`}
-            isExternal
-          >
-            Contact us.
-          </TrackedLink>
-        </Text>
-        <Flex flexDir="row" gap={12}>
-          <Flex flexDir="column" gap={2}>
-            <Text size="label.lg">Mainnets</Text>
-            <UnorderedList>
-              <Text as={ListItem}>Polygon</Text>
-              <Text as={ListItem}>Optimism</Text>
-              <Text as={ListItem}>Arbitrum</Text>
-              <Text as={ListItem}>Base</Text>
-            </UnorderedList>
-          </Flex>
-          <Flex flexDir="column" gap={2}>
-            <Text size="label.lg">Testnets</Text>
-            <UnorderedList>
-              <Text as={ListItem}>Goerli</Text>
-              <Text as={ListItem}>Mumbai</Text>
-              <Text as={ListItem}>Optimism Goerli</Text>
-              <Text as={ListItem}>Arbitrum Goerli</Text>
-              <Text as={ListItem}>Base Goerli</Text>
-            </UnorderedList>
-          </Flex>
+          <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
+            {accountFactories.map((publishedContractId, idx) => {
+              const [publisher, contractId] = publishedContractId.split("/");
+              return (
+                <ContractCard
+                  key={publishedContractId}
+                  publisher={publisher}
+                  contractId={contractId}
+                  tracking={{
+                    source: "smart-wallet-tab",
+                    itemIndex: `${idx}`,
+                  }}
+                />
+              );
+            })}
+          </SimpleGrid>
         </Flex>
-      </Flex>
-      <Flex flexDir={"column"} gap={4}>
-        <Heading size="title.md" as="h1">
-          Deploy Account Factories
-        </Heading>
-        <Text>
-          Ready to use Account Factory contracts that can deploy individual
-          accounts gas-efficiently and provide on chain data about your user
-          base.
-          <br />
-          <TrackedLink
-            color={"blue.500"}
-            category="smart-wallet"
-            label="account-factory-blog"
-            isExternal
-            href="https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/"
-          >
-            Read about our different account factory contracts.
-          </TrackedLink>
-        </Text>
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
-          {accountFactories.map((publishedContractId, idx) => {
-            const [publisher, contractId] = publishedContractId.split("/");
-            return (
-              <ContractCard
-                key={publishedContractId}
-                publisher={publisher}
-                contractId={contractId}
-                tracking={{
-                  source: "smart-wallet-tab",
-                  itemIndex: `${idx}`,
-                }}
-              />
-            );
-          })}
-        </SimpleGrid>
-      </Flex>
-      <FactoriesTable walletAddress={address} factoriesQuery={factories} />
+      ) : null}
       <Flex flexDir={"column"} gap={4}>
         <Heading size="title.md" as="h1">
           Integrate Smart Wallets into your apps
@@ -614,109 +532,6 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           setEnvironment={setSelectedLanguage}
         />
       </Flex>
-    </Flex>
-  );
-};
-
-interface FactoryTableProps {
-  walletAddress: string | undefined;
-  factoriesQuery: UseQueryResult<ContractWithExtensions[], unknown>;
-}
-
-type FactoryTableRow = {
-  name: string;
-  address: string;
-  chainId: number;
-  chainName: string;
-  walletsDeployed: number;
-};
-const columnHelper = createColumnHelper<FactoryTableRow>();
-
-const useFactoryTableData = (
-  walletAddress: string | undefined,
-  factoriesQuery: FactoryTableProps["factoriesQuery"],
-) => {
-  return useQuery(
-    [
-      "dashboard-registry",
-      walletAddress,
-      "multichain-contract-list",
-      "factories",
-      "table",
-    ],
-    async () => {
-      const factories = factoriesQuery.data;
-      invariant(factories, "factories should be defined");
-
-      const rows = await Promise.all(
-        factories.map(async (f) => {
-          const chainInfo = getChainByChainId(f.contract.chainId || -1);
-          const chainName = chainInfo?.name || "Unknown";
-          return {
-            name:
-              "metadata" in f.contract
-                ? (await f.contract.metadata()).name
-                : "Unknown",
-            address: f.contract.address,
-            chainId: f.contract.chainId,
-            chainName,
-            walletsDeployed: 0,
-          };
-        }),
-      );
-      return rows;
-    },
-    {
-      enabled:
-        !!walletAddress &&
-        !!factoriesQuery.data &&
-        factoriesQuery.data.length > 0,
-    },
-  );
-};
-
-const FactoriesTable: React.FC<FactoryTableProps> = ({
-  walletAddress,
-  factoriesQuery,
-}) => {
-  const data = useFactoryTableData(walletAddress, factoriesQuery);
-  const router = useRouter();
-
-  const columns = [
-    columnHelper.accessor("name", {
-      header: "Name",
-      cell: (cell) => <Text>{cell.getValue()}</Text>,
-    }),
-    columnHelper.accessor("chainName", {
-      header: "Chain",
-      cell: (cell) => <Text>{cell.getValue()}</Text>,
-    }),
-    columnHelper.accessor("address", {
-      header: "Address",
-      cell: (cell) => <Text>{shortenIfAddress(cell.getValue())}</Text>,
-    }),
-  ];
-
-  return (
-    <Flex flexDir={"column"} gap={4}>
-      <Heading size="title.md" as="h1">
-        Your Account Factories
-      </Heading>
-      <Text>Quickly access your deployed account factories.</Text>
-      {walletAddress ? (
-        <TWTable
-          title="deployed factories"
-          columns={columns}
-          data={data.data || []}
-          isLoading={!!walletAddress && factoriesQuery.isLoading}
-          isFetched={!!walletAddress && factoriesQuery.isFetched}
-          onRowClick={(row) => router.push(`/${row.chainId}/${row.address}`)}
-        />
-      ) : (
-        <Text color="inherit" fontStyle={"italic"}>
-          Connect your wallet to view your deployed factories.
-        </Text>
-      )}
     </Flex>
   );
 };

@@ -16,7 +16,7 @@ import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
 import invariant from "tiny-invariant";
-import { Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { Card, Heading, Link, Text, TrackedLink, Badge } from "tw-components";
 
 interface ContractCardProps {
   publisher: string;
@@ -32,12 +32,16 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   publisher,
   contractId,
   version = "latest",
-
   tracking,
 }) => {
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
   );
+
+  const isNewContract = useMemo(() => {
+    const newContracts = ["thirdweb.eth/AccountFactory"];
+    return newContracts.includes(`${publisher}/${contractId}`);
+  }, [publisher, contractId]);
 
   const showSkeleton =
     publishedContractResult.isLoading ||
@@ -78,48 +82,63 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         gap={3}
         flexDir="column"
       >
-        <Flex
-          align="center"
-          gap={1}
-          color="rgba(255,255,255,.7)"
-          _light={{ color: "rgba(0,0,0,.6)" }}
-        >
-          {(showSkeleton || publishedContractResult.data?.audit) && (
-            <Flex
-              isExternal
-              as={Link}
-              align="center"
-              gap={0}
-              href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
-              _dark={{
-                color: "green.300",
-              }}
-              _light={{
-                color: "green.600",
-              }}
-            >
-              <Skeleton boxSize={5} isLoaded={!showSkeleton}>
-                <Icon as={BsShieldCheck} />
-              </Skeleton>
-              <Skeleton isLoaded={!showSkeleton}>
-                <Text color="inherit" size="label.sm" fontWeight={500}>
-                  Audited
-                </Text>
-              </Skeleton>
-            </Flex>
-          )}
-          {showSkeleton ||
-            (publishedContractResult.data?.version &&
-              publishedContractResult.data?.audit && (
-                <Text size="label.sm">·</Text>
-              ))}
-          {(showSkeleton || publishedContractResult.data?.version) && (
-            <Flex align="center" gap={0.5}>
-              <Skeleton isLoaded={!showSkeleton}>
-                <Text color="inherit" size="label.sm" fontWeight={500}>
-                  v{publishedContractResult.data?.version}
-                </Text>
-              </Skeleton>
+        <Flex justifyContent="space-between">
+          <Flex
+            align="center"
+            gap={1}
+            color="rgba(255,255,255,.7)"
+            _light={{ color: "rgba(0,0,0,.6)" }}
+          >
+            {(showSkeleton || publishedContractResult.data?.audit) && (
+              <Flex
+                isExternal
+                as={Link}
+                align="center"
+                gap={0}
+                href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
+                _dark={{
+                  color: "green.300",
+                }}
+                _light={{
+                  color: "green.600",
+                }}
+              >
+                <Skeleton boxSize={5} isLoaded={!showSkeleton}>
+                  <Icon as={BsShieldCheck} />
+                </Skeleton>
+                <Skeleton isLoaded={!showSkeleton}>
+                  <Text color="inherit" size="label.sm" fontWeight={500}>
+                    Audited
+                  </Text>
+                </Skeleton>
+              </Flex>
+            )}
+            {showSkeleton ||
+              (publishedContractResult.data?.version &&
+                publishedContractResult.data?.audit && (
+                  <Text size="label.sm">·</Text>
+                ))}
+            {(showSkeleton || publishedContractResult.data?.version) && (
+              <Flex align="center" gap={0.5}>
+                <Skeleton isLoaded={!showSkeleton}>
+                  <Text color="inherit" size="label.sm" fontWeight={500}>
+                    v{publishedContractResult.data?.version}
+                  </Text>
+                </Skeleton>
+              </Flex>
+            )}
+          </Flex>
+          {isNewContract && (
+            <Flex>
+              <Badge
+                alignSelf="center"
+                borderRadius="xl"
+                px={2}
+                py={1.5}
+                textTransform="capitalize"
+              >
+                New
+              </Badge>
             </Flex>
           )}
         </Flex>

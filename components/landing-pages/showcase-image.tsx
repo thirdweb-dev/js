@@ -1,4 +1,10 @@
-import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  GridItem,
+  SimpleGrid,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { Heading, Text } from "tw-components";
@@ -10,6 +16,7 @@ interface LandingShowcaseImageProps {
   gradient?: string;
   description: string;
   image: StaticImageData;
+  imagePosition?: "left" | "right";
 }
 
 export const LandingShowcaseImage: React.FC<LandingShowcaseImageProps> = ({
@@ -19,39 +26,35 @@ export const LandingShowcaseImage: React.FC<LandingShowcaseImageProps> = ({
   gradient,
   description,
   image,
+  imagePosition = "right",
 }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
   return (
-    <SimpleGrid columns={12} gap={12}>
-      <GridItem colSpan={{ base: 12, md: 7 }}>
+    <SimpleGrid gap={8} columns={{ base: 1, md: 2 }}>
+      <GridItem order={imagePosition === "left" && !isMobile ? 2 : 1}>
         <Flex flexDir="column" justifyContent="center">
           {miniTitle && (
-            <Heading
-              size="subtitle.sm"
+            <Text
+              size="body.lg"
               as="span"
-              bgGradient={gradient}
-              bgClip="text"
+              textTransform="uppercase"
+              fontWeight="bold"
             >
               {miniTitle}
-            </Heading>
+            </Text>
           )}
           <Heading pb={4} size="display.sm">
-            {title}{" "}
             <Box as="span" bgGradient={gradient} bgClip="text">
-              {titleWithGradient}
+              {titleWithGradient}{" "}
             </Box>
+            {title}
           </Heading>
-          {description && <Text size="body.lg">{description}</Text>}
+          {description && <Text size="body.xl">{description}</Text>}
         </Flex>
       </GridItem>
-      {image && (
-        <GridItem colSpan={{ base: 12, md: 5 }}>
-          <ChakraNextImage
-            src={require("public/assets/solutions-pages/commerce/shopify.png")}
-            width="80px"
-            alt="Shopify"
-          />
-        </GridItem>
-      )}
+      <GridItem order={imagePosition === "left" && !isMobile ? 1 : 2}>
+        <ChakraNextImage src={image} alt="" borderRadius="xl" />
+      </GridItem>
     </SimpleGrid>
   );
 };

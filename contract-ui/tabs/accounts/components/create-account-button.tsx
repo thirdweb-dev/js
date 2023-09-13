@@ -1,4 +1,3 @@
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
   useAccountsForAddress,
   useAddress,
@@ -7,7 +6,7 @@ import {
   useIsAccountDeployed,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { LinkButton } from "tw-components";
+import { Button } from "tw-components";
 
 interface CreateAccountButtonProps {
   contractQuery: ReturnType<typeof useContract>;
@@ -21,7 +20,6 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
     contractQuery?.contract,
   );
 
-  const network = useDashboardEVMChainId();
   const address = useAddress();
   const { data: isAccountDeployed } = useIsAccountDeployed(
     contractQuery.contract,
@@ -38,12 +36,9 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   if (isAccountDeployed && accountsForAddress?.length) {
     return (
-      <LinkButton
-        href={`/${network}/${accountsForAddress[0]}`}
-        colorScheme="primary"
-      >
-        Go to Account
-      </LinkButton>
+      <Button colorScheme="primary" isDisabled>
+        Account Created
+      </Button>
     );
   }
 

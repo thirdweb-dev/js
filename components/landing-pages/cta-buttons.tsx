@@ -6,15 +6,17 @@ interface LandingCTAButtonsProps {
   ctaLink: string;
   ctaText?: string;
   trackingCategory: string;
+  alignLeft?: boolean;
 }
 
 export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
   ctaLink,
   ctaText = "Get Started",
   trackingCategory,
+  alignLeft,
 }) => {
   return (
-    <Flex gap={{ base: 4, md: 6 }} mx="auto">
+    <Flex gap={{ base: 4, md: 6 }} mx={alignLeft ? "inherit" : "auto"}>
       <TrackedLinkButton
         leftIcon={<Icon as={BsFillLightningChargeFill} boxSize={4} />}
         py={6}

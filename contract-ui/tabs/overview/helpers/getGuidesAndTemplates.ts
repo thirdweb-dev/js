@@ -327,6 +327,14 @@ const ALL_TEMPLATES: Record<string, Item> = {
     title: "Multiwrap",
     url: "https://github.com/thirdweb-example/multiwrap",
   },
+  smartWalletScript: {
+    title: "Smart Wallet Demo Script",
+    url: "https://github.com/thirdweb-example/smart-wallet-script",
+  },
+  smartWalletReact: {
+    title: "Smart Wallet React Demo",
+    url: "https://github.com/thirdweb-example/smart-wallet-react",
+  },
 };
 
 const TEMPLATES_FOR_TYPE: Record<ContractType, Item[]> = {
@@ -421,7 +429,10 @@ const TEMPLATES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   EnglishAuctions: [],
   Offers: [],
   Account: [],
-  AccountFactory: [],
+  AccountFactory: [
+    ALL_TEMPLATES.smartWalletScript,
+    ALL_TEMPLATES.smartWalletReact,
+  ],
   AccountPermissions: [],
   ERC1155UpdatableMetadata: [],
   AirdropERC20: [],

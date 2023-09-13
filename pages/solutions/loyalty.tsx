@@ -84,6 +84,7 @@ const Loyalty: ThirdwebNextPage = () => {
         <LandingDynamicSelector
           title="What you can build."
           blackToWhiteTitle="Use-Cases"
+          TRACKING_CATEGORY={TRACKING_CATEGORY}
           items={[
             {
               title: "Tiered Loyalty Program",

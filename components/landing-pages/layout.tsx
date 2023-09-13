@@ -7,10 +7,12 @@ import { ComponentWithChildren } from "types/component-with-children";
 
 interface LandingLayoutProps {
   seo: NextSeoProps;
+  bgColor?: string;
 }
 
 export const LandingLayout: ComponentWithChildren<LandingLayoutProps> = ({
   seo,
+  bgColor = "#000",
   children,
 }) => {
   return (
@@ -26,7 +28,7 @@ export const LandingLayout: ComponentWithChildren<LandingLayoutProps> = ({
         justify="center"
         flexDir="column"
         as="main"
-        bg="#000"
+        bg={bgColor}
       >
         <HomepageTopNav />
         {/* pull it up by as much as the topnav is tall */}

@@ -1,5 +1,5 @@
 import { LandingDesktopMobileImageProps } from "./types";
-import { Container, useBreakpointValue } from "@chakra-ui/react";
+import { useBreakpointValue } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 
 export const LandingDesktopMobileImage: React.FC<
@@ -13,9 +13,5 @@ export const LandingDesktopMobileImage: React.FC<
     return null;
   }
 
-  return (
-    <Container maxW="container.hero">
-      <ChakraNextImage src={imageToShow} alt="" />
-    </Container>
-  );
+  return <ChakraNextImage src={imageToShow} alt="" />;
 };

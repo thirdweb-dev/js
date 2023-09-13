@@ -28,11 +28,13 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
             {titleWithGradient}
           </Box>
         </Heading>
-        <LandingCTAButtons
-          ctaText={ctaText}
-          ctaLink={ctaLink}
-          trackingCategory={trackingCategory}
-        />
+        <Flex justifyContent="center">
+          <LandingCTAButtons
+            ctaText={ctaText}
+            ctaLink={ctaLink}
+            trackingCategory={trackingCategory}
+          />
+        </Flex>
       </Flex>
     </Container>
   );

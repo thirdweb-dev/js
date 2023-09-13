@@ -20,10 +20,11 @@ const POPULAR = {
   contracts: [
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/MarketplaceV3",
-    "unlock-protocol.eth/PublicLock",
+    "thirdweb.eth/AccountFactory",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/NFTStake",
+    "unlock-protocol.eth/PublicLock",
   ],
 } as const;
 const NFTS = {
@@ -165,7 +166,7 @@ const STAKING = {
 const SMART_WALLET = {
   id: "smart-wallet",
   name: "Smart Wallet",
-  displayName: "Smart Wallet (Beta)",
+  displayName: "Smart Wallet",
   description:
     "Smart wallet factories that let you spin up Account Abstraction (ERC-4337) wallets for your users.",
   contracts: [
