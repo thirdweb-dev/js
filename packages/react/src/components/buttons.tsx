@@ -43,6 +43,8 @@ export const Button = styled.button<{
         return p.theme.colors.accentButtonText;
       case "secondary":
         return p.theme.colors.secondaryButtonText;
+      case "outline":
+        return p.theme.colors.secondaryButtonText;
       case "link":
         return p.theme.colors.accentText;
       default:
@@ -54,9 +56,6 @@ export const Button = styled.button<{
     if (p.variant === "outline") {
       return `
       border: 1.5px solid ${p.theme.colors.borderColor};
-      &:hover {
-        border-color: ${p.theme.colors.secondaryButtonText};
-      }
     `;
     }
   }}
