@@ -1,6 +1,9 @@
 import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
-export type PaperConfig = Omit<PaperWalletAdditionalOptions, "chain"> & {
+export type PaperConfig = Omit<
+  PaperWalletAdditionalOptions,
+  "chain" | "clientId"
+> & {
   /**
    * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
    */
