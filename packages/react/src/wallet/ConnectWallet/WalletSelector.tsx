@@ -224,7 +224,7 @@ export const WalletSelector: React.FC<{
         </ScreenBottomContainer>
       )}
 
-      {showTOS && (
+      {showTOS && !isWalletGroupExpanded && (
         <div>
           {showSeperatorLine && <Line />}
 

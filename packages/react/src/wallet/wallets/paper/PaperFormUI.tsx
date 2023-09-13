@@ -59,7 +59,15 @@ export const PaperFormUIScreen: React.FC<{
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   return (
-    <Container fullHeight flex="column" p="lg" animate="fadein">
+    <Container
+      fullHeight
+      flex="column"
+      p="lg"
+      animate="fadein"
+      style={{
+        minHeight: "250px",
+      }}
+    >
       <ModalHeader onBack={props.onBack} title="Sign in" />
       {isCompact ? <Spacer y="xl" /> : null}
 
