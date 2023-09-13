@@ -149,7 +149,7 @@ export const CreateLocalWallet_Password: React.FC<{
           dataTest="confirm-password"
         />
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         {/* Create */}
         <Button
@@ -172,7 +172,7 @@ export const CreateLocalWallet_Password: React.FC<{
         <span>OR</span>
       </TextDivider>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       {/* Import */}
       <Flex justifyContent="center">

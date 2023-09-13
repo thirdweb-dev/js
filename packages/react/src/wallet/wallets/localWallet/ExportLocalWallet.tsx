@@ -12,7 +12,12 @@ import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { Spinner } from "../../../components/Spinner";
-import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
+import {
+  Container,
+  Flex,
+  ModalHeader,
+  ScreenBottomContainer,
+} from "../../../components/basic";
 import {
   useAddress,
   useCreateWalletInstance,
@@ -127,88 +132,94 @@ export const ExportLocalWallet: React.FC<{
   const exportDisabled = isWrongPassword;
 
   return (
-    <ScreenContainer>
-      <ModalHeader onBack={props.onBack} title="Backup Wallet" />
-
-      <Spacer y="lg" />
-
-      <ModalDescription sm>
-        This will download a JSON file containing the wallet information onto
-        your device encrypted with the password
-      </ModalDescription>
-
-      <Spacer y="sm" />
-
-      <ModalDescription sm>
-        You can use this JSON file to import the account in MetaMask using the
-        same password
-      </ModalDescription>
-
-      <Spacer y="xl" />
-
+    <Container>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           exportFromLocalStorage();
         }}
       >
-        <Label>Wallet Address</Label>
-        <Spacer y="sm" />
+        <Container fullHeight p="lg">
+          <ModalHeader onBack={props.onBack} title="Backup Wallet" />
 
-        <SavedWalletAddress>{shortenAddress(savedAddress)}</SavedWalletAddress>
+          <Spacer y="lg" />
 
-        <Spacer y="xl" />
+          <ModalDescription sm>
+            This will download a JSON file containing the wallet information
+            onto your device encrypted with the password
+          </ModalDescription>
 
-        {passwordIsRequired && (
-          <>
-            {/* Hidden Account Address as Username */}
-            <input
-              type="text"
-              name="username"
-              autoComplete="off"
-              value={address}
-              disabled
-              style={{ display: "none" }}
-            />
+          <Spacer y="sm" />
 
-            {/* password */}
-            <FormFieldWithIconButton
-              noSave
-              required
-              name="current-password"
-              autocomplete="current-password"
-              id="current-password"
-              onChange={(value) => {
-                setPassword(value);
-                setIsWrongPassword(false);
-              }}
-              right={{
-                onClick: () => setShowPassword(!showPassword),
-                icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
-              }}
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              error={isWrongPassword ? "Wrong Password" : ""}
-              dataTest="current-password"
-            />
-            <Spacer y="md" />
-          </>
-        )}
+          <ModalDescription sm>
+            You can use this JSON file to import the account in MetaMask using
+            the same password
+          </ModalDescription>
 
-        <Button
-          disabled={exportDisabled}
-          variant="primary"
-          fullWidth
-          style={{
-            opacity: exportDisabled ? 0.5 : 1,
-          }}
-          type="submit"
-        >
-          Backup
-        </Button>
+          <Spacer y="xl" />
+
+          <Label>Wallet Address</Label>
+          <Spacer y="sm" />
+
+          <SavedWalletAddress>
+            {shortenAddress(savedAddress)}
+          </SavedWalletAddress>
+
+          {passwordIsRequired && (
+            <>
+              <Spacer y="lg" />
+              {/* Hidden Account Address as Username */}
+              <input
+                type="text"
+                name="username"
+                autoComplete="off"
+                value={address}
+                disabled
+                style={{ display: "none" }}
+              />
+
+              {/* password */}
+              <FormFieldWithIconButton
+                noSave
+                required
+                name="current-password"
+                autocomplete="current-password"
+                id="current-password"
+                onChange={(value) => {
+                  setPassword(value);
+                  setIsWrongPassword(false);
+                }}
+                right={{
+                  onClick: () => setShowPassword(!showPassword),
+                  icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+                }}
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                error={isWrongPassword ? "Wrong Password" : ""}
+                dataTest="current-password"
+              />
+              <Spacer y="md" />
+            </>
+          )}
+        </Container>
+
+        <Spacer y="md" />
+        <ScreenBottomContainer>
+          <Button
+            disabled={exportDisabled}
+            variant="accent"
+            fullWidth
+            style={{
+              opacity: exportDisabled ? 0.5 : 1,
+            }}
+            type="submit"
+          >
+            Backup
+          </Button>
+        </ScreenBottomContainer>
       </form>
-    </ScreenContainer>
+    </Container>
   );
 };
 
