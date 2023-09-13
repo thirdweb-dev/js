@@ -1,4 +1,5 @@
 import {
+  ButtonGroup,
   Flex,
   FormControl,
   ListItem,
@@ -14,9 +15,11 @@ import { ThirdwebNextPage } from "utils/types";
 import {
   Card,
   Heading,
+  LinkButton,
   Text,
   TrackedLink,
   TrackedLinkButton,
+  Button,
 } from "tw-components";
 import { useAddress } from "@thirdweb-dev/react";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
@@ -33,8 +36,9 @@ import { useSupportedChain } from "hooks/chains/configureChains";
 import { ChakraNextImage } from "components/Image";
 import invariant from "tiny-invariant";
 import { ContractCard } from "components/explore/contract-card";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
+
+const TRACKING_CATEGORY = "smart-wallet";
 
 const useFactories = () => {
   const walletAddress = useAddress();
@@ -255,7 +259,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           />
         </SimpleGrid>
       </Flex>
-      {accountFactories.length === 0 ? (
+      {(factories?.data || []).length === 0 ? (
         <Flex flexDir={"column"} gap={4}>
           <Heading size="title.md" as="h1">
             Deploy Account Factories
@@ -267,7 +271,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
             <br />
             <TrackedLink
               color={"blue.500"}
-              category="smart-wallet"
+              category={TRACKING_CATEGORY}
               label="account-factory-blog"
               isExternal
               href="https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/"
@@ -297,102 +301,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         <Heading size="title.md" as="h1">
           Integrate Smart Wallets into your apps
         </Heading>
-        <Text>Get started quickly by cloning one of the starter templates</Text>
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-          <TrackedLink
-            category="smart-wallet"
-            label="node-template"
-            href="https://github.com/thirdweb-example/smart-wallet-script"
-            isExternal
-            _hover={{ textDecor: "none" }}
-          >
-            <Card
-              as={Flex}
-              flexDir={"row"}
-              gap={4}
-              flex={1}
-              transition="150ms border-color ease-in-out"
-              _hover={{
-                _dark: {
-                  borderColor: "blue.400",
-                },
-                _light: {
-                  borderColor: "blue.600",
-                },
-              }}
-              overflow="hidden"
-              bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-            >
-              <SiGithub size={"42"} />
-              <Flex flexDir={"column"} gap={2}>
-                <Heading size="title.sm" as="h1">
-                  Node.js template
-                </Heading>
-                <Text>
-                  Simple Node.js script that connects to a smart wallet and
-                  mints ERC20 tokens.
-                </Text>
-              </Flex>
-            </Card>
-          </TrackedLink>
-          <TrackedLink
-            category="smart-wallet"
-            label="react-template"
-            href="https://github.com/thirdweb-example/smart-wallet-react"
-            isExternal
-            _hover={{ textDecor: "none" }}
-          >
-            <Card
-              as={Flex}
-              flexDir={"row"}
-              gap={4}
-              flex={1}
-              transition="150ms border-color ease-in-out"
-              _hover={{
-                _dark: {
-                  borderColor: "blue.400",
-                },
-                _light: {
-                  borderColor: "blue.600",
-                },
-              }}
-              overflow="hidden"
-              bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-            >
-              <SiGithub size={"42"} />
-              <Flex flexDir={"column"} gap={2}>
-                <Heading size="title.sm" as="h1">
-                  React template
-                </Heading>
-                <Text>
-                  Simple web application that lets users connects to their smart
-                  wallet and mint NFTs.
-                </Text>
-              </Flex>
-            </Card>
-          </TrackedLink>
-        </SimpleGrid>
-        <Text>
-          Or use the following code to integrate smart wallets into your apps.
-          This will handle:
-        </Text>
-        <UnorderedList>
-          <Text as={ListItem}>
-            Connecting your users to their smart wallet based of their personal
-            wallet (can be any wallet, including email or local wallets).
-          </Text>
-          <Text as={ListItem}>
-            Automatically deploy the individual account contracts for your users
-            when they do their first onchain transaction.
-          </Text>
-          <Text as={ListItem}>
-            Handle all transaction gas costs via the thirdweb paymaster.
-          </Text>
-        </UnorderedList>
-        <Text>
-          Select your deployed account factory and client ID to get a fully
-          functional code snippet.
-        </Text>
+
         <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
           <FormControl as={Flex} flexDir="column" gap={4}>
             <Heading size="label.lg">Account Factories</Heading>
@@ -448,6 +357,35 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
             </Skeleton>
           </FormControl>
         </Flex>
+        <ButtonGroup size="sm" variant="ghost" spacing={{ base: 0.5, md: 2 }}>
+          <Button
+            isActive={true}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+          >
+            Wallet SDK
+          </Button>
+          {form.watch("chainAndFactoryAddress") && (
+            <LinkButton
+              isActive={false}
+              _active={{
+                bg: "bgBlack",
+                color: "bgWhite",
+              }}
+              rounded="lg"
+              href={`/${form
+                .watch("chainAndFactoryAddress")
+                ?.split("-")[0]}/${form
+                .watch("chainAndFactoryAddress")
+                ?.split("-")[1]}"`}
+            >
+              Direct contract interaction (advanced)
+            </LinkButton>
+          )}
+        </ButtonGroup>
         <CodeSegment
           snippet={formatSnippet(CONNECT_SNIPPET?.supportedLanguages as any, {
             contractAddress: form
@@ -460,7 +398,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           setEnvironment={setSelectedLanguage}
         />
         <TrackedLinkButton
-          category="smart-wallet"
+          category={TRACKING_CATEGORY}
           label="docs-wallets"
           href="https://portal.thirdweb.com/wallet/smart-wallet"
           colorScheme="primary"
@@ -479,7 +417,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         <Text>
           Once setup, you can use the thirdweb{" "}
           <TrackedLink
-            category="smart-wallet"
+            category={TRACKING_CATEGORY}
             label="docs-typescript"
             href="https://portal.thirdweb.com/typescript"
             color={"blue.500"}
@@ -489,7 +427,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           </TrackedLink>
           ,{" "}
           <TrackedLink
-            category="smart-wallet"
+            category={TRACKING_CATEGORY}
             label="docs-react"
             href="https://portal.thirdweb.com/react"
             color={"blue.500"}
@@ -499,7 +437,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           </TrackedLink>
           ,{" "}
           <TrackedLink
-            category="smart-wallet"
+            category={TRACKING_CATEGORY}
             label="docs-react-native"
             href="https://portal.thirdweb.com/react-native"
             color={"blue.500"}
@@ -509,7 +447,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           </TrackedLink>{" "}
           and{" "}
           <TrackedLink
-            category="smart-wallet"
+            category={TRACKING_CATEGORY}
             label="docs-unity"
             href="https://portal.thirdweb.com/unity"
             color={"blue.500"}
@@ -532,6 +470,153 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
           setEnvironment={setSelectedLanguage}
         />
       </Flex>
+      <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+        <Card
+          as={Flex}
+          flexDir={"row"}
+          gap={4}
+          flex={1}
+          overflow="hidden"
+          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+        >
+          <Flex flexDir={"column"} gap={2}>
+            <Heading size="title.sm" as="h1">
+              Docs
+            </Heading>
+            <UnorderedList>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="full-docs"
+                href="https://portal.thirdweb.com/smart-wallet"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">Full Docs</Text>
+              </TrackedLink>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="smart-wallet-react"
+                href="https://portal.thirdweb.com/smart-wallet/guides/react"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">Using Smart Wallet in React</Text>
+              </TrackedLink>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="smart-wallet-typescript"
+                href="https://portal.thirdweb.com/smart-wallet/guides/typescript"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">
+                  Using Smart Wallet with the Typescript SDK
+                </Text>
+              </TrackedLink>
+            </UnorderedList>
+          </Flex>
+        </Card>
+        <Card
+          as={Flex}
+          flexDir={"row"}
+          gap={4}
+          flex={1}
+          overflow="hidden"
+          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+        >
+          <Flex flexDir={"column"} gap={2}>
+            <Heading size="title.sm" as="h1">
+              Smart Wallet Guides
+            </Heading>
+            <UnorderedList>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="deploy-smart-wallet"
+                href="https://blog.thirdweb.com/guides/how-to-use-erc4337-smart-wallets/"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">
+                  How to Deploy a Smart Wallet (ERC-4337)
+                </Text>
+              </TrackedLink>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="extend-base-smart-wallet"
+                href="https://blog.thirdweb.com/guides/custom-smart-wallet-contracts/"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">
+                  How to Extend the Base Smart Wallet Contracts Using the
+                  Solidity SDK
+                </Text>
+              </TrackedLink>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="batch-txns"
+                href="https://blog.thirdweb.com/guides/how-to-batch-transactions-with-the-thirdweb-sdk/"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text _hover={{ opacity: 0.8 }} color="blue.500">
+                  Batch Transactions with the Smart Wallet
+                </Text>
+              </TrackedLink>
+            </UnorderedList>
+          </Flex>
+        </Card>
+        <Card
+          as={Flex}
+          flexDir={"row"}
+          gap={4}
+          flex={1}
+          overflow="hidden"
+          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+        >
+          <Flex flexDir={"column"} gap={2}>
+            <Heading size="title.sm" as="h1">
+              Smart Wallet Templates
+            </Heading>
+            <UnorderedList>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="node-template"
+                href="https://github.com/thirdweb-example/smart-wallet-react"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">Node.js template</Text>
+              </TrackedLink>
+              <TrackedLink
+                as={ListItem}
+                category={TRACKING_CATEGORY}
+                label="react-template"
+                href="https://github.com/thirdweb-example/smart-wallet-react"
+                isExternal
+                _hover={{ opacity: 0.8 }}
+                color="blue.500"
+              >
+                <Text color="blue.500">React template</Text>
+              </TrackedLink>
+            </UnorderedList>
+          </Flex>
+        </Card>
+      </SimpleGrid>
     </Flex>
   );
 };

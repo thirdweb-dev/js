@@ -29,7 +29,7 @@ export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
         color="black"
         href={ctaLink}
         category={trackingCategory}
-        label="contact-us"
+        label={ctaText.replaceAll(" ", "-").toLowerCase()}
         fontWeight="bold"
       >
         {ctaText}
