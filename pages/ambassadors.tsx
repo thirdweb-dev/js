@@ -57,11 +57,6 @@ const ambassadors = [
     twitter: "stand_english",
     profileImage: "/assets/ambassadors/yuki.png",
   },
-  {
-    name: "Wolfmaximus",
-    twitter: "NFTwolfmaximus",
-    profileImage: "/assets/ambassadors/wolf.jpeg",
-  },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 const Ambassadors: ThirdwebNextPage = () => {
