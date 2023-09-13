@@ -1,8 +1,11 @@
 import { Popover } from "../../../components/Popover";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { darkThemeObj, lightThemeObj } from "../../../design-system";
-import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
+import { Theme, darkThemeObj, lightThemeObj } from "../../../design-system";
+import {
+  ConnectWallet,
+  ConnectWalletProps,
+} from "../../../wallet/ConnectWallet/ConnectWallet";
 import { useIsHeadlessWallet } from "../../../wallet/hooks/useIsHeadlessWallet";
 import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -41,8 +44,12 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   // the fn to execute
   action: TActionFn;
   type?: "button" | "submit" | "reset";
-  theme?: "dark" | "light";
+  theme?: "dark" | "light" | Theme;
   style?: React.CSSProperties;
+  connectWallet?: Omit<
+    ConnectWalletProps,
+    "detailsBtn" | "hideTestnetFaucet" | "switchToActiveChain" | "theme"
+  >;
 }
 
 /**
@@ -79,6 +86,7 @@ export const Web3Button = <TAction extends ActionFn>({
   type,
   theme,
   style,
+  connectWallet,
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const sdkChainId = useSDKChainId();
@@ -96,6 +104,9 @@ export const Web3Button = <TAction extends ActionFn>({
   const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
     "idle",
   );
+
+  const themeType =
+    typeof themeToUse === "string" ? themeToUse : themeToUse.type;
 
   const actionMutation = useMutation(
     async () => {
@@ -130,6 +141,7 @@ export const Web3Button = <TAction extends ActionFn>({
         style={style}
         theme={theme}
         className={`${className || ""} ${TW_WEB3BUTTON}--connect-wallet`}
+        {...connectWallet}
       />
     );
   }
@@ -166,7 +178,7 @@ export const Web3Button = <TAction extends ActionFn>({
         onClick={handleSwitchChain}
         style={{ ...btnStyle, ...style }}
         data-is-loading={confirmStatus === "waiting"}
-        data-theme={theme}
+        data-theme={themeType}
       >
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"primaryButtonText"} />
@@ -211,7 +223,7 @@ export const Web3Button = <TAction extends ActionFn>({
         disabled
         style={{ ...btnStyle, ...style }}
         data-is-loading
-        data-theme={theme}
+        data-theme={themeType}
       >
         <Spinner size="md" color={"primaryButtonText"} />
       </Button>
@@ -229,7 +241,7 @@ export const Web3Button = <TAction extends ActionFn>({
         disabled={isDisabled}
         style={{ ...btnStyle, ...style }}
         data-is-loading="false"
-        data-theme={theme}
+        data-theme={themeType}
       >
         {children}
       </Button>
@@ -237,7 +249,15 @@ export const Web3Button = <TAction extends ActionFn>({
   }
 
   return (
-    <ThemeProvider theme={themeToUse === "dark" ? darkThemeObj : lightThemeObj}>
+    <ThemeProvider
+      theme={
+        typeof themeToUse === "string"
+          ? themeToUse === "dark"
+            ? darkThemeObj
+            : lightThemeObj
+          : themeToUse
+      }
+    >
       {button}
     </ThemeProvider>
   );

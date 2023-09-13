@@ -24,7 +24,7 @@ export const OverrideConfirmation: React.FC<{
           lineHeight: 1.5,
         }}
       >
-        <Text>
+        <Text multiline>
           Your current wallet will be deleted if you create a new wallet. Backup
           wallet to your device before creating a new wallet
         </Text>

@@ -7,6 +7,7 @@ export const Button = styled.button<{
   fullWidth?: boolean;
 }>`
   all: unset;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +46,7 @@ export const Button = styled.button<{
       case "link":
         return p.theme.colors.accentText;
       default:
-        return p.theme.colors.primaryText;
+        return p.theme.colors.primaryButtonText;
     }
   }};
 
@@ -54,7 +55,7 @@ export const Button = styled.button<{
       return `
       border: 1.5px solid ${p.theme.colors.borderColor};
       &:hover {
-        border-color: ${p.theme.colors.primaryText};
+        border-color: ${p.theme.colors.secondaryButtonText};
       }
     `;
     }
@@ -69,8 +70,6 @@ export const Button = styled.button<{
       }`;
     }
   }}
-
-  cursor: pointer;
 
   /* pressed effect */
   &:active {

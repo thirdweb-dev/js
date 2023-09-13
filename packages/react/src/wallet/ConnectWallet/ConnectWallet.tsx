@@ -33,7 +33,7 @@ import { isMobile } from "../../evm/utils/isMobile";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
 
-type ConnectWalletProps = {
+export type ConnectWalletProps = {
   className?: string;
   theme?: "dark" | "light" | Theme;
 
