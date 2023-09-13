@@ -5,10 +5,10 @@ import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import { Input } from "../../components/formElements";
 import {
-  darkTheme,
+  darkThemeObj,
   fontSize,
   iconSize,
-  lightTheme,
+  lightThemeObj,
   media,
   radius,
   spacing,
@@ -143,7 +143,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   );
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+    <ThemeProvider theme={theme === "dark" ? darkThemeObj : lightThemeObj}>
       <Modal
         size={"compact"}
         open={true}

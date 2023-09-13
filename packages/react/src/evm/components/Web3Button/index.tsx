@@ -1,7 +1,7 @@
 import { Popover } from "../../../components/Popover";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { darkTheme, lightTheme } from "../../../design-system";
+import { darkThemeObj, lightThemeObj } from "../../../design-system";
 import { ConnectWallet } from "../../../wallet/ConnectWallet/ConnectWallet";
 import { useIsHeadlessWallet } from "../../../wallet/hooks/useIsHeadlessWallet";
 import { ThemeProvider } from "@emotion/react";
@@ -237,7 +237,7 @@ export const Web3Button = <TAction extends ActionFn>({
   }
 
   return (
-    <ThemeProvider theme={themeToUse === "dark" ? darkTheme : lightTheme}>
+    <ThemeProvider theme={themeToUse === "dark" ? darkThemeObj : lightThemeObj}>
       {button}
     </ThemeProvider>
   );

@@ -90,7 +90,7 @@ export const ConnectModalContent = (props: {
     return (
       <ConnectUI
         supportedWallets={walletConfigs}
-        theme={theme}
+        theme={typeof theme === "string" ? theme : theme.type}
         goBack={handleBack}
         close={handleClose}
         isOpen={isWalletModalOpen}
@@ -143,7 +143,7 @@ export const ConnectModalContent = (props: {
 };
 
 export const ConnectModal = () => {
-  const { theme, modalSize, themeOptions } = useContext(ModalConfigCtx);
+  const { theme, modalSize } = useContext(ModalConfigCtx);
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
@@ -175,7 +175,7 @@ export const ConnectModal = () => {
   ]);
 
   return (
-    <CustomThemeProvider theme={theme} themeOptions={themeOptions}>
+    <CustomThemeProvider theme={theme}>
       <Modal
         size={modalSize}
         open={isWalletModalOpen}

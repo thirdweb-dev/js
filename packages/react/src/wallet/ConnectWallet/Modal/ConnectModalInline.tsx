@@ -1,4 +1,4 @@
-import { Theme, ThemeOptions } from "../../../design-system";
+import { Theme } from "../../../design-system";
 import styled from "@emotion/styled";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { CrossContainer } from "../../../components/Modal";
@@ -19,11 +19,10 @@ import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider"
 import { WelcomeScreen } from "../screens/types";
 
 export const ConnectModalInline = (props: {
-  theme: "light" | "dark";
+  theme: "light" | "dark" | Theme;
   title?: string;
   className?: string;
   modalSize: "wide" | "compact";
-  themeOptions?: ThemeOptions;
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
   welcomeScreen?: WelcomeScreen;
@@ -61,15 +60,11 @@ export const ConnectModalInline = (props: {
       theme={props.theme}
       modalSize={modalSize}
       title={props.title}
-      themeOptions={props.themeOptions}
       termsOfServiceUrl={props.termsOfServiceUrl}
       privacyPolicyUrl={props.privacyPolicyUrl}
       welcomeScreen={props.welcomeScreen}
     >
-      <CustomThemeProvider
-        theme={props.theme}
-        themeOptions={props.themeOptions}
-      >
+      <CustomThemeProvider theme={props.theme}>
         <ConnectModalInlineContainer
           className={props.className}
           style={{

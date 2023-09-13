@@ -15,7 +15,8 @@ export { magicLink } from "./wallet/wallets/magic/magicLink";
 export { zerionWallet } from "./wallet/wallets/zerion/zerionWallet";
 export { bloctoWallet } from "./wallet/wallets/blocto/bloctoWallet";
 
+export { lightTheme, darkTheme } from "./design-system/index";
+export type { Theme, ThemeOverrides } from "./design-system/index";
+
 // at the moment we'll re-export everything from the evm package
 export * from "./evm";
-
-export type { ThemeOptions } from "./design-system/index";

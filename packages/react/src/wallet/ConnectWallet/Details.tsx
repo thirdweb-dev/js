@@ -60,7 +60,6 @@ const TW_CONNECTED_WALLET = "tw-connected-wallet";
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
-  theme: "dark" | "light";
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
   className?: string;
@@ -107,7 +106,6 @@ export const ConnectedWalletDetails: React.FC<{
     <WalletInfoButton
       type="button"
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
-      data-theme={props.theme}
       style={props.style}
       data-test="connected-wallet-details"
     >
@@ -421,7 +419,6 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
-          theme={props.theme}
           chains={chains}
           {...props.networkSelector}
           onClose={() => setShowNetworkSelector(false)}

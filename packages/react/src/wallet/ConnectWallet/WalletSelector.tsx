@@ -268,7 +268,11 @@ export const WalletSelection: React.FC<{
             {walletConfig.selectUI ? (
               <walletConfig.selectUI
                 modalSize={modalConfig.modalSize}
-                theme={modalConfig.theme}
+                theme={
+                  typeof modalConfig.theme === "string"
+                    ? modalConfig.theme
+                    : modalConfig.theme.type
+                }
                 supportedWallets={props.walletConfigs}
                 onSelect={(data) => {
                   props.selectWallet(walletConfig);

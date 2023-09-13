@@ -44,18 +44,20 @@ const lightColors: typeof darkColors = {
   primaryButtonText: mauve.mauve1,
 };
 
-export const darkTheme = {
+export const darkThemeObj = {
+  type: "dark" as "light" | "dark",
   colors: darkColors,
 };
 
-export const lightTheme: typeof darkTheme = {
+export const lightThemeObj: typeof darkThemeObj = {
+  type: "light",
   colors: lightColors,
 };
 
-export type Theme = typeof darkTheme;
+export type Theme = typeof darkThemeObj;
 
-export type ThemeOptions = {
-  [key in keyof Theme]?: Partial<Theme[key]>;
+export type ThemeOverrides = {
+  [key in Exclude<keyof Theme, "type">]?: Partial<Theme[key]>;
 };
 
 export const fontSize = {
@@ -105,3 +107,24 @@ export const shadow = {
   lg: "0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
   xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
 };
+
+export function lightTheme(overrides: ThemeOverrides): Theme {
+  return applyThemeOverrides(lightThemeObj, overrides);
+}
+
+export function darkTheme(overrides: ThemeOverrides): Theme {
+  return applyThemeOverrides(darkThemeObj, overrides);
+}
+
+export function applyThemeOverrides(
+  baseTheme: Theme,
+  themeOverides: ThemeOverrides,
+): Theme {
+  const theme = { ...baseTheme };
+
+  if (themeOverides.colors) {
+    theme.colors = { ...theme.colors, ...themeOverides.colors };
+  }
+
+  return theme;
+}

@@ -6,7 +6,7 @@ import {
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
 import { ThemeProvider } from "@emotion/react";
-import { darkTheme, lightTheme } from "../../design-system";
+import { darkThemeObj, lightThemeObj } from "../../design-system";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
@@ -65,7 +65,7 @@ export const ThirdwebProvider = <
 
   return (
     <WalletUIStatesProvider theme={theme} modalSize="wide">
-      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme === "dark" ? darkThemeObj : lightThemeObj}>
         <ThirdwebProviderCore
           theme={theme}
           supportedWallets={wallets}

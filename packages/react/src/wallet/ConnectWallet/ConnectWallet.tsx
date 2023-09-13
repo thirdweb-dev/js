@@ -1,4 +1,4 @@
-import { ThemeOptions, iconSize, spacing } from "../../design-system";
+import { Theme, iconSize, spacing } from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
   ThirdwebThemeContext,
@@ -35,12 +35,7 @@ import { WelcomeScreen } from "./screens/types";
 
 type ConnectWalletProps = {
   className?: string;
-  theme?: "dark" | "light";
-
-  /**
-   * Customize the theme colors of the ConnectWallet button and modal
-   */
-  themeOptions?: ThemeOptions;
+  theme?: "dark" | "light" | Theme;
 
   btnTitle?: string;
   /**
@@ -58,7 +53,9 @@ type ConnectWalletProps = {
     onLogin?: (token: string) => void;
     onLogout?: () => void;
   };
+
   style?: React.CSSProperties;
+
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
 
   /**
@@ -155,7 +152,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   };
 
   return (
-    <CustomThemeProvider theme={theme} themeOptions={props.themeOptions}>
+    <CustomThemeProvider theme={theme}>
       {showSignatureModal && (
         <SignatureModal
           open={showSignatureModal}
@@ -194,7 +191,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   theme,
                   data: undefined,
                   modalSize,
-                  themeOptions: props.themeOptions,
                   termsOfServiceUrl: props.termsOfServiceUrl,
                   privacyPolicyUrl: props.privacyPolicyUrl,
                   welcomeScreen: props.welcomeScreen,
@@ -217,7 +213,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           return (
             <SwitchNetworkButton
               style={props.style}
-              theme={theme}
               className={props.className}
             />
           );
@@ -259,7 +254,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             networkSelector={props.networkSelector}
             dropdownPosition={props.dropdownPosition}
             className={props.className}
-            theme={theme}
             style={props.style}
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
@@ -279,7 +273,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
-  theme: "dark" | "light";
 }) {
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
@@ -292,7 +285,6 @@ function SwitchNetworkButton(props: {
       }`}
       variant="primary"
       type="button"
-      data-theme={props.theme}
       data-is-loading={switching}
       data-test="switch-network-button"
       disabled={switching}
