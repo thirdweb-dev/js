@@ -60,7 +60,7 @@ export const GetStartedScreen: React.FC<{
 
   return (
     <Container fullHeight flex="column" animate="fadein">
-      <Container expand p="lg">
+      <Container expand flex="column" p="lg">
         {showScreen === "android-scan" && googlePlayStoreLink && (
           <InstallScanScreen
             platformIcon={<PlayStoreIcon size={iconSize.md} />}
@@ -84,57 +84,59 @@ export const GetStartedScreen: React.FC<{
         )}
 
         {showScreen === "base" && (
-          <Container animate="fadein">
+          <Container expand flex="column">
             {header || <ModalHeader onBack={handleBack} title={walletName} />}
             <Spacer y="xl" />
 
-            <Flex flexDirection="column" gap="xs">
-              {/* Chrome Extension  */}
-              {chromeExtensionLink && (
-                <ButtonLink
-                  onClick={() => {
-                    openWindow(chromeExtensionLink);
-                  }}
-                >
-                  <ChromeIcon size={iconSize.lg} />
-                  <span>Download Chrome Extension</span>
-                </ButtonLink>
-              )}
+            <Container expand animate="fadein" flex="column" center="y">
+              <Flex flexDirection="column" gap="xs">
+                {/* Chrome Extension  */}
+                {chromeExtensionLink && (
+                  <ButtonLink
+                    onClick={() => {
+                      openWindow(chromeExtensionLink);
+                    }}
+                  >
+                    <ChromeIcon size={iconSize.lg} />
+                    <span>Download Chrome Extension</span>
+                  </ButtonLink>
+                )}
 
-              {/* Google Play store  */}
-              {googlePlayStoreLink && (
-                <ButtonLink
-                  as="button"
-                  onClick={() => {
-                    if (isMobile()) {
-                      openWindow(googlePlayStoreLink);
-                    } else {
-                      setShowScreen("android-scan");
-                    }
-                  }}
-                >
-                  <PlayStoreIcon size={iconSize.lg} />
-                  <span>Download on Google Play</span>
-                </ButtonLink>
-              )}
+                {/* Google Play store  */}
+                {googlePlayStoreLink && (
+                  <ButtonLink
+                    as="button"
+                    onClick={() => {
+                      if (isMobile()) {
+                        openWindow(googlePlayStoreLink);
+                      } else {
+                        setShowScreen("android-scan");
+                      }
+                    }}
+                  >
+                    <PlayStoreIcon size={iconSize.lg} />
+                    <span>Download on Google Play</span>
+                  </ButtonLink>
+                )}
 
-              {/* App Store  */}
-              {appleStoreLink && (
-                <ButtonLink
-                  as="button"
-                  onClick={() => {
-                    if (isMobile()) {
-                      openWindow(appleStoreLink);
-                    } else {
-                      setShowScreen("ios-scan");
-                    }
-                  }}
-                >
-                  <AppleIcon size={iconSize.lg} />
-                  <span>Download on App Store</span>
-                </ButtonLink>
-              )}
-            </Flex>
+                {/* App Store  */}
+                {appleStoreLink && (
+                  <ButtonLink
+                    as="button"
+                    onClick={() => {
+                      if (isMobile()) {
+                        openWindow(appleStoreLink);
+                      } else {
+                        setShowScreen("ios-scan");
+                      }
+                    }}
+                  >
+                    <AppleIcon size={iconSize.lg} />
+                    <span>Download on App Store</span>
+                  </ButtonLink>
+                )}
+              </Flex>
+            </Container>
           </Container>
         )}
 
@@ -143,7 +145,7 @@ export const GetStartedScreen: React.FC<{
 
       {showScreen === "base" && (
         <>
-          <Spacer y="xl" />
+          {isCompact && <Spacer y="xs" />}
           <ScreenBottomContainer
             style={
               isCompact
@@ -172,15 +174,15 @@ const InstallScanScreen: React.FC<{
   onBack?: () => void;
 }> = (props) => {
   return (
-    <div>
+    <Container animate="fadein" expand>
       <ModalHeader title={props.walletName} onBack={props.onBack} />
       <Spacer y="xl" />
 
-      <div
+      <Container
+        flex="column"
+        expand
+        center="both"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           textAlign: "center",
         }}
       >
@@ -200,8 +202,8 @@ const InstallScanScreen: React.FC<{
           Scan QR with your phone to download <br /> {props.walletName} from{" "}
           {props.platform}
         </ModalDescription>
-      </div>
-    </div>
+      </Container>
+    </Container>
   );
 };
 
