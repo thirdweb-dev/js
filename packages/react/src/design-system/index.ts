@@ -5,21 +5,14 @@ const darkColors = {
   base2: "hsl(230deg 11.63% 12%)",
   base3: "hsl(230deg 11.63% 15%)",
   base4: "hsl(230deg 11.63% 17%)",
-  base5: "hsl(230deg 11.63% 20%)",
-
   primaryText: mauveDark.mauve12,
   secondaryText: mauveDark.mauve10,
-  accentText: "#3385FF",
-
   danger: tomato.tomato9,
   success: green.green7,
   overlay: "rgba(0, 0, 0, 0.7)",
-
-  accentButtonBg: "hsl(216 100% 50%)",
-  accentButtonText: mauveDark.mauve12,
-
-  primaryButtonBg: mauveDark.mauve12,
-  primaryButtonText: "hsl(230deg 11.63% 8.43%)",
+  accentText: "#3385FF",
+  accentBg: "hsl(216 100% 50%)",
+  textOnAccent: mauveDark.mauve12,
 };
 
 const lightColors: typeof darkColors = {
@@ -27,32 +20,69 @@ const lightColors: typeof darkColors = {
   base2: mauve.mauve3,
   base3: mauve.mauve5,
   base4: mauve.mauve6,
-  base5: mauve.mauve7,
-
   primaryText: mauve.mauve12,
   secondaryText: mauveDark.mauve10,
   accentText: "hsl(216 100% 45%)",
-
   success: green.green9,
   danger: tomato.tomato9,
   overlay: "rgba(0, 0, 0, 0.7)",
-
-  accentButtonBg: "hsl(216 100% 50%)",
-  accentButtonText: mauveDark.mauve12,
-
-  primaryButtonBg: mauve.mauve12,
-  primaryButtonText: mauve.mauve1,
+  accentBg: "hsl(216 100% 50%)",
+  textOnAccent: mauve.mauve1,
 };
 
-export const darkThemeObj = {
-  type: "dark" as "light" | "dark",
-  colors: darkColors,
-};
+function createThemeObj(colors: typeof darkColors) {
+  return {
+    type: "dark" as "light" | "dark",
+    colors: {
+      primaryText: colors.primaryText,
+      secondaryText: colors.secondaryText,
+      accentText: colors.accentText,
 
-export const lightThemeObj: typeof darkThemeObj = {
-  type: "light",
-  colors: lightColors,
-};
+      danger: colors.danger,
+      success: colors.success,
+
+      modalOverlayBg: colors.overlay,
+
+      accentButtonBg: colors.accentBg,
+      accentButtonText: colors.textOnAccent,
+
+      primaryButtonBg: colors.primaryText,
+      primaryButtonText: colors.base1,
+
+      secondaryButtonBg: colors.base3,
+      secondaryButtonText: colors.primaryText,
+      secondaryButtonHoverBg: colors.base4,
+
+      modalBg: colors.base1,
+      dropdownBg: colors.base1,
+
+      tooltipBg: colors.primaryText,
+      tooltipText: colors.base1,
+
+      inputAutofillBg: colors.base2,
+      scrollbarBg: colors.base2,
+      walletSelectorButtonHoverBg: colors.base2,
+
+      separatorLine: colors.base3,
+
+      secondaryIconColor: colors.secondaryText,
+      secondaryIconHoverBg: colors.base3,
+      secondaryIconHoverColor: colors.primaryText,
+
+      borderColor: colors.base3,
+      skeletonBg: colors.base3,
+
+      selectedTextColor: colors.base1,
+      selectedTextBg: colors.primaryText,
+
+      connectedButtonBg: colors.base1,
+      connectedButtonBgHover: colors.base2,
+    },
+  };
+}
+
+export const darkThemeObj = /* @__PURE__ */ createThemeObj(darkColors);
+export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
 
 export type Theme = typeof darkThemeObj;
 

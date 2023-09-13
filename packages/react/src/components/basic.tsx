@@ -37,7 +37,7 @@ export const ScreenContainer = styled.div`
 `;
 
 export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
-  border-top: 1px solid ${(p) => p.theme.colors.base3};
+  border-top: 1px solid ${(p) => p.theme.colors.separatorLine};
   display: flex;
   flex-direction: column;
   gap: ${spacing.lg};
@@ -89,16 +89,10 @@ export function ModalHeader(props: {
 
 export const Line = styled.div<{
   theme?: Theme;
-  color: keyof Theme["colors"];
-  height: number;
 }>`
-  height: ${(p) => p.height}px;
-  background: ${(p) => p.theme.colors[p.color]};
+  height: 2px;
+  background: ${(p) => p.theme.colors.separatorLine};
 `;
-
-export function Separator() {
-  return <Line color="base3" height={1} />;
-}
 
 export function Container(props: {
   animate?: "fadein" | "floatup" | "floatdown";

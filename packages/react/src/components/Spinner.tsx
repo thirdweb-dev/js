@@ -20,7 +20,7 @@ export const Spinner: React.FC<{
         cy="25"
         r="20"
         fill="none"
-        stroke={theme.colors[props.color || "nuetral"]}
+        stroke={theme.colors[props.color]}
         strokeWidth="4"
       />
     </Svg>

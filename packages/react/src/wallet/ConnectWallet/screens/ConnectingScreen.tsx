@@ -1,6 +1,6 @@
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import { Container, ModalHeader, Separator } from "../../../components/basic";
+import { Container, ModalHeader, Line } from "../../../components/basic";
 import { ModalDescription } from "../../../components/modalElements";
 import {
   Theme,
@@ -8,6 +8,7 @@ import {
   iconSize,
   media,
   radius,
+  shadow,
   spacing,
 } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
@@ -55,11 +56,7 @@ export const ConnectingScreen: React.FC<{
             </div>
 
             {props.errorConnecting && (
-              <RetryButton
-                variant="secondary"
-                onClick={props.onRetry}
-                aria-label="retry"
-              >
+              <RetryButton onClick={props.onRetry} aria-label="retry">
                 <ReloadIcon width={iconSize.md} height={iconSize.md} />
               </RetryButton>
             )}
@@ -103,7 +100,7 @@ export const ConnectingScreen: React.FC<{
       </Container>
 
       <Spacer y="lg" />
-      {modalConfig.modalSize === "compact" && <Separator />}
+      {modalConfig.modalSize === "compact" && <Line />}
 
       <Container flex="row" center="x" p="lg">
         <Button
@@ -131,8 +128,9 @@ const retryFadeIn = keyframes`
 const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
   animation: ${retryFadeIn} 0.3s ease;
   position: absolute;
-  background: ${(p) => p.theme.colors.base3};
-  color: ${(p) => p.theme.colors.primaryText};
+  background: ${(p) => p.theme.colors.danger};
+  color: ${(p) => p.theme.colors.modalBg};
+  box-shadow: ${shadow.sm};
   bottom: 5px;
   right: 5px;
   transform: translate(50%, 50%);
@@ -143,7 +141,7 @@ const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
 
   &:hover {
     background: ${(p) => p.theme.colors.danger};
-    color: ${(p) => p.theme.colors.primaryText};
+    color: ${(p) => p.theme.colors.modalBg};
     transform: translate(50%, 50%) scale(1.2) rotate(35deg);
   }
 `;
@@ -245,7 +243,7 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
 
   [data-blocker] {
     padding: ${spacing.xs};
-    background: ${(p) => p.theme.colors.base1};
+    background: ${(p) => p.theme.colors.modalBg};
     position: relative;
     z-index: 1;
     border-radius: ${radius.xl};

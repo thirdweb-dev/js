@@ -153,7 +153,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
               }}
             >
               <Spacer y="xl" />
-              <Line color="base3" height={2} />
+              <Line />
               <Spacer y="xl" />
 
               <Text color="primaryText">New device detected</Text>

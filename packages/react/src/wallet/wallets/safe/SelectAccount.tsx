@@ -363,7 +363,7 @@ export const SelectAccount: React.FC<{
                 >
                   {" "}
                   {switchingNetwork ? "Switching" : "Switch Network"}
-                  {switchingNetwork && <Spinner size="sm" color="base1" />}
+                  {switchingNetwork && <Spinner size="sm" color="accentText" />}
                 </Button>
               ) : (
                 <Button
@@ -426,7 +426,7 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   color: ${(p) => p.theme.colors.primaryText};
   background: none;
   font-size: ${fontSize.md};
-  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.base3};
+  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.secondaryButtonBg};
   appearance: none;
 
   &:focus {

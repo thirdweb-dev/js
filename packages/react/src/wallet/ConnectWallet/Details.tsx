@@ -219,7 +219,6 @@ export const ConnectedWalletDetails: React.FC<{
             >
               <AccountAddress> {shortenString(address || "")}</AccountAddress>
               <IconButton
-                variant="secondary"
                 style={{
                   padding: "3px",
                 }}
@@ -241,7 +240,6 @@ export const ConnectedWalletDetails: React.FC<{
             >
               <DisconnectIconButton
                 type="button"
-                variant="secondary"
                 onClick={() => {
                   disconnect();
                   props.onDisconnect();
@@ -463,16 +461,17 @@ const DropDownContent = /* @__PURE__ */ styled(
   padding: ${spacing.lg};
   animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.colors.base3};
-  background-color: ${(props) => props.theme.colors.base1};
+  border: 1px solid ${(props) => props.theme.colors.borderColor};
+  background-color: ${(props) => props.theme.colors.dropdownBg};
+  --bg: ${(props) => props.theme.colors.dropdownBg};
   z-index: 1000000;
   line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  background: ${(props) => props.theme.colors.base1};
-  border: 1px solid ${(props) => props.theme.colors.base3};
+  background: ${(props) => props.theme.colors.connectedButtonBg};
+  border: 1px solid ${(props) => props.theme.colors.borderColor};
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
@@ -495,8 +494,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
 
   &:hover {
     transition: background 250ms ease;
-    background: ${(props) => props.theme.colors.base3};
-    border-color: ${(props) => props.theme.colors.base4};
+    background: ${(props) => props.theme.colors.connectedButtonBgHover};
   }
 `;
 
@@ -539,8 +537,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   all: unset;
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.md};
-  background-color: ${(props) => props.theme.colors.base1};
-  border: 1px solid ${(props) => props.theme.colors.base3};
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.colors.borderColor};
   box-sizing: border-box;
   display: flex;
   align-items: center;

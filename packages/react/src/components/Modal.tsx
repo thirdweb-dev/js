@@ -65,11 +65,7 @@ export const Modal: React.FC<{
             {!props.hideCloseIcon && (
               <CrossContainer>
                 <Dialog.Close asChild>
-                  <IconButton
-                    variant="secondary"
-                    type="button"
-                    aria-label="Close"
-                  >
+                  <IconButton type="button" aria-label="Close">
                     <Cross2Icon
                       style={{
                         width: iconSize.md,
@@ -122,7 +118,8 @@ const modalAnimationMobile = keyframes`
 
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
-  background: ${(p) => p.theme.colors.base1};
+  background: ${(p) => p.theme.colors.modalBg};
+  --bg: ${(p) => p.theme.colors.modalBg};
   color: ${(p) => p.theme.colors.primaryText};
   border-radius: ${radius.xl};
   position: fixed;
@@ -134,7 +131,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   animation: ${modalAnimationDesktop} 300ms ease;
   box-shadow: ${shadow.lg};
   line-height: 1;
-  border: 1px solid ${(p) => p.theme.colors.base3};
+  border: 1px solid ${(p) => p.theme.colors.borderColor};
   outline: none;
   overflow: hidden;
 
@@ -157,7 +154,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   }
 
   & *::selection {
-    background-color: ${(p) => p.theme.colors.primaryText};
-    color: ${(p) => p.theme.colors.base1};
+    background-color: ${(p) => p.theme.colors.selectedTextBg};
+    color: ${(p) => p.theme.colors.selectedTextColor};
   }
 `;

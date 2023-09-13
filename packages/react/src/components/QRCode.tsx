@@ -60,8 +60,8 @@ const IconContainer = styled.div`
 const QRCodeContainer = styled.div<{ theme?: Theme }>`
   animation: ${fadeInAnimation} 600ms ease;
   --ck-qr-dot-color: ${(p) => p.theme.colors.primaryText};
-  --ck-body-background: ${(p) => p.theme.colors.base1};
-  --ck-qr-background: ${(p) => p.theme.colors.base1};
+  --ck-body-background: ${(p) => p.theme.colors.modalBg};
+  --ck-qr-background: ${(p) => p.theme.colors.modalBg};
 `;
 
 const generateMatrix = (
@@ -97,8 +97,8 @@ export const PlaceholderKeyframes = keyframes`
 `;
 
 export const QRPlaceholder = styled.div<{ theme?: Theme }>`
-  --color: ${(p) => p.theme.colors.base4};
-  --bg: ${(p) => p.theme.colors.base1};
+  --color: ${(p) => p.theme.colors.skeletonBg};
+  --bg: ${(p) => p.theme.colors.modalBg};
 
   overflow: hidden;
   position: relative;
@@ -165,7 +165,7 @@ export const QRPlaceholder = styled.div<{ theme?: Theme }>`
     background-image: linear-gradient(
       90deg,
       transparent 50%,
-      ${(p) => p.theme.colors.base3},
+      ${(p) => p.theme.colors.skeletonBg},
       transparent
     );
     background-size: 200% 100%;

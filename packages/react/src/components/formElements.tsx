@@ -8,7 +8,7 @@ export const Label = styled.label<{ theme?: Theme }>`
 `;
 
 export const Input = styled.input<{
-  variant: "outline" | "transparent" | "secondary";
+  variant: "outline" | "transparent";
   theme?: Theme;
 }>`
   font-size: ${fontSize.md};
@@ -22,14 +22,7 @@ export const Input = styled.input<{
   color: ${(p) => p.theme.colors.primaryText};
   -webkit-appearance: none;
   appearance: none;
-  background: ${(p) => {
-    switch (p.variant) {
-      case "secondary":
-        return p.theme.colors.base2;
-      default:
-        return "transparent";
-    }
-  }};
+  background: transparent;
 
   &::placeholder {
     color: ${(p) => p.theme.colors.secondaryText};
@@ -39,28 +32,27 @@ export const Input = styled.input<{
     ${(p) => {
       switch (p.variant) {
         case "outline":
-          return p.theme.colors.base4;
-        case "transparent":
+          return p.theme.colors.borderColor;
+        default:
           return "transparent";
-        case "secondary":
-          return p.theme.colors.base3;
       }
     }};
 
   /* when browser auto-fills the input  */
   &:-webkit-autofill {
     -webkit-text-fill-color: ${(p) => p.theme.colors.primaryText};
-    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.colors.base2} inset !important;
-    box-shadow: 0 0 0px 1000px ${(p) => p.theme.colors.base2} inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px ${(p) => p.theme.colors.inputAutofillBg}
+      inset !important;
+    box-shadow: 0 0 0px 1000px ${(p) => p.theme.colors.inputAutofillBg} inset !important;
     transition: background-color 5000s ease-in-out 0s;
   }
 
   &:-webkit-autofill:focus {
     -webkit-box-shadow:
-      0 0 0px 1000px ${(p) => p.theme.colors.base2} inset,
+      0 0 0px 1000px ${(p) => p.theme.colors.inputAutofillBg} inset,
       0 0 0 2px ${(p) => p.theme.colors.accentText} !important;
     box-shadow:
-      0 0 0px 1000px ${(p) => p.theme.colors.base2} inset,
+      0 0 0px 1000px ${(p) => p.theme.colors.inputAutofillBg} inset,
       0 0 0 2px ${(p) => p.theme.colors.accentText} !important;
   }
 
@@ -98,7 +90,7 @@ export const Input = styled.input<{
 export const InputContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   border-radius: ${radius.sm};
-  box-shadow: 0 0 0px 1.5px ${(p) => p.theme.colors.base3};
+  box-shadow: 0 0 0px 1.5px ${(p) => p.theme.colors.borderColor};
 
   /* show focus ring on container instead of input  */
   &:focus-within {

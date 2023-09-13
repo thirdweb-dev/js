@@ -169,7 +169,7 @@ export const Web3Button = <TAction extends ActionFn>({
         data-theme={theme}
       >
         {confirmStatus === "waiting" ? (
-          <Spinner size="sm" color={"base1"} />
+          <Spinner size="sm" color={"primaryButtonText"} />
         ) : (
           "Switch Network"
         )}
@@ -213,7 +213,7 @@ export const Web3Button = <TAction extends ActionFn>({
         data-is-loading
         data-theme={theme}
       >
-        <Spinner size="md" color={"base1"} />
+        <Spinner size="md" color={"primaryButtonText"} />
       </Button>
     );
   }

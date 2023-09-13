@@ -28,7 +28,7 @@ export const Button = styled.button<{
       case "accent":
         return p.theme.colors.accentButtonBg;
       case "secondary":
-        return p.theme.colors.base3;
+        return p.theme.colors.secondaryButtonBg;
       default:
         return "none";
     }
@@ -41,7 +41,7 @@ export const Button = styled.button<{
       case "accent":
         return p.theme.colors.accentButtonText;
       case "secondary":
-        return p.theme.colors.primaryText;
+        return p.theme.colors.secondaryButtonText;
       case "link":
         return p.theme.colors.accentText;
       default:
@@ -52,7 +52,7 @@ export const Button = styled.button<{
   ${(p) => {
     if (p.variant === "outline") {
       return `
-      border: 1.5px solid ${p.theme.colors.base4};
+      border: 1.5px solid ${p.theme.colors.borderColor};
       &:hover {
         border-color: ${p.theme.colors.primaryText};
       }
@@ -83,7 +83,6 @@ export const Button = styled.button<{
 `;
 
 export const IconButton = styled.button<{
-  variant: "neutral" | "secondary";
   theme?: Theme;
 }>`
   all: unset;
@@ -93,21 +92,15 @@ export const IconButton = styled.button<{
   justify-content: center;
   border-radius: ${radius.sm};
   -webkit-tap-highlight-color: transparent;
-  color: ${(p) => {
-    switch (p.variant) {
-      case "neutral":
-        return p.theme.colors.primaryText;
-      case "secondary":
-        return p.theme.colors.secondaryText;
-    }
-  }};
+  color: ${(p) => p.theme.colors.secondaryIconColor};
   padding: 2px;
   transition:
     background 0.2s ease,
     color 0.2s ease;
+
   &:hover {
-    background: ${(p) => p.theme.colors.base3};
-    color: ${(p) => p.theme.colors.primaryText};
+    background: ${(p) => p.theme.colors.secondaryIconHoverBg};
+    color: ${(p) => p.theme.colors.secondaryIconHoverColor};
   }
 `;
 

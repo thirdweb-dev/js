@@ -42,7 +42,7 @@ export const ConnectModalInline = (props: {
 
       {/* close icon */}
       <CrossContainer>
-        <IconButton variant="secondary" type="button" aria-label="Close">
+        <IconButton type="button" aria-label="Close">
           <Cross2Icon
             style={{
               width: iconSize.md,
@@ -87,7 +87,7 @@ export const ConnectModalInline = (props: {
 };
 
 const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
-  background: ${(p) => p.theme.colors.base1};
+  background: ${(p) => p.theme.colors.modalBg};
   color: ${(p) => p.theme.colors.primaryText};
   transition: background 0.2s ease;
   border-radius: ${radius.xl};
@@ -95,7 +95,11 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   box-sizing: border-box;
   box-shadow: ${shadow.lg};
   position: relative;
-  border: 1px solid ${(p) => p.theme.colors.base3};
+  border: 1px solid ${(p) => p.theme.colors.borderColor};
   line-height: 1;
   overflow: hidden;
+  & *::selection {
+    background-color: ${(p) => p.theme.colors.primaryText};
+    color: ${(p) => p.theme.colors.modalBg};
+  }
 `;

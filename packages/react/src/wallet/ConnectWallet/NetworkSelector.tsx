@@ -35,7 +35,6 @@ import {
 import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
-import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
 import { Flex, ScreenContainer } from "../../components/basic";
 import { Text } from "../../components/text";
@@ -196,11 +195,8 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
               />
 
               <SearchInput
-                style={{
-                  boxShadow: "none",
-                }}
-                tabIndex={isMobile() ? -1 : 0}
-                variant="secondary"
+                tabIndex={-1}
+                variant="outline"
                 placeholder="Search Network or Chain ID"
                 value={searchTerm}
                 onChange={(e) => {
@@ -532,7 +528,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
     background 0.2s ease,
     color 0.2s ease;
   &[data-state="active"] {
-    background: ${(p) => p.theme.colors.base3};
+    background: ${(p) => p.theme.colors.secondaryButtonBg};
     color: ${(p) => p.theme.colors.primaryText};
   }
 `;
@@ -554,8 +550,8 @@ const ScrollContainer = styled.div<{ theme?: Theme }>`
   ${(p) =>
     scrollbar({
       track: "transparent",
-      thumb: p.theme.colors.base2,
-      hover: p.theme.colors.base4,
+      thumb: p.theme.colors.scrollbarBg,
+      hover: p.theme.colors.scrollbarBg,
     })}
 `;
 
@@ -580,12 +576,12 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   border-radius: ${radius.md};
   cursor: pointer;
   transition: background 0.2s ease;
-  background: ${(p) => p.theme.colors.base2};
+  background: ${(p) => p.theme.colors.secondaryButtonBg};
   color: ${(p) => p.theme.colors.primaryText};
   font-weight: 600;
   font-size: ${fontSize.md};
   &:hover {
-    background: ${(p) => p.theme.colors.base4};
+    background: ${(p) => p.theme.colors.secondaryButtonHoverBg};
   }
 
   ${media.mobile} {

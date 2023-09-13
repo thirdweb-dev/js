@@ -135,7 +135,7 @@ const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)<{
 `;
 
 const DropContainer = styled.div<{ theme?: Theme }>`
-  border: 2px solid ${(p) => p.theme.colors.base3};
+  border: 2px solid ${(p) => p.theme.colors.borderColor};
   border-radius: ${radius.md};
   padding: ${spacing.xl} ${spacing.md};
   display: flex;

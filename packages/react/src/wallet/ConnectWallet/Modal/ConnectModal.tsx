@@ -117,7 +117,7 @@ export const ConnectModalContent = (props: {
           style={{
             height: "100%",
             display: "grid",
-            gridTemplateColumns: "310px 1fr",
+            gridTemplateColumns: "300px 1fr",
           }}
         >
           <LeftContainer> {walletList} </LeftContainer>
@@ -202,5 +202,5 @@ export const ConnectModal = () => {
 const LeftContainer = /* @__PURE__ */ styled(FlexScrollContainer)<{
   theme?: Theme;
 }>`
-  border-right: 1px solid ${(p) => p.theme.colors.base3};
+  border-right: 1px solid ${(p) => p.theme.colors.separatorLine};
 `;

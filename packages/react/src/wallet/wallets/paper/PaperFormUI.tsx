@@ -11,7 +11,6 @@ export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
   showOrSeparator?: boolean;
   googleLoginSupported: boolean;
-  submitType: "inline" | "button";
 }) => {
   return (
     <div>
@@ -33,7 +32,6 @@ export const PaperFormUI = (props: {
       )}
 
       <InputSelectionUI
-        submitType={props.submitType}
         onSelect={(email) => props.onSelect({ email })}
         placeholder="Enter your email address"
         name="email"
@@ -75,7 +73,6 @@ export const PaperFormUIScreen: React.FC<{
           googleLoginSupported={props.googleLoginSupported}
           onSelect={props.onSelect}
           showOrSeparator={false}
-          submitType="button"
         />
       </Container>
     </Container>

@@ -216,11 +216,11 @@ export const ButtonLink = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   box-sizing: border-box;
   width: 100%;
-  color: ${(p) => p.theme.colors.primaryText};
-  background: ${(p) => p.theme.colors.base2};
+  color: ${(p) => p.theme.colors.secondaryButtonText};
+  background: ${(p) => p.theme.colors.secondaryButtonBg};
   transition: 100ms ease;
   &:hover {
-    background: ${(p) => p.theme.colors.base3};
+    background: ${(p) => p.theme.colors.secondaryButtonHoverBg};
     text-decoration: none;
     color: ${(p) => p.theme.colors.primaryText};
   }

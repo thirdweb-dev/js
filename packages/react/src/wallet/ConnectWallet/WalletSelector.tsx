@@ -226,7 +226,7 @@ export const WalletSelector: React.FC<{
 
       {showTOS && (
         <div>
-          {showSeperatorLine && <Line height={1} color="base3" />}
+          {showSeperatorLine && <Line />}
 
           <Container
             p="md"
@@ -378,7 +378,7 @@ const WalletButton = styled.button<{ theme?: Theme }>`
   padding: ${spacing.xs} ${spacing.xs};
 
   &:hover {
-    background-color: ${(p) => p.theme.colors.base2};
+    background-color: ${(p) => p.theme.colors.walletSelectorButtonHoverBg};
   }
 
   transition:

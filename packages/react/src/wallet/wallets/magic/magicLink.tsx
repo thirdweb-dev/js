@@ -139,7 +139,6 @@ const MagicUI: React.FC<{
                 return (
                   <SocialIconButton
                     key={provider}
-                    variant="secondary"
                     onClick={() => {
                       props.onSelect({ provider });
                     }}
@@ -221,7 +220,6 @@ const MagicUI: React.FC<{
             }
           }
         }}
-        submitType={props.modalSize === "wide" ? "button" : "inline"}
         showOrSeparator={props.showOrSeparator}
       />
     </Flex>
@@ -414,7 +412,7 @@ const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
   font-size: ${fontSize.md};
   transition: background-color 0.2s ease;
   &:hover {
-    background-color: ${(p) => p.theme.colors.base3};
+    background-color: ${(p) => p.theme.colors.secondaryButtonBg};
   }
   &:active {
     box-shadow: none;
@@ -422,6 +420,6 @@ const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
 `;
 
 const SocialIconButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  border: 1px solid ${(p) => p.theme.colors.base3};
+  border: 1px solid ${(p) => p.theme.colors.borderColor};
   padding: ${spacing.xs};
 `;

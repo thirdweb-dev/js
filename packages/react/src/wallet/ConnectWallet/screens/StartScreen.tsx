@@ -107,7 +107,7 @@ export function StartScreen() {
 const LinkContainer = styled.div<{ theme?: Theme }>`
   &[data-seperator="true"] {
     padding-bottom: ${spacing.lg};
-    border-bottom: 1px solid ${(p) => p.theme.colors.base3};
+    border-bottom: 1px solid ${(p) => p.theme.colors.separatorLine};
   }
 
   &[data-seperator="false"] {

@@ -45,8 +45,8 @@ const TooltipContent = /* @__PURE__ */ styled(
 )<{
   theme?: Theme;
 }>`
-  background: ${(p) => p.theme.colors.base3};
-  color: ${(p) => p.theme.colors.primaryText};
+  background: ${(p) => p.theme.colors.tooltipBg};
+  color: ${(p) => p.theme.colors.tooltipText};
   border-radius: ${radius.sm};
   line-height: 1;
   padding: ${spacing.sm} ${spacing.md};
@@ -65,5 +65,5 @@ const TooltipArrow = /* @__PURE__ */ styled(
 )<{
   theme?: Theme;
 }>`
-  fill: ${(p) => p.theme.colors.base3};
+  fill: ${(p) => p.theme.colors.tooltipBg};
 `;

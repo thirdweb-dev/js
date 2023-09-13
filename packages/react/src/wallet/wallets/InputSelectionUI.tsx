@@ -2,10 +2,7 @@ import { useState } from "react";
 import { ErrorMessage, Input } from "../../components/formElements";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Theme, iconSize, spacing } from "../../design-system";
-import { Button, InputButton } from "../../components/buttons";
-import styled from "@emotion/styled";
+import { Button } from "../../components/buttons";
 
 export function InputSelectionUI(props: {
   onSelect: (data: string) => void;
@@ -17,7 +14,6 @@ export function InputSelectionUI(props: {
   showOrSeparator?: boolean;
   footer?: React.ReactNode;
   noInput?: boolean;
-  submitType: "inline" | "button";
 }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
@@ -66,17 +62,6 @@ export function InputSelectionUI(props: {
               }
             }}
           />
-
-          {props.submitType === "inline" && (
-            <CircleInputButton
-              onClick={() => {
-                handleSelect();
-              }}
-              type="button"
-            >
-              <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
-            </CircleInputButton>
-          )}
         </div>
       )}
 
@@ -97,15 +82,10 @@ export function InputSelectionUI(props: {
           </>
         )}
 
-      {props.submitType === "button" && (
-        <>
-          <Spacer y="md" />
-          <Button variant="accent" onClick={handleSelect} fullWidth>
-            Continue
-          </Button>
-        </>
-      )}
-
+      <Spacer y="md" />
+      <Button variant="accent" onClick={handleSelect} fullWidth>
+        Continue
+      </Button>
       {props.footer}
 
       {props.showOrSeparator && (
@@ -120,19 +100,3 @@ export function InputSelectionUI(props: {
     </div>
   );
 }
-
-const CircleInputButton = /* @__PURE__ */ styled(InputButton)<{
-  theme?: Theme;
-}>`
-  background: ${(p) => p.theme.colors.base4};
-  border-radius: 50%;
-  padding: ${spacing.xxs};
-  color: ${(p) => p.theme.colors.primaryText};
-  position: absolute;
-  top: 50%;
-  right: ${spacing.sm};
-  transform: translateY(-50%);
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;

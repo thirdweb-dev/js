@@ -19,9 +19,6 @@ export const Text = styled.span<{
   line-height: ${(p) => (p.multiline ? 1.5 : 1)};
   ${(p) => (p.center ? `text-align: center;` : "")};
   text-wrap: ${(p) => (p.balance ? "balance" : "auto")};
-  &::selection {
-    background: ${(p) => p.theme.colors.base3};
-  }
 `;
 
 export const Link = styled.a<{

@@ -199,7 +199,11 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               }}
               data-test="connect-wallet-button"
             >
-              {isLoading ? <Spinner size="sm" color="base1" /> : btnTitle}
+              {isLoading ? (
+                <Spinner size="sm" color="primaryButtonText" />
+              ) : (
+                btnTitle
+              )}
             </AnimatedButton>
           );
         }
@@ -303,7 +307,11 @@ function SwitchNetworkButton(props: {
       }}
       aria-label={switching ? "Switching Network" : undefined}
     >
-      {switching ? <Spinner size="sm" color="base1" /> : "Switch Network"}
+      {switching ? (
+        <Spinner size="sm" color="primaryButtonText" />
+      ) : (
+        "Switch Network"
+      )}
     </AnimatedButton>
   );
 }

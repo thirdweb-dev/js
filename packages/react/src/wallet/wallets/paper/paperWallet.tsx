@@ -90,7 +90,6 @@ const PaperSelectionUI: React.FC<
         googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
         showOrSeparator={props.supportedWallets.length > 1}
         onSelect={props.onSelect}
-        submitType="button"
       />
     </div>
   );
