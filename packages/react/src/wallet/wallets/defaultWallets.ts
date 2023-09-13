@@ -5,6 +5,7 @@ import { walletConnect } from "./walletConnect/walletConnect";
 import { trustWallet } from "./trustWallet/TrustWallet";
 import { zerionWallet } from "./zerion/zerionWallet";
 import { rainbowWallet } from "./rainbow/RainbowWallet";
+import { phantomWallet } from "./phantom/phantomWallet";
 
 export const defaultWallets: WalletConfig<any>[] = /* @__PURE__ */ (() => [
   metamaskWallet(),
@@ -13,4 +14,5 @@ export const defaultWallets: WalletConfig<any>[] = /* @__PURE__ */ (() => [
   rainbowWallet(),
   zerionWallet(),
   trustWallet(),
+  phantomWallet(),
 ])();

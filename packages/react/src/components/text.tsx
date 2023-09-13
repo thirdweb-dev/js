@@ -25,6 +25,7 @@ export const Link = styled.a<{
   theme?: Theme;
   size?: keyof typeof fontSize;
   secondary?: boolean;
+  weight?: 400 | 500 | 600 | 700;
   inline?: boolean;
   center?: boolean;
 }>`
@@ -36,6 +37,7 @@ export const Link = styled.a<{
   text-decoration: none;
   text-align: ${(p) => (p.center ? "center" : "left")};
   display: ${(p) => (p.inline ? "inline" : "block")};
+  font-weight: ${(p) => p.weight || 400};
   line-height: 1;
 
   &:hover {

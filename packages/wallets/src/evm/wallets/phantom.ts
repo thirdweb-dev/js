@@ -20,8 +20,9 @@ export class PhantomWallet extends AbstractClientWallet {
     urls: {
       chrome:
         "https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa",
-      android: "https://play.google.com/store/apps/details?id=app.phantom",
-      ios: "https://apps.apple.com/us/app/phantom-crypto-wallet/id1598432977",
+      // not specifiying theme because they can't be used to connect
+      // android: "https://play.google.com/store/apps/details?id=app.phantom",
+      // ios: "https://apps.apple.com/us/app/phantom-crypto-wallet/id1598432977",
     },
   };
 

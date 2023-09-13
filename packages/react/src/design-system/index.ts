@@ -21,7 +21,7 @@ const lightColors: typeof darkColors = {
   base3: mauve.mauve5,
   base4: mauve.mauve6,
   primaryText: mauve.mauve12,
-  secondaryText: mauveDark.mauve10,
+  secondaryText: mauveDark.mauve9,
   accentText: "hsl(216 100% 45%)",
   success: green.green9,
   danger: tomato.tomato9,

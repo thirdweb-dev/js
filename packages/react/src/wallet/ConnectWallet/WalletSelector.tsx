@@ -207,10 +207,11 @@ export const WalletSelector: React.FC<{
         <ScreenBottomContainer>
           {showNewToWallets && (
             <Flex justifyContent="space-between">
-              <Text color="secondaryText" size="sm">
+              <Text color="secondaryText" size="sm" weight={500}>
                 New to wallets?
               </Text>
               <Link
+                weight={500}
                 size="sm"
                 target="_blank"
                 href="https://ethereum.org/en/wallets/find-wallet/"
