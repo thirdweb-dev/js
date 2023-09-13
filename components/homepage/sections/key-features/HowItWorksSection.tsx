@@ -8,7 +8,7 @@ const TRACKING_CATEGORY = "how_it_works_section";
 
 const data: { title: string; icons: Item[] }[] = [
   {
-    title: "DEV TOOLS",
+    title: "CONTRACTS",
     icons: [
       {
         icon: require("/public/assets/landingpage/howitworks-solidity-sdk.png"),
@@ -48,19 +48,44 @@ const data: { title: string; icons: Item[] }[] = [
     ],
   },
   {
+    title: "WALLET",
+    icons: [
+      {
+        icon: require("/public/assets/landingpage/howitworks-wallet.png"),
+        title: "Wallet SDK",
+        href: "/dashboard/wallets",
+      },
+      {
+        icon: require("/public/assets/product-icons/smart-wallet.svg"),
+        title: "Smart Wallet",
+        href: "/smart-wallet",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-auth.png"),
+        title: "Auth",
+        href: "/auth",
+      },
+    ],
+  },
+  {
+    title: "PAYMENTS",
+    icons: [
+      {
+        icon: require("/public/assets/landingpage/howitworks-fiat.png"),
+        title: "Fiat On-Ramp",
+      },
+      {
+        icon: require("/public/assets/landingpage/howitworks-gasless.png"),
+        title: "Sponsored Transactions",
+      },
+    ],
+  },
+  {
     title: "INFRASTRUCTURE",
     icons: [
       {
         icon: require("/public/assets/landingpage/howitworks-indexer.png"),
         title: "Data Feeds",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-gasless.png"),
-        title: "Gasless",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-fiat.png"),
-        title: "Fiat On-Ramp",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-storage.png"),
@@ -70,15 +95,7 @@ const data: { title: string; icons: Item[] }[] = [
       {
         icon: require("/public/assets/landingpage/howitworks-rpc.png"),
         title: "RPC Edge",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-wallet.png"),
-        title: "Wallet",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-auth.png"),
-        title: "Auth",
-        href: "/auth",
+        href: "/dashboard/rpc-edge",
       },
     ],
   },
@@ -164,7 +181,7 @@ export const HowItWorksSection: React.FC = () => {
           pb={9}
           w={{ md: "full" }}
           maxW={36}
-          maxH="18rem"
+          maxH="38rem"
         >
           <Image
             opacity={0.55}
@@ -197,7 +214,7 @@ export const HowItWorksSection: React.FC = () => {
           pb={12}
           w={{ md: "full" }}
           maxW={36}
-          maxH="18rem"
+          maxH="38rem"
         >
           <Image
             opacity={0.55}
@@ -225,53 +242,73 @@ export const HowItWorksSection: React.FC = () => {
           flexGrow={1}
           flexDir="column"
         >
-          {data.map(({ title, icons }) => (
-            <Box
-              key={title}
-              mt={{
-                base: 4,
-                md: 0,
-              }}
-            >
-              <Heading
-                size="title.xs"
-                color="#A0A0A0"
-                textAlign="center"
-                fontSize="0.7rem"
-                letterSpacing={1.1}
-                lineHeight="1"
-                mt="-0.95rem"
-                pb={2}
-                as="h4"
-              >
-                {title}
-              </Heading>
-              <Flex rounded="8" border="2px #171717 solid" w="full" h="full">
-                <SimpleGrid
-                  my="auto"
-                  w="full"
-                  columns={{ base: 3, lg: 7 }}
-                  gap="1rem 0"
-                  py={6}
-                  px={4}
-                >
-                  {icons.map((item, index) => (
-                    <GridItem
-                      key={item.title}
-                      colSpan={{
-                        base: index === 6 ? 3 : 1,
-                        lg: 1,
-                      }}
-                    >
-                      <Item item={item} />
-                    </GridItem>
-                  ))}
-                </SimpleGrid>
-              </Flex>
-            </Box>
-          ))}
+          <HowItWorksSectionItem
+            item={data.find(({ title }) => title === "CONTRACTS")}
+          />
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+            <HowItWorksSectionItem
+              item={data.find(({ title }) => title === "WALLET")}
+            />
+            <HowItWorksSectionItem
+              item={data.find(({ title }) => title === "PAYMENTS")}
+            />
+          </SimpleGrid>
+          <HowItWorksSectionItem
+            item={data.find(({ title }) => title === "INFRASTRUCTURE")}
+          />
         </Flex>
       </Flex>
     </KeyFeatureLayout>
+  );
+};
+
+interface HowItWorksSectionItemProps {
+  item?: {
+    title: string;
+    icons: Item[];
+  };
+}
+
+const HowItWorksSectionItem: React.FC<HowItWorksSectionItemProps> = ({
+  item,
+}) => {
+  return (
+    <Box>
+      <Heading
+        size="title.xs"
+        color="#A0A0A0"
+        textAlign="center"
+        fontSize="0.7rem"
+        letterSpacing={1.1}
+        lineHeight="1"
+        mt="-0.95rem"
+        pb={2}
+        as="h4"
+      >
+        {item?.title}
+      </Heading>
+      <Flex rounded="8" border="2px #171717 solid" w="full" h="full">
+        <SimpleGrid
+          my="auto"
+          w="full"
+          columns={item?.icons.length}
+          gap="1rem 0"
+          py={6}
+          px={4}
+        >
+          {item?.icons.map((itm, index) => (
+            <GridItem
+              key={itm.title}
+              colSpan={{
+                base: index === 6 ? 3 : 1,
+                lg: 1,
+              }}
+            >
+              <Item item={itm} />
+            </GridItem>
+          ))}
+        </SimpleGrid>
+      </Flex>
+    </Box>
   );
 };
