@@ -11,8 +11,8 @@ export const defaultWallets: WalletConfig<any>[] = /* @__PURE__ */ (() => [
   metamaskWallet(),
   coinbaseWallet(),
   walletConnect(),
+  trustWallet(),
   rainbowWallet(),
   zerionWallet(),
-  trustWallet(),
   phantomWallet(),
 ])();
