@@ -1,5 +1,10 @@
-import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ConnectUIProps,
+  useCreateWalletInstance,
+  useSetConnectedWallet,
+  useSetConnectionStatus,
+} from "@thirdweb-dev/react-core";
+import { useState } from "react";
 import {
   Container,
   Flex,
@@ -21,30 +26,27 @@ export const PaperGoogleLogin = ({
   goBack,
   modalSize,
 }: ConnectUIProps<PaperWallet>) => {
-  const connect = useConnect();
-  const prompted = useRef(false);
-  const [status, setStatus] = useState<"idle" | "connecting" | "failed">(
+  const createWalletInstance = useCreateWalletInstance();
+  const setConnectionStatus = useSetConnectionStatus();
+  const setConnectedWallet = useSetConnectedWallet();
+  const [UIStatus, setUIStatus] = useState<"idle" | "connecting" | "failed">(
     "idle",
   );
 
-  const googleLogin = useCallback(async () => {
-    setStatus("connecting");
+  const googleLogin = async () => {
     try {
-      await connect(walletConfig, { googleLogin: true });
+      const paper = createWalletInstance(walletConfig);
+      setUIStatus("connecting");
+      setConnectionStatus("connecting");
+      await paper.connect({ googleLogin: true });
+      setConnectedWallet(paper);
       close();
     } catch (e) {
-      setStatus("failed");
+      setConnectionStatus("disconnected");
+      setUIStatus("failed");
       console.error(e);
     }
-  }, [close, connect, walletConfig]);
-
-  useEffect(() => {
-    if (prompted.current) {
-      return;
-    }
-    prompted.current = true;
-    googleLogin();
-  }, [googleLogin]);
+  };
 
   return (
     <Container animate="fadein" flex="column" fullHeight>
@@ -65,7 +67,9 @@ export const PaperGoogleLogin = ({
           }
           onBack={goBack}
         />
-        {modalSize === "compact" ? <Spacer y="xxl" /> : null}
+
+        {modalSize === "compact" ? <Spacer y="xl" /> : null}
+
         <div
           style={{
             display: "flex",
@@ -76,7 +80,15 @@ export const PaperGoogleLogin = ({
             textAlign: "center",
           }}
         >
-          {status === "connecting" && (
+          {UIStatus === "idle" && (
+            <Container p="xl" flex="row" center="x">
+              <Button onClick={googleLogin} variant="primary">
+                Sign in
+              </Button>
+            </Container>
+          )}
+
+          {UIStatus === "connecting" && (
             <>
               <Text
                 color="primaryText"
@@ -95,7 +107,7 @@ export const PaperGoogleLogin = ({
               <Spacer y="xxl" />
             </>
           )}
-          {status === "failed" && (
+          {UIStatus === "failed" && (
             <>
               <Text color="danger">Failed to sign in</Text>
               <Spacer y="lg" />
