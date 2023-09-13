@@ -6,6 +6,7 @@ import { RainbowScan } from "./RainbowScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { RainbowWallet } from "@thirdweb-dev/wallets";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { wait } from "../../../utils/wait";
 
 export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
   const [screen, setScreen] = useState<
@@ -22,6 +23,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
       setErrorConnecting(false);
       connectPrompted.current = true;
       setScreen("connecting");
+      await wait(1000);
       await connect(walletConfig);
       close();
     } catch (e) {
