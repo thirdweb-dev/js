@@ -125,6 +125,10 @@ export interface UsageBillableByService {
     storage: number;
     rpc: number;
   };
+  rateLimitedAt: {
+    storage?: string;
+    rpc?: string;
+  };
 }
 
 export function useAccount() {

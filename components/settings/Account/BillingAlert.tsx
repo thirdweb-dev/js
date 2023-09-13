@@ -7,21 +7,37 @@ import {
   Flex,
   IconButton,
 } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { FiX } from "react-icons/fi";
 
 import { TrackedLink, Text } from "tw-components";
 
+enum DismissedStorageType {
+  Usage_50 = "usage_50",
+  Usage_100 = "usage_100",
+  RateRpc = "rate_rpc",
+  RateStorage = "rate_storage",
+}
+
+type DismissedStorage = {
+  [T in DismissedStorageType]?: number;
+};
 export const BillingAlert = () => {
-  const [dismissedAlertSec, setDismissedAlertSec] = useLocalStorage<
-    number | undefined
-  >("dismissed-billing-alert", undefined, 0);
+  const trackEvent = useTrack();
+  const [dismissedAlert, setDismissedAlert] = useLocalStorage<
+    DismissedStorage | undefined
+  >("dismissed-billing-alert", undefined, {
+    [DismissedStorageType.Usage_50]: 0,
+    [DismissedStorageType.Usage_100]: 0,
+    [DismissedStorageType.RateRpc]: 0,
+    [DismissedStorageType.RateStorage]: 0,
+  });
 
   const usageQuery = useAccountUsage();
   const meQuery = useAccount();
-  const router = useRouter();
 
   const exceededUsage_50 = useMemo(() => {
     if (!usageQuery?.data) {
@@ -48,19 +64,56 @@ export const BillingAlert = () => {
     );
   }, [usageQuery?.data]);
 
-  const dismissedForThePeriod = useMemo(() => {
-    if (!meQuery?.data) {
-      return true;
-    }
-
-    if (!dismissedAlertSec) {
+  const exceededRateRpc = useMemo(() => {
+    if (!usageQuery?.data) {
       return false;
     }
 
-    const startDate = new Date(meQuery.data.currentBillingPeriodStartsAt);
+    return !!usageQuery.data.rateLimitedAt?.rpc;
+  }, [usageQuery?.data]);
 
-    return dismissedAlertSec > Math.floor(startDate.getTime());
-  }, [meQuery?.data, dismissedAlertSec]);
+  const exceededRateStorage = useMemo(() => {
+    if (!usageQuery?.data) {
+      return false;
+    }
+
+    return !!usageQuery.data.rateLimitedAt?.storage;
+  }, [usageQuery?.data]);
+
+  const dismissedForThePeriod = useCallback(
+    (type: DismissedStorageType) => {
+      if (!meQuery?.data) {
+        return true;
+      }
+
+      if (!dismissedAlert) {
+        return false;
+      }
+
+      const startDate = new Date(meQuery.data.currentBillingPeriodStartsAt);
+
+      // backwards compatibility when dismissedAlert stored a single number value
+      if (typeof dismissedAlert === "number") {
+        return dismissedAlert > Math.floor(startDate.getTime());
+      }
+
+      return (dismissedAlert?.[type] || 0) > Math.floor(startDate.getTime());
+    },
+    [meQuery?.data, dismissedAlert],
+  );
+
+  const handleDismiss = (type: DismissedStorageType) => {
+    setDismissedAlert({
+      ...dismissedAlert,
+      [type]: Math.floor(Date.now()),
+    });
+
+    trackEvent({
+      category: "billing",
+      action: "dismiss_limit_alert",
+      type,
+    });
+  };
 
   if (
     meQuery.isLoading ||
@@ -73,21 +126,98 @@ export const BillingAlert = () => {
 
   const { status } = meQuery.data;
 
-  if (status === "validPayment") {
-    return null;
+  if (status === "invalidPayment") {
+    return (
+      <BillingTypeAlert
+        title="Your payment method was declined"
+        description="You have an overdue invoice. To continue using thirdweb services without interruption, please"
+        status="error"
+      />
+    );
   }
 
-  if (!exceededUsage_50 && !exceededUsage_100) {
-    return null;
+  if (
+    status !== "validPayment" &&
+    exceededUsage_50 &&
+    !dismissedForThePeriod(DismissedStorageType.Usage_50)
+  ) {
+    return (
+      <BillingTypeAlert
+        title="You are approaching your free monthly limits"
+        status="warning"
+        onDismiss={() => handleDismiss(DismissedStorageType.Usage_50)}
+      />
+    );
   }
 
-  if (dismissedForThePeriod) {
-    return null;
+  if (
+    status !== "validPayment" &&
+    exceededUsage_100 &&
+    !dismissedForThePeriod(DismissedStorageType.Usage_100)
+  ) {
+    return (
+      <BillingTypeAlert
+        title="You have used all of your free monthly limits"
+        status="error"
+        onDismiss={() => handleDismiss(DismissedStorageType.Usage_100)}
+      />
+    );
   }
+
+  if (exceededRateRpc && !dismissedForThePeriod(DismissedStorageType.RateRpc)) {
+    return (
+      <BillingTypeAlert
+        title="You have exceeded your RPC rate limit"
+        description={`You have exceeded your RPC rate limit at ${usageQuery.data.rateLimits.rpc} requests per second. Please add your payment method and upgrade your plan in the next 3 days to continue using thirdweb services without interruption. You can upgrade to thirdweb Pro by`}
+        ctaText="contacting sales team"
+        ctaHref="/contact-us"
+        status="warning"
+        onDismiss={() => handleDismiss(DismissedStorageType.RateRpc)}
+      />
+    );
+  }
+
+  if (
+    exceededRateStorage &&
+    !dismissedForThePeriod(DismissedStorageType.RateStorage)
+  ) {
+    return (
+      <BillingTypeAlert
+        title="You have exceeded your Storage Gateway rate limit"
+        description={`You have exceeded your Storage Gateway rate limit at ${usageQuery.data.rateLimits.storage} requests per second. Please add your payment method and upgrade your plan in the next 3 days to continue using thirdweb services without interruption. You can upgrade to thirdweb Pro by`}
+        ctaText="contacting sales team"
+        ctaHref="/contact-us"
+        status="warning"
+        onDismiss={() => handleDismiss(DismissedStorageType.RateStorage)}
+      />
+    );
+  }
+
+  return null;
+};
+
+type BillingTypeAlertProps = {
+  status: "error" | "warning";
+  onDismiss?: () => void;
+  title: string;
+  description?: string;
+  ctaText?: string;
+  ctaHref?: string;
+};
+
+const BillingTypeAlert: React.FC<BillingTypeAlertProps> = ({
+  status,
+  onDismiss,
+  title,
+  description = "To ensure there are no future interruptions to your services",
+  ctaText = "add a payment method",
+  ctaHref = "/dashboard/settings/billing",
+}) => {
+  const router = useRouter();
 
   return (
     <Alert
-      status={exceededUsage_100 ? "error" : "warning"}
+      status={status}
       borderRadius="md"
       as={Flex}
       alignItems="start"
@@ -99,27 +229,23 @@ export const BillingAlert = () => {
       <Flex>
         <AlertIcon boxSize={4} mt={1} ml={1} />
         <Flex flexDir="column" gap={1} pl={1}>
-          <AlertTitle>
-            {exceededUsage_100
-              ? "You have used all of your free monthly limits"
-              : "You are approaching your free monthly limits"}
-          </AlertTitle>
+          <AlertTitle>{title}</AlertTitle>
           <AlertDescription>
             <Text size="body.md" as="span" pr={1}>
-              To ensure there are no future interruptions to your services,
+              {description},
             </Text>
-            {router.pathname.startsWith("/dashboard/settings/billing") ? (
-              <Text as="span">add a payment method</Text>
+            {router.pathname.startsWith(ctaHref) ? (
+              <Text as="span">{ctaText}</Text>
             ) : (
               <TrackedLink
-                href="/dashboard/settings/billing"
+                href={ctaHref}
                 category="billing"
-                label="rate_limit_exceeded"
+                label="limit_exceeded"
                 fontWeight="medium"
                 color="blue.500"
               >
                 <Text as="span" color="blue.500">
-                  add a payment method
+                  {ctaText}
                 </Text>
               </TrackedLink>
             )}
@@ -128,17 +254,18 @@ export const BillingAlert = () => {
         </Flex>
       </Flex>
 
-      <IconButton
-        size="xs"
-        aria-label="Close announcement"
-        icon={<FiX />}
-        colorScheme="blackAlpha"
-        color="white"
-        variant="ghost"
-        opacity={0.6}
-        _hover={{ opacity: 1 }}
-        onClick={() => setDismissedAlertSec(Math.floor(Date.now()))}
-      />
+      {onDismiss && (
+        <IconButton
+          size="xs"
+          aria-label="Close announcement"
+          icon={<FiX />}
+          color="bgBlack"
+          variant="ghost"
+          opacity={0.6}
+          _hover={{ opacity: 1 }}
+          onClick={onDismiss}
+        />
+      )}
     </Alert>
   );
 };

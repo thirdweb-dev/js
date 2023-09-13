@@ -157,7 +157,9 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
                     as={validPayment ? FiCheckCircle : FiAlertCircle}
                     color={validPayment ? "green.500" : "red.500"}
                   />
-                  <Text size="label.sm">Valid payment</Text>
+                  <Text size="label.sm">
+                    {validPayment ? "Valid payment" : "Invalid payment"}
+                  </Text>
                 </HStack>
               </Badge>
             </HStack>
