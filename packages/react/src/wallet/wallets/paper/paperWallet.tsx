@@ -15,7 +15,9 @@ import { useScreenContext } from "../../ConnectWallet/Modal/screen";
 import { PaperGoogleLogin } from "./PaperGoogleLogin";
 import { emailIcon } from "../../ConnectWallet/icons/dataUris";
 
-export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
+export const paperWallet = (
+  config?: PaperConfig,
+): WalletConfig<PaperWallet> => {
   const defaultRecovery = "AWS_MANAGED";
 
   return {
@@ -42,7 +44,7 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
         <PaperSelectionUI
           {...props}
           recoveryShareManagement={
-            config.advancedOptions?.recoveryShareManagement || defaultRecovery
+            config?.advancedOptions?.recoveryShareManagement || defaultRecovery
           }
         />
       );
@@ -52,7 +54,7 @@ export const paperWallet = (config: PaperConfig): WalletConfig<PaperWallet> => {
         <PaperConnectUI
           {...props}
           recoveryShareManagement={
-            config.advancedOptions?.recoveryShareManagement || defaultRecovery
+            config?.advancedOptions?.recoveryShareManagement || defaultRecovery
           }
         />
       );
