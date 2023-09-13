@@ -78,6 +78,7 @@ function createThemeObj(colors: typeof darkColors) {
       connectedButtonBg: colors.base1,
       connectedButtonBgHover: colors.base2,
     },
+    fontFamily: "inherit",
   };
 }
 
@@ -154,6 +155,10 @@ export function applyThemeOverrides(
 
   if (themeOverides.colors) {
     theme.colors = { ...theme.colors, ...themeOverides.colors };
+  }
+
+  if (themeOverides.fontFamily) {
+    theme.fontFamily = themeOverides.fontFamily;
   }
 
   return theme;

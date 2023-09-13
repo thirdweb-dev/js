@@ -317,7 +317,7 @@ export function WalletEntryButton(props: {
       />
       <WalletNameContainer>
         <Flex flexDirection="column" gap="xxs">
-          <Text color="primaryText" weight={600}>
+          <Text color="primaryText" weight={500}>
             {walletConfig.meta.name}
           </Text>
           {isRecommended && (

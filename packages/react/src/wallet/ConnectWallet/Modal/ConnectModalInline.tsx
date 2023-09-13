@@ -98,6 +98,7 @@ const ConnectModalInlineContainer = styled.div<{ theme?: Theme }>`
   border: 1px solid ${(p) => p.theme.colors.borderColor};
   line-height: 1;
   overflow: hidden;
+  font-family: ${(p) => p.theme.fontFamily};
   & *::selection {
     background-color: ${(p) => p.theme.colors.primaryText};
     color: ${(p) => p.theme.colors.modalBg};

@@ -134,6 +134,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   border: 1px solid ${(p) => p.theme.colors.borderColor};
   outline: none;
   overflow: hidden;
+  font-family: ${(p) => p.theme.fontFamily};
 
   ${noScrollBar}
 
