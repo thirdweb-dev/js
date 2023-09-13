@@ -155,6 +155,11 @@ function redirects() {
       destination: "/dashboard/infrastructure/storage",
       permanent: false,
     },
+    {
+      source: "/smart-wallet",
+      destination: "/account-abstraction",
+      permanent: false,
+    },
   ];
 }
 
