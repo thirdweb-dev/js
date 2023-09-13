@@ -46,7 +46,7 @@ export enum PageId {
   // thirdweb.com/web3-sdk
   Web3SDKLanding = "web3-sdk-landing",
 
-  // thirdweb.com/smart-wallet
+  // thirdweb.com/account-abstraction
   SmartWalletLanding = "smart-wallet-landing",
 
   // thirdweb.com/pre-built-contracts

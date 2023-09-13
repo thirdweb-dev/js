@@ -58,7 +58,7 @@ const data: { title: string; icons: Item[] }[] = [
       {
         icon: require("/public/assets/product-icons/smart-wallet.svg"),
         title: "Smart Wallet",
-        href: "/smart-wallet",
+        href: "/account-abstraction",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-auth.png"),
