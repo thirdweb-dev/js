@@ -1,3 +1,4 @@
+import { Tooltip } from "@chakra-ui/react";
 import {
   useAccountsForAddress,
   useAddress,
@@ -6,7 +7,7 @@ import {
   useIsAccountDeployed,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { Button } from "tw-components";
+import { Button, Card, Text } from "tw-components";
 
 interface CreateAccountButtonProps {
   contractQuery: ReturnType<typeof useContract>;
@@ -36,9 +37,23 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   if (isAccountDeployed && accountsForAddress?.length) {
     return (
-      <Button colorScheme="primary" isDisabled>
-        Account Created
-      </Button>
+      <Tooltip
+        label={
+          <Card py={2} px={4} bgColor="backgroundHighlight">
+            <Text>You can only initialize one account per EOA.</Text>
+          </Card>
+        }
+        bg="transparent"
+        boxShadow="none"
+        bgColor="backgroundHighlight"
+        borderRadius="lg"
+        placement="right"
+        shouldWrapChildren
+      >
+        <Button colorScheme="primary" isDisabled>
+          Account Created
+        </Button>
+      </Tooltip>
     );
   }
 
