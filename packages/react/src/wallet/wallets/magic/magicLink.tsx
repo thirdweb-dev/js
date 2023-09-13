@@ -17,6 +17,11 @@ import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
 import styled from "@emotion/styled";
 import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
+import {
+  emailAndPhoneIcon,
+  emailIcon,
+  phoneIcon,
+} from "../../ConnectWallet/icons/dataUris";
 
 export function magicLink(
   config: MagicLinkAdditionalOptions & {
@@ -53,14 +58,31 @@ export function magicLink(
 
   const type = config.type || "auth";
 
+  let icon = emailAndPhoneIcon;
+  let iconText = "Email or phone";
+
+  if (emailLoginEnabled && !smsLoginEnabled) {
+    icon = emailIcon;
+    iconText = "Email";
+  }
+
+  if (!emailLoginEnabled && smsLoginEnabled) {
+    icon = phoneIcon;
+    iconText = "Phone number";
+  }
+
+  if (!emailLoginEnabled && !smsLoginEnabled) {
+    iconText = "Social login";
+  }
+
   return {
     category: "socialLogin",
     id: MagicLink.id,
     recommended: config?.recommended,
     meta: {
       ...MagicLink.meta,
-      iconURL:
-        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiM2ODUxRkYiLz4KPHBhdGggZD0iTTQwIDEyQzQyLjU1NjcgMTQuOTY4MiA0NS4zNzY2IDE3LjcyNDcgNDguNDI1OSAyMC4yMzc1QzQ2LjM5NDEgMjYuNDg0MyA0NS4zMDAxIDMzLjEyMTEgNDUuMzAwMSA0MEM0NS4zMDAxIDQ2Ljg3ODkgNDYuMzk0MSA1My41MTU3IDQ4LjQyNTkgNTkuNzYyNUM0NS4zNzY2IDYyLjI3NTMgNDIuNTU2NyA2NS4wMzE5IDQwIDY4QzM3LjQ0MzMgNjUuMDMxOSAzNC42MjM0IDYyLjI3NTMgMzEuNTc0MSA1OS43NjI1QzMzLjYwNTkgNTMuNTE1NyAzNC42OTk5IDQ2Ljg3ODkgMzQuNjk5OSA0MEMzNC42OTk5IDMzLjEyMTEgMzMuNjA1OSAyNi40ODQzIDMxLjU3NDEgMjAuMjM3NUMzNC42MjM0IDE3LjcyNDcgMzcuNDQzMyAxNC45NjgyIDQwIDEyWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTI1Ljc0NTYgNTUuNDQzN0MyMi41MTc5IDUzLjI5OTIgMTkuMDkyMyA1MS40MDQgMTUuNSA0OS43ODc1QzE2LjQ5NjUgNDYuNjkxNiAxNy4wMzI1IDQzLjQwNTEgMTcuMDMyNSA0MEMxNy4wMzI1IDM2LjU5NDkgMTYuNDk2NSAzMy4zMDg2IDE1LjUgMzAuMjEyNUMxOS4wOTIzIDI4LjU5NiAyMi41MTc4IDI2LjcwMDggMjUuNzQ1NiAyNC41NTY0QzI2Ljk3OTkgMjkuNTE0MyAyNy42MzMgMzQuNjg0OCAyNy42MzMgNDBDMjcuNjMzIDQ1LjMxNTIgMjYuOTc5OSA1MC40ODU3IDI1Ljc0NTYgNTUuNDQzN1oiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik01Mi4zNjcxIDQwQzUyLjM2NzEgNDUuMzE1MyA1My4wMjAyIDUwLjQ4NTcgNTQuMjU0NCA1NS40NDM3QzU3LjQ4MjEgNTMuMjk5MiA2MC45MDc4IDUxLjQwNCA2NC41IDQ5Ljc4NzZDNjMuNTAzNSA0Ni42OTE2IDYyLjk2NzQgNDMuNDA1MSA2Mi45Njc0IDQwQzYyLjk2NzQgMzYuNTk0OSA2My41MDM1IDMzLjMwODYgNjQuNSAzMC4yMTI1QzYwLjkwNzggMjguNTk2IDU3LjQ4MjEgMjYuNzAwOSA1NC4yNTQ0IDI0LjU1NjRDNTMuMDIwMiAyOS41MTQzIDUyLjM2NzEgMzQuNjg0OCA1Mi4zNjcxIDQwWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==",
+      name: iconText,
+      iconURL: icon,
     },
     create: (options: WalletOptions) =>
       new MagicLink({ ...options, ...config }),

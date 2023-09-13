@@ -90,7 +90,7 @@ export function ModalHeader(props: {
 export const Line = styled.div<{
   theme?: Theme;
 }>`
-  height: 2px;
+  height: 1px;
   background: ${(p) => p.theme.colors.separatorLine};
 `;
 
