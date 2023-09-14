@@ -113,17 +113,22 @@ export const HeroSection = () => {
           justifySelf="flex-end"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
         />
-        <ChakraNextImage
+        <Flex
+          w="full"
+          justifyContent="center"
           display={{ base: "flex", lg: "none" }}
-          alt=""
-          maxW="100%"
-          w={96}
-          src={HeroMobile}
-          priority
-          quality={95}
-          justifySelf="flex-end"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
-        />
+        >
+          <ChakraNextImage
+            alt=""
+            maxW="100%"
+            w={96}
+            src={HeroMobile}
+            priority
+            quality={95}
+            justifySelf="flex-end"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
+          />
+        </Flex>
       </Grid>
     </HomepageSection>
   );

@@ -19,14 +19,14 @@ const GET_STARTED_SECTIONS = [
     description:
       "Onboard, authenticate, and manage users. Connect any wallets to your app and games.",
     image: require("public/assets/dashboard/home-wallets.png"),
-    href: "/dashboard/wallets",
+    href: "/dashboard/wallets/connect",
   },
   {
     title: "Contracts",
     description:
       "Create, deploy, and manage smart contracts on any EVM network.",
     image: require("public/assets/dashboard/home-contracts.png"),
-    href: "/dashboard/contracts",
+    href: "/dashboard/contracts/deploy",
   },
   {
     title: "Payments",
@@ -38,7 +38,7 @@ const GET_STARTED_SECTIONS = [
     title: "Infrastructure",
     description: "Connect your application to decentralized networks.",
     image: require("public/assets/dashboard/home-infrastructure.png"),
-    href: "/dashboard/infrastructure",
+    href: "/dashboard/infrastructure/storage",
   },
 ];
 

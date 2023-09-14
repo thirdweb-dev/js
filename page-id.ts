@@ -102,6 +102,9 @@ export enum PageId {
   // thirdweb.com/dashboard/wallets/smart-wallet
   DashboardWalletsSmartWallet = "dashboard-wallets-smart-wallet",
 
+  // thirdweb.com/dashboard/contracts/build
+  DashboardContractsBuild = "dashboard-contracts-build",
+
   // thirdweb.com/dashboard/contracts
   Contracts = "contracts",
   // thirdweb.com/dashboard/programs

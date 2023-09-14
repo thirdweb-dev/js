@@ -53,7 +53,7 @@ const data: { title: string; icons: Item[] }[] = [
       {
         icon: require("/public/assets/landingpage/howitworks-wallet.png"),
         title: "Wallet SDK",
-        href: "/dashboard/wallets",
+        href: "/dashboard/wallets/wallet-sdk",
       },
       {
         icon: require("/public/assets/product-icons/smart-wallet.svg"),

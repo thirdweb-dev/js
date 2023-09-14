@@ -236,7 +236,7 @@ const Contracts: ThirdwebNextPage = () => {
 
 Contracts.getLayout = (page, props) => (
   <AppLayout ecosystem="evm" {...props} hasSidebar={true}>
-    <ContractsSidebar activePage="deployed" />
+    <ContractsSidebar activePage="deploy" />
 
     {page}
   </AppLayout>

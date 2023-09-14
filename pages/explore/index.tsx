@@ -5,6 +5,7 @@ import { ContractRow } from "components/explore/contract-row";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublishUpsellCard } from "components/explore/upsells/publish-submit";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
+import { ContractsSidebar } from "core-ui/sidebar/contracts";
 import {
   EXPLORE_PAGE_DATA,
   ExploreCategory,
@@ -72,6 +73,7 @@ const ExplorePage: ThirdwebNextPage = (
 
 ExplorePage.getLayout = (page, props) => (
   <AppLayout {...props} noSEOOverride>
+    <ContractsSidebar activePage="explore" />
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>
 );

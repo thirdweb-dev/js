@@ -2,11 +2,10 @@ import { SidebarNav } from "./nav";
 import { Route } from "./types";
 
 type InfrastructureSidebarProps = {
-  activePage: "overview" | "rpc-edge" | "storage";
+  activePage: "storage" | "rpc-edge";
 };
 
 const links: Route[] = [
-  { path: "/dashboard/infrastructure", title: "Overview", name: "overview" },
   {
     path: "/dashboard/infrastructure/storage",
     title: "Storage",

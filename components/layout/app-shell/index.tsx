@@ -123,14 +123,15 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
           <Button
             as={TrackedLink}
             variant="link"
-            href="/explore"
+            href="/pricing"
             category="header"
-            label="docs"
+            label="pricing"
             flexDir="row"
             gap={1.5}
             mx={1}
             alignItems="center"
             display={{ base: "none", md: "flex" }}
+            isExternal
           >
             <Icon as={FiGlobe} />
             <Heading
@@ -138,7 +139,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
               as="h4"
               size="label.md"
             >
-              Explore
+              Pricing
             </Heading>
           </Button>
           <Button
@@ -216,7 +217,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Home
           </LinkButton>
           <LinkButton
-            href="/dashboard/wallets"
+            href="/dashboard/wallets/connect"
             isActive={pathname.startsWith("/dashboard/wallets")}
             _active={{
               bg: "bgBlack",
@@ -227,7 +228,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Wallets
           </LinkButton>
           <LinkButton
-            href="/dashboard/contracts"
+            href="/dashboard/contracts/deploy"
             isActive={
               pathname.startsWith("/dashboard/contracts") ||
               route === "/[networkOrAddress]/[...catchAll]"
@@ -249,7 +250,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
             Payments
           </LinkButton>
           <LinkButton
-            href="/dashboard/infrastructure"
+            href="/dashboard/infrastructure/storage"
             isActive={pathname.startsWith("/dashboard/infrastructure")}
             _active={{
               bg: "bgBlack",

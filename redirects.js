@@ -160,6 +160,26 @@ function redirects() {
       destination: "/account-abstraction",
       permanent: false,
     },
+    {
+      source: "/dashboard/published",
+      destination: "/dashboard/publish",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/wallets",
+      destination: "/dashboard/wallets/connect",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/infrastructure",
+      destination: "/dashboard/infrastructure/storage",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/contracts",
+      destination: "/dashboard/contracts/deploy",
+      permanent: false,
+    },
   ];
 }
 

@@ -109,7 +109,7 @@ Check out this free NFT I claimed for deploying a contract on OP Goerli!`,
           </AspectRatio>*/}
         </Card>
         <TrackedLinkButton
-          href="/dashboard/contracts"
+          href="/dashboard/contracts/deploy"
           isExternal
           py={3}
           px={6}

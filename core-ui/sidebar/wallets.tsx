@@ -2,11 +2,10 @@ import { SidebarNav } from "./nav";
 import { Route } from "./types";
 
 type WalletsSidebarProps = {
-  activePage: "overview" | "connect" | "wallet-sdk" | "smart-wallet";
+  activePage: "connect" | "wallet-sdk" | "smart-wallet";
 };
 
 const links: Route[] = [
-  { path: "/dashboard/wallets", title: "Overview", name: "overview" },
   {
     path: "/dashboard/wallets/connect",
     title: "Connect",
