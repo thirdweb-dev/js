@@ -47,8 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                The most complete toolkit for Account Abstraction. Build apps
-                with ERC-4337 on any EVM
+                Introducing: The most complete toolkit for account abstraction.
+                Build web3 apps with ERC-4337
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
