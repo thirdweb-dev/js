@@ -49,7 +49,7 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     DropERC20: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
     SignatureDrop: "",
     Marketplace: "",
-    MarketplaceV3: "0x58e0F289C7dD2025eBd0696d913ECC0fdc1CC8bc",
+    MarketplaceV3: "",
     TokenERC721: "0x26279882D5E93045D4FA986847CAAC048b2Bac3b",
     TokenERC1155: "0xA8E28D98203848401A4f924358e6c337153D0f04",
     TokenERC20: "0x56Abb6a3f25DCcdaDa106191053b1CC54C196DEE",

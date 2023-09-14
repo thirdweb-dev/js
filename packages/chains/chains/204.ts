@@ -6,9 +6,7 @@ export default {
     "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-mainnet-rpc.bnbchain.org"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "BNB Chain Native Token",
     "symbol": "BNB",

@@ -14,7 +14,7 @@ import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 import IAirdropERC20 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC20.json";
 import IAirdropERC721 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC721.json";
 import IAirdropERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC1155.json";
-import IAccountFactory from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactory.json";
+import IAccountFactoryCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactoryCore.json";
 import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions.json";
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
@@ -291,7 +291,7 @@ export const FEATURE_ACCOUNT_FACTORY = {
     sdk: "sdk.accountFactory",
     contracts: "",
   },
-  abis: [IAccountFactory],
+  abis: [IAccountFactoryCore],
   features: {},
 } as const;
 

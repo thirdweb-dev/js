@@ -34,6 +34,7 @@ export * from "./wallets/injected";
 export * from "./wallets/local-wallet";
 export * from "./wallets/magic";
 export * from "./wallets/metamask";
+export * from "./wallets/phantom";
 export * from "./wallets/private-key";
 export * from "./wallets/rainbow-wallet";
 export * from "./wallets/safe";
@@ -47,6 +48,7 @@ export type { Chain } from "@thirdweb-dev/chains";
 
 // export the window ethereum util
 export { getInjectedMetamaskProvider } from "./connectors/metamask/getInjectedMetamaskProvider";
+export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhantomProvider";
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
 
