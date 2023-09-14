@@ -1,15 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Manta Pacific Testnet",
+  "name": "Manta Pacific Mainnet",
   "chain": "Manta Pacific",
   "rpc": [
-    "https://manta-pacific-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://manta-testnet.calderachain.xyz/http"
+    "https://manta-pacific.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://pacific-rpc.manta.network/http"
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "Manta",
-    "symbol": "MANTA",
+    "name": "Ether",
+    "symbol": "ETH",
     "decimals": 18
   },
   "features": [
@@ -20,10 +20,10 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://manta-testnet.caldera.dev/",
-  "shortName": "mantaTestnet",
-  "chainId": 3441005,
-  "networkId": 3441005,
+  "infoURL": "https://pacific-info.manta.network",
+  "shortName": "manta",
+  "chainId": 169,
+  "networkId": 169,
   "icon": {
     "url": "ipfs://QmTckcVTViRZ3NqT36MTt8AvgBSmudrbgU3pi8AaNtthoV",
     "width": 834,
@@ -32,11 +32,11 @@ export default {
   },
   "explorers": [
     {
-      "name": "manta-testnet Explorer",
-      "url": "https://manta-testnet.calderaexplorer.xyz",
+      "name": "manta-pacific Explorer",
+      "url": "https://pacific-explorer.manta.network",
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "manta-pacific-testnet"
+  "testnet": false,
+  "slug": "manta-pacific"
 } as const satisfies Chain;

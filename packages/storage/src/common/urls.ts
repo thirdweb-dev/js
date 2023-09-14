@@ -47,7 +47,7 @@ export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
  */
 export const TW_UPLOAD_SERVER_URL = getProcessEnv(
   "CUSTOM_UPLOAD_SERVER_URL",
-  "https://storage.thirdweb.com",
+  "https://storage.staging.thirdweb.com", //"https://storage.thirdweb.com",
 );
 
 /**

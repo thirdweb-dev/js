@@ -139,8 +139,15 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
         xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
         if (this.clientId) {
-          xhr.setRequestHeader("x-client-id", this.clientId);
+          xhr.setRequestHeader(
+            "x-client-id",
+            "7ce34e83f55ae1bf8828675637ff82a1",
+          );
         }
+
+        // xhr.setRequestHeader("x-sdk-version", pkg.version);
+        // xhr.setRequestHeader("x-sdk-name", pkg.name);
+        xhr.setRequestHeader("x-sdk-platform", "react-native");
 
         xhr.send(form);
       });
@@ -152,24 +159,41 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           content: data,
         });
 
+        console.log("calling ipfs-pin-json", fetchBody);
+
+        console.log("APP_BUNDLE_ID", APP_BUNDLE_ID);
+        console.log("this.clientId", this.clientId);
+
         try {
           const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
             method: "POST",
             headers: {
               "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
-              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
+              ...(this.clientId
+                ? { "x-client-id": "7ce34e83f55ae1bf8828675637ff82a1" }
+                : {}),
               "Content-Type": "application/json",
+              // "x-sdk-version": pkg.version,
+              // "x-sdk-name": pkg.name,
+              "x-sdk-platform": "react-native",
             },
             body: fetchBody,
           });
 
+          console.log("res", res);
+          console.log("res.ok", res.ok);
+
           if (res.ok) {
             const ipfs = await res.json();
+
+            console.log("res.json", ipfs);
+
             const cid = ipfs.IpfsHash;
 
             return resolve([`ipfs://${cid}`]);
           }
         } catch (error) {
+          console.log("error", error);
           reject(error);
         }
       });
