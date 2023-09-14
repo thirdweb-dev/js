@@ -136,6 +136,8 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
 
   /**
    * Size of the modal
+   *
+   * This is always `compact` on React Native
    */
   modalSize: "compact" | "wide";
 };
@@ -170,6 +172,8 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
 
   /**
    * Size of the modal
+   *
+   * This is always `compact` on React Native
    */
   modalSize: "compact" | "wide";
 };
