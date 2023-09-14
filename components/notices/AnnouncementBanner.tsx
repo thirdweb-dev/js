@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-api-keys-requirement", false, true);
+    useLocalStorage("dismissed-smart-w-allet", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -28,9 +28,9 @@ export const AnnouncementBanner = () => {
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
           isExternal
-          href="https://blog.thirdweb.com/changelog/api-keys-to-access-thirdweb-infra/"
+          href="/account-abstraction"
           category="announcement"
-          label="api-keys-requirement"
+          label="smart-wallet"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -47,8 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                thirdweb services now <strong>require</strong> API key
-                authentication
+                The most complete toolkit for Account Abstraction. Build apps
+                with ERC-4337 on any EVM
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

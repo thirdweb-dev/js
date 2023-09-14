@@ -15,7 +15,6 @@ import { ThirdwebNextPage } from "utils/types";
 import {
   Card,
   Heading,
-  LinkButton,
   Text,
   TrackedLink,
   TrackedLinkButton,
@@ -87,111 +86,6 @@ const accountFactories = [
 ];
 
 const CONNECT_SNIPPET = WALLETS_SNIPPETS.find((s) => s.id === "smart-wallet");
-const INTERACT_SNIPPET = {
-  javascript: `import {{chainName}} from "@thirdweb-dev/chains";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-
-// Simply initialize your SDK with the created smart wallet
-const sdk = await ThirdwebSDK.fromWallet(smartWallet, {{chainName}}, {
-  clientId: "YOUR_CLIENT_ID"
-});
-
-// You can now interact with the blockchain as you would with a regular EOA
-const smartWalletAddress = await sdk.wallet.getAddress();
-
-// gas free wallet actions
-await sdk.wallet.transfer("{{contract_address}}", "0.01");
-
-// gas free contract deployments
-const contractAddress = await sdk.deployer.deployNFTCollection({ 
-  name: "My NFT Collection", 
-  primary_sale_recipient: smartWalletAddress 
-});
-
-// gas free contract interactions
-const contract = await sdk.getContract(contractAddress);
-await contract.erc721.mint({ 
-  name: "My NFT",
-  description: "My NFT description",
-  image: "https://example.com/image.png",
-});
-`,
-  react: `import {{chainName}} from "@thirdweb-dev/chains";
-import { useAddress, useContract, useOwnedNFTs, Web3Button } from "@thirdweb-dev/react";
-
-// The ThirdwebProvider setup above already handles connection to the smart wallet
-// Within the provider, you can use the react SDK hooks to interact with the blockchain
-export default function MyComponent() {
-  // Get the connected smart wallet address
-  const smartWalletAddress = useAddress();
-
-  // Fetch owned NFTs
-  const { contract } = useContract("{{contract_address}}");
-  const { data, isLoading } = useOwnedNFTs(contract, smartWalletAddress);
-
-  // Mint a new NFT
-  return (
-    <Web3Button
-      contractAddress={"{{contract_address}}"}
-      action={(contract) => contract.erc721.mint({ 
-          name: "My NFT",
-          description: "My NFT description",
-          image: "https://example.com/image.png",
-        })
-      }
-    >
-      Mint NFT
-    </Web3Button>
-  );
-}`,
-  "react-native": `import {{chainName}} from "@thirdweb-dev/chains";
-import { useAddress, useContract, useOwnedNFTs, Web3Button } from "@thirdweb-dev/react-native";
-
-// The ThirdwebProvider setup above already handles connection to the smart wallet
-// Within the provider, you can use the react SDK hooks to interact with the blockchain
-export default function MyComponent() {
-  // Get the connected smart wallet address
-  const smartWalletAddress = useAddress();
-
-  // Fetch owned NFTs
-  const { contract } = useContract("{{contract_address}}");
-  const { data, isLoading } = useOwnedNFTs(contract, smartWalletAddress);
-
-  // Mint a new NFT
-  return (
-    <Web3Button
-      contractAddress={"{{contract_address}}"}
-      action={(contract) => contract.erc721.mint({ 
-          name: "My NFT",
-          description: "My NFT description",
-          image: "https://example.com/image.png",
-        })
-      }
-    >
-      Mint NFT
-    </Web3Button>
-  );
-}`,
-  unity: `using Thirdweb;
-
-public async void MintNFT()
-{
-  // The ThirdwebManger prefab holds the smart wallet connection state
-  var sdk = ThirdwebManager.Instance.SDK;
-
-  // Get the connected smart wallet address
-  var smartWalletAddress = await sdk.Wallet.GetAddress();
-
-  // Interact with contracts
-  Contract contract = sdk.GetContract("{{contract_address}}");
-  await contract.ERC721.Mint(new NFTMetadata()
-  {
-      name = "My NFT",
-      description = "My NFT description",
-      image = "https://example.com/image.png",
-  });
-}`,
-};
 
 const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   const address = useAddress();
@@ -369,7 +263,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
             Wallet SDK
           </Button>
           {!!form.watch("chainAndFactoryAddress") && (
-            <LinkButton
+            <TrackedLinkButton
               isActive={false}
               _active={{
                 bg: "bgBlack",
@@ -381,9 +275,11 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
                 ?.split("-")[0]}/${form
                 .watch("chainAndFactoryAddress")
                 ?.split("-")[1]}/code`}
+              category={TRACKING_CATEGORY}
+              label="direct-contract-interaction"
             >
               Direct contract interaction (advanced)
-            </LinkButton>
+            </TrackedLinkButton>
           )}
         </ButtonGroup>
         <CodeSegment
