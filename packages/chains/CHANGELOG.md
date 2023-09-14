@@ -1,5 +1,13 @@
 # @thirdweb-dev/chains
 
+## 0.1.51
+
+### Patch Changes
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1599](https://github.com/thirdweb-dev/js/pull/1599) [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1) Thanks [@MananTank](https://github.com/MananTank)! - Update chains
+
 ## 0.1.50
 
 ### Patch Changes

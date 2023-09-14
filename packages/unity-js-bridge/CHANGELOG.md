@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.78
+
+### Patch Changes
+
+- [#1595](https://github.com/thirdweb-dev/js/pull/1595) [`66c4ade8`](https://github.com/thirdweb-dev/js/commit/66c4ade868ae007e1cbf29c146c8bb3a2634eb38) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add unity support for tx builder endpoint
+
+- Updated dependencies [[`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c), [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93), [`2a873d2f`](https://github.com/thirdweb-dev/js/commit/2a873d2f80271208819bac88b32cea0b48761c8d), [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`f9042765`](https://github.com/thirdweb-dev/js/commit/f90427650c037b2c437685734ddc3398ad3e2612), [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1), [`defe5fce`](https://github.com/thirdweb-dev/js/commit/defe5fced3fd738157616a9f1644c5092dcaa5a8), [`2f187d13`](https://github.com/thirdweb-dev/js/commit/2f187d13754f571b7205fc1b743efde767b1b1c8), [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334), [`931ee793`](https://github.com/thirdweb-dev/js/commit/931ee7930f16c25e4d775d2d93538a5cfe770353)]:
+  - @thirdweb-dev/sdk@3.10.60
+  - @thirdweb-dev/wallets@1.2.0
+  - @thirdweb-dev/chains@0.1.51
+  - @thirdweb-dev/auth@3.2.41
+
 ## 0.2.77
 
 ### Patch Changes
