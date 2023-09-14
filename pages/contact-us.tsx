@@ -263,6 +263,9 @@ const ContactUs: ThirdwebNextPage = () => {
                     <option value="MintingAPI">Minting API</option>
                     <option value="Wallets">Wallets</option>
                     <option value="Marketplaces">Marketplaces</option>
+                    <option value="Account Abstraction">
+                      Account Abstraction
+                    </option>
                     <option value="Other">Other</option>
                   </Select>
                 </FormControl>
@@ -297,7 +300,6 @@ const ContactUs: ThirdwebNextPage = () => {
                     </option>
                     <option value="thirdweb Website">thirdweb Website</option>
                     <option value="Newsletter">Newsletter</option>
-                    <option value="Referral">Referral</option>
                     <option value="Referral">Referral</option>
                     <option value="Other">Other</option>
                     <option value="Event">Event</option>

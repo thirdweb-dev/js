@@ -5,6 +5,7 @@ import { TrackedLinkButton } from "tw-components";
 interface LandingCTAButtonsProps {
   ctaLink: string;
   ctaText?: string;
+  contactUsTitle?: string;
   trackingCategory: string;
   alignLeft?: boolean;
 }
@@ -12,6 +13,7 @@ interface LandingCTAButtonsProps {
 export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
   ctaLink,
   ctaText = "Get Started",
+  contactUsTitle = "Contact Us",
   trackingCategory,
   alignLeft,
 }) => {
@@ -42,7 +44,7 @@ export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
         category={trackingCategory}
         label="contact-us"
       >
-        Contact Us
+        {contactUsTitle}
       </TrackedLinkButton>
     </Flex>
   );
