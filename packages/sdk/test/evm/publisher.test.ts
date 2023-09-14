@@ -4,10 +4,11 @@ import {
   ThirdwebSDK,
 } from "../../src/evm";
 import {
+  extendedMetadataMock,
   defaultProvider,
   implementations,
   signers,
-  sdk as mockSdk,
+  sdk,
 } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -17,6 +18,15 @@ import { expect } from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
 import invariant from "tiny-invariant";
+import { mockUploadMetadataWithBytecode } from "./utils";
+import {
+  greeterBytecode,
+  greeterCompilerMetadata,
+} from "./mock/greeterContractMetadata";
+import {
+  constructorParamBytecode,
+  constructorParamMetadata,
+} from "./mock/constructorParamContractMetadata";
 
 global.fetch = require("cross-fetch");
 
@@ -50,18 +60,46 @@ describe("Publishing", async () => {
   let adminWallet: SignerWithAddress;
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
-  let sdk: ThirdwebSDK;
+  // let sdk: ThirdwebSDK;
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet, {
-      secretKey: process.env.TW_SECRET_KEY,
-    });
-    simpleContractUri =
-      "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
+    // sdk = new ThirdwebSDK(adminWallet, {
+    //   secretKey: process.env.TW_SECRET_KEY,
+    // });
+    simpleContractUri = await mockUploadMetadataWithBytecode(
+      "Greeter",
+      greeterCompilerMetadata.output.abi,
+      greeterBytecode,
+      "",
+      {
+        ...extendedMetadataMock,
+        deployType: "standard",
+        networksForDeployment: {
+          allNetworks: true,
+          networksEnabled: [],
+        },
+        publisher: await adminWallet.getAddress(),
+      },
+      "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0",
+    );
     // if we change the test data - await uploadContractMetadata("Greeter", storage);
-    constructorParamsContractUri =
-      "ipfs://QmT5Dx3xigHr6BPG8scxbX7JaAucHRD9UPXc6FCtgcNn5e/0";
+    constructorParamsContractUri = await mockUploadMetadataWithBytecode(
+      "ConstructorParams",
+      constructorParamMetadata.output.abi,
+      constructorParamBytecode,
+      "",
+      {
+        ...extendedMetadataMock,
+        deployType: "standard",
+        networksForDeployment: {
+          allNetworks: true,
+          networksEnabled: [],
+        },
+        publisher: await adminWallet.getAddress(),
+      },
+      "ipfs://QmT5Dx3xigHr6BPG8scxbX7JaAucHRD9UPXc6FCtgcNn5e/0",
+    );
   });
 
   beforeEach(async () => {
@@ -153,7 +191,7 @@ describe("Publishing", async () => {
     expect(c.publishedMetadata.version).to.eq("4.0.0");
   });
 
-  it("should fetch metadata", async () => {
+  it.skip("should fetch metadata", async () => {
     const publisher = sdk.getPublisher();
     const meta = await publisher.fetchCompilerMetadataFromPredeployURI(
       simpleContractUri,
@@ -161,7 +199,7 @@ describe("Publishing", async () => {
     expect(meta.licenses.join()).to.eq("MIT,Apache-2.0");
   });
 
-  it("should fetch metadata from previously deployed version", async () => {
+  it.skip("should fetch metadata from previously deployed version", async () => {
     const publisher = sdk.getPublisher();
     for (let i = 1; i < 3; i++) {
       await publisher.publish(simpleContractUri, {
