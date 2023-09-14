@@ -23,8 +23,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
   static meta = {
     name: "Embedded Wallet",
     iconURL:
-      // TODO: replace with thirdweb logo
-      "ipfs://QmNrLXtPoFrh4yjZbXui39zUMozS1oetpgU8dvZhFAxfRa/thirdweb-logo-icon.svg",
+      "ipfs://QmNx2evQa6tcQs9VTd3YaDm31ckfStvgRGKFGELahUmrbV/emailIcon.svg",
   };
 
   public get walletName() {
