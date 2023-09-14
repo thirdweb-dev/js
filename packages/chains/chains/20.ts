@@ -6,9 +6,7 @@ export default {
     "https://elastos-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.elastos.io/eth"
   ],
-  "faucets": [
-    "https://faucet.elastos.org/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Elastos",
     "symbol": "ELA",

@@ -8,9 +8,7 @@ export default {
     "https://mainnet-rpc.thundertoken.net",
     "https://mainnet-rpc.thundercore.io"
   ],
-  "faucets": [
-    "https://faucet.thundercore.com"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "ThunderCore Token",
     "symbol": "TT",

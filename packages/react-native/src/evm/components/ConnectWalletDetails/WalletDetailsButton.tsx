@@ -70,6 +70,7 @@ export const WalletDetailsButton = ({
               ) : (
                 <AddressDisplay
                   variant="bodySmallSecondary"
+                  extraShort={false}
                   address={address}
                 />
               )}

@@ -79,7 +79,7 @@ export class Airdrop1155<T extends IAirdropERC1155 | AirdropERC1155>
     ): Promise<Transaction<Airdrop1155Output>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
-        method: "airdrop",
+        method: "airdropERC1155",
         args: [tokenAddress, tokenOwner, contents],
         parse: (receipt) => {
           const events = this.contractWrapper.parseLogs<AirdropFailedEvent>(

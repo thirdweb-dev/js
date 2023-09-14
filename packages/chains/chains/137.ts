@@ -19,6 +19,7 @@ export default {
     "https://rpc-mainnet.matic.quiknode.pro",
     "https://matic-mainnet-full-rpc.bwarelabs.com",
     "https://polygon-bor.publicnode.com",
+    "wss://polygon-bor.publicnode.com",
     "https://polygon.gateway.tenderly.co",
     "wss://polygon.gateway.tenderly.co"
   ],

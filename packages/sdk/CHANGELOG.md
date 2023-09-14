@@ -1,5 +1,25 @@
 # @thirdweb-dev/sdk
 
+## 3.10.60
+
+### Patch Changes
+
+- [#1594](https://github.com/thirdweb-dev/js/pull/1594) [`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle default gas values for `sdk.wallet.sendRawTransaction()`, expose `sdk.wallet.executeRawTransasction()` and expose `fromAddress` in `contract.erc1155.airdrop()`
+
+- [#1600](https://github.com/thirdweb-dev/js/pull/1600) [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update addresses
+
+- [#1591](https://github.com/thirdweb-dev/js/pull/1591) [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update airdrop function names on contracts and sdk to resolve abi conflict
+
+- [#1609](https://github.com/thirdweb-dev/js/pull/1609) [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17) Thanks [@arcoraven](https://github.com/arcoraven)! - Fixes maxFeePerGas value set incorrectly
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1589](https://github.com/thirdweb-dev/js/pull/1589) [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gasprice for bittorrent mainnet create2 factory deployment
+
+- Updated dependencies [[`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1)]:
+  - @thirdweb-dev/contracts-js@1.3.13
+  - @thirdweb-dev/chains@0.1.51
+
 ## 3.10.59
 
 ### Patch Changes

@@ -366,9 +366,12 @@ export class Erc1155<
     async (
       tokenId: BigNumberish,
       addresses: AirdropInput,
+      fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const from = fromAddress
+        ? await resolveAddress(fromAddress)
+        : await this.contractWrapper.getSignerAddress();
 
       const balanceOf = await this.balanceOf(from, tokenId);
 
