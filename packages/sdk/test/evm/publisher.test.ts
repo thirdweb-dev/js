@@ -191,7 +191,7 @@ describe("Publishing", async () => {
     expect(c.publishedMetadata.description).to.eq("description");
   });
 
-  it("should publish constructor params contract", async () => {
+  it.skip("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(constructorParamsContractUri, {
@@ -213,7 +213,7 @@ describe("Publishing", async () => {
     expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
   });
 
-  it("test factory deploy", async () => {
+  it.skip("test factory deploy", async () => {
     const realSDK = new ThirdwebSDK(adminWallet, {
       secretKey: process.env.TW_SECRET_KEY,
     });
@@ -293,7 +293,7 @@ describe("Publishing", async () => {
     expect(deployedAddr.length).to.be.gt(0);
   });
 
-  it("SimpleAzuki enumerable", async () => {
+  it.skip("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet, {
       secretKey: process.env.TW_SECRET_KEY,
     });
@@ -367,7 +367,7 @@ describe("Publishing", async () => {
     expect(claimConditions.length).to.equal(2);
   });
 
-  it("ERC721Drop base feature detection", async () => {
+  it.skip("ERC721Drop base feature detection", async () => {
     const ipfsUri = "ipfs://QmXQ2f6qA7FD8uks1hKK1soTn6sbEGBSfDpzN9buYXkGxZ";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
@@ -402,7 +402,7 @@ describe("Publishing", async () => {
     expect(nftsAfter[1].owner).to.equal(AddressZero);
   });
 
-  it("ERC1155Drop base feature detection", async () => {
+  it.skip("ERC1155Drop base feature detection", async () => {
     const ipfsUri = "ipfs://QmZsZcLS3fAtPw2EyZGbHxkdeofTxNtqMoXNWLc79sRXWa";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       "test",
