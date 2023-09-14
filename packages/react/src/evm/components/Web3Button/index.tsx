@@ -1,16 +1,14 @@
 import { Popover } from "../../../components/Popover";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { Theme, darkThemeObj, lightThemeObj } from "../../../design-system";
+import { Theme, ThemeObjectOrType } from "../../../design-system";
 import {
   ConnectWallet,
   ConnectWalletProps,
 } from "../../../wallet/ConnectWallet/ConnectWallet";
 import { useIsHeadlessWallet } from "../../../wallet/hooks/useIsHeadlessWallet";
-import { ThemeProvider } from "@emotion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  ThirdwebThemeContext,
   useAddress,
   useContract,
   useNetworkMismatch,
@@ -20,8 +18,10 @@ import {
 } from "@thirdweb-dev/react-core";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
-import { PropsWithChildren, useContext, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import invariant from "tiny-invariant";
+import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
+import { useTheme } from "@emotion/react";
 
 type ActionFn = (contract: SmartContract) => any;
 
@@ -73,21 +73,24 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
  *
  * @beta
  */
-export const Web3Button = <TAction extends ActionFn>({
-  contractAddress,
-  onSuccess,
-  onError,
-  onSubmit,
-  isDisabled,
-  contractAbi,
-  children,
-  action,
-  className,
-  type,
-  theme,
-  style,
-  connectWallet,
-}: PropsWithChildren<Web3ButtonProps<TAction>>) => {
+export const Web3Button = <TAction extends ActionFn>(
+  props: PropsWithChildren<Web3ButtonProps<TAction>>,
+) => {
+  const {
+    contractAddress,
+    onSuccess,
+    onError,
+    onSubmit,
+    isDisabled,
+    contractAbi,
+    children,
+    action,
+    className,
+    type,
+    style,
+    connectWallet,
+  } = props;
+
   const address = useAddress();
   const sdkChainId = useSDKChainId();
   const switchChain = useSwitchChain();
@@ -98,15 +101,14 @@ export const Web3Button = <TAction extends ActionFn>({
   const requiresConfirmation = !useIsHeadlessWallet();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
-  const thirdwebTheme = useContext(ThirdwebThemeContext);
-  const themeToUse = theme || thirdwebTheme || "dark";
+  const contextTheme = useTheme() as ThemeObjectOrType;
+  const theme = props.theme || contextTheme || "dark";
 
   const [confirmStatus, setConfirmStatus] = useState<"idle" | "waiting">(
     "idle",
   );
 
-  const themeType =
-    typeof themeToUse === "string" ? themeToUse : themeToUse.type;
+  const themeType = typeof theme === "string" ? theme : theme.type;
 
   const actionMutation = useMutation(
     async () => {
@@ -248,17 +250,5 @@ export const Web3Button = <TAction extends ActionFn>({
     );
   }
 
-  return (
-    <ThemeProvider
-      theme={
-        typeof themeToUse === "string"
-          ? themeToUse === "dark"
-            ? darkThemeObj
-            : lightThemeObj
-          : themeToUse
-      }
-    >
-      {button}
-    </ThemeProvider>
-  );
+  return <CustomThemeProvider theme={theme}>{button}</CustomThemeProvider>;
 };

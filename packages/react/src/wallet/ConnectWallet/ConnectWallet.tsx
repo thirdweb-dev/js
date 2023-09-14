@@ -1,7 +1,11 @@
-import { Theme, iconSize, spacing } from "../../design-system";
+import {
+  Theme,
+  ThemeObjectOrType,
+  iconSize,
+  spacing,
+} from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
-  ThirdwebThemeContext,
   useAddress,
   useConnectionStatus,
   useLogin,
@@ -32,6 +36,7 @@ import { defaultModalTitle } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
+import { useTheme } from "@emotion/react";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -114,8 +119,8 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
-  const themeFromProvider = useContext(ThirdwebThemeContext);
-  const theme = props.theme || themeFromProvider || "dark";
+  const contextTheme = useTheme() as ThemeObjectOrType;
+  const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useConnectionStatus();
 
   const walletConfigs = useWallets();

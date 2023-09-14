@@ -87,6 +87,8 @@ export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
 
 export type Theme = typeof darkThemeObj;
 
+export type ThemeObjectOrType = "light" | "dark" | Theme;
+
 export type ThemeOverrides = {
   [key in Exclude<keyof Theme, "type">]?: Partial<Theme[key]>;
 };

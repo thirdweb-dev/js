@@ -10,25 +10,18 @@ import {
   radius,
   spacing,
   Theme,
+  ThemeObjectOrType,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
-  ThirdwebThemeContext,
   useChainId,
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
-import {
-  memo,
-  useCallback,
-  useContext,
-  useDeferredValue,
-  useMemo,
-  useState,
-} from "react";
+import { memo, useCallback, useDeferredValue, useMemo, useState } from "react";
 import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
@@ -37,6 +30,7 @@ import { Flex, ScreenContainer } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { useTheme } from "@emotion/react";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -74,8 +68,8 @@ const fuseConfig = {
 export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
-  const themeFromProvider = useContext(ThirdwebThemeContext);
-  const theme = props.theme || themeFromProvider || "dark";
+  const themeFromContext = useTheme() as ThemeObjectOrType;
+  const theme = props.theme || themeFromContext || "dark";
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
 

@@ -5,16 +5,16 @@ import {
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
-import { ThemeProvider } from "@emotion/react";
-import { darkThemeObj, lightThemeObj } from "../../design-system";
+import { ThemeObjectOrType } from "../../design-system";
 import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "createWalletStorage" | "supportedWallets" | "signer"
+    "createWalletStorage" | "supportedWallets" | "signer" | "theme"
   > {
   /**
    * Wallets supported by the dApp
@@ -30,6 +30,12 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * ```
    */
   supportedWallets?: WalletConfig<any>[];
+
+  /**
+   * theme to use for all thirdweb components
+   * @defaultValue "dark"
+   */
+  theme?: ThemeObjectOrType;
 }
 
 /**
@@ -57,24 +63,25 @@ export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
   supportedWallets,
-  theme,
   children,
+  theme: _theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
+  const theme = _theme || "dark";
 
   return (
     <WalletUIStatesProvider theme={theme} modalSize="wide">
-      <ThemeProvider theme={theme === "dark" ? darkThemeObj : lightThemeObj}>
+      <CustomThemeProvider theme={theme}>
         <ThirdwebProviderCore
-          theme={theme}
-          supportedWallets={wallets}
           {...restProps}
+          theme={typeof theme === "string" ? theme : theme.type}
+          supportedWallets={wallets}
         >
           {children}
           <ConnectModal />
         </ThirdwebProviderCore>
-      </ThemeProvider>
+      </CustomThemeProvider>
     </WalletUIStatesProvider>
   );
 };
