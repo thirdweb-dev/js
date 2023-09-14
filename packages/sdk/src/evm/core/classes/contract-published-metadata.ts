@@ -15,7 +15,7 @@ import { ContractWrapper } from "./contract-wrapper";
  * Handles publish metadata for a contract
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class ContractPublishedMetadata<TContract extends BaseContract> {
   private contractWrapper;
   private storage: ThirdwebStorage;
