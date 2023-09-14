@@ -71,7 +71,7 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@babel/runtime": "^7.22.6",
-    "@microsoft/api-documenter": "^7.22.30",
+    "@microsoft/api-documenter": "^7.22.33",
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "2.7.0",
