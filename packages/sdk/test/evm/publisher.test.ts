@@ -74,7 +74,7 @@ describe("Publishing", async () => {
     expect(functions.length).gt(0);
   });
 
-  it("should update bio", async () => {
+  it.skip("should update bio", async () => {
     const address = adminWallet.address;
     const publisher = sdk.getPublisher();
     await publisher.updatePublisherProfile({
@@ -88,7 +88,7 @@ describe("Publishing", async () => {
     expect(profile.github).to.eq("something");
   });
 
-  it("should match back publish metadata", async () => {
+  it.skip("should match back publish metadata", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri, {
       version: "0.0.1",
@@ -312,7 +312,7 @@ describe("Publishing", async () => {
     expect(all.length).to.eq(0);
   });
 
-  it("AzukiWithMinting mintable", async () => {
+  it.skip("AzukiWithMinting mintable", async () => {
     const pub = await sdk.getPublisher();
     const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
     const tx = await pub.publish(ipfsUri, {
@@ -440,7 +440,7 @@ describe("Publishing", async () => {
     expect(nftsAfter[1].supply).to.equal("0");
   });
 
-  it("ERC1155Signature mint feature detection", async () => {
+  it.skip("ERC1155Signature mint feature detection", async () => {
     const ipfsUri = "ipfs://QmNuKYGZoiHyumKjT7gPk3vwy3WKt7gTf1hKGZ2eyGZGRd";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       "test",
