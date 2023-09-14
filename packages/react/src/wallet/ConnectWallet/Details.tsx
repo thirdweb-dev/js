@@ -65,6 +65,7 @@ export const ConnectedWalletDetails: React.FC<{
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
+  theme: "light" | "dark" | Theme;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -417,6 +418,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showNetworkSelector && (
         <NetworkSelector
+          theme={props.theme}
           chains={chains}
           {...props.networkSelector}
           onClose={() => setShowNetworkSelector(false)}

@@ -255,6 +255,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         // wallet details button
         return (
           <ConnectedWalletDetails
+            theme={theme}
             networkSelector={props.networkSelector}
             dropdownPosition={props.dropdownPosition}
             className={props.className}

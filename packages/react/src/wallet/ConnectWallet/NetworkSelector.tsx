@@ -1,14 +1,11 @@
-import { ThemeProvider } from "@emotion/react";
 import { ChainIcon } from "../../components/ChainIcon";
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import { Input } from "../../components/formElements";
 import {
-  darkThemeObj,
   fontSize,
   iconSize,
-  lightThemeObj,
   media,
   radius,
   spacing,
@@ -39,6 +36,7 @@ import { useEffect } from "react";
 import { Flex, ScreenContainer } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -49,7 +47,7 @@ type RenderChain = React.FC<{
 }>;
 
 export type NetworkSelectorProps = {
-  theme?: "dark" | "light";
+  theme: "dark" | "light" | Theme;
   onClose?: () => void;
   chains?: Chain[];
   popularChains?: Chain[];
@@ -142,7 +140,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   );
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkThemeObj : lightThemeObj}>
+    <CustomThemeProvider theme={theme}>
       <Modal
         size={"compact"}
         open={true}
@@ -280,7 +278,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
           </Tabs.Root>
         </ScreenContainer>
       </Modal>
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 };
 
