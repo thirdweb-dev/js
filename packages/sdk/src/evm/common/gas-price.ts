@@ -25,7 +25,7 @@ export async function getDefaultGasOverrides(provider: providers.Provider) {
   );
   if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
     return {
-      maxFeePerGas: feeData.maxPriorityFeePerGas,
+      maxFeePerGas: feeData.maxFeePerGas,
       maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
     };
   } else {
