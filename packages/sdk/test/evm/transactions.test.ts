@@ -21,42 +21,6 @@ describe("Transactions", async () => {
   before(async () => {
     [adminWallet, samWallet] = signers;
 
-    // mock upload Forwarder
-    await mockUploadMetadataWithBytecode(
-      "Forwarder",
-      Forwarder__factory.abi,
-      Forwarder__factory.bytecode,
-      "",
-      {
-        ...extendedMetadataMock,
-        deployType: "standard",
-        networksForDeployment: {
-          allNetworks: true,
-          networksEnabled: [],
-        },
-      },
-      "ipfs://Qmcu8FaqerUvQYb4qPg7PwkXa6dRtEe45LedLJPN42Jwqe/0",
-      // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
-    );
-
-    // mock upload TWCloneFactory
-    await mockUploadMetadataWithBytecode(
-      "Forwarder",
-      TWCloneFactoryAbi,
-      TWCloneFactoryBytecode,
-      "",
-      {
-        ...extendedMetadataMock,
-        deployType: "standard",
-        networksForDeployment: {
-          allNetworks: true,
-          networksEnabled: [],
-        },
-      },
-      "ipfs://QmYfw13Zykqf9jAmJobNgYrEpatEF9waWcQPUHvJ7sctRb/0",
-      // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
-    );
-
     mockPublishUri = await mockUploadMetadataWithBytecode(
       "TokenERC721",
       TokenERC721__factory.abi,
