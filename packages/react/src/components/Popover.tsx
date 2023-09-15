@@ -8,6 +8,7 @@ import {
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as RXPopover from "@radix-ui/react-popover";
+import { Container } from "./basic";
 
 export type PopoverProps = {
   children: React.ReactNode;
@@ -22,7 +23,18 @@ export const Popover = (props: PopoverProps) => {
       <RXPopover.Trigger asChild>{props.children}</RXPopover.Trigger>
       <RXPopover.Portal>
         <PopoverContent sideOffset={7} side="top">
-          <FlexWrapper>{props.content}</FlexWrapper>
+          <Container
+            flex="row"
+            center="y"
+            gap="sm"
+            style={{
+              lineHeight: 1.5,
+              maxWidth: "200px",
+              textAlign: "center",
+            }}
+          >
+            {props.content}
+          </Container>
           <PopoverArrow />
         </PopoverContent>
       </RXPopover.Portal>
@@ -46,24 +58,16 @@ const PopoverContent = /* @__PURE__ */ styled(
 )<{ theme?: Theme }>`
   border-radius: ${radius.sm};
   padding: ${spacing.sm} ${spacing.md};
-  background-color: ${(p) => p.theme.bg.inverted};
+  background-color: ${(p) => p.theme.colors.tooltipBg};
   box-shadow: ${shadow.md};
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  animation-name: ${slideUpAndFade};
-  color: ${(p) => p.theme.text.inverted};
+  animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  color: ${(p) => p.theme.colors.tooltipText};
   font-size: ${fontSize.md};
 `;
 
 const PopoverArrow = /* @__PURE__ */ styled(/* @__PURE__ */ RXPopover.Arrow)<{
   theme?: Theme;
 }>`
-  fill: ${(p) => p.theme.bg.inverted};
-`;
-
-const FlexWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
+  fill: ${(p) => p.theme.colors.tooltipBg};
 `;
