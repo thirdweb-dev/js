@@ -197,7 +197,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
             gap: spacing.sm,
           }}
         >
-          Connect
+          Continue
           {isConnecting && <Spinner size="sm" color="accentButtonText" />}
         </Button>
       </form>

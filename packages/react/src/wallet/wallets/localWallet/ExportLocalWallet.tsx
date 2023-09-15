@@ -2,12 +2,16 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { ModalDescription } from "../../../components/modalElements";
-import { Theme } from "../../../design-system";
+import { Theme, iconSize, spacing } from "../../../design-system";
 import styled from "@emotion/styled";
 import { fontSize } from "../../../design-system";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+  PinBottomIcon,
+} from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
@@ -23,6 +27,7 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
@@ -38,6 +43,7 @@ export const ExportLocalWallet: React.FC<{
   const address = useAddress();
   const [savedAddress, setSavedAddress] = useState("");
   const createWalletInstance = useCreateWalletInstance();
+  const modalConfig = useContext(ModalConfigCtx);
 
   // set savedAddress and passwordIsRequired on mount
   const mounted = useRef(false);
@@ -131,14 +137,19 @@ export const ExportLocalWallet: React.FC<{
   const exportDisabled = isWrongPassword;
 
   return (
-    <Container>
+    <Container fullHeight>
       <form
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
         onSubmit={(e) => {
           e.preventDefault();
           exportFromLocalStorage();
         }}
       >
-        <Container fullHeight p="lg">
+        <Container expand p="lg">
           <ModalHeader onBack={props.onBack} title="Backup Wallet" />
 
           <Spacer y="lg" />
@@ -204,17 +215,24 @@ export const ExportLocalWallet: React.FC<{
         </Container>
 
         <Spacer y="md" />
-        <ScreenBottomContainer>
+        <ScreenBottomContainer
+          style={{
+            borderTop: modalConfig.modalSize === "wide" ? "none" : undefined,
+          }}
+        >
           <Button
             disabled={exportDisabled}
             variant="accent"
             fullWidth
             style={{
               opacity: exportDisabled ? 0.5 : 1,
+              display: "flex",
+              gap: spacing.sm,
             }}
             type="submit"
           >
-            Backup
+            <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
+            Download
           </Button>
         </ScreenBottomContainer>
       </form>

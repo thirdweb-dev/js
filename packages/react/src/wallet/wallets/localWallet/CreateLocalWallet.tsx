@@ -2,7 +2,12 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+  PinBottomIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
@@ -14,7 +19,7 @@ import {
 } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
-import { spacing } from "../../../design-system";
+import { iconSize, spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
 
 export const CreateLocalWallet_Password: React.FC<{
@@ -161,10 +166,16 @@ export const CreateLocalWallet_Password: React.FC<{
           type="submit"
           fullWidth
           style={{
-            gap: spacing.sm,
+            gap: spacing.xs,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
           data-test="create-new-wallet-button"
         >
+          {!isConnecting && (
+            <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+          )}
           {isConnecting ? "Connecting" : "Create new wallet"}
           {isConnecting && <Spinner size="sm" color="accentButtonText" />}
         </Button>
@@ -185,7 +196,13 @@ export const CreateLocalWallet_Password: React.FC<{
         onClick={() => {
           setShowImportScreen(true);
         }}
+        style={{
+          display: "flex",
+          gap: spacing.sm,
+          alignItems: "center",
+        }}
       >
+        <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
         Import wallet
       </Button>
     </ScreenContainer>
