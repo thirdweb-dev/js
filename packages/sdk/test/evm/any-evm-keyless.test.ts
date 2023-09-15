@@ -239,7 +239,7 @@ describe("Any EVM Keyless Deploy", async () => {
     await jsonProvider.send("hardhat_reset", []);
   });
 
-  it.skip("correct count of logs and transactions", async () => {
+  it("correct count of logs and transactions", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     contract = await deployTieredDrop();
