@@ -1,7 +1,11 @@
 import { IconStyleProp } from "./types";
 import Svg, { Path } from "react-native-svg";
 
-const RightArrowIcon = ({ width, height, color }: IconStyleProp) => {
+const RightArrowIcon = ({
+  width,
+  height,
+  color = "#646D7A",
+}: IconStyleProp) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 5 8" fill="none">
       <Path

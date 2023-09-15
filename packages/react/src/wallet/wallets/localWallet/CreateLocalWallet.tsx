@@ -1,20 +1,21 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
+import { ModalDescription } from "../../../components/modalElements";
 import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+  EyeClosedIcon,
+  EyeOpenIcon,
+  PinBottomIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
-import { LocalWalletModalHeader } from "./common";
-import { Flex } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
-import { spacing } from "../../../design-system";
+import { iconSize, spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
 
 export const CreateLocalWallet_Password: React.FC<{
@@ -30,7 +31,7 @@ export const CreateLocalWallet_Password: React.FC<{
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet, meta } = useLocalWalletInfo(
+  const { localWallet } = useLocalWalletInfo(
     props.localWalletConf,
     props.persist,
   );
@@ -84,20 +85,17 @@ export const CreateLocalWallet_Password: React.FC<{
   };
 
   return (
-    <>
-      <LocalWalletModalHeader
-        onBack={props.goBack}
-        meta={meta}
-        hideBack={!props.renderBackButton}
+    <Container p="lg" fullHeight>
+      <ModalHeader
+        onBack={props.renderBackButton ? props.goBack : undefined}
+        title={props.localWalletConf.meta.name}
+        imgSrc={props.localWalletConf.meta.iconURL}
       />
 
-      <Flex alignItems="center" gap="xs">
-        <ModalTitle>Guest Wallet</ModalTitle>
-      </Flex>
+      <Spacer y="lg" />
 
-      <Spacer y="sm" />
-      <ModalDescription>
-        Choose a password for your wallet, you{`'`}ll be able to access and
+      <ModalDescription sm>
+        Choose a password for your wallet You{`'`}ll be able to access and
         export this wallet with the same password.
       </ModalDescription>
 
@@ -156,43 +154,54 @@ export const CreateLocalWallet_Password: React.FC<{
           dataTest="confirm-password"
         />
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         {/* Create */}
         <Button
-          variant="inverted"
+          variant="accent"
           type="submit"
+          fullWidth
           style={{
-            width: "100%",
-            gap: spacing.sm,
+            gap: spacing.xs,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
           data-test="create-new-wallet-button"
         >
+          {!isConnecting && (
+            <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+          )}
           {isConnecting ? "Connecting" : "Create new wallet"}
-          {isConnecting && <Spinner size="sm" color="inverted" />}
+          {isConnecting && <Spinner size="sm" color="accentButtonText" />}
         </Button>
       </form>
 
-      <Spacer y="xxl" />
+      <Spacer y="xl" />
 
       <TextDivider>
         <span>OR</span>
       </TextDivider>
 
-      <Spacer y="lg" />
+      <Spacer y="xl" />
 
       {/* Import */}
-      <Flex justifyContent="center">
-        <Button
-          variant="link"
-          onClick={() => {
-            setShowImportScreen(true);
-          }}
-        >
-          Import wallet
-        </Button>
-      </Flex>
-    </>
+      <Button
+        fullWidth
+        variant="outline"
+        onClick={() => {
+          setShowImportScreen(true);
+        }}
+        style={{
+          display: "flex",
+          gap: spacing.sm,
+          alignItems: "center",
+        }}
+      >
+        <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
+        Import wallet
+      </Button>
+    </Container>
   );
 };
 
@@ -227,14 +236,14 @@ export const CreateLocalWallet_Guest: React.FC<{
   }, [handleConnect, localWallet]);
 
   return (
-    <Flex
-      justifyContent="center"
-      alignItems="center"
+    <Container
+      flex="row"
+      center="both"
       style={{
         height: "300px",
       }}
     >
-      <Spinner size="lg" color="link" />
-    </Flex>
+      <Spinner size="lg" color="accentText" />
+    </Container>
   );
 };
