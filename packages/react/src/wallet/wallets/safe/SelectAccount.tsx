@@ -1,18 +1,12 @@
-import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { ErrorMessage, Label } from "../../../components/formElements";
+import { Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
-import {
-  BackButton,
-  ModalTitle,
-  ModalDescription,
-  HelperLink,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
 import { useIsHeadlessWallet } from "../../hooks/useIsHeadlessWallet";
-import { Steps } from "../../../components/Steps";
+// import { Steps } from "../../../components/Steps";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -29,8 +23,15 @@ import {
 } from "@thirdweb-dev/react-core";
 import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SafeWalletConfig } from "./types";
+import {
+  Container,
+  ModalHeader,
+  ScreenBottomContainer,
+} from "../../../components/basic";
+import { Link, Text } from "../../../components/text";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -104,273 +105,316 @@ export const SelectAccount: React.FC<{
   const disableNetworkSelection = supportedChains.length === 1;
 
   const switchChain = useSwitchChain();
+  const modalConfig = useContext(ModalConfigCtx);
 
   return (
-    <>
-      {props.renderBackButton && (
-        <>
-          <BackButton onClick={props.onBack} />
-          <Spacer y="md" />
-        </>
-      )}
-
-      <Img
-        src={props.safeWalletConfig.meta.iconURL}
-        width={iconSize.xl}
-        height={iconSize.xl}
-      />
-      <Spacer y="lg" />
-
-      <ModalTitle>Enter your Safe Address & Network </ModalTitle>
-      <Spacer y="md" />
-
-      <ModalDescription>
-        You can find your safe address in{" "}
-        <HelperLink
-          target="_blank"
-          href="https://app.safe.global/home"
-          style={{
-            display: "inline",
-          }}
-        >
-          Safe Dashboard
-        </HelperLink>
-      </ModalDescription>
-
-      <Spacer y="lg" />
-      <Steps step={2} />
-
-      <Spacer y="xl" />
-
+    <Container fullHeight flex="column" scrollY>
       <form
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
       >
-        {/* Select Safe Address */}
-        <FormField
-          name="safeAddress"
-          id="safeAddress"
-          errorMessage={
-            safeAddress && !isValidAddress ? "Invalid Safe Address" : undefined
-          }
-          autocomplete="on"
-          onChange={(value) => {
-            setSafeConnectError(false);
-            if (value.length > 4) {
-              const prefix = value.split(":")[0];
+        <Container p="lg">
+          <ModalHeader
+            title={props.safeWalletConfig.meta.name}
+            onBack={props.renderBackButton ? props.onBack : undefined}
+            imgSrc={props.safeWalletConfig.meta.iconURL}
+          />
+        </Container>
 
-              if (prefix && prefix in gnosisAddressPrefixToChainId) {
-                setSafeChainId(
-                  gnosisAddressPrefixToChainId[
-                    prefix as keyof typeof gnosisAddressPrefixToChainId
-                  ],
-                );
-                setSafeAddress(value.slice(prefix.length + 1));
+        <Container
+          expand
+          flex="column"
+          p="lg"
+          scrollY
+          style={{
+            paddingTop: 0,
+          }}
+        >
+          <Spacer y="md" />
+
+          <Text color="primaryText" size="lg" weight={500}>
+            Enter your safe details
+          </Text>
+          <Spacer y="sm" />
+
+          <ModalDescription>
+            You can find your safe address in{" "}
+            <Link
+              inline
+              target="_blank"
+              href="https://app.safe.global/home"
+              style={{
+                display: "inline",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Safe Dashboard
+            </Link>
+          </ModalDescription>
+
+          <Spacer y="xl" />
+
+          {/* Select Safe Address */}
+          <FormField
+            name="safeAddress"
+            id="safeAddress"
+            errorMessage={
+              safeAddress && !isValidAddress
+                ? "Invalid Safe Address"
+                : undefined
+            }
+            autocomplete="on"
+            onChange={(value) => {
+              setSafeConnectError(false);
+              if (value.length > 4) {
+                const prefix = value.split(":")[0];
+
+                if (prefix && prefix in gnosisAddressPrefixToChainId) {
+                  setSafeChainId(
+                    gnosisAddressPrefixToChainId[
+                      prefix as keyof typeof gnosisAddressPrefixToChainId
+                    ],
+                  );
+                  setSafeAddress(value.slice(prefix.length + 1));
+                } else {
+                  setSafeAddress(value);
+                }
               } else {
                 setSafeAddress(value);
               }
-            } else {
-              setSafeAddress(value);
-            }
-          }}
-          label="Safe Address"
-          type="text"
-          value={safeAddress}
-          required
-          placeholder="0x123..."
-        />
-
-        <Spacer y="lg" />
-
-        {/* Select Safe Netowrk */}
-        <Label htmlFor="safeNetwork">Safe Network</Label>
-        <Spacer y="xs" />
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
-          <NetworkSelect
-            data-error={supportedChains.length === 0}
+            }}
+            label="Safe Address"
+            type="text"
+            value={safeAddress}
             required
-            name="safeNetwork"
-            id="safeNetwork"
-            value={safeChainId}
-            disabled={disableNetworkSelection}
-            placeholder="Select Network your safe is deployed to"
-            onChange={(e) => {
-              setSafeConnectError(false);
-              setSwitchError(false);
-              setSafeChainId(Number(e.target.value));
-            }}
-          >
-            {!disableNetworkSelection && (
-              <option value="" hidden>
-                Select network your safe is deployed on
-              </option>
-            )}
+            placeholder="0x123..."
+          />
 
-            {useOptGroup ? (
-              <>
-                <optgroup label="Mainnets">
-                  {mainnets.map((chain) => {
-                    return (
-                      <option value={chain.chainId} key={chain.chainId}>
-                        {chain.name}
-                      </option>
-                    );
-                  })}
-                </optgroup>
+          <Spacer y="lg" />
 
-                <optgroup label="Testnets">
-                  {testnets.map((chain) => {
-                    return (
-                      <option value={chain.chainId} key={chain.chainId}>
-                        {chain.name}
-                      </option>
-                    );
-                  })}
-                </optgroup>
-              </>
-            ) : (
-              supportedChains.map((chain) => {
-                return (
-                  <option value={chain.chainId} key={chain.chainId}>
-                    {chain.name}
-                  </option>
-                );
-              })
-            )}
-          </NetworkSelect>
-          {!disableNetworkSelection && (
-            <StyledChevronDownIcon
-              width={iconSize.sm}
-              height={iconSize.sm}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: spacing.sm,
-                transform: "translateY(-50%)",
-                pointerEvents: "none",
-              }}
-            />
-          )}
-        </div>
-
-        {supportedChains.length === 0 && (
-          <>
-            <Spacer y="sm" />
-            <ErrorMessage>
-              {" "}
-              Can not use Safe: No Safe supported chains are configured in App
-            </ErrorMessage>
-          </>
-        )}
-
-        <Spacer y="sm" />
-
-        {safeConnectError && (
-          <ErrorMessage
+          {/* Select Safe Netowrk */}
+          <Label htmlFor="safeNetwork">Safe Network</Label>
+          <Spacer y="sm" />
+          <div
             style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              fontSize: fontSize.sm,
+              position: "relative",
             }}
           >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>
-              Could not connect to Safe. <br />
-              Make sure safe address and network are correct.
-            </span>
-          </ErrorMessage>
-        )}
-
-        {switchError && (
-          <ErrorMessage
-            style={{
-              display: "flex",
-              gap: spacing.sm,
-              alignItems: "center",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <ExclamationTriangleIcon width={iconSize.sm} height={iconSize.sm} />
-            <span>Failed to switch network.</span>
-          </ErrorMessage>
-        )}
-
-        <Spacer y="xl" />
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          {mismatch ? (
-            <Button
-              type="button"
-              variant="secondary"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-              }}
-              onClick={async () => {
-                if (!activeWallet) {
-                  throw new Error("No active wallet");
-                }
+            <NetworkSelect
+              data-error={supportedChains.length === 0}
+              required
+              name="safeNetwork"
+              id="safeNetwork"
+              value={safeChainId}
+              disabled={disableNetworkSelection}
+              placeholder="Network your safe is deployed to"
+              onChange={(e) => {
                 setSafeConnectError(false);
                 setSwitchError(false);
-                setSwitchingNetwork(true);
-                try {
-                  await switchChain(safeChainId);
-                } catch (e) {
-                  setSwitchError(true);
-                } finally {
-                  setSwitchingNetwork(false);
-                }
+                setSafeChainId(Number(e.target.value));
               }}
             >
-              {" "}
-              {switchingNetwork ? "Switching" : "Switch Network"}
-              {switchingNetwork && <Spinner size="sm" color="primary" />}
-            </Button>
-          ) : (
-            <Button
-              variant="inverted"
-              type="submit"
+              {!disableNetworkSelection && (
+                <option value="" hidden>
+                  Network your safe is deployed to
+                </option>
+              )}
+
+              {useOptGroup ? (
+                <>
+                  <optgroup label="Mainnets">
+                    {mainnets.map((chain) => {
+                      return (
+                        <option value={chain.chainId} key={chain.chainId}>
+                          {chain.name}
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+
+                  <optgroup label="Testnets">
+                    {testnets.map((chain) => {
+                      return (
+                        <option value={chain.chainId} key={chain.chainId}>
+                          {chain.name}
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+                </>
+              ) : (
+                supportedChains.map((chain) => {
+                  return (
+                    <option value={chain.chainId} key={chain.chainId}>
+                      {chain.name}
+                    </option>
+                  );
+                })
+              )}
+            </NetworkSelect>
+
+            {!disableNetworkSelection && (
+              <StyledChevronDownIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  right: spacing.sm,
+                  transform: "translateY(-50%)",
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+          </div>
+
+          <Spacer y="sm" />
+
+          {supportedChains.length === 0 && (
+            <>
+              <Text color="danger" multiline size="xs">
+                {" "}
+                Can not use Safe: No Safe supported chains are configured in App
+              </Text>
+              <Spacer y="sm" />
+            </>
+          )}
+
+          {safeConnectError && (
+            <Text
+              size="xs"
+              multiline
+              color="danger"
               style={{
                 display: "flex",
-                alignItems: "center",
                 gap: spacing.sm,
+                alignItems: "center",
               }}
             >
-              {connectionStatus === "connecting"
-                ? "Connecting"
-                : "Connect to Safe"}
-              {connectionStatus === "connecting" && (
-                <Spinner size="sm" color="inverted" />
-              )}
-            </Button>
+              <ExclamationTriangleIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+              />
+              <span>
+                Could not connect to Safe. <br />
+                Make sure safe address and network are correct.
+              </span>
+            </Text>
           )}
-        </div>
-        {switchingNetwork && requiresConfirmation && (
-          <ConfirmMessage> Confirm in your wallet </ConfirmMessage>
-        )}
+
+          {switchError && (
+            <Text color="danger" size="sm">
+              <Container flex="row" gap="sm" center="y">
+                <ExclamationTriangleIcon
+                  width={iconSize.sm}
+                  height={iconSize.sm}
+                />
+                Failed to switch network
+              </Container>
+            </Text>
+          )}
+        </Container>
+
+        <ScreenBottomContainer
+          style={{
+            borderTop: modalConfig.modalSize === "wide" ? "none" : undefined,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              {mismatch ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: spacing.sm,
+                    width:
+                      modalConfig.modalSize === "compact" ? "100%" : undefined,
+                  }}
+                  onClick={async () => {
+                    if (!activeWallet) {
+                      throw new Error("No active wallet");
+                    }
+                    setSafeConnectError(false);
+                    setSwitchError(false);
+                    setSwitchingNetwork(true);
+                    try {
+                      await switchChain(safeChainId);
+                    } catch (e) {
+                      setSwitchError(true);
+                    } finally {
+                      setSwitchingNetwork(false);
+                    }
+                  }}
+                >
+                  {" "}
+                  {switchingNetwork ? "Switching" : "Switch Network"}
+                  {switchingNetwork && <Spinner size="sm" color="accentText" />}
+                </Button>
+              ) : (
+                <Button
+                  variant="accent"
+                  type="submit"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: spacing.sm,
+                    width:
+                      modalConfig.modalSize === "compact" ? "100%" : undefined,
+                  }}
+                >
+                  {connectionStatus === "connecting"
+                    ? "Connecting"
+                    : "Connect to Safe"}
+                  {connectionStatus === "connecting" && (
+                    <Spinner size="sm" color="primaryText" />
+                  )}
+                </Button>
+              )}
+            </div>
+
+            {switchingNetwork && requiresConfirmation && (
+              <>
+                <Spacer y="md" />
+                <Container
+                  flex="row"
+                  style={
+                    modalConfig.modalSize === "compact"
+                      ? {
+                          justifyContent: "center",
+                        }
+                      : {
+                          justifyContent: "flex-end",
+                        }
+                  }
+                >
+                  <Text size="sm" color="accentText">
+                    {" "}
+                    Confirm in your wallet{" "}
+                  </Text>
+                </Container>
+              </>
+            )}
+          </div>
+        </ScreenBottomContainer>
       </form>
-    </>
+    </Container>
   );
 };
-
-const ConfirmMessage = styled.p<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.link.primary};
-  text-align: right;
-`;
 
 const NetworkSelect = styled.select<{ theme?: Theme }>`
   width: 100%;
@@ -379,21 +423,21 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
   outline: none;
   border: none;
   border-radius: 6px;
-  color: ${(p) => p.theme.text.neutral};
-  background: transparent;
+  color: ${(p) => p.theme.colors.primaryText};
+  background: none;
   font-size: ${fontSize.md};
-  box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.outline};
+  box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.secondaryButtonBg};
   appearance: none;
 
   &:focus {
-    box-shadow: 0 0 0 2px ${(p) => p.theme.input.focusRing};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.colors.accentText};
   }
 
   &:invalid {
-    color: ${(p) => p.theme.text.secondary};
+    color: ${(p) => p.theme.colors.secondaryText};
   }
   &[data-error="true"] {
-    box-shadow: 0 0 0 1.5px ${(p) => p.theme.input.errorRing};
+    box-shadow: 0 0 0 1.5px ${(p) => p.theme.colors.danger};
   }
 
   &[disabled] {
@@ -405,5 +449,5 @@ const NetworkSelect = styled.select<{ theme?: Theme }>`
 const StyledChevronDownIcon = /* @__PURE__ */ styled(ChevronDownIcon)<{
   theme?: Theme;
 }>`
-  color: ${(p) => p.theme.icon.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
 `;

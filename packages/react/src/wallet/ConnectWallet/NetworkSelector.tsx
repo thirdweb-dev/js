@@ -1,44 +1,36 @@
-import { ThemeProvider } from "@emotion/react";
 import { ChainIcon } from "../../components/ChainIcon";
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
 import { Spinner } from "../../components/Spinner";
 import { Input } from "../../components/formElements";
 import {
-  darkTheme,
   fontSize,
   iconSize,
-  lightTheme,
   media,
   radius,
   spacing,
   Theme,
+  ThemeObjectOrType,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
-  ThirdwebThemeContext,
   useChainId,
   useSupportedChains,
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
-import {
-  memo,
-  useCallback,
-  useContext,
-  useDeferredValue,
-  useMemo,
-  useState,
-} from "react";
+import { memo, useCallback, useDeferredValue, useMemo, useState } from "react";
 import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
-import { isMobile } from "../../evm/utils/isMobile";
 import { useEffect } from "react";
-import { Flex } from "../../components/basic";
-import { SecondaryText } from "../../components/text";
+import { Flex, ScreenContainer } from "../../components/basic";
+import { Text } from "../../components/text";
+import { ModalTitle } from "../../components/modalElements";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { useTheme } from "@emotion/react";
 
 type RenderChain = React.FC<{
   chain: Chain;
@@ -49,7 +41,7 @@ type RenderChain = React.FC<{
 }>;
 
 export type NetworkSelectorProps = {
-  theme?: "dark" | "light";
+  theme: "dark" | "light" | Theme;
   onClose?: () => void;
   chains?: Chain[];
   popularChains?: Chain[];
@@ -76,8 +68,8 @@ const fuseConfig = {
 export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
-  const themeFromProvider = useContext(ThirdwebThemeContext);
-  const theme = props.theme || themeFromProvider || "dark";
+  const themeFromContext = useTheme() as ThemeObjectOrType;
+  const theme = props.theme || themeFromContext || "dark";
   const supportedChains = useSupportedChains();
   const chains = props.chains || supportedChains;
 
@@ -142,146 +134,145 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
   );
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+    <CustomThemeProvider theme={theme}>
       <Modal
+        size={"compact"}
         open={true}
         setOpen={(value) => {
           if (!value && onClose) {
             onClose();
           }
         }}
-        title="Select Network"
         style={{
-          maxWidth: "480px",
           paddingBottom: props.onCustomClick ? spacing.md : "0px",
         }}
       >
-        <Spacer y="xl" />
+        <ScreenContainer>
+          <ModalTitle>Select Network</ModalTitle>
+          <Spacer y="xl" />
 
-        <Tabs.Root className="TabsRoot" defaultValue="all">
-          <Tabs.List
-            className="TabsList"
-            aria-label="Manage your account"
-            style={{
-              display: "flex",
-              gap: spacing.xxs,
-            }}
-          >
-            <TabButton className="TabsTrigger" value="all">
-              All
-            </TabButton>
-            <TabButton className="TabsTrigger" value="mainnet">
-              Mainnets
-            </TabButton>
-            <TabButton className="TabsTrigger" value="testnet">
-              Testnets
-            </TabButton>
-          </Tabs.List>
-
-          <Spacer y="lg" />
-
-          {/* Search */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            <StyledMagnifyingGlassIcon
-              width={iconSize.md}
-              height={iconSize.md}
-            />
-
-            <SearchInput
+          <Tabs.Root className="TabsRoot" defaultValue="all">
+            <Tabs.List
+              className="TabsList"
+              aria-label="Manage your account"
               style={{
-                boxShadow: "none",
+                display: "flex",
+                gap: spacing.xxs,
               }}
-              tabIndex={isMobile() ? -1 : 0}
-              variant="secondary"
-              placeholder="Search Network or Chain ID"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-            />
+            >
+              <TabButton className="TabsTrigger" value="all">
+                All
+              </TabButton>
+              <TabButton className="TabsTrigger" value="mainnet">
+                Mainnets
+              </TabButton>
+              <TabButton className="TabsTrigger" value="testnet">
+                Testnets
+              </TabButton>
+            </Tabs.List>
 
-            {/* Searching Spinner */}
-            {deferredSearchTerm !== searchTerm && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: spacing.md,
+            <Spacer y="lg" />
+
+            {/* Search */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <StyledMagnifyingGlassIcon
+                width={iconSize.md}
+                height={iconSize.md}
+              />
+
+              <SearchInput
+                tabIndex={-1}
+                variant="outline"
+                placeholder="Search Network or Chain ID"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
                 }}
-              >
-                <Spinner size="md" color="link" />
-              </div>
+              />
+
+              {/* Searching Spinner */}
+              {deferredSearchTerm !== searchTerm && (
+                <div
+                  style={{
+                    position: "absolute",
+                    right: spacing.md,
+                  }}
+                >
+                  <Spinner size="md" color="accentText" />
+                </div>
+              )}
+            </div>
+
+            <Spacer y="lg" />
+
+            <Tabs.Content className="TabsContent" value="all">
+              <NetworkTab
+                allChains={allChains}
+                type="all"
+                popularChains={popularChains}
+                recentChains={recentChains}
+                onSwitch={handleSwitch}
+                renderChain={props.renderChain}
+                close={props.onClose}
+              />
+            </Tabs.Content>
+
+            <Tabs.Content className="TabsContent" value="mainnet">
+              <NetworkTab
+                allChains={allChains}
+                type="mainnet"
+                popularChains={popularChains}
+                recentChains={recentChains}
+                onSwitch={handleSwitch}
+                renderChain={props.renderChain}
+                close={props.onClose}
+              />
+            </Tabs.Content>
+
+            <Tabs.Content className="TabsContent" value="testnet">
+              <NetworkTab
+                allChains={allChains}
+                type="testnet"
+                popularChains={popularChains}
+                recentChains={recentChains}
+                onSwitch={handleSwitch}
+                renderChain={props.renderChain}
+                close={props.onClose}
+              />
+            </Tabs.Content>
+
+            {onCustomClick && (
+              <>
+                <Spacer y="sm" />
+                <Button
+                  fullWidth
+                  variant="link"
+                  onClick={() => {
+                    onCustomClick();
+                    if (onClose) {
+                      onClose();
+                    }
+                  }}
+                  style={{
+                    display: "flex",
+                    fontSize: fontSize.sm,
+                    boxShadow: "none",
+                  }}
+                >
+                  Add Custom Network
+                </Button>
+              </>
             )}
-          </div>
-
-          <Spacer y="lg" />
-
-          <Tabs.Content className="TabsContent" value="all">
-            <NetworkTab
-              allChains={allChains}
-              type="all"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content className="TabsContent" value="mainnet">
-            <NetworkTab
-              allChains={allChains}
-              type="mainnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content className="TabsContent" value="testnet">
-            <NetworkTab
-              allChains={allChains}
-              type="testnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
-              onSwitch={handleSwitch}
-              renderChain={props.renderChain}
-              close={props.onClose}
-            />
-          </Tabs.Content>
-
-          {onCustomClick && (
-            <>
-              <Spacer y="sm" />
-              <Button
-                variant="link"
-                onClick={() => {
-                  onCustomClick();
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  fontSize: fontSize.sm,
-                  boxShadow: "none",
-                }}
-              >
-                Add Custom Network
-              </Button>
-            </>
-          )}
-        </Tabs.Root>
+          </Tabs.Root>
+        </ScreenContainer>
       </Modal>
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 };
 
@@ -430,7 +421,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
         }}
       >
         {/* Don't put a spinner here - it's gonna freeze */}
-        <SecondaryText>Loading</SecondaryText>
+        <Text>Loading</Text>
       </Flex>
     );
   }
@@ -492,7 +483,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                     {confirming && (
                       <>
                         <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
-                        <Spinner size="sm" color="link" />
+                        <Spinner size="sm" color="accentText" />
                       </>
                     )}
 
@@ -520,7 +511,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
   all: unset;
   font-size: ${fontSize.md};
   font-weight: 500;
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   cursor: pointer;
   padding: ${spacing.sm} ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
@@ -529,14 +520,14 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
     background 0.2s ease,
     color 0.2s ease;
   &[data-state="active"] {
-    background: ${(p) => p.theme.bg.elevated};
-    color: ${(p) => p.theme.text.neutral};
+    background: ${(p) => p.theme.colors.secondaryButtonBg};
+    color: ${(p) => p.theme.colors.primaryText};
   }
 `;
 
 const SectionLabel = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   margin: 0;
 `;
 
@@ -551,8 +542,8 @@ const ScrollContainer = styled.div<{ theme?: Theme }>`
   ${(p) =>
     scrollbar({
       track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
+      thumb: p.theme.colors.scrollbarBg,
+      hover: p.theme.colors.scrollbarBg,
     })}
 `;
 
@@ -577,12 +568,12 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   border-radius: ${radius.md};
   cursor: pointer;
   transition: background 0.2s ease;
-  background: ${(p) => p.theme.bg.elevated};
-  color: ${(p) => p.theme.text.neutral};
+  background: ${(p) => p.theme.colors.secondaryButtonBg};
+  color: ${(p) => p.theme.colors.primaryText};
   font-weight: 600;
   font-size: ${fontSize.md};
   &:hover {
-    background: ${(p) => p.theme.bg.highlighted};
+    background: ${(p) => p.theme.colors.secondaryButtonHoverBg};
   }
 
   ${media.mobile} {
@@ -593,7 +584,7 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
   theme?: Theme;
 }>`
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   position: absolute;
   left: 18px;
 `;
@@ -604,10 +595,10 @@ const SearchInput = /* @__PURE__ */ styled(Input)<{ theme?: Theme }>`
 
 const ConfirmMessage = styled.div<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.link.primary};
+  color: ${(p) => p.theme.colors.accentText};
 `;
 
 const ErrorMessage = styled.div<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.text.danger};
+  color: ${(p) => p.theme.colors.danger};
 `;

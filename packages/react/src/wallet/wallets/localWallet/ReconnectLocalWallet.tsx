@@ -1,10 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
@@ -13,12 +10,13 @@ import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
 import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWalletModalHeader } from "./common";
-import { SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
+import { ScreenContainer } from "../../../components/basic";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -125,22 +123,14 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   };
 
   return (
-    <>
+    <ScreenContainer>
       <LocalWalletModalHeader
         onBack={props.goBack}
         meta={meta}
         hideBack={!props.renderBackButton}
+        title="Guest Wallet"
       />
 
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Guest Wallet
-      </ModalTitle>
-
-      <Spacer y="xs" />
       <ModalDescription>
         Connect to saved wallet on your device
       </ModalDescription>
@@ -151,9 +141,9 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Spacer y="sm" />
 
-      <SecondaryText>
+      <Text>
         {savedAddress === "" ? "Loading..." : shortenAddress(savedAddress)}
-      </SecondaryText>
+      </Text>
 
       <Spacer y="xl" />
 
@@ -199,16 +189,16 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
         {/* Connect Button */}
         <Button
-          variant="inverted"
+          variant="accent"
           type="submit"
+          fullWidth
           style={{
             display: "flex",
             gap: spacing.sm,
-            width: "100%",
           }}
         >
           Connect
-          {isConnecting && <Spinner size="sm" color="inverted" />}
+          {isConnecting && <Spinner size="sm" color="accentButtonText" />}
         </Button>
       </form>
 
@@ -216,9 +206,9 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Button
         variant="link"
+        fullWidth
         style={{
           textAlign: "center",
-          width: "100%",
           padding: "2px",
         }}
         onClick={() => {
@@ -227,6 +217,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       >
         Create a new wallet
       </Button>
-    </>
+    </ScreenContainer>
   );
 };

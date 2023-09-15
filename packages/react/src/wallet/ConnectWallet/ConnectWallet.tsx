@@ -1,8 +1,11 @@
-import { darkTheme, iconSize, lightTheme, spacing } from "../../design-system";
-import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
-import { ThemeProvider } from "@emotion/react";
 import {
-  ThirdwebThemeContext,
+  Theme,
+  ThemeObjectOrType,
+  iconSize,
+  spacing,
+} from "../../design-system";
+import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
+import {
   useAddress,
   useConnectionStatus,
   useLogin,
@@ -13,6 +16,7 @@ import {
   useUser,
   useWallet,
   useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import { useContext, useState } from "react";
 import {
@@ -28,14 +32,20 @@ import { Flex } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
 import type { NetworkSelectorProps } from "./NetworkSelector";
+import { defaultModalTitle } from "./constants";
+import { isMobile } from "../../evm/utils/isMobile";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { WelcomeScreen } from "./screens/types";
+import { useTheme } from "@emotion/react";
 
-type ConnectWalletProps = {
+export type ConnectWalletProps = {
   className?: string;
-  theme?: "dark" | "light";
+  theme?: "dark" | "light" | Theme;
+
   btnTitle?: string;
   /**
    * Set a custom title for the modal
-   * @default "Choose your wallet"
+   * @default "Connect"
    */
   modalTitle?: string;
   /**
@@ -48,7 +58,9 @@ type ConnectWalletProps = {
     onLogin?: (token: string) => void;
     onLogout?: () => void;
   };
+
   style?: React.CSSProperties;
+
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
 
   /**
@@ -68,6 +80,34 @@ type ConnectWalletProps = {
    * @default false
    */
   switchToActiveChain?: boolean;
+
+  /**
+   * Set the size of the modal - `compact` or `wide` on desktop
+   *
+   * Modal size is always `compact` on mobile
+   *
+   * @default "wide"
+   */
+  modalSize?: "compact" | "wide";
+
+  /**
+   * If provided, Modal will show a Terms of Service message at the bottom with below link
+   */
+  termsOfServiceUrl?: string;
+
+  /**
+   * If provided, Modal will show a Privacy Policy message at the bottom with below link
+   */
+  privacyPolicyUrl?: string;
+
+  /**
+   * Customize the welcome screen
+   *
+   * Either provide a component to replace the default screen entirely
+   *
+   * or an object with title, subtitle and imgSrc to change the content of the default screen
+   */
+  welcomeScreen?: WelcomeScreen;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -79,10 +119,11 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const activeWallet = useWallet();
-  const themeFromProvider = useContext(ThirdwebThemeContext);
-  const theme = props.theme || themeFromProvider || "dark";
+  const contextTheme = useTheme() as ThemeObjectOrType;
+  const theme = props.theme || contextTheme || "dark";
   const connectionStatus = useConnectionStatus();
 
+  const walletConfigs = useWallets();
   const isLoading =
     connectionStatus === "connecting" || connectionStatus === "unknown";
 
@@ -116,7 +157,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   };
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+    <CustomThemeProvider theme={theme}>
       {showSignatureModal && (
         <SignatureModal
           open={showSignatureModal}
@@ -134,7 +175,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               className={`${props.className || ""} ${TW_CONNECT_WALLET}`}
               data-theme={theme}
               data-is-loading={isLoading}
-              variant="inverted"
+              variant="primary"
               type="button"
               style={{
                 minWidth: "140px",
@@ -144,16 +185,30 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 connectionStatus === "connecting" ? "Connecting" : btnTitle
               }
               onClick={() => {
+                let modalSize = props.modalSize || "wide";
+
+                if (isMobile() || walletConfigs.length === 1) {
+                  modalSize = "compact";
+                }
+
                 setModalConfig({
-                  title: props.modalTitle || "Choose your wallet",
+                  title: props.modalTitle || defaultModalTitle,
                   theme,
                   data: undefined,
+                  modalSize,
+                  termsOfServiceUrl: props.termsOfServiceUrl,
+                  privacyPolicyUrl: props.privacyPolicyUrl,
+                  welcomeScreen: props.welcomeScreen,
                 });
                 setIsWalletModalOpen(true);
               }}
               data-test="connect-wallet-button"
             >
-              {isLoading ? <Spinner size="sm" color="inverted" /> : btnTitle}
+              {isLoading ? (
+                <Spinner size="sm" color="primaryButtonText" />
+              ) : (
+                btnTitle
+              )}
             </AnimatedButton>
           );
         }
@@ -167,7 +222,6 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           return (
             <SwitchNetworkButton
               style={props.style}
-              theme={theme}
               className={props.className}
             />
           );
@@ -177,7 +231,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         else if (requiresSignIn) {
           return (
             <Button
-              variant="inverted"
+              variant="primary"
               onClick={signIn}
               data-theme={theme}
               className={`${TW_CONNECT_WALLET}--sign-in ${
@@ -206,10 +260,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         // wallet details button
         return (
           <ConnectedWalletDetails
+            theme={theme}
             networkSelector={props.networkSelector}
             dropdownPosition={props.dropdownPosition}
             className={props.className}
-            theme={theme}
             style={props.style}
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
@@ -222,14 +276,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           />
         );
       })()}
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 };
 
 function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
-  theme: "dark" | "light";
 }) {
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
@@ -240,9 +293,8 @@ function SwitchNetworkButton(props: {
       className={`${TW_CONNECT_WALLET}--switch-network ${
         props.className || ""
       }`}
-      variant="inverted"
+      variant="primary"
       type="button"
-      data-theme={props.theme}
       data-is-loading={switching}
       data-test="switch-network-button"
       disabled={switching}
@@ -261,7 +313,11 @@ function SwitchNetworkButton(props: {
       }}
       aria-label={switching ? "Switching Network" : undefined}
     >
-      {switching ? <Spinner size="sm" color="inverted" /> : "Switch Network"}
+      {switching ? (
+        <Spinner size="sm" color="primaryButtonText" />
+      ) : (
+        "Switch Network"
+      )}
     </AnimatedButton>
   );
 }

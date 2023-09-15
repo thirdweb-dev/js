@@ -1,12 +1,14 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
+import { Flex } from "../../components/basic";
+import { Spinner } from "../../components/Spinner";
 
 export const HeadlessConnectUI = ({
   close,
   walletConfig,
   open,
   supportedWallets,
-}: ConnectUIProps) => {
+}: ConnectUIProps<any>) => {
   const connect = useConnect();
   const prompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
@@ -30,5 +32,15 @@ export const HeadlessConnectUI = ({
     })();
   }, [walletConfig, connect, close, open, singleWallet]);
 
-  return null;
+  return (
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      style={{
+        minHeight: "250px",
+      }}
+    >
+      <Spinner size="md" color="primaryText" />
+    </Flex>
+  );
 };

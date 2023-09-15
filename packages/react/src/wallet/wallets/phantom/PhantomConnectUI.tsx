@@ -1,18 +1,34 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { PhantomWallet } from "@thirdweb-dev/wallets";
+import { wait } from "../../../utils/wait";
 
 export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   const [screen, setScreen] = useState<"connecting" | "get-started">(
     "connecting",
   );
   const { walletConfig, close } = props;
+  const [errorConnecting, setErrorConnecting] = useState(false);
   const connect = useConnect();
 
   const hideBackButton = props.supportedWallets.length === 1;
   const { goBack } = props;
+
+  const connectToExtension = useCallback(async () => {
+    try {
+      connectPrompted.current = true;
+      setScreen("connecting");
+      setErrorConnecting(false);
+      await wait(1000);
+      await connect(walletConfig);
+      close();
+    } catch (e) {
+      setErrorConnecting(true);
+      console.error(e);
+    }
+  }, [walletConfig, close, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -26,14 +42,7 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
 
     (async () => {
       if (isInstalled) {
-        try {
-          connectPrompted.current = true;
-          setScreen("connecting");
-          await connect(walletConfig);
-          close();
-        } catch (e) {
-          goBack();
-        }
+        connectToExtension();
       }
 
       // if phantom is not injected
@@ -41,7 +50,7 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
         setScreen("get-started");
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [walletConfig, close, connect, goBack, connectToExtension]);
 
   if (screen === "connecting") {
     return (
@@ -50,7 +59,13 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://help.phantom.app"
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        onRetry={() => {
+          connectToExtension();
+        }}
+        errorConnecting={errorConnecting}
       />
     );
   }

@@ -42,7 +42,7 @@ import {
 import { useState } from "react";
 import { fadeInAnimation } from "../../components/FadeIn";
 import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
-import { Flex } from "../../components/basic";
+import { Flex, ScreenContainer } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
@@ -60,12 +60,12 @@ const TW_CONNECTED_WALLET = "tw-connected-wallet";
 export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
-  theme: "dark" | "light";
   style?: React.CSSProperties;
   networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
+  theme: "light" | "dark" | Theme;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -107,7 +107,6 @@ export const ConnectedWalletDetails: React.FC<{
     <WalletInfoButton
       type="button"
       className={`${TW_CONNECTED_WALLET} ${props.className || ""}`}
-      data-theme={props.theme}
       style={props.style}
       data-test="connected-wallet-details"
     >
@@ -221,7 +220,6 @@ export const ConnectedWalletDetails: React.FC<{
             >
               <AccountAddress> {shortenString(address || "")}</AccountAddress>
               <IconButton
-                variant="secondary"
                 style={{
                   padding: "3px",
                 }}
@@ -243,7 +241,6 @@ export const ConnectedWalletDetails: React.FC<{
             >
               <DisconnectIconButton
                 type="button"
-                variant="secondary"
                 onClick={() => {
                   disconnect();
                   props.onDisconnect();
@@ -389,6 +386,7 @@ export const ConnectedWalletDetails: React.FC<{
     <>
       {isMobile() ? (
         <Modal
+          size={"compact"}
           trigger={trigger}
           open={open}
           setOpen={setOpen}
@@ -396,10 +394,10 @@ export const ConnectedWalletDetails: React.FC<{
         >
           <div
             style={{
-              minHeight: "200px",
+              minHeight: "220px",
             }}
           >
-            {content}
+            <ScreenContainer>{content}</ScreenContainer>
           </div>
         </Modal>
       ) : (
@@ -428,13 +426,7 @@ export const ConnectedWalletDetails: React.FC<{
       )}
 
       {showExportModal && (
-        <Modal
-          open={true}
-          setOpen={setShowExportModal}
-          style={{
-            maxWidth: "480px",
-          }}
-        >
+        <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
           <ExportLocalWallet
             localWalletConfig={activeWalletConfig as LocalWalletConfig}
             onBack={() => {
@@ -464,23 +456,24 @@ const dropdownContentFade = keyframes`
 const DropDownContent = /* @__PURE__ */ styled(
   /* @__PURE__ */ DropdownMenu.Content,
 )<{ theme?: Theme }>`
-  width: 360px;
+  width: 320px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};
   padding: ${spacing.lg};
   animation: ${dropdownContentFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.border.base};
-  background-color: ${(props) => props.theme.bg.base};
+  border: 1px solid ${(props) => props.theme.colors.borderColor};
+  background-color: ${(props) => props.theme.colors.dropdownBg};
+  --bg: ${(props) => props.theme.colors.dropdownBg};
   z-index: 1000000;
   line-height: 1;
 `;
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
-  background: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.border.base};
+  background: ${(props) => props.theme.colors.connectedButtonBg};
+  border: 1px solid ${(props) => props.theme.colors.borderColor};
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.lg};
   cursor: pointer;
@@ -503,13 +496,12 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
 
   &:hover {
     transition: background 250ms ease;
-    background: ${(props) => props.theme.bg.baseHover};
-    border-color: ${(props) => props.theme.bg.highlighted};
+    background: ${(props) => props.theme.colors.connectedButtonBgHover};
   }
 `;
 
 const WalletAddress = styled.span<{ theme?: Theme }>`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   font-size: ${fontSize.xs};
   font-weight: 500;
 `;
@@ -520,26 +512,26 @@ const ColFlex = styled.div<{ theme?: Theme }>`
 `;
 
 const WalletBalance = styled.span<{ theme?: Theme }>`
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.colors.primaryText};
   font-size: ${fontSize.sm};
   font-weight: 500;
 `;
 
 const AccountAddress = styled.span<{ theme?: Theme }>`
   font-size: ${fontSize.md};
-  color: ${(props) => props.theme.text.neutral};
+  color: ${(props) => props.theme.colors.primaryText};
   font-weight: 500;
 `;
 
 const AccountBalance = styled.span<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   font-weight: 500;
 `;
 
 const DropdownLabel = styled.label<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   font-weight: 500;
 `;
 
@@ -547,8 +539,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   all: unset;
   padding: ${spacing.sm} ${spacing.sm};
   border-radius: ${radius.md};
-  background-color: ${(props) => props.theme.bg.base};
-  border: 1px solid ${(props) => props.theme.border.elevated};
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.colors.borderColor};
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -556,7 +548,7 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   font-size: ${fontSize.md};
   font-weight: 500;
-  color: ${(props) => props.theme.text.neutral} !important;
+  color: ${(props) => props.theme.colors.primaryText} !important;
   gap: ${spacing.sm};
   -webkit-tap-highlight-color: transparent;
   line-height: 1.3;
@@ -565,8 +557,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     transition:
       box-shadow 250ms ease,
       border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.link.primary};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.link.primary};
+    border: 1px solid ${(props) => props.theme.colors.accentText};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.accentText};
   }
 
   &[disabled] {
@@ -580,8 +572,8 @@ const MenuButton = styled.button<{ theme?: Theme }>`
     transition:
       box-shadow 250ms ease,
       border-color 250ms ease;
-    border: 1px solid ${(props) => props.theme.text.danger};
-    box-shadow: 0 0 0 1px ${(props) => props.theme.text.danger};
+    border: 1px solid ${(props) => props.theme.colors.danger};
+    box-shadow: 0 0 0 1px ${(props) => props.theme.colors.danger};
   }
 `;
 
@@ -598,7 +590,7 @@ export const StyledChevronRightIcon = /* @__PURE__ */ styled(
 )<{
   theme?: Theme;
 }>`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
 `;
 
 const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
@@ -606,9 +598,9 @@ const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
 }>`
   margin-right: -${spacing.xxs};
   margin-left: auto;
-  color: ${(props) => props.theme.icon.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
   &:hover {
-    color: ${(props) => props.theme.icon.danger};
+    color: ${(props) => props.theme.colors.danger};
     background: none;
   }
 `;
@@ -617,7 +609,7 @@ const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.icon.secondary};
+  color: ${(props) => props.theme.colors.secondaryText};
 `;
 
 function WalletSwitcher({

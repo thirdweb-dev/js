@@ -10,7 +10,7 @@ import {
   ModalTitle,
 } from "../../../components/modalElements";
 import { Spacer } from "../../../components/Spacer";
-import { Flex } from "../../../components/basic";
+import { Flex, ScreenContainer } from "../../../components/basic";
 import { ButtonLink } from "../../ConnectWallet/screens/GetStartedScreen";
 import { Img } from "../../../components/Img";
 import { iconSize } from "../../../design-system";
@@ -22,7 +22,7 @@ const FrameFailedConnect: React.FC<{
   supportLink: string;
 }> = (props) => {
   return (
-    <>
+    <ScreenContainer>
       <BackButton onClick={() => props.onBack()} />
       <Spacer y="lg" />
       {
@@ -30,7 +30,7 @@ const FrameFailedConnect: React.FC<{
           <ModalTitle>Failed to connect to Frame.</ModalTitle>
           <Spacer y="sm" />
 
-          <ModalDescription>
+          <ModalDescription sm>
             Make sure the desktop app is installed and running. You can download
             Frame from the link below. Make sure to refresh this page once Frame
             is running.
@@ -56,7 +56,7 @@ const FrameFailedConnect: React.FC<{
       <HelperLink target="_blank" href={props.supportLink}>
         Still having troubles connecting?
       </HelperLink>
-    </>
+    </ScreenContainer>
   );
 };
 
@@ -100,11 +100,17 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        errorConnecting={false}
+        onRetry={() => {
+          // NOOP
+        }}
+        onGetStarted={() => {
+          // NOOP - TODO
+        }}
         hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink={supportLink}
       />
     );
   }

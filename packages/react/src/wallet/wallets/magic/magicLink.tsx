@@ -2,40 +2,103 @@ import { MagicLink, MagicLinkAdditionalOptions } from "@thirdweb-dev/wallets";
 import {
   ConnectUIProps,
   SelectUIProps,
+  WalletConfig,
   WalletOptions,
   useConnect,
 } from "@thirdweb-dev/react-core";
 import type { ConfiguredMagicLinkWallet } from "./types";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { Spinner } from "../../../components/Spinner";
-import { Flex } from "../../../components/basic";
+import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { Img } from "../../../components/Img";
 import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { Button, IconButton } from "../../../components/buttons";
 import { ToolTip } from "../../../components/Tooltip";
-import { Spacer } from "../../../components/Spacer";
 import styled from "@emotion/styled";
+import { WalletEntryButton } from "../../ConnectWallet/WalletSelector";
+import {
+  emailAndPhoneIcon,
+  emailIcon,
+  phoneIcon,
+} from "../../ConnectWallet/icons/dataUris";
 
 export function magicLink(
-  config: MagicLinkAdditionalOptions,
+  config: MagicLinkAdditionalOptions & {
+    /**
+     * If true, the wallet will be tagged as "reccomended" in ConnectWallet Modal
+     */
+    recommended?: boolean;
+  },
 ): ConfiguredMagicLinkWallet {
-  const selectUI = (props: SelectUIProps<MagicLink>) => (
-    <MagicSelectionUI
-      {...props}
-      emailLogin={config.emailLogin !== false}
-      smsLogin={config.smsLogin !== false}
-      oauthProviders={config.oauthOptions?.providers}
-    />
-  );
+  const emailLoginEnabled = config.emailLogin !== false;
+  const smsLoginEnabled = config.smsLogin !== false;
+  const oauthProviders = config.oauthOptions?.providers;
+
+  const selectUI = (props: SelectUIProps<MagicLink>) => {
+    if (props.modalSize === "wide") {
+      return (
+        <WalletEntryButton
+          walletConfig={props.walletConfig}
+          selectWallet={() => props.onSelect(undefined)}
+        />
+      );
+    }
+
+    return (
+      <MagicUI
+        {...props}
+        emailLogin={emailLoginEnabled}
+        smsLogin={smsLoginEnabled}
+        oauthProviders={oauthProviders}
+        showOrSeparator={props.supportedWallets.length > 1}
+      />
+    );
+  };
+
+  const type = config.type || "auth";
+
+  let icon = emailAndPhoneIcon;
+  let iconText = "Email or phone";
+
+  if (emailLoginEnabled && !smsLoginEnabled) {
+    icon = emailIcon;
+    iconText = "Email";
+  }
+
+  if (!emailLoginEnabled && smsLoginEnabled) {
+    icon = phoneIcon;
+    iconText = "Phone number";
+  }
+
+  if (!emailLoginEnabled && !smsLoginEnabled) {
+    iconText = "Social login";
+  }
 
   return {
+    category: "socialLogin",
     id: MagicLink.id,
-    meta: MagicLink.meta,
+    recommended: config?.recommended,
+    meta: {
+      ...MagicLink.meta,
+      name: iconText,
+      iconURL: icon,
+    },
     create: (options: WalletOptions) =>
       new MagicLink({ ...options, ...config }),
     connectUI(props) {
-      return <MagicConnectionUI {...props} type={config.type || "auth"} />;
+      if (props.modalSize === "wide") {
+        return (
+          <MagicConnectionUIWide
+            {...props}
+            type={type}
+            emailLogin={emailLoginEnabled}
+            smsLogin={smsLoginEnabled}
+            oauthProviders={oauthProviders}
+          />
+        );
+      }
+      return <MagicConnectionUICompact {...props} type={type} />;
     },
     // select UI only for auth
     selectUI: config.type === "connect" ? undefined : selectUI,
@@ -50,13 +113,16 @@ type OuthProvider = Exclude<
   undefined
 >["providers"][number];
 
-const MagicSelectionUI: React.FC<
-  SelectUIProps<MagicLink> & {
-    emailLogin: boolean;
-    smsLogin: boolean;
-    oauthProviders?: OuthProvider[];
-  }
-> = (props) => {
+type SelectionData = string | { provider: OuthProvider };
+
+const MagicUI: React.FC<{
+  onSelect: (selection: string | { provider: OuthProvider }) => void;
+  showOrSeparator: boolean;
+  emailLogin: boolean;
+  smsLogin: boolean;
+  oauthProviders?: OuthProvider[];
+  modalSize: "compact" | "wide";
+}> = (props) => {
   const isEmailEnabled = props.emailLogin !== false;
   const isSMSEnabled = props.smsLogin !== false;
 
@@ -79,10 +145,69 @@ const MagicSelectionUI: React.FC<
     );
   }
 
-  const noInput = !isEmailEnabled && !isSMSEnabled;
+  const socialIconSize =
+    props.modalSize === "compact" ? iconSize.md : iconSize.lg;
 
   return (
-    <>
+    <Flex
+      flexDirection="column"
+      gap={props.modalSize === "compact" ? "lg" : "xl"}
+    >
+      {props.oauthProviders && (
+        <>
+          {props.oauthProviders.length >= 3 ? (
+            <Flex gap="md" justifyContent="center" wrap="wrap">
+              {props.oauthProviders.map((provider) => {
+                return (
+                  <SocialIconButton
+                    key={provider}
+                    onClick={() => {
+                      props.onSelect({ provider });
+                    }}
+                  >
+                    <ToolTip
+                      tip={`Login with ${upperCaseFirstLetter(provider)}`}
+                      sideOffset={15}
+                    >
+                      <div>
+                        <Img
+                          src={providerImages[provider]}
+                          width={iconSize.lg}
+                          height={iconSize.lg}
+                          alt=""
+                        />
+                      </div>
+                    </ToolTip>
+                  </SocialIconButton>
+                );
+              })}
+            </Flex>
+          ) : (
+            <Flex gap="xs" flexDirection="column">
+              {props.oauthProviders.map((provider) => {
+                return (
+                  <SocialButtonLarge
+                    key={provider}
+                    variant="secondary"
+                    onClick={() => {
+                      props.onSelect({ provider });
+                    }}
+                  >
+                    <Img
+                      src={providerImages[provider]}
+                      width={socialIconSize}
+                      height={socialIconSize}
+                      alt=""
+                    />
+                    <span>Login with {upperCaseFirstLetter(provider)}</span>
+                  </SocialButtonLarge>
+                );
+              })}
+            </Flex>
+          )}
+        </>
+      )}
+
       <InputSelectionUI
         onSelect={props.onSelect}
         placeholder={placeholder}
@@ -117,75 +242,78 @@ const MagicSelectionUI: React.FC<
             }
           }
         }}
-        supportedWallets={props.supportedWallets}
-        footer={
-          props.oauthProviders && (
-            <>
-              {!noInput && <Spacer y="lg" />}
-              {props.oauthProviders.length >= 3 ? (
-                <Flex gap="md" justifyContent="center" wrap="wrap">
-                  {props.oauthProviders.map((provider) => {
-                    return (
-                      <IconButton
-                        key={provider}
-                        variant="secondary"
-                        onClick={() => {
-                          props.onSelect({ provider });
-                        }}
-                      >
-                        <ToolTip
-                          tip={`Login with ${upperCaseFirstLetter(provider)}`}
-                        >
-                          <div>
-                            <Img
-                              src={providerImages[provider]}
-                              width={iconSize.lg}
-                              height={iconSize.lg}
-                              alt=""
-                            />
-                          </div>
-                        </ToolTip>
-                      </IconButton>
-                    );
-                  })}
-                </Flex>
-              ) : (
-                <Flex gap="xs" flexDirection="column">
-                  {props.oauthProviders.map((provider) => {
-                    return (
-                      <SocialButton
-                        key={provider}
-                        variant="secondary"
-                        onClick={() => {
-                          props.onSelect({ provider });
-                        }}
-                      >
-                        <Img
-                          src={providerImages[provider]}
-                          width={iconSize.lg}
-                          height={iconSize.lg}
-                          alt=""
-                        />
-                        <span>Login with {upperCaseFirstLetter(provider)}</span>
-                      </SocialButton>
-                    );
-                  })}
-                </Flex>
-              )}
-            </>
-          )
-        }
+        showOrSeparator={props.showOrSeparator}
       />
-    </>
+    </Flex>
   );
 };
 
-const MagicConnectionUI: React.FC<
+function useConnectMagic() {
+  const connect = useConnect();
+
+  const connector = useCallback(
+    async (data: {
+      selectionData: SelectionData;
+      walletConfig: WalletConfig<MagicLink>;
+      singleWallet: boolean;
+      type: "auth" | "connect";
+      open: () => void;
+      close: () => void;
+    }) => {
+      const { selectionData, walletConfig, singleWallet } = data;
+
+      if (typeof selectionData === "object") {
+        try {
+          (async () => {
+            await connect(walletConfig, {
+              oauthProvider: selectionData.provider,
+            });
+          })();
+          data.close();
+        } catch {
+          if (!singleWallet) {
+            data.open();
+          }
+        }
+
+        return;
+      }
+
+      const isEmail = selectionData
+        ? (selectionData as string).includes("@")
+        : false;
+
+      (async () => {
+        data.close();
+        try {
+          await connect(
+            walletConfig,
+            data.type === "connect"
+              ? {}
+              : isEmail
+              ? { email: selectionData }
+              : { phoneNumber: selectionData },
+          );
+        } catch (e) {
+          if (!singleWallet) {
+            data.open();
+          }
+          console.error(e);
+        }
+      })();
+    },
+    [connect],
+  );
+
+  return connector;
+}
+
+const MagicConnectionUICompact: React.FC<
   ConnectUIProps<MagicLink> & { type: "auth" | "connect" }
 > = ({ close, walletConfig, open, selectionData, supportedWallets, type }) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
-  const connect = useConnect();
+  const connectMagic = useConnectMagic();
 
   useEffect(() => {
     if (connectPrompted.current) {
@@ -193,46 +321,23 @@ const MagicConnectionUI: React.FC<
     }
     connectPrompted.current = true;
 
-    if (typeof selectionData === "object") {
-      try {
-        (async () => {
-          await connect(walletConfig, {
-            oauthProvider: selectionData.provider,
-          });
-        })();
-        close();
-      } catch {
-        if (!singleWallet) {
-          open();
-        }
-      }
-
-      return;
-    }
-
-    const isEmail = selectionData
-      ? (selectionData as string).includes("@")
-      : false;
-
-    (async () => {
-      close();
-      try {
-        await connect(
-          walletConfig,
-          type === "connect"
-            ? {}
-            : isEmail
-            ? { email: selectionData }
-            : { phoneNumber: selectionData },
-        );
-      } catch (e) {
-        if (!singleWallet) {
-          open();
-        }
-        console.error(e);
-      }
-    })();
-  }, [connect, selectionData, walletConfig, close, open, singleWallet, type]);
+    connectMagic({
+      selectionData: selectionData as SelectionData,
+      singleWallet,
+      type,
+      walletConfig,
+      open,
+      close,
+    });
+  }, [
+    close,
+    connectMagic,
+    open,
+    selectionData,
+    singleWallet,
+    type,
+    walletConfig,
+  ]);
 
   return (
     <Flex
@@ -242,8 +347,54 @@ const MagicConnectionUI: React.FC<
         minHeight: "250px",
       }}
     >
-      <Spinner size="md" color="primary" />
+      <Spinner size="md" color="primaryText" />
     </Flex>
+  );
+};
+
+const MagicConnectionUIWide: React.FC<
+  ConnectUIProps<MagicLink> & {
+    type: "auth" | "connect";
+    emailLogin: boolean;
+    smsLogin: boolean;
+    oauthProviders?: OuthProvider[];
+  }
+> = (props) => {
+  const connectMagic = useConnectMagic();
+
+  return (
+    <ScreenContainer
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <ModalHeader onBack={props.goBack} title="Sign in" />
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <MagicUI
+          {...props}
+          onSelect={(data) => {
+            connectMagic({
+              selectionData: data,
+              close: props.close,
+              open: props.open,
+              singleWallet: props.supportedWallets.length === 1,
+              type: props.type,
+              walletConfig: props.walletConfig,
+            });
+          }}
+          showOrSeparator={false}
+        />
+      </div>
+    </ScreenContainer>
   );
 };
 
@@ -276,16 +427,21 @@ function upperCaseFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const SocialButton = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
+const SocialButtonLarge = /* @__PURE__ */ styled(Button)<{ theme?: Theme }>`
   display: flex;
   justify-content: flex-start;
   gap: ${spacing.md};
   font-size: ${fontSize.md};
   transition: background-color 0.2s ease;
   &:hover {
-    background-color: ${(p) => p.theme.bg.elevatedHover};
+    background-color: ${(p) => p.theme.colors.secondaryButtonBg};
   }
   &:active {
     box-shadow: none;
   }
+`;
+
+const SocialIconButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
+  border: 1px solid ${(p) => p.theme.colors.borderColor};
+  padding: ${spacing.xs};
 `;

@@ -1,24 +1,36 @@
-import { iconSize } from "../../../design-system";
-import { Img } from "../../../components/Img";
-import { Spacer } from "../../../components/Spacer";
-import { BackButton } from "../../../components/modalElements";
+import { BackButton, ModalTitle } from "../../../components/modalElements";
 import { WalletConfig } from "@thirdweb-dev/react-core";
+import { Flex } from "../../../components/basic";
+import { Spacer } from "../../../components/Spacer";
 
 export const LocalWalletModalHeader: React.FC<{
   onBack: () => void;
   meta: WalletConfig["meta"];
   hideBack?: boolean;
+  title: string;
 }> = (props) => {
   return (
     <>
-      {!props.hideBack && (
-        <>
-          <BackButton onClick={props.onBack} />
-          <Spacer y="md" />
-        </>
-      )}
-      <Img src={props.meta.iconURL} width={iconSize.xl} height={iconSize.xl} />
-      <Spacer y="md" />
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          position: "relative",
+        }}
+      >
+        {!props.hideBack && (
+          <BackButton
+            onClick={props.onBack}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
+          />
+        )}
+        <ModalTitle> {props.title}</ModalTitle>
+      </Flex>
+      <Spacer y={"lg"} />
     </>
   );
 };
