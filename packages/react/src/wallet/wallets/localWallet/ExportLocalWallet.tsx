@@ -11,7 +11,7 @@ import {
   PinBottomIcon,
 } from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { shortenAddress } from "../../../evm/utils/addresses";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
@@ -27,12 +27,12 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
-import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const ExportLocalWallet: React.FC<{
   onBack: () => void;
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
+  modalSize: "wide" | "compact";
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +43,6 @@ export const ExportLocalWallet: React.FC<{
   const address = useAddress();
   const [savedAddress, setSavedAddress] = useState("");
   const createWalletInstance = useCreateWalletInstance();
-  const modalConfig = useContext(ModalConfigCtx);
 
   // set savedAddress and passwordIsRequired on mount
   const mounted = useRef(false);
@@ -217,7 +216,7 @@ export const ExportLocalWallet: React.FC<{
         <Spacer y="md" />
         <ScreenBottomContainer
           style={{
-            borderTop: modalConfig.modalSize === "wide" ? "none" : undefined,
+            borderTop: props.modalSize === "wide" ? "none" : undefined,
           }}
         >
           <Button

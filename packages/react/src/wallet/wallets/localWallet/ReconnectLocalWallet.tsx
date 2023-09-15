@@ -24,6 +24,7 @@ type ReconnectLocalWalletProps = {
   supportedWallets: WalletConfig[];
   renderBackButton: boolean;
   persist: boolean;
+  modalSize: "wide" | "compact";
 };
 
 /**
@@ -58,6 +59,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
     return (
       <ExportLocalWallet
+        modalSize={props.modalSize}
         localWalletConfig={props.localWallet}
         onBack={() => {
           setShowExport(false);

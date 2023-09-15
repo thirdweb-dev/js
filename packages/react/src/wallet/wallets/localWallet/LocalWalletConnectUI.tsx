@@ -42,6 +42,7 @@ export const LocalWalletConnectUI = (
   if (walletData) {
     return (
       <ReconnectLocalWallet
+        modalSize={props.modalSize}
         renderBackButton={props.supportedWallets.length > 1}
         supportedWallets={props.supportedWallets}
         onConnect={props.close}

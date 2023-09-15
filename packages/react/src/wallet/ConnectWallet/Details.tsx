@@ -434,6 +434,7 @@ export const ConnectedWalletDetails: React.FC<{
       {showExportModal && (
         <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
           <ExportLocalWallet
+            modalSize="compact"
             localWalletConfig={activeWalletConfig as LocalWalletConfig}
             onBack={() => {
               setShowExportModal(false);
