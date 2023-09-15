@@ -146,6 +146,7 @@ export function ChooseWallet({
         </>
       ) : emailWallet.selectUI ? (
         <emailWallet.selectUI
+          modalSize="compact"
           theme={themeLightDark}
           supportedWallets={wallets}
           onSelect={(data: any) => {
