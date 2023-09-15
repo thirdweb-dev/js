@@ -4,7 +4,7 @@ import {
   CreateLocalWallet_Password,
 } from "./CreateLocalWallet";
 import { ReconnectLocalWallet } from "./ReconnectLocalWallet";
-import { Flex } from "../../../components/basic";
+import { Container } from "../../../components/basic";
 import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWallet } from "@thirdweb-dev/wallets";
@@ -27,21 +27,22 @@ export const LocalWalletConnectUI = (
 
   if (walletData === "loading") {
     return (
-      <Flex
-        justifyContent="center"
-        alignItems="center"
+      <Container
+        flex="row"
+        center="both"
         style={{
           height: "300px",
         }}
       >
         <Spinner size="lg" color="primaryText" />
-      </Flex>
+      </Container>
     );
   }
 
   if (walletData) {
     return (
       <ReconnectLocalWallet
+        modalSize={props.modalSize}
         renderBackButton={props.supportedWallets.length > 1}
         supportedWallets={props.supportedWallets}
         onConnect={props.close}

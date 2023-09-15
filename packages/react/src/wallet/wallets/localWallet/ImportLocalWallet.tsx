@@ -12,9 +12,8 @@ import { DragNDrop } from "../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
-import { LocalWalletModalHeader } from "./common";
 import type { LocalWalletConfig } from "./types";
-import { ScreenContainer } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
@@ -68,12 +67,14 @@ export const ImportLocalWallet: React.FC<{
   };
 
   return (
-    <ScreenContainer>
-      <LocalWalletModalHeader
+    <Container p="lg">
+      <ModalHeader
         onBack={props.goBack}
-        meta={meta}
         title="Import Wallet"
+        imgSrc={meta.iconURL}
       />
+
+      <Spacer y="xl" />
 
       <ModalDescription sm>
         The application can authorize any transactions on behalf of the wallet
@@ -160,6 +161,6 @@ export const ImportLocalWallet: React.FC<{
           </Button>
         </FormFooter>
       </form>
-    </ScreenContainer>
+    </Container>
   );
 };

@@ -2,7 +2,6 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { Spacer } from "../../../components/Spacer";
 import {
   ScreenBottomContainer,
-  Flex,
   ModalHeader,
   Container,
 } from "../../../components/basic";
@@ -98,18 +97,16 @@ export const SelectPersonalWallet: React.FC<{
 
       {guestWallet && (
         <ScreenBottomContainer>
-          <Flex justifyContent="center">
-            <Button
-              variant="outline"
-              fullWidth
-              onClick={() => {
-                props.selectWallet(guestWallet);
-              }}
-              data-test="continue-as-guest-button"
-            >
-              Continue as guest
-            </Button>
-          </Flex>
+          <Button
+            variant="outline"
+            fullWidth
+            onClick={() => {
+              props.selectWallet(guestWallet);
+            }}
+            data-test="continue-as-guest-button"
+          >
+            Continue as guest
+          </Button>
         </ScreenBottomContainer>
       )}
     </Container>

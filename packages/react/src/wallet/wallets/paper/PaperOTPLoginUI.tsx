@@ -5,7 +5,7 @@ import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
-import { Container, Flex, Line, ModalHeader } from "../../../components/basic";
+import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
@@ -188,11 +188,11 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
           {verifyStatus === "invalid" && (
             <FadeIn>
               <Spacer y="sm" />
-              <Flex justifyContent="center">
+              <Container flex="row" center="x">
                 <Text size="sm" color="danger">
                   Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
                 </Text>
-              </Flex>
+              </Container>
             </FadeIn>
           )}
 
@@ -201,9 +201,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
           {verifyStatus === "verifying" ? (
             <>
               <Spacer y="md" />
-              <Flex justifyContent="center">
+              <Container flex="row" center="x">
                 <Spinner size="md" color="accentText" />
-              </Flex>
+              </Container>
               <Spacer y="md" />
             </>
           ) : (
@@ -231,17 +231,17 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
           )}
 
           {!sentEmailInfo && (
-            <Flex
+            <Container
+              flex="row"
+              center="both"
               gap="xs"
-              alignItems="center"
-              justifyContent="center"
               style={{
                 textAlign: "center",
               }}
             >
               <Text size="sm">Sending OTP</Text>
               <Spinner size="xs" color="secondaryText" />
-            </Flex>
+            </Container>
           )}
 
           {sentEmailInfo && (

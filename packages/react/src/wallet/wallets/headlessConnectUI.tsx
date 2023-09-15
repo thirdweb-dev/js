@@ -1,6 +1,6 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { useEffect, useRef } from "react";
-import { Flex } from "../../components/basic";
+import { Container } from "../../components/basic";
 import { Spinner } from "../../components/Spinner";
 
 export const HeadlessConnectUI = ({
@@ -33,14 +33,14 @@ export const HeadlessConnectUI = ({
   }, [walletConfig, connect, close, open, singleWallet]);
 
   return (
-    <Flex
-      justifyContent="center"
-      alignItems="center"
+    <Container
+      flex="row"
+      center="both"
       style={{
         minHeight: "250px",
       }}
     >
       <Spinner size="md" color="primaryText" />
-    </Flex>
+    </Container>
   );
 };

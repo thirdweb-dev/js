@@ -9,7 +9,7 @@ import {
 import type { ConfiguredMagicLinkWallet } from "./types";
 import { useRef, useEffect, useCallback } from "react";
 import { Spinner } from "../../../components/Spinner";
-import { Flex, ModalHeader, ScreenContainer } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { Img } from "../../../components/Img";
 import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
@@ -149,14 +149,11 @@ const MagicUI: React.FC<{
     props.modalSize === "compact" ? iconSize.md : iconSize.lg;
 
   return (
-    <Flex
-      flexDirection="column"
-      gap={props.modalSize === "compact" ? "lg" : "xl"}
-    >
+    <Container flex="column" gap={props.modalSize === "compact" ? "lg" : "xl"}>
       {props.oauthProviders && (
         <>
           {props.oauthProviders.length >= 3 ? (
-            <Flex gap="md" justifyContent="center" wrap="wrap">
+            <Container gap="md" flex="row" center="x">
               {props.oauthProviders.map((provider) => {
                 return (
                   <SocialIconButton
@@ -181,9 +178,9 @@ const MagicUI: React.FC<{
                   </SocialIconButton>
                 );
               })}
-            </Flex>
+            </Container>
           ) : (
-            <Flex gap="xs" flexDirection="column">
+            <Container gap="xs" flex="column">
               {props.oauthProviders.map((provider) => {
                 return (
                   <SocialButtonLarge
@@ -203,7 +200,7 @@ const MagicUI: React.FC<{
                   </SocialButtonLarge>
                 );
               })}
-            </Flex>
+            </Container>
           )}
         </>
       )}
@@ -244,7 +241,7 @@ const MagicUI: React.FC<{
         }}
         showOrSeparator={props.showOrSeparator}
       />
-    </Flex>
+    </Container>
   );
 };
 
@@ -340,15 +337,15 @@ const MagicConnectionUICompact: React.FC<
   ]);
 
   return (
-    <Flex
-      justifyContent="center"
-      alignItems="center"
+    <Container
+      flex="row"
+      center="both"
       style={{
         minHeight: "250px",
       }}
     >
       <Spinner size="md" color="primaryText" />
-    </Flex>
+    </Container>
   );
 };
 
@@ -363,22 +360,9 @@ const MagicConnectionUIWide: React.FC<
   const connectMagic = useConnectMagic();
 
   return (
-    <ScreenContainer
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Container p="lg" fullHeight flex="column">
       <ModalHeader onBack={props.goBack} title="Sign in" />
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
+      <Container expand flex="row" center="both" p="lg">
         <MagicUI
           {...props}
           onSelect={(data) => {
@@ -393,8 +377,8 @@ const MagicConnectionUIWide: React.FC<
           }}
           showOrSeparator={false}
         />
-      </div>
-    </ScreenContainer>
+      </Container>
+    </Container>
   );
 };
 

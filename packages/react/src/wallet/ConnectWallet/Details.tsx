@@ -40,15 +40,16 @@ import {
   WalletInstance,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { fadeInAnimation } from "../../components/FadeIn";
 import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
-import { Flex, ScreenContainer } from "../../components/basic";
+import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
 import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
+import { fadeInAnimation } from "../../design-system/animations";
+import { Text } from "../../components/text";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -116,16 +117,20 @@ export const ConnectedWalletDetails: React.FC<{
         className={`${TW_CONNECTED_WALLET}__network-icon`}
       />
 
-      <ColFlex>
+      <Container flex="column" gap="xs">
         {balanceQuery.data ? (
-          <WalletBalance className={`${TW_CONNECTED_WALLET}__balance`}>
+          <Text
+            className={`${TW_CONNECTED_WALLET}__balance`}
+            size="sm"
+            color="primaryText"
+            weight={500}
+          >
             {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
             {balanceQuery.data.symbol}
-          </WalletBalance>
+          </Text>
         ) : (
           <Skeleton height={fontSize.sm} width="82px" />
         )}
-        <Spacer y="xs" />
 
         {activeWallet?.walletId === walletIds.localWallet ? (
           <ErrorMessage
@@ -138,13 +143,17 @@ export const ConnectedWalletDetails: React.FC<{
             Guest
           </ErrorMessage>
         ) : address ? (
-          <WalletAddress className={`${TW_CONNECTED_WALLET}__address`}>
+          <Text
+            size="xs"
+            weight={500}
+            className={`${TW_CONNECTED_WALLET}__address`}
+          >
             {shortenString(address || "")}
-          </WalletAddress>
+          </Text>
         ) : (
           <Skeleton height={fontSize.xs} width="88px" />
         )}
-      </ColFlex>
+      </Container>
 
       <Img
         width={iconSize.lg}
@@ -194,7 +203,7 @@ export const ConnectedWalletDetails: React.FC<{
   const content = (
     <div>
       {/* Balance and Account Address */}
-      <Flex gap="md">
+      <Container flex="row" gap="md">
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
@@ -208,7 +217,7 @@ export const ConnectedWalletDetails: React.FC<{
           }}
         >
           {/* row 1 */}
-          <Flex gap="xs" alignItems="center">
+          <Container gap="xs" flex="row" center="y">
             <div
               style={{
                 display: "flex",
@@ -218,7 +227,10 @@ export const ConnectedWalletDetails: React.FC<{
               data-test="connected-wallet-address"
               data-address={address}
             >
-              <AccountAddress> {shortenString(address || "")}</AccountAddress>
+              <Text color="primaryText" weight={500}>
+                {" "}
+                {shortenString(address || "")}
+              </Text>
               <IconButton
                 style={{
                   padding: "3px",
@@ -249,10 +261,10 @@ export const ConnectedWalletDetails: React.FC<{
                 <ExitIcon size={iconSize.md} />
               </DisconnectIconButton>
             </ToolTip>
-          </Flex>
+          </Container>
 
           {/* row 2 */}
-          <AccountBalance>
+          <Text weight={500} size="sm">
             {" "}
             {balanceQuery.data ? (
               Number(balanceQuery.data.displayValue).toFixed(3)
@@ -260,9 +272,9 @@ export const ConnectedWalletDetails: React.FC<{
               <Skeleton height="1em" width="100px" />
             )}{" "}
             {balanceQuery.data?.symbol}{" "}
-          </AccountBalance>
+          </Text>
         </div>
-      </Flex>
+      </Container>
 
       <Spacer y="lg" />
 
@@ -275,7 +287,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="md" />
 
-      <Flex flexDirection="column" gap={"sm"}>
+      <Container flex="column" gap="sm">
         {/* Switch to Personal Wallet for Safe */}
         {personalWallet && personalWalletConfig && (
           <WalletSwitcher
@@ -341,9 +353,9 @@ export const ConnectedWalletDetails: React.FC<{
                 fontSize: fontSize.sm,
               }}
             >
-              <SecondaryIconContainer>
+              <Container flex="row" center="both" color="secondaryText">
                 <FundsIcon size={iconSize.sm} />
-              </SecondaryIconContainer>
+              </Container>
               Request Testnet Funds
             </MenuLink>
           )}
@@ -360,9 +372,9 @@ export const ConnectedWalletDetails: React.FC<{
                 fontSize: fontSize.sm,
               }}
             >
-              <SecondaryIconContainer>
+              <Container flex="row" center="both" color="secondaryText">
                 <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
-              </SecondaryIconContainer>
+              </Container>
               Backup wallet{" "}
             </MenuButton>
             <Spacer y="sm" />
@@ -378,7 +390,7 @@ export const ConnectedWalletDetails: React.FC<{
             </ErrorMessage>
           </div>
         )}
-      </Flex>
+      </Container>
     </div>
   );
 
@@ -392,13 +404,7 @@ export const ConnectedWalletDetails: React.FC<{
           setOpen={setOpen}
           hideCloseIcon={true}
         >
-          <div
-            style={{
-              minHeight: "220px",
-            }}
-          >
-            <ScreenContainer>{content}</ScreenContainer>
-          </div>
+          <Container p="lg">{content}</Container>
         </Modal>
       ) : (
         <DropdownMenu.Root open={open} onOpenChange={setOpen}>
@@ -428,6 +434,7 @@ export const ConnectedWalletDetails: React.FC<{
       {showExportModal && (
         <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
           <ExportLocalWallet
+            modalSize="compact"
             localWalletConfig={activeWalletConfig as LocalWalletConfig}
             onBack={() => {
               setShowExportModal(false);
@@ -498,35 +505,6 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
     transition: background 250ms ease;
     background: ${(props) => props.theme.colors.connectedButtonBgHover};
   }
-`;
-
-const WalletAddress = styled.span<{ theme?: Theme }>`
-  color: ${(props) => props.theme.colors.secondaryText};
-  font-size: ${fontSize.xs};
-  font-weight: 500;
-`;
-
-const ColFlex = styled.div<{ theme?: Theme }>`
-  display: flex;
-  flex-direction: column;
-`;
-
-const WalletBalance = styled.span<{ theme?: Theme }>`
-  color: ${(props) => props.theme.colors.primaryText};
-  font-size: ${fontSize.sm};
-  font-weight: 500;
-`;
-
-const AccountAddress = styled.span<{ theme?: Theme }>`
-  font-size: ${fontSize.md};
-  color: ${(props) => props.theme.colors.primaryText};
-  font-weight: 500;
-`;
-
-const AccountBalance = styled.span<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(props) => props.theme.colors.secondaryText};
-  font-weight: 500;
 `;
 
 const DropdownLabel = styled.label<{ theme?: Theme }>`
@@ -603,13 +581,6 @@ const DisconnectIconButton = /* @__PURE__ */ styled(IconButton)<{
     color: ${(props) => props.theme.colors.danger};
     background: none;
   }
-`;
-
-const SecondaryIconContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => props.theme.colors.secondaryText};
 `;
 
 function WalletSwitcher({

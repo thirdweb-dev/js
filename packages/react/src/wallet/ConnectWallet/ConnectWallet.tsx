@@ -26,9 +26,8 @@ import {
 import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
-import { fadeInAnimation } from "../../components/FadeIn";
 import { LockIcon } from "./icons/LockIcon";
-import { Flex } from "../../components/basic";
+import { Container } from "../../components/basic";
 import { shortenAddress } from "../../evm/utils/addresses";
 import { SignatureModal } from "./SignatureModal";
 import type { NetworkSelectorProps } from "./NetworkSelector";
@@ -37,6 +36,7 @@ import { isMobile } from "../../evm/utils/isMobile";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
 import { useTheme } from "@emotion/react";
+import { fadeInAnimation } from "../../design-system/animations";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -240,8 +240,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               style={props.style}
               data-test="sign-in-button"
             >
-              <Flex
-                alignItems="center"
+              <Container
+                flex="row"
+                center="y"
                 gap="sm"
                 style={{
                   paddingRight: spacing.xs,
@@ -251,7 +252,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               >
                 <LockIcon size={iconSize.sm} />
                 <span> Sign in </span>
-              </Flex>
+              </Container>
               <span>{shortenAddress(address || "", true)}</span>
             </Button>
           );

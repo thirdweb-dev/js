@@ -3,7 +3,6 @@ import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
 import {
   Container,
-  Flex,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -89,7 +88,7 @@ export const GetStartedScreen: React.FC<{
             <Spacer y="xl" />
 
             <Container expand animate="fadein" flex="column" center="y">
-              <Flex flexDirection="column" gap="xs">
+              <Container flex="column" gap="xs">
                 {/* Chrome Extension  */}
                 {chromeExtensionLink && (
                   <ButtonLink
@@ -135,7 +134,7 @@ export const GetStartedScreen: React.FC<{
                     <span>Download on App Store</span>
                   </ButtonLink>
                 )}
-              </Flex>
+              </Container>
             </Container>
           </Container>
         )}
