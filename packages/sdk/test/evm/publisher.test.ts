@@ -1,8 +1,4 @@
-import {
-  ChainId,
-  resolveContractUriFromAddress,
-  ThirdwebSDK,
-} from "../../src/evm";
+import { ChainId, resolveContractUriFromAddress } from "../../src/evm";
 import {
   extendedMetadataMock,
   defaultProvider,
@@ -353,10 +349,7 @@ describe("Publishing", async () => {
   });
 
   it("SimpleAzuki enumerable", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet, {
-      secretKey: process.env.TW_SECRET_KEY,
-    });
-    const pub = await realSDK.getPublisher();
+    const pub = await sdk.getPublisher();
     const ipfsUri = await mockUploadMetadataWithBytecode(
       "SimpleAzuki",
       simpleAzukiMetadata.output.abi,
@@ -383,7 +376,7 @@ describe("Publishing", async () => {
       contract.metadataUri,
       [],
     );
-    const c = await realSDK.getContract(deployedAddr);
+    const c = await sdk.getContract(deployedAddr);
     const all = await c.erc721.getAll();
     expect(all.length).to.eq(0);
   });
