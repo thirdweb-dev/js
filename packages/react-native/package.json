@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/ && tsc --noEmit",
+    "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc",
