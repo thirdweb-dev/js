@@ -208,7 +208,7 @@ export const SelectAccount: React.FC<{
             }}
           >
             <NetworkSelect
-              data-error={supportedChains.length === 0}
+              data-error={supportedChains.length === 0 || safeConnectError}
               required
               name="safeNetwork"
               id="safeNetwork"
@@ -363,7 +363,9 @@ export const SelectAccount: React.FC<{
                 >
                   {" "}
                   {switchingNetwork ? "Switching" : "Switch Network"}
-                  {switchingNetwork && <Spinner size="sm" color="accentText" />}
+                  {switchingNetwork && (
+                    <Spinner size="sm" color="primaryButtonText" />
+                  )}
                 </Button>
               ) : (
                 <Button

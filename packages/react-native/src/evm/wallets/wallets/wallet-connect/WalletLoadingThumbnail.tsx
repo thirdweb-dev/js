@@ -11,7 +11,11 @@ interface Props {
   showError?: boolean;
 }
 
-function WalletLoadingThumbnail({ children, showError }: Props) {
+function WalletLoadingThumbnail({
+  children,
+  showError,
+  imageSize = 50,
+}: Props) {
   const Theme = useAppTheme();
   const spinValue = useRef(new Animated.Value(0));
 
@@ -38,12 +42,17 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
 
   return (
     <View style={styles.container}>
-      <Svg width={60} height={60} viewBox="0 0 60 60" style={styles.loader}>
+      <Svg
+        width={imageSize + 10}
+        height={imageSize + 10}
+        viewBox={`0 0 ${imageSize + 10} ${imageSize + 10}`}
+        style={styles.loader}
+      >
         <AnimatedRect
           x="2"
           y="2"
-          width={56}
-          height={56}
+          width={imageSize + 6}
+          height={imageSize + 6}
           rx={15}
           stroke={showError ? "transparent" : Theme.colors.linkPrimary}
           strokeWidth={2}
@@ -55,8 +64,12 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
       {showError && (
         <View
           style={[
-            styles.error,
             {
+              position: "absolute",
+              borderWidth: 2,
+              height: imageSize + 6,
+              width: imageSize + 6,
+              borderRadius: 30 / 3.5,
               borderColor: Theme.colors.border,
             },
           ]}
@@ -74,13 +87,6 @@ const styles = StyleSheet.create({
   },
   loader: {
     position: "absolute",
-  },
-  error: {
-    position: "absolute",
-    borderWidth: 2,
-    height: 56,
-    width: 56,
-    borderRadius: 30 / 3.5,
   },
 });
 

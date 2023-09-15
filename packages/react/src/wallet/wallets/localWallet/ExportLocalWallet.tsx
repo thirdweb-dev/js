@@ -2,10 +2,14 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { Label } from "../../../components/formElements";
 import { ModalDescription } from "../../../components/modalElements";
-import { Theme } from "../../../design-system";
+import { Theme, iconSize, spacing } from "../../../design-system";
 import styled from "@emotion/styled";
 import { fontSize } from "../../../design-system";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+  PinBottomIcon,
+} from "@radix-ui/react-icons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { useEffect, useRef, useState } from "react";
 import { shortenAddress } from "../../../evm/utils/addresses";
@@ -14,7 +18,6 @@ import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet"
 import { Spinner } from "../../../components/Spinner";
 import {
   Container,
-  Flex,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -29,6 +32,7 @@ export const ExportLocalWallet: React.FC<{
   onBack: () => void;
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
+  modalSize: "wide" | "compact";
 }> = (props) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -117,32 +121,36 @@ export const ExportLocalWallet: React.FC<{
 
   if (!savedAddress) {
     return (
-      <Flex
-        justifyContent="center"
-        alignItems="center"
+      <Container
+        flex="row"
+        center="both"
         style={{
           height: "300px",
         }}
       >
         <Spinner size="md" color="accentText" />
-      </Flex>
+      </Container>
     );
   }
 
   const exportDisabled = isWrongPassword;
 
   return (
-    <Container>
+    <Container fullHeight>
       <form
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
         onSubmit={(e) => {
           e.preventDefault();
           exportFromLocalStorage();
         }}
       >
-        <Container fullHeight p="lg">
+        <Container expand p="lg">
           <ModalHeader onBack={props.onBack} title="Backup Wallet" />
-
-          <Spacer y="lg" />
+          <Spacer y="xl" />
 
           <ModalDescription sm>
             This will download a JSON file containing the wallet information
@@ -205,17 +213,24 @@ export const ExportLocalWallet: React.FC<{
         </Container>
 
         <Spacer y="md" />
-        <ScreenBottomContainer>
+        <ScreenBottomContainer
+          style={{
+            borderTop: props.modalSize === "wide" ? "none" : undefined,
+          }}
+        >
           <Button
             disabled={exportDisabled}
             variant="accent"
             fullWidth
             style={{
               opacity: exportDisabled ? 0.5 : 1,
+              display: "flex",
+              gap: spacing.sm,
             }}
             type="submit"
           >
-            Backup
+            <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
+            Download
           </Button>
         </ScreenBottomContainer>
       </form>

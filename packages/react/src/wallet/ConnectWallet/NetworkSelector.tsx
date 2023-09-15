@@ -26,7 +26,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { useEffect } from "react";
-import { Flex, ScreenContainer } from "../../components/basic";
+import { Container } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
@@ -147,7 +147,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
           paddingBottom: props.onCustomClick ? spacing.md : "0px",
         }}
       >
-        <ScreenContainer>
+        <Container p="lg">
           <ModalTitle>Select Network</ModalTitle>
           <Spacer y="xl" />
 
@@ -186,7 +186,10 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                 height={iconSize.md}
               />
 
-              <SearchInput
+              <Input
+                style={{
+                  padding: `${spacing.sm} ${spacing.md} ${spacing.sm} 60px`,
+                }}
                 tabIndex={-1}
                 variant="outline"
                 placeholder="Search Network or Chain ID"
@@ -270,7 +273,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
               </>
             )}
           </Tabs.Root>
-        </ScreenContainer>
+        </Container>
       </Modal>
     </CustomThemeProvider>
   );
@@ -413,16 +416,16 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
 
   if (isLoading) {
     return (
-      <Flex
-        justifyContent="center"
-        alignItems="center"
+      <Container
+        flex="row"
+        center="both"
         style={{
           height: "250px",
         }}
       >
         {/* Don't put a spinner here - it's gonna freeze */}
         <Text>Loading</Text>
-      </Flex>
+      </Container>
     );
   }
 
@@ -482,15 +485,17 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                   >
                     {confirming && (
                       <>
-                        <ConfirmMessage>Confirm in Wallet</ConfirmMessage>
+                        <Text size="sm" color="accentText" weight={500}>
+                          Confirm in Wallet
+                        </Text>
                         <Spinner size="sm" color="accentText" />
                       </>
                     )}
 
                     {switchingFailed && (
-                      <ErrorMessage>
-                        Error: Could not Switch Network
-                      </ErrorMessage>
+                      <Text size="sm" color="danger" weight={500}>
+                        Failed to Switch Network
+                      </Text>
                     )}
                   </div>
                 </div>
@@ -587,18 +592,4 @@ const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
   color: ${(p) => p.theme.colors.secondaryText};
   position: absolute;
   left: 18px;
-`;
-
-const SearchInput = /* @__PURE__ */ styled(Input)<{ theme?: Theme }>`
-  padding: ${spacing.sm} ${spacing.md} ${spacing.sm} 60px;
-`;
-
-const ConfirmMessage = styled.div<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.colors.accentText};
-`;
-
-const ErrorMessage = styled.div<{ theme?: Theme }>`
-  font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.colors.danger};
 `;

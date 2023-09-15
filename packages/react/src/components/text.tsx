@@ -18,7 +18,7 @@ export const Text = styled.span<{
   font-weight: ${(p) => p.weight || 400};
   line-height: ${(p) => (p.multiline ? 1.5 : 1)};
   ${(p) => (p.center ? `text-align: center;` : "")};
-  text-wrap: ${(p) => (p.balance ? "balance" : "auto")};
+  text-wrap: ${(p) => (p.balance ? "balance" : "inherit")};
 `;
 
 export const Link = styled.a<{

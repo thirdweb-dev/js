@@ -1,10 +1,9 @@
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { Spacer } from "../../../components/Spacer";
-import { LocalWalletModalHeader } from "./common";
 import { FormFooter } from "../../../components/formElements";
 import { WalletConfig } from "@thirdweb-dev/react-core";
-import { ScreenContainer } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
@@ -12,18 +11,11 @@ export const OverrideConfirmation: React.FC<{
   meta: WalletConfig["meta"];
 }> = (props) => {
   return (
-    <ScreenContainer>
-      <LocalWalletModalHeader
-        onBack={props.onBack}
-        meta={props.meta}
-        title="Warning"
-      />
+    <Container p="lg">
+      <ModalHeader onBack={props.onBack} title="Warning" />
+      <Spacer y="xl" />
 
-      <div
-        style={{
-          lineHeight: 1.5,
-        }}
-      >
+      <Container>
         <Text multiline>
           Your current wallet will be deleted if you create a new wallet. Backup
           wallet to your device before creating a new wallet
@@ -32,11 +24,11 @@ export const OverrideConfirmation: React.FC<{
         <Spacer y="xl" />
 
         <FormFooter>
-          <Button variant="primary" fullWidth onClick={props.onBackup}>
+          <Button variant="accent" fullWidth onClick={props.onBackup}>
             Backup wallet
           </Button>
         </FormFooter>
-      </div>
-    </ScreenContainer>
+      </Container>
+    </Container>
   );
 };

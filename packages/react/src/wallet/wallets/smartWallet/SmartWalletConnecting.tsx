@@ -15,7 +15,7 @@ import {
   useSwitchChain,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Container, Flex, ModalHeader } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { SmartWalletConfig } from "./types";
 import { Text } from "../../../components/text";
 
@@ -139,7 +139,7 @@ export const SmartWalletConnecting: React.FC<{
 
           <Spacer y="xl" />
 
-          <Flex flexDirection="column" gap="md">
+          <Container flex="column" gap="md">
             <Button
               type="button"
               fullWidth
@@ -194,7 +194,7 @@ export const SmartWalletConnecting: React.FC<{
                 <span>Failed to switch network.</span>
               </ErrorMessage>
             )}
-          </Flex>
+          </Container>
         </div>
       </Container>
     </Container>

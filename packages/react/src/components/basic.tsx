@@ -1,40 +1,12 @@
 import styled from "@emotion/styled";
 import { Theme, iconSize, spacing } from "../design-system";
 import { BackButton, ModalTitle } from "./modalElements";
-import { fadeInAnimation } from "./FadeIn";
-import { keyframes } from "@emotion/react";
 import { Img } from "./Img";
-
-export const Flex = (props: {
-  flexDirection?: "row" | "column";
-  justifyContent?: "flex-start" | "flex-end" | "center" | "space-between";
-  alignItems?: "flex-start" | "flex-end" | "center" | "stretch";
-  wrap?: "wrap" | "nowrap";
-  gap?: keyof typeof spacing;
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-}) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: props.flexDirection,
-        justifyContent: props.justifyContent,
-        alignItems: props.alignItems,
-        flexWrap: props.wrap,
-        gap: props.gap ? spacing[props.gap] : undefined,
-        ...(props.style || {}),
-      }}
-    >
-      {" "}
-      {props.children}
-    </div>
-  );
-};
-
-export const ScreenContainer = styled.div`
-  padding: ${spacing.lg};
-`;
+import {
+  fadeInAnimation,
+  floatDownAnimation,
+  floatUpAnimation,
+} from "../design-system/animations";
 
 export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
   border-top: 1px solid ${(p) => p.theme.colors.separatorLine};
@@ -107,6 +79,8 @@ export function Container(props: {
   px?: keyof typeof spacing;
   relative?: boolean;
   scrollY?: boolean;
+  color?: keyof Theme["colors"];
+  debug?: boolean;
 }) {
   const styles: React.CSSProperties = {};
 
@@ -125,6 +99,10 @@ export function Container(props: {
   if (props.flex) {
     styles.display = "flex";
     styles.flexDirection = props.flex;
+
+    if (props.flex === "row") {
+      styles.flexWrap = "wrap";
+    }
 
     if (props.gap) {
       styles.gap = spacing[props.gap];
@@ -161,10 +139,16 @@ export function Container(props: {
     styles.paddingRight = spacing[props.px];
   }
 
+  if (props.debug) {
+    styles.outline = "1px solid red";
+    styles.outlineOffset = "-1px";
+  }
+
   return (
     <Box
       data-scrolly={props.scrollY}
       data-animate={props.animate}
+      color={props.color}
       style={{
         ...styles,
         ...props.style,
@@ -175,29 +159,9 @@ export function Container(props: {
   );
 }
 
-const floatUpAnimation = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(20%) scale(0.8) ;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
+const Box = styled.div<{ theme?: Theme; color?: keyof Theme["colors"] }>`
+  color: ${(p) => (p.color ? p.theme.colors[p.color] : "inherit")};
 
-const floatDownAnimation = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-20%) scale(0.8) ;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const Box = styled.div<{ theme?: Theme }>`
   &[data-animate="fadein"] {
     opacity: 0;
     animation: ${fadeInAnimation} 350ms ease forwards;
@@ -217,12 +181,4 @@ const Box = styled.div<{ theme?: Theme }>`
     overflow-y: auto;
     ${noScrollBar}
   }
-`;
-
-export const FlexScrollContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  ${noScrollBar}
-  position: relative;
 `;

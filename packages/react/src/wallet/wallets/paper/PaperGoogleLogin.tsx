@@ -7,7 +7,6 @@ import {
 import { useState } from "react";
 import {
   Container,
-  Flex,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -60,10 +59,10 @@ export const PaperGoogleLogin = ({
       >
         <ModalHeader
           title={
-            <Flex justifyContent="center" alignItems="center" gap="xs">
+            <Container flex="row" center="both" gap="xs">
               <GoogleIcon size={iconSize.md} />
               <ModalTitle> Sign in </ModalTitle>
-            </Flex>
+            </Container>
           }
           onBack={goBack}
         />
@@ -100,9 +99,9 @@ export const PaperGoogleLogin = ({
                 Select your Google account in the pop-up
               </Text>
               <Spacer y="xl" />
-              <Flex justifyContent="center">
+              <Container center="x" flex="row">
                 <Spinner size="lg" color="accentText" />
-              </Flex>
+              </Container>
 
               <Spacer y="xxl" />
             </>
