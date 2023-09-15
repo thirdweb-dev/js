@@ -49,7 +49,8 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     DropERC20: "0xf3C7d3F0AA374a2D32489929e24D3e9313Aec8bb",
     SignatureDrop: "",
     Marketplace: "",
-    MarketplaceV3: "",
+    MarketplaceV3: "0x13f25360dd3f9096c3e2cBe60b95c45b11ADB7E4",
+    MarketplaceV3_aux: "0x5a2524Ca4E4f86a34382C5be871F34f50F014d84",
     TokenERC721: "0x26279882D5E93045D4FA986847CAAC048b2Bac3b",
     TokenERC1155: "0xA8E28D98203848401A4f924358e6c337153D0f04",
     TokenERC20: "0x56Abb6a3f25DCcdaDa106191053b1CC54C196DEE",
@@ -67,10 +68,18 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
 export function getImplementation(
   chainId: number,
   contractName: string,
+  version?: string,
 ): string | null {
   if (chainId in IMPLEMENTATIONS) {
     const approvedImpls = IMPLEMENTATIONS[chainId];
     if (contractName in approvedImpls) {
+      if (
+        contractName === "MarketplaceV3" &&
+        version === "1.1.2" &&
+        chainId === 324
+      ) {
+        return approvedImpls["MarketplaceV3_aux"];
+      }
       return approvedImpls[contractName as keyof typeof approvedImpls];
     }
   }
