@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { Img } from "../../components/Img";
 import {
-  Flex,
   noScrollBar,
   ModalHeader,
   Container,
@@ -72,33 +71,31 @@ export const WalletSelector: React.FC<{
   );
 
   const continueAsGuest = localWalletConfig && (
-    <Flex justifyContent="center">
-      <Button
-        fullWidth
-        variant={isCompact ? "outline" : "link"}
-        style={
-          !isCompact
-            ? {
-                textAlign: "left",
-                justifyContent: "flex-start",
-              }
-            : undefined
-        }
-        onClick={() => {
-          props.selectWallet(localWalletConfig);
-        }}
-        data-test="continue-as-guest-button"
-      >
-        Continue as Guest
-      </Button>
-    </Flex>
+    <Button
+      fullWidth
+      variant={isCompact ? "outline" : "link"}
+      style={
+        !isCompact
+          ? {
+              textAlign: "left",
+              justifyContent: "flex-start",
+            }
+          : undefined
+      }
+      onClick={() => {
+        props.selectWallet(localWalletConfig);
+      }}
+      data-test="continue-as-guest-button"
+    >
+      Continue as Guest
+    </Button>
   );
 
   const twTitle = (
-    <Flex gap="xxs" alignItems="center">
+    <Container gap="xxs" center="y" flex="row">
       <TWIcon size={iconSize.md} />
       <ModalTitle> {props.title} </ModalTitle>
-    </Flex>
+    </Container>
   );
 
   const handleSelect = async (wallet: WalletConfig) => {
@@ -111,7 +108,7 @@ export const WalletSelector: React.FC<{
   const showSeperatorLine = showNewToWallets && !continueAsGuest && showTOS;
 
   return (
-    <Container scrollY flex="column" animate="fadein" fullHeight>
+    <Container scrollY flex="column" animate="fadein">
       {/* Header */}
       <Container p="lg">
         {isWalletGroupExpanded ? (
@@ -169,7 +166,7 @@ export const WalletSelector: React.FC<{
                     setIsWalletGroupExpanded(true);
                   }}
                 >
-                  <Flex gap="xxs">
+                  <Container flex="row" gap="xxs">
                     {eoaWallets.slice(0, 2).map((w) => (
                       <Img
                         key={w.id}
@@ -178,7 +175,7 @@ export const WalletSelector: React.FC<{
                         src={w.meta.iconURL}
                       />
                     ))}
-                  </Flex>
+                  </Container>
                   Connect a wallet
                 </Button>
 
@@ -206,7 +203,12 @@ export const WalletSelector: React.FC<{
       {showFooter && (
         <ScreenBottomContainer>
           {showNewToWallets && (
-            <Flex justifyContent="space-between">
+            <Container
+              flex="row"
+              style={{
+                justifyContent: "space-between",
+              }}
+            >
               <Text color="secondaryText" size="sm" weight={500}>
                 New to wallets?
               </Text>
@@ -218,7 +220,7 @@ export const WalletSelector: React.FC<{
               >
                 Get started
               </Link>
-            </Flex>
+            </Container>
           )}
 
           {!showGroupsUI && continueAsGuest}
@@ -315,36 +317,29 @@ export function WalletEntryButton(props: {
         height={iconSize.xl}
         loading="eager"
       />
-      <WalletNameContainer>
-        <Flex flexDirection="column" gap="xxs">
-          <Text color="primaryText" weight={500}>
-            {walletConfig.meta.name}
+
+      <Container flex="column" gap="xxs" expand>
+        <Text color="primaryText" weight={500}>
+          {walletConfig.meta.name}
+        </Text>
+
+        {isRecommended && (
+          <Text size="sm" color="accentText" weight={500}>
+            Recommended
           </Text>
-          {isRecommended && (
-            <Text size="sm" color="accentText" weight={500}>
-              Recommended
+        )}
+
+        {!isRecommended &&
+          walletConfig.isInstalled &&
+          walletConfig.isInstalled() && (
+            <Text size="sm" weight={500}>
+              Installed
             </Text>
           )}
-
-          {!isRecommended &&
-            walletConfig.isInstalled &&
-            walletConfig.isInstalled() && (
-              <Text size="sm" weight={500}>
-                Installed
-              </Text>
-            )}
-        </Flex>
-      </WalletNameContainer>
+      </Container>
     </WalletButton>
   );
 }
-
-const WalletNameContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  align-items: center;
-`;
 
 const WalletList = styled.ul<{ theme?: Theme }>`
   all: unset;

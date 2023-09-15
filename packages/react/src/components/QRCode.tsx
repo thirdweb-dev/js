@@ -1,9 +1,9 @@
 import { keyframes } from "@emotion/react";
 import { Theme, radius } from "../design-system";
-import { fadeInAnimation } from "./FadeIn";
 import styled from "@emotion/styled";
 import QRCodeUtil from "qrcode";
 import React, { ReactElement, useMemo } from "react";
+import { fadeInAnimation } from "../design-system/animations";
 
 export const QRCode: React.FC<{
   qrCodeUri?: string;

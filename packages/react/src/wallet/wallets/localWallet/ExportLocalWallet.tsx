@@ -14,7 +14,6 @@ import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet"
 import { Spinner } from "../../../components/Spinner";
 import {
   Container,
-  Flex,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -117,15 +116,15 @@ export const ExportLocalWallet: React.FC<{
 
   if (!savedAddress) {
     return (
-      <Flex
-        justifyContent="center"
-        alignItems="center"
+      <Container
+        flex="row"
+        center="both"
         style={{
           height: "300px",
         }}
       >
         <Spinner size="md" color="accentText" />
-      </Flex>
+      </Container>
     );
   }
 

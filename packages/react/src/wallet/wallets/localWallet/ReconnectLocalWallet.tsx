@@ -9,14 +9,13 @@ import { Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
 import { shortenAddress } from "../../../evm/utils/addresses";
-import { LocalWalletModalHeader } from "./common";
 import { Text } from "../../../components/text";
 import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
-import { ScreenContainer } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -123,13 +122,14 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   };
 
   return (
-    <ScreenContainer>
-      <LocalWalletModalHeader
-        onBack={props.goBack}
-        meta={meta}
-        hideBack={!props.renderBackButton}
-        title="Guest Wallet"
+    <Container p="lg">
+      <ModalHeader
+        onBack={props.renderBackButton ? props.goBack : undefined}
+        title={meta.name}
+        imgSrc={meta.iconURL}
       />
+
+      <Spacer y="xl" />
 
       <ModalDescription>
         Connect to saved wallet on your device
@@ -217,6 +217,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       >
         Create a new wallet
       </Button>
-    </ScreenContainer>
+    </Container>
   );
 };
