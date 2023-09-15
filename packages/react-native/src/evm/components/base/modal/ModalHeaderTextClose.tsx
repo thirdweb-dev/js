@@ -8,12 +8,14 @@ interface ModalHeaderTextCloseProps {
   onClose: () => void;
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
+  onBackPress?: () => void;
 }
 
 export const ModalHeaderTextClose = ({
   headerText,
   subHeaderText,
   onClose,
+  onBackPress,
   ...props
 }: ModalHeaderTextCloseProps & React.ComponentProps<typeof Box>) => {
   const theme = useAppTheme();
@@ -25,6 +27,15 @@ export const ModalHeaderTextClose = ({
         justifyContent={headerText ? "space-between" : "flex-end"}
         {...props}
       >
+        {onBackPress ? (
+          <Icon
+            type="back"
+            width={16}
+            height={16}
+            onPress={onBackPress}
+            color={theme.colors.iconPrimary}
+          />
+        ) : null}
         {typeof headerText === "string" ? (
           <Text variant="header">{headerText}</Text>
         ) : (
@@ -32,8 +43,8 @@ export const ModalHeaderTextClose = ({
         )}
         <Icon
           type="close"
-          width={14}
-          height={14}
+          width={16}
+          height={16}
           color={theme.colors.iconSecondary}
           onPress={onClose}
         />

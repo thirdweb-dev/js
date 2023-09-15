@@ -16,6 +16,7 @@ import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
+import { useColorScheme } from "react-native";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -70,6 +71,7 @@ export const ThirdwebProvider = <
   sdkOptions,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+  const colorScheme = useColorScheme();
   useCoinbaseWalletListener(
     !!supportedWallets.find((w) => w.id === walletIds.coinbase),
   );
@@ -102,7 +104,9 @@ export const ThirdwebProvider = <
       {...sdkOptions}
       {...restProps}
     >
-      <ThemeProvider theme={theme}>
+      <ThemeProvider
+        theme={theme ? theme : colorScheme === "dark" ? "dark" : "light"}
+      >
         <UIContextProvider>
           {hasMagicConfig ? (
             <SafeAreaProvider>
