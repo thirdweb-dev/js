@@ -10,10 +10,7 @@
     "react-dom": "^18.2.0",
     "react-scripts": "^5"
   },
-  "scripts": {
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "e2e": "npx playwright test"
-  },
+  "scripts": {},
   "browserslist": {
     "production": [
       ">0.2%",

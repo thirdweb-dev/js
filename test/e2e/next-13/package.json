@@ -2,11 +2,7 @@
   "name": "e2e-next-13",
   "version": "0.1.2",
   "private": true,
-  "scripts": {
-    "build": "next build",
-    "start": "next start",
-    "e2e": "npx playwright test"
-  },
+  "scripts": {},
   "dependencies": {
     "@thirdweb-dev/react": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",

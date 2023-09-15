@@ -33,7 +33,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "build": "pnpm clean && tsc && node scripts/build.js",
+    "build": "bun run clean && tsc && bun scripts/build.js",
     "push": "yalc push"
   }
 }

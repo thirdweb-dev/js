@@ -41,9 +41,9 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist/",
-    "typechain": "rm -rf ./src && cp ./external_abis/*.json ./node_modules/@thirdweb-dev/contracts/abi && typechain --target ethers-v5 --out-dir src './node_modules/@thirdweb-dev/contracts/abi/*.json'",
-    "extract-abi": "node ./scripts/extract-abis.mjs",
-    "build": "pnpm typechain && tsc && pnpm preconstruct build && pnpm extract-abi",
+    "typechain": "rm -rf ./src && cp ./external_abis/*.json ../../node_modules/@thirdweb-dev/contracts/abi && typechain --target ethers-v5 --out-dir src '../../node_modules/@thirdweb-dev/contracts/abi/*.json'",
+    "extract-abi": "bun ./scripts/extract-abis.mjs",
+    "build": "bun run typechain && tsc && bun run preconstruct build && bun run extract-abi",
     "push": "yalc push"
   }
 }

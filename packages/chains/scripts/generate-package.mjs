@@ -76,7 +76,8 @@ const overridesDir = path.join(process.cwd(), "./data/overrides");
 const overridesFiles = fs.readdirSync(overridesDir);
 for (const file of overridesFiles) {
   // file:// is required for windows builds
-  const override = await import(path.join("file://", overridesDir, file));
+  // but breaks bun builds so lets try it without it again for now
+  const override = await import(path.join(overridesDir, file));
   // get file name without extension
   const chainId = parseInt(file.split(".")[0]);
   overrides[chainId] = override.default;
@@ -96,9 +97,8 @@ const additionalChainsDir = path.join(process.cwd(), "./data/additional");
 const additionalChainsFiles = fs.readdirSync(additionalChainsDir);
 for (const file of additionalChainsFiles) {
   // file:// is required for windows builds
-  const additionalChain = await import(
-    path.join("file://", additionalChainsDir, file)
-  );
+  // but it breaks bun so lets try without it again for now
+  const additionalChain = await import(path.join(additionalChainsDir, file));
 
   chains = chains.filter((c) => c.chainId !== additionalChain.default.chainId);
   chains.push(additionalChain.default);

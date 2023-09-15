@@ -41,7 +41,7 @@ export interface MagicAuthOptions extends MagicOptions {
     redirectURI?: string;
   };
   magicSdkConfiguration?: Omit<
-    MagicSDKAdditionalConfiguration<string, OAuthExtension[]>,
+    MagicSDKAdditionalConfiguration<string, []>,
     "extensions" | "network"
   >;
 }

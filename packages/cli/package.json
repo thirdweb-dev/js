@@ -69,10 +69,10 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "cli": "node -r ts-node/register src/cli/index.ts",
-    "build": "pnpm clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
-    "build:watch": "pnpm run build --watch",
-    "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js",
+    "cli": "bun src/cli/index.ts",
+    "build": "bun run clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
+    "build:watch": "bun run run build --watch",
+    "generate-thirdweb-package": "bun scripts/generate-thirdweb-package.js",
     "e2e": "jest"
   },
   "files": [

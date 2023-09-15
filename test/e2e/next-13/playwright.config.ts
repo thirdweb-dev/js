@@ -99,7 +99,7 @@ const config: PlaywrightTestConfig = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "pnpm start -p 3050",
+    command: "bun run start -p 3050",
     port: 3050,
     // its static so yeah go for it
     reuseExistingServer: true,

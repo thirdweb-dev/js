@@ -10,7 +10,7 @@ import { basename, join, resolve } from "path";
 
 const main = () => {
   const sourceFolders = [];
-  sourceFolders.push(resolve(
+  sourceFolders.push(resolve("../..",
     "node_modules",
     "@thirdweb-dev/contracts/abi",
   ));

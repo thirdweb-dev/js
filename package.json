@@ -7,10 +7,9 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=16.7.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "test": "turbo run test test:evm test:solana --filter=./packages/*",
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/*",
@@ -23,15 +22,15 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "node ./scripts/pre-release.mjs && changeset publish",
-    "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
-    "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
+    "release": "bun ./scripts/pre-release.mjs && changeset publish",
+    "version-packages:nightly": "bun scripts/pre-nightly.mjs && changeset version --snapshot nightly",
+    "release:nightly": "bun ./scripts/pre-release.mjs && changeset publish --tag nightly",
     "push": "turbo run push --filter=./packages/*",
-    "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
-    "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs",
-    "explain:major": "node ./scripts/changeset-explain-major.mjs"
+    "hotlink-init": "bun ./scripts/hotlink/hotlink-init.mjs",
+    "hotlink-revert": "bun ./scripts/hotlink/hotlink-revert.mjs",
+    "explain:major": "bun ./scripts/changeset-explain-major.mjs"
   },
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "bun@1.0.1",
   "dependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
@@ -46,12 +45,16 @@
     "eslint": "^8.45.0",
     "mocha": "^10.2.0",
     "prettier": "^3.0.0",
-    "turbo": "^1.10.12",
+    "turbo": "^1.10.14",
     "yalc": "1.0.0-pre.53"
   },
   "manypkg": {
     "defaultBranch": "main"
   },
+  "workspaces": [
+    "packages/*",
+    "test/e2e/*"
+  ],
   "pnpm": {
     "overrides": {
       "cross-fetch@>=3.0.0 <3.1.5": ">=3.1.5",

@@ -28,7 +28,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "test:all": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
-    "test": "pnpm test:all",
+    "test": "bun run test:all",
     "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
     "push": "yalc push"
   },

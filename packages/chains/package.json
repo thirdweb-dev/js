@@ -49,7 +49,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ./scripts/generate-package.mjs && tsc && preconstruct build",
+    "build": "bun ./scripts/generate-package.mjs && tsc && preconstruct build",
     "push": "yalc push",
     "plop": "plop",
     "add-chain": "plop add-chain",

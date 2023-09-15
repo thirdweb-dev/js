@@ -1,21 +1,13 @@
 name: "Install"
-description: "Sets up Node.js and runs install"
+description: "Sets up Bun and runs install"
 
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 8
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        registry-url: "https://registry.npmjs.org"
-        cache: "pnpm"
-
+    - name: Install bun
+        uses: oven-sh/setup-bun@v1
     - name: Install dependencies
       shell: bash
-      run: pnpm install
+      run: bun install
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"

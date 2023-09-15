@@ -57,10 +57,10 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "generate-docs": "pnpm generate-docs:evm && pnpm generate-docs:solana && pnpm generate-snippets",
+    "generate-docs": "bun run generate-docs:evm && bun run generate-docs:solana && bun run generate-snippets",
     "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
-    "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-snippets-solana.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
+    "generate-snippets": "bun ./scripts/generate-snippets-evm.mjs && bun ./scripts/generate-snippets-solana.mjs && bun ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
     "push": "yalc push"
   },
@@ -100,7 +100,7 @@
   "dependencies": {
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
-    "@thirdweb-dev/generated-abis": "workspace:^",
+    "@thirdweb-dev/generated-abis": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",

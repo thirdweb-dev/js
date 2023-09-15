@@ -117,11 +117,11 @@ export abstract class MagicBaseConnector extends WagmiConnector<
     await magic.user.logout();
   }
 
-  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]>;
+  abstract getMagicSDK(): InstanceWithExtensions<SDKBase, []>;
 }
 
 export class MagicAuthConnector extends MagicBaseConnector {
-  magicSDK?: InstanceWithExtensions<SDKBase, OAuthExtension[]>;
+  magicSDK?: InstanceWithExtensions<SDKBase, []>;
   magicSdkConfiguration?: MagicSDKAdditionalConfiguration<
     string,
     MagicSDKExtensionsOption<OAuthExtension["name"]>
@@ -188,19 +188,20 @@ export class MagicAuthConnector extends MagicBaseConnector {
         await magic.wallet.connectWithUI();
       } else {
         // LOGIN WITH MAGIC LINK WITH OAUTH PROVIDER
-        if ("oauthProvider" in options) {
-          await magic.oauth.loginWithRedirect({
-            provider: options.oauthProvider,
-            redirectURI: this.oauthRedirectURI || window.location.href,
-          });
-          await new Promise((res) => {
-            // never resolve - to keep the app in "connecting..." state until the redirect happens
-            setTimeout(res, 10000); // timeout if takes if redirect doesn't happen for 10 seconds (will likely never happen)
-          });
-        }
+        // if ("oauthProvider" in options) {
+        //   await magic.oauth.loginWithRedirect({
+        //     provider: options.oauthProvider,
+        //     redirectURI: this.oauthRedirectURI || window.location.href,
+        //   });
+        //   await new Promise((res) => {
+        //     // never resolve - to keep the app in "connecting..." state until the redirect happens
+        //     setTimeout(res, 10000); // timeout if takes if redirect doesn't happen for 10 seconds (will likely never happen)
+        //   });
+        // }
 
         // LOGIN WITH MAGIC LINK WITH EMAIL
-        else if ("email" in options) {
+        //else
+        if ("email" in options) {
           await magic.auth.loginWithMagicLink({
             email: options.email,
             showUI: true,
@@ -258,7 +259,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
   initializeMagicSDK({ chainId }: { chainId?: number } = {}) {
     const options = {
       ...this.magicSdkConfiguration,
-      extensions: [new OAuthExtension()],
+      // extensions: [new OAuthExtension()],
     };
     if (chainId) {
       const chain = this.chains.find((c) => c.chainId === chainId);
@@ -274,7 +275,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
     return this.magicSDK;
   }
 
-  getMagicSDK(): InstanceWithExtensions<SDKBase, OAuthExtension[]> {
+  getMagicSDK(): InstanceWithExtensions<SDKBase, []> {
     if (!this.magicSDK) {
       return this.initializeMagicSDK();
     }
