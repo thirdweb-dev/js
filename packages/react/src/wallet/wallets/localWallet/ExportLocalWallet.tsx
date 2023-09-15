@@ -150,8 +150,7 @@ export const ExportLocalWallet: React.FC<{
       >
         <Container expand p="lg">
           <ModalHeader onBack={props.onBack} title="Backup Wallet" />
-
-          <Spacer y="lg" />
+          <Spacer y="xl" />
 
           <ModalDescription sm>
             This will download a JSON file containing the wallet information

@@ -164,7 +164,7 @@ export function Container(props: {
 }
 
 const Box = styled.div<{ theme?: Theme; color?: keyof Theme["colors"] }>`
-  color: ${(p) => (p.color ? p.theme.colors[p.color] : "initial")};
+  color: ${(p) => (p.color ? p.theme.colors[p.color] : "inherit")};
 
   &[data-animate="fadein"] {
     opacity: 0;
