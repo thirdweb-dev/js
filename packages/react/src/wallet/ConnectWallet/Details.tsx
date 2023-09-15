@@ -100,6 +100,9 @@ export const ConnectedWalletDetails: React.FC<{
 
   const disableSwitchChain = !!personalWallet;
 
+  const isActuallyMetaMask =
+    activeWallet && activeWallet instanceof MetaMaskWallet;
+
   const trigger = props.detailsBtn ? (
     <div>
       <props.detailsBtn />
@@ -278,6 +281,16 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="lg" />
 
+      {activeWallet && activeWallet.walletId === walletIds.smartWallet && (
+        <>
+          <Container flex="row" gap="xs" center="y">
+            <ActiveDot />
+            <Text size="sm">Connected to Smart Wallet</Text>
+          </Container>
+          <Spacer y="lg" />
+        </>
+      )}
+
       {/* Network Switcher */}
       <div>
         <DropdownLabel>Current Network</DropdownLabel>
@@ -302,7 +315,11 @@ export const ConnectedWalletDetails: React.FC<{
         {/* Switch to Wrapper Wallet */}
         {wrapperWalletConfig && wrapperWallet && (
           <WalletSwitcher
-            name={wrapperWalletConfig.meta.name}
+            name={
+              wrapperWallet.walletId === walletIds.smartWallet
+                ? "Smart Wallet"
+                : wrapperWalletConfig.meta.name
+            }
             wallet={wrapperWallet}
             onSwitch={() => {
               setWrapperWallet(undefined);
@@ -311,8 +328,8 @@ export const ConnectedWalletDetails: React.FC<{
         )}
 
         {/* Switch Account for Metamask */}
-        {activeWalletConfig &&
-          activeWalletConfig.id === walletIds.metamask &&
+        {isActuallyMetaMask &&
+          activeWalletConfig &&
           activeWalletConfig.isInstalled &&
           activeWalletConfig.isInstalled() &&
           !isMobile() && (
@@ -610,3 +627,10 @@ function WalletSwitcher({
     </MenuButton>
   );
 }
+
+const ActiveDot = styled.div<{ theme?: Theme }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${(props) => props.theme.colors.success};
+`;

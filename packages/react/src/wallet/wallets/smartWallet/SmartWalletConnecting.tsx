@@ -13,6 +13,7 @@ import {
   useWalletContext,
   useWallet,
   useSwitchChain,
+  WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Container, ModalHeader } from "../../../components/basic";
@@ -32,6 +33,7 @@ export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   smartWallet: SmartWalletConfig;
+  personalWallet: WalletConfig;
 }> = (props) => {
   const activeWallet = useWallet(); // personal wallet
 
@@ -120,8 +122,8 @@ export const SmartWalletConnecting: React.FC<{
     >
       <Container p="lg">
         <ModalHeader
-          title="Smart Wallet"
-          imgSrc={props.smartWallet.meta.iconURL}
+          title={props.personalWallet.meta.name}
+          imgSrc={props.personalWallet.meta.iconURL}
           onBack={props.onBack}
         />
       </Container>
