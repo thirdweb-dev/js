@@ -135,12 +135,10 @@ export const WalletSelector: React.FC<{
         {showGroupsUI ? (
           <>
             {isWalletGroupExpanded ? (
-              <Container p="xs">
-                <WalletSelection
-                  walletConfigs={eoaWallets}
-                  selectWallet={handleSelect}
-                />
-              </Container>
+              <WalletSelection
+                walletConfigs={eoaWallets}
+                selectWallet={handleSelect}
+              />
             ) : (
               <Container px="xs">
                 <WalletSelection
@@ -194,12 +192,10 @@ export const WalletSelector: React.FC<{
             )}
           </>
         ) : (
-          <Container p="xs">
-            <WalletSelection
-              walletConfigs={nonLocalWalletConfigs}
-              selectWallet={handleSelect}
-            />
-          </Container>
+          <WalletSelection
+            walletConfigs={nonLocalWalletConfigs}
+            selectWallet={handleSelect}
+          />
         )}
       </Container>
 
