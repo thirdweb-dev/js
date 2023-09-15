@@ -137,6 +137,7 @@ export const SmartWalletFlow = ({
     return (
       <>
         <ModalHeaderTextClose
+          marginHorizontal="xl"
           onClose={onConnectingClosePress}
           headerText={mismatch ? "Network Mismatch" : "Connecting smart wallet"}
           subHeaderText={
@@ -191,7 +192,7 @@ export const SmartWalletFlow = ({
     <ChooseWallet
       headerText={"Link key"}
       subHeaderText={
-        <Text variant="subHeader">
+        <Text variant="subHeader" marginHorizontal="xl">
           {
             "Choose a personal wallet that acts as your account's key. This controls access to your account. "
           }

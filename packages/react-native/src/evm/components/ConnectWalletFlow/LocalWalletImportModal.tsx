@@ -196,10 +196,12 @@ export const LocalWalletImportModal = ({
             ---- Or Private key or Mnemonic ----
           </Text>
           <TextInput
-            secureTextEntry={true}
-            placeholder={"Private key / Mnemonic"}
-            placeholderTextColor={theme.colors.textSecondary}
-            onChangeText={onPrivateKeyEntered}
+            textInputProps={{
+              secureTextEntry: true,
+              placeholder: "Private key / Mnemonic",
+              placeholderTextColor: theme.colors.textSecondary,
+              onChangeText: onPrivateKeyEntered,
+            }}
           />
           <Box
             flexDirection="row"

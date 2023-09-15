@@ -11,11 +11,15 @@ import {
   CLOSE_MODAL_STATE,
   ConnectWalletFlowModal,
 } from "../../utils/modalTypes";
+import Box from "../base/Box";
+import { ThemeProvider } from "../../styles/ThemeProvider";
+import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
-  const { modalTitle, walletConfig } = (modalState as ConnectWalletFlowModal)
-    .data;
+  const { modalTitle, privacyPolicyUrl, termsOfServiceUrl, walletConfig } = (
+    modalState as ConnectWalletFlowModal
+  ).data;
 
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
@@ -23,6 +27,7 @@ export const ConnectWalletFlow = () => {
   const [selectionData, setSelectionData] = useState<any>();
   const supportedWallets = useWallets();
   const theme = useColorScheme();
+  const appTheme = useAppTheme();
   const connect = useConnect();
 
   const onClose = useCallback(
@@ -67,7 +72,7 @@ export const ConnectWalletFlow = () => {
 
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
-    if (walletConfig) {
+    if (walletConfig && !walletConfig.connectUI) {
       onChooseWallet(walletConfig);
     }
   }, [onChooseWallet, walletConfig]);
@@ -128,32 +133,37 @@ export const ConnectWalletFlow = () => {
   ]);
 
   return (
-    <>
-      {activeWallet ? (
-        isConnecting ? (
-          <ConnectingWallet
-            content={
-              activeWallet.id === walletIds.localWallet ? (
-                <Text variant="bodySmallSecondary" mt="md">
-                  Creating, encrypting and securing your device wallet.
-                </Text>
-              ) : undefined
-            }
-            wallet={activeWallet}
-            onClose={onClose}
-            onBackPress={onBackPress}
-          />
+    <ThemeProvider theme={appTheme}>
+      <Box flexDirection="column">
+        {activeWallet ? (
+          isConnecting ? (
+            <ConnectingWallet
+              subHeaderText=""
+              content={
+                activeWallet.id === walletIds.localWallet ? (
+                  <Text variant="bodySmallSecondary" mt="md">
+                    Creating, encrypting and securing your device wallet.
+                  </Text>
+                ) : undefined
+              }
+              wallet={activeWallet}
+              onClose={onClose}
+              onBackPress={onBackPress}
+            />
+          ) : (
+            getComponentForWallet()
+          )
         ) : (
-          getComponentForWallet()
-        )
-      ) : (
-        <ChooseWallet
-          headerText={modalTitle}
-          wallets={supportedWallets}
-          onChooseWallet={onChooseWallet}
-          onClose={onClose}
-        />
-      )}
-    </>
+          <ChooseWallet
+            headerText={modalTitle}
+            privacyPolicyUrl={privacyPolicyUrl}
+            termsOfServiceUrl={termsOfServiceUrl}
+            wallets={supportedWallets}
+            onChooseWallet={onChooseWallet}
+            onClose={onClose}
+          />
+        )}
+      </Box>
+    </ThemeProvider>
   );
 };

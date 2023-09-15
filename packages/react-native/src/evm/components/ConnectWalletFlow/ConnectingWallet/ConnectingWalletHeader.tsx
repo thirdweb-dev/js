@@ -33,9 +33,7 @@ export const ConnectWalletHeader = ({
             onPress={onBackPress}
             color={theme.colors.iconPrimary}
           />
-        ) : (
-          <View />
-        )}
+        ) : null}
         {walletLogoUrl ? (
           <ImageSvgUri width={56} height={56} imageUrl={walletLogoUrl} />
         ) : null}

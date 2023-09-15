@@ -4,6 +4,7 @@ import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
 import { useState, useEffect } from "react";
 import { useModalState } from "../../providers/ui-context-provider";
 import { ThemeProvider, ThemeProviderProps } from "../../styles/ThemeProvider";
+import { useAppTheme } from "../../styles/hooks";
 
 export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
@@ -17,13 +18,25 @@ export type ConnectWalletButtonProps = {
    * @default "Choose your wallet"
    */
   modalTitle?: string;
+  /**
+   * Set a custom terms of service url
+   */
+  termsOfServiceUrl?: string;
+
+  /**
+   * Set a custom privacy policy url
+   */
+  privacyPolicyUrl?: string;
 };
 
 export const ConnectWalletButton = ({
   modalTitle,
+  termsOfServiceUrl,
+  privacyPolicyUrl,
   buttonTitle,
   theme,
 }: ConnectWalletButtonProps) => {
+  const appTheme = useAppTheme();
   const connectionStatus = useConnectionStatus();
   const isWalletConnecting = connectionStatus === "connecting";
 
@@ -59,6 +72,8 @@ export const ConnectWalletButton = ({
       view: "ConnectWalletFlow",
       data: {
         modalTitle,
+        termsOfServiceUrl,
+        privacyPolicyUrl,
         walletConfig:
           supportedWallets.length === 1 ? supportedWallets[0] : undefined,
       },
@@ -67,7 +82,7 @@ export const ConnectWalletButton = ({
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme ? theme : appTheme}>
       <BaseButton
         backgroundColor="buttonBackgroundColor"
         onPress={onConnectWalletPress}

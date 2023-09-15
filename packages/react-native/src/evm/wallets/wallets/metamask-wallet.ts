@@ -2,6 +2,7 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WCMeta } from "../types/wc";
 import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
+import { WalletConnectConfig } from "./wallet-connect/wallet-connect";
 
 export class MetaMaskWallet extends WalletConnectBase {
   static id = walletIds.metamask;
@@ -20,9 +21,7 @@ export class MetaMaskWallet extends WalletConnectBase {
   }
 }
 
-type MetaMaskWalletConfig = { projectId?: string };
-
-export const metamaskWallet = (config?: MetaMaskWalletConfig) => {
+export const metamaskWallet = (config?: WalletConnectConfig) => {
   return {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
@@ -32,5 +31,6 @@ export const metamaskWallet = (config?: MetaMaskWalletConfig) => {
         walletId: walletIds.metamask,
         projectId: config?.projectId,
       }),
+    recommended: config?.recommended,
   } satisfies WalletConfig;
 };
