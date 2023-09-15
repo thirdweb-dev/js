@@ -67,11 +67,13 @@ jobs:
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
-      - name: Install
-        uses: ./.github/composite-actions/install
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
 
       - name: Build
-        run: bun run  build
+        run: bun run build
 
       - name: Configure npm
         run: |
