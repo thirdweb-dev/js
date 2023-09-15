@@ -105,7 +105,7 @@ const SmartWallet: ThirdwebNextPage = () => {
               Component: (
                 <ChakraNextImage
                   src={require("/public/assets/product-pages/smart-wallet/fully-programmable.png")}
-                  alt=""
+                  alt="Multisignature account abstraction"
                   borderRadius="lg"
                 />
               ),
