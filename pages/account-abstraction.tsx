@@ -45,7 +45,7 @@ const SmartWallet: ThirdwebNextPage = () => {
               url: `${getAbsoluteUrl()}/assets/og-image/smart-wallet.png`,
               width: 1200,
               height: 630,
-              alt: "Account Abstraction",
+              alt: "Account Abstraction ERC-4337",
             },
           ],
         },
