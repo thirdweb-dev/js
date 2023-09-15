@@ -12,6 +12,6 @@ export class KeypairSigner implements SolanaSigner {
   }
 
   public async signMessage(message: Uint8Array): Promise<Uint8Array> {
-    return ed25519.sync.sign(message, this.#keypair.secretKey.slice(0, 32));
+    return ed25519.sign(message, this.#keypair.secretKey.slice(0, 32));
   }
 }
