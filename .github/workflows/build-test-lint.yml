@@ -36,7 +36,19 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - run: bun run build
+      - name: Build all packages
+        run: bun run build
+       # We use week in the turbo cache key to keep the cache from infinitely growing
+      - id: get-week
+        run: echo "WEEK=$(date +%U)" >> $GITHUB_OUTPUT
+
+      - name: Cache build output
+        uses: actions/cache@v3
+        timeout-minutes: 5
+        id: cache-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}
 
   lint:
     timeout-minutes: 15
@@ -59,8 +71,13 @@ jobs:
       
       - name: Install bun
         uses: oven-sh/setup-bun@v1
-      - name: Install dependencies
-        run: bun install
+      - name: Restore build output
+        uses: actions/cache@v3
+        timeout-minutes: 5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}  
       - run: bun run test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -75,8 +92,13 @@ jobs:
     steps:
       - name: Install bun
         uses: oven-sh/setup-bun@v1
-      - name: Install dependencies
-        run: bun install
+      - name: Restore build output
+        uses: actions/cache@v3
+        timeout-minutes: 5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}  
 
       - name: Install Playwright
         run: bunx playwright install --with-deps
