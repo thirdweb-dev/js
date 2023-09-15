@@ -50,6 +50,7 @@ import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
 import { fadeInAnimation } from "../../design-system/animations";
 import { Text } from "../../components/text";
+import { useENS } from "./hooks/useENS";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -73,6 +74,8 @@ export const ConnectedWalletDetails: React.FC<{
   const walletChainId = useChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
+  const ensQuery = useENS();
+
   const activeWallet = useWallet();
   const activeWalletConfig = useWalletConfig();
   const [showExportModal, setShowExportModal] = useState(false);
@@ -142,13 +145,13 @@ export const ConnectedWalletDetails: React.FC<{
           >
             Guest
           </ErrorMessage>
-        ) : address ? (
+        ) : address || ensQuery.data ? (
           <Text
             size="xs"
             weight={500}
             className={`${TW_CONNECTED_WALLET}__address`}
           >
-            {shortenString(address || "")}
+            {ensQuery.data || shortenString(address || "")}
           </Text>
         ) : (
           <Skeleton height={fontSize.xs} width="88px" />
@@ -486,7 +489,7 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: ${spacing.md};
+  gap: ${spacing.sm};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
