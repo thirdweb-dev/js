@@ -17,7 +17,7 @@ import { useCallback, useEffect, useContext } from "react";
 import { reservedScreens, compactmodalMaxHeight } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
-import { FlexScrollContainer } from "../../../components/basic";
+import { Container, noScrollBar } from "../../../components/basic";
 import { ScreenContext, useScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
@@ -121,14 +121,17 @@ export const ConnectModalContent = (props: {
           }}
         >
           <LeftContainer> {walletList} </LeftContainer>
-          <FlexScrollContainer>
+          <Container flex="column" scrollY relative>
             {screen === reservedScreens.main && <>{getStarted}</>}
             {screen === reservedScreens.getStarted && getStarted}
             {typeof screen !== "string" && getWalletUI(screen)}
-          </FlexScrollContainer>
+          </Container>
         </div>
       ) : (
-        <FlexScrollContainer
+        <Container
+          flex="column"
+          scrollY
+          relative
           style={{
             maxHeight: compactmodalMaxHeight,
           }}
@@ -136,7 +139,7 @@ export const ConnectModalContent = (props: {
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}
           {typeof screen !== "string" && getWalletUI(screen)}
-        </FlexScrollContainer>
+        </Container>
       )}
     </ScreenContext.Provider>
   );
@@ -199,8 +202,13 @@ export const ConnectModal = () => {
   );
 };
 
-const LeftContainer = /* @__PURE__ */ styled(FlexScrollContainer)<{
+const LeftContainer = /* @__PURE__ */ styled.div<{
   theme?: Theme;
 }>`
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  ${noScrollBar}
+  position: relative;
   border-right: 1px solid ${(p) => p.theme.colors.separatorLine};
 `;

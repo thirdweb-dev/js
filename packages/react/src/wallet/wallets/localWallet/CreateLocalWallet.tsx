@@ -12,11 +12,7 @@ import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
-import {
-  Container,
-  ModalHeader,
-  ScreenContainer,
-} from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
 import { iconSize, spacing } from "../../../design-system";
@@ -89,7 +85,7 @@ export const CreateLocalWallet_Password: React.FC<{
   };
 
   return (
-    <ScreenContainer>
+    <Container p="lg" fullHeight>
       <ModalHeader
         onBack={props.renderBackButton ? props.goBack : undefined}
         title={props.localWalletConf.meta.name}
@@ -205,7 +201,7 @@ export const CreateLocalWallet_Password: React.FC<{
         <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
         Import wallet
       </Button>
-    </ScreenContainer>
+    </Container>
   );
 };
 

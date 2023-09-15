@@ -8,10 +8,6 @@ import {
   floatUpAnimation,
 } from "../design-system/animations";
 
-export const ScreenContainer = styled.div`
-  padding: ${spacing.lg};
-`;
-
 export const ScreenBottomContainer = styled.div<{ theme?: Theme }>`
   border-top: 1px solid ${(p) => p.theme.colors.separatorLine};
   display: flex;
@@ -185,12 +181,4 @@ const Box = styled.div<{ theme?: Theme; color?: keyof Theme["colors"] }>`
     overflow-y: auto;
     ${noScrollBar}
   }
-`;
-
-export const FlexScrollContainer = styled.div<{ theme?: Theme }>`
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  ${noScrollBar}
-  position: relative;
 `;
