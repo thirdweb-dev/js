@@ -3,7 +3,7 @@ import { IconType } from "@react-icons/all-files";
 import { StaticImageData } from "next/image";
 import { Text } from "tw-components";
 
-export interface ProductNavCardProps {
+export interface ProductSectionItemProps {
   name: string;
   description: string;
   href?: string;
@@ -13,7 +13,7 @@ export interface ProductNavCardProps {
   selected: boolean;
 }
 
-export const ProductNavCard: React.FC<ProductNavCardProps> = ({
+export const ProductNavCard: React.FC<ProductSectionItemProps> = ({
   name,
   description,
   comingSoon,

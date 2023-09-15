@@ -1,4 +1,4 @@
-import { NavCard, NavCardProps } from "./NavCard";
+import { NavCard } from "./NavCard";
 import {
   Box,
   Fade,
@@ -8,21 +8,27 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Card, Text } from "tw-components";
-import { PRODUCT_SECTIONS } from "./DesktopMenu";
 import { ProductNavCard } from "./ProductNavCard";
 import { useRef, useState } from "react";
+import { SectionItemProps, SectionProps } from "./types";
 
-interface ProductHoverMenuProps {
+interface NestedHoverMenuProps {
   title: string;
-  items: NavCardProps[];
+  items: SectionItemProps[];
+  sections: SectionProps[];
+  initialSection: string;
+  leftOffset?: string;
 }
 
-export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
+export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
   title,
   items,
+  sections,
+  initialSection,
+  leftOffset = "0px",
 }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const [hoveredSection, setHoveredSection] = useState<string>("contracts");
+  const [hoveredSection, setHoveredSection] = useState<string>(initialSection);
 
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -50,7 +56,7 @@ export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
       // We just check if the menu is open, and if so, close it.
       if (isOpen) {
         onClose();
-        setHoveredSection("contracts");
+        setHoveredSection(initialSection);
       }
     }, 100);
   };
@@ -61,7 +67,7 @@ export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
         color="white"
         fontSize="16px"
         cursor="pointer"
-        py={3}
+        py={4}
         opacity={isOpen ? 0.8 : 1}
         transition="opacity 0.1s"
         onMouseEnter={onOpen}
@@ -74,12 +80,13 @@ export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
           <Card
             p={0}
             position="absolute"
-            top={0}
-            left="-480px"
+            top="0px"
+            left={leftOffset}
             borderColor="whiteAlpha.100"
             bg="black"
             borderWidth="2px"
             overflow="hidden"
+            borderRadius="8px"
           >
             <Flex>
               <Flex
@@ -87,7 +94,7 @@ export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
                 borderRight="1px"
                 borderRightColor="gray.900"
               >
-                {PRODUCT_SECTIONS.map((section) => (
+                {sections.map((section) => (
                   <Stack
                     key={section.name}
                     width={"300px"}
@@ -104,9 +111,9 @@ export const ProductHoverMenu: React.FC<ProductHoverMenuProps> = ({
                   </Stack>
                 ))}
               </Flex>
-              <Flex p={6} bg="#0E0F11">
-                <Stack width="660px">
-                  <SimpleGrid columns={2} gap={4}>
+              <Flex p={4} bg="#0E0F11">
+                <Stack width="328px">
+                  <SimpleGrid columns={1} gap={2}>
                     {items
                       .filter((item) => item.section === hoveredSection)
                       .map((item) => (

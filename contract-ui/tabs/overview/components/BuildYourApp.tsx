@@ -6,7 +6,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
-import { PRODUCTS } from "components/product-pages/common/nav/DesktopMenu";
+import { PRODUCTS } from "components/product-pages/common/nav/data";
 import { useTabHref } from "contract-ui/utils";
 import {
   Card,

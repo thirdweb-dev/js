@@ -1,5 +1,5 @@
-import { PRODUCTS, RESOURCES, SOLUTIONS } from "./DesktopMenu";
-import type { NavCardProps } from "./NavCard";
+import { DEVELOPER_RESOURCES, PRODUCTS, SOLUTIONS } from "./data";
+import type { SectionItemProps } from "./types";
 import {
   Flex,
   FlexProps,
@@ -49,8 +49,8 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
             onItemClick={disclosure.onClose}
           />
           <MobileNavSection
-            title="Resources"
-            links={RESOURCES}
+            title="Developer"
+            links={DEVELOPER_RESOURCES}
             onItemClick={disclosure.onClose}
           />
           <MobileNavSection
@@ -66,7 +66,7 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
 
 type MobileNavSectionProps = {
   title: string;
-  links: NavCardProps[];
+  links: SectionItemProps[];
   onItemClick: () => void;
 };
 

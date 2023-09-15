@@ -47,11 +47,6 @@ export const RESOURCES: FooterLinkInfo[] = [
     link: "/pricing",
   },
   {
-    label: "about",
-    name: "About",
-    link: "/about",
-  },
-  {
     name: "Upcoming Events",
     label: "events",
     link: "/events",
@@ -147,7 +142,17 @@ export const FAUCETS: FooterLinkInfo[] = [
   },
 ];
 
-export const LEGAL: FooterLinkInfo[] = [
+export const COMPANY: FooterLinkInfo[] = [
+  {
+    label: "about",
+    name: "About us",
+    link: "/about",
+  },
+  {
+    label: "blog",
+    name: "Blog",
+    link: "https://blog.thirdweb.com",
+  },
   {
     name: "Privacy Policy",
     label: "privacy",

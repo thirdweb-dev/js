@@ -1,27 +1,9 @@
 import { Box, Flex, Icon, Stack } from "@chakra-ui/react";
-import { IconType } from "@react-icons/all-files";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
 import { Text, TrackedLink } from "tw-components";
+import { SectionItemProps } from "./types";
 
-export interface NavCardProps {
-  name: string;
-  label: string;
-  description: string;
-  link: string;
-  icon?: StaticImageData;
-  iconType?: IconType;
-  comingSoon?: boolean;
-  section:
-    | "contracts"
-    | "wallets"
-    | "infrastructure"
-    | "payments"
-    | "solutions"
-    | "resources";
-}
-
-export const NavCard: React.FC<NavCardProps> = ({
+export const NavCard: React.FC<SectionItemProps> = ({
   name,
   description,
   label,
@@ -40,7 +22,7 @@ export const NavCard: React.FC<NavCardProps> = ({
       pointerEvents={comingSoon ? "none" : "auto"}
     >
       <Box _hover={{ bg: "whiteAlpha.50" }} p="8px" borderRadius="md">
-        <Stack direction="row" align="center" spacing={3}>
+        <Stack direction="row" align="center" spacing={4}>
           {icon && (
             <ChakraNextImage boxSize={7} mb="-4px" src={icon} alt="icon" />
           )}
