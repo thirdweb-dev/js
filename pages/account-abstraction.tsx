@@ -36,7 +36,7 @@ const SmartWallet: ThirdwebNextPage = () => {
     <LandingLayout
       bgColor="#0F0F0F"
       seo={{
-        title: "The complete Account Abstraction toolkit",
+        title: "The Complete Account Abstraction Toolkit",
         description:
           "Add smart wallets to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Learn more.",
         openGraph: {
@@ -45,7 +45,7 @@ const SmartWallet: ThirdwebNextPage = () => {
               url: `${getAbsoluteUrl()}/assets/og-image/smart-wallet.png`,
               width: 1200,
               height: 630,
-              alt: "Web3 Loyalty Programs",
+              alt: "Account Abstraction",
             },
           ],
         },
