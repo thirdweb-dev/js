@@ -134,9 +134,6 @@ export class Auth {
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
 
    */
-  async loginWithGoogle(): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithGoogle();
-  }
 
   /**
    * @description
