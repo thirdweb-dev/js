@@ -50,6 +50,7 @@ export type { Chain } from "@thirdweb-dev/chains";
 export { getInjectedMetamaskProvider } from "./connectors/metamask/getInjectedMetamaskProvider";
 export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhantomProvider";
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
+export { getInjectedCoinbaseProvider } from "./connectors/coinbase-wallet/getInjectedCoinbaseProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
 
 // ThirdwebEmbeddedWalletSdk

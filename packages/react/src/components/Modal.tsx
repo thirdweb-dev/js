@@ -5,24 +5,30 @@ import {
   shadow,
   radius,
   iconSize,
-  fontSize,
 } from "../design-system";
-import { scrollbar } from "../design-system/styles";
+import {
+  widemodalMaxHeight,
+  modalMaxWidthCompact,
+  modalMaxWidthWide,
+  compactmodalMaxHeight,
+} from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
+import { noScrollBar } from "./basic";
 import { IconButton } from "./buttons";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { DynamicHeight } from "./DynamicHeight";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
   open?: boolean;
   setOpen?: (open: boolean) => void;
   children: React.ReactNode;
-  title?: string;
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
+  size: "wide" | "compact";
 }> = (props) => {
   return (
     <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
@@ -38,20 +44,28 @@ export const Modal: React.FC<{
           <Overlay />
         </Dialog.Overlay>
         <Dialog.Content asChild>
-          <DialogContent style={props.style}>
-            {props.title && <DialogTitle> {props.title}</DialogTitle>}
-
-            {props.children}
+          <DialogContent
+            style={{
+              height: props.size === "compact" ? "auto" : widemodalMaxHeight,
+              maxWidth:
+                props.size === "compact"
+                  ? modalMaxWidthCompact
+                  : modalMaxWidthWide,
+            }}
+          >
+            {props.size === "compact" ? (
+              <DynamicHeight maxHeight={compactmodalMaxHeight}>
+                {props.children}{" "}
+              </DynamicHeight>
+            ) : (
+              props.children
+            )}
 
             {/* Close Icon */}
             {!props.hideCloseIcon && (
               <CrossContainer>
                 <Dialog.Close asChild>
-                  <IconButton
-                    variant="secondary"
-                    type="button"
-                    aria-label="Close"
-                  >
+                  <IconButton type="button" aria-label="Close">
                     <Cross2Icon
                       style={{
                         width: iconSize.md,
@@ -70,7 +84,7 @@ export const Modal: React.FC<{
   );
 };
 
-const CrossContainer = styled.div`
+export const CrossContainer = styled.div`
   position: absolute;
   top: ${spacing.lg};
   right: ${spacing.lg};
@@ -104,7 +118,9 @@ const modalAnimationMobile = keyframes`
 
 const DialogContent = styled.div<{ theme?: Theme }>`
   z-index: 10000;
-  background-color: ${(p) => p.theme.bg.base};
+  background: ${(p) => p.theme.colors.modalBg};
+  --bg: ${(p) => p.theme.colors.modalBg};
+  color: ${(p) => p.theme.colors.primaryText};
   border-radius: ${radius.xl};
   position: fixed;
   top: 50%;
@@ -112,23 +128,15 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   transform: translate(-50%, -50%);
   width: calc(100vw - 40px);
   box-sizing: border-box;
-  overflow-y: auto;
-  padding: ${spacing.lg};
-  padding-bottom: ${spacing.xl};
-  animation: ${modalAnimationDesktop} 200ms ease;
+  animation: ${modalAnimationDesktop} 300ms ease;
   box-shadow: ${shadow.lg};
   line-height: 1;
+  border: 1px solid ${(p) => p.theme.colors.borderColor};
+  outline: none;
+  overflow: hidden;
+  font-family: ${(p) => p.theme.fontFamily};
 
-  &:focus {
-    outline: none;
-  }
-
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.bg.elevated,
-      hover: p.theme.bg.highlighted,
-    })}
+  ${noScrollBar}
 
   /* open from bottom on mobile */
   ${media.mobile} {
@@ -147,16 +155,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   }
 
   & *::selection {
-    background-color: ${(p) => p.theme.bg.inverted};
-    color: ${(p) => p.theme.text.inverted};
+    background-color: ${(p) => p.theme.colors.selectedTextBg};
+    color: ${(p) => p.theme.colors.selectedTextColor};
   }
-`;
-
-const DialogTitle = /* @__PURE__ */ styled.h2<{
-  theme?: Theme;
-}>`
-  margin: 0;
-  font-weight: 500;
-  color: ${(p) => p.theme.text.neutral};
-  font-size: ${fontSize.lg};
 `;

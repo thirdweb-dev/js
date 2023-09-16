@@ -11,7 +11,6 @@ import {
   IERC1155__factory,
 } from "@thirdweb-dev/contracts-js";
 import {
-  ThirdwebSDK,
   getAllDetectedExtensionNames,
   isExtensionEnabled,
   matchesAbiFromBytecode,
@@ -23,20 +22,15 @@ import { expect } from "chai";
 
 global.fetch = require("cross-fetch");
 
-describe("Custom Contracts", async () => {
+describe("Feature Detection", async () => {
   let adminWallet: SignerWithAddress;
-  let realSDK: ThirdwebSDK;
 
   before(async () => {
     [adminWallet] = signers;
-    realSDK = new ThirdwebSDK(adminWallet, {
-      secretKey: process.env.TW_SECRET_KEY,
-    });
   });
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    realSDK.updateSignerOrProvider(adminWallet);
   });
 
   it("should extract implementation address for eip-1167 minimal proxy", async () => {
