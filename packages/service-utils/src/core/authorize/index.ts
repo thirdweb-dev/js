@@ -257,6 +257,9 @@ export async function authorize(
       id: apiKeyMeta.accountId,
       // TODO update this later
       name: "",
+      limits: apiKeyMeta.limits,
+      rateLimits: apiKeyMeta.rateLimits,
+      usage: apiKeyMeta.usage,
       creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
     },
   };
