@@ -117,7 +117,7 @@ const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
 
   return (
     <EmbeddedWalletFormUIScreen
-      googleLoginSupported={false}
+      googleLoginSupported={true}
       modalSize={props.modalSize}
       onSelect={(_loginType) => {
         setLoginType(_loginType);
