@@ -1,3 +1,4 @@
+import type { AirdropERC20, IAirdropERC20 } from "@thirdweb-dev/contracts-js";
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC20 } from "../../constants/thirdweb-features";
@@ -6,7 +7,6 @@ import { Airdrop20Content, Airdrop20Output } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IAirdropERC20, AirdropERC20 } from "@thirdweb-dev/contracts-js";
 
 /**
  * @public
@@ -25,7 +25,7 @@ export class Airdrop20<T extends IAirdropERC20 | AirdropERC20>
    * @internal
    */
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
