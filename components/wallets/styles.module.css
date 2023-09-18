@@ -1,4 +1,9 @@
 /* don't let user select any wallets  */
-.ConnectModalInline ul {
+.ConnectModalInline > * {
   pointer-events: none;
+}
+
+.ConnectModalInline {
+  min-width: 360px;
+  width: 100vw !important;
 }

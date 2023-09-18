@@ -15,6 +15,7 @@ import {
   Grid,
   useBreakpointValue,
   Switch,
+  useColorMode,
 } from "@chakra-ui/react";
 import {
   ConnectWallet,
@@ -30,6 +31,7 @@ import {
   trustWallet,
   zerionWallet,
   magicLink,
+  phantomWallet,
   bloctoWallet,
   frameWallet,
   rainbowWallet,
@@ -63,7 +65,8 @@ type WalletId =
   | "Magic Link"
   | "Blocto Wallet"
   | "Frame Wallet"
-  | "Rainbow Wallet";
+  | "Rainbow Wallet"
+  | "Phantom";
 type WalletInfo = Record<
   WalletId,
   {
@@ -84,8 +87,8 @@ type WalletSetupOptions = {
     btnTitle?: string;
     auth?: string;
     modalTitle?: string;
-    dropdownPosition?: string;
     switchToActiveChain?: string;
+    modalSize?: string;
   };
 };
 
@@ -98,6 +101,7 @@ const trustWalletConfig = trustWallet();
 const rainbowWalletConfig = rainbowWallet();
 
 const zerionWalletConfig = zerionWallet();
+const phantomConfig = phantomWallet();
 
 const hideUIForWalletIds = new Set([
   metamaskWalletConfig.id,
@@ -105,6 +109,7 @@ const hideUIForWalletIds = new Set([
   walletConnectConfig.id,
   bloctoWalletConfig.id,
   frameWalletConfig.id,
+  phantomConfig.id,
 ]);
 
 const hideUIForWalletIdsMobile = new Set([
@@ -128,6 +133,27 @@ const wallets: WalletInfo = {
     code: "walletConnect()",
     component: walletConnectConfig,
     import: "walletConnect",
+  },
+  "Trust Wallet": {
+    code: `trustWallet()`,
+    component: trustWalletConfig,
+    import: "trustWallet",
+  },
+  "Rainbow Wallet": {
+    code: `rainbowWallet()`,
+    component: rainbowWalletConfig,
+    import: "rainbowWallet",
+  },
+
+  "Zerion Wallet": {
+    code: "zerionWallet()",
+    component: zerionWalletConfig,
+    import: "zerionWallet",
+  },
+  Phantom: {
+    code: "phantomWallet()",
+    component: phantomConfig,
+    import: "phantomWallet",
   },
   "Guest Mode": {
     code: `localWallet()`,
@@ -166,21 +192,6 @@ const wallets: WalletInfo = {
     }),
     import: "magicLink",
   },
-  "Rainbow Wallet": {
-    code: `rainbowWallet()`,
-    component: rainbowWalletConfig,
-    import: "rainbowWallet",
-  },
-  "Trust Wallet": {
-    code: `trustWallet()`,
-    component: trustWalletConfig,
-    import: "trustWallet",
-  },
-  "Zerion Wallet": {
-    code: "zerionWallet()",
-    component: zerionWalletConfig,
-    import: "zerionWallet",
-  },
   "Blocto Wallet": {
     code: "bloctoWallet()",
     component: bloctoWalletConfig,
@@ -195,10 +206,12 @@ const wallets: WalletInfo = {
 
 export const ConnectWalletWithPreview: React.FC = () => {
   const [btnTitle, setBtnTitle] = useState("");
+  const [modalSize, setModalSize] = useState<"compact" | "wide">("wide");
   const [modalTitle, setModalTitle] = useState("");
-  const [dropdownPosition, setdropdownPosition] =
-    useState<DefaultOrCustom>("default");
-  const [selectedTheme, setSelectedTheme] = useState<Theme>("dark");
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const selectedTheme = colorMode === "light" ? "light" : "dark";
+
   const [authEnabled, setAuthEnabled] = useState(false);
   const [switchToActiveChain, setSwitchToActiveChain] = useState(false);
   const [walletSelection, setWalletSelection] = useState<
@@ -209,14 +222,15 @@ export const ConnectWalletWithPreview: React.FC = () => {
     WalletConnect: true,
     Safe: false,
     "Smart Wallet": false,
-    "Guest Mode": true,
-    "Email Wallet": true,
-    "Trust Wallet": false,
-    "Zerion Wallet": false,
+    "Guest Mode": false,
+    "Email Wallet": false,
+    "Trust Wallet": true,
+    "Zerion Wallet": true,
     "Blocto Wallet": false,
     "Magic Link": false,
     "Frame Wallet": false,
-    "Rainbow Wallet": false,
+    "Rainbow Wallet": true,
+    Phantom: true,
   });
   const [code, setCode] = useState("");
 
@@ -243,11 +257,8 @@ export const ConnectWalletWithPreview: React.FC = () => {
         btnTitle: btnTitle ? `"${btnTitle}"` : undefined,
         modalTitle: modalTitle ? `"${modalTitle}"` : undefined,
         auth: authEnabled ? "{ loginOptional: false }" : undefined,
-        dropdownPosition:
-          dropdownPosition === "custom"
-            ? `{ align: "center", side: "bottom" }`
-            : undefined,
         switchToActiveChain: switchToActiveChain ? "true" : undefined,
+        modalSize: `"${modalSize}"`,
       },
     });
 
@@ -261,20 +272,21 @@ export const ConnectWalletWithPreview: React.FC = () => {
   }, [
     authEnabled,
     btnTitle,
-    dropdownPosition,
     enabledWallets,
     modalTitle,
     selectedTheme,
     switchToActiveChain,
+    modalSize,
   ]);
 
   const supportedWallets = enabledWallets.map(
     (walletId) => wallets[walletId].component,
   );
+
   const withThirdwebProvider = (content: React.ReactNode) => (
     <ThirdwebProvider
       activeChain="polygon"
-      key={enabledWallets.join(",")}
+      key={enabledWallets.join(",") + modalSize}
       supportedWallets={
         supportedWallets.length > 0 ? supportedWallets : undefined
       }
@@ -293,15 +305,8 @@ export const ConnectWalletWithPreview: React.FC = () => {
 
   const connectWalletButton = (
     <ConnectWallet
+      modalSize={modalSize}
       modalTitle={modalTitle}
-      dropdownPosition={
-        dropdownPosition === "custom"
-          ? {
-              align: "center",
-              side: "bottom",
-            }
-          : undefined
-      }
       theme={selectedTheme}
       btnTitle={btnTitle || undefined}
       // overrides
@@ -320,28 +325,34 @@ export const ConnectWalletWithPreview: React.FC = () => {
       }}
     >
       <ConnectModalInlinePreview
+        modalSize={modalSize}
         walletIds={supportedWallets.map((x) => x.id)}
         modalTitle={modalTitle}
         selectedTheme={selectedTheme}
-        connectWalletButton={connectWalletButton}
       />
     </ClientOnly>,
   );
+
   const connectWalletButtonPreview = withThirdwebProvider(connectWalletButton);
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Grid
       templateColumns={{
-        base: "1fr",
-        md: "1fr 1.5fr",
+        md: "300px 1fr",
+        sm: "1fr",
       }}
-      gap={8}
+      gap={{
+        base: 14,
+        md: 4,
+      }}
       mt={8}
     >
       {/* left */}
       <GridItem>
         <Tabs isLazy>
-          <TabList>
+          <TabList fontSize={14}>
             <Tab> Wallets </Tab>
             <Tab> Appearance </Tab>
             <Tab> Features </Tab>
@@ -352,8 +363,10 @@ export const ConnectWalletWithPreview: React.FC = () => {
             <TabPanel p={0} pt={6}>
               <Grid
                 flexWrap={"wrap"}
-                gap={[3, 4]}
-                templateColumns="1fr 1fr 1fr"
+                gap={3}
+                templateColumns={{
+                  base: "1fr",
+                }}
               >
                 {Object.keys(wallets).map((key) => {
                   const walletId = key as WalletId;
@@ -362,11 +375,8 @@ export const ConnectWalletWithPreview: React.FC = () => {
 
                   return (
                     <Flex
-                      direction="column"
-                      justifyContent="center"
                       key={walletId}
                       borderRadius="xl"
-                      gap={3}
                       bg={isChecked ? "hsl(215.88deg 100% 60% / 15%)" : "none"}
                       cursor="pointer"
                       _hover={
@@ -378,9 +388,7 @@ export const ConnectWalletWithPreview: React.FC = () => {
                           : {}
                       }
                       transition="background 200ms ease"
-                      border={"2px solid"}
-                      borderColor={isChecked ? "blue.500" : "inputBgHover"}
-                      py={4}
+                      p={2}
                       alignItems="center"
                       onClick={() => {
                         setWalletSelection({
@@ -389,14 +397,29 @@ export const ConnectWalletWithPreview: React.FC = () => {
                         });
                       }}
                       userSelect={"none"}
+                      gap={3}
                     >
                       <Image
-                        width={12}
-                        height={12}
+                        width={10}
+                        height={10}
                         alt={walletInfo.component.meta.name}
                         src={replaceIpfsUrl(walletInfo.component.meta.iconURL)}
-                      />{" "}
-                      <Text color="inherit">{walletId}</Text>
+                      />
+
+                      <Flex
+                        gap={3}
+                        alignItems="center"
+                        justifyContent="space-between"
+                        flex={1}
+                      >
+                        <Text
+                          fontWeight={600}
+                          fontSize={16}
+                          color={isChecked ? "heading" : "paragraph"}
+                        >
+                          {walletId}
+                        </Text>
+                      </Flex>
                     </Flex>
                   );
                 })}
@@ -426,7 +449,10 @@ export const ConnectWalletWithPreview: React.FC = () => {
                         selectedTheme === "dark" ? "blue.500" : "gray.800"
                       }
                       onClick={() => {
-                        setSelectedTheme("dark");
+                        if (selectedTheme === "dark") {
+                          return;
+                        }
+                        toggleColorMode();
                       }}
                     ></Button>
 
@@ -444,11 +470,33 @@ export const ConnectWalletWithPreview: React.FC = () => {
                         selectedTheme === "light" ? "blue.500" : "gray.200"
                       }
                       onClick={() => {
-                        setSelectedTheme("light");
+                        if (selectedTheme === "light") {
+                          return;
+                        }
+                        toggleColorMode();
                       }}
                     ></Button>
                   </Flex>
                 </FormItem>
+
+                {/* modal size */}
+                {!isMobile && (
+                  <FormItem
+                    label="Modal Size"
+                    description="Specify the size of ConnectWallet modal. Modal is always compact on mobile device."
+                  >
+                    <Select
+                      variant="filled"
+                      value={modalSize}
+                      onChange={(event) => {
+                        setModalSize(event.target.value as "wide" | "compact");
+                      }}
+                    >
+                      <option value="wide">wide</option>
+                      <option value="compact">compact</option>
+                    </Select>
+                  </FormItem>
+                )}
 
                 {/* Button Title */}
                 <FormItem
@@ -476,25 +524,6 @@ export const ConnectWalletWithPreview: React.FC = () => {
                       setModalTitle(e.target.value);
                     }}
                   />
-                </FormItem>
-
-                {/* dropdownPosition */}
-                <FormItem
-                  label="Dropdown Position"
-                  description="Specify where should the details dropdown menu open relative to the ConnectWallet details Button. The details button is rendered when wallet is connected."
-                >
-                  <Select
-                    variant="filled"
-                    value={dropdownPosition}
-                    onChange={(event) => {
-                      setdropdownPosition(
-                        event.target.value as DefaultOrCustom,
-                      );
-                    }}
-                  >
-                    <option value="default">default</option>
-                    <option value="custom">custom</option>
-                  </Select>
                 </FormItem>
               </Flex>
             </TabPanel>
@@ -538,9 +567,8 @@ export const ConnectWalletWithPreview: React.FC = () => {
       {/* right */}
       <GridItem>
         <Tabs>
-          <TabList>
-            <Tab> UI </Tab>
-            <Tab> Live Preview </Tab>
+          <TabList fontSize={14}>
+            <Tab> Preview </Tab>
             <Tab> Code </Tab>
           </TabList>
 
@@ -550,34 +578,30 @@ export const ConnectWalletWithPreview: React.FC = () => {
                 borderRadius="md"
                 w="full"
                 my="auto"
-                display="grid"
-                placeItems="center"
-                minH="700px"
+                display="flex"
+                flexDir="column"
+                justifyContent="center"
+                alignItems="center"
+                minH="800px"
                 py={8}
-                bg={selectedTheme === "light" ? "gray.300" : "black"}
-                border="1px solid"
-                borderColor={"backgroundHighlight"}
-                cursor="not-allowed"
               >
-                {componentPreview}
-              </Box>
-            </TabPanel>
+                <Box>
+                  <Text color={"gray.700"} textAlign="center">
+                    Live Preview
+                  </Text>
+                  <Box height={2} />
+                  <Box>{connectWalletButtonPreview}</Box>
+                </Box>
 
-            <TabPanel p={0} pt={6}>
-              <Box
-                borderRadius="md"
-                w="full"
-                my="auto"
-                display="grid"
-                placeItems="center"
-                minH="700px"
-                py={8}
-                bg={selectedTheme === "light" ? "gray.300" : "black"}
-                border="1px solid"
-                borderColor={"backgroundHighlight"}
-                cursor="not-allowed"
-              >
-                {connectWalletButtonPreview}
+                <Box height={12} />
+
+                <Box>
+                  <Text color={"gray.700"} textAlign="center">
+                    Modal UI
+                  </Text>
+                  <Box height={2} />
+                  {componentPreview}
+                </Box>
               </Box>
             </TabPanel>
 
@@ -594,10 +618,13 @@ export const ConnectWalletWithPreview: React.FC = () => {
 const ConnectModalInlinePreview = (props: {
   walletIds: string[];
   modalTitle: string;
+  modalSize: "compact" | "wide";
   selectedTheme: Theme;
-  connectWalletButton: React.ReactNode;
 }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue(
+    { base: true, md: false },
+    { ssr: false },
+  );
   const disconnect = useDisconnect();
   const walletIdsJoin = props.walletIds.join(",");
   const connectionStatus = useConnectionStatus();
@@ -629,11 +656,11 @@ const ConnectModalInlinePreview = (props: {
       alignItems="center"
       flexDir="column"
       gap={12}
+      cursor="not-allowed"
     >
-      <Box pointerEvents="none">{props.connectWalletButton}</Box>
-
       {showInlineModal && (
         <ConnectModalInline
+          modalSize={isMobile ? "compact" : props.modalSize}
           className={styles.ConnectModalInline}
           title={props.modalTitle}
           theme={props.selectedTheme}
