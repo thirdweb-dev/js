@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.10.61
+
+### Patch Changes
+
+- [#1617](https://github.com/thirdweb-dev/js/pull/1617) [`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update addresses
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): centralize access of the ethers contract within the js SDK.
+
+- Updated dependencies [[`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/chains@0.1.52
+
 ## 3.10.60
 
 ### Patch Changes
