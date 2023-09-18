@@ -1,21 +1,20 @@
+import type { ISignatureAction, TieredDrop } from "@thirdweb-dev/contracts-js";
+import type { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
+import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumberish, utils } from "ethers";
+import invariant from "tiny-invariant";
 import type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
 } from "../../../core/schema/nft";
+import { CommonNFTInput, NFTMetadataInput } from "../../../core/schema/nft";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
-import type { UploadProgressEvent } from "../../types/events";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import type { TransactionResultWithId } from "../types";
-import type { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { ISignatureAction, TieredDrop } from "@thirdweb-dev/contracts-js";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, utils } from "ethers";
-import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
-import type { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
-import { CommonNFTInput, NFTMetadataInput } from "../../../core/schema/nft";
 import { GenericRequest } from "../../schema/contracts/common";
 import {
   TieredDropPayloadInput,
@@ -23,11 +22,12 @@ import {
   TieredDropPayloadSchema,
   TieredDropPayloadWithSignature,
 } from "../../schema/contracts/tiered-drop";
-import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
-import invariant from "tiny-invariant";
-import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
-import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import type { UploadProgressEvent } from "../../types/events";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { TransactionResultWithId } from "../types";
+import type { ContractWrapper } from "./contract-wrapper";
 import type { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 
 export class Erc721TieredDrop implements DetectableFeature {
   featureName = FEATURE_NFT_TIERED_DROP.name;
@@ -49,8 +49,7 @@ export class Erc721TieredDrop implements DetectableFeature {
   public async getMetadataInTier(
     tier: string,
   ): Promise<Omit<NFTMetadata, "id">[]> {
-    const tiers =
-      await this.contractWrapper.readContract.getMetadataForAllTiers();
+    const tiers = await this.contractWrapper.read("getMetadataForAllTiers", []);
     const batches = tiers.find((t) => t.tier === tier);
 
     if (!batches) {
@@ -83,17 +82,16 @@ export class Erc721TieredDrop implements DetectableFeature {
   }
 
   public async getTokensInTier(tier: string): Promise<NFT[]> {
-    const endIndex =
-      await this.contractWrapper.readContract.getTokensInTierLen();
+    const endIndex = await this.contractWrapper.read("getTokensInTierLen", []);
     if (endIndex.eq(0)) {
       return [];
     }
 
-    const ranges = await this.contractWrapper.readContract.getTokensInTier(
+    const ranges = await this.contractWrapper.read("getTokensInTier", [
       tier,
       0,
       endIndex,
-    );
+    ]);
 
     const nfts = await Promise.all(
       ranges
@@ -198,24 +196,17 @@ export class Erc721TieredDrop implements DetectableFeature {
       );
 
       const baseUri = getBaseUriFromBatch(uris);
-      const baseUriId =
-        await this.contractWrapper.readContract.getBaseURICount();
+      const baseUriId = await this.contractWrapper.read("getBaseURICount", []);
       const chainId = await this.contractWrapper.getChainID();
       const hashedPassword = utils.solidityKeccak256(
         ["string", "uint256", "uint256", "address"],
-        [
-          password,
-          chainId,
-          baseUriId,
-          this.contractWrapper.readContract.address,
-        ],
+        [password, chainId, baseUriId, this.contractWrapper.address],
       );
 
-      const encryptedBaseUri =
-        await this.contractWrapper.readContract.encryptDecrypt(
-          utils.toUtf8Bytes(baseUri),
-          hashedPassword,
-        );
+      const encryptedBaseUri = await this.contractWrapper.read(
+        "encryptDecrypt",
+        [utils.toUtf8Bytes(baseUri), hashedPassword],
+      );
 
       const provenanceHash = utils.solidityKeccak256(
         ["bytes", "bytes", "uint256"],
@@ -265,7 +256,7 @@ export class Erc721TieredDrop implements DetectableFeature {
       const chainId = await this.contractWrapper.getChainID();
       const key = utils.solidityKeccak256(
         ["string", "uint256", "uint256", "address"],
-        [password, chainId, batchId, this.contractWrapper.readContract.address],
+        [password, chainId, batchId, this.contractWrapper.address],
       );
       // performing the reveal locally to make sure it'd succeed before sending the transaction
       try {
@@ -317,7 +308,7 @@ export class Erc721TieredDrop implements DetectableFeature {
             name: "SignatureAction",
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract: this.contractWrapper.address,
           },
           { GenericRequest: GenericRequest },
           await this.mapPayloadToContractStruct(payload),
@@ -334,10 +325,10 @@ export class Erc721TieredDrop implements DetectableFeature {
     const message = await this.mapPayloadToContractStruct(
       signedPayload.payload,
     );
-    const verification = await this.contractWrapper.readContract.verify(
+    const verification = await this.contractWrapper.read("verify", [
       message,
       signedPayload.signature,
-    );
+    ]);
     return verification[0];
   }
 

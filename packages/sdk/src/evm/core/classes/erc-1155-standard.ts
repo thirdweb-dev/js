@@ -1,3 +1,6 @@
+import type { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFT } from "../../../core/schema/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Address } from "../../schema/shared/Address";
@@ -8,9 +11,6 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
-import type { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
 
 /**
  * Standard ERC1155 NFT functions
@@ -56,7 +56,7 @@ export class StandardErc1155<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   ////// Standard ERC1155 functions //////

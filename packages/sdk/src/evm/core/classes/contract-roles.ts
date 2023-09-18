@@ -1,20 +1,21 @@
-import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { resolveAddress } from "../../common/ens/resolveAddress";
-import { MissingRoleError } from "../../common/error";
-import { getRoleHash, Role } from "../../common/role";
-import { buildTransactionFunction } from "../../common/transactions";
-import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
-import { Address } from "../../schema/shared/Address";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
 import type {
   IMulticall,
   IPermissions,
   IPermissionsEnumerable,
 } from "@thirdweb-dev/contracts-js";
 import invariant from "tiny-invariant";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { MissingRoleError } from "../../common/error";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { Role, getRoleHash } from "../../common/role";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Handle contract permissions
@@ -27,6 +28,7 @@ import invariant from "tiny-invariant";
  * ```
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   implements DetectableFeature
 {
@@ -39,7 +41,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   public readonly roles;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper: ContractWrapper<IPermissions>,
     roles: readonly TRole[],
   ) {
     this.contractWrapper = contractWrapper;
@@ -99,11 +101,11 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
     ) {
       const roleHash = getRoleHash(role);
       const count = (
-        await wrapper.readContract.getRoleMemberCount(roleHash)
+        await wrapper.read("getRoleMemberCount", [roleHash])
       ).toNumber();
       return await Promise.all(
         Array.from(Array(count).keys()).map((i) =>
-          wrapper.readContract.getRoleMember(roleHash, i),
+          wrapper.read("getRoleMember", [roleHash, i]),
         ),
       );
     }
@@ -135,6 +137,8 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
     async (rolesWithAddresses: {
       [key in TRole]?: AddressOrEns[];
     }): Promise<Transaction> => {
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
+
       const roles = Object.keys(rolesWithAddresses) as TRole[];
       invariant(roles.length, "you must provide at least one role to set");
       invariant(
@@ -167,10 +171,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
         if (toAdd.length) {
           toAdd.forEach((address) => {
             encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                "grantRole",
-                [getRoleHash(role), address],
-              ),
+              contractEncoder.encode("grantRole", [getRoleHash(role), address]),
             );
           });
         }
@@ -181,10 +182,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
               address,
             )) as any;
             encoded.push(
-              this.contractWrapper.readContract.interface.encodeFunctionData(
-                revokeFunctionName,
-                [getRoleHash(role), address],
-              ),
+              contractEncoder.encode(revokeFunctionName, [
+                getRoleHash(role),
+                address,
+              ]),
             );
           }
         }
@@ -254,7 +255,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
 
       const resolvedAddress: Address = await resolveAddress(address);
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<IPermissions>,
+        contractWrapper: this.contractWrapper,
         method: "grantRole",
         args: [getRoleHash(role), resolvedAddress],
       });
@@ -297,7 +298,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
       );
 
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<IPermissions>,
+        contractWrapper: this.contractWrapper,
         method: revokeFunctionName,
         args: [getRoleHash(role), resolvedAddress],
       });
