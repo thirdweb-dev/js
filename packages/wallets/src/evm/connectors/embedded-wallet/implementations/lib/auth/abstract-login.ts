@@ -57,8 +57,6 @@ export abstract class AbstractLogin<
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
   abstract loginWithEmailOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
 
-  abstract loginWithGoogle(): Promise<AuthLoginReturnType>;
-
   async sendEmailLoginOtp({
     email,
   }: LoginQuerierTypes["sendThirdwebEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
