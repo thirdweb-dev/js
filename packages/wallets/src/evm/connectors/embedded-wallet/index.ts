@@ -32,7 +32,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.options = options;
   }
 
-  private getEmbeddedWalletSDK(): EmbeddedWalletSdk {
+  getEmbeddedWalletSDK(): EmbeddedWalletSdk {
     if (!this.#embeddedWalletSdk) {
       this.#embeddedWalletSdk = new EmbeddedWalletSdk({
         clientId: this.options.clientId,
