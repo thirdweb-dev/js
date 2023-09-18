@@ -111,7 +111,7 @@ export class Split implements UpdateableNetwork {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -132,13 +132,12 @@ export class Split implements UpdateableNetwork {
   public async getAllRecipients(): Promise<SplitRecipient[]> {
     const recipients: SplitRecipient[] = [];
     let index = BigNumber.from(0);
-    const totalRecipients =
-      await this.contractWrapper.readContract.payeeCount();
+    const totalRecipients = await this.contractWrapper.read("payeeCount", []);
     while (index.lt(totalRecipients)) {
       try {
-        const recipientAddress = await this.contractWrapper.readContract.payee(
+        const recipientAddress = await this.contractWrapper.read("payee", [
           index,
-        );
+        ]);
         recipients.push(
           await this.getRecipientSplitPercentage(recipientAddress),
         );
@@ -208,21 +207,21 @@ export class Split implements UpdateableNetwork {
    */
   public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
     const resolvedAddress = await resolveAddress(address);
-    const walletBalance =
-      await this.contractWrapper.readContract.provider.getBalance(
-        this.getAddress(),
-      );
-    const totalReleased = await this.contractWrapper.readContract[
-      "totalReleased()"
-    ]();
+    const walletBalance = await this.contractWrapper
+      .getProvider()
+      .getBalance(this.getAddress());
+    const totalReleased = await this.contractWrapper.read(
+      "totalReleased" as "totalReleased()",
+      [],
+    );
     const totalReceived = walletBalance.add(totalReleased);
 
     return this._pendingPayment(
       resolvedAddress,
       totalReceived,
-      await this.contractWrapper.readContract["released(address)"](
+      await this.contractWrapper.read("released" as "released(address)", [
         resolvedAddress,
-      ),
+      ]),
     );
   }
 
@@ -254,16 +253,17 @@ export class Split implements UpdateableNetwork {
       this.contractWrapper.getProvider(),
     ) as IERC20;
     const walletBalance = await erc20.balanceOf(this.getAddress());
-    const totalReleased = await this.contractWrapper.readContract[
-      "totalReleased(address)"
-    ](resolvedToken);
+    const totalReleased = await this.contractWrapper.read(
+      "totalReleased" as "totalReleased(address)",
+      [resolvedToken],
+    );
     const totalReceived = walletBalance.add(totalReleased);
     const value = await this._pendingPayment(
       resolvedWallet,
       totalReceived,
-      await this.contractWrapper.readContract["released(address,address)"](
-        resolvedToken,
-        resolvedWallet,
+      await this.contractWrapper.read(
+        "released" as "released(address,address)",
+        [resolvedToken, resolvedWallet],
       ),
     );
     return await fetchCurrencyValue(
@@ -283,8 +283,8 @@ export class Split implements UpdateableNetwork {
     const resolvedAddress = await resolveAddress(address);
 
     const [totalShares, walletsShares] = await Promise.all([
-      this.contractWrapper.readContract.totalShares(),
-      this.contractWrapper.readContract.shares(address),
+      this.contractWrapper.read("totalShares", []),
+      this.contractWrapper.read("shares", [address]),
     ]);
     // We convert to basis points to avoid floating point loss of precision
     return {
@@ -393,12 +393,12 @@ export class Split implements UpdateableNetwork {
     alreadyReleased: BigNumber,
   ): Promise<BigNumber> {
     const addressReceived = totalReceived.mul(
-      await this.contractWrapper.readContract.shares(
+      await this.contractWrapper.read("shares", [
         await resolveAddress(address),
-      ),
+      ]),
     );
     const totalRoyaltyAvailable = addressReceived.div(
-      await this.contractWrapper.readContract.totalShares(),
+      await this.contractWrapper.read("totalShares", []),
     );
     return totalRoyaltyAvailable.sub(alreadyReleased);
   }
