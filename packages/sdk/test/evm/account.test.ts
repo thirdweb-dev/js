@@ -609,7 +609,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       const restrictionsForAdmin = {
         signer: adminWallet.address,
-        makeAdmin: true,
+        isAdmin: true,
         permissions: { approvedCallTargets: [] },
       };
       signersWithRestrictions.push(restrictionsForAdmin);
@@ -617,7 +617,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       // Adding a new admin: Signer3
       const restrictionsSigner3 = {
         signer: signer3Wallet.address,
-        makeAdmin: true,
+        isAdmin: true,
         permissions: { approvedCallTargets: [] },
       };
       signersWithRestrictions.push(restrictionsSigner3);
@@ -627,7 +627,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       const restrictionsSigner4 = {
         signer: signer4Wallet.address,
-        makeAdmin: false,
+        isAdmin: false,
         permissions: { approvedCallTargets: [] },
       };
       signersWithRestrictions.push(restrictionsSigner4);
@@ -635,7 +635,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
       // Adding a new scoped signer
       const restrictionsSigner5 = {
         signer: signer5Wallet.address,
-        makeAdmin: false,
+        isAdmin: false,
         permissions: { approvedCallTargets: [adminWallet.address] },
       };
       signersWithRestrictions.push(restrictionsSigner5);
@@ -647,7 +647,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       const restrictionsSigner6 = {
         signer: signer6Wallet.address,
-        makeAdmin: false,
+        isAdmin: false,
         permissions: { approvedCallTargets: [] },
       };
       signersWithRestrictions.push(restrictionsSigner6);
@@ -660,7 +660,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       const restrictionsSigner7 = {
         signer: signer7Wallet.address,
-        makeAdmin: false,
+        isAdmin: false,
         permissions: { approvedCallTargets: [signer1Wallet.address] },
       };
       signersWithRestrictions.push(restrictionsSigner7);
@@ -670,7 +670,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       const restrictionsSigner8 = {
         signer: signer8Wallet.address,
-        makeAdmin: false,
+        isAdmin: false,
         permissions: { approvedCallTargets: [adminWallet.address] },
       };
       signersWithRestrictions.push(restrictionsSigner8);
@@ -682,7 +682,7 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
 
       const restrictionsSigner9 = {
         signer: signer9Wallet.address,
-        makeAdmin: true,
+        isAdmin: true,
         permissions: { approvedCallTargets: [] },
       };
       signersWithRestrictions.push(restrictionsSigner9);

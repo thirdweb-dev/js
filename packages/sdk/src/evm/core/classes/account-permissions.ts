@@ -649,7 +649,7 @@ export class AccountPermissions implements DetectableFeature {
       // Remove all existing admins not included in the passed snapshot.
       const allAdmins = await this.getAllAdmins();
       const allToMakeAdmin = resolvedSnapshot
-        .filter((item) => item.makeAdmin)
+        .filter((item) => item.isAdmin)
         .map((item) => item.signer);
       allAdmins.forEach((admin) => {
         if (!allToMakeAdmin.includes(admin)) {
@@ -666,7 +666,7 @@ export class AccountPermissions implements DetectableFeature {
       const allSigners = await this.getAllSigners();
       const allToMakeSigners = resolvedSnapshot
         .filter((item) => {
-          return !item.makeAdmin;
+          return !item.isAdmin;
         })
         .map((item) => item.signer);
       await Promise.all(
@@ -686,7 +686,7 @@ export class AccountPermissions implements DetectableFeature {
 
       for (const member of resolvedSnapshot) {
         // Add new admin
-        if (member.makeAdmin) {
+        if (member.isAdmin) {
           addAdminData.push(
             this.contractWrapper.writeContract.interface.encodeFunctionData(
               "setAdmin",

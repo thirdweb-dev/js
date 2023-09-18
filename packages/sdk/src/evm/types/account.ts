@@ -31,7 +31,7 @@ export type SignerWithPermissions = {
 export const PermissionSnapshotSchema = /* @__PURE__ */ z.array(
   /* @__PURE__ */ z.object({
     signer: AddressOrEnsSchema,
-    makeAdmin: /* @__PURE__ */ z.boolean(),
+    isAdmin: /* @__PURE__ */ z.boolean(),
     permissions: SignerPermissionsSchema,
   }),
 );
