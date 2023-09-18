@@ -61,7 +61,18 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
         // Show Google popup
         if (options?.googleLogin) {
-          authResult = await thirdwebSDK.auth.loginWithGoogle();
+          const googleWindow = window.open(
+            "",
+            "Login",
+            "width=350, height=500",
+          );
+          authResult = await thirdwebSDK.auth.loginWithGoogle(
+            googleWindow !== null
+              ? {
+                  windowOpened: googleWindow,
+                }
+              : undefined,
+          );
         }
 
         // Headless
