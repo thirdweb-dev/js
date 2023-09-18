@@ -186,8 +186,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): ThirdwebSDK {
     let signerWithProvider = signer;
     if (network) {
-      const provider = getChainProvider(network, options);
-      signerWithProvider = signer.connect(provider);
+      try {
+        const provider = getChainProvider(network, options);
+        signerWithProvider = signer.connect(provider);
+      } catch {
+        // We have to catch here because browser wallets throw when trying to override provider
+      }
     }
 
     const sdk = new ThirdwebSDK(
