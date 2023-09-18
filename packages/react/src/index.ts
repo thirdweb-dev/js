@@ -1,7 +1,6 @@
 export { useSmartWallet } from "./evm/hooks/wallets/useSmartWallet";
 export { bloctoWallet } from "./wallet/wallets/blocto/bloctoWallet";
 export { coinbaseWallet } from "./wallet/wallets/coinbase/coinbaseWallet";
-export { embeddedWallet } from "./wallet/wallets/embeddedWallet";
 export { frameWallet } from "./wallet/wallets/frame/frameWallet";
 export { localWallet } from "./wallet/wallets/localWallet/localWallet";
 export { magicLink } from "./wallet/wallets/magic/magicLink";
