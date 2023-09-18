@@ -185,7 +185,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     let signerWithProvider = signer;
-    if (network && !signer.provider) {
+    if (network) {
       const provider = getChainProvider(network, options);
       signerWithProvider = signer.connect(provider);
     }
