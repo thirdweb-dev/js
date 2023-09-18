@@ -87,7 +87,14 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
 
         // Show Google popup
         if (options?.googleLogin) {
-          authResult = await paperSDK.auth.loginWithGoogle();
+          const paperWindow = window.open("", "Login", "width=350, height=500");
+          authResult = await paperSDK.auth.loginWithGoogle(
+            paperWindow !== null
+              ? {
+                  windowOpened: paperWindow,
+                }
+              : undefined,
+          );
         }
 
         // Headless
