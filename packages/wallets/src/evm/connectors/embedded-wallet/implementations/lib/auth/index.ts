@@ -1,6 +1,6 @@
-import type {
-  AuthAndWalletRpcReturnType,
-  AuthLoginReturnType,
+import {
+  type AuthAndWalletRpcReturnType,
+  type AuthLoginReturnType,
 } from "../../interfaces/auth";
 import type {
   ClientIdWithQuerierType,
@@ -127,6 +127,12 @@ export class Auth {
     args: Parameters<BaseLogin["loginWithEmailOtp"]>[0],
   ): Promise<AuthLoginReturnType> {
     return this.BaseLogin.loginWithEmailOtp(args);
+  }
+
+  async loginWithGoogle(
+    args?: Parameters<BaseLogin["loginWithGoogle"]>[0],
+  ): Promise<AuthLoginReturnType> {
+    return this.BaseLogin.loginWithGoogle(args);
   }
 
   /**
