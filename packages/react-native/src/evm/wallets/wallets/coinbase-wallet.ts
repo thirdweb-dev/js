@@ -66,7 +66,10 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   }
 }
 
-export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
+export const coinbaseWallet = (config?: {
+  callbackURL?: URL;
+  recommended?: boolean;
+}) => {
   const callbackURLNonNull =
     config?.callbackURL || new URL("https://thirdweb.com/wsegue");
   return {
@@ -75,5 +78,6 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
     config: config,
+    recommended: config?.recommended,
   };
 };

@@ -52,6 +52,8 @@ export type ClosedModal = {
 // connect wallet flow
 export type ConnectWalletFlowData = {
   modalTitle?: string;
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
   walletConfig?: WalletConfig;
 };
 

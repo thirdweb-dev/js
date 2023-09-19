@@ -1,6 +1,7 @@
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WCMeta } from "../types/wc";
 import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
+import { WalletConnectConfig } from "./wallet-connect/wallet-connect";
 
 export class TrustWallet extends WalletConnectBase {
   static id = "trust" as const;
@@ -19,9 +20,7 @@ export class TrustWallet extends WalletConnectBase {
   }
 }
 
-type TrustWalletConfig = { projectId?: string };
-
-export const trustWallet = (config?: TrustWalletConfig) => {
+export const trustWallet = (config?: WalletConnectConfig) => {
   return {
     id: TrustWallet.id,
     meta: TrustWallet.meta,
@@ -31,5 +30,6 @@ export const trustWallet = (config?: TrustWalletConfig) => {
         walletId: "trust",
         projectId: config?.projectId,
       }),
+    recommended: config?.recommended,
   } satisfies WalletConfig<WalletConnectBase>;
 };

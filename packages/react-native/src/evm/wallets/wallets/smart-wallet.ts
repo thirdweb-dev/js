@@ -9,7 +9,8 @@ import { createSyncStorage } from "../../../core/AsyncStorage";
 
 type SmartWalletConfig = {
   personalWallets?: WalletConfig<any>[];
-} & Omit<SmartWalletConfigWallets, "chain" | 'clientId' | 'secretKey'>;
+  recommended?: boolean;
+} & Omit<SmartWalletConfigWallets, "chain" | "clientId" | "secretKey">;
 
 export type SmartWalletObj = WalletConfig<SmartWallet>;
 
@@ -27,5 +28,6 @@ export const smartWallet = (
         wcStorage: createSyncStorage("smart-wallet"),
       }),
     personalWallets: config.personalWallets || DEFAULT_WALLETS,
+    recommended: config.recommended,
   };
 };

@@ -27,6 +27,7 @@ export { AbstractClientWallet } from "./wallets/base";
 export type { WalletOptions } from "./wallets/base";
 export * from "./wallets/blocto";
 export * from "./wallets/coinbase-wallet";
+export * from "./wallets/embedded-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/frame";
 export * from "./wallets/injected";
@@ -49,7 +50,8 @@ export type { Chain } from "@thirdweb-dev/chains";
 export { getInjectedMetamaskProvider } from "./connectors/metamask/getInjectedMetamaskProvider";
 export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhantomProvider";
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
+export { getInjectedCoinbaseProvider } from "./connectors/coinbase-wallet/getInjectedCoinbaseProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
 
 // ThirdwebEmbeddedWalletSdk
-export * from "./implementations/embedded-wallet";
+export * from "./connectors/embedded-wallet/implementations";
