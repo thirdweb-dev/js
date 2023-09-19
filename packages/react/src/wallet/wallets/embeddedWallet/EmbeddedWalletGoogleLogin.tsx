@@ -6,6 +6,7 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { useEffect } from "react";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
@@ -14,7 +15,6 @@ import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { useEffect } from "react";
 
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
@@ -27,17 +27,16 @@ export const EmbeddedWalletGoogleLogin = (
 
   const googleLogin = async () => {
     try {
-      const googleWindow = window.open("", "Login", "width=350, height=500");
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
       await embeddedWallet.connect({
-        googleLogin: googleWindow ? { windowOpened: googleWindow } : true,
+        googleLogin: true,
       });
       setConnectedWallet(embeddedWallet);
       props.close();
     } catch (e) {
       setConnectionStatus("disconnected");
-      console.error(e);
+      console.error("Error logging into google", e);
     }
   };
 
