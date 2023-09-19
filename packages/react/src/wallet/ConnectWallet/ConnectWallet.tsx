@@ -127,7 +127,7 @@ export type ConnectWalletProps = {
    * }} />
    * ```
    */
-  balanceToken?: Record<number, string>;
+  displayBalanceToken?: Record<number, string>;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -303,7 +303,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
             supportedTokens={supportedTokens}
-            balanceToken={props.balanceToken}
+            displayBalanceToken={props.displayBalanceToken}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();

@@ -75,7 +75,7 @@ export const ConnectedWalletDetails: React.FC<{
   hideTestnetFaucet?: boolean;
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
-  balanceToken?: Record<number, string>;
+  displayBalanceToken?: Record<number, string>;
 }> = (props) => {
   const chain = useChain();
   const walletChainId = useChainId();
@@ -85,8 +85,8 @@ export const ConnectedWalletDetails: React.FC<{
   const address = useAddress();
 
   const token =
-    walletChainId && props.balanceToken
-      ? props.balanceToken[walletChainId]
+    walletChainId && props.displayBalanceToken
+      ? props.displayBalanceToken[walletChainId]
       : undefined;
 
   const balanceQuery = useBalance(token);
