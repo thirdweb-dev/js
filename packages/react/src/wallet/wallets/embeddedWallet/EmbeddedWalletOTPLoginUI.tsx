@@ -31,38 +31,37 @@ export const EmbeddedWalletOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (
     "verifying" | "invalid" | "valid" | "idle"
   >("idle");
 
-  const [sentEmailInfo, setSentEmailInfo] = useState<
-    SentEmailInfo | null | "error"
-  >(null);
+  const [sendEmailOtpStatus, setSendEmailOtpStatus] = useState<
+    "sending" | "sent" | "error"
+  >("sending");
 
   const recoveryCodeRequired = false;
 
   const sendEmail = useCallback(async () => {
     setOtpInput("");
     setVerifyStatus("idle");
-    setSentEmailInfo(null);
+    setSendEmailOtpStatus("sending");
 
     try {
       const _wallet = createWalletInstance(props.walletConfig);
       setWallet(_wallet);
       const _embeddedWalletSdk = await _wallet.getEmbeddedWalletSDK();
 
-      const { isNewDevice, isNewUser } =
-        await _embeddedWalletSdk.auth.sendEmailLoginOtp({
-          email: email,
-        });
+      await _embeddedWalletSdk.auth.sendEmailLoginOtp({
+        email: email,
+      });
 
-      setSentEmailInfo({ isNewDevice, isNewUser });
+      setSendEmailOtpStatus("sent");
     } catch (e) {
       debugger;
       console.error(e);
       setVerifyStatus("idle");
-      setSentEmailInfo("error");
+      setSendEmailOtpStatus("error");
     }
   }, [createWalletInstance, email, props.walletConfig]);
 
   const handleSubmit = () => {
-    if (!sentEmailInfo || otpInput.length !== 6) {
+    if (!sendEmailOtpStatus || otpInput.length !== 6) {
       return;
     }
 
@@ -170,7 +169,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (
 
           <Spacer y="lg" />
 
-          {sentEmailInfo === "error" && (
+          {sendEmailOtpStatus === "error" && (
             <>
               <Text size="sm" center color="danger">
                 Failed to send OTP
@@ -179,7 +178,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (
             </>
           )}
 
-          {!sentEmailInfo && (
+          {sendEmailOtpStatus === "sending" && (
             <Container
               flex="row"
               center="both"
@@ -193,7 +192,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (
             </Container>
           )}
 
-          {sentEmailInfo && (
+          {sendEmailOtpStatus === "sent" && (
             <LinkButton onClick={sendEmail} type="button">
               Resend OTP
             </LinkButton>
