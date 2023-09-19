@@ -23,10 +23,7 @@ export const RawDateSchema = z.date().transform((i) => {
   return Math.floor(i.getTime() / 1000);
 });
 
-export const AccountTypeSchema = z.union([
-  z.literal("evm"),
-  z.literal("solana"),
-]);
+export const AccountTypeSchema = z.literal("evm");
 
 export type User<TContext extends Json = Json> = {
   address: string;

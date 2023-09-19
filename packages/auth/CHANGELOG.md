@@ -561,7 +561,7 @@
 
   ## How to upgrade
 
-  The `ThirdwebAuth` constructor now takes the `domain` in the constructor, and takes a more generic `wallet` interface as input. The `wallet` can be imported from the `@thirdweb-dev/wallets` package, or for more simpler use cases, from the `@thirdweb-dev/auth/evm` and `@thirdweb-dev/auth/solana` entrypoints.
+  The `ThirdwebAuth` constructor now takes the `domain` in the constructor, and takes a more generic `wallet` interface as input. The `wallet` can be imported from the `@thirdweb-dev/wallets` package, or for more simpler use cases, from the `@thirdweb-dev/auth/evm` entrypoint.
 
   ```js
   import { PrivateKeyWallet } from "@thirdweb-dev/auth/evm";

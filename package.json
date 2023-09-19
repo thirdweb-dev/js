@@ -11,7 +11,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "test": "turbo run test test:evm test:solana --filter=./packages/*",
+    "test": "turbo run test --filter=./packages/*",
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/*",
     "build:release": "turbo run build --force --filter=./packages/*",

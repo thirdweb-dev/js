@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-solana.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-solana.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-solana.esm.js": "./dist/thirdweb-dev-wallets-solana.browser.esm.js"
-  }
-}
