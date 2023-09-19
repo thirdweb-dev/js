@@ -72,7 +72,7 @@ const EngineLanding: ThirdwebNextPage = () => {
             description="Save months of development time with solutions that work out-of-the-box and abstract away all of the blockchain complexity for you."
           />
           <LandingIconSectionItem
-            icon={require("public/assets/solutions-pages/loyalty/icon-2.png")}
+            icon={require("public/assets/solutions-pages/loyalty/icon-2.svg")}
             title="Cross-chain EVM support"
             description="Launch your web3 app on any (or many) chains. Don't lock your users into one network — unlock ultimate cross-chain flexibility with support for any EVM."
           />
@@ -82,7 +82,7 @@ const EngineLanding: ThirdwebNextPage = () => {
             description="Nonce, key and fund management handled for you. Scale your app without sacrificing performance or security."
           />
           <LandingIconSectionItem
-            icon={require("public/assets/solutions-pages/loyalty/icon-3.png")}
+            icon={require("public/assets/solutions-pages/loyalty/icon-3.svg")}
             title="Secure and reliable"
             description="Best-in-class security for your users and 99.9% infrastructure uptime."
           />

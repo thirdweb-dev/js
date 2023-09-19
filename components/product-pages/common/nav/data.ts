@@ -166,14 +166,6 @@ export const COMPANY: SectionItemProps[] = [
     icon: require("public/assets/tw-icons/datastore.png"),
     section: "company",
   },
-  {
-    name: "Events",
-    label: "events",
-    description: "Our latest events",
-    link: "/events",
-    icon: require("public/assets/tw-icons/events.png"),
-    section: "company",
-  },
 ];
 
 export const DEVELOPER_SECTIONS = [
