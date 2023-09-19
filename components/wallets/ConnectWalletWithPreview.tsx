@@ -51,7 +51,6 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import styles from "./styles.module.css";
 
 type Theme = "light" | "dark";
-type DefaultOrCustom = "default" | "custom";
 type WalletId =
   | "MetaMask"
   | "Coinbase"

@@ -49,6 +49,9 @@ export enum PageId {
   // thirdweb.com/account-abstraction
   SmartWalletLanding = "smart-wallet-landing",
 
+  // thirdweb.com/engine
+  EngineLanding = "engine-landing",
+
   // thirdweb.com/pre-built-contracts
   PreBuiltContractsLanding = "pre-built-contracts-landing",
 

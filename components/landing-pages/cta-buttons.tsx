@@ -6,6 +6,7 @@ interface LandingCTAButtonsProps {
   ctaLink: string;
   ctaText?: string;
   contactUsTitle?: string;
+  noContactUs?: boolean;
   trackingCategory: string;
   alignLeft?: boolean;
 }
@@ -14,6 +15,7 @@ export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
   ctaLink,
   ctaText = "Get Started",
   contactUsTitle = "Contact Us",
+  noContactUs,
   trackingCategory,
   alignLeft,
 }) => {
@@ -36,16 +38,18 @@ export const LandingCTAButtons: React.FC<LandingCTAButtonsProps> = ({
       >
         {ctaText}
       </TrackedLinkButton>
-      <TrackedLinkButton
-        variant="outline"
-        py={6}
-        px={8}
-        href="/contact-us"
-        category={trackingCategory}
-        label="contact-us"
-      >
-        {contactUsTitle}
-      </TrackedLinkButton>
+      {!noContactUs && (
+        <TrackedLinkButton
+          variant="outline"
+          py={6}
+          px={8}
+          href="/contact-us"
+          category={trackingCategory}
+          label="contact-us"
+        >
+          {contactUsTitle}
+        </TrackedLinkButton>
+      )}
     </Flex>
   );
 };

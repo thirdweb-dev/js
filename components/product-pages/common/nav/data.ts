@@ -104,6 +104,14 @@ export const PRODUCTS: SectionItemProps[] = [
     icon: require("public/assets/product-icons/payments.png"),
     section: "payments",
   },
+  {
+    name: "Engine",
+    label: "engine",
+    description: "All-in-one API for enterprise-grade Web3 apps",
+    link: "/engine",
+    icon: require("public/assets/product-icons/engine.png"),
+    section: "infrastructure",
+  },
 ];
 
 export const SOLUTIONS: SectionItemProps[] = [

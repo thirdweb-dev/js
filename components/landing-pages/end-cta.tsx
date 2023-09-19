@@ -8,6 +8,7 @@ interface LandingEndCTAProps {
   gradient: string;
   ctaText?: string;
   ctaLink: string;
+  noContactUs?: boolean;
   trackingCategory: string;
 }
 
@@ -17,6 +18,7 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
   gradient,
   ctaText,
   ctaLink,
+  noContactUs,
   trackingCategory,
 }) => {
   return (
@@ -32,6 +34,7 @@ export const LandingEndCTA: React.FC<LandingEndCTAProps> = ({
           <LandingCTAButtons
             ctaText={ctaText}
             ctaLink={ctaLink}
+            noContactUs={noContactUs}
             trackingCategory={trackingCategory}
           />
         </Flex>

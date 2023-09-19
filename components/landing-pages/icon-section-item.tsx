@@ -26,7 +26,7 @@ export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
         <ChakraNextImage src={icon} width="32px" alt="" />
       </Flex>
       <Flex flexDir="column" gap={4}>
-        <Text size="body.xl" color="white">
+        <Text size="body.xl" color="white" fontWeight="bold">
           {title}
         </Text>
         <Text size="body.lg">{description}</Text>
