@@ -11,13 +11,14 @@ import { Transaction } from "./transactions";
  * Encodes and decodes Contract functions
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class ContractOwner<TContract extends Ownable>
   implements DetectableFeature
 {
   featureName = FEATURE_OWNER.name;
   private contractWrapper;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<Ownable>) {
     this.contractWrapper = contractWrapper;
   }
 
@@ -32,7 +33,7 @@ export class ContractOwner<TContract extends Ownable>
    * @twfeature Ownable
    */
   public async get(): Promise<string> {
-    return this.contractWrapper.readContract.owner();
+    return this.contractWrapper.read("owner", []);
   }
 
   /**
@@ -53,7 +54,7 @@ export class ContractOwner<TContract extends Ownable>
       const resolvedAddress = await resolveAddress(address);
 
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<Ownable>,
+        contractWrapper: this.contractWrapper,
         method: "setOwner",
         args: [resolvedAddress],
       });

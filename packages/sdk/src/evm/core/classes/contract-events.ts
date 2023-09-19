@@ -1,8 +1,8 @@
+import type { BaseContract, Event, providers, utils } from "ethers";
+import type EventEmitter from "eventemitter3";
 import { EventType } from "../../constants/events";
 import type { ContractEvent, EventQueryOptions } from "../../types/events";
 import { ContractWrapper } from "./contract-wrapper";
-import type { BaseContract, Event, providers, utils } from "ethers";
-import type EventEmitter from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
@@ -73,7 +73,7 @@ export class ContractEvents<TContract extends BaseContract> {
       eventName as string,
     );
 
-    const address = this.contractWrapper.readContract.address;
+    const address = this.contractWrapper.address;
     const filter = {
       address,
       topics: [
@@ -116,7 +116,7 @@ export class ContractEvents<TContract extends BaseContract> {
   public listenToAllEvents<TEvent extends Record<string, any>>(
     listener: (event: ContractEvent<TEvent>) => void,
   ) {
-    const address = this.contractWrapper.readContract.address;
+    const address = this.contractWrapper.address;
     const filter = { address };
 
     const wrappedListener = (log: providers.Log) => {
@@ -179,7 +179,7 @@ export class ContractEvents<TContract extends BaseContract> {
    */
   public removeAllListeners() {
     this.contractWrapper.readContract.removeAllListeners();
-    const address = this.contractWrapper.readContract.address;
+    const address = this.contractWrapper.address;
     const filter = { address };
     this.contractWrapper.getProvider().removeAllListeners(filter);
   }
@@ -264,18 +264,14 @@ export class ContractEvents<TContract extends BaseContract> {
       order: "desc",
     },
   ): Promise<ContractEvent<TEvent>[]> {
-    const event = this.contractWrapper.readContract.interface.getEvent(
-      eventName as string,
-    );
-
     const eventInterface =
       this.contractWrapper.readContract.interface.getEvent(eventName);
     const args = options.filters
       ? eventInterface.inputs.map((e) => (options.filters as TFilter)[e.name])
       : [];
-    const filter = this.contractWrapper.readContract.filters[event.name](
-      ...args,
-    );
+    const filter = this.contractWrapper.readContract.filters[
+      eventInterface.name
+    ](...args);
 
     const events = await this.contractWrapper.readContract.queryFilter(
       filter,

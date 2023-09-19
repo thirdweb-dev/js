@@ -1,4 +1,8 @@
-import { assertWindowEthereum } from "@thirdweb-dev/wallets";
+import {
+  assertWindowEthereum,
+  getInjectedCoinbaseProvider,
+  getInjectedMetamaskProvider,
+} from "@thirdweb-dev/wallets";
 
 export function useInstalledWallets() {
   let isMetamaskInstalled = false;
@@ -8,10 +12,8 @@ export function useInstalledWallets() {
 
   const window_: Window | undefined = globalThis?.window;
   if (assertWindowEthereum(window_)) {
-    isMetamaskInstalled = !!window_.ethereum?.isMetaMask;
-    isCoinbaseWalletInstalled =
-      !!window_.ethereum?.isCoinbaseWallet ||
-      !!window_.ethereum?.providers?.some((p) => p.isCoinbaseWallet);
+    isMetamaskInstalled = !!getInjectedMetamaskProvider();
+    isCoinbaseWalletInstalled = !!getInjectedCoinbaseProvider();
     isZerionWalletInstalled = !!window_.ethereum?.isZerion;
     isTrustWalletInstalled = !!window_.ethereum?.isTrust;
   }

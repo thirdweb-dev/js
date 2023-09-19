@@ -6,6 +6,7 @@ import { walletIds } from "@thirdweb-dev/wallets";
 
 export type WalletConnectConfig = {
   projectId?: string;
+  recommended?: boolean;
 };
 
 export const walletConnect = (
@@ -24,5 +25,6 @@ export const walletConnect = (
     connectUI(props) {
       return <WalletConnectUI {...props} projectId={projectId} />;
     },
+    recommended: config?.recommended,
   };
 };

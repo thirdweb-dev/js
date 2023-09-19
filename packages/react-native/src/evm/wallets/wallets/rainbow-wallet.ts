@@ -3,6 +3,7 @@ import {
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
+import { WalletConnectConfig } from "./wallet-connect/wallet-connect";
 
 export class RainbowWallet extends WalletConnectBase {
   static id = "rainbow" as const;
@@ -21,9 +22,7 @@ export class RainbowWallet extends WalletConnectBase {
   }
 }
 
-type RainbowWalletConfig = { projectId?: string };
-
-export const rainbowWallet = (config?: RainbowWalletConfig) => {
+export const rainbowWallet = (config?: WalletConnectConfig) => {
   return {
     id: RainbowWallet.id,
     meta: RainbowWallet.meta,
@@ -33,5 +32,6 @@ export const rainbowWallet = (config?: RainbowWalletConfig) => {
         walletId: RainbowWallet.id,
         projectId: config?.projectId,
       }),
+    recommended: config?.recommended,
   } satisfies WalletConfig;
 };

@@ -1,47 +1,47 @@
+import type {
+  DropERC20,
+  IBurnableERC20,
+  IMintableERC20,
+  TokenERC20,
+} from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish } from "ethers";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_TOKEN,
-  FEATURE_TOKEN_MINTABLE,
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
-  FEATURE_TOKEN_SIGNATURE_MINTABLE,
   FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
+  FEATURE_TOKEN_MINTABLE,
+  FEATURE_TOKEN_SIGNATURE_MINTABLE,
 } from "../../constants/erc20-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { TokenMintInput } from "../../schema/tokens/token";
 import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
-import type { CurrencyValue } from "../../types/currency";
-import type { Amount, Currency } from "../../types/currency";
+import type { Amount, Currency, CurrencyValue } from "../../types/currency";
 import type {
+  BaseDropERC20,
   BaseERC20,
   BaseSignatureMintERC20,
-  BaseDropERC20,
 } from "../../types/eips";
 import type { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput } from "../types";
 import type { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  TokenERC20,
-  DropERC20,
-  IMintableERC20,
-  IBurnableERC20,
-} from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish } from "ethers";
-import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 
+import { normalizeAmount } from "../../common/currency/normalizeAmount";
+import { ContractEncoder } from "./contract-encoder";
 import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
-import { normalizeAmount } from "../../common/currency/normalizeAmount";
 
 /**
  * Standard ERC20 Token functions
@@ -101,7 +101,7 @@ export class Erc20<
    * @internal
    */
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   ////// Standard ERC20 Extension //////
@@ -156,8 +156,9 @@ export class Erc20<
    */
   public async balanceOf(address: AddressOrEns): Promise<CurrencyValue> {
     return this.getValue(
-      await this.contractWrapper.readContract.balanceOf(
-        await resolveAddress(address),
+      await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
+        "balanceOf",
+        [await resolveAddress(address)],
       ),
     );
   }
@@ -173,7 +174,10 @@ export class Erc20<
    */
   public async totalSupply(): Promise<CurrencyValue> {
     return await this.getValue(
-      await this.contractWrapper.readContract.totalSupply(),
+      await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
+        "totalSupply",
+        [],
+      ),
     );
   }
 
@@ -221,9 +225,9 @@ export class Erc20<
     spender: AddressOrEns,
   ): Promise<CurrencyValue> {
     return await this.getValue(
-      await this.contractWrapper.readContract.allowance(
-        await resolveAddress(owner),
-        await resolveAddress(spender),
+      await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
+        "allowance",
+        [await resolveAddress(owner), await resolveAddress(spender)],
       ),
     );
   }
@@ -335,13 +339,14 @@ export class Erc20<
    */
   transferBatch = /* @__PURE__ */ buildTransactionFunction(
     async (args: TokenMintInput[]) => {
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = await Promise.all(
         args.map(async (arg) => {
           const amountWithDecimals = await this.normalizeAmount(arg.amount);
-          return this.contractWrapper.readContract.interface.encodeFunctionData(
-            "transfer",
-            [await resolveAddress(arg.toAddress), amountWithDecimals],
-          );
+          return contractEncoder.encode("transfer", [
+            await resolveAddress(arg.toAddress),
+            amountWithDecimals,
+          ]);
         }),
       );
       return Transaction.fromContractWrapper({
