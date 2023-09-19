@@ -1,5 +1,4 @@
 import { ChainId } from "../constants/chains/ChainId";
-import fetch from "cross-fetch";
 import { BigNumber, utils, providers } from "ethers";
 import { Mumbai, Polygon } from "@thirdweb-dev/chains";
 import { isBrowser } from "./utils";

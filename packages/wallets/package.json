@@ -406,7 +406,6 @@
     "@walletconnect/utils": "^2.9.1",
     "@walletconnect/web3wallet": "^1.8.7",
     "buffer": "^6.0.3",
-    "cross-fetch": "^3.1.8",
     "crypto-js": "^4.1.1",
     "eth-provider": "^0.13.6",
     "eventemitter3": "^5.0.1",

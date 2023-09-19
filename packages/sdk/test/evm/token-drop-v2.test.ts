@@ -12,8 +12,6 @@ import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
-global.fetch = require("cross-fetch");
-
 describe("Token Drop Contract (v2)", async () => {
   let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,

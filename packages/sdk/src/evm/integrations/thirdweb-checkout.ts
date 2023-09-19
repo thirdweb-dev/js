@@ -3,7 +3,6 @@ import { ChainId } from "../constants/chains/ChainId";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
 import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
-// import fetch from "cross-fetch";
 import invariant from "tiny-invariant";
 
 const PAPER_API_BASE = `https://paper.xyz/api` as const;
