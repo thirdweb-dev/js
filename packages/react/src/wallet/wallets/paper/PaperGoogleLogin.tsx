@@ -5,18 +5,14 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import {
-  Container,
-  ModalHeader,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { Spinner } from "../../../components/Spinner";
 import { PaperWallet } from "@thirdweb-dev/wallets";
 import { Text } from "../../../components/text";
 import { Spacer } from "../../../components/Spacer";
 import { iconSize } from "../../../design-system";
 import { Button } from "../../../components/buttons";
-import { HelperLink, ModalTitle } from "../../../components/modalElements";
+import { ModalTitle } from "../../../components/modalElements";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 
 export const PaperGoogleLogin = ({
@@ -34,10 +30,14 @@ export const PaperGoogleLogin = ({
 
   const googleLogin = async () => {
     try {
+      const googleWindow = window.open("", "Login", "width=350, height=500");
       const paper = createWalletInstance(walletConfig);
       setUIStatus("connecting");
       setConnectionStatus("connecting");
-      await paper.connect({ googleLogin: true });
+      await paper.connect({
+        googleLogin:
+          googleWindow !== null ? { windowOpened: googleWindow } : true,
+      });
       setConnectedWallet(paper);
       close();
     } catch (e) {
@@ -77,6 +77,7 @@ export const PaperGoogleLogin = ({
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            minHeight: "250px",
           }}
         >
           {UIStatus === "idle" && (
@@ -119,45 +120,6 @@ export const PaperGoogleLogin = ({
           )}
         </div>
       </Container>
-
-      <ScreenBottomContainer
-        style={{
-          borderTop: modalSize === "wide" ? "none" : undefined,
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <Text size="sm" multiline>
-            Make sure you have enabled <br /> pop-ups for this site
-          </Text>
-
-          <Spacer y="sm" />
-
-          <Text size="sm" multiline>
-            The option to enable pop-ups can <br /> be found in {`browser's`}{" "}
-            address bar
-          </Text>
-
-          <Spacer y="sm" />
-
-          <Text size="sm" multiline>
-            Once you have enabled pop-ups, <br />
-            click on{" "}
-            <HelperLink
-              onClick={googleLogin}
-              style={{
-                display: "inline",
-              }}
-            >
-              Retry
-            </HelperLink>
-            to try again.
-          </Text>
-        </div>
-      </ScreenBottomContainer>
     </Container>
   );
 };
