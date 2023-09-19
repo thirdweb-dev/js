@@ -22,7 +22,6 @@ export function useCoinbaseWalletListener(enable: boolean, callbackURL?: URL) {
         incomingUrl.hostname === callbackURL.hostname
       ) {
         // @ts-expect-error - Passing a URL object to handleResponse crashes the function
-        //
         handleResponse(url);
       }
     });
