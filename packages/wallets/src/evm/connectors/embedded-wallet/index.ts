@@ -47,7 +47,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     email?: string;
     chainId?: number;
     otp?: string;
-    recoveryCode?: string;
     googleLogin?: true;
   }) {
     const thirdwebSDK = await this.getEmbeddedWalletSDK();
@@ -69,7 +68,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           authResult = await thirdwebSDK.auth.loginWithGoogle(
             googleWindow !== null
               ? {
-                  windowOpened: googleWindow,
+                  openedWindow: googleWindow,
+                  closeOpenedWindow: (openedWindow) => {
+                    openedWindow.close();
+                  },
                 }
               : undefined,
           );
