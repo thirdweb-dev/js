@@ -139,10 +139,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         xhr.open("POST", `${TW_UPLOAD_SERVER_URL}/ipfs/upload`);
         xhr.setRequestHeader("x-bundle-id", APP_BUNDLE_ID || ""); // only empty on web
         if (this.clientId) {
-          xhr.setRequestHeader(
-            "x-client-id",
-            "7ce34e83f55ae1bf8828675637ff82a1",
-          );
+          xhr.setRequestHeader("x-client-id", this.clientId);
         }
 
         // xhr.setRequestHeader("x-sdk-version", pkg.version);
@@ -169,9 +166,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             method: "POST",
             headers: {
               "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
-              ...(this.clientId
-                ? { "x-client-id": "7ce34e83f55ae1bf8828675637ff82a1" }
-                : {}),
+              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
               "Content-Type": "application/json",
               // "x-sdk-version": pkg.version,
               // "x-sdk-name": pkg.name,
