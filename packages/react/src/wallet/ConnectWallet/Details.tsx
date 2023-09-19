@@ -119,7 +119,8 @@ export const ConnectedWalletDetails: React.FC<{
 
   const shortAddress = address ? shortenString(address) : "";
 
-  const addressOrENS = ensQuery.data || shortAddress;
+  const addressOrENS = ensQuery.data?.ens || shortAddress;
+  const avatarUrl = ensQuery.data?.avatarUrl;
 
   const trigger = props.detailsBtn ? (
     <div>
@@ -135,8 +136,11 @@ export const ConnectedWalletDetails: React.FC<{
       <Img
         width={iconSize.lg}
         height={iconSize.lg}
-        src={activeWalletIconURL}
+        src={avatarUrl || activeWalletIconURL}
         className={`${TW_CONNECTED_WALLET}__wallet-icon`}
+        style={{
+          borderRadius: radius.sm,
+        }}
       />
 
       <Container flex="column" gap="xs">
@@ -222,12 +226,15 @@ export const ConnectedWalletDetails: React.FC<{
   const content = (
     <div>
       {/* Balance and Account Address */}
-      <Container flex="row" gap="md">
+      <Container flex="row" gap="sm">
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
-          src={activeWalletIconURL}
+          src={avatarUrl || activeWalletIconURL}
           alt=""
+          style={{
+            borderRadius: radius.sm,
+          }}
         />
 
         <div

@@ -14,6 +14,7 @@ import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { useEffect } from "react";
 
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
@@ -36,6 +37,14 @@ export const EmbeddedWalletGoogleLogin = (
       console.error(e);
     }
   };
+
+  const closeModal = props.close;
+
+  useEffect(() => {
+    if (connectionStatus === "connected") {
+      closeModal();
+    }
+  }, [connectionStatus, closeModal]);
 
   return (
     <Container animate="fadein" flex="column" fullHeight>

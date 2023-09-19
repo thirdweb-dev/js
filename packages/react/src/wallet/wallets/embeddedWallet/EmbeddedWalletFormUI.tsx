@@ -30,7 +30,6 @@ export const EmbeddedWalletFormUI = (props: {
       setConnectionStatus("connecting");
       await embeddedWallet.connect({ googleLogin: true });
       setConnectedWallet(embeddedWallet);
-      close();
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error(e);

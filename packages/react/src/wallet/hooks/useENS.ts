@@ -5,6 +5,7 @@ import {
   useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { getChainProvider } from "@thirdweb-dev/sdk/evm";
+import { providers } from "ethers";
 
 export function useENS() {
   const address = useAddress();
@@ -37,7 +38,22 @@ export function useENS() {
           : undefined,
       });
 
-      return provider.lookupAddress(address);
+      if (provider instanceof providers.JsonRpcProvider) {
+        const [ens, avatarUrl] = await Promise.all([
+          provider.lookupAddress(address),
+          provider.getAvatar(address),
+        ] as const);
+
+        return {
+          ens,
+          avatarUrl,
+        };
+      }
+
+      return {
+        ens: await provider.lookupAddress(address),
+        avatarUrl: null,
+      };
     },
   });
 }
