@@ -47,7 +47,7 @@ export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
  */
 export const TW_UPLOAD_SERVER_URL = getProcessEnv(
   "CUSTOM_UPLOAD_SERVER_URL",
-  "https://storage.staging.thirdweb.com", //"https://storage.thirdweb.com",
+  "https://storage-server-staging-vbjq-ike-u-c37eb1.chainsaw-dev.zeet.app", //"https://storage.thirdweb.com",
 );
 
 /**

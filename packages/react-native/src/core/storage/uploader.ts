@@ -184,13 +184,17 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           console.log("res.ok", res.ok);
 
           if (res.ok) {
-            const ipfs = await res.json();
+            const ipfsResults = await res.json();
 
-            console.log("res.json", ipfs);
+            const results = ipfsResults.map(
+              (ipfs: { IpfsHash: string; PinSize: number }) => {
+                const cid = ipfs.IpfsHash;
 
-            const cid = ipfs.IpfsHash;
+                return `ipfs://${cid}`;
+              },
+            );
 
-            return resolve([`ipfs://${cid}`]);
+            return resolve(results);
           }
         } catch (error) {
           console.log("error", error);
