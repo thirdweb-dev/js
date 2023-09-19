@@ -46,12 +46,35 @@ export class BaseLogin extends AbstractLogin<
     return this.postLogin(result);
   }
 
+  private closeWindow = ({
+    isWindowOpenedByFn,
+    win,
+    closeOpenedWindow,
+  }: {
+    win?: Window | null;
+    isWindowOpenedByFn: boolean;
+    closeOpenedWindow?: (openedWindow: Window) => void;
+  }) => {
+    if (isWindowOpenedByFn) {
+      win?.close();
+    } else {
+      if (win && closeOpenedWindow) {
+        closeOpenedWindow(win);
+      } else if (win) {
+        win.close();
+      }
+    }
+  };
+
   override async loginWithGoogle(args?: {
-    windowOpened?: Window | null;
+    openedWindow?: Window | null;
+    closeOpenedWindow?: (openedWindow: Window) => void;
   }): Promise<AuthLoginReturnType> {
-    let win = args?.windowOpened;
+    let win = args?.openedWindow;
+    let isWindowOpenedByFn = false;
     if (!win) {
       win = window.open("", "Login", "width=350, height=500");
+      isWindowOpenedByFn = true;
     }
     if (!win) {
       throw new Error("Something went wrong opening pop-up");
@@ -96,7 +119,11 @@ export class BaseLogin extends AbstractLogin<
             case "userLoginSuccess": {
               window.removeEventListener("message", messageListener);
               clearInterval(pollTimer);
-              win?.close();
+              this.closeWindow({
+                isWindowOpenedByFn,
+                win,
+                closeOpenedWindow: args?.closeOpenedWindow,
+              });
               if (event.data.authResult) {
                 resolve(event.data.authResult);
               }
@@ -105,7 +132,11 @@ export class BaseLogin extends AbstractLogin<
             case "userLoginFailed": {
               window.removeEventListener("message", messageListener);
               clearInterval(pollTimer);
-              win?.close();
+              this.closeWindow({
+                isWindowOpenedByFn,
+                win,
+                closeOpenedWindow: args?.closeOpenedWindow,
+              });
               reject(new Error(event.data.error));
               break;
             }
