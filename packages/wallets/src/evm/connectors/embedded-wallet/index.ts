@@ -43,13 +43,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
-  async connect(options?: {
-    email?: string;
-    chainId?: number;
-    otp?: string;
-    recoveryCode?: string;
-    googleLogin?: true;
-  }) {
+  async connect(
+    options?: {
+      chainId?: number;
+    } & EmbeddedWalletConnectionArgs,
+  ) {
     const thirdwebSDK = await this.getEmbeddedWalletSDK();
     if (!thirdwebSDK) {
       throw new Error("EmbeddedWallet SDK not initialized");
@@ -61,18 +59,21 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
         // Show Google popup
         if (options?.googleLogin) {
-          const googleWindow = window.open(
-            "",
-            "Login",
-            "width=350, height=500",
-          );
-          authResult = await thirdwebSDK.auth.loginWithGoogle(
-            googleWindow !== null
-              ? {
-                  windowOpened: googleWindow,
-                }
-              : undefined,
-          );
+          const arg = options.googleLogin;
+
+          if (arg !== null && arg !== true) {
+            authResult = await thirdwebSDK.auth.loginWithGoogle(arg);
+          } else {
+            const googleWindow = window.open(
+              "",
+              "Login",
+              "width=350, height=500",
+            );
+
+            authResult = await thirdwebSDK.auth.loginWithGoogle({
+              windowOpened: googleWindow,
+            });
+          }
         }
 
         // Headless
