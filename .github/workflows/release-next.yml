@@ -33,7 +33,7 @@ jobs:
 
       - name: Create @next release
         run: |
-          git checkout main
+          git checkout next
           pnpm version-packages:next
           pnpm release:next
         env:
