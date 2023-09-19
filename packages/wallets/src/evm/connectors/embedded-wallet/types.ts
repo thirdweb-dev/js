@@ -16,4 +16,7 @@ export interface EmbeddedWalletConnectorOptions {
 
 export interface EmbeddedWalletConnectionArgs {
   email?: string;
+  otp?: string;
+  recoveryCode?: string;
+  googleLogin?: true;
 }
