@@ -32,7 +32,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.options = options;
   }
 
-  private getEmbeddedWalletSDK(): EmbeddedWalletSdk {
+  getEmbeddedWalletSDK(): EmbeddedWalletSdk {
     if (!this.#embeddedWalletSdk) {
       this.#embeddedWalletSdk = new EmbeddedWalletSdk({
         clientId: this.options.clientId,
@@ -43,28 +43,59 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
-  async connect(options?: { email?: string; chainId?: number }) {
+  async connect(options?: {
+    email?: string;
+    chainId?: number;
+    otp?: string;
+    recoveryCode?: string;
+    googleLogin?: true;
+  }) {
     const thirdwebSDK = await this.getEmbeddedWalletSDK();
     if (!thirdwebSDK) {
-      throw new Error("Paper SDK not initialized");
+      throw new Error("EmbeddedWallet SDK not initialized");
     }
     const user = await thirdwebSDK.getUser();
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
 
-        if (options?.email) {
+        // Show Google popup
+        if (options?.googleLogin) {
+          const googleWindow = window.open(
+            "",
+            "Login",
+            "width=350, height=500",
+          );
+          authResult = await thirdwebSDK.auth.loginWithGoogle(
+            googleWindow !== null
+              ? {
+                  windowOpened: googleWindow,
+                }
+              : undefined,
+          );
+        }
+
+        // Headless
+        else if (options?.email && options?.otp) {
+          authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
+            email: options.email,
+            otp: options.otp,
+          });
+        }
+
+        // Show OTP modal
+        else if (options?.email) {
           authResult = await thirdwebSDK.auth.loginWithEmailOtp({
             email: options.email,
           });
-        } else {
+        }
+
+        // Show Full Modal
+        else {
           authResult = await thirdwebSDK.auth.loginWithModal();
         }
+
         this.user = authResult.user;
-        break;
-      }
-      case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
-        this.user = user;
         break;
       }
     }
