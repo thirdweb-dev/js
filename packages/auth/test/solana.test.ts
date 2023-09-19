@@ -7,7 +7,7 @@ describe("Wallet Authentication - Solana", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 
-  before(async () => {
+  beforeAll(async () => {
     const [adminSigner, signerSigner, attackerSigner] = [
       Keypair.generate(),
       Keypair.generate(),
