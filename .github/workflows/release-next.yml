@@ -2,8 +2,11 @@ name: Release Next
 
 on:
   push:
-    # only on next branch
-    branches: ["next"]
+    paths:
+      - ".changeset/**"
+      - "packages/**"
+    branches:
+      - next
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
