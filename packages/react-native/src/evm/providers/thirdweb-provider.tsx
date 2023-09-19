@@ -80,7 +80,7 @@ export const ThirdwebProvider = <
     !!coinbaseWalletObj,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    coinbaseWalletObj.config?.callbackURL,
+    coinbaseWalletObj?.config?.callbackURL,
   );
 
   const hasMagicConfig = useMemo(
