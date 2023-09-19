@@ -72,10 +72,9 @@ const EmbeddedWalletSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = (
   return (
     <div>
       <EmbeddedWalletFormUI
-        // props.recoveryShareManagement !== "USER_MANAGED"
-        googleLoginSupported={false}
         showOrSeparator={props.supportedWallets.length > 1}
         onSelect={props.onSelect}
+        walletConfig={props.walletConfig}
       />
     </div>
   );
@@ -117,11 +116,11 @@ const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
 
   return (
     <EmbeddedWalletFormUIScreen
-      googleLoginSupported={true}
       modalSize={props.modalSize}
       onSelect={(_loginType) => {
         setLoginType(_loginType);
       }}
+      walletConfig={props.walletConfig}
       onBack={props.goBack}
     />
   );
