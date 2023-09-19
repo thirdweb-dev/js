@@ -4,8 +4,6 @@ on:
   push:
     # only on next branch
     branches: ["next"]
-  pull_request:
-    types: [opened, synchronize]
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
