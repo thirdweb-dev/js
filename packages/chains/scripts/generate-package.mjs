@@ -1,7 +1,7 @@
 // @ts-check
 import axios from "axios";
 import merge from "deepmerge";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 
 /** @typedef {import("../src/types").Chain} Chain */
@@ -73,7 +73,7 @@ let overrides = {};
 
 // get all overides by reading the overrides directory and importing them
 const overridesDir = path.join(process.cwd(), "./data/overrides");
-const overridesFiles = fs.readdirSync(overridesDir);
+const overridesFiles = await fs.readdir(overridesDir);
 for (const file of overridesFiles) {
   // file:// is required for windows builds
   // but breaks bun builds so lets try it without it again for now
@@ -94,7 +94,7 @@ chains = chains.filter((c) => c.chainId !== 1337);
 
 // get all additional chains by reading the additional chains directory and importing them
 const additionalChainsDir = path.join(process.cwd(), "./data/additional");
-const additionalChainsFiles = fs.readdirSync(additionalChainsDir);
+const additionalChainsFiles = await fs.readdir(additionalChainsDir);
 for (const file of additionalChainsFiles) {
   // file:// is required for windows builds
   // but it breaks bun so lets try without it again for now
@@ -207,9 +207,9 @@ function findSlug(chain) {
 
 const chainDir = `${chainsDir}`;
 // clean out the chains directory
-fs.rmdirSync(chainDir, { recursive: true });
+await fs.rmdir(chainDir, { recursive: true });
 // make sure the chain directory exists
-fs.mkdirSync(chainDir, { recursive: true });
+await fs.mkdir(chainDir, { recursive: true });
 
 const results = await Promise.all(
   chains.map(async (chain) => {

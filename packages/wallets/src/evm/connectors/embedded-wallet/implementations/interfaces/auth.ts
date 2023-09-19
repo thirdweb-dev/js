@@ -13,6 +13,10 @@ export enum AuthProvider {
   COGNITO = "Cognito",
 }
 
+export type GetHeadlessLoginLinkReturnType = {
+  loginLink: string;
+};
+
 // TODO: Clean up tech debt of random type Objects
 // E.g. StoredTokenType is really not used anywhere but it exists as this object for legacy reason
 export type StoredTokenType = {
