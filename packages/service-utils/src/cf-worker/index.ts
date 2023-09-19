@@ -204,23 +204,27 @@ export async function logHttpRequest({
   isAuthed?: boolean;
   statusMessage?: Error | string;
 }) {
-  const authorizationData = await extractAuthorizationData({ req, clientId });
-  const headers = req.headers;
+  try {
+    const authorizationData = await extractAuthorizationData({ req, clientId });
+    const headers = req.headers;
 
-  console.log(
-    JSON.stringify({
-      source,
-      pathname: req.url,
-      hasSecretKey: !!authorizationData.secretKey,
-      hasClientId: !!authorizationData.clientId,
-      hasJwt: !!authorizationData.jwt,
-      clientId: authorizationData.clientId,
-      isAuthed: !!isAuthed ?? null,
-      status: res.status,
-      sdkName: headers.get("x-sdk-name") ?? "unknown",
-      sdkVersion: headers.get("x-sdk-version") ?? "unknown",
-      platform: headers.get("x-sdk-platform") ?? "unknown",
-    }),
-  );
-  console.log(`statusMessage=${statusMessage ?? res.statusText}`);
+    console.log(
+      JSON.stringify({
+        source,
+        pathname: req.url,
+        hasSecretKey: !!authorizationData.secretKey,
+        hasClientId: !!authorizationData.clientId,
+        hasJwt: !!authorizationData.jwt,
+        clientId: authorizationData.clientId,
+        isAuthed: !!isAuthed ?? null,
+        status: res.status,
+        sdkName: headers.get("x-sdk-name") ?? "unknown",
+        sdkVersion: headers.get("x-sdk-version") ?? "unknown",
+        platform: headers.get("x-sdk-platform") ?? "unknown",
+      }),
+    );
+    console.log(`statusMessage=${statusMessage ?? res.statusText}`);
+  } catch (err) {
+    console.error("Failed to log HTTP request:", err);
+  }
 }
