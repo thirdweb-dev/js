@@ -3,7 +3,6 @@ import { Spacer } from "../../components/Spacer";
 import { Container, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
 import { shortenString } from "../../evm/utils/addresses";
-import { IconButton } from "../../components/buttons";
 import { CopyIcon } from "../../components/CopyIcon";
 import styled from "@emotion/styled";
 import { Theme, iconSize, radius, spacing } from "../../design-system";
@@ -49,13 +48,11 @@ export function ReceiveFunds() {
         <Text color="primaryText" size="md">
           {shortenString(address || "")}
         </Text>
-        <IconButton>
-          <CopyIcon
-            text={address || ""}
-            tip="Copy address"
-            hasCopied={hasCopied}
-          />
-        </IconButton>
+        <CopyIcon
+          text={address || ""}
+          tip="Copy address"
+          hasCopied={hasCopied}
+        />
       </WalletAddressContianer>
 
       <Spacer y="lg" />
