@@ -1,4 +1,3 @@
-import { afterEach, beforeEach } from "node:test";
 import { Ethereum } from "../src";
 import {
   type ChainRPCOptions,
@@ -192,7 +191,7 @@ describe("chains/utils", () => {
 });
 
 describe("chains/utils with APP_BUNDLE_ID", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     globalThis.APP_BUNDLE_ID = "com.thirdweb.rpc";
   });
 

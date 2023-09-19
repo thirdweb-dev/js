@@ -29,11 +29,9 @@
     "@babel/runtime": "^7.22.6",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/jest": "^29.5.3",
     "axios": "^1.4.0",
     "deepmerge": "^4.3.1",
     "eslint-config-thirdweb": "workspace:*",
-    "jest": "^29.6.2",
     "plop": "^3.1.2",
     "typescript": "^5.1.6"
   },
@@ -54,6 +52,6 @@
     "plop": "plop",
     "add-chain": "plop add-chain",
     "override-chain": "plop override-chain",
-    "test": "jest"
+    "test": "bun test"
   }
 }
