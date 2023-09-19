@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.52
+
+### Patch Changes
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(chains): add new chain information
+
 ## 0.1.51
 
 ### Patch Changes

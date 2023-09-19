@@ -1,11 +1,8 @@
-import {
-  EMBEDDED_WALLET_PATH,
-  GET_IFRAME_BASE_URL,
-  HEADLESS_GOOGLE_OAUTH_ROUTE,
-} from "../../constants/settings";
+import { GET_IFRAME_BASE_URL } from "../../constants/settings";
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
+  GetHeadlessLoginLinkReturnType,
 } from "../../interfaces/auth";
 import { AbstractLogin } from "./abstract-login";
 
@@ -16,6 +13,16 @@ export class BaseLogin extends AbstractLogin<
   { email: string },
   { email: string; otp: string }
 > {
+  private async getGoogleLoginUrl(): Promise<GetHeadlessLoginLinkReturnType> {
+    const result = await this.LoginQuerier.call<GetHeadlessLoginLinkReturnType>(
+      {
+        procedureName: "getHeadlessGoogleLoginLink",
+        params: undefined,
+      },
+    );
+    return result;
+  }
+
   override async loginWithModal(): Promise<AuthLoginReturnType> {
     await this.preLogin();
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
@@ -39,12 +46,21 @@ export class BaseLogin extends AbstractLogin<
     return this.postLogin(result);
   }
 
-  override async loginWithGoogle(): Promise<AuthLoginReturnType> {
+  override async loginWithGoogle(args?: {
+    windowOpened?: Window | null;
+  }): Promise<AuthLoginReturnType> {
+    let win = args?.windowOpened;
+    if (!win) {
+      win = window.open("", "Login", "width=350, height=500");
+    }
+    if (!win) {
+      throw new Error("Something went wrong opening pop-up");
+    }
     await this.preLogin();
-    const googleOauthUrl = `${GET_IFRAME_BASE_URL()}${EMBEDDED_WALLET_PATH}${HEADLESS_GOOGLE_OAUTH_ROUTE}?developerClientId=${
-      this.clientId
-    }`;
-    const win = window.open(googleOauthUrl, "Login", "width=350, height=500");
+    // fetch the url to open the login window from iframe
+    const { loginLink } = await this.getGoogleLoginUrl();
+
+    win.location.href = loginLink;
 
     // listen to result from the login window
     const result = await new Promise<AuthAndWalletRpcReturnType>(
@@ -54,13 +70,10 @@ export class BaseLogin extends AbstractLogin<
           if (!win) {
             return;
           }
-          try {
-            if (win.closed) {
-              clearInterval(pollTimer);
-              reject(new Error("User closed login window"));
-            }
-          } catch (e) {
-            // silence the error since it'll throw when the user closes it on the google auth page
+          if (win.closed) {
+            clearInterval(pollTimer);
+            window.removeEventListener("message", messageListener);
+            reject(new Error("User closed login window"));
           }
         }, 1000);
 
@@ -78,11 +91,11 @@ export class BaseLogin extends AbstractLogin<
             reject(new Error("Invalid event data"));
             return;
           }
-          window.removeEventListener("message", messageListener);
-          clearInterval(pollTimer);
 
           switch (event.data.eventType) {
             case "userLoginSuccess": {
+              window.removeEventListener("message", messageListener);
+              clearInterval(pollTimer);
               win?.close();
               if (event.data.authResult) {
                 resolve(event.data.authResult);
@@ -90,8 +103,20 @@ export class BaseLogin extends AbstractLogin<
               break;
             }
             case "userLoginFailed": {
+              window.removeEventListener("message", messageListener);
+              clearInterval(pollTimer);
               win?.close();
               reject(new Error(event.data.error));
+              break;
+            }
+            case "injectDeveloperClientId": {
+              win?.postMessage(
+                {
+                  eventType: "injectDeveloperClientIdResult",
+                  developerClientId: this.clientId,
+                },
+                GET_IFRAME_BASE_URL(),
+              );
               break;
             }
           }
@@ -99,6 +124,7 @@ export class BaseLogin extends AbstractLogin<
         window.addEventListener("message", messageListener);
       },
     );
+
     return this.postLogin({
       storedToken: { ...result.storedToken, shouldStoreCookieString: true },
       walletDetails: { ...result.walletDetails, isIframeStorageEnabled: false },

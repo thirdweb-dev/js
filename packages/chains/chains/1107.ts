@@ -19,7 +19,7 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://blx.org",
-  "shortName": "blxq",
+  "shortName": "tblxq",
   "chainId": 1107,
   "networkId": 1107,
   "explorers": [

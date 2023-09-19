@@ -1,6 +1,6 @@
-import type {
-  AuthAndWalletRpcReturnType,
-  AuthLoginReturnType,
+import {
+  type AuthAndWalletRpcReturnType,
+  type AuthLoginReturnType,
 } from "../../interfaces/auth";
 import type {
   ClientIdWithQuerierType,
@@ -129,14 +129,17 @@ export class Auth {
     return this.BaseLogin.loginWithEmailOtp(args);
   }
 
+  async loginWithGoogle(
+    args?: Parameters<BaseLogin["loginWithGoogle"]>[0],
+  ): Promise<AuthLoginReturnType> {
+    return this.BaseLogin.loginWithGoogle(args);
+  }
+
   /**
    * A headless way to initiate login with google.
    * @returns {{user: InitializedUser}} An InitializedUser object. See {@link EmbeddedWalletSdk.getUser} for more
 
    */
-  async loginWithGoogle(): Promise<AuthLoginReturnType> {
-    return this.BaseLogin.loginWithGoogle();
-  }
 
   /**
    * @description

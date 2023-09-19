@@ -1,5 +1,73 @@
 # @thirdweb-dev/react-native
 
+## 0.2.61
+
+### Patch Changes
+
+- [#1592](https://github.com/thirdweb-dev/js/pull/1592) [`1fe867e2`](https://github.com/thirdweb-dev/js/commit/1fe867e20510a43d2a19ba553709aeaca1d46bb3) Thanks [@iketw](https://github.com/iketw)! - Improved ConnectWallet UX/DevX :)
+
+  1. Devs can now pass a `recommended` field to `supportedWallets` to recommend wallets to users.
+
+  When recommending a wallet, this wallet will show up at the top of the wallets list.
+
+  ```javascript
+  import { metamaskWallet, ThirdwebProvider } from "@thirdweb-dev/react-native";
+
+  <ThirdwebProvider
+    clientId="your-client-id"
+    supportedWallets={[
+      metamaskWallet({
+        recommended: true,
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  2. Better theme customization
+
+  You can now more easily customize the theme of the ConnectWallet component:
+
+  ```javascript
+  import { ConnectWallet, darkTheme } from "@thirdweb-dev/react-native";
+
+  <ConnectWallet
+    theme={darkTheme({
+      colors: {
+        textPrimary: "yellow",
+        textSecondary: "blue",
+      },
+    })}
+    buttonTitle="Enter web3"
+    modalTitle="Sign in"
+  />;
+  ```
+
+  Note that you can still pass `light` or `dark` if you want to use one of the predefined thems :)
+
+  3. You can now pass your Privacy Policy and Terms of Service urls, they will show up
+     at the bottom of the modal:
+
+  ```javascript
+  import { ConnectWallet, darkTheme } from "@thirdweb-dev/react-native";
+
+  <ConnectWallet
+    privacyPolicyUrl="https://your-privacy-policy"
+    termsOfServiceUrl="https://your-terms-of-service"
+  />;
+  ```
+
+  4. Fixed a bug when you only specify an email wallet. In this case the app shouldn't auto connect, it should show the email field.
+
+- [#1550](https://github.com/thirdweb-dev/js/pull/1550) [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet v3 updates
+
+- Updated dependencies [[`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a), [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/sdk@3.10.61
+  - @thirdweb-dev/wallets@1.2.1
+  - @thirdweb-dev/react-core@3.15.0
+  - @thirdweb-dev/chains@0.1.52
+
 ## 0.2.60
 
 ### Patch Changes

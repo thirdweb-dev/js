@@ -108,7 +108,7 @@ export const WalletSelector: React.FC<{
   const showSeperatorLine = showNewToWallets && !continueAsGuest && showTOS;
 
   return (
-    <Container scrollY flex="column" animate="fadein">
+    <Container scrollY flex="column" animate="fadein" fullHeight>
       {/* Header */}
       <Container p="lg">
         {isWalletGroupExpanded ? (

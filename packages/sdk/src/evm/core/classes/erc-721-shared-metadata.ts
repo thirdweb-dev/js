@@ -1,12 +1,12 @@
+import type { SharedMetadata } from "@thirdweb-dev/contracts-js";
 import { isFileOrBuffer, type ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BasicNFTInput } from "../../../core/schema/nft";
+import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_SHARED_METADATA } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ContractWrapper } from "./contract-wrapper";
-import type { SharedMetadata } from "@thirdweb-dev/contracts-js";
-import { buildTransactionFunction } from "../../common/transactions";
-import { BasicNFTInput } from "../../../core/schema/nft";
-import { Transaction } from "./transactions";
 import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Set shared metadata for ERC721 NFTs (Open Edition)
@@ -45,7 +45,7 @@ export class Erc721SharedMetadata implements DetectableFeature {
    * @returns - The shared metadata for the Open Edition NFTs.
    */
   public async get(): Promise<BasicNFTInput | undefined> {
-    const metadata = await this.contractWrapper.readContract.sharedMetadata();
+    const metadata = await this.contractWrapper.read("sharedMetadata", []);
 
     if (metadata.every((value) => value === "")) {
       return undefined;
