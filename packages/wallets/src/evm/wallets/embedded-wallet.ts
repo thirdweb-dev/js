@@ -56,4 +56,9 @@ export class EmbeddedWallet extends AbstractClientWallet<
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.getEmail();
   }
+
+  async getEmbeddedWalletSDK() {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.getEmbeddedWalletSDK();
+  }
 }

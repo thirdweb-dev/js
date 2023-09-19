@@ -15,11 +15,11 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Areon",
-    "symbol": "AREA",
+    "symbol": "TAREA",
     "decimals": 18
   },
   "infoURL": "https://areon.network",
-  "shortName": "area",
+  "shortName": "tarea",
   "chainId": 462,
   "networkId": 462,
   "explorers": [
