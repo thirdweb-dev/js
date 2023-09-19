@@ -1,9 +1,6 @@
 import { ImportModal } from "../import-contract/modal";
 import { ShowMoreButton } from "./show-more-button";
-import {
-  useAllContractList,
-  useContractMetadataWithAddress,
-} from "@3rdweb-sdk/react";
+import { useAllContractList } from "@3rdweb-sdk/react";
 import { useRemoveContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   ButtonGroup,
@@ -60,7 +57,6 @@ import {
 import {
   Badge,
   Button,
-  ChakraNextLink,
   CodeBlock,
   Heading,
   LinkButton,
@@ -71,9 +67,9 @@ import {
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { TableContainer } from "tw-components/table-container";
 import { ComponentWithChildren } from "types/component-with-children";
-import { shortenIfAddress } from "utils/usedapp-external";
 import { z } from "zod";
 import { usePublishedContractsFromDeploy } from "../hooks";
+import { AsyncContractNameCell } from "./cells";
 
 interface DeployedContractsProps {
   noHeader?: boolean;
@@ -592,40 +588,3 @@ const AsyncContractTypeCell = memo(({ cell }: AsyncContractTypeCellProps) => {
 });
 
 AsyncContractTypeCell.displayName = "AsyncContractTypeCell";
-
-interface AsyncContractNameCellProps {
-  cell: {
-    address: string;
-    chainId: number;
-    contractType: ContractType;
-    metadata: () => Promise<
-      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
-    >;
-  };
-}
-
-const AsyncContractNameCell = memo(({ cell }: AsyncContractNameCellProps) => {
-  const chainSlug = useChainSlug(cell.chainId);
-  const metadataQuery = useContractMetadataWithAddress(
-    cell.address,
-    cell.metadata,
-    cell.chainId,
-  );
-
-  return (
-    <Skeleton isLoaded={!metadataQuery.isLoading}>
-      <ChakraNextLink href={`/${chainSlug}/${cell.address}`} passHref>
-        <Text
-          color="blue.500"
-          _dark={{ color: "blue.400" }}
-          size="label.md"
-          _groupHover={{ textDecor: "underline" }}
-        >
-          {metadataQuery.data?.name || shortenIfAddress(cell.address)}
-        </Text>
-      </ChakraNextLink>
-    </Skeleton>
-  );
-});
-
-AsyncContractNameCell.displayName = "AsyncContractNameCell";

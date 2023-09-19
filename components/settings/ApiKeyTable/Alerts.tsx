@@ -169,17 +169,19 @@ export const SmartWalletsBillingAlert = ({
         </Flex>
       </Flex>
 
-      <IconButton
-        size="xs"
-        aria-label="Close notice"
-        icon={<FiX />}
-        colorScheme="blackAlpha"
-        color="white"
-        variant="ghost"
-        opacity={0.6}
-        _hover={{ opacity: 1 }}
-        onClick={() => setDismissed(true)}
-      />
+      {dismissable && (
+        <IconButton
+          size="xs"
+          aria-label="Close notice"
+          icon={<FiX />}
+          colorScheme="blackAlpha"
+          color="white"
+          variant="ghost"
+          opacity={0.6}
+          _hover={{ opacity: 1 }}
+          onClick={() => setDismissed(true)}
+        />
+      )}
     </Alert>
   );
 };

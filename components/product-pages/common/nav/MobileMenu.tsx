@@ -24,6 +24,7 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
           bgColor: "white",
           opacity: 0.8,
         }}
+        size="sm"
         color="black"
         href="/contact-us"
         category="landing-page"

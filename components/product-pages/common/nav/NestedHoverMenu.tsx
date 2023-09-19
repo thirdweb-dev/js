@@ -67,10 +67,10 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
         color="white"
         fontSize="16px"
         cursor="pointer"
-        py={4}
         opacity={isOpen ? 0.8 : 1}
         transition="opacity 0.1s"
         onMouseEnter={onOpen}
+        py="10px"
       >
         {title}
       </Text>
@@ -80,7 +80,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
           <Card
             p={0}
             position="absolute"
-            top="0px"
+            top={0}
             left={leftOffset}
             borderColor="whiteAlpha.100"
             bg="black"

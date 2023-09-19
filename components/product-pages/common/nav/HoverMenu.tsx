@@ -31,7 +31,7 @@ export const HoverMenu: React.FC<HoverMenuProps> = ({
         color="white"
         fontSize="16px"
         cursor="pointer"
-        py={4}
+        py="10px"
         opacity={isOpen ? 0.8 : 1}
         transition="opacity 0.1s"
         onMouseEnter={onOpen}
@@ -52,7 +52,7 @@ export const HoverMenu: React.FC<HoverMenuProps> = ({
             borderRadius="8px"
           >
             <Flex>
-              <Stack width={columns === 2 ? "660px" : "300px"}>
+              <Stack width={columns === 2 ? "660px" : "280px"}>
                 <SimpleGrid columns={columns} gap={2}>
                   {items.map((item) => (
                     <NavCard key={item.label} {...item} />
