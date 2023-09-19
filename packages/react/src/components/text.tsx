@@ -37,7 +37,7 @@ export const Link = styled.a<{
   text-decoration: none;
   text-align: ${(p) => (p.center ? "center" : "left")};
   display: ${(p) => (p.inline ? "inline" : "block")};
-  font-weight: ${(p) => p.weight || 400};
+  font-weight: ${(p) => p.weight || 500};
   line-height: 1;
 
   &:hover {

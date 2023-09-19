@@ -383,7 +383,7 @@ export const SelectAccount: React.FC<{
                     ? "Connecting"
                     : "Connect to Safe"}
                   {connectionStatus === "connecting" && (
-                    <Spinner size="sm" color="primaryText" />
+                    <Spinner size="sm" color="accentButtonText" />
                   )}
                 </Button>
               )}

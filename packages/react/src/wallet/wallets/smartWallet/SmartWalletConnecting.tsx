@@ -169,7 +169,9 @@ export const SmartWalletConnecting: React.FC<{
             >
               {" "}
               {switchingNetwork ? "Switching" : "Switch Network"}
-              {switchingNetwork && <Spinner size="sm" color="primaryText" />}
+              {switchingNetwork && (
+                <Spinner size="sm" color="accentButtonText" />
+              )}
             </Button>
 
             {switchingNetwork && requiresConfirmation && (

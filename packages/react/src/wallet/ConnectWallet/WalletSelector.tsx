@@ -319,23 +319,15 @@ export function WalletEntryButton(props: {
       />
 
       <Container flex="column" gap="xxs" expand>
-        <Text color="primaryText" weight={500}>
+        <Text color="primaryText" weight={600}>
           {walletConfig.meta.name}
         </Text>
 
-        {isRecommended && (
-          <Text size="sm" color="accentText" weight={500}>
-            Recommended
-          </Text>
-        )}
+        {isRecommended && <Text size="sm">Recommended</Text>}
 
         {!isRecommended &&
           walletConfig.isInstalled &&
-          walletConfig.isInstalled() && (
-            <Text size="sm" weight={500}>
-              Installed
-            </Text>
-          )}
+          walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
       </Container>
     </WalletButton>
   );
