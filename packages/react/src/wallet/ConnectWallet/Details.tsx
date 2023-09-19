@@ -51,11 +51,12 @@ import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
 import { fadeInAnimation } from "../../design-system/animations";
-import { Text } from "../../components/text";
+import { Link, Text } from "../../components/text";
 import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { useENS } from "../hooks/useENS";
+import { smartWalletIcon } from "./icons/dataUris";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -90,7 +91,7 @@ export const ConnectedWalletDetails: React.FC<{
   const walletContext = useWalletContext();
 
   const chain = useChain();
-  const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
+  let activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
 
   // modals
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
@@ -118,6 +119,12 @@ export const ConnectedWalletDetails: React.FC<{
     activeWallet && activeWallet instanceof MetaMaskWallet;
 
   const shortAddress = address ? shortenString(address) : "";
+
+  const isSmartWallet = activeWallet?.walletId === walletIds.smartWallet;
+
+  if (isSmartWallet) {
+    activeWalletIconURL = smartWalletIcon;
+  }
 
   const addressOrENS = ensQuery.data?.ens || shortAddress;
   const avatarUrl = ensQuery.data?.avatarUrl;
@@ -303,15 +310,35 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="lg" />
 
-      {activeWallet && activeWallet.walletId === walletIds.smartWallet && (
-        <>
-          <Container flex="row" gap="xs" center="y">
-            <ActiveDot />
-            <Text size="sm">Connected to Smart Wallet</Text>
-          </Container>
-          <Spacer y="lg" />
-        </>
-      )}
+      {activeWallet &&
+        activeWallet.walletId === walletIds.smartWallet &&
+        chain &&
+        address && (
+          <>
+            <SecondaryLink
+              href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+              target="_blank"
+              size="sm"
+            >
+              <Container
+                flex="row"
+                gap="xs"
+                center="y"
+                style={{
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Container flex="row" gap="xs" center="y">
+                  <ActiveDot />
+                  Connected to Smart Wallet
+                </Container>
+                <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
+            </SecondaryLink>
+            <Spacer y="md" />
+          </>
+        )}
 
       {/* Send and Recive */}
       <Container
@@ -453,6 +480,25 @@ export const ConnectedWalletDetails: React.FC<{
             </MenuLink>
           )}
 
+        {/* Explorer link */}
+        {chain?.explorers && (
+          <MenuLink
+            href={chain.explorers[0].url + "/address/" + address}
+            target="_blank"
+            as="a"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontSize: fontSize.sm,
+            }}
+          >
+            <Container flex="row" center="both" color="secondaryText">
+              <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+            Transaction History
+          </MenuLink>
+        )}
+
         {/* Export  Wallet */}
         {activeWallet?.walletId === walletIds.localWallet && (
           <div>
@@ -471,36 +517,12 @@ export const ConnectedWalletDetails: React.FC<{
               Backup wallet{" "}
             </MenuButton>
             <Spacer y="sm" />
-            <ErrorMessage
-              style={{
-                fontSize: fontSize.xs,
-                textAlign: "center",
-              }}
-            >
+            <Text size="xs" center multiline color="danger">
               This is a temporary guest wallet <br />
               Backup if you {`don't `}
               want to lose access to it
-            </ErrorMessage>
+            </Text>
           </div>
-        )}
-
-        {/* Explorer link */}
-        {chain?.explorers && (
-          <MenuLink
-            href={chain.explorers[0].url + "/address/" + address}
-            target="_blank"
-            as="a"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              fontSize: fontSize.sm,
-            }}
-          >
-            <Container flex="row" center="both" color="secondaryText">
-              <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
-            </Container>
-            Transaction History
-          </MenuLink>
         )}
       </Container>
     </div>
@@ -744,4 +766,12 @@ const ActiveDot = styled.div<{ theme?: Theme }>`
   height: 8px;
   border-radius: 50%;
   background-color: ${(props) => props.theme.colors.success};
+`;
+
+const SecondaryLink = /* @__PURE__ */ styled(Link)<{ theme?: Theme }>`
+  display: block;
+  color: ${(p) => p.theme.colors.secondaryText};
+  &:hover {
+    color: ${(p) => p.theme.colors.primaryText};
+  }
 `;
