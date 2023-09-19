@@ -26,6 +26,8 @@
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
+    "version-packages:next": "node scripts/pre-nightly.mjs && changeset version --snapshot next",
+    "release:next": "node ./scripts/pre-release.mjs && changeset publish --tag next",
     "push": "turbo run push --filter=./packages/*",
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs",
