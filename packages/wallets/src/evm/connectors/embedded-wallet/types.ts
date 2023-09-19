@@ -17,6 +17,7 @@ export interface EmbeddedWalletConnectorOptions {
 export interface EmbeddedWalletConnectionArgs {
   email?: string;
   otp?: string;
-  recoveryCode?: string;
-  googleLogin?: true | { windowOpened: Window };
+  googleLogin?:
+    | true
+    | { openedWindow: Window; closeOpenedWindow: (window: Window) => void };
 }

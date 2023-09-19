@@ -71,7 +71,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
             );
 
             authResult = await thirdwebSDK.auth.loginWithGoogle({
-              windowOpened: googleWindow,
+              openedWindow: googleWindow,
+              closeOpenedWindow: (openedWindow) => {
+                openedWindow.close();
+              },
             });
           }
         }
