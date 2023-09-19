@@ -18,11 +18,11 @@ import { useSmartWallet } from "../../providers/context-provider";
 import BaseButton from "../base/BaseButton";
 import { SmartWalletAdditionalActions } from "./SmartWalletAdditionalActions";
 import Text from "../base/Text";
-import { useAppTheme } from "../../styles/hooks";
 import { LocalWalletImportModal } from "../ConnectWalletFlow/LocalWalletImportModal";
 import { IconTextButton } from "../base/IconTextButton";
 import MoneyIcon from "../../assets/money";
 import { TWModal } from "../base/modal/TWModal";
+import { ThemeProvider } from "../../styles/ThemeProvider";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -40,7 +40,6 @@ export const ConnectWalletDetailsModal = ({
   address?: string;
   hideTestnetFaucet?: boolean;
 }) => {
-  const theme = useAppTheme();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const activeWallet = useWallet();
   const chain = useChain();
@@ -126,11 +125,7 @@ export const ConnectWalletDetailsModal = ({
                 <Text variant="bodySmall">Backup wallet</Text>
               </View>
             </>
-            <RightArrowIcon
-              height={10}
-              width={10}
-              color={theme.colors.iconPrimary}
-            />
+            <RightArrowIcon height={10} width={10} />
           </BaseButton>
 
           <BaseButton
@@ -147,11 +142,7 @@ export const ConnectWalletDetailsModal = ({
                 <Text variant="bodySmall">Import wallet</Text>
               </View>
             </>
-            <RightArrowIcon
-              height={10}
-              width={10}
-              color={theme.colors.iconPrimary}
-            />
+            <RightArrowIcon height={10} width={10} />
           </BaseButton>
 
           <LocalWalletImportModal
@@ -178,48 +169,47 @@ export const ConnectWalletDetailsModal = ({
     onExportLocalWalletPress,
     onWalletImported,
     smartWallet,
-    theme.colors.iconPrimary,
   ]);
 
   return (
-    <TWModal isVisible={isVisible} onBackdropPress={onClosePress}>
-      <View
-        style={[styles.modal, { backgroundColor: theme.colors.background }]}
-      >
-        <Box style={styles.contentContainer}>
-          <ExportLocalWalletModal
-            isVisible={isExportModalVisible}
-            onClose={onExportModalClose}
-          />
-          <WalletDetailsModalHeader
-            address={address}
-            onDisconnectPress={onDisconnectPress}
-            onAddressCopied={onAddressCopied}
-          />
-          <View style={styles.currentNetwork}>
-            <Text variant="bodySmallSecondary">Current Network</Text>
-          </View>
-          <NetworkButton chain={chain} enableSwitchModal={true} />
-          {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
-            <IconTextButton
-              mt="xs"
-              text="Request Testnet Funds"
-              icon={<MoneyIcon height={10} width={10} />}
-              onPress={() => {
-                if (chain?.faucets?.[0]) {
-                  Linking.openURL(chain.faucets[0]);
-                }
-              }}
+    <ThemeProvider>
+      <TWModal isVisible={isVisible} onBackdropPress={onClosePress}>
+        <Box backgroundColor="background" style={styles.modal}>
+          <Box style={styles.contentContainer}>
+            <ExportLocalWalletModal
+              isVisible={isExportModalVisible}
+              onClose={onExportModalClose}
             />
-          ) : null}
-          {getAdditionalActions()}
-          {extraRows ? extraRows({}) : null}
-          {addressCopied === true ? (
-            <Toast text={"Address copied to clipboard"} />
-          ) : null}
+            <WalletDetailsModalHeader
+              address={address}
+              onDisconnectPress={onDisconnectPress}
+              onAddressCopied={onAddressCopied}
+            />
+            <View style={styles.currentNetwork}>
+              <Text variant="bodySmallSecondary">Current Network</Text>
+            </View>
+            <NetworkButton chain={chain} enableSwitchModal={true} />
+            {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
+              <IconTextButton
+                mt="xs"
+                text="Request Testnet Funds"
+                icon={<MoneyIcon height={10} width={10} />}
+                onPress={() => {
+                  if (chain?.faucets?.[0]) {
+                    Linking.openURL(chain.faucets[0]);
+                  }
+                }}
+              />
+            ) : null}
+            {getAdditionalActions()}
+            {extraRows ? extraRows({}) : null}
+            {addressCopied === true ? (
+              <Toast text={"Address copied to clipboard"} />
+            ) : null}
+          </Box>
         </Box>
-      </View>
-    </TWModal>
+      </TWModal>
+    </ThemeProvider>
   );
 };
 

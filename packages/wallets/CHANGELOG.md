@@ -1,5 +1,57 @@
 # @thirdweb-dev/wallets
 
+## 1.2.1
+
+### Patch Changes
+
+- [#1550](https://github.com/thirdweb-dev/js/pull/1550) [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet v3 updates
+
+- Updated dependencies [[`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/sdk@3.10.61
+  - @thirdweb-dev/chains@0.1.52
+
+## 1.2.0
+
+### Minor Changes
+
+- [#1563](https://github.com/thirdweb-dev/js/pull/1563) [`defe5fce`](https://github.com/thirdweb-dev/js/commit/defe5fced3fd738157616a9f1644c5092dcaa5a8) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(wallets): Adds `ThirdwebEmbeddedWalletSdk` that allows user to have a MPC EOA wallet spun up for them seamlessly
+
+### Patch Changes
+
+- [#1606](https://github.com/thirdweb-dev/js/pull/1606) [`2a873d2f`](https://github.com/thirdweb-dev/js/commit/2a873d2f80271208819bac88b32cea0b48761c8d) Thanks [@MananTank](https://github.com/MananTank)! - Fix wallets package build for windows
+
+- [#1597](https://github.com/thirdweb-dev/js/pull/1597) [`f9042765`](https://github.com/thirdweb-dev/js/commit/f90427650c037b2c437685734ddc3398ad3e2612) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - chore(wallets,react): add ability to use thirdweb's client ID with paperWallet
+
+- [#1585](https://github.com/thirdweb-dev/js/pull/1585) [`2f187d13`](https://github.com/thirdweb-dev/js/commit/2f187d13754f571b7205fc1b743efde767b1b1c8) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix bug in loadOrCreate
+
+- [#1596](https://github.com/thirdweb-dev/js/pull/1596) [`931ee793`](https://github.com/thirdweb-dev/js/commit/931ee7930f16c25e4d775d2d93538a5cfe770353) Thanks [@nheingit](https://github.com/nheingit)! - Add phantom wallet
+
+- Updated dependencies [[`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c), [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93), [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1), [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334)]:
+  - @thirdweb-dev/sdk@3.10.60
+  - @thirdweb-dev/contracts-js@1.3.13
+  - @thirdweb-dev/chains@0.1.51
+
+## 1.1.23
+
+### Patch Changes
+
+- [#1568](https://github.com/thirdweb-dev/js/pull/1568) [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better fee calculations for OP stack
+
+- [#1572](https://github.com/thirdweb-dev/js/pull/1572) [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dynamic gas fee estimations
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- Updated dependencies [[`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25), [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40), [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/sdk@3.10.59
+
+## 1.1.22
+
+### Patch Changes
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005), [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19)]:
+  - @thirdweb-dev/chains@0.1.50
+  - @thirdweb-dev/sdk@3.10.58
+
 ## 1.1.21
 
 ### Patch Changes

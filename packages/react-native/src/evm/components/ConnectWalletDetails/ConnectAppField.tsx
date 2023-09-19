@@ -119,11 +119,15 @@ const ConnectAppField = () => {
           borderRadius="md"
         >
           <TextInput
-            onChangeText={onAddressChangeText}
-            flex={1}
-            value={wcUri}
-            placeholder={"wc://..."}
-            placeholderTextColor={theme.colors.textSecondary}
+            textInputProps={{
+              onChangeText: onAddressChangeText,
+              value: wcUri,
+              placeholder: "wc://...",
+              placeholderTextColor: theme.colors.textSecondary,
+            }}
+            containerProps={{
+              flex: 1,
+            }}
           />
           <BaseButton
             onPress={() => onWCPress()}

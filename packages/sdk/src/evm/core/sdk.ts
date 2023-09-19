@@ -103,7 +103,7 @@ import {
   utils,
   ContractFactory as ethersContractFactory,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import {

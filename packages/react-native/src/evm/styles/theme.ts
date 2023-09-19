@@ -1,3 +1,4 @@
+import { DeepPartial } from "../types/deepPartial";
 import { paletteDark, paletteLight } from "./colors";
 import { textVariants } from "./textVariants";
 import { createTheme } from "@shopify/restyle";
@@ -9,16 +10,10 @@ export const baseTheme = {
     xs: 8,
     sm: 12,
     md: 16,
+    xmd: 20,
     lg: 24,
     xl: 32,
     xxl: 48,
-  },
-  fontSize: {
-    xs: 12,
-    sm: 14,
-    md: 16,
-    lg: 20,
-    xl: 24,
   },
   borderRadii: {
     xs: 4,
@@ -28,30 +23,24 @@ export const baseTheme = {
     xl: 20,
     xxl: 32,
   },
-  iconSize: {
-    sm: 16,
-    md: 24,
-    lg: 32,
-    xl: 48,
-  },
   textVariants,
 };
 
-const darkTheme_ = createTheme({
+export const _darkTheme = createTheme({
   ...baseTheme,
   colors: {
     ...paletteDark,
   },
 });
 
-const lightTheme_: Theme = {
+export const _lightTheme: Theme = {
   ...baseTheme,
   colors: {
     ...paletteLight,
   },
 };
 
-export type Theme = typeof darkTheme_;
+export type Theme = typeof _darkTheme;
 
 export type ButtonTheme = {
   buttonBackgroundColor?: string;
@@ -61,27 +50,35 @@ export type ButtonTheme = {
 export const darkTheme = ({
   buttonBackgroundColor = paletteDark.buttonBackgroundColor,
   buttonTextColor = paletteDark.buttonTextColor,
-}: ButtonTheme = {}) => {
+  colors,
+  ...props
+}: ButtonTheme & DeepPartial<Theme> = _darkTheme): Theme => {
   return {
-    ...darkTheme_,
+    ..._darkTheme,
     colors: {
-      ...darkTheme_.colors,
+      ..._darkTheme.colors,
+      ...colors,
       buttonBackgroundColor,
       buttonTextColor,
     },
-  };
+    ...props,
+  } as Theme;
 };
 
 export const lightTheme = ({
   buttonBackgroundColor = paletteLight.buttonBackgroundColor,
   buttonTextColor = paletteLight.buttonTextColor,
-}: ButtonTheme = {}) => {
+  colors,
+  ...props
+}: ButtonTheme & DeepPartial<Theme> = _lightTheme): Theme => {
   return {
-    ...lightTheme_,
+    ..._lightTheme,
     colors: {
-      ...lightTheme_.colors,
+      ..._lightTheme.colors,
+      ...colors,
       buttonBackgroundColor,
       buttonTextColor,
     },
-  };
+    ...props,
+  } as Theme;
 };

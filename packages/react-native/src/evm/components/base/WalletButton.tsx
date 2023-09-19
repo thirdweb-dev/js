@@ -10,7 +10,8 @@ type WalletButtonProps = {
   walletIconUrl: string;
   name: string;
   labelText?: string;
-} & (typeof BaseButton)["arguments"];
+  recommended?: boolean;
+} & React.ComponentProps<typeof BaseButton>;
 
 export const WalletButton = ({
   mb,
@@ -18,6 +19,7 @@ export const WalletButton = ({
   walletIconUrl,
   name,
   labelText,
+  recommended,
 }: WalletButtonProps) => {
   return (
     <BaseButton
@@ -28,14 +30,15 @@ export const WalletButton = ({
       paddingHorizontal="md"
       paddingVertical="sm"
       borderRadius="sm"
-      backgroundColor="backgroundHighlight"
+      backgroundColor="background"
       onPress={onPress}
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
-        <ImageSvgUri imageUrl={walletIconUrl} width={32} height={32} />
-        <Text ml="md" variant="bodyLarge">
-          {name}
-        </Text>
+        <ImageSvgUri imageUrl={walletIconUrl} width={48} height={48} />
+        <Box ml="sm" alignItems="flex-start">
+          <Text variant="bodyLarge">{name}</Text>
+          {recommended ? <Text variant="link">Recommended</Text> : null}
+        </Box>
       </Box>
       {labelText ? <Label text={labelText} /> : <View />}
     </BaseButton>

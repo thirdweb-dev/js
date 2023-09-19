@@ -1,5 +1,25 @@
 # @thirdweb-dev/chains
 
+## 0.1.52
+
+### Patch Changes
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(chains): add new chain information
+
+## 0.1.51
+
+### Patch Changes
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1599](https://github.com/thirdweb-dev/js/pull/1599) [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1) Thanks [@MananTank](https://github.com/MananTank)! - Update chains
+
+## 0.1.50
+
+### Patch Changes
+
+- [#1558](https://github.com/thirdweb-dev/js/pull/1558) [`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005) Thanks [@Marfuen](https://github.com/Marfuen)! - Updating chains list
+
 ## 0.1.49
 
 ### Patch Changes

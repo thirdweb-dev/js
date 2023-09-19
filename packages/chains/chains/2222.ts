@@ -10,7 +10,8 @@ export default {
     "https://kava-evm.rpc.thirdweb.com",
     "wss://wevm.kava.io",
     "wss://wevm2.kava.io",
-    "https://kava-evm.publicnode.com"
+    "https://kava-evm.publicnode.com",
+    "wss://kava-evm.publicnode.com"
   ],
   "faucets": [],
   "nativeCurrency": {

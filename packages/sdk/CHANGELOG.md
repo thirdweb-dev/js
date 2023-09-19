@@ -1,5 +1,60 @@
 # @thirdweb-dev/sdk
 
+## 3.10.61
+
+### Patch Changes
+
+- [#1617](https://github.com/thirdweb-dev/js/pull/1617) [`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update addresses
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): centralize access of the ethers contract within the js SDK.
+
+- Updated dependencies [[`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/chains@0.1.52
+
+## 3.10.60
+
+### Patch Changes
+
+- [#1594](https://github.com/thirdweb-dev/js/pull/1594) [`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle default gas values for `sdk.wallet.sendRawTransaction()`, expose `sdk.wallet.executeRawTransasction()` and expose `fromAddress` in `contract.erc1155.airdrop()`
+
+- [#1600](https://github.com/thirdweb-dev/js/pull/1600) [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update addresses
+
+- [#1591](https://github.com/thirdweb-dev/js/pull/1591) [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update airdrop function names on contracts and sdk to resolve abi conflict
+
+- [#1609](https://github.com/thirdweb-dev/js/pull/1609) [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17) Thanks [@arcoraven](https://github.com/arcoraven)! - Fixes maxFeePerGas value set incorrectly
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1589](https://github.com/thirdweb-dev/js/pull/1589) [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gasprice for bittorrent mainnet create2 factory deployment
+
+- Updated dependencies [[`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1)]:
+  - @thirdweb-dev/contracts-js@1.3.13
+  - @thirdweb-dev/chains@0.1.51
+
+## 3.10.59
+
+### Patch Changes
+
+- [#1567](https://github.com/thirdweb-dev/js/pull/1567) [`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix constructor param encoding for deterministic deployments
+
+- [#1568](https://github.com/thirdweb-dev/js/pull/1568) [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better fee calculations for OP stack
+
+- [#1572](https://github.com/thirdweb-dev/js/pull/1572) [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dynamic gas fee estimations
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+- Updated dependencies [[`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f), [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/storage@1.2.10
+
+## 3.10.58
+
+### Patch Changes
+
+- [#1557](https://github.com/thirdweb-dev/js/pull/1557) [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19) Thanks [@MananTank](https://github.com/MananTank)! - Use default export for EventEmitter to fix issue with Nuxt/Vite + Yarn to fix the "Named export 'EventEmitter' not found" error
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005)]:
+  - @thirdweb-dev/chains@0.1.50
+
 ## 3.10.57
 
 ### Patch Changes

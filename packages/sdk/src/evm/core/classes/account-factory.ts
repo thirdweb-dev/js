@@ -1,16 +1,17 @@
 import type { IAccountFactory } from "@thirdweb-dev/contracts-js";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_ACCOUNT_FACTORY } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
+import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
+import { utils, type BytesLike } from "ethers";
+import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
+import { buildTransactionFunction } from "../../common/transactions";
+import { TransactionResultWithAddress } from "../types";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
-import { buildTransactionFunction } from "../../common/transactions";
 import { Transaction } from "./transactions";
-import { TransactionResultWithAddress } from "../types";
-import { type BytesLike, utils } from "ethers";
-import { AccountCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AccountFactory";
-import { isContractDeployed } from "../../common/any-evm-utils/isContractDeployed";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class AccountFactory<TContract extends IAccountFactory>
   implements DetectableFeature
 {
@@ -20,14 +21,14 @@ export class AccountFactory<TContract extends IAccountFactory>
   // utilities
   public events: ContractEvents<IAccountFactory>;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<IAccountFactory>) {
     this.contractWrapper = contractWrapper;
 
     this.events = new ContractEvents(this.contractWrapper);
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /*********************************
@@ -55,7 +56,7 @@ export class AccountFactory<TContract extends IAccountFactory>
     if (extraData) {
       data = extraData;
     }
-    return this.contractWrapper.readContract.getAddress(admin, data);
+    return this.contractWrapper.read("getAddress", [admin, data]);
   }
 
   /**
@@ -71,7 +72,7 @@ export class AccountFactory<TContract extends IAccountFactory>
    * @twfeature AccountFactory
    */
   public async getAssociatedAccounts(signer: string): Promise<string[]> {
-    return this.contractWrapper.readContract.getAccountsOfSigner(signer);
+    return this.contractWrapper.read("getAccountsOfSigner", [signer]);
   }
 
   /**
@@ -87,7 +88,7 @@ export class AccountFactory<TContract extends IAccountFactory>
    * @twfeature AccountFactory
    */
   public async getAllAccounts(): Promise<string[]> {
-    return await this.contractWrapper.readContract.getAllAccounts();
+    return await this.contractWrapper.read("getAllAccounts", []);
   }
 
   /**

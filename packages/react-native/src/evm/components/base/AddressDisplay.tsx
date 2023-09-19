@@ -3,13 +3,13 @@ import { shortenWalletAddress } from "../../utils/addresses";
 import Text from "./Text";
 
 type AddressProps = {
-  address: string;
+  address?: string;
   variant?: keyof Theme["textVariants"];
   extraShort?: boolean;
-} & (typeof Text)["arguments"];
+} & React.ComponentProps<typeof Text>;
 
 export const AddressDisplay = ({
-  address,
+  address = "",
   variant = "bodyLarge",
   extraShort,
   ...props

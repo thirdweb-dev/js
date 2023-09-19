@@ -8,9 +8,7 @@ export default {
     "wss://sokol.poa.network/wss",
     "ws://sokol.poa.network:8546"
   ],
-  "faucets": [
-    "https://faucet.poa.network"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "POA Sokol Ether",
     "symbol": "SPOA",

@@ -1,3 +1,5 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
@@ -24,15 +26,13 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -215,7 +215,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -251,7 +251,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
     const maxId = Math.min(
-      (await this.contractWrapper.readContract.nextTokenIdToClaim()).toNumber(),
+      (await this.contractWrapper.read("nextTokenIdToClaim", [])).toNumber(),
       start + count,
     );
     return await Promise.all(
@@ -282,17 +282,13 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     ).toNumber();
     const firstTokenId = BigNumber.from(
       Math.max(
-        (
-          await this.contractWrapper.readContract.nextTokenIdToClaim()
-        ).toNumber(),
+        (await this.contractWrapper.read("nextTokenIdToClaim", [])).toNumber(),
         start,
       ),
     );
     const maxId = BigNumber.from(
       Math.min(
-        (
-          await this.contractWrapper.readContract.nextTokenIdToMint()
-        ).toNumber(),
+        (await this.contractWrapper.read("nextTokenIdToMint", [])).toNumber(),
         firstTokenId.toNumber() + count,
       ),
     );
@@ -340,10 +336,10 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 

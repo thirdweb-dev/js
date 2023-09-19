@@ -1,8 +1,9 @@
 import { noopStorage } from "../../../core/AsyncStorage";
 import type {
-  CoinbaseWalletConnector,
+  CoinbaseWalletConnector as CoinbaseWalletConnectorType,
   CoinbaseWalletConnectorOptions,
 } from "../connectors/coinbase-wallet";
+import { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
 import {
   AbstractClientWallet,
   Connector,
@@ -28,8 +29,8 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   };
 
   connector?: Connector;
-  coinbaseConnector?: CoinbaseWalletConnector;
-  provider?: CoinbaseWalletConnector["provider"];
+  coinbaseConnector?: CoinbaseWalletConnectorType;
+  provider?: CoinbaseWalletConnectorType["provider"];
 
   static id = walletIds.coinbase;
   public get walletName() {
@@ -50,11 +51,6 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { CoinbaseWalletConnector: CoinbaseWalletConnector } = await import(
-        "../connectors/coinbase-wallet"
-      );
-
       const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {
@@ -73,7 +69,10 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   }
 }
 
-export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
+export const coinbaseWallet = (config?: {
+  callbackURL?: URL;
+  recommended?: boolean;
+}) => {
   const callbackURLNonNull =
     config?.callbackURL || new URL("https://thirdweb.com/wsegue");
   return {
@@ -81,5 +80,6 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
+    recommended: config?.recommended,
   } satisfies WalletConfig<CoinbaseWallet>;
 };

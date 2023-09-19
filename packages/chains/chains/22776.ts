@@ -14,8 +14,8 @@ export default {
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "MAP",
-    "symbol": "MAP",
+    "name": "MAPO",
+    "symbol": "MAPO",
     "decimals": 18
   },
   "infoURL": "https://maplabs.io",

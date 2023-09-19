@@ -1,3 +1,5 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BaseContract } from "ethers";
 import { extractEventsFromAbi } from "../../common/feature-detection/extractEventsFromAbi";
 import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
@@ -8,13 +10,12 @@ import {
   PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract } from "ethers";
 
 /**
  * Handles publish metadata for a contract
  * @internal
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class ContractPublishedMetadata<TContract extends BaseContract> {
   private contractWrapper;
   private storage: ThirdwebStorage;
@@ -22,7 +23,7 @@ export class ContractPublishedMetadata<TContract extends BaseContract> {
   private _cachedMetadata: PublishedMetadata | undefined;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper: ContractWrapper<BaseContract>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
@@ -38,7 +39,7 @@ export class ContractPublishedMetadata<TContract extends BaseContract> {
       return this._cachedMetadata;
     }
     this._cachedMetadata = await fetchContractMetadataFromAddress(
-      this.contractWrapper.readContract.address,
+      this.contractWrapper.address,
       this.contractWrapper.getProvider(),
       this.storage,
       this.contractWrapper.options,

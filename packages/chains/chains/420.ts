@@ -8,6 +8,7 @@ export default {
     "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli.optimism.io",
     "https://optimism-goerli.publicnode.com",
+    "wss://optimism-goerli.publicnode.com",
     "https://optimism-goerli.gateway.tenderly.co",
     "wss://optimism-goerli.gateway.tenderly.co"
   ],

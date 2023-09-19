@@ -1,5 +1,117 @@
 # @thirdweb-dev/react-native
 
+## 0.2.61
+
+### Patch Changes
+
+- [#1592](https://github.com/thirdweb-dev/js/pull/1592) [`1fe867e2`](https://github.com/thirdweb-dev/js/commit/1fe867e20510a43d2a19ba553709aeaca1d46bb3) Thanks [@iketw](https://github.com/iketw)! - Improved ConnectWallet UX/DevX :)
+
+  1. Devs can now pass a `recommended` field to `supportedWallets` to recommend wallets to users.
+
+  When recommending a wallet, this wallet will show up at the top of the wallets list.
+
+  ```javascript
+  import { metamaskWallet, ThirdwebProvider } from "@thirdweb-dev/react-native";
+
+  <ThirdwebProvider
+    clientId="your-client-id"
+    supportedWallets={[
+      metamaskWallet({
+        recommended: true,
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  2. Better theme customization
+
+  You can now more easily customize the theme of the ConnectWallet component:
+
+  ```javascript
+  import { ConnectWallet, darkTheme } from "@thirdweb-dev/react-native";
+
+  <ConnectWallet
+    theme={darkTheme({
+      colors: {
+        textPrimary: "yellow",
+        textSecondary: "blue",
+      },
+    })}
+    buttonTitle="Enter web3"
+    modalTitle="Sign in"
+  />;
+  ```
+
+  Note that you can still pass `light` or `dark` if you want to use one of the predefined thems :)
+
+  3. You can now pass your Privacy Policy and Terms of Service urls, they will show up
+     at the bottom of the modal:
+
+  ```javascript
+  import { ConnectWallet, darkTheme } from "@thirdweb-dev/react-native";
+
+  <ConnectWallet
+    privacyPolicyUrl="https://your-privacy-policy"
+    termsOfServiceUrl="https://your-terms-of-service"
+  />;
+  ```
+
+  4. Fixed a bug when you only specify an email wallet. In this case the app shouldn't auto connect, it should show the email field.
+
+- [#1550](https://github.com/thirdweb-dev/js/pull/1550) [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet v3 updates
+
+- Updated dependencies [[`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a), [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/sdk@3.10.61
+  - @thirdweb-dev/wallets@1.2.1
+  - @thirdweb-dev/react-core@3.15.0
+  - @thirdweb-dev/chains@0.1.52
+
+## 0.2.60
+
+### Patch Changes
+
+- [#1590](https://github.com/thirdweb-dev/js/pull/1590) [`87ed24e1`](https://github.com/thirdweb-dev/js/commit/87ed24e1b40675f6e06e7ecde24fd14e24b802fd) Thanks [@iketw](https://github.com/iketw)! - Sets correct UI types for some React Native components
+
+  Type composition in some components was being done incorrectly, which made
+  types be `any`, which in turn hide some typescript issues easily recognizable
+  by our linter.
+
+- [#1587](https://github.com/thirdweb-dev/js/pull/1587) [`4a7f41b3`](https://github.com/thirdweb-dev/js/commit/4a7f41b3ee15914000ea23c3136c24b26290e8dd) Thanks [@iketw](https://github.com/iketw)! - Remove signer from ThirdwebProvider as it is not being used
+
+  The idea of the React/RN ThirdwebProvider is to provider support for wallets. If devs want to pass their own signer they can directly use ThirdwebSDKProvider
+
+- [#1605](https://github.com/thirdweb-dev/js/pull/1605) [`bb320c7e`](https://github.com/thirdweb-dev/js/commit/bb320c7e97fc6a10bbc0f32564d31f8bc8e564c6) Thanks [@iketw](https://github.com/iketw)! - Pass options to download an correctly pass clientId to RN storage.
+
+- Updated dependencies [[`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c), [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93), [`2a873d2f`](https://github.com/thirdweb-dev/js/commit/2a873d2f80271208819bac88b32cea0b48761c8d), [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`f9042765`](https://github.com/thirdweb-dev/js/commit/f90427650c037b2c437685734ddc3398ad3e2612), [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1), [`defe5fce`](https://github.com/thirdweb-dev/js/commit/defe5fced3fd738157616a9f1644c5092dcaa5a8), [`2f187d13`](https://github.com/thirdweb-dev/js/commit/2f187d13754f571b7205fc1b743efde767b1b1c8), [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334), [`931ee793`](https://github.com/thirdweb-dev/js/commit/931ee7930f16c25e4d775d2d93538a5cfe770353)]:
+  - @thirdweb-dev/sdk@3.10.60
+  - @thirdweb-dev/wallets@1.2.0
+  - @thirdweb-dev/chains@0.1.51
+  - @thirdweb-dev/react-core@3.14.41
+
+## 0.2.59
+
+### Patch Changes
+
+- Updated dependencies [[`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f), [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0), [`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25), [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40), [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/storage@1.2.10
+  - @thirdweb-dev/sdk@3.10.59
+  - @thirdweb-dev/wallets@1.1.23
+  - @thirdweb-dev/react-core@3.14.40
+
+## 0.2.58
+
+### Patch Changes
+
+- [#1546](https://github.com/thirdweb-dev/js/pull/1546) [`cdc08c55`](https://github.com/thirdweb-dev/js/commit/cdc08c55282d5873972b85217c42ba2f97a1ffed) Thanks [@iketw](https://github.com/iketw)! - Use regular import for coinbase connector in React Native
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005), [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19)]:
+  - @thirdweb-dev/chains@0.1.50
+  - @thirdweb-dev/sdk@3.10.58
+  - @thirdweb-dev/react-core@3.14.39
+  - @thirdweb-dev/wallets@1.1.22
+
 ## 0.2.57
 
 ### Patch Changes

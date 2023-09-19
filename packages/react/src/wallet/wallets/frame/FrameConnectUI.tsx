@@ -4,13 +4,12 @@ import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { useEffect, useRef, useState } from "react";
 import {
-  BackButton,
   HelperLink,
   ModalDescription,
   ModalTitle,
 } from "../../../components/modalElements";
 import { Spacer } from "../../../components/Spacer";
-import { Flex } from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { ButtonLink } from "../../ConnectWallet/screens/GetStartedScreen";
 import { Img } from "../../../components/Img";
 import { iconSize } from "../../../design-system";
@@ -22,41 +21,39 @@ const FrameFailedConnect: React.FC<{
   supportLink: string;
 }> = (props) => {
   return (
-    <>
-      <BackButton onClick={() => props.onBack()} />
-      <Spacer y="lg" />
+    <Container p="lg">
+      <ModalHeader onBack={() => props.onBack()} title="Frame" />
+      <Spacer y="xl" />
       {
         <>
-          <ModalTitle>Failed to connect to Frame.</ModalTitle>
+          <ModalTitle>Failed to connect to Frame </ModalTitle>
           <Spacer y="sm" />
 
-          <ModalDescription>
+          <ModalDescription sm>
             Make sure the desktop app is installed and running. You can download
             Frame from the link below. Make sure to refresh this page once Frame
             is running.
           </ModalDescription>
         </>
       }
-      <Spacer y="xl" />
-      <Flex flexDirection="column" gap="xs">
-        <ButtonLink
-          onClick={() => {
-            openWindow("https://frame.sh");
-          }}
-        >
-          <Img
-            width={iconSize.lg}
-            height={iconSize.lg}
-            src={props.walletIconURL}
-          />
-          <span>Download Frame</span>
-        </ButtonLink>
-      </Flex>
-      <Spacer y="xl" />
+      <Spacer y="lg" />
+      <ButtonLink
+        onClick={() => {
+          openWindow("https://frame.sh");
+        }}
+      >
+        <Img
+          width={iconSize.lg}
+          height={iconSize.lg}
+          src={props.walletIconURL}
+        />
+        <span>Download Frame</span>
+      </ButtonLink>
+      <Spacer y="lg" />
       <HelperLink target="_blank" href={props.supportLink}>
         Still having troubles connecting?
       </HelperLink>
-    </>
+    </Container>
   );
 };
 
@@ -100,11 +97,17 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        errorConnecting={false}
+        onRetry={() => {
+          // NOOP
+        }}
+        onGetStarted={() => {
+          // NOOP - TODO
+        }}
         hideBackButton={hideBackButton}
         onBack={goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink={supportLink}
       />
     );
   }

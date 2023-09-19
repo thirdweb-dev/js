@@ -18,6 +18,7 @@ import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useEffect } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import invariant from "tiny-invariant";
+import { useUIContext } from "../providers/ui-context-provider";
 
 type ActionFn = (contract: SmartContract) => Promise<any>;
 
@@ -82,10 +83,17 @@ export const Web3Button = <TAction extends ActionFn>({
   const needToSwitchChain =
     sdkChainId && walletChainId && sdkChainId !== walletChainId;
   const connectionStatus = useConnectionStatus();
+  const setTheme = useUIContext().setTheme;
 
   const queryClient = useQueryClient();
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
+
+  useEffect(() => {
+    if (theme) {
+      setTheme(theme);
+    }
+  }, [setTheme, theme]);
 
   const actionMutation = useMutation(
     async () => {
@@ -153,7 +161,7 @@ export const Web3Button = <TAction extends ActionFn>({
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <BaseButton
         backgroundColor="buttonBackgroundColor"
         onPress={() => {

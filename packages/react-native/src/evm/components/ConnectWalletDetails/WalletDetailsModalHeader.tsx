@@ -59,7 +59,7 @@ export const WalletDetailsModalHeader = ({
             justifyContent="center"
             alignItems="center"
           >
-            <AddressDisplay mr="xs" address={address} />
+            <AddressDisplay mr="xs" address={address} extraShort={false} />
             <CopyIcon
               width={14}
               height={14}
