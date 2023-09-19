@@ -5,8 +5,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 
-global.fetch = require("cross-fetch");
-
 describe("NFT Contract", async () => {
   type NewType = NFTCollection;
   let nftContract: NewType;

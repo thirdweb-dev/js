@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=16.7.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -56,10 +56,8 @@
   },
   "pnpm": {
     "overrides": {
-      "cross-fetch@>=3.0.0 <3.1.5": ">=3.1.5",
       "got@<11.8.5": ">=11.8.5",
       "glob-parent@<5.1.2": ">=5.1.2",
-      "node-fetch@<2.6.7": ">=2.6.7",
       "nth-check@<2.0.1": ">=2.0.1",
       "socket.io-parser@>=4.0.4 <4.2.3": ">=4.2.3",
       "fast-xml-parser@<4.2.4": ">=4.2.4",

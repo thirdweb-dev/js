@@ -1,6 +1,5 @@
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import fetch from "cross-fetch";
 import {
   BaseContract,
   BigNumber,
