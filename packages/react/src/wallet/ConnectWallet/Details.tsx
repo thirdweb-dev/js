@@ -27,6 +27,7 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   ShuffleIcon,
+  TextAlignLeftIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
@@ -408,7 +409,9 @@ export const ConnectedWalletDetails: React.FC<{
                 fontSize: fontSize.sm,
               }}
             >
-              <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+              <Container color="secondaryText">
+                <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
               Switch Account
             </MenuButton>
           )}
@@ -471,6 +474,25 @@ export const ConnectedWalletDetails: React.FC<{
               want to lose access to it
             </ErrorMessage>
           </div>
+        )}
+
+        {/* Explorer link */}
+        {chain?.explorers && (
+          <MenuLink
+            href={chain.explorers[0].url + "/address/" + address}
+            target="_blank"
+            as="a"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontSize: fontSize.sm,
+            }}
+          >
+            <Container flex="row" center="both" color="secondaryText">
+              <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+            Transaction History
+          </MenuLink>
         )}
       </Container>
     </div>
