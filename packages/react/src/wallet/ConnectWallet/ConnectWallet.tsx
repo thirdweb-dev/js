@@ -116,6 +116,18 @@ export type ConnectWalletProps = {
    * These tokens will be displayed in "Send Funds" Modal
    */
   supportedTokens?: SupportedTokens;
+
+  /**
+   * Show balance of ERC20 token instead of the native token  in the "Connected" button when connected to certain network
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet balanceToken={{
+   *  1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
+   * }} />
+   * ```
+   */
+  balanceToken?: Record<number, string>;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -291,6 +303,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
             supportedTokens={supportedTokens}
+            balanceToken={props.balanceToken}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();
