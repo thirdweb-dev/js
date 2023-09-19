@@ -13,8 +13,12 @@ import {
   Container,
   ScreenBottomContainer,
 } from "../../../components/basic";
-import { iconSize } from "../../../design-system";
+import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { Text } from "../../../components/text";
+import styled from "@emotion/styled";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { useClipboard } from "../../../evm/components/hooks/useCopyClipboard";
+import { Button } from "../../../components/buttons";
 
 export const WalletConnectScan: React.FC<{
   onBack: () => void;
@@ -74,7 +78,7 @@ export const WalletConnectScan: React.FC<{
         }}
       >
         <ModalHeader onBack={onBack} title="WalletConnect" />
-        {modalSize === "compact" && <Spacer y="xl" />}
+        <Spacer y="xl" />
 
         <Container flex="column" center="both" expand>
           <QRCode
@@ -87,10 +91,20 @@ export const WalletConnectScan: React.FC<{
               />
             }
           />
-
-          <Spacer y="xl" />
         </Container>
       </Container>
+
+      <Spacer y="lg" />
+
+      <Container flex="row" center="x">
+        <CopyButton
+          text={qrCodeUri || ""}
+          tip="Copy QRI to clipboard"
+          hide={!qrCodeUri}
+        />
+      </Container>
+
+      <Spacer y="lg" />
 
       <ScreenBottomContainer
         style={{
@@ -105,3 +119,35 @@ export const WalletConnectScan: React.FC<{
     </Container>
   );
 };
+
+export const CopyButton: React.FC<{
+  text: string;
+  tip: string;
+  side?: "top" | "bottom" | "left" | "right";
+  align?: "start" | "center" | "end";
+  hide?: boolean;
+}> = (props) => {
+  const { hasCopied, onCopy } = useClipboard(props.text);
+
+  return (
+    <Button
+      variant="outline"
+      onClick={onCopy}
+      style={{
+        padding: spacing.xs,
+        fontSize: fontSize.xs,
+        opacity: props.hide ? 0 : 1,
+        transition: "opacity 400ms ease",
+      }}
+    >
+      <Container flex="row" center="both" gap="xs" color="secondaryText">
+        {hasCopied ? <CheckIconStyled /> : <CopyIcon />}
+        Copy
+      </Container>
+    </Button>
+  );
+};
+
+const CheckIconStyled = /* @__PURE__ */ styled(CheckIcon)<{ theme?: Theme }>`
+  color: ${(p) => p.theme.colors.success};
+`;

@@ -266,7 +266,7 @@ export function SendFundsForm(props: {
           </CurrencyBadge>
         </Container>
 
-        <Spacer y="xxl" />
+        <Spacer y="xl" />
 
         {/* Submit */}
         <Button

@@ -55,6 +55,7 @@ import { Text } from "../../components/text";
 import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
+import { useENS } from "../hooks/useENS";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -81,6 +82,7 @@ export const ConnectedWalletDetails: React.FC<{
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
   const activeWalletConfig = useWalletConfig();
+  const ensQuery = useENS();
 
   const [wrapperWallet, setWrapperWallet] = useState<
     WalletInstance | undefined
@@ -115,6 +117,10 @@ export const ConnectedWalletDetails: React.FC<{
   const isActuallyMetaMask =
     activeWallet && activeWallet instanceof MetaMaskWallet;
 
+  const shortAddress = address ? shortenString(address) : "";
+
+  const addressOrENS = ensQuery.data || shortAddress;
+
   const trigger = props.detailsBtn ? (
     <div>
       <props.detailsBtn />
@@ -126,27 +132,15 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.style}
       data-test="connected-wallet-details"
     >
-      <ChainIcon
-        chain={chain}
-        size={iconSize.lg}
-        className={`${TW_CONNECTED_WALLET}__network-icon`}
+      <Img
+        width={iconSize.lg}
+        height={iconSize.lg}
+        src={activeWalletIconURL}
+        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
       />
 
       <Container flex="column" gap="xs">
-        {balanceQuery.data ? (
-          <Text
-            className={`${TW_CONNECTED_WALLET}__balance`}
-            size="sm"
-            color="primaryText"
-            weight={500}
-          >
-            {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
-            {balanceQuery.data.symbol}
-          </Text>
-        ) : (
-          <Skeleton height={fontSize.sm} width="82px" />
-        )}
-
+        {/* Address */}
         {activeWallet?.walletId === walletIds.localWallet ? (
           <ErrorMessage
             style={{
@@ -157,25 +151,33 @@ export const ConnectedWalletDetails: React.FC<{
           >
             Guest
           </ErrorMessage>
-        ) : address ? (
+        ) : addressOrENS ? (
           <Text
-            size="xs"
+            size="sm"
+            color="primaryText"
             weight={500}
             className={`${TW_CONNECTED_WALLET}__address`}
           >
-            {shortenString(address || "")}
+            {addressOrENS}
           </Text>
         ) : (
-          <Skeleton height={fontSize.xs} width="88px" />
+          <Skeleton height={fontSize.sm} width="88px" />
+        )}
+
+        {/* Balance */}
+        {balanceQuery.data ? (
+          <Text
+            className={`${TW_CONNECTED_WALLET}__balance`}
+            size="xs"
+            weight={500}
+          >
+            {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+            {balanceQuery.data.symbol}
+          </Text>
+        ) : (
+          <Skeleton height={fontSize.xs} width="82px" />
         )}
       </Container>
-
-      <Img
-        width={iconSize.lg}
-        height={iconSize.lg}
-        src={activeWalletIconURL}
-        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
-      />
     </WalletInfoButton>
   );
 
@@ -200,7 +202,7 @@ export const ConnectedWalletDetails: React.FC<{
             position: "relative",
           }}
         >
-          <ChainIcon chain={chain} size={iconSize.lg} active />
+          <ChainIcon chain={chain} size={iconSize.md} active />
         </div>
         <Text size="sm" color="primaryText" multiline>
           {chain?.name || `Unknown chain #${walletChainId}`}
@@ -245,8 +247,7 @@ export const ConnectedWalletDetails: React.FC<{
               data-address={address}
             >
               <Text color="primaryText" weight={500}>
-                {" "}
-                {shortenString(address || "")}
+                {addressOrENS}
               </Text>
               <IconButton
                 style={{
@@ -605,7 +606,8 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: ${spacing.md};
+  min-width: 180px;
+  gap: ${spacing.sm};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
