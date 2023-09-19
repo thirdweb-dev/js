@@ -31,7 +31,7 @@
     "@solana/wallet-adapter-base": "^0.9.16",
     "@solana/wallet-adapter-react": "^0.15.34",
     "@solana/wallet-adapter-react-ui": "^0.9.27",
-    "@solana/wallet-adapter-wallets": "^0.19.11",
+    "@solana/wallet-adapter-wallets": "^0.19.22",
     "@solana/web3.js": "1.67.2",
     "@tanstack/query-async-storage-persister": "^4.33.0",
     "@tanstack/react-query": "^4.33.0",
