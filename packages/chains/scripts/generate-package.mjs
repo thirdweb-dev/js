@@ -103,58 +103,10 @@ for (const file of additionalChainsFiles) {
   chains = chains.filter((c) => c.chainId !== additionalChain.default.chainId);
   chains.push(additionalChain.default);
 }
-
-chains = chains
-  // Keep scroll-alpha-testnet for now even though its deprecated
-  .filter((c) => c.status !== "deprecated" || c.chainId === 534353)
-  .map((chain) => {
-    if (overrides[chain.chainId]) {
-      chain = merge(chain, overrides[chain.chainId], {
-        arrayMerge: combineMerge,
-      });
-    }
-
-    // apparently this is the best way to do this off of raw data
-    const testnet =
-      chain.testnet === false
-        ? false
-        : JSON.stringify(chain).toLowerCase().includes("test");
-
-    const resultChain = {
-      ...chain,
-      testnet,
-    };
-    // only add the explroers if they were there in the first place
-    if (resultChain.explorers) {
-      resultChain.explorers = sortExplorers(resultChain.explorers);
-      // check every key that *could* contain a url and validate it
-      resultChain.explorers = filterOutErroringValues(
-        resultChain.explorers,
-        (explorer) => new URL(explorer.url),
-      );
-    }
-    if (resultChain.faucets) {
-      resultChain.faucets = filterOutErroringValues(
-        resultChain.faucets,
-        (faucet) => new URL(faucet),
-      );
-    }
-    if (resultChain.rpc) {
-      resultChain.rpc = filterOutErroringValues(
-        resultChain.rpc,
-        (rpc) => new URL(rpc),
-      );
-    }
-    if (resultChain.infoURL) {
-      try {
-        new URL(resultChain.infoURL);
-      } catch (e) {
-        delete resultChain.infoURL;
-      }
-    }
-
-    return resultChain;
-  });
+// Keep scroll-alpha-testnet for now even though its deprecated
+chains = chains.filter(
+  (c) => c.status !== "deprecated" || c.chainId === 534353,
+);
 
 /**
  * Sort RPCs in chain
@@ -179,14 +131,8 @@ function sortRPCs(chain) {
   });
 
   chain.rpc = [...thirdwebRPCs, ...infuraRPCs, ...alchemyRPCs, ...otherRPCs];
+  return chain;
 }
-
-chains.forEach(sortRPCs);
-
-const imports = [];
-const exports = [];
-const exportNames = [];
-const exportNameToChain = {};
 
 const takenSlugs = {};
 
@@ -265,77 +211,153 @@ fs.rmdirSync(chainDir, { recursive: true });
 // make sure the chain directory exists
 fs.mkdirSync(chainDir, { recursive: true });
 
-for (const chain of chains) {
-  try {
-    if ("icon" in chain) {
-      if (typeof chain.icon === "string") {
-        const iconMeta = await downloadIcon(chain.icon);
-        if (iconMeta) {
-          chain.icon = iconMeta;
-        }
+const results = await Promise.all(
+  chains.map(async (chain) => {
+    if (overrides[chain.chainId]) {
+      chain = merge(chain, overrides[chain.chainId], {
+        arrayMerge: combineMerge,
+      });
+    }
+
+    // apparently this is the best way to do this off of raw data
+    const testnet =
+      chain.testnet === false
+        ? false
+        : JSON.stringify(chain).toLowerCase().includes("test");
+
+    chain = {
+      ...chain,
+      testnet,
+    };
+    // only add the explroers if they were there in the first place
+    if (chain.explorers) {
+      chain.explorers = sortExplorers(chain.explorers);
+      // check every key that *could* contain a url and validate it
+      chain.explorers = filterOutErroringValues(
+        chain.explorers,
+        (explorer) => new URL(explorer.url),
+      );
+    }
+    if (chain.faucets) {
+      chain.faucets = filterOutErroringValues(
+        chain.faucets,
+        (faucet) => new URL(faucet),
+      );
+    }
+    if (chain.rpc) {
+      chain.rpc = filterOutErroringValues(chain.rpc, (rpc) => new URL(rpc));
+    }
+    if (chain.infoURL) {
+      try {
+        new URL(chain.infoURL);
+      } catch (e) {
+        delete chain.infoURL;
       }
     }
-    if ("explorers" in chain && Array.isArray(chain.explorers)) {
-      for (const explorer of chain.explorers) {
-        if ("icon" in explorer) {
-          if (typeof explorer.icon === "string") {
-            const iconMeta = await downloadIcon(explorer.icon);
-            if (iconMeta) {
-              explorer.icon = iconMeta;
+
+    chain = sortRPCs(chain);
+
+    try {
+      if ("icon" in chain) {
+        if (typeof chain.icon === "string") {
+          const iconMeta = await downloadIcon(chain.icon);
+          if (iconMeta) {
+            chain.icon = iconMeta;
+          }
+        }
+      }
+      if ("explorers" in chain && Array.isArray(chain.explorers)) {
+        for (const explorer of chain.explorers) {
+          if ("icon" in explorer) {
+            if (typeof explorer.icon === "string") {
+              const iconMeta = await downloadIcon(explorer.icon);
+              if (iconMeta) {
+                explorer.icon = iconMeta;
+              }
             }
           }
         }
       }
+    } catch (err) {
+      console.log(err.message);
     }
-  } catch (err) {
-    console.log(err.message);
-  }
 
-  // figure out a slug for the chain
+    // figure out a slug for the chain
 
-  const slug = findSlug(chain);
-  chain.slug = slug;
-  // if the chain has RPCs that we can use then prepend our RPC to the list
-  const chainHasHttpRpc = chain.rpc.some((rpc) => rpc.startsWith("http"));
-  // if the chain has RPCs that we can use then prepend our RPC to the list
-  // we're exlcuding localhost because we don't want to use our RPC for localhost
-  if (chainHasHttpRpc && chain.chainId !== 1337) {
-    chain.rpc = [
-      `https://${slug}.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
-      ...chain.rpc,
-    ];
-  }
-  // unique rpcs
-  chain.rpc = [...new Set(chain.rpc)];
+    const slug = findSlug(chain);
+    chain.slug = slug;
+    // if the chain has RPCs that we can use then prepend our RPC to the list
+    const chainHasHttpRpc = chain.rpc.some((rpc) => rpc.startsWith("http"));
+    // if the chain has RPCs that we can use then prepend our RPC to the list
+    // we're exlcuding localhost because we don't want to use our RPC for localhost
+    if (chainHasHttpRpc && chain.chainId !== 1337) {
+      chain.rpc = [
+        `https://${slug}.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
+        ...chain.rpc,
+      ];
+    }
+    // unique rpcs
+    chain.rpc = [...new Set(chain.rpc)];
 
-  fs.writeFileSync(
-    `${chainDir}/${chain.chainId}.ts`,
-    `import type { Chain } from "../src/types";
+    // @ts-ignore
+    await Bun.write(
+      `${chainDir}/${chain.chainId}.ts`,
+      `import type { Chain } from "../src/types";
 export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
-  );
+    );
 
-  let exportName = slug
-    .split("-")
-    .map((s) => s[0].toUpperCase() + s.slice(1))
-    .join("");
+    let exportName = slug
+      .split("-")
+      .map((s) => s[0].toUpperCase() + s.slice(1))
+      .join("");
 
-  // if chainName starts with a number, prepend an underscore
-  if (exportName.match(/^[0-9]/)) {
-    exportName = `_${exportName}`;
-  }
+    // if chainName starts with a number, prepend an underscore
+    if (exportName.match(/^[0-9]/)) {
+      exportName = `_${exportName}`;
+    }
 
-  imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
+    // imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
 
-  exports.push(
-    `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
-  );
+    // exports.push(
+    //   `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
+    // );
 
-  const key = `c${chain.chainId}`;
-  exportNames.push(key);
-  exportNameToChain[key] = chain;
-}
+    const key = `c${chain.chainId}`;
 
-fs.writeFileSync(
+    // exportNames.push(key);
+    // exportNameToChain[key] = chain;
+
+    return {
+      imp: `import c${chain.chainId} from "../chains/${chain.chainId}";`,
+      exp: `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
+      chain,
+      key,
+      exportName,
+    };
+  }),
+);
+
+const { imports, exports, exportNames, exportNameToChain } = results.reduce(
+  (acc, result) => {
+    // @ts-ignore
+    acc.imports.push(result.imp);
+    // @ts-ignore
+    acc.exports.push(result.exp);
+    // @ts-ignore
+    acc.exportNames.push(result.key);
+    acc.exportNameToChain[result.key] = result.chain;
+    return acc;
+  },
+  {
+    imports: [],
+    exports: [],
+    exportNames: [],
+    exportNameToChain: {},
+  },
+);
+
+// @ts-ignore
+await Bun.write(
   `./src/index.ts`,
   `${imports.join("\n")}
 import type { Chain } from "./types";
@@ -349,6 +371,7 @@ export const allChains: Chain[] = [${exportNames.join(", ")}];
 
 type ChainsById = {
   ${exportNames
+    // @ts-ignore
     .map((n) => `${exportNameToChain[n].chainId}: typeof ${n}`)
     .join(",\n")}
 };
@@ -356,6 +379,7 @@ type ChainsById = {
 type ChainIdsBySlug = {
   ${exportNames
     .map(
+      // @ts-ignore
       (n) => `"${exportNameToChain[n].slug}": ${exportNameToChain[n].chainId}`,
     )
     .join(",\n")}

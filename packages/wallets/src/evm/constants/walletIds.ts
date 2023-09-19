@@ -10,6 +10,7 @@ export const walletIds = {
   smartWallet: "smartWallet",
   safe: "safe",
   trust: "trust",
+  embeddedWallet: "embeddedWallet",
   walletConnectV1: "walletConnectV1",
   walletConnect: "walletConnect",
   phantom: "phantom",

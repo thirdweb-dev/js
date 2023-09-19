@@ -1,6 +1,6 @@
 import type { Chain } from "@thirdweb-dev/chains";
 import { MagicSDKAdditionalConfiguration } from "@magic-sdk/provider";
-import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
+import { OAuthProvider } from "@magic-ext/oauth";
 
 export type MagicWalletAdditionalOptions = {
   clientId: string;
