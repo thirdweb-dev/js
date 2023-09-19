@@ -53,6 +53,7 @@ import { fadeInAnimation } from "../../design-system/animations";
 import { Text } from "../../components/text";
 import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
+import { ReceiveFunds } from "./ReceiveFunds";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -92,6 +93,7 @@ export const ConnectedWalletDetails: React.FC<{
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
+  const [showReceiveModal, setShowReceiveModal] = useState(false);
 
   // dropdown
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -199,7 +201,7 @@ export const ConnectedWalletDetails: React.FC<{
         >
           <ChainIcon chain={chain} size={iconSize.lg} active />
         </div>
-        <Text size="sm" color="primaryText">
+        <Text size="sm" color="primaryText" multiline>
           {chain?.name || `Unknown chain #${walletChainId}`}
         </Text>
         <StyledChevronRightIcon
@@ -342,6 +344,10 @@ export const ConnectedWalletDetails: React.FC<{
             gap: spacing.xs,
             alignItems: "center",
             padding: spacing.sm,
+          }}
+          onClick={() => {
+            setShowReceiveModal(true);
+            setIsDropdownOpen(false);
           }}
         >
           <PinBottomIcon width={iconSize.sm} height={iconSize.sm} /> Receive{" "}
@@ -528,6 +534,12 @@ export const ConnectedWalletDetails: React.FC<{
       {showSendModal && (
         <Modal size={"compact"} open={true} setOpen={setShowSendModal}>
           <SendFunds supportedTokens={props.supportedTokens} />
+        </Modal>
+      )}
+
+      {showReceiveModal && (
+        <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
+          <ReceiveFunds />
         </Modal>
       )}
     </>

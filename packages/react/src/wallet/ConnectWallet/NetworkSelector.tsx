@@ -12,7 +12,6 @@ import {
   Theme,
   ThemeObjectOrType,
 } from "../../design-system";
-import { scrollbar } from "../../design-system/styles";
 import styled from "@emotion/styled";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -26,7 +25,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { useEffect } from "react";
-import { Container } from "../../components/basic";
+import { Container, noScrollBar } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
@@ -544,17 +543,10 @@ const SectionLabel = styled.p<{ theme?: Theme }>`
 const ScrollContainer = styled.div<{ theme?: Theme }>`
   box-sizing: border-box;
   overflow: auto;
-  padding-right: 10px;
   padding-bottom: ${spacing.lg};
-  width: calc(100% + 16px);
   -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
-  ${(p) =>
-    scrollbar({
-      track: "transparent",
-      thumb: p.theme.colors.scrollbarBg,
-      hover: p.theme.colors.scrollbarBg,
-    })}
+  ${noScrollBar};
 `;
 
 const NetworkListUl = styled.ul<{ theme?: Theme }>`
