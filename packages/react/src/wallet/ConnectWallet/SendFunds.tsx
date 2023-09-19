@@ -400,7 +400,7 @@ export function TokenSelector(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title="Token" />
+        <ModalHeader onBack={props.onBack} title="Select a Token" />
         <Spacer y="xl" />
         <Input
           placeholder="Search or paste token address"
