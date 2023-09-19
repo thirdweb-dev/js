@@ -19,6 +19,7 @@ export const Button = styled.button<{
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
   flex-shrink: 0;
+  transition: border 200ms ease;
 
   ${(p) => p.fullWidth && `width: 100%;`};
 
@@ -56,6 +57,9 @@ export const Button = styled.button<{
     if (p.variant === "outline") {
       return `
       border: 1.5px solid ${p.theme.colors.borderColor};
+      &:hover {
+        border-color: ${p.theme.colors.accentText};
+      }
     `;
     }
   }}

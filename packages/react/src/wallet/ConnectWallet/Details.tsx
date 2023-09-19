@@ -5,7 +5,7 @@ import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
 import { ToolTip } from "../../components/Tooltip";
-import { IconButton } from "../../components/buttons";
+import { Button, IconButton } from "../../components/buttons";
 import {
   fontSize,
   iconSize,
@@ -24,6 +24,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   ChevronRightIcon,
   EnterIcon,
+  PaperPlaneIcon,
   PinBottomIcon,
   ShuffleIcon,
 } from "@radix-ui/react-icons";
@@ -50,6 +51,8 @@ import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
 import { fadeInAnimation } from "../../design-system/animations";
 import { Text } from "../../components/text";
+import { SendFunds } from "./SendFunds";
+import { SupportedTokens } from "./defaultTokens";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -67,6 +70,7 @@ export const ConnectedWalletDetails: React.FC<{
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
   theme: "light" | "dark" | Theme;
+  supportedTokens: SupportedTokens;
 }> = (props) => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
@@ -75,7 +79,7 @@ export const ConnectedWalletDetails: React.FC<{
   const balanceQuery = useBalance();
   const activeWallet = useWallet();
   const activeWalletConfig = useWalletConfig();
-  const [showExportModal, setShowExportModal] = useState(false);
+
   const [wrapperWallet, setWrapperWallet] = useState<
     WalletInstance | undefined
   >();
@@ -84,8 +88,13 @@ export const ConnectedWalletDetails: React.FC<{
   const chain = useChain();
   const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
 
+  // modals
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showSendModal, setShowSendModal] = useState(false);
+
+  // dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const sdk = useSDK();
 
@@ -177,7 +186,7 @@ export const ConnectedWalletDetails: React.FC<{
         type="button"
         disabled={disableSwitchChain}
         onClick={() => {
-          setOpen(false);
+          setIsDropdownOpen(false);
           setShowNetworkSelector(true);
         }}
       >
@@ -190,7 +199,9 @@ export const ConnectedWalletDetails: React.FC<{
         >
           <ChainIcon chain={chain} size={iconSize.lg} active />
         </div>
-        {chain?.name || `Unknown chain #${walletChainId}`}
+        <Text size="sm" color="primaryText">
+          {chain?.name || `Unknown chain #${walletChainId}`}
+        </Text>
         <StyledChevronRightIcon
           width={iconSize.sm}
           height={iconSize.sm}
@@ -291,6 +302,54 @@ export const ConnectedWalletDetails: React.FC<{
         </>
       )}
 
+      {/* Send and Recive */}
+      <Container
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: spacing.sm,
+        }}
+      >
+        <Button
+          variant="outline"
+          style={{
+            fontSize: fontSize.sm,
+            display: "flex",
+            gap: spacing.xs,
+            alignItems: "center",
+            padding: spacing.sm,
+          }}
+          onClick={() => {
+            setShowSendModal(true);
+            setIsDropdownOpen(false);
+          }}
+        >
+          <PaperPlaneIcon
+            width={iconSize.sm}
+            height={iconSize.sm}
+            style={{
+              transform: "translateY(-10%) rotate(-45deg) ",
+            }}
+          />
+          Send
+        </Button>
+
+        <Button
+          variant="outline"
+          style={{
+            fontSize: fontSize.sm,
+            display: "flex",
+            gap: spacing.xs,
+            alignItems: "center",
+            padding: spacing.sm,
+          }}
+        >
+          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} /> Receive{" "}
+        </Button>
+      </Container>
+
+      <Spacer y="lg" />
+
       {/* Network Switcher */}
       <div>
         <DropdownLabel>Current Network</DropdownLabel>
@@ -337,7 +396,7 @@ export const ConnectedWalletDetails: React.FC<{
               type="button"
               onClick={() => {
                 (activeWallet as MetaMaskWallet).switchAccount();
-                setOpen(false);
+                setIsDropdownOpen(false);
               }}
               style={{
                 fontSize: fontSize.sm,
@@ -359,7 +418,7 @@ export const ConnectedWalletDetails: React.FC<{
               onClick={async (e) => {
                 if (chain.chainId === Localhost.chainId) {
                   e.preventDefault();
-                  setOpen(false);
+                  setIsDropdownOpen(false);
                   await sdk?.wallet.requestFunds(10);
                   await balanceQuery.refetch();
                 }
@@ -383,7 +442,7 @@ export const ConnectedWalletDetails: React.FC<{
             <MenuButton
               onClick={() => {
                 setShowExportModal(true);
-                setOpen(false);
+                setIsDropdownOpen(false);
               }}
               style={{
                 fontSize: fontSize.sm,
@@ -417,14 +476,17 @@ export const ConnectedWalletDetails: React.FC<{
         <Modal
           size={"compact"}
           trigger={trigger}
-          open={open}
-          setOpen={setOpen}
+          open={isDropdownOpen}
+          setOpen={setIsDropdownOpen}
           hideCloseIcon={true}
         >
           <Container p="lg">{content}</Container>
         </Modal>
       ) : (
-        <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+        <DropdownMenu.Root
+          open={isDropdownOpen}
+          onOpenChange={setIsDropdownOpen}
+        >
           <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropDownContent
@@ -460,6 +522,12 @@ export const ConnectedWalletDetails: React.FC<{
               setShowExportModal(false);
             }}
           />
+        </Modal>
+      )}
+
+      {showSendModal && (
+        <Modal size={"compact"} open={true} setOpen={setShowSendModal}>
+          <SendFunds supportedTokens={props.supportedTokens} />
         </Modal>
       )}
     </>

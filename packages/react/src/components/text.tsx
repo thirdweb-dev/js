@@ -15,7 +15,7 @@ export const Text = styled.span<{
   color: ${(p) => p.theme.colors[p.color || "secondaryText"]};
   margin: 0;
   display: ${(p) => (p.inline ? "inline" : "block")};
-  font-weight: ${(p) => p.weight || 400};
+  font-weight: ${(p) => p.weight || 500};
   line-height: ${(p) => (p.multiline ? 1.5 : 1)};
   ${(p) => (p.center ? `text-align: center;` : "")};
   text-wrap: ${(p) => (p.balance ? "balance" : "inherit")};

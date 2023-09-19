@@ -1,9 +1,12 @@
 import { fontSize, radius, spacing, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
-export const Label = styled.label<{ theme?: Theme }>`
+export const Label = styled.label<{
+  theme?: Theme;
+  color?: keyof Theme["colors"];
+}>`
   font-size: ${fontSize.sm};
-  color: ${(p) => p.theme.colors.primaryText};
+  color: ${(p) => p.theme.colors[p.color || "primaryText"]};
   display: block;
 `;
 

@@ -18,7 +18,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -37,6 +37,7 @@ import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
 import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
+import { SupportedTokens, defaultTokens } from "./defaultTokens";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -108,6 +109,13 @@ export type ConnectWalletProps = {
    * or an object with title, subtitle and imgSrc to change the content of the default screen
    */
   welcomeScreen?: WelcomeScreen;
+
+  /**
+   * Override the default supported tokens for each network
+   *
+   * These tokens will be displayed in "Send Funds" Modal
+   */
+  supportedTokens?: SupportedTokens;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -155,6 +163,20 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     }
     setShowSignatureModal(false);
   };
+
+  const supportedTokens = useMemo(() => {
+    if (!props.supportedTokens) {
+      return defaultTokens;
+    }
+
+    const tokens = { ...defaultTokens };
+    for (const k in props.supportedTokens) {
+      const key = Number(k);
+      tokens[key] = props.supportedTokens[key];
+    }
+
+    return tokens;
+  }, [props.supportedTokens]);
 
   return (
     <CustomThemeProvider theme={theme}>
@@ -268,6 +290,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             style={props.style}
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
+            supportedTokens={supportedTokens}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();
