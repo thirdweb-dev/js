@@ -147,108 +147,117 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
           paddingBottom: props.onCustomClick ? spacing.md : "0px",
         }}
       >
-        <Container p="lg">
-          <ModalTitle>Select Network</ModalTitle>
-          <Spacer y="xl" />
+        <Container>
+          <Container p="lg">
+            <ModalTitle>Select Network</ModalTitle>
+          </Container>
 
           <Tabs.Root className="TabsRoot" defaultValue="all">
-            <Tabs.List
-              className="TabsList"
-              aria-label="Manage your account"
-              style={{
-                display: "flex",
-                gap: spacing.xxs,
-              }}
-            >
-              <TabButton className="TabsTrigger" value="all">
-                All
-              </TabButton>
-              <TabButton className="TabsTrigger" value="mainnet">
-                Mainnets
-              </TabButton>
-              <TabButton className="TabsTrigger" value="testnet">
-                Testnets
-              </TabButton>
-            </Tabs.List>
-
-            <Spacer y="lg" />
-
-            {/* Search */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                position: "relative",
-              }}
-            >
-              <StyledMagnifyingGlassIcon
-                width={iconSize.md}
-                height={iconSize.md}
-              />
-
-              <Input
+            <Container px="lg">
+              <Tabs.List
+                className="TabsList"
+                aria-label="Manage your account"
                 style={{
-                  padding: `${spacing.sm} ${spacing.md} ${spacing.sm} 60px`,
+                  display: "flex",
+                  gap: spacing.xxs,
                 }}
-                tabIndex={-1}
-                variant="outline"
-                placeholder="Search Network or Chain ID"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                }}
-              />
-
-              {/* Searching Spinner */}
-              {deferredSearchTerm !== searchTerm && (
-                <div
-                  style={{
-                    position: "absolute",
-                    right: spacing.md,
-                  }}
-                >
-                  <Spinner size="md" color="accentText" />
-                </div>
-              )}
-            </div>
+              >
+                <TabButton className="TabsTrigger" value="all">
+                  All
+                </TabButton>
+                <TabButton className="TabsTrigger" value="mainnet">
+                  Mainnets
+                </TabButton>
+                <TabButton className="TabsTrigger" value="testnet">
+                  Testnets
+                </TabButton>
+              </Tabs.List>
+            </Container>
 
             <Spacer y="lg" />
 
-            <Tabs.Content className="TabsContent" value="all">
-              <NetworkTab
-                allChains={allChains}
-                type="all"
-                popularChains={popularChains}
-                recentChains={recentChains}
-                onSwitch={handleSwitch}
-                renderChain={props.renderChain}
-                close={props.onClose}
-              />
-            </Tabs.Content>
+            {chains.length > 10 && (
+              <>
+                <Container px="lg">
+                  {/* Search */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      position: "relative",
+                    }}
+                  >
+                    <StyledMagnifyingGlassIcon
+                      width={iconSize.md}
+                      height={iconSize.md}
+                    />
 
-            <Tabs.Content className="TabsContent" value="mainnet">
-              <NetworkTab
-                allChains={allChains}
-                type="mainnet"
-                popularChains={popularChains}
-                recentChains={recentChains}
-                onSwitch={handleSwitch}
-                renderChain={props.renderChain}
-                close={props.onClose}
-              />
-            </Tabs.Content>
+                    <Input
+                      style={{
+                        padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
+                      }}
+                      tabIndex={-1}
+                      variant="outline"
+                      placeholder="Search Network or Chain ID"
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                      }}
+                    />
+                    {/* Searching Spinner */}
+                    {deferredSearchTerm !== searchTerm && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          right: spacing.md,
+                        }}
+                      >
+                        <Spinner size="md" color="accentText" />
+                      </div>
+                    )}
+                  </div>
+                </Container>
+                <Spacer y="lg" />
+              </>
+            )}
 
-            <Tabs.Content className="TabsContent" value="testnet">
-              <NetworkTab
-                allChains={allChains}
-                type="testnet"
-                popularChains={popularChains}
-                recentChains={recentChains}
-                onSwitch={handleSwitch}
-                renderChain={props.renderChain}
-                close={props.onClose}
-              />
-            </Tabs.Content>
+            <Container px="md">
+              <Tabs.Content className="TabsContent" value="all">
+                <NetworkTab
+                  allChains={allChains}
+                  type="all"
+                  popularChains={popularChains}
+                  recentChains={recentChains}
+                  onSwitch={handleSwitch}
+                  renderChain={props.renderChain}
+                  close={props.onClose}
+                />
+              </Tabs.Content>
+
+              <Tabs.Content className="TabsContent" value="mainnet">
+                <NetworkTab
+                  allChains={allChains}
+                  type="mainnet"
+                  popularChains={popularChains}
+                  recentChains={recentChains}
+                  onSwitch={handleSwitch}
+                  renderChain={props.renderChain}
+                  close={props.onClose}
+                />
+              </Tabs.Content>
+
+              <Tabs.Content className="TabsContent" value="testnet">
+                <NetworkTab
+                  allChains={allChains}
+                  type="testnet"
+                  popularChains={popularChains}
+                  recentChains={recentChains}
+                  onSwitch={handleSwitch}
+                  renderChain={props.renderChain}
+                  close={props.onClose}
+                />
+              </Tabs.Content>
+            </Container>
 
             {onCustomClick && (
               <>
@@ -477,27 +486,22 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                   }}
                 >
                   {chainName}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: spacing.xs,
-                    }}
-                  >
+                  <Container animate="fadein" flex="row" gap="xs">
                     {confirming && (
                       <>
-                        <Text size="sm" color="accentText" weight={500}>
+                        <Text size="xs" color="accentText">
                           Confirm in Wallet
                         </Text>
-                        <Spinner size="sm" color="accentText" />
+                        <Spinner size="xs" color="accentText" />
                       </>
                     )}
 
                     {switchingFailed && (
-                      <Text size="sm" color="danger" weight={500}>
+                      <Text size="xs" color="danger">
                         Failed to Switch Network
                       </Text>
                     )}
-                  </div>
+                  </Container>
                 </div>
               ) : (
                 chainName
@@ -514,7 +518,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
   theme?: Theme;
 }>`
   all: unset;
-  font-size: ${fontSize.md};
+  font-size: ${fontSize.sm};
   font-weight: 500;
   color: ${(p) => p.theme.colors.secondaryText};
   cursor: pointer;
@@ -524,6 +528,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
   transition:
     background 0.2s ease,
     color 0.2s ease;
+
   &[data-state="active"] {
     background: ${(p) => p.theme.colors.secondaryButtonBg};
     color: ${(p) => p.theme.colors.primaryText};
@@ -569,16 +574,15 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   box-sizing: border-box;
   align-items: center;
   gap: ${spacing.md};
-  padding: ${spacing.sm} ${spacing.md};
+  padding: ${spacing.xs} ${spacing.sm};
   border-radius: ${radius.md};
   cursor: pointer;
   transition: background 0.2s ease;
-  background: ${(p) => p.theme.colors.secondaryButtonBg};
   color: ${(p) => p.theme.colors.primaryText};
-  font-weight: 600;
+  font-weight: 500;
   font-size: ${fontSize.md};
   &:hover {
-    background: ${(p) => p.theme.colors.secondaryButtonHoverBg};
+    background: ${(p) => p.theme.colors.secondaryButtonBg};
   }
 
   ${media.mobile} {
@@ -591,5 +595,5 @@ const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)<{
 }>`
   color: ${(p) => p.theme.colors.secondaryText};
   position: absolute;
-  left: 18px;
+  left: ${spacing.sm};
 `;
