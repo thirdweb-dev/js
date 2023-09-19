@@ -584,7 +584,7 @@ const AsyncContractTypeCell = memo(({ cell }: AsyncContractTypeCellProps) => {
         </Text>
       ) : (
         <Text fontStyle="italic" opacity={0.5}>
-          Unpublished
+          Custom
         </Text>
       )}
     </Skeleton>
