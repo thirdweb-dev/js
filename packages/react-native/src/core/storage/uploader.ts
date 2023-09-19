@@ -156,11 +156,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           content: data,
         });
 
-        console.log("calling ipfs-pin-json", fetchBody);
-
-        console.log("APP_BUNDLE_ID", APP_BUNDLE_ID);
-        console.log("this.clientId", this.clientId);
-
         try {
           const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
             method: "POST",
@@ -174,9 +169,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             },
             body: fetchBody,
           });
-
-          console.log("res", res);
-          console.log("res.ok", res.ok);
 
           if (res.ok) {
             const ipfsResults = await res.json();
