@@ -46,6 +46,7 @@ export const ChooseWalletContentSquare = ({
             borderRadius="sm"
           >
             <wallet.selectUI
+              modalSize="compact"
               theme={theme}
               supportedWallets={wallets}
               onSelect={(data) => {

@@ -1,10 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
   useCreateWalletInstance,
@@ -15,8 +12,8 @@ import { DragNDrop } from "../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
-import { LocalWalletModalHeader } from "./common";
 import type { LocalWalletConfig } from "./types";
+import { Container, ModalHeader } from "../../../components/basic";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
@@ -70,21 +67,24 @@ export const ImportLocalWallet: React.FC<{
   };
 
   return (
-    <>
-      <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Import Wallet
-      </ModalTitle>
-      <Spacer y="md" />
+    <Container p="lg">
+      <ModalHeader
+        onBack={props.goBack}
+        title="Import Wallet"
+        imgSrc={meta.iconURL}
+      />
 
-      <ModalDescription>
+      <Spacer y="xl" />
+
+      <ModalDescription sm>
         The application can authorize any transactions on behalf of the wallet
-        without any approvals. We recommend only connecting to trusted
-        applications.
+        without any approvals.
+      </ModalDescription>
+
+      <Spacer y="xs" />
+
+      <ModalDescription sm>
+        We recommend only connecting to trusted applications.
       </ModalDescription>
 
       <Spacer y="lg" />
@@ -149,7 +149,7 @@ export const ImportLocalWallet: React.FC<{
 
         <FormFooter>
           <Button
-            variant="inverted"
+            variant="accent"
             type="submit"
             disabled={!jsonString}
             style={{
@@ -161,6 +161,6 @@ export const ImportLocalWallet: React.FC<{
           </Button>
         </FormFooter>
       </form>
-    </>
+    </Container>
   );
 };

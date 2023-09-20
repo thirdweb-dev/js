@@ -18,6 +18,10 @@ export function getInjectedMetamaskProvider(): Ethereum | undefined {
       return;
     }
 
+    if (ethereum.isRainbow) {
+      return;
+    }
+
     if (ethereum.isPhantom) {
       return;
     }

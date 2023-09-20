@@ -17,6 +17,7 @@ export type WalletClass<I extends WalletInstance = WalletInstance> = {
 };
 
 export type WalletConfig<I extends WalletInstance = WalletInstance> = {
+  category?: "socialLogin" | "walletLogin";
   id: string;
   meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;
@@ -132,6 +133,13 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
    * List of all supported wallets including your wallet.
    */
   supportedWallets: WalletConfig[];
+
+  /**
+   * Size of the modal
+   *
+   * This is always `compact` on React Native
+   */
+  modalSize: "compact" | "wide";
 };
 
 export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
@@ -161,4 +169,11 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
    * theme of the connect wallet modal
    */
   theme: "dark" | "light";
+
+  /**
+   * Size of the modal
+   *
+   * This is always `compact` on React Native
+   */
+  modalSize: "compact" | "wide";
 };
