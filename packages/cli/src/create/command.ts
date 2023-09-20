@@ -73,9 +73,6 @@ export async function twCreate(
       framework = "pwa-vite";
     }
 
-    if (options.solana) {
-      chain = "solana";
-    }
     if (options.evm) {
       chain = "evm";
     }
@@ -206,21 +203,7 @@ export async function twCreate(
 
     if (!options.template) {
       if (projectType === "app" && !chain) {
-        const res = await prompts({
-          type: "select",
-          name: "chain",
-          message: CREATE_MESSAGES.chain,
-          choices: [
-            { title: "EVM", value: "evm" },
-            { title: "Solana", value: "solana" },
-          ],
-        });
-
-        if (res.chain === "solana") {
-          chain = "solana";
-        } else {
-          chain = "evm";
-        }
+        chain = "evm";
       }
 
       if (projectType === "app" && !framework) {
@@ -228,25 +211,15 @@ export async function twCreate(
           type: "select",
           name: "framework",
           message: CREATE_MESSAGES.framework,
-          choices:
-            chain === "solana"
-              ? [
-                  { title: "Next.js", value: "next" },
-                  { title: "Create React App", value: "cra" },
-                  { title: "Node.js", value: "node" },
-                  { title: "Express", value: "express" },
-                  // Solana doesn't support Vite just yet:
-                  // { title: "Vite", value: "vite" },
-                ]
-              : [
-                  { title: "Next.js", value: "next" },
-                  { title: "Create React App", value: "cra" },
-                  { title: "Vite", value: "vite" },
-                  { title: "PWA Vite", value: "pwa-vite" },
-                  { title: "React Native", value: "react-native" },
-                  { title: "Node.js", value: "node" },
-                  { title: "Express", value: "express" },
-                ],
+          choices: [
+            { title: "Next.js", value: "next" },
+            { title: "Create React App", value: "cra" },
+            { title: "Vite", value: "vite" },
+            { title: "PWA Vite", value: "pwa-vite" },
+            { title: "React Native", value: "react-native" },
+            { title: "Node.js", value: "node" },
+            { title: "Express", value: "express" },
+          ],
         });
 
         if (typeof res.framework === "string") {
@@ -467,7 +440,6 @@ export async function twCreate(
         framework,
         language,
         template,
-        chain,
       });
     } else {
       await createContractProject({
