@@ -45,7 +45,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
   initializeConnector() {
     this.connector = new EmbeddedWalletConnector({
       ...this.options,
-      clientId: this.options.paperClientId,
+      clientId: this.options.clientId,
       chains: this.chains,
     });
 

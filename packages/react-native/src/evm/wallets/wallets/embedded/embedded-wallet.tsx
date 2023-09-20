@@ -14,7 +14,7 @@ export const embeddedWallet = (
   config: embeddedConfig,
 ): WalletConfig<EmbeddedWallet> => {
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
-    <EmailSelectionUI {...props} clientId={config.paperClientId} />
+    <EmailSelectionUI {...props} clientId={config.clientId} />
   );
 
   return {
