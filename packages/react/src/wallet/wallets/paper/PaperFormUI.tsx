@@ -1,18 +1,18 @@
-import { Spacer } from "../../../components/Spacer";
-import { InputSelectionUI } from "../InputSelectionUI";
-import { Container, ModalHeader } from "../../../components/basic";
-import { Theme, iconSize, spacing } from "../../../design-system";
 import styled from "@emotion/styled";
-import { Button } from "../../../components/buttons";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { PaperLoginType } from "./types";
 import {
   WalletConfig,
   useCreateWalletInstance,
-  useSetConnectionStatus,
   useSetConnectedWallet,
+  useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { PaperWallet } from "@thirdweb-dev/wallets";
+import { Spacer } from "../../../components/Spacer";
+import { Container, ModalHeader } from "../../../components/basic";
+import { Button } from "../../../components/buttons";
+import { Theme, iconSize, spacing } from "../../../design-system";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { InputSelectionUI } from "../InputSelectionUI";
+import { PaperLoginType } from "./types";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -34,7 +34,12 @@ export const PaperFormUI = (props: {
         throw new Error("Failed to open google login window");
       }
       await paperWallet.connect({
-        googleLogin: { windowOpened: googleWindow },
+        googleLogin: {
+          openedWindow: googleWindow,
+          closeOpenedWindow: (openedWindow) => {
+            openedWindow.close();
+          },
+        },
       });
       setConnectedWallet(paperWallet);
     } catch (e) {

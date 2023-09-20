@@ -18,7 +18,7 @@ import {
   PaperWalletConnectorOptions,
 } from "./types";
 
-export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
+export class PaperWalletConnector extends Connector<Record<string, never>> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready = true;
@@ -72,7 +72,11 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     return this.paper;
   }
 
-  async connect(options?: PaperWalletConnectionArgs) {
+  async connect(
+    options?: {
+      chainId?: number;
+    } & PaperWalletConnectionArgs,
+  ) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
@@ -82,42 +86,51 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
 
-        switch (options?.loginType) {
-          case "headless_google_oauth": {
-            authResult = await paperSDK.auth.loginWithGoogle({
-              closeOpenedWindow: options.closeOpenedWindow,
-              openedWindow: options.openedWindow,
-            });
-            break;
-          }
-          case "headless_email_otp_verification": {
-            authResult = await paperSDK.auth.verifyPaperEmailLoginOtp({
-              email: options.email,
-              otp: options.otp,
-            });
-            break;
-          }
-          case "ui_email_otp": {
-            authResult = await paperSDK.auth.loginWithPaperEmailOtp({
-              email: options.email,
-            });
-            break;
-          }
-          default: {
-            authResult = await paperSDK.auth.loginWithPaperModal();
-            break;
-          }
+        // Show Google popup
+        if (options?.googleLogin) {
+          const arg = options.googleLogin;
+          authResult = await paperSDK.auth.loginWithGoogle(
+            typeof arg === "object" ? arg : undefined,
+          );
         }
+
+        // Headless
+        else if (options?.email && options?.otp) {
+          authResult = await paperSDK.auth.verifyPaperEmailLoginOtp({
+            email: options.email,
+            otp: options.otp,
+            recoveryCode: options.recoveryCode,
+          });
+        }
+
+        // Show OTP modal
+        else if (options?.email) {
+          authResult = await paperSDK.auth.loginWithPaperEmailOtp({
+            email: options.email,
+          });
+        }
+
+        // Show Full Modal
+        else {
+          authResult = await paperSDK.auth.loginWithPaperModal();
+        }
+
         this.user = authResult.user;
         break;
       }
       case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
-        if (options?.loginType === "headless_google_oauth") {
-          if (options.closeOpenedWindow && options.openedWindow) {
-            options.closeOpenedWindow(options.openedWindow);
+        if (typeof options?.googleLogin === "object") {
+          if (
+            options.googleLogin.closeOpenedWindow &&
+            options.googleLogin.openedWindow
+          ) {
+            options.googleLogin.closeOpenedWindow(
+              options.googleLogin.openedWindow,
+            );
           }
         }
         this.user = user;
+        break;
       }
     }
     if (!this.user) {

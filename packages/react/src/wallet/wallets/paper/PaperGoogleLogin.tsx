@@ -5,16 +5,16 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { Container, ModalHeader } from "../../../components/basic";
-import { Spinner } from "../../../components/Spinner";
 import { PaperWallet } from "@thirdweb-dev/wallets";
-import { Text } from "../../../components/text";
-import { Spacer } from "../../../components/Spacer";
-import { iconSize } from "../../../design-system";
-import { Button } from "../../../components/buttons";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { ModalTitle } from "../../../components/modalElements";
 import { useEffect } from "react";
+import { Spacer } from "../../../components/Spacer";
+import { Spinner } from "../../../components/Spinner";
+import { Container, ModalHeader } from "../../../components/basic";
+import { Button } from "../../../components/buttons";
+import { ModalTitle } from "../../../components/modalElements";
+import { Text } from "../../../components/text";
+import { iconSize } from "../../../design-system";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize } = props;
@@ -33,8 +33,14 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
+
       await paperWallet.connect({
-        googleLogin: { windowOpened: googleWindow },
+        googleLogin: {
+          openedWindow: googleWindow,
+          closeOpenedWindow: (openedWindow) => {
+            openedWindow.close();
+          },
+        },
       });
       setConnectedWallet(paperWallet);
       props.close();

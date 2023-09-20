@@ -105,10 +105,10 @@ export class PaperWallet extends AbstractClientWallet<
     }
 
     // do not return non-serializable params to make auto-connect work
-    if (connectParams.loginType === "headless_google_oauth") {
+    if (typeof connectParams.googleLogin === "object") {
       return {
-        loginType: connectParams.loginType,
-        chainId: connectParams.chainId,
+        ...connectParams,
+        googleLogin: true,
       };
     }
 
