@@ -22,6 +22,9 @@ export function authorizeClient(
       // TODO update this later
       name: "",
       creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
+      limits: apiKeyMeta.limits,
+      rateLimits: apiKeyMeta.rateLimits,
+      usage: apiKeyMeta.usage,
     },
   };
 

@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Frenchain Testnet",
-  "chain": "tfren",
+  "name": "Synapse Chain Testnet",
+  "status": "active",
+  "chain": "ETH",
   "rpc": [
-    "https://frenchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-01tn.frenchain.app"
+    "https://synapse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sepolia.synapseprotocol.com"
   ],
   "faucets": [],
   "nativeCurrency": {
-    "name": "tFREN",
-    "symbol": "FtREN",
+    "name": "Sepolia ETH",
+    "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://frenchain.app",
-  "shortName": "tFREN",
+  "infoURL": "https://synapseprotocol.com",
+  "shortName": "synapse-sepolia",
   "chainId": 444,
   "networkId": 444,
-  "icon": {
-    "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
+  "redFlags": [
+    "reusedChainId"
+  ],
   "explorers": [
     {
-      "name": "blockscout",
-      "url": "https://testnet.frenscan.io",
-      "icon": {
-        "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
-        "width": 128,
-        "height": 128,
-        "format": "png"
-      },
+      "name": "Synapse Chain Sepolia",
+      "url": "https://sepolia.synapsescan.com",
       "standard": "EIP3091"
     }
   ],
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://docs.synapseprotocol.com/synapse-chain/using-synapse-chain/bridging-to-synapse-chain"
+      }
+    ]
+  },
   "testnet": true,
-  "slug": "frenchain-testnet"
+  "slug": "synapse-chain-testnet"
 } as const satisfies Chain;

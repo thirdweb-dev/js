@@ -6,9 +6,7 @@ export default {
     "https://gochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gochain.io"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "GoChain Ether",
     "symbol": "GO",

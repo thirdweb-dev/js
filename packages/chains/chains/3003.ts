@@ -2,6 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Canxium Mainnet",
   "chain": "CAU",
+  "icon": {
+    "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
+    "width": 938,
+    "height": 938,
+    "format": "png"
+  },
   "rpc": [
     "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.canxium.org"

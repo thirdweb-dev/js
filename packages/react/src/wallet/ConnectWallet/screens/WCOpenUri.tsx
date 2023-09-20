@@ -18,15 +18,20 @@ export const WCOpenURI: React.FC<{
     android: string;
     other: string;
   };
-  supportLink: string;
+  // supportLink: string;
+  errorConnecting: boolean;
+  onRetry: () => void;
   hideBackButton: boolean;
+  onGetStarted: () => void;
 }> = ({
   onBack,
   onConnected,
   walletConfig,
   appUriPrefix,
-  supportLink,
+  onRetry,
+  errorConnecting,
   hideBackButton,
+  onGetStarted,
 }) => {
   const createInstance = useCreateWalletInstance();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -76,7 +81,10 @@ export const WCOpenURI: React.FC<{
       onBack={onBack}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
-      supportLink={supportLink}
+      errorConnecting={errorConnecting}
+      onRetry={onRetry}
+      onGetStarted={onGetStarted}
+      // supportLink={supportLink}
     />
   );
 };

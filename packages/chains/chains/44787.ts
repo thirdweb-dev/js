@@ -27,8 +27,8 @@ export default {
       "standard": "EIP3091"
     },
     {
-      "name": "Celoscan",
-      "url": "https://celoscan.io",
+      "name": "Alfajoresscan",
+      "url": "https://alfajores.celoscan.io",
       "standard": "EIP3091"
     }
   ],

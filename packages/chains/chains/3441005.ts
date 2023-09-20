@@ -21,7 +21,7 @@ export default {
     }
   ],
   "infoURL": "https://manta-testnet.caldera.dev/",
-  "shortName": "manta",
+  "shortName": "mantaTestnet",
   "chainId": 3441005,
   "networkId": 3441005,
   "icon": {

@@ -3,17 +3,17 @@ import { ConnectWalletFlow } from "./ConnectWalletFlow/ConnectWalletFlow";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useMemo } from "react";
 import { ThemeProvider } from "../styles/ThemeProvider";
-import { useAppTheme } from "../styles/hooks";
 import { SessionRequestModal } from "./ConnectWalletDetails/SessionRequestModal";
 import { SessionProposalModal } from "./ConnectWalletDetails/SessionProposalModal";
 import { TWModal } from "./base/modal/TWModal";
+import Box from "./base/Box";
+import { useAppTheme } from "../styles/hooks";
 
-const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.6;
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 export const MainModal = () => {
   const theme = useAppTheme();
-
   const { modalState } = useModalState();
 
   const { isOpen, isSheet } = modalState;
@@ -37,11 +37,9 @@ export const MainModal = () => {
     <ThemeProvider theme={theme}>
       <TWModal isVisible={isOpen}>
         {isSheet ? (
-          <View
-            style={[styles.modal, { backgroundColor: theme.colors.background }]}
-          >
+          <Box backgroundColor="background" style={styles.modal}>
             <View style={styles.contentContainer}>{view}</View>
-          </View>
+          </Box>
         ) : (
           view
         )}
@@ -58,8 +56,8 @@ const styles = StyleSheet.create({
     width: DEVICE_WIDTH,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    padding: 24,
-    paddingBottom: 40,
+    paddingTop: 32,
+    paddingBottom: 28,
   },
   contentContainer: {
     maxHeight: MODAL_HEIGHT,

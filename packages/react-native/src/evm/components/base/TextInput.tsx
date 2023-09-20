@@ -3,18 +3,19 @@ import Box from "./Box";
 import { useTheme } from "@shopify/restyle";
 import { ReactNode } from "react";
 
-type TextInputProps = (typeof Box)["arguments"] &
-  TextInputRN["props"] & {
-    rightElement?: ReactNode;
-    leftElement?: ReactNode;
-  };
+type TextInputProps = {
+  containerProps?: (typeof Box)["arguments"];
+  textInputProps?: TextInputRN["props"];
+} & {
+  rightElement?: ReactNode;
+  leftElement?: ReactNode;
+};
 
 export const TextInput = ({
-  onChangeText,
-  placeholder,
+  containerProps,
+  textInputProps,
   rightElement,
   leftElement,
-  ...props
 }: TextInputProps) => {
   const theme = useTheme();
 
@@ -27,18 +28,16 @@ export const TextInput = ({
       borderWidth={1}
       borderRadius="md"
       pr="xs"
-      {...props}
+      {...containerProps}
     >
       {leftElement ? leftElement : null}
       <TextInputRN
         style={{ ...styles.textInput, color: theme.colors.textPrimary }}
         returnKeyType={"done"}
         clearTextOnFocus={false}
-        placeholder={placeholder}
         autoCapitalize="none"
         autoCorrect={false}
-        onChangeText={onChangeText}
-        {...props}
+        {...textInputProps}
       />
       {rightElement ? rightElement : null}
     </Box>

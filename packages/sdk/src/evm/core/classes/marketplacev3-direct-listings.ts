@@ -1,3 +1,21 @@
+import type {
+  DirectListingsLogic,
+  IDirectListings,
+  IERC1155,
+  IERC165,
+  IERC721,
+  MarketplaceV3,
+} from "@thirdweb-dev/contracts-js";
+import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
+import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
+import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
+import {
+  NewListingEvent,
+  UpdatedListingEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListingsLogic";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, Contract } from "ethers";
+import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -16,11 +34,11 @@ import {
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
 import type { DirectListingV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -31,24 +49,6 @@ import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
-import type {
-  IERC1155,
-  IERC165,
-  IERC721,
-  IDirectListings,
-  DirectListingsLogic,
-  MarketplaceV3,
-} from "@thirdweb-dev/contracts-js";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import {
-  NewListingEvent,
-  UpdatedListingEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListingsLogic";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, Contract } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * Handles direct listings
@@ -81,7 +81,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -101,7 +101,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @twfeature DirectListings
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalListings();
+    return await this.contractWrapper.read("totalListings", []);
   }
 
   /**
@@ -129,10 +129,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllListings,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllListings", [startId, endId]),
     );
     rawListings = batches.flat();
 
@@ -170,10 +168,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllValidListings,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllValidListings", [startId, endId]),
     );
     rawListings = batches.flat();
 
@@ -204,9 +200,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
    * @twfeature DirectListings
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListingV3> {
-    const listing = await this.contractWrapper.readContract.getListing(
-      listingId,
-    );
+    const listing = await this.contractWrapper.read("getListing", [listingId]);
 
     return await this.mapListing(listing);
   }
@@ -233,10 +227,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       throw new Error(`Listing ${listingId} is not a reserved listing.`);
     }
 
-    return await this.contractWrapper.readContract.isBuyerApprovedForListing(
+    return await this.contractWrapper.read("isBuyerApprovedForListing", [
       listingId,
       await resolveAddress(buyer),
-    );
+    ]);
   }
 
   /**
@@ -259,10 +253,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   ): Promise<boolean> {
     await this.validateListing(BigNumber.from(listingId));
 
-    return await this.contractWrapper.readContract.isCurrencyApprovedForListing(
+    return await this.contractWrapper.read("isCurrencyApprovedForListing", [
       listingId,
       await resolveAddress(currency),
-    );
+    ]);
   }
 
   /**
@@ -303,10 +297,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       );
     }
 
-    return await this.contractWrapper.readContract.currencyPriceForListing(
+    return await this.contractWrapper.read("currencyPriceForListing", [
       listingId,
       resolvedCurrencyAddress,
-    );
+    ]);
   }
 
   /** ******************************
@@ -735,11 +729,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         );
       }
 
-      const currencyPrice =
-        await this.contractWrapper.readContract.currencyPriceForListing(
-          listingId,
-          resolvedCurrencyAddress,
-        );
+      const currencyPrice = await this.contractWrapper.read(
+        "currencyPriceForListing",
+        [listingId, resolvedCurrencyAddress],
+      );
       invariant(
         pricePerTokenInCurrency === currencyPrice,
         "Currency already approved with this price.",
@@ -780,11 +773,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         throw new Error(`Can't revoke approval for main listing currency.`);
       }
 
-      const currencyPrice =
-        await this.contractWrapper.readContract.currencyPriceForListing(
-          listingId,
-          resolvedCurrencyAddress,
-        );
+      const currencyPrice = await this.contractWrapper.read(
+        "currencyPriceForListing",
+        [listingId, resolvedCurrencyAddress],
+      );
       invariant(!currencyPrice.isZero(), "Currency not approved.");
 
       return Transaction.fromContractWrapper({
