@@ -36,11 +36,18 @@ export class PaperWallet extends AbstractClientWallet<
     super(PaperWallet.id, {
       ...options,
     });
-    // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
+
+    if (options.paperClientId && options.paperClientId === "uninitialized") {
+      this.paperClientId = "00000000-0000-0000-0000-000000000000";
+      this.chain = options.chain;
+      return;
+    }
+
     if (
       options.advancedOptions &&
       options.advancedOptions?.recoveryShareManagement === "USER_MANAGED"
     ) {
+      // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
       if (
         (options.clientId &&
           !this.isClientIdLegacyPaper(options.clientId ?? "")) ||
