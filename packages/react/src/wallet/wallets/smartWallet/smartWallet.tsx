@@ -13,6 +13,8 @@ export const smartWallet = (
   wallet: WalletConfig<any>,
   config: SmartWalletConfigOptions,
 ): SmartWalletConfig => {
+  const WalletSelectUI = wallet.selectUI;
+
   return {
     ...wallet,
     create: (options: WalletOptions) =>
@@ -20,6 +22,11 @@ export const smartWallet = (
     connectUI(props) {
       return <SmartConnectUI {...props} personalWallet={wallet} />;
     },
+    selectUI: WalletSelectUI
+      ? (props) => {
+          return <WalletSelectUI {...props} walletConfig={wallet} />;
+        }
+      : undefined,
     personalWallets: [wallet],
   };
 };
