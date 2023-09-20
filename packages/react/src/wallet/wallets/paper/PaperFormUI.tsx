@@ -6,12 +6,43 @@ import styled from "@emotion/styled";
 import { Button } from "../../../components/buttons";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { PaperLoginType } from "./types";
+import {
+  WalletConfig,
+  useCreateWalletInstance,
+  useSetConnectionStatus,
+  useSetConnectedWallet,
+} from "@thirdweb-dev/react-core";
+import { PaperWallet } from "@thirdweb-dev/wallets";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
   showOrSeparator?: boolean;
   googleLoginSupported: boolean;
+  walletConfig: WalletConfig<PaperWallet>;
 }) => {
+  const createWalletInstance = useCreateWalletInstance();
+  const setConnectionStatus = useSetConnectionStatus();
+  const setConnectedWallet = useSetConnectedWallet();
+
+  // Need to trigger google login on button click to avoid popup from being blocked
+  const googleLogin = async () => {
+    try {
+      const paperWallet = createWalletInstance(props.walletConfig);
+      setConnectionStatus("connecting");
+      const googleWindow = window.open("", "Login", "width=350, height=500");
+      if (!googleWindow) {
+        throw new Error("Failed to open google login window");
+      }
+      await paperWallet.connect({
+        googleLogin: { windowOpened: googleWindow },
+      });
+      setConnectedWallet(paperWallet);
+    } catch (e) {
+      setConnectionStatus("disconnected");
+      console.error(e);
+    }
+  };
+
   return (
     <div>
       {props.googleLoginSupported && (
@@ -20,6 +51,7 @@ export const PaperFormUI = (props: {
             variant="secondary"
             fullWidth
             onClick={() => {
+              googleLogin();
               props.onSelect({ google: true });
             }}
           >
@@ -56,6 +88,7 @@ export const PaperFormUIScreen: React.FC<{
   onBack: () => void;
   modalSize: "compact" | "wide";
   googleLoginSupported: boolean;
+  walletConfig: WalletConfig<PaperWallet>;
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   return (
@@ -78,6 +111,7 @@ export const PaperFormUIScreen: React.FC<{
         p={isCompact ? undefined : "lg"}
       >
         <PaperFormUI
+          walletConfig={props.walletConfig}
           googleLoginSupported={props.googleLoginSupported}
           onSelect={props.onSelect}
           showOrSeparator={false}

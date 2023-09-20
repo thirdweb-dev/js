@@ -13,7 +13,10 @@ import { utils } from "ethers";
 import { normalizeChainId } from "../../../lib/wagmi-core";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
-import { PaperWalletConnectorOptions } from "./types";
+import {
+  PaperWalletConnectionArgs,
+  PaperWalletConnectorOptions,
+} from "./types";
 
 export class PaperWalletConnector extends Connector<Record<string, never>> {
   readonly id: string = walletIds.paper;
@@ -69,13 +72,11 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
     return this.paper;
   }
 
-  async connect(options?: {
-    email?: string;
-    chainId?: number;
-    otp?: string;
-    recoveryCode?: string;
-    googleLogin?: true;
-  }) {
+  async connect(
+    options?: {
+      chainId?: number;
+    } & PaperWalletConnectionArgs,
+  ) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
@@ -87,7 +88,10 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
 
         // Show Google popup
         if (options?.googleLogin) {
-          authResult = await paperSDK.auth.loginWithGoogle();
+          const arg = options.googleLogin;
+          authResult = await paperSDK.auth.loginWithGoogle(
+            typeof arg === "object" ? arg : undefined,
+          );
         }
 
         // Headless
