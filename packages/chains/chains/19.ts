@@ -13,7 +13,8 @@ export default {
     "https://songbird-api.flare.network/ext/C/rpc",
     "https://sgb.ftso.com.au/ext/bc/C/rpc",
     "https://sgb.lightft.so/rpc",
-    "https://sgb-rpc.ftso.eu"
+    "https://sgb-rpc.ftso.eu",
+    "https://rpc.ftso.au/songbird"
   ],
   "faucets": [],
   "nativeCurrency": {
