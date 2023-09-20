@@ -114,7 +114,7 @@ const SmartWallet: ThirdwebNextPage = () => {
         />
         <Flex flexDir="column" gap={6} alignItems="center">
           <Heading
-            as="h1"
+            as="h2"
             size="display.md"
             textAlign="center"
             px={{ base: 2, md: 0 }}
