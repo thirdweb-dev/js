@@ -84,7 +84,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       }
       case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
         if (options?.loginType === "headless_google_oauth") {
-          options.closeOpenedWindow(options.openedWindow);
+          if (options.closeOpenedWindow && options.openedWindow) {
+            options.closeOpenedWindow(options.openedWindow);
+          }
         }
         this.user = user;
       }

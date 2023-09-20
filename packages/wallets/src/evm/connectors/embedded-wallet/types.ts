@@ -19,8 +19,8 @@ export type EmbeddedWalletConnectionArgs = {
 } & (
   | {
       loginType: "headless_google_oauth";
-      openedWindow: Window;
-      closeOpenedWindow: (window: Window) => void;
+      openedWindow?: Window;
+      closeOpenedWindow?: (window: Window) => void;
     }
   | {
       loginType: "headless_email_otp_verification";
