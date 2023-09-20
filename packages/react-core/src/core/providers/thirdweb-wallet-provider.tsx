@@ -266,6 +266,11 @@ export function ThirdwebWalletProvider(
 
   // Auto Connect
   useEffect(() => {
+    // do not auto connect if signerWallet is given
+    if (props.signerWallet) {
+      return;
+    }
+
     if (autoConnectTriggered.current) {
       return;
     }
@@ -376,6 +381,7 @@ export function ThirdwebWalletProvider(
     activeWallet,
     connectionStatus,
     autoConnectTimeout,
+    props.signerWallet,
   ]);
 
   const connectWallet = useCallback(
@@ -463,23 +469,31 @@ export function ThirdwebWalletProvider(
     };
   }, [activeWallet, onWalletDisconnect]);
 
-  const signerConnected = useRef(props.signerWallet);
+  // connect signerWallet immediately if it's passed
+  // and disconnect it if it's not passed
+  const signerConnected = useRef<typeof props.signerWallet>();
   useEffect(() => {
     if (!props.signerWallet) {
+      if (signerConnected.current) {
+        disconnectWallet();
+        signerConnected.current = undefined;
+      }
       return;
     }
 
     if (signerConnected.current === props.signerWallet) {
       return;
     }
-    signerConnected.current = props.signerWallet;
+
     const wallet = createWalletInstance(props.signerWallet);
     setConnectedWallet(wallet);
+    signerConnected.current = props.signerWallet;
   }, [
     createWalletInstance,
     props.supportedWallets,
     setConnectedWallet,
     props.signerWallet,
+    disconnectWallet,
   ]);
 
   return (

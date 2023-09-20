@@ -6,7 +6,7 @@ import {
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
 import { ThemeObjectOrType } from "../../design-system";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
@@ -68,11 +68,17 @@ export const ThirdwebProvider = <
 >({
   supportedWallets,
   children,
+  signer,
   theme: _theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
   const theme = _theme || "dark";
+
+  const signerWalletConfig = useMemo(
+    () => (signer ? (signerWallet(signer) as WalletConfig<any>) : undefined),
+    [signer],
+  );
 
   return (
     <WalletUIStatesProvider theme={theme} modalSize="wide">
@@ -81,11 +87,7 @@ export const ThirdwebProvider = <
           {...restProps}
           theme={typeof theme === "string" ? theme : theme.type}
           supportedWallets={wallets}
-          signerWallet={
-            restProps.signer
-              ? (signerWallet(restProps.signer) as WalletConfig<any>)
-              : undefined
-          }
+          signerWallet={signerWalletConfig}
         >
           {children}
           <ConnectModal />
