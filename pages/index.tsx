@@ -20,6 +20,8 @@ import { PageId } from "page-id";
 import { Suspense } from "react";
 import { ThirdwebNextPage } from "utils/types";
 
+const TRACKING_CATEGORY = "homepage";
+
 const HomePage: ThirdwebNextPage = () => {
   return (
     <DarkMode>
@@ -49,7 +51,7 @@ const HomePage: ThirdwebNextPage = () => {
             <LaunchSection />
             <ManageSection />
             <AnyEVMSection />
-            <PricingSection />
+            <PricingSection TRACKING_CATEGORY={TRACKING_CATEGORY} onHomepage />
             <SolutionsSection />
             <GetStartedSection />
             <NewsletterSection />

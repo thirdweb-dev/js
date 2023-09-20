@@ -26,11 +26,11 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 }) => {
   return (
     <Container maxW="max-content">
-      <Flex flexDir="column" pt={{ base: 8, lg: 24 }} gap={{ base: 8, md: 16 }}>
-        <Flex flexDir="column" gap={6}>
+      <Flex flexDir="column" pt={{ base: 8, lg: 24 }} gap={{ base: 8, md: 24 }}>
+        <Flex flexDir="column" gap={8}>
           <Heading
-            as={onHomepage ? "h2" : "h1"}
-            size={onHomepage ? "display.sm" : "display.md"}
+            as="h1"
+            size="display.md"
             textAlign="center"
             px={{ base: 2, md: 0 }}
           >
@@ -40,13 +40,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             </Box>
           </Heading>
           {onHomepage && (
-            <Text textAlign="center" size="body.lg">
+            <Text>
               Learn more about{" "}
               <TrackedLink
                 category={TRACKING_CATEGORY}
                 href="/pricing"
                 label="pricing-plans"
-                color="blue.500"
               >
                 pricing plans
               </TrackedLink>
@@ -63,7 +62,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             borderColor="gray.900"
             p={{ base: 6, md: 10 }}
             h="full"
-            maxH={{ base: "100%", md: "95%" }}
+            maxH={{ base: "100%", md: "85%" }}
           >
             <Flex flexDir="column" gap={8}>
               <Flex flexDir="column" gap={4}>
@@ -149,7 +148,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <Text color="white">
                     Everything in Free Plan Bundle, plus:
                   </Text>
-                  <CheckmarkItem text="Higher rate limits for RPC, Storage Gateway, and IPFS" />
+                  <CheckmarkItem text="Higher rate limits for RPC" />
+                  <CheckmarkItem text="Higher rate limits for Storage Gateway" />
+                  <CheckmarkItem text="Higher storage pinning file size for IPFS" />
                   <CheckmarkItem text="Higher transaction limit for checkout" />
                   <CheckmarkItem text="99.9% Infrastructure uptime SLAs" />
                   <CheckmarkItem text="24 hour customer support SLAs" />

@@ -180,6 +180,11 @@ function redirects() {
       destination: "/dashboard/contracts/deploy",
       permanent: false,
     },
+    {
+      source: "/connect-wallet",
+      destination: "/dashboard/wallets/connect",
+      permanent: false,
+    },
   ];
 }
 
