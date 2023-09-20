@@ -9,7 +9,7 @@ export type SignerWalletAdditionalOptions = {
   chain?: Chain;
   storage?: AsyncStorage;
   secretKey?: string;
-  getSigner: () => Promise<Signer>;
+  signer: Signer;
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -27,6 +27,7 @@ export class SignerWallet extends AbstractClientWallet<
   constructor(options: WalletOptions<SignerWalletAdditionalOptions>) {
     super("signerWallet", options);
     this.options = options;
+    this.signer = options.signer;
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
@@ -36,7 +37,7 @@ export class SignerWallet extends AbstractClientWallet<
       const { SignerConnector } = await import("../connectors/signer/index");
 
       if (!this.signer) {
-        this.signer = await this.options.getSigner();
+        this.signer = this.options.signer;
       }
 
       const defaults = this.options.chain

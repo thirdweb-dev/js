@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   ConnectParams,
   CreateAsyncStorage,
+  SignerWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
@@ -108,6 +109,7 @@ export function ThirdwebWalletProvider(
     autoConnectTimeout?: number;
     clientId?: string;
     activeChainSetExplicitly: boolean;
+    signerWallet?: WalletConfig<SignerWallet>;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -460,6 +462,25 @@ export function ThirdwebWalletProvider(
       activeWallet.removeListener("disconnect");
     };
   }, [activeWallet, onWalletDisconnect]);
+
+  const signerConnected = useRef(props.signerWallet);
+  useEffect(() => {
+    if (!props.signerWallet) {
+      return;
+    }
+
+    if (signerConnected.current === props.signerWallet) {
+      return;
+    }
+    signerConnected.current = props.signerWallet;
+    const wallet = createWalletInstance(props.signerWallet);
+    setConnectedWallet(wallet);
+  }, [
+    createWalletInstance,
+    props.supportedWallets,
+    setConnectedWallet,
+    props.signerWallet,
+  ]);
 
   return (
     <ThirdwebWalletContext.Provider

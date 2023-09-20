@@ -10,11 +10,13 @@ import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { signerWallet } from "../../wallet/wallets/signerWallet";
+import { Signer } from "ethers";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "createWalletStorage" | "supportedWallets" | "signer" | "theme"
+    "createWalletStorage" | "supportedWallets" | "theme"
   > {
   /**
    * Wallets supported by the dApp
@@ -36,6 +38,8 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * @defaultValue "dark"
    */
   theme?: ThemeObjectOrType;
+
+  signer?: Signer;
 }
 
 /**
@@ -77,6 +81,11 @@ export const ThirdwebProvider = <
           {...restProps}
           theme={typeof theme === "string" ? theme : theme.type}
           supportedWallets={wallets}
+          signerWallet={
+            restProps.signer
+              ? (signerWallet(restProps.signer) as WalletConfig<any>)
+              : undefined
+          }
         >
           {children}
           <ConnectModal />
