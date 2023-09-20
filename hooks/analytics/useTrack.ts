@@ -1,4 +1,4 @@
-import flat from "flat";
+import { flatten } from "flat";
 import posthog from "posthog-js";
 import { useCallback } from "react";
 
@@ -32,7 +32,7 @@ export function useTrack() {
     );
 
     try {
-      posthog.capture(catActLab, flat(restDataSafe));
+      posthog.capture(catActLab, flatten(restDataSafe));
     } catch (e) {
       // ignore - we just don't want to trigger an error in the app if posthog fails
     }
