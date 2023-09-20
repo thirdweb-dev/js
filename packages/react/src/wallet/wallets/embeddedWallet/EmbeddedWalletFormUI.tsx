@@ -1,11 +1,4 @@
 import styled from "@emotion/styled";
-import { Spacer } from "../../../components/Spacer";
-import { Container, ModalHeader } from "../../../components/basic";
-import { Button } from "../../../components/buttons";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType } from "./types";
 import {
   WalletConfig,
   useCreateWalletInstance,
@@ -13,6 +6,13 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { Spacer } from "../../../components/Spacer";
+import { Container, ModalHeader } from "../../../components/basic";
+import { Button } from "../../../components/buttons";
+import { Theme, iconSize, spacing } from "../../../design-system";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { InputSelectionUI } from "../InputSelectionUI";
+import type { EmbeddedWalletLoginType } from "./types";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -26,15 +26,18 @@ export const EmbeddedWalletFormUI = (props: {
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
-      const googleWindow = window.open("", "Login", "width=350, height=500");
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
+      const googleWindow = window.open("", "Login", "width=350, height=500");
+      if (!googleWindow) {
+        throw new Error("Failed to open google login window");
+      }
       await embeddedWallet.connect({
-        googleLogin: googleWindow
-          ? {
-              windowOpened: googleWindow,
-            }
-          : true,
+        loginType: "headless_google_oauth",
+        openedWindow: googleWindow,
+        closeOpenedWindow: (openedWindow) => {
+          openedWindow.close();
+        },
       });
       setConnectedWallet(embeddedWallet);
     } catch (e) {

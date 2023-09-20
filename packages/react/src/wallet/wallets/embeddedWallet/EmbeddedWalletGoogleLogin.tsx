@@ -29,8 +29,17 @@ export const EmbeddedWalletGoogleLogin = (
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
+      const googleWindow = window.open("", "Login", "width=350, height=500");
+      if (!googleWindow) {
+        throw new Error("Failed to open google login window");
+      }
+
       await embeddedWallet.connect({
-        googleLogin: true,
+        loginType: "headless_google_oauth",
+        openedWindow: googleWindow,
+        closeOpenedWindow: (openedWindow) => {
+          openedWindow.close();
+        },
       });
       setConnectedWallet(embeddedWallet);
       props.close();
