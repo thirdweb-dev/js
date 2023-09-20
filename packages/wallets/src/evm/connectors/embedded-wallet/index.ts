@@ -86,6 +86,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         if (options?.loginType === "headless_google_oauth") {
           options.closeOpenedWindow(options.openedWindow);
         }
+        this.user = user;
       }
     }
     if (!this.user) {
