@@ -24,9 +24,21 @@ export interface PaperWalletConnectorOptions {
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 
-export interface PaperWalletConnectionArgs {
-  email?: string;
-  otp?: string;
-  recoveryCode?: string;
-  googleLogin?: true | { windowOpened: Window };
-}
+export type PaperWalletConnectionArgs = {
+  chainId?: number;
+} & (
+  | {
+      loginType: "headless_google_oauth";
+      openedWindow?: Window;
+      closeOpenedWindow?: (window: Window) => void;
+    }
+  | {
+      loginType: "headless_email_otp_verification";
+      email: string;
+      otp: string;
+    }
+  | {
+      loginType: "ui_email_otp";
+      email: string;
+    }
+);
