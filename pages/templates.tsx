@@ -27,7 +27,10 @@ export interface TemplateCardProps {
   img: string;
   hoverBorderColor: string;
   tags: string[];
-  author: string;
+  authorIcon: string;
+  authorENS: string;
+  contractName?: string;
+  contractLink?: string;
 }
 
 export const templates: TemplateCardProps[] = [
@@ -41,7 +44,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/loyalty-card.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["Signature minting", "Loyalty Card"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "erc721",
@@ -53,20 +57,26 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/nft-drop.png",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
     tags: ["ERC721", "Custom Claim Conditions"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+    contractName: "NFTDrop",
+    contractLink: "https://thirdweb.com/thirdweb.eth/DropERC721",
   },
-  // {
-  //   id: "marketplace-v3",
-  //   title: "Marketplace",
-  //   homepage: "https://marketplace-v3.thirdweb-example.com/",
-  //   repo: "https://github.com/thirdweb-example/marketplace-v3",
-  //   description:
-  //     "Allow holders of your NFTs to trade in a marketplace with a built-in escrow and auctioning system.",
-  //   img: "/assets/templates/marketplace.png",
-  //   hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
-  //   tags: ["Multi-currency", "Buy & Sell"],
-  //   author: "thirdweb",
-  // },
+  {
+    id: "marketplace-v3",
+    title: "Marketplace",
+    homepage: "https://marketplace-v3.thirdweb-example.com/",
+    repo: "https://github.com/thirdweb-example/marketplace-v3",
+    description:
+      "Allow holders of your NFTs to trade in a marketplace with a built-in escrow and auctioning system.",
+    img: "/assets/templates/marketplace.png",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+    tags: ["Multi-currency", "Buy & Sell"],
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
+    contractName: "Marketplace",
+    contractLink: "https://thirdweb.com/thirdweb.eth/MarketplaceV3",
+  },
   {
     id: "nft-gated-website",
     title: "NFT Gated Website",
@@ -77,7 +87,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/nft-gated-site.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["NFT", "React", "Loyalty"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "nft-gallery",
@@ -89,7 +100,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/nft-gallery.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["ERC721", "ERC1155"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "cra-javascript-starter",
@@ -101,7 +113,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/starter.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["React", "JavaScript", "Web"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "cra-typescript-starter",
@@ -113,7 +126,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/starter.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["React", "TypeScript", "Web"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "next-javascript-starter",
@@ -125,7 +139,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/starter.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["Next", "JavaScript", "Web"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "next-typescript-starter",
@@ -137,7 +152,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/starter.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["Next", "TypeScript", "Web"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "vite-javascript-starter",
@@ -149,7 +165,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/starter.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["Vite", "TypeScript", "Web"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
   {
     id: "vite-typescript-starter",
@@ -161,7 +178,8 @@ export const templates: TemplateCardProps[] = [
     img: "/assets/templates/starter.png",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
     tags: ["Vite", "TypeScript", "Web"],
-    author: "thirdweb",
+    authorENS: "thirdweb.eth",
+    authorIcon: "/assets/templates/thirdweb-eth.png",
   },
 ];
 
@@ -172,6 +190,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   img,
   hoverBorderColor,
   tags,
+  authorENS,
+  authorIcon,
 }) => {
   return (
     <Flex
@@ -206,7 +226,6 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <TrackedLink
               as={LinkOverlay}
               href={`/template/${id}`}
-              isExternal
               category="templates"
               label={title.toLowerCase()}
               color="white"
@@ -228,9 +247,9 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 borderRadius="8px"
                 height="26px"
                 padding="6px 12px"
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"center"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
               >
                 <Text
                   as="span"
@@ -256,6 +275,32 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             {description}
           </Text>
         </Box>
+        <Flex
+          direction="row"
+          alignItems="center"
+          w="fit-content"
+          ml="auto"
+          mt={6}
+        >
+          <Image
+            src={authorIcon}
+            alt={`Icon of ${authorENS}`}
+            width="16px"
+            height="16px"
+            mr={1}
+          />
+          <Text
+            as="span"
+            color="whiteAlpha.900"
+            lineHeight={1.5}
+            fontSize="12px"
+            fontWeight={500}
+            letterSpacing="-0.02em"
+            opacity={0.75}
+          >
+            {authorENS}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   );
@@ -292,7 +337,7 @@ const Templates: ThirdwebNextPage = () => {
               letterSpacing="-0.04em"
               as="span"
               bgGradient="linear-gradient(243.9deg, #BFA3DA 21.81%, #84309C 48.81%, #C735B0 86.61%);"
-              bgClip={"text"}
+              bgClip="text"
             >
               templates
             </Text>

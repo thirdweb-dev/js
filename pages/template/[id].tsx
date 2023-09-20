@@ -6,7 +6,14 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
 import { TemplateCardProps, templates } from "pages/templates";
 import React from "react";
-import { Heading, Link, LinkButton, Text, TrackedLink } from "tw-components";
+import {
+  Heading,
+  Link,
+  LinkButton,
+  Text,
+  TrackedLink,
+  TrackedLinkButton,
+} from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 type TemplateContentsProps = {
@@ -543,29 +550,29 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
                 textTransform="uppercase"
                 fontWeight={600}
                 color="#646D7A"
-                letterSpacing={"0.1em"}
-                fontSize={"12px"}
+                letterSpacing="0.1em"
+                fontSize="12px"
               >
                 Author
               </Text>
               <Flex direction="row" alignItems="center" mt={2}>
                 <Image
-                  src="/assets/templates/thirdweb-eth.png"
-                  alt={"thirdweb icon"}
-                  width={"16px"}
-                  height={"16px"}
+                  src={props.template.authorIcon}
+                  alt={`Icon of ${props.template.authorENS}`}
+                  width="16px"
+                  height="16px"
                   mr={1}
                 />
                 <Text
                   as="span"
                   color="whiteAlpha.900"
                   lineHeight={1.5}
-                  fontSize={"12px"}
+                  fontSize="12px"
                   fontWeight={500}
                   letterSpacing="-0.02em"
                   opacity={0.75}
                 >
-                  thirdweb.eth
+                  {props.template.authorENS}
                 </Text>
               </Flex>
             </Box>
@@ -624,6 +631,60 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
               borderRadius={8}
               display={{ base: "none", md: "block" }}
             />
+
+            {props.template.contractLink && (
+              <Flex
+                w="full"
+                border="1px solid rgba(255, 255, 255, 0.2)"
+                borderRadius="2xl"
+                flexShrink={0}
+                p={8}
+                mt={6}
+                gap={1}
+                align="center"
+                justify="space-between"
+              >
+                <Flex flexDir="column">
+                  <Text
+                    color="whiteAlpha.900"
+                    fontWeight={500}
+                    fontSize={18}
+                    lineHeight={1.5}
+                    opacity={0.7}
+                  >
+                    This template is using
+                  </Text>
+
+                  <Link
+                    href={props.template.contractLink}
+                    isExternal
+                    color="blue.300"
+                    fontWeight={600}
+                    fontSize={28}
+                  >
+                    {props.template.contractName} Contract
+                  </Link>
+                </Flex>
+
+                <TrackedLinkButton
+                  href={props.template.contractLink}
+                  category="template-page"
+                  label="deploy-your-own"
+                  bg="white"
+                  color="blackAlpha.900"
+                  fontWeight={600}
+                  _hover={{
+                    bg: "white",
+                    opacity: 0.8,
+                  }}
+                  isExternal
+                  noIcon
+                >
+                  Deploy your own
+                </TrackedLinkButton>
+              </Flex>
+            )}
+
             <Heading as="h2" fontSize="32px" fontWeight={700} mt={16}>
               Get started
             </Heading>
