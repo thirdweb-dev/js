@@ -15,25 +15,21 @@ concurrency:
 
 jobs:
   build:
-    name: Build, Lint & Test
+    name: Lint & Test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node_version: [18]
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up NodeJS ${{ matrix.node_version }}
-        uses: actions/setup-node@v3
+      - name: Check out code
+        uses: actions/checkout@v3
         with:
-          node-version: ${{ matrix.node_version }}
-          cache: "yarn"
+          fetch-depth: 25
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
 
       - name: Run CI
         run: |
-          yarn install
-          yarn lint
-          yarn test
+          bun run lint
+          bun run test
