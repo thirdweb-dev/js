@@ -32,6 +32,18 @@ export interface TemplateCardProps {
 
 export const templates: TemplateCardProps[] = [
   {
+    id: "loyalty-card",
+    title: "Loyalty Card",
+    homepage: "https://loyalty-card.thirdweb-example.com",
+    repo: "https://github.com/thirdweb-example/loyalty-card/",
+    description:
+      "Allow users to generate a loyalty card and admins to manage the loyalty cards.",
+    img: "/assets/templates/loyalty-card.png",
+    hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
+    tags: ["Signature minting", "Loyalty Card"],
+    author: "thirdweb",
+  },
+  {
     id: "erc721",
     title: "NFT Drop",
     homepage: "https://nft-drop.thirdweb-example.com/",
