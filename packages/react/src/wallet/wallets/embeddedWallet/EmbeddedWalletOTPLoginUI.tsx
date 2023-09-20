@@ -11,16 +11,11 @@ import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
 
-type PaperOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
+type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
-type SentEmailInfo = {
-  isNewDevice: boolean;
-  isNewUser: boolean;
-};
-
-export const EmbeddedWalletOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (
-  props,
-) => {
+export const EmbeddedWalletOTPLoginUI: React.FC<
+  EmbeddedWalletOTPLoginUIProps
+> = (props) => {
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const { createWalletInstance, setConnectedWallet } = useWalletContext();
@@ -78,6 +73,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (
     try {
       setVerifyStatus("verifying");
       await wallet.connect({
+        loginType: "headless_email_otp_verification",
         email,
         otp: otpInput,
       });
