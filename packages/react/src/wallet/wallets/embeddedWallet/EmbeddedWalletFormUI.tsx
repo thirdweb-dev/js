@@ -39,6 +39,10 @@ export const EmbeddedWalletFormUI = (props: {
           openedWindow.close();
         },
       });
+
+      if (!googleWindow.closed) {
+        googleWindow.close();
+      }
       setConnectedWallet(embeddedWallet);
     } catch (e) {
       setConnectionStatus("disconnected");
