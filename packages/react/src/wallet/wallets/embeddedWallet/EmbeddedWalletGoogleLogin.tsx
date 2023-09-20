@@ -42,10 +42,6 @@ export const EmbeddedWalletGoogleLogin = (
         },
       });
 
-      if (!googleWindow.closed) {
-        googleWindow.close();
-      }
-
       setConnectedWallet(embeddedWallet);
       props.close();
     } catch (e) {

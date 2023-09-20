@@ -49,9 +49,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       throw new Error("EmbeddedWallet SDK not initialized");
     }
     const user = await thirdwebSDK.getUser();
-    console.log("user", { user });
-    console.log("options", { options });
-
     switch (user.status) {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
