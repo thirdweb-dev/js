@@ -59,7 +59,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
       return undefined;
     }
 
-    // do not return non-seriazable params to make auto-connect work
+    // do not return non-serializable params to make auto-connect work
     if (connectParams.loginType === "headless_google_oauth") {
       return {
         loginType: connectParams.loginType,
