@@ -61,7 +61,6 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
       setSentEmailInfo({ isNewDevice, isNewUser });
     } catch (e) {
-      debugger;
       console.error(e);
       setVerifyStatus("idle");
       setSentEmailInfo("error");

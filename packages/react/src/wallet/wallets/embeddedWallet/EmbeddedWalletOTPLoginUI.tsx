@@ -48,7 +48,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
       setSendEmailOtpStatus("sent");
     } catch (e) {
-      debugger;
       console.error(e);
       setVerifyStatus("idle");
       setSendEmailOtpStatus("error");

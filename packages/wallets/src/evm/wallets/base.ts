@@ -124,8 +124,6 @@ export abstract class AbstractClientWallet<
       const address = await connector.connect(connectOptions);
       return address;
     } catch (error) {
-      console.error("error", error);
-      debugger;
       throw new Error((error as Error).message);
     }
   }

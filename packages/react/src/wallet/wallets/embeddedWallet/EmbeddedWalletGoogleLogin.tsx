@@ -35,7 +35,6 @@ export const EmbeddedWalletGoogleLogin = (
       }
 
       await embeddedWallet.connect({
-        ...props,
         loginType: "headless_google_oauth",
         openedWindow: googleWindow,
         closeOpenedWindow: (openedWindow) => {
