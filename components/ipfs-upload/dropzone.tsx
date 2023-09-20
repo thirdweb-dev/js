@@ -159,7 +159,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
       return replaceIpfsUrl(ipfsHashes[0]);
     }
     // get the folder
-    return replaceIpfsUrl(ipfsHashes[0].split("/").slice(0, -1).join("/"));
+    // return replaceIpfsUrl(ipfsHashes[0].split("/").slice(0, -1).join("/"));
+    return `https://ipfs.io/ipfs/${ipfsHashes[0].split("ipfs://")[1]}`;
   }, [ipfsHashes]);
 
   return (
