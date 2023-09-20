@@ -21,10 +21,7 @@ import { Transaction } from "./transactions";
  * ```
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class ContractPlatformFee<TContract extends IPlatformFee>
-  implements DetectableFeature
-{
+export class ContractPlatformFee implements DetectableFeature {
   featureName = FEATURE_PLATFORM_FEE.name;
   private contractWrapper;
 

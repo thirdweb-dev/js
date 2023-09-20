@@ -28,10 +28,7 @@ import { Transaction } from "./transactions";
  * ```
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class ContractRoles<TContract extends IPermissions, TRole extends Role>
-  implements DetectableFeature
-{
+export class ContractRoles<TRole extends Role> implements DetectableFeature {
   featureName = FEATURE_PERMISSIONS.name;
   private contractWrapper;
   /**

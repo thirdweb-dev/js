@@ -11,10 +11,7 @@ import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class AccountFactory<TContract extends IAccountFactory>
-  implements DetectableFeature
-{
+export class AccountFactory implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_FACTORY.name;
   private contractWrapper: ContractWrapper<IAccountFactory>;
 

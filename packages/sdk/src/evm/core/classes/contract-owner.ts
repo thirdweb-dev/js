@@ -11,10 +11,7 @@ import { Transaction } from "./transactions";
  * Encodes and decodes Contract functions
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-export class ContractOwner<TContract extends Ownable>
-  implements DetectableFeature
-{
+export class ContractOwner implements DetectableFeature {
   featureName = FEATURE_OWNER.name;
   private contractWrapper;
 

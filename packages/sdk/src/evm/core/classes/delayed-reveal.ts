@@ -33,14 +33,7 @@ import { Transaction } from "./transactions";
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
-  T extends
-    | DropERC721_V3
-    | BaseDelayedRevealERC721
-    | SignatureDrop
-    | BaseDelayedRevealERC1155,
-> {
+export class DelayedReveal {
   featureName;
 
   private contractWrapper;
