@@ -85,7 +85,7 @@ export function StartScreen() {
           <Link
             target="_blank"
             center
-            href="https://ethereum.org/en/wallets/find-wallet/"
+            href="https://blog.thirdweb.com/web3-wallet/"
           >
             New to wallets?
           </Link>

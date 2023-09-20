@@ -216,7 +216,7 @@ export const WalletSelector: React.FC<{
                 weight={500}
                 size="sm"
                 target="_blank"
-                href="https://ethereum.org/en/wallets/find-wallet/"
+                href="https://blog.thirdweb.com/web3-wallet/"
               >
                 Get started
               </Link>
