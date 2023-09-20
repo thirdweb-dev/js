@@ -23,19 +23,6 @@ const DashboardWalletsLocal: ThirdwebNextPage = () => {
               solution that simplifies the onboarding process and improves the
               user experience for web3 apps in two ways:
             </Text>
-            <Text>
-              Add specific Wallet SDK reference used to integrate embedded
-              wallets similar to what we have for current{" "}
-              <TrackedLink
-                href="/dashboard/wallets/wallet-sdk"
-                category={TRACKING_CATEGORY}
-                label="wallet-sdk"
-                color="primary.500"
-              >
-                Wallet SDK
-              </TrackedLink>{" "}
-              page.
-            </Text>
 
             <TrackedLink
               category={TRACKING_CATEGORY}

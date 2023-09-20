@@ -22,19 +22,6 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
               control their users&apos; wallets. Email login, social login, and
               bring-your-own auth supported.
             </Text>
-            <Text>
-              Add specific Wallet SDK reference used to integrate embedded
-              wallets similar to what we have for current{" "}
-              <TrackedLink
-                href="/dashboard/wallets/wallet-sdk"
-                category={TRACKING_CATEGORY}
-                label="wallet-sdk"
-                color="primary.500"
-              >
-                Wallet SDK
-              </TrackedLink>{" "}
-              page.
-            </Text>
 
             <TrackedLink
               category={TRACKING_CATEGORY}
