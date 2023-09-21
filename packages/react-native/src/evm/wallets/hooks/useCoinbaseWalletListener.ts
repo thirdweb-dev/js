@@ -7,16 +7,24 @@ import { Linking } from "react-native";
  *
  * This hook sets up the UniversalLinks listener.
  */
-export function useCoinbaseWalletListener(enable: boolean) {
+export function useCoinbaseWalletListener(enable: boolean, callbackURL?: URL) {
   useEffect(() => {
     if (!enable) {
       return;
     }
 
     const sub = Linking.addEventListener("url", ({ url }) => {
-      // @ts-expect-error - Passing a URL object to handleResponse crashes the function
-      handleResponse(url);
+      const incomingUrl = new URL(url);
+      if (
+        callbackURL &&
+        incomingUrl.host === callbackURL.host &&
+        incomingUrl.protocol === callbackURL.protocol &&
+        incomingUrl.hostname === callbackURL.hostname
+      ) {
+        // @ts-expect-error - Passing a URL object to handleResponse crashes the function
+        handleResponse(url);
+      }
     });
     return () => sub?.remove();
-  }, [enable]);
+  }, [callbackURL, enable]);
 }
