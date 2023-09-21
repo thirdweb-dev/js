@@ -45,6 +45,7 @@ export function StartScreen() {
         style={{
           minHeight: "300px",
         }}
+        px="lg"
       >
         <Container flex="row" center="x">
           {img ? (
@@ -62,18 +63,17 @@ export function StartScreen() {
 
         <Spacer y="xxl" />
 
-        <Text center color="primaryText" weight={600}>
+        <Text center color="primaryText" weight={600} multiline>
           {title}
         </Text>
 
         <Spacer y="md" />
 
         <Text
-          weight={500}
           color="secondaryText"
+          multiline
           style={{
             textAlign: "center",
-            display: "block",
           }}
         >
           {subtitle}

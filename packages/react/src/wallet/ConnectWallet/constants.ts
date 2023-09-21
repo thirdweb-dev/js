@@ -9,6 +9,6 @@ export const modalMaxWidthWide = "730px";
 export const defaultModalTitle = "Connect";
 
 export const widemodalMaxHeight = "550px";
-export const compactmodalMaxHeight = "550px";
+export const compactmodalMaxHeight = "600px";
 
 export const defaultTheme = "dark";

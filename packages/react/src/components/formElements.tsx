@@ -1,4 +1,4 @@
-import { fontSize, radius, Theme } from "../design-system";
+import { fontSize, radius, Theme, spacing } from "../design-system";
 import styled from "@emotion/styled";
 
 export const Label = styled.label<{
@@ -12,11 +12,12 @@ export const Label = styled.label<{
 
 export const Input = styled.input<{
   variant: "outline" | "transparent";
+  sm?: boolean;
   theme?: Theme;
 }>`
   font-size: ${fontSize.md};
   display: block;
-  padding: ${fontSize.sm};
+  padding: ${(p) => (p.sm ? spacing.sm : fontSize.sm)};
   box-sizing: border-box;
   width: 100%;
   outline: none;

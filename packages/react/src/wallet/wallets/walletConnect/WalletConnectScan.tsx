@@ -8,11 +8,7 @@ import type { WalletConfig } from "@thirdweb-dev/react-core";
 import { QRCode } from "../../../components/QRCode";
 import { Img } from "../../../components/Img";
 import { Spacer } from "../../../components/Spacer";
-import {
-  ModalHeader,
-  Container,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { ModalHeader, Container } from "../../../components/basic";
 import { Theme, fontSize, iconSize, spacing } from "../../../design-system";
 import { Text } from "../../../components/text";
 import styled from "@emotion/styled";
@@ -26,7 +22,7 @@ export const WalletConnectScan: React.FC<{
   walletConfig: WalletConfig<WalletConnect>;
   hideBackButton: boolean;
   modalSize: "wide" | "compact";
-}> = ({ onBack, onConnected, walletConfig, modalSize }) => {
+}> = ({ onBack, onConnected, walletConfig }) => {
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -64,37 +60,37 @@ export const WalletConnectScan: React.FC<{
   return (
     <Container
       fullHeight
+      animate="fadein"
       flex="column"
       style={{
         minHeight: "450px",
       }}
     >
-      <Container
-        p="lg"
-        flex="column"
-        expand
-        style={{
-          paddingBottom: 0,
-        }}
-      >
+      <Container p="lg">
         <ModalHeader onBack={onBack} title="WalletConnect" />
-        <Spacer y="xl" />
-
-        <Container flex="column" center="both" expand>
-          <QRCode
-            qrCodeUri={qrCodeUri}
-            QRIcon={
-              <Img
-                width={iconSize.xxl}
-                height={iconSize.xxl}
-                src={walletConfig.meta.iconURL}
-              />
-            }
-          />
-        </Container>
       </Container>
 
-      <Spacer y="lg" />
+      <Spacer y="md" />
+
+      <Container flex="column" center={"x"} px="lg" expand>
+        <QRCode
+          size={310}
+          qrCodeUri={qrCodeUri}
+          QRIcon={
+            <Img
+              width={iconSize.xxl}
+              height={iconSize.xxl}
+              src={walletConfig.meta.iconURL}
+            />
+          }
+        />
+      </Container>
+
+      <Spacer y="sm" />
+
+      {/* <Spacer y="xl" /> */}
+
+      {/* <Spacer y="lg" />
 
       <Container flex="row" center="x">
         <CopyButton
@@ -102,20 +98,14 @@ export const WalletConnectScan: React.FC<{
           tip="Copy QRI to clipboard"
           hide={!qrCodeUri}
         />
-      </Container>
+      </Container> */}
 
-      <Spacer y="lg" />
-
-      <ScreenBottomContainer
-        style={{
-          borderTop: modalSize === "wide" ? "none" : undefined,
-        }}
-      >
+      <Container p="lg">
         <Text multiline center>
           Scan this with your wallet <br />
           or camera app to connect{" "}
         </Text>
-      </ScreenBottomContainer>
+      </Container>
     </Container>
   );
 };
@@ -136,8 +126,6 @@ export const CopyButton: React.FC<{
       style={{
         padding: spacing.xs,
         fontSize: fontSize.xs,
-        opacity: props.hide ? 0 : 1,
-        transition: "opacity 400ms ease",
       }}
     >
       <Container flex="row" center="both" gap="xs" color="secondaryText">

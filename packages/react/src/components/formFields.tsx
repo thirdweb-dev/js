@@ -28,6 +28,7 @@ export const FormFieldWithIconButton: React.FC<{
 
       <InputContainer data-error={!!props.error}>
         <Input
+          sm
           variant="transparent"
           required={props.required}
           name={props.name}
