@@ -18,7 +18,8 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 > = (props) => {
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
-  const { createWalletInstance, setConnectedWallet } = useWalletContext();
+  const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
+    useWalletContext();
 
   const [wallet, setWallet] = useState<EmbeddedWallet | null>(null);
 
@@ -71,6 +72,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
     try {
       setVerifyStatus("verifying");
+      setConnectionStatus("connecting");
       await wallet.connect({
         loginType: "headless_email_otp_verification",
         email,
