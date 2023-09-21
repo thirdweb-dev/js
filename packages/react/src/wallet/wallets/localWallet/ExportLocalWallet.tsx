@@ -212,7 +212,6 @@ export const ExportLocalWallet: React.FC<{
           )}
         </Container>
 
-        <Spacer y="md" />
         <ScreenBottomContainer
           style={{
             borderTop: props.modalSize === "wide" ? "none" : undefined,

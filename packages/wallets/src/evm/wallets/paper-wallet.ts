@@ -4,7 +4,7 @@ import {
   PaperWalletConnectionArgs,
 } from "../connectors/paper/types";
 import { walletIds } from "../constants/walletIds";
-import { Connector } from "../interfaces/connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
@@ -95,6 +95,24 @@ export class PaperWallet extends AbstractClientWallet<
       });
     }
     return this.connector;
+  }
+
+  getConnectParams(): ConnectParams<PaperWalletConnectionArgs> | undefined {
+    const connectParams = super.getConnectParams();
+
+    if (!connectParams) {
+      return undefined;
+    }
+
+    // do not return non-serializable params to make auto-connect work
+    if (typeof connectParams.googleLogin === "object") {
+      return {
+        ...connectParams,
+        googleLogin: true,
+      };
+    }
+
+    return connectParams;
   }
 
   async getEmail() {

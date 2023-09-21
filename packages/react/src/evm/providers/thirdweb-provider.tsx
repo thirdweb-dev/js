@@ -71,7 +71,7 @@ export const ThirdwebProvider = <
   const theme = _theme || "dark";
 
   return (
-    <WalletUIStatesProvider theme={theme} modalSize="wide">
+    <WalletUIStatesProvider theme={theme}>
       <CustomThemeProvider theme={theme}>
         <ThirdwebProviderCore
           {...restProps}

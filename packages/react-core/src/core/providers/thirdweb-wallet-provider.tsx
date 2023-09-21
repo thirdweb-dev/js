@@ -90,6 +90,7 @@ type ThirdwebWalletContextData = {
    */
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
   activeChainSetExplicitly: boolean;
+  clientId?: string;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -483,6 +484,7 @@ export function ThirdwebWalletProvider(
           return walletInstanceToConfig.get(walletInstance);
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
+        clientId: props.clientId,
       }}
     >
       {props.children}

@@ -26,6 +26,7 @@ export const Img: React.FC<{
         height: props.height ? props.height + "px" : undefined,
         width: props.width ? props.width + "px" : undefined,
         userSelect: "none",
+        ...props.style,
       }}
       draggable={false}
       className={props.className}
