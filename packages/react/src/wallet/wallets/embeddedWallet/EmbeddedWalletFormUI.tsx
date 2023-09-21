@@ -13,6 +13,7 @@ import { Theme, iconSize, spacing } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { InputSelectionUI } from "../InputSelectionUI";
 import type { EmbeddedWalletLoginType } from "./types";
+import { TextDivider } from "../../../components/TextDivider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -60,6 +61,12 @@ export const EmbeddedWalletFormUI = (props: {
         <GoogleIcon size={iconSize.md} />
         Sign in with Google
       </SocialButton>
+
+      <Spacer y="lg" />
+
+      <TextDivider>
+        <span>OR</span>
+      </TextDivider>
 
       <Spacer y="lg" />
 

@@ -46,7 +46,6 @@ import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
-import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
@@ -161,15 +160,15 @@ export const ConnectedWalletDetails: React.FC<{
       <Container flex="column" gap="xs">
         {/* Address */}
         {activeWallet?.walletId === walletIds.localWallet ? (
-          <ErrorMessage
+          <Text
+            color="danger"
+            size="xs"
             style={{
-              lineHeight: 1,
               minWidth: "70px",
-              fontSize: fontSize.xs,
             }}
           >
             Guest
-          </ErrorMessage>
+          </Text>
         ) : addressOrENS ? (
           <Text
             size="sm"
@@ -763,7 +762,9 @@ function WalletSwitcher({
         fontSize: fontSize.sm,
       }}
     >
-      <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      <Container color="secondaryText">
+        <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      </Container>
       Switch to {name}
     </MenuButton>
   );

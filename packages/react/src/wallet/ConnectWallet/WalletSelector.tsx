@@ -127,13 +127,14 @@ export const WalletSelector: React.FC<{
       <Container
         expand
         scrollY
-        px="md"
+        px={nonLocalWalletConfigs.length === 1 ? "lg" : "md"}
         style={{
           paddingTop: "2px",
         }}
       >
         {showGroupsUI ? (
           <>
+            {/* list of EOA wallets */}
             {isWalletGroupExpanded ? (
               <WalletSelection
                 walletConfigs={eoaWallets}

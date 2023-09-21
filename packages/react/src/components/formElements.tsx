@@ -110,14 +110,6 @@ export const InputContainer = styled.div<{ theme?: Theme }>`
   }
 `;
 
-export const ErrorMessage = styled.p<{ theme?: Theme }>`
-  all: unset;
-  font-size: ${fontSize.sm};
-  display: block;
-  color: ${(p) => p.theme.colors.danger};
-  line-height: 1;
-`;
-
 export const FormFooter = styled.div`
   display: flex;
   justify-content: flex-end;
