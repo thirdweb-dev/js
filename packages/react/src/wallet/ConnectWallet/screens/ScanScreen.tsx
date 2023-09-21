@@ -7,11 +7,10 @@ import {
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
-import { ModalDescription } from "../../../components/modalElements";
 import { fontSize, iconSize } from "../../../design-system";
-import type { Theme } from "../../../design-system/index";
-import styled from "@emotion/styled";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { Text } from "../../../components/text";
+import { Button } from "../../../components/buttons";
 
 export const ScanScreen: React.FC<{
   onBack: () => void;
@@ -31,7 +30,7 @@ export const ScanScreen: React.FC<{
         <ModalHeader onBack={props.onBack} title={props.walletName} />
       </Container>
 
-      {modalConfig.modalSize === "compact" && <Spacer y="sm" />}
+      {modalConfig.modalSize === "compact" && <Spacer y="xs" />}
 
       <Container expand flex="column" px="lg" center="both">
         <div
@@ -41,6 +40,7 @@ export const ScanScreen: React.FC<{
         >
           <QRCode
             qrCodeUri={props.qrCodeUri}
+            size={310}
             QRIcon={
               <Img
                 width={iconSize.xxl}
@@ -50,13 +50,13 @@ export const ScanScreen: React.FC<{
             }
           />
 
-          <Spacer y="xl" />
+          <Spacer y="lg" />
 
-          <ModalDescription>
+          <Text center multiline>
             Scan this with {walletName} <br /> or camera app to connect
-          </ModalDescription>
+          </Text>
 
-          <Spacer y="xl" />
+          <Spacer y="lg" />
         </div>
       </Container>
 
@@ -65,7 +65,8 @@ export const ScanScreen: React.FC<{
           border: modalConfig.modalSize === "compact" ? undefined : "none",
         }}
       >
-        <LinkButton
+        <Button
+          variant="link"
           onClick={props.onGetStarted}
           style={{
             fontSize: fontSize.sm,
@@ -73,17 +74,8 @@ export const ScanScreen: React.FC<{
           }}
         >
           {`Don't`} have {walletName}?
-        </LinkButton>
+        </Button>
       </ScreenBottomContainer>
     </Container>
   );
 };
-
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.colors.accentText};
-  cursor: pointer;
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
-`;

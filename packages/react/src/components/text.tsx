@@ -24,24 +24,25 @@ export const Text = styled.span<{
 export const Link = styled.a<{
   theme?: Theme;
   size?: keyof typeof fontSize;
-  secondary?: boolean;
   weight?: 400 | 500 | 600 | 700;
   inline?: boolean;
   center?: boolean;
+  color?: keyof Theme["colors"];
+  hoverColor?: keyof Theme["colors"];
 }>`
   all: unset;
   cursor: pointer;
-  color: ${(p) =>
-    p.secondary ? p.theme.colors.secondaryText : p.theme.colors.accentText};
+  color: ${(p) => p.theme.colors[p.color || "accentText"]};
   font-size: ${(p) => fontSize[p.size || "md"]};
   text-decoration: none;
   text-align: ${(p) => (p.center ? "center" : "left")};
   display: ${(p) => (p.inline ? "inline" : "block")};
   font-weight: ${(p) => p.weight || 500};
   line-height: 1;
+  transition: color 0.2s ease;
 
   &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
+    color: ${(p) => p.theme.colors[p.hoverColor || "primaryText"]};
     text-decoration: none;
   }
 `;

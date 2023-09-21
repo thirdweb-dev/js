@@ -46,7 +46,6 @@ import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
-import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
@@ -161,15 +160,15 @@ export const ConnectedWalletDetails: React.FC<{
       <Container flex="column" gap="xs">
         {/* Address */}
         {activeWallet?.walletId === walletIds.localWallet ? (
-          <ErrorMessage
+          <Text
+            color="danger"
+            size="xs"
             style={{
-              lineHeight: 1,
               minWidth: "70px",
-              fontSize: fontSize.xs,
             }}
           >
             Guest
-          </ErrorMessage>
+          </Text>
         ) : addressOrENS ? (
           <Text
             size="sm"
@@ -323,7 +322,9 @@ export const ConnectedWalletDetails: React.FC<{
         chain &&
         address && (
           <>
-            <SecondaryLink
+            <Link
+              color="secondaryText"
+              hoverColor="primaryText"
               href={`https://thirdweb.com/${chain.slug}/${address}/account`}
               target="_blank"
               size="sm"
@@ -343,7 +344,7 @@ export const ConnectedWalletDetails: React.FC<{
                 </Container>
                 <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
-            </SecondaryLink>
+            </Link>
             <Spacer y="md" />
           </>
         )}
@@ -763,7 +764,9 @@ function WalletSwitcher({
         fontSize: fontSize.sm,
       }}
     >
-      <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      <Container color="secondaryText">
+        <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      </Container>
       Switch to {name}
     </MenuButton>
   );
@@ -774,12 +777,4 @@ const ActiveDot = styled.div<{ theme?: Theme }>`
   height: 8px;
   border-radius: 50%;
   background-color: ${(props) => props.theme.colors.success};
-`;
-
-const SecondaryLink = /* @__PURE__ */ styled(Link)<{ theme?: Theme }>`
-  display: block;
-  color: ${(p) => p.theme.colors.secondaryText};
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
 `;

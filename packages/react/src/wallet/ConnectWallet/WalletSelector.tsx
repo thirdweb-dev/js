@@ -93,7 +93,27 @@ export const WalletSelector: React.FC<{
 
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
-      <TWIcon size={iconSize.md} />
+      {modalConfig.titleIconUrl === undefined ? (
+        <Link
+          color="primaryText"
+          hoverColor="accentText"
+          target="_blank"
+          href="https://thirdweb.com/dashboard/wallets/connect"
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <TWIcon size={iconSize.md} />
+        </Link>
+      ) : modalConfig.titleIconUrl === "" ? null : (
+        <Img
+          src={modalConfig.titleIconUrl}
+          width={iconSize.md}
+          height={iconSize.md}
+        />
+      )}
+
       <ModalTitle> {props.title} </ModalTitle>
     </Container>
   );
@@ -127,13 +147,14 @@ export const WalletSelector: React.FC<{
       <Container
         expand
         scrollY
-        px="md"
+        px={nonLocalWalletConfigs.length === 1 ? "lg" : "md"}
         style={{
           paddingTop: "2px",
         }}
       >
         {showGroupsUI ? (
           <>
+            {/* list of EOA wallets */}
             {isWalletGroupExpanded ? (
               <WalletSelection
                 walletConfigs={eoaWallets}

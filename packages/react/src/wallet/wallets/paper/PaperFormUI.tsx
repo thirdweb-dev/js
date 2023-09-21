@@ -13,6 +13,7 @@ import { Theme, iconSize, spacing } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
+import { TextDivider } from "../../../components/TextDivider";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -63,6 +64,12 @@ export const PaperFormUI = (props: {
             <GoogleIcon size={iconSize.md} />
             Sign in with Google
           </SocialButton>
+
+          <Spacer y="lg" />
+
+          <TextDivider>
+            <span>OR</span>
+          </TextDivider>
 
           <Spacer y="lg" />
         </>

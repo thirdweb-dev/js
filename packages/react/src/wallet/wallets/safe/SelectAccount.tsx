@@ -5,8 +5,6 @@ import { Label } from "../../../components/formElements";
 import { FormField } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
 import { iconSize, spacing, Theme, fontSize } from "../../../design-system";
-import { useIsHeadlessWallet } from "../../hooks/useIsHeadlessWallet";
-// import { Steps } from "../../../components/Steps";
 import styled from "@emotion/styled";
 import {
   ChevronDownIcon,
@@ -62,7 +60,6 @@ export const SelectAccount: React.FC<{
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   const connectionStatus = useConnectionStatus();
-  const requiresConfirmation = !useIsHeadlessWallet();
   const chains = useSupportedChains();
 
   // put supported chains first
@@ -388,29 +385,6 @@ export const SelectAccount: React.FC<{
                 </Button>
               )}
             </div>
-
-            {switchingNetwork && requiresConfirmation && (
-              <>
-                <Spacer y="md" />
-                <Container
-                  flex="row"
-                  style={
-                    modalConfig.modalSize === "compact"
-                      ? {
-                          justifyContent: "center",
-                        }
-                      : {
-                          justifyContent: "flex-end",
-                        }
-                  }
-                >
-                  <Text size="sm" color="accentText">
-                    {" "}
-                    Confirm in your wallet{" "}
-                  </Text>
-                </Container>
-              </>
-            )}
           </div>
         </ScreenBottomContainer>
       </form>

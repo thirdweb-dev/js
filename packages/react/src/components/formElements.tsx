@@ -1,4 +1,4 @@
-import { fontSize, radius, spacing, Theme } from "../design-system";
+import { fontSize, radius, Theme, spacing } from "../design-system";
 import styled from "@emotion/styled";
 
 export const Label = styled.label<{
@@ -12,11 +12,12 @@ export const Label = styled.label<{
 
 export const Input = styled.input<{
   variant: "outline" | "transparent";
+  sm?: boolean;
   theme?: Theme;
 }>`
   font-size: ${fontSize.md};
   display: block;
-  padding: ${fontSize.sm};
+  padding: ${(p) => (p.sm ? spacing.sm : fontSize.sm)};
   box-sizing: border-box;
   width: 100%;
   outline: none;
@@ -108,18 +109,4 @@ export const InputContainer = styled.div<{ theme?: Theme }>`
   &[data-error="true"] {
     box-shadow: 0 0 0px 2px ${(p) => p.theme.colors.danger};
   }
-`;
-
-export const ErrorMessage = styled.p<{ theme?: Theme }>`
-  all: unset;
-  font-size: ${fontSize.sm};
-  display: block;
-  color: ${(p) => p.theme.colors.danger};
-  line-height: 1;
-`;
-
-export const FormFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: ${spacing.sm};
 `;
