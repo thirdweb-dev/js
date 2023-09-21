@@ -1,4 +1,4 @@
-import { fontSize, radius, spacing, Theme } from "../design-system";
+import { fontSize, radius, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
 export const Label = styled.label<{
@@ -108,10 +108,4 @@ export const InputContainer = styled.div<{ theme?: Theme }>`
   &[data-error="true"] {
     box-shadow: 0 0 0px 2px ${(p) => p.theme.colors.danger};
   }
-`;
-
-export const FormFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: ${spacing.sm};
 `;

@@ -10,7 +10,6 @@ import {
 import { useState } from "react";
 import { DragNDrop } from "../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { LocalWalletConfig } from "./types";
 import { Container, ModalHeader } from "../../../components/basic";
@@ -147,7 +146,12 @@ export const ImportLocalWallet: React.FC<{
           </>
         )}
 
-        <FormFooter>
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "flex-end",
+          }}
+        >
           <Button
             variant="accent"
             type="submit"
@@ -159,7 +163,7 @@ export const ImportLocalWallet: React.FC<{
           >
             Import
           </Button>
-        </FormFooter>
+        </Container>
       </form>
     </Container>
   );
