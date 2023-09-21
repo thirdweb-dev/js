@@ -49,6 +49,14 @@ export type ConnectWalletProps = {
    * @default "Connect"
    */
   modalTitle?: string;
+
+  /**
+   * Replace the thirdweb icon next to modalTitle and set your own iconUrl
+   *
+   * Set to empty string to hide the icon
+   */
+  modalTitleIconUrl?: string;
+
   /**
    * render a custom button to display the connected wallet details instead of the default button
    */
@@ -233,6 +241,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   termsOfServiceUrl: props.termsOfServiceUrl,
                   privacyPolicyUrl: props.privacyPolicyUrl,
                   welcomeScreen: props.welcomeScreen,
+                  titleIconUrl: props.modalTitleIconUrl,
                 });
                 setIsWalletModalOpen(true);
               }}

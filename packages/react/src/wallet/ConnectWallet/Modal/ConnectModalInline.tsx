@@ -13,6 +13,7 @@ import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
   defaultModalTitle,
+  defaultTheme,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
 import { useScreen } from "./screen";
@@ -20,18 +21,21 @@ import { isMobile } from "../../../evm/utils/isMobile";
 import { useWallets } from "@thirdweb-dev/react-core";
 import { DynamicHeight } from "../../../components/DynamicHeight";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
-import { WelcomeScreen } from "../screens/types";
 import { ComponentProps, useContext, useEffect } from "react";
+import { ConnectWalletProps } from "../ConnectWallet";
 
-export const ConnectModalInline = (props: {
-  theme: "light" | "dark" | Theme;
-  title?: string;
-  className?: string;
-  modalSize: "wide" | "compact";
-  termsOfServiceUrl?: string;
-  privacyPolicyUrl?: string;
-  welcomeScreen?: WelcomeScreen;
-}) => {
+export const ConnectModalInline = (
+  props: Omit<
+    ConnectWalletProps,
+    | "detailsBtn"
+    | "dropdownPosition"
+    | "auth"
+    | "networkSelector"
+    | "hideTestnetFaucet"
+    | "switchToActiveChain"
+    | "supportedTokens"
+  >,
+) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
   const modalSize =
@@ -61,17 +65,18 @@ export const ConnectModalInline = (props: {
   );
 
   const walletUIStatesProps = {
-    theme: props.theme,
+    theme: props.theme || defaultTheme,
     modalSize: modalSize,
-    title: props.title,
+    title: props.modalTitle,
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
+    titleIconUrl: props.modalTitleIconUrl,
   };
 
   return (
     <WalletUIStatesProvider {...walletUIStatesProps}>
-      <CustomThemeProvider theme={props.theme}>
+      <CustomThemeProvider theme={walletUIStatesProps.theme}>
         <ConnectModalInlineContainer
           className={props.className}
           style={{
@@ -105,10 +110,11 @@ function SyncedWalletUIStates(
       ...c,
       title: props.title || defaultModalTitle,
       theme: props.theme || "dark",
-      modalSize: isMobile() ? "compact" : props.modalSize,
+      modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
       privacyPolicyUrl: props.privacyPolicyUrl,
       welcomeScreen: props.welcomeScreen,
+      titleIconUrl: props.titleIconUrl,
     }));
   }, [
     props.title,
@@ -117,6 +123,7 @@ function SyncedWalletUIStates(
     props.termsOfServiceUrl,
     props.privacyPolicyUrl,
     props.welcomeScreen,
+    props.titleIconUrl,
     setModalConfig,
   ]);
 

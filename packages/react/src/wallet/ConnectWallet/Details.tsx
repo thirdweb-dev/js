@@ -322,7 +322,9 @@ export const ConnectedWalletDetails: React.FC<{
         chain &&
         address && (
           <>
-            <SecondaryLink
+            <Link
+              color="secondaryText"
+              hoverColor="primaryText"
               href={`https://thirdweb.com/${chain.slug}/${address}/account`}
               target="_blank"
               size="sm"
@@ -342,7 +344,7 @@ export const ConnectedWalletDetails: React.FC<{
                 </Container>
                 <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
-            </SecondaryLink>
+            </Link>
             <Spacer y="md" />
           </>
         )}
@@ -775,12 +777,4 @@ const ActiveDot = styled.div<{ theme?: Theme }>`
   height: 8px;
   border-radius: 50%;
   background-color: ${(props) => props.theme.colors.success};
-`;
-
-const SecondaryLink = /* @__PURE__ */ styled(Link)<{ theme?: Theme }>`
-  display: block;
-  color: ${(p) => p.theme.colors.secondaryText};
-  &:hover {
-    color: ${(p) => p.theme.colors.primaryText};
-  }
 `;
