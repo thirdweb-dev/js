@@ -157,7 +157,7 @@ const ConnectAppField = () => {
         <BaseButton
           backgroundColor="background"
           borderColor="border"
-          mb="sm"
+          mt="xs"
           justifyContent="space-between"
           style={styles.exportWallet}
           onPress={onConnectDappPress}

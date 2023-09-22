@@ -43,7 +43,7 @@
     "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
     "react-native-qrcode-svg": "6.2.0",
-    "react-native-svg": "13.2.0",
+    "react-native-svg": "^13.9.0",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {

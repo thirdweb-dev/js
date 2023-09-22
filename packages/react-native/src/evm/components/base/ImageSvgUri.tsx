@@ -20,11 +20,7 @@ const ImageSvgUri = ({
   const [error, setError] = useState(false);
 
   if (imageUrl.startsWith("<svg")) {
-    return (
-      <Box style={{ width: width, height: height }}>
-        <SvgXml width={width} height={height} xml={imageUrl} />
-      </Box>
-    );
+    return <SvgXml width={width} height={height} xml={imageUrl} />;
   }
 
   const resolvedImageUrl = storage

@@ -16,7 +16,7 @@ export function SelectTokenButton(props: {
       flexDirection="row"
       alignItems="center"
       onPress={props.onPress}
-      mb="xs"
+      mb="md"
     >
       {props.token?.icon ? (
         <ImageSvgUri width={32} height={32} imageUrl={props.token.icon} />
@@ -24,7 +24,7 @@ export function SelectTokenButton(props: {
         <ChainIcon chainIconUrl={chain?.icon?.url} size={32} active={false} />
       )}
       <Box ml="md" alignItems="flex-start" justifyContent="center" height={36}>
-        <Text variant="bodySmall">{tokenName}</Text>
+        <Text variant="bodyLarge">{tokenName}</Text>
         {!balanceQuery.data ? (
           <LoadingTextAnimation
             text="Fetching..."

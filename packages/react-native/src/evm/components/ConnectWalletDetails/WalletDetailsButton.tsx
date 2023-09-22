@@ -48,15 +48,6 @@ export const WalletDetailsButton = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onPress = () => {
-    // setModalState({
-    //   view: "WalletDetails",
-    //   data: {
-    //     address: address,
-    //   },
-    //   isOpen: true,
-    //   isSheet: true,
-    //   caller: "ConnectWalletDetails",
-    // });
     setIsModalVisible(!isModalVisible);
   };
 

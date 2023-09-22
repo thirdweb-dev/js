@@ -2,12 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Bear Network Chain Testnet",
   "chain": "BRNKCTEST",
-  "icon": {
-    "url": "ipfs://QmQqhH28QpUrreoRw5Gj8YShzdHxxVGMjfVrx3TqJNLSLv",
-    "width": 1067,
-    "height": 1067,
-    "format": "png"
-  },
+  "icon": "brnkc",
   "rpc": [
     "https://bear-network-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://brnkc-test.bearnetwork.net"

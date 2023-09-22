@@ -157,7 +157,6 @@ export function TokenSelector(props: {
         <Box
           flexDirection="column"
           paddingTop="none"
-          paddingBottom="sm"
           maxHeight={MODAL_HEIGHT - 150}
         >
           <ScrollView>

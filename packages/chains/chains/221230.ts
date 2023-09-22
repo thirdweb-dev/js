@@ -4,7 +4,7 @@ export default {
   "chain": "REAP",
   "rpc": [
     "https://reapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.reapchain.org"
+    "https://eth.reapchain.org"
   ],
   "faucets": [],
   "nativeCurrency": {
