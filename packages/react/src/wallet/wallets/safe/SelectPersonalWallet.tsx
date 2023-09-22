@@ -3,6 +3,7 @@ import { Spacer } from "../../../components/Spacer";
 // import { Steps } from "../../../components/Steps";
 import {
   Container,
+  Line,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -56,6 +57,8 @@ export const SelectpersonalWallet: React.FC<{
           imgSrc={props.safeWallet.meta.iconURL}
         />
       </Container>
+      <Line />
+      <Spacer y="sm" />
 
       <Container px="lg">
         <Spacer y="md" />

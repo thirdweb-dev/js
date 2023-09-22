@@ -1,9 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Button } from "../../../components/buttons";
-import { ErrorMessage } from "../../../components/formElements";
 import { iconSize, spacing, fontSize } from "../../../design-system";
-import { useIsHeadlessWallet } from "../../hooks/useIsHeadlessWallet";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
   useChain,
@@ -13,11 +11,13 @@ import {
   useWalletContext,
   useWallet,
   useSwitchChain,
+  WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Container, ModalHeader } from "../../../components/basic";
 import { SmartWalletConfig } from "./types";
 import { Text } from "../../../components/text";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 
 export const gnosisAddressPrefixToChainId = {
   eth: 1,
@@ -32,6 +32,7 @@ export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
   onConnect: () => void;
   smartWallet: SmartWalletConfig;
+  personalWallet: WalletConfig;
 }> = (props) => {
   const activeWallet = useWallet(); // personal wallet
 
@@ -46,12 +47,12 @@ export const SmartWalletConnecting: React.FC<{
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
 
   const connectionStatus = useConnectionStatus();
-  const requiresConfirmation = !useIsHeadlessWallet();
 
   const { onConnect } = props;
   const connectStarted = useRef(false);
 
   const switchChain = useSwitchChain();
+  const modalSize = useContext(ModalConfigCtx).modalSize;
 
   const handleConnect = useCallback(async () => {
     if (!activeWallet || !connectedChain || connectStarted.current) {
@@ -110,31 +111,33 @@ export const SmartWalletConnecting: React.FC<{
   }
 
   return (
-    <Container
-      fullHeight
-      animate="fadein"
-      flex="column"
-      style={{
-        minHeight: "350px",
-      }}
-    >
+    <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
         <ModalHeader
-          title="Smart Wallet"
-          imgSrc={props.smartWallet.meta.iconURL}
+          title={props.personalWallet.meta.name}
+          imgSrc={props.personalWallet.meta.iconURL}
           onBack={props.onBack}
         />
       </Container>
 
+      {modalSize === "compact" && <Spacer y="lg" />}
+
       <Container expand flex="column" center="both" p="lg">
-        <div>
-          <Text size="lg" color="primaryText" center weight={500}>
-            Network Mismatch
-          </Text>
+        <Container p={modalSize === "wide" ? "lg" : undefined}>
+          <Container flex="row" center="x" color="danger">
+            <ExclamationTriangleIcon width={iconSize.lg} height={iconSize.lg} />
+          </Container>
+
           <Spacer y="md" />
+
+          <Text size="lg" color="primaryText" center weight={500}>
+            Wrong Network
+          </Text>
+
+          <Spacer y="lg" />
+
           <Text multiline center>
-            Your wallet is not connected to the required network. Switch to
-            required network to continue
+            Your wallet is not connected to the required network
           </Text>
 
           <Spacer y="xl" />
@@ -167,35 +170,31 @@ export const SmartWalletConnecting: React.FC<{
             >
               {" "}
               {switchingNetwork ? "Switching" : "Switch Network"}
-              {switchingNetwork && <Spinner size="sm" color="primaryText" />}
+              {switchingNetwork && (
+                <Spinner size="sm" color="accentButtonText" />
+              )}
             </Button>
 
-            {switchingNetwork && requiresConfirmation && (
-              <Text color="accentText" size="sm" center>
-                Confirm in your wallet
-              </Text>
-            )}
-
-            {switchError && (
-              <ErrorMessage
-                style={{
-                  display: "flex",
-                  gap: spacing.sm,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  fontSize: fontSize.sm,
-                }}
-              >
-                <ExclamationTriangleIcon
-                  width={iconSize.sm}
-                  height={iconSize.sm}
-                />
-                <span>Failed to switch network.</span>
-              </ErrorMessage>
-            )}
+            <Container
+              flex="row"
+              gap="sm"
+              center="both"
+              color="danger"
+              style={{
+                textAlign: "center",
+                fontSize: fontSize.sm,
+                opacity: switchError ? 1 : 0,
+                transition: "opacity 200ms ease",
+              }}
+            >
+              <ExclamationTriangleIcon
+                width={iconSize.sm}
+                height={iconSize.sm}
+              />
+              <span>Failed to switch network</span>
+            </Container>
           </Container>
-        </div>
+        </Container>
       </Container>
     </Container>
   );

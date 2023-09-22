@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ErrorMessage, Input } from "../../components/formElements";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { Button } from "../../components/buttons";
+import { Text } from "../../components/text";
+import { Input } from "../../components/formElements";
 
 export function InputSelectionUI(props: {
   onSelect: (data: string) => void;
@@ -68,7 +69,9 @@ export function InputSelectionUI(props: {
       {showError && error && (
         <>
           <Spacer y="xs" />
-          <ErrorMessage>{error}</ErrorMessage>
+          <Text color="danger" size="sm">
+            {error}
+          </Text>
         </>
       )}
 
@@ -78,7 +81,9 @@ export function InputSelectionUI(props: {
         showError && (
           <>
             <Spacer y="xs" />
-            <ErrorMessage>{props.emptyErrorMessage}</ErrorMessage>
+            <Text color="danger" size="sm">
+              {props.emptyErrorMessage}
+            </Text>
           </>
         )}
 

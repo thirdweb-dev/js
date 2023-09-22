@@ -24,7 +24,8 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");
-  const { createWalletInstance, setConnectedWallet } = useWalletContext();
+  const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
+    useWalletContext();
 
   const [wallet, setWallet] = useState<PaperWallet | null>(null);
 
@@ -61,7 +62,6 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
       setSentEmailInfo({ isNewDevice, isNewUser });
     } catch (e) {
-      debugger;
       console.error(e);
       setVerifyStatus("idle");
       setSentEmailInfo("error");
@@ -89,6 +89,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
     try {
       setVerifyStatus("verifying");
+      setConnectionStatus("connecting");
       await wallet.connect({
         email,
         otp: otpInput,

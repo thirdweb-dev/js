@@ -6,7 +6,6 @@ import {
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
-import { ModalDescription } from "../../../components/modalElements";
 import { iconSize, radius, spacing } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
@@ -87,7 +86,15 @@ export const GetStartedScreen: React.FC<{
             {header || <ModalHeader onBack={handleBack} title={walletName} />}
             <Spacer y="xl" />
 
-            <Container expand animate="fadein" flex="column" center="y">
+            <Container
+              expand
+              animate="fadein"
+              flex="column"
+              center="y"
+              style={{
+                minHeight: "250px",
+              }}
+            >
               <Container flex="column" gap="xs">
                 {/* Chrome Extension  */}
                 {chromeExtensionLink && (
@@ -195,12 +202,15 @@ const InstallScanScreen: React.FC<{
             />
           }
         />
-        <Spacer y="lg" />
 
-        <ModalDescription sm>
-          Scan QR with your phone to download <br /> {props.walletName} from{" "}
+        <Spacer y="xl" />
+
+        <Text multiline center>
+          Scan with your phone to download <br /> {props.walletName} from{" "}
           {props.platform}
-        </ModalDescription>
+        </Text>
+
+        <Spacer y="xs" />
       </Container>
     </Container>
   );
@@ -217,6 +227,7 @@ export const ButtonLink = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   box-sizing: border-box;
   width: 100%;
+  font-weight: 500;
   color: ${(p) => p.theme.colors.secondaryButtonText};
   background: ${(p) => p.theme.colors.secondaryButtonBg};
   transition: 100ms ease;
