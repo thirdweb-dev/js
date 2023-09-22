@@ -38,6 +38,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   >(null);
 
   const recoveryCodeRequired = !!(
+    props.recoveryShareManagement !== "AWS_MANAGED" &&
     sentEmailInfo &&
     sentEmailInfo !== "error" &&
     sentEmailInfo.isNewDevice &&
@@ -58,8 +59,6 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
         await _paperSDK.auth.sendPaperEmailLoginOtp({
           email: email,
         });
-
-      console.log({ isNewDevice, isNewUser });
 
       setSentEmailInfo({ isNewDevice, isNewUser });
     } catch (e) {
