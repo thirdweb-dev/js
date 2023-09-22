@@ -40,10 +40,12 @@ export const SmartConnectUI = (
   const PersonalWalletConfig = props.personalWallet;
 
   if (!activeWallet) {
-    const _props = {
+    const _props: ConnectUIProps = {
       ...props,
       walletConfig: PersonalWalletConfig,
-      close: () => props.close(false),
+      connected: () => {
+        console.log("connected to personal wallet");
+      },
     };
 
     if (PersonalWalletConfig.connectUI) {
@@ -56,7 +58,7 @@ export const SmartConnectUI = (
   return (
     <SmartWalletConnecting
       onBack={props.goBack}
-      onConnect={props.close}
+      onConnect={props.connected}
       smartWallet={walletConfig}
       personalWallet={props.personalWallet}
     />

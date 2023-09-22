@@ -175,11 +175,12 @@ export const SmartWalletFlow = ({
       <LocalWalletFlow
         modalSize="compact"
         theme={colorScheme || "dark"}
-        close={onClose}
+        connected={onClose}
         goBack={onLocalWalletBackPress}
         onConnected={onConnectedLocalWallet}
         isOpen={false}
-        open={() => {}}
+        hide={() => {}}
+        show={() => {}}
         walletConfig={localWallet()}
         selectionData={undefined} // TODO
         setSelectionData={() => {}} // TODO

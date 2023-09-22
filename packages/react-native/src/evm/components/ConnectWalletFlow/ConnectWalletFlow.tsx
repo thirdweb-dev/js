@@ -110,9 +110,10 @@ export const ConnectWalletFlow = () => {
           modalSize="compact"
           theme={theme || "dark"}
           goBack={onBackPress}
-          close={handleClose}
+          connected={handleClose}
           isOpen={modalVisible}
-          open={onOpenModal}
+          show={onOpenModal}
+          hide={() => {}}
           walletConfig={activeWallet}
           supportedWallets={supportedWallets}
           selectionData={selectionData}

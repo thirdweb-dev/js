@@ -9,7 +9,7 @@ import { wait } from "../../../utils/wait";
 
 export const CoinbaseConnectUI = ({
   walletConfig,
-  close,
+  connected,
   goBack,
   supportedWallets,
 }: ConnectUIProps<CoinbaseWallet>) => {
@@ -29,12 +29,12 @@ export const CoinbaseConnectUI = ({
       await wait(1000);
       setScreen("connecting");
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [close, connect, walletConfig]);
+  }, [connected, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {

@@ -81,7 +81,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
       setConnectedWallet(wallet);
       setVerifyStatus("valid");
-      props.close();
+      props.connected();
     } catch (e) {
       setVerifyStatus("invalid");
       console.error(e);

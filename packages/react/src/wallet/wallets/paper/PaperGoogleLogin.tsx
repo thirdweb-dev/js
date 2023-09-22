@@ -17,7 +17,7 @@ import { iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
-  const { goBack, modalSize } = props;
+  const { goBack, modalSize, connected } = props;
 
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -43,20 +43,18 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
         },
       });
       setConnectedWallet(paperWallet);
-      props.close();
+      props.connected();
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error(e);
     }
   };
 
-  const closeModal = props.close;
-
   useEffect(() => {
     if (connectionStatus === "connected") {
-      closeModal();
+      connected();
     }
-  }, [connectionStatus, closeModal]);
+  }, [connectionStatus, connected]);
 
   return (
     <Container animate="fadein" flex="column" fullHeight>

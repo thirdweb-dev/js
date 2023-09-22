@@ -63,7 +63,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   );
   const connect = useConnect();
   const connectPrompted = useRef(false);
-  const { walletConfig, close, goBack } = props;
+  const { walletConfig, connected, goBack } = props;
   const downloadLink = "https://frame.sh";
   const supportLink = "https://docs.frame.sh";
   const hideBackButton = props.supportedWallets.length === 1;
@@ -81,7 +81,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
           connectPrompted.current = true;
           setScreen("connecting");
           await connect(walletConfig);
-          close();
+          connected();
         } catch (e) {
           setScreen("connect-failed");
         }
@@ -92,7 +92,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         openWindow(downloadLink);
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [walletConfig, connect, goBack, connected]);
 
   if (screen === "connecting") {
     return (

@@ -4,6 +4,8 @@ import {
   WalletConfig,
   useConnectionStatus,
   useDisconnect,
+  useThirdwebAuthContext,
+  useUser,
   useWallet,
   useWallets,
 } from "@thirdweb-dev/react-core";
@@ -22,11 +24,13 @@ import { ScreenContext, useScreen } from "./screen";
 import { StartScreen } from "../screens/StartScreen";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
 import { Theme } from "../../../design-system";
+import { SignatureScreen } from "../SignatureScreen";
 
 export const ConnectModalContent = (props: {
   screen: string | WalletConfig;
   initialScreen: string | WalletConfig;
   setScreen: (screen: string | WalletConfig) => void;
+  setHideModal: (hide: boolean) => void;
 }) => {
   const { screen, setScreen, initialScreen } = props;
 
@@ -45,24 +49,34 @@ export const ConnectModalContent = (props: {
   const modalSize = modalConfig.modalSize;
   const isWideModal = modalSize === "wide";
 
-  const handleClose = useCallback(
-    (reset = true) => {
-      if (reset) {
-        setScreen(initialScreen);
-      }
-      if (connectionStatus === "connecting") {
-        disconnect();
-      }
-      setIsWalletModalOpen(false);
-    },
-    [
-      connectionStatus,
-      setIsWalletModalOpen,
-      setScreen,
-      initialScreen,
-      disconnect,
-    ],
-  );
+  const { user } = useUser();
+  const authConfig = useThirdwebAuthContext();
+
+  const closeModal = () => {
+    setScreen(initialScreen);
+    setIsWalletModalOpen(false);
+  };
+
+  const handleConnected = useCallback(() => {
+    const requiresSignIn = modalConfig.auth?.loginOptional
+      ? false
+      : !!authConfig?.authUrl && !user?.address;
+
+    if (requiresSignIn) {
+      setScreen(reservedScreens.signIn);
+      return;
+    }
+
+    setScreen(initialScreen);
+    setIsWalletModalOpen(false);
+  }, [
+    modalConfig.auth?.loginOptional,
+    authConfig?.authUrl,
+    user?.address,
+    setIsWalletModalOpen,
+    setScreen,
+    initialScreen,
+  ]);
 
   const handleBack = useCallback(() => {
     setScreen(initialScreen);
@@ -92,10 +106,13 @@ export const ConnectModalContent = (props: {
         supportedWallets={walletConfigs}
         theme={typeof theme === "string" ? theme : theme.type}
         goBack={handleBack}
-        close={handleClose}
+        connected={handleConnected}
         isOpen={isWalletModalOpen}
-        open={() => {
-          setIsWalletModalOpen(true);
+        show={() => {
+          props.setHideModal(false);
+        }}
+        hide={() => {
+          props.setHideModal(true);
         }}
         walletConfig={walletConfig}
         modalSize={modalConfig.modalSize}
@@ -122,6 +139,9 @@ export const ConnectModalContent = (props: {
         >
           <LeftContainer> {walletList} </LeftContainer>
           <Container flex="column" scrollY relative>
+            {screen === reservedScreens.signIn && (
+              <SignatureScreen onDone={closeModal} />
+            )}
             {screen === reservedScreens.main && <>{getStarted}</>}
             {screen === reservedScreens.getStarted && getStarted}
             {typeof screen !== "string" && getWalletUI(screen)}
@@ -136,6 +156,9 @@ export const ConnectModalContent = (props: {
             maxHeight: compactmodalMaxHeight,
           }}
         >
+          {screen === reservedScreens.signIn && (
+            <SignatureScreen onDone={closeModal} />
+          )}
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}
           {typeof screen !== "string" && getWalletUI(screen)}
@@ -146,10 +169,14 @@ export const ConnectModalContent = (props: {
 };
 
 export const ConnectModal = () => {
-  const { theme, modalSize } = useContext(ModalConfigCtx);
+  const { theme, modalSize, auth } = useContext(ModalConfigCtx);
+  const authConfig = useThirdwebAuthContext();
+  const { user } = useUser();
+
   const { screen, setScreen, initialScreen } = useScreen();
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
+  const [hideModal, setHideModal] = useState(false);
   const connectionStatus = useConnectionStatus();
 
   const [prevConnectionStatus, setPrevConnectionStatus] =
@@ -186,17 +213,28 @@ export const ConnectModal = () => {
     prevConnectionStatus,
   ]);
 
+  useEffect(() => {
+    if (!isWalletModalOpen) {
+      setHideModal(false);
+    }
+  }, [isWalletModalOpen]);
+
   return (
     <CustomThemeProvider theme={theme}>
       <Modal
+        hide={hideModal}
         size={modalSize}
         open={isWalletModalOpen}
         setOpen={(value) => {
+          const requiresSignIn = auth?.loginOptional
+            ? false
+            : !!authConfig?.authUrl && !user?.address;
+
           setIsWalletModalOpen(value);
           if (!value) {
             setScreen(initialScreen); // reset screen
           }
-          if (connectionStatus === "connecting") {
+          if (connectionStatus === "connecting" || requiresSignIn) {
             disconnect();
           }
         }}
@@ -205,6 +243,7 @@ export const ConnectModal = () => {
           initialScreen={initialScreen}
           screen={screen}
           setScreen={setScreen}
+          setHideModal={setHideModal}
         />
       </Modal>
     </CustomThemeProvider>

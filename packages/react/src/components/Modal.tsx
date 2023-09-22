@@ -29,6 +29,7 @@ export const Modal: React.FC<{
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
   size: "wide" | "compact";
+  hide?: boolean;
 }> = (props) => {
   return (
     <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
@@ -40,18 +41,26 @@ export const Modal: React.FC<{
       {/* Dialog */}
       <Dialog.Portal>
         {/* Overlay */}
-        <Dialog.Overlay asChild>
-          <Overlay />
-        </Dialog.Overlay>
+        {!props.hide && (
+          <Dialog.Overlay asChild>
+            <Overlay />
+          </Dialog.Overlay>
+        )}
+
         <Dialog.Content asChild>
           <DialogContent
-            style={{
-              height: props.size === "compact" ? "auto" : widemodalMaxHeight,
-              maxWidth:
-                props.size === "compact"
-                  ? modalMaxWidthCompact
-                  : modalMaxWidthWide,
-            }}
+            style={
+              props.hide
+                ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
+                : {
+                    height:
+                      props.size === "compact" ? "auto" : widemodalMaxHeight,
+                    maxWidth:
+                      props.size === "compact"
+                        ? modalMaxWidthCompact
+                        : modalMaxWidthWide,
+                  }
+            }
           >
             {props.size === "compact" ? (
               <DynamicHeight maxHeight={compactmodalMaxHeight}>

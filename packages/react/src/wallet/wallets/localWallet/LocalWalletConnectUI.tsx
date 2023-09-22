@@ -20,7 +20,7 @@ export const LocalWalletConnectUI = (
         persist={props.persist}
         localWallet={props.walletConfig}
         goBack={props.goBack}
-        onConnect={props.close}
+        onConnect={props.connected}
       />
     );
   }
@@ -45,7 +45,7 @@ export const LocalWalletConnectUI = (
         modalSize={props.modalSize}
         renderBackButton={props.supportedWallets.length > 1}
         supportedWallets={props.supportedWallets}
-        onConnect={props.close}
+        onConnect={props.connected}
         goBack={props.goBack}
         localWallet={props.walletConfig}
         persist={props.persist}
@@ -57,7 +57,7 @@ export const LocalWalletConnectUI = (
     <CreateLocalWallet_Password
       goBack={props.goBack}
       localWalletConf={props.walletConfig}
-      onConnect={props.close}
+      onConnect={props.connected}
       renderBackButton={props.supportedWallets.length > 1}
       persist={props.persist}
     />

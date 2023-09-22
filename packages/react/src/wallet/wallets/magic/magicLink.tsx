@@ -260,10 +260,18 @@ function useConnectMagic() {
       walletConfig: WalletConfig<MagicLink>;
       singleWallet: boolean;
       type: "auth" | "connect";
-      open: () => void;
-      close: () => void;
+      show: () => void;
+      connected: () => void;
+      hide: () => void;
     }) => {
-      const { selectionData, walletConfig, singleWallet } = data;
+      const {
+        selectionData,
+        walletConfig,
+        singleWallet,
+        connected,
+        show,
+        hide,
+      } = data;
 
       if (typeof selectionData === "object") {
         try {
@@ -272,10 +280,10 @@ function useConnectMagic() {
               oauthProvider: selectionData.provider,
             });
           })();
-          data.close();
+          connected();
         } catch {
           if (!singleWallet) {
-            data.open();
+            show();
           }
         }
 
@@ -287,7 +295,7 @@ function useConnectMagic() {
         : false;
 
       (async () => {
-        data.close();
+        hide();
         try {
           await connect(
             walletConfig,
@@ -297,9 +305,10 @@ function useConnectMagic() {
               ? { email: selectionData }
               : { phoneNumber: selectionData },
           );
+          connected();
         } catch (e) {
           if (!singleWallet) {
-            data.open();
+            show();
           }
           console.error(e);
         }
@@ -313,7 +322,15 @@ function useConnectMagic() {
 
 const MagicConnectionUICompact: React.FC<
   ConnectUIProps<MagicLink> & { type: "auth" | "connect" }
-> = ({ close, walletConfig, open, selectionData, supportedWallets, type }) => {
+> = ({
+  connected,
+  walletConfig,
+  show,
+  selectionData,
+  supportedWallets,
+  type,
+  hide,
+}) => {
   const connectPrompted = useRef(false);
   const singleWallet = supportedWallets.length === 1;
   const connectMagic = useConnectMagic();
@@ -329,17 +346,19 @@ const MagicConnectionUICompact: React.FC<
       singleWallet,
       type,
       walletConfig,
-      open,
-      close,
+      show,
+      connected,
+      hide,
     });
   }, [
-    close,
     connectMagic,
-    open,
+    connected,
     selectionData,
+    show,
     singleWallet,
     type,
     walletConfig,
+    hide,
   ]);
 
   return (
@@ -374,11 +393,12 @@ const MagicConnectionUIWide: React.FC<
           onSelect={(data) => {
             connectMagic({
               selectionData: data,
-              close: props.close,
-              open: props.open,
+              connected: props.connected,
+              show: props.show,
               singleWallet: props.supportedWallets.length === 1,
               type: props.type,
               walletConfig: props.walletConfig,
+              hide: props.hide,
             });
           }}
           showOrSeparator={false}

@@ -43,14 +43,14 @@ export const EmbeddedWalletGoogleLogin = (
       });
 
       setConnectedWallet(embeddedWallet);
-      props.close();
+      props.connected();
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error("Error logging into google", e);
     }
   };
 
-  const closeModal = props.close;
+  const closeModal = props.connected;
 
   useEffect(() => {
     if (connectionStatus === "connected") {

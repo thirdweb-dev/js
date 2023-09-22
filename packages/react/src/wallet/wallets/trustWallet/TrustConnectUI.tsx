@@ -12,7 +12,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const { walletConfig, close } = props;
+  const { walletConfig, connected } = props;
   const connect = useConnect();
   const hideBackButton = props.supportedWallets.length === 1;
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -23,12 +23,12 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
       connectPrompted.current = true;
       setScreen("connecting");
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [close, connect, walletConfig]);
+  }, [connected, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
