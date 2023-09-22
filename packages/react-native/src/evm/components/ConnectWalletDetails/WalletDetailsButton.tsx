@@ -1,21 +1,39 @@
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
-import { ChainIcon } from "../base/ChainIcon";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet, useChain } from "@thirdweb-dev/react-core";
-import { StyleSheet, View } from "react-native";
+import { useWallet } from "@thirdweb-dev/react-core";
+import { StyleSheet } from "react-native";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import Box from "../base/Box";
 import { ConnectWalletDetailsModal } from "./ConnectWalletDetailsModal";
 import { useState } from "react";
 import { TextBalance } from "../base/TextBalance";
+import { SupportedTokens } from "../SendFunds/defaultTokens";
 
 export type ConnectWalletDetailsProps = {
   address?: string;
   detailsButton?: React.FC<{ onPress: () => void }>;
   extraRows?: React.FC;
   hideTestnetFaucet?: boolean;
+  /**
+   * Override the default supported tokens for each network
+   *
+   * These tokens will be displayed in "Send Funds" Modal
+   */
+  supportedTokens: SupportedTokens;
+
+  /**
+   * Show balance of ERC20 token instead of the native token  in the "Connected" button when connected to certain network
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet balanceToken={{
+   *  1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
+   * }} />
+   * ```
+   */
+  displayBalanceToken?: Record<number, string>;
 };
 
 export const WalletDetailsButton = ({
@@ -23,9 +41,10 @@ export const WalletDetailsButton = ({
   detailsButton,
   extraRows,
   hideTestnetFaucet,
+  supportedTokens,
+  displayBalanceToken,
 }: ConnectWalletDetailsProps) => {
   const activeWallet = useWallet();
-  const chain = useChain();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onPress = () => {
@@ -49,6 +68,8 @@ export const WalletDetailsButton = ({
         extraRows={extraRows}
         address={address}
         hideTestnetFaucet={hideTestnetFaucet}
+        supportedTokens={supportedTokens}
+        displayBalanceToken={displayBalanceToken}
       />
       {detailsButton ? (
         detailsButton({ onPress })
@@ -59,28 +80,25 @@ export const WalletDetailsButton = ({
           style={styles.walletDetails}
           onPress={onPress}
         >
-          <Box flex={1} flexDirection="row" justifyContent="space-between">
-            <View>
-              <ChainIcon size={32} chainIconUrl={chain?.icon?.url} />
-            </View>
-            <Box justifyContent="center" alignItems="flex-start">
-              <TextBalance textVariant="bodySmall" />
+          <Box flex={1} flexDirection="row" justifyContent="flex-start">
+            <WalletIcon
+              size={32}
+              iconUri={activeWallet?.getMeta().iconURL || ""}
+            />
+            <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
-                <Text variant="error">Guest</Text>
+                <Text variant="bodySmall" color="red">
+                  Guest
+                </Text>
               ) : (
                 <AddressDisplay
-                  variant="bodySmallSecondary"
+                  variant="bodySmall"
                   extraShort={false}
                   address={address}
                 />
               )}
+              <TextBalance textVariant="bodySmallSecondary" />
             </Box>
-            <View>
-              <WalletIcon
-                size={32}
-                iconUri={activeWallet?.getMeta().iconURL || ""}
-              />
-            </View>
           </Box>
         </BaseButton>
       )}

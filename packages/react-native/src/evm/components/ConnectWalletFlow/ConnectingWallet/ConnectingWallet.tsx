@@ -30,7 +30,7 @@ export function ConnectingWallet({
         subHeaderText={subHeaderText}
         onClose={onClose}
       />
-      <WalletLoadingThumbnail imageSize={80}>
+      <WalletLoadingThumbnail imageSize={100}>
         <ImageSvgUri height={80} width={80} imageUrl={wallet.meta.iconURL} />
       </WalletLoadingThumbnail>
       <View style={styles.connectingContainer}>
