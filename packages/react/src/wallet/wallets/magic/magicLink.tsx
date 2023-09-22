@@ -149,7 +149,13 @@ const MagicUI: React.FC<{
     props.modalSize === "compact" ? iconSize.md : iconSize.lg;
 
   return (
-    <Container flex="column" gap={props.modalSize === "compact" ? "lg" : "xl"}>
+    <Container
+      flex="column"
+      gap={props.modalSize === "compact" ? "lg" : "xl"}
+      style={{
+        width: "100%",
+      }}
+    >
       {props.oauthProviders && (
         <>
           {props.oauthProviders.length >= 3 ? (
@@ -344,7 +350,7 @@ const MagicConnectionUICompact: React.FC<
         minHeight: "250px",
       }}
     >
-      <Spinner size="md" color="primaryText" />
+      <Spinner size="md" color="accentText" />
     </Container>
   );
 };
@@ -362,7 +368,7 @@ const MagicConnectionUIWide: React.FC<
   return (
     <Container p="lg" fullHeight flex="column">
       <ModalHeader onBack={props.goBack} title="Sign in" />
-      <Container expand flex="row" center="both" p="lg">
+      <Container expand flex="column" center="both" p="md">
         <MagicUI
           {...props}
           onSelect={(data) => {

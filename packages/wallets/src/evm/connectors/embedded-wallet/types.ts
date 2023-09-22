@@ -14,9 +14,21 @@ export interface EmbeddedWalletConnectorOptions {
   styles?: EmbeddedWalletConstructorType["styles"];
 }
 
-export interface EmbeddedWalletConnectionArgs {
-  email?: string;
-  otp?: string;
-  recoveryCode?: string;
-  googleLogin?: true;
-}
+export type EmbeddedWalletConnectionArgs = {
+  chainId?: number;
+} & (
+  | {
+      loginType: "headless_google_oauth";
+      openedWindow?: Window;
+      closeOpenedWindow?: (window: Window) => void;
+    }
+  | {
+      loginType: "headless_email_otp_verification";
+      email: string;
+      otp: string;
+    }
+  | {
+      loginType: "ui_email_otp";
+      email: string;
+    }
+);

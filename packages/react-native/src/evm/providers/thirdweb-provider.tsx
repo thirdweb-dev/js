@@ -72,8 +72,15 @@ export const ThirdwebProvider = <
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const colorScheme = useColorScheme();
+
+  const coinbaseWalletObj = supportedWallets.find(
+    (w) => w.id === walletIds.coinbase,
+  );
   useCoinbaseWalletListener(
-    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+    !!coinbaseWalletObj,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    coinbaseWalletObj?.config?.callbackURL,
   );
 
   const hasMagicConfig = useMemo(

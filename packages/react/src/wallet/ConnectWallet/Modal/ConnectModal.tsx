@@ -13,7 +13,7 @@ import {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,
 } from "../../../evm/providers/wallet-ui-states-provider";
-import { useCallback, useEffect, useContext } from "react";
+import { useCallback, useEffect, useContext, useState } from "react";
 import { reservedScreens, compactmodalMaxHeight } from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
@@ -151,6 +151,13 @@ export const ConnectModal = () => {
   const isWalletModalOpen = useIsWalletModalOpen();
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const connectionStatus = useConnectionStatus();
+
+  const [prevConnectionStatus, setPrevConnectionStatus] =
+    useState(connectionStatus);
+  useEffect(() => {
+    setPrevConnectionStatus(connectionStatus);
+  }, [connectionStatus]);
+
   const disconnect = useDisconnect();
 
   const wallet = useWallet();
@@ -165,7 +172,8 @@ export const ConnectModal = () => {
       !isWrapperConnected &&
       isWrapperScreen &&
       !isWalletModalOpen &&
-      connectionStatus === "connected"
+      connectionStatus === "connected" &&
+      prevConnectionStatus === "connecting"
     ) {
       setIsWalletModalOpen(true);
     }
@@ -175,6 +183,7 @@ export const ConnectModal = () => {
     setIsWalletModalOpen,
     isWrapperScreen,
     isWrapperConnected,
+    prevConnectionStatus,
   ]);
 
   return (
