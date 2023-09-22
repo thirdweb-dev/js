@@ -38,59 +38,6 @@ export const COMMUNITY: FooterLinkInfo[] = [
     name: "thirdweb learn",
     label: "thirdweb-learn",
   },
-];
-
-export const RESOURCES: FooterLinkInfo[] = [
-  {
-    label: "pricing",
-    name: "Pricing",
-    link: "/pricing",
-  },
-  {
-    name: "Upcoming Events",
-    label: "events",
-    link: "/events",
-  },
-  {
-    name: "Contact us",
-    label: "sales-form",
-    link: "/contact-us",
-  },
-  {
-    name: "Docs",
-    link: "https://portal.thirdweb.com",
-    label: "portal",
-  },
-  {
-    name: "Templates",
-    link: "/templates",
-    label: "templates",
-  },
-  {
-    name: "Open Source",
-    link: "/open-source",
-    label: "open-source",
-  },
-  {
-    name: "Guides",
-    label: "guides",
-    link: "https://blog.thirdweb.com/guides",
-  },
-  {
-    name: "Blog",
-    label: "blog",
-    link: "https://blog.thirdweb.com/",
-  },
-  {
-    name: "Careers",
-    label: "careers",
-    link: "https://careers.thirdweb.com/",
-  },
-  {
-    name: "Press Kit",
-    label: "press-kit",
-    link: "https://ipfs.io/ipfs/QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
-  },
   {
     name: "Report Abuse",
     label: "abuse",
@@ -123,22 +70,9 @@ export const SDKs: FooterLinkInfo[] = [
 
 export const NETWORKS: FooterLinkInfo[] = [
   {
-    name: "Solana",
-    label: "network-solana",
-    link: "/network/solana",
-  },
-  {
     name: "Chainlist",
     label: "chains",
     link: "/chains",
-  },
-];
-
-export const FAUCETS: FooterLinkInfo[] = [
-  {
-    name: "Solana",
-    label: "faucet-solana",
-    link: "/faucet/solana",
   },
 ];
 
@@ -152,6 +86,21 @@ export const COMPANY: FooterLinkInfo[] = [
     label: "blog",
     name: "Blog",
     link: "https://blog.thirdweb.com",
+  },
+  {
+    label: "pricing",
+    name: "Pricing",
+    link: "/pricing",
+  },
+  {
+    name: "Careers",
+    label: "careers",
+    link: "https://careers.thirdweb.com/",
+  },
+  {
+    name: "Press Kit",
+    label: "press-kit",
+    link: "https://ipfs.io/ipfs/QmTWMy6Dw1PDyMxHxNcmDmPE8zqFCQMfD6m2feHVY89zgu/",
   },
   {
     name: "Privacy Policy",
