@@ -9,7 +9,12 @@ import { TokenInfo, SupportedTokens } from "./defaultTokens";
 import { utils } from "ethers";
 import Box from "../base/Box";
 import { ModalHeaderTextClose } from "../base/modal/ModalHeaderTextClose";
-import { ActivityIndicator, Dimensions, TextInput } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  ScrollView,
+  TextInput,
+} from "react-native";
 import { useAppTheme } from "../../styles/hooks";
 import { SelectTokenButton } from "./SelectTokenButton";
 import CloseIcon from "../../assets/close";
@@ -70,7 +75,7 @@ function useNativeToken(): TokenInfo | undefined {
   }
 }
 
-const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
 export function TokenSelector(props: {
   onTokenSelect: (token?: TokenInfo) => void;
@@ -151,20 +156,21 @@ export function TokenSelector(props: {
       {filteredList.length > 0 && (
         <Box
           flexDirection="column"
-          gap="xs"
-          paddingBottom="lg"
           paddingTop="none"
-          maxHeight={400}
+          paddingBottom="sm"
+          maxHeight={MODAL_HEIGHT - 150}
         >
-          {filteredList.map((token) => {
-            return (
-              <SelectTokenButton
-                onPress={() => props.onTokenSelect(token)}
-                token={token}
-                key={token.address}
-              />
-            );
-          })}
+          <ScrollView>
+            {filteredList.map((token) => {
+              return (
+                <SelectTokenButton
+                  onPress={() => props.onTokenSelect(token)}
+                  token={token}
+                  key={token.address}
+                />
+              );
+            })}
+          </ScrollView>
         </Box>
       )}
 

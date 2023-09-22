@@ -12,7 +12,12 @@ export function SelectTokenButton(props: {
   const tokenName = props.token?.name || balanceQuery.data?.name;
 
   return (
-    <BaseButton flexDirection="row" alignItems="center" onPress={props.onPress}>
+    <BaseButton
+      flexDirection="row"
+      alignItems="center"
+      onPress={props.onPress}
+      mb="xs"
+    >
       {props.token?.icon ? (
         <ImageSvgUri width={32} height={32} imageUrl={props.token.icon} />
       ) : (
