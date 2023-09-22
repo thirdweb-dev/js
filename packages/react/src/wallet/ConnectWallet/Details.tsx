@@ -5,7 +5,7 @@ import { Modal } from "../../components/Modal";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
 import { ToolTip } from "../../components/Tooltip";
-import { IconButton } from "../../components/buttons";
+import { Button, IconButton } from "../../components/buttons";
 import {
   fontSize,
   iconSize,
@@ -24,8 +24,10 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   ChevronRightIcon,
   EnterIcon,
+  PaperPlaneIcon,
   PinBottomIcon,
   ShuffleIcon,
+  TextAlignLeftIcon,
 } from "@radix-ui/react-icons";
 import { Localhost } from "@thirdweb-dev/chains";
 import {
@@ -44,12 +46,16 @@ import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
-import { ErrorMessage } from "../../components/formElements";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "../wallets/localWallet/types";
 import { fadeInAnimation } from "../../design-system/animations";
-import { Text } from "../../components/text";
+import { Link, Text } from "../../components/text";
+import { SendFunds } from "./SendFunds";
+import { SupportedTokens } from "./defaultTokens";
+import { ReceiveFunds } from "./ReceiveFunds";
+import { useENS } from "../hooks/useENS";
+import { smartWalletIcon } from "./icons/dataUris";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -67,25 +73,41 @@ export const ConnectedWalletDetails: React.FC<{
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
   theme: "light" | "dark" | Theme;
+  supportedTokens: SupportedTokens;
+  displayBalanceToken?: Record<number, string>;
 }> = (props) => {
+  const chain = useChain();
+  const walletChainId = useChainId();
+
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
-  const walletChainId = useChainId();
   const address = useAddress();
-  const balanceQuery = useBalance();
+
+  const token =
+    walletChainId && props.displayBalanceToken
+      ? props.displayBalanceToken[walletChainId]
+      : undefined;
+
+  const balanceQuery = useBalance(token);
   const activeWallet = useWallet();
   const activeWalletConfig = useWalletConfig();
-  const [showExportModal, setShowExportModal] = useState(false);
+  const ensQuery = useENS();
+
   const [wrapperWallet, setWrapperWallet] = useState<
     WalletInstance | undefined
   >();
   const walletContext = useWalletContext();
 
-  const chain = useChain();
-  const activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
+  let activeWalletIconURL = activeWalletConfig?.meta.iconURL || "";
 
+  // modals
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showSendModal, setShowSendModal] = useState(false);
+  const [showReceiveModal, setShowReceiveModal] = useState(false);
+
+  // dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const sdk = useSDK();
 
@@ -100,6 +122,20 @@ export const ConnectedWalletDetails: React.FC<{
 
   const disableSwitchChain = !!personalWallet;
 
+  const isActuallyMetaMask =
+    activeWallet && activeWallet instanceof MetaMaskWallet;
+
+  const shortAddress = address ? shortenString(address) : "";
+
+  const isSmartWallet = activeWallet?.walletId === walletIds.smartWallet;
+
+  if (isSmartWallet) {
+    activeWalletIconURL = smartWalletIcon;
+  }
+
+  const addressOrENS = ensQuery.data?.ens || shortAddress;
+  const avatarUrl = ensQuery.data?.avatarUrl;
+
   const trigger = props.detailsBtn ? (
     <div>
       <props.detailsBtn />
@@ -111,56 +147,55 @@ export const ConnectedWalletDetails: React.FC<{
       style={props.style}
       data-test="connected-wallet-details"
     >
-      <ChainIcon
-        chain={chain}
-        size={iconSize.lg}
-        className={`${TW_CONNECTED_WALLET}__network-icon`}
+      <Img
+        width={iconSize.lg}
+        height={iconSize.lg}
+        src={avatarUrl || activeWalletIconURL}
+        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
+        style={{
+          borderRadius: radius.sm,
+        }}
       />
 
       <Container flex="column" gap="xs">
+        {/* Address */}
+        {activeWallet?.walletId === walletIds.localWallet ? (
+          <Text
+            color="danger"
+            size="xs"
+            style={{
+              minWidth: "70px",
+            }}
+          >
+            Guest
+          </Text>
+        ) : addressOrENS ? (
+          <Text
+            size="sm"
+            color="primaryText"
+            weight={500}
+            className={`${TW_CONNECTED_WALLET}__address`}
+          >
+            {addressOrENS}
+          </Text>
+        ) : (
+          <Skeleton height={fontSize.sm} width="88px" />
+        )}
+
+        {/* Balance */}
         {balanceQuery.data ? (
           <Text
             className={`${TW_CONNECTED_WALLET}__balance`}
-            size="sm"
-            color="primaryText"
+            size="xs"
             weight={500}
           >
             {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
             {balanceQuery.data.symbol}
           </Text>
         ) : (
-          <Skeleton height={fontSize.sm} width="82px" />
-        )}
-
-        {activeWallet?.walletId === walletIds.localWallet ? (
-          <ErrorMessage
-            style={{
-              lineHeight: 1,
-              minWidth: "70px",
-              fontSize: fontSize.xs,
-            }}
-          >
-            Guest
-          </ErrorMessage>
-        ) : address ? (
-          <Text
-            size="xs"
-            weight={500}
-            className={`${TW_CONNECTED_WALLET}__address`}
-          >
-            {shortenString(address || "")}
-          </Text>
-        ) : (
-          <Skeleton height={fontSize.xs} width="88px" />
+          <Skeleton height={fontSize.xs} width="82px" />
         )}
       </Container>
-
-      <Img
-        width={iconSize.lg}
-        height={iconSize.lg}
-        src={activeWalletIconURL}
-        className={`${TW_CONNECTED_WALLET}__wallet-icon`}
-      />
     </WalletInfoButton>
   );
 
@@ -174,7 +209,7 @@ export const ConnectedWalletDetails: React.FC<{
         type="button"
         disabled={disableSwitchChain}
         onClick={() => {
-          setOpen(false);
+          setIsDropdownOpen(false);
           setShowNetworkSelector(true);
         }}
       >
@@ -185,9 +220,11 @@ export const ConnectedWalletDetails: React.FC<{
             position: "relative",
           }}
         >
-          <ChainIcon chain={chain} size={iconSize.lg} active />
+          <ChainIcon chain={chain} size={iconSize.md} active />
         </div>
-        {chain?.name || `Unknown chain #${walletChainId}`}
+        <Text size="sm" color="primaryText" multiline>
+          {chain?.name || `Unknown chain #${walletChainId}`}
+        </Text>
         <StyledChevronRightIcon
           width={iconSize.sm}
           height={iconSize.sm}
@@ -203,12 +240,15 @@ export const ConnectedWalletDetails: React.FC<{
   const content = (
     <div>
       {/* Balance and Account Address */}
-      <Container flex="row" gap="md">
+      <Container flex="row" gap="sm">
         <Img
           width={iconSize.xl}
           height={iconSize.xl}
-          src={activeWalletIconURL}
+          src={avatarUrl || activeWalletIconURL}
           alt=""
+          style={{
+            borderRadius: radius.sm,
+          }}
         />
 
         <div
@@ -228,8 +268,7 @@ export const ConnectedWalletDetails: React.FC<{
               data-address={address}
             >
               <Text color="primaryText" weight={500}>
-                {" "}
-                {shortenString(address || "")}
+                {addressOrENS}
               </Text>
               <IconButton
                 style={{
@@ -278,6 +317,90 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="lg" />
 
+      {activeWallet &&
+        activeWallet.walletId === walletIds.smartWallet &&
+        chain &&
+        address && (
+          <>
+            <Link
+              color="secondaryText"
+              hoverColor="primaryText"
+              href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+              target="_blank"
+              size="sm"
+            >
+              <Container
+                flex="row"
+                gap="xs"
+                center="y"
+                style={{
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Container flex="row" gap="xs" center="y">
+                  <ActiveDot />
+                  Connected to Smart Wallet
+                </Container>
+                <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
+            </Link>
+            <Spacer y="md" />
+          </>
+        )}
+
+      {/* Send and Recive */}
+      <Container
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: spacing.sm,
+        }}
+      >
+        <Button
+          variant="outline"
+          style={{
+            fontSize: fontSize.sm,
+            display: "flex",
+            gap: spacing.xs,
+            alignItems: "center",
+            padding: spacing.sm,
+          }}
+          onClick={() => {
+            setShowSendModal(true);
+            setIsDropdownOpen(false);
+          }}
+        >
+          <PaperPlaneIcon
+            width={iconSize.sm}
+            height={iconSize.sm}
+            style={{
+              transform: "translateY(-10%) rotate(-45deg) ",
+            }}
+          />
+          Send
+        </Button>
+
+        <Button
+          variant="outline"
+          style={{
+            fontSize: fontSize.sm,
+            display: "flex",
+            gap: spacing.xs,
+            alignItems: "center",
+            padding: spacing.sm,
+          }}
+          onClick={() => {
+            setShowReceiveModal(true);
+            setIsDropdownOpen(false);
+          }}
+        >
+          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} /> Receive{" "}
+        </Button>
+      </Container>
+
+      <Spacer y="lg" />
+
       {/* Network Switcher */}
       <div>
         <DropdownLabel>Current Network</DropdownLabel>
@@ -302,7 +425,11 @@ export const ConnectedWalletDetails: React.FC<{
         {/* Switch to Wrapper Wallet */}
         {wrapperWalletConfig && wrapperWallet && (
           <WalletSwitcher
-            name={wrapperWalletConfig.meta.name}
+            name={
+              wrapperWallet.walletId === walletIds.smartWallet
+                ? "Smart Wallet"
+                : wrapperWalletConfig.meta.name
+            }
             wallet={wrapperWallet}
             onSwitch={() => {
               setWrapperWallet(undefined);
@@ -311,8 +438,8 @@ export const ConnectedWalletDetails: React.FC<{
         )}
 
         {/* Switch Account for Metamask */}
-        {activeWalletConfig &&
-          activeWalletConfig.id === walletIds.metamask &&
+        {isActuallyMetaMask &&
+          activeWalletConfig &&
           activeWalletConfig.isInstalled &&
           activeWalletConfig.isInstalled() &&
           !isMobile() && (
@@ -320,13 +447,15 @@ export const ConnectedWalletDetails: React.FC<{
               type="button"
               onClick={() => {
                 (activeWallet as MetaMaskWallet).switchAccount();
-                setOpen(false);
+                setIsDropdownOpen(false);
               }}
               style={{
                 fontSize: fontSize.sm,
               }}
             >
-              <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+              <Container color="secondaryText">
+                <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
               Switch Account
             </MenuButton>
           )}
@@ -342,7 +471,7 @@ export const ConnectedWalletDetails: React.FC<{
               onClick={async (e) => {
                 if (chain.chainId === Localhost.chainId) {
                   e.preventDefault();
-                  setOpen(false);
+                  setIsDropdownOpen(false);
                   await sdk?.wallet.requestFunds(10);
                   await balanceQuery.refetch();
                 }
@@ -360,13 +489,32 @@ export const ConnectedWalletDetails: React.FC<{
             </MenuLink>
           )}
 
+        {/* Explorer link */}
+        {chain?.explorers && (
+          <MenuLink
+            href={chain.explorers[0].url + "/address/" + address}
+            target="_blank"
+            as="a"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              fontSize: fontSize.sm,
+            }}
+          >
+            <Container flex="row" center="both" color="secondaryText">
+              <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+            Transaction History
+          </MenuLink>
+        )}
+
         {/* Export  Wallet */}
         {activeWallet?.walletId === walletIds.localWallet && (
           <div>
             <MenuButton
               onClick={() => {
                 setShowExportModal(true);
-                setOpen(false);
+                setIsDropdownOpen(false);
               }}
               style={{
                 fontSize: fontSize.sm,
@@ -378,16 +526,11 @@ export const ConnectedWalletDetails: React.FC<{
               Backup wallet{" "}
             </MenuButton>
             <Spacer y="sm" />
-            <ErrorMessage
-              style={{
-                fontSize: fontSize.xs,
-                textAlign: "center",
-              }}
-            >
+            <Text size="xs" center multiline color="danger">
               This is a temporary guest wallet <br />
               Backup if you {`don't `}
               want to lose access to it
-            </ErrorMessage>
+            </Text>
           </div>
         )}
       </Container>
@@ -400,14 +543,17 @@ export const ConnectedWalletDetails: React.FC<{
         <Modal
           size={"compact"}
           trigger={trigger}
-          open={open}
-          setOpen={setOpen}
+          open={isDropdownOpen}
+          setOpen={setIsDropdownOpen}
           hideCloseIcon={true}
         >
           <Container p="lg">{content}</Container>
         </Modal>
       ) : (
-        <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+        <DropdownMenu.Root
+          open={isDropdownOpen}
+          onOpenChange={setIsDropdownOpen}
+        >
           <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropDownContent
@@ -443,6 +589,18 @@ export const ConnectedWalletDetails: React.FC<{
               setShowExportModal(false);
             }}
           />
+        </Modal>
+      )}
+
+      {showSendModal && (
+        <Modal size={"compact"} open={true} setOpen={setShowSendModal}>
+          <SendFunds supportedTokens={props.supportedTokens} />
+        </Modal>
+      )}
+
+      {showReceiveModal && (
+        <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
+          <ReceiveFunds />
         </Modal>
       )}
     </>
@@ -486,7 +644,8 @@ const WalletInfoButton = styled.button<{ theme?: Theme }>`
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: ${spacing.md};
+  min-width: 180px;
+  gap: ${spacing.sm};
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
@@ -605,8 +764,17 @@ function WalletSwitcher({
         fontSize: fontSize.sm,
       }}
     >
-      <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      <Container color="secondaryText">
+        <EnterIcon width={iconSize.sm} height={iconSize.sm} />
+      </Container>
       Switch to {name}
     </MenuButton>
   );
 }
+
+const ActiveDot = styled.div<{ theme?: Theme }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${(props) => props.theme.colors.success};
+`;

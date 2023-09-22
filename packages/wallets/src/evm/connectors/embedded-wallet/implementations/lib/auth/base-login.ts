@@ -70,6 +70,7 @@ export class BaseLogin extends AbstractLogin<
     openedWindow?: Window | null;
     closeOpenedWindow?: (openedWindow: Window) => void;
   }): Promise<AuthLoginReturnType> {
+    await this.preLogin();
     let win = args?.openedWindow;
     let isWindowOpenedByFn = false;
     if (!win) {

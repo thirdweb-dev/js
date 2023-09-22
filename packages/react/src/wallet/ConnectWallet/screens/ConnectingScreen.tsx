@@ -1,13 +1,11 @@
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader, Line } from "../../../components/basic";
-import { fontSize, media, spacing } from "../../../design-system";
+import { fontSize } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
-import styled from "@emotion/styled";
-import { ModalDescription } from "../../../components/modalElements";
 import { WalletLogoSpinner } from "./WalletLogoSpinner";
 
 export const ConnectingScreen: React.FC<{
@@ -52,7 +50,8 @@ export const ConnectingScreen: React.FC<{
           <Spacer y="lg" />
 
           {!props.errorConnecting ? (
-            <Desc
+            <Text
+              multiline
               style={{
                 textAlign: "center",
               }}
@@ -60,15 +59,15 @@ export const ConnectingScreen: React.FC<{
               Login and connect your wallet
               <br /> through the {props.walletName}{" "}
               {isMobile() ? "application" : "pop-up"}
-            </Desc>
+            </Text>
           ) : (
-            <Desc
+            <Text
               style={{
                 textAlign: "center",
               }}
             >
               click on button above to try again
-            </Desc>
+            </Text>
           )}
         </Container>
       </Container>
@@ -91,10 +90,3 @@ export const ConnectingScreen: React.FC<{
     </Container>
   );
 };
-
-const Desc = /* @__PURE__ */ styled(ModalDescription)`
-  font-size: ${fontSize.md};
-  ${media.mobile} {
-    padding: 0 ${spacing.lg};
-  }
-`;

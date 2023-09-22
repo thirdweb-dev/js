@@ -14,6 +14,7 @@ export type ModalConfig = {
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
   welcomeScreen?: WelcomeScreen;
+  titleIconUrl?: string;
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
@@ -35,8 +36,9 @@ export const SetModalConfigCtx = /* @__PURE__ */ createContext<
 export const WalletUIStatesProvider = (
   props: React.PropsWithChildren<{
     theme?: "light" | "dark" | Theme;
-    modalSize: "wide" | "compact";
+    modalSize?: "wide" | "compact";
     title?: string;
+    titleIconUrl?: string;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
     welcomeScreen?: WelcomeScreen;
@@ -49,10 +51,11 @@ export const WalletUIStatesProvider = (
     title: props.title || defaultModalTitle,
     theme: props.theme || "dark",
     data: undefined,
-    modalSize: _isMobile ? "compact" : props.modalSize,
+    modalSize: (_isMobile ? "compact" : props.modalSize) || "wide",
     termsOfServiceUrl: props.termsOfServiceUrl,
     privacyPolicyUrl: props.privacyPolicyUrl,
     welcomeScreen: props.welcomeScreen,
+    titleIconUrl: props.titleIconUrl,
   });
 
   return (

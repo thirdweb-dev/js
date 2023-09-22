@@ -10,7 +10,7 @@ export const QRCode: React.FC<{
   QRIcon?: React.ReactNode;
   size?: number;
 }> = (props) => {
-  const size = props.size || 280;
+  const size = props.size || 310;
 
   return (
     <div
@@ -24,7 +24,7 @@ export const QRCode: React.FC<{
             uri={props.qrCodeUri}
             size={size + 20}
             ecl="M"
-            clearSize={70}
+            clearSize={props.QRIcon ? 70 : undefined}
           />
         </QRCodeContainer>
       ) : (

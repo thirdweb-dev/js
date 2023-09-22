@@ -43,12 +43,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
-  async connect(options?: {
-    email?: string;
-    chainId?: number;
-    otp?: string;
-    googleLogin?: true;
-  }) {
+  async connect(options?: EmbeddedWalletConnectionArgs) {
     const thirdwebSDK = await this.getEmbeddedWalletSDK();
     if (!thirdwebSDK) {
       throw new Error("EmbeddedWallet SDK not initialized");
@@ -58,46 +53,42 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
 
-        // Show Google popup
-        if (options?.googleLogin) {
-          const googleWindow = window.open(
-            "",
-            "Login",
-            "width=350, height=500",
-          );
-          authResult = await thirdwebSDK.auth.loginWithGoogle(
-            googleWindow !== null
-              ? {
-                  openedWindow: googleWindow,
-                  closeOpenedWindow: (openedWindow) => {
-                    openedWindow.close();
-                  },
-                }
-              : undefined,
-          );
+        switch (options?.loginType) {
+          case "headless_google_oauth": {
+            authResult = await thirdwebSDK.auth.loginWithGoogle({
+              closeOpenedWindow: options.closeOpenedWindow,
+              openedWindow: options.openedWindow,
+            });
+            break;
+          }
+          case "headless_email_otp_verification": {
+            authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
+              email: options.email,
+              otp: options.otp,
+            });
+            break;
+          }
+          case "ui_email_otp": {
+            authResult = await thirdwebSDK.auth.loginWithEmailOtp({
+              email: options.email,
+            });
+            break;
+          }
+          default: {
+            authResult = await thirdwebSDK.auth.loginWithModal();
+            break;
+          }
         }
-
-        // Headless
-        else if (options?.email && options?.otp) {
-          authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
-            email: options.email,
-            otp: options.otp,
-          });
-        }
-
-        // Show OTP modal
-        else if (options?.email) {
-          authResult = await thirdwebSDK.auth.loginWithEmailOtp({
-            email: options.email,
-          });
-        }
-
-        // Show Full Modal
-        else {
-          authResult = await thirdwebSDK.auth.loginWithModal();
-        }
-
         this.user = authResult.user;
+        break;
+      }
+      case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
+        if (options?.loginType === "headless_google_oauth") {
+          if (options.closeOpenedWindow && options.openedWindow) {
+            options.closeOpenedWindow(options.openedWindow);
+          }
+        }
+        this.user = user;
         break;
       }
     }

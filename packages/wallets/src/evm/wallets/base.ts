@@ -1,10 +1,10 @@
+import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
-import { ConnectParams, Connector } from "../interfaces/connector";
-import { AbstractWallet } from "./abstract";
-import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
+import { ConnectParams, Connector } from "../interfaces/connector";
+import { AbstractWallet } from "./abstract";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {

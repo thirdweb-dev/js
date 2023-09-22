@@ -14,11 +14,12 @@ export const Button = styled.button<{
   border-radius: ${radius.md};
   padding: ${fontSize.sm} ${fontSize.sm};
   font-size: ${fontSize.md};
-  font-weight: ${(p) => (p.variant === "link" ? 400 : 500)};
+  font-weight: 500;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
   flex-shrink: 0;
+  transition: border 200ms ease;
 
   ${(p) => p.fullWidth && `width: 100%;`};
 
@@ -56,6 +57,9 @@ export const Button = styled.button<{
     if (p.variant === "outline") {
       return `
       border: 1.5px solid ${p.theme.colors.borderColor};
+      &:hover {
+        border-color: ${p.theme.colors.accentText};
+      }
     `;
     }
   }}
