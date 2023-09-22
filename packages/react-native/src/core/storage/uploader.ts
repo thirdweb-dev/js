@@ -163,23 +163,26 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         });
 
         try {
-          const res = await fetch(`${TW_UPLOAD_SERVER_URL}/ipfs/pin-json`, {
-            method: "POST",
-            headers: {
-              "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
-              ...(this.clientId ? { "x-client-id": this.clientId } : {}),
-              "Content-Type": "application/json",
-              "x-sdk-version": version,
-              "x-sdk-name": packageName,
-              "x-sdk-platform": platform,
+          const res = await fetch(
+            `${TW_UPLOAD_SERVER_URL}/ipfs/batch-pin-json`,
+            {
+              method: "POST",
+              headers: {
+                "x-bundle-id": APP_BUNDLE_ID || "", // only empty on web
+                ...(this.clientId ? { "x-client-id": this.clientId } : {}),
+                "Content-Type": "application/json",
+                "x-sdk-version": version,
+                "x-sdk-name": packageName,
+                "x-sdk-platform": platform,
+              },
+              body: fetchBody,
             },
-            body: fetchBody,
-          });
+          );
 
           if (res.ok) {
             const ipfsResults = await res.json();
 
-            const results = ipfsResults.map(
+            const results = ipfsResults.results.map(
               (ipfs: { IpfsHash: string; PinSize: number }) => {
                 const cid = ipfs.IpfsHash;
 
