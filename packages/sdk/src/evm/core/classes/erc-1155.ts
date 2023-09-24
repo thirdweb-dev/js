@@ -13,7 +13,7 @@ import {
   type BigNumberish,
   type BytesLike,
 } from "ethers";
-import { QueryAllParams } from "../../../core/schema/QueryParams";
+import { QueryAllParams, QueryOwnedParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
@@ -494,12 +494,16 @@ export class Erc1155<
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC1155Enumerable
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryOwnedParams,
+  ): Promise<NFT[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).owned(
       walletAddress,
+      queryParams,
     );
   }
 

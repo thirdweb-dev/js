@@ -155,17 +155,30 @@ describe("Edition Contract", async () => {
     expect(bobsNftsAfterTransfer[0].quantityOwned).to.be.equal("20");
   });
 
-  it("should respect pagination for getOwned", async () => {
-    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
-    const metadata = _tokenIds.map((num) => ({
-      metadata: {
-        name: `Bundle ${num}`,
-      },
-      supply: 100,
-    }));
-    await bundleContract.mintBatch(metadata);
-
-  });
+  // it("should respect pagination for getOwned", async () => {
+  //   const nfts = [] as { metadata: { name: string }; supply: number }[];
+  //   for (let i = 0; i < 100; i++) {
+  //     nfts.push({
+  //       metadata: { name: `Test${i}` },
+  //       supply: 10,
+  //     });
+  //   }
+  //   await bundleContract.mintBatch(nfts);
+  //   const total = await bundleContract.getTotalCount();
+  //   expect(total.toNumber()).to.eq(100);
+  //   const page1 = await bundleContract.getOwned(adminWallet.address, {
+  //     count: 2,
+  //     start: 0,
+  //   });
+  //   expect(page1).to.be.an("array").length(2);
+  //   const page2 = await bundleContract.getOwned(adminWallet.address, {
+  //     count: 2,
+  //     start: 20,
+  //   });
+  //   expect(page2).to.be.an("array").length(2);
+  //   expect(page2[0].metadata.name).to.eq("Test20");
+  //   expect(page2[1].metadata.name).to.eq("Test21");
+  // });
 
   it("should airdrop edition tokens to different wallets", async () => {
     await bundleContract.mint({

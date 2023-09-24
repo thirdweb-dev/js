@@ -16,7 +16,19 @@ export default {
   "shortName": "hmnd",
   "chainId": 5234,
   "networkId": 5234,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Subscan",
+      "url": "https://humanode.subscan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
+    }
+  ],
   "testnet": false,
   "slug": "humanode"
 } as const satisfies Chain;

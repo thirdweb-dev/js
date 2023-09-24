@@ -3,6 +3,7 @@ import { BigNumber, BigNumberish } from "ethers";
 import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
+  QueryOwnedParams,
 } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
@@ -102,7 +103,10 @@ export class Erc1155Enumerable implements DetectableFeature {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async owned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+  public async owned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryOwnedParams,
+  ): Promise<NFT[]> {
     const address = await resolveAddress(
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );
@@ -112,7 +116,7 @@ export class Erc1155Enumerable implements DetectableFeature {
       Array.from(Array(maxId.toNumber()).keys()),
     ]);
 
-    const ownedBalances = balances
+    let ownedBalances = balances
       .map((b, i) => {
         return {
           tokenId: i,
@@ -120,6 +124,14 @@ export class Erc1155Enumerable implements DetectableFeature {
         };
       })
       .filter((b) => b.balance.gt(0));
+
+    if (queryParams) {
+      const page = queryParams?.page || 1;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      const startIndex = (page - 1) * count;
+      ownedBalances = ownedBalances.slice(startIndex, startIndex + count);
+    }
+
     return await Promise.all(
       ownedBalances.map(async (b) => {
         const editionMetadata = await this.erc1155.get(b.tokenId.toString());

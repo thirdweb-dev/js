@@ -8,6 +8,10 @@ import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
 import type { Erc721 } from "./erc-721";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryOwnedParams,
+} from "../../../core/schema/QueryParams";
 
 /**
  * List owned ERC721 NFTs
@@ -50,8 +54,18 @@ export class Erc721AQueryable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async all(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    const tokenIds = await this.tokenIds(walletAddress);
+  public async all(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryOwnedParams,
+  ): Promise<NFT[]> {
+    let tokenIds = await this.tokenIds(walletAddress);
+    if (queryParams) {
+      const page = queryParams?.page || 1;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      const startIndex = (page - 1) * count;
+      tokenIds = tokenIds.slice(startIndex, startIndex + count);
+    }
+
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
     );

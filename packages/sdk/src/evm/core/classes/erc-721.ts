@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  type QueryAllParams,
-} from "../../../core/schema/QueryParams";
-=======
 import type {
   DropERC721,
   IBurnableERC721,
@@ -23,8 +17,11 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import type { QueryAllParams } from "../../../core/schema/QueryParams";
->>>>>>> origin/main
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryOwnedParams,
+  type QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
@@ -417,7 +414,7 @@ export class Erc721<
    */
   public async getOwned(
     walletAddress?: AddressOrEns,
-    queryParams?: QueryAllParams,
+    queryParams?: QueryOwnedParams,
   ) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
@@ -430,17 +427,15 @@ export class Erc721<
         walletAddress || (await this.contractWrapper.getSignerAddress());
       const allOwners = await this.getAllOwners();
 
-      const start = BigNumber.from(queryParams?.start || 0).toNumber();
-      const count = BigNumber.from(
-        queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-      ).toNumber();
-
       let ownedTokens = (allOwners || []).filter(
         (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
       );
 
-      if (start < ownedTokens.length && count) {
-        ownedTokens = ownedTokens.slice(start, count);
+      if (queryParams) {
+        const page = queryParams?.page || 1;
+        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+        const startIndex = (page - 1) * count;
+        ownedTokens = ownedTokens.slice(startIndex, startIndex + count);
       }
 
       return Promise.all(
@@ -454,35 +449,20 @@ export class Erc721<
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @param queryParams - optional filtering to only fetch a subset of results.
    */
-  public async getOwnedTokenIds(
-    walletAddress?: AddressOrEns,
-    queryParams?: QueryAllParams,
-  ) {
+  public async getOwnedTokenIds(walletAddress?: AddressOrEns) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
 
     if (this.query?.owned) {
-      return this.query.owned.tokenIds(walletAddress, queryParams);
+      return this.query.owned.tokenIds(walletAddress);
     } else {
       const address =
         walletAddress || (await this.contractWrapper.getSignerAddress());
       const allOwners = await this.getAllOwners();
-
-      const start = BigNumber.from(queryParams?.start || 0).toNumber();
-      const count = BigNumber.from(
-        queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
-      ).toNumber();
-
-      let ownedTokenIds = (allOwners || [])
+      return (allOwners || [])
         .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
         .map((i) => BigNumber.from(i.tokenId));
-
-      if (start < ownedTokenIds.length && count) {
-        ownedTokenIds = ownedTokenIds.slice(start, count);
-      }
-
-      return ownedTokenIds;
     }
   }
 
