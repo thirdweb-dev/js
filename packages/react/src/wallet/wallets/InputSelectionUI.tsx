@@ -1,26 +1,22 @@
 import { useState } from "react";
-import { ErrorMessage, Input } from "../../components/formElements";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Theme, iconSize, spacing } from "../../design-system";
-import { InputButton } from "../../components/buttons";
-import styled from "@emotion/styled";
-import { WalletConfig } from "@thirdweb-dev/react-core";
+import { Button } from "../../components/buttons";
+import { Text } from "../../components/text";
+import { Input } from "../../components/formElements";
 
 export function InputSelectionUI(props: {
-  onSelect: (data: any) => void;
+  onSelect: (data: string) => void;
   placeholder: string;
   name: string;
   type: string;
   errorMessage?: (input: string) => string | undefined;
   emptyErrorMessage?: string;
-  supportedWallets: WalletConfig[];
+  showOrSeparator?: boolean;
   footer?: React.ReactNode;
   noInput?: boolean;
 }) {
   const [input, setInput] = useState("");
-  const singleWallet = props.supportedWallets.length === 1;
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);
 
@@ -48,7 +44,7 @@ export function InputSelectionUI(props: {
           <Input
             tabIndex={-1}
             placeholder={props.placeholder}
-            variant="secondary"
+            variant="outline"
             type={props.type}
             name={props.name}
             value={input}
@@ -67,23 +63,15 @@ export function InputSelectionUI(props: {
               }
             }}
           />
-
-          <CircleInputButton
-            onClick={() => {
-              handleSelect();
-            }}
-            color="inverted"
-            type="button"
-          >
-            <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
-          </CircleInputButton>
         </div>
       )}
 
       {showError && error && (
         <>
           <Spacer y="xs" />
-          <ErrorMessage>{error}</ErrorMessage>
+          <Text color="danger" size="sm">
+            {error}
+          </Text>
         </>
       )}
 
@@ -93,13 +81,19 @@ export function InputSelectionUI(props: {
         showError && (
           <>
             <Spacer y="xs" />
-            <ErrorMessage>{props.emptyErrorMessage}</ErrorMessage>
+            <Text color="danger" size="sm">
+              {props.emptyErrorMessage}
+            </Text>
           </>
         )}
 
+      <Spacer y="md" />
+      <Button variant="accent" onClick={handleSelect} fullWidth>
+        Continue
+      </Button>
       {props.footer}
 
-      {!singleWallet && (
+      {props.showOrSeparator && (
         <>
           <Spacer y="lg" />
           <TextDivider>
@@ -111,19 +105,3 @@ export function InputSelectionUI(props: {
     </div>
   );
 }
-
-const CircleInputButton = /* @__PURE__ */ styled(InputButton)<{
-  theme?: Theme;
-}>`
-  background: ${(p) => p.theme.bg.highlighted};
-  border-radius: 50%;
-  padding: ${spacing.xxs};
-  color: ${(p) => p.theme.text.neutral};
-  position: absolute;
-  top: 50%;
-  right: ${spacing.sm};
-  transform: translateY(-50%);
-  &:hover {
-    color: ${(p) => p.theme.text.neutral};
-  }
-`;

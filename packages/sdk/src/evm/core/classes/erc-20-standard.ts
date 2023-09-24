@@ -1,3 +1,5 @@
+import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -9,8 +11,6 @@ import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Transaction } from "./transactions";
-import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * Standard ERC20 Token functions
@@ -60,7 +60,7 @@ export class StandardErc20<
    * @internal
    */
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************

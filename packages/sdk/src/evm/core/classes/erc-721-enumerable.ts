@@ -1,12 +1,12 @@
+import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
+import { BigNumber } from "ethers";
 import type { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
-import { BigNumber } from "ethers";
-import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
 import type { Erc721 } from "./erc-721";
 import {
   DEFAULT_QUERY_ALL_COUNT,
@@ -85,7 +85,7 @@ export class Erc721Enumerable implements DetectableFeature {
     }
     return await Promise.all(
       indices.map((i) =>
-        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
+        this.contractWrapper.read("tokenOfOwnerByIndex", [address, i]),
       ),
     );
   }

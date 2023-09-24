@@ -1,21 +1,23 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
+import { ModalDescription } from "../../../components/modalElements";
 import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+  EyeClosedIcon,
+  EyeOpenIcon,
+  PinBottomIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
-import { LocalWalletModalHeader } from "./common";
-import { Flex } from "../../../components/basic";
+import { Container, Line, ModalHeader } from "../../../components/basic";
 import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
-import { spacing } from "../../../design-system";
+import { iconSize, spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
+import { wait } from "../../../utils/wait";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
@@ -30,7 +32,7 @@ export const CreateLocalWallet_Password: React.FC<{
   const passwordMismatch = confirmPassword && password !== confirmPassword;
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { localWallet, meta } = useLocalWalletInfo(
+  const { localWallet } = useLocalWalletInfo(
     props.localWalletConf,
     props.persist,
   );
@@ -84,115 +86,127 @@ export const CreateLocalWallet_Password: React.FC<{
   };
 
   return (
-    <>
-      <LocalWalletModalHeader
-        onBack={props.goBack}
-        meta={meta}
-        hideBack={!props.renderBackButton}
-      />
-
-      <Flex alignItems="center" gap="xs">
-        <ModalTitle>Guest Wallet</ModalTitle>
-      </Flex>
-
-      <Spacer y="sm" />
-      <ModalDescription>
-        Choose a password for your wallet, you{`'`}ll be able to access and
-        export this wallet with the same password.
-      </ModalDescription>
-
-      <Spacer y="lg" />
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleConnect();
-        }}
-      >
-        {/* Hidden Account Address as Username */}
-        <input
-          type="text"
-          name="username"
-          autoComplete="off"
-          value={generatedAddress || ""}
-          disabled
-          style={{ display: "none" }}
+    <Container fullHeight>
+      <Container p="lg">
+        <ModalHeader
+          onBack={props.renderBackButton ? props.goBack : undefined}
+          title={props.localWalletConf.meta.name}
+          imgSrc={props.localWalletConf.meta.iconURL}
         />
+      </Container>
 
-        {/* Password */}
-        <FormFieldWithIconButton
-          name="password"
-          required
-          autocomplete="new-password"
-          id="new-password"
-          onChange={(value) => setPassword(value)}
-          right={{
-            icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
-            onClick: () => setShowPassword(!showPassword),
-          }}
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          dataTest="new-password"
-        />
+      <Line />
+
+      <Container p="lg">
+        <ModalDescription sm>
+          Choose a password for your wallet. <br /> You{`'`}ll be able to access
+          and export this wallet with the same password.
+        </ModalDescription>
 
         <Spacer y="lg" />
 
-        {/* Confirm Password */}
-        <FormFieldWithIconButton
-          name="confirm-password"
-          required
-          autocomplete="new-password"
-          id="confirm-password"
-          onChange={(value) => setConfirmPassword(value)}
-          right={{
-            icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
-            onClick: () => setShowPassword(!showPassword),
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleConnect();
           }}
-          label="Confirm Password"
-          type={showPassword ? "text" : "password"}
-          value={confirmPassword}
-          error={passwordMismatch ? "Passwords don't match" : ""}
-          dataTest="confirm-password"
-        />
+        >
+          {/* Hidden Account Address as Username */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="off"
+            value={generatedAddress || ""}
+            disabled
+            style={{ display: "none" }}
+          />
+
+          {/* Password */}
+          <FormFieldWithIconButton
+            name="password"
+            required
+            autocomplete="new-password"
+            id="new-password"
+            onChange={(value) => setPassword(value)}
+            right={{
+              icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+              onClick: () => setShowPassword(!showPassword),
+            }}
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            dataTest="new-password"
+          />
+
+          <Spacer y="lg" />
+
+          {/* Confirm Password */}
+          <FormFieldWithIconButton
+            name="confirm-password"
+            required
+            autocomplete="new-password"
+            id="confirm-password"
+            onChange={(value) => setConfirmPassword(value)}
+            right={{
+              icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+              onClick: () => setShowPassword(!showPassword),
+            }}
+            label="Confirm Password"
+            type={showPassword ? "text" : "password"}
+            value={confirmPassword}
+            error={passwordMismatch ? "Passwords don't match" : ""}
+            dataTest="confirm-password"
+          />
+
+          <Spacer y="lg" />
+
+          {/* Create */}
+          <Button
+            variant="accent"
+            type="submit"
+            fullWidth
+            style={{
+              gap: spacing.xs,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            data-test="create-new-wallet-button"
+          >
+            {!isConnecting && (
+              <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+            )}
+            {isConnecting ? "Connecting" : "Create new wallet"}
+            {isConnecting && <Spinner size="sm" color="accentButtonText" />}
+          </Button>
+        </form>
 
         <Spacer y="xl" />
 
-        {/* Create */}
+        <TextDivider>
+          <span>OR</span>
+        </TextDivider>
+
+        <Spacer y="xl" />
+
+        {/* Import */}
         <Button
-          variant="inverted"
-          type="submit"
-          style={{
-            width: "100%",
-            gap: spacing.sm,
-          }}
-          data-test="create-new-wallet-button"
-        >
-          {isConnecting ? "Connecting" : "Create new wallet"}
-          {isConnecting && <Spinner size="sm" color="inverted" />}
-        </Button>
-      </form>
-
-      <Spacer y="xxl" />
-
-      <TextDivider>
-        <span>OR</span>
-      </TextDivider>
-
-      <Spacer y="lg" />
-
-      {/* Import */}
-      <Flex justifyContent="center">
-        <Button
-          variant="link"
+          fullWidth
+          variant="outline"
           onClick={() => {
             setShowImportScreen(true);
           }}
+          style={{
+            display: "flex",
+            gap: spacing.sm,
+            alignItems: "center",
+          }}
         >
+          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
           Import wallet
         </Button>
-      </Flex>
-    </>
+      </Container>
+    </Container>
   );
 };
 
@@ -212,6 +226,7 @@ export const CreateLocalWallet_Guest: React.FC<{
     }
     await localWallet.generate();
     setConnectionStatus("connecting");
+    await wait(1000);
     await localWallet.connect();
     setConnectedWallet(localWallet);
     onConnect();
@@ -227,14 +242,15 @@ export const CreateLocalWallet_Guest: React.FC<{
   }, [handleConnect, localWallet]);
 
   return (
-    <Flex
-      justifyContent="center"
-      alignItems="center"
+    <Container
+      flex="row"
+      center="both"
+      fullHeight
       style={{
-        height: "300px",
+        minHeight: "300px",
       }}
     >
-      <Spinner size="lg" color="link" />
-    </Flex>
+      <Spinner size="xl" color="accentText" />
+    </Container>
   );
 };

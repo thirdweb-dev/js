@@ -4,7 +4,7 @@ import {
   PaperWalletConnectionArgs,
 } from "../connectors/paper/types";
 import { walletIds } from "../constants/walletIds";
-import { Connector } from "../interfaces/connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type { PaperWalletAdditionalOptions } from "../connectors/paper/types";
@@ -36,11 +36,18 @@ export class PaperWallet extends AbstractClientWallet<
     super(PaperWallet.id, {
       ...options,
     });
-    // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
+
+    if (options.paperClientId && options.paperClientId === "uninitialized") {
+      this.paperClientId = "00000000-0000-0000-0000-000000000000";
+      this.chain = options.chain;
+      return;
+    }
+
     if (
       options.advancedOptions &&
       options.advancedOptions?.recoveryShareManagement === "USER_MANAGED"
     ) {
+      // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
       if (
         (options.clientId &&
           !this.isClientIdLegacyPaper(options.clientId ?? "")) ||
@@ -90,8 +97,31 @@ export class PaperWallet extends AbstractClientWallet<
     return this.connector;
   }
 
+  getConnectParams(): ConnectParams<PaperWalletConnectionArgs> | undefined {
+    const connectParams = super.getConnectParams();
+
+    if (!connectParams) {
+      return undefined;
+    }
+
+    // do not return non-serializable params to make auto-connect work
+    if (typeof connectParams.googleLogin === "object") {
+      return {
+        ...connectParams,
+        googleLogin: true,
+      };
+    }
+
+    return connectParams;
+  }
+
   async getEmail() {
     const connector = (await this.getConnector()) as PaperWalletConnector;
     return connector.getEmail();
+  }
+
+  async getPaperSDK() {
+    const connector = (await this.getConnector()) as PaperWalletConnector;
+    return connector.getPaperSDK();
   }
 }

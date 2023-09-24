@@ -1,5 +1,13 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.13
+
+### Patch Changes
+
+- [#1591](https://github.com/thirdweb-dev/js/pull/1591) [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update airdrop function names on contracts and sdk to resolve abi conflict
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
 ## 1.3.12
 
 ### Patch Changes

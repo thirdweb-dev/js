@@ -26,4 +26,12 @@ export interface PaperWalletConnectorOptions {
 
 export interface PaperWalletConnectionArgs {
   email?: string;
+  otp?: string;
+  recoveryCode?: string;
+  googleLogin?:
+    | true
+    | {
+        openedWindow?: Window;
+        closeOpenedWindow?: (openedWindow: Window) => void;
+      };
 }
