@@ -30,7 +30,6 @@ export const SmartWalletFlow = ({
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
 
-  console.log("walletConfig", personalWalletChainId);
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
     : false;

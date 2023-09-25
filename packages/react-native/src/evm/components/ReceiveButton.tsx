@@ -143,7 +143,7 @@ export const ReceiveFundsModal = ({
             borderRadius="md"
             p="md"
           >
-            <QRCode value={address} size={200} />
+            <QRCode value={address} size={150} />
           </Box>
 
           {addressCopied === true ? (
