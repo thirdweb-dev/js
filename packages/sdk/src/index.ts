@@ -16,7 +16,10 @@ export { getRpcUrl } from "./core/constants/urls";
 
 export { checkClientIdOrSecretKey } from "./core/utils/apiKey";
 
-export type { QueryAllParams } from "./core/schema/QueryParams";
+export type {
+  QueryAllParams,
+  QueryOwnedParams,
+} from "./core/schema/QueryParams";
 
 // export EVM by default
 export * from "./evm";
