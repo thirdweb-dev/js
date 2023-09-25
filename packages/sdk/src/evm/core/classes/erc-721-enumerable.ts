@@ -10,7 +10,6 @@ import type { ContractWrapper } from "./contract-wrapper";
 import type { Erc721 } from "./erc-721";
 import {
   DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
   QueryOwnedParams,
 } from "../../../core/schema/QueryParams";
 
