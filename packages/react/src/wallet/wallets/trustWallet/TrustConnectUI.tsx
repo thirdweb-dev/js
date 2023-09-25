@@ -88,7 +88,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         onGetStarted={handleGetStarted}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         walletConfig={walletConfig}
         appUriPrefix={trustWalletUris}
         // supportLink="https://support.trustwallet.com/en/support/home"
@@ -114,7 +114,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
       <TrustScan
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

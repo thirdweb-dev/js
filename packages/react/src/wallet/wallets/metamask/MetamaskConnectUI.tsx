@@ -96,7 +96,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
     return (
       <MetamaskScan
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

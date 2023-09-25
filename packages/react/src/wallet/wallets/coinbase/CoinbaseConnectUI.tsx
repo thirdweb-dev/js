@@ -101,7 +101,7 @@ export const CoinbaseConnectUI = ({
     return (
       <CoinbaseScan
         onBack={goBack}
-        onConnected={close}
+        onConnected={connected}
         onGetStarted={() => setScreen("get-started")}
         walletConfig={walletConfig}
         hideBackButton={hideBackButton}

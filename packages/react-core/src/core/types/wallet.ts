@@ -51,13 +51,11 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
   /**
    * temporarily hide the ConnectModal
    * This is useful when you want to open another modal and do not want to show the ConnectModal in the background
-   *
-   * once the wallet is connected, you can call `connected` to close the modal
    */
   hide: () => void;
 
   /**
-   * indicates that the wallet is connected and it is safe to close the modal
+   * when the wallet is connected, call this function to indicate that the wallet is connected and it is safe to close the Modal
    */
   connected: () => void;
 

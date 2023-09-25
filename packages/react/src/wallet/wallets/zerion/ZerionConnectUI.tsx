@@ -81,7 +81,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
         errorConnecting={errorConnecting}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         walletConfig={walletConfig}
         appUriPrefix={{
           ios: "zerion://",
@@ -110,7 +110,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
       <ZerionScan
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}
