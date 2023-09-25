@@ -7,26 +7,32 @@ type ADVANCED_OPTIONS = {
   secretKey?: string;
 };
 
+function omitEmptyKeys<T extends Record<string, unknown>>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined),
+  ) as T;
+}
+
 export function convertApiChainToChain(apiChain: ApiChain): Chain {
-  return {
+  return omitEmptyKeys({
     ...apiChain,
     chainId: parseInt(apiChain.chainId),
     status: apiChain.status || undefined,
     features: apiChain.features.map((feature) => ({ name: feature })),
     icon: apiChain.icon || undefined,
     infoURL: apiChain.infoURL || undefined,
-  };
+  });
 }
 
 export function convertChainToApiChain(chain: Chain): ApiChain {
-  return {
+  return omitEmptyKeys({
     ...chain,
     chainId: chain.chainId.toString(),
     status: chain.status || null,
     features: chain.features?.map((feature) => feature.name) || [],
     icon: chain.icon || null,
     infoURL: chain.infoURL || null,
-  };
+  });
 }
 
 export async function getChainFromApi(
