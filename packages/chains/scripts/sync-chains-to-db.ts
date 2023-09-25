@@ -2,7 +2,7 @@ import merge from "deepmerge";
 import fs from "fs/promises";
 import path from "path";
 import { Chain } from "../src/types";
-import { createChain } from "../src/api";
+import { createChain, getChainList } from "../src/api";
 
 const HOST = "https://api.thirdweb.com";
 const SECRET_KEY = process.env.SECRET_KEY as string;
@@ -304,17 +304,30 @@ const results: Chain[] = await Promise.all(
   }),
 );
 
-console.log("Uploading...");
+console.log("Checking existing chains...");
+
+const existing = await getChainList({ page: 0, limit: 1000 }, { host: HOST });
+const existingChains = existing.data;
+
+// filter out chains that already exist
+const filteredResults = results.filter(
+  (chain) =>
+    !existingChains.find(
+      (existingChain) => existingChain.chainId === chain.chainId,
+    ),
+);
+
+console.log("Uploading...", filteredResults.length);
 
 let successes = 0;
 let duplicates = 0;
 let errors = 0;
 
-for (const chain of results) {
+for (const chain of filteredResults) {
   try {
     const res = await createChain(chain, { host: HOST, secretKey: SECRET_KEY });
     if (res.error) {
-      if (res.code === "CHAIN_ID_CLASH") {
+      if (res.error.code === "CHAIN_ID_CLASH") {
         duplicates++;
       } else {
         console.log("Error:", res.error, chain.chainId);
