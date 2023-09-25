@@ -340,14 +340,17 @@ export class Erc20<
   transferBatch = /* @__PURE__ */ buildTransactionFunction(
     async (args: TokenMintInput[]) => {
       const contractEncoder = new ContractEncoder(this.contractWrapper);
-      const encoded = await Promise.all(
-        args.map(async (arg) => {
-          const amountWithDecimals = await this.normalizeAmount(arg.amount);
-          return contractEncoder.encode("transfer", [
-            await resolveAddress(arg.toAddress),
-            amountWithDecimals,
-          ]);
-        }),
+      const encoded = (
+        await Promise.all(
+          args.map((arg) =>
+            Promise.all([
+              this.normalizeAmount(arg.amount),
+              resolveAddress(arg.toAddress),
+            ]),
+          ),
+        )
+      ).map(([amountWithDecimals, address]) =>
+        contractEncoder.encode("transfer", [address, amountWithDecimals]),
       );
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

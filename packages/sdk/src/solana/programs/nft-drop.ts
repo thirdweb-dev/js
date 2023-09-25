@@ -204,22 +204,24 @@ export class NFTDrop {
       startIndex + parsedQueryParams.count - claimedNfts.length,
     );
 
-    const unclaimedNfts = await Promise.all(
-      unclaimedItems.slice(startIndex, endIndex).map(async (item) => {
-        const metadata: NFTMetadata = await this.storage.downloadJSON(item.uri);
-        return {
-          metadata: {
-            ...metadata,
-            id: PublicKey.default.toBase58(),
-            uri: item.uri,
-          },
-          owner: PublicKey.default.toBase58(),
-          supply: "0",
-          type: "metaplex",
-        } as NFT;
-      }),
-    );
-
+    const _items = unclaimedItems.slice(startIndex, endIndex);
+    const unclaimedNfts = (
+      await Promise.all(
+        _items.map((item) => this.storage.downloadJSON(item.uri)),
+      )
+    ).map((metadata, index) => {
+      const item = _items[index];
+      return {
+        metadata: {
+          ...metadata,
+          id: PublicKey.default.toBase58(),
+          uri: item.uri,
+        },
+        owner: PublicKey.default.toBase58(),
+        supply: "0",
+        type: "metaplex",
+      } as NFT;
+    });
     // Always return claimed NFTs first, and then fill remaining query count with unclaimed NFTs
     return [...claimedNfts, ...unclaimedNfts];
   }

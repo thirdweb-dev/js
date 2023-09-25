@@ -136,22 +136,24 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     async (
       signedPayloads: SignedPayload1155[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const contractPayloads = await Promise.all(
-        signedPayloads.map(async (s) => {
-          const message = await this.mapPayloadToContractStruct(s.payload);
-          const signature = s.signature;
-          const price = s.payload.price;
-          if (BigNumber.from(price).gt(0)) {
-            throw new Error(
-              "Can only batch free mints. For mints with a price, use regular mint()",
-            );
-          }
-          return {
-            message,
-            signature,
-          };
-        }),
-      );
+      const contractPayloads = (
+        await Promise.all(
+          signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
+        )
+      ).map((message, index) => {
+        const s = signedPayloads[index];
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      });
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
         return contractEncoder.encode("mintWithSignature", [
