@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Numbers Mainnet",
+  "chainId": 10507,
   "chain": "NUM",
+  "name": "Numbers Mainnet",
+  "rpc": [
+    "https://numbers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnetrpc.num.network"
+  ],
+  "slug": "numbers",
   "icon": {
     "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
     "width": 1500,
     "height": 1500,
     "format": "png"
   },
-  "rpc": [
-    "https://numbers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnetrpc.num.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "NUM Token",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://numbersprotocol.io",
   "shortName": "Jade",
-  "chainId": 10507,
-  "networkId": 10507,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ethernal",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "numbers"
+  "features": []
 } as const satisfies Chain;

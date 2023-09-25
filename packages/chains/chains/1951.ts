@@ -1,19 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "D-Chain Mainnet",
+  "chainId": 1951,
   "chain": "D-Chain",
+  "name": "D-Chain Mainnet",
   "rpc": [
     "https://d-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.d-chain.network/ext/bc/2ZiR1Bro5E59siVuwdNuRFzqL95NkvkbzyLBdrsYR9BLSHV7H4/rpc"
   ],
-  "nativeCurrency": {
-    "name": "DOINX",
-    "symbol": "DOINX",
-    "decimals": 18
-  },
-  "shortName": "dchain-mainnet",
-  "chainId": 1951,
-  "networkId": 1951,
+  "slug": "d-chain",
   "icon": {
     "url": "ipfs://QmV2vhTqS9UyrX9Q6BSCbK4JrKBnS8ErHvstMjfb2oVWaj",
     "width": 700,
@@ -21,7 +15,15 @@ export default {
     "format": "png"
   },
   "faucets": [],
+  "nativeCurrency": {
+    "name": "DOINX",
+    "symbol": "DOINX",
+    "decimals": 18
+  },
   "infoURL": "",
+  "shortName": "dchain-mainnet",
   "testnet": false,
-  "slug": "d-chain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

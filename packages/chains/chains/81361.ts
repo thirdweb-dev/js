@@ -1,8 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mizana Testnet",
+  "chainId": 81361,
   "chain": "MEER",
+  "name": "Mizana Testnet",
   "rpc": [],
+  "slug": "mizana-testnet",
+  "icon": {
+    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Mizana Testnet",
@@ -11,15 +19,9 @@ export default {
   },
   "infoURL": "https://github.com/Qitmeer",
   "shortName": "mizanatest",
-  "icon": {
-    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "chainId": 81361,
-  "networkId": 81361,
-  "status": "incubating",
   "testnet": true,
-  "slug": "mizana-testnet"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

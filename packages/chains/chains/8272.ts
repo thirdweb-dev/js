@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Blockton Blockchain",
+  "chainId": 8272,
   "chain": "Blockton Blockchain",
+  "name": "Blockton Blockchain",
+  "rpc": [
+    "https://blockton-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.blocktonscan.com/"
+  ],
+  "slug": "blockton-blockchain",
   "icon": {
     "url": "ipfs://bafkreig3hoedafisrgc6iffdo2jcblm6kov35h72gcblc3zkmt7t4ucwhy",
     "width": 800,
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://blockton-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.blocktonscan.com/"
-  ],
   "faucets": [
     "https://faucet.blocktonscan.com/"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://blocktoncoin.com",
   "shortName": "BTON",
-  "chainId": 8272,
-  "networkId": 8272,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Blockton Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "blockton-blockchain"
+  "features": []
 } as const satisfies Chain;

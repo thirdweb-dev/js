@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CloudWalk Mainnet",
+  "chainId": 2009,
   "chain": "CloudWalk Mainnet",
+  "name": "CloudWalk Mainnet",
   "rpc": [],
+  "slug": "cloudwalk",
   "faucets": [],
   "nativeCurrency": {
     "name": "CloudWalk Native Token",
@@ -11,8 +13,8 @@ export default {
   },
   "infoURL": "https://cloudwalk.io",
   "shortName": "cloudwalk_mainnet",
-  "chainId": 2009,
-  "networkId": 2009,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "CloudWalk Mainnet Explorer",
@@ -20,6 +22,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "cloudwalk"
+  "features": []
 } as const satisfies Chain;

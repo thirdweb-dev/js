@@ -1,13 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bifrost Mainnet",
-  "title": "The Bifrost Mainnet network",
+  "chainId": 3068,
   "chain": "BFC",
+  "name": "Bifrost Mainnet",
   "rpc": [
     "https://bifrost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-01.mainnet.thebifrost.io/rpc",
     "https://public-02.mainnet.thebifrost.io/rpc"
   ],
+  "slug": "bifrost",
+  "icon": {
+    "url": "ipfs://QmcHvn2Wq91ULyEH5s3uHjosX285hUgyJHwggFJUd3L5uh",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Bifrost",
@@ -16,14 +23,8 @@ export default {
   },
   "infoURL": "https://thebifrost.io",
   "shortName": "bfc",
-  "chainId": 3068,
-  "networkId": 3068,
-  "icon": {
-    "url": "ipfs://QmcHvn2Wq91ULyEH5s3uHjosX285hUgyJHwggFJUd3L5uh",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "explorer-thebifrost",
@@ -31,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bifrost"
+  "features": []
 } as const satisfies Chain;

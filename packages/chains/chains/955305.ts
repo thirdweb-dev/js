@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eluvio Content Fabric",
+  "chainId": 955305,
   "chain": "Eluvio",
+  "name": "Eluvio Content Fabric",
   "rpc": [
     "https://eluvio-content-fabric.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://host-76-74-28-226.contentfabric.io/eth/",
@@ -15,6 +16,7 @@ export default {
     "https://host-60-240-133-202.contentfabric.io/eth/",
     "https://host-64-235-250-98.contentfabric.io/eth/"
   ],
+  "slug": "eluvio-content-fabric",
   "faucets": [],
   "nativeCurrency": {
     "name": "ELV",
@@ -23,9 +25,8 @@ export default {
   },
   "infoURL": "https://eluv.io",
   "shortName": "elv",
-  "chainId": 955305,
-  "networkId": 955305,
-  "slip44": 1011,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -33,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "eluvio-content-fabric"
+  "features": []
 } as const satisfies Chain;

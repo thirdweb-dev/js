@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Astra",
+  "chainId": 11110,
   "chain": "Astra",
+  "name": "Astra",
   "rpc": [
     "https://astra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.io",
     "https://rpc1.astranaut.io"
   ],
+  "slug": "astra",
+  "icon": {
+    "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+    "width": 104,
+    "height": 80,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Astra",
@@ -15,38 +23,19 @@ export default {
   },
   "infoURL": "https://astranaut.io",
   "shortName": "astra",
-  "chainId": 11110,
-  "networkId": 11110,
-  "icon": {
-    "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-    "width": 104,
-    "height": 80,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "Astra EVM Explorer (Blockscout)",
-      "url": "https://explorer.astranaut.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-        "width": 104,
-        "height": 80,
-        "format": "png"
-      }
-    },
     {
       "name": "Astra PingPub Explorer",
       "url": "https://ping.astranaut.io/astra",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-        "width": 104,
-        "height": 80,
-        "format": "png"
-      }
+      "standard": "none"
+    },
+    {
+      "name": "Astra EVM Explorer (Blockscout)",
+      "url": "https://explorer.astranaut.io",
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "astra"
+  "features": []
 } as const satisfies Chain;

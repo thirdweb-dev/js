@@ -1,9 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Quarix",
+  "chainId": 8888888,
   "chain": "Quarix",
-  "status": "incubating",
+  "name": "Quarix",
   "rpc": [],
+  "slug": "quarix",
+  "icon": {
+    "url": "ipfs://QmZmY6xVNzRAGwyT64PuyHaQ33BR84HEWvTVf6YHPW7kvQ",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Q",
@@ -12,15 +19,9 @@ export default {
   },
   "infoURL": "",
   "shortName": "quarix",
-  "chainId": 8888888,
-  "networkId": 8888888,
-  "icon": {
-    "url": "ipfs://QmZmY6xVNzRAGwyT64PuyHaQ33BR84HEWvTVf6YHPW7kvQ",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
-  "explorers": [],
   "testnet": false,
-  "slug": "quarix"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

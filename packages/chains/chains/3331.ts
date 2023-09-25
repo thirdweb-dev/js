@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ZCore Testnet",
+  "chainId": 3331,
   "chain": "Beach",
+  "name": "ZCore Testnet",
+  "rpc": [
+    "https://zcore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.zcore.cash"
+  ],
+  "slug": "zcore-testnet",
   "icon": {
     "url": "ipfs://QmQnXu13ym8W1VA3QxocaNVXGAuEPmamSCkS7bBscVk1f4",
     "width": 1050,
     "height": 1050,
     "format": "png"
   },
-  "rpc": [
-    "https://zcore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.zcore.cash"
-  ],
   "faucets": [
     "https://faucet.zcore.cash"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://zcore.cash",
   "shortName": "zcrbeach",
-  "chainId": 3331,
-  "networkId": 3331,
   "testnet": true,
-  "slug": "zcore-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

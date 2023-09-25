@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Joys Digital Mainnet",
+  "chainId": 35855456,
   "chain": "JOYS",
+  "name": "Joys Digital Mainnet",
   "rpc": [
     "https://joys-digital.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.joys.digital"
   ],
+  "slug": "joys-digital",
   "faucets": [],
   "nativeCurrency": {
     "name": "JOYS",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://joys.digital",
   "shortName": "JOYS",
-  "chainId": 35855456,
-  "networkId": 35855456,
   "testnet": false,
-  "slug": "joys-digital"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

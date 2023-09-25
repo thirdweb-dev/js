@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Evanesco Testnet",
+  "chainId": 1201,
   "chain": "Evanesco Testnet",
+  "name": "Evanesco Testnet",
   "rpc": [
     "https://evanesco-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed5.evanesco.org:8547"
   ],
+  "slug": "evanesco-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "AVIS",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://evanesco.org/",
   "shortName": "avis",
-  "chainId": 1201,
-  "networkId": 1201,
   "testnet": true,
-  "slug": "evanesco-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

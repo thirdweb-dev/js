@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cascadia Testnet",
+  "chainId": 6102,
   "chain": "Cascadia",
+  "name": "Cascadia Testnet",
   "rpc": [
     "https://cascadia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.cascadia.foundation"
   ],
+  "slug": "cascadia-testnet",
+  "icon": {
+    "url": "ipfs://QmQtcwxNiJ9D1QDz4k6jZ7qacLcqMk6CeW85TTBWBvNp3z",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "faucets": [
     "https://www.cascadia.foundation/faucet"
   ],
@@ -16,38 +24,19 @@ export default {
   },
   "infoURL": "https://www.cascadia.foundation",
   "shortName": "cascadia",
-  "chainId": 6102,
-  "networkId": 6102,
-  "icon": {
-    "url": "ipfs://QmQtcwxNiJ9D1QDz4k6jZ7qacLcqMk6CeW85TTBWBvNp3z",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "Cascadia EVM Explorer",
-      "url": "https://explorer.cascadia.foundation",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmQtcwxNiJ9D1QDz4k6jZ7qacLcqMk6CeW85TTBWBvNp3z",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
-    },
     {
       "name": "Cascadia Cosmos Explorer",
       "url": "https://validator.cascadia.foundation",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmQtcwxNiJ9D1QDz4k6jZ7qacLcqMk6CeW85TTBWBvNp3z",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
+      "standard": "none"
+    },
+    {
+      "name": "Cascadia EVM Explorer",
+      "url": "https://explorer.cascadia.foundation",
+      "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "cascadia-testnet"
+  "features": []
 } as const satisfies Chain;

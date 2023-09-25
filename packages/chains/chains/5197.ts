@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EraSwap Mainnet",
+  "chainId": 5197,
   "chain": "ESN",
+  "name": "EraSwap Mainnet",
+  "rpc": [
+    "https://eraswap.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.eraswap.network",
+    "https://rpc-mumbai.mainnet.eraswap.network"
+  ],
+  "slug": "eraswap",
   "icon": {
     "url": "ipfs://QmV1wZ1RVXeD7216aiVBpLkbBBHWNuoTvcSzpVQsqi2uaH",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "rpc": [
-    "https://eraswap.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.eraswap.network",
-    "https://rpc-mumbai.mainnet.eraswap.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "EraSwap",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://eraswap.info/",
   "shortName": "es",
-  "chainId": 5197,
-  "networkId": 5197,
   "testnet": false,
-  "slug": "eraswap"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

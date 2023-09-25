@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Avax",
+  "chainId": 43288,
   "chain": "Boba Avax",
+  "name": "Boba Avax",
   "rpc": [
     "https://boba-avax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avax.boba.network",
@@ -9,6 +10,7 @@ export default {
     "https://replica.avax.boba.network",
     "wss://replica-wss.avax.boba.network"
   ],
+  "slug": "boba-avax",
   "faucets": [],
   "nativeCurrency": {
     "name": "Boba Token",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://docs.boba.network/for-developers/network-avalanche",
   "shortName": "bobaavax",
-  "chainId": 43288,
-  "networkId": 43288,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Boba Avax Explorer",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "boba-avax"
+  "features": []
 } as const satisfies Chain;

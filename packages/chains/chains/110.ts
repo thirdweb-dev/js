@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Proton Testnet",
+  "chainId": 110,
   "chain": "XPR",
+  "name": "Proton Testnet",
   "rpc": [
     "https://proton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://protontestnet.greymass.com/"
   ],
+  "slug": "proton-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Proton",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://protonchain.com",
   "shortName": "xpr",
-  "chainId": 110,
-  "networkId": 110,
   "testnet": true,
-  "slug": "proton-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

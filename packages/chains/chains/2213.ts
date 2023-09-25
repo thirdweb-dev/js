@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Evanesco Mainnet",
+  "chainId": 2213,
   "chain": "EVA",
+  "name": "Evanesco Mainnet",
   "rpc": [
     "https://evanesco.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed4.evanesco.org:8546"
   ],
+  "slug": "evanesco",
+  "icon": {
+    "url": "ipfs://QmZbmGYdfbMRrWJore3c7hyD6q7B5pXHJqTSNjbZZUK6V8",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "EVA",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://evanesco.org/",
   "shortName": "evanesco",
-  "chainId": 2213,
-  "networkId": 2213,
-  "icon": {
-    "url": "ipfs://QmZbmGYdfbMRrWJore3c7hyD6q7B5pXHJqTSNjbZZUK6V8",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Evanesco Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "evanesco"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "IoTeX Network Testnet",
+  "chainId": 4690,
   "chain": "iotex.io",
+  "name": "IoTeX Network Testnet",
   "rpc": [
     "https://iotex-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://babel-api.testnet.iotex.io"
   ],
+  "slug": "iotex-network-testnet",
+  "icon": {
+    "url": "ipfs://QmQKHQrvtyUC5b5B76ke5GPTGXoGTVCubXS6gHgzCAswKo",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.iotex.io/"
   ],
@@ -16,8 +24,8 @@ export default {
   },
   "infoURL": "https://iotex.io",
   "shortName": "iotex-testnet",
-  "chainId": 4690,
-  "networkId": 4690,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "testnet iotexscan",
@@ -25,12 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmQKHQrvtyUC5b5B76ke5GPTGXoGTVCubXS6gHgzCAswKo",
-    "width": 250,
-    "height": 250,
-    "format": "png"
-  },
-  "testnet": true,
-  "slug": "iotex-network-testnet"
+  "features": []
 } as const satisfies Chain;

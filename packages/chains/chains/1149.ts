@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Symplexia Smart Chain",
+  "chainId": 1149,
   "chain": "Plexchain",
+  "name": "Symplexia Smart Chain",
   "rpc": [
     "https://symplexia-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://plex-rpc.plexfinance.us"
   ],
+  "slug": "symplexia-smart-chain",
+  "icon": {
+    "url": "ipfs://QmcXzfMNSQ7SZzKemNquVoXyG5ergdqCGeLWjRYETGBTUM",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Plex Native Token",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://plexfinance.us/",
   "shortName": "Plexchain",
-  "chainId": 1149,
-  "networkId": 1149,
-  "icon": {
-    "url": "ipfs://QmcXzfMNSQ7SZzKemNquVoXyG5ergdqCGeLWjRYETGBTUM",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Plexchain Explorer",
       "url": "https://explorer.plexfinance.us",
-      "icon": {
-        "url": "ipfs://QmcXzfMNSQ7SZzKemNquVoXyG5ergdqCGeLWjRYETGBTUM",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "symplexia-smart-chain"
+  "features": []
 } as const satisfies Chain;

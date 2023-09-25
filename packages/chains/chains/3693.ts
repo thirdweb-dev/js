@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Empire Network",
+  "chainId": 3693,
   "chain": "EMPIRE",
+  "name": "Empire Network",
   "rpc": [
     "https://empire-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.empirenetwork.io"
   ],
+  "slug": "empire-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Empire",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.empirenetwork.io/",
   "shortName": "empire",
-  "chainId": 3693,
-  "networkId": 3693,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Empire Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "empire-network"
+  "features": []
 } as const satisfies Chain;

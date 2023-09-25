@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bear Network Chain Testnet",
+  "chainId": 751230,
   "chain": "BRNKCTEST",
+  "name": "Bear Network Chain Testnet",
+  "rpc": [
+    "https://bear-network-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://brnkc-test.bearnetwork.net"
+  ],
+  "slug": "bear-network-chain-testnet",
   "icon": {
     "url": "ipfs://QmQqhH28QpUrreoRw5Gj8YShzdHxxVGMjfVrx3TqJNLSLv",
     "width": 1067,
     "height": 1067,
     "format": "png"
   },
-  "rpc": [
-    "https://bear-network-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://brnkc-test.bearnetwork.net"
-  ],
   "faucets": [
     "https://faucet.bearnetwork.net"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://bearnetwork.net",
   "shortName": "BRNKCTEST",
-  "chainId": 751230,
-  "networkId": 751230,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "brnktestscan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bear-network-chain-testnet"
+  "features": []
 } as const satisfies Chain;

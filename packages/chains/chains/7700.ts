@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Canto",
+  "chainId": 7700,
   "chain": "Canto",
+  "name": "Canto",
   "rpc": [
     "https://canto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://canto.slingshot.finance",
     "https://canto.neobase.one",
     "https://mainnode.plexnode.org:8545"
   ],
+  "slug": "canto",
   "faucets": [],
   "nativeCurrency": {
     "name": "Canto",
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://canto.io",
   "shortName": "canto",
-  "chainId": 7700,
-  "networkId": 7700,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Canto EVM Explorer (Blockscout)",
@@ -35,6 +37,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "canto"
+  "features": []
 } as const satisfies Chain;

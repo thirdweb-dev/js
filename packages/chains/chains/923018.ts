@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "FNCY Testnet",
+  "chainId": 923018,
   "chain": "FNCY",
+  "name": "FNCY Testnet",
   "rpc": [
     "https://fncy-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fncy-testnet-seed.fncy.world"
   ],
+  "slug": "fncy-testnet",
+  "icon": {
+    "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet-testnet.fncy.world"
   ],
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://fncyscan-testnet.fncy.world",
   "shortName": "tFNCY",
-  "chainId": 923018,
-  "networkId": 923018,
-  "icon": {
-    "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "fncy scan testnet",
       "url": "https://fncyscan-testnet.fncy.world",
-      "icon": {
-        "url": "ipfs://QmfXCh6UnaEHn3Evz7RFJ3p2ggJBRm9hunDHegeoquGuhD",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "fncy-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Xpla Mainnet",
+  "chainId": 37,
   "chain": "XPLA",
+  "name": "Xpla Mainnet",
   "rpc": [
     "https://xpla.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dimension-evm-rpc.xpla.dev"
   ],
+  "slug": "xpla",
+  "icon": {
+    "url": "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "faucets": [],
   "nativeCurrency": {
     "name": "XPLA",
     "symbol": "XPLA",
@@ -13,13 +22,10 @@ export default {
   },
   "infoURL": "https://xpla.io/",
   "shortName": "xpla",
-  "chainId": 37,
-  "icon": {
-    "url": "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [
+    "reusedChainId"
+  ],
   "explorers": [
     {
       "name": "XPLA Explorer",
@@ -27,9 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "redFlags": [
-    "reusedChainId"
-  ],
-  "slug": "xpla"
+  "features": []
 } as const satisfies Chain;

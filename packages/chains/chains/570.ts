@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rollux Mainnet",
+  "chainId": 570,
   "chain": "SYS",
+  "name": "Rollux Mainnet",
   "rpc": [
     "https://rollux.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
@@ -9,6 +10,7 @@ export default {
     "wss://rpc.rollux.com/wss",
     "https://rpc.ankr.com/rollux/${ANKR_API_KEY}"
   ],
+  "slug": "rollux",
   "faucets": [
     "https://rollux.id/faucetapp"
   ],
@@ -19,8 +21,8 @@ export default {
   },
   "infoURL": "https://rollux.com",
   "shortName": "sys-rollux",
-  "chainId": 570,
-  "networkId": 570,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Rollux Explorer",
@@ -28,6 +30,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "rollux"
+  "features": []
 } as const satisfies Chain;

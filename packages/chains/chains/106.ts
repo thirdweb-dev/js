@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Velas EVM Mainnet",
+  "chainId": 106,
   "chain": "Velas",
+  "name": "Velas EVM Mainnet",
+  "rpc": [
+    "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evmexplorer.velas.com/rpc",
+    "https://explorer.velas.com/rpc"
+  ],
+  "slug": "velas-evm",
   "icon": {
     "url": "ipfs://QmNXiCXJxEeBd7ZYGYjPSMTSdbDd2nfodLC677gUfk9ku5",
     "width": 924,
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evmexplorer.velas.com/rpc",
-    "https://explorer.velas.com/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Velas",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://velas.com",
   "shortName": "vlx",
-  "chainId": 106,
-  "networkId": 106,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Velas Explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "velas-evm"
+  "features": []
 } as const satisfies Chain;

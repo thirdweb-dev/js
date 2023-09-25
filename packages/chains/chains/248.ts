@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oasys Mainnet",
+  "chainId": 248,
   "chain": "Oasys",
+  "name": "Oasys Mainnet",
+  "rpc": [
+    "https://oasys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mainnet.oasys.games"
+  ],
+  "slug": "oasys",
   "icon": {
     "url": "ipfs://QmT84suD2ZmTSraJBfeHhTNst2vXctQijNCztok9XiVcUR",
     "width": 3600,
     "height": 3600,
     "format": "png"
   },
-  "rpc": [
-    "https://oasys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mainnet.oasys.games"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "OAS",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://oasys.games",
   "shortName": "OAS",
-  "chainId": 248,
-  "networkId": 248,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "oasys"
+  "features": []
 } as const satisfies Chain;

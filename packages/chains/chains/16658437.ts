@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Plian Testnet Main",
+  "chainId": 16658437,
   "chain": "Plian",
+  "name": "Plian Testnet Main",
   "rpc": [
     "https://plian-testnet-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/testnet"
   ],
+  "slug": "plian-testnet-main",
   "faucets": [],
   "nativeCurrency": {
     "name": "Plian Testnet Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://plian.org",
   "shortName": "plian-testnet",
-  "chainId": 16658437,
-  "networkId": 16658437,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "piscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "plian-testnet-main"
+  "features": []
 } as const satisfies Chain;

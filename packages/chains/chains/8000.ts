@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Teleport",
+  "chainId": 8000,
   "chain": "Teleport",
+  "name": "Teleport",
   "rpc": [
     "https://teleport.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.teleport.network"
   ],
+  "slug": "teleport",
+  "icon": {
+    "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
+    "width": 390,
+    "height": 390,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Tele",
@@ -14,38 +22,19 @@ export default {
   },
   "infoURL": "https://teleport.network",
   "shortName": "teleport",
-  "chainId": 8000,
-  "networkId": 8000,
-  "icon": {
-    "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
-    "width": 390,
-    "height": 390,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "Teleport EVM Explorer (Blockscout)",
-      "url": "https://evm-explorer.teleport.network",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
-        "width": 390,
-        "height": 390,
-        "format": "svg"
-      }
-    },
     {
       "name": "Teleport Cosmos Explorer (Big Dipper)",
       "url": "https://explorer.teleport.network",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
-        "width": 390,
-        "height": 390,
-        "format": "svg"
-      }
+      "standard": "none"
+    },
+    {
+      "name": "Teleport EVM Explorer (Blockscout)",
+      "url": "https://evm-explorer.teleport.network",
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "teleport"
+  "features": []
 } as const satisfies Chain;

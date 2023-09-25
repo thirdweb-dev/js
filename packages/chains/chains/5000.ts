@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mantle",
+  "chainId": 5000,
   "chain": "ETH",
-  "icon": {
-    "url": "ipfs://QmYddHh5zdceSsBU7uGfQvEHg6UUtAFbzQBBaePS4whx7o",
-    "width": 225,
-    "height": 225,
-    "format": "png"
-  },
+  "name": "Mantle",
   "rpc": [
     "https://mantle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mantle.xyz",
     "https://mantle.publicnode.com",
     "wss://mantle.publicnode.com"
   ],
+  "slug": "mantle",
+  "icon": {
+    "url": "ipfs://QmYddHh5zdceSsBU7uGfQvEHg6UUtAFbzQBBaePS4whx7o",
+    "width": 225,
+    "height": 225,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Mantle",
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://mantle.xyz",
   "shortName": "mantle",
-  "chainId": 5000,
-  "networkId": 5000,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Mantle Explorer",
@@ -31,15 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge.mantle.xyz"
-      }
-    ]
-  },
-  "testnet": false,
-  "slug": "mantle"
+  "features": []
 } as const satisfies Chain;

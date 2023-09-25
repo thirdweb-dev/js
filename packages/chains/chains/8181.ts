@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Testnet BeOne Chain",
+  "chainId": 8181,
   "chain": "tBOC",
+  "name": "Testnet BeOne Chain",
   "rpc": [
     "https://testnet-beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pre-boc1.beonechain.com"
   ],
+  "slug": "testnet-beone-chain",
+  "icon": {
+    "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "faucets": [
     "https://testnet.beonescan.com/faucet"
   ],
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://testnet.beonescan.com",
   "shortName": "tBOC",
-  "chainId": 8181,
-  "networkId": 8181,
-  "icon": {
-    "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Testnet BeOne Chain",
       "url": "https://testnet.beonescan.com",
-      "icon": {
-        "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "testnet-beone-chain"
+  "features": []
 } as const satisfies Chain;

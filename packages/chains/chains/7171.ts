@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitrock Mainnet",
+  "chainId": 7171,
   "chain": "Bitrock",
+  "name": "Bitrock Mainnet",
+  "rpc": [
+    "https://bitrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://connect.bit-rock.io"
+  ],
+  "slug": "bitrock",
   "icon": {
     "url": "ipfs://QmfXZCAh3HWS2bJroUStN9TieL4QA9QArMotie3X4pwBfj",
     "width": 72,
     "height": 72,
     "format": "svg"
   },
-  "rpc": [
-    "https://bitrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.bit-rock.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "BITROCK",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://bit-rock.io",
   "shortName": "bitrock",
-  "chainId": 7171,
-  "networkId": 7171,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitrock Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bitrock"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Numbers Testnet",
+  "chainId": 10508,
   "chain": "NUM",
+  "name": "Numbers Testnet",
+  "rpc": [
+    "https://numbers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnetrpc.num.network"
+  ],
+  "slug": "numbers-testnet",
   "icon": {
     "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
     "width": 1500,
     "height": 1500,
     "format": "png"
   },
-  "rpc": [
-    "https://numbers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnetrpc.num.network"
-  ],
   "faucets": [
     "https://faucet.avax.network/?subnet=num",
     "https://faucet.num.network"
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://numbersprotocol.io",
   "shortName": "Snow",
-  "chainId": 10508,
-  "networkId": 10508,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ethernal",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "numbers-testnet"
+  "features": []
 } as const satisfies Chain;

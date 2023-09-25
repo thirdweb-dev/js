@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tectum Emission Token",
+  "chainId": 1003,
   "chain": "TET",
+  "name": "Tectum Emission Token",
   "rpc": [
     "https://tectum-emission-token.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.softnote.com/"
   ],
+  "slug": "tectum-emission-token",
   "faucets": [],
   "nativeCurrency": {
     "name": "Tectum",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://softnote.com",
   "shortName": "tet",
-  "chainId": 1003,
-  "networkId": 1003,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Tectum explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "tectum-emission-token"
+  "features": []
 } as const satisfies Chain;

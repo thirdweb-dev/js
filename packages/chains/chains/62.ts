@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Testnet Morden",
+  "chainId": 62,
   "chain": "ETC",
+  "name": "Ethereum Classic Testnet Morden",
   "rpc": [],
+  "slug": "ethereum-classic-testnet-morden",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ethereum Classic Testnet Ether",
@@ -11,8 +13,8 @@ export default {
   },
   "infoURL": "https://ethereumclassic.org",
   "shortName": "tetc",
-  "chainId": 62,
-  "networkId": 2,
   "testnet": true,
-  "slug": "ethereum-classic-testnet-morden"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

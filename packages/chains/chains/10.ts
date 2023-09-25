@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OP Mainnet",
+  "chainId": 10,
   "chain": "ETH",
+  "name": "OP Mainnet",
   "rpc": [
     "https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-mainnet.infura.io/v3/${INFURA_API_KEY}",
@@ -12,6 +13,13 @@ export default {
     "https://optimism.gateway.tenderly.co",
     "wss://optimism.gateway.tenderly.co"
   ],
+  "slug": "optimism",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -20,8 +28,8 @@ export default {
   },
   "infoURL": "https://optimism.io",
   "shortName": "oeth",
-  "chainId": 10,
-  "networkId": 10,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "etherscan",
@@ -31,21 +39,8 @@ export default {
     {
       "name": "blockscout",
       "url": "https://optimism.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "testnet": false,
-  "slug": "optimism"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ThunderCore Testnet",
+  "chainId": 18,
   "chain": "TST",
+  "name": "ThunderCore Testnet",
   "rpc": [
     "https://thundercore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.thundercore.com"
   ],
+  "slug": "thundercore-testnet",
   "faucets": [
     "https://faucet-testnet.thundercore.com"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://thundercore.com",
   "shortName": "TST",
-  "chainId": 18,
-  "networkId": 18,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "thundercore-blockscout-testnet",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "thundercore-testnet"
+  "features": []
 } as const satisfies Chain;

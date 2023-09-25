@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Synapse Chain Testnet",
-  "status": "active",
+  "chainId": 444,
   "chain": "ETH",
+  "name": "Synapse Chain Testnet",
   "rpc": [
     "https://synapse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.synapseprotocol.com"
   ],
+  "slug": "synapse-chain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Sepolia ETH",
@@ -15,8 +16,8 @@ export default {
   },
   "infoURL": "https://synapseprotocol.com",
   "shortName": "synapse-sepolia",
-  "chainId": 444,
-  "networkId": 444,
+  "testnet": true,
+  "status": "active",
   "redFlags": [
     "reusedChainId"
   ],
@@ -27,15 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-11155111",
-    "bridges": [
-      {
-        "url": "https://docs.synapseprotocol.com/synapse-chain/using-synapse-chain/bridging-to-synapse-chain"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "synapse-chain-testnet"
+  "features": []
 } as const satisfies Chain;

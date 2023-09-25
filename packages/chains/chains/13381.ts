@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Phoenix Mainnet",
+  "chainId": 13381,
   "chain": "Phoenix",
+  "name": "Phoenix Mainnet",
   "rpc": [
     "https://phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.phoenixplorer.com/"
   ],
+  "slug": "phoenix",
+  "icon": {
+    "url": "ipfs://QmYiLMeKDXMSNuQmtxNdxm53xR588pcRXMf7zuiZLjQnc6",
+    "width": 1501,
+    "height": 1501,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Phoenix",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://cryptophoenix.org/phoenix",
   "shortName": "Phoenix",
-  "chainId": 13381,
-  "networkId": 13381,
-  "icon": {
-    "url": "ipfs://QmYiLMeKDXMSNuQmtxNdxm53xR588pcRXMf7zuiZLjQnc6",
-    "width": 1501,
-    "height": 1501,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "phoenixplorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "phoenix"
+  "features": []
 } as const satisfies Chain;

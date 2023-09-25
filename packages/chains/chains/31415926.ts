@@ -1,9 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Filecoin - Local testnet",
+  "chainId": 31415926,
   "chain": "FIL",
-  "status": "incubating",
+  "name": "Filecoin - Local testnet",
   "rpc": [],
+  "slug": "filecoin-local-testnet",
+  "icon": {
+    "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "testnet filecoin",
@@ -12,16 +19,9 @@ export default {
   },
   "infoURL": "https://filecoin.io",
   "shortName": "filecoin-local",
-  "icon": {
-    "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
-  "chainId": 31415926,
-  "networkId": 31415926,
-  "slip44": 1,
-  "explorers": [],
   "testnet": true,
-  "slug": "filecoin-local-testnet"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

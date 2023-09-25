@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TOP Mainnet EVM",
+  "chainId": 980,
   "chain": "TOP",
+  "name": "TOP Mainnet EVM",
+  "rpc": [
+    "https://top-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ethapi.topnetwork.org"
+  ],
+  "slug": "top-evm",
   "icon": {
     "url": "ipfs://QmYikaM849eZrL8pGNeVhEHVTKWpxdGMvCY5oFBfZ2ndhd",
     "width": 800,
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://top-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ethapi.topnetwork.org"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.topnetwork.org/",
   "shortName": "top_evm",
-  "chainId": 980,
-  "networkId": 0,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "topscan.dev",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "top-evm"
+  "features": []
 } as const satisfies Chain;

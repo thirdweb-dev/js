@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oasis Sapphire Testnet",
+  "chainId": 23295,
   "chain": "Sapphire",
+  "name": "Oasis Sapphire Testnet",
+  "rpc": [
+    "https://oasis-sapphire-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.sapphire.oasis.dev",
+    "wss://testnet.sapphire.oasis.dev/ws"
+  ],
+  "slug": "oasis-sapphire-testnet",
   "icon": {
     "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
     "width": 2000,
     "height": 2000,
     "format": "png"
   },
-  "rpc": [
-    "https://oasis-sapphire-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.sapphire.oasis.dev",
-    "wss://testnet.sapphire.oasis.dev/ws"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Sapphire Test Rose",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://docs.oasis.io/dapp/sapphire",
   "shortName": "sapphire-testnet",
-  "chainId": 23295,
-  "networkId": 23295,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Oasis Sapphire Testnet Explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "oasis-sapphire-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Smart Bitcoin Cash Testnet",
+  "chainId": 10001,
   "chain": "smartBCHTest",
+  "name": "Smart Bitcoin Cash Testnet",
   "rpc": [
     "https://smart-bitcoin-cash-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.smartbch.org",
     "https://smartbch.devops.cash/testnet"
   ],
+  "slug": "smart-bitcoin-cash-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin Cash Test Token",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "http://smartbch.org/",
   "shortName": "smartbchtest",
-  "chainId": 10001,
-  "networkId": 10001,
   "testnet": true,
-  "slug": "smart-bitcoin-cash-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

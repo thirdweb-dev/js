@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taycan Testnet",
+  "chainId": 2023,
   "chain": "Taycan",
+  "name": "Taycan Testnet",
   "rpc": [
     "https://taycan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-taycan.hupayx.io"
   ],
+  "slug": "taycan-testnet",
+  "icon": {
+    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+    "width": 1000,
+    "height": 1206,
+    "format": "png"
+  },
   "faucets": [
     "https://ttaycan-faucet.hupayx.io/"
   ],
@@ -16,38 +24,19 @@ export default {
   },
   "infoURL": "https://hupayx.io",
   "shortName": "taycan-testnet",
-  "chainId": 2023,
-  "networkId": 2023,
-  "icon": {
-    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-    "width": 1000,
-    "height": 1206,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "Taycan Explorer(Blockscout)",
-      "url": "https://evmscan-test.hupayx.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-        "width": 1000,
-        "height": 1206,
-        "format": "png"
-      }
-    },
     {
       "name": "Taycan Cosmos Explorer",
       "url": "https://cosmoscan-test.hupayx.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-        "width": 1000,
-        "height": 1206,
-        "format": "png"
-      }
+      "standard": "none"
+    },
+    {
+      "name": "Taycan Explorer(Blockscout)",
+      "url": "https://evmscan-test.hupayx.io",
+      "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "taycan-testnet"
+  "features": []
 } as const satisfies Chain;

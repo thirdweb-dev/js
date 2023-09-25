@@ -1,22 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "UPTN",
+  "chainId": 6119,
   "chain": "UPTN",
+  "name": "UPTN",
+  "rpc": [
+    "https://uptn.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node-api.uptn.io/v1/ext/rpc"
+  ],
+  "slug": "uptn",
   "icon": {
     "url": "ipfs://Qma6cGPCDcJPFxy5KQaMBrLtuVQiqeLncXVybcBoQuhai5",
     "width": 128,
     "height": 128,
     "format": "png"
   },
-  "rpc": [
-    "https://uptn.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node-api.uptn.io/v1/ext/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "UPTN",
@@ -25,8 +22,8 @@ export default {
   },
   "infoURL": "https://uptn.io",
   "shortName": "UPTN",
-  "chainId": 6119,
-  "networkId": 6119,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "UPTN Explorer",
@@ -34,6 +31,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "uptn"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

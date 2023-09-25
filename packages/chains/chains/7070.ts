@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Planq Mainnet",
+  "chainId": 7070,
   "chain": "Planq",
+  "name": "Planq Mainnet",
+  "rpc": [
+    "https://planq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm-rpc.planq.network"
+  ],
+  "slug": "planq",
   "icon": {
     "url": "ipfs://QmWEy9xK5BoqxPuVs7T48WM4exJrxzkEFt45iHcxWqUy8D",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "rpc": [
-    "https://planq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm-rpc.planq.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Planq",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://planq.network",
   "shortName": "planq",
-  "chainId": 7070,
-  "networkId": 7070,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Planq EVM Explorer (Blockscout)",
@@ -34,6 +36,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "planq"
+  "features": []
 } as const satisfies Chain;

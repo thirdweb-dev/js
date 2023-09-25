@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "myOwn Testnet",
+  "chainId": 9999,
   "chain": "myOwn",
+  "name": "myOwn Testnet",
   "rpc": [
     "https://myown-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.dev.bccloud.net"
   ],
+  "slug": "myown-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "MYN",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://docs.bccloud.net/",
   "shortName": "myn",
-  "chainId": 9999,
-  "networkId": 9999,
   "testnet": true,
-  "slug": "myown-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

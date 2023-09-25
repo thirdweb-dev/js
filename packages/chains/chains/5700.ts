@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Syscoin Tanenbaum Testnet",
+  "chainId": 5700,
   "chain": "SYS",
+  "name": "Syscoin Tanenbaum Testnet",
   "rpc": [
     "https://syscoin-tanenbaum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tanenbaum.io",
@@ -9,6 +10,7 @@ export default {
     "https://syscoin-tanenbaum-evm.publicnode.com",
     "wss://syscoin-tanenbaum-evm.publicnode.com"
   ],
+  "slug": "syscoin-tanenbaum-testnet",
   "faucets": [
     "https://faucet.tanenbaum.io"
   ],
@@ -19,8 +21,8 @@ export default {
   },
   "infoURL": "https://syscoin.org",
   "shortName": "tsys",
-  "chainId": 5700,
-  "networkId": 5700,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Syscoin Testnet Block Explorer",
@@ -28,6 +30,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "syscoin-tanenbaum-testnet"
+  "features": []
 } as const satisfies Chain;

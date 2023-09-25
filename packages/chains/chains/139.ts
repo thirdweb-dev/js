@@ -1,25 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "WoopChain Mainnet",
+  "chainId": 139,
   "chain": "WOOP",
+  "name": "WoopChain Mainnet",
+  "rpc": [
+    "https://woopchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.woop.ai/rpc"
+  ],
+  "slug": "woopchain",
   "icon": {
     "url": "ipfs://Qma7LpnkGjAN1dwL6VTXUYqzySNxjLg4br7J8UE4yZWYec",
     "width": 310,
     "height": 310,
     "format": "png"
   },
-  "rpc": [
-    "https://woopchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.woop.ai/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "WoopCoin",
@@ -28,8 +22,8 @@ export default {
   },
   "infoURL": "https://wikiwoop.com",
   "shortName": "woop",
-  "chainId": 139,
-  "networkId": 139,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "wikiwoop",
@@ -37,6 +31,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "woopchain"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

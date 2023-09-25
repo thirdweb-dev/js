@@ -1,16 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Beam",
+  "chainId": 4337,
   "chain": "BEAM",
+  "name": "Beam",
   "rpc": [
     "https://beam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/beam/mainnet/rpc"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "beam",
+  "icon": {
+    "url": "ipfs://QmQJ21NWyGGDraicVEzS1Uqq1yXahM9NCuNZgnfYvtspdt",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Merit Circle",
@@ -19,14 +22,8 @@ export default {
   },
   "infoURL": "https://www.onbeam.com",
   "shortName": "beam",
-  "icon": {
-    "url": "ipfs://QmQJ21NWyGGDraicVEzS1Uqq1yXahM9NCuNZgnfYvtspdt",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "chainId": 4337,
-  "networkId": 4337,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Beam Explorer",
@@ -34,6 +31,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "beam"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

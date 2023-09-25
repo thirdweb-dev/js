@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AIA Mainnet",
+  "chainId": 1319,
   "chain": "AIA",
-  "icon": {
-    "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
-    "width": 160,
-    "height": 160,
-    "format": "png"
-  },
+  "name": "AIA Mainnet",
   "rpc": [
     "https://aia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://aia-dataseed1.aiachain.org",
@@ -15,6 +10,13 @@ export default {
     "https://aia-dataseed3.aiachain.org",
     "https://aia-dataseed4.aiachain.org"
   ],
+  "slug": "aia",
+  "icon": {
+    "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
+    "width": 160,
+    "height": 160,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "AIA Mainnet",
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://aiachain.org/",
   "shortName": "aia",
-  "chainId": 1319,
-  "networkId": 1319,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "AIA Chain Explorer Mainnet",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "aia"
+  "features": []
 } as const satisfies Chain;

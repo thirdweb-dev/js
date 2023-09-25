@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Reapchain Testnet",
+  "chainId": 221231,
   "chain": "REAP",
+  "name": "Reapchain Testnet",
   "rpc": [
     "https://reapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-eth.reapchain.org"
   ],
+  "slug": "reapchain-testnet",
+  "icon": {
+    "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "faucets": [
     "http://faucet.reapchain.com"
   ],
@@ -14,30 +22,16 @@ export default {
     "symbol": "tREAP",
     "decimals": 18
   },
-  "features": [],
   "infoURL": "https://reapchain.com",
   "shortName": "reap-testnet",
-  "chainId": 221231,
-  "networkId": 221231,
-  "icon": {
-    "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Reapchain Testnet Dashboard",
       "url": "https://test-dashboard.reapchain.org",
-      "icon": {
-        "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "reapchain-testnet"
+  "features": []
 } as const satisfies Chain;

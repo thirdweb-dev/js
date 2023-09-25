@@ -1,8 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CENNZnet Rata",
+  "chainId": 3000,
   "chain": "CENNZnet",
+  "name": "CENNZnet Rata",
   "rpc": [],
+  "slug": "cennznet-rata",
+  "icon": {
+    "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
+    "width": 112,
+    "height": 112,
+    "format": "svg"
+  },
   "faucets": [
     "https://app-faucet.centrality.me"
   ],
@@ -13,14 +21,8 @@ export default {
   },
   "infoURL": "https://cennz.net",
   "shortName": "cennz-r",
-  "chainId": 3000,
-  "networkId": 3000,
-  "icon": {
-    "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
-    "width": 112,
-    "height": 112,
-    "format": "svg"
-  },
   "testnet": false,
-  "slug": "cennznet-rata"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

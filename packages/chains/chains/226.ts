@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "LACHAIN Testnet",
+  "chainId": 226,
   "chain": "TLA",
+  "name": "LACHAIN Testnet",
+  "rpc": [
+    "https://lachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.lachain.io"
+  ],
+  "slug": "lachain-testnet",
   "icon": {
     "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
     "width": 1280,
     "height": 1280,
     "format": "png"
   },
-  "rpc": [
-    "https://lachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.lachain.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "TLA",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://lachain.io",
   "shortName": "TLA",
-  "chainId": 226,
-  "networkId": 226,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "lachain-testnet"
+  "features": []
 } as const satisfies Chain;

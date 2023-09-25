@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EOS EVM Network",
+  "chainId": 17777,
   "chain": "EOS",
+  "name": "EOS EVM Network",
+  "rpc": [
+    "https://eos-evm-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.evm.eosnetwork.com"
+  ],
+  "slug": "eos-evm-network",
   "icon": {
     "url": "ipfs://QmXkK5D5GWizvY1FmL6pV8cYLAbhehKETubktCgh6qDJZb",
     "width": 500,
     "height": 750,
     "format": "png"
   },
-  "rpc": [
-    "https://eos-evm-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.evm.eosnetwork.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "EOS",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://eosnetwork.com/eos-evm",
   "shortName": "eos",
-  "chainId": 17777,
-  "networkId": 17777,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "EOS EVM Explorer",
@@ -29,18 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge.evm.eosnetwork.com"
-      },
-      {
-        "url": "https://app.multichain.org"
-      }
-    ]
-  },
-  "testnet": false,
-  "slug": "eos-evm-network"
+  "features": []
 } as const satisfies Chain;

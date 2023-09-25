@@ -1,13 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fox Testnet Network",
+  "chainId": 6565,
   "chain": "FOX",
+  "name": "Fox Testnet Network",
   "rpc": [
     "https://fox-testnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet-v1.foxchain.app/",
     "https://rpc2-testnet-v1.foxchain.app/",
     "https://rpc3-testnet-v1.foxchain.app"
   ],
+  "slug": "fox-testnet-network",
+  "icon": {
+    "url": "ipfs://Qmbp1rwhtRr6JQRyYqyfLqkbmzXr1T17zbmChsi2ouvg3M",
+    "width": 100,
+    "height": 100,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.foxchain.app"
   ],
@@ -18,27 +26,14 @@ export default {
   },
   "infoURL": "https://foxchain.app",
   "shortName": "fox",
-  "chainId": 6565,
-  "networkId": 6565,
-  "icon": {
-    "url": "ipfs://Qmbp1rwhtRr6JQRyYqyfLqkbmzXr1T17zbmChsi2ouvg3M",
-    "width": 100,
-    "height": 100,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "FOX Testnet Explorer",
-      "icon": {
-        "url": "ipfs://Qmbp1rwhtRr6JQRyYqyfLqkbmzXr1T17zbmChsi2ouvg3M",
-        "width": 100,
-        "height": 100,
-        "format": "png"
-      },
       "url": "https://testnet.foxscan.app",
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "fox-testnet-network"
+  "features": []
 } as const satisfies Chain;

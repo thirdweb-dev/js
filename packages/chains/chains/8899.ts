@@ -1,20 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "JIBCHAIN L1",
+  "chainId": 8899,
   "chain": "JBC",
+  "name": "JIBCHAIN L1",
   "rpc": [
     "https://jibchain-l1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-l1.jibchain.net"
   ],
+  "slug": "jibchain-l1",
   "faucets": [],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "nativeCurrency": {
     "name": "JIBCOIN",
     "symbol": "JBC",
@@ -22,8 +16,8 @@ export default {
   },
   "infoURL": "https://jibchain.net",
   "shortName": "jbc",
-  "chainId": 8899,
-  "networkId": 8899,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "JIBCHAIN Explorer",
@@ -31,6 +25,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "jibchain-l1"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

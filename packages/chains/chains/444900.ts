@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Weelink Testnet",
+  "chainId": 444900,
   "chain": "WLK",
+  "name": "Weelink Testnet",
   "rpc": [
     "https://weelink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://weelinknode1c.gw002.oneitfarm.com"
   ],
+  "slug": "weelink-testnet",
   "faucets": [
     "https://faucet.weelink.gw002.oneitfarm.com"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://weelink.cloud",
   "shortName": "wlkt",
-  "chainId": 444900,
-  "networkId": 444900,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "weelink-testnet",
@@ -25,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "weelink-testnet"
+  "features": []
 } as const satisfies Chain;

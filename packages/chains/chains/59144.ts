@@ -1,20 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Linea Mainnet",
-  "chain": "Linea Mainnet",
-  "shortName": "linea-mainnet",
   "chainId": 59144,
-  "testnet": false,
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
+  "chain": "Linea Mainnet",
+  "name": "Linea Mainnet",
   "rpc": [
     "https://linea.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://linea-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://rpc.linea.build"
   ],
+  "slug": "linea",
+  "icon": {
+    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
+    "width": 97,
+    "height": 102,
+    "format": "svg"
+  },
+  "faucets": [
+    "https://www.infura.io/faucet/linea"
+  ],
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "infoURL": "https://docs.linea.build/overview",
+  "shortName": "linea-mainnet",
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "lineascan",
@@ -27,15 +39,5 @@ export default {
       "standard": ""
     }
   ],
-  "faucets": [
-    "https://www.infura.io/faucet/linea"
-  ],
-  "infoURL": "https://docs.linea.build/overview",
-  "icon": {
-    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-    "height": 512,
-    "width": 512,
-    "format": "svg"
-  },
-  "slug": "linea"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Canto Tesnet",
+  "chainId": 7701,
   "chain": "Canto",
+  "name": "Canto Tesnet",
   "rpc": [
     "https://canto-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-archive.plexnode.wtf"
   ],
+  "slug": "canto-tesnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Testnet Canto",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://canto.io",
   "shortName": "TestnetCanto",
-  "chainId": 7701,
-  "networkId": 7701,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Canto Testnet EVM Explorer (Blockscout)",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "canto-tesnet"
+  "features": []
 } as const satisfies Chain;

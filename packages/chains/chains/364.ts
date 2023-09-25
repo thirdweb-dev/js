@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Theta Amber Testnet",
+  "chainId": 364,
   "chain": "Theta",
+  "name": "Theta Amber Testnet",
   "rpc": [
     "https://theta-amber-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api-amber.thetatoken.org/rpc"
   ],
+  "slug": "theta-amber-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Theta Fuel",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.thetatoken.org/",
   "shortName": "theta-amber",
-  "chainId": 364,
-  "networkId": 364,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Theta Amber Testnet Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "theta-amber-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "JuncaChain",
+  "chainId": 668,
   "chain": "JuncaChain",
+  "name": "JuncaChain",
   "rpc": [
     "https://juncachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.juncachain.com"
   ],
+  "slug": "juncachain",
+  "faucets": [],
   "nativeCurrency": {
     "name": "JuncaChain Native Token",
     "symbol": "JGC",
     "decimals": 18
   },
-  "faucets": [],
   "infoURL": "https://junca-cash.world",
   "shortName": "junca",
-  "chainId": 668,
-  "networkId": 668,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "JuncaScan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "juncachain"
+  "features": []
 } as const satisfies Chain;

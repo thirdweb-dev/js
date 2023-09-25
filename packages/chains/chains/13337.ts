@@ -1,16 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Beam Testnet",
+  "chainId": 13337,
   "chain": "BEAM",
+  "name": "Beam Testnet",
   "rpc": [
     "https://beam-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/beam/testnet/rpc"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "beam-testnet",
+  "icon": {
+    "url": "ipfs://QmQJ21NWyGGDraicVEzS1Uqq1yXahM9NCuNZgnfYvtspdt",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Merit Circle",
@@ -19,14 +22,8 @@ export default {
   },
   "infoURL": "https://www.onbeam.com",
   "shortName": "beam-testnet",
-  "icon": {
-    "url": "ipfs://QmQJ21NWyGGDraicVEzS1Uqq1yXahM9NCuNZgnfYvtspdt",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "chainId": 13337,
-  "networkId": 13337,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Beam Explorer",
@@ -34,6 +31,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "beam-testnet"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

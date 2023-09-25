@@ -1,30 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "RSK Mainnet",
-  "chain": "RSK",
+  "chainId": 30,
+  "chain": "Rootstock",
+  "name": "Rootstock Mainnet",
   "rpc": [
-    "https://rsk.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rootstock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node.rsk.co",
     "https://mycrypto.rsk.co"
   ],
+  "slug": "rootstock",
+  "icon": {
+    "url": "ipfs://bafkreigidzbf22dnpmmlfxv6u7oifq6ln33j4n57ox4ipiproalufrheym",
+    "width": 3000,
+    "height": 3325,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Smart Bitcoin",
     "symbol": "RBTC",
     "decimals": 18
   },
-  "infoURL": "https://rsk.co",
+  "infoURL": "https://rootstock.io",
   "shortName": "rsk",
-  "chainId": 30,
-  "networkId": 30,
-  "slip44": 137,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
-      "name": "RSK Explorer",
+      "name": "Rootstock Explorer",
       "url": "https://explorer.rsk.co",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://rootstock.blockscout.com",
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "rsk"
+  "features": []
 } as const satisfies Chain;

@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CIC Chain Mainnet",
+  "chainId": 1353,
   "chain": "CIC",
+  "name": "CIC Chain Mainnet",
   "rpc": [
     "https://cic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xapi.cicscan.com"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Crazy Internet Coin",
-    "symbol": "CIC",
-    "decimals": 18
-  },
-  "infoURL": "https://www.cicchain.net",
-  "shortName": "CIC",
-  "chainId": 1353,
-  "networkId": 1353,
+  "slug": "cic-chain",
   "icon": {
     "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
     "width": 1024,
     "height": 768,
     "format": "png"
   },
+  "faucets": [],
+  "nativeCurrency": {
+    "name": "Crazy Internet Coin",
+    "symbol": "CICT",
+    "decimals": 18
+  },
+  "infoURL": "https://www.cicchain.net",
+  "shortName": "CIC",
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "CICscan",
       "url": "https://cicscan.com",
-      "icon": {
-        "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
-        "width": 1024,
-        "height": 768,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "cic-chain"
+  "features": []
 } as const satisfies Chain;

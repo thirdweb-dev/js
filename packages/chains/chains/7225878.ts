@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Saakuru Mainnet",
+  "chainId": 7225878,
   "chain": "Saakuru",
+  "name": "Saakuru Mainnet",
+  "rpc": [
+    "https://saakuru.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.saakuru.network"
+  ],
+  "slug": "saakuru",
   "icon": {
     "url": "ipfs://QmduEdtFobPpZWSc45MU6RKxZfTEzLux2z8ikHFhT8usqv",
     "width": 1024,
     "height": 1024,
     "format": "png"
   },
-  "rpc": [
-    "https://saakuru.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.saakuru.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "OAS",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://saakuru.network",
   "shortName": "saakuru",
-  "chainId": 7225878,
-  "networkId": 7225878,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "saakuru-explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "saakuru"
+  "features": []
 } as const satisfies Chain;

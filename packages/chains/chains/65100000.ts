@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Autonity Piccadilly (Thames) Testnet",
+  "chainId": 65100000,
   "chain": "AUT",
+  "name": "Autonity Piccadilly (Thames) Testnet",
   "rpc": [
     "https://autonity-piccadilly-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.piccadilly.autonity.org/",
     "wss://rpc1.piccadilly.autonity.org/ws/"
   ],
+  "slug": "autonity-piccadilly-thames-testnet",
+  "icon": {
+    "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.autonity.org/"
   ],
@@ -17,14 +25,8 @@ export default {
   },
   "infoURL": "https://autonity.org/",
   "shortName": "piccadilly-0",
-  "chainId": 65100000,
-  "networkId": 65100000,
-  "icon": {
-    "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "autonity-blockscout",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "autonity-piccadilly-thames-testnet"
+  "features": []
 } as const satisfies Chain;

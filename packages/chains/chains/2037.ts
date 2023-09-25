@@ -1,16 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kiwi Subnet",
+  "chainId": 2037,
   "chain": "KIWI",
+  "name": "Kiwi Subnet",
   "rpc": [
     "https://kiwi-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/kiwi/testnet/rpc"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "kiwi-subnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Shrapgas",
@@ -19,8 +16,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "kiwi",
-  "chainId": 2037,
-  "networkId": 2037,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "KIWI Explorer",
@@ -28,6 +25,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kiwi-subnet"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

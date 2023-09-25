@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Diode Testnet Staging",
+  "chainId": 13,
   "chain": "DIODE",
+  "name": "Diode Testnet Staging",
   "rpc": [
     "https://diode-testnet-staging.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging.diode.io:8443/",
     "wss://staging.diode.io:8443/ws"
   ],
+  "slug": "diode-testnet-staging",
   "faucets": [],
   "nativeCurrency": {
     "name": "Staging Diodes",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://diode.io/staging",
   "shortName": "dstg",
-  "chainId": 13,
-  "networkId": 13,
   "testnet": true,
-  "slug": "diode-testnet-staging"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

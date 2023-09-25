@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bobabase Testnet",
+  "chainId": 1297,
   "chain": "Bobabase Testnet",
+  "name": "Bobabase Testnet",
   "rpc": [
     "https://bobabase-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabase.boba.network",
@@ -9,6 +10,7 @@ export default {
     "https://replica.bobabase.boba.network",
     "wss://replica-wss.bobabase.boba.network"
   ],
+  "slug": "bobabase-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Boba Token",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://boba.network",
   "shortName": "Bobabase",
-  "chainId": 1297,
-  "networkId": 1297,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bobabase block explorer",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "bobabase-testnet"
+  "features": []
 } as const satisfies Chain;

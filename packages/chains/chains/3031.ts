@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Orlando Chain",
+  "chainId": 3031,
   "chain": "ORL",
+  "name": "Orlando Chain",
   "rpc": [
     "https://orlando-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.orlchain.com"
   ],
+  "slug": "orlando-chain",
+  "icon": {
+    "url": "ipfs://QmNsuuBBTHErnuFDcdyzaY8CKoVJtobsLJx2WQjaPjcp7g",
+    "width": 512,
+    "height": 528,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Orlando",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://orlchain.com",
   "shortName": "ORL",
-  "chainId": 3031,
-  "networkId": 3031,
-  "icon": {
-    "url": "ipfs://QmNsuuBBTHErnuFDcdyzaY8CKoVJtobsLJx2WQjaPjcp7g",
-    "width": 512,
-    "height": 528,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Orlando (ORL) Explorer",
       "url": "https://orlscan.com",
-      "icon": {
-        "url": "ipfs://QmNsuuBBTHErnuFDcdyzaY8CKoVJtobsLJx2WQjaPjcp7g",
-        "width": 512,
-        "height": 528,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "orlando-chain"
+  "features": []
 } as const satisfies Chain;

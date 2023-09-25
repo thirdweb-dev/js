@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Anytype EVM Chain",
+  "chainId": 1701,
   "chain": "ETH",
+  "name": "Anytype EVM Chain",
+  "rpc": [
+    "https://anytype-evm-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://geth.anytype.io"
+  ],
+  "slug": "anytype-evm-chain",
   "icon": {
     "url": "ipfs://QmaARJiAQUn4Z6wG8GLEry3kTeBB3k6RfHzSZU9SPhBgcG",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "rpc": [
-    "https://anytype-evm-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://geth.anytype.io"
-  ],
   "faucets": [
     "https://evm.anytype.io/faucet"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "https://evm.anytype.io",
   "shortName": "AnytypeChain",
-  "chainId": 1701,
-  "networkId": 1701,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Anytype Explorer",
       "url": "https://explorer.anytype.io",
-      "icon": {
-        "url": "ipfs://QmaARJiAQUn4Z6wG8GLEry3kTeBB3k6RfHzSZU9SPhBgcG",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "anytype-evm-chain"
+  "features": []
 } as const satisfies Chain;

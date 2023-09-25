@@ -1,12 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Polygon zkEVM Testnet",
-  "title": "Polygon zkEVM Testnet",
+  "chainId": 1442,
   "chain": "Polygon",
+  "name": "Polygon zkEVM Testnet",
   "rpc": [
     "https://polygon-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.public.zkevm-test.net"
   ],
+  "slug": "polygon-zkevm-testnet",
+  "icon": {
+    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+    "width": 122,
+    "height": 135,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -15,8 +22,8 @@ export default {
   },
   "infoURL": "https://polygon.technology/solutions/polygon-zkevm/",
   "shortName": "testnet-zkEVM-mango",
-  "chainId": 1442,
-  "networkId": 1442,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Polygon zkEVM explorer",
@@ -24,12 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
-    "width": 122,
-    "height": 135,
-    "format": "png"
-  },
-  "testnet": true,
-  "slug": "polygon-zkevm-testnet"
+  "features": []
 } as const satisfies Chain;

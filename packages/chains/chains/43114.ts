@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Avalanche C-Chain",
+  "chainId": 43114,
   "chain": "AVAX",
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/avalanche/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "name": "Avalanche C-Chain",
   "rpc": [
     "https://avalanche.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-mainnet.infura.io/v3/${INFURA_API_KEY}",
@@ -15,11 +10,13 @@ export default {
     "https://avalanche-c-chain.publicnode.com",
     "wss://avalanche-c-chain.publicnode.com"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "avalanche",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/avalanche/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Avalanche",
@@ -28,9 +25,8 @@ export default {
   },
   "infoURL": "https://www.avax.network/",
   "shortName": "avax",
-  "chainId": 43114,
-  "networkId": 43114,
-  "slip44": 9005,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "snowtrace",
@@ -38,6 +34,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "avalanche"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EtherGem",
+  "chainId": 1987,
   "chain": "EGEM",
+  "name": "EtherGem",
   "rpc": [
     "https://ethergem.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.egem.io/custom"
   ],
+  "slug": "ethergem",
   "faucets": [],
   "nativeCurrency": {
     "name": "EtherGem Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://egem.io",
   "shortName": "egem",
-  "chainId": 1987,
-  "networkId": 1987,
-  "slip44": 1987,
   "testnet": false,
-  "slug": "ethergem"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

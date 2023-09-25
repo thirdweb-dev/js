@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Harmony Mainnet Shard 1",
+  "chainId": 1666600001,
   "chain": "Harmony",
+  "name": "Harmony Mainnet Shard 1",
   "rpc": [
     "https://harmony-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s1.t.hmny.io"
   ],
+  "slug": "harmony-shard-1",
   "faucets": [],
   "nativeCurrency": {
     "name": "ONE",
@@ -13,10 +15,9 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://www.harmony.one/",
-  "slip44": 1023,
   "shortName": "hmy-s1",
-  "chainId": 1666600001,
-  "networkId": 1666600001,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Harmony Block Explorer",
@@ -24,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "harmony-shard-1"
+  "features": []
 } as const satisfies Chain;

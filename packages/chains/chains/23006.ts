@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Antofy Testnet",
+  "chainId": 23006,
   "chain": "ABN",
+  "name": "Antofy Testnet",
+  "rpc": [
+    "https://antofy-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.antofy.io"
+  ],
+  "slug": "antofy-testnet",
   "icon": {
     "url": "ipfs://QmdTfku81ohnG9ECU1Xswmeumt678cBhwHWuFYZ7i1Qsto",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://antofy-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.antofy.io"
-  ],
   "faucets": [
     "https://faucet.antofy.io"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://antofy.io",
   "shortName": "ABNt",
-  "chainId": 23006,
-  "networkId": 23006,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Antofy Testnet",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "antofy-testnet"
+  "features": []
 } as const satisfies Chain;

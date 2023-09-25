@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arcturus Chain Testnet",
+  "chainId": 5616,
   "chain": "ARCTURUS",
+  "name": "Arcturus Chain Testnet",
   "rpc": [
     "https://arcturus-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://185.99.196.3:8545"
   ],
+  "slug": "arcturus-chain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Test Arct",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://arcturuschain.io",
   "shortName": "ARCT",
-  "chainId": 5616,
-  "networkId": 5616,
   "testnet": true,
-  "slug": "arcturus-chain-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

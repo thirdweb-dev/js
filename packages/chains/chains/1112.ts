@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "WEMIX3.0 Testnet",
+  "chainId": 1112,
   "chain": "TWEMIX",
+  "name": "WEMIX3.0 Testnet",
   "rpc": [
     "https://wemix3-0-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.test.wemix.com",
     "wss://ws.test.wemix.com"
   ],
+  "slug": "wemix3-0-testnet",
   "faucets": [
     "https://wallet.test.wemix.com/faucet"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://wemix.com",
   "shortName": "twemix",
-  "chainId": 1112,
-  "networkId": 1112,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "WEMIX Testnet Microscope",
@@ -26,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "wemix3-0-testnet"
+  "features": []
 } as const satisfies Chain;

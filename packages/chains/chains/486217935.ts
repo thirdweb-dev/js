@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gather Devnet Network",
+  "chainId": 486217935,
   "chain": "GTH",
+  "name": "Gather Devnet Network",
   "rpc": [
     "https://gather-devnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.gather.network"
   ],
+  "slug": "gather-devnet-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Gather",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://gather.network",
   "shortName": "dGTH",
-  "chainId": 486217935,
-  "networkId": 486217935,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Blockscout",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "gather-devnet-network"
+  "features": []
 } as const satisfies Chain;

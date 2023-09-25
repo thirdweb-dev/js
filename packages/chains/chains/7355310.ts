@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OpenVessel",
+  "chainId": 7355310,
   "chain": "VSL",
+  "name": "OpenVessel",
+  "rpc": [
+    "https://openvessel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-external.openvessel.io"
+  ],
+  "slug": "openvessel",
   "icon": {
     "url": "ipfs://QmeknNzGCZXQK7egwfwyxQan7Lw8bLnqYsyoEgEbDNCzJX",
     "width": 600,
     "height": 529,
     "format": "png"
   },
-  "rpc": [
-    "https://openvessel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-external.openvessel.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Vessel ETH",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.openvessel.io",
   "shortName": "vsl",
-  "chainId": 7355310,
-  "networkId": 7355310,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "openvessel-mainnet",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "openvessel"
+  "features": []
 } as const satisfies Chain;

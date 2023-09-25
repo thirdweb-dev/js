@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Super Smart Chain Mainnet",
+  "chainId": 1970,
   "chain": "SCS",
+  "name": "Super Smart Chain Mainnet",
   "rpc": [
     "https://super-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.scschain.com"
   ],
+  "slug": "super-smart-chain",
+  "icon": {
+    "url": "ipfs://QmW4C4QHLMhLeH5MsdVbauMc2Skb4ehzLKU3egLKKoux4D",
+    "width": 130,
+    "height": 130,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Super Chain Native Token",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://scschain.com",
   "shortName": "scs",
-  "chainId": 1970,
-  "networkId": 1970,
-  "icon": {
-    "url": "ipfs://QmW4C4QHLMhLeH5MsdVbauMc2Skb4ehzLKU3egLKKoux4D",
-    "width": 130,
-    "height": 130,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "super-smart-chain"
+  "features": []
 } as const satisfies Chain;

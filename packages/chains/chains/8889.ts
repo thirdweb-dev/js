@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Vyvo Smart Chain",
+  "chainId": 8889,
   "chain": "VSC",
+  "name": "Vyvo Smart Chain",
   "rpc": [
     "https://vyvo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vsc-dataseed.vyvo.org:8889"
   ],
+  "slug": "vyvo-smart-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "VSC",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://vsc-dataseed.vyvo.org",
   "shortName": "vsc",
-  "chainId": 8889,
-  "networkId": 8889,
   "testnet": false,
-  "slug": "vyvo-smart-chain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

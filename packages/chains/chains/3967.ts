@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DYNO Testnet",
+  "chainId": 3967,
   "chain": "DYNO",
+  "name": "DYNO Testnet",
   "rpc": [
     "https://dyno-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tapi.dynoprotocol.com"
   ],
+  "slug": "dyno-testnet",
   "faucets": [
     "https://faucet.dynoscan.io"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://dynoprotocol.com",
   "shortName": "tdyno",
-  "chainId": 3967,
-  "networkId": 3967,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "DYNO Explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "dyno-testnet"
+  "features": []
 } as const satisfies Chain;

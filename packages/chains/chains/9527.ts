@@ -1,29 +1,31 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rangers Protocol Testnet Robin",
+  "chainId": 9527,
   "chain": "Rangers",
+  "name": "Rangers Protocol Testnet Robin",
+  "rpc": [
+    "https://rangers-protocol-testnet-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://robin.rangersprotocol.com/api/jsonrpc"
+  ],
+  "slug": "rangers-protocol-testnet-robin",
   "icon": {
     "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
     "width": 2000,
     "height": 2000,
     "format": "png"
   },
-  "rpc": [
-    "https://rangers-protocol-testnet-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://robin.rangersprotocol.com/api/jsonrpc"
-  ],
   "faucets": [
     "https://robin-faucet.rangersprotocol.com"
   ],
   "nativeCurrency": {
     "name": "Rangers Protocol Gas",
-    "symbol": "tRPG",
+    "symbol": "RPG",
     "decimals": 18
   },
   "infoURL": "https://rangersprotocol.com",
   "shortName": "trpg",
-  "chainId": 9527,
-  "networkId": 9527,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "rangersscan-robin",
@@ -31,6 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "rangers-protocol-testnet-robin"
+  "features": []
 } as const satisfies Chain;

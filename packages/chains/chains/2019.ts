@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PublicMint Testnet",
-  "title": "Public Mint Testnet",
+  "chainId": 2019,
   "chain": "PublicMint",
+  "name": "PublicMint Testnet",
   "rpc": [
     "https://publicmint-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tst.publicmint.io:8545"
   ],
+  "slug": "publicmint-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "USD",
@@ -15,9 +16,8 @@ export default {
   },
   "infoURL": "https://publicmint.com",
   "shortName": "pmint_test",
-  "chainId": 2019,
-  "networkId": 2019,
-  "slip44": 60,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "PublicMint Explorer",
@@ -25,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "publicmint-testnet"
+  "features": []
 } as const satisfies Chain;

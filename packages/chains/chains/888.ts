@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Wanchain",
+  "chainId": 888,
   "chain": "WAN",
+  "name": "Wanchain",
   "rpc": [
     "https://wanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gwan-ssl.wandevs.org:56891/"
   ],
+  "slug": "wanchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Wancoin",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://www.wanscan.org",
   "shortName": "wan",
-  "chainId": 888,
-  "networkId": 888,
-  "slip44": 5718350,
   "testnet": false,
-  "slug": "wanchain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

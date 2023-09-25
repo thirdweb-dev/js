@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MultiVAC Mainnet",
+  "chainId": 62621,
   "chain": "MultiVAC",
+  "name": "MultiVAC Mainnet",
+  "rpc": [
+    "https://multivac.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mtv.ac",
+    "https://rpc-eu.mtv.ac"
+  ],
+  "slug": "multivac",
   "icon": {
     "url": "ipfs://QmWb1gthhbzkiLdgcP8ccZprGbJVjFcW8Rn4uJjrw4jd3B",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "rpc": [
-    "https://multivac.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mtv.ac",
-    "https://rpc-eu.mtv.ac"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "MultiVAC",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://mtv.ac",
   "shortName": "mtv",
-  "chainId": 62621,
-  "networkId": 62621,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "MultiVAC Explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "multivac"
+  "features": []
 } as const satisfies Chain;

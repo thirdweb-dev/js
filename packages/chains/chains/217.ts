@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SiriusNet V2",
+  "chainId": 217,
   "chain": "SIN2",
-  "faucets": [],
+  "name": "SiriusNet V2",
   "rpc": [
     "https://siriusnet-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.siriusnet.io"
   ],
+  "slug": "siriusnet-v2",
   "icon": {
     "url": "ipfs://bafybeicxuxdzrzpwsil4owqmn7wpwka2rqsohpfqmukg57pifzyxr5om2q",
     "width": 100,
     "height": 100,
     "format": "png"
   },
+  "faucets": [],
   "nativeCurrency": {
     "name": "MCD",
     "symbol": "MCD",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://siriusnet.io",
   "shortName": "SIN2",
-  "chainId": 217,
-  "networkId": 217,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "siriusnet explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "siriusnet-v2"
+  "features": []
 } as const satisfies Chain;

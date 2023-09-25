@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tipboxcoin Mainnet",
+  "chainId": 404040,
   "chain": "TPBX",
+  "name": "Tipboxcoin Mainnet",
+  "rpc": [
+    "https://tipboxcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.tipboxcoin.net"
+  ],
+  "slug": "tipboxcoin",
   "icon": {
     "url": "ipfs://QmbiaHnR3fVVofZ7Xq2GYZxwHkLEy3Fh5qDtqnqXD6ACAh",
     "width": 192,
     "height": 192,
     "format": "png"
   },
-  "rpc": [
-    "https://tipboxcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.tipboxcoin.net"
-  ],
   "faucets": [
     "https://faucet.tipboxcoin.net"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://tipboxcoin.net",
   "shortName": "TPBXm",
-  "chainId": 404040,
-  "networkId": 404040,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Tipboxcoin",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "tipboxcoin"
+  "features": []
 } as const satisfies Chain;

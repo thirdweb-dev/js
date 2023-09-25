@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Web3Q Mainnet",
+  "chainId": 333,
   "chain": "Web3Q",
+  "name": "Web3Q Mainnet",
   "rpc": [
     "https://web3q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.web3q.io:8545"
   ],
+  "slug": "web3q",
   "faucets": [],
   "nativeCurrency": {
     "name": "Web3Q",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://web3q.io/home.w3q/",
   "shortName": "w3q",
-  "chainId": 333,
-  "networkId": 333,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "w3q-mainnet",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "web3q"
+  "features": []
 } as const satisfies Chain;

@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Opal testnet by Unique",
-  "icon": {
-    "url": "ipfs://QmYJDpmWyjDa3H6BxweFmQXk4fU8b1GU7M9EqYcaUNvXzc",
-    "width": 48,
-    "height": 48,
-    "format": "svg"
-  },
+  "chainId": 8882,
   "chain": "UNQ",
+  "name": "Opal testnet by Unique",
   "rpc": [
     "https://opal-testnet-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-opal.unique.network",
@@ -15,6 +10,13 @@ export default {
     "https://eu-rpc-opal.unique.network",
     "https://asia-rpc-opal.unique.network"
   ],
+  "slug": "opal-testnet-by-unique",
+  "icon": {
+    "url": "ipfs://QmYJDpmWyjDa3H6BxweFmQXk4fU8b1GU7M9EqYcaUNvXzc",
+    "width": 48,
+    "height": 48,
+    "format": "svg"
+  },
   "faucets": [
     "https://t.me/unique2faucet_opal_bot"
   ],
@@ -25,8 +27,8 @@ export default {
   },
   "infoURL": "https://unique.network",
   "shortName": "opl",
-  "chainId": 8882,
-  "networkId": 8882,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Unique Scan / Opal",
@@ -34,6 +36,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "opal-testnet-by-unique"
+  "features": []
 } as const satisfies Chain;

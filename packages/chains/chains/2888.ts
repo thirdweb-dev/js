@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Network Goerli Testnet",
+  "chainId": 2888,
   "chain": "ETH",
+  "name": "Boba Network Goerli Testnet",
   "rpc": [
     "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.boba.network/",
     "wss://wss.goerli.boba.network/"
   ],
+  "slug": "boba-network-goerli-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Goerli Ether",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://boba.network",
   "shortName": "BobaGoerli",
-  "chainId": 2888,
-  "networkId": 2888,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Blockscout",
@@ -24,15 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-5",
-    "bridges": [
-      {
-        "url": "https://gateway.boba.network"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "boba-network-goerli-testnet"
+  "features": []
 } as const satisfies Chain;

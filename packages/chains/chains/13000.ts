@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SPS",
+  "chainId": 13000,
   "chain": "SPS",
+  "name": "SPS",
   "rpc": [
     "https://sps.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ssquad.games"
   ],
+  "slug": "sps",
   "faucets": [],
   "nativeCurrency": {
     "name": "ECG",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://ssquad.games/",
   "shortName": "SPS",
-  "chainId": 13000,
-  "networkId": 13000,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SPS Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "sps"
+  "features": []
 } as const satisfies Chain;

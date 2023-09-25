@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Razor Skale Chain",
+  "chainId": 278611351,
   "chain": "Razor Schain",
+  "name": "Razor Skale Chain",
+  "rpc": [
+    "https://razor-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.skalenodes.com/v1/turbulent-unique-scheat"
+  ],
+  "slug": "razor-skale-chain",
   "icon": {
     "url": "ipfs://QmUdwAZJfyKGZnfPGDsCnNvGu123mdd57kTGj1Y3EWVuWK",
     "width": 900,
     "height": 900,
     "format": "png"
   },
-  "rpc": [
-    "https://razor-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.skalenodes.com/v1/turbulent-unique-scheat"
-  ],
   "faucets": [
     "https://faucet.razorscan.io/"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://razor.network",
   "shortName": "razor",
-  "chainId": 278611351,
-  "networkId": 278611351,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "turbulent-unique-scheat",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "razor-skale-chain"
+  "features": []
 } as const satisfies Chain;

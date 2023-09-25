@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ontology Mainnet",
+  "chainId": 58,
   "chain": "Ontology",
-  "icon": {
-    "url": "ipfs://bafkreigmvn6spvbiirtutowpq6jmetevbxoof5plzixjoerbeswy4htfb4",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
+  "name": "Ontology Mainnet",
   "rpc": [
     "https://ontology.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://dappnode1.ont.io:20339",
@@ -19,6 +14,13 @@ export default {
     "https://dappnode3.ont.io:10339",
     "https://dappnode4.ont.io:10339"
   ],
+  "slug": "ontology",
+  "icon": {
+    "url": "ipfs://bafkreigmvn6spvbiirtutowpq6jmetevbxoof5plzixjoerbeswy4htfb4",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "ONG",
@@ -27,8 +29,8 @@ export default {
   },
   "infoURL": "https://ont.io/",
   "shortName": "OntologyMainnet",
-  "chainId": 58,
-  "networkId": 58,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "explorer",
@@ -36,6 +38,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ontology"
+  "features": []
 } as const satisfies Chain;

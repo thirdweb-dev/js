@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ThaiChain 2.0 ThaiFi",
+  "chainId": 17,
   "chain": "TCH",
+  "name": "ThaiChain 2.0 ThaiFi",
   "rpc": [
     "https://thaichain-2-0-thaifi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.thaifi.com"
   ],
+  "slug": "thaichain-2-0-thaifi",
   "faucets": [],
   "nativeCurrency": {
     "name": "Thaifi Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://exp.thaifi.com",
   "shortName": "tfi",
-  "chainId": 17,
-  "networkId": 17,
   "testnet": false,
-  "slug": "thaichain-2-0-thaifi"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

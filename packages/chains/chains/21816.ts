@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "omChain Mainnet",
+  "chainId": 21816,
   "chain": "OML",
+  "name": "omChain Mainnet",
+  "rpc": [
+    "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://seed.omchain.io"
+  ],
+  "slug": "omchain",
   "icon": {
     "url": "ipfs://QmQtEHaejiDbmiCvbBYw9jNQv3DLK5XHCQwLRfnLNpdN5j",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "rpc": [
-    "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://seed.omchain.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "omChain",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://omchain.io",
   "shortName": "omc",
-  "chainId": 21816,
-  "networkId": 21816,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "omChain Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "omchain"
+  "features": []
 } as const satisfies Chain;

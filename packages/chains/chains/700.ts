@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Star Social Testnet",
+  "chainId": 700,
   "chain": "SNS",
+  "name": "Star Social Testnet",
   "rpc": [
     "https://star-social-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avastar.cc/ext/bc/C/rpc"
   ],
+  "slug": "star-social-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Social",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://info.avastar.cc",
   "shortName": "SNS",
-  "chainId": 700,
-  "networkId": 700,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "starscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "star-social-testnet"
+  "features": []
 } as const satisfies Chain;

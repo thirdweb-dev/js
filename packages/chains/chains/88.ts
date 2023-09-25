@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TomoChain",
+  "chainId": 88,
   "chain": "TOMO",
+  "name": "TomoChain",
   "rpc": [
     "https://tomochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tomochain.com"
   ],
+  "slug": "tomochain",
   "faucets": [],
   "nativeCurrency": {
     "name": "TomoChain",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://tomochain.com",
   "shortName": "tomo",
-  "chainId": 88,
-  "networkId": 88,
-  "slip44": 889,
   "testnet": false,
-  "slug": "tomochain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

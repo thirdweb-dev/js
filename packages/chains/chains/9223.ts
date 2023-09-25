@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Codefin Mainnet",
+  "chainId": 9223,
   "chain": "COF",
+  "name": "Codefin Mainnet",
+  "rpc": [
+    "https://codefin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://chain-rpc.codefin.pro"
+  ],
+  "slug": "codefin",
   "icon": {
     "url": "ipfs://QmVyAuAnKKNnGEpqeYMLPRfMdysLgPBTZeEXihXbRytGhp",
     "width": 1024,
     "height": 1024,
     "format": "png"
   },
-  "rpc": [
-    "https://codefin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://chain-rpc.codefin.pro"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Codefin",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://network.codefin.pro",
   "shortName": "COF",
-  "chainId": 9223,
-  "networkId": 9223,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Codefin Net Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "codefin"
+  "features": []
 } as const satisfies Chain;

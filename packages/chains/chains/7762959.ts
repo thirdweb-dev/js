@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Musicoin",
+  "chainId": 7762959,
   "chain": "MUSIC",
+  "name": "Musicoin",
   "rpc": [
     "https://musicoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mewapi.musicoin.tw"
   ],
+  "slug": "musicoin",
   "faucets": [],
   "nativeCurrency": {
     "name": "Musicoin",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://musicoin.tw",
   "shortName": "music",
-  "chainId": 7762959,
-  "networkId": 7762959,
-  "slip44": 184,
   "testnet": false,
-  "slug": "musicoin"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

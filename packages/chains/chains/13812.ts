@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Susono",
+  "chainId": 13812,
   "chain": "SUS",
+  "name": "Susono",
   "rpc": [
     "https://susono.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gateway.opn.network/node/ext/bc/2VsZe5DstWw2bfgdx3YbjKcMsJnNDjni95sZorBEdk9L9Qr9Fr/rpc"
   ],
+  "slug": "susono",
   "faucets": [],
   "nativeCurrency": {
     "name": "Susono",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "sus",
-  "chainId": 13812,
-  "networkId": 13812,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Susono",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "susono"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dexalot Subnet",
+  "chainId": 432204,
   "chain": "DEXALOT",
+  "name": "Dexalot Subnet",
+  "rpc": [
+    "https://dexalot-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/dexalot/mainnet/rpc"
+  ],
+  "slug": "dexalot-subnet",
   "icon": {
     "url": "ipfs://QmfVxdrWjtUKiGzqFDzAxHH2FqwP2aRuZTGcYWdWg519Xy",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "rpc": [
-    "https://dexalot-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/dexalot/mainnet/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Dexalot",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://dexalot.com",
   "shortName": "dexalot",
-  "chainId": 432204,
-  "networkId": 432204,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Avalanche Subnet Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "dexalot-subnet"
+  "features": []
 } as const satisfies Chain;

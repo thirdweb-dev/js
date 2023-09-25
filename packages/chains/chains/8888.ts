@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "XANAChain",
+  "chainId": 8888,
   "chain": "XANAChain",
+  "name": "XANAChain",
   "rpc": [
     "https://xanachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xana.net/rpc"
   ],
+  "slug": "xanachain",
+  "icon": {
+    "url": "ipfs://QmWGNfwJ9o2vmKD3E6fjrxpbFP8W5q45zmYzHHoXwqqAoj",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "XETA",
@@ -14,14 +22,10 @@ export default {
   },
   "infoURL": "https://xanachain.xana.net/",
   "shortName": "XANAChain",
-  "chainId": 8888,
-  "networkId": 8888,
-  "icon": {
-    "url": "ipfs://QmWGNfwJ9o2vmKD3E6fjrxpbFP8W5q45zmYzHHoXwqqAoj",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [
+    "reusedChainId"
+  ],
   "explorers": [
     {
       "name": "XANAChain",
@@ -29,9 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "redFlags": [
-    "reusedChainId"
-  ],
-  "testnet": false,
-  "slug": "xanachain"
+  "features": []
 } as const satisfies Chain;

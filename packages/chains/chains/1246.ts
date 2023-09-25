@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OM Platform Mainnet",
+  "chainId": 1246,
   "chain": "omplatform",
+  "name": "OM Platform Mainnet",
   "rpc": [
     "https://om-platform.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-cnx.omplatform.com/"
   ],
+  "slug": "om-platform",
   "faucets": [],
   "nativeCurrency": {
     "name": "OMCOIN",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://omplatform.com/",
   "shortName": "om",
-  "chainId": 1246,
-  "networkId": 1246,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OMSCAN - Expenter",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "om-platform"
+  "features": []
 } as const satisfies Chain;

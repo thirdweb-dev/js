@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alph Network",
+  "chainId": 8738,
   "chain": "ALPH",
+  "name": "Alph Network",
   "rpc": [
     "https://alph-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alph.network",
     "wss://rpc.alph.network"
   ],
+  "slug": "alph-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Alph Network",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://alph.network",
   "shortName": "alph",
-  "chainId": 8738,
-  "networkId": 8738,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "alphscan",
@@ -24,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "alph-network"
+  "features": []
 } as const satisfies Chain;

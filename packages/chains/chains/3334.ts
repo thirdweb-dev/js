@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Web3Q Galileo",
+  "chainId": 3334,
   "chain": "Web3Q",
+  "name": "Web3Q Galileo",
   "rpc": [
     "https://web3q-galileo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galileo.web3q.io:8545"
   ],
+  "slug": "web3q-galileo",
   "faucets": [],
   "nativeCurrency": {
     "name": "Web3Q",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://galileo.web3q.io/home.w3q/",
   "shortName": "w3q-g",
-  "chainId": 3334,
-  "networkId": 3334,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "w3q-galileo",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "web3q-galileo"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BerylBit Mainnet",
+  "chainId": 9012,
   "chain": "BRB",
+  "name": "BerylBit Mainnet",
   "rpc": [
     "https://berylbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.berylbit.io"
   ],
+  "slug": "berylbit",
+  "icon": {
+    "url": "ipfs://QmeDXHkpranzqGN1BmQqZSrFp4vGXf4JfaB5iq8WHHiwDi",
+    "width": 162,
+    "height": 162,
+    "format": "png"
+  },
   "faucets": [
     "https://t.me/BerylBit"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://www.beryl-bit.com",
   "shortName": "brb",
-  "chainId": 9012,
-  "networkId": 9012,
-  "icon": {
-    "url": "ipfs://QmeDXHkpranzqGN1BmQqZSrFp4vGXf4JfaB5iq8WHHiwDi",
-    "width": 162,
-    "height": 162,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "berylbit-explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "berylbit"
+  "features": []
 } as const satisfies Chain;

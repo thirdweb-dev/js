@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Beagle Messaging Chain",
+  "chainId": 1515,
   "chain": "BMC",
+  "name": "Beagle Messaging Chain",
   "rpc": [
     "https://beagle-messaging-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beagle.chat/eth"
   ],
+  "slug": "beagle-messaging-chain",
   "faucets": [
     "https://faucet.beagle.chat/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://beagle.chat/",
   "shortName": "beagle",
-  "chainId": 1515,
-  "networkId": 1515,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Beagle Messaging Chain Explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "beagle-messaging-chain"
+  "features": []
 } as const satisfies Chain;

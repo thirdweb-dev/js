@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zhejiang",
+  "chainId": 1337803,
   "chain": "ETH",
+  "name": "Zhejiang",
   "rpc": [
     "https://zhejiang.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zhejiang.ethpandaops.io"
   ],
+  "slug": "zhejiang",
+  "icon": {
+    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
+    "width": 1000,
+    "height": 1628,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.zhejiang.ethpandaops.io",
     "https://zhejiang-faucet.pk910.de"
@@ -17,27 +25,14 @@ export default {
   },
   "infoURL": "https://zhejiang.ethpandaops.io",
   "shortName": "zhejiang",
-  "chainId": 1337803,
-  "networkId": 1337803,
-  "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Zhejiang Explorer",
       "url": "https://zhejiang.beaconcha.in",
-      "icon": {
-        "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-        "width": 1000,
-        "height": 1628,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "zhejiang"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "WhiteBIT Network Testnet",
+  "chainId": 2625,
   "chain": "WBT",
+  "name": "WhiteBIT Network Testnet",
   "rpc": [
     "https://whitebit-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.whitebit.network"
   ],
+  "slug": "whitebit-network-testnet",
+  "icon": {
+    "url": "ipfs://QmQqAAn2F98TH5ouRyvReKxQdaGKjE7WJQPEPW6mFFVXUT",
+    "width": 32,
+    "height": 32,
+    "format": "svg"
+  },
   "faucets": [
     "https://explorer.whitebit.network/testnet/faucet"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://whitebit.com/wbt",
   "shortName": "twbt",
-  "chainId": 2625,
-  "networkId": 2625,
-  "icon": {
-    "url": "ipfs://QmQqAAn2F98TH5ouRyvReKxQdaGKjE7WJQPEPW6mFFVXUT",
-    "width": 32,
-    "height": 32,
-    "format": "svg"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "wb-explorer-testnet",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "whitebit-network-testnet"
+  "features": []
 } as const satisfies Chain;

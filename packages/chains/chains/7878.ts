@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hazlor Testnet",
+  "chainId": 7878,
   "chain": "SCAS",
+  "name": "Hazlor Testnet",
   "rpc": [
     "https://hazlor-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hatlas.rpc.hazlor.com:8545",
     "wss://hatlas.rpc.hazlor.com:8546"
   ],
+  "slug": "hazlor-testnet",
   "faucets": [
     "https://faucet.hazlor.com"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://hazlor.com",
   "shortName": "tscas",
-  "chainId": 7878,
-  "networkId": 7878,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Hazlor Testnet Explorer",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "hazlor-testnet"
+  "features": []
 } as const satisfies Chain;

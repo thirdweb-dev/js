@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Web3Q Testnet",
+  "chainId": 3333,
   "chain": "Web3Q",
+  "name": "Web3Q Testnet",
   "rpc": [
     "https://web3q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.web3q.io:8545"
   ],
+  "slug": "web3q-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Web3Q",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://testnet.web3q.io/home.w3q/",
   "shortName": "w3q-t",
-  "chainId": 3333,
-  "networkId": 3333,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "w3q-testnet",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "web3q-testnet"
+  "features": []
 } as const satisfies Chain;

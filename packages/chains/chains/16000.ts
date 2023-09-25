@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MetaDot Mainnet",
+  "chainId": 16000,
   "chain": "MTT",
+  "name": "MetaDot Mainnet",
   "rpc": [
     "https://metadot.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.metadot.network"
   ],
+  "slug": "metadot",
   "faucets": [],
   "nativeCurrency": {
     "name": "MetaDot Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://metadot.network",
   "shortName": "mtt",
-  "chainId": 16000,
-  "networkId": 16000,
   "testnet": false,
-  "slug": "metadot"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

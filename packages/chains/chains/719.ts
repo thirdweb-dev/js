@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shibarium Beta",
+  "chainId": 719,
   "chain": "Shibarium",
+  "name": "Shibarium Beta",
+  "rpc": [
+    "https://shibarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://puppynet.shibrpc.com"
+  ],
+  "slug": "shibarium-beta",
   "icon": {
     "url": "ipfs://QmYNVkoZgRjDBQzJz6kog9mA2yPzQFW2oSKvhnkwuBhLQE",
     "width": 2000,
     "height": 2000,
     "format": "png"
   },
-  "rpc": [
-    "https://shibarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://puppynet.shibrpc.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "BONE",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://beta.shibariumtech.com",
   "shortName": "shibarium",
-  "chainId": 719,
-  "networkId": 719,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "shibscan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "shibarium-beta"
+  "features": []
 } as const satisfies Chain;

@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ThunderCore Mainnet",
+  "chainId": 108,
   "chain": "TT",
+  "name": "ThunderCore Mainnet",
   "rpc": [
     "https://thundercore.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.thundercore.com",
     "https://mainnet-rpc.thundertoken.net",
     "https://mainnet-rpc.thundercore.io"
   ],
+  "slug": "thundercore",
   "faucets": [],
   "nativeCurrency": {
     "name": "ThunderCore Token",
@@ -16,9 +18,8 @@ export default {
   },
   "infoURL": "https://thundercore.com",
   "shortName": "TT",
-  "chainId": 108,
-  "networkId": 108,
-  "slip44": 1001,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "thundercore-viewblock",
@@ -26,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "thundercore"
+  "features": []
 } as const satisfies Chain;

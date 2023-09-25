@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ecoball Mainnet",
+  "chainId": 2100,
   "chain": "ECO",
+  "name": "Ecoball Mainnet",
   "rpc": [
     "https://ecoball.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ecoball.org/ecoball/"
   ],
+  "slug": "ecoball",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ecoball Coin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://ecoball.org",
   "shortName": "eco",
-  "chainId": 2100,
-  "networkId": 2100,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ecoball Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ecoball"
+  "features": []
 } as const satisfies Chain;

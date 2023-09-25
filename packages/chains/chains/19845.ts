@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BTCIX Network",
+  "chainId": 19845,
   "chain": "BTCIX",
+  "name": "BTCIX Network",
   "rpc": [
     "https://btcix-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.btcix.org/rpc"
   ],
+  "slug": "btcix-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "BTCIX Network",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://bitcolojix.org",
   "shortName": "btcix",
-  "chainId": 19845,
-  "networkId": 19845,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BTCIXScan",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "btcix-network"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PandoProject Mainnet",
+  "chainId": 3601,
   "chain": "PandoProject",
+  "name": "PandoProject Mainnet",
+  "rpc": [
+    "https://pandoproject.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://eth-rpc-api.pandoproject.org/rpc"
+  ],
+  "slug": "pandoproject",
   "icon": {
     "url": "ipfs://QmNduBtT5BNGDw7DjRwDvaZBb6gjxf46WD7BYhn4gauGc9",
     "width": 1000,
     "height": 1628,
     "format": "png"
   },
-  "rpc": [
-    "https://pandoproject.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth-rpc-api.pandoproject.org/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "pando-token",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.pandoproject.org/",
   "shortName": "pando-mainnet",
-  "chainId": 3601,
-  "networkId": 3601,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Pando Mainnet Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "pandoproject"
+  "features": []
 } as const satisfies Chain;

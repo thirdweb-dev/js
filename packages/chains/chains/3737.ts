@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Crossbell",
+  "chainId": 3737,
   "chain": "Crossbell",
+  "name": "Crossbell",
   "rpc": [
     "https://crossbell.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.crossbell.io"
   ],
+  "slug": "crossbell",
+  "icon": {
+    "url": "ipfs://QmS8zEetTb6pwdNpVjv5bz55BXiSMGP9BjTJmNcjcUT91t",
+    "width": 408,
+    "height": 408,
+    "format": "svg"
+  },
   "faucets": [
     "https://faucet.crossbell.io"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://crossbell.io",
   "shortName": "csb",
-  "chainId": 3737,
-  "networkId": 3737,
-  "icon": {
-    "url": "ipfs://QmS8zEetTb6pwdNpVjv5bz55BXiSMGP9BjTJmNcjcUT91t",
-    "format": "svg",
-    "width": 408,
-    "height": 408
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Crossbell Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "crossbell"
+  "features": []
 } as const satisfies Chain;

@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Raba Network Mainnet",
+  "chainId": 7484,
   "chain": "Raba",
+  "name": "Raba Network Mainnet",
+  "rpc": [
+    "https://raba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.x.raba.app/",
+    "wss://rpc.x.raba.app/ws/"
+  ],
+  "slug": "raba-network",
   "icon": {
     "url": "ipfs://QmatP9qMHEYoXqRDyHMTyjYRQa6j6Gk7pmv1QLxQkvpGRP",
     "width": 787,
     "height": 750,
     "format": "png"
   },
-  "rpc": [
-    "https://raba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.x.raba.app/",
-    "wss://rpc.x.raba.app/ws/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Raba",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://x.raba.app/",
   "shortName": "raba",
-  "chainId": 7484,
-  "networkId": 7484,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "raba",
@@ -30,6 +32,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "raba-network"
+  "features": []
 } as const satisfies Chain;

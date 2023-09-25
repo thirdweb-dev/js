@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dogcoin Testnet",
+  "chainId": 9339,
   "chain": "DOGS",
+  "name": "Dogcoin Testnet",
+  "rpc": [
+    "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.dogcoin.me"
+  ],
+  "slug": "dogcoin-testnet",
   "icon": {
     "url": "ipfs://QmZCadkExKThak3msvszZjo6UnAbUJKE61dAcg4TixuMC3",
     "width": 160,
     "height": 171,
     "format": "png"
   },
-  "rpc": [
-    "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.dogcoin.me"
-  ],
   "faucets": [
     "https://faucet.dogcoin.network"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://dogcoin.network",
   "shortName": "DOGSt",
-  "chainId": 9339,
-  "networkId": 9339,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Dogcoin",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "dogcoin-testnet"
+  "features": []
 } as const satisfies Chain;

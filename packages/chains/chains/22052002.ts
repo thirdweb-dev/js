@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Excelon Mainnet",
+  "chainId": 22052002,
   "chain": "XLON",
+  "name": "Excelon Mainnet",
+  "rpc": [
+    "https://excelon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://edgewallet1.xlon.org/"
+  ],
+  "slug": "excelon",
   "icon": {
     "url": "ipfs://QmTV45o4jTe6ayscF1XWh1WXk5DPck4QohR5kQocSWjvQP",
     "width": 300,
     "height": 300,
     "format": "png"
   },
-  "rpc": [
-    "https://excelon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://edgewallet1.xlon.org/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Excelon",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://xlon.org",
   "shortName": "xlon",
-  "chainId": 22052002,
-  "networkId": 22052002,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Excelon explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "excelon"
+  "features": []
 } as const satisfies Chain;

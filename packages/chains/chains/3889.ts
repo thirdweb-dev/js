@@ -1,25 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KalyChain Testnet",
+  "chainId": 3889,
   "chain": "KLC",
+  "name": "KalyChain Testnet",
+  "rpc": [
+    "https://kalychain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnetrpc.kalychain.io/rpc"
+  ],
+  "slug": "kalychain-testnet",
   "icon": {
     "url": "ipfs://QmUaXcPewLuQtY5a7xPTzJyVdjkH487VfV7gSR8UXrbxQ3",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://kalychain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnetrpc.kalychain.io/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "KalyCoin",
@@ -28,8 +22,8 @@ export default {
   },
   "infoURL": "https://kalychain.io",
   "shortName": "kalytestnet",
-  "chainId": 3889,
-  "networkId": 3889,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "KalyScan",
@@ -37,6 +31,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kalychain-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

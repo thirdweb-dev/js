@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dogechain Testnet",
+  "chainId": 568,
   "chain": "DC",
+  "name": "Dogechain Testnet",
+  "rpc": [
+    "https://dogechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.dogechain.dog"
+  ],
+  "slug": "dogechain-testnet",
   "icon": {
     "url": "ipfs://QmNS6B6L8FfgGSMTEi2SxD3bK5cdmKPNtQKcYaJeRWrkHs",
     "width": 732,
     "height": 732,
     "format": "png"
   },
-  "rpc": [
-    "https://dogechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.dogechain.dog"
-  ],
   "faucets": [
     "https://faucet.dogechain.dog"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://dogechain.dog",
   "shortName": "dct",
-  "chainId": 568,
-  "networkId": 568,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "dogechain testnet explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "dogechain-testnet"
+  "features": []
 } as const satisfies Chain;

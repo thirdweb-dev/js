@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CloudTx Testnet",
+  "chainId": 31224,
   "chain": "CloudTx",
+  "name": "CloudTx Testnet",
+  "rpc": [
+    "https://cloudtx-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.cloudtx.finance"
+  ],
+  "slug": "cloudtx-testnet",
   "icon": {
     "url": "ipfs://QmSEsi71AdA5HYH6VNC5QUQezFg1C7BiVQJdx1VVfGz3g3",
     "width": 713,
     "height": 830,
     "format": "png"
   },
-  "rpc": [
-    "https://cloudtx-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.cloudtx.finance"
-  ],
   "faucets": [
     "https://faucet.cloudtx.finance"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://cloudtx.finance/",
   "shortName": "CLD",
-  "chainId": 31224,
-  "networkId": 31224,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "cloudtxexplorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "cloudtx-testnet"
+  "features": []
 } as const satisfies Chain;

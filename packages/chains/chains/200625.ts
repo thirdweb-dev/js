@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Akroma",
+  "chainId": 200625,
   "chain": "AKA",
+  "name": "Akroma",
   "rpc": [
     "https://akroma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://remote.akroma.io"
   ],
+  "slug": "akroma",
   "faucets": [],
   "nativeCurrency": {
     "name": "Akroma Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://akroma.io",
   "shortName": "aka",
-  "chainId": 200625,
-  "networkId": 200625,
-  "slip44": 200625,
   "testnet": false,
-  "slug": "akroma"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

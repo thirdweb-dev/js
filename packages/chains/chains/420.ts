@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Optimism Goerli Testnet",
+  "chainId": 420,
   "chain": "ETH",
+  "name": "Optimism Goerli Testnet",
   "rpc": [
     "https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism-goerli.infura.io/v3/${INFURA_API_KEY}",
@@ -12,6 +13,13 @@ export default {
     "https://optimism-goerli.gateway.tenderly.co",
     "wss://optimism-goerli.gateway.tenderly.co"
   ],
+  "slug": "optimism-goerli",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://coinbase.com/faucets/optimism-goerli-faucet"
   ],
@@ -22,27 +30,14 @@ export default {
   },
   "infoURL": "https://optimism.io",
   "shortName": "ogor",
-  "chainId": 420,
-  "networkId": 420,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://optimism-goerli.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "testnet": true,
-  "slug": "optimism-goerli"
+  "features": []
 } as const satisfies Chain;

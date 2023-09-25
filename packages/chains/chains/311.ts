@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Omax Mainnet",
+  "chainId": 311,
   "chain": "OMAX Chain",
+  "name": "Omax Mainnet",
   "rpc": [
     "https://omax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainapi.omaxray.com"
   ],
+  "slug": "omax",
+  "icon": {
+    "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.omaxray.com/"
   ],
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://www.omaxcoin.com/",
   "shortName": "omax",
-  "chainId": 311,
-  "networkId": 311,
-  "icon": {
-    "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Omax Chain Explorer",
       "url": "https://omaxray.com",
-      "icon": {
-        "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "omax"
+  "features": []
 } as const satisfies Chain;

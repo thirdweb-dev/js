@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Darwinia Pangoro Testnet",
+  "chainId": 45,
   "chain": "pangoro",
+  "name": "Darwinia Pangoro Testnet",
   "rpc": [
     "https://darwinia-pangoro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangoro-rpc.darwinia.network"
   ],
+  "slug": "darwinia-pangoro-testnet",
   "faucets": [
     "https://docs.darwinia.network/pangoro-testnet-70cfec5dc9ca42759959ba3803edaec2"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://darwinia.network/",
   "shortName": "pangoro",
-  "chainId": 45,
-  "networkId": 45,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "subscan",
@@ -25,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "darwinia-pangoro-testnet"
+  "features": []
 } as const satisfies Chain;

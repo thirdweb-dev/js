@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SwapDEX",
+  "chainId": 230,
   "chain": "SDX",
+  "name": "SwapDEX",
   "rpc": [
     "https://swapdex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.swapdex.network",
     "wss://ss.swapdex.network"
   ],
+  "slug": "swapdex",
   "faucets": [],
   "nativeCurrency": {
     "name": "SwapDEX",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://swapdex.network/",
   "shortName": "SDX",
-  "chainId": 230,
-  "networkId": 230,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SwapDEX",
@@ -24,6 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "swapdex"
+  "features": []
 } as const satisfies Chain;

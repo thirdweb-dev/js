@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PAWCHAIN Testnet",
+  "chainId": 542,
   "chain": "PAW",
+  "name": "PAWCHAIN Testnet",
   "rpc": [
     "https://pawchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pawchainx.com/"
   ],
+  "slug": "pawchain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "PAW",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://pawchainx.com/",
   "shortName": "PAW",
-  "chainId": 542,
-  "networkId": 542,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "PAWCHAIN Testnet",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "pawchain-testnet"
+  "features": []
 } as const satisfies Chain;

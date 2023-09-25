@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lambda Testnet",
+  "chainId": 92001,
   "chain": "Lambda",
+  "name": "Lambda Testnet",
   "rpc": [
     "https://lambda-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.lambda.top/"
   ],
+  "slug": "lambda-testnet",
+  "icon": {
+    "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.lambda.top"
   ],
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://lambda.im",
   "shortName": "lambda-testnet",
-  "chainId": 92001,
-  "networkId": 92001,
-  "icon": {
-    "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Lambda EVM Explorer",
       "url": "https://explorer.lambda.top",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "lambda-testnet"
+  "features": []
 } as const satisfies Chain;

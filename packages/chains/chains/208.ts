@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Structx Mainnet",
+  "chainId": 208,
   "chain": "utx",
+  "name": "Structx Mainnet",
   "rpc": [
     "https://structx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.structx.io"
   ],
+  "slug": "structx",
   "faucets": [],
   "nativeCurrency": {
     "name": "Notes",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://structx.io",
   "shortName": "utx",
-  "chainId": 208,
-  "networkId": 208,
   "testnet": false,
-  "slug": "structx"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

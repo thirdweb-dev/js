@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rikeza Network Mainnet",
-  "title": "Rikeza Network Mainnet",
+  "chainId": 1433,
   "chain": "Rikeza",
+  "name": "Rikeza Network Mainnet",
+  "rpc": [
+    "https://rikeza-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.rikscan.com"
+  ],
+  "slug": "rikeza-network",
   "icon": {
     "url": "ipfs://QmfJ1Qxpzi6CSLeFeWY1Bwe435CpT5za5WfrLUE7vNzZfy",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://rikeza-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.rikscan.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Rikeza",
@@ -21,8 +22,8 @@ export default {
   },
   "infoURL": "https://rikeza.io",
   "shortName": "RIK",
-  "chainId": 1433,
-  "networkId": 1433,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Rikeza Blockchain explorer",
@@ -30,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "rikeza-network"
+  "features": []
 } as const satisfies Chain;

@@ -1,8 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mizana Privnet",
+  "chainId": 81363,
   "chain": "MEER",
+  "name": "Mizana Privnet",
   "rpc": [],
+  "slug": "mizana-privnet",
+  "icon": {
+    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Mizana Privnet",
@@ -11,15 +19,9 @@ export default {
   },
   "infoURL": "https://github.com/Qitmeer",
   "shortName": "mizanapriv",
-  "icon": {
-    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "chainId": 81363,
-  "networkId": 81363,
-  "status": "incubating",
   "testnet": false,
-  "slug": "mizana-privnet"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

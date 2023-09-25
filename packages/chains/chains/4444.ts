@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Htmlcoin Mainnet",
+  "chainId": 4444,
   "chain": "mainnet",
+  "name": "Htmlcoin Mainnet",
   "rpc": [
     "https://htmlcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://janus.htmlcoin.com/api/"
   ],
+  "slug": "htmlcoin",
+  "icon": {
+    "url": "ipfs://QmR1oDRSadPerfyWMhKHNP268vPKvpczt5zPawgFSZisz2",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "faucets": [
     "https://gruvin.me/htmlcoin"
   ],
@@ -16,28 +24,15 @@ export default {
   },
   "infoURL": "https://htmlcoin.com",
   "shortName": "html",
-  "chainId": 4444,
-  "networkId": 4444,
-  "icon": {
-    "url": "ipfs://QmR1oDRSadPerfyWMhKHNP268vPKvpczt5zPawgFSZisz2",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
+  "testnet": false,
   "status": "active",
+  "redFlags": [],
   "explorers": [
     {
       "name": "htmlcoin",
       "url": "https://explorer.htmlcoin.com",
-      "icon": {
-        "url": "ipfs://QmR1oDRSadPerfyWMhKHNP268vPKvpczt5zPawgFSZisz2",
-        "width": 1000,
-        "height": 1000,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "htmlcoin"
+  "features": []
 } as const satisfies Chain;

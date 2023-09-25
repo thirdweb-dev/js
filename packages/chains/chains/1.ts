@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Mainnet",
+  "chainId": 1,
   "chain": "ETH",
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "name": "Ethereum Mainnet",
   "rpc": [
     "https://ethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.infura.io/v3/${INFURA_API_KEY}",
@@ -20,14 +15,13 @@ export default {
     "https://mainnet.gateway.tenderly.co",
     "wss://mainnet.gateway.tenderly.co"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    },
-    {
-      "name": "EIP155"
-    }
-  ],
+  "slug": "ethereum",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -36,12 +30,8 @@ export default {
   },
   "infoURL": "https://ethereum.org",
   "shortName": "eth",
-  "chainId": 1,
-  "networkId": 1,
-  "slip44": 60,
-  "ens": {
-    "registry": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "etherscan",
@@ -51,15 +41,15 @@ export default {
     {
       "name": "blockscout",
       "url": "https://eth.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ethereum"
+  "features": [
+    {
+      "name": "EIP1559"
+    },
+    {
+      "name": "EIP155"
+    }
+  ]
 } as const satisfies Chain;

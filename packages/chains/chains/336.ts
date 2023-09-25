@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shiden",
+  "chainId": 336,
   "chain": "SDN",
+  "name": "Shiden",
   "rpc": [
     "https://shiden.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://shiden.api.onfinality.io/public",
@@ -11,6 +12,13 @@ export default {
     "wss://shiden.public.blastapi.io",
     "wss://shiden-rpc.dwellir.com"
   ],
+  "slug": "shiden",
+  "icon": {
+    "url": "ipfs://QmQySjAoWHgk3ou1yvBi2TrTcgH6KhfGiU7GcrLzrAeRkE",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Shiden",
@@ -19,38 +27,19 @@ export default {
   },
   "infoURL": "https://shiden.astar.network/",
   "shortName": "sdn",
-  "chainId": 336,
-  "networkId": 336,
-  "icon": {
-    "url": "ipfs://QmQySjAoWHgk3ou1yvBi2TrTcgH6KhfGiU7GcrLzrAeRkE",
-    "width": 250,
-    "height": 250,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://blockscout.com/shiden",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
     {
       "name": "subscan",
       "url": "https://shiden.subscan.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "none"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://blockscout.com/shiden",
+      "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "shiden"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "IMPERIUM MAINNET",
+  "chainId": 9819,
   "chain": "IMP",
+  "name": "IMPERIUM MAINNET",
   "rpc": [
     "https://imperium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-aws-mainnet.imperiumchain.com",
     "https://data-aws2-mainnet.imperiumchain.com"
   ],
+  "slug": "imperium",
+  "icon": {
+    "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],
@@ -17,27 +25,14 @@ export default {
   },
   "infoURL": "https://imperiumchain.com",
   "shortName": "IMP",
-  "chainId": 9819,
-  "networkId": 9819,
-  "icon": {
-    "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "IMPERIUM Explorer",
-      "icon": {
-        "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
       "url": "https://impscan.com",
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "imperium"
+  "features": []
 } as const satisfies Chain;

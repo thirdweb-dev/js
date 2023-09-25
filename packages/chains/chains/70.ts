@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hoo Smart Chain",
+  "chainId": 70,
   "chain": "HSC",
+  "name": "Hoo Smart Chain",
   "rpc": [
     "https://hoo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.hoosmartchain.com",
@@ -9,6 +10,7 @@ export default {
     "wss://ws-mainnet.hoosmartchain.com",
     "wss://ws-mainnet2.hoosmartchain.com"
   ],
+  "slug": "hoo-smart-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Hoo Smart Chain Native Token",
@@ -17,9 +19,8 @@ export default {
   },
   "infoURL": "https://www.hoosmartchain.com",
   "shortName": "hsc",
-  "chainId": 70,
-  "networkId": 70,
-  "slip44": 1170,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "hooscan",
@@ -27,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "hoo-smart-chain"
+  "features": []
 } as const satisfies Chain;

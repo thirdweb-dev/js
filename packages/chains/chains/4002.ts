@@ -1,13 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fantom Testnet",
+  "chainId": 4002,
   "chain": "FTM",
+  "name": "Fantom Testnet",
   "rpc": [
     "https://fantom-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fantom-testnet.publicnode.com",
     "https://fantom-testnet.publicnode.com",
     "https://rpc.testnet.fantom.network"
   ],
+  "slug": "fantom-testnet",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/fantom/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.fantom.network"
   ],
@@ -18,27 +26,14 @@ export default {
   },
   "infoURL": "https://docs.fantom.foundation/quick-start/short-guide#fantom-testnet",
   "shortName": "tftm",
-  "chainId": 4002,
-  "networkId": 4002,
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/fantom/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ftmscan",
       "url": "https://testnet.ftmscan.com",
-      "icon": {
-        "url": "ipfs://QmRqbK449Fo9sJ3xMpkPbg6uV1weQj4yVV1xNMP9cdPmjf",
-        "width": 73,
-        "height": 73,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "fantom-testnet"
+  "features": []
 } as const satisfies Chain;

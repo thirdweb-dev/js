@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fuse Mainnet",
+  "chainId": 122,
   "chain": "FUSE",
+  "name": "Fuse Mainnet",
   "rpc": [
     "https://fuse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fuse.io"
   ],
+  "slug": "fuse",
+  "icon": {
+    "url": "ipfs://QmQg8aqyeaMfHvjzFDtZkb8dUNRYhFezPp8UYVc1HnLpRW/green.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Fuse",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://fuse.io/",
   "shortName": "fuse",
-  "chainId": 122,
-  "networkId": 122,
-  "icon": {
-    "url": "ipfs://QmQg8aqyeaMfHvjzFDtZkb8dUNRYhFezPp8UYVc1HnLpRW/green.png",
-    "format": "png",
-    "width": 512,
-    "height": 512
-  },
   "testnet": false,
-  "slug": "fuse"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

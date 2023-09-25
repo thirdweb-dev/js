@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Etho Protocol",
+  "chainId": 1313114,
   "chain": "ETHO",
+  "name": "Etho Protocol",
   "rpc": [
     "https://etho-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ethoprotocol.com"
   ],
+  "slug": "etho-protocol",
   "faucets": [],
   "nativeCurrency": {
     "name": "Etho Protocol",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://ethoprotocol.com",
   "shortName": "etho",
-  "chainId": 1313114,
-  "networkId": 1313114,
-  "slip44": 1313114,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -24,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "etho-protocol"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CMP-Testnet",
+  "chainId": 512512,
   "chain": "CMP",
+  "name": "CMP-Testnet",
   "rpc": [
     "https://cmp-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galaxy.block.caduceus.foundation",
     "wss://galaxy.block.caduceus.foundation"
   ],
+  "slug": "cmp-testnet",
   "faucets": [
     "https://dev.caduceus.foundation/testNetwork"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://caduceus.foundation/",
   "shortName": "cmp",
-  "chainId": 512512,
-  "networkId": 512512,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Galaxy Scan",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "cmp-testnet"
+  "features": []
 } as const satisfies Chain;

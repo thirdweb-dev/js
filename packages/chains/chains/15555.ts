@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Trust EVM Testnet",
+  "chainId": 15555,
   "chain": "Trust EVM Testnet",
+  "name": "Trust EVM Testnet",
   "rpc": [
     "https://trust-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.testnet-dev.trust.one"
   ],
+  "slug": "trust-evm-testnet",
   "faucets": [
     "https://faucet.testnet-dev.trust.one/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.trust.one/",
   "shortName": "TrustTestnet",
-  "chainId": 15555,
-  "networkId": 15555,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Trust EVM Explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "trust-evm-testnet"
+  "features": []
 } as const satisfies Chain;

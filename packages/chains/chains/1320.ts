@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AIA Testnet",
+  "chainId": 1320,
   "chain": "AIA",
+  "name": "AIA Testnet",
+  "rpc": [
+    "https://aia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://aia-dataseed1-testnet.aiachain.org"
+  ],
+  "slug": "aia-testnet",
   "icon": {
     "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
     "width": 160,
     "height": 160,
     "format": "png"
   },
-  "rpc": [
-    "https://aia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://aia-dataseed1-testnet.aiachain.org"
-  ],
   "faucets": [
     "https://aia-faucet-testnet.aiachain.org"
   ],
@@ -20,18 +22,10 @@ export default {
     "symbol": "AIA",
     "decimals": 18
   },
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "infoURL": "https://aiachain.org",
   "shortName": "aiatestnet",
-  "chainId": 1320,
-  "networkId": 1320,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "AIA Chain Explorer Testnet",
@@ -39,6 +33,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "aia-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

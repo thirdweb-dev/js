@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CMP-Mainnet",
+  "chainId": 256256,
   "chain": "CMP",
+  "name": "CMP-Mainnet",
   "rpc": [
     "https://cmp.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.block.caduceus.foundation",
     "wss://mainnet.block.caduceus.foundation"
   ],
+  "slug": "cmp",
   "faucets": [],
   "nativeCurrency": {
     "name": "Caduceus Token",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://caduceus.foundation/",
   "shortName": "cmp-mainnet",
-  "chainId": 256256,
-  "networkId": 256256,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Mainnet Scan",
@@ -24,6 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "cmp"
+  "features": []
 } as const satisfies Chain;

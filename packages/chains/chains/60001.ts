@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Thinkium Testnet Chain 1",
+  "chainId": 60001,
   "chain": "Thinkium",
+  "name": "Thinkium Testnet Chain 1",
   "rpc": [
     "https://thinkium-testnet-chain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test1.thinkiumrpc.net/"
   ],
+  "slug": "thinkium-testnet-chain-1",
   "faucets": [
     "https://www.thinkiumdev.net/faucet"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://thinkium.net/",
   "shortName": "TKM-test1",
-  "chainId": 60001,
-  "networkId": 60001,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "thinkiumscan",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "thinkium-testnet-chain-1"
+  "features": []
 } as const satisfies Chain;

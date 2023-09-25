@@ -1,16 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Testnet Mordor",
+  "chainId": 63,
   "chain": "ETC",
+  "name": "Ethereum Classic Testnet Mordor",
   "rpc": [
     "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mordor.etccooperative.org"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    }
-  ],
+  "slug": "ethereum-classic-testnet-mordor",
   "faucets": [
     "https://mordor.canhaz.net/",
     "https://easy.hebeswap.com/#/faucet"
@@ -22,9 +19,8 @@ export default {
   },
   "infoURL": "https://github.com/eth-classic/mordor/",
   "shortName": "metc",
-  "chainId": 63,
-  "networkId": 7,
-  "slip44": 63,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -32,6 +28,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ethereum-classic-testnet-mordor"
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ]
 } as const satisfies Chain;

@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Smart Bitcoin Cash",
+  "chainId": 10000,
   "chain": "smartBCH",
+  "name": "Smart Bitcoin Cash",
   "rpc": [
     "https://smart-bitcoin-cash.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smartbch.greyh.at",
@@ -9,6 +10,7 @@ export default {
     "https://smartbch.fountainhead.cash/mainnet",
     "https://smartbch.devops.cash/mainnet"
   ],
+  "slug": "smart-bitcoin-cash",
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin Cash",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://smartbch.org/",
   "shortName": "smartbch",
-  "chainId": 10000,
-  "networkId": 10000,
   "testnet": false,
-  "slug": "smart-bitcoin-cash"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

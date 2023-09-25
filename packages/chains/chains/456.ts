@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ARZIO Chain",
+  "chainId": 456,
   "chain": "ARZIO",
+  "name": "ARZIO Chain",
+  "rpc": [
+    "https://arzio-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://chain-rpc.arzio.co"
+  ],
+  "slug": "arzio-chain",
   "icon": {
     "url": "ipfs://QmUwqGWGjjQweTprn5LBirAwRjYnteTiFLCVpSNHrfMmSL",
     "width": 150,
     "height": 150,
     "format": "png"
   },
-  "rpc": [
-    "https://arzio-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://chain-rpc.arzio.co"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "ARZIO",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://chain.arzio.co",
   "shortName": "arzio",
-  "chainId": 456,
-  "networkId": 456,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ARZIO Scan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "arzio-chain"
+  "features": []
 } as const satisfies Chain;

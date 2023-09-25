@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ecoball Testnet Espuma",
+  "chainId": 2101,
   "chain": "ECO",
+  "name": "Ecoball Testnet Espuma",
   "rpc": [
     "https://ecoball-testnet-espuma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ecoball.org/espuma/"
   ],
+  "slug": "ecoball-testnet-espuma",
   "faucets": [],
   "nativeCurrency": {
     "name": "Espuma Coin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://ecoball.org",
   "shortName": "esp",
-  "chainId": 2101,
-  "networkId": 2101,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ecoball Testnet Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ecoball-testnet-espuma"
+  "features": []
 } as const satisfies Chain;

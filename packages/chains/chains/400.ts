@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HyperonChain TestNet",
+  "chainId": 400,
   "chain": "HPN",
+  "name": "HyperonChain TestNet",
+  "rpc": [
+    "https://hyperonchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.hyperonchain.com"
+  ],
+  "slug": "hyperonchain-testnet",
   "icon": {
     "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
     "width": 540,
     "height": 541,
     "format": "png"
   },
-  "rpc": [
-    "https://hyperonchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.hyperonchain.com"
-  ],
   "faucets": [
     "https://faucet.hyperonchain.com"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "https://docs.hyperonchain.com",
   "shortName": "hpn",
-  "chainId": 400,
-  "networkId": 400,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://testnet.hyperonchain.com",
-      "icon": {
-        "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
-        "width": 540,
-        "height": 541,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "hyperonchain-testnet"
+  "features": []
 } as const satisfies Chain;

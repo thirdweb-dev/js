@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CYBERTRUST",
+  "chainId": 85449,
   "chain": "CYBER",
+  "name": "CYBERTRUST",
   "rpc": [
     "https://cybertrust.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.cybertrust.space:48501"
   ],
+  "slug": "cybertrust",
   "faucets": [],
   "nativeCurrency": {
     "name": "Cyber Trust",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://cybertrust.space",
   "shortName": "Cyber",
-  "chainId": 85449,
-  "networkId": 48501,
   "testnet": true,
-  "slug": "cybertrust"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

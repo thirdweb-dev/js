@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "0XTade",
+  "chainId": 10248,
   "chain": "0XTade Chain",
+  "name": "0XTade",
   "rpc": [
     "https://0xtade.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.0xtchain.com"
   ],
+  "slug": "0xtade",
   "faucets": [],
   "nativeCurrency": {
     "name": "0XT",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.0xtrade.finance/",
   "shortName": "0xt",
-  "chainId": 10248,
-  "networkId": 10248,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "0xtrade Scan",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "0xtade"
+  "features": []
 } as const satisfies Chain;

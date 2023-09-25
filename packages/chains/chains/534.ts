@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Candle",
+  "chainId": 534,
   "chain": "Candle",
+  "name": "Candle",
   "rpc": [
     "https://candle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://candle-rpc.com/",
     "https://rpc.cndlchain.com"
   ],
+  "slug": "candle",
   "faucets": [],
   "nativeCurrency": {
     "name": "CANDLE",
@@ -15,9 +17,8 @@ export default {
   },
   "infoURL": "https://candlelabs.org/",
   "shortName": "CNDL",
-  "chainId": 534,
-  "networkId": 534,
-  "slip44": 674,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "candleexplorer",
@@ -25,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "candle"
+  "features": []
 } as const satisfies Chain;

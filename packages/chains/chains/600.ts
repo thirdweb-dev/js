@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Meshnyan testnet",
+  "chainId": 600,
   "chain": "MeshTestChain",
+  "name": "Meshnyan testnet",
   "rpc": [],
+  "slug": "meshnyan-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Meshnyan Testnet Native Token",
@@ -11,8 +13,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "mesh-chain-testnet",
-  "chainId": 600,
-  "networkId": 600,
   "testnet": true,
-  "slug": "meshnyan-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

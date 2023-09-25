@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zilliqa EVM Testnet",
+  "chainId": 33101,
   "chain": "ZIL",
+  "name": "Zilliqa EVM Testnet",
   "rpc": [
     "https://zilliqa-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-api.zilliqa.com"
   ],
+  "slug": "zilliqa-evm-testnet",
   "faucets": [
     "https://dev-wallet.zilliqa.com/faucet?network=testnet"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.zilliqa.com/",
   "shortName": "zil-testnet",
-  "chainId": 33101,
-  "networkId": 33101,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Zilliqa EVM Explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "zilliqa-evm-testnet"
+  "features": []
 } as const satisfies Chain;

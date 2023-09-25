@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taf ECO Chain Mainnet",
+  "chainId": 224168,
   "chain": "Taf ECO Chain",
+  "name": "Taf ECO Chain Mainnet",
+  "rpc": [
+    "https://taf-eco-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.tafchain.com/v1"
+  ],
+  "slug": "taf-eco-chain",
   "icon": {
     "url": "ipfs://bafkreigpxhu7glccsislhjqpl5fnsfmj2io4cy33blhky642uiuyojossy",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://taf-eco-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.tafchain.com/v1"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Taf ECO Chain Mainnet",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.tafchain.com",
   "shortName": "TAFECO",
-  "chainId": 224168,
-  "networkId": 224168,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Taf ECO Chain Mainnet",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "taf-eco-chain"
+  "features": []
 } as const satisfies Chain;

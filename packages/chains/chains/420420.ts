@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kekchain",
+  "chainId": 420420,
   "chain": "kek",
+  "name": "Kekchain",
   "rpc": [
     "https://kekchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.kekchain.com"
   ],
+  "slug": "kekchain",
+  "icon": {
+    "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
+    "width": 401,
+    "height": 401,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "KEK",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://kekchain.com",
   "shortName": "KEK",
-  "chainId": 420420,
-  "networkId": 103090,
-  "icon": {
-    "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
-    "width": 401,
-    "height": 401,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://mainnet-explorer.kekchain.com",
-      "icon": {
-        "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
-        "width": 401,
-        "height": 401,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "kekchain"
+  "features": []
 } as const satisfies Chain;

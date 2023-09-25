@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nova Network",
+  "chainId": 87,
   "chain": "NNW",
-  "icon": {
-    "url": "ipfs://QmTTamJ55YGQwMboq4aqf3JjTEy5WDtjo4GBRQ5VdsWA6U",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "name": "Nova Network",
   "rpc": [
     "https://nova-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.novanetwork.io",
     "https://0x57.redjackstudio.com",
     "https://rpc.novanetwork.io:9070"
   ],
+  "slug": "nova-network",
+  "icon": {
+    "url": "ipfs://QmTTamJ55YGQwMboq4aqf3JjTEy5WDtjo4GBRQ5VdsWA6U",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Supernova",
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://novanetwork.io",
   "shortName": "nnw",
-  "chainId": 87,
-  "networkId": 87,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "novanetwork",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "nova-network"
+  "features": []
 } as const satisfies Chain;

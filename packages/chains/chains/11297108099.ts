@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Palm Testnet",
+  "chainId": 11297108099,
   "chain": "Palm",
+  "name": "Palm Testnet",
+  "rpc": [
+    "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
+  ],
+  "slug": "palm-testnet",
   "icon": {
     "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
     "width": 72,
     "height": 72,
     "format": "svg"
   },
-  "rpc": [
-    "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "PALM",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://palm.io",
   "shortName": "tpalm",
-  "chainId": 11297108099,
-  "networkId": 11297108099,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Palm Testnet Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "palm-testnet"
+  "features": []
 } as const satisfies Chain;

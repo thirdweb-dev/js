@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Sapphire by Unique",
-  "icon": {
-    "url": "ipfs://Qmd1PGt4cDRjFbh4ihP5QKEd4XQVwN1MkebYKdF56V74pf",
-    "width": 48,
-    "height": 48,
-    "format": "svg"
-  },
+  "chainId": 8883,
   "chain": "UNQ",
+  "name": "Sapphire by Unique",
   "rpc": [
     "https://sapphire-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-sapphire.unique.network",
@@ -15,6 +10,13 @@ export default {
     "https://eu-rpc-sapphire.unique.network",
     "https://asia-rpc-sapphire.unique.network"
   ],
+  "slug": "sapphire-by-unique",
+  "icon": {
+    "url": "ipfs://Qmd1PGt4cDRjFbh4ihP5QKEd4XQVwN1MkebYKdF56V74pf",
+    "width": 48,
+    "height": 48,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Quartz",
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://unique.network",
   "shortName": "sph",
-  "chainId": 8883,
-  "networkId": 8883,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Unique Scan / Sapphire",
@@ -32,6 +34,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "sapphire-by-unique"
+  "features": []
 } as const satisfies Chain;

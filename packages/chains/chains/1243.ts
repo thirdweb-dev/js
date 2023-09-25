@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ARC Mainnet",
+  "chainId": 1243,
   "chain": "ARC",
+  "name": "ARC Mainnet",
+  "rpc": [
+    "https://arc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-main-1.archiechain.io"
+  ],
+  "slug": "arc",
   "icon": {
     "url": "ipfs://bafybeiady63oqduls2pm4aaykzjhahblagokhnpsc5qeq5dmkxqelh7i2i",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://arc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-main-1.archiechain.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "ARC",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://archiechain.io/",
   "shortName": "ARC",
-  "chainId": 1243,
-  "networkId": 1243,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "archiescan",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "arc"
+  "features": []
 } as const satisfies Chain;

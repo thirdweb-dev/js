@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Worldland Testnet",
+  "chainId": 10395,
   "chain": "Worldland",
+  "name": "Worldland Testnet",
+  "rpc": [
+    "https://worldland-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gwangju.worldland.foundation"
+  ],
+  "slug": "worldland-testnet",
   "icon": {
     "url": "ipfs://QmYZNTfK3byhgLsTjXP8vPubVHRz2CWsBrTJxZrQmKq6JZ",
     "width": 3509,
     "height": 2482,
     "format": "png"
   },
-  "rpc": [
-    "https://worldland-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://gwangju.worldland.foundation"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Worldland",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://worldland.foundation",
   "shortName": "TWLC",
-  "chainId": 10395,
-  "networkId": 10395,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Worldland Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "worldland-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Openpiece Testnet",
+  "chainId": 141,
   "chain": "OPENPIECE",
+  "name": "Openpiece Testnet",
+  "rpc": [
+    "https://openpiece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.openpiece.io"
+  ],
+  "slug": "openpiece-testnet",
   "icon": {
     "url": "ipfs://QmVTahJkdSH3HPYsJMK2GmqfWZjLyxE7cXy1aHEnHU3vp2",
     "width": 250,
     "height": 250,
     "format": "png"
   },
-  "rpc": [
-    "https://openpiece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.openpiece.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Belly",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://cryptopiece.online",
   "shortName": "OPtest",
-  "chainId": 141,
-  "networkId": 141,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Belly Scan",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "openpiece-testnet"
+  "features": []
 } as const satisfies Chain;

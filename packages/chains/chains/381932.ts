@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metal Tahoe C-Chain",
+  "chainId": 381932,
   "chain": "Metal",
+  "name": "Metal Tahoe C-Chain",
   "rpc": [
     "https://metal-tahoe-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tahoe.metalblockchain.org/ext/bc/C/rpc"
   ],
+  "slug": "metal-tahoe-c-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Metal",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://www.metalblockchain.org/",
   "shortName": "Tahoe",
-  "chainId": 381932,
-  "networkId": 381932,
-  "slip44": 9005,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "metalscan",
@@ -24,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "metal-tahoe-c-chain"
+  "features": []
 } as const satisfies Chain;

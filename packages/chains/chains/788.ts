@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aerochain Testnet",
+  "chainId": 788,
   "chain": "Aerochain",
+  "name": "Aerochain Testnet",
   "rpc": [
     "https://aerochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.aerochain.id/"
   ],
+  "slug": "aerochain-testnet",
   "faucets": [
     "https://faucet.aerochain.id/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://aerochaincoin.org/",
   "shortName": "taero",
-  "chainId": 788,
-  "networkId": 788,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "aeroscan",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "aerochain-testnet"
+  "features": []
 } as const satisfies Chain;

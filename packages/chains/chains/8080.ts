@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shardeum Liberty 1.X",
+  "chainId": 8080,
   "chain": "Shardeum",
+  "name": "Shardeum Liberty 1.X",
+  "rpc": [
+    "https://shardeum-liberty-1-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://liberty10.shardeum.org/"
+  ],
+  "slug": "shardeum-liberty-1-x",
   "icon": {
     "url": "ipfs://Qma1bfuubpepKn7DLDy4NPSKDeT3S4VPCNhu6UmdGrb6YD",
     "width": 609,
     "height": 533,
     "format": "png"
   },
-  "rpc": [
-    "https://shardeum-liberty-1-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://liberty10.shardeum.org/"
-  ],
   "faucets": [
     "https://faucet.liberty10.shardeum.org"
   ],
@@ -22,8 +24,10 @@ export default {
   },
   "infoURL": "https://docs.shardeum.org/",
   "shortName": "Liberty10",
-  "chainId": 8080,
-  "networkId": 8080,
+  "testnet": false,
+  "redFlags": [
+    "reusedChainId"
+  ],
   "explorers": [
     {
       "name": "Shardeum Scan",
@@ -31,9 +35,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "redFlags": [
-    "reusedChainId"
-  ],
-  "testnet": false,
-  "slug": "shardeum-liberty-1-x"
+  "features": []
 } as const satisfies Chain;

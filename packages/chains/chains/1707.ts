@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TBSI Mainnet",
-  "title": "Thai Blockchain Service Infrastructure Mainnet",
+  "chainId": 1707,
   "chain": "TBSI",
+  "name": "TBSI Mainnet",
   "rpc": [
     "https://tbsi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blockchain.or.th"
   ],
+  "slug": "tbsi",
   "faucets": [],
   "nativeCurrency": {
     "name": "Jinda",
@@ -15,8 +16,8 @@ export default {
   },
   "infoURL": "https://blockchain.or.th",
   "shortName": "TBSI",
-  "chainId": 1707,
-  "networkId": 1707,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -24,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "tbsi"
+  "features": []
 } as const satisfies Chain;

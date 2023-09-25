@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mixin Virtual Machine",
+  "chainId": 73927,
   "chain": "MVM",
+  "name": "Mixin Virtual Machine",
   "rpc": [
     "https://mixin-virtual-machine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.mvm.dev"
   ],
+  "slug": "mixin-virtual-machine",
+  "icon": {
+    "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
+    "width": 471,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://mvm.dev",
   "shortName": "mvm",
-  "chainId": 73927,
-  "networkId": 73927,
-  "icon": {
-    "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
-    "width": 471,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "mvmscan",
       "url": "https://scan.mvm.dev",
-      "icon": {
-        "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
-        "width": 471,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "mixin-virtual-machine"
+  "features": []
 } as const satisfies Chain;

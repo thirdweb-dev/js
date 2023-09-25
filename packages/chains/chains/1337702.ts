@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kintsugi",
-  "title": "Kintsugi merge testnet",
+  "chainId": 1337702,
   "chain": "ETH",
+  "name": "Kintsugi",
   "rpc": [
     "https://kintsugi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kintsugi.themerge.dev"
   ],
+  "slug": "kintsugi",
   "faucets": [
     "http://fauceth.komputing.org?chain=1337702&address=${ADDRESS}",
     "https://faucet.kintsugi.themerge.dev"
@@ -18,8 +19,8 @@ export default {
   },
   "infoURL": "https://kintsugi.themerge.dev/",
   "shortName": "kintsugi",
-  "chainId": 1337702,
-  "networkId": 1337702,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "kintsugi explorer",
@@ -27,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kintsugi"
+  "features": []
 } as const satisfies Chain;

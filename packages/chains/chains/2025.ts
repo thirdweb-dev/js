@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rangers Protocol Mainnet",
+  "chainId": 2025,
   "chain": "Rangers",
+  "name": "Rangers Protocol Mainnet",
+  "rpc": [
+    "https://rangers-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.rangersprotocol.com/api/jsonrpc"
+  ],
+  "slug": "rangers-protocol",
   "icon": {
     "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
     "width": 2000,
     "height": 2000,
     "format": "png"
   },
-  "rpc": [
-    "https://rangers-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.rangersprotocol.com/api/jsonrpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Rangers Protocol Gas",
@@ -20,9 +22,8 @@ export default {
   },
   "infoURL": "https://rangersprotocol.com",
   "shortName": "rpg",
-  "chainId": 2025,
-  "networkId": 2025,
-  "slip44": 1008,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "rangersscan",
@@ -30,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "rangers-protocol"
+  "features": []
 } as const satisfies Chain;

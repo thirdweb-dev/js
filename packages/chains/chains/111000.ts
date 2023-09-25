@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Siberium Test Network",
+  "chainId": 111000,
   "chain": "SBR",
+  "name": "Siberium Test Network",
   "rpc": [
     "https://siberium-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.siberium.net"
   ],
+  "slug": "siberium-test-network",
+  "icon": {
+    "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "TestSIBR",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://siberium.net",
   "shortName": "testsbr",
-  "chainId": 111000,
-  "networkId": 111000,
-  "icon": {
-    "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
-    "width": 512,
-    "height": 512,
-    "format": "svg"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Siberium Testnet Explorer - blockscout",
       "url": "https://explorer.test.siberium.net",
-      "icon": {
-        "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
-        "width": 512,
-        "height": 512,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "siberium-test-network"
+  "features": []
 } as const satisfies Chain;

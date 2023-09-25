@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MXC zkEVM Mainnet",
+  "chainId": 18686,
   "chain": "MXC zkEVM",
+  "name": "MXC zkEVM Mainnet",
+  "rpc": [
+    "https://mxc-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mxc.com"
+  ],
+  "slug": "mxc-zkevm",
   "icon": {
     "url": "ipfs://QmdGCthKA11K9kCZJdbTP5WPAyq1wiRZ3REn6KG58MrWaE",
     "width": 159,
     "height": 159,
     "format": "png"
   },
-  "rpc": [
-    "https://mxc-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mxc.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "MXC zkEVM Mainnet",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://doc.mxc.com/docs/intro",
   "shortName": "MXCzkEVM",
-  "chainId": 18686,
-  "networkId": 18686,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "MXC zkEVM Mainnet",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "mxc-zkevm"
+  "features": []
 } as const satisfies Chain;

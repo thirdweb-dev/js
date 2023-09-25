@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HAPchain",
+  "chainId": 8794598,
   "chain": "HAPchain",
+  "name": "HAPchain",
   "rpc": [
     "https://hapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.hap.land"
   ],
+  "slug": "hapchain",
+  "icon": {
+    "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "HAP",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://hap.land",
   "shortName": "hap",
-  "chainId": 8794598,
-  "networkId": 8794598,
-  "icon": {
-    "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "HAP EVM Explorer (Blockscout)",
       "url": "https://blockscout.hap.land",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "hapchain"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alaya Dev Testnet",
+  "chainId": 201030,
   "chain": "Alaya",
+  "name": "Alaya Dev Testnet",
   "rpc": [
     "https://alaya-dev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnetopenapi.alaya.network/rpc",
     "wss://devnetopenapi.alaya.network/ws"
   ],
+  "slug": "alaya-dev-testnet",
+  "icon": {
+    "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
+    "width": 1140,
+    "height": 1140,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.alaya.network/faucet/?id=f93426c0887f11eb83b900163e06151c"
   ],
@@ -17,14 +25,8 @@ export default {
   },
   "infoURL": "https://www.alaya.network/",
   "shortName": "alayadev",
-  "chainId": 201030,
-  "networkId": 1,
-  "icon": {
-    "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
-    "width": 1140,
-    "height": 1140,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "alaya explorer",
@@ -32,6 +34,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "alaya-dev-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Firechain Mainnet",
+  "chainId": 529,
   "chain": "FIRE",
+  "name": "Firechain Mainnet",
+  "rpc": [
+    "https://firechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.rpc1.thefirechain.com"
+  ],
+  "slug": "firechain",
   "icon": {
     "url": "ipfs://QmYjuztyURb3Fc6ZTLgCbwQa64CcVoigF5j9cafzuSbqgf",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://firechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.rpc1.thefirechain.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Firechain",
@@ -20,10 +22,9 @@ export default {
   },
   "infoURL": "https://thefirechain.com",
   "shortName": "fire",
-  "chainId": 529,
-  "networkId": 529,
-  "explorers": [],
-  "status": "incubating",
   "testnet": false,
-  "slug": "firechain"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

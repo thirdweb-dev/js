@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DecentraBone Layer1 Testnet",
+  "chainId": 910,
   "chain": "DBONE",
+  "name": "DecentraBone Layer1 Testnet",
   "rpc": [
     "https://decentrabone-layer1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://layer1test.decentrabone.com"
   ],
+  "slug": "decentrabone-layer1-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "DecentraBone",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://decentrabone.com",
   "shortName": "DBONE",
-  "chainId": 910,
-  "networkId": 910,
   "testnet": true,
-  "slug": "decentrabone-layer1-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

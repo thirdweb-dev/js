@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SatoshIE",
+  "chainId": 1985,
   "chain": "TUSHY",
+  "name": "SatoshIE",
   "rpc": [
     "https://satoshie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc.satosh.ie"
   ],
+  "slug": "satoshie",
+  "icon": {
+    "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
+    "width": 1024,
+    "height": 1024,
+    "format": "jpg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Tushy Token",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://satosh.ie",
   "shortName": "satoshie",
-  "chainId": 1985,
-  "networkId": 1985,
-  "icon": {
-    "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
-    "width": 1024,
-    "height": 1024,
-    "format": "jpg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "mainnetexplorer",
       "url": "http://explore.satosh.ie",
-      "icon": {
-        "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
-        "width": 1024,
-        "height": 1024,
-        "format": "jpg"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "satoshie"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Humanode Testnet 5 Israfel",
+  "chainId": 14853,
   "chain": "Humanode Testnet 5",
+  "name": "Humanode Testnet 5 Israfel",
   "rpc": [
     "https://humanode-testnet-5-israfel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://explorer-rpc-http.testnet5.stages.humanode.io"
   ],
+  "slug": "humanode-testnet-5-israfel",
   "faucets": [
     "https://t.me/HumanodeTestnet5FaucetBot"
   ],
@@ -16,9 +18,8 @@ export default {
   },
   "infoURL": "https://humanode.io",
   "shortName": "hmnd-t5",
-  "chainId": 14853,
-  "networkId": 14853,
-  "explorers": [],
   "testnet": true,
-  "slug": "humanode-testnet-5-israfel"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

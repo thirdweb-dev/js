@@ -1,20 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Acala Mandala Testnet TC9",
+  "chainId": 595,
   "chain": "mACA",
+  "name": "Acala Mandala Testnet TC9",
   "rpc": [
     "https://acala-mandala-testnet-tc9.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-tc9.aca-staging.network",
     "wss://eth-rpc-tc9.aca-staging.network"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "acala-mandala-testnet-tc9",
   "faucets": [],
   "nativeCurrency": {
     "name": "Acala Mandala Token",
@@ -23,9 +17,8 @@ export default {
   },
   "infoURL": "https://acala.network",
   "shortName": "maca",
-  "chainId": 595,
-  "networkId": 595,
-  "slip44": 595,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -33,6 +26,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "acala-mandala-testnet-tc9"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

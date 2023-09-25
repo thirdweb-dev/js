@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gold Smart Chain Mainnet",
+  "chainId": 6789,
   "chain": "STAND",
+  "name": "Gold Smart Chain Mainnet",
+  "rpc": [
+    "https://gold-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.goldsmartchain.com"
+  ],
+  "slug": "gold-smart-chain",
   "icon": {
     "url": "ipfs://QmPNuymyaKLJhCaXnyrsL8358FeTxabZFsaxMmWNU4Tzt3",
     "width": 396,
     "height": 418,
     "format": "png"
   },
-  "rpc": [
-    "https://gold-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet.goldsmartchain.com"
-  ],
   "faucets": [
     "https://faucet.goldsmartchain.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://goldsmartchain.com",
   "shortName": "STANDm",
-  "chainId": 6789,
-  "networkId": 6789,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Gold Smart Chain",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "gold-smart-chain"
+  "features": []
 } as const satisfies Chain;

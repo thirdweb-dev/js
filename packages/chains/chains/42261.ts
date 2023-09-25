@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oasis Emerald Testnet",
+  "chainId": 42261,
   "chain": "Emerald",
+  "name": "Oasis Emerald Testnet",
+  "rpc": [
+    "https://oasis-emerald-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.emerald.oasis.dev/",
+    "wss://testnet.emerald.oasis.dev/ws"
+  ],
+  "slug": "oasis-emerald-testnet",
   "icon": {
     "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
     "width": 2000,
     "height": 2000,
     "format": "png"
   },
-  "rpc": [
-    "https://oasis-emerald-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.emerald.oasis.dev/",
-    "wss://testnet.emerald.oasis.dev/ws"
-  ],
   "faucets": [
     "https://faucet.testnet.oasis.dev/"
   ],
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://docs.oasis.io/dapp/emerald",
   "shortName": "emerald-testnet",
-  "chainId": 42261,
-  "networkId": 42261,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Oasis Emerald Testnet Explorer",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "oasis-emerald-testnet"
+  "features": []
 } as const satisfies Chain;

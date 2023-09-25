@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OpenChain Mainnet",
+  "chainId": 474142,
   "chain": "OpenChain",
+  "name": "OpenChain Mainnet",
   "rpc": [
     "https://openchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://baas-rpc.luniverse.io:18545?lChainId=1641349324562974539"
   ],
+  "slug": "openchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "OpenCoin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.openchain.live",
   "shortName": "oc",
-  "chainId": 474142,
-  "networkId": 474142,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SIDE SCAN",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "openchain"
+  "features": []
 } as const satisfies Chain;

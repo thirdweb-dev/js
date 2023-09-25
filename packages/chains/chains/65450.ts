@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scolcoin Mainnet",
+  "chainId": 65450,
   "chain": "SCOLWEI",
+  "name": "Scolcoin Mainnet",
   "rpc": [
     "https://scolcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.scolcoin.com"
   ],
+  "slug": "scolcoin",
+  "icon": {
+    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
+    "width": 792,
+    "height": 822,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Scolcoin",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://scolcoin.com",
   "shortName": "SRC",
-  "chainId": 65450,
-  "networkId": 65450,
-  "icon": {
-    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
-    "width": 792,
-    "height": 822,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Scolscan Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "scolcoin"
+  "features": []
 } as const satisfies Chain;

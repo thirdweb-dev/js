@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ZetaChain Athens 3 Testnet",
+  "chainId": 7001,
   "chain": "ZetaChain",
+  "name": "ZetaChain Athens 3 Testnet",
+  "rpc": [
+    "https://zetachain-athens-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ankr.com/zetachain_evm_athens_testnet"
+  ],
+  "slug": "zetachain-athens-3-testnet",
   "icon": {
     "url": "ipfs://QmP4Gnf4Lkp8q5LQVePNjAWxSqrw8vU2JAf7amcFz4vEUy",
     "width": 712,
     "height": 712,
     "format": "png"
   },
-  "rpc": [
-    "https://zetachain-athens-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.ankr.com/zetachain_evm_athens_testnet"
-  ],
   "faucets": [
     "https://labs.zetachain.com/get-zeta"
   ],
@@ -22,27 +24,20 @@ export default {
   },
   "infoURL": "https://zetachain.com/docs",
   "shortName": "zetachain-athens",
-  "chainId": 7001,
-  "networkId": 7001,
+  "testnet": true,
   "status": "active",
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://zetachain-athens-3.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
     {
       "name": "ZetaChain Athens Testnet Explorer",
       "url": "https://athens3.explorer.zetachain.com",
       "standard": "none"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://zetachain-athens-3.blockscout.com",
+      "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "zetachain-athens-3-testnet"
+  "features": []
 } as const satisfies Chain;

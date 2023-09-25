@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ozone Chain Testnet",
+  "chainId": 401,
   "chain": "OZONE",
+  "name": "Ozone Chain Testnet",
   "rpc": [
     "https://ozone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.ozonechain.io"
   ],
+  "slug": "ozone-chain-testnet",
+  "icon": {
+    "url": "ipfs://QmbM4weV8Bk6c9yNhosYntkVw39SNZtCHYGgWyXTxkevZ8",
+    "width": 1600,
+    "height": 1600,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "OZONE",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://ozonechain.io",
   "shortName": "ozo_tst",
-  "chainId": 401,
-  "networkId": 401,
-  "icon": {
-    "url": "ipfs://QmbM4weV8Bk6c9yNhosYntkVw39SNZtCHYGgWyXTxkevZ8",
-    "width": 1600,
-    "height": 1600,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OZONE Scan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ozone-chain-testnet"
+  "features": []
 } as const satisfies Chain;

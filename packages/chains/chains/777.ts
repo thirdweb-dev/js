@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "cheapETH",
+  "chainId": 777,
   "chain": "cheapETH",
+  "name": "cheapETH",
   "rpc": [
     "https://cheapeth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.cheapeth.org/rpc"
   ],
+  "slug": "cheapeth",
   "faucets": [],
   "nativeCurrency": {
     "name": "cTH",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://cheapeth.org/",
   "shortName": "cth",
-  "chainId": 777,
-  "networkId": 777,
   "testnet": false,
-  "slug": "cheapeth"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

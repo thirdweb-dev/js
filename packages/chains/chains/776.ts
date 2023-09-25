@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OpenChain Testnet",
+  "chainId": 776,
   "chain": "OpenChain Testnet",
+  "name": "OpenChain Testnet",
   "rpc": [],
+  "slug": "openchain-testnet",
   "faucets": [
     "https://faucet.openchain.info/"
   ],
@@ -13,8 +15,8 @@ export default {
   },
   "infoURL": "https://testnet.openchain.info/",
   "shortName": "opc",
-  "chainId": 776,
-  "networkId": 776,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OPEN CHAIN TESTNET",
@@ -22,6 +24,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "openchain-testnet"
+  "features": []
 } as const satisfies Chain;

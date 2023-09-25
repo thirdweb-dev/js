@@ -1,41 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Reapchain Mainnet",
+  "chainId": 221230,
   "chain": "REAP",
+  "name": "Reapchain Mainnet",
   "rpc": [
     "https://reapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.reapchain.org"
+    "https://eth.reapchain.org"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Reap",
-    "symbol": "REAP",
-    "decimals": 18
-  },
-  "features": [],
-  "infoURL": "https://reapchain.com",
-  "shortName": "reap",
-  "chainId": 221230,
-  "networkId": 221230,
+  "slug": "reapchain",
   "icon": {
     "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
     "width": 256,
     "height": 256,
     "format": "png"
   },
+  "faucets": [],
+  "nativeCurrency": {
+    "name": "Reap",
+    "symbol": "REAP",
+    "decimals": 18
+  },
+  "infoURL": "https://reapchain.com",
+  "shortName": "reap",
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Reapchain Dashboard",
       "url": "https://dashboard.reapchain.org",
-      "icon": {
-        "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "reapchain"
+  "features": []
 } as const satisfies Chain;

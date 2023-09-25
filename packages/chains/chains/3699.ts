@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SenjePowers Mainnet",
+  "chainId": 3699,
   "chain": "SPC",
+  "name": "SenjePowers Mainnet",
+  "rpc": [
+    "https://senjepowers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.senjepowersscan.com"
+  ],
+  "slug": "senjepowers",
   "icon": {
     "url": "ipfs://QmcpyTj4hUyHJZ2VmSdkXFpPpRcNKRP1VxMs7Cp1anymNy",
     "width": 504,
     "height": 495,
     "format": "png"
   },
-  "rpc": [
-    "https://senjepowers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.senjepowersscan.com"
-  ],
   "faucets": [
     "https://faucet.senjepowersscan.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://senjepowersscan.com",
   "shortName": "SPCm",
-  "chainId": 3699,
-  "networkId": 3699,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SenjePowers",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "senjepowers"
+  "features": []
 } as const satisfies Chain;

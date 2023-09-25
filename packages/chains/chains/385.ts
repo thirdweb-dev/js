@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lisinski",
+  "chainId": 385,
   "chain": "CRO",
+  "name": "Lisinski",
   "rpc": [
     "https://lisinski.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-bitfalls1.lisinski.online"
   ],
+  "slug": "lisinski",
   "faucets": [
     "https://pipa.lisinski.online"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://lisinski.online",
   "shortName": "lisinski",
-  "chainId": 385,
-  "networkId": 385,
   "testnet": false,
-  "slug": "lisinski"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

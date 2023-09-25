@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BLG Testnet",
+  "chainId": 12321,
   "chain": "BLG",
+  "name": "BLG Testnet",
+  "rpc": [
+    "https://blg-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.blgchain.com"
+  ],
+  "slug": "blg-testnet",
   "icon": {
     "url": "ipfs://QmUN5j2cre8GHKv52JE8ag88aAnRmuHMGFxePPvKMogisC",
     "width": 512,
     "height": 512,
     "format": "svg"
   },
-  "rpc": [
-    "https://blg-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.blgchain.com"
-  ],
   "faucets": [
     "https://faucet.blgchain.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://blgchain.com",
   "shortName": "blgchain",
-  "chainId": 12321,
-  "networkId": 12321,
   "testnet": true,
-  "slug": "blg-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

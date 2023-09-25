@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Haic",
+  "chainId": 803,
   "chain": "Haic",
+  "name": "Haic",
   "rpc": [
     "https://haic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://orig.haichain.io/"
   ],
+  "slug": "haic",
   "faucets": [],
   "nativeCurrency": {
     "name": "Haicoin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.haichain.io/",
   "shortName": "haic",
-  "chainId": 803,
-  "networkId": 803,
   "testnet": false,
-  "slug": "haic"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

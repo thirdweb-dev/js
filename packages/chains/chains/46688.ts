@@ -1,26 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fusion Testnet",
+  "chainId": 46688,
   "chain": "FSN",
+  "name": "Fusion Testnet",
+  "rpc": [
+    "https://fusion-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.fusionnetwork.io",
+    "wss://testnet.fusionnetwork.io"
+  ],
+  "slug": "fusion-testnet",
   "icon": {
     "url": "ipfs://QmX3tsEoj7SdaBLLV8VyyCUAmymdEGiSGeuTbxMrEMVvth",
     "width": 31,
     "height": 31,
     "format": "svg"
   },
-  "rpc": [
-    "https://fusion-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.fusionnetwork.io",
-    "wss://testnet.fusionnetwork.io"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Testnet Fusion",
@@ -29,22 +23,21 @@ export default {
   },
   "infoURL": "https://fusion.org",
   "shortName": "tfsn",
-  "chainId": 46688,
-  "networkId": 46688,
-  "slip44": 288,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "fsnscan",
       "url": "https://testnet.fsnscan.com",
-      "icon": {
-        "url": "ipfs://QmSAFx34SKNi7a139agX12f68oBMo2Ktt9c8yD8aFa14gd",
-        "width": 48,
-        "height": 51,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "fusion-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

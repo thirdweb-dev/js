@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Klaytn Testnet Baobab",
+  "chainId": 1001,
   "chain": "KLAY",
+  "name": "Klaytn Testnet Baobab",
   "rpc": [
     "https://klaytn-testnet-baobab.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.baobab.klaytn.net:8651"
   ],
+  "slug": "klaytn-testnet-baobab",
   "faucets": [
     "https://baobab.wallet.klaytn.com/access?next=faucet"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.klaytn.com/",
   "shortName": "Baobab",
-  "chainId": 1001,
-  "networkId": 1001,
   "testnet": true,
-  "slug": "klaytn-testnet-baobab"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Botanix Testnet",
+  "chainId": 3636,
   "chain": "BTC",
+  "name": "Botanix Testnet",
+  "rpc": [
+    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.btxtestchain.com"
+  ],
+  "slug": "botanix-testnet",
   "icon": {
     "url": "ipfs://Qmf2iSjcrZwUDKhCVY9ZzfbSV2He2HSssbcG2yMz1mDerm",
     "width": 32,
     "height": 32,
     "format": "png"
   },
-  "rpc": [
-    "https://botanix-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.btxtestchain.com"
-  ],
   "faucets": [
     "https://faucet.btxtestchain.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://btxtestchain.com",
   "shortName": "BTCt",
-  "chainId": 3636,
-  "networkId": 3636,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Botanix",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "botanix-testnet"
+  "features": []
 } as const satisfies Chain;

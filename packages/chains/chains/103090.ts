@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Crystaleum",
+  "chainId": 103090,
   "chain": "crystal",
+  "name": "Crystaleum",
   "rpc": [
     "https://crystaleum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cryptocurrencydevs.org",
     "https://rpc.crystaleum.org"
   ],
+  "slug": "crystaleum",
+  "icon": {
+    "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
+    "width": 150,
+    "height": 150,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "CRFI",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://crystaleum.org",
   "shortName": "CRFI",
-  "chainId": 103090,
-  "networkId": 1,
-  "icon": {
-    "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
-    "width": 150,
-    "height": 150,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://scan.crystaleum.org",
-      "icon": {
-        "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
-        "width": 150,
-        "height": 150,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "crystaleum"
+  "features": []
 } as const satisfies Chain;

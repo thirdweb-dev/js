@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GIL Testnet",
+  "chainId": 1452,
   "chain": "GIL",
+  "name": "GIL Testnet",
+  "rpc": [
+    "https://gil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.giltestnet.com"
+  ],
+  "slug": "gil-testnet",
   "icon": {
     "url": "ipfs://QmeDXUAYgQxwaSJLsqWgTqnrJVwicgEyNf9199xAMyRkqA",
     "width": 243,
     "height": 243,
     "format": "svg"
   },
-  "rpc": [
-    "https://gil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.giltestnet.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "GANG",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://gaussgang.com/",
   "shortName": "gil",
-  "chainId": 1452,
-  "networkId": 1452,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GIL Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "gil-testnet"
+  "features": []
 } as const satisfies Chain;

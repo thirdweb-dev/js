@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Pirl",
+  "chainId": 3125659152,
   "chain": "PIRL",
+  "name": "Pirl",
   "rpc": [
     "https://pirl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wallrpc.pirl.io"
   ],
+  "slug": "pirl",
   "faucets": [],
   "nativeCurrency": {
     "name": "Pirl Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://pirl.io",
   "shortName": "pirl",
-  "chainId": 3125659152,
-  "networkId": 3125659152,
-  "slip44": 164,
   "testnet": false,
-  "slug": "pirl"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Six Protocol Testnet",
+  "chainId": 150,
   "chain": "FIVENET",
+  "name": "Six Protocol Testnet",
+  "rpc": [
+    "https://six-protocol-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-evm.fivenet.sixprotocol.net"
+  ],
+  "slug": "six-protocol-testnet",
   "icon": {
     "url": "ipfs://QmP93z696v8Hetu13peY2oEHDXq8Bj5CqaDRwpVkpnM15A",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://six-protocol-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-evm.fivenet.sixprotocol.net"
-  ],
   "faucets": [
     "https://faucet.sixprotocol.net"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "https://six.network/",
   "shortName": "sixt",
-  "chainId": 150,
-  "networkId": 150,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SIX Scan fivenet",
       "url": "https://sixscan.io/fivenet",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmP93z696v8Hetu13peY2oEHDXq8Bj5CqaDRwpVkpnM15A",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "six-protocol-testnet"
+  "features": []
 } as const satisfies Chain;

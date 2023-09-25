@@ -1,12 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Polygon zkEVM",
-  "title": "Polygon zkEVM",
+  "chainId": 1101,
   "chain": "Polygon",
+  "name": "Polygon zkEVM",
   "rpc": [
     "https://polygon-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zkevm-rpc.com"
   ],
+  "slug": "polygon-zkevm",
+  "icon": {
+    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
+    "width": 122,
+    "height": 135,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -15,36 +22,14 @@ export default {
   },
   "infoURL": "https://polygon.technology/polygon-zkevm",
   "shortName": "zkevm",
-  "chainId": 1101,
-  "networkId": 1101,
-  "icon": {
-    "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
-    "width": 122,
-    "height": 135,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://zkevm.polygonscan.com",
-      "icon": {
-        "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
-        "width": 122,
-        "height": 135,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge.zkevm-rpc.com"
-      }
-    ]
-  },
-  "testnet": false,
-  "slug": "polygon-zkevm"
+  "features": []
 } as const satisfies Chain;

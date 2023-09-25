@@ -1,22 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "UPTN Testnet",
+  "chainId": 6118,
   "chain": "UPTN",
+  "name": "UPTN Testnet",
+  "rpc": [
+    "https://uptn-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node-api.alp.uptn.io/v1/ext/rpc"
+  ],
+  "slug": "uptn-testnet",
   "icon": {
     "url": "ipfs://Qma6cGPCDcJPFxy5KQaMBrLtuVQiqeLncXVybcBoQuhai5",
     "width": 128,
     "height": 128,
     "format": "png"
   },
-  "rpc": [
-    "https://uptn-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node-api.alp.uptn.io/v1/ext/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "UPTN",
@@ -25,8 +22,8 @@ export default {
   },
   "infoURL": "https://uptn.io",
   "shortName": "UPTN-TEST",
-  "chainId": 6118,
-  "networkId": 6118,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "UPTN Testnet Explorer",
@@ -34,6 +31,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "uptn-testnet"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

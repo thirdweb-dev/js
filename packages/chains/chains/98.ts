@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Six Protocol",
+  "chainId": 98,
   "chain": "SIXNET",
+  "name": "Six Protocol",
+  "rpc": [
+    "https://six-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sixnet-rpc-evm.sixprotocol.net"
+  ],
+  "slug": "six-protocol",
   "icon": {
     "url": "ipfs://QmP93z696v8Hetu13peY2oEHDXq8Bj5CqaDRwpVkpnM15A",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://six-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sixnet-rpc-evm.sixprotocol.net"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "SIX evm token",
@@ -20,21 +22,14 @@ export default {
   },
   "infoURL": "https://six.network/",
   "shortName": "six",
-  "chainId": 98,
-  "networkId": 98,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SIX Scan",
       "url": "https://sixscan.io/sixnet",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmP93z696v8Hetu13peY2oEHDXq8Bj5CqaDRwpVkpnM15A",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "six-protocol"
+  "features": []
 } as const satisfies Chain;

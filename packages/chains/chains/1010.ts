@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Evrice Network",
+  "chainId": 1010,
   "chain": "EVC",
+  "name": "Evrice Network",
   "rpc": [
     "https://evrice-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://meta.evrice.com"
   ],
+  "slug": "evrice-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Evrice",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://evrice.com",
   "shortName": "EVC",
-  "chainId": 1010,
-  "networkId": 1010,
-  "slip44": 1020,
   "testnet": false,
-  "slug": "evrice-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

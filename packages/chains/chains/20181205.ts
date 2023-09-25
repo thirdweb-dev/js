@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "quarkblockchain",
+  "chainId": 20181205,
   "chain": "QKI",
+  "name": "quarkblockchain",
   "rpc": [
     "https://quarkblockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hz.rpc.qkiscan.cn",
@@ -10,6 +11,7 @@ export default {
     "https://rpc2.qkiscan.io",
     "https://rpc3.qkiscan.io"
   ],
+  "slug": "quarkblockchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "quarkblockchain Native Token",
@@ -18,8 +20,8 @@ export default {
   },
   "infoURL": "https://quarkblockchain.org/",
   "shortName": "qki",
-  "chainId": 20181205,
-  "networkId": 20181205,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "qkiscan",
@@ -27,6 +29,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "quarkblockchain"
+  "features": []
 } as const satisfies Chain;

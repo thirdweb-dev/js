@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nepal Blockchain Network",
+  "chainId": 977,
   "chain": "YETI",
+  "name": "Nepal Blockchain Network",
   "rpc": [
     "https://nepal-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.nepalblockchain.dev",
     "https://api.nepalblockchain.network"
   ],
+  "slug": "nepal-blockchain-network",
   "faucets": [
     "https://faucet.nepalblockchain.network"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://nepalblockchain.network",
   "shortName": "yeti",
-  "chainId": 977,
-  "networkId": 977,
   "testnet": false,
-  "slug": "nepal-blockchain-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

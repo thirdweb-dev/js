@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba BNB Testnet",
+  "chainId": 9728,
   "chain": "Boba BNB Testnet",
+  "name": "Boba BNB Testnet",
   "rpc": [
     "https://boba-bnb-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bnb.boba.network",
@@ -11,6 +12,7 @@ export default {
     "https://boba-bnb-testnet.gateway.tenderly.co",
     "wss://boba-bnb-testnet.gateway.tenderly.co"
   ],
+  "slug": "boba-bnb-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Boba Token",
@@ -19,8 +21,8 @@ export default {
   },
   "infoURL": "https://boba.network",
   "shortName": "BobaBnbTestnet",
-  "chainId": 9728,
-  "networkId": 9728,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Boba BNB Testnet block explorer",
@@ -28,15 +30,5 @@ export default {
       "standard": "none"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-5",
-    "bridges": [
-      {
-        "url": "https://gateway.boba.network"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "boba-bnb-testnet"
+  "features": []
 } as const satisfies Chain;

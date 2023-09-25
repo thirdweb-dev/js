@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Godwoken Mainnet",
+  "chainId": 71402,
   "chain": "GWT",
+  "name": "Godwoken Mainnet",
   "rpc": [
     "https://godwoken.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://v1.mainnet.godwoken.io/rpc"
   ],
+  "slug": "godwoken",
   "faucets": [],
   "nativeCurrency": {
     "name": "pCKB",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.nervos.org",
   "shortName": "gw-mainnet-v1",
-  "chainId": 71402,
-  "networkId": 71402,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GWScan Block Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "godwoken"
+  "features": []
 } as const satisfies Chain;

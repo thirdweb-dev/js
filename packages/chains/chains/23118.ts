@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Opside Testnet",
+  "chainId": 23118,
   "chain": "Opside",
+  "name": "Opside Testnet",
   "rpc": [
     "https://opside-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.opside.network"
   ],
+  "slug": "opside-testnet",
+  "icon": {
+    "url": "ipfs://QmeCyZeibUoHNoYGzy1GkzH2uhxyRHKvH51PdaUMer4VTo",
+    "width": 591,
+    "height": 591,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.opside.network"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://opside.network",
   "shortName": "opside",
-  "chainId": 23118,
-  "networkId": 23118,
-  "icon": {
-    "url": "ipfs://QmeCyZeibUoHNoYGzy1GkzH2uhxyRHKvH51PdaUMer4VTo",
-    "width": 591,
-    "height": 591,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "opsideInfo",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "opside-testnet"
+  "features": []
 } as const satisfies Chain;

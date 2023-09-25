@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SOMA Network Testnet",
+  "chainId": 2323,
   "chain": "SOMA",
+  "name": "SOMA Network Testnet",
   "rpc": [
     "https://soma-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-testnet-v1.somanetwork.io/",
@@ -10,6 +11,13 @@ export default {
     "https://testnet-sg-server-1.somanetwork.io",
     "https://testnet-sg-server-2.somanetwork.io"
   ],
+  "slug": "soma-network-testnet",
+  "icon": {
+    "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.somanetwork.io"
   ],
@@ -20,27 +28,14 @@ export default {
   },
   "infoURL": "https://somanetwork.io",
   "shortName": "sma",
-  "chainId": 2323,
-  "networkId": 2323,
-  "icon": {
-    "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SOMA Testnet Explorer",
-      "icon": {
-        "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
       "url": "https://testnet.somascan.io",
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "soma-network-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gnosis",
+  "chainId": 100,
   "chain": "GNO",
-  "icon": {
-    "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
-    "width": 1800,
-    "height": 1800,
-    "format": "png"
-  },
+  "name": "Gnosis",
   "rpc": [
     "https://gnosis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gnosischain.com",
@@ -21,6 +16,13 @@ export default {
     "https://gnosis.oat.farm",
     "wss://rpc.gnosischain.com/wss"
   ],
+  "slug": "gnosis",
+  "icon": {
+    "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
+    "width": 1800,
+    "height": 1800,
+    "format": "png"
+  },
   "faucets": [
     "https://gnosisfaucet.com",
     "https://stakely.io/faucet/gnosis-chain-xdai",
@@ -28,32 +30,24 @@ export default {
   ],
   "nativeCurrency": {
     "name": "xDAI",
-    "symbol": "XDAI",
+    "symbol": "xDAI",
     "decimals": 18
   },
   "infoURL": "https://docs.gnosischain.com",
   "shortName": "gno",
-  "chainId": 100,
-  "networkId": 100,
-  "slip44": 700,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://gnosis.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
     {
       "name": "gnosisscan",
       "url": "https://gnosisscan.io",
       "standard": "EIP3091"
+    },
+    {
+      "name": "blockscout",
+      "url": "https://gnosis.blockscout.com",
+      "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "gnosis"
+  "features": []
 } as const satisfies Chain;

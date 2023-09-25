@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DataHopper",
+  "chainId": 2021121117,
   "chain": "HOP",
+  "name": "DataHopper",
   "rpc": [
     "https://datahopper.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23.92.21.121:8545"
   ],
+  "slug": "datahopper",
   "faucets": [],
   "nativeCurrency": {
     "name": "DataHoppers",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.DataHopper.com",
   "shortName": "hop",
-  "chainId": 2021121117,
-  "networkId": 2021121117,
   "testnet": false,
-  "slug": "datahopper"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

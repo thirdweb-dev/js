@@ -1,26 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
+  "chainId": 4090,
+  "chain": "Fastex Chain (Bahamut)",
   "name": "Fastex Chain (Bahamut) Oasis Testnet",
-  "title": "Bahamut testnet Oasis",
+  "rpc": [
+    "https://fastex-chain-bahamut-oasis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.oasis.bahamutchain.com"
+  ],
+  "slug": "fastex-chain-bahamut-oasis-testnet",
   "icon": {
     "url": "ipfs://QmSemioP83RXnDWwTZbet8VpwJxcFRboX4B3pcdhLZGodP",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "chain": "Fastex Chain (Bahamut)",
-  "rpc": [
-    "https://fastex-chain-bahamut-oasis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.oasis.bahamutchain.com"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [
     "https://faucet.oasis.fastexchain.com"
   ],
@@ -31,8 +24,8 @@ export default {
   },
   "infoURL": "https://fastexchain.com",
   "shortName": "Oasis",
-  "chainId": 4090,
-  "networkId": 4090,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -40,6 +33,12 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "fastex-chain-bahamut-oasis-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

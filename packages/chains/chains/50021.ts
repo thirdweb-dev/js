@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GTON Testnet",
+  "chainId": 50021,
   "chain": "GTON Testnet",
+  "name": "GTON Testnet",
   "rpc": [
     "https://gton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gton.network/"
   ],
+  "slug": "gton-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "GCD",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://gton.capital",
   "shortName": "tgton",
-  "chainId": 50021,
-  "networkId": 50021,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GTON Testnet Network Explorer",
@@ -23,10 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-3"
-  },
-  "testnet": true,
-  "slug": "gton-testnet"
+  "features": []
 } as const satisfies Chain;

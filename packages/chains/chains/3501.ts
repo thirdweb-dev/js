@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "JFIN Chain",
+  "chainId": 3501,
   "chain": "JFIN",
+  "name": "JFIN Chain",
   "rpc": [
     "https://jfin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jfinchain.com"
   ],
+  "slug": "jfin-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "JFIN Coin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://jfinchain.com",
   "shortName": "jfin",
-  "chainId": 3501,
-  "networkId": 3501,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "JFIN Chain Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "jfin-chain"
+  "features": []
 } as const satisfies Chain;

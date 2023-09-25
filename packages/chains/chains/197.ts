@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Neutrinos TestNet",
+  "chainId": 197,
   "chain": "NEUTR",
+  "name": "Neutrinos TestNet",
   "rpc": [
     "https://neutrinos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.neutrinoschain.com"
   ],
+  "slug": "neutrinos-testnet",
   "faucets": [
     "https://neutrinoschain.com/faucet"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://docs.neutrinoschain.com",
   "shortName": "NEUTR",
-  "chainId": 197,
-  "networkId": 197,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "neutrinos-testnet"
+  "features": []
 } as const satisfies Chain;

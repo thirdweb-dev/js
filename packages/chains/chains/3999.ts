@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "YuanChain Mainnet",
+  "chainId": 3999,
   "chain": "YCC",
+  "name": "YuanChain Mainnet",
   "rpc": [
     "https://yuanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.yuan.org/eth"
   ],
+  "slug": "yuanchain",
+  "icon": {
+    "url": "ipfs://QmdbPhiB5W2gbHZGkYsN7i2VTKKP9casmAN2hRnpDaL9W4",
+    "width": 96,
+    "height": 96,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "YCC",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://www.yuan.org",
   "shortName": "ycc",
-  "chainId": 3999,
-  "networkId": 3999,
-  "icon": {
-    "url": "ipfs://QmdbPhiB5W2gbHZGkYsN7i2VTKKP9casmAN2hRnpDaL9W4",
-    "width": 96,
-    "height": 96,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "YuanChain Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "yuanchain"
+  "features": []
 } as const satisfies Chain;

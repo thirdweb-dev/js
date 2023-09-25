@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mintara Testnet",
-  "title": "Mintara Testnet",
+  "chainId": 1079,
   "chain": "Mintara",
+  "name": "Mintara Testnet",
+  "rpc": [
+    "https://mintara-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/mintara/testnet/rpc"
+  ],
+  "slug": "mintara-testnet",
   "icon": {
     "url": "ipfs://bafybeie7jzlzlpz7c3a3oh4x5joej23dj2qf3cexmchjyc72hv3fblcaja",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "rpc": [
-    "https://mintara-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/mintara/testnet/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "MINTARA",
@@ -21,8 +22,8 @@ export default {
   },
   "infoURL": "https://playthink.co.jp",
   "shortName": "mintara-testnet",
-  "chainId": 1079,
-  "networkId": 1079,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "explorer",
@@ -30,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "mintara-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HashBit Mainnet",
+  "chainId": 11119,
   "chain": "HBIT",
+  "name": "HashBit Mainnet",
   "rpc": [
     "https://hashbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.hashbit.org",
     "https://rpc.hashbit.org"
   ],
+  "slug": "hashbit",
   "faucets": [],
   "nativeCurrency": {
     "name": "HashBit Native Token",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://hashbit.org",
   "shortName": "hbit",
-  "chainId": 11119,
-  "networkId": 11119,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "hashbitscan",
@@ -24,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "hashbit"
+  "features": []
 } as const satisfies Chain;

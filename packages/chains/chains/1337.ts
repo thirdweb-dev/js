@@ -1,25 +1,29 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Localhost",
+  "chainId": 1337,
   "chain": "ETH",
+  "name": "Localhost",
   "rpc": [
+    "https://localhost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://localhost:8545"
   ],
+  "slug": "localhost",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "infoURL": null,
   "shortName": "local",
-  "chainId": 1337,
-  "networkId": 1337,
   "testnet": true,
-  "slug": "localhost"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

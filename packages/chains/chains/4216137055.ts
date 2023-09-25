@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OneLedger Testnet Frankenstein",
+  "chainId": 4216137055,
   "chain": "OLT",
+  "name": "OneLedger Testnet Frankenstein",
+  "rpc": [
+    "https://oneledger-testnet-frankenstein.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://frankenstein-rpc.oneledger.network"
+  ],
+  "slug": "oneledger-testnet-frankenstein",
   "icon": {
     "url": "ipfs://QmRhqq4Gp8G9w27ND3LeFW49o5PxcxrbJsqHbpBFtzEMfC",
     "width": 225,
     "height": 225,
     "format": "png"
   },
-  "rpc": [
-    "https://oneledger-testnet-frankenstein.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://frankenstein-rpc.oneledger.network"
-  ],
   "faucets": [
     "https://frankenstein-faucet.oneledger.network"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://oneledger.io",
   "shortName": "frankenstein",
-  "chainId": 4216137055,
-  "networkId": 4216137055,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OneLedger Block Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "oneledger-testnet-frankenstein"
+  "features": []
 } as const satisfies Chain;

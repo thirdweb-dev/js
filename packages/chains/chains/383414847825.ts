@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zeniq",
+  "chainId": 383414847825,
   "chain": "ZENIQ",
+  "name": "Zeniq",
   "rpc": [
     "https://zeniq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smart.zeniq.network:9545"
   ],
+  "slug": "zeniq",
   "faucets": [
     "https://faucet.zeniq.net/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.zeniq.dev/",
   "shortName": "zeniq",
-  "chainId": 383414847825,
-  "networkId": 383414847825,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "zeniq-smart-chain-explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "zeniq"
+  "features": []
 } as const satisfies Chain;

@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Setheum",
+  "chainId": 258,
   "chain": "Setheum",
+  "name": "Setheum",
   "rpc": [],
+  "slug": "setheum",
   "faucets": [],
   "nativeCurrency": {
     "name": "Setheum",
@@ -11,8 +13,8 @@ export default {
   },
   "infoURL": "https://setheum.xyz",
   "shortName": "setm",
-  "chainId": 258,
-  "networkId": 258,
   "testnet": false,
-  "slug": "setheum"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

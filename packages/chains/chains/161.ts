@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Armonia Eva Chain Testnet",
+  "chainId": 161,
   "chain": "Wall-e",
+  "name": "Armonia Eva Chain Testnet",
   "rpc": [
     "https://armonia-eva-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.evascan.io/api/eth-rpc/"
   ],
+  "slug": "armonia-eva-chain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Armonia Multichain Native Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://amax.network",
   "shortName": "wall-e",
-  "chainId": 161,
-  "networkId": 161,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout - evascan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "armonia-eva-chain-testnet"
+  "features": []
 } as const satisfies Chain;

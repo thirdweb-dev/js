@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BitEth",
+  "chainId": 8086,
   "chain": "BTE",
+  "name": "BitEth",
   "rpc": [
     "https://biteth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.biteth.org"
   ],
+  "slug": "biteth",
   "faucets": [],
   "nativeCurrency": {
     "name": "BitEth",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://biteth.org",
   "shortName": "BitEth",
-  "chainId": 8086,
-  "networkId": 8086,
-  "explorers": [],
   "testnet": false,
-  "slug": "biteth"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

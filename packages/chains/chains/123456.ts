@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ADIL Devnet",
+  "chainId": 123456,
   "chain": "ADIL",
+  "name": "ADIL Devnet",
+  "rpc": [
+    "https://adil-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://devnet.adilchain-rpc.io"
+  ],
+  "slug": "adil-devnet",
   "icon": {
     "url": "ipfs://QmeHNYUx6n8CjUFSLWNT17oAtDYrUq6r8buyvGCUBXCJw6",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "rpc": [
-    "https://adil-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet.adilchain-rpc.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Devnet ADIL",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://adilchain.io",
   "shortName": "dadil",
-  "chainId": 123456,
-  "networkId": 123456,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ADIL Devnet Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "adil-devnet"
+  "features": []
 } as const satisfies Chain;

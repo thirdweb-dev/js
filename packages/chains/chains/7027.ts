@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ella the heart",
+  "chainId": 7027,
   "chain": "ella",
+  "name": "Ella the heart",
+  "rpc": [
+    "https://ella-the-heart.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ella.network"
+  ],
+  "slug": "ella-the-heart",
   "icon": {
     "url": "ipfs://QmVkAhSaHhH3wKoLT56Aq8dNyEH4RySPEpqPcLwsptGBDm",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://ella-the-heart.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.ella.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ella",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://ella.network",
   "shortName": "ELLA",
-  "chainId": 7027,
-  "networkId": 7027,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ella",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ella-the-heart"
+  "features": []
 } as const satisfies Chain;

@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BeanEco SmartChain",
-  "title": "BESC Mainnet",
+  "chainId": 535037,
   "chain": "BESC",
+  "name": "BeanEco SmartChain",
   "rpc": [
     "https://beaneco-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.bescscan.io"
   ],
+  "slug": "beaneco-smartchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "BeanEco SmartChain",
     "symbol": "BESC",
     "decimals": 18
   },
+  "infoURL": null,
   "shortName": "BESC",
-  "chainId": 535037,
-  "networkId": 535037,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "bescscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "beaneco-smartchain"
+  "features": []
 } as const satisfies Chain;

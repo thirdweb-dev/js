@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Core Blockchain Testnet",
+  "chainId": 1115,
   "chain": "Core",
+  "name": "Core Blockchain Testnet",
+  "rpc": [
+    "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.test.btcs.network/"
+  ],
+  "slug": "core-blockchain-testnet",
   "icon": {
     "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
     "width": 200,
     "height": 217,
     "format": "png"
   },
-  "rpc": [
-    "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.test.btcs.network/"
-  ],
   "faucets": [
     "https://scan.test.btcs.network/faucet"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "https://www.coredao.org",
   "shortName": "tcore",
-  "chainId": 1115,
-  "networkId": 1115,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Core Scan Testnet",
       "url": "https://scan.test.btcs.network",
-      "icon": {
-        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
-        "width": 200,
-        "height": 217,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "core-blockchain-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,8 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Flana Mixnet",
+  "chainId": 81352,
   "chain": "MEER",
+  "name": "Flana Mixnet",
   "rpc": [],
+  "slug": "flana-mixnet",
+  "icon": {
+    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Flana Mixnet",
@@ -11,15 +19,9 @@ export default {
   },
   "infoURL": "https://github.com/Qitmeer",
   "shortName": "flanamix",
-  "icon": {
-    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "chainId": 81352,
-  "networkId": 81352,
-  "status": "incubating",
   "testnet": false,
-  "slug": "flana-mixnet"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

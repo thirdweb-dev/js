@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Theta Testnet",
+  "chainId": 365,
   "chain": "Theta",
+  "name": "Theta Testnet",
   "rpc": [
     "https://theta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api-testnet.thetatoken.org/rpc"
   ],
+  "slug": "theta-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Theta Fuel",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.thetatoken.org/",
   "shortName": "theta-testnet",
-  "chainId": 365,
-  "networkId": 365,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Theta Testnet Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "theta-testnet"
+  "features": []
 } as const satisfies Chain;

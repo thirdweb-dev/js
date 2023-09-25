@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CoinEx Smart Chain Mainnet",
+  "chainId": 52,
   "chain": "CSC",
+  "name": "CoinEx Smart Chain Mainnet",
   "rpc": [
     "https://coinex-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.coinex.net"
   ],
+  "slug": "coinex-smart-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "CoinEx Chain Native Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.coinex.org/",
   "shortName": "cet",
-  "chainId": 52,
-  "networkId": 52,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "coinexscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "coinex-smart-chain"
+  "features": []
 } as const satisfies Chain;

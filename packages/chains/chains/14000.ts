@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SPS Testnet",
+  "chainId": 14000,
   "chain": "SPS-Testnet",
+  "name": "SPS Testnet",
   "rpc": [
     "https://sps-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.3sps.net"
   ],
+  "slug": "sps-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "ECG",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://ssquad.games/",
   "shortName": "SPS-Test",
-  "chainId": 14000,
-  "networkId": 14000,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SPS Test Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "sps-testnet"
+  "features": []
 } as const satisfies Chain;

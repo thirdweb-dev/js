@@ -1,25 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Flachain Mainnet",
+  "chainId": 29032022,
   "chain": "FLX",
+  "name": "Flachain Mainnet",
+  "rpc": [
+    "https://flachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://flachain.flaexchange.top/"
+  ],
+  "slug": "flachain",
   "icon": {
     "url": "ipfs://bafybeiadlvc4pfiykehyt2z67nvgt5w4vlov27olu5obvmryv4xzua4tae",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "rpc": [
-    "https://flachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://flachain.flaexchange.top/"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Flacoin",
@@ -28,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.flaexchange.top",
   "shortName": "fla",
-  "chainId": 29032022,
-  "networkId": 29032022,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "FLXExplorer",
@@ -37,6 +31,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "flachain"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

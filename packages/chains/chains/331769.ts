@@ -1,25 +1,29 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ProofOfPepe Testnet",
-  "chain": "POPTestnet",
-  "shortName": "POPTestnet",
   "chainId": 331769,
-  "testnet": true,
-  "icon": {
-    "format": "png",
-    "url": "ipfs://QmP8rYvcc7aJB3c2YZxjxaySvHapHnoK8MnxuSuDT4PtF2",
-    "height": 400,
-    "width": 400
-  },
+  "chain": "POPTestnet",
+  "name": "ProofOfPepe Testnet",
   "rpc": [
     "https://proofofpepe-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet01.proofofpepe.tech"
   ],
+  "slug": "proofofpepe-testnet",
+  "icon": {
+    "url": "ipfs://QmP8rYvcc7aJB3c2YZxjxaySvHapHnoK8MnxuSuDT4PtF2",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "faucets": [],
   "nativeCurrency": {
     "name": "POP",
     "symbol": "POP",
     "decimals": 18
   },
+  "infoURL": null,
+  "shortName": "POPTestnet",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ProofOfPepe Explorer",
@@ -27,5 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "slug": "proofofpepe-testnet"
+  "features": []
 } as const satisfies Chain;

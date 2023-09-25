@@ -1,27 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Horizen Gobi Testnet",
-  "shortName": "Gobi",
+  "chainId": 1663,
   "chain": "Gobi",
+  "name": "Horizen Gobi Testnet",
+  "rpc": [
+    "https://horizen-gobi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gobi-rpc.horizenlabs.io/ethv1",
+    "https://rpc.ankr.com/horizen_gobi_testnet"
+  ],
+  "slug": "horizen-gobi-testnet",
   "icon": {
     "url": "ipfs://QmSFMBk3rMyu45Sy9KQHjgArFj4HdywANNYrSosLMUdcti",
     "width": 1213,
     "height": 1213,
     "format": "png"
   },
-  "rpc": [
-    "https://horizen-gobi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://gobi-rpc.horizenlabs.io/ethv1",
-    "https://rpc.ankr.com/horizen_gobi_testnet"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [
     "https://faucet.horizen.io"
   ],
@@ -31,22 +24,22 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://horizen.io/",
-  "chainId": 1663,
-  "networkId": 1663,
-  "slip44": 121,
+  "shortName": "Gobi",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Gobi Testnet Block Explorer",
       "url": "https://gobi-explorer.horizen.io",
-      "icon": {
-        "url": "ipfs://QmSFMBk3rMyu45Sy9KQHjgArFj4HdywANNYrSosLMUdcti",
-        "width": 1213,
-        "height": 1213,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "horizen-gobi-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

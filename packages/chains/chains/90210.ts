@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Beverly Hills",
-  "title": "Ethereum multi-client Verkle Testnet Beverly Hills",
+  "chainId": 90210,
   "chain": "ETH",
+  "name": "Beverly Hills",
   "rpc": [
     "https://beverly-hills.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.beverlyhills.ethdevops.io:8545"
   ],
+  "slug": "beverly-hills",
   "faucets": [
     "https://faucet.beverlyhills.ethdevops.io"
   ],
@@ -17,9 +18,9 @@ export default {
   },
   "infoURL": "https://beverlyhills.ethdevops.io",
   "shortName": "bvhl",
-  "chainId": 90210,
-  "networkId": 90210,
+  "testnet": true,
   "status": "incubating",
+  "redFlags": [],
   "explorers": [
     {
       "name": "Beverly Hills explorer",
@@ -27,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "beverly-hills"
+  "features": []
 } as const satisfies Chain;

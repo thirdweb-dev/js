@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Network Rinkeby Testnet",
+  "chainId": 28,
   "chain": "ETH",
+  "name": "Boba Network Rinkeby Testnet",
   "rpc": [
     "https://boba-network-rinkeby-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinkeby.boba.network/"
   ],
+  "slug": "boba-network-rinkeby-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://boba.network",
   "shortName": "BobaRinkeby",
-  "chainId": 28,
-  "networkId": 28,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Blockscout",
@@ -23,15 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-4",
-    "bridges": [
-      {
-        "url": "https://gateway.rinkeby.boba.network"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "boba-network-rinkeby-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -58,3 +58,13 @@ export type MinimalChain = Pick<
   | "slug"
   | "icon"
 >;
+
+export type ApiChain = Omit<
+  Chain,
+  "features" | "chainId" | "status" | "icon"
+> & {
+  features: string[];
+  chainId: string;
+  status: string | null;
+  icon: Icon | null;
+};

@@ -1,25 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hedera Testnet",
+  "chainId": 296,
   "chain": "Hedera",
+  "name": "Hedera Testnet",
+  "rpc": [
+    "https://hedera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.hashio.io/api"
+  ],
+  "slug": "hedera-testnet",
   "icon": {
     "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
     "width": 1500,
     "height": 1500,
     "format": "png"
   },
-  "rpc": [
-    "https://hedera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.hashio.io/api"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [
     "https://portal.hedera.com"
   ],
@@ -30,9 +24,8 @@ export default {
   },
   "infoURL": "https://hedera.com",
   "shortName": "hedera-testnet",
-  "chainId": 296,
-  "networkId": 296,
-  "slip44": 3030,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "HashScan",
@@ -60,6 +53,12 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "hedera-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

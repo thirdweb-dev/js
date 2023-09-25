@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Toronet Mainnet",
+  "chainId": 77777,
   "chain": "Toronet",
+  "name": "Toronet Mainnet",
+  "rpc": [
+    "https://toronet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://toronet.org/rpc"
+  ],
+  "slug": "toronet",
   "icon": {
     "url": "ipfs://QmciSvgLatP6jhgdazuiyD3fSrhipfAN7wC943v1qxcrpv",
     "width": 846,
     "height": 733,
     "format": "png"
   },
-  "rpc": [
-    "https://toronet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://toronet.org/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Toro",
@@ -20,11 +22,8 @@ export default {
   },
   "infoURL": "https://toronet.org",
   "shortName": "Toronet",
-  "chainId": 77777,
-  "networkId": 77777,
-  "ens": {
-    "registry": "0x1f45a71f4aAD769E27c969c4359E0e250C67165c"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "toronet_explorer",
@@ -32,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "toronet"
+  "features": []
 } as const satisfies Chain;

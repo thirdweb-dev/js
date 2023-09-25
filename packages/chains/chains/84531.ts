@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Base Goerli Testnet",
+  "chainId": 84531,
   "chain": "ETH",
+  "name": "Base Goerli Testnet",
   "rpc": [
     "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://base-goerli.publicnode.com",
@@ -10,6 +11,13 @@ export default {
     "https://base-goerli.gateway.tenderly.co",
     "https://goerli.base.org"
   ],
+  "slug": "base-goerli",
+  "icon": {
+    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://www.coinbase.com/faucets/base-ethereum-goerli-faucet"
   ],
@@ -20,32 +28,19 @@ export default {
   },
   "infoURL": "https://base.org",
   "shortName": "basegor",
-  "chainId": 84531,
-  "networkId": 84531,
-  "icon": {
-    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "basescout",
-      "url": "https://base-goerli.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
     {
       "name": "basescan",
       "url": "https://goerli.basescan.org",
       "standard": "none"
+    },
+    {
+      "name": "basescout",
+      "url": "https://base-goerli.blockscout.com",
+      "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "base-goerli"
+  "features": []
 } as const satisfies Chain;

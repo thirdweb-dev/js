@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Moonbeam",
+  "chainId": 1284,
   "chain": "MOON",
+  "name": "Moonbeam",
   "rpc": [
     "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbeam.network",
     "wss://wss.api.moonbeam.network"
   ],
+  "slug": "moonbeam",
   "faucets": [],
   "nativeCurrency": {
     "name": "Glimmer",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://moonbeam.network/networks/moonbeam/",
   "shortName": "mbeam",
-  "chainId": 1284,
-  "networkId": 1284,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "moonscan",
@@ -24,6 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "moonbeam"
+  "features": []
 } as const satisfies Chain;

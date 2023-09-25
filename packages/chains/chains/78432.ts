@@ -1,16 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Conduit Subnet",
+  "chainId": 78432,
   "chain": "CONDUIT",
+  "name": "Conduit Subnet",
   "rpc": [
     "https://conduit-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/conduit/testnet/rpc"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "conduit-subnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "CON",
@@ -19,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.avax.network",
   "shortName": "conduit",
-  "chainId": 78432,
-  "networkId": 78432,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "CONDUIT Explorer",
@@ -28,6 +25,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "conduit-subnet"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

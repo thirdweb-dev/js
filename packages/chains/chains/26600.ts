@@ -1,17 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hertz Network Mainnet",
+  "chainId": 26600,
   "chain": "HTZ",
+  "name": "Hertz Network Mainnet",
   "rpc": [
     "https://hertz-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.hertzscan.com"
   ],
+  "slug": "hertz-network",
+  "icon": {
+    "url": "ipfs://Qmf3GYbPXmTDpSP6t7Ug2j5HjEwrY5oGhBDP7d4TQHvGnG",
+    "width": 162,
+    "height": 129,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Hertz",
     "symbol": "HTZ",
     "decimals": 18
   },
+  "infoURL": "https://www.hertz-network.com",
+  "shortName": "HTZ",
+  "testnet": false,
+  "redFlags": [],
+  "explorers": [
+    {
+      "name": "Hertz Scan",
+      "url": "https://hertzscan.com",
+      "standard": "EIP3091"
+    }
+  ],
   "features": [
     {
       "name": "EIP155"
@@ -19,30 +38,5 @@ export default {
     {
       "name": "EIP1559"
     }
-  ],
-  "infoURL": "https://www.hertz-network.com",
-  "shortName": "HTZ",
-  "chainId": 26600,
-  "networkId": 26600,
-  "icon": {
-    "url": "ipfs://Qmf3GYbPXmTDpSP6t7Ug2j5HjEwrY5oGhBDP7d4TQHvGnG",
-    "width": 162,
-    "height": 129,
-    "format": "png"
-  },
-  "explorers": [
-    {
-      "name": "Hertz Scan",
-      "url": "https://hertzscan.com",
-      "icon": {
-        "url": "ipfs://Qmf3GYbPXmTDpSP6t7Ug2j5HjEwrY5oGhBDP7d4TQHvGnG",
-        "width": 162,
-        "height": 129,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "hertz-network"
+  ]
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lightstreams Testnet",
+  "chainId": 162,
   "chain": "PHT",
+  "name": "Lightstreams Testnet",
   "rpc": [
     "https://lightstreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.sirius.lightstreams.io"
   ],
+  "slug": "lightstreams-testnet",
   "faucets": [
     "https://discuss.lightstreams.network/t/request-test-tokens"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://explorer.sirius.lightstreams.io",
   "shortName": "tpht",
-  "chainId": 162,
-  "networkId": 162,
   "testnet": true,
-  "slug": "lightstreams-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

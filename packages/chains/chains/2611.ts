@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Redlight Chain Mainnet",
+  "chainId": 2611,
   "chain": "REDLC",
+  "name": "Redlight Chain Mainnet",
   "rpc": [
     "https://redlight-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed2.redlightscan.finance"
   ],
+  "slug": "redlight-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Redlight Coin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://redlight.finance/",
   "shortName": "REDLC",
-  "chainId": 2611,
-  "networkId": 2611,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "REDLC Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "redlight-chain"
+  "features": []
 } as const satisfies Chain;

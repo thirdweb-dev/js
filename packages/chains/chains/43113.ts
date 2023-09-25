@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Avalanche Fuji Testnet",
+  "chainId": 43113,
   "chain": "AVAX",
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/avalanche/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "name": "Avalanche Fuji Testnet",
   "rpc": [
     "https://avalanche-fuji.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-fuji.infura.io/v3/${INFURA_API_KEY}",
@@ -15,6 +10,13 @@ export default {
     "https://avalanche-fuji-c-chain.publicnode.com",
     "wss://avalanche-fuji-c-chain.publicnode.com"
   ],
+  "slug": "avalanche-fuji",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/avalanche/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.avax.network/",
     "https://faucet.avax-test.network/"
@@ -26,8 +28,8 @@ export default {
   },
   "infoURL": "https://cchain.explorer.avax-test.network",
   "shortName": "Fuji",
-  "chainId": 43113,
-  "networkId": 1,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "snowtrace",
@@ -35,6 +37,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "avalanche-fuji"
+  "features": []
 } as const satisfies Chain;

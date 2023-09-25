@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Toki Network",
+  "chainId": 8654,
   "chain": "TOKI",
+  "name": "Toki Network",
   "rpc": [
     "https://toki-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.buildwithtoki.com/v0/rpc"
   ],
+  "slug": "toki-network",
+  "icon": {
+    "url": "ipfs://QmbCBBH4dFHGr8u1yQspCieQG9hLcPFNYdRx1wnVsX8hUw",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Toki",
@@ -14,15 +22,8 @@ export default {
   },
   "infoURL": "https://www.buildwithtoki.com",
   "shortName": "toki",
-  "chainId": 8654,
-  "networkId": 8654,
-  "icon": {
-    "url": "ipfs://QmbCBBH4dFHGr8u1yQspCieQG9hLcPFNYdRx1wnVsX8hUw",
-    "width": 512,
-    "height": 512,
-    "format": "svg"
-  },
-  "explorers": [],
   "testnet": false,
-  "slug": "toki-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

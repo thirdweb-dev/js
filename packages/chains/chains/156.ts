@@ -1,19 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OEBlock Testnet",
+  "chainId": 156,
   "chain": "OEBt",
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "name": "OEBlock Testnet",
   "rpc": [
     "https://oeblock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.oeblock.com"
   ],
+  "slug": "oeblock-testnet",
+  "icon": {
+    "url": "ipfs://QmdoQUfYqtkWMfjtoPv2KWDY4MxDDSsyWgwXtCx6jfkezz",
+    "width": 155,
+    "height": 177,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "OEBlock",
@@ -22,14 +22,8 @@ export default {
   },
   "infoURL": "https://www.oeblock.com/",
   "shortName": "obe",
-  "chainId": 156,
-  "networkId": 156,
-  "icon": {
-    "url": "ipfs://QmdoQUfYqtkWMfjtoPv2KWDY4MxDDSsyWgwXtCx6jfkezz",
-    "width": 155,
-    "height": 177,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OEScan explorer",
@@ -37,6 +31,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "oeblock-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

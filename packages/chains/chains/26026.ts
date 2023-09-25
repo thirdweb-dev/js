@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ferrum Testnet",
+  "chainId": 26026,
   "chain": "tFRM",
+  "name": "Ferrum Testnet",
   "rpc": [
     "https://ferrum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.dev.svcs.ferrumnetwork.io:9933"
   ],
+  "slug": "ferrum-testnet",
   "faucets": [
     "https://testnet.faucet.ferrumnetwork.io"
   ],
@@ -14,18 +16,10 @@ export default {
     "symbol": "tFRM",
     "decimals": 18
   },
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "infoURL": "https://ferrum.network",
   "shortName": "frm",
-  "chainId": 26026,
-  "networkId": 26026,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "polkadotjs",
@@ -33,6 +27,12 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "ferrum-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

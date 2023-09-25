@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TBSI Testnet",
-  "title": "Thai Blockchain Service Infrastructure Testnet",
+  "chainId": 1708,
   "chain": "TBSI",
+  "name": "TBSI Testnet",
   "rpc": [
     "https://tbsi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.blockchain.or.th"
   ],
+  "slug": "tbsi-testnet",
   "faucets": [
     "https://faucet.blockchain.or.th"
   ],
@@ -17,8 +18,8 @@ export default {
   },
   "infoURL": "https://blockchain.or.th",
   "shortName": "tTBSI",
-  "chainId": 1708,
-  "networkId": 1708,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -26,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "tbsi-testnet"
+  "features": []
 } as const satisfies Chain;

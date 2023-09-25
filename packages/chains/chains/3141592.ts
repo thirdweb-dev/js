@@ -1,9 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Filecoin - Butterfly testnet",
+  "chainId": 3141592,
   "chain": "FIL",
-  "status": "incubating",
+  "name": "Filecoin - Butterfly testnet",
   "rpc": [],
+  "slug": "filecoin-butterfly-testnet",
+  "icon": {
+    "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.butterfly.fildev.network"
   ],
@@ -14,16 +21,9 @@ export default {
   },
   "infoURL": "https://filecoin.io",
   "shortName": "filecoin-butterfly",
-  "icon": {
-    "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
-  "chainId": 3141592,
-  "networkId": 3141592,
-  "slip44": 1,
-  "explorers": [],
   "testnet": true,
-  "slug": "filecoin-butterfly-testnet"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

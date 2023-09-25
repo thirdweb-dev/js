@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Wegochain Rubidium Mainnet",
+  "chainId": 5869,
   "chain": "RBD",
+  "name": "Wegochain Rubidium Mainnet",
   "rpc": [
     "https://wegochain-rubidium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://proxy.wegochain.io",
     "http://wallet.wegochain.io:7764"
   ],
+  "slug": "wegochain-rubidium",
   "faucets": [],
   "nativeCurrency": {
     "name": "Rubid",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://www.wegochain.io",
   "shortName": "rbd",
-  "chainId": 5869,
-  "networkId": 5869,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "wegoscan2",
@@ -24,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "wegochain-rubidium"
+  "features": []
 } as const satisfies Chain;

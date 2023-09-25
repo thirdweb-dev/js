@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "IPOS Network",
+  "chainId": 1122334455,
   "chain": "IPOS",
+  "name": "IPOS Network",
   "rpc": [
     "https://ipos-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.iposlab.com",
     "https://rpc2.iposlab.com"
   ],
+  "slug": "ipos-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "IPOS Network Ether",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://iposlab.com",
   "shortName": "ipos",
-  "chainId": 1122334455,
-  "networkId": 1122334455,
   "testnet": false,
-  "slug": "ipos-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

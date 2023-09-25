@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EgonCoin Testnet",
+  "chainId": 271271,
   "chain": "EGON",
+  "name": "EgonCoin Testnet",
+  "rpc": [
+    "https://egoncoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpctest.egcscan.com"
+  ],
+  "slug": "egoncoin-testnet",
   "icon": {
     "url": "ipfs://QmNZiMmzMQYjyGtNSghtzLg4UooYhDgMQsa677DAP5KsBg",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://egoncoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpctest.egcscan.com"
-  ],
   "faucets": [
     "https://faucet.egcscan.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://egcscan.com",
   "shortName": "EGONt",
-  "chainId": 271271,
-  "networkId": 271271,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "EgonCoin Testnet",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "egoncoin-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,15 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arbitrum One",
   "chainId": 42161,
-  "shortName": "arb1",
   "chain": "ETH",
-  "networkId": 42161,
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
+  "name": "Arbitrum One",
   "rpc": [
     "https://arbitrum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://arbitrum-mainnet.infura.io/v3/${INFURA_API_KEY}",
@@ -18,7 +11,23 @@ export default {
     "https://arbitrum-one.publicnode.com",
     "wss://arbitrum-one.publicnode.com"
   ],
+  "slug": "arbitrum",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "infoURL": "https://arbitrum.io",
+  "shortName": "arb1",
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Arbitrum Explorer",
@@ -31,22 +40,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "infoURL": "https://arbitrum.io",
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge.arbitrum.io"
-      }
-    ]
-  },
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "testnet": false,
-  "slug": "arbitrum"
+  "features": []
 } as const satisfies Chain;

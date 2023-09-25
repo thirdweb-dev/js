@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alyx Mainnet",
+  "chainId": 1314,
   "chain": "ALYX",
+  "name": "Alyx Mainnet",
   "rpc": [
     "https://alyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alyxchain.com"
   ],
+  "slug": "alyx",
+  "icon": {
+    "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
+    "width": 2481,
+    "height": 2481,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Alyx Chain Native Token",
@@ -14,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.alyxchain.com",
   "shortName": "alyx",
-  "chainId": 1314,
-  "networkId": 1314,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "alyxscan",
@@ -23,12 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
-    "width": 2481,
-    "height": 2481,
-    "format": "png"
-  },
-  "testnet": false,
-  "slug": "alyx"
+  "features": []
 } as const satisfies Chain;

@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tao Network",
+  "chainId": 558,
   "chain": "TAO",
+  "name": "Tao Network",
   "rpc": [
     "https://tao-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.tao.network",
@@ -9,6 +10,7 @@ export default {
     "https://rpc.tao.network",
     "wss://rpc.tao.network"
   ],
+  "slug": "tao-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Tao",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://tao.network",
   "shortName": "tao",
-  "chainId": 558,
-  "networkId": 558,
   "testnet": true,
-  "slug": "tao-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

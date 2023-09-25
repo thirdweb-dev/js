@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dubxcoin testnet",
+  "chainId": 3270,
   "chain": "TESTDUBX",
+  "name": "Dubxcoin testnet",
   "rpc": [
     "https://dubxcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctestnet.arabianchain.org"
   ],
+  "slug": "dubxcoin-testnet",
   "faucets": [
     "https://faucet.arabianchain.org/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://arabianchain.org",
   "shortName": "testdubx",
-  "chainId": 3270,
-  "networkId": 3270,
   "testnet": true,
-  "slug": "dubxcoin-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scroll Sepolia Testnet",
+  "chainId": 534351,
   "chain": "ETH",
-  "status": "active",
+  "name": "Scroll Sepolia Testnet",
   "rpc": [
     "https://scroll-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia-rpc.scroll.io/"
+    "https://sepolia-rpc.scroll.io",
+    "https://rpc.ankr.com/scroll_sepolia_testnet",
+    "https://scroll-sepolia.chainstacklabs.com",
+    "https://scroll-testnet-public.unifra.io"
   ],
+  "slug": "scroll-sepolia-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -15,24 +19,20 @@ export default {
   },
   "infoURL": "https://scroll.io",
   "shortName": "scr-sepolia",
-  "chainId": 534351,
-  "networkId": 534351,
+  "testnet": true,
+  "status": "active",
+  "redFlags": [],
   "explorers": [
     {
-      "name": "Scroll Sepolia Testnet Block Explorer",
+      "name": "Scroll Sepolia Etherscan",
+      "url": "https://sepolia.scrollscan.dev",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Scroll Sepolia Blockscout",
       "url": "https://sepolia-blockscout.scroll.io",
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-11155111",
-    "bridges": [
-      {
-        "url": "https://scroll.io/bridge"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "scroll-sepolia-testnet"
+  "features": []
 } as const satisfies Chain;

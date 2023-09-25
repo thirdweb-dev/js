@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SX Network Mainnet",
+  "chainId": 416,
   "chain": "SX",
+  "name": "SX Network Mainnet",
+  "rpc": [
+    "https://sx-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.sx.technology"
+  ],
+  "slug": "sx-network",
   "icon": {
     "url": "ipfs://QmSXLXqyr2H6Ja5XrmznXbWTEvF2gFaL8RXNXgyLmDHjAF",
     "width": 896,
     "height": 690,
     "format": "png"
   },
-  "rpc": [
-    "https://sx-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.sx.technology"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "SX Network",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.sx.technology",
   "shortName": "SX",
-  "chainId": 416,
-  "networkId": 416,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SX Network Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "sx-network"
+  "features": []
 } as const satisfies Chain;

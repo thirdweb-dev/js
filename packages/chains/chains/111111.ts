@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Siberium Network",
+  "chainId": 111111,
   "chain": "SBR",
+  "name": "Siberium Network",
   "rpc": [
     "https://siberium-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.main.siberium.net",
     "https://rpc.main.siberium.net.ru"
   ],
+  "slug": "siberium-network",
+  "icon": {
+    "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Siberium",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://siberium.net",
   "shortName": "sbr",
-  "chainId": 111111,
-  "networkId": 111111,
-  "icon": {
-    "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
-    "width": 512,
-    "height": 512,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Siberium Mainnet Explorer - blockscout - 2",
       "url": "https://explorer.main.siberium.net.ru",
-      "icon": {
-        "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
-        "width": 512,
-        "height": 512,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "siberium-network"
+  "features": []
 } as const satisfies Chain;

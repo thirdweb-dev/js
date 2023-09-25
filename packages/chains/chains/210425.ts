@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PlatON Mainnet",
+  "chainId": 210425,
   "chain": "PlatON",
+  "name": "PlatON Mainnet",
   "rpc": [
     "https://platon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi2.platon.network/rpc",
     "wss://openapi2.platon.network/ws"
   ],
+  "slug": "platon",
+  "icon": {
+    "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
+    "width": 180,
+    "height": 180,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "LAT",
@@ -15,14 +23,8 @@ export default {
   },
   "infoURL": "https://www.platon.network",
   "shortName": "platon",
-  "chainId": 210425,
-  "networkId": 1,
-  "icon": {
-    "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
-    "width": 180,
-    "height": 180,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "PlatON explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "platon"
+  "features": []
 } as const satisfies Chain;

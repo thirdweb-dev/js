@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TCG Verse Mainnet",
+  "chainId": 2400,
   "chain": "TCG Verse",
+  "name": "TCG Verse Mainnet",
+  "rpc": [
+    "https://tcg-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.tcgverse.xyz"
+  ],
+  "slug": "tcg-verse",
   "icon": {
     "url": "ipfs://bafkreidg4wpewve5mdxrofneqblydkrjl3oevtgpdf3fk3z3vjqam6ocoe",
     "width": 350,
     "height": 350,
     "format": "png"
   },
-  "rpc": [
-    "https://tcg-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.tcgverse.xyz"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "OAS",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://tcgverse.xyz/",
   "shortName": "TCGV",
-  "chainId": 2400,
-  "networkId": 2400,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "TCG Verse Explorer",
@@ -29,10 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-248"
-  },
-  "testnet": false,
-  "slug": "tcg-verse"
+  "features": []
 } as const satisfies Chain;

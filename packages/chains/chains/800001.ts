@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OctaSpace",
+  "chainId": 800001,
   "chain": "OCTA",
+  "name": "OctaSpace",
   "rpc": [
     "https://octaspace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octa.space",
     "wss://rpc.octa.space"
   ],
+  "slug": "octaspace",
+  "icon": {
+    "url": "ipfs://QmVhezQHkqSZ5Tvtsw18giA1yBjV1URSsBQ7HenUh6p6oC",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "OctaSpace",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://octa.space",
   "shortName": "octa",
-  "chainId": 800001,
-  "networkId": 800001,
-  "icon": {
-    "url": "ipfs://QmVhezQHkqSZ5Tvtsw18giA1yBjV1URSsBQ7HenUh6p6oC",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://explorer.octa.space",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "octaspace"
+  "features": []
 } as const satisfies Chain;

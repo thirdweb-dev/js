@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ultron Mainnet",
+  "chainId": 1231,
   "chain": "Ultron",
+  "name": "Ultron Mainnet",
+  "rpc": [
+    "https://ultron.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ultron-rpc.net"
+  ],
+  "slug": "ultron",
   "icon": {
     "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://ultron.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ultron-rpc.net"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ultron",
@@ -20,21 +22,14 @@ export default {
   },
   "infoURL": "https://ultron.foundation",
   "shortName": "UtronMainnet",
-  "chainId": 1231,
-  "networkId": 1231,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ultron Explorer",
       "url": "https://ulxscan.com",
-      "icon": {
-        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "ultron"
+  "features": []
 } as const satisfies Chain;

@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "VeChain Testnet",
+  "chainId": 100010,
   "chain": "VeChain",
+  "name": "VeChain Testnet",
   "rpc": [],
+  "slug": "vechain-testnet",
   "faucets": [
     "https://faucet.vecha.in"
   ],
@@ -13,8 +15,8 @@ export default {
   },
   "infoURL": "https://vechain.org",
   "shortName": "vechain-testnet",
-  "chainId": 100010,
-  "networkId": 100010,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "VeChain Explorer",
@@ -22,6 +24,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "vechain-testnet"
+  "features": []
 } as const satisfies Chain;

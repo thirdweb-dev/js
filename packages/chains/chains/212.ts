@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MAP Makalu",
-  "title": "MAP Testnet Makalu",
+  "chainId": 212,
   "chain": "MAP",
+  "name": "MAP Makalu",
   "rpc": [
     "https://map-makalu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.maplabs.io"
   ],
+  "slug": "map-makalu",
   "faucets": [
     "https://faucet.maplabs.io"
   ],
@@ -17,8 +18,8 @@ export default {
   },
   "infoURL": "https://maplabs.io",
   "shortName": "makalu",
-  "chainId": 212,
-  "networkId": 212,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "mapscan",
@@ -26,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "map-makalu"
+  "features": []
 } as const satisfies Chain;

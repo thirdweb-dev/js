@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Callisto Mainnet",
+  "chainId": 820,
   "chain": "CLO",
+  "name": "Callisto Mainnet",
   "rpc": [
     "https://callisto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.callisto.network/"
   ],
+  "slug": "callisto",
   "faucets": [],
   "nativeCurrency": {
     "name": "Callisto",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://callisto.network",
   "shortName": "clo",
-  "chainId": 820,
-  "networkId": 1,
-  "slip44": 820,
   "testnet": false,
-  "slug": "callisto"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zenith Mainnet",
+  "chainId": 79,
   "chain": "Zenith",
+  "name": "Zenith Mainnet",
   "rpc": [
     "https://zenith.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataserver-us-1.zenithchain.co/",
@@ -12,6 +13,7 @@ export default {
     "https://dataserver-asia-6.zenithchain.co/",
     "https://dataserver-asia-7.zenithchain.co/"
   ],
+  "slug": "zenith",
   "faucets": [],
   "nativeCurrency": {
     "name": "ZENITH",
@@ -19,9 +21,9 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://www.zenithchain.co/",
-  "chainId": 79,
-  "networkId": 79,
   "shortName": "zenith",
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "zenith scan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "zenith"
+  "features": []
 } as const satisfies Chain;

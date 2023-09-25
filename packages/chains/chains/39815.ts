@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OHO Mainnet",
+  "chainId": 39815,
   "chain": "OHO",
+  "name": "OHO Mainnet",
   "rpc": [
     "https://oho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.oho.ai"
   ],
+  "slug": "oho",
+  "icon": {
+    "url": "ipfs://QmZt75xixnEtFzqHTrJa8kJkV4cTXmUZqeMeHM8BcvomQc",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "OHO",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://oho.ai",
   "shortName": "oho",
-  "chainId": 39815,
-  "networkId": 39815,
-  "icon": {
-    "url": "ipfs://QmZt75xixnEtFzqHTrJa8kJkV4cTXmUZqeMeHM8BcvomQc",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ohoscan",
       "url": "https://ohoscan.com",
-      "icon": {
-        "url": "ipfs://QmZt75xixnEtFzqHTrJa8kJkV4cTXmUZqeMeHM8BcvomQc",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "oho"
+  "features": []
 } as const satisfies Chain;

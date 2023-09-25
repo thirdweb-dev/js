@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Liveplex OracleEVM",
+  "chainId": 50001,
   "chain": "Liveplex OracleEVM Network",
+  "name": "Liveplex OracleEVM",
   "rpc": [
     "https://liveplex-oracleevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oracle.liveplex.io"
   ],
+  "slug": "liveplex-oracleevm",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "LOE",
-  "chainId": 50001,
-  "networkId": 50001,
-  "explorers": [],
   "testnet": false,
-  "slug": "liveplex-oracleevm"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

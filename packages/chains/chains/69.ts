@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Optimism Kovan",
-  "title": "Optimism Testnet Kovan",
+  "chainId": 69,
   "chain": "ETH",
+  "name": "Optimism Kovan",
   "rpc": [
     "https://optimism-kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://kovan.optimism.io/"
   ],
+  "slug": "optimism-kovan",
   "faucets": [
     "http://fauceth.komputing.org?chain=69&address=${ADDRESS}"
   ],
@@ -15,6 +16,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "infoURL": "https://optimism.io",
+  "shortName": "okov",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "etherscan",
@@ -22,10 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "infoURL": "https://optimism.io",
-  "shortName": "okov",
-  "chainId": 69,
-  "networkId": 69,
-  "testnet": true,
-  "slug": "optimism-kovan"
+  "features": []
 } as const satisfies Chain;

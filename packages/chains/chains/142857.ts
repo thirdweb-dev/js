@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ICPlaza Mainnet",
+  "chainId": 142857,
   "chain": "ICPlaza",
+  "name": "ICPlaza Mainnet",
+  "rpc": [
+    "https://icplaza.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpcmainnet.ic-plaza.org/"
+  ],
+  "slug": "icplaza",
   "icon": {
     "url": "ipfs://QmQpKKwpqrx77VA4SJLEWhuv9eLFMcVV9uvxRCLb6gdgCX",
     "width": 847,
     "height": 906,
     "format": "png"
   },
-  "rpc": [
-    "https://icplaza.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpcmainnet.ic-plaza.org/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "ict",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://docs.ic-plaza.org/",
   "shortName": "ICPlaza",
-  "chainId": 142857,
-  "networkId": 142857,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ICPlaza",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "icplaza"
+  "features": []
 } as const satisfies Chain;

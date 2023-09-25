@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "LUDAN Mainnet",
+  "chainId": 1688,
   "chain": "LUDAN",
+  "name": "LUDAN Mainnet",
   "rpc": [
     "https://ludan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ludan.org/"
   ],
+  "slug": "ludan",
+  "icon": {
+    "url": "ipfs://bafkreigzeanzqgxrzzep45t776ovbwi242poqxbryuu2go5eedeuwwcsay",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "LUDAN",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://www.ludan.org/",
   "shortName": "LUDAN",
-  "icon": {
-    "url": "ipfs://bafkreigzeanzqgxrzzep45t776ovbwi242poqxbryuu2go5eedeuwwcsay",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "chainId": 1688,
-  "networkId": 1688,
   "testnet": false,
-  "slug": "ludan"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

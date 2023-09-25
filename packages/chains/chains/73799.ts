@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Energy Web Volta Testnet",
+  "chainId": 73799,
   "chain": "Volta",
+  "name": "Energy Web Volta Testnet",
   "rpc": [
     "https://energy-web-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://volta-rpc.energyweb.org",
     "wss://volta-rpc.energyweb.org/ws"
   ],
+  "slug": "energy-web-volta-testnet",
   "faucets": [
     "https://voltafaucet.energyweb.org"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://energyweb.org",
   "shortName": "vt",
-  "chainId": 73799,
-  "networkId": 73799,
   "testnet": true,
-  "slug": "energy-web-volta-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

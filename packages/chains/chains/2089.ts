@@ -1,18 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Algol",
+  "chainId": 2089,
   "chain": "algol",
+  "name": "Algol",
   "rpc": [
+    "https://algol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fullnode.algol.cntrfg.com"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "algol",
   "faucets": [],
   "nativeCurrency": {
     "name": "Algol",
@@ -21,8 +16,15 @@ export default {
   },
   "infoURL": "https://centrifuge.io",
   "shortName": "algl",
-  "chainId": 2089,
-  "networkId": 2089,
   "testnet": false,
-  "slug": "algol"
+  "redFlags": [],
+  "explorers": [],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

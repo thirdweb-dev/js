@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arthera Testnet",
+  "chainId": 10243,
   "chain": "AA",
+  "name": "Arthera Testnet",
+  "rpc": [
+    "https://arthera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-test.arthera.net"
+  ],
+  "slug": "arthera-testnet",
   "icon": {
     "url": "ipfs://QmYQp3e52KjkT4bYdAvB6ACEEpXs2D8DozsDitaADRY2Ak",
     "width": 1024,
     "height": 998,
     "format": "png"
   },
-  "rpc": [
-    "https://arthera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-test.arthera.net"
-  ],
   "faucets": [
     "https://faucet.arthera.net"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "https://docs.arthera.net",
   "shortName": "aa",
-  "chainId": 10243,
-  "networkId": 10243,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://explorer-test.arthera.net",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "arthera-testnet"
+  "features": []
 } as const satisfies Chain;

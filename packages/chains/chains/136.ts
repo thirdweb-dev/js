@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Deamchain Mainnet",
+  "chainId": 136,
   "chain": "Deamchain",
+  "name": "Deamchain Mainnet",
+  "rpc": [
+    "https://deamchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.deamchain.com"
+  ],
+  "slug": "deamchain",
   "icon": {
     "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
     "width": 512,
     "height": 512,
     "format": "svg"
   },
-  "rpc": [
-    "https://deamchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.deamchain.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Deamchain Native Token",
@@ -20,21 +22,14 @@ export default {
   },
   "infoURL": "https://deamchain.com",
   "shortName": "deam",
-  "chainId": 136,
-  "networkId": 136,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Deamchain Block Explorer",
       "url": "https://scan.deamchain.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
-        "width": 512,
-        "height": 512,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "deamchain"
+  "features": []
 } as const satisfies Chain;

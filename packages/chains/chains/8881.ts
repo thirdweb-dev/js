@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Quartz by Unique",
-  "icon": {
-    "url": "ipfs://QmaGPdccULQEFcCGxzstnmE8THfac2kSiGwvWRAiaRq4dp",
-    "width": 48,
-    "height": 48,
-    "format": "svg"
-  },
+  "chainId": 8881,
   "chain": "UNQ",
+  "name": "Quartz by Unique",
   "rpc": [
     "https://quartz-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-quartz.unique.network",
@@ -16,6 +11,13 @@ export default {
     "https://asia-rpc-quartz.unique.network",
     "https://us-rpc-quartz.unique.network"
   ],
+  "slug": "quartz-by-unique",
+  "icon": {
+    "url": "ipfs://QmaGPdccULQEFcCGxzstnmE8THfac2kSiGwvWRAiaRq4dp",
+    "width": 48,
+    "height": 48,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Quartz",
@@ -24,8 +26,8 @@ export default {
   },
   "infoURL": "https://unique.network",
   "shortName": "qtz",
-  "chainId": 8881,
-  "networkId": 8881,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Unique Scan / Quartz",
@@ -33,6 +35,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "quartz-by-unique"
+  "features": []
 } as const satisfies Chain;

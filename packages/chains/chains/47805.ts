@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "REI Network",
+  "chainId": 47805,
   "chain": "REI",
+  "name": "REI Network",
   "rpc": [
     "https://rei-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rei.network",
     "wss://rpc.rei.network"
   ],
+  "slug": "rei-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "REI",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://rei.network/",
   "shortName": "REI",
-  "chainId": 47805,
-  "networkId": 47805,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "rei-scan",
@@ -24,6 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "rei-network"
+  "features": []
 } as const satisfies Chain;

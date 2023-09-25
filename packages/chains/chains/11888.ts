@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SanR Chain",
+  "chainId": 11888,
   "chain": "SanRChain",
+  "name": "SanR Chain",
   "rpc": [
     "https://sanr-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sanrchain-node.santiment.net"
   ],
+  "slug": "sanr-chain",
+  "icon": {
+    "url": "ipfs://QmPLMg5mYD8XRknvYbDkD2x7FXxYan7MPTeUWZC2CihwDM",
+    "width": 2048,
+    "height": 2048,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "nSAN",
@@ -14,23 +22,8 @@ export default {
   },
   "infoURL": "https://sanr.app",
   "shortName": "SAN",
-  "chainId": 11888,
-  "networkId": 11888,
-  "icon": {
-    "url": "ipfs://QmPLMg5mYD8XRknvYbDkD2x7FXxYan7MPTeUWZC2CihwDM",
-    "width": 2048,
-    "height": 2048,
-    "format": "png"
-  },
-  "parent": {
-    "chain": "eip155-1",
-    "type": "L2",
-    "bridges": [
-      {
-        "url": "https://sanr.app"
-      }
-    ]
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SanR Chain Explorer",
@@ -38,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "sanr-chain"
+  "features": []
 } as const satisfies Chain;

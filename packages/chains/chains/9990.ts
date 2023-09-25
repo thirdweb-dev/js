@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Agung Network",
+  "chainId": 9990,
   "chain": "Agung",
+  "name": "Agung Network",
+  "rpc": [
+    "https://agung-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpcpc1-qa.agung.peaq.network"
+  ],
+  "slug": "agung-network",
   "icon": {
     "url": "ipfs://bafkreih6nzctk6brx5cqkylxbhvi3vsr6q5ks4th5knolkrlfp4tdia2mu",
     "width": 400,
     "height": 400,
     "format": "svg"
   },
-  "rpc": [
-    "https://agung-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpcpc1-qa.agung.peaq.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Agung",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.peaq.network",
   "shortName": "AGNG",
-  "chainId": 9990,
-  "networkId": 9990,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Polkadot.js",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "agung-network"
+  "features": []
 } as const satisfies Chain;

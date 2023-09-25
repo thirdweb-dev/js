@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metadium Mainnet",
+  "chainId": 11,
   "chain": "META",
+  "name": "Metadium Mainnet",
   "rpc": [
     "https://metadium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metadium.com/prod"
   ],
+  "slug": "metadium",
   "faucets": [],
   "nativeCurrency": {
     "name": "Metadium Mainnet Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://metadium.com",
   "shortName": "meta",
-  "chainId": 11,
-  "networkId": 11,
-  "slip44": 916,
   "testnet": false,
-  "slug": "metadium"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

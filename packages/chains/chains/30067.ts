@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Piece testnet",
+  "chainId": 30067,
   "chain": "PieceNetwork",
+  "name": "Piece testnet",
+  "rpc": [
+    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc0.piecenetwork.com"
+  ],
+  "slug": "piece-testnet",
   "icon": {
     "url": "ipfs://QmWAU39z1kcYshAqkENRH8qUjfR5CJehCxA4GiC33p3HpH",
     "width": 800,
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc0.piecenetwork.com"
-  ],
   "faucets": [
     "https://piecenetwork.com/faucet"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://piecenetwork.com",
   "shortName": "Piece",
-  "chainId": 30067,
-  "networkId": 30067,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Piece Scan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "piece-testnet"
+  "features": []
 } as const satisfies Chain;

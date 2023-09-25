@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CryptoCoinPay",
+  "chainId": 10823,
   "chain": "CCP",
+  "name": "CryptoCoinPay",
   "rpc": [
     "https://cryptocoinpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://node106.cryptocoinpay.info:8545",
     "ws://node106.cryptocoinpay.info:8546"
   ],
-  "faucets": [],
+  "slug": "cryptocoinpay",
   "icon": {
     "url": "ipfs://QmPw1ixYYeXvTiRWoCt2jWe4YMd3B5o7TzL18SBEHXvhXX",
     "width": 200,
     "height": 200,
     "format": "png"
   },
+  "faucets": [],
   "nativeCurrency": {
     "name": "CryptoCoinPay",
     "symbol": "CCP",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://www.cryptocoinpay.co",
   "shortName": "CCP",
-  "chainId": 10823,
-  "networkId": 10823,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "CCP Explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "cryptocoinpay"
+  "features": []
 } as const satisfies Chain;

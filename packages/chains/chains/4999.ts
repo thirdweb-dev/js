@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BlackFort Exchange Network",
+  "chainId": 4999,
   "chain": "BXN",
+  "name": "BlackFort Exchange Network",
   "rpc": [
     "https://blackfort-exchange-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.blackfort.network/rpc",
@@ -9,12 +10,30 @@ export default {
     "https://mainnet-2.blackfort.network/rpc",
     "https://mainnet-3.blackfort.network/rpc"
   ],
+  "slug": "blackfort-exchange-network",
+  "icon": {
+    "url": "ipfs://QmPasA8xykRtJDivB2bcKDiRCUNWDPtfUTTKVAcaF2wVxC",
+    "width": 1968,
+    "height": 1968,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "BlackFort Token",
     "symbol": "BXN",
     "decimals": 18
   },
+  "infoURL": "https://blackfort.exchange",
+  "shortName": "BXN",
+  "testnet": false,
+  "redFlags": [],
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://explorer.blackfort.network",
+      "standard": "EIP3091"
+    }
+  ],
   "features": [
     {
       "name": "EIP155"
@@ -22,30 +41,5 @@ export default {
     {
       "name": "EIP1559"
     }
-  ],
-  "infoURL": "https://blackfort.exchange",
-  "shortName": "BXN",
-  "chainId": 4999,
-  "networkId": 4999,
-  "icon": {
-    "url": "ipfs://QmPasA8xykRtJDivB2bcKDiRCUNWDPtfUTTKVAcaF2wVxC",
-    "width": 1968,
-    "height": 1968,
-    "format": "png"
-  },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://explorer.blackfort.network",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "blackfort-exchange-network"
+  ]
 } as const satisfies Chain;

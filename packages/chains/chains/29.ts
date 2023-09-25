@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Genesis L1",
+  "chainId": 29,
   "chain": "genesis",
+  "name": "Genesis L1",
   "rpc": [
     "https://genesis-l1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.genesisl1.org"
   ],
+  "slug": "genesis-l1",
   "faucets": [],
   "nativeCurrency": {
     "name": "L1 coin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.genesisl1.com",
   "shortName": "L1",
-  "chainId": 29,
-  "networkId": 29,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Genesis L1 blockchain explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "genesis-l1"
+  "features": []
 } as const satisfies Chain;

@@ -1,22 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GateChain Mainnet",
   "chainId": 86,
-  "shortName": "gt",
   "chain": "GT",
-  "networkId": 86,
+  "name": "GateChain Mainnet",
+  "rpc": [
+    "https://gatechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.gatenode.cc"
+  ],
+  "slug": "gatechain",
+  "faucets": [
+    "https://www.gatescan.org/faucet"
+  ],
   "nativeCurrency": {
     "name": "GateToken",
     "symbol": "GT",
     "decimals": 18
   },
-  "rpc": [
-    "https://gatechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.gatenode.cc"
-  ],
-  "faucets": [
-    "https://www.gatescan.org/faucet"
-  ],
+  "infoURL": "https://www.gatechain.io",
+  "shortName": "gt",
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GateScan",
@@ -24,7 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "infoURL": "https://www.gatechain.io",
-  "testnet": false,
-  "slug": "gatechain"
+  "features": []
 } as const satisfies Chain;

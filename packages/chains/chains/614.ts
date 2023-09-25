@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Graphlinq Blockchain Mainnet",
+  "chainId": 614,
   "chain": "GLQ Blockchain",
+  "name": "Graphlinq Blockchain Mainnet",
   "rpc": [
     "https://graphlinq-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://glq-dataseed.graphlinq.io"
   ],
+  "slug": "graphlinq-blockchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "GLQ",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://graphlinq.io",
   "shortName": "glq",
-  "chainId": 614,
-  "networkId": 614,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GLQ Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "graphlinq-blockchain"
+  "features": []
 } as const satisfies Chain;

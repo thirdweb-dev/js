@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "LoopNetwork Mainnet",
+  "chainId": 15551,
   "chain": "LoopNetwork",
+  "name": "LoopNetwork Mainnet",
   "rpc": [
     "https://loopnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.mainnetloop.com"
   ],
+  "slug": "loopnetwork",
   "faucets": [],
   "nativeCurrency": {
     "name": "LOOP",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "http://theloopnetwork.org/",
   "shortName": "loop",
-  "chainId": 15551,
-  "networkId": 15551,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "loopscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "loopnetwork"
+  "features": []
 } as const satisfies Chain;

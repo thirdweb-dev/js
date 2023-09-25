@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BRC Chain Mainnet",
+  "chainId": 12123,
   "chain": "BRC",
+  "name": "BRC Chain Mainnet",
   "rpc": [
     "https://brc-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.brcchain.io"
   ],
+  "slug": "brc-chain",
+  "icon": {
+    "url": "ipfs://QmX8qGX7xoZqYUpHxA85uZwQX2fgbTHvmddE1NfseDyBED",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.brcchain.io"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://bridge.brcchain.io",
   "shortName": "BRC",
-  "chainId": 12123,
-  "networkId": 12123,
-  "icon": {
-    "url": "ipfs://QmX8qGX7xoZqYUpHxA85uZwQX2fgbTHvmddE1NfseDyBED",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BRC Chain Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "brc-chain"
+  "features": []
 } as const satisfies Chain;

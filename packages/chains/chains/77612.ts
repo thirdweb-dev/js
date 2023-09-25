@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Vention Smart Chain Mainnet",
+  "chainId": 77612,
   "chain": "VSC",
+  "name": "Vention Smart Chain Mainnet",
+  "rpc": [
+    "https://vention-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.vention.network"
+  ],
+  "slug": "vention-smart-chain",
   "icon": {
     "url": "ipfs://QmcNepHmbmHW1BZYM3MFqJW4awwhmDqhUPRXXmRnXwg1U4",
     "width": 250,
     "height": 250,
     "format": "png"
   },
-  "rpc": [
-    "https://vention-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.vention.network"
-  ],
   "faucets": [
     "https://faucet.vention.network"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://ventionscan.io",
   "shortName": "vscm",
-  "chainId": 77612,
-  "networkId": 77612,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ventionscan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "vention-smart-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PandoProject Testnet",
+  "chainId": 3602,
   "chain": "PandoProject",
+  "name": "PandoProject Testnet",
+  "rpc": [
+    "https://pandoproject-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.ethrpc.pandoproject.org/rpc"
+  ],
+  "slug": "pandoproject-testnet",
   "icon": {
     "url": "ipfs://QmNduBtT5BNGDw7DjRwDvaZBb6gjxf46WD7BYhn4gauGc9",
     "width": 1000,
     "height": 1628,
     "format": "png"
   },
-  "rpc": [
-    "https://pandoproject-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.ethrpc.pandoproject.org/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "pando-token",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.pandoproject.org/",
   "shortName": "pando-testnet",
-  "chainId": 3602,
-  "networkId": 3602,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Pando Testnet Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "pandoproject-testnet"
+  "features": []
 } as const satisfies Chain;

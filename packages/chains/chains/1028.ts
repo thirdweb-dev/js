@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BitTorrent Chain Testnet",
+  "chainId": 1028,
   "chain": "BTTC",
+  "name": "BitTorrent Chain Testnet",
   "rpc": [
     "https://bittorrent-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.bittorrentchain.io/"
   ],
+  "slug": "bittorrent-chain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "BitTorrent",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://bittorrentchain.io/",
   "shortName": "tbtt",
-  "chainId": 1028,
-  "networkId": 1028,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "testbttcscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "bittorrent-chain-testnet"
+  "features": []
 } as const satisfies Chain;

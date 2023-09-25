@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Quadrans Blockchain Testnet",
+  "chainId": 10947,
   "chain": "tQDC",
+  "name": "Quadrans Blockchain Testnet",
+  "rpc": [
+    "https://quadrans-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpctest.quadrans.io",
+    "https://rpctest2.quadrans.io"
+  ],
+  "slug": "quadrans-blockchain-testnet",
   "icon": {
     "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
     "width": 1024,
     "height": 1024,
     "format": "png"
   },
-  "rpc": [
-    "https://quadrans-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpctest.quadrans.io",
-    "https://rpctest2.quadrans.io"
-  ],
   "faucets": [
     "https://faucetpage.quadrans.io"
   ],
@@ -23,21 +25,14 @@ export default {
   },
   "infoURL": "https://quadrans.io",
   "shortName": "quadranstestnet",
-  "chainId": 10947,
-  "networkId": 10947,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "explorer",
       "url": "https://explorer.testnet.quadrans.io",
-      "icon": {
-        "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
-        "width": 1024,
-        "height": 1024,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "quadrans-blockchain-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kaiba Lightning Chain Testnet",
+  "chainId": 104,
   "chain": "tKLC",
+  "name": "Kaiba Lightning Chain Testnet",
   "rpc": [
     "https://kaiba-lightning-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://klc.live/"
   ],
+  "slug": "kaiba-lightning-chain-testnet",
+  "icon": {
+    "url": "ipfs://bafybeihbsw3ky7yf6llpww6fabo4dicotcgwjpefscoxrppstjx25dvtea",
+    "width": 932,
+    "height": 932,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Kaiba Testnet Token",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://kaibadefi.com",
   "shortName": "tklc",
-  "chainId": 104,
-  "networkId": 104,
-  "icon": {
-    "url": "ipfs://bafybeihbsw3ky7yf6llpww6fabo4dicotcgwjpefscoxrppstjx25dvtea",
-    "width": 932,
-    "height": 932,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "kaibascan",
       "url": "https://kaibascan.io",
-      "icon": {
-        "url": "ipfs://bafybeihbsw3ky7yf6llpww6fabo4dicotcgwjpefscoxrppstjx25dvtea",
-        "width": 932,
-        "height": 932,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kaiba-lightning-chain-testnet"
+  "features": []
 } as const satisfies Chain;

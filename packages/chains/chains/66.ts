@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OKXChain Mainnet",
+  "chainId": 66,
   "chain": "okxchain",
+  "name": "OKXChain Mainnet",
   "rpc": [
     "https://okxchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchainrpc.okex.org",
     "https://okc-mainnet.gateway.pokt.network/v1/lb/6275309bea1b320039c893ff"
   ],
+  "slug": "okxchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "OKXChain Global Utility Token",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://www.okex.com/okc",
   "shortName": "okt",
-  "chainId": 66,
-  "networkId": 66,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OKLink",
@@ -24,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "okxchain"
+  "features": []
 } as const satisfies Chain;

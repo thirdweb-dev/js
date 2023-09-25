@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PEER Testnet",
+  "chainId": 601,
   "chain": "PEER",
+  "name": "PEER Testnet",
   "rpc": [
     "https://peer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet-polka-host-232813573.us-west-1.elb.amazonaws.com"
   ],
+  "slug": "peer-testnet",
+  "icon": {
+    "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
+    "width": 1363,
+    "height": 760,
+    "format": "png"
+  },
   "faucets": [
     "https://testnet.peer.inc"
   ],
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://peer.inc",
   "shortName": "PEER",
-  "chainId": 601,
-  "networkId": 601,
-  "icon": {
-    "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
-    "width": 1363,
-    "height": 760,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "PEER Explorer",
       "url": "https://testnet.peer.inc",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmPKKCdjEhP6CHekLD8YnhR2VsdjzprHapapDj7Wzqm52b",
-        "width": 1363,
-        "height": 760,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "peer-testnet"
+  "features": []
 } as const satisfies Chain;

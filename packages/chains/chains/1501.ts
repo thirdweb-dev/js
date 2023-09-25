@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BEVM",
+  "chainId": 1501,
   "chain": "ChainX",
+  "name": "BEVM",
   "rpc": [
     "https://bevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.bevm.io/",
     "https://rpc-2.bevm.io/"
   ],
+  "slug": "bevm",
   "faucets": [],
   "nativeCurrency": {
     "name": "BTC",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://chainx.org",
   "shortName": "chainx",
-  "chainId": 1501,
-  "networkId": 1501,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "bevm scan",
@@ -24,6 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "bevm"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BOMB Chain",
+  "chainId": 2300,
   "chain": "BOMB",
+  "name": "BOMB Chain",
   "rpc": [
     "https://bomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bombchain.com"
   ],
+  "slug": "bomb-chain",
+  "icon": {
+    "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "BOMB Token",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://www.bombchain.com",
   "shortName": "bomb",
-  "chainId": 2300,
-  "networkId": 2300,
-  "icon": {
-    "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "bombscan",
-      "icon": {
-        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
-        "width": 1024,
-        "height": 1024,
-        "format": "png"
-      },
       "url": "https://bombscan.com",
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bomb-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arcology Testnet",
+  "chainId": 118,
   "chain": "Arcology",
+  "name": "Arcology Testnet",
+  "rpc": [
+    "https://arcology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.arcology.network/rpc"
+  ],
+  "slug": "arcology-testnet",
   "icon": {
     "url": "ipfs://QmRD7itMvaZutfBjyA7V9xkMGDtsZiJSagPwd3ijqka8kE",
     "width": 288,
     "height": 288,
     "format": "png"
   },
-  "rpc": [
-    "https://arcology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.arcology.network/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Arcology Coin",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://arcology.network/",
   "shortName": "arcology",
-  "chainId": 118,
-  "networkId": 118,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "arcology",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "arcology-testnet"
+  "features": []
 } as const satisfies Chain;

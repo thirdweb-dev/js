@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Obscuro Testnet",
-  "title": "Obscuro Sepolia Rollup Testnet",
   "chainId": 443,
-  "shortName": "obs-testnet",
   "chain": "ETH",
-  "networkId": 443,
+  "name": "Obscuro Testnet",
+  "rpc": [
+    "https://obscuro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.obscu.ro"
+  ],
+  "slug": "obscuro-testnet",
+  "faucets": [],
   "nativeCurrency": {
     "name": "Sepolia Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "rpc": [
-    "https://obscuro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.obscu.ro"
-  ],
-  "faucets": [],
   "infoURL": "https://obscu.ro",
+  "shortName": "obs-testnet",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Obscuro Sepolia Rollup Explorer",
@@ -24,15 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-5",
-    "bridges": [
-      {
-        "url": "https://bridge.obscu.ro"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "obscuro-testnet"
+  "features": []
 } as const satisfies Chain;

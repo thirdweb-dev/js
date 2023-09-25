@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kalar Chain",
+  "chainId": 1379,
   "chain": "KLC",
+  "name": "Kalar Chain",
+  "rpc": [
+    "https://kalar-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-api.kalarchain.tech"
+  ],
+  "slug": "kalar-chain",
   "icon": {
     "url": "ipfs://bafkreihfoy2kgf2rebaoicso7z5h7ju46z6gtr64mskkths3qbfkrtnkjm",
     "width": 190,
     "height": 170,
     "format": "png"
   },
-  "rpc": [
-    "https://kalar-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-api.kalarchain.tech"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Kalar",
@@ -20,21 +22,14 @@ export default {
   },
   "infoURL": "https://kalarchain.tech",
   "shortName": "KLC",
-  "chainId": 1379,
-  "networkId": 1379,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "kalarscan",
       "url": "https://explorer.kalarchain.tech",
-      "icon": {
-        "url": "ipfs://bafkreidbzzv3lrwlzquhlpl4jcmr54sifhi5ufoek6olb5kjh3h3kvktdq",
-        "width": 411,
-        "height": 159,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "kalar-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "VChain Mainnet",
+  "chainId": 2223,
   "chain": "VChain",
+  "name": "VChain Mainnet",
   "rpc": [
     "https://vchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bc.vcex.xyz"
   ],
+  "slug": "vchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "VNDT",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://bo.vcex.xyz/",
   "shortName": "VChain",
-  "chainId": 2223,
-  "networkId": 2223,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "VChain Scan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "vchain"
+  "features": []
 } as const satisfies Chain;

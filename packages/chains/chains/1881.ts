@@ -1,25 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gitshock Cartenz Testnet",
+  "chainId": 1881,
   "chain": "Gitshock Cartenz",
+  "name": "Gitshock Cartenz Testnet",
+  "rpc": [
+    "https://gitshock-cartenz-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.cartenz.works"
+  ],
+  "slug": "gitshock-cartenz-testnet",
   "icon": {
     "url": "ipfs://bafkreifqpj5jkjazvh24muc7wv4r22tihzzl75cevgecxhvojm4ls6mzpq",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://gitshock-cartenz-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.cartenz.works"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Gitshock Cartenz",
@@ -28,8 +22,8 @@ export default {
   },
   "infoURL": "https://gitshock.com",
   "shortName": "gitshockchain",
-  "chainId": 1881,
-  "networkId": 1881,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -37,6 +31,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "gitshock-cartenz-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

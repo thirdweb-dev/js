@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Pixie Chain Testnet",
+  "chainId": 666,
   "chain": "PixieChain",
+  "name": "Pixie Chain Testnet",
   "rpc": [
     "https://pixie-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.chain.pixie.xyz",
     "wss://ws-testnet.chain.pixie.xyz"
   ],
+  "slug": "pixie-chain-testnet",
   "faucets": [
     "https://chain.pixie.xyz/faucet"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://scan-testnet.chain.pixie.xyz",
   "shortName": "pixie-chain-testnet",
-  "chainId": 666,
-  "networkId": 666,
   "testnet": true,
-  "slug": "pixie-chain-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

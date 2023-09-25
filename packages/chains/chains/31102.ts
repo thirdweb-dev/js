@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethersocial Network",
+  "chainId": 31102,
   "chain": "ESN",
+  "name": "Ethersocial Network",
   "rpc": [
     "https://ethersocial-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.esn.gonspool.com"
   ],
+  "slug": "ethersocial-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ethersocial Network Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://ethersocial.org",
   "shortName": "esn",
-  "chainId": 31102,
-  "networkId": 1,
-  "slip44": 31102,
   "testnet": false,
-  "slug": "ethersocial-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "POA Network Sokol",
+  "chainId": 77,
   "chain": "POA",
+  "name": "POA Network Sokol",
   "rpc": [
     "https://poa-network-sokol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sokol.poa.network",
     "wss://sokol.poa.network/wss",
     "ws://sokol.poa.network:8546"
   ],
+  "slug": "poa-network-sokol",
   "faucets": [],
   "nativeCurrency": {
     "name": "POA Sokol Ether",
@@ -16,21 +18,14 @@ export default {
   },
   "infoURL": "https://poa.network",
   "shortName": "spoa",
-  "chainId": 77,
-  "networkId": 77,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://blockscout.com/poa/sokol",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "poa-network-sokol"
+  "features": []
 } as const satisfies Chain;

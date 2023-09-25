@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Joys Digital TestNet",
+  "chainId": 99415706,
   "chain": "TOYS",
+  "name": "Joys Digital TestNet",
   "rpc": [
     "https://joys-digital-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://toys.joys.cash/"
   ],
+  "slug": "joys-digital-testnet",
   "faucets": [
     "https://faucet.joys.digital/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://joys.digital",
   "shortName": "TOYS",
-  "chainId": 99415706,
-  "networkId": 99415706,
   "testnet": true,
-  "slug": "joys-digital-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

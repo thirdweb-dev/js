@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alaya Mainnet",
+  "chainId": 201018,
   "chain": "Alaya",
+  "name": "Alaya Mainnet",
   "rpc": [
     "https://alaya.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi.alaya.network/rpc",
     "wss://openapi.alaya.network/ws"
   ],
+  "slug": "alaya",
+  "icon": {
+    "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
+    "width": 1140,
+    "height": 1140,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "ATP",
@@ -15,14 +23,8 @@ export default {
   },
   "infoURL": "https://www.alaya.network/",
   "shortName": "alaya",
-  "chainId": 201018,
-  "networkId": 1,
-  "icon": {
-    "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
-    "width": 1140,
-    "height": 1140,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "alaya explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "alaya"
+  "features": []
 } as const satisfies Chain;

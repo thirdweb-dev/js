@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitchain Mainnet",
+  "chainId": 198,
   "chain": "Bit",
+  "name": "Bitchain Mainnet",
   "rpc": [
     "https://bitchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitchain.biz/"
   ],
+  "slug": "bitchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.bitchain.biz/",
   "shortName": "bit",
-  "chainId": 198,
-  "networkId": 198,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitchain Scan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bitchain"
+  "features": []
 } as const satisfies Chain;

@@ -1,20 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kinto Testnet",
-  "title": "Kinto Testnet",
+  "chainId": 42888,
   "chain": "ETH",
+  "name": "Kinto Testnet",
   "rpc": [
     "https://kinto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://35.215.120.180:8545"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "kinto-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -23,8 +16,8 @@ export default {
   },
   "infoURL": "https://ethereum.org",
   "shortName": "keth",
-  "chainId": 42888,
-  "networkId": 42888,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "kintoscan",
@@ -32,6 +25,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kinto-testnet"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

@@ -1,25 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hedera Mainnet",
+  "chainId": 295,
   "chain": "Hedera",
+  "name": "Hedera Mainnet",
+  "rpc": [
+    "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.hashio.io/api"
+  ],
+  "slug": "hedera",
   "icon": {
     "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
     "width": 1500,
     "height": 1500,
     "format": "png"
   },
-  "rpc": [
-    "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.hashio.io/api"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "hbar",
@@ -28,9 +22,8 @@ export default {
   },
   "infoURL": "https://hedera.com",
   "shortName": "hedera-mainnet",
-  "chainId": 295,
-  "networkId": 295,
-  "slip44": 3030,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "HashScan",
@@ -58,6 +51,12 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "hedera"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

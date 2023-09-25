@@ -1,22 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hedera Localnet",
+  "chainId": 298,
   "chain": "Hedera",
+  "name": "Hedera Localnet",
+  "rpc": [],
+  "slug": "hedera-localnet",
   "icon": {
     "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
     "width": 1500,
     "height": 1500,
     "format": "png"
   },
-  "rpc": [],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "hbar",
@@ -25,10 +19,15 @@ export default {
   },
   "infoURL": "https://hedera.com",
   "shortName": "hedera-localnet",
-  "chainId": 298,
-  "networkId": 298,
-  "slip44": 3030,
-  "explorers": [],
   "testnet": false,
-  "slug": "hedera-localnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tritanium Testnet",
+  "chainId": 5353,
   "chain": "TRITANIUM",
+  "name": "Tritanium Testnet",
   "rpc": [
     "https://tritanium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodetestnet-station-one.tritanium.network/",
     "https://nodetestnet-station-two.tritanium.network/"
   ],
+  "slug": "tritanium-testnet",
+  "icon": {
+    "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.tritanium.network"
   ],
@@ -17,27 +25,14 @@ export default {
   },
   "infoURL": "https://tritanium.network",
   "shortName": "ttrn",
-  "chainId": 5353,
-  "networkId": 5353,
-  "icon": {
-    "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "TRITANIUM Testnet Explorer",
-      "icon": {
-        "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "url": "https://testnet.tritanium.network",
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "tritanium-testnet"
+  "features": []
 } as const satisfies Chain;

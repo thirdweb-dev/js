@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "QEasyWeb3 Testnet",
+  "chainId": 9528,
   "chain": "QET",
+  "name": "QEasyWeb3 Testnet",
   "rpc": [
     "https://qeasyweb3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://qeasyweb3.com"
   ],
+  "slug": "qeasyweb3-testnet",
   "faucets": [
     "http://faucet.qeasyweb3.com"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.qeasyweb3.com",
   "shortName": "QETTest",
-  "chainId": 9528,
-  "networkId": 9528,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "QEasyWeb3 Explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "qeasyweb3-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BlockChain Station Testnet",
+  "chainId": 708,
   "chain": "BCS",
+  "name": "BlockChain Station Testnet",
   "rpc": [
     "https://blockchain-station-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bcsdev.io",
     "wss://rpc-ws-testnet.bcsdev.io"
   ],
+  "slug": "blockchain-station-testnet",
   "faucets": [
     "https://faucet.bcsdev.io"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://blockchainstation.io",
   "shortName": "tbcs",
-  "chainId": 708,
-  "networkId": 708,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BlockChain Station Explorer",
@@ -26,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "blockchain-station-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "maistestsubnet",
+  "chainId": 43214913,
   "chain": "MAI",
+  "name": "maistestsubnet",
   "rpc": [
     "https://maistestsubnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://174.138.9.169:9650/ext/bc/VUKSzFZKckx4PoZF9gX5QAqLPxbLzvu1vcssPG5QuodaJtdHT/rpc"
   ],
+  "slug": "maistestsubnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "maistestsubnet",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "mais",
-  "chainId": 43214913,
-  "networkId": 43214913,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "maistesntet",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "maistestsubnet"
+  "features": []
 } as const satisfies Chain;

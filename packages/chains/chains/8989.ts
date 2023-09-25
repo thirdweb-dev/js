@@ -1,12 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Giant Mammoth Mainnet",
-  "title": "Giant Mammoth Chain",
+  "chainId": 8989,
   "chain": "GMMT",
+  "name": "Giant Mammoth Mainnet",
   "rpc": [
     "https://giant-mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-asia.gmmtchain.io"
   ],
+  "slug": "giant-mammoth",
+  "icon": {
+    "url": "ipfs://QmVth4aPeskDTFqRifUugJx6gyEHCmx2PFbMWUtsCSQFkF",
+    "width": 468,
+    "height": 518,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Giant Mammoth Coin",
@@ -15,27 +22,14 @@ export default {
   },
   "infoURL": "https://gmmtchain.io/",
   "shortName": "gmmt",
-  "chainId": 8989,
-  "networkId": 8989,
-  "icon": {
-    "url": "ipfs://QmVth4aPeskDTFqRifUugJx6gyEHCmx2PFbMWUtsCSQFkF",
-    "width": 468,
-    "height": 518,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "gmmtscan",
       "url": "https://scan.gmmtchain.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmVth4aPeskDTFqRifUugJx6gyEHCmx2PFbMWUtsCSQFkF",
-        "width": 468,
-        "height": 518,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "giant-mammoth"
+  "features": []
 } as const satisfies Chain;

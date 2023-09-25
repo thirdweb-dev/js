@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ENULS Testnet",
+  "chainId": 120,
   "chain": "ENULS",
+  "name": "ENULS Testnet",
   "rpc": [
     "https://enuls-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beta.evmapi.nuls.io",
     "https://beta.evmapi2.nuls.io"
   ],
+  "slug": "enuls-testnet",
+  "icon": {
+    "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+    "width": 26,
+    "height": 41,
+    "format": "svg"
+  },
   "faucets": [
     "http://faucet.nuls.io"
   ],
@@ -17,27 +25,14 @@ export default {
   },
   "infoURL": "https://nuls.io",
   "shortName": "enulst",
-  "chainId": 120,
-  "networkId": 120,
-  "icon": {
-    "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
-    "width": 26,
-    "height": 41,
-    "format": "svg"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "enulsscan",
       "url": "https://beta.evmscan.nuls.io",
-      "icon": {
-        "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
-        "width": 26,
-        "height": 41,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "enuls-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MAAL Chain",
+  "chainId": 786,
   "chain": "MAAL",
-  "icon": {
-    "url": "ipfs://bafkreiexfqfe2x4impvwhra3xxa5eb25gv25zi3kkaoatdnld7wbxdzf2a",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "name": "MAAL Chain",
   "rpc": [
     "https://maal-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1-mainnet.maalscan.io/",
     "https://node2-mainnet.maalscan.io/",
     "https://node3-mainnet.maalscan.io/"
   ],
+  "slug": "maal-chain",
+  "icon": {
+    "url": "ipfs://bafkreiexfqfe2x4impvwhra3xxa5eb25gv25zi3kkaoatdnld7wbxdzf2a",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "MAAL",
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://www.maalchain.com/",
   "shortName": "maal",
-  "chainId": 786,
-  "networkId": 786,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "maalscan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "maal-chain"
+  "features": []
 } as const satisfies Chain;

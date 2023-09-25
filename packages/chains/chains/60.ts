@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GoChain",
+  "chainId": 60,
   "chain": "GO",
+  "name": "GoChain",
   "rpc": [
     "https://gochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gochain.io"
   ],
+  "slug": "gochain",
   "faucets": [],
   "nativeCurrency": {
     "name": "GoChain Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://gochain.io",
   "shortName": "go",
-  "chainId": 60,
-  "networkId": 60,
-  "slip44": 6060,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GoChain Explorer",
@@ -24,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "gochain"
+  "features": []
 } as const satisfies Chain;

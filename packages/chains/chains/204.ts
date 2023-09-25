@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "opBNB Mainnet",
+  "chainId": 204,
   "chain": "opBNB",
+  "name": "opBNB Mainnet",
   "rpc": [
     "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-mainnet-rpc.bnbchain.org"
   ],
+  "slug": "opbnb",
   "faucets": [],
   "nativeCurrency": {
     "name": "BNB Chain Native Token",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://opbnb.bnbchain.org/en",
   "shortName": "obnb",
-  "chainId": 204,
-  "networkId": 204,
-  "slip44": 714,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "opbnbscan",
@@ -24,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "opbnb"
+  "features": []
 } as const satisfies Chain;

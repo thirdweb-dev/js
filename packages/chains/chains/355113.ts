@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitfinity Network Testnet",
+  "chainId": 355113,
   "chain": "BFT",
+  "name": "Bitfinity Network Testnet",
   "rpc": [
     "https://bitfinity-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bitfinity.network"
   ],
+  "slug": "bitfinity-network-testnet",
   "faucets": [
     "https://bitfinity.network/faucet"
   ],
@@ -16,21 +18,14 @@ export default {
   },
   "infoURL": "https://bitfinity.network",
   "shortName": "Bitfinity",
-  "chainId": 355113,
-  "networkId": 355113,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitfinity Block Explorer",
       "url": "https://explorer.bitfinity.network",
-      "icon": {
-        "url": "ipfs://bafkreiczbhnoc5wpjikskmehexmg3xmqr4fchrny64db4wmk3lrygqik5e",
-        "width": 796,
-        "height": 129,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bitfinity-network-testnet"
+  "features": []
 } as const satisfies Chain;

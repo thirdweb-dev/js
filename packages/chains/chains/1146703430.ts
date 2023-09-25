@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CyberdeckNet",
+  "chainId": 1146703430,
   "chain": "cyberdeck",
+  "name": "CyberdeckNet",
   "rpc": [
     "https://cyberdecknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://cybeth1.cyberdeck.eu:8545"
   ],
+  "slug": "cyberdecknet",
+  "icon": {
+    "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
+    "width": 193,
+    "height": 214,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Cyb",
@@ -14,28 +22,15 @@ export default {
   },
   "infoURL": "https://cyberdeck.eu",
   "shortName": "cyb",
-  "chainId": 1146703430,
-  "networkId": 1146703430,
-  "icon": {
-    "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
-    "width": 193,
-    "height": 214,
-    "format": "png"
-  },
+  "testnet": false,
   "status": "active",
+  "redFlags": [],
   "explorers": [
     {
       "name": "CybEthExplorer",
       "url": "http://cybeth1.cyberdeck.eu:8000",
-      "icon": {
-        "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
-        "width": 193,
-        "height": 214,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "cyberdecknet"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AIOZ Network",
+  "chainId": 168,
   "chain": "AIOZ",
+  "name": "AIOZ Network",
+  "rpc": [
+    "https://aioz-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://eth-dataseed.aioz.network"
+  ],
+  "slug": "aioz-network",
   "icon": {
     "url": "ipfs://QmRAGPFhvQiXgoJkui7WHajpKctGFrJNhHqzYdwcWt5V3Z",
     "width": 1024,
     "height": 1024,
     "format": "png"
   },
-  "rpc": [
-    "https://aioz-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth-dataseed.aioz.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "AIOZ",
@@ -20,9 +22,8 @@ export default {
   },
   "infoURL": "https://aioz.network",
   "shortName": "aioz",
-  "chainId": 168,
-  "networkId": 168,
-  "slip44": 60,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "AIOZ Network Explorer",
@@ -30,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "aioz-network"
+  "features": []
 } as const satisfies Chain;

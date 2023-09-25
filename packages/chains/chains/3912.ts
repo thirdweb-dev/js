@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DRAC Network",
+  "chainId": 3912,
   "chain": "DRAC",
+  "name": "DRAC Network",
   "rpc": [
     "https://drac-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.dracscan.com/rpc"
   ],
+  "slug": "drac-network",
+  "icon": {
+    "url": "ipfs://QmXbsQe7QsVFZJZdBmbZVvS6LgX9ZFoaTMBs9MiQXUzJTw",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "faucets": [
     "https://www.dracscan.io/faucet"
   ],
@@ -16,22 +24,8 @@ export default {
   },
   "infoURL": "https://drac.io/",
   "shortName": "drac",
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "chainId": 3912,
-  "networkId": 3912,
-  "icon": {
-    "url": "ipfs://QmXbsQe7QsVFZJZdBmbZVvS6LgX9ZFoaTMBs9MiQXUzJTw",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "DRAC_Network Scan",
@@ -39,6 +33,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "drac-network"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

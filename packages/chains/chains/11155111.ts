@@ -1,8 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Sepolia",
-  "title": "Ethereum Testnet Sepolia",
+  "chainId": 11155111,
   "chain": "ETH",
+  "name": "Sepolia",
   "rpc": [
     "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.infura.io/v3/${INFURA_API_KEY}",
@@ -14,6 +14,7 @@ export default {
     "https://sepolia.gateway.tenderly.co",
     "wss://sepolia.gateway.tenderly.co"
   ],
+  "slug": "sepolia",
   "faucets": [
     "http://fauceth.komputing.org?chain=11155111&address=${ADDRESS}"
   ],
@@ -24,8 +25,8 @@ export default {
   },
   "infoURL": "https://sepolia.otterscan.io",
   "shortName": "sep",
-  "chainId": 11155111,
-  "networkId": 11155111,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "etherscan-sepolia",
@@ -38,6 +39,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "sepolia"
+  "features": []
 } as const satisfies Chain;

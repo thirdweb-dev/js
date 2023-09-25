@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TLChain Network Mainnet",
+  "chainId": 5177,
   "chain": "TLC",
+  "name": "TLChain Network Mainnet",
+  "rpc": [
+    "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.tlxscan.com/"
+  ],
+  "slug": "tlchain-network",
   "icon": {
     "url": "ipfs://QmaR5TsgnWSjLys6wGaciKUbc5qYL3Es4jtgQcosVqDWR3",
     "width": 2048,
     "height": 2048,
     "format": "png"
   },
-  "rpc": [
-    "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.tlxscan.com/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "TLChain Network",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://tlchain.network/",
   "shortName": "tlc",
-  "chainId": 5177,
-  "networkId": 5177,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "TLChain Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "tlchain-network"
+  "features": []
 } as const satisfies Chain;

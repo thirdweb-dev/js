@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BitYuan Mainnet",
+  "chainId": 2999,
   "chain": "BTY",
+  "name": "BitYuan Mainnet",
   "rpc": [
     "https://bityuan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bityuan.com/eth"
   ],
+  "slug": "bityuan",
+  "icon": {
+    "url": "ipfs://QmUmJVof2m5e4HUXb3GmijWUFsLUNhrQiwwQG3CqcXEtHt",
+    "width": 91,
+    "height": 24,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "BTY",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://www.bityuan.com",
   "shortName": "bty",
-  "chainId": 2999,
-  "networkId": 2999,
-  "icon": {
-    "url": "ipfs://QmUmJVof2m5e4HUXb3GmijWUFsLUNhrQiwwQG3CqcXEtHt",
-    "width": 91,
-    "height": 24,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BitYuan Block Chain Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "bityuan"
+  "features": []
 } as const satisfies Chain;

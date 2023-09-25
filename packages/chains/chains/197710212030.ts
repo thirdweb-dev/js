@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ntity Mainnet",
+  "chainId": 197710212030,
   "chain": "Ntity",
+  "name": "Ntity Mainnet",
   "rpc": [
     "https://ntity.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ntity.io"
   ],
+  "slug": "ntity",
+  "icon": {
+    "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
+    "width": 711,
+    "height": 715,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ntity",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://ntity.io",
   "shortName": "ntt",
-  "chainId": 197710212030,
-  "networkId": 197710212030,
-  "icon": {
-    "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
-    "width": 711,
-    "height": 715,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ntity Blockscout",
       "url": "https://blockscout.ntity.io",
-      "icon": {
-        "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
-        "width": 711,
-        "height": 715,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ntity"
+  "features": []
 } as const satisfies Chain;

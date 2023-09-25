@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "WhiteBIT Network",
+  "chainId": 1875,
   "chain": "WBT",
+  "name": "WhiteBIT Network",
   "rpc": [
     "https://whitebit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.whitebit.network"
   ],
+  "slug": "whitebit-network",
+  "icon": {
+    "url": "ipfs://Qmbi6cqsQyDjkQSoxbNTTUy8WGyVEFqCtATX2aF4KLmCcZ",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "WhiteBIT Coin",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://whitebit.network",
   "shortName": "wbt",
-  "chainId": 1875,
-  "networkId": 1875,
-  "icon": {
-    "url": "ipfs://Qmbi6cqsQyDjkQSoxbNTTUy8WGyVEFqCtATX2aF4KLmCcZ",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "wb-explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "whitebit-network"
+  "features": []
 } as const satisfies Chain;

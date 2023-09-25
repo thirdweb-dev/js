@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MOAC mainnet",
+  "chainId": 1099,
   "chain": "MOAC",
+  "name": "MOAC mainnet",
   "rpc": [],
+  "slug": "moac",
   "faucets": [],
   "nativeCurrency": {
     "name": "MOAC",
@@ -11,9 +13,8 @@ export default {
   },
   "infoURL": "https://moac.io",
   "shortName": "moac",
-  "chainId": 1099,
-  "networkId": 1099,
-  "slip44": 314,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "moac explorer",
@@ -21,6 +22,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "moac"
+  "features": []
 } as const satisfies Chain;

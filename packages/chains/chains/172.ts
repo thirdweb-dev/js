@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Latam-Blockchain Resil Testnet",
+  "chainId": 172,
   "chain": "Resil",
+  "name": "Latam-Blockchain Resil Testnet",
   "rpc": [
     "https://latam-blockchain-resil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.latam-blockchain.com",
     "wss://ws.latam-blockchain.com"
   ],
+  "slug": "latam-blockchain-resil-testnet",
   "faucets": [
     "https://faucet.latam-blockchain.com"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://latam-blockchain.com",
   "shortName": "resil",
-  "chainId": 172,
-  "networkId": 172,
   "testnet": true,
-  "slug": "latam-blockchain-resil-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

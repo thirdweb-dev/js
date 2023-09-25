@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Yidark Chain Mainnet",
+  "chainId": 927,
   "chain": "Yidark",
+  "name": "Yidark Chain Mainnet",
+  "rpc": [
+    "https://yidark-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.yidark.io"
+  ],
+  "slug": "yidark-chain",
   "icon": {
     "url": "ipfs://QmdbFGqrpiLQGtAeUAyeS2NBvACfgrchEF466ni5q36fuZ",
     "width": 401,
     "height": 401,
     "format": "png"
   },
-  "rpc": [
-    "https://yidark-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.yidark.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Yidark",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://yidarkscan.com",
   "shortName": "ydk",
-  "chainId": 927,
-  "networkId": 927,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Yidarkscan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "yidark-chain"
+  "features": []
 } as const satisfies Chain;

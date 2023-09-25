@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitcoin EVM",
+  "chainId": 2203,
   "chain": "Bitcoin EVM",
+  "name": "Bitcoin EVM",
   "rpc": [
     "https://bitcoin-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.bitcoinevm.com"
   ],
+  "slug": "bitcoin-evm",
+  "icon": {
+    "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitcoin",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://bitcoinevm.com",
   "shortName": "BTC",
-  "chainId": 2203,
-  "networkId": 2203,
-  "icon": {
-    "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Explorer",
       "url": "https://explorer.bitcoinevm.com",
-      "icon": {
-        "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "bitcoin-evm"
+  "features": []
 } as const satisfies Chain;

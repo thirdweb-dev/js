@@ -1,14 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kerleano",
-  "title": "Proof of Climate awaReness testnet",
+  "chainId": 1804,
   "chain": "CRC",
-  "status": "active",
+  "name": "Kerleano",
   "rpc": [
     "https://kerleano.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cacib-saturn-test.francecentral.cloudapp.azure.com",
     "wss://cacib-saturn-test.francecentral.cloudapp.azure.com:9443"
   ],
+  "slug": "kerleano",
+  "icon": {
+    "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
+    "width": 334,
+    "height": 360,
+    "format": "png"
+  },
   "faucets": [
     "https://github.com/ethereum-pocr/kerleano/blob/main/docs/faucet.md"
   ],
@@ -19,27 +25,15 @@ export default {
   },
   "infoURL": "https://github.com/ethereum-pocr/kerleano",
   "shortName": "kerleano",
-  "chainId": 1804,
-  "networkId": 1804,
-  "icon": {
-    "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
-    "width": 334,
-    "height": 360,
-    "format": "png"
-  },
+  "testnet": true,
+  "status": "active",
+  "redFlags": [],
   "explorers": [
     {
       "name": "Lite Explorer",
       "url": "https://ethereum-pocr.github.io/explorer/kerleano",
-      "icon": {
-        "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
-        "width": 334,
-        "height": 360,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kerleano"
+  "features": []
 } as const satisfies Chain;

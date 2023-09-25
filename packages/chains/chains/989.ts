@@ -1,14 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TOP Mainnet",
+  "chainId": 989,
   "chain": "TOP",
+  "name": "TOP Mainnet",
+  "rpc": [],
+  "slug": "top",
   "icon": {
     "url": "ipfs://QmYikaM849eZrL8pGNeVhEHVTKWpxdGMvCY5oFBfZ2ndhd",
     "width": 800,
     "height": 800,
     "format": "png"
   },
-  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "TOP",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://www.topnetwork.org/",
   "shortName": "top",
-  "chainId": 989,
-  "networkId": 0,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "topscan.dev",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "top"
+  "features": []
 } as const satisfies Chain;

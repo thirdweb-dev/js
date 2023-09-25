@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Spicy Chain",
+  "chainId": 88882,
   "chain": "Spicy",
+  "name": "Spicy Chain",
   "rpc": [
     "https://spicy-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://spicy-rpc.chiliz.com/"
   ],
+  "slug": "spicy-chain",
+  "icon": {
+    "url": "ipfs://QmTGYofJ8VLkeNY4J69AvXi8e126kmbHmf34wLFoJ1FKAK",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "faucets": [
     "https://spicy-faucet.chiliz.com/"
   ],
@@ -16,8 +24,8 @@ export default {
   },
   "infoURL": "https://chiliz.com/",
   "shortName": "Spicy",
-  "chainId": 88882,
-  "networkId": 88882,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Spicy Explorer",
@@ -25,12 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmTGYofJ8VLkeNY4J69AvXi8e126kmbHmf34wLFoJ1FKAK",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
-  "testnet": true,
-  "slug": "spicy-chain"
+  "features": []
 } as const satisfies Chain;

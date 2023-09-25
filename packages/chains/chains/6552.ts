@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scolcoin WeiChain Testnet",
+  "chainId": 6552,
   "chain": "SCOLWEI-testnet",
+  "name": "Scolcoin WeiChain Testnet",
   "rpc": [
     "https://scolcoin-weichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.scolcoin.com"
   ],
+  "slug": "scolcoin-weichain-testnet",
+  "icon": {
+    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
+    "width": 792,
+    "height": 822,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.scolcoin.com"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://scolcoin.com",
   "shortName": "SRC-test",
-  "chainId": 6552,
-  "networkId": 6552,
-  "icon": {
-    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
-    "width": 792,
-    "height": 822,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Scolscan Testnet Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "scolcoin-weichain-testnet"
+  "features": []
 } as const satisfies Chain;

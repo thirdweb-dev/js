@@ -1,41 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Palette Chain Testnet",
+  "chainId": 17180,
   "chain": "PLT",
+  "name": "Palette Chain Testnet",
   "rpc": [
     "https://palette-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palette-opennet.com:22000"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Palette Token",
-    "symbol": "PLT",
-    "decimals": 18
-  },
-  "features": [],
-  "infoURL": "https://hashpalette.com/",
-  "shortName": "PCT",
-  "chainId": 17180,
-  "networkId": 17180,
+  "slug": "palette-chain-testnet",
   "icon": {
     "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
     "width": 800,
     "height": 800,
     "format": "png"
   },
+  "faucets": [],
+  "nativeCurrency": {
+    "name": "Palette Token",
+    "symbol": "PLT",
+    "decimals": 18
+  },
+  "infoURL": "https://hashpalette.com/",
+  "shortName": "PCT",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Palettescan",
       "url": "https://testnet.palettescan.com",
-      "icon": {
-        "url": "ipfs://QmPCEGZD1p1keTT2YfPp725azx1r9Ci41hejeUuGL2whFA",
-        "width": 800,
-        "height": 800,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "palette-chain-testnet"
+  "features": []
 } as const satisfies Chain;

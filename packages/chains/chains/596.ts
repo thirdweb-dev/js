@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Karura Network Testnet",
+  "chainId": 596,
   "chain": "KAR",
+  "name": "Karura Network Testnet",
   "rpc": [
     "https://karura-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-karura-testnet.aca-staging.network",
     "wss://eth-rpc-karura-testnet.aca-staging.network"
   ],
+  "slug": "karura-network-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Karura Token",
@@ -15,9 +17,8 @@ export default {
   },
   "infoURL": "https://karura.network",
   "shortName": "tkar",
-  "chainId": 596,
-  "networkId": 596,
-  "slip44": 596,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -25,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "karura-network-testnet"
+  "features": []
 } as const satisfies Chain;

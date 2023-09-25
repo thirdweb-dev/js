@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Popcateum Mainnet",
+  "chainId": 1213,
   "chain": "POPCATEUM",
+  "name": "Popcateum Mainnet",
   "rpc": [
     "https://popcateum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.popcateum.org"
   ],
+  "slug": "popcateum",
   "faucets": [],
   "nativeCurrency": {
     "name": "Popcat",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://popcateum.org",
   "shortName": "popcat",
-  "chainId": 1213,
-  "networkId": 1213,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "popcateum explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "popcateum"
+  "features": []
 } as const satisfies Chain;

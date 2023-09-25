@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taiko Jolnir L2",
+  "chainId": 167007,
   "chain": "ETH",
-  "status": "incubating",
+  "name": "Taiko Jolnir L2",
+  "rpc": [
+    "https://taiko-jolnir-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.jolnir.taiko.xyz"
+  ],
+  "slug": "taiko-jolnir-l2",
   "icon": {
     "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
     "width": 288,
     "height": 258,
     "format": "png"
   },
-  "rpc": [
-    "https://taiko-jolnir-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.jolnir.taiko.xyz"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -21,8 +22,9 @@ export default {
   },
   "infoURL": "https://taiko.xyz",
   "shortName": "tko-jolnir",
-  "chainId": 167007,
-  "networkId": 167007,
+  "testnet": false,
+  "status": "incubating",
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "taiko-jolnir-l2"
+  "features": []
 } as const satisfies Chain;

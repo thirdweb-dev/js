@@ -1,19 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "J2O Taro",
+  "chainId": 35011,
   "chain": "TARO",
+  "name": "J2O Taro",
   "rpc": [
     "https://j2o-taro.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.j2o.io"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "j2o-taro",
   "faucets": [],
   "nativeCurrency": {
     "name": "TARO Coin",
@@ -22,21 +16,21 @@ export default {
   },
   "infoURL": "https://j2o.io",
   "shortName": "j2o",
-  "chainId": 35011,
-  "networkId": 35011,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "J2O Taro Explorer",
       "url": "https://exp.j2o.io",
-      "icon": {
-        "url": "ipfs://QmdUYi8fjnvdM9iFQ7dwE2YvmhDtavSB3bKhCD2GhPxPks",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "j2o-taro"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

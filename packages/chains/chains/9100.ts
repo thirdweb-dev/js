@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Genesis Coin",
+  "chainId": 9100,
   "chain": "Genesis",
+  "name": "Genesis Coin",
   "rpc": [
     "https://genesis-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://genesis-gn.com",
     "wss://genesis-gn.com"
   ],
+  "slug": "genesis-coin",
   "faucets": [],
   "nativeCurrency": {
     "name": "GN Coin",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://genesis-gn.com",
   "shortName": "GENEC",
-  "chainId": 9100,
-  "networkId": 9100,
   "testnet": false,
-  "slug": "genesis-coin"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

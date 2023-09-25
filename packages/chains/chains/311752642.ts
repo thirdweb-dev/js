@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OneLedger Mainnet",
+  "chainId": 311752642,
   "chain": "OLT",
+  "name": "OneLedger Mainnet",
+  "rpc": [
+    "https://oneledger.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.oneledger.network"
+  ],
+  "slug": "oneledger",
   "icon": {
     "url": "ipfs://QmRhqq4Gp8G9w27ND3LeFW49o5PxcxrbJsqHbpBFtzEMfC",
     "width": 225,
     "height": 225,
     "format": "png"
   },
-  "rpc": [
-    "https://oneledger.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.oneledger.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "OLT",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://oneledger.io",
   "shortName": "oneledger",
-  "chainId": 311752642,
-  "networkId": 311752642,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OneLedger Block Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "oneledger"
+  "features": []
 } as const satisfies Chain;

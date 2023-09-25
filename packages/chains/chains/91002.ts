@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nautilus Trition Chain",
-  "title": "Nautilus Trition Testnet",
+  "chainId": 91002,
   "chain": "ETH",
+  "name": "Nautilus Trition Chain",
+  "rpc": [
+    "https://nautilus-trition-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://triton.api.nautchain.xyz"
+  ],
+  "slug": "nautilus-trition-chain",
   "icon": {
     "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "rpc": [
-    "https://nautilus-trition-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://triton.api.nautchain.xyz"
-  ],
   "faucets": [
     "https://faucet.eclipse.builders"
   ],
@@ -23,8 +24,8 @@ export default {
   },
   "infoURL": "https://docs.nautchain.xyz",
   "shortName": "NAUT",
-  "chainId": 91002,
-  "networkId": 91002,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Nautscan",
@@ -32,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "nautilus-trition-chain"
+  "features": []
 } as const satisfies Chain;

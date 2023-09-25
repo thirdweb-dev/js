@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Redbelly Network Testnet",
-  "shortName": "rbn-testnet",
-  "chain": "RBN",
   "chainId": 153,
-  "networkId": 153,
+  "chain": "RBN",
+  "name": "Redbelly Network Testnet",
   "rpc": [],
+  "slug": "redbelly-network-testnet",
   "faucets": [],
-  "infoURL": "https://redbelly.network",
   "nativeCurrency": {
     "name": "Redbelly Network Coin",
     "symbol": "RBNT",
     "decimals": 18
   },
-  "status": "incubating",
+  "infoURL": "https://redbelly.network",
+  "shortName": "rbn-testnet",
   "testnet": true,
-  "slug": "redbelly-network-testnet"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

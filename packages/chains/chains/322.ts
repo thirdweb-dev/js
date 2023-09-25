@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KCC Testnet",
+  "chainId": 322,
   "chain": "KCC",
+  "name": "KCC Testnet",
   "rpc": [
     "https://kcc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.kcc.network"
   ],
+  "slug": "kcc-testnet",
   "faucets": [
     "https://faucet-testnet.kcc.network"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://scan-testnet.kcc.network",
   "shortName": "kcst",
-  "chainId": 322,
-  "networkId": 322,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "kcc-scan-testnet",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kcc-testnet"
+  "features": []
 } as const satisfies Chain;

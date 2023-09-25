@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Factory 127 Mainnet",
+  "chainId": 127,
   "chain": "FETH",
+  "name": "Factory 127 Mainnet",
   "rpc": [],
+  "slug": "factory-127",
   "faucets": [],
   "nativeCurrency": {
     "name": "Factory 127 Token",
@@ -11,9 +13,8 @@ export default {
   },
   "infoURL": "https://www.factory127.com",
   "shortName": "feth",
-  "chainId": 127,
-  "networkId": 127,
-  "slip44": 127,
   "testnet": false,
-  "slug": "factory-127"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

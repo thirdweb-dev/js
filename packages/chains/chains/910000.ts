@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Posichain Testnet Shard 0",
+  "chainId": 910000,
   "chain": "PSC",
+  "name": "Posichain Testnet Shard 0",
   "rpc": [
     "https://posichain-testnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s0.t.posichain.org"
   ],
+  "slug": "posichain-testnet-shard-0",
   "faucets": [
     "https://faucet.posichain.org/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://posichain.org",
   "shortName": "psc-t-s0",
-  "chainId": 910000,
-  "networkId": 910000,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Posichain Explorer Testnet",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "posichain-testnet-shard-0"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Palm",
+  "chainId": 11297108109,
   "chain": "Palm",
+  "name": "Palm",
+  "rpc": [
+    "https://palm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}"
+  ],
+  "slug": "palm",
   "icon": {
     "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
     "width": 72,
     "height": 72,
     "format": "svg"
   },
-  "rpc": [
-    "https://palm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "PALM",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://palm.io",
   "shortName": "palm",
-  "chainId": 11297108109,
-  "networkId": 11297108109,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Palm Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "palm"
+  "features": []
 } as const satisfies Chain;

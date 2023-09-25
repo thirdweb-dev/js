@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kava",
+  "chainId": 2222,
   "chain": "KAVA",
+  "name": "Kava",
   "rpc": [
     "https://kava.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.kava.io",
@@ -13,6 +14,13 @@ export default {
     "https://kava-evm.publicnode.com",
     "wss://kava-evm.publicnode.com"
   ],
+  "slug": "kava",
+  "icon": {
+    "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
+    "width": 1186,
+    "height": 360,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Kava",
@@ -21,27 +29,14 @@ export default {
   },
   "infoURL": "https://www.kava.io",
   "shortName": "kava",
-  "chainId": 2222,
-  "networkId": 2222,
-  "icon": {
-    "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
-    "width": 1186,
-    "height": 360,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Kava EVM Explorer",
       "url": "https://kavascan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
-        "width": 1186,
-        "height": 360,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "kava"
+  "features": []
 } as const satisfies Chain;

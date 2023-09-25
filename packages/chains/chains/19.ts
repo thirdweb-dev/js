@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Songbird Canary-Network",
+  "chainId": 19,
   "chain": "SGB",
-  "icon": {
-    "url": "ipfs://QmXyvnrZY8FUxSULfnKKA99sAEkjAHtvhRx5WeHixgaEdu",
-    "width": 382,
-    "height": 382,
-    "format": "png"
-  },
+  "name": "Songbird Canary-Network",
   "rpc": [
     "https://songbird-canary-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://songbird-api.flare.network/ext/C/rpc",
@@ -16,6 +11,13 @@ export default {
     "https://sgb-rpc.ftso.eu",
     "https://rpc.ftso.au/songbird"
   ],
+  "slug": "songbird-canary-network",
+  "icon": {
+    "url": "ipfs://QmXyvnrZY8FUxSULfnKKA99sAEkjAHtvhRx5WeHixgaEdu",
+    "width": 382,
+    "height": 382,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Songbird",
@@ -24,8 +26,8 @@ export default {
   },
   "infoURL": "https://flare.xyz",
   "shortName": "sgb",
-  "chainId": 19,
-  "networkId": 19,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -33,6 +35,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "songbird-canary-network"
+  "features": []
 } as const satisfies Chain;

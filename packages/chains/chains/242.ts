@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Plinga Mainnet",
+  "chainId": 242,
   "chain": "Plinga",
-  "icon": {
-    "url": "ipfs://bafybeibpvlod5nyev6wyuvp6pbestmgvru3ovbadsul32odpno26xwld6y",
-    "width": 1039,
-    "height": 1022,
-    "format": "svg"
-  },
+  "name": "Plinga Mainnet",
   "rpc": [
     "https://plinga.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcurl.mainnet.plgchain.com",
     "https://rpcurl.plgchain.blockchain.evmnode.online",
     "https://rpcurl.mainnet.plgchain.plinga.technology"
   ],
+  "slug": "plinga",
+  "icon": {
+    "url": "ipfs://bafybeibpvlod5nyev6wyuvp6pbestmgvru3ovbadsul32odpno26xwld6y",
+    "width": 1039,
+    "height": 1022,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Plinga",
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://www.plinga.technology/",
   "shortName": "plgchain",
-  "chainId": 242,
-  "networkId": 242,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "plgscan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "plinga"
+  "features": []
 } as const satisfies Chain;

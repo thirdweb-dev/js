@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Areon Network Testnet",
+  "chainId": 462,
   "chain": "Areon",
+  "name": "Areon Network Testnet",
+  "rpc": [
+    "https://areon-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.areon.network"
+  ],
+  "slug": "areon-network-testnet",
   "icon": {
     "url": "ipfs://bafkreihs2nrnizpcuzjmuu2yi7wrtwd7qlqje46qnil5bnntfbfkb2roea",
     "width": 1000,
     "height": 1000,
     "format": "png"
   },
-  "rpc": [
-    "https://areon-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.areon.network"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Areon",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://areon.network",
   "shortName": "tarea",
-  "chainId": 462,
-  "networkId": 462,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "AreonScan",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "areon-network-testnet"
+  "features": []
 } as const satisfies Chain;

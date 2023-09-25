@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AmStar Mainnet",
+  "chainId": 1388,
   "chain": "AmStar",
+  "name": "AmStar Mainnet",
+  "rpc": [
+    "https://amstar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.amstarscan.com"
+  ],
+  "slug": "amstar",
   "icon": {
     "url": "ipfs://Qmd4TMQdnYxaUZqnVddh5S37NGH72g2kkK38ccCEgdZz1C",
     "width": 599,
     "height": 563,
     "format": "png"
   },
-  "rpc": [
-    "https://amstar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.amstarscan.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "SINSO",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://sinso.io",
   "shortName": "ASAR",
-  "chainId": 1388,
-  "networkId": 1388,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "amstarscan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "amstar"
+  "features": []
 } as const satisfies Chain;

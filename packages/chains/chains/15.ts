@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Diode Prenet",
+  "chainId": 15,
   "chain": "DIODE",
+  "name": "Diode Prenet",
   "rpc": [
     "https://diode-prenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prenet.diode.io:8443/",
     "wss://prenet.diode.io:8443/ws"
   ],
+  "slug": "diode-prenet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Diodes",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://diode.io/prenet",
   "shortName": "diode",
-  "chainId": 15,
-  "networkId": 15,
   "testnet": false,
-  "slug": "diode-prenet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

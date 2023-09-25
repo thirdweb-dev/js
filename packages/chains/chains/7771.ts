@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitrock Testnet",
+  "chainId": 7771,
   "chain": "Bitrock",
+  "name": "Bitrock Testnet",
+  "rpc": [
+    "https://bitrock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.bit-rock.io"
+  ],
+  "slug": "bitrock-testnet",
   "icon": {
     "url": "ipfs://QmfXZCAh3HWS2bJroUStN9TieL4QA9QArMotie3X4pwBfj",
     "width": 72,
     "height": 72,
     "format": "svg"
   },
-  "rpc": [
-    "https://bitrock-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.bit-rock.io"
-  ],
   "faucets": [
     "https://faucet.bit-rock.io"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://bit-rock.io",
   "shortName": "tbitrock",
-  "chainId": 7771,
-  "networkId": 7771,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitrock Testnet Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bitrock-testnet"
+  "features": []
 } as const satisfies Chain;

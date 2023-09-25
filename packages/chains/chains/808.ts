@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Portal Fantasy Chain Test",
+  "chainId": 808,
   "chain": "PF",
+  "name": "Portal Fantasy Chain Test",
+  "rpc": [
+    "https://portal-fantasy-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/portal-fantasy/testnet/rpc"
+  ],
+  "slug": "portal-fantasy-chain-test",
   "icon": {
     "url": "ipfs://QmeMa6aw3ebUKJdGgbzDgcVtggzp7cQdfSrmzMYmnt5ywc",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "rpc": [
-    "https://portal-fantasy-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/portal-fantasy/testnet/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Portal Fantasy Token",
@@ -20,9 +22,8 @@ export default {
   },
   "infoURL": "https://portalfantasy.io",
   "shortName": "PFTEST",
-  "chainId": 808,
-  "networkId": 808,
-  "explorers": [],
   "testnet": true,
-  "slug": "portal-fantasy-chain-test"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitcichain Mainnet",
+  "chainId": 1907,
   "chain": "BITCI",
+  "name": "Bitcichain Mainnet",
+  "rpc": [
+    "https://bitcichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.bitci.com"
+  ],
+  "slug": "bitcichain",
   "icon": {
     "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
     "width": 64,
     "height": 64,
     "format": "svg"
   },
-  "rpc": [
-    "https://bitcichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.bitci.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitci",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.bitcichain.com",
   "shortName": "bitci",
-  "chainId": 1907,
-  "networkId": 1907,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitci Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bitcichain"
+  "features": []
 } as const satisfies Chain;

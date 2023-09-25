@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Holesky",
+  "chainId": 17000,
   "chain": "ETH",
+  "name": "Holesky",
   "rpc": [
     "https://holesky.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.holesky.ethpandaops.io"
   ],
+  "slug": "holesky",
+  "icon": {
+    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
+    "width": 1000,
+    "height": 1628,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.holesky.ethpandaops.io",
     "https://holesky-faucet.pk910.de"
@@ -17,28 +25,15 @@ export default {
   },
   "infoURL": "https://holesky.ethpandaops.io",
   "shortName": "holesky",
-  "chainId": 17000,
-  "networkId": 17000,
-  "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
-  },
+  "testnet": true,
   "status": "incubating",
+  "redFlags": [],
   "explorers": [
     {
       "name": "Holesky Explorer",
       "url": "https://holesky.beaconcha.in",
-      "icon": {
-        "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-        "width": 1000,
-        "height": 1628,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "holesky"
+  "features": []
 } as const satisfies Chain;

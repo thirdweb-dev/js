@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "eLiberty Testnet",
+  "chainId": 99099,
   "chain": "$EL",
+  "name": "eLiberty Testnet",
+  "rpc": [
+    "https://eliberty-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.eliberty.ngo"
+  ],
+  "slug": "eliberty-testnet",
   "icon": {
     "url": "ipfs://Qmcr8US1DZcK3ooiMtE8tEQPgep12abXzxPw1jCkgZhji9",
     "width": 150,
     "height": 150,
     "format": "png"
   },
-  "rpc": [
-    "https://eliberty-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.eliberty.ngo"
-  ],
   "faucets": [
     "https://faucet.eliberty.ngo"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://eliberty.ngo",
   "shortName": "ELt",
-  "chainId": 99099,
-  "networkId": 99099,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "eLiberty Testnet",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "eliberty-testnet"
+  "features": []
 } as const satisfies Chain;

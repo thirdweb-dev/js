@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bobabeam",
+  "chainId": 1294,
   "chain": "Bobabeam",
+  "name": "Bobabeam",
   "rpc": [
     "https://bobabeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabeam.boba.network",
@@ -9,6 +10,7 @@ export default {
     "https://replica.bobabeam.boba.network",
     "wss://replica-wss.bobabeam.boba.network"
   ],
+  "slug": "bobabeam",
   "faucets": [],
   "nativeCurrency": {
     "name": "Boba Token",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://boba.network",
   "shortName": "Bobabeam",
-  "chainId": 1294,
-  "networkId": 1294,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bobabeam block explorer",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "bobabeam"
+  "features": []
 } as const satisfies Chain;

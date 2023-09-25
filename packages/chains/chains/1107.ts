@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BLXq Testnet",
+  "chainId": 1107,
   "chain": "BLXQ",
+  "name": "BLXq Testnet",
+  "rpc": [
+    "https://blxq-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnetq1.blx.org"
+  ],
+  "slug": "blxq-testnet",
   "icon": {
     "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
     "width": 1000,
     "height": 1000,
     "format": "png"
   },
-  "rpc": [
-    "https://blxq-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnetq1.blx.org"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "BLXQ",
@@ -20,21 +22,14 @@ export default {
   },
   "infoURL": "https://blx.org",
   "shortName": "tblxq",
-  "chainId": 1107,
-  "networkId": 1107,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BLXq Explorer",
       "url": "https://explorer.blx.org",
-      "icon": {
-        "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
-        "width": 1000,
-        "height": 1000,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "blxq-testnet"
+  "features": []
 } as const satisfies Chain;

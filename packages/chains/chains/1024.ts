@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CLV Parachain",
+  "chainId": 1024,
   "chain": "CLV",
+  "name": "CLV Parachain",
   "rpc": [
     "https://clv-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api-para.clover.finance"
   ],
+  "slug": "clv-parachain",
   "faucets": [],
   "nativeCurrency": {
     "name": "CLV",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://clv.org",
   "shortName": "clv",
-  "chainId": 1024,
-  "networkId": 1024,
   "testnet": false,
-  "slug": "clv-parachain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

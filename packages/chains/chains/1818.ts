@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cube Chain Mainnet",
+  "chainId": 1818,
   "chain": "Cube",
-  "icon": {
-    "url": "ipfs://QmbENgHTymTUUArX5MZ2XXH69WGenirU3oamkRD448hYdz",
-    "width": 282,
-    "height": 250,
-    "format": "png"
-  },
+  "name": "Cube Chain Mainnet",
   "rpc": [
     "https://cube-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.cube.network",
@@ -17,6 +12,13 @@ export default {
     "https://http-mainnet-us.cube.network",
     "wss://ws-mainnet-us.cube.network"
   ],
+  "slug": "cube-chain",
+  "icon": {
+    "url": "ipfs://QmbENgHTymTUUArX5MZ2XXH69WGenirU3oamkRD448hYdz",
+    "width": 282,
+    "height": 250,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Cube Chain Native Token",
@@ -25,9 +27,8 @@ export default {
   },
   "infoURL": "https://www.cube.network",
   "shortName": "cube",
-  "chainId": 1818,
-  "networkId": 1818,
-  "slip44": 1818,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "cube-scan",
@@ -35,6 +36,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "cube-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Milkomeda C1 Testnet",
+  "chainId": 200101,
   "chain": "milkTAda",
+  "name": "Milkomeda C1 Testnet",
+  "rpc": [
+    "https://milkomeda-c1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-devnet-cardano-evm.c1.milkomeda.com",
+    "wss://rpc-devnet-cardano-evm.c1.milkomeda.com"
+  ],
+  "slug": "milkomeda-c1-testnet",
   "icon": {
     "url": "ipfs://QmdoUtvHDybu5ppYBZT8BMRp6AqByVSoQs8nFwKbaS55jd",
     "width": 367,
     "height": 367,
     "format": "svg"
   },
-  "rpc": [
-    "https://milkomeda-c1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-devnet-cardano-evm.c1.milkomeda.com",
-    "wss://rpc-devnet-cardano-evm.c1.milkomeda.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "milkTAda",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://milkomeda.com",
   "shortName": "milkTAda",
-  "chainId": 200101,
-  "networkId": 200101,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Blockscout",
@@ -30,6 +32,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "milkomeda-c1-testnet"
+  "features": []
 } as const satisfies Chain;

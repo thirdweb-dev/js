@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "VELO Labs Mainnet",
+  "chainId": 56789,
   "chain": "NOVA chain",
+  "name": "VELO Labs Mainnet",
   "rpc": [
     "https://velo-labs.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nova.velo.org"
   ],
+  "slug": "velo-labs",
+  "icon": {
+    "url": "ipfs://QmYqvnW2jwPEKUv8BdaV4sbL8Audcwosat6SPn4GqYtKxc",
+    "width": 225,
+    "height": 225,
+    "format": "png"
+  },
   "faucets": [
     "https://nova-faucet.velo.org"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://velo.org",
   "shortName": "VELO",
-  "chainId": 56789,
-  "networkId": 56789,
-  "icon": {
-    "url": "ipfs://QmYqvnW2jwPEKUv8BdaV4sbL8Audcwosat6SPn4GqYtKxc",
-    "width": 225,
-    "height": 225,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "novascan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "velo-labs"
+  "features": []
 } as const satisfies Chain;

@@ -1,16 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shrapnel Testnet",
+  "chainId": 2038,
   "chain": "SHRAPNEL",
+  "name": "Shrapnel Testnet",
   "rpc": [
     "https://shrapnel-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/shrapnel/testnet/rpc"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "shrapnel-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "SHRAPG",
@@ -19,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.shrapnel.com/",
   "shortName": "shraptest",
-  "chainId": 2038,
-  "networkId": 2038,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SHRAPNEL Explorer",
@@ -28,6 +25,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "shrapnel-testnet"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

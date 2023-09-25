@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Milkomeda A1 Mainnet",
+  "chainId": 2002,
   "chain": "milkALGO",
+  "name": "Milkomeda A1 Mainnet",
+  "rpc": [
+    "https://milkomeda-a1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet-algorand-rollup.a1.milkomeda.com",
+    "wss://rpc-mainnet-algorand-rollup.a1.milkomeda.com/ws"
+  ],
+  "slug": "milkomeda-a1",
   "icon": {
     "url": "ipfs://QmdoUtvHDybu5ppYBZT8BMRp6AqByVSoQs8nFwKbaS55jd",
     "width": 367,
     "height": 367,
     "format": "svg"
   },
-  "rpc": [
-    "https://milkomeda-a1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet-algorand-rollup.a1.milkomeda.com",
-    "wss://rpc-mainnet-algorand-rollup.a1.milkomeda.com/ws"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "milkALGO",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://milkomeda.com",
   "shortName": "milkALGO",
-  "chainId": 2002,
-  "networkId": 2002,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Blockscout",
@@ -30,6 +32,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "milkomeda-a1"
+  "features": []
 } as const satisfies Chain;

@@ -1,30 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Neurochain Mainnet",
+  "chainId": 313,
   "chain": "NCN",
+  "name": "Neurochain Mainnet",
   "rpc": [
     "https://neurochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nc-rpc-prd1.neurochain.io",
     "https://nc-rpc-prd2.neurochain.io"
   ],
+  "slug": "neurochain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Neurochain",
     "symbol": "NCN",
     "decimals": 18
   },
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "infoURL": "https://www.neurochain.ai",
   "shortName": "ncn",
-  "chainId": 313,
-  "networkId": 313,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "neuroscan",
@@ -32,6 +26,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "neurochain"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

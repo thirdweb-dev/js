@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Huobi ECO Chain Mainnet",
+  "chainId": 128,
   "chain": "Heco",
+  "name": "Huobi ECO Chain Mainnet",
   "rpc": [
     "https://huobi-eco-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.hecochain.com",
     "wss://ws-mainnet.hecochain.com"
   ],
+  "slug": "huobi-eco-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Huobi ECO Chain Native Token",
@@ -15,9 +17,8 @@ export default {
   },
   "infoURL": "https://www.hecochain.com",
   "shortName": "heco",
-  "chainId": 128,
-  "networkId": 128,
-  "slip44": 1010,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "hecoinfo",
@@ -25,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "huobi-eco-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OYchain Mainnet",
+  "chainId": 126,
   "chain": "OYchain",
+  "name": "OYchain Mainnet",
+  "rpc": [
+    "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mainnet.oychain.io"
+  ],
+  "slug": "oychain",
   "icon": {
     "url": "ipfs://QmXW5T2MaGHznXUmQEXoyJjcdmX7dhLbj5fnqvZZKqeKzA",
     "width": 677,
     "height": 237,
     "format": "png"
   },
-  "rpc": [
-    "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mainnet.oychain.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "OYchain Token",
@@ -20,9 +22,8 @@ export default {
   },
   "infoURL": "https://www.oychain.io",
   "shortName": "OYchainMainnet",
-  "chainId": 126,
-  "networkId": 126,
-  "slip44": 126,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OYchain Mainnet Explorer",
@@ -30,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "oychain"
+  "features": []
 } as const satisfies Chain;

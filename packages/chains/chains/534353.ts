@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scroll Alpha Testnet",
+  "chainId": 534353,
   "chain": "ETH",
-  "status": "deprecated",
+  "name": "Scroll Alpha Testnet",
   "rpc": [
     "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-rpc.scroll.io/l2"
   ],
+  "slug": "scroll-alpha-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -15,8 +16,9 @@ export default {
   },
   "infoURL": "https://scroll.io",
   "shortName": "scr-alpha",
-  "chainId": 534353,
-  "networkId": 534353,
+  "testnet": true,
+  "status": "deprecated",
+  "redFlags": [],
   "explorers": [
     {
       "name": "Scroll Alpha Testnet Block Explorer",
@@ -24,11 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-5",
-    "bridges": []
-  },
-  "testnet": true,
-  "slug": "scroll-alpha-testnet"
+  "features": []
 } as const satisfies Chain;

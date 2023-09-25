@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Treasurenet Mainnet Alpha",
+  "chainId": 5002,
   "chain": "Treasurenet Mainnet Alpha",
-  "icon": {
-    "url": "ipfs://QmTcNX8ukHkXiVfVah1W8Sed3vtGN95Sq2QSimfLuHva6B",
-    "width": 1844,
-    "height": 1920,
-    "format": "png"
-  },
+  "name": "Treasurenet Mainnet Alpha",
   "rpc": [
     "https://treasurenet-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node0.treasurenet.io",
@@ -15,11 +10,13 @@ export default {
     "https://node2.treasurenet.io",
     "https://node3.treasurenet.io"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    }
-  ],
+  "slug": "treasurenet-alpha",
+  "icon": {
+    "url": "ipfs://QmTcNX8ukHkXiVfVah1W8Sed3vtGN95Sq2QSimfLuHva6B",
+    "width": 1844,
+    "height": 1920,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "UNIT",
@@ -28,21 +25,18 @@ export default {
   },
   "infoURL": "https://www.treasurenet.io",
   "shortName": "treasurenet",
-  "chainId": 5002,
-  "networkId": 5002,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Treasurenet EVM BlockExplorer",
       "url": "https://evmexplorer.treasurenet.io",
-      "icon": {
-        "url": "ipfs://QmTcNX8ukHkXiVfVah1W8Sed3vtGN95Sq2QSimfLuHva6B",
-        "width": 1844,
-        "height": 1920,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "treasurenet-alpha"
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ]
 } as const satisfies Chain;

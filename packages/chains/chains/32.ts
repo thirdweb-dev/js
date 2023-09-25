@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GoodData Testnet",
+  "chainId": 32,
   "chain": "GooD",
+  "name": "GoodData Testnet",
   "rpc": [
     "https://gooddata-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test2.goodata.io"
   ],
+  "slug": "gooddata-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "GoodData Testnet Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.goodata.org",
   "shortName": "GooDT",
-  "chainId": 32,
-  "networkId": 32,
   "testnet": true,
-  "slug": "gooddata-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

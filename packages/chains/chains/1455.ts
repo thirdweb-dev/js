@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ctex Scan Blockchain",
+  "chainId": 1455,
   "chain": "Ctex Scan Blockchain",
+  "name": "Ctex Scan Blockchain",
+  "rpc": [
+    "https://ctex-scan-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.ctexscan.com/"
+  ],
+  "slug": "ctex-scan-blockchain",
   "icon": {
     "url": "ipfs://bafkreid5evn4qovxo6msuekizv5zn7va62tea7w2zpdx5sskconebuhqle",
     "width": 800,
     "height": 800,
     "format": "png"
   },
-  "rpc": [
-    "https://ctex-scan-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.ctexscan.com/"
-  ],
   "faucets": [
     "https://faucet.ctexscan.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://ctextoken.io",
   "shortName": "CTEX",
-  "chainId": 1455,
-  "networkId": 1455,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ctex Scan Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "ctex-scan-blockchain"
+  "features": []
 } as const satisfies Chain;

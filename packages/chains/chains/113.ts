@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dehvo",
+  "chainId": 113,
   "chain": "Dehvo",
+  "name": "Dehvo",
   "rpc": [
     "https://dehvo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.dehvo.com",
@@ -9,6 +10,7 @@ export default {
     "https://rpc1.dehvo.com",
     "https://rpc2.dehvo.com"
   ],
+  "slug": "dehvo",
   "faucets": [
     "https://buy.dehvo.com"
   ],
@@ -19,9 +21,8 @@ export default {
   },
   "infoURL": "https://dehvo.com",
   "shortName": "deh",
-  "chainId": 113,
-  "networkId": 113,
-  "slip44": 714,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Dehvo Explorer",
@@ -29,6 +30,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "dehvo"
+  "features": []
 } as const satisfies Chain;

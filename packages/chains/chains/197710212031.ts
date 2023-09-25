@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Haradev Testnet",
+  "chainId": 197710212031,
   "chain": "Ntity",
+  "name": "Haradev Testnet",
   "rpc": [
     "https://haradev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://blockchain.haradev.com"
   ],
+  "slug": "haradev-testnet",
+  "icon": {
+    "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
+    "width": 711,
+    "height": 715,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ntity Haradev",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://ntity.io",
   "shortName": "ntt-haradev",
-  "chainId": 197710212031,
-  "networkId": 197710212031,
-  "icon": {
-    "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
-    "width": 711,
-    "height": 715,
-    "format": "svg"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ntity Haradev Blockscout",
       "url": "https://blockscout.haradev.com",
-      "icon": {
-        "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
-        "width": 711,
-        "height": 715,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "haradev-testnet"
+  "features": []
 } as const satisfies Chain;

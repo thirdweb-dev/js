@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Crypto Emergency",
+  "chainId": 193,
   "chain": "CEM",
+  "name": "Crypto Emergency",
   "rpc": [
     "https://crypto-emergency.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cemchain.com"
   ],
+  "slug": "crypto-emergency",
   "faucets": [],
   "nativeCurrency": {
     "name": "Crypto Emergency",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://cemblockchain.com/",
   "shortName": "cem",
-  "chainId": 193,
-  "networkId": 193,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "cemscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "crypto-emergency"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Meter Testnet",
+  "chainId": 83,
   "chain": "METER Testnet",
+  "name": "Meter Testnet",
   "rpc": [
     "https://meter-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctest.meter.io"
   ],
+  "slug": "meter-testnet",
   "faucets": [
     "https://faucet-warringstakes.meter.io"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.meter.io",
   "shortName": "MeterTest",
-  "chainId": 83,
-  "networkId": 83,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Meter Testnet Scan",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "meter-testnet"
+  "features": []
 } as const satisfies Chain;

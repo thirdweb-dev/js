@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Coinbit Mainnet",
+  "chainId": 112,
   "chain": "Coinbit",
+  "name": "Coinbit Mainnet",
   "rpc": [
     "https://coinbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coinbit-rpc-mainnet.chain.sbcrypto.app"
   ],
+  "slug": "coinbit",
+  "icon": {
+    "url": "ipfs://QmdaQRUbAXJGfHeJ8jaB8WVh8CCmHExq8VjvAfXpLWWQEo",
+    "width": 760,
+    "height": 760,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Gas IDR",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://crypto.stockbit.com/",
   "shortName": "coinbit",
-  "chainId": 112,
-  "networkId": 112,
-  "icon": {
-    "url": "ipfs://QmdaQRUbAXJGfHeJ8jaB8WVh8CCmHExq8VjvAfXpLWWQEo",
-    "width": 760,
-    "height": 760,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://coinbit-explorer.chain.sbcrypto.app",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "coinbit"
+  "features": []
 } as const satisfies Chain;

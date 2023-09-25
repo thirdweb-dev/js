@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Double-A Chain Mainnet",
+  "chainId": 512,
   "chain": "AAC",
+  "name": "Double-A Chain Mainnet",
   "rpc": [
     "https://double-a-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.acuteangle.com"
   ],
+  "slug": "double-a-chain",
+  "icon": {
+    "url": "ipfs://QmRUrz4dULaoaMpnqd8qXT7ehwz3aaqnYKY4ePsy7isGaF",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Acuteangle Native Token",
@@ -14,9 +22,8 @@ export default {
   },
   "infoURL": "https://www.acuteangle.com/",
   "shortName": "aac",
-  "chainId": 512,
-  "networkId": 512,
-  "slip44": 1512,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "aacscan",
@@ -24,12 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmRUrz4dULaoaMpnqd8qXT7ehwz3aaqnYKY4ePsy7isGaF",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "testnet": false,
-  "slug": "double-a-chain"
+  "features": []
 } as const satisfies Chain;

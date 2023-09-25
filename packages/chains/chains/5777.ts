@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ganache",
-  "title": "Ganache GUI Ethereum Testnet",
+  "chainId": 5777,
   "chain": "ETH",
+  "name": "Ganache",
+  "rpc": [
+    "https://ganache.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://127.0.0.1:7545"
+  ],
+  "slug": "ganache",
   "icon": {
     "url": "ipfs://Qmc9N7V8CiLB4r7FEcG7GojqfiGGsRCZqcFWCahwMohbDW",
     "width": 267,
     "height": 300,
     "format": "png"
   },
-  "rpc": [
-    "https://ganache.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://127.0.0.1:7545"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ganache Test Ether",
@@ -21,9 +22,8 @@ export default {
   },
   "infoURL": "https://trufflesuite.com/ganache/",
   "shortName": "ggui",
-  "chainId": 5777,
-  "networkId": 5777,
-  "explorers": [],
   "testnet": true,
-  "slug": "ganache"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

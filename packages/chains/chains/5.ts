@@ -1,8 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Goerli",
-  "title": "Ethereum Testnet Goerli",
+  "chainId": 5,
   "chain": "ETH",
+  "name": "Goerli",
   "rpc": [
     "https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.infura.io/v3/${INFURA_API_KEY}",
@@ -14,6 +14,13 @@ export default {
     "https://goerli.gateway.tenderly.co",
     "wss://goerli.gateway.tenderly.co"
   ],
+  "slug": "goerli",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.paradigm.xyz/",
     "http://fauceth.komputing.org?chain=5&address=${ADDRESS}",
@@ -27,11 +34,8 @@ export default {
   },
   "infoURL": "https://goerli.net/#about",
   "shortName": "gor",
-  "chainId": 5,
-  "networkId": 5,
-  "ens": {
-    "registry": "0x112234455c3a32fd11230c42e7bccd4a84e02010"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "etherscan-goerli",
@@ -41,21 +45,8 @@ export default {
     {
       "name": "blockscout-goerli",
       "url": "https://eth-goerli.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "testnet": true,
-  "slug": "goerli"
+  "features": []
 } as const satisfies Chain;

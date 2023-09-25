@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zeeth Chain",
+  "chainId": 427,
   "chain": "ZeethChain",
+  "name": "Zeeth Chain",
   "rpc": [
     "https://zeeth-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zeeth.io"
   ],
+  "slug": "zeeth-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Zeeth Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "zeeth",
-  "chainId": 427,
-  "networkId": 427,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Zeeth Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "zeeth-chain"
+  "features": []
 } as const satisfies Chain;

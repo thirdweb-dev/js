@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Unique",
-  "icon": {
-    "url": "ipfs://QmbJ7CGZ2GxWMp7s6jy71UGzRsMe4w3KANKXDAExYWdaFR",
-    "width": 48,
-    "height": 48,
-    "format": "svg"
-  },
+  "chainId": 8880,
   "chain": "UNQ",
+  "name": "Unique",
   "rpc": [
     "https://unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.unique.network",
@@ -15,6 +10,13 @@ export default {
     "https://asia-rpc.unique.network",
     "https://us-rpc.unique.network"
   ],
+  "slug": "unique",
+  "icon": {
+    "url": "ipfs://QmbJ7CGZ2GxWMp7s6jy71UGzRsMe4w3KANKXDAExYWdaFR",
+    "width": 48,
+    "height": 48,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Unique",
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://unique.network",
   "shortName": "unq",
-  "chainId": 8880,
-  "networkId": 8880,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Unique Scan",
@@ -32,6 +34,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "unique"
+  "features": []
 } as const satisfies Chain;

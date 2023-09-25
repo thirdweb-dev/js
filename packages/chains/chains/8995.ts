@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "bloxberg",
+  "chainId": 8995,
   "chain": "bloxberg",
+  "name": "bloxberg",
   "rpc": [
     "https://bloxberg.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.bloxberg.org"
   ],
+  "slug": "bloxberg",
   "faucets": [
     "https://faucet.bloxberg.org/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://bloxberg.org",
   "shortName": "berg",
-  "chainId": 8995,
-  "networkId": 8995,
   "testnet": false,
-  "slug": "bloxberg"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Molereum Network",
+  "chainId": 6022140761023,
   "chain": "ETH",
+  "name": "Molereum Network",
   "rpc": [
     "https://molereum-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://molereum.jdubedition.com"
   ],
+  "slug": "molereum-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Molereum Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://github.com/Jdubedition/molereum",
   "shortName": "mole",
-  "chainId": 6022140761023,
-  "networkId": 6022140761023,
   "testnet": false,
-  "slug": "molereum-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

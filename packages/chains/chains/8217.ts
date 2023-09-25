@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Klaytn Mainnet Cypress",
+  "chainId": 8217,
   "chain": "KLAY",
+  "name": "Klaytn Mainnet Cypress",
   "rpc": [
     "https://klaytn-cypress.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://klaytn.blockpi.network/v1/rpc/public",
@@ -9,6 +10,13 @@ export default {
     "https://public-en-cypress.klaytn.net",
     "https://public-node-api.klaytnapi.com/v1/cypress"
   ],
+  "slug": "klaytn-cypress",
+  "icon": {
+    "url": "ipfs://bafkreigtgdivlmfvf7trqjqy4vkz2d26xk3iif6av265v4klu5qavsugm4",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "KLAY",
@@ -17,9 +25,8 @@ export default {
   },
   "infoURL": "https://www.klaytn.com/",
   "shortName": "Cypress",
-  "chainId": 8217,
-  "networkId": 8217,
-  "slip44": 8217,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "klaytnfinder",
@@ -32,12 +39,5 @@ export default {
       "standard": "none"
     }
   ],
-  "icon": {
-    "format": "png",
-    "url": "ipfs://bafkreigtgdivlmfvf7trqjqy4vkz2d26xk3iif6av265v4klu5qavsugm4",
-    "height": 1000,
-    "width": 1000
-  },
-  "testnet": false,
-  "slug": "klaytn-cypress"
+  "features": []
 } as const satisfies Chain;

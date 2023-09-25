@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SatoshiChain Mainnet",
+  "chainId": 12009,
   "chain": "SATS",
+  "name": "SatoshiChain Mainnet",
+  "rpc": [
+    "https://satoshichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.satoshichain.io"
+  ],
+  "slug": "satoshichain",
   "icon": {
     "url": "ipfs://QmRegpZQBW4o1imYNsW3d27MQjygBSU23Gf6JKje26nvs7",
     "width": 1251,
     "height": 1251,
     "format": "png"
   },
-  "rpc": [
-    "https://satoshichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.satoshichain.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "SatoshiChain Coin",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://satoshichain.net",
   "shortName": "sats",
-  "chainId": 12009,
-  "networkId": 12009,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SatoshiChain Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "satoshichain"
+  "features": []
 } as const satisfies Chain;

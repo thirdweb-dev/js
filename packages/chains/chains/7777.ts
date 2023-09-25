@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rise of the Warbots Testnet",
+  "chainId": 7777,
   "chain": "nmactest",
+  "name": "Rise of the Warbots Testnet",
   "rpc": [
     "https://rise-of-the-warbots-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet1.riseofthewarbots.com",
@@ -10,6 +11,7 @@ export default {
     "https://testnet4.riseofthewarbots.com",
     "https://testnet5.riseofthewarbots.com"
   ],
+  "slug": "rise-of-the-warbots-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Nano Machines",
@@ -18,8 +20,8 @@ export default {
   },
   "infoURL": "https://riseofthewarbots.com/",
   "shortName": "RiseOfTheWarbotsTestnet",
-  "chainId": 7777,
-  "networkId": 7777,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "avascan",
@@ -27,6 +29,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "rise-of-the-warbots-testnet"
+  "features": []
 } as const satisfies Chain;

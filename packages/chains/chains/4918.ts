@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Venidium Testnet",
+  "chainId": 4918,
   "chain": "XVM",
+  "name": "Venidium Testnet",
   "rpc": [
     "https://venidium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm-testnet.venidium.io"
   ],
+  "slug": "venidium-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Venidium",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://venidium.io",
   "shortName": "txvm",
-  "chainId": 4918,
-  "networkId": 4918,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Venidium EVM Testnet Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "venidium-testnet"
+  "features": []
 } as const satisfies Chain;

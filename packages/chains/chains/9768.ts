@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MainnetZ Testnet",
+  "chainId": 9768,
   "chain": "NetZ",
+  "name": "MainnetZ Testnet",
+  "rpc": [
+    "https://z-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.mainnetz.io"
+  ],
+  "slug": "z-testnet",
   "icon": {
     "url": "ipfs://QmT5gJ5weBiLT3GoYuF5yRTRLdPLCVZ3tXznfqW7M8fxgG",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://z-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.mainnetz.io"
-  ],
   "faucets": [
     "https://faucet.mainnetz.io"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://testnet.mainnetz.io",
   "shortName": "NetZt",
-  "chainId": 9768,
-  "networkId": 9768,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "MainnetZ",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "z-testnet"
+  "features": []
 } as const satisfies Chain;

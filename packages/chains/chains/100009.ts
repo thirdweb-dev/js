@@ -1,8 +1,10 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "VeChain",
+  "chainId": 100009,
   "chain": "VeChain",
+  "name": "VeChain",
   "rpc": [],
+  "slug": "vechain",
   "faucets": [],
   "nativeCurrency": {
     "name": "VeChain",
@@ -11,8 +13,8 @@ export default {
   },
   "infoURL": "https://vechain.org",
   "shortName": "vechain",
-  "chainId": 100009,
-  "networkId": 100009,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "VeChain Stats",
@@ -25,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "vechain"
+  "features": []
 } as const satisfies Chain;

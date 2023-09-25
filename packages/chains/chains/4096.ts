@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitindi Testnet",
+  "chainId": 4096,
   "chain": "BNI",
+  "name": "Bitindi Testnet",
+  "rpc": [
+    "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.bitindi.org",
+    "https://testnet-rpc.bitindi.org"
+  ],
+  "slug": "bitindi-testnet",
   "icon": {
     "url": "ipfs://QmRAFFPiLiSgjGTs9QaZdnR9fsDgyUdTejwSxcnPXo292s",
     "width": 60,
     "height": 72,
     "format": "png"
   },
-  "rpc": [
-    "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.bitindi.org",
-    "https://testnet-rpc.bitindi.org"
-  ],
   "faucets": [
     "https://faucet.bitindi.org"
   ],
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://bitindi.org",
   "shortName": "BNIt",
-  "chainId": 4096,
-  "networkId": 4096,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitindi",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bitindi-testnet"
+  "features": []
 } as const satisfies Chain;

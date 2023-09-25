@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scroll",
+  "chainId": 534352,
   "chain": "ETH",
-  "status": "incubating",
+  "name": "Scroll",
   "rpc": [
     "https://scroll.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.scroll.io"
   ],
+  "slug": "scroll",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -15,8 +16,9 @@ export default {
   },
   "infoURL": "https://scroll.io",
   "shortName": "scr",
-  "chainId": 534352,
-  "networkId": 534352,
+  "testnet": false,
+  "status": "incubating",
+  "redFlags": [],
   "explorers": [
     {
       "name": "Scroll Mainnet Block Explorer",
@@ -24,15 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://scroll.io/bridge"
-      }
-    ]
-  },
-  "testnet": false,
-  "slug": "scroll"
+  "features": []
 } as const satisfies Chain;

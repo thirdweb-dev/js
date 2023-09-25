@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Godwoken Testnet v1",
+  "chainId": 71401,
   "chain": "GWT",
+  "name": "Godwoken Testnet v1",
   "rpc": [
     "https://godwoken-testnet-v1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-v1.ckbapp.dev",
     "https://v1.testnet.godwoken.io/rpc"
   ],
+  "slug": "godwoken-testnet-v1",
   "faucets": [
     "https://testnet.bridge.godwoken.io"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://www.nervos.org",
   "shortName": "gw-testnet-v1",
-  "chainId": 71401,
-  "networkId": 71401,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "GWScan Block Explorer",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "godwoken-testnet-v1"
+  "features": []
 } as const satisfies Chain;

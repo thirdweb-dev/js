@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AirDAO Testnet",
+  "chainId": 22040,
   "chain": "ambnet-test",
+  "name": "AirDAO Testnet",
+  "rpc": [
+    "https://airdao-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://network.ambrosus-test.io"
+  ],
+  "slug": "airdao-testnet",
   "icon": {
     "url": "ipfs://QmSxXjvWng3Diz4YwXDV2VqSPgMyzLYBNfkjJcr7rzkxom",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://airdao-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://network.ambrosus-test.io"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Amber",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://testnet.airdao.io",
   "shortName": "airdao-test",
-  "chainId": 22040,
-  "networkId": 22040,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "AirDAO Network Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "airdao-testnet"
+  "features": []
 } as const satisfies Chain;

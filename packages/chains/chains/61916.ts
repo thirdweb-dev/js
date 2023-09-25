@@ -1,13 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DoKEN Super Chain Mainnet",
+  "chainId": 61916,
   "chain": "DoKEN Super Chain",
+  "name": "DoKEN Super Chain Mainnet",
   "rpc": [
     "https://doken-super-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sgrpc.doken.dev",
     "https://nyrpc.doken.dev",
     "https://ukrpc.doken.dev"
   ],
+  "slug": "doken-super-chain",
+  "icon": {
+    "url": "ipfs://bafkreifms4eio6v56oyeemnnu5luq3sc44hptan225lr45itgzu3u372iu",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "DoKEN",
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://doken.dev/",
   "shortName": "DoKEN",
-  "chainId": 61916,
-  "networkId": 61916,
-  "icon": {
-    "url": "ipfs://bafkreifms4eio6v56oyeemnnu5luq3sc44hptan225lr45itgzu3u372iu",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "DSC Scan",
       "url": "https://explore.doken.dev",
-      "icon": {
-        "url": "ipfs://bafkreifms4eio6v56oyeemnnu5luq3sc44hptan225lr45itgzu3u372iu",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "doken-super-chain"
+  "features": []
 } as const satisfies Chain;

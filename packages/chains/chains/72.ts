@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DxChain Testnet",
+  "chainId": 72,
   "chain": "DxChain",
+  "name": "DxChain Testnet",
   "rpc": [
     "https://dxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-http.dxchain.com"
   ],
+  "slug": "dxchain-testnet",
   "faucets": [
     "https://faucet.dxscan.io"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://testnet.dxscan.io/",
   "shortName": "dxc",
-  "chainId": 72,
-  "networkId": 72,
   "testnet": true,
-  "slug": "dxchain-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

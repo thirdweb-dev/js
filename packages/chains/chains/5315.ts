@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Uzmi Network Mainnet",
+  "chainId": 5315,
   "chain": "UZMI",
+  "name": "Uzmi Network Mainnet",
   "rpc": [
     "https://uzmi-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.uzmigames.com.br/"
   ],
+  "slug": "uzmi-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "UZMI",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://uzmigames.com.br/",
   "shortName": "UZMI",
-  "chainId": 5315,
-  "networkId": 5315,
   "testnet": false,
-  "slug": "uzmi-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Polis Mainnet",
+  "chainId": 333999,
   "chain": "Olympus",
+  "name": "Polis Mainnet",
+  "rpc": [
+    "https://polis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.polis.tech"
+  ],
+  "slug": "polis",
   "icon": {
     "url": "ipfs://QmagWrtyApex28H2QeXcs3jJ2F7p2K7eESz3cDbHdQ3pjG",
     "width": 1050,
     "height": 1050,
     "format": "png"
   },
-  "rpc": [
-    "https://polis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.polis.tech"
-  ],
   "faucets": [
     "https://faucet.polis.tech"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://polis.tech",
   "shortName": "olympus",
-  "chainId": 333999,
-  "networkId": 333999,
   "testnet": false,
-  "slug": "polis"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

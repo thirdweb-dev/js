@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tres Mainnet",
+  "chainId": 6066,
   "chain": "TresLeches",
+  "name": "Tres Mainnet",
   "rpc": [
     "https://tres.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tresleches.finance/",
     "https://rpc.treschain.io/"
   ],
+  "slug": "tres",
+  "icon": {
+    "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "TRES",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://treschain.com",
   "shortName": "TRESMAIN",
-  "chainId": 6066,
-  "networkId": 6066,
-  "icon": {
-    "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "treslechesexplorer",
       "url": "https://explorer.tresleches.finance",
-      "icon": {
-        "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "tres"
+  "features": []
 } as const satisfies Chain;

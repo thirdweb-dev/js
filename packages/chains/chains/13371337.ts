@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PepChain Churchill",
+  "chainId": 13371337,
   "chain": "PEP",
+  "name": "PepChain Churchill",
   "rpc": [
     "https://pepchain-churchill.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://churchill-rpc.pepchain.io"
   ],
+  "slug": "pepchain-churchill",
   "faucets": [],
   "nativeCurrency": {
     "name": "PepChain Churchill Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://pepchain.io",
   "shortName": "tpep",
-  "chainId": 13371337,
-  "networkId": 13371337,
   "testnet": false,
-  "slug": "pepchain-churchill"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

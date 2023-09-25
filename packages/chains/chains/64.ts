@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ellaism",
+  "chainId": 64,
   "chain": "ELLA",
+  "name": "Ellaism",
   "rpc": [
     "https://ellaism.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.ellaism.org"
   ],
+  "slug": "ellaism",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ellaism Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://ellaism.org",
   "shortName": "ellaism",
-  "chainId": 64,
-  "networkId": 64,
-  "slip44": 163,
   "testnet": false,
-  "slug": "ellaism"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

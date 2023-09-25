@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DeBank Testnet",
+  "chainId": 2021398,
   "chain": "DeBank",
+  "name": "DeBank Testnet",
   "rpc": [
     "https://debank-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://rpc.testnet.debank.com"
   ],
-  "faucets": [],
+  "slug": "debank-testnet",
   "icon": {
     "url": "ipfs://QmW9pBps8WHRRWmyXhjLZrjZJUe8F48hUu7z98bu2RVsjN",
     "width": 400,
     "height": 400,
     "format": "png"
   },
+  "faucets": [],
   "nativeCurrency": {
     "name": "DeBank USD",
     "symbol": "USD",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://debank.com",
   "shortName": "dbk",
-  "chainId": 2021398,
-  "networkId": 2021398,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "DeBank Chain Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "debank-testnet"
+  "features": []
 } as const satisfies Chain;

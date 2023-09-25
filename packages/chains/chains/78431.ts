@@ -1,16 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bulletin Subnet",
+  "chainId": 78431,
   "chain": "BULLETIN",
+  "name": "Bulletin Subnet",
   "rpc": [
     "https://bulletin-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/bulletin/testnet/rpc"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "bulletin-subnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "BLT",
@@ -19,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.avax.network",
   "shortName": "bulletin",
-  "chainId": 78431,
-  "networkId": 78431,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BULLETIN Explorer",
@@ -28,6 +25,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bulletin-subnet"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

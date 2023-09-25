@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Canxium Mainnet",
+  "chainId": 3003,
   "chain": "CAU",
+  "name": "Canxium Mainnet",
+  "rpc": [
+    "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.canxium.org"
+  ],
+  "slug": "canxium",
   "icon": {
     "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
     "width": 938,
     "height": 938,
     "format": "png"
   },
-  "rpc": [
-    "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.canxium.org"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Canxium",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://canxium.org",
   "shortName": "cau",
-  "chainId": 3003,
-  "networkId": 3003,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "canxium explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "canxium"
+  "features": []
 } as const satisfies Chain;

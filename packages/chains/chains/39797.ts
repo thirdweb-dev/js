@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Energi Mainnet",
+  "chainId": 39797,
   "chain": "NRG",
+  "name": "Energi Mainnet",
   "rpc": [
     "https://energi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodeapi.energi.network"
   ],
+  "slug": "energi",
   "faucets": [],
   "nativeCurrency": {
     "name": "Energi",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://www.energi.world/",
   "shortName": "nrg",
-  "chainId": 39797,
-  "networkId": 39797,
-  "slip44": 39797,
   "testnet": false,
-  "slug": "energi"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mind Smart Chain Mainnet",
+  "chainId": 9996,
   "chain": "MIND",
-  "icon": {
-    "url": "ipfs://QmX2b4CzNyrNgy4ERBEteSS9MsuYNVYeq2sSMMiogGjbFP",
-    "width": 732,
-    "height": 732,
-    "format": "jpg"
-  },
+  "name": "Mind Smart Chain Mainnet",
   "rpc": [
     "https://mind-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-msc.mindchain.info/",
     "https://seednode.mindchain.info",
     "wss://seednode.mindchain.info/ws"
   ],
+  "slug": "mind-smart-chain",
+  "icon": {
+    "url": "ipfs://QmX2b4CzNyrNgy4ERBEteSS9MsuYNVYeq2sSMMiogGjbFP",
+    "width": 732,
+    "height": 732,
+    "format": "jpg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "MIND Coin",
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://mindchain.info",
   "shortName": "MIND",
-  "chainId": 9996,
-  "networkId": 9996,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Mind Chain explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "mind-smart-chain"
+  "features": []
 } as const satisfies Chain;

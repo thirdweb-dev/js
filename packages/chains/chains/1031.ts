@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Proxy Network Testnet",
+  "chainId": 1031,
   "chain": "Proxy Network",
+  "name": "Proxy Network Testnet",
   "rpc": [
     "https://proxy-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://128.199.94.183:8041"
   ],
+  "slug": "proxy-network-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "PRX",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://theproxy.network",
   "shortName": "prx",
-  "chainId": 1031,
-  "networkId": 1031,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "proxy network testnet",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "proxy-network-testnet"
+  "features": []
 } as const satisfies Chain;

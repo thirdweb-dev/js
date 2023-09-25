@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Jouleverse Mainnet",
+  "chainId": 3666,
   "chain": "Jouleverse",
+  "name": "Jouleverse Mainnet",
   "rpc": [
     "https://jouleverse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jnsdao.com:8503"
   ],
+  "slug": "jouleverse",
   "faucets": [],
   "nativeCurrency": {
     "name": "J",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://jnsdao.com",
   "shortName": "jouleverse",
-  "chainId": 3666,
-  "networkId": 3666,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "jscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "jouleverse"
+  "features": []
 } as const satisfies Chain;

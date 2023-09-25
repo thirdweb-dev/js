@@ -1,13 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kava Testnet",
+  "chainId": 2221,
   "chain": "KAVA",
+  "name": "Kava Testnet",
   "rpc": [
     "https://kava-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.testnet.kava.io",
     "https://kava-evm-testnet.rpc.thirdweb.com",
     "wss://wevm.testnet.kava.io"
   ],
+  "slug": "kava-testnet",
+  "icon": {
+    "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
+    "width": 1186,
+    "height": 360,
+    "format": "svg"
+  },
   "faucets": [
     "https://faucet.kava.io"
   ],
@@ -18,27 +26,14 @@ export default {
   },
   "infoURL": "https://www.kava.io",
   "shortName": "tkava",
-  "chainId": 2221,
-  "networkId": 2221,
-  "icon": {
-    "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
-    "width": 1186,
-    "height": 360,
-    "format": "svg"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Kava Testnet Explorer",
       "url": "http://testnet.kavascan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
-        "width": 1186,
-        "height": 360,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kava-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Energy Web Chain",
+  "chainId": 246,
   "chain": "Energy Web Chain",
+  "name": "Energy Web Chain",
   "rpc": [
     "https://energy-web-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.energyweb.org",
     "wss://rpc.energyweb.org/ws"
   ],
+  "slug": "energy-web-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Energy Web Token",
@@ -15,9 +17,8 @@ export default {
   },
   "infoURL": "https://energyweb.org",
   "shortName": "ewt",
-  "chainId": 246,
-  "networkId": 246,
-  "slip44": 246,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -25,6 +26,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "energy-web-chain"
+  "features": []
 } as const satisfies Chain;

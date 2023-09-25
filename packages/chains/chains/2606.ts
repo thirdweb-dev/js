@@ -1,14 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PoCRNet",
-  "title": "Proof of Climate awaReness mainnet",
+  "chainId": 2606,
   "chain": "CRC",
-  "status": "active",
+  "name": "PoCRNet",
   "rpc": [
     "https://pocrnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pocrnet.westeurope.cloudapp.azure.com/http",
     "wss://pocrnet.westeurope.cloudapp.azure.com/ws"
   ],
+  "slug": "pocrnet",
+  "icon": {
+    "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
+    "width": 334,
+    "height": 360,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Climate awaReness Coin",
@@ -17,27 +23,15 @@ export default {
   },
   "infoURL": "https://github.com/ethereum-pocr/pocrnet",
   "shortName": "pocrnet",
-  "chainId": 2606,
-  "networkId": 2606,
-  "icon": {
-    "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
-    "width": 334,
-    "height": 360,
-    "format": "png"
-  },
+  "testnet": false,
+  "status": "active",
+  "redFlags": [],
   "explorers": [
     {
       "name": "Lite Explorer",
       "url": "https://ethereum-pocr.github.io/explorer/pocrnet",
-      "icon": {
-        "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
-        "width": 334,
-        "height": 360,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "pocrnet"
+  "features": []
 } as const satisfies Chain;

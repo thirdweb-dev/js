@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alyx Chain Testnet",
+  "chainId": 135,
   "chain": "Alyx Chain Testnet",
+  "name": "Alyx Chain Testnet",
   "rpc": [
     "https://alyx-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.alyxchain.com"
   ],
+  "slug": "alyx-chain-testnet",
+  "icon": {
+    "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
+    "width": 2481,
+    "height": 2481,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.alyxchain.com"
   ],
@@ -16,8 +24,8 @@ export default {
   },
   "infoURL": "https://www.alyxchain.com",
   "shortName": "AlyxTestnet",
-  "chainId": 135,
-  "networkId": 135,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "alyx testnet scan",
@@ -25,12 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
-    "width": 2481,
-    "height": 2481,
-    "format": "png"
-  },
-  "testnet": true,
-  "slug": "alyx-chain-testnet"
+  "features": []
 } as const satisfies Chain;

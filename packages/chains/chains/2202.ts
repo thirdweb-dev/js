@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Antofy Mainnet",
+  "chainId": 2202,
   "chain": "ABN",
+  "name": "Antofy Mainnet",
+  "rpc": [
+    "https://antofy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.antofy.io"
+  ],
+  "slug": "antofy",
   "icon": {
     "url": "ipfs://QmdTfku81ohnG9ECU1Xswmeumt678cBhwHWuFYZ7i1Qsto",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://antofy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.antofy.io"
-  ],
   "faucets": [
     "https://faucet.antofy.io"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://antofy.io",
   "shortName": "ABNm",
-  "chainId": 2202,
-  "networkId": 2202,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Antofy Mainnet",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "antofy"
+  "features": []
 } as const satisfies Chain;

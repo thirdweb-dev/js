@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Camino C-Chain",
+  "chainId": 500,
   "chain": "CAM",
+  "name": "Camino C-Chain",
   "rpc": [
     "https://camino-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.camino.network/ext/bc/C/rpc"
   ],
+  "slug": "camino-c-chain",
+  "icon": {
+    "url": "ipfs://QmSEoUonisawfCvT3osysuZzbqUEHugtgNraePKWL8PKYa",
+    "width": 768,
+    "height": 768,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Camino",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://camino.network/",
   "shortName": "Camino",
-  "chainId": 500,
-  "networkId": 1000,
-  "icon": {
-    "url": "ipfs://QmSEoUonisawfCvT3osysuZzbqUEHugtgNraePKWL8PKYa",
-    "width": 768,
-    "height": 768,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockexplorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "camino-c-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,18 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Centrifuge",
+  "chainId": 2031,
   "chain": "CFG",
+  "name": "Centrifuge",
   "rpc": [
+    "https://centrifuge.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fullnode.parachain.centrifuge.io"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "centrifuge",
   "faucets": [],
   "nativeCurrency": {
     "name": "Centrifuge",
@@ -21,8 +16,8 @@ export default {
   },
   "infoURL": "https://centrifuge.io",
   "shortName": "cfg",
-  "chainId": 2031,
-  "networkId": 2031,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "subscan",
@@ -30,6 +25,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "centrifuge"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

@@ -1,8 +1,15 @@
-// @ts-check
-import axios from "axios";
 import merge from "deepmerge";
 import fs from "fs/promises";
 import path from "path";
+import { Chain } from "../src/types";
+import { createChain } from "../src/api";
+
+const HOST = "https://api.thirdweb.com";
+const SECRET_KEY = process.env.SECRET_KEY as string;
+
+if (!SECRET_KEY) {
+  throw new Error("SECRET_KEY env var is required");
+}
 
 /** @typedef {import("../src/types").Chain} Chain */
 
@@ -20,11 +27,11 @@ const combineMerge = (target, source) => {
 /**
  * @param {Chain['explorers']} explorers
  */
-function sortExplorers(explorers = []) {
-  let etherscan = null;
-  let blockscout = null;
+function sortExplorers(explorers: Chain["explorers"] = []) {
+  let etherscan: any = null;
+  let blockscout: any = null;
 
-  let restExplorers = [];
+  let restExplorers: any = [];
 
   for (const explorer of explorers) {
     if (explorer.name.includes("etherscan")) {
@@ -36,7 +43,7 @@ function sortExplorers(explorers = []) {
     }
   }
 
-  const returnExplorers = [];
+  const returnExplorers: any = [];
   if (etherscan) {
     returnExplorers.push(etherscan);
   }
@@ -62,8 +69,6 @@ function filterOutErroringValues(values, valueChecker) {
   });
 }
 
-const chainsDir = "./chains";
-
 const chainsJsonUrl = "https://chainid.network/chains.json";
 const iconRoute =
   "https://raw.githubusercontent.com/ethereum-lists/chains/master/_data/icons";
@@ -76,16 +81,17 @@ const overridesDir = path.join(process.cwd(), "./data/overrides");
 const overridesFiles = await fs.readdir(overridesDir);
 for (const file of overridesFiles) {
   // file:// is required for windows builds
-  const override = await import(path.join("file://", overridesDir, file));
+  const override = await import(path.join(overridesDir, file));
   // get file name without extension
   const chainId = parseInt(file.split(".")[0]);
   overrides[chainId] = override.default;
 }
 
+console.log("Downloading...");
 // chains from remote src
-
 /** @type {Chain[]} */
-let chains = (await axios.get(chainsJsonUrl)).data;
+const chainsRes = await fetch(chainsJsonUrl);
+let chains = await chainsRes.json();
 // immediately filter out localhost
 chains = chains.filter((c) => c.chainId !== 1337);
 
@@ -96,9 +102,7 @@ const additionalChainsDir = path.join(process.cwd(), "./data/additional");
 const additionalChainsFiles = await fs.readdir(additionalChainsDir);
 for (const file of additionalChainsFiles) {
   // file:// is required for windows builds
-  const additionalChain = await import(
-    path.join("file://", additionalChainsDir, file)
-  );
+  const additionalChain = await import(path.join(additionalChainsDir, file));
 
   chains = chains.filter((c) => c.chainId !== additionalChain.default.chainId);
   chains.push(additionalChain.default);
@@ -108,15 +112,17 @@ chains = chains.filter(
   (c) => c.status !== "deprecated" || c.chainId === 534353,
 );
 
+console.log("Downloaded: ", chains.length);
+
 /**
  * Sort RPCs in chain
  * @param {Chain} chain
  */
 function sortRPCs(chain) {
-  const thirdwebRPCs = [];
-  const alchemyRPCs = [];
-  const infuraRPCs = [];
-  const otherRPCs = [];
+  const thirdwebRPCs: string[] = [];
+  const alchemyRPCs: string[] = [];
+  const infuraRPCs: string[] = [];
+  const otherRPCs: string[] = [];
 
   chain.rpc.forEach((rpc) => {
     if (rpc.includes("${THIRDWEB_API_KEY}")) {
@@ -142,9 +148,10 @@ async function downloadIcon(icon) {
   if (iconMetaMap.has(icon)) {
     return iconMetaMap.get(icon);
   }
-  const result = await axios.get(`${iconRoute}/${icon}.json`);
-  if (result.status == 200) {
-    const iconMeta = result.data[0];
+  const res = await fetch(`${iconRoute}/${icon}.json`);
+  const result = await res.json();
+  if (res.status == 200) {
+    const iconMeta = result[0];
 
     iconMetaMap.set(icon, iconMeta);
     return iconMeta;
@@ -205,13 +212,7 @@ function findSlug(chain) {
   return slug;
 }
 
-const chainDir = `${chainsDir}`;
-// clean out the chains directory
-await fs.rmdir(chainDir, { recursive: true });
-// make sure the chain directory exists
-await fs.mkdir(chainDir, { recursive: true });
-
-const results = await Promise.all(
+const results: Chain[] = await Promise.all(
   chains.map(async (chain) => {
     if (overrides[chain.chainId]) {
       chain = merge(chain, overrides[chain.chainId], {
@@ -299,151 +300,35 @@ const results = await Promise.all(
     // unique rpcs
     chain.rpc = [...new Set(chain.rpc)];
 
-    // @ts-ignore
-    await fs.writeFile(
-      `${chainDir}/${chain.chainId}.ts`,
-      `import type { Chain } from "../src/types";
-export default ${JSON.stringify(chain, null, 2)} as const satisfies Chain;`,
-    );
-
-    let exportName = slug
-      .split("-")
-      .map((s) => s[0].toUpperCase() + s.slice(1))
-      .join("");
-
-    // if chainName starts with a number, prepend an underscore
-    if (exportName.match(/^[0-9]/)) {
-      exportName = `_${exportName}`;
-    }
-
-    // imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
-
-    // exports.push(
-    //   `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
-    // );
-
-    const key = `c${chain.chainId}`;
-
-    // exportNames.push(key);
-    // exportNameToChain[key] = chain;
-
-    return {
-      imp: `import c${chain.chainId} from "../chains/${chain.chainId}";`,
-      exp: `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
-      chain,
-      key,
-      exportName,
-    };
+    return chain;
   }),
 );
 
-const { imports, exports, exportNames, exportNameToChain } = results.reduce(
-  (acc, result) => {
-    // @ts-ignore
-    acc.imports.push(result.imp);
-    // @ts-ignore
-    acc.exports.push(result.exp);
-    // @ts-ignore
-    acc.exportNames.push(result.key);
-    acc.exportNameToChain[result.key] = result.chain;
-    return acc;
-  },
-  {
-    imports: [],
-    exports: [],
-    exportNames: [],
-    exportNameToChain: {},
-  },
-);
+console.log("Uploading...");
 
-// @ts-ignore
-await fs.writeFile(
-  `./src/index.ts`,
-  `${imports.join("\n")}
-import type { Chain } from "./types";
+let successes = 0;
+let duplicates = 0;
+let errors = 0;
 
-${exports.join("\n")}
-export * from "./types";
-export * from "./utils";
-export const defaultChains = [c1, c5, c8453, c84531, c137, c80001, c42161, c421613, c10, c420, c56, c97, c250, c4002, c43114, c43113, c1337];
-// @ts-expect-error - TODO: fix this later
-export const allChains: Chain[] = [${exportNames.join(", ")}];
-
-type ChainsById = {
-  ${exportNames
-    // @ts-ignore
-    .map((n) => `${exportNameToChain[n].chainId}: typeof ${n}`)
-    .join(",\n")}
-};
-
-type ChainIdsBySlug = {
-  ${exportNames
-    .map(
-      // @ts-ignore
-      (n) => `"${exportNameToChain[n].slug}": ${exportNameToChain[n].chainId}`,
-    )
-    .join(",\n")}
-};
-
-let _chainsById: Record<number, Chain>;
-let _chainIdsBySlug: Record<string, number>;
-
-function getChainsById() {
-  if (_chainsById) {
-    return _chainsById;
+for (const chain of results) {
+  try {
+    const res = await createChain(chain, { host: HOST, secretKey: SECRET_KEY });
+    if (res.error) {
+      if (res.code === "CHAIN_ID_CLASH") {
+        duplicates++;
+      } else {
+        console.log("Error:", res.error, chain.chainId);
+        errors++;
+      }
+    } else {
+      successes++;
+    }
+  } catch (e) {
+    console.log("Error:", e, chain.chainId);
+    errors++;
   }
-  _chainsById = {};
-  allChains.forEach((chain) => {
-    _chainsById[chain.chainId] = chain;
-  });
-  return _chainsById;
 }
 
-export function getChainIdsBySlug() {
-  if (_chainIdsBySlug) {
-    return _chainIdsBySlug;
-  }
-  _chainIdsBySlug = {};
-  allChains.forEach((chain) => {
-    _chainIdsBySlug[chain.slug] = chain.chainId;
-  });
-  return _chainIdsBySlug;
-}
-
-export type ChainSlug = keyof ChainIdsBySlug;
-export type ChainId = keyof ChainsById;
-
-function isValidChainId(chainId: number): chainId is ChainId {
-  const chainsById = getChainsById();
-  return chainId in chainsById;
-}
-
-function isValidChainSlug(slug: string): slug is ChainSlug {
-  const chainIdsBySlug = getChainIdsBySlug();
-  return slug in chainIdsBySlug;
-}
-
-export function getChainByChainId<TChainId extends ChainId>(
-  chainId: TChainId | (number & {}),
-) {
-  if (isValidChainId(chainId)) {
-    const chainsById = getChainsById();
-    return chainsById[chainId] as ChainsById[TChainId];
-  }
-  throw new Error(\`Chain with chainId "\${chainId}" not found\`);
-}
-
-export function getChainBySlug<TSlug extends ChainSlug>(
-  slug: TSlug | (string & {}),
-) {
-  if (isValidChainSlug(slug)) {
-    const chainIdsBySlug = getChainIdsBySlug();
-    const chainsById = getChainsById();
-    return chainsById[
-      chainIdsBySlug[slug]
-    ] as ChainsById[ChainIdsBySlug[TSlug]];
-  }
-  throw new Error(\`Chain with slug "\${slug}" not found\`);
-}
-`,
-);
+console.log("Successes:", successes);
+console.log("Duplicates:", duplicates);
+console.log("Errors:", errors);

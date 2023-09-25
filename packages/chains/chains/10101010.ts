@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Soverun Mainnet",
+  "chainId": 10101010,
   "chain": "SVRN",
+  "name": "Soverun Mainnet",
+  "rpc": [
+    "https://soverun.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.soverun.com"
+  ],
+  "slug": "soverun",
   "icon": {
     "url": "ipfs://QmTYazUzgY9Nn2mCjWwFUSLy3dG6i2PvALpwCNQvx1zXyi",
     "width": 1154,
     "height": 1154,
     "format": "png"
   },
-  "rpc": [
-    "https://soverun.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.soverun.com"
-  ],
   "faucets": [
     "https://faucet.soverun.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://soverun.com",
   "shortName": "SVRNm",
-  "chainId": 10101010,
-  "networkId": 10101010,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Soverun",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "soverun"
+  "features": []
 } as const satisfies Chain;

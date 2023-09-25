@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Consta Testnet",
+  "chainId": 371,
   "chain": "tCNT",
+  "name": "Consta Testnet",
   "rpc": [
     "https://consta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.theconsta.com"
   ],
+  "slug": "consta-testnet",
+  "icon": {
+    "url": "ipfs://QmfQ1yae6uvXgBSwnwJM4Mtp8ctH66tM6mB1Hsgu4XvsC9",
+    "width": 2000,
+    "height": 2000,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "tCNT",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "http://theconsta.com",
   "shortName": "tCNT",
-  "chainId": 371,
-  "networkId": 371,
-  "icon": {
-    "url": "ipfs://QmfQ1yae6uvXgBSwnwJM4Mtp8ctH66tM6mB1Hsgu4XvsC9",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "consta-testnet"
+  "features": []
 } as const satisfies Chain;

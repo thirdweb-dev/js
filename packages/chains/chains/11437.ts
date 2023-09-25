@@ -1,14 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shyft Testnet",
+  "chainId": 11437,
   "chain": "SHYFTT",
+  "name": "Shyft Testnet",
+  "rpc": [],
+  "slug": "shyft-testnet",
   "icon": {
     "url": "ipfs://QmUkFZC2ZmoYPTKf7AHdjwRPZoV2h1MCuHaGM4iu8SNFpi",
     "width": 400,
     "height": 400,
     "format": "svg"
   },
-  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Shyft Test Token",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://shyft.network",
   "shortName": "shyftt",
-  "chainId": 11437,
-  "networkId": 11437,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Shyft Testnet BX",
@@ -26,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "shyft-testnet"
+  "features": []
 } as const satisfies Chain;

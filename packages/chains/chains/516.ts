@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gear Zero Network Mainnet",
+  "chainId": 516,
   "chain": "GearZero",
+  "name": "Gear Zero Network Mainnet",
   "rpc": [
     "https://gear-zero-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gzn.linksme.info"
   ],
+  "slug": "gear-zero-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Gear Zero Network Native Token",
@@ -14,10 +16,8 @@ export default {
   },
   "infoURL": "https://token.gearzero.ca/mainnet",
   "shortName": "gz-mainnet",
-  "chainId": 516,
-  "networkId": 516,
-  "slip44": 516,
-  "explorers": [],
   "testnet": false,
-  "slug": "gear-zero-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Plian Mainnet Subchain 1",
+  "chainId": 8007736,
   "chain": "Plian",
+  "name": "Plian Mainnet Subchain 1",
   "rpc": [
     "https://plian-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/child_0"
   ],
+  "slug": "plian-subchain-1",
   "faucets": [],
   "nativeCurrency": {
     "name": "Plian Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://plian.org",
   "shortName": "plian-mainnet-l2",
-  "chainId": 8007736,
-  "networkId": 8007736,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "piscan",
@@ -23,10 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "chain": "eip155-2099156",
-    "type": "L2"
-  },
-  "testnet": false,
-  "slug": "plian-subchain-1"
+  "features": []
 } as const satisfies Chain;

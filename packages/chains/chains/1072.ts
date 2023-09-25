@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ShimmerEVM Testnet",
-  "title": "ShimmerEVM Testnet",
+  "chainId": 1072,
   "chain": "ShimmerEVM",
+  "name": "ShimmerEVM Testnet",
+  "rpc": [
+    "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://json-rpc.evm.testnet.shimmer.network"
+  ],
+  "slug": "shimmerevm-testnet",
   "icon": {
     "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
     "width": 720,
     "height": 720,
     "format": "png"
   },
-  "rpc": [
-    "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://json-rpc.evm.testnet.shimmer.network"
-  ],
   "faucets": [
     "https://evm-toolkit.evm.testnet.shimmer.network",
     "https://evm-faucet.testnet.shimmer.network"
@@ -24,8 +25,8 @@ export default {
   },
   "infoURL": "https://shimmer.network",
   "shortName": "shimmerevm-testnet",
-  "chainId": 1072,
-  "networkId": 1072,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "explorer",
@@ -33,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "shimmerevm-testnet"
+  "features": []
 } as const satisfies Chain;

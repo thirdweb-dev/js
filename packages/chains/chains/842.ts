@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taraxa Testnet",
+  "chainId": 842,
   "chain": "Tara",
+  "name": "Taraxa Testnet",
+  "rpc": [
+    "https://taraxa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.taraxa.io/"
+  ],
+  "slug": "taraxa-testnet",
   "icon": {
     "url": "ipfs://QmQhdktNyBeXmCaVuQpi1B4yXheSUKrJA17L4wpECKzG5D",
     "width": 310,
     "height": 310,
     "format": "png"
   },
-  "rpc": [
-    "https://taraxa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.taraxa.io/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Tara",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://taraxa.io",
   "shortName": "taratest",
-  "chainId": 842,
-  "networkId": 842,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Taraxa Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "taraxa-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OKBChain Testnet",
+  "chainId": 195,
   "chain": "okbchain",
+  "name": "OKBChain Testnet",
   "rpc": [
     "https://okbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://okbtestrpc.okbchain.org"
   ],
+  "slug": "okbchain-testnet",
   "faucets": [
     "https://www.oklink.com/okbc-test"
   ],
@@ -14,11 +16,11 @@ export default {
     "symbol": "OKB",
     "decimals": 18
   },
-  "features": [],
   "infoURL": "https://www.okx.com/okbc/docs/dev/quick-start/introduction/introduction-to-okbchain",
   "shortName": "tokb",
-  "chainId": 195,
-  "networkId": 195,
+  "testnet": true,
+  "status": "active",
+  "redFlags": [],
   "explorers": [
     {
       "name": "OKLink",
@@ -26,7 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "status": "active",
-  "testnet": true,
-  "slug": "okbchain-testnet"
+  "features": []
 } as const satisfies Chain;

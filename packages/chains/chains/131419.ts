@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ETND Chain Mainnets",
+  "chainId": 131419,
   "chain": "ETND",
+  "name": "ETND Chain Mainnets",
   "rpc": [
     "https://etnd-chain-s.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.node1.etnd.pro/"
   ],
+  "slug": "etnd-chain-s",
+  "icon": {
+    "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "ETND",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://www.etnd.pro",
   "shortName": "ETND",
-  "chainId": 131419,
-  "networkId": 131419,
-  "icon": {
-    "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "etndscan",
       "url": "https://scan.etnd.pro",
-      "icon": {
-        "url": "ipfs://Qmd26eRJxPb1jJg5Q4mC2M4kD9Jrs5vmcnr5LczHFMGwSD",
-        "width": 128,
-        "height": 128,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "etnd-chain-s"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MARO Blockchain Mainnet",
+  "chainId": 8848,
   "chain": "MARO Blockchain",
+  "name": "MARO Blockchain Mainnet",
+  "rpc": [
+    "https://maro-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.ma.ro"
+  ],
+  "slug": "maro-blockchain",
   "icon": {
     "url": "ipfs://bafkreig47k53aipns6nu3u5fxpysp7mogzk6zyvatgpbam7yut3yvtuefa",
     "width": 160,
     "height": 160,
     "format": "png"
   },
-  "rpc": [
-    "https://maro-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet.ma.ro"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "MARO",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://ma.ro/",
   "shortName": "maro",
-  "chainId": 8848,
-  "networkId": 8848,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "MARO Scan",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "maro-blockchain"
+  "features": []
 } as const satisfies Chain;

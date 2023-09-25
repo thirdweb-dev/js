@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Evmos",
+  "chainId": 9001,
   "chain": "Evmos",
+  "name": "Evmos",
   "rpc": [
     "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmos-evm.publicnode.com",
     "wss://evmos-evm.publicnode.com"
   ],
+  "slug": "evmos",
+  "icon": {
+    "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Evmos",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://evmos.org",
   "shortName": "evmos",
-  "chainId": 9001,
-  "networkId": 9001,
-  "icon": {
-    "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Evmos Explorer (Escan)",
       "url": "https://escan.live",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "evmos"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SecureChain Testnet",
+  "chainId": 3434,
   "chain": "SCAI",
+  "name": "SecureChain Testnet",
+  "rpc": [
+    "https://securechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.securechain.ai"
+  ],
+  "slug": "securechain-testnet",
   "icon": {
     "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
     "width": 150,
     "height": 150,
     "format": "png"
   },
-  "rpc": [
-    "https://securechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.securechain.ai"
-  ],
   "faucets": [
     "https://faucet.securechain.ai"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://securechain.ai",
   "shortName": "SCAIt",
-  "chainId": 3434,
-  "networkId": 3434,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "SecureChain",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "securechain-testnet"
+  "features": []
 } as const satisfies Chain;

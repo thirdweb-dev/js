@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SmartMesh Mainnet",
+  "chainId": 20180430,
   "chain": "Spectrum",
+  "name": "SmartMesh Mainnet",
   "rpc": [
     "https://smartmesh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonapi1.smartmesh.cn"
   ],
+  "slug": "smartmesh",
   "faucets": [],
   "nativeCurrency": {
     "name": "SmartMesh Native Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://smartmesh.io",
   "shortName": "spectrum",
-  "chainId": 20180430,
-  "networkId": 1,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "spectrum",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "smartmesh"
+  "features": []
 } as const satisfies Chain;

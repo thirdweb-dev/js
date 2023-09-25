@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Blockchain Genesis Mainnet",
+  "chainId": 10101,
   "chain": "GEN",
+  "name": "Blockchain Genesis Mainnet",
   "rpc": [
     "https://blockchain-genesis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eu.mainnet.xixoio.com",
     "https://us.mainnet.xixoio.com",
     "https://asia.mainnet.xixoio.com"
   ],
+  "slug": "blockchain-genesis",
   "faucets": [],
   "nativeCurrency": {
     "name": "GEN",
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.xixoio.com/",
   "shortName": "GEN",
-  "chainId": 10101,
-  "networkId": 10101,
   "testnet": false,
-  "slug": "blockchain-genesis"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

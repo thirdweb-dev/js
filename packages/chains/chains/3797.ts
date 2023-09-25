@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AlveyChain Mainnet",
+  "chainId": 3797,
   "chain": "ALV",
+  "name": "AlveyChain Mainnet",
+  "rpc": [
+    "https://alveychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.alveychain.com/rpc",
+    "https://rpc2.alvey.io/rpc"
+  ],
+  "slug": "alveychain",
   "icon": {
     "url": "ipfs://QmSwczpPLBG6ob1a8WLoujthiCPzwEyJNp7WdKRi52qbWX",
     "width": 310,
     "height": 310,
     "format": "png"
   },
-  "rpc": [
-    "https://alveychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.alveychain.com/rpc",
-    "https://rpc2.alvey.io/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "AlveyCoin",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://alveyscan.com/rpc",
   "shortName": "alv",
-  "chainId": 3797,
-  "networkId": 3797,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "AlveyScan",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "alveychain"
+  "features": []
 } as const satisfies Chain;

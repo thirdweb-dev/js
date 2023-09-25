@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DOS Chain",
+  "chainId": 7979,
   "chain": "DOS",
+  "name": "DOS Chain",
   "rpc": [
     "https://dos-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://main.doschain.com"
   ],
+  "slug": "dos-chain",
+  "icon": {
+    "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "DOS",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://doschain.io",
   "shortName": "dos",
-  "chainId": 7979,
-  "networkId": 7979,
-  "icon": {
-    "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "DOScan",
       "url": "https://doscan.io",
-      "icon": {
-        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "dos-chain"
+  "features": []
 } as const satisfies Chain;

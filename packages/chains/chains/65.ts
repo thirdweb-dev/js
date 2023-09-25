@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OKExChain Testnet",
+  "chainId": 65,
   "chain": "okexchain",
+  "name": "OKExChain Testnet",
   "rpc": [
     "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchaintestrpc.okex.org"
   ],
+  "slug": "okexchain-testnet",
   "faucets": [
     "https://www.okex.com/drawdex"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.okex.com/okexchain",
   "shortName": "tokt",
-  "chainId": 65,
-  "networkId": 65,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OKLink",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "okexchain-testnet"
+  "features": []
 } as const satisfies Chain;

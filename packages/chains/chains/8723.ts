@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TOOL Global Mainnet",
+  "chainId": 8723,
   "chain": "OLO",
+  "name": "TOOL Global Mainnet",
   "rpc": [
     "https://tool-global.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-web3.wolot.io"
   ],
+  "slug": "tool-global",
   "faucets": [],
   "nativeCurrency": {
     "name": "TOOL Global",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://ibdt.io",
   "shortName": "olo",
-  "chainId": 8723,
-  "networkId": 8723,
-  "slip44": 479,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OLO Block Explorer",
@@ -24,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "tool-global"
+  "features": []
 } as const satisfies Chain;

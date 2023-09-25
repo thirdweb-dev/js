@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ShibaChain",
+  "chainId": 27,
   "chain": "SHIB",
+  "name": "ShibaChain",
   "rpc": [
     "https://shibachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shibchain.org"
   ],
+  "slug": "shibachain",
   "faucets": [],
   "nativeCurrency": {
     "name": "SHIBA INU COIN",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://shibchain.org",
   "shortName": "shib",
-  "chainId": 27,
-  "networkId": 27,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Shiba Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "shibachain"
+  "features": []
 } as const satisfies Chain;

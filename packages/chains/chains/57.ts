@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Syscoin Mainnet",
+  "chainId": 57,
   "chain": "SYS",
+  "name": "Syscoin Mainnet",
   "rpc": [
     "https://syscoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.syscoin.org",
@@ -11,6 +12,7 @@ export default {
     "https://syscoin-evm.publicnode.com",
     "wss://syscoin-evm.publicnode.com"
   ],
+  "slug": "syscoin",
   "faucets": [
     "https://faucet.syscoin.org"
   ],
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://www.syscoin.org",
   "shortName": "sys",
-  "chainId": 57,
-  "networkId": 57,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Syscoin Block Explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "syscoin"
+  "features": []
 } as const satisfies Chain;

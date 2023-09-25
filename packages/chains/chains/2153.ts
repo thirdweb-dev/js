@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Findora Testnet",
+  "chainId": 2153,
   "chain": "Testnet-anvil",
+  "name": "Findora Testnet",
   "rpc": [
     "https://findora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-testnet.prod.findora.org:8545/"
   ],
+  "slug": "findora-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "FRA",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://findora.org/",
   "shortName": "findora-testnet",
-  "chainId": 2153,
-  "networkId": 2153,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "findorascan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "findora-testnet"
+  "features": []
 } as const satisfies Chain;

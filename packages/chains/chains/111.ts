@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EtherLite Chain",
+  "chainId": 111,
   "chain": "ETL",
+  "name": "EtherLite Chain",
   "rpc": [
     "https://etherlite-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etherlite.org"
   ],
+  "slug": "etherlite-chain",
+  "icon": {
+    "url": "ipfs://QmbNAai1KnBnw4SPQKgrf6vBddifPCQTg2PePry1bmmZYy",
+    "width": 88,
+    "height": 88,
+    "format": "png"
+  },
   "faucets": [
     "https://etherlite.org/faucets"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://etherlite.org",
   "shortName": "ETL",
-  "chainId": 111,
-  "networkId": 111,
-  "icon": {
-    "url": "ipfs://QmbNAai1KnBnw4SPQKgrf6vBddifPCQTg2PePry1bmmZYy",
-    "width": 88,
-    "height": 88,
-    "format": "png"
-  },
   "testnet": false,
-  "slug": "etherlite-chain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

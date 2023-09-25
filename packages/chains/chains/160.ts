@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Armonia Eva Chain Mainnet",
+  "chainId": 160,
   "chain": "Eva",
+  "name": "Armonia Eva Chain Mainnet",
   "rpc": [
     "https://armonia-eva-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evascan.io/api/eth-rpc/"
   ],
+  "slug": "armonia-eva-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Armonia Multichain Native Token",
@@ -14,9 +16,9 @@ export default {
   },
   "infoURL": "https://amax.network",
   "shortName": "eva",
-  "chainId": 160,
-  "networkId": 160,
-  "status": "incubating",
   "testnet": false,
-  "slug": "armonia-eva-chain"
+  "status": "incubating",
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

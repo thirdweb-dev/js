@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Japan Open Chain Testnet",
+  "chainId": 10081,
   "chain": "JOCT",
+  "name": "Japan Open Chain Testnet",
   "rpc": [
     "https://japan-open-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.testnet.japanopenchain.org:8545",
     "https://rpc-2.testnet.japanopenchain.org:8545"
   ],
+  "slug": "japan-open-chain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Japan Open Chain Testnet Token",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://www.japanopenchain.org/",
   "shortName": "joct",
-  "chainId": 10081,
-  "networkId": 10081,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Testnet Block Explorer",
@@ -24,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "japan-open-chain-testnet"
+  "features": []
 } as const satisfies Chain;

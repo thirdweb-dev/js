@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dubxcoin network",
+  "chainId": 3269,
   "chain": "DUBX",
+  "name": "Dubxcoin network",
   "rpc": [
     "https://dubxcoin-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcmain.arabianchain.org"
   ],
+  "slug": "dubxcoin-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Dubxcoin mainnet",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://arabianchain.org",
   "shortName": "dubx",
-  "chainId": 3269,
-  "networkId": 3269,
   "testnet": false,
-  "slug": "dubxcoin-network"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

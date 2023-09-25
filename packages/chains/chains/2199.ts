@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Moonsama Network",
+  "chainId": 2199,
   "chain": "MSN",
+  "name": "Moonsama Network",
   "rpc": [
     "https://moonsama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.moonsama.com",
     "wss://rpc.moonsama.com/ws"
   ],
+  "slug": "moonsama-network",
+  "icon": {
+    "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
+    "width": 468,
+    "height": 468,
+    "format": "png"
+  },
   "faucets": [
     "https://multiverse.moonsama.com/faucet"
   ],
@@ -17,28 +25,14 @@ export default {
   },
   "infoURL": "https://moonsama.com",
   "shortName": "msn",
-  "chainId": 2199,
-  "networkId": 2199,
-  "slip44": 2199,
-  "icon": {
-    "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
-    "width": 468,
-    "height": 468,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
       "url": "https://explorer.moonsama.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "moonsama-network"
+  "features": []
 } as const satisfies Chain;

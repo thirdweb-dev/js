@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PolySmartChain",
+  "chainId": 6999,
   "chain": "PSC",
+  "name": "PolySmartChain",
   "rpc": [
     "https://polysmartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed0.polysmartchain.com/",
     "https://seed1.polysmartchain.com/",
     "https://seed2.polysmartchain.com/"
   ],
+  "slug": "polysmartchain",
   "faucets": [],
   "nativeCurrency": {
     "name": "PSC",
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://www.polysmartchain.com/",
   "shortName": "psc",
-  "chainId": 6999,
-  "networkId": 6999,
   "testnet": false,
-  "slug": "polysmartchain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Excoincial Chain Volta-Testnet",
+  "chainId": 27082017,
   "chain": "TEXL",
+  "name": "Excoincial Chain Volta-Testnet",
+  "rpc": [
+    "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.exlscan.com"
+  ],
+  "slug": "excoincial-chain-volta-testnet",
   "icon": {
     "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.exlscan.com"
-  ],
   "faucets": [
     "https://faucet.exlscan.com"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "",
   "shortName": "exlvolta",
-  "chainId": 27082017,
-  "networkId": 27082017,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "exlscan",
       "url": "https://testnet-explorer.exlscan.com",
-      "icon": {
-        "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "excoincial-chain-volta-testnet"
+  "features": []
 } as const satisfies Chain;

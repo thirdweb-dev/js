@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aurora Testnet",
+  "chainId": 1313161555,
   "chain": "NEAR",
+  "name": "Aurora Testnet",
   "rpc": [
     "https://aurora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.aurora.dev/"
   ],
+  "slug": "aurora-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://aurora.dev",
   "shortName": "aurora-testnet",
-  "chainId": 1313161555,
-  "networkId": 1313161555,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "aurorascan.dev",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "aurora-testnet"
+  "features": []
 } as const satisfies Chain;

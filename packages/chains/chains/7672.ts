@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "The Root Network - Porcini Testnet",
+  "chainId": 7672,
   "chain": "TRN",
+  "name": "The Root Network - Porcini Testnet",
   "rpc": [
     "https://the-root-network-porcini-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://porcini.rootnet.app/archive",
     "wss://porcini.rootnet.app/archive/ws"
   ],
+  "slug": "the-root-network-porcini-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "XRP",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://www.futureverse.com/technology/root",
   "shortName": "trn-porcini",
-  "chainId": 7672,
-  "networkId": 7672,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "rootnet",
@@ -24,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "the-root-network-porcini-testnet"
+  "features": []
 } as const satisfies Chain;

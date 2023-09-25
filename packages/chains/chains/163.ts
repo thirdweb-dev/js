@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lightstreams Mainnet",
+  "chainId": 163,
   "chain": "PHT",
+  "name": "Lightstreams Mainnet",
   "rpc": [
     "https://lightstreams.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.mainnet.lightstreams.io"
   ],
+  "slug": "lightstreams",
   "faucets": [],
   "nativeCurrency": {
     "name": "Lightstreams PHT",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://explorer.lightstreams.io",
   "shortName": "pht",
-  "chainId": 163,
-  "networkId": 163,
   "testnet": false,
-  "slug": "lightstreams"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

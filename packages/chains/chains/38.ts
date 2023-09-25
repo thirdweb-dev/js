@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Valorbit",
+  "chainId": 38,
   "chain": "VAL",
+  "name": "Valorbit",
   "rpc": [
     "https://valorbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.valorbit.com/v2"
   ],
+  "slug": "valorbit",
   "faucets": [],
   "nativeCurrency": {
     "name": "Valorbit",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://valorbit.com",
   "shortName": "val",
-  "chainId": 38,
-  "networkId": 38,
-  "slip44": 538,
   "testnet": false,
-  "slug": "valorbit"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

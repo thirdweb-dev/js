@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mantis Testnet (Hexapod)",
+  "chainId": 96970,
   "chain": "Mantis",
-  "icon": {
-    "url": "ipfs://Qma8dDhxSSVUyzV8Pu5bo252WaZEEikYFndRh7LVktvQEy",
-    "width": 512,
-    "height": 330,
-    "format": "png"
-  },
+  "name": "Mantis Testnet (Hexapod)",
   "rpc": [
     "https://mantis-testnet-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mantis-rpc.switch.ch",
     "https://mantis-rpc.kore-technologies.ch",
     "https://mantis-rpc.phoenix-systems.io"
   ],
+  "slug": "mantis-testnet-hexapod",
+  "icon": {
+    "url": "ipfs://Qma8dDhxSSVUyzV8Pu5bo252WaZEEikYFndRh7LVktvQEy",
+    "width": 512,
+    "height": 330,
+    "format": "png"
+  },
   "faucets": [
     "https://mantis.switch.ch/faucet",
     "https://mantis.kore-technologies.ch/faucet",
@@ -27,21 +29,14 @@ export default {
   },
   "infoURL": "https://hexapod.network",
   "shortName": "mantis",
-  "chainId": 96970,
-  "networkId": 96970,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Mantis Blockscout",
       "url": "https://blockscout.mantis.hexapod.network",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "mantis-testnet-hexapod"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Condor Test Network",
+  "chainId": 188881,
   "chain": "CONDOR",
+  "name": "Condor Test Network",
+  "rpc": [
+    "https://condor-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.condor.systems/rpc"
+  ],
+  "slug": "condor-test-network",
   "icon": {
     "url": "ipfs://QmPRDuEJSTqp2cDUvWCp71Wns6XV8nvdeAVKWH6srpk4xM",
     "width": 752,
     "height": 752,
     "format": "png"
   },
-  "rpc": [
-    "https://condor-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.condor.systems/rpc"
-  ],
   "faucets": [
     "https://faucet.condor.systems"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://condor.systems",
   "shortName": "condor",
-  "chainId": 188881,
-  "networkId": 188881,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "CondorScan",
@@ -31,6 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "condor-test-network"
+  "features": []
 } as const satisfies Chain;

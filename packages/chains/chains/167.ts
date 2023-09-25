@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Atoshi Testnet",
+  "chainId": 167,
   "chain": "ATOSHI",
+  "name": "Atoshi Testnet",
+  "rpc": [
+    "https://atoshi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node.atoshi.io/"
+  ],
+  "slug": "atoshi-testnet",
   "icon": {
     "url": "ipfs://QmfFK6B4MFLrpSS46aLf7hjpt28poHFeTGEKEuH248Tbyj",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "rpc": [
-    "https://atoshi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.atoshi.io/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "ATOSHI",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://atoshi.org",
   "shortName": "atoshi",
-  "chainId": 167,
-  "networkId": 167,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "atoshiscan",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "atoshi-testnet"
+  "features": []
 } as const satisfies Chain;

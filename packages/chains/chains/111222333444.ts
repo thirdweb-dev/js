@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Alphabet Mainnet",
+  "chainId": 111222333444,
   "chain": "Alphabet Network",
-  "icon": {
-    "url": "ipfs://QmfTeudwVJcu7jzySBcpD9H5ZVK66nPJKRnicxend1bxfq",
-    "width": 500,
-    "height": 500,
-    "format": "svg"
-  },
+  "name": "Alphabet Mainnet",
   "rpc": [
     "https://alphabet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://londonpublic.alphabetnetwork.org",
@@ -15,6 +10,13 @@ export default {
     "https://main-rpc.com",
     "wss://main-rpc.com/ws/"
   ],
+  "slug": "alphabet",
+  "icon": {
+    "url": "ipfs://QmfTeudwVJcu7jzySBcpD9H5ZVK66nPJKRnicxend1bxfq",
+    "width": 500,
+    "height": 500,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "ALT",
@@ -23,8 +25,8 @@ export default {
   },
   "infoURL": "https://alphabetnetwork.org",
   "shortName": "alphabet",
-  "chainId": 111222333444,
-  "networkId": 111222333444,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Alphabet Explorer",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "alphabet"
+  "features": []
 } as const satisfies Chain;

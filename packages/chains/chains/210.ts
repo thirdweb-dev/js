@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitnet",
+  "chainId": 210,
   "chain": "BTN",
+  "name": "Bitnet",
+  "rpc": [
+    "https://bitnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.bitnet.money",
+    "https://rpc.btnscan.com"
+  ],
+  "slug": "bitnet",
   "icon": {
     "url": "ipfs://QmS9h3nFiCzaBLnBNw8Wot4U7vvEVK45EQfi8nxH4nvrmz",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://bitnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.bitnet.money",
-    "https://rpc.btnscan.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Bitnet",
@@ -21,8 +23,8 @@ export default {
   },
   "infoURL": "https://bitnet.money",
   "shortName": "BTN",
-  "chainId": 210,
-  "networkId": 210,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bitnet Explorer",
@@ -30,6 +32,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bitnet"
+  "features": []
 } as const satisfies Chain;

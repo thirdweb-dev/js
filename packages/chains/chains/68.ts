@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SoterOne Mainnet",
+  "chainId": 68,
   "chain": "SOTER",
+  "name": "SoterOne Mainnet",
   "rpc": [
     "https://soterone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.soter.one"
   ],
+  "slug": "soterone",
   "faucets": [],
   "nativeCurrency": {
     "name": "SoterOne Mainnet Ether",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://www.soterone.com",
   "shortName": "SO1",
-  "chainId": 68,
-  "networkId": 68,
   "testnet": false,
-  "slug": "soterone"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

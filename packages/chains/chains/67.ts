@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DBChain Testnet",
+  "chainId": 67,
   "chain": "DBM",
+  "name": "DBChain Testnet",
   "rpc": [
     "https://dbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://test-rpc.dbmbp.com"
   ],
+  "slug": "dbchain-testnet",
   "faucets": [],
   "nativeCurrency": {
     "name": "DBChain Testnet",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "http://test.dbmbp.com",
   "shortName": "dbm",
-  "chainId": 67,
-  "networkId": 67,
   "testnet": true,
-  "slug": "dbchain-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

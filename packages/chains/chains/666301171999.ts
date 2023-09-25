@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PDC Mainnet",
+  "chainId": 666301171999,
   "chain": "IPDC",
+  "name": "PDC Mainnet",
   "rpc": [
     "https://pdc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.ipdc.io/"
   ],
+  "slug": "pdc",
   "faucets": [],
   "nativeCurrency": {
     "name": "PDC",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://ipdc.io",
   "shortName": "ipdc",
-  "chainId": 666301171999,
-  "networkId": 666301171999,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ipdcscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "pdc"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metal C-Chain",
+  "chainId": 381931,
   "chain": "Metal",
+  "name": "Metal C-Chain",
   "rpc": [
     "https://metal-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metalblockchain.org/ext/bc/C/rpc"
   ],
+  "slug": "metal-c-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "Metal",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://www.metalblockchain.org/",
   "shortName": "metal",
-  "chainId": 381931,
-  "networkId": 381931,
-  "slip44": 9005,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "metalscan",
@@ -24,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "metal-c-chain"
+  "features": []
 } as const satisfies Chain;

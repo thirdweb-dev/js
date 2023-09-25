@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nebula Staging",
+  "chainId": 503129905,
   "chain": "staging-faint-slimy-achird",
+  "name": "Nebula Staging",
   "rpc": [
     "https://nebula-staging.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
     "wss://staging-v3.skalenodes.com/v1/ws/staging-faint-slimy-achird"
   ],
+  "slug": "nebula-staging",
   "faucets": [],
   "nativeCurrency": {
     "name": "sFUEL",
@@ -15,21 +17,14 @@ export default {
   },
   "infoURL": "https://nebulachain.io/",
   "shortName": "nebula-staging",
-  "chainId": 503129905,
-  "networkId": 503129905,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "nebula",
       "url": "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com",
-      "icon": {
-        "url": "ipfs://QmfQkfmQuoUUUKwF1yCcrPEzFcWLaqNyiSv5YMcSj6zs74",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "nebula-staging"
+  "features": []
 } as const satisfies Chain;

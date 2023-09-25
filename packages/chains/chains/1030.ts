@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Conflux eSpace",
+  "chainId": 1030,
   "chain": "Conflux",
+  "name": "Conflux eSpace",
   "rpc": [
     "https://conflux-espace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.confluxrpc.com"
   ],
+  "slug": "conflux-espace",
+  "icon": {
+    "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
+    "width": 460,
+    "height": 576,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "CFX",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://confluxnetwork.org",
   "shortName": "cfx",
-  "chainId": 1030,
-  "networkId": 1030,
-  "icon": {
-    "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
-    "width": 460,
-    "height": 576,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Conflux Scan",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "conflux-espace"
+  "features": []
 } as const satisfies Chain;

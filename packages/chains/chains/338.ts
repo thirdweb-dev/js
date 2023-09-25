@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cronos Testnet",
+  "chainId": 338,
   "chain": "CRO",
+  "name": "Cronos Testnet",
   "rpc": [
     "https://cronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-t3.cronos.org"
   ],
+  "slug": "cronos-testnet",
   "faucets": [
     "https://cronos.org/faucet"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://cronos.org",
   "shortName": "tcro",
-  "chainId": 338,
-  "networkId": 338,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Cronos Testnet Explorer",
@@ -25,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "cronos-testnet"
+  "features": []
 } as const satisfies Chain;

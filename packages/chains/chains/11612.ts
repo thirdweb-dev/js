@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Sardis Testnet",
+  "chainId": 11612,
   "chain": "SRDX",
+  "name": "Sardis Testnet",
+  "rpc": [
+    "https://sardis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.sardisnetwork.com"
+  ],
+  "slug": "sardis-testnet",
   "icon": {
     "url": "ipfs://QmdR9QJjQEh1mBnf2WbJfehverxiP5RDPWMtEECbDP2rc3",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://sardis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.sardisnetwork.com"
-  ],
   "faucets": [
     "https://faucet.sardisnetwork.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://mysardis.com",
   "shortName": "SRDXt",
-  "chainId": 11612,
-  "networkId": 11612,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Sardis",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "sardis-testnet"
+  "features": []
 } as const satisfies Chain;

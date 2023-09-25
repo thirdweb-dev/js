@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EZChain C-Chain Mainnet",
+  "chainId": 2612,
   "chain": "EZC",
+  "name": "EZChain C-Chain Mainnet",
   "rpc": [
     "https://ezchain-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ezchain.com/ext/bc/C/rpc"
   ],
+  "slug": "ezchain-c-chain",
+  "icon": {
+    "url": "ipfs://QmPKJbYCFjGmY9X2cA4b9YQjWYHQncmKnFtKyQh9rHkFTb",
+    "width": 146,
+    "height": 48,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "EZChain",
@@ -14,14 +22,8 @@ export default {
   },
   "infoURL": "https://ezchain.com",
   "shortName": "EZChain",
-  "chainId": 2612,
-  "networkId": 2612,
-  "icon": {
-    "url": "ipfs://QmPKJbYCFjGmY9X2cA4b9YQjWYHQncmKnFtKyQh9rHkFTb",
-    "width": 146,
-    "height": 48,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "ezchain",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ezchain-c-chain"
+  "features": []
 } as const satisfies Chain;

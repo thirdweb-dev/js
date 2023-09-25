@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ambros Chain Mainnet",
+  "chainId": 880,
   "chain": "ambroschain",
+  "name": "Ambros Chain Mainnet",
   "rpc": [
     "https://ambros-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ambros.network"
   ],
+  "slug": "ambros-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "AMBROS",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://ambros.network",
   "shortName": "ambros",
-  "chainId": 880,
-  "networkId": 880,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Ambros Chain Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "ambros-chain"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ARTIS sigma1",
+  "chainId": 246529,
   "chain": "ARTIS",
+  "name": "ARTIS sigma1",
   "rpc": [
     "https://artis-sigma1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sigma1.artis.network"
   ],
+  "slug": "artis-sigma1",
   "faucets": [],
   "nativeCurrency": {
     "name": "ARTIS sigma1 Ether",
@@ -14,9 +16,8 @@ export default {
   },
   "infoURL": "https://artis.eco",
   "shortName": "ats",
-  "chainId": 246529,
-  "networkId": 246529,
-  "slip44": 246529,
   "testnet": false,
-  "slug": "artis-sigma1"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

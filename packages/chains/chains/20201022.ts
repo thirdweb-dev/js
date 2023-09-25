@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Pego Network",
+  "chainId": 20201022,
   "chain": "PEGO",
+  "name": "Pego Network",
   "rpc": [
     "https://pego-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pegorpc.com",
@@ -9,6 +10,13 @@ export default {
     "https://node2.pegorpc.com",
     "https://node3.pegorpc.com"
   ],
+  "slug": "pego-network",
+  "icon": {
+    "url": "ipfs://QmVf1afskRHuZjFSLCZH8397KrVNAoYgyAePX9VMBrPVtx",
+    "width": 246,
+    "height": 247,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Pego Native Token",
@@ -17,14 +25,8 @@ export default {
   },
   "infoURL": "https://pego.network",
   "shortName": "pg",
-  "chainId": 20201022,
-  "networkId": 20201022,
-  "icon": {
-    "url": "ipfs://QmVf1afskRHuZjFSLCZH8397KrVNAoYgyAePX9VMBrPVtx",
-    "width": 246,
-    "height": 247,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Pego Network Explorer",
@@ -32,6 +34,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "pego-network"
+  "features": []
 } as const satisfies Chain;

@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BeOne Chain Mainnet",
+  "chainId": 818,
   "chain": "BOC",
-  "icon": {
-    "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
+  "name": "BeOne Chain Mainnet",
   "rpc": [
     "https://beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed1.beonechain.com",
@@ -17,6 +12,13 @@ export default {
     "https://dataseed-uk1.beonechain.com",
     "https://dataseed-uk2.beonechain.com"
   ],
+  "slug": "beone-chain",
+  "icon": {
+    "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "BeOne Chain Mainnet",
@@ -25,9 +27,8 @@ export default {
   },
   "infoURL": "https://beonechain.com",
   "shortName": "BOC",
-  "chainId": 818,
-  "networkId": 818,
-  "slip44": 8181,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BeOne Chain Mainnet",
@@ -35,6 +36,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "beone-chain"
+  "features": []
 } as const satisfies Chain;

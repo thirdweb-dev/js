@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KCC Mainnet",
+  "chainId": 321,
   "chain": "KCC",
+  "name": "KCC Mainnet",
   "rpc": [
     "https://kcc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.kcc.network",
     "https://kcc.mytokenpocket.vip",
     "https://public-rpc.blockpi.io/http/kcc"
   ],
+  "slug": "kcc",
   "faucets": [],
   "nativeCurrency": {
     "name": "KuCoin Token",
@@ -16,9 +18,8 @@ export default {
   },
   "infoURL": "https://kcc.io",
   "shortName": "kcs",
-  "chainId": 321,
-  "networkId": 321,
-  "slip44": 641,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "KCC Explorer",
@@ -26,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "kcc"
+  "features": []
 } as const satisfies Chain;

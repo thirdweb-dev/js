@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Crab Network",
+  "chainId": 44,
   "chain": "crab",
+  "name": "Crab Network",
   "rpc": [
     "https://crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://crab-rpc.darwinia.network",
@@ -9,6 +10,7 @@ export default {
     "https://crab.api.onfinality.io/public-ws",
     "https://darwiniacrab-rpc.dwellir.com"
   ],
+  "slug": "crab-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Crab Network Native Token",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://crab.network/",
   "shortName": "crab",
-  "chainId": 44,
-  "networkId": 44,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "subscan",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "crab-network"
+  "features": []
 } as const satisfies Chain;

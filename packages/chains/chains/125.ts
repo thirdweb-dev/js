@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OYchain Testnet",
+  "chainId": 125,
   "chain": "OYchain",
+  "name": "OYchain Testnet",
   "rpc": [
     "https://oychain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.oychain.io"
   ],
+  "slug": "oychain-testnet",
   "faucets": [
     "https://faucet.oychain.io"
   ],
@@ -16,9 +18,8 @@ export default {
   },
   "infoURL": "https://www.oychain.io",
   "shortName": "OYchainTestnet",
-  "chainId": 125,
-  "networkId": 125,
-  "slip44": 125,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OYchain Testnet Explorer",
@@ -26,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "oychain-testnet"
+  "features": []
 } as const satisfies Chain;

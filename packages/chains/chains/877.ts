@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dexit Network",
+  "chainId": 877,
   "chain": "DXT",
+  "name": "Dexit Network",
   "rpc": [
     "https://dexit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dxt.dexit.network"
   ],
+  "slug": "dexit-network",
   "faucets": [
     "https://faucet.dexit.network"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://dexit.network",
   "shortName": "DXT",
-  "chainId": 877,
-  "networkId": 877,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "dxtscan",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "dexit-network"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shinarium Beta",
+  "chainId": 534849,
   "chain": "Shinarium",
+  "name": "Shinarium Beta",
+  "rpc": [
+    "https://shinarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.shinarium.org"
+  ],
+  "slug": "shinarium-beta",
   "icon": {
     "url": "ipfs://bafybeiadbavrwcial76vs5ovhyykyaobteltuhliqcthdairbja4klwzhu",
     "width": 1000,
     "height": 1000,
     "format": "png"
   },
-  "rpc": [
-    "https://shinarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.shinarium.org"
-  ],
   "faucets": [
     "https://faucet.shinarium.org"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://shinarium.org",
   "shortName": "shi",
-  "chainId": 534849,
-  "networkId": 534849,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "shinascan",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "shinarium-beta"
+  "features": []
 } as const satisfies Chain;

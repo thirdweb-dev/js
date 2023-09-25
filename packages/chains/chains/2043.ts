@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OriginTrail Parachain",
+  "chainId": 2043,
   "chain": "OTP",
+  "name": "OriginTrail Parachain",
   "rpc": [
     "https://origintrail-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://astrosat.origintrail.network",
     "wss://parachain-rpc.origin-trail.network"
   ],
+  "slug": "origintrail-parachain",
   "faucets": [],
   "nativeCurrency": {
     "name": "OriginTrail Parachain Token",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://parachain.origintrail.io",
   "shortName": "otp",
-  "chainId": 2043,
-  "networkId": 2043,
   "testnet": false,
-  "slug": "origintrail-parachain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

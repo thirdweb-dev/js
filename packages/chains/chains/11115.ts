@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Astra Testnet",
+  "chainId": 11115,
   "chain": "Astra",
+  "name": "Astra Testnet",
   "rpc": [
     "https://astra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.dev"
   ],
+  "slug": "astra-testnet",
+  "icon": {
+    "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+    "width": 104,
+    "height": 80,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.astranaut.dev"
   ],
@@ -16,38 +24,19 @@ export default {
   },
   "infoURL": "https://astranaut.io",
   "shortName": "astra-testnet",
-  "chainId": 11115,
-  "networkId": 11115,
-  "icon": {
-    "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-    "width": 104,
-    "height": 80,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
-    {
-      "name": "Astra EVM Explorer",
-      "url": "https://explorer.astranaut.dev",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-        "width": 104,
-        "height": 80,
-        "format": "png"
-      }
-    },
     {
       "name": "Astra PingPub Explorer",
       "url": "https://ping.astranaut.dev/astra",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-        "width": 104,
-        "height": 80,
-        "format": "png"
-      }
+      "standard": "none"
+    },
+    {
+      "name": "Astra EVM Explorer",
+      "url": "https://explorer.astranaut.dev",
+      "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "astra-testnet"
+  "features": []
 } as const satisfies Chain;

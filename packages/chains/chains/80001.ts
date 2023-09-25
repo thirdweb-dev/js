@@ -1,14 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mumbai",
-  "title": "Polygon Testnet Mumbai",
+  "chainId": 80001,
   "chain": "Polygon",
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
+  "name": "Mumbai",
   "rpc": [
     "https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}",
@@ -19,6 +13,13 @@ export default {
     "https://polygon-mumbai.gateway.tenderly.co",
     "wss://polygon-mumbai.gateway.tenderly.co"
   ],
+  "slug": "mumbai",
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.polygon.technology/"
   ],
@@ -29,8 +30,8 @@ export default {
   },
   "infoURL": "https://polygon.technology/",
   "shortName": "maticmum",
-  "chainId": 80001,
-  "networkId": 80001,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "polygonscan",
@@ -38,6 +39,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "mumbai"
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CamDL Mainnet",
+  "chainId": 95,
   "chain": "CADL",
+  "name": "CamDL Mainnet",
   "rpc": [
     "https://camdl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.camdl.gov.kh/"
   ],
+  "slug": "camdl",
+  "icon": {
+    "url": "ipfs://QmW5Fpb2Ywnfqcj4ibvpbKvPv5Mo5eseWdYZnnUvLkj2Hp",
+    "width": 1453,
+    "height": 1453,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.camdl.gov.kh/"
   ],
@@ -14,24 +22,13 @@ export default {
     "symbol": "CADL",
     "decimals": 18
   },
-  "features": [
-    {
-      "name": "EIP155"
-    }
-  ],
   "infoURL": "https://camdl.gov.kh/",
   "shortName": "camdl",
-  "chainId": 95,
-  "networkId": 95,
+  "testnet": false,
+  "status": "active",
   "redFlags": [
     "reusedChainId"
   ],
-  "icon": {
-    "url": "ipfs://QmW5Fpb2Ywnfqcj4ibvpbKvPv5Mo5eseWdYZnnUvLkj2Hp",
-    "width": 1453,
-    "height": 1453,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "CamDL Block Explorer",
@@ -39,7 +36,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "status": "active",
-  "testnet": false,
-  "slug": "camdl"
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ]
 } as const satisfies Chain;

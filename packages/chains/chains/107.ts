@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nebula Testnet",
+  "chainId": 107,
   "chain": "NTN",
+  "name": "Nebula Testnet",
+  "rpc": [
+    "https://nebula-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.rpc.novanetwork.io"
+  ],
+  "slug": "nebula-testnet",
   "icon": {
     "url": "ipfs://QmeFaJtQqTKKuXQR7ysS53bLFPasFBcZw445cvYJ2HGeTo",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://nebula-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.rpc.novanetwork.io"
-  ],
   "faucets": [
     "https://faucet.novanetwork.io"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://novanetwork.io",
   "shortName": "ntn",
-  "chainId": 107,
-  "networkId": 107,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "nebulatestnet",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "nebula-testnet"
+  "features": []
 } as const satisfies Chain;

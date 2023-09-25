@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fibonacci Mainnet",
+  "chainId": 12306,
   "chain": "FIBO",
-  "icon": {
-    "url": "ipfs://bafkreidiedaz3jugxmh2ylzlc4nympbd5iwab33adhwkcnblyop6vvj25y",
-    "width": 1494,
-    "height": 1494,
-    "format": "png"
-  },
+  "name": "Fibonacci Mainnet",
   "rpc": [
     "https://fibonacci.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.fibo-api.asia",
@@ -25,6 +20,13 @@ export default {
     "https://node6.fibo-rpc.asia",
     "https://node7.fibo-rpc.asia"
   ],
+  "slug": "fibonacci",
+  "icon": {
+    "url": "ipfs://bafkreidiedaz3jugxmh2ylzlc4nympbd5iwab33adhwkcnblyop6vvj25y",
+    "width": 1494,
+    "height": 1494,
+    "format": "png"
+  },
   "faucets": [
     "https://test.fibochain.org/faucets"
   ],
@@ -35,8 +37,8 @@ export default {
   },
   "infoURL": "https://fibochain.org",
   "shortName": "fibo",
-  "chainId": 12306,
-  "networkId": 1230,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "fiboscan",
@@ -44,6 +46,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "fibonacci"
+  "features": []
 } as const satisfies Chain;

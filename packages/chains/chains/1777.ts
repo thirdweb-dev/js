@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gauss Mainnet",
+  "chainId": 1777,
   "chain": "Gauss",
+  "name": "Gauss Mainnet",
+  "rpc": [
+    "https://gauss.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.gaussgang.com"
+  ],
+  "slug": "gauss",
   "icon": {
     "url": "ipfs://QmeDXUAYgQxwaSJLsqWgTqnrJVwicgEyNf9199xAMyRkqA",
     "width": 243,
     "height": 243,
     "format": "svg"
   },
-  "rpc": [
-    "https://gauss.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.gaussgang.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "GANG",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://gaussgang.com/",
   "shortName": "gauss",
-  "chainId": 1777,
-  "networkId": 1777,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Gauss Explorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "gauss"
+  "features": []
 } as const satisfies Chain;

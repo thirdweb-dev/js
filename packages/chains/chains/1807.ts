@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rabbit Analog Testnet Chain",
+  "chainId": 1807,
   "chain": "rAna",
+  "name": "Rabbit Analog Testnet Chain",
+  "rpc": [
+    "https://rabbit-analog-testnet-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rabbit.analog-rpc.com"
+  ],
+  "slug": "rabbit-analog-testnet-chain",
   "icon": {
     "url": "ipfs://QmdfbjjF3ZzN2jTkH9REgrA8jDS6A6c21n7rbWSVbSnvQc",
     "width": 310,
     "height": 251,
     "format": "svg"
   },
-  "rpc": [
-    "https://rabbit-analog-testnet-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rabbit.analog-rpc.com"
-  ],
   "faucets": [
     "https://analogfaucet.com"
   ],
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://rabbit.analogscan.com",
   "shortName": "rAna",
-  "chainId": 1807,
-  "networkId": 1807,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -31,6 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "rabbit-analog-testnet-chain"
+  "features": []
 } as const satisfies Chain;

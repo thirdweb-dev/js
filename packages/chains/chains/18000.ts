@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Frontier of Dreams Testnet",
+  "chainId": 18000,
   "chain": "Game Network",
+  "name": "Frontier of Dreams Testnet",
   "rpc": [
     "https://frontier-of-dreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fod.games/"
   ],
+  "slug": "frontier-of-dreams-testnet",
+  "faucets": [],
   "nativeCurrency": {
     "name": "ZKST",
     "symbol": "ZKST",
     "decimals": 18
   },
-  "faucets": [],
-  "shortName": "ZKST",
-  "chainId": 18000,
-  "networkId": 18000,
   "infoURL": "https://goexosphere.com",
+  "shortName": "ZKST",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Game Network",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "frontier-of-dreams-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "IMPERIUM TESTNET",
+  "chainId": 9818,
   "chain": "tIMP",
+  "name": "IMPERIUM TESTNET",
   "rpc": [
     "https://imperium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-aws-testnet.imperiumchain.com",
     "https://data-aws2-testnet.imperiumchain.com"
   ],
+  "slug": "imperium-testnet",
+  "icon": {
+    "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],
@@ -17,27 +25,14 @@ export default {
   },
   "infoURL": "https://imperiumchain.com",
   "shortName": "tIMP",
-  "chainId": 9818,
-  "networkId": 9818,
-  "icon": {
-    "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "IMPERIUM TESTNET Explorer",
-      "icon": {
-        "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
       "url": "https://network.impscan.com",
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "imperium-testnet"
+  "features": []
 } as const satisfies Chain;

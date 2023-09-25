@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Qitmeer",
+  "chainId": 813,
   "chain": "MEER",
+  "name": "Qitmeer",
   "rpc": [
     "https://qitmeer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-dataseed1.meerscan.io",
@@ -15,6 +16,13 @@ export default {
     "https://rpc.dimai.ai",
     "https://rpc.woowow.io"
   ],
+  "slug": "qitmeer",
+  "icon": {
+    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Qitmeer",
@@ -23,28 +31,14 @@ export default {
   },
   "infoURL": "https://github.com/Qitmeer",
   "shortName": "meer",
-  "chainId": 813,
-  "networkId": 813,
-  "slip44": 813,
-  "icon": {
-    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "meerscan",
-      "icon": {
-        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "url": "https://qng.meerscan.io",
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "qitmeer"
+  "features": []
 } as const satisfies Chain;

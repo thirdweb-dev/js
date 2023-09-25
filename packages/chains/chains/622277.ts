@@ -1,19 +1,38 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rethereum Mainnet",
+  "chainId": 622277,
   "chain": "RTH",
+  "name": "Rethereum Mainnet",
   "rpc": [
     "https://rethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rethereum.org",
     "https://rethereum.rpc.restratagem.com",
     "https://rpc.rthcentral.org"
   ],
+  "slug": "rethereum",
+  "icon": {
+    "url": "ipfs://bafkreiawlhc2trzyxgnz24vowdymxme2m446uk4vmrplgxsdd74ecpfloq",
+    "width": 830,
+    "height": 830,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Rethereum",
     "symbol": "RTH",
     "decimals": 18
   },
+  "infoURL": "https://www.rethereum.org",
+  "shortName": "rth",
+  "testnet": false,
+  "redFlags": [],
+  "explorers": [
+    {
+      "name": "rethereum",
+      "url": "https://explorer.rethereum.org",
+      "standard": "EIP3091"
+    }
+  ],
   "features": [
     {
       "name": "EIP155"
@@ -21,30 +40,5 @@ export default {
     {
       "name": "EIP1559"
     }
-  ],
-  "infoURL": "https://www.rethereum.org",
-  "shortName": "rth",
-  "chainId": 622277,
-  "networkId": 622277,
-  "icon": {
-    "url": "ipfs://bafkreiawlhc2trzyxgnz24vowdymxme2m446uk4vmrplgxsdd74ecpfloq",
-    "width": 830,
-    "height": 830,
-    "format": "png"
-  },
-  "explorers": [
-    {
-      "name": "rethereum",
-      "url": "https://explorer.rethereum.org",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "rethereum"
+  ]
 } as const satisfies Chain;

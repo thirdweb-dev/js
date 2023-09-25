@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Paribu Net Testnet",
+  "chainId": 3500,
   "chain": "PRB",
+  "name": "Paribu Net Testnet",
   "rpc": [
     "https://paribu-net-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.paribuscan.com"
   ],
+  "slug": "paribu-net-testnet",
+  "icon": {
+    "url": "ipfs://QmVgc77jYo2zrxQjhYwT4KzvSrSZ1DBJraJVX57xAvP8MD",
+    "width": 2362,
+    "height": 2362,
+    "format": "png"
+  },
   "faucets": [
     "https://faucet.paribuscan.com"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://net.paribu.com",
   "shortName": "prbtestnet",
-  "chainId": 3500,
-  "networkId": 3500,
-  "icon": {
-    "url": "ipfs://QmVgc77jYo2zrxQjhYwT4KzvSrSZ1DBJraJVX57xAvP8MD",
-    "width": 2362,
-    "height": 2362,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Paribu Net Testnet Explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "paribu-net-testnet"
+  "features": []
 } as const satisfies Chain;

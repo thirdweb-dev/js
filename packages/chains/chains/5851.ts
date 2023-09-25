@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ontology Testnet",
+  "chainId": 5851,
   "chain": "Ontology",
-  "icon": {
-    "url": "ipfs://bafkreigmvn6spvbiirtutowpq6jmetevbxoof5plzixjoerbeswy4htfb4",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
+  "name": "Ontology Testnet",
   "rpc": [
     "https://ontology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://polaris1.ont.io:20339",
@@ -19,6 +14,13 @@ export default {
     "https://polaris3.ont.io:10339",
     "https://polaris4.ont.io:10339"
   ],
+  "slug": "ontology-testnet",
+  "icon": {
+    "url": "ipfs://bafkreigmvn6spvbiirtutowpq6jmetevbxoof5plzixjoerbeswy4htfb4",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "faucets": [
     "https://developer.ont.io/"
   ],
@@ -29,8 +31,8 @@ export default {
   },
   "infoURL": "https://ont.io/",
   "shortName": "OntologyTestnet",
-  "chainId": 5851,
-  "networkId": 5851,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "explorer",
@@ -38,6 +40,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ontology-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,20 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Acala Network",
+  "chainId": 787,
   "chain": "ACA",
+  "name": "Acala Network",
   "rpc": [
     "https://acala-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-acala.aca-api.network",
     "wss://eth-rpc-acala.aca-api.network"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "acala-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Acala Token",
@@ -23,9 +17,8 @@ export default {
   },
   "infoURL": "https://acala.network",
   "shortName": "aca",
-  "chainId": 787,
-  "networkId": 787,
-  "slip44": 787,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -33,6 +26,12 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "acala-network"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

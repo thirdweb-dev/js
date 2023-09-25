@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Anduschain Mainnet",
+  "chainId": 14288640,
   "chain": "anduschain",
+  "name": "Anduschain Mainnet",
   "rpc": [
     "https://anduschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.anduschain.io/rpc",
     "wss://rpc.anduschain.io/ws"
   ],
+  "slug": "anduschain",
   "faucets": [],
   "nativeCurrency": {
     "name": "DAON",
@@ -15,21 +17,14 @@ export default {
   },
   "infoURL": "https://anduschain.io/",
   "shortName": "anduschain-mainnet",
-  "chainId": 14288640,
-  "networkId": 14288640,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "anduschain explorer",
       "url": "https://explorer.anduschain.io",
-      "icon": {
-        "url": "ipfs://bafkreiapaxokh2p4j7hg43ug2inomixiwrdhni4kpqazvqifssnez7efze",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "anduschain"
+  "features": []
 } as const satisfies Chain;

@@ -1,13 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ONUS Chain Mainnet",
-  "title": "ONUS Chain Mainnet",
+  "chainId": 1975,
   "chain": "onus",
+  "name": "ONUS Chain Mainnet",
   "rpc": [
     "https://onus-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.onuschain.io",
     "wss://ws.onuschain.io"
   ],
+  "slug": "onus-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "ONUS",
@@ -16,21 +17,14 @@ export default {
   },
   "infoURL": "https://onuschain.io",
   "shortName": "onus-mainnet",
-  "chainId": 1975,
-  "networkId": 1975,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Onus explorer mainnet",
       "url": "https://explorer.onuschain.io",
-      "icon": {
-        "url": "ipfs://bafkreiec34ik3glrm5jrzafdytvu4kxdsrxhqmagbe27fytdcuzkhoooay",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "onus-chain"
+  "features": []
 } as const satisfies Chain;

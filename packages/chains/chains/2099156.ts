@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Plian Mainnet Main",
+  "chainId": 2099156,
   "chain": "Plian",
+  "name": "Plian Mainnet Main",
   "rpc": [
     "https://plian-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/pchain"
   ],
+  "slug": "plian-main",
   "faucets": [],
   "nativeCurrency": {
     "name": "Plian Token",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://plian.org/",
   "shortName": "plian-mainnet",
-  "chainId": 2099156,
-  "networkId": 2099156,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "piscan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "plian-main"
+  "features": []
 } as const satisfies Chain;

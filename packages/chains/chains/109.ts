@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shibarium",
+  "chainId": 109,
   "chain": "Shibarium",
+  "name": "Shibarium",
+  "rpc": [
+    "https://shibarium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://www.shibrpc.com"
+  ],
+  "slug": "shibarium",
   "icon": {
     "url": "ipfs://QmYNVkoZgRjDBQzJz6kog9mA2yPzQFW2oSKvhnkwuBhLQE",
     "width": 2000,
     "height": 2000,
     "format": "png"
   },
-  "rpc": [
-    "https://shibarium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.shibrpc.com"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "BONE Shibarium",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://shibariumecosystem.com",
   "shortName": "shibariumecosystem",
-  "chainId": 109,
-  "networkId": 109,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "shibariumscan",
@@ -29,6 +31,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "shibarium"
+  "features": []
 } as const satisfies Chain;

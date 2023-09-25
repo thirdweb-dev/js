@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Network",
+  "chainId": 288,
   "chain": "ETH",
+  "name": "Boba Network",
   "rpc": [
     "https://boba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.boba.network",
@@ -11,6 +12,7 @@ export default {
     "wss://boba-ethereum.gateway.tenderly.co/",
     "wss://gateway.tenderly.co/public/boba-ethereum"
   ],
+  "slug": "boba-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -19,8 +21,8 @@ export default {
   },
   "infoURL": "https://boba.network",
   "shortName": "Boba",
-  "chainId": 288,
-  "networkId": 288,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Bobascan",
@@ -33,15 +35,5 @@ export default {
       "standard": "none"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://gateway.boba.network"
-      }
-    ]
-  },
-  "testnet": false,
-  "slug": "boba-network"
+  "features": []
 } as const satisfies Chain;

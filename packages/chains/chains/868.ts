@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fantasia Chain Mainnet",
+  "chainId": 868,
   "chain": "FSC",
+  "name": "Fantasia Chain Mainnet",
   "rpc": [
     "https://fantasia-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-data1.fantasiachain.com/",
     "https://mainnet-data2.fantasiachain.com/",
     "https://mainnet-data3.fantasiachain.com/"
   ],
+  "slug": "fantasia-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "FST",
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://fantasia.technology/",
   "shortName": "FSCMainnet",
-  "chainId": 868,
-  "networkId": 868,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "FSCScan",
@@ -25,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "fantasia-chain"
+  "features": []
 } as const satisfies Chain;

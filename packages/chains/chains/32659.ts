@@ -1,26 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fusion Mainnet",
+  "chainId": 32659,
   "chain": "FSN",
+  "name": "Fusion Mainnet",
+  "rpc": [
+    "https://fusion.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.fusionnetwork.io",
+    "wss://mainnet.fusionnetwork.io"
+  ],
+  "slug": "fusion",
   "icon": {
     "url": "ipfs://QmX3tsEoj7SdaBLLV8VyyCUAmymdEGiSGeuTbxMrEMVvth",
     "width": 31,
     "height": 31,
     "format": "svg"
   },
-  "rpc": [
-    "https://fusion.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.fusionnetwork.io",
-    "wss://mainnet.fusionnetwork.io"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Fusion",
@@ -29,22 +23,21 @@ export default {
   },
   "infoURL": "https://fusion.org",
   "shortName": "fsn",
-  "chainId": 32659,
-  "networkId": 32659,
-  "slip44": 288,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "fsnscan",
       "url": "https://fsnscan.com",
-      "icon": {
-        "url": "ipfs://QmSAFx34SKNi7a139agX12f68oBMo2Ktt9c8yD8aFa14gd",
-        "width": 48,
-        "height": 51,
-        "format": "svg"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "fusion"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

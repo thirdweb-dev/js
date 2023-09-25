@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Polygon Supernet Arianee",
+  "chainId": 11891,
   "chain": "Arianee",
+  "name": "Polygon Supernet Arianee",
   "rpc": [
     "https://polygon-supernet-arianee.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.polygonsupernet.public.arianee.net"
   ],
+  "slug": "polygon-supernet-arianee",
   "faucets": [],
   "nativeCurrency": {
     "name": "Arianee",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://arianee.org",
   "shortName": "Arianee",
-  "chainId": 11891,
-  "networkId": 11891,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Polygon Supernet Arianee Explorer",
@@ -23,10 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "chain": "eip155-1",
-    "type": "L2"
-  },
-  "testnet": false,
-  "slug": "polygon-supernet-arianee"
+  "features": []
 } as const satisfies Chain;

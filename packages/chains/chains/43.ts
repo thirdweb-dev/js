@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Darwinia Pangolin Testnet",
+  "chainId": 43,
   "chain": "pangolin",
+  "name": "Darwinia Pangolin Testnet",
   "rpc": [
     "https://darwinia-pangolin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangolin-rpc.darwinia.network"
   ],
+  "slug": "darwinia-pangolin-testnet",
   "faucets": [
     "https://docs.darwinia.network/pangolin-testnet-1e9ac8b09e874e8abd6a7f18c096ca6a"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://darwinia.network/",
   "shortName": "pangolin",
-  "chainId": 43,
-  "networkId": 43,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "subscan",
@@ -25,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "darwinia-pangolin-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nautilus Proteus Testnet",
+  "chainId": 88002,
   "chain": "ETH",
+  "name": "Nautilus Proteus Testnet",
+  "rpc": [
+    "https://nautilus-proteus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.proteus.nautchain.xyz/solana"
+  ],
+  "slug": "nautilus-proteus-testnet",
   "icon": {
     "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "rpc": [
-    "https://nautilus-proteus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.proteus.nautchain.xyz/solana"
-  ],
   "faucets": [
     "https://proteusfaucet.nautchain.xyz"
   ],
@@ -22,21 +24,14 @@ export default {
   },
   "infoURL": "https://docs.nautchain.xyz",
   "shortName": "NAUTTest",
-  "chainId": 88002,
-  "networkId": 88002,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Nautscan",
       "url": "https://proteus.nautscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "nautilus-proteus-testnet"
+  "features": []
 } as const satisfies Chain;

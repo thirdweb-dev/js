@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Joseon Mainnet",
+  "chainId": 1392,
   "chain": "Joseon",
+  "name": "Joseon Mainnet",
+  "rpc": [
+    "https://joseon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.modchain.net/blockchain.joseon.com/rpc"
+  ],
+  "slug": "joseon",
   "icon": {
     "url": "ipfs://QmQjwcNRCLXU8JBtSkPLUnbWVrpoqbnZVffpJ9Bu8rG34e",
     "width": 148,
     "height": 148,
     "format": "svg"
   },
-  "rpc": [
-    "https://joseon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.modchain.net/blockchain.joseon.com/rpc"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Joseon Mun",
@@ -20,8 +22,8 @@ export default {
   },
   "infoURL": "https://www.joseon.com/",
   "shortName": "mun",
-  "chainId": 1392,
-  "networkId": 1392,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BlockExplorer",
@@ -29,6 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "joseon"
+  "features": []
 } as const satisfies Chain;

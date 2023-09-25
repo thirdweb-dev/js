@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Findora Mainnet",
+  "chainId": 2152,
   "chain": "Findora",
+  "name": "Findora Mainnet",
   "rpc": [
     "https://findora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.findora.org"
   ],
+  "slug": "findora",
   "faucets": [],
   "nativeCurrency": {
     "name": "FRA",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://findora.org/",
   "shortName": "fra",
-  "chainId": 2152,
-  "networkId": 2152,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "findorascan",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "findora"
+  "features": []
 } as const satisfies Chain;

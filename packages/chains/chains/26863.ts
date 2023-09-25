@@ -1,13 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OasisChain Mainnet",
+  "chainId": 26863,
   "chain": "OasisChain",
+  "name": "OasisChain Mainnet",
   "rpc": [
     "https://oasischain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.oasischain.io",
     "https://rpc2.oasischain.io",
     "https://rpc3.oasischain.io"
   ],
+  "slug": "oasischain",
   "faucets": [
     "http://faucet.oasischain.io"
   ],
@@ -18,8 +20,8 @@ export default {
   },
   "infoURL": "https://scan.oasischain.io",
   "shortName": "OAC",
-  "chainId": 26863,
-  "networkId": 26863,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "OasisChain Explorer",
@@ -27,6 +29,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "oasischain"
+  "features": []
 } as const satisfies Chain;

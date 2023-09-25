@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CENNZnet Nikau",
+  "chainId": 3001,
   "chain": "CENNZnet",
+  "name": "CENNZnet Nikau",
   "rpc": [
     "https://cennznet-nikau.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nikau.centrality.me/public"
   ],
+  "slug": "cennznet-nikau",
+  "icon": {
+    "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
+    "width": 112,
+    "height": 112,
+    "format": "svg"
+  },
   "faucets": [
     "https://app-faucet.centrality.me"
   ],
@@ -16,14 +24,8 @@ export default {
   },
   "infoURL": "https://cennz.net",
   "shortName": "cennz-n",
-  "chainId": 3001,
-  "networkId": 3001,
-  "icon": {
-    "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
-    "width": 112,
-    "height": 112,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "UNcover",
@@ -31,6 +33,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "cennznet-nikau"
+  "features": []
 } as const satisfies Chain;

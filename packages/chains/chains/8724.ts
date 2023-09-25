@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TOOL Global Testnet",
+  "chainId": 8724,
   "chain": "OLO",
+  "name": "TOOL Global Testnet",
   "rpc": [
     "https://tool-global-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-web3.wolot.io"
   ],
+  "slug": "tool-global-testnet",
   "faucets": [
     "https://testnet-explorer.wolot.io"
   ],
@@ -16,9 +18,8 @@ export default {
   },
   "infoURL": "https://testnet-explorer.wolot.io",
   "shortName": "tolo",
-  "chainId": 8724,
-  "networkId": 8724,
-  "slip44": 479,
   "testnet": true,
-  "slug": "tool-global-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

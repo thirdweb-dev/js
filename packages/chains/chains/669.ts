@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "JuncaChain testnet",
+  "chainId": 669,
   "chain": "JuncaChain testnet",
+  "name": "JuncaChain testnet",
   "rpc": [
     "https://juncachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.juncachain.com",
     "wss://ws-testnet.juncachain.com"
   ],
+  "slug": "juncachain-testnet",
   "faucets": [
     "https://faucet-testnet.juncachain.com"
   ],
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://junca-cash.world",
   "shortName": "juncat",
-  "chainId": 669,
-  "networkId": 669,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "JuncaScan",
@@ -26,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "juncachain-testnet"
+  "features": []
 } as const satisfies Chain;

@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Moonrock",
+  "chainId": 1288,
   "chain": "MOON",
+  "name": "Moonrock",
   "rpc": [
     "https://moonrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonrock.moonbeam.network",
     "wss://wss.api.moonrock.moonbeam.network"
   ],
+  "slug": "moonrock",
   "faucets": [],
   "nativeCurrency": {
     "name": "Rocs",
@@ -15,8 +17,8 @@ export default {
   },
   "infoURL": "https://docs.moonbeam.network/learn/platform/networks/overview/",
   "shortName": "mrock",
-  "chainId": 1288,
-  "networkId": 1288,
   "testnet": false,
-  "slug": "moonrock"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CIC Chain Testnet",
+  "chainId": 1252,
   "chain": "CICT",
+  "name": "CIC Chain Testnet",
   "rpc": [
     "https://cic-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testapi.cicscan.com"
   ],
+  "slug": "cic-chain-testnet",
+  "icon": {
+    "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
+    "width": 1024,
+    "height": 768,
+    "format": "png"
+  },
   "faucets": [
     "https://cicfaucet.com"
   ],
@@ -16,27 +24,14 @@ export default {
   },
   "infoURL": "https://www.cicchain.net",
   "shortName": "CICT",
-  "chainId": 1252,
-  "networkId": 1252,
-  "icon": {
-    "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
-    "width": 1024,
-    "height": 768,
-    "format": "png"
-  },
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "CICscan",
       "url": "https://testnet.cicscan.com",
-      "icon": {
-        "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
-        "width": 1024,
-        "height": 768,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "cic-chain-testnet"
+  "features": []
 } as const satisfies Chain;

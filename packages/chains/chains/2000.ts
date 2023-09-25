@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dogechain Mainnet",
+  "chainId": 2000,
   "chain": "DC",
-  "icon": {
-    "url": "ipfs://QmNS6B6L8FfgGSMTEi2SxD3bK5cdmKPNtQKcYaJeRWrkHs",
-    "width": 732,
-    "height": 732,
-    "format": "png"
-  },
+  "name": "Dogechain Mainnet",
   "rpc": [
     "https://dogechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dogechain.dog",
     "https://rpc01-sg.dogechain.dog",
     "https://rpc.ankr.com/dogechain"
   ],
+  "slug": "dogechain",
+  "icon": {
+    "url": "ipfs://QmNS6B6L8FfgGSMTEi2SxD3bK5cdmKPNtQKcYaJeRWrkHs",
+    "width": 732,
+    "height": 732,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Dogecoin",
@@ -22,8 +24,8 @@ export default {
   },
   "infoURL": "https://dogechain.dog",
   "shortName": "dc",
-  "chainId": 2000,
-  "networkId": 2000,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "dogechain explorer",
@@ -31,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "dogechain"
+  "features": []
 } as const satisfies Chain;

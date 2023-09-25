@@ -1,13 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eleanor",
-  "title": "Metatime Testnet Eleanor",
+  "chainId": 1967,
   "chain": "MTC",
+  "name": "Eleanor",
   "rpc": [
     "https://eleanor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metatime.com/eleanor",
     "wss://ws.metatime.com/eleanor"
   ],
+  "slug": "eleanor",
   "faucets": [
     "https://faucet.metatime.com/eleanor"
   ],
@@ -18,8 +19,8 @@ export default {
   },
   "infoURL": "https://eleanor.metatime.com",
   "shortName": "mtc",
-  "chainId": 1967,
-  "networkId": 1967,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "metaexplorer-eleanor",
@@ -27,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "eleanor"
+  "features": []
 } as const satisfies Chain;

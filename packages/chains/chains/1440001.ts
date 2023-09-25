@@ -1,31 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "XRP Ledger EVM Devnet Sidechain",
-  "chain": "XRPL",
-  "shortName": "XRPL-EVM-Devnet-Sidechain",
   "chainId": 1440001,
-  "testnet": true,
-  "icon": {
-    "format": "png",
-    "url": "ipfs://bafkreidmgxjwjircegjkvysgz25b2ukw6h7axoirkxv6idupzzqsdrljgy",
-    "width": 780,
-    "height": 680
-  },
+  "chain": "XRPL",
+  "name": "XRP Ledger EVM Devnet Sidechain",
   "rpc": [
     "https://xrp-ledger-evm-devnet-sidechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm-sidechain.xrpl.org"
   ],
-  "nativeCurrency": {
-    "decimals": 18,
-    "name": "XRP",
-    "symbol": "XRP"
+  "slug": "xrp-ledger-evm-devnet-sidechain",
+  "icon": {
+    "url": "ipfs://bafkreidmgxjwjircegjkvysgz25b2ukw6h7axoirkxv6idupzzqsdrljgy",
+    "width": 780,
+    "height": 680,
+    "format": "png"
   },
+  "faucets": [],
+  "nativeCurrency": {
+    "name": "XRP",
+    "symbol": "XRP",
+    "decimals": 6
+  },
+  "infoURL": null,
+  "shortName": "XRPL-EVM-Devnet-Sidechain",
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
-      "url": "https://evm-sidechain.xrpl.org/",
       "name": "XRP Ledger Explorer",
+      "url": "https://evm-sidechain.xrpl.org/",
       "standard": "EIP3091"
     }
   ],
-  "slug": "xrp-ledger-evm-devnet-sidechain"
+  "features": []
 } as const satisfies Chain;

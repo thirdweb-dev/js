@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arbitrum Sepolia",
-  "title": "Arbitrum Sepolia Rollup Testnet",
+  "chainId": 421614,
   "chain": "ETH",
+  "name": "Arbitrum Sepolia",
   "rpc": [
     "https://arbitrum-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-rollup.arbitrum.io/rpc"
   ],
+  "slug": "arbitrum-sepolia",
   "faucets": [],
   "nativeCurrency": {
     "name": "Sepolia Ether",
@@ -15,8 +16,8 @@ export default {
   },
   "infoURL": "https://arbitrum.io",
   "shortName": "arb-sep",
-  "chainId": 421614,
-  "networkId": 421614,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Arbitrum Sepolia Rollup Testnet Explorer",
@@ -24,15 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-11155111",
-    "bridges": [
-      {
-        "url": "https://bridge.arbitrum.io"
-      }
-    ]
-  },
-  "testnet": true,
-  "slug": "arbitrum-sepolia"
+  "features": []
 } as const satisfies Chain;

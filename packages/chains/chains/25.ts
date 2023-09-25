@@ -1,18 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cronos Mainnet",
+  "chainId": 25,
   "chain": "CRO",
+  "name": "Cronos Mainnet",
   "rpc": [
     "https://cronos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cronos.org",
     "https://cronos-evm.publicnode.com",
     "wss://cronos-evm.publicnode.com"
   ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "cronos",
   "faucets": [],
   "nativeCurrency": {
     "name": "Cronos",
@@ -21,8 +18,8 @@ export default {
   },
   "infoURL": "https://cronos.org/",
   "shortName": "cro",
-  "chainId": 25,
-  "networkId": 25,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Cronos Explorer",
@@ -30,6 +27,9 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "cronos"
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

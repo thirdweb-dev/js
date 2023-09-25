@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Vela1 Chain Mainnet",
+  "chainId": 555,
   "chain": "VELA1",
+  "name": "Vela1 Chain Mainnet",
   "rpc": [
     "https://vela1-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.velaverse.io"
   ],
+  "slug": "vela1-chain",
   "faucets": [],
   "nativeCurrency": {
     "name": "CLASS COIN",
@@ -14,8 +16,8 @@ export default {
   },
   "infoURL": "https://velaverse.io",
   "shortName": "CLASS",
-  "chainId": 555,
-  "networkId": 555,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Vela1 Chain Mainnet Explorer",
@@ -23,6 +25,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "vela1-chain"
+  "features": []
 } as const satisfies Chain;

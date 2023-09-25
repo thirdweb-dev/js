@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BOSagora Mainnet",
+  "chainId": 2151,
   "chain": "ETH",
+  "name": "BOSagora Mainnet",
   "rpc": [
     "https://bosagora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bosagora.org",
     "https://rpc.bosagora.org"
   ],
+  "slug": "bosagora",
+  "icon": {
+    "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
+    "width": 256,
+    "height": 257,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "BOSAGORA",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://docs.bosagora.org",
   "shortName": "boa",
-  "chainId": 2151,
-  "networkId": 2151,
-  "icon": {
-    "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
-    "width": 256,
-    "height": 257,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "BOASCAN",
       "url": "https://boascan.io",
-      "icon": {
-        "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
-        "width": 256,
-        "height": 257,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bosagora"
+  "features": []
 } as const satisfies Chain;

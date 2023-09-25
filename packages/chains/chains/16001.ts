@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MetaDot Testnet",
+  "chainId": 16001,
   "chain": "MTTTest",
+  "name": "MetaDot Testnet",
   "rpc": [
     "https://metadot-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.metadot.network"
   ],
+  "slug": "metadot-testnet",
   "faucets": [
     "https://faucet.metadot.network/"
   ],
@@ -16,8 +18,8 @@ export default {
   },
   "infoURL": "https://metadot.network",
   "shortName": "mtttest",
-  "chainId": 16001,
-  "networkId": 16001,
   "testnet": true,
-  "slug": "metadot-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

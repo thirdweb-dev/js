@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Telos EVM Mainnet",
+  "chainId": 40,
   "chain": "TLOS",
+  "name": "Telos EVM Mainnet",
   "rpc": [
     "https://telos-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.telos.net/evm"
   ],
+  "slug": "telos-evm",
+  "icon": {
+    "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",
+    "width": 228,
+    "height": 228,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Telos",
@@ -14,8 +22,8 @@ export default {
   },
   "infoURL": "https://telos.net",
   "shortName": "TelosEVM",
-  "chainId": 40,
-  "networkId": 40,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "teloscan",
@@ -23,12 +31,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",
-    "format": "png",
-    "width": 228,
-    "height": 228
-  },
-  "testnet": false,
-  "slug": "telos-evm"
+  "features": []
 } as const satisfies Chain;

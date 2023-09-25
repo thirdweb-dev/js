@@ -1,17 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PGN (Public Goods Network)",
+  "chainId": 424,
   "chain": "ETH",
+  "name": "PGN (Public Goods Network)",
   "rpc": [
     "https://pgn-public-goods-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.publicgoods.network"
   ],
+  "slug": "pgn-public-goods-network",
+  "icon": {
+    "url": "ipfs://QmUVJ7MLCEAfq3pHVPFLscqRMiyAY5biVgTkeDQCmAhHNS",
+    "width": 574,
+    "height": 574,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
+  "infoURL": "https://publicgoods.network/",
+  "shortName": "PGN",
+  "testnet": false,
+  "redFlags": [],
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://explorer.publicgoods.network",
+      "standard": "EIP3091"
+    }
+  ],
   "features": [
     {
       "name": "EIP155"
@@ -19,39 +38,5 @@ export default {
     {
       "name": "EIP1559"
     }
-  ],
-  "infoURL": "https://publicgoods.network/",
-  "shortName": "PGN",
-  "chainId": 424,
-  "networkId": 424,
-  "icon": {
-    "url": "ipfs://QmUVJ7MLCEAfq3pHVPFLscqRMiyAY5biVgTkeDQCmAhHNS",
-    "width": 574,
-    "height": 574,
-    "format": "svg"
-  },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://explorer.publicgoods.network",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge.publicgoods.network"
-      }
-    ]
-  },
-  "testnet": false,
-  "slug": "pgn-public-goods-network"
+  ]
 } as const satisfies Chain;

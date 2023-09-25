@@ -1,26 +1,29 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zora Testnet",
+  "chainId": 999,
   "chain": "ETH",
+  "name": "Zora Testnet",
   "rpc": [
     "https://zora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.zora.co/"
   ],
+  "slug": "zora-testnet",
+  "icon": {
+    "url": "ipfs://QmZ6qaRwTPFEZUspwMUjaxC6KhmzcELdRQcQzS3P72Dzts/Vector.svg",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
-    "symbol": "GETH",
+    "symbol": "ETH",
     "decimals": 18
   },
-  "icon": {
-    "url": "ipfs://QmZ6qaRwTPFEZUspwMUjaxC6KhmzcELdRQcQzS3P72Dzts/Vector.svg",
-    "height": 512,
-    "width": 512,
-    "format": "svg"
-  },
+  "infoURL": null,
   "shortName": "Zora",
-  "chainId": 999,
-  "networkId": 999,
   "testnet": true,
-  "slug": "zora-testnet"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

@@ -1,11 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eurus Mainnet",
+  "chainId": 1008,
   "chain": "EUN",
+  "name": "Eurus Mainnet",
   "rpc": [
     "https://eurus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.eurus.network/"
   ],
+  "slug": "eurus",
+  "icon": {
+    "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
+    "width": 471,
+    "height": 471,
+    "format": "svg"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Eurus",
@@ -14,27 +22,14 @@ export default {
   },
   "infoURL": "https://eurus.network",
   "shortName": "eun",
-  "chainId": 1008,
-  "networkId": 1008,
-  "icon": {
-    "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
-    "width": 471,
-    "height": 471,
-    "format": "svg"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "eurusexplorer",
       "url": "https://explorer.eurus.network",
-      "icon": {
-        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
-        "width": 471,
-        "height": 471,
-        "format": "svg"
-      },
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "eurus"
+  "features": []
 } as const satisfies Chain;

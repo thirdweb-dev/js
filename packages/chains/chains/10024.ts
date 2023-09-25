@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gon Chain",
+  "chainId": 10024,
   "chain": "GonChain",
-  "icon": {
-    "url": "ipfs://QmPtiJGaApbW3ATZhPW3pKJpw3iGVrRGsZLWhrDKF9ZK18",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
+  "name": "Gon Chain",
   "rpc": [
     "https://gon-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.gaiaopen.network",
@@ -16,6 +11,13 @@ export default {
     "https://node3.mainnet.gon.network",
     "https://node4.mainnet.gon.network"
   ],
+  "slug": "gon-chain",
+  "icon": {
+    "url": "ipfs://QmPtiJGaApbW3ATZhPW3pKJpw3iGVrRGsZLWhrDKF9ZK18",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Gon Token",
@@ -24,8 +26,8 @@ export default {
   },
   "infoURL": "",
   "shortName": "gon",
-  "chainId": 10024,
-  "networkId": 10024,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Gon Explorer",
@@ -33,6 +35,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "gon-chain"
+  "features": []
 } as const satisfies Chain;

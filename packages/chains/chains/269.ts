@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "High Performance Blockchain",
+  "chainId": 269,
   "chain": "HPB",
+  "name": "High Performance Blockchain",
   "rpc": [
     "https://high-performance-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hpbnode.com",
     "wss://ws.hpbnode.com"
   ],
+  "slug": "high-performance-blockchain",
   "faucets": [
     "https://myhpbwallet.com/"
   ],
@@ -17,9 +19,8 @@ export default {
   },
   "infoURL": "https://hpb.io",
   "shortName": "hpb",
-  "chainId": 269,
-  "networkId": 269,
-  "slip44": 269,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "hscan",
@@ -27,6 +28,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "high-performance-blockchain"
+  "features": []
 } as const satisfies Chain;

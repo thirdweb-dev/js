@@ -1,17 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metaplayerone Mainnet",
+  "chainId": 2122,
   "chain": "METAD",
+  "name": "Metaplayerone Mainnet",
+  "rpc": [
+    "https://metaplayerone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.metaplayer.one/"
+  ],
+  "slug": "metaplayerone",
   "icon": {
     "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
     "width": 1280,
     "height": 1280,
     "format": "png"
   },
-  "rpc": [
-    "https://metaplayerone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.metaplayer.one/"
-  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "METAD",
@@ -20,21 +22,14 @@ export default {
   },
   "infoURL": "https://docs.metaplayer.one/",
   "shortName": "Metad",
-  "chainId": 2122,
-  "networkId": 2122,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Metad Scan",
       "url": "https://scan.metaplayer.one",
-      "icon": {
-        "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
-        "width": 1280,
-        "height": 1280,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "metaplayerone"
+  "features": []
 } as const satisfies Chain;

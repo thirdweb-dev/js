@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dragonfly Mainnet (Hexapod)",
+  "chainId": 78281,
   "chain": "Dragonfly",
-  "icon": {
-    "url": "ipfs://QmPXhdPGufjcPzZ9Y6nY6QyW8MgA6793L88iPMRh1Q3gjJ",
-    "width": 512,
-    "height": 366,
-    "format": "png"
-  },
+  "name": "Dragonfly Mainnet (Hexapod)",
   "rpc": [
     "https://dragonfly-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dragonfly-rpc.switch.ch",
@@ -15,6 +10,13 @@ export default {
     "https://dragonfly-rpc.phoenix-systems.io",
     "https://dragonfly-rpc.block-spirit.ch"
   ],
+  "slug": "dragonfly-hexapod",
+  "icon": {
+    "url": "ipfs://QmPXhdPGufjcPzZ9Y6nY6QyW8MgA6793L88iPMRh1Q3gjJ",
+    "width": 512,
+    "height": 366,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Dragonfly",
@@ -23,21 +25,14 @@ export default {
   },
   "infoURL": "https://hexapod.network",
   "shortName": "dfly",
-  "chainId": 78281,
-  "networkId": 78281,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Dragonfly Blockscout",
       "url": "https://blockscout.dragonfly.hexapod.network",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "dragonfly-hexapod"
+  "features": []
 } as const satisfies Chain;

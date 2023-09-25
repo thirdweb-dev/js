@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "QuarkChain Devnet Shard 1",
+  "chainId": 110002,
   "chain": "QuarkChain",
+  "name": "QuarkChain Devnet Shard 1",
   "rpc": [
     "https://quarkchain-devnet-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet-s1-ethapi.quarkchain.io",
     "http://eth-jrpc.devnet.quarkchain.io:39901"
   ],
+  "slug": "quarkchain-devnet-shard-1",
   "faucets": [],
   "nativeCurrency": {
     "name": "QKC",
@@ -15,12 +17,8 @@ export default {
   },
   "infoURL": "https://www.quarkchain.io",
   "shortName": "qkc-d-s1",
-  "chainId": 110002,
-  "networkId": 110002,
-  "parent": {
-    "chain": "eip155-110000",
-    "type": "shard"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "quarkchain-devnet",
@@ -28,6 +26,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "quarkchain-devnet-shard-1"
+  "features": []
 } as const satisfies Chain;

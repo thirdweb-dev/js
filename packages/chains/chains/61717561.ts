@@ -1,12 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aquachain",
+  "chainId": 61717561,
   "chain": "AQUA",
+  "name": "Aquachain",
   "rpc": [
     "https://aquachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://c.onical.org",
     "https://tx.aquacha.in/api"
   ],
+  "slug": "aquachain",
   "faucets": [
     "https://aquacha.in/faucet"
   ],
@@ -17,9 +19,8 @@ export default {
   },
   "infoURL": "https://aquachain.github.io",
   "shortName": "aqua",
-  "chainId": 61717561,
-  "networkId": 61717561,
-  "slip44": 61717561,
   "testnet": false,
-  "slug": "aquachain"
+  "redFlags": [],
+  "explorers": [],
+  "features": []
 } as const satisfies Chain;

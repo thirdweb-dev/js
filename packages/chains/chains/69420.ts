@@ -1,12 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Condrieu",
-  "title": "Ethereum Verkle Testnet Condrieu",
+  "chainId": 69420,
   "chain": "ETH",
+  "name": "Condrieu",
   "rpc": [
     "https://condrieu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.condrieu.ethdevops.io:8545"
   ],
+  "slug": "condrieu",
   "faucets": [
     "https://faucet.condrieu.ethdevops.io"
   ],
@@ -17,8 +18,8 @@ export default {
   },
   "infoURL": "https://condrieu.ethdevops.io",
   "shortName": "cndr",
-  "chainId": 69420,
-  "networkId": 69420,
+  "testnet": true,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Condrieu explorer",
@@ -26,6 +27,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "condrieu"
+  "features": []
 } as const satisfies Chain;

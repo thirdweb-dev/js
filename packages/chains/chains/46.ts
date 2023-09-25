@@ -1,7 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Darwinia Network",
+  "chainId": 46,
   "chain": "darwinia",
+  "name": "Darwinia Network",
   "rpc": [
     "https://darwinia-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.darwinia.network",
@@ -9,6 +10,7 @@ export default {
     "https://darwinia2.api.onfinality.io/public-ws",
     "https://darwinia-rpc.dwellir.com"
   ],
+  "slug": "darwinia-network",
   "faucets": [],
   "nativeCurrency": {
     "name": "Darwinia Network Native Token",
@@ -17,8 +19,8 @@ export default {
   },
   "infoURL": "https://darwinia.network/",
   "shortName": "darwinia",
-  "chainId": 46,
-  "networkId": 46,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "subscan",
@@ -26,6 +28,5 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "darwinia-network"
+  "features": []
 } as const satisfies Chain;

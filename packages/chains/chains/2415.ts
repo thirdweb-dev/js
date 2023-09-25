@@ -1,12 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "XODEX",
+  "chainId": 2415,
   "chain": "XODEX",
+  "name": "XODEX",
   "rpc": [
     "https://xodex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xo-dex.com/rpc",
     "https://xo-dex.io"
   ],
+  "slug": "xodex",
+  "icon": {
+    "url": "ipfs://QmXt49jPfHUmDF4n8TF7ks6txiPztx6qUHanWmHnCoEAhW",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "XODEX Native Token",
@@ -15,27 +23,14 @@ export default {
   },
   "infoURL": "https://xo-dex.com",
   "shortName": "xodex",
-  "chainId": 2415,
-  "networkId": 10,
-  "icon": {
-    "url": "ipfs://QmXt49jPfHUmDF4n8TF7ks6txiPztx6qUHanWmHnCoEAhW",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "XODEX Explorer",
       "url": "https://explorer.xo-dex.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmXt49jPfHUmDF4n8TF7ks6txiPztx6qUHanWmHnCoEAhW",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "xodex"
+  "features": []
 } as const satisfies Chain;

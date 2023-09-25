@@ -1,13 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Edgeware EdgeEVM Mainnet",
+  "chainId": 2021,
   "chain": "EDG",
-  "icon": {
-    "url": "ipfs://QmS3ERgAKYTmV7bSWcUPSvrrCC9wHQYxtZqEQYx9Rw4RGA",
-    "width": 352,
-    "height": 304,
-    "format": "png"
-  },
+  "name": "Edgeware EdgeEVM Mainnet",
   "rpc": [
     "https://edgeware-edgeevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgeware-evm.jelliedowl.net",
@@ -21,14 +16,13 @@ export default {
     "wss://mainnet4.edgewa.re",
     "wss://mainnet5.edgewa.re"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
+  "slug": "edgeware-edgeevm",
+  "icon": {
+    "url": "ipfs://QmS3ERgAKYTmV7bSWcUPSvrrCC9wHQYxtZqEQYx9Rw4RGA",
+    "width": 352,
+    "height": 304,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Edgeware",
@@ -37,9 +31,8 @@ export default {
   },
   "infoURL": "https://edgeware.io",
   "shortName": "edg",
-  "chainId": 2021,
-  "networkId": 2021,
-  "slip44": 523,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "Edgscan by Bharathcoorg",
@@ -49,15 +42,15 @@ export default {
     {
       "name": "Subscan",
       "url": "https://edgeware.subscan.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "edgeware-edgeevm"
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ]
 } as const satisfies Chain;

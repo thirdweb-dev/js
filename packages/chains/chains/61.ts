@@ -1,18 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Mainnet",
+  "chainId": 61,
   "chain": "ETC",
+  "name": "Ethereum Classic Mainnet",
   "rpc": [
     "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://etc.rivet.link",
     "https://etc.etcdesktop.com",
     "https://etc.mytokenpocket.vip"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    }
-  ],
+  "slug": "ethereum-classic",
   "faucets": [],
   "nativeCurrency": {
     "name": "Ethereum Classic Ether",
@@ -21,9 +18,8 @@ export default {
   },
   "infoURL": "https://ethereumclassic.org",
   "shortName": "etc",
-  "chainId": 61,
-  "networkId": 1,
-  "slip44": 61,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "blockscout",
@@ -31,6 +27,9 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ethereum-classic"
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ]
 } as const satisfies Chain;

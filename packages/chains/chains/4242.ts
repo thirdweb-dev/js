@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nexi Mainnet",
+  "chainId": 4242,
   "chain": "Nexi",
-  "icon": {
-    "url": "ipfs://bafybeifxqd7zel2m237kq5enavnh2s6cshaavswigogyvae2wevxy5k2ti",
-    "width": 512,
-    "height": 578,
-    "format": "png"
-  },
+  "name": "Nexi Mainnet",
   "rpc": [
     "https://nexi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chain.nexi.technology/",
     "https://chain.nexilix.com",
     "https://chain.nexi.evmnode.online"
   ],
+  "slug": "nexi",
+  "icon": {
+    "url": "ipfs://bafybeifxqd7zel2m237kq5enavnh2s6cshaavswigogyvae2wevxy5k2ti",
+    "width": 512,
+    "height": 578,
+    "format": "png"
+  },
   "faucets": [],
   "nativeCurrency": {
     "name": "Nexi",
@@ -22,9 +24,8 @@ export default {
   },
   "infoURL": "https://www.nexi.technology/",
   "shortName": "nexi",
-  "chainId": 4242,
-  "networkId": 4242,
-  "slip44": 2500,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "nexiscan",
@@ -32,6 +33,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "nexi"
+  "features": []
 } as const satisfies Chain;

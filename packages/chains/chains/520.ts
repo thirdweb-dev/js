@@ -1,19 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "XT Smart Chain Mainnet",
+  "chainId": 520,
   "chain": "XSC",
-  "icon": {
-    "url": "ipfs://QmNmAFgQKkjofaBR5mhB5ygE1Gna36YBVsGkgZQxrwW85s",
-    "width": 98,
-    "height": 96,
-    "format": "png"
-  },
+  "name": "XT Smart Chain Mainnet",
   "rpc": [
     "https://xt-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://datarpc1.xsc.pub",
     "https://datarpc2.xsc.pub",
     "https://datarpc3.xsc.pub"
   ],
+  "slug": "xt-smart-chain",
+  "icon": {
+    "url": "ipfs://QmNmAFgQKkjofaBR5mhB5ygE1Gna36YBVsGkgZQxrwW85s",
+    "width": 98,
+    "height": 96,
+    "format": "png"
+  },
   "faucets": [
     "https://xsc.pub/faucet"
   ],
@@ -24,8 +26,8 @@ export default {
   },
   "infoURL": "https://xsc.pub/",
   "shortName": "xt",
-  "chainId": 520,
-  "networkId": 1024,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "xscscan",
@@ -33,6 +35,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "xt-smart-chain"
+  "features": []
 } as const satisfies Chain;

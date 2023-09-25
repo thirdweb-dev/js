@@ -1,11 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Singularity ZERO Mainnet",
+  "chainId": 12052,
   "chain": "ZERO",
+  "name": "Singularity ZERO Mainnet",
   "rpc": [
     "https://singularity-zero.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zerorpc.singularity.gold"
   ],
+  "slug": "singularity-zero",
   "faucets": [
     "https://zeroscan.singularity.gold"
   ],
@@ -16,9 +18,8 @@ export default {
   },
   "infoURL": "https://www.singularity.gold",
   "shortName": "ZERO",
-  "chainId": 12052,
-  "networkId": 12052,
-  "slip44": 621,
+  "testnet": false,
+  "redFlags": [],
   "explorers": [
     {
       "name": "zeroscan",
@@ -26,6 +27,5 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "singularity-zero"
+  "features": []
 } as const satisfies Chain;
