@@ -348,20 +348,21 @@ export class Marketplace implements UpdateableNetwork {
     );
     // derive the offers from the events
     return await Promise.all(
-      listingEvents.map(async (e): Promise<Offer> => {
-        return await mapOffer(
-          this.contractWrapper.getProvider(),
-          BigNumber.from(listingId),
-          {
-            quantityWanted: e.data.quantityWanted,
-            pricePerToken: e.data.quantityWanted.gt(0)
-              ? e.data.totalOfferAmount.div(e.data.quantityWanted)
-              : e.data.totalOfferAmount,
-            currency: e.data.currency,
-            offeror: e.data.offeror,
-          } as UnmappedOffer,
-        );
-      }),
+      listingEvents.map(
+        (e): Promise<Offer> =>
+          mapOffer(
+            this.contractWrapper.getProvider(),
+            BigNumber.from(listingId),
+            {
+              quantityWanted: e.data.quantityWanted,
+              pricePerToken: e.data.quantityWanted.gt(0)
+                ? e.data.totalOfferAmount.div(e.data.quantityWanted)
+                : e.data.totalOfferAmount,
+              currency: e.data.currency,
+              offeror: e.data.offeror,
+            } as UnmappedOffer,
+          ),
+      ),
     );
   }
 

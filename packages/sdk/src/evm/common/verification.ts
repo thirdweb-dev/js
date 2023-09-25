@@ -66,23 +66,25 @@ export async function verifyThirdwebPrebuiltImplementation(
   secretKey?: string,
   constructorArgs?: ConstructorParamMap,
 ): Promise<string | string[]> {
-  const contractAddress = await getThirdwebContractAddress(
-    contractName,
-    chainId,
-    storage,
-    contractVersion,
-    clientId,
-    secretKey,
-  );
-  const encodedArgs = await getEncodedConstructorParamsForThirdwebContract(
-    contractName,
-    chainId,
-    storage,
-    contractVersion,
-    clientId,
-    secretKey,
-    constructorArgs,
-  );
+  const [contractAddress, encodedArgs] = await Promise.all([
+    getThirdwebContractAddress(
+      contractName,
+      chainId,
+      storage,
+      contractVersion,
+      clientId,
+      secretKey,
+    ),
+    getEncodedConstructorParamsForThirdwebContract(
+      contractName,
+      chainId,
+      storage,
+      contractVersion,
+      clientId,
+      secretKey,
+      constructorArgs,
+    ),
+  ]);
 
   console.info(`Verifying ${contractName} at address ${contractAddress}`);
 

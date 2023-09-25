@@ -206,14 +206,11 @@ export class Split implements UpdateableNetwork {
    * ```
    */
   public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
-    const resolvedAddress = await resolveAddress(address);
-    const walletBalance = await this.contractWrapper
-      .getProvider()
-      .getBalance(this.getAddress());
-    const totalReleased = await this.contractWrapper.read(
-      "totalReleased" as "totalReleased()",
-      [],
-    );
+    const [resolvedAddress, walletBalance, totalReleased] = await Promise.all([
+      resolveAddress(address),
+      this.contractWrapper.getProvider().getBalance(this.getAddress()),
+      this.contractWrapper.read("totalReleased" as "totalReleased()", []),
+    ]);
     const totalReceived = walletBalance.add(totalReleased);
 
     return this._pendingPayment(
@@ -244,19 +241,21 @@ export class Split implements UpdateableNetwork {
     walletAddress: AddressOrEns,
     tokenAddress: AddressOrEns,
   ): Promise<CurrencyValue> {
-    const resolvedToken = await resolveAddress(tokenAddress);
-    const resolvedWallet = await resolveAddress(walletAddress);
-
+    const [resolvedToken, resolvedWallet] = await Promise.all([
+      resolveAddress(tokenAddress),
+      resolveAddress(walletAddress),
+    ]);
     const erc20 = new Contract(
       resolvedToken,
       ERC20Abi,
       this.contractWrapper.getProvider(),
     ) as IERC20;
-    const walletBalance = await erc20.balanceOf(this.getAddress());
-    const totalReleased = await this.contractWrapper.read(
-      "totalReleased" as "totalReleased(address)",
-      [resolvedToken],
-    );
+    const [walletBalance, totalReleased] = await Promise.all([
+      erc20.balanceOf(this.getAddress()),
+      this.contractWrapper.read("totalReleased" as "totalReleased(address)", [
+        resolvedToken,
+      ]),
+    ]);
     const totalReceived = walletBalance.add(totalReleased);
     const value = await this._pendingPayment(
       resolvedWallet,

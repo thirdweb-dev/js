@@ -177,12 +177,11 @@ export class NFTDrop {
    */
   async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     const parsedQueryParams = QueryAllParamsSchema.parse(queryParams);
-    const info = await this.getCandyMachine();
-
-    // First, get all the claimed NFTs within the query params range
-    const claimedNfts = await this.getAllClaimed(parsedQueryParams);
-    const totalClaimed = await this.totalClaimedSupply();
-
+    const [info, claimedNfts, totalClaimed] = await Promise.all([
+      this.getCandyMachine(),
+      this.getAllClaimed(parsedQueryParams),
+      this.totalClaimedSupply(),
+    ]);
     // Then filter out all claimed NFTs from items to leave only unclaimed remaining
     const unclaimedItems: CandyMachineV2Item[] = [];
     info.items.forEach((item) => {
