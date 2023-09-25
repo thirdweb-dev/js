@@ -41,8 +41,12 @@ import {
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useState } from "react";
-import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
+import { useEffect, useState } from "react";
+import {
+  MetaMaskWallet,
+  type SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
@@ -135,6 +139,20 @@ export const ConnectedWalletDetails: React.FC<{
 
   const addressOrENS = ensQuery.data?.ens || shortAddress;
   const avatarUrl = ensQuery.data?.avatarUrl;
+
+  const [showConnectedToSmartWallet, setShowConnectedToSmartWallet] =
+    useState(false);
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
+      const smartWallet = activeWallet as SmartWallet;
+      smartWallet.isDeployed().then((isDeployed) => {
+        setShowConnectedToSmartWallet(isDeployed);
+      });
+    } else {
+      setShowConnectedToSmartWallet(false);
+    }
+  }, [activeWallet]);
 
   const trigger = props.detailsBtn ? (
     <div>
@@ -317,37 +335,34 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="lg" />
 
-      {activeWallet &&
-        activeWallet.walletId === walletIds.smartWallet &&
-        chain &&
-        address && (
-          <>
-            <Link
-              color="secondaryText"
-              hoverColor="primaryText"
-              href={`https://thirdweb.com/${chain.slug}/${address}/account`}
-              target="_blank"
-              size="sm"
+      {showConnectedToSmartWallet && chain && address && (
+        <>
+          <Link
+            color="secondaryText"
+            hoverColor="primaryText"
+            href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+            target="_blank"
+            size="sm"
+          >
+            <Container
+              flex="row"
+              gap="xs"
+              center="y"
+              style={{
+                width: "100%",
+                justifyContent: "space-between",
+              }}
             >
-              <Container
-                flex="row"
-                gap="xs"
-                center="y"
-                style={{
-                  width: "100%",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Container flex="row" gap="xs" center="y">
-                  <ActiveDot />
-                  Connected to Smart Wallet
-                </Container>
-                <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+              <Container flex="row" gap="xs" center="y">
+                <ActiveDot />
+                Connected to Smart Wallet
               </Container>
-            </Link>
-            <Spacer y="md" />
-          </>
-        )}
+              <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+          </Link>
+          <Spacer y="md" />
+        </>
+      )}
 
       {/* Send and Recive */}
       <Container
