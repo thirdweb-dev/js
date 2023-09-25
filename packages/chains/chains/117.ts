@@ -16,22 +16,12 @@ export default {
   "shortName": "auptick",
   "chainId": 117,
   "networkId": 117,
-  "icon": {
-    "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
+  "icon": "uptick",
   "explorers": [
     {
       "name": "Uptick Explorer",
       "url": "https://evm-explorer.uptick.network",
-      "icon": {
-        "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      },
+      "icon": "uptick",
       "standard": "none"
     }
   ],

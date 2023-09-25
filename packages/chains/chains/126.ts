@@ -2,12 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "name": "OYchain Mainnet",
   "chain": "OYchain",
-  "icon": {
-    "url": "ipfs://QmXW5T2MaGHznXUmQEXoyJjcdmX7dhLbj5fnqvZZKqeKzA",
-    "width": 677,
-    "height": 237,
-    "format": "png"
-  },
+  "icon": "oychain",
   "rpc": [
     "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oychain.io"

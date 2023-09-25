@@ -1,4 +1,3 @@
-import { PaperWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 import { EmbeddedWallet } from "./EmbeddedWallet";
 import {
   SelectUIProps,
@@ -8,22 +7,25 @@ import {
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
 
-type embeddedConfig = Omit<PaperWalletAdditionalOptions, "chain" | "chains">;
+export type EmbeddedWalletConfig = {
+  recommended?: boolean;
+};
 
 export const embeddedWallet = (
-  config: embeddedConfig,
+  config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
-    <EmailSelectionUI {...props} clientId={config.clientId} />
+    <EmailSelectionUI {...props} />
   );
 
   return {
     id: EmbeddedWallet.id,
     meta: EmbeddedWallet.meta,
     create(options: WalletOptions) {
-      return new EmbeddedWallet({ ...options, ...config });
+      return new EmbeddedWallet({ ...options, clientId: "" });
     },
     selectUI: selectUI,
     connectUI: EmbeddedConnectionUI,
+    recommended: config?.recommended,
   };
 };

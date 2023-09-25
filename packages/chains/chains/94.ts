@@ -24,22 +24,12 @@ export default {
   "shortName": "sdlt",
   "chainId": 94,
   "networkId": 94,
-  "icon": {
-    "url": "ipfs://bafkreig7x5z4j6vh2r3pugmjnob3tmlksaekhqcgsorqzvs55o6v7ehqd4",
-    "width": 682,
-    "height": 512,
-    "format": "png"
-  },
+  "icon": "bcts",
   "explorers": [
     {
       "name": "SwissDLT Explorer",
       "url": "https://explorer.swissdlt.ch",
-      "icon": {
-        "url": "ipfs://bafkreig7x5z4j6vh2r3pugmjnob3tmlksaekhqcgsorqzvs55o6v7ehqd4",
-        "width": 682,
-        "height": 512,
-        "format": "png"
-      },
+      "icon": "bcts",
       "standard": "EIP3091"
     }
   ],

@@ -126,7 +126,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   };
 
   return (
-    <Box>
+    <Box marginHorizontal="xl">
       <ConnectWalletHeader
         middleContent={<Text variant="header">Sign In</Text>}
         subHeaderText={"Please enter the code sent to"}

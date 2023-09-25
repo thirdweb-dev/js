@@ -5,6 +5,7 @@ import { useAppTheme } from "../../../styles/hooks";
 import {
   SelectUIProps,
   useCreateWalletInstance,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
@@ -12,17 +13,17 @@ import Text from "../../../components/base/Text";
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
-export const EmailSelectionUI: React.FC<
-  SelectUIProps<EmbeddedWallet> & {
-    clientId: string;
-  }
-> = ({ onSelect, clientId, walletConfig }) => {
+export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
+  onSelect,
+  walletConfig,
+}) => {
   const theme = useAppTheme();
   const [email, setEmail] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
+  const clientId = useWalletContext().clientId;
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(

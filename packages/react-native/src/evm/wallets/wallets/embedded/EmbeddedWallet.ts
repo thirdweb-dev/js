@@ -1,13 +1,14 @@
 import {
   WalletOptions,
-  PaperWalletAdditionalOptions,
   AbstractClientWallet,
+  EmbeddedWalletAdditionalOptions,
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
 import { EmbeddedWalletConnectionArgs } from "../../connectors/embedded-wallet/types";
 import { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 
-export type EmbeddedWalletOptions = WalletOptions<PaperWalletAdditionalOptions>;
+export type EmbeddedWalletOptions =
+  WalletOptions<EmbeddedWalletAdditionalOptions>;
 
 export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletOptions,
