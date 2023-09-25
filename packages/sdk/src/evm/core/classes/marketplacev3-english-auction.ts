@@ -404,12 +404,11 @@ export class MarketplaceV3EnglishAuctions<
     async (
       listings: EnglishAuctionInputParams[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createAuction.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createAuction.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this

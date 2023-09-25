@@ -48,15 +48,11 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
       const contractEncoder = new ContractEncoder(this);
-      const encoded: string[] = await Promise.all(
-        contractAddresses.map(async (address) =>
-          contractEncoder.encode("add", [
-            deployerAddress,
-            await resolveAddress(address),
-          ]),
-        ),
+      const encoded = (
+        await Promise.all(contractAddresses.map((addr) => resolveAddress(addr)))
+      ).map((address) =>
+        contractEncoder.encode("add", [deployerAddress, address]),
       );
-
       return Transaction.fromContractWrapper({
         contractWrapper: this,
         method: "multicall",
@@ -79,15 +75,11 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.getSignerAddress();
       const contractEncoder = new ContractEncoder(this);
-      const encoded: string[] = await Promise.all(
-        contractAddresses.map(async (address) =>
-          contractEncoder.encode("remove", [
-            deployerAddress,
-            await resolveAddress(address),
-          ]),
-        ),
+      const encoded = (
+        await Promise.all(contractAddresses.map((addr) => resolveAddress(addr)))
+      ).map((address) =>
+        contractEncoder.encode("remove", [deployerAddress, address]),
       );
-
       return Transaction.fromContractWrapper({
         contractWrapper: this,
         method: "multicall",

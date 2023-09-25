@@ -65,16 +65,16 @@ export async function getDeploymentInfo(
 
     const pluginMetadata = (
       await Promise.all(
-        publishedExtensions.map(async (c) => {
-          return fetchAndCacheDeployMetadata(c.metadataUri, storage);
-        }),
+        publishedExtensions.map((c) =>
+          fetchAndCacheDeployMetadata(c.metadataUri, storage),
+        ),
       )
     ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
 
     // get deployment info for all plugins
     const pluginDeploymentInfo = await Promise.all(
-      pluginMetadata.map(async (metadata) => {
-        const info = await computeDeploymentInfo(
+      pluginMetadata.map((metadata) =>
+        computeDeploymentInfo(
           "plugin",
           provider,
           storage,
@@ -82,9 +82,8 @@ export async function getDeploymentInfo(
           { metadata: metadata },
           clientId,
           secretKey,
-        );
-        return info;
-      }),
+        ),
+      ),
     );
 
     // create constructor param input for PluginMap
@@ -142,8 +141,8 @@ export async function getDeploymentInfo(
 
     // get deployment info for all extensions
     const extensionDeploymentInfo = await Promise.all(
-      extensionMetadata.map(async (metadata) => {
-        const info = await computeDeploymentInfo(
+      extensionMetadata.map((metadata) =>
+        computeDeploymentInfo(
           "extension",
           provider,
           storage,
@@ -151,9 +150,8 @@ export async function getDeploymentInfo(
           { metadata: metadata },
           clientId,
           secretKey,
-        );
-        return info;
-      }),
+        ),
+      ),
     );
 
     // create constructor param input for BaseRouter

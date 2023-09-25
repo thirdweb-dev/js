@@ -152,14 +152,13 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
       for (let i = 0; i < sortedRoles.length; i++) {
         const role = sortedRoles[i];
         const addresses: Address[] = await Promise.all(
-          rolesWithAddresses[role]?.map(
-            async (addressOrEns) => await resolveAddress(addressOrEns),
+          rolesWithAddresses[role]?.map((addressOrEns) =>
+            resolveAddress(addressOrEns),
           ) || [],
         );
         const currentAddresses: Address[] = await Promise.all(
-          currentRoles[role]?.map(
-            async (addressOrEns) =>
-              await resolveAddress(addressOrEns as AddressOrEns),
+          currentRoles[role]?.map((addressOrEns) =>
+            resolveAddress(addressOrEns as AddressOrEns),
           ) || [],
         );
         const toAdd = addresses.filter(

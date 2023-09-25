@@ -141,7 +141,7 @@ export async function encodeConstructorParamsForImplementation(
       return p.type;
     }
   });
-
+  const { chainId } = await provider.getNetwork();
   const constructorParamValues = await Promise.all(
     constructorParams.map(async (p) => {
       if (constructorParamMap && constructorParamMap[p.name]) {
@@ -156,7 +156,6 @@ export async function encodeConstructorParamsForImplementation(
         return constructorParamMap[p.name].value;
       }
       if (p.name && p.name.includes("nativeTokenWrapper")) {
-        const chainId = (await provider.getNetwork()).chainId;
         let nativeTokenWrapperAddress =
           getNativeTokenByChainId(chainId).wrapped.address;
 
@@ -218,7 +217,6 @@ export async function encodeConstructorParamsForImplementation(
 
         return deploymentInfo.transaction.predictedAddress;
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {
-        const chainId = (await provider.getNetwork()).chainId;
         return getRoyaltyEngineV1ByChainId(chainId);
       } else {
         throw new Error("Can't resolve constructor arguments");

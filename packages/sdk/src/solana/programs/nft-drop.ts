@@ -478,8 +478,8 @@ export class NFTDrop {
     const candyMachine = await this.getCandyMachine();
     await this.claimConditions.assertCanClaimable(Number(amount));
     const builders = await Promise.all(
-      [...Array(Number(amount)).keys()].map(async () => {
-        return await this.metaplex
+      [...Array(Number(amount)).keys()].map(() => {
+        return this.metaplex
           .candyMachinesV2()
           .builders()
           .mint({
