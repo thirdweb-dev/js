@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import { ActivityIndicator, StyleSheet, TextInput } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { useAppTheme } from "../../../styles/hooks";
 import {
   SelectUIProps,
@@ -9,6 +9,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
+import BaseButton from "../../../components/base/BaseButton";
+import { TextInput } from "../../../components/base/TextInput";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
@@ -67,47 +69,55 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
   };
 
   return (
-    <Box flex={1}>
-      <Box flex={1} alignItems="flex-start">
-        <Box
-          flexDirection="row"
-          alignItems="center"
-          borderColor="border"
-          justifyContent="center"
+    <Box paddingHorizontal="xl" mt="lg">
+      <Box>
+        <TextInput
+          textInputProps={{
+            value: email,
+            placeholder: "Enter your email address",
+            placeholderTextColor: theme.colors.textSecondary,
+            keyboardType: "email-address",
+            returnKeyType: "done",
+            autoCapitalize: "none",
+            autoCorrect: false,
+            autoComplete: "off",
+            clearTextOnFocus: false,
+            onChangeText: setEmail,
+            style: {
+              fontSize: 14,
+              color: theme.colors.textPrimary,
+              lineHeight: 16,
+              padding: 0,
+            },
+          }}
+          containerProps={{
+            paddingHorizontal: "sm",
+            paddingVertical: "md",
+          }}
+        />
+        <BaseButton
+          mt="md"
+          paddingVertical="xmd"
+          borderRadius="lg"
           borderWidth={1}
-          borderRadius="md"
-          pr="xs"
+          borderColor="border"
+          backgroundColor="accentButtonColor"
+          onPress={handleNetworkCall}
         >
-          <TextInput
-            placeholder="Enter your email address"
-            placeholderTextColor="gray"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email} // "jorge@thirdweb.com"
-            onChangeText={setEmail}
-            returnKeyType="done"
-            onSubmitEditing={handleNetworkCall}
-            autoCorrect={false}
-            autoComplete="off"
-            clearTextOnFocus={false}
-            style={{ ...styles.textInput, color: theme.colors.textPrimary }}
-          />
-          {isFetching ? <ActivityIndicator size={"small"} /> : null}
-        </Box>
+          {isFetching ? (
+            <ActivityIndicator size={"small"} />
+          ) : (
+            <Text
+              variant="bodySmall"
+              color="accentButtonTextColor"
+              fontWeight="700"
+            >
+              Continue
+            </Text>
+          )}
+        </BaseButton>
         {errorMessage ? <Text variant="error">{errorMessage}</Text> : null}
       </Box>
-      <Text marginVertical="sm" variant="bodySmallSecondary" textAlign="center">
-        ---- OR ----
-      </Text>
     </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: {
-    textAlign: "left",
-    flex: 1,
-    height: 40,
-    paddingLeft: 5,
-  },
-});

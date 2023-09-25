@@ -8,7 +8,7 @@ export async function getEncryptionKey(
   pwd: string,
   salt: ArrayBuffer,
 ): Promise<string> {
-  const key = QuickCrypto.pbkdf2Sync(pwd, salt, 100000, 256, "sha256");
+  const key = QuickCrypto.pbkdf2Sync(pwd, salt, 5000000, 256, "sha256");
 
   // this produces a 256 bytes length key
   // but node by default produces a 32 byte length key

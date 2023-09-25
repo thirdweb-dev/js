@@ -2,6 +2,7 @@ import {
   WalletOptions,
   AbstractClientWallet,
   EmbeddedWalletAdditionalOptions,
+  walletIds,
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
 import { EmbeddedWalletConnectionArgs } from "../../connectors/embedded-wallet/types";
@@ -18,11 +19,12 @@ export class EmbeddedWallet extends AbstractClientWallet<
   options: EmbeddedWalletOptions;
 
   static meta = {
-    name: "Email Wallet",
-    iconURL: "https://thirdweb.com/favicon.ico",
+    name: walletIds.embeddedWallet,
+    iconURL:
+      "ipfs://QmNx2evQa6tcQs9VTd3YaDm31ckfStvgRGKFGELahUmrbV/emailIcon.svg",
   };
 
-  static id = "email-wallet";
+  static id = walletIds.embeddedWallet;
 
   constructor(options: EmbeddedWalletOptions) {
     super(EmbeddedWallet.id, options);
