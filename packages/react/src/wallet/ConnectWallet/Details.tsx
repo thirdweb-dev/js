@@ -140,20 +140,6 @@ export const ConnectedWalletDetails: React.FC<{
   const addressOrENS = ensQuery.data?.ens || shortAddress;
   const avatarUrl = ensQuery.data?.avatarUrl;
 
-  const [showConnectedToSmartWallet, setShowConnectedToSmartWallet] =
-    useState(false);
-
-  useEffect(() => {
-    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
-      const smartWallet = activeWallet as SmartWallet;
-      smartWallet.isDeployed().then((isDeployed) => {
-        setShowConnectedToSmartWallet(isDeployed);
-      });
-    } else {
-      setShowConnectedToSmartWallet(false);
-    }
-  }, [activeWallet]);
-
   const trigger = props.detailsBtn ? (
     <div>
       <props.detailsBtn />
@@ -335,34 +321,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="lg" />
 
-      {showConnectedToSmartWallet && chain && address && (
-        <>
-          <Link
-            color="secondaryText"
-            hoverColor="primaryText"
-            href={`https://thirdweb.com/${chain.slug}/${address}/account`}
-            target="_blank"
-            size="sm"
-          >
-            <Container
-              flex="row"
-              gap="xs"
-              center="y"
-              style={{
-                width: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Container flex="row" gap="xs" center="y">
-                <ActiveDot />
-                Connected to Smart Wallet
-              </Container>
-              <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
-            </Container>
-          </Link>
-          <Spacer y="md" />
-        </>
-      )}
+      <ConnectedToSmartWallet />
 
       {/* Send and Recive */}
       <Container
@@ -793,3 +752,56 @@ const ActiveDot = styled.div<{ theme?: Theme }>`
   border-radius: 50%;
   background-color: ${(props) => props.theme.colors.success};
 `;
+
+function ConnectedToSmartWallet() {
+  const activeWallet = useWallet();
+  const chain = useChain();
+  const address = useAddress();
+
+  const [showConnectedToSmartWallet, setShowConnectedToSmartWallet] =
+    useState(false);
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
+      const smartWallet = activeWallet as SmartWallet;
+      smartWallet.isDeployed().then((isDeployed) => {
+        setShowConnectedToSmartWallet(isDeployed);
+      });
+    } else {
+      setShowConnectedToSmartWallet(false);
+    }
+  }, [activeWallet]);
+
+  if (showConnectedToSmartWallet && chain && address) {
+    return (
+      <>
+        <Link
+          color="secondaryText"
+          hoverColor="primaryText"
+          href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+          target="_blank"
+          size="sm"
+        >
+          <Container
+            flex="row"
+            gap="xs"
+            center="y"
+            style={{
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Container flex="row" gap="xs" center="y">
+              <ActiveDot />
+              Connected to Smart Wallet
+            </Container>
+            <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+          </Container>
+        </Link>
+        <Spacer y="md" />
+      </>
+    );
+  }
+
+  return null;
+}
