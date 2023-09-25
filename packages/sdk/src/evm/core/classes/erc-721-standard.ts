@@ -5,7 +5,10 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
-import { QueryAllParams } from "../../../core/schema/QueryParams";
+import {
+  QueryAllParams,
+  QueryOwnedParams,
+} from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -100,7 +103,7 @@ export class StandardErc721<
    */
   public async getOwned(
     walletAddress?: AddressOrEns,
-    queryParams?: QueryAllParams,
+    queryParams?: QueryOwnedParams,
   ): Promise<NFT[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
@@ -115,12 +118,11 @@ export class StandardErc721<
    */
   public async getOwnedTokenIds(
     walletAddress?: AddressOrEns,
-    queryParams?: QueryAllParams,
   ): Promise<BigNumber[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
-    return this.erc721.getOwnedTokenIds(walletAddress, queryParams);
+    return this.erc721.getOwnedTokenIds(walletAddress);
   }
 
   /**

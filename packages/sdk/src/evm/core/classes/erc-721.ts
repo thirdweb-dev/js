@@ -447,7 +447,6 @@ export class Erc721<
   /**
    * Get all token ids of NFTs owned by a specific wallet.
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
-   * @param queryParams - optional filtering to only fetch a subset of results.
    */
   public async getOwnedTokenIds(walletAddress?: AddressOrEns) {
     if (walletAddress) {
