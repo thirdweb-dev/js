@@ -1,4 +1,4 @@
-import { useAddress, useWalletConfig } from "@thirdweb-dev/react-core";
+import { useAddress } from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
 import { Container, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
@@ -11,9 +11,8 @@ import { isMobile } from "../../evm/utils/isMobile";
 import { Img } from "../../components/Img";
 import { useClipboard } from "../../evm/components/hooks/useCopyClipboard";
 
-export function ReceiveFunds() {
+export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();
-  const walletConfig = useWalletConfig();
   const isMob = isMobile();
   const { hasCopied, onCopy } = useClipboard(address || "");
 
@@ -30,13 +29,11 @@ export function ReceiveFunds() {
               qrCodeUri={address}
               size={310}
               QRIcon={
-                walletConfig?.meta.iconURL ? (
-                  <Img
-                    src={walletConfig?.meta.iconURL}
-                    width={iconSize.xxl}
-                    height={iconSize.xxl}
-                  />
-                ) : undefined
+                <Img
+                  src={props.iconUrl}
+                  width={iconSize.xxl}
+                  height={iconSize.xxl}
+                />
               }
             />
           </Container>

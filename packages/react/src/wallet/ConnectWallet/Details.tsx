@@ -600,7 +600,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showReceiveModal && (
         <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
-          <ReceiveFunds />
+          <ReceiveFunds iconUrl={activeWalletIconURL} />
         </Modal>
       )}
     </>
