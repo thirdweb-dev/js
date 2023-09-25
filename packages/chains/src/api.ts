@@ -64,6 +64,7 @@ type ChainListQuery = {
   page?: number;
   sortBy?: "chainId" | "updatedAt" | "createdAt";
   sort?: "asc" | "desc";
+  filter?: "mainnet" | "testnet";
 };
 
 export async function getChainList(
