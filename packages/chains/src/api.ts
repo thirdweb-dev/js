@@ -14,6 +14,7 @@ export function convertApiChainToChain(apiChain: ApiChain): Chain {
     status: apiChain.status || undefined,
     features: apiChain.features.map((feature) => ({ name: feature })),
     icon: apiChain.icon || undefined,
+    infoURL: apiChain.infoURL || undefined,
   };
 }
 
@@ -24,6 +25,7 @@ export function convertChainToApiChain(chain: Chain): ApiChain {
     status: chain.status || null,
     features: chain.features?.map((feature) => feature.name) || [],
     icon: chain.icon || null,
+    infoURL: chain.infoURL || null,
   };
 }
 

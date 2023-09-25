@@ -21,7 +21,6 @@ export default {
     "symbol": "GRAMS",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "TeaParty",
   "testnet": false,
   "status": "incubating",

@@ -17,7 +17,6 @@ export default {
     "symbol": "Q",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "quarix",
   "testnet": false,
   "status": "incubating",

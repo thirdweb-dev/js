@@ -22,7 +22,6 @@ export default {
     "symbol": "PEPE",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "POP",
   "testnet": false,
   "redFlags": [],

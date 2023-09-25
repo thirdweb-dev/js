@@ -22,7 +22,6 @@ export default {
     "symbol": "TEXL",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "exlvolta",
   "testnet": true,
   "redFlags": [],

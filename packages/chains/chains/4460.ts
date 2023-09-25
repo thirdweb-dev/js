@@ -20,7 +20,6 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "orderlyl2",
   "testnet": true,
   "redFlags": [],

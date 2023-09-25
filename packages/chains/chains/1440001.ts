@@ -20,7 +20,6 @@ export default {
     "symbol": "XRP",
     "decimals": 6
   },
-  "infoURL": null,
   "shortName": "XRPL-EVM-Devnet-Sidechain",
   "testnet": true,
   "redFlags": [],

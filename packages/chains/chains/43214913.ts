@@ -14,7 +14,6 @@ export default {
     "symbol": "MAI",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "mais",
   "testnet": true,
   "redFlags": [],

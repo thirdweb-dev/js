@@ -11,7 +11,6 @@ export default {
     "symbol": "MESHT",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "mesh-chain-testnet",
   "testnet": true,
   "redFlags": [],

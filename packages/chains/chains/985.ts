@@ -23,7 +23,6 @@ export default {
     "symbol": "CMEMO",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "memochain",
   "testnet": false,
   "redFlags": [],

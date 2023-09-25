@@ -14,7 +14,6 @@ export default {
     "symbol": "ZTH",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "zeeth",
   "testnet": false,
   "redFlags": [],

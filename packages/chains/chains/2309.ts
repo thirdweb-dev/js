@@ -11,7 +11,6 @@ export default {
     "symbol": "ARÉV",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "arevia",
   "testnet": false,
   "status": "incubating",

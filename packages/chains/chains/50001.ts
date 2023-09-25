@@ -14,7 +14,6 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "LOE",
   "testnet": false,
   "redFlags": [],

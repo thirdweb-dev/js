@@ -20,7 +20,6 @@ export default {
     "symbol": "POP",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "POPTestnet",
   "testnet": true,
   "redFlags": [],

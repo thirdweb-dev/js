@@ -14,7 +14,6 @@ export default {
     "symbol": "OPN",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "sus",
   "testnet": false,
   "redFlags": [],

@@ -16,7 +16,6 @@ export default {
     "symbol": "WRLDS",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "WRLDS",
   "testnet": true,
   "redFlags": [],

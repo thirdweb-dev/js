@@ -22,7 +22,6 @@ export default {
     "symbol": "LAC",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "lachain",
   "testnet": false,
   "redFlags": [],

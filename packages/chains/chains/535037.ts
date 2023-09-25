@@ -14,7 +14,6 @@ export default {
     "symbol": "BESC",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "BESC",
   "testnet": false,
   "redFlags": [],

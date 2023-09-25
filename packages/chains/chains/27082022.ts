@@ -20,7 +20,6 @@ export default {
     "symbol": "EXL",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "exl",
   "testnet": false,
   "redFlags": [],

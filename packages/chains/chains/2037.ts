@@ -14,7 +14,6 @@ export default {
     "symbol": "SHRAP",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "kiwi",
   "testnet": true,
   "redFlags": [],

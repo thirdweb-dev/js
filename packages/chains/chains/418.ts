@@ -23,7 +23,6 @@ export default {
     "symbol": "TLA",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "latestnet",
   "testnet": true,
   "redFlags": [],

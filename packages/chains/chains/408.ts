@@ -20,7 +20,6 @@ export default {
     "symbol": "OMN",
     "decimals": 18
   },
-  "infoURL": null,
   "shortName": "OmegaNetwork",
   "testnet": false,
   "redFlags": [],

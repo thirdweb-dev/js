@@ -24,7 +24,6 @@ export default {
     "symbol": "GT",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "gon",
   "testnet": true,
   "redFlags": [],

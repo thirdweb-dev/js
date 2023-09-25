@@ -20,7 +20,6 @@ export default {
     "symbol": "DOINX",
     "decimals": 18
   },
-  "infoURL": "",
   "shortName": "dchain-mainnet",
   "testnet": false,
   "redFlags": [],
