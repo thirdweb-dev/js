@@ -58,12 +58,10 @@ export class Erc721Enumerable implements DetectableFeature {
   ): Promise<NFT[]> {
     let tokenIds = await this.tokenIds(walletAddress);
     if (queryParams) {
-      if (queryParams) {
-        const page = queryParams?.page || 1;
-        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-        const startIndex = (page - 1) * count;
-        tokenIds = tokenIds.slice(startIndex, startIndex + count);
-      }
+      const page = queryParams?.page || 1;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      const startIndex = (page - 1) * count;
+      tokenIds = tokenIds.slice(startIndex, startIndex + count);
     }
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
