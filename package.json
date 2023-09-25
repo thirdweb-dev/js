@@ -12,8 +12,7 @@
     "fix": "next lint --fix",
     "format": "prettier --write .",
     "gen:theme-typings": "chakra-cli tokens theme/index.ts",
-    "install-sentry": "./sentry-postinstall.sh",
-    "postinstall": "bun run gen:theme-typings && bun run install-sentry",
+    "postinstall": "bun run gen:theme-typings",
     "find:unused": "next-unused",
     "postbuild": "next-sitemap",
     "build:analyze": "ANALYZE=true bun run build"
@@ -59,7 +58,7 @@
     "framer-motion": "^10.16.4",
     "fuse.js": "^6.6.2",
     "idb-keyval": "^6.2.0",
-    "next": "^13.5.1",
+    "next": "^13.5.2",
     "next-plausible": "^3.9.1",
     "next-seo": "^6.1.0",
     "node-vibrant": "^3.2.1-alpha.1",
@@ -111,7 +110,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "isomorphic-fetch": "^3.0.0",
     "lodash.merge": "^4.6.2",
-    "next-sitemap": "^4.0.0",
+    "next-sitemap": "^4.2.3",
     "next-unused": "^0.0.6",
     "tailwindcss": "^3.3.1",
     "typescript": "^5.2.2"
