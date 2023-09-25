@@ -594,17 +594,12 @@ export class Marketplace implements UpdateableNetwork {
   private async getAllListingsNoFilter(
     filterInvalidListings: boolean,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    const listings = await Promise.all(
-      Array.from(
-        Array(
-          (await this.contractWrapper.read("totalListings", [])).toNumber(),
-        ).keys(),
-      ).map(async (i) => {
-        let listing;
-
-        try {
-          listing = await this.getListing(i);
-        } catch (err) {
+    const _totalListings = (
+      await this.contractWrapper.read("totalListings", [])
+    ).toNumber();
+    const _listings = await Promise.all(
+      Array.from(Array(_totalListings).keys()).map((i) =>
+        this.getListing(i).catch((err) => {
           if (err instanceof ListingNotFoundError) {
             return undefined;
           } else {
@@ -613,20 +608,29 @@ export class Marketplace implements UpdateableNetwork {
             );
             return undefined;
           }
-        }
-
-        if (listing.type === ListingType.Auction) {
-          return listing;
-        }
-
+        }),
+      ),
+    );
+    const _listingValidity = await Promise.all(
+      _listings.map((_listing) => {
+        if (!_listing || _listing === undefined) return { valid: false };
+        if (_listing.type === ListingType.Auction) return { valid: false };
+        if (filterInvalidListings)
+          return this.direct.isStillValidListing(_listing);
+        return { valid: false };
+      }),
+    );
+    const listings = await Promise.all(
+      _listings.map((_listing, index) => {
+        if (!_listing || _listing === undefined) return undefined;
+        if (_listing.type === ListingType.Auction) return _listing;
         if (filterInvalidListings) {
-          const { valid } = await this.direct.isStillValidListing(listing);
+          const { valid } = _listingValidity[index];
           if (!valid) {
             return undefined;
           }
         }
-
-        return listing;
+        return _listing;
       }),
     );
     return listings.filter((l) => l !== undefined) as (
