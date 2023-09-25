@@ -62,8 +62,8 @@ export async function getChainFromApi(
 type ChainListQuery = {
   limit?: number;
   page?: number;
-  sort?: "chainId" | "updatedAt" | "createdAt";
-  order?: "asc" | "desc";
+  sortBy?: "chainId" | "updatedAt" | "createdAt";
+  sort?: "asc" | "desc";
 };
 
 export async function getChainList(
