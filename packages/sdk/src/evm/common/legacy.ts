@@ -7,9 +7,12 @@ export async function getPrebuiltInfo(
 ): Promise<{ type: string; version: number } | undefined> {
   try {
     const contract = new Contract(address, IThirdwebContractABI, provider);
-    const version = await contract.contractType();
+    const [_type, version] = await Promise.all([
+      contract.contractType(),
+      contract.contractVersion(),
+    ]);
     const type = utils
-      .toUtf8String(version) // eslint-disable-next-line no-control-regex
+      .toUtf8String(_type) // eslint-disable-next-line no-control-regex
       .replace(/\x00/g, "");
     return {
       type,
