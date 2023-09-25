@@ -49,10 +49,11 @@ export class PaperWallet extends AbstractClientWallet<
     ) {
       // checks to see if we are trying to use USER_MANAGED with thirdweb client ID. If so, we throw an error.
       if (
-        (options.clientId &&
-          !this.isClientIdLegacyPaper(options.clientId ?? "")) ||
         (options.paperClientId &&
-          !this.isClientIdLegacyPaper(options.paperClientId))
+          !this.isClientIdLegacyPaper(options.paperClientId)) ||
+        (!options.paperClientId &&
+          options.clientId &&
+          !this.isClientIdLegacyPaper(options.clientId))
       ) {
         throw new Error(
           'RecoveryShareManagement option "USER_MANAGED" is not supported with thirdweb client ID',

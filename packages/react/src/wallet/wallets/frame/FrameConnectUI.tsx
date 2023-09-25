@@ -10,7 +10,10 @@ import {
 } from "../../../components/modalElements";
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader } from "../../../components/basic";
-import { ButtonLink } from "../../ConnectWallet/screens/GetStartedScreen";
+import {
+  ButtonLink,
+  GetStartedScreen,
+} from "../../ConnectWallet/screens/GetStartedScreen";
 import { Img } from "../../../components/Img";
 import { iconSize } from "../../../design-system";
 import { openWindow } from "../../utils/openWindow";
@@ -58,9 +61,9 @@ const FrameFailedConnect: React.FC<{
 };
 
 export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
-  const [screen, setScreen] = useState<"connecting" | "connect-failed">(
-    "connecting",
-  );
+  const [screen, setScreen] = useState<
+    "connecting" | "connect-failed" | "get-started"
+  >("connecting");
   const connect = useConnect();
   const connectPrompted = useRef(false);
   const { walletConfig, connected, goBack } = props;
@@ -102,7 +105,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
           // NOOP
         }}
         onGetStarted={() => {
-          // NOOP - TODO
+          setScreen("get-started");
         }}
         hideBackButton={hideBackButton}
         onBack={goBack}
@@ -118,6 +121,19 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
         onBack={goBack}
         walletIconURL={walletConfig.meta.iconURL}
         supportLink={supportLink}
+      />
+    );
+  }
+
+  if (screen === "get-started") {
+    return (
+      <GetStartedScreen
+        walletIconURL={walletConfig.meta.iconURL}
+        walletName={walletConfig.meta.name}
+        chromeExtensionLink={walletConfig.meta.urls?.chrome}
+        googlePlayStoreLink={walletConfig.meta.urls?.android}
+        appleStoreLink={walletConfig.meta.urls?.ios}
+        onBack={props.goBack}
       />
     );
   }
