@@ -1,7 +1,7 @@
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import { QueryAllParams } from "../../../core/schema/QueryParams";
+import { QueryAllParams, QueryOwnedParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -192,7 +192,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public async getOwned(
     walletAddress?: AddressOrEns,
-    queryParams?: QueryAllParams,
+    queryParams?: QueryOwnedParams,
   ): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress, queryParams);
   }

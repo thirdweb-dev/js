@@ -1,6 +1,9 @@
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import { QueryAllParams } from "../../../core/schema/QueryParams";
+import {
+  QueryAllParams,
+  QueryOwnedParams,
+} from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -216,8 +219,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    return this.erc1155.getOwned(walletAddress);
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryOwnedParams,
+  ): Promise<NFT[]> {
+    return this.erc1155.getOwned(walletAddress, queryParams);
   }
 
   /**
