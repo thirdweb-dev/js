@@ -45,7 +45,7 @@ export function ConnectingWallet({
               Connecting your wallet
             </Text>
             <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-              Login and connect your wallet through the metamask pop-up
+              {`Login and connect your wallet through the ${wallet.meta.name} pop-up`}
             </Text>
           </>
         )}

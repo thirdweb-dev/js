@@ -7,8 +7,6 @@ import {
 export type SmartWalletConfigOptions = Omit<
   SmartWalletConfig_,
   "chain" | "clientId" | "secretKey"
-> & {
-  personalWallets?: WalletConfig<any>[];
-};
+>;
 
 export type SmartWalletConfig = WalletConfig<SmartWallet>;

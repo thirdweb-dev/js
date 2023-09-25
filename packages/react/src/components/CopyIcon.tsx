@@ -9,6 +9,7 @@ export const CopyIcon: React.FC<{
   tip: string;
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
+  hasCopied?: boolean;
 }> = (props) => {
   const { hasCopied, onCopy } = useClipboard(props.text);
 
@@ -22,7 +23,7 @@ export const CopyIcon: React.FC<{
       }}
     >
       <ToolTip tip={props.tip} side={props.side} align={props.align}>
-        {hasCopied ? <CheckIconStyled /> : <CopyIconSVG />}
+        {props.hasCopied || hasCopied ? <CheckIconStyled /> : <CopyIconSVG />}
       </ToolTip>
     </div>
   );
