@@ -4,6 +4,7 @@ import type {
 } from "@paperxyz/sdk-common-utilities";
 import type { EmbeddedWallet } from "../../lib/core/embedded-wallet";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
+import { RecoveryShareManagement } from "../auth";
 
 // Class constructor types
 // types for class constructors still a little messy right now.
@@ -58,6 +59,7 @@ export type SetUpWalletRpcReturnType = WalletAddressObjectType & {
 export type SendEmailOtpReturnType = {
   isNewUser: boolean;
   isNewDevice: boolean;
+  recoveryShareManagement: RecoveryShareManagement;
 };
 export type LogoutReturnType = { success: boolean };
 export type GetAuthDetailsReturnType = { authDetails?: AuthDetails };
