@@ -1,7 +1,7 @@
 import {
   AuthProvider,
   AuthStoredTokenWithCookieReturnType,
-  SendEmailOtpReturnType,
+  RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import type { CognitoUser } from "amazon-cognito-identity-js";
 import { Auth } from "aws-amplify";
@@ -17,6 +17,7 @@ import {
 import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
+import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 
 export async function sendEmailOTP(
   email: string,
@@ -53,6 +54,7 @@ export async function sendEmailOTP(
     ? {
         isNewUser: result.isNewUser,
         isNewDevice: true,
+        recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
       }
     : {
         isNewUser: result.isNewUser,
@@ -60,6 +62,7 @@ export async function sendEmailOTP(
           clientId,
           result.walletUserId ?? "",
         )),
+        recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
       };
 }
 
