@@ -12,6 +12,7 @@ import {
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { WalletOptions as WalletOptionsRC } from "@thirdweb-dev/react-core";
+import { COINBASE_ICON } from "../../assets/svgs";
 
 type CoinbaseWalletOptions = Omit<
   WalletOptions<CoinbaseWalletConnectorOptions>,
@@ -21,8 +22,7 @@ type CoinbaseWalletOptions = Omit<
 export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
     name: "Coinbase Wallet",
-    iconURL:
-      "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
+    iconURL: COINBASE_ICON,
   };
 
   connector?: Connector;
