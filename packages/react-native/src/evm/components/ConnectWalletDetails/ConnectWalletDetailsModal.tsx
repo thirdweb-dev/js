@@ -23,6 +23,10 @@ import { IconTextButton } from "../base/IconTextButton";
 import MoneyIcon from "../../assets/money";
 import { TWModal } from "../base/modal/TWModal";
 import { ThemeProvider } from "../../styles/ThemeProvider";
+import TransactionIcon from "../../assets/transaction";
+import { ReceiveButton } from "../ReceiveButton";
+import { SendButton } from "../SendFunds/SendButton";
+import { SupportedTokens } from "../SendFunds/defaultTokens";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -33,12 +37,16 @@ export const ConnectWalletDetailsModal = ({
   extraRows,
   address,
   hideTestnetFaucet,
+  supportedTokens,
+  displayBalanceToken,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
   extraRows?: React.FC;
   address?: string;
   hideTestnetFaucet?: boolean;
+  supportedTokens: SupportedTokens;
+  displayBalanceToken?: Record<number, string>;
 }) => {
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const activeWallet = useWallet();
@@ -48,6 +56,11 @@ export const ConnectWalletDetailsModal = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const setConnectedWallet = useSetConnectedWallet();
+
+  const tokenAddress =
+    chain?.chainId && displayBalanceToken
+      ? displayBalanceToken[chain?.chainId]
+      : undefined;
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -181,10 +194,15 @@ export const ConnectWalletDetailsModal = ({
               onClose={onExportModalClose}
             />
             <WalletDetailsModalHeader
+              tokenAddress={tokenAddress}
               address={address}
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
+            <Box flexDirection="row" justifyContent="space-evenly" mt="md">
+              <SendButton supportedTokens={supportedTokens} />
+              <ReceiveButton />
+            </Box>
             <View style={styles.currentNetwork}>
               <Text variant="bodySmallSecondary">Current Network</Text>
             </View>
@@ -193,7 +211,7 @@ export const ConnectWalletDetailsModal = ({
               <IconTextButton
                 mt="xs"
                 text="Request Testnet Funds"
-                icon={<MoneyIcon height={10} width={10} />}
+                icon={<MoneyIcon height={16} width={16} />}
                 onPress={() => {
                   if (chain?.faucets?.[0]) {
                     Linking.openURL(chain.faucets[0]);
@@ -201,6 +219,18 @@ export const ConnectWalletDetailsModal = ({
                 }}
               />
             ) : null}
+            {chain?.explorers && chain?.explorers?.[0] && (
+              <IconTextButton
+                mt="xs"
+                text="View Transaction History"
+                icon={<TransactionIcon height={16} width={16} />}
+                onPress={() => {
+                  Linking.openURL(
+                    chain?.explorers?.[0].url + "/address/" + address,
+                  );
+                }}
+              />
+            )}
             {getAdditionalActions()}
             {extraRows ? extraRows({}) : null}
             {addressCopied === true ? (

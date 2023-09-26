@@ -5,7 +5,10 @@ export default {
   "status": "active",
   "rpc": [
     "https://scroll-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia-rpc.scroll.io/"
+    "https://sepolia-rpc.scroll.io",
+    "https://rpc.ankr.com/scroll_sepolia_testnet",
+    "https://scroll-sepolia.chainstacklabs.com",
+    "https://scroll-testnet-public.unifra.io"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -19,7 +22,12 @@ export default {
   "networkId": 534351,
   "explorers": [
     {
-      "name": "Scroll Sepolia Testnet Block Explorer",
+      "name": "Scroll Sepolia Etherscan",
+      "url": "https://sepolia.scrollscan.dev",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Scroll Sepolia Blockscout",
       "url": "https://sepolia-blockscout.scroll.io",
       "standard": "EIP3091"
     }
