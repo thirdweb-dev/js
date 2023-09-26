@@ -1,5 +1,6 @@
-import { PaperWallet } from "@thirdweb-dev/wallets";
+import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
+import { PaperWallet } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
@@ -10,7 +11,6 @@ import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
-import styled from "@emotion/styled";
 import { RecoveryShareManagement } from "./types";
 
 type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
@@ -19,6 +19,7 @@ type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
 type SentEmailInfo = {
   isNewDevice: boolean;
   isNewUser: boolean;
+  recoveryShareManagement: RecoveryShareManagement;
 };
 export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   const email = props.selectionData;
@@ -38,9 +39,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   >(null);
 
   const recoveryCodeRequired = !!(
-    props.recoveryShareManagement !== "AWS_MANAGED" &&
     sentEmailInfo &&
     sentEmailInfo !== "error" &&
+    sentEmailInfo.recoveryShareManagement !== "AWS_MANAGED" &&
     sentEmailInfo.isNewDevice &&
     !sentEmailInfo.isNewUser
   );
@@ -55,12 +56,12 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
       setWallet(_wallet);
       const _paperSDK = await _wallet.getPaperSDK();
 
-      const { isNewDevice, isNewUser } =
+      const { isNewDevice, isNewUser, recoveryShareManagement } =
         await _paperSDK.auth.sendPaperEmailLoginOtp({
           email: email,
         });
 
-      setSentEmailInfo({ isNewDevice, isNewUser });
+      setSentEmailInfo({ isNewDevice, isNewUser, recoveryShareManagement });
     } catch (e) {
       console.error(e);
       setVerifyStatus("idle");
