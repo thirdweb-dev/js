@@ -41,8 +41,12 @@ import {
   useWallet,
   WalletInstance,
 } from "@thirdweb-dev/react-core";
-import { useState } from "react";
-import { MetaMaskWallet, walletIds } from "@thirdweb-dev/wallets";
+import { useEffect, useState } from "react";
+import {
+  MetaMaskWallet,
+  type SmartWallet,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import { Container } from "../../components/basic";
 import { FundsIcon } from "./icons/FundsIcon";
 import { ExportLocalWallet } from "../wallets/localWallet/ExportLocalWallet";
@@ -317,37 +321,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Spacer y="lg" />
 
-      {activeWallet &&
-        activeWallet.walletId === walletIds.smartWallet &&
-        chain &&
-        address && (
-          <>
-            <Link
-              color="secondaryText"
-              hoverColor="primaryText"
-              href={`https://thirdweb.com/${chain.slug}/${address}/account`}
-              target="_blank"
-              size="sm"
-            >
-              <Container
-                flex="row"
-                gap="xs"
-                center="y"
-                style={{
-                  width: "100%",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Container flex="row" gap="xs" center="y">
-                  <ActiveDot />
-                  Connected to Smart Wallet
-                </Container>
-                <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
-              </Container>
-            </Link>
-            <Spacer y="md" />
-          </>
-        )}
+      <ConnectedToSmartWallet />
 
       {/* Send and Recive */}
       <Container
@@ -600,7 +574,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {showReceiveModal && (
         <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
-          <ReceiveFunds />
+          <ReceiveFunds iconUrl={activeWalletIconURL} />
         </Modal>
       )}
     </>
@@ -778,3 +752,56 @@ const ActiveDot = styled.div<{ theme?: Theme }>`
   border-radius: 50%;
   background-color: ${(props) => props.theme.colors.success};
 `;
+
+function ConnectedToSmartWallet() {
+  const activeWallet = useWallet();
+  const chain = useChain();
+  const address = useAddress();
+
+  const [showConnectedToSmartWallet, setShowConnectedToSmartWallet] =
+    useState(false);
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
+      const smartWallet = activeWallet as SmartWallet;
+      smartWallet.isDeployed().then((isDeployed) => {
+        setShowConnectedToSmartWallet(isDeployed);
+      });
+    } else {
+      setShowConnectedToSmartWallet(false);
+    }
+  }, [activeWallet]);
+
+  if (showConnectedToSmartWallet && chain && address) {
+    return (
+      <>
+        <Link
+          color="secondaryText"
+          hoverColor="primaryText"
+          href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+          target="_blank"
+          size="sm"
+        >
+          <Container
+            flex="row"
+            gap="xs"
+            center="y"
+            style={{
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Container flex="row" gap="xs" center="y">
+              <ActiveDot />
+              Connected to Smart Wallet
+            </Container>
+            <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+          </Container>
+        </Link>
+        <Spacer y="md" />
+      </>
+    );
+  }
+
+  return null;
+}
