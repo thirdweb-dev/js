@@ -13,7 +13,7 @@ export type PaperWalletAdditionalOptions = {
   advancedOptions?: PaperAdvanceOptions;
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
   paperClientId?: string;
-  clientId: string;
+  clientId?: string;
 };
 
 export interface PaperWalletConnectorOptions {
