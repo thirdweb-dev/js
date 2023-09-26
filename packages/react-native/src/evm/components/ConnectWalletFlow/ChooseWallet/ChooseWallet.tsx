@@ -1,5 +1,4 @@
 import { walletIds } from "@thirdweb-dev/wallets";
-import { localWallet } from "../../../wallets/wallets/local-wallet";
 import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
 import { WalletConfig } from "@thirdweb-dev/react-core";
 import { ReactNode, useState } from "react";
@@ -53,7 +52,9 @@ export function ChooseWallet({
   const onContinueAsGuestPress = () => {
     setIsConnecting(true);
     setTimeout(() => {
-      onChooseWallet(localWallet());
+      if (guestWallet) {
+        onChooseWallet(guestWallet);
+      }
     }, 0);
   };
 
