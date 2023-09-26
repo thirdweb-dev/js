@@ -365,26 +365,30 @@ export class Erc1155SignatureMintable implements DetectableFeature {
       );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
+    const [uris, chainId, contractInfo] = await Promise.all([
+      uploadOrExtractURIs(metadatas, this.storage),
+      this.contractWrapper.getChainID(),
+      getPrebuiltInfo(
+        this.contractWrapper.address,
+        this.contractWrapper.getProvider(),
+      ),
+    ]);
 
-    const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    const contractInfo = await getPrebuiltInfo(
-      this.contractWrapper.address,
-      this.contractWrapper.getProvider(),
-    );
     const isLegacyContract = contractInfo?.type === "TokenERC1155";
-
-    return await Promise.all(
-      parsedRequests.map(async (m, i) => {
-        const uri = uris[i];
-        const finalPayload = await Signature1155PayloadOutput.parseAsync({
+    const _finalPayloads = await Promise.all(
+      parsedRequests.map((m, i) =>
+        Signature1155PayloadOutput.parseAsync({
           ...m,
-          uri,
-        });
-        const signature = await this.contractWrapper.signTypedData(
+          uri: uris[i],
+        }),
+      ),
+    );
+    const _signatures = await Promise.all(
+      _finalPayloads.map((payload) =>
+        this.contractWrapper.signTypedData(
           signer,
           {
             name: isLegacyContract ? "TokenERC1155" : "SignatureMintERC1155",
@@ -393,14 +397,14 @@ export class Erc1155SignatureMintable implements DetectableFeature {
             verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
+          payload,
+        ),
+      ),
     );
+    return parsedRequests.map((_, index) => ({
+      payload: _finalPayloads[index],
+      signature: _signatures[index] as string,
+    }));
   }
 
   /** ******************************

@@ -299,16 +299,14 @@ export class Erc1155<
       amount: BigNumberish,
       data: BytesLike = [0],
     ) => {
+      const [fromAddress, toAddress] = await Promise.all([
+        resolveAddress(from),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "safeTransferFrom",
-        args: [
-          await resolveAddress(from),
-          await resolveAddress(to),
-          tokenId,
-          amount,
-          data,
-        ],
+        args: [fromAddress, toAddress, tokenId, amount, data],
       });
     },
   );
@@ -376,10 +374,10 @@ export class Erc1155<
       const from = fromAddress
         ? await resolveAddress(fromAddress)
         : await this.contractWrapper.getSignerAddress();
-
-      const balanceOf = await this.balanceOf(from, tokenId);
-
-      const input = await AirdropInputSchema.parseAsync(addresses);
+      const [balanceOf, input] = await Promise.all([
+        this.balanceOf(from, tokenId),
+        AirdropInputSchema.parseAsync(addresses),
+      ]);
 
       const totalToAirdrop = input.reduce((prev, curr) => {
         return BigNumber.from(prev).add(BigNumber.from(curr?.quantity || 1));
