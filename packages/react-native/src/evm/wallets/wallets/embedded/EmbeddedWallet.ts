@@ -19,7 +19,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
   options: EmbeddedWalletOptions;
 
   static meta = {
-    name: walletIds.embeddedWallet,
+    name: "Embedded Wallet",
     iconURL:
       "ipfs://QmNx2evQa6tcQs9VTd3YaDm31ckfStvgRGKFGELahUmrbV/emailIcon.svg",
   };

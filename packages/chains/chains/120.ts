@@ -19,12 +19,22 @@ export default {
   "shortName": "enulst",
   "chainId": 120,
   "networkId": 120,
-  "icon": "enuls",
+  "icon": {
+    "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+    "width": 26,
+    "height": 41,
+    "format": "svg"
+  },
   "explorers": [
     {
       "name": "enulsscan",
       "url": "https://beta.evmscan.nuls.io",
-      "icon": "enuls",
+      "icon": {
+        "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+        "width": 26,
+        "height": 41,
+        "format": "svg"
+      },
       "standard": "EIP3091"
     }
   ],

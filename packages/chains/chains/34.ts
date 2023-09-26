@@ -2,7 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Dithereum Testnet",
   "chain": "DTH",
-  "icon": "dithereum",
+  "icon": {
+    "url": "ipfs://QmSHN5GtRGpMMpszSn1hF47ZSLRLqrLxWsQ48YYdJPyjLf",
+    "width": 500,
+    "height": 500,
+    "format": "png"
+  },
   "rpc": [
     "https://dithereum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node-testnet.dithereum.io"

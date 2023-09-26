@@ -26,7 +26,12 @@ export default {
   "redFlags": [
     "reusedChainId"
   ],
-  "icon": "camdl",
+  "icon": {
+    "url": "ipfs://QmW5Fpb2Ywnfqcj4ibvpbKvPv5Mo5eseWdYZnnUvLkj2Hp",
+    "width": 1453,
+    "height": 1453,
+    "format": "png"
+  },
   "explorers": [
     {
       "name": "CamDL Block Explorer",

@@ -2,7 +2,12 @@ import type { Chain } from "../src/types";
 export default {
   "name": "Flare Testnet Coston2",
   "chain": "FLR",
-  "icon": "coston2",
+  "icon": {
+    "url": "ipfs://QmZhAYyazEBZSHWNQb9uCkNPq2MNTLoW3mjwiD3955hUjw",
+    "width": 382,
+    "height": 382,
+    "format": "png"
+  },
   "rpc": [
     "https://flare-testnet-coston2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coston2-api.flare.network/ext/bc/C/rpc"

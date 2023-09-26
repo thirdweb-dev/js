@@ -18,7 +18,12 @@ export default {
   "shortName": "cfxtest",
   "chainId": 71,
   "networkId": 71,
-  "icon": "conflux",
+  "icon": {
+    "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
+    "width": 460,
+    "height": 576,
+    "format": "png"
+  },
   "explorers": [
     {
       "name": "Conflux Scan",

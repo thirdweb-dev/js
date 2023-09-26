@@ -27,9 +27,6 @@ export function ConnectingWallet({
     <Box paddingHorizontal="xl">
       <ConnectWalletHeader
         onBackPress={onBackPress}
-        middleContent={
-          <ImageSvgUri width={56} height={56} imageUrl={wallet.meta.iconURL} />
-        }
         subHeaderText={subHeaderText}
         onClose={onClose}
       />
