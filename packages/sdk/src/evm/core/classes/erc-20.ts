@@ -280,11 +280,11 @@ export class Erc20<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom",
-        args: [
-          await resolveAddress(from),
-          await resolveAddress(to),
-          await this.normalizeAmount(amount),
-        ],
+        args: await Promise.all([
+          resolveAddress(from),
+          resolveAddress(to),
+          this.normalizeAmount(amount),
+        ]),
       });
     },
   );

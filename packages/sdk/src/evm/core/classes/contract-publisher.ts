@@ -238,9 +238,10 @@ export class ContractPublisher extends RPCConnectionHandler {
     async (profileMetadata: ProfileMetadataInput) => {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
-      const publisher = await signer.getAddress();
-      const profileUri = await this.storage.upload(profileMetadata);
-
+      const [publisher, profileUri] = await Promise.all([
+        signer.getAddress(),
+        this.storage.upload(profileMetadata),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.publisher,
         method: "setPublisherProfileUri",

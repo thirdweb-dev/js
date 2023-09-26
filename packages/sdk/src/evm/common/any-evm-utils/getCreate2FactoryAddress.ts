@@ -23,9 +23,10 @@ export async function getCreate2FactoryAddress(
   if (commonFactoryExists) {
     return COMMON_FACTORY;
   }
-
-  const enforceEip155 = await isEIP155Enforced(provider);
-  const networkId = (await provider.getNetwork()).chainId;
+  const [enforceEip155, { chainId: networkId }] = await Promise.all([
+    isEIP155Enforced(provider),
+    provider.getNetwork(),
+  ]);
   const chainId = enforceEip155 ? networkId : 0;
   const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
     ? getCreate2FactoryDeploymentInfo(
