@@ -2,10 +2,8 @@ import { rateLimit } from ".";
 import { validApiKeyMeta, validServiceConfig } from "../../mocks";
 import { updateRateLimitedAt } from "../api";
 
-// Mocking the cacheOptions object
-const mockCacheOptions = {
-  get: jest.fn(),
-  put: jest.fn(),
+const mockRedis = {
+  incr: jest.fn(),
 };
 
 // Mocking the updateRateLimitedAt function
@@ -27,14 +25,14 @@ describe("rateLimit", () => {
         accountMeta: null,
       },
       validServiceConfig,
-      mockCacheOptions,
+      mockRedis,
     );
 
     expect(result).toEqual({ rateLimited: false });
   });
 
   it("should not rate limit if within limit", async () => {
-    mockCacheOptions.get.mockResolvedValue("49"); // Current count is 49 requests in 10 seconds.
+    mockRedis.incr.mockResolvedValue("50"); // Current count is 50 requests in 10 seconds.
 
     const result = await rateLimit(
       {
@@ -43,7 +41,7 @@ describe("rateLimit", () => {
         accountMeta: null,
       },
       validServiceConfig,
-      mockCacheOptions,
+      mockRedis,
     );
 
     expect(result).toEqual({ rateLimited: false });
@@ -51,7 +49,7 @@ describe("rateLimit", () => {
   });
 
   it("should report rate limit if exceeded but not block", async () => {
-    mockCacheOptions.get.mockResolvedValue("50"); // Current count is 50 requests in 10 seconds.
+    mockRedis.incr.mockResolvedValue("51"); // Current count is 51 requests in 10 seconds.
 
     const result = await rateLimit(
       {
@@ -60,7 +58,7 @@ describe("rateLimit", () => {
         accountMeta: null,
       },
       validServiceConfig,
-      mockCacheOptions,
+      mockRedis,
     );
 
     expect(result).toEqual({ rateLimited: false });
@@ -68,7 +66,7 @@ describe("rateLimit", () => {
   });
 
   it("should rate limit if exceeded hard limit", async () => {
-    mockCacheOptions.get.mockResolvedValue("100");
+    mockRedis.incr.mockResolvedValue("101");
 
     const result = await rateLimit(
       {
@@ -77,7 +75,7 @@ describe("rateLimit", () => {
         accountMeta: null,
       },
       validServiceConfig,
-      mockCacheOptions,
+      mockRedis,
     );
 
     expect(result).toEqual({

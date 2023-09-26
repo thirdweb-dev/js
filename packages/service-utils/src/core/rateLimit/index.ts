@@ -1,6 +1,5 @@
 import { CoreServiceConfig, updateRateLimitedAt } from "../api";
 import { AuthorizationResult } from "../authorize/types";
-
 import { RateLimitResult } from "./types";
 
 const DEFAULT_RATE_LIMIT_WINDOW_SECONDS = 10;
@@ -54,13 +53,14 @@ export async function rateLimit(
   const limitPerSecond = rateLimits[serviceScope] as number;
   const limitPerWindow =
     limitPerSecond * sampleRate * DEFAULT_RATE_LIMIT_WINDOW_SECONDS;
+
   if (requestCount > limitPerWindow) {
     // Report rate limit hits.
     if (apiKeyMeta?.id) {
       await updateRateLimitedAt(apiKeyMeta.id, serviceConfig);
     }
 
-    // Actually rate limit only when reached hard limit.
+    // Reject requests when they've exceeded 2x the rate limit.
     if (requestCount > limitPerWindow * HARD_LIMIT_MULTIPLE) {
       return {
         requestCount,
