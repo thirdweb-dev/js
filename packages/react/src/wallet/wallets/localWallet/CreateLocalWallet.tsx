@@ -181,13 +181,13 @@ export const CreateLocalWallet_Password: React.FC<{
           </Button>
         </form>
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         <TextDivider>
           <span>OR</span>
         </TextDivider>
 
-        <Spacer y="xl" />
+        <Spacer y="lg" />
 
         {/* Import */}
         <Button

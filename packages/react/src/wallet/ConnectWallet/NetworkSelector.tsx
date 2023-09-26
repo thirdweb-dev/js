@@ -25,7 +25,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { useEffect } from "react";
-import { Container, noScrollBar } from "../../components/basic";
+import { Container, Line, noScrollBar } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
@@ -260,24 +260,26 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
 
             {onCustomClick && (
               <>
-                <Spacer y="sm" />
-                <Button
-                  fullWidth
-                  variant="link"
-                  onClick={() => {
-                    onCustomClick();
-                    if (onClose) {
-                      onClose();
-                    }
-                  }}
-                  style={{
-                    display: "flex",
-                    fontSize: fontSize.sm,
-                    boxShadow: "none",
-                  }}
-                >
-                  Add Custom Network
-                </Button>
+                <Line />
+                <Container p="lg">
+                  <Button
+                    fullWidth
+                    variant="link"
+                    onClick={() => {
+                      onCustomClick();
+                      if (onClose) {
+                        onClose();
+                      }
+                    }}
+                    style={{
+                      display: "flex",
+                      fontSize: fontSize.sm,
+                      boxShadow: "none",
+                    }}
+                  >
+                    Add Custom Network
+                  </Button>
+                </Container>
               </>
             )}
           </Tabs.Root>
@@ -538,14 +540,14 @@ const SectionLabel = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
   color: ${(p) => p.theme.colors.secondaryText};
   margin: 0;
+  display: block;
+  padding: 0 ${spacing.xs};
 `;
 
 const ScrollContainer = styled.div<{ theme?: Theme }>`
   box-sizing: border-box;
   overflow: auto;
   padding-bottom: ${spacing.lg};
-  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   ${noScrollBar};
 `;
 
