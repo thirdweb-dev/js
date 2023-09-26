@@ -470,14 +470,17 @@ export class AccountPermissions implements DetectableFeature {
   revokeAccess = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
+      const [isAdmin, isSigner] = await Promise.all([
+        this.isAdmin(resolvedSignerAddress),
+        this.isSigner(resolvedSignerAddress),
+      ]);
+      if (isAdmin) {
         throw new Error(
           "Signer is already an admin. Cannot revoke permissions of an admin.",
         );
       }
 
-      if (!(await this.isSigner(resolvedSignerAddress))) {
+      if (!isSigner) {
         throw new Error(
           "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
         );

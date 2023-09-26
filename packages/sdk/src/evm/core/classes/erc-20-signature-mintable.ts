@@ -254,14 +254,17 @@ export class Erc20SignatureMintable implements DetectableFeature {
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,
   ): Promise<ITokenERC20.MintRequestStructOutput> {
-    const normalizedPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      mintRequest.price,
-      mintRequest.currencyAddress,
-    );
+    const [normalizedPrice, _decimals] = await Promise.all([
+      normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        mintRequest.price,
+        mintRequest.currencyAddress,
+      ),
+      this.contractWrapper.read("decimals", []),
+    ]);
     const amountWithDecimals = utils.parseUnits(
       mintRequest.quantity,
-      await this.contractWrapper.read("decimals", []),
+      _decimals,
     );
     return {
       to: mintRequest.to,

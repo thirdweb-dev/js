@@ -225,10 +225,14 @@ export class Erc20<
     owner: AddressOrEns,
     spender: AddressOrEns,
   ): Promise<CurrencyValue> {
+    const args = await Promise.all([
+      resolveAddress(owner),
+      resolveAddress(spender),
+    ]);
     return await this.getValue(
       await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
         "allowance",
-        [await resolveAddress(owner), await resolveAddress(spender)],
+        args,
       ),
     );
   }
@@ -253,7 +257,10 @@ export class Erc20<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transfer",
-        args: [await resolveAddress(to), await this.normalizeAmount(amount)],
+        args: await Promise.all([
+          resolveAddress(to),
+          this.normalizeAmount(amount),
+        ]),
       });
     },
   );
@@ -308,10 +315,10 @@ export class Erc20<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
-        args: [
-          await resolveAddress(spender),
-          await this.normalizeAmount(amount),
-        ],
+        args: await Promise.all([
+          resolveAddress(spender),
+          this.normalizeAmount(amount),
+        ]),
       });
     },
   );

@@ -366,13 +366,11 @@ export class ContractPublisher extends RPCConnectionHandler {
     ): Promise<Transaction<TransactionResult<PublishedContract>>> => {
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
-      const publisher = await signer.getAddress();
-
-      const predeployMetadata = await fetchRawPredeployMetadata(
-        predeployUri,
-        this.storage,
-      );
-
+      const [publisher, predeployMetadata] = await Promise.all([
+        signer.getAddress(),
+        fetchRawPredeployMetadata(predeployUri, this.storage),
+      ]);
+      
       const compilerMetadata = await fetchContractMetadata(
         predeployMetadata.metadataUri,
         this.storage,

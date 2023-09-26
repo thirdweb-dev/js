@@ -150,24 +150,34 @@ export class Vote implements UpdateableNetwork {
    * @returns - All the proposals in the contract.
    */
   public async getAll(): Promise<Proposal[]> {
-    return Promise.all(
-      (await this.contractWrapper.read("getAllProposals", [])).map(
-        async (data) => ({
-          proposalId: data.proposalId,
-          proposer: data.proposer,
-          description: data.description,
-          startBlock: data.startBlock,
-          endBlock: data.endBlock,
-          state: await this.contractWrapper.read("state", [data.proposalId]),
-          votes: await this.getProposalVotes(data.proposalId),
-          executions: data[3].map((c, i) => ({
-            toAddress: data.targets[i],
-            nativeTokenValue: c,
-            transactionData: data.calldatas[i],
-          })),
-        }),
+    const _proposals =
+      (await this.contractWrapper.read("getAllProposals", [])) ?? [];
+    if (!_proposals.length) return [];
+    const _items = await Promise.all(
+      _proposals.map((item) =>
+        Promise.all([
+          this.contractWrapper.read("state", [item.proposalId]),
+          this.getProposalVotes(item.proposalId),
+        ]),
       ),
     );
+    return _items.map(([state, votes], index) => {
+      const data = _proposals[index];
+      return {
+        proposalId: data.proposalId,
+        proposer: data.proposer,
+        description: data.description,
+        startBlock: data.startBlock,
+        endBlock: data.endBlock,
+        state: state,
+        votes: votes,
+        executions: data[3].map((c, i) => ({
+          toAddress: data.targets[i],
+          nativeTokenValue: c,
+          transactionData: data.calldatas[i],
+        })),
+      };
+    });
   }
 
   /**
