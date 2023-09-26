@@ -38,14 +38,11 @@ export async function predictThirdwebContractAddress(
     secretKey,
   );
   const publishUri = publishedContract.metadataUri;
-  const create2Factory = await getCreate2FactoryAddress(provider);
+  const [create2Factory, { extendedMetadata }] = await Promise.all([
+    getCreate2FactoryAddress(provider),
+    fetchAndCacheDeployMetadata(publishUri, storage),
+  ]);
   invariant(create2Factory, "Thirdweb stack not found");
-
-  const { extendedMetadata } = await fetchAndCacheDeployMetadata(
-    publishUri,
-    storage,
-  );
-
   if (
     extendedMetadata?.routerType === "plugin" ||
     extendedMetadata?.routerType === "dynamic"

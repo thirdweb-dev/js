@@ -73,8 +73,10 @@ export class Erc721BatchMintable implements DetectableFeature {
       to: AddressOrEns,
       metadatas: NFTMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
-      const uris = await uploadOrExtractURIs(metadatas, this.storage);
-      const resolvedAddress = await resolveAddress(to);
+      const [uris, resolvedAddress] = await Promise.all([
+        uploadOrExtractURIs(metadatas, this.storage),
+        resolveAddress(to),
+      ]);
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = uris.map((uri) =>
         contractEncoder.encode("mintTo", [resolvedAddress, uri]),

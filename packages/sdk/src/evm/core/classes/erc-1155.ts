@@ -231,14 +231,15 @@ export class Erc1155<
     address: AddressOrEns,
     operator: AddressOrEns,
   ): Promise<boolean> {
+    const args = await Promise.all([
+      resolveAddress(address),
+      resolveAddress(operator),
+    ]);
     return await (
       this.contractWrapper as ContractWrapper<
         BaseERC1155 | BaseSignatureMintERC1155
       >
-    ).read("isApprovedForAll", [
-      await resolveAddress(address),
-      await resolveAddress(operator),
-    ]);
+    ).read("isApprovedForAll", args);
   }
 
   /**
@@ -263,11 +264,14 @@ export class Erc1155<
       amount: BigNumberish,
       data: BytesLike = [0],
     ) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const [from, toAddress] = await Promise.all([
+        this.contractWrapper.getSignerAddress(),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "safeTransferFrom",
-        args: [from, await resolveAddress(to), tokenId, amount, data],
+        args: [from, toAddress, tokenId, amount, data],
       });
     },
   );

@@ -83,8 +83,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     ): Promise<Transaction<TransactionResultWithId>> => {
       const mintRequest = signedPayload.payload;
       const signature = signedPayload.signature;
-      const message = await this.mapPayloadToContractStruct(mintRequest);
-      const overrides = await this.contractWrapper.getCallOverrides();
+      const [message, overrides] = await Promise.all([
+        this.mapPayloadToContractStruct(mintRequest),
+        this.contractWrapper.getCallOverrides(),
+      ]);
       // TODO: Transaction Sequence Pattern
       await setErc20Allowance(
         this.contractWrapper,

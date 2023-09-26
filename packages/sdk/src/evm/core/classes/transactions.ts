@@ -189,8 +189,10 @@ abstract class TransactionContext {
    * Estimate the total gas cost of this transaction (in both ether and wei)
    */
   public async estimateGasCost() {
-    const gasLimit = await this.estimateGasLimit();
-    const gasPrice = await this.getGasPrice();
+    const [gasLimit, gasPrice] = await Promise.all([
+      this.estimateGasLimit(),
+      this.getGasPrice(),
+    ]);
     const gasCost = gasLimit.mul(gasPrice);
 
     return {

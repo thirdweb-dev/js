@@ -41,15 +41,12 @@ export async function getEncodedConstructorParamsForThirdwebContract(
     secretKey,
   );
   const publishUri = publishedContract.metadataUri;
-  const metadata = await fetchAndCacheDeployMetadata(publishUri, storage);
-  const create2Factory = await getCreate2FactoryAddress(provider);
+  const [metadata, create2Factory, { extendedMetadata }] = await Promise.all([
+    fetchAndCacheDeployMetadata(publishUri, storage),
+    getCreate2FactoryAddress(provider),
+    fetchAndCacheDeployMetadata(publishUri, storage),
+  ]);
   invariant(create2Factory, "Thirdweb stack not found");
-
-  const { extendedMetadata } = await fetchAndCacheDeployMetadata(
-    publishUri,
-    storage,
-  );
-
   let encodedArgs;
 
   // if pluginMetadata is not empty, then it's a plugin-pattern router contract

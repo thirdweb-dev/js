@@ -375,18 +375,21 @@ export class AccountPermissions implements DetectableFeature {
       signerAddress: AddressOrEns,
       permissions: SignerPermissionsInput,
     ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedPermissions = await SignerPermissionsSchema.parseAsync(
-        permissions,
-      );
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
+      const [resolvedSignerAddress, resolvedPermissions] = await Promise.all([
+        resolveAddress(signerAddress),
+        SignerPermissionsSchema.parseAsync(permissions),
+      ]);
+      const [isAdmin, isSigner] = await Promise.all([
+        this.isAdmin(resolvedSignerAddress),
+        this.isSigner(resolvedSignerAddress),
+      ]);
+      if (isAdmin) {
         throw new Error(
           "Signer is already an admin. Cannot grant permissions to an existing admin.",
         );
       }
 
-      if (await this.isSigner(resolvedSignerAddress)) {
+      if (isSigner) {
         throw new Error(
           "Signer already has permissions. Cannot grant permissions to an existing signer. You can update permissions using `updatePermissions`.",
         );
@@ -420,18 +423,23 @@ export class AccountPermissions implements DetectableFeature {
       signerAddress: AddressOrEns,
       permissions: SignerPermissionsInput,
     ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedPermissions = await SignerPermissionsSchema.parseAsync(
-        permissions,
-      );
+      const [resolvedSignerAddress, resolvedPermissions] = await Promise.all([
+        resolveAddress(signerAddress),
+        SignerPermissionsSchema.parseAsync(permissions),
+      ]);
 
-      if (await this.isAdmin(resolvedSignerAddress)) {
+      const [isAdmin, isSigner] = await Promise.all([
+        this.isAdmin(resolvedSignerAddress),
+        this.isSigner(resolvedSignerAddress),
+      ]);
+
+      if (isAdmin) {
         throw new Error(
           "Signer is already an admin. Cannot update permissions of an existing admin.",
         );
       }
 
-      if (!(await this.isSigner(resolvedSignerAddress))) {
+      if (!isSigner) {
         throw new Error(
           "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
         );

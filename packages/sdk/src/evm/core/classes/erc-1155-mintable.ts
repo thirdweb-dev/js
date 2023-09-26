@@ -115,19 +115,14 @@ export class Erc1155Mintable implements DetectableFeature {
     to: AddressOrEns,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<Transaction> {
-    const uri = await uploadOrExtractURI(
-      metadataWithSupply.metadata,
-      this.storage,
-    );
+    const [uri, toAddress] = await Promise.all([
+      uploadOrExtractURI(metadataWithSupply.metadata, this.storage),
+      resolveAddress(to),
+    ]);
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "mintTo",
-      args: [
-        await resolveAddress(to),
-        constants.MaxUint256,
-        uri,
-        metadataWithSupply.supply,
-      ],
+      args: [toAddress, constants.MaxUint256, uri, metadataWithSupply.supply],
     });
   }
 
@@ -154,16 +149,14 @@ export class Erc1155Mintable implements DetectableFeature {
       tokenId: BigNumberish,
       additionalSupply: BigNumberish,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const metadata = await this.erc1155.getTokenMetadata(tokenId);
+      const [metadata, toAddress] = await Promise.all([
+        this.erc1155.getTokenMetadata(tokenId),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "mintTo",
-        args: [
-          await resolveAddress(to),
-          tokenId,
-          metadata.uri,
-          additionalSupply,
-        ],
+        args: [toAddress, tokenId, metadata.uri, additionalSupply],
         parse: (receipt) => {
           return {
             id: BigNumber.from(tokenId),

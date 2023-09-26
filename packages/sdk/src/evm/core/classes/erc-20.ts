@@ -197,10 +197,11 @@ export class Erc20<
    * @twfeature ERC20
    */
   public async allowance(spender: AddressOrEns): Promise<CurrencyValue> {
-    return await this.allowanceOf(
-      await this.contractWrapper.getSignerAddress(),
-      await resolveAddress(spender),
-    );
+    const [owner, spenderAddress] = await Promise.all([
+      this.contractWrapper.getSignerAddress(),
+      resolveAddress(spender),
+    ]);
+    return await this.allowanceOf(owner, spenderAddress);
   }
 
   /**
