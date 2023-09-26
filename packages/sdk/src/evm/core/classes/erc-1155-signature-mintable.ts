@@ -83,8 +83,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     ): Promise<Transaction<TransactionResultWithId>> => {
       const mintRequest = signedPayload.payload;
       const signature = signedPayload.signature;
-      const message = await this.mapPayloadToContractStruct(mintRequest);
-      const overrides = await this.contractWrapper.getCallOverrides();
+      const [message, overrides] = await Promise.all([
+        this.mapPayloadToContractStruct(mintRequest),
+        this.contractWrapper.getCallOverrides(),
+      ]);
       // TODO: Transaction Sequence Pattern
       await setErc20Allowance(
         this.contractWrapper,
@@ -136,22 +138,24 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     async (
       signedPayloads: SignedPayload1155[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const contractPayloads = await Promise.all(
-        signedPayloads.map(async (s) => {
-          const message = await this.mapPayloadToContractStruct(s.payload);
-          const signature = s.signature;
-          const price = s.payload.price;
-          if (BigNumber.from(price).gt(0)) {
-            throw new Error(
-              "Can only batch free mints. For mints with a price, use regular mint()",
-            );
-          }
-          return {
-            message,
-            signature,
-          };
-        }),
-      );
+      const contractPayloads = (
+        await Promise.all(
+          signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
+        )
+      ).map((message, index) => {
+        const s = signedPayloads[index];
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      });
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
         return contractEncoder.encode("mintWithSignature", [
@@ -361,26 +365,30 @@ export class Erc1155SignatureMintable implements DetectableFeature {
       );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
+    const [uris, chainId, contractInfo] = await Promise.all([
+      uploadOrExtractURIs(metadatas, this.storage),
+      this.contractWrapper.getChainID(),
+      getPrebuiltInfo(
+        this.contractWrapper.address,
+        this.contractWrapper.getProvider(),
+      ),
+    ]);
 
-    const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    const contractInfo = await getPrebuiltInfo(
-      this.contractWrapper.address,
-      this.contractWrapper.getProvider(),
-    );
     const isLegacyContract = contractInfo?.type === "TokenERC1155";
-
-    return await Promise.all(
-      parsedRequests.map(async (m, i) => {
-        const uri = uris[i];
-        const finalPayload = await Signature1155PayloadOutput.parseAsync({
+    const _finalPayloads = await Promise.all(
+      parsedRequests.map((m, i) =>
+        Signature1155PayloadOutput.parseAsync({
           ...m,
-          uri,
-        });
-        const signature = await this.contractWrapper.signTypedData(
+          uri: uris[i],
+        }),
+      ),
+    );
+    const _signatures = await Promise.all(
+      _finalPayloads.map((payload) =>
+        this.contractWrapper.signTypedData(
           signer,
           {
             name: isLegacyContract ? "TokenERC1155" : "SignatureMintERC1155",
@@ -389,14 +397,14 @@ export class Erc1155SignatureMintable implements DetectableFeature {
             verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
+          payload,
+        ),
+      ),
     );
+    return parsedRequests.map((_, index) => ({
+      payload: _finalPayloads[index],
+      signature: _signatures[index] as string,
+    }));
   }
 
   /** ******************************
