@@ -28,9 +28,10 @@ export async function deployCreate2Factory(
   if (commonFactoryExists) {
     return COMMON_FACTORY;
   }
-
-  const enforceEip155 = await isEIP155Enforced(signer.provider);
-  const networkId = (await signer.provider.getNetwork()).chainId;
+  const [enforceEip155, { chainId: networkId }] = await Promise.all([
+    isEIP155Enforced(signer.provider),
+    signer.provider.getNetwork(),
+  ]);
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
   const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
