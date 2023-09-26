@@ -476,8 +476,8 @@ importers:
         specifier: ^11.11.0
         version: 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.17)(react@18.2.0)
       '@google/model-viewer':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^3.2.1
+        version: 3.2.1(three@0.154.0)
       '@radix-ui/colors':
         specifier: ^0.1.9
         version: 0.1.9
@@ -5278,12 +5278,14 @@ packages:
       keycode: 2.2.1
     dev: true
 
-  /@google/model-viewer@2.1.1:
-    resolution: {integrity: sha512-5umyLoD5vMxlSVQwtmUXeNCNWs9dzmWykGm1qrHe/pCYrj/1lyJIgJRw+IxoMNodGqtcHEtfDhdNjRDM9yo/TA==}
+  /@google/model-viewer@3.2.1(three@0.154.0):
+    resolution: {integrity: sha512-qD6xsRhiG+0qsvUY2gqnM+9hQPQWDs+5RJzXrdrHSGAkFkUiTTif0raButQTRm2c1CDXWWE6AuCHXnVW9yN9Ug==}
     engines: {node: '>=6.0.0'}
+    peerDependencies:
+      three: ^0.154.0
     dependencies:
-      lit: 2.6.1
-      three: 0.146.0
+      lit: 2.7.6
+      three: 0.154.0
     dev: false
 
   /@graphql-typed-document-node/core@3.1.2(graphql@15.8.0):
@@ -5998,10 +6000,6 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: false
 
-  /@lit-labs/ssr-dom-shim@1.0.0:
-    resolution: {integrity: sha512-ic93MBXfApIFTrup4a70M/+ddD8xdt2zxxj9sRwHQzhS9ag/syqkD8JPdTXsc1gUy2K8TTirhlCqyTEM/sifNw==}
-    dev: false
-
   /@lit-labs/ssr-dom-shim@1.1.1:
     resolution: {integrity: sha512-kXOeFbfCm4fFf2A3WwVEeQj55tMZa8c8/f9AKHMobQMkzNUfUj+antR3fRPaZJawsa1aZiP/Da3ndpZrwEe4rQ==}
     dev: false
@@ -6009,7 +6007,7 @@ packages:
   /@lit/reactive-element@1.6.1:
     resolution: {integrity: sha512-va15kYZr7KZNNPZdxONGQzpUr+4sxVu7V/VG7a8mRfPPXUyhEYj5RzXCQmGrlP3tAh0L3HHm5AjBMFYRqlM9SA==}
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.0.0
+      '@lit-labs/ssr-dom-shim': 1.1.1
     dev: false
 
   /@magic-ext/connect@6.7.2:
@@ -12360,7 +12358,7 @@ packages:
       algosdk: 1.24.1
       arweave: 1.13.3
       arweave-stream-tx: 1.2.2(arweave@1.13.3)
-      avsc: github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef
+      avsc: git@github.com+Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef
       axios: 0.21.4(debug@4.3.4)
       base64url: 3.0.1
       bs58: 4.0.1
@@ -20714,13 +20712,6 @@ packages:
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  /lit-element@3.2.2:
-    resolution: {integrity: sha512-6ZgxBR9KNroqKb6+htkyBwD90XGRiqKDHVrW/Eh0EZ+l+iC+u+v+w3/BA5NGi4nizAVHGYvQBHUDuSmLjPp7NQ==}
-    dependencies:
-      '@lit/reactive-element': 1.6.1
-      lit-html: 2.6.1
-    dev: false
-
   /lit-element@3.3.2:
     resolution: {integrity: sha512-xXAeVWKGr4/njq0rGC9dethMnYCq5hpKYrgQZYTzawt9YQhMiXfD+T1RgrdY3NamOxwq2aXlb0vOI6e29CKgVQ==}
     dependencies:
@@ -20729,24 +20720,10 @@ packages:
       lit-html: 2.7.4
     dev: false
 
-  /lit-html@2.6.1:
-    resolution: {integrity: sha512-Z3iw+E+3KKFn9t2YKNjsXNEu/LRLI98mtH/C6lnFg7kvaqPIzPn124Yd4eT/43lyqrejpc5Wb6BHq3fdv4S8Rw==}
-    dependencies:
-      '@types/trusted-types': 2.0.3
-    dev: false
-
   /lit-html@2.7.4:
     resolution: {integrity: sha512-/Jw+FBpeEN+z8X6PJva5n7+0MzCVAH2yypN99qHYYkq8bI+j7I39GH+68Z/MZD6rGKDK9RpzBw7CocfmHfq6+g==}
     dependencies:
       '@types/trusted-types': 2.0.3
-    dev: false
-
-  /lit@2.6.1:
-    resolution: {integrity: sha512-DT87LD64f8acR7uVp7kZfhLRrHkfC/N4BVzAtnw9Yg8087mbBJ//qedwdwX0kzDbxgPccWRW6mFwGbRQIxy0pw==}
-    dependencies:
-      '@lit/reactive-element': 1.6.1
-      lit-element: 3.2.2
-      lit-html: 2.6.1
     dev: false
 
   /lit@2.7.6:
@@ -26731,8 +26708,8 @@ packages:
     dependencies:
       real-require: 0.1.0
 
-  /three@0.146.0:
-    resolution: {integrity: sha512-1lvNfLezN6OJ9NaFAhfX4sm5e9YCzHtaRgZ1+B4C+Hv6TibRMsuBAM5/wVKzxjpYIlMymvgsHEFrrigEfXnb2A==}
+  /three@0.154.0:
+    resolution: {integrity: sha512-Uzz8C/5GesJzv8i+Y2prEMYUwodwZySPcNhuJUdsVMH2Yn4Nm8qlbQe6qRN5fOhg55XB0WiLfTPBxVHxpE60ug==}
     dev: false
 
   /throat@5.0.0:
@@ -28999,8 +28976,8 @@ packages:
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
 
-  github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
-    resolution: {tarball: https://codeload.github.com/Bundlr-Network/avsc/tar.gz/a730cc8018b79e114b6a3381bbb57760a24c6cef}
+  git@github.com+Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
+    resolution: {commit: a730cc8018b79e114b6a3381bbb57760a24c6cef, repo: git@github.com:Bundlr-Network/avsc.git, type: git}
     name: avsc
     version: 5.4.7
     engines: {node: '>=0.11'}
