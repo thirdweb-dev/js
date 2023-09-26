@@ -19,7 +19,7 @@ export const COGNITO_IDENTITY_POOL_ID =
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 
-const BASE_URL = "https://withpaper.com";
+const BASE_URL = "https://ews-thirdweb.com";
 const ROUTE_2022_08_12_API_BASE_PATH = `${BASE_URL}/api/2022-08-12`;
 
 export const ROUTE_GET_EMBEDDED_WALLET_DETAILS = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/user-wallet-details`;

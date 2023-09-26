@@ -3,14 +3,22 @@ import { getRandomValues } from "../getRandomValues";
 import QuickCrypto from "react-native-quick-crypto";
 
 const ENCRYPTION_SEPARATOR = ":";
+const KEY_ITERATION_COUNT = 5000000;
+const KEY_LENGTH = 256;
 
 export async function getEncryptionKey(
   pwd: string,
   salt: ArrayBuffer,
 ): Promise<string> {
-  const key = QuickCrypto.pbkdf2Sync(pwd, salt, 5000000, 256, "sha256");
+  const key = QuickCrypto.pbkdf2Sync(
+    pwd,
+    salt,
+    KEY_ITERATION_COUNT,
+    KEY_LENGTH,
+    "sha256",
+  );
 
-  // this produces a 256 bytes length key
+  // this produces a 256 bits length key
   // but node by default produces a 32 byte length key
   const key32 = key.slice(0, 32);
 
