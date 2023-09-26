@@ -2,13 +2,13 @@ import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WCMeta } from "../types/wc";
 import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
 import { WalletConnectConfig } from "./wallet-connect/wallet-connect";
+import { TRUST_ICON } from "../../assets/svgs";
 
 export class TrustWallet extends WalletConnectBase {
   static id = "trust" as const;
   static meta = {
     name: "Trust Wallet",
-    iconURL:
-      "ipfs://QmNigQbXk7wKZwDcgN38Znj1ZZQ3JEG3DD6fUKLBU8SUTP/trust%20wallet.svg",
+    iconURL: TRUST_ICON,
     links: {
       native: "trust:",
       universal: "https://link.trustwallet.com",

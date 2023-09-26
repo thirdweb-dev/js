@@ -13,7 +13,8 @@ export default {
     "https://api.calibration.node.glif.io/rpc/v1",
     "https://rpc.ankr.com/filecoin_testnet",
     "https://filecoin-calibration.chainstacklabs.com/rpc/v1",
-    "https://filecoin-calibration.chainup.net/rpc/v1"
+    "https://filecoin-calibration.chainup.net/rpc/v1",
+    "https://calibration.filfox.info/rpc/v1"
   ],
   "faucets": [
     "https://faucet.calibration.fildev.network/"
