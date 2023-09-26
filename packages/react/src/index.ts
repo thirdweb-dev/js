@@ -1,3 +1,6 @@
+export { defaultTokens } from "./wallet/ConnectWallet/defaultTokens";
+export { defaultWallets } from "./wallet/wallets/defaultWallets";
+
 export { useSmartWallet } from "./evm/hooks/wallets/useSmartWallet";
 export { bloctoWallet } from "./wallet/wallets/blocto/bloctoWallet";
 export { coinbaseWallet } from "./wallet/wallets/coinbase/coinbaseWallet";
