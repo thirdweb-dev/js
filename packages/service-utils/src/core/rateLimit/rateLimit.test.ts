@@ -4,6 +4,7 @@ import { updateRateLimitedAt } from "../api";
 
 const mockRedis = {
   incr: jest.fn(),
+  expire: jest.fn(),
 };
 
 // Mocking the updateRateLimitedAt function
@@ -85,5 +86,22 @@ describe("rateLimit", () => {
       errorCode: "RATE_LIMIT_EXCEEDED",
     });
     expect(updateRateLimitedAt).toHaveBeenCalled();
+  });
+
+  it("expires on the first incr request only", async () => {
+    mockRedis.incr.mockResolvedValue("1");
+
+    const result = await rateLimit(
+      {
+        authorized: true,
+        apiKeyMeta: { ...validApiKeyMeta, rateLimits: {} },
+        accountMeta: null,
+      },
+      validServiceConfig,
+      mockRedis,
+    );
+
+    expect(result).toEqual({ rateLimited: false });
+    expect(mockRedis.expire).toHaveBeenCalled();
   });
 });
