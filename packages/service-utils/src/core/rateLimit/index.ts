@@ -10,16 +10,19 @@ type IRedis = {
   expire: (key: string, ttlSeconds: number) => Promise<0 | 1>;
 };
 
-export async function rateLimit(
-  authzResult: AuthorizationResult,
-  serviceConfig: CoreServiceConfig,
-  redis: IRedis,
+export async function rateLimit(args: {
+  authzResult: AuthorizationResult;
+  serviceConfig: CoreServiceConfig;
+  redis: IRedis;
   /**
-   * Sample 10% of requests by default to reduce load on Redis.
+   * Sample requests to reduce load on Redis.
    * This scales down the request count and the rate limit threshold.
+   * @default 1.0
    */
-  sampleRate = 0.1,
-): Promise<RateLimitResult> {
+  sampleRate?: number;
+}): Promise<RateLimitResult> {
+  const { authzResult, serviceConfig, redis, sampleRate = 1.0 } = args;
+
   const shouldCountRequest = Math.random() < sampleRate;
   if (!shouldCountRequest || !authzResult.authorized) {
     return {
@@ -34,6 +37,7 @@ export async function rateLimit(
   const { serviceScope } = serviceConfig;
   const { rateLimits } = apiKeyMeta || accountMeta || {};
   const limitPerSecond = rateLimits?.[serviceScope];
+
   if (!limitPerSecond) {
     // No rate limit is provided. Assume the request is not rate limited.
     return {
