@@ -192,10 +192,11 @@ export class Token {
    * ```
    */
   async balanceOf(walletAddress: string): Promise<CurrencyValue> {
-    const [mint, addr] = await Promise.all([
-      this.getMint(),
-      getAssociatedTokenAddress(this.publicKey, new PublicKey(walletAddress)),
-    ]);
+    const mint = await this.getMint();
+    const addr = await getAssociatedTokenAddress(
+      this.publicKey,
+      new PublicKey(walletAddress),
+    );
     try {
       const account = await getAccount(this.connection, addr);
       return toCurrencyValue({

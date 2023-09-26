@@ -177,11 +177,12 @@ export class NFTDrop {
    */
   async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     const parsedQueryParams = QueryAllParamsSchema.parse(queryParams);
-    const [info, claimedNfts, totalClaimed] = await Promise.all([
-      this.getCandyMachine(),
-      this.getAllClaimed(parsedQueryParams),
-      this.totalClaimedSupply(),
-    ]);
+    const info = await this.getCandyMachine();
+
+    // First, get all the claimed NFTs within the query params range
+    const claimedNfts = await this.getAllClaimed(parsedQueryParams);
+    const totalClaimed = await this.totalClaimedSupply();
+
     // Then filter out all claimed NFTs from items to leave only unclaimed remaining
     const unclaimedItems: CandyMachineV2Item[] = [];
     info.items.forEach((item) => {
@@ -203,24 +204,22 @@ export class NFTDrop {
       startIndex + parsedQueryParams.count - claimedNfts.length,
     );
 
-    const _items = unclaimedItems.slice(startIndex, endIndex);
-    const unclaimedNfts = (
-      await Promise.all(
-        _items.map((item) => this.storage.downloadJSON(item.uri)),
-      )
-    ).map((metadata, index) => {
-      const item = _items[index];
-      return {
-        metadata: {
-          ...metadata,
-          id: PublicKey.default.toBase58(),
-          uri: item.uri,
-        },
-        owner: PublicKey.default.toBase58(),
-        supply: "0",
-        type: "metaplex",
-      } as NFT;
-    });
+    const unclaimedNfts = await Promise.all(
+      unclaimedItems.slice(startIndex, endIndex).map(async (item) => {
+        const metadata: NFTMetadata = await this.storage.downloadJSON(item.uri);
+        return {
+          metadata: {
+            ...metadata,
+            id: PublicKey.default.toBase58(),
+            uri: item.uri,
+          },
+          owner: PublicKey.default.toBase58(),
+          supply: "0",
+          type: "metaplex",
+        } as NFT;
+      }),
+    );
+
     // Always return claimed NFTs first, and then fill remaining query count with unclaimed NFTs
     return [...claimedNfts, ...unclaimedNfts];
   }
@@ -479,8 +478,8 @@ export class NFTDrop {
     const candyMachine = await this.getCandyMachine();
     await this.claimConditions.assertCanClaimable(Number(amount));
     const builders = await Promise.all(
-      [...Array(Number(amount)).keys()].map(() => {
-        return this.metaplex
+      [...Array(Number(amount)).keys()].map(async () => {
+        return await this.metaplex
           .candyMachinesV2()
           .builders()
           .mint({

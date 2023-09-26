@@ -400,8 +400,8 @@ export class NFTCollection {
     );
 
     const builders = await Promise.all(
-      [...Array(amount).keys()].map((_, i) => {
-        return this.metaplex
+      [...Array(amount).keys()].map(async (_, i) => {
+        return await this.metaplex
           .nfts()
           .builders()
           .printNewEdition({
