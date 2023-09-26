@@ -151,16 +151,18 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
       const sortedRoles = roles.sort((role) => (role === "admin" ? 1 : -1));
       for (let i = 0; i < sortedRoles.length; i++) {
         const role = sortedRoles[i];
-        const addresses: Address[] = await Promise.all(
-          rolesWithAddresses[role]?.map((addressOrEns) =>
-            resolveAddress(addressOrEns),
-          ) || [],
-        );
-        const currentAddresses: Address[] = await Promise.all(
-          currentRoles[role]?.map((addressOrEns) =>
-            resolveAddress(addressOrEns as AddressOrEns),
-          ) || [],
-        );
+        const [addresses, currentAddresses] = await Promise.all([
+          Promise.all(
+            rolesWithAddresses[role]?.map((addressOrEns) =>
+              resolveAddress(addressOrEns),
+            ) || [],
+          ),
+          Promise.all(
+            currentRoles[role]?.map((addressOrEns) =>
+              resolveAddress(addressOrEns as AddressOrEns),
+            ) || [],
+          ),
+        ]);
         const toAdd = addresses.filter(
           (address) => !currentAddresses.includes(address),
         );
@@ -210,8 +212,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   public async verify(roles: TRole[], address: AddressOrEns): Promise<void> {
     await Promise.all(
       roles.map(async (role) => {
-        const members = await this.get(role);
-        const resolvedAddress: Address = await resolveAddress(address);
+        const [members, resolvedAddress] = await Promise.all([
+          this.get(role),
+          resolveAddress(address),
+        ]);
         if (
           !members
             .map((a) => a.toLowerCase())
@@ -309,8 +313,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    ****************************/
 
   private async getRevokeRoleFunctionName(address: AddressOrEns) {
-    const resolvedAddress = await resolveAddress(address);
-    const signerAddress = await this.contractWrapper.getSignerAddress();
+    const [resolvedAddress, signerAddress] = await Promise.all([
+      resolveAddress(address),
+      this.contractWrapper.getSignerAddress(),
+    ]);
     if (signerAddress.toLowerCase() === resolvedAddress.toLowerCase()) {
       return "renounceRole";
     }
