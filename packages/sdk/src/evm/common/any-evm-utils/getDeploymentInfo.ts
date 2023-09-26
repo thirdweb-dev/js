@@ -37,15 +37,13 @@ export async function getDeploymentInfo(
   secretKey?: string,
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
-
-  const create2FactoryAddress = create2Factory
-    ? create2Factory
-    : await getCreate2FactoryAddress(provider);
-
+  const [create2FactoryAddress, { compilerMetadata, extendedMetadata }] =
+    await Promise.all([
+      create2Factory ? create2Factory : getCreate2FactoryAddress(provider),
+      fetchAndCacheDeployMetadata(metadataUri, storage),
+    ]);
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const { compilerMetadata, extendedMetadata } =
-    await fetchAndCacheDeployMetadata(metadataUri, storage);
   const defaultExtensions = extendedMetadata?.defaultExtensions;
 
   if (extendedMetadata?.routerType === "plugin" && defaultExtensions) {
@@ -177,29 +175,30 @@ export async function getDeploymentInfo(
     finalDeploymentInfo.push(...extensionDeploymentInfo);
   }
 
-  const implementationDeployInfo = await computeDeploymentInfo(
-    "implementation",
-    provider,
-    storage,
-    create2FactoryAddress,
-    {
-      metadata: compilerMetadata,
-      constructorParams: customParams,
-    },
-    clientId,
-    secretKey,
-  );
-
-  // get clone factory
-  const factoryInfo = await computeDeploymentInfo(
-    "infra",
-    provider,
-    storage,
-    create2FactoryAddress,
-    { contractName: "TWCloneFactory" },
-    clientId,
-    secretKey,
-  );
+  const [implementationDeployInfo, factoryInfo] = await Promise.all([
+    computeDeploymentInfo(
+      "implementation",
+      provider,
+      storage,
+      create2FactoryAddress,
+      {
+        metadata: compilerMetadata,
+        constructorParams: customParams,
+      },
+      clientId,
+      secretKey,
+    ),
+    // get clone factory
+    computeDeploymentInfo(
+      "infra",
+      provider,
+      storage,
+      create2FactoryAddress,
+      { contractName: "TWCloneFactory" },
+      clientId,
+      secretKey,
+    ),
+  ]);
 
   finalDeploymentInfo.push(factoryInfo);
   finalDeploymentInfo.push(...Object.values(caches.deploymentPresets));
