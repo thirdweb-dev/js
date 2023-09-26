@@ -1224,7 +1224,7 @@ export { default as Bitnet } from "../chains/210"
 export { default as FreightTrustNetwork } from "../chains/211"
 export { default as MapMakalu } from "../chains/212"
 export { default as SiriusnetV2 } from "../chains/217"
-export { default as LachainLA } from "../chains/225"
+export { default as Lachain } from "../chains/225"
 export { default as LachainTestnet } from "../chains/226"
 export { default as Swapdex } from "../chains/230"
 export { default as DeamchainTestnet } from "../chains/236"
@@ -1239,7 +1239,7 @@ export { default as Neonlink } from "../chains/259"
 export { default as SurBlockchainNetwork } from "../chains/262"
 export { default as HighPerformanceBlockchain } from "../chains/269"
 export { default as Egoncoin } from "../chains/271"
-export { default as Lachain } from "../chains/274"
+export { default as LachainLachain } from "../chains/274"
 export { default as ZksyncEraTestnet } from "../chains/280"
 export { default as BobaNetwork } from "../chains/288"
 export { default as Hedera } from "../chains/295"
@@ -3348,7 +3348,7 @@ type ChainIdsBySlug = {
 "freight-trust-network": 211,
 "map-makalu": 212,
 "siriusnet-v2": 217,
-"lachain-LA": 225,
+"lachain": 225,
 "lachain-testnet": 226,
 "swapdex": 230,
 "deamchain-testnet": 236,
@@ -3363,7 +3363,7 @@ type ChainIdsBySlug = {
 "sur-blockchain-network": 262,
 "high-performance-blockchain": 269,
 "egoncoin": 271,
-"lachain": 274,
+"lachain-lachain": 274,
 "zksync-era-testnet": 280,
 "boba-network": 288,
 "hedera": 295,
