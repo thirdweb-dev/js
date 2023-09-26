@@ -3,8 +3,7 @@ import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
-import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
-import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
+import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
 import { useModalState } from "../../providers/ui-context-provider";
 import {
@@ -60,10 +59,8 @@ export const ConnectWalletFlow = () => {
       setActiveWallet(() => wallet);
       setSelectionData(data);
 
-      // If not smart wallet (sw has it's own flow, need to migrate it to connectUI)
-      // &&
       // If the wallet has no custom connect UI, then connect it
-      if (wallet.id !== SmartWallet.id && !wallet.connectUI) {
+      if (!wallet.connectUI) {
         connectActiveWallet(wallet, data);
       }
     },
@@ -85,10 +82,6 @@ export const ConnectWalletFlow = () => {
     resetModal();
   }, []);
 
-  const onConnected = useCallback(() => {
-    onClose(true);
-  }, [onClose]);
-
   const resetModal = () => {
     setActiveWallet(undefined);
     setIsConnecting(false);
@@ -99,11 +92,6 @@ export const ConnectWalletFlow = () => {
   }, [onClose]);
 
   const getComponentForWallet = useCallback(() => {
-    switch (activeWallet?.id) {
-      case SmartWallet.id:
-        return <SmartWalletFlow onClose={onClose} onConnect={onConnected} />;
-    }
-
     if (activeWallet?.connectUI) {
       return (
         <activeWallet.connectUI
@@ -125,8 +113,6 @@ export const ConnectWalletFlow = () => {
     handleClose,
     modalVisible,
     onBackPress,
-    onClose,
-    onConnected,
     selectionData,
     supportedWallets,
     theme,

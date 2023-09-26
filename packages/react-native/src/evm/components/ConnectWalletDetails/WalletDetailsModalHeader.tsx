@@ -16,12 +16,14 @@ interface WalletDetailsModalHeaderProps {
   onDisconnectPress: () => void;
   onAddressCopied?: () => void;
   loading?: boolean;
+  tokenAddress?: string;
 }
 
 export const WalletDetailsModalHeader = ({
   address,
   onDisconnectPress,
   onAddressCopied,
+  tokenAddress,
 }: WalletDetailsModalHeaderProps) => {
   const theme = useAppTheme();
   const activeWallet = useWallet();
@@ -66,7 +68,10 @@ export const WalletDetailsModalHeader = ({
               color={theme.colors.textSecondary}
             />
           </Box>
-          <TextBalance textVariant="bodySmallSecondary" />
+          <TextBalance
+            textVariant="bodySmallSecondary"
+            tokenAddress={tokenAddress}
+          />
         </BaseButton>
         {showLoading ? (
           <ActivityIndicator size="small" color={theme.colors.iconHighlight} />

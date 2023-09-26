@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
-    alignSelf: "stretch",
     height: TOAST_HEIGHT,
     marginHorizontal: 10,
     padding: 10,

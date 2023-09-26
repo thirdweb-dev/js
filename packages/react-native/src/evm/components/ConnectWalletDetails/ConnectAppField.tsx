@@ -113,7 +113,7 @@ const ConnectAppField = () => {
       {!appMeta && showWCInput ? (
         <Box
           flexDirection="row"
-          mb="sm"
+          mt="xs"
           borderColor="border"
           borderWidth={1}
           borderRadius="md"
@@ -157,13 +157,13 @@ const ConnectAppField = () => {
         <BaseButton
           backgroundColor="background"
           borderColor="border"
-          mb="sm"
+          mt="xs"
           justifyContent="space-between"
           style={styles.exportWallet}
           onPress={onConnectDappPress}
         >
           <>
-            {appMeta ? (
+            {appMeta?.iconUrl ? (
               <WalletIcon size={32} iconUri={appMeta.iconUrl} />
             ) : (
               <WalletConnectIcon width={16} height={16} />

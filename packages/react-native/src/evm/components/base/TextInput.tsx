@@ -49,6 +49,5 @@ const styles = StyleSheet.create({
     textAlign: "left",
     flex: 1,
     height: 40,
-    paddingLeft: 5,
   },
 });
