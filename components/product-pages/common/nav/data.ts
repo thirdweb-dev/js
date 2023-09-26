@@ -2,7 +2,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { MdOutlineLoyalty } from "react-icons/md";
 import { TfiStamp } from "react-icons/tfi";
-import { SectionProps, SectionItemProps } from "./types";
+import { SectionItemProps, SectionProps } from "./types";
 
 export const PRODUCT_SECTIONS: SectionProps[] = [
   {
@@ -49,10 +49,10 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "contracts",
   },
   {
-    name: "Solidity SDK",
+    name: "Build",
     label: "contractkit",
     description: "Build your own contract easily",
-    link: "/solidity-sdk",
+    link: "/build",
     icon: require("public/assets/product-icons/extensions.png"),
     section: "contracts",
   },
@@ -65,19 +65,19 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "contracts",
   },
   {
+    name: "Interact",
+    label: "interact",
+    description: "Seamlessly integrate smart contracts into your apps",
+    link: "/interact",
+    icon: require("public/assets/product-icons/interact.svg"),
+    section: "contracts",
+  },
+  {
     name: "Auth",
     label: "auth",
     description: "Authenticate users with their wallets",
     link: "/auth",
     icon: require("public/assets/product-icons/auth.png"),
-    section: "wallets",
-  },
-  {
-    name: "Wallet SDK",
-    label: "wallet-sdk",
-    description: "Connect any wallet",
-    link: "/wallet-sdk",
-    icon: require("public/assets/product-icons/wallet-sdk.png"),
     section: "wallets",
   },
   {
@@ -89,6 +89,22 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "wallets",
   },
   {
+    name: "Embedded Wallets",
+    label: "embedded-wallets",
+    description: "The power of web3, with the user experience of web2",
+    link: "/embedded-wallets",
+    icon: require("public/assets/product-icons/embedded-wallet.svg"),
+    section: "wallets",
+  },
+  {
+    name: "Connect",
+    label: "connect",
+    description: "Web3 onboarding, for the next billion users",
+    link: "/connect",
+    icon: require("public/assets/product-icons/wallet-sdk.png"),
+    section: "wallets",
+  },
+  {
     name: "Storage",
     label: "storage",
     description: "Secure, fast, decentralized storage",
@@ -97,11 +113,27 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "infrastructure",
   },
   {
+    name: "RPC Edge",
+    label: "rpc-edge",
+    description: "Enterprise-grade RPCs, for free",
+    link: "/rpc-edge",
+    icon: require("public/assets/product-icons/rpc-edge.svg"),
+    section: "infrastructure",
+  },
+  {
     name: "NFT Checkout",
     label: "nft-checkout",
-    description: "Accept credit card checkout for NFTs",
-    link: "https://withpaper.com/product/checkouts",
-    icon: require("public/assets/product-icons/payments.png"),
+    description: "One-click NFT checkout flows with just a credit card",
+    link: "/checkout",
+    icon: require("public/assets/product-icons/payments.svg"),
+    section: "payments",
+  },
+  {
+    name: "Sponsored Transactions",
+    label: "sponsored-transactions",
+    description: "Remove all user friction with invisible transactions",
+    link: "/checkout",
+    icon: require("public/assets/product-icons/sponsored-transactions.svg"),
     section: "payments",
   },
   {
@@ -250,5 +282,13 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     link: "https://portal.thirdweb.com/cli",
     icon: require("public/assets/product-icons/support.png"),
     section: "tools",
+  },
+  {
+    name: "Wallet SDK",
+    label: "wallet-sdk",
+    description: "Connect any wallet",
+    link: "https://portal.thirdweb.com/wallet",
+    icon: require("public/assets/product-icons/wallet-sdk.svg"),
+    section: "sdks",
   },
 ];

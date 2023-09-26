@@ -68,7 +68,7 @@ export const BuildSection: React.FC = () => {
               Create your own contracts with our{" "}
               <GradientText
                 as={LinkOverlay}
-                href="/solidity-sdk"
+                href="/build"
                 category={TRACKING_CATEGORY}
                 label="contractkit"
                 stopOne="#805AA8"

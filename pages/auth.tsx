@@ -1,198 +1,201 @@
-import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
-import { Aurora } from "components/homepage/Aurora";
-import { SDKSection } from "components/homepage/sections/SDKSection";
-import { AuthenticationExamples } from "components/product-pages/authentication/AuthenticationExamples";
-import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
-import { Hero } from "components/product-pages/common/Hero";
-import { ProductCard } from "components/product-pages/common/ProductCard";
-import { ProductPage } from "components/product-pages/common/ProductPage";
-import { ProductSection } from "components/product-pages/common/ProductSection";
+import { Container, Flex } from "@chakra-ui/react";
+import { LandingEndCTA } from "components/landing-pages/end-cta";
+import { LandingGridSection } from "components/landing-pages/grid-section";
+import { LandingGuidesShowcase } from "components/landing-pages/guide-showcase";
+import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
+import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
+import { LandingLayout } from "components/landing-pages/layout";
+import { LandingSectionHeading } from "components/landing-pages/section-heading";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { Heading, TrackedLink } from "tw-components";
+import { Card, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
-const TRACKING_CATEGORY = "auth";
+const TRACKING_CATEGORY = "auth-landing";
 
 const GUIDES = [
   {
     title: "How to Create a Web3 Creator Platform with a Web2 Backend",
     image:
-      "https://blog.thirdweb.com/content/images/size/w1000/2022/09/web3-creator-platform-bg.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/03/How-to-create-a-web3-creator----platform-with-a-web2-backend.png",
     link: "https://blog.thirdweb.com/guides/how-to-create-a-web3-creator-platform/",
   },
   {
     title: "Create An NFT Gated Website",
     image:
-      "https://blog.thirdweb.com/content/images/size/w1000/2022/08/thumbnail-31.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/08/thumbnail-31.png",
     link: "https://blog.thirdweb.com/guides/nft-gated-website/",
   },
   {
     title: "Accept Stripe Subscription Payments For Your Web3 App",
     image:
-      "https://blog.thirdweb.com/content/images/size/w1000/2022/09/This-is-the-one-3.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/03/Add-stripe-subscriptions--with-web3-auth-2.png",
     link: "https://blog.thirdweb.com/guides/add-stripe-subscriptions-with-web3-auth/",
   },
 ];
 
-const Authentication: ThirdwebNextPage = () => {
+const AuthLanding: ThirdwebNextPage = () => {
   return (
-    <ProductPage
+    <LandingLayout
+      bgColor="#0F0F0F"
       seo={{
-        title: "Auth",
-        description: "Authenticate users with their wallets",
+        title: "The Complete Toolkit for Web3 Authentication",
+        description:
+          "Auth for the most popular web3 wallets & web2 login flows. Verify your users' identities & prove wallet ownership to off-chain systems.",
         openGraph: {
           images: [
             {
               url: `${getAbsoluteUrl()}/assets/og-image/auth.png`,
-              width: 2334,
-              height: 1260,
-              alt: "thirdweb Auth",
+              width: 1200,
+              height: 630,
+              alt: "The Complete Toolkit for Web3 Authentication",
             },
           ],
         },
       }}
     >
-      {/* Hero */}
-      <Hero
-        trackingCategory={TRACKING_CATEGORY}
-        name="Auth"
-        title="Authenticate users with their wallets"
-        description="Authenticate users with just their wallet. Build powerful web3 functionality into web2 experiences."
-        buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/auth"
-        gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FF8D5C 100.01%)"
-        image={require("public/assets/product-pages/authentication/auth.png")}
+      <Container
+        maxW="container.page"
+        as={Flex}
+        flexDir="column"
+        gap={{ base: "80px", md: "120px" }}
       >
-        <SimpleGrid
-          justifyContent="flex-start"
-          w="100%"
-          columns={{ base: 1, md: 3 }}
-          gap={{ base: 12, md: 6 }}
-        >
-          <ProductCard
-            title="Simplify sign-in flow"
-            icon={require("/public/assets/product-pages/authentication/sign-in.png")}
-          >
-            Simplify sign in flow by allowing any user to sign-in to any app
-            using their web3 wallet.
-          </ProductCard>
-          <ProductCard
-            title="Verify on-chain identities"
-            icon={require("/public/assets/product-pages/authentication/verify.png")}
-          >
-            {/* span required for inline-context */}
-            <span>
-              Built on the SIWE{" ("}
-              <TrackedLink
-                color="white"
-                fontWeight="medium"
-                href="https://eips.ethereum.org/EIPS/eip-4361"
-                category={TRACKING_CATEGORY}
-                label="sign-in-with-ethereum"
-                isExternal
-              >
-                Sign-in with Ethereum
-              </TrackedLink>
-              {") "}
-              standard. Securely verify a user{`'`}s on-chain identity, without
-              relying on a centralized database to verify their identity.
-            </span>
-          </ProductCard>
-          <ProductCard
-            title="Secure token authentication"
-            icon={require("/public/assets/product-pages/authentication/authenticate.png")}
-          >
-            {/* span required for inline-context */}
-            <span>
-              Secure your backend with a web3-compatible authentication system
-              compliant with the widely used{" "}
-              <TrackedLink
-                color="white"
-                fontWeight="medium"
-                href="https://jwt.io"
-                category={TRACKING_CATEGORY}
-                label="jwt"
-                isExternal
-              >
-                JSON Web Token
-              </TrackedLink>{" "}
-              standard.
-            </span>
-          </ProductCard>
-        </SimpleGrid>
-      </Hero>
-
-      {/* SDK */}
-      <ProductSection
-        id="developers"
-        overflow="hidden"
-        py={{ base: 12, lg: 24 }}
-      >
-        <SDKSection
-          title="Integrate web3 into your apps and games"
-          description="Powerful SDKs to integrate web3-compatible authentication into your apps and games. Works with any backend, framework, or service."
-          codeSelectorProps={{
-            snippets: "auth",
-            docs: "https://portal.thirdweb.com/auth",
-          }}
+        <LandingHeroWithSideImage
+          miniTitle="Storage"
+          title="The complete toolkit for"
+          titleWithGradient="Web3 Authentication"
+          subtitle="Easy auth for the most popular web3 wallets and web2 login flows — so you can verify your users’ identities & prove wallet ownership to off-chain systems."
+          trackingCategory={TRACKING_CATEGORY}
+          ctaLink="https://portal.thirdweb.com/auth"
+          contactUsTitle="Book Demo"
+          gradient="linear(to-r, #3385FF, #7BB0FF)"
+          image={require("public/assets/product-pages/hero/desktop-hero-auth.png")}
+          mobileImage={require("public/assets/product-pages/hero/mobile-hero-auth.png")}
         />
 
-        <Aurora
-          pos={{ left: "50%", top: "40%" }}
-          size={{ width: "2000px", height: "1300px" }}
-          color={"hsl(223deg 40% 15%)"}
-        />
-      </ProductSection>
+        <LandingGridSection title={<></>}>
+          <LandingIconSectionItem
+            icon={require("public/assets/product-pages-icons/wallets/icon-simple-click.svg")}
+            title="Instant onboarding"
+            description="Enable any user to verify their identity using web2 sign-in flows such as an email, phone number, or social account — and auto-generate a wallet for them."
+          />
+          <LandingIconSectionItem
+            icon={require("public/assets/product-pages-icons/wallets/icon-secure.svg")}
+            title="Web3-first auth"
+            description="Build web3 apps with secure, self-custodied, web3-first authentication for your users."
+          />
+          <LandingIconSectionItem
+            icon={require("public/assets/product-pages-icons/wallets/icon-build.svg")}
+            title="Seamless DX"
+            description="Powerful SDKs to integrate web3-compatible auth into your app — working with any backend, framework, or service."
+          />
+        </LandingGridSection>
+        <LandingGridSection title={<></>}>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/wallets/icon-verified.svg")}
+              title="Onchain identity verification"
+              description={
+                <>
+                  Built on the SIWE (
+                  <TrackedLink
+                    href="https://eips.ethereum.org/EIPS/eip-4361"
+                    category={TRACKING_CATEGORY}
+                    label="siwe"
+                    color="blue.500"
+                    isExternal
+                  >
+                    Sign-in with Ethereum
+                  </TrackedLink>
+                  ) standard. Securely verify a user&apos;s on-chain identity,
+                  without relying on a centralized database to verify their
+                  identity.
+                </>
+              }
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/wallets/icon-wallet-management.svg")}
+              title="Comprehensive wallet management"
+              description="Auth includes a wide range of key management infrastructure for wallets. "
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/wallets/icon-private.svg")}
+              title="Secure token authentication"
+              description={
+                <>
+                  Secure your backend with a web3-compatible authentication
+                  system compliant with the widely used{" "}
+                  <TrackedLink
+                    href="https://jwt.io/"
+                    category={TRACKING_CATEGORY}
+                    label="jwt"
+                    color="blue.500"
+                    isExternal
+                  >
+                    JSON Web Token
+                  </TrackedLink>{" "}
+                  standard.
+                </>
+              }
+            />
+          </Card>
+        </LandingGridSection>
 
-      {/* Use Cases */}
-      <ProductSection overflow="hidden">
-        <Flex
-          flexDir="column"
-          py={{ base: 24, lg: 48 }}
-          align="center"
-          gap={{ base: 12, lg: 24 }}
+        <LandingGridSection
+          title={
+            <LandingSectionHeading
+              title="What You Can Build"
+              blackToWhiteTitle=""
+            />
+          }
         >
-          <Box>
-            <Heading
-              as="h2"
-              bgGradient="linear(to-r, #907EFF, #C5D8FF)"
-              bgClip="text"
-              size="display.sm"
-              fontWeight={700}
-              textAlign="center"
-              mb={6}
-            >
-              Auth for every use case
-            </Heading>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/wallets/icon-efficient.svg")}
+              title="Passwordless auth"
+              description="Enable users to seamlessly log into any app with just a web3 wallet or web2 login."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/wallets/icon-verified.svg")}
+              title="Identity verification systems"
+              description="Securely verify a user's onchain identity & grant them access to gated resources, interaction with your app, and the ability to receive payments with ETH or ERC-20 tokens."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/wallets/icon-data-check.svg")}
+              title="Onchain & offchain data"
+              description="Understand your users better by merging their web2 and web3 identities — with rich on-chain data."
+            />
+          </Card>
+        </LandingGridSection>
 
-            <Heading
-              as="h3"
-              size="subtitle.lg"
-              textAlign="center"
-              maxW="container.lg"
-            >
-              Explore use cases that require user{`'`}s wallet addresses on the
-              backend.
-            </Heading>
-          </Box>
+        <LandingGuidesShowcase
+          title="Learn how to build"
+          description="Check out our guides to learn how to build with Auth"
+          solution="Auth"
+          category={TRACKING_CATEGORY}
+          guides={GUIDES}
+        />
 
-          <AuthenticationExamples />
-        </Flex>
-      </ProductSection>
-
-      {/* Guides */}
-      <GuidesShowcase
-        title="Learn how to build"
-        category={TRACKING_CATEGORY}
-        description="Check out our guides to learn how to build with Auth"
-        solution="Auth"
-        guides={GUIDES}
-      />
-    </ProductPage>
+        <LandingEndCTA
+          title="Start building"
+          titleWithGradient="today."
+          trackingCategory={TRACKING_CATEGORY}
+          ctaLink="https://portal.thirdweb.com/auth"
+          gradient="linear(to-r, #3385FF, #7BB0FF)"
+        />
+      </Container>
+    </LandingLayout>
   );
 };
 
-Authentication.pageId = PageId.AuthenticationLanding;
+AuthLanding.pageId = PageId.AuthLanding;
 
-export default Authentication;
+export default AuthLanding;

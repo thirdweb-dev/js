@@ -1,138 +1,216 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
-import { Hero } from "components/product-pages/common/Hero";
-import { ProductCard } from "components/product-pages/common/ProductCard";
-import { ProductPage } from "components/product-pages/common/ProductPage";
-import { ProductSection } from "components/product-pages/common/ProductSection";
-import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
+import { Container, Flex } from "@chakra-ui/react";
+import { LandingEndCTA } from "components/landing-pages/end-cta";
+import { LandingGridSection } from "components/landing-pages/grid-section";
+import { LandingGuidesShowcase } from "components/landing-pages/guide-showcase";
+import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
+import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
+import { LandingLayout } from "components/landing-pages/layout";
+import { LandingSectionHeading } from "components/landing-pages/section-heading";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { Heading, Text } from "tw-components";
+import { Card } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
-const TRACKING_CATEGORY = "deploy";
+const TRACKING_CATEGORY = "deploy-landing";
 
 const GUIDES = [
   {
-    title: "Deploy Smart Contracts From A Safe",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w1000/2022/11/This-is-the-one--20-.png",
-    link: "https://blog.thirdweb.com/guides/how-to-deploy-smart-contract-using-gnosis-safe/",
-  },
-  {
     title: "How to Deploy Any Smart Contract Using the thirdweb CLI",
     image:
-      "https://blog.thirdweb.com/content/images/size/w1000/2022/10/This-is-the-one-10.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/10/This-is-the-one-10.png",
     link: "https://blog.thirdweb.com/guides/how-to-deploy-any-smart-contract-using-thirdweb-cli/",
   },
   {
-    title: "Introducing thirdweb Deploy",
+    title: "How to deploy an NFT Marketplace",
     image:
-      "https://blog.thirdweb.com/content/images/size/w1000/2022/09/Blog-thumbnail_tw-deploy.png",
-    link: "https://blog.thirdweb.com/thirdweb-deploy/",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/09/How-to-Create-an-NFT-Marketplace---Step-by-Step-Tutorial-Guide.png",
+    link: "https://blog.thirdweb.com/guides/how-to-create-an-nft-marketplace/",
+  },
+  {
+    title: "How to build a Token Bound Account (ERC 6551)",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/06/How-to-Create-Token-Bound-Accounts--ERC-6551-.png",
+    link: "https://blog.thirdweb.com/guides/create-token-bound-accounts-erc6551/",
   },
 ];
 
-const Deploy: ThirdwebNextPage = () => {
+const CASE_STUDIES = [
+  {
+    title:
+      "Base Launches its First Builder Quest & Brings New Developers Onchain",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/05/Base-Launches-its-First-Builder-Quest-and-Brings-New-Developers-Onchain---thirdweb-Case-Study-1.png",
+    link: "https://blog.thirdweb.com/case-studies/base-builder-quest-brings-developers-onchain/",
+  },
+  {
+    title: "Pixels Builds an On-Chain Ecosystem for its Open-World Web3 Game",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/04/Pixels-Builds-an-Onchain-Ecosystem-for-its-Web3-Game-thirdweb-Case-Study.png",
+    link: "https://blog.thirdweb.com/case-studies/pixels-builds-an-onchain-ecosystem-for-its-web3-game/",
+  },
+  {
+    title:
+      "Layer3 Powers Web3 Adoption through Gamified Experiences & NFT Rewards",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/Layer3--2-.png",
+    link: "https://blog.thirdweb.com/case-studies/layer3-powers-web3-adoption-through-gamified-experiences-nft-rewards/",
+  },
+];
+
+const DeployLanding: ThirdwebNextPage = () => {
   return (
-    <ProductPage
+    <LandingLayout
+      bgColor="#0F0F0F"
       seo={{
-        title: "Deploy",
-        description: "Simple contract deployment workflow for teams",
+        title: "Deploy Smart Contracts on Any EVM Chain",
+        description:
+          "Deploy smart contracts to any EVM network securely, using a single command or a few clicks from our dashboard. Learn more.",
         openGraph: {
           images: [
             {
               url: `${getAbsoluteUrl()}/assets/og-image/deploy.png`,
-              width: 2334,
-              height: 1260,
-              alt: "thirdweb Deploy",
+              width: 1200,
+              height: 630,
+              alt: "Deploy Smart Contracts on Any EVM Chain",
             },
           ],
         },
       }}
     >
-      {/* hero */}
-      <Hero
-        trackingCategory={TRACKING_CATEGORY}
-        name="Deploy"
-        title="Simple contract deployment workflow for teams"
-        description="Deploy contracts on-chain with a simple deployment workflow designed for team collaboration."
-        buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/deploy"
-        image={require("public/assets/product-pages/deploy/hero.png")}
-        gradient="linear-gradient(147.15deg, #410AB6 30.17%, #5CFFE1 100.01%)"
+      <Container
+        maxW="container.page"
+        as={Flex}
+        flexDir="column"
+        gap={{ base: "80px", md: "120px" }}
       >
-        <SimpleGrid
-          justifyContent="flex-start"
-          w="100%"
-          columns={{ base: 1, md: 3 }}
-          gap={{ base: 12, md: 6 }}
-        >
-          <ProductCard
-            title="1-line contract deployment"
-            icon={require("/public/assets/product-pages/deploy/hero-icon-1.png")}
-          >
-            {/* span required for inline-context */}
-            <span>
-              Compile and deploy any smart contract with the CLI{" "}
-              <Text as="span" size="body.lg" fontWeight="medium" color="white">
-                npx thirdweb deploy
-              </Text>{" "}
-              command. No more copying ABIs or generating bindings.
-            </span>
-          </ProductCard>
-          <ProductCard
-            title="Deploy from your wallet"
-            icon={require("/public/assets/product-pages/deploy/hero-icon-2.png")}
-          >
-            Enable non-technical team members to deploy contracts without
-            relying on engineers. Deploy directly from your browser. No need to
-            deal with insecure and unfunded private keys or scripts required
-            with local deploys.
-          </ProductCard>
-          <ProductCard
-            title="Unlock powerful tooling"
-            icon={require("/public/assets/product-pages/deploy/hero-icon-3.png")}
-          >
-            Unlock access to powerful tooling that allow you to easily build
-            apps on top of your contracts, including SDKs and Dashboard.
-          </ProductCard>
-        </SimpleGrid>
-      </Hero>
+        <LandingHeroWithSideImage
+          miniTitle="Deploy"
+          title="Launch smart contracts"
+          titleWithGradient="on any EVM chain securely"
+          subtitle="Deploy smart contracts to any EVM network, using a single command or a few clicks from our dashboard. No more copying ABIs or sharing private keys."
+          trackingCategory={TRACKING_CATEGORY}
+          ctaLink="https://portal.thirdweb.com/deploy"
+          contactUsTitle="Book Demo"
+          gradient="linear(to-r, #F213A4, #F97CCE)"
+          image={require("public/assets/product-pages/hero/desktop-hero-deploy.png")}
+          mobileImage={require("public/assets/product-pages/hero/mobile-hero-deploy.png")}
+        />
 
-      {/* Video Embed section*/}
-      <ProductSection py={{ base: 12, lg: 24 }}>
-        <Flex alignItems="center" flexDirection="column">
-          <Heading
-            as="h2"
-            size="display.sm"
-            textAlign="center"
-            mb={12}
-            maxW={850}
-          >
-            Deploy contracts to unlock powerful SDKs and Dashboard
-          </Heading>
-          <YoutubeEmbed
-            maxWidth={680}
-            title="Deploy contracts to unlock powerful SDKs and Dashboard"
-            aspectRatio={16 / 10}
-            videoId="6EqumMCa-E8"
+        <LandingGridSection title={<></>}>
+          <LandingIconSectionItem
+            icon={require("public/assets/product-pages-icons/contracts/icon-simple-click.svg")}
+            title="Simplify your workflow"
+            description="Decrease your go-to-market time by deploying smart contracts with one command line or with a few clicks on our dashboard. A simplified workflow for developers, with no more copying ABIs or generating bindings."
           />
-        </Flex>
-      </ProductSection>
+          <LandingIconSectionItem
+            icon={require("public/assets/product-pages-icons/contracts/icon-secure.svg")}
+            title="Deploy securely"
+            description="Eliminate any risk from your workflow. No need to share private keys as deployment is managed via our dashboard. No need to deal with insecure and unfunded private keys required with local deploys."
+          />
+          <LandingIconSectionItem
+            icon={require("public/assets/product-pages-icons/contracts/icon-build.svg")}
+            title="Build on any contract"
+            description="Unlock a full Web3 development stack for any smart contract. Access powerful tooling that allows you to easily build apps on top of your contracts, including Wallets, SDKs, Payments and Infrastructure. "
+          />
+        </LandingGridSection>
+        <LandingGridSection title={<></>} desktopColumns={4}>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-share.svg")}
+              title="CLI"
+              description="1-line command for deploying contracts."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-dashboard.svg")}
+              title="Dashboard user interface"
+              description="For deploying contracts, no need to share private keys."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-storage-management.svg")}
+              title="Managed infrastructure"
+              description="No need to set RPC URL and automatically upload and pin contract metadata to IPFS."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-verified.svg")}
+              title="Automatic verification"
+              description="Contracts are automatically verified on Sourcify."
+            />
+          </Card>
+        </LandingGridSection>
 
-      {/* Guides */}
-      <GuidesShowcase
-        title="Learn how to build"
-        category={TRACKING_CATEGORY}
-        description="Check out our guides to learn how to build with Deploy"
-        solution="Deploy"
-        guides={GUIDES}
-      />
-    </ProductPage>
+        <LandingGridSection
+          title={
+            <LandingSectionHeading
+              title="What You Can Build"
+              blackToWhiteTitle=""
+            />
+          }
+          desktopColumns={4}
+        >
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-digital-collectible.svg")}
+              title="Digital Collectibles"
+              description="Deploy ERC-721 or ERC-1155 NFT smart contracts with lazy minting to let your audience claim or purchase digital collectibles."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-marketplace.svg")}
+              title="Marketplaces"
+              description="Build your own fully-customizable marketplace — where you can sell directly to your audiences, create auctions that users can bid on, and enable anyone to trade digital assets."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-smart-wallet.svg")}
+              title="Smart Wallets"
+              description="Deploy smart wallet factories for your app — using account abstraction to give your users powerful features such as wallet recovery, multi-signature security, & batch transactions."
+            />
+          </Card>
+          <Card p={8}>
+            <LandingIconSectionItem
+              icon={require("public/assets/product-pages-icons/contracts/icon-game.svg")}
+              title="Web3 Games"
+              description="Build blockchain-based games with collectible in-game items and in-game economies using NFTs, native tokens and more. "
+            />
+          </Card>
+        </LandingGridSection>
+
+        <LandingGuidesShowcase
+          title="Deploy smart contracts for any web3 app"
+          description="Learn how to deploy smart contracts to any EVM chain in seconds"
+          solution="Deploy"
+          category={TRACKING_CATEGORY}
+          guides={GUIDES}
+        />
+
+        <LandingGuidesShowcase
+          title="The best web3 apps use thirdweb's smart contract tools"
+          category={TRACKING_CATEGORY}
+          description="Seamlessly deploy smart contracts on any EVM chain so you can focus on building a great app."
+          guides={CASE_STUDIES}
+          caseStudies
+        />
+
+        <LandingEndCTA
+          title="Start building"
+          titleWithGradient="today."
+          trackingCategory={TRACKING_CATEGORY}
+          ctaLink="https://portal.thirdweb.com/deploy"
+          gradient="linear(to-r, #F213A4, #F97CCE)"
+        />
+      </Container>
+    </LandingLayout>
   );
 };
 
-Deploy.pageId = PageId.DeployLanding;
+DeployLanding.pageId = PageId.DeployLanding;
 
-export default Deploy;
+export default DeployLanding;

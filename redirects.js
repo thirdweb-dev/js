@@ -53,12 +53,12 @@ function redirects() {
     },
     {
       source: "/extensions",
-      destination: "/solidity-sdk",
+      destination: "/build",
       permanent: false,
     },
     {
       source: "/contractkit",
-      destination: "/solidity-sdk",
+      destination: "/build",
       permanent: true,
     },
     //  old (deprecated) routes
@@ -181,8 +181,18 @@ function redirects() {
       permanent: false,
     },
     {
+      source: "/solidity-sdk",
+      destination: "/build",
+      permanent: false,
+    },
+    {
       source: "/connect-wallet",
-      destination: "/dashboard/wallets/connect",
+      destination: "/connect",
+      permanent: false,
+    },
+    {
+      source: "/wallet-sdk",
+      destination: "https://portal.thirdweb.com/wallet",
       permanent: false,
     },
   ];

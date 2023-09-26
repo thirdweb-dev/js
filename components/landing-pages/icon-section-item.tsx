@@ -7,7 +7,7 @@ import { Text } from "tw-components";
 interface LandingIconSectionItemProps {
   icon: StaticImageData;
   title: string;
-  description: ReactNode;
+  description?: ReactNode;
 }
 
 export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
@@ -29,7 +29,7 @@ export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
         <Text size="body.xl" color="white" fontWeight="bold">
           {title}
         </Text>
-        <Text size="body.lg">{description}</Text>
+        {description && <Text size="body.lg">{description}</Text>}
       </Flex>
     </Flex>
   );

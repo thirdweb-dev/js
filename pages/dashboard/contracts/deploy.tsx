@@ -89,7 +89,7 @@ const DeployOptions = () => {
         title: "Build your own",
         description:
           "Get started with the Solidity SDK to create custom contracts specific to your use case.",
-        href: "/solidity-sdk",
+        href: "/build",
       },
       deploy: {
         title: "Deploy from source",

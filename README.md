@@ -32,4 +32,4 @@ Some env vars can be overridden that are required for some external services to 
 
 To define env vars please create a `.env` file based on the `.env.example` template at the root level of the project. This file is ignored by git so you can safely add it to your local copy of the project.
 
-**No environment variables are required to build a basic functioning version of the site.**
+**Add your thirdweb clientID and secret key to build a basic functioning version of the site.**

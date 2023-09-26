@@ -175,7 +175,7 @@ const Commerce: ThirdwebNextPage = () => {
                   category={TRACKING_CATEGORY}
                   color="white"
                   fontWeight="medium"
-                  href={"/explore"}
+                  href="/explore"
                   label="use-case-explore"
                 >
                   Explore
