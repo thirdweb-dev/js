@@ -92,6 +92,13 @@
       },
       "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.cjs.js"
     },
+    "./evm/wallets/gcp-kms": {
+      "module": {
+        "browser": "./evm/wallets/gcp-kms/dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.browser.esm.js",
+        "default": "./evm/wallets/gcp-kms/dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.esm.js"
+      },
+      "default": "./evm/wallets/gcp-kms/dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.cjs.js"
+    },
     "./evm/wallets/phantom": {
       "module": {
         "browser": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.browser.esm.js",
