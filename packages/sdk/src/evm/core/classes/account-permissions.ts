@@ -516,16 +516,21 @@ export class AccountPermissions implements DetectableFeature {
       signerAddress: AddressOrEns,
       target: AddressOrEns,
     ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedTarget = await resolveAddress(target);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
+      const [resolvedSignerAddress, resolvedTarget] = await Promise.all([
+        resolveAddress(signerAddress),
+        resolveAddress(target),
+      ]);
+      const [isAdmin, isSigner] = await Promise.all([
+        this.isAdmin(resolvedSignerAddress),
+        this.isSigner(resolvedSignerAddress),
+      ]);
+      if (isAdmin) {
         throw new Error(
           "Signer is already an admin. Cannot approve targets for an admin.",
         );
       }
 
-      if (!(await this.isSigner(resolvedSignerAddress))) {
+      if (!isSigner) {
         throw new Error(
           "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
         );
@@ -573,16 +578,21 @@ export class AccountPermissions implements DetectableFeature {
       signerAddress: AddressOrEns,
       target: AddressOrEns,
     ): Promise<Transaction> => {
-      const resolvedSignerAddress = await resolveAddress(signerAddress);
-      const resolvedTarget = await resolveAddress(target);
-
-      if (await this.isAdmin(resolvedSignerAddress)) {
+      const [resolvedSignerAddress, resolvedTarget] = await Promise.all([
+        resolveAddress(signerAddress),
+        resolveAddress(target),
+      ]);
+      const [isAdmin, isSigner] = await Promise.all([
+        this.isAdmin(resolvedSignerAddress),
+        this.isSigner(resolvedSignerAddress),
+      ]);
+      if (isAdmin) {
         throw new Error(
           "Signer is already an admin. Cannot approve targets for an admin.",
         );
       }
 
-      if (!(await this.isSigner(resolvedSignerAddress))) {
+      if (!isSigner) {
         throw new Error(
           "Signer does not already have permissions. You can grant permissions using `grantPermissions`.",
         );
@@ -657,8 +667,12 @@ export class AccountPermissions implements DetectableFeature {
       const addOrUpdateSignerData: string[] = [];
       const removeSignerData: string[] = [];
 
+      const [allAdmins, allSigners] = await Promise.all([
+        this.getAllAdmins(),
+        this.getAllSigners(),
+      ]);
+
       // Remove all existing admins not included in the passed snapshot.
-      const allAdmins = await this.getAllAdmins();
       const allToMakeAdmin = resolvedSnapshot
         .filter((item) => item.makeAdmin)
         .map((item) => item.signer);
@@ -674,26 +688,26 @@ export class AccountPermissions implements DetectableFeature {
       });
 
       // Remove all existing signers not included in the passed snapshot.
-      const allSigners = await this.getAllSigners();
       const allToMakeSigners = resolvedSnapshot
         .filter((item) => {
           return !item.makeAdmin;
         })
         .map((item) => item.signer);
-      await Promise.all(
-        allSigners.map(async (item) => {
-          if (!allToMakeSigners.includes(item.signer)) {
-            const data = await this.buildSignerPermissionRequest(item.signer, {
-              startDate: BigNumber.from(0),
-              expirationDate: BigNumber.from(0),
-              approvedCallTargets: [],
-              nativeTokenLimitPerTransaction: "0",
-            });
 
-            removeSignerData.push(data);
-          }
-        }),
-      );
+      (
+        await Promise.all(
+          allSigners
+            .filter((item) => !allToMakeSigners.includes(item.signer))
+            .map((item) =>
+              this.buildSignerPermissionRequest(item.signer, {
+                startDate: BigNumber.from(0),
+                expirationDate: BigNumber.from(0),
+                approvedCallTargets: [],
+                nativeTokenLimitPerTransaction: "0",
+              }),
+            ),
+        )
+      ).forEach((data) => removeSignerData.push(data));
 
       for (const member of resolvedSnapshot) {
         // Add new admin
@@ -704,15 +718,21 @@ export class AccountPermissions implements DetectableFeature {
               [member.signer, true],
             ),
           );
-        } else {
-          // Add new scoped
-          const data = await this.buildSignerPermissionRequest(
-            member.signer,
-            member.permissions,
-          );
-          addOrUpdateSignerData.push(data);
         }
       }
+
+      (
+        await Promise.all(
+          resolvedSnapshot
+            .filter((member) => !member.makeAdmin)
+            .map((member) =>
+              this.buildSignerPermissionRequest(
+                member.signer,
+                member.permissions,
+              ),
+            ),
+        )
+      ).map((data) => addOrUpdateSignerData.push(data));
 
       const data: string[] = [];
       removeAdminData.forEach((item) => {
