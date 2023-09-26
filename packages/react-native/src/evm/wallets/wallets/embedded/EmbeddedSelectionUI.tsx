@@ -5,7 +5,6 @@ import { useAppTheme } from "../../../styles/hooks";
 import {
   SelectUIProps,
   useCreateWalletInstance,
-  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
@@ -25,7 +24,6 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
-  const clientId = useWalletContext().clientId;
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -51,7 +49,6 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
           onSelect({
             ...response,
             email,
-            clientId,
             emailWallet,
           });
         })
@@ -70,54 +67,53 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
 
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      <Box>
-        <TextInput
-          textInputProps={{
-            value: email,
-            placeholder: "Enter your email address",
-            placeholderTextColor: theme.colors.textSecondary,
-            keyboardType: "email-address",
-            returnKeyType: "done",
-            autoCapitalize: "none",
-            autoCorrect: false,
-            autoComplete: "off",
-            clearTextOnFocus: false,
-            onChangeText: setEmail,
-            style: {
-              fontSize: 14,
-              color: theme.colors.textPrimary,
-              lineHeight: 16,
-              padding: 0,
-            },
-          }}
-          containerProps={{
-            paddingHorizontal: "sm",
-            paddingVertical: "md",
-          }}
-        />
-        <BaseButton
-          mt="md"
-          paddingVertical="xmd"
-          borderRadius="lg"
-          borderWidth={1}
-          borderColor="border"
-          backgroundColor="accentButtonColor"
-          onPress={handleNetworkCall}
-        >
-          {isFetching ? (
-            <ActivityIndicator size={"small"} />
-          ) : (
-            <Text
-              variant="bodySmall"
-              color="accentButtonTextColor"
-              fontWeight="700"
-            >
-              Continue
-            </Text>
-          )}
-        </BaseButton>
-        {errorMessage ? <Text variant="error">{errorMessage}</Text> : null}
-      </Box>
+      <TextInput
+        textInputProps={{
+          placeholder: "Enter your email address",
+          placeholderTextColor: theme.colors.textSecondary,
+          onChangeText: setEmail,
+          style: {
+            fontSize: 14,
+            color: theme.colors.textPrimary,
+            lineHeight: 16,
+            padding: 0,
+          },
+          value: email,
+          keyboardType: "email-address",
+          returnKeyType: "done",
+          autoCapitalize: "none",
+          autoCorrect: false,
+          autoComplete: "off",
+          clearTextOnFocus: false,
+        }}
+        containerProps={{
+          paddingHorizontal: "sm",
+          paddingVertical: "sm",
+          justifyContent: "flex-start",
+        }}
+      />
+      <BaseButton
+        mt="md"
+        paddingVertical="xmd"
+        borderRadius="lg"
+        borderWidth={1}
+        borderColor="border"
+        backgroundColor="accentButtonColor"
+        onPress={handleNetworkCall}
+      >
+        {isFetching ? (
+          <ActivityIndicator size={"small"} />
+        ) : (
+          <Text
+            variant="bodySmall"
+            color="accentButtonTextColor"
+            fontWeight="700"
+          >
+            Continue
+          </Text>
+        )}
+      </BaseButton>
+      {errorMessage ? <Text variant="error">{errorMessage}</Text> : null}
     </Box>
   );
 };

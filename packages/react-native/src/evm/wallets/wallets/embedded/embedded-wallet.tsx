@@ -22,7 +22,10 @@ export const embeddedWallet = (
     id: EmbeddedWallet.id,
     meta: EmbeddedWallet.meta,
     create(options: WalletOptions) {
-      return new EmbeddedWallet({ ...options, clientId: "" });
+      return new EmbeddedWallet({
+        ...options,
+        clientId: options.clientId || "",
+      });
     },
     selectUI: selectUI,
     connectUI: EmbeddedConnectionUI,
