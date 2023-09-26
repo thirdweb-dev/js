@@ -132,7 +132,7 @@ export const PRODUCTS: SectionItemProps[] = [
     name: "Sponsored Transactions",
     label: "sponsored-transactions",
     description: "Remove all user friction with invisible transactions",
-    link: "/checkout",
+    link: "/sponsored-transactions",
     icon: require("public/assets/product-icons/sponsored-transactions.svg"),
     section: "payments",
   },
