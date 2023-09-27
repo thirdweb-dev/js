@@ -3,12 +3,12 @@ import {
   Connector,
 } from "@thirdweb-dev/wallets";
 import { ethers, utils } from "ethers";
+import { LOCAL_WALLET_ICON } from "../../assets/svgs";
 
 export class LocalWallet extends LocalWalletCore {
   static meta = {
     name: "Guest Wallet",
-    iconURL:
-      "ipfs://QmQAyJG3y2wZf9u6JXxn8U9Kd1ZVfjtQkf5aua8FcWr8Gm/local-wallet-mobile.svg",
+    iconURL: LOCAL_WALLET_ICON,
   };
 
   getMeta() {
