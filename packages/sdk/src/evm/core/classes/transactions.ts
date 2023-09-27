@@ -515,8 +515,11 @@ export class Transaction<
     let sentTx;
     let iteration = 1;
     while (!sentTx) {
-      sentTx = await this.provider.getTransaction(txHash);
-
+      try {
+        sentTx = await this.provider.getTransaction(txHash);
+      } catch (err) {
+        // some providers can throw an error if the tx is very recent
+      }
       // Exponential (ish) backoff for polling
       if (!sentTx) {
         await new Promise((resolve) =>
