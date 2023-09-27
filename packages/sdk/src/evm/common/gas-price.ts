@@ -41,10 +41,10 @@ export async function getDynamicFeeData(
   let maxFeePerGas: null | BigNumber = null;
   let maxPriorityFeePerGas: null | BigNumber = null;
 
-  const [chainId, block, eth_maxPriorityFeePerGas] = await Promise.all([
-    (await provider.getNetwork()).chainId,
-    await provider.getBlock("latest"),
-    await provider.send("eth_maxPriorityFeePerGas", []).catch(() => null),
+  const [{ chainId }, block, eth_maxPriorityFeePerGas] = await Promise.all([
+    provider.getNetwork(),
+    provider.getBlock("latest"),
+    provider.send("eth_maxPriorityFeePerGas", []).catch(() => null),
   ]);
 
   const baseBlockFee =
