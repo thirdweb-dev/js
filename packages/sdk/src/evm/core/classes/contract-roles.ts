@@ -177,18 +177,17 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
           });
         }
         if (toRemove.length) {
-          for (let j = 0; j < toRemove.length; j++) {
-            const address = toRemove[j];
-            const revokeFunctionName = (await this.getRevokeRoleFunctionName(
-              address,
-            )) as any;
+          const revokeFunctionNames = await Promise.all(
+            toRemove.map((address) => this.getRevokeRoleFunctionName(address)),
+          );
+          revokeFunctionNames.forEach((revokeFunctionName, index) =>
             encoded.push(
               contractEncoder.encode(revokeFunctionName, [
                 getRoleHash(role),
-                address,
+                toRemove[index],
               ]),
-            );
-          }
+            ),
+          );
         }
       }
 
