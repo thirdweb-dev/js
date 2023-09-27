@@ -1,73 +1,93 @@
 import { CoreServiceConfig, updateRateLimitedAt } from "../api";
 import { AuthorizationResult } from "../authorize/types";
-
 import { RateLimitResult } from "./types";
 
-const DEFAULT_RATE_LIMIT_WINDOW_SECONDS = 10;
-const HARD_LIMIT_MULTIPLE = 2; // 2x of allowed limit
+const RATE_LIMIT_WINDOW_SECONDS = 10;
 
-type CacheOptions = {
-  get: (bucketId: string) => Promise<string | null>;
-  put: (bucketId: string, count: string) => Promise<void> | void;
+// Redis interface compatible with ioredis (Node) and upstash (Cloudflare Workers).
+type IRedis = {
+  incr: (key: string) => Promise<number>;
+  expire: (key: string, ttlSeconds: number) => Promise<0 | 1>;
 };
 
-export async function rateLimit(
-  authzResult: AuthorizationResult,
-  serviceConfig: CoreServiceConfig,
-  cacheOptions: CacheOptions,
-): Promise<RateLimitResult> {
-  if (!authzResult.authorized) {
+export async function rateLimit(args: {
+  authzResult: AuthorizationResult;
+  serviceConfig: CoreServiceConfig;
+  redis: IRedis;
+  /**
+   * Sample requests to reduce load on Redis.
+   * This scales down the request count and the rate limit threshold.
+   * @default 1.0
+   */
+  sampleRate?: number;
+}): Promise<RateLimitResult> {
+  const { authzResult, serviceConfig, redis, sampleRate = 1.0 } = args;
+
+  const shouldSampleRequest = Math.random() < sampleRate;
+  if (!shouldSampleRequest || !authzResult.authorized) {
     return {
       rateLimited: false,
+      requestCount: 0,
+      rateLimit: 0,
     };
   }
 
   const { apiKeyMeta, accountMeta } = authzResult;
-  const { rateLimits } = apiKeyMeta || accountMeta || {};
-
   const accountId = apiKeyMeta?.accountId || accountMeta?.id;
-  const { serviceScope } = serviceConfig;
 
-  if (!rateLimits || !(serviceScope in rateLimits)) {
+  const { serviceScope } = serviceConfig;
+  const limitPerSecond =
+    apiKeyMeta?.rateLimits?.[serviceScope] ??
+    accountMeta?.rateLimits?.[serviceScope];
+
+  if (!limitPerSecond) {
     // No rate limit is provided. Assume the request is not rate limited.
     return {
       rateLimited: false,
+      requestCount: 0,
+      rateLimit: 0,
     };
   }
 
-  const limit = rateLimits[serviceScope] as number;
+  // Gets the 10-second window for the current timestamp.
+  const timestampWindow =
+    Math.floor(Date.now() / (1000 * RATE_LIMIT_WINDOW_SECONDS)) *
+    RATE_LIMIT_WINDOW_SECONDS;
+  const key = `rate-limit:${serviceScope}:${accountId}:${timestampWindow}`;
 
-  // Floors the current time to the nearest DEFAULT_RATE_LIMIT_WINDOW_SECONDS.
-  const bucketId =
-    Math.floor(Date.now() / (1000 * DEFAULT_RATE_LIMIT_WINDOW_SECONDS)) *
-    DEFAULT_RATE_LIMIT_WINDOW_SECONDS;
-  const key = [serviceScope, accountId, bucketId].join(":");
-  const value = parseInt((await cacheOptions.get(key)) || "0");
-  const current = value + 1;
+  // Increment and get the current request count in this window.
+  const requestCount = await redis.incr(key);
+  if (requestCount === 1) {
+    // For the first increment, set an expiration to clean up this key.
+    await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS);
+  }
 
-  // limit is in seconds, but we need in DEFAULT_RATE_LIMIT_WINDOW_SECONDS
-  const limitWindow = limit * DEFAULT_RATE_LIMIT_WINDOW_SECONDS;
+  // Get the limit for this window accounting for the sample rate.
+  const limitPerWindow =
+    limitPerSecond * sampleRate * RATE_LIMIT_WINDOW_SECONDS;
 
-  if (current > limitWindow) {
-    // report rate limit hits
+  if (requestCount > limitPerWindow) {
+    // Report rate limit hits.
     if (apiKeyMeta?.id) {
       await updateRateLimitedAt(apiKeyMeta.id, serviceConfig);
     }
 
-    // actually rate limit only when reached hard limit
-    if (current > limitWindow * HARD_LIMIT_MULTIPLE) {
+    // Reject requests when they've exceeded 2x the rate limit.
+    if (requestCount > 2 * limitPerWindow) {
       return {
         rateLimited: true,
+        requestCount,
+        rateLimit: limitPerWindow,
         status: 429,
-        errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limit} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
+        errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
         errorCode: "RATE_LIMIT_EXCEEDED",
       };
     }
-  } else {
-    await cacheOptions.put(key, current.toString());
   }
 
   return {
     rateLimited: false,
+    requestCount,
+    rateLimit: limitPerWindow,
   };
 }

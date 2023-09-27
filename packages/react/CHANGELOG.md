@@ -1,5 +1,80 @@
 # @thirdweb-dev/react
 
+## 3.16.0
+
+### Minor Changes
+
+- [#1618](https://github.com/thirdweb-dev/js/pull/1618) [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54) Thanks [@MananTank](https://github.com/MananTank)! - ## New smartWallet() API (Breaking Change)
+
+  ### Before
+
+  In the previous API, adding a smart wallet created it's own new entry called "Smart wallet" in the ConnectWallet Modal and you had to pass in the personal wallets which was shown to the user when they clicked on the "Smart wallet".
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet({
+        personalWallets: [metamaskWallet(), coinbaseWallet()],
+        factoryAddress: "....",
+        gassless: true,
+      }),
+    ]}
+  />
+  ```
+
+  ### After
+
+  Since most users don't know what a smart wallet is, this was confusing. So with the new API, you can just use smart wallet under the hood for any wallet you want and it will just show up as that wallet and not a "smart wallet" in ConnectWallet Modal to improve the user experience.
+
+  Once the user is connected, the ConnectWallet Details button shows to the user that they are infact connected to a smart wallet.
+
+  ```tsx
+  const config = {
+    factoryAddress: "....",
+    gassless: true,
+  }
+
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet(metamaskWallet(), config),
+      smartWalet(coinbaseWallet(), config),
+    ]}
+  />
+  ```
+
+  ## New Features added to `ConnectWallet` component
+
+  - ENS Name + Avatar support added
+  - New 'Send funds' button added to ConnectWallet which users can use to send various tokens.
+  - New "Receive funds" button added to ConnectWallet which users scan the QR code from their wallet app on phone to send funds to their other wallet on desktop
+  - Added `supportedTokens` prop to customize the list of tokens for each network in for the "Send Funds" screen.
+  - "Transaction history" button added to ConnectWallet which opens the block explorer
+  - New wallet `embededWallet()` to sign in with Google / Email
+  - Ability to show balance of any token instead of just native token in the ConnectWallet details button using the `displayBalanceToken` prop
+
+- [#1622](https://github.com/thirdweb-dev/js/pull/1622) [`4268775f`](https://github.com/thirdweb-dev/js/commit/4268775f9c81d559e19af72887b1f2d1fb893e51) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(react): add `embeddedWallet` wallet type
+
+- [#1598](https://github.com/thirdweb-dev/js/pull/1598) [`43f188c8`](https://github.com/thirdweb-dev/js/commit/43f188c8a7ec02f394604120b414a039a2650525) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(wallets): Add `EmbeddedWallet` and `EmbeddedWalletConnector` to `@thirdweb-dev/wallets` for use in vanilla JS clients
+
+### Patch Changes
+
+- [#1650](https://github.com/thirdweb-dev/js/pull/1650) [`1018eb56`](https://github.com/thirdweb-dev/js/commit/1018eb56a6560d97a2768b1d6d726082cd91a728) Thanks [@MananTank](https://github.com/MananTank)! - - show the first token given to `supportedTokens` as the default selected token in the "Send Funds" screen
+
+  - Show smart wallet icon in "Receive Funds" screen when connected to a smart wallet
+  - only show "Connected to smart wallet" link if the smart wallet is deployed
+
+- [#1653](https://github.com/thirdweb-dev/js/pull/1653) [`bd18e4f5`](https://github.com/thirdweb-dev/js/commit/bd18e4f5ef0378cc141009287d3555b4445081dd) Thanks [@MananTank](https://github.com/MananTank)! - NetworkSelector component UI tweaks
+
+- [#1659](https://github.com/thirdweb-dev/js/pull/1659) [`ea5b9c3e`](https://github.com/thirdweb-dev/js/commit/ea5b9c3ecdd588461fb00f0e9da463de4a30ed1d) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix(wallets/react): Show recovery modal for `USER_MANAGED` wallets in `paperWallet` implementation
+
+- [#1664](https://github.com/thirdweb-dev/js/pull/1664) [`a9854e69`](https://github.com/thirdweb-dev/js/commit/a9854e69ced6657db758b7b000a5b12580276370) Thanks [@MananTank](https://github.com/MananTank)! - Fix Img component crashing app on invalid URL
+
+- Updated dependencies [[`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54), [`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131), [`9d553746`](https://github.com/thirdweb-dev/js/commit/9d553746b025ac489f9b8ee357372c9d01c835e1), [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54), [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861), [`c29042b7`](https://github.com/thirdweb-dev/js/commit/c29042b71e266cb11d70d67f0fe2ffcc0fc1f5fa), [`b5b7e524`](https://github.com/thirdweb-dev/js/commit/b5b7e5243df83e3ab60d0917c099fb6967b63439), [`b6df6b89`](https://github.com/thirdweb-dev/js/commit/b6df6b895723947427c515411a7a833edaa324c6), [`94bdcc14`](https://github.com/thirdweb-dev/js/commit/94bdcc142a7fe1e9f53273560404fa6b5ac3a7c4), [`48906a9d`](https://github.com/thirdweb-dev/js/commit/48906a9d8ef2cfdd9ac489822a72d50cbd825628), [`43f188c8`](https://github.com/thirdweb-dev/js/commit/43f188c8a7ec02f394604120b414a039a2650525), [`ea5b9c3e`](https://github.com/thirdweb-dev/js/commit/ea5b9c3ecdd588461fb00f0e9da463de4a30ed1d), [`def6d400`](https://github.com/thirdweb-dev/js/commit/def6d400ab463bda3118d4c9cb00e5cc25a415c2)]:
+  - @thirdweb-dev/react-core@3.16.0
+  - @thirdweb-dev/chains@0.1.53
+  - @thirdweb-dev/wallets@1.3.0
+  - @thirdweb-dev/sdk@3.10.62
+
 ## 3.15.0
 
 ### Minor Changes
