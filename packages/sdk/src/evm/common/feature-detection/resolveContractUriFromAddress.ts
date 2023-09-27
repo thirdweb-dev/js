@@ -11,7 +11,7 @@ export async function resolveContractUriFromAddress(
   address: string,
   provider: providers.Provider,
 ): Promise<string | undefined> {
-  const bytecode = await resolveImplementationBytecode(address, provider);
+  const { bytecode } = await resolveImplementation(address, provider);
   return extractIPFSHashFromBytecode(bytecode);
 }
 
@@ -19,14 +19,20 @@ export async function resolveContractUriAndBytecode(
   address: string,
   provider: providers.Provider,
 ): Promise<{ uri: string | undefined; bytecode: string }> {
-  const bytecode = await resolveImplementationBytecode(address, provider);
+  const { bytecode } = await resolveImplementation(address, provider);
   return { uri: extractIPFSHashFromBytecode(bytecode), bytecode };
 }
 
-export async function resolveImplementationBytecode(
+/**
+ * Resolve the implementation address of a proxy contract and its bytecode
+ * @param address the contract address
+ * @param provider RPC provider
+ * @returns the implementation address and its bytecode
+ */
+export async function resolveImplementation(
   address: string,
   provider: providers.Provider,
-): Promise<string> {
+): Promise<{ address: string; bytecode: string }> {
   let bytecode;
   try {
     bytecode = await provider.getCode(address);
@@ -46,10 +52,7 @@ export async function resolveImplementationBytecode(
     const implementationAddress =
       extractMinimalProxyImplementationAddress(bytecode);
     if (implementationAddress) {
-      return await resolveImplementationBytecode(
-        implementationAddress,
-        provider,
-      );
+      return await resolveImplementation(implementationAddress, provider);
     }
   } catch (e) {
     // ignore
@@ -68,10 +71,7 @@ export async function resolveImplementationBytecode(
       utils.isAddress(implementationAddress) &&
       implementationAddress !== constants.AddressZero
     ) {
-      return await resolveImplementationBytecode(
-        implementationAddress,
-        provider,
-      );
+      return await resolveImplementation(implementationAddress, provider);
     }
   } catch (e) {
     // ignore
@@ -79,5 +79,5 @@ export async function resolveImplementationBytecode(
   if (!bytecode) {
     throw new Error(`Error fetching bytecode for ${address}`);
   }
-  return bytecode;
+  return { address, bytecode };
 }
