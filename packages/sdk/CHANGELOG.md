@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 3.10.62
+
+### Patch Changes
+
+- [#1660](https://github.com/thirdweb-dev/js/pull/1660) [`c29042b7`](https://github.com/thirdweb-dev/js/commit/c29042b71e266cb11d70d67f0fe2ffcc0fc1f5fa) Thanks [@kien-ngo](https://github.com/kien-ngo)! - improve performance of gas estimation
+
+- [#1643](https://github.com/thirdweb-dev/js/pull/1643) [`b5b7e524`](https://github.com/thirdweb-dev/js/commit/b5b7e5243df83e3ab60d0917c099fb6967b63439) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for prepare to account extension
+
+- [#1661](https://github.com/thirdweb-dev/js/pull/1661) [`b6df6b89`](https://github.com/thirdweb-dev/js/commit/b6df6b895723947427c515411a7a833edaa324c6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix not resolving custom currencies for balance calls
+
+- [#1624](https://github.com/thirdweb-dev/js/pull/1624) [`48906a9d`](https://github.com/thirdweb-dev/js/commit/48906a9d8ef2cfdd9ac489822a72d50cbd825628) Thanks [@adam-maj](https://github.com/adam-maj)! - fromSigner should respect network if possible
+
+- Updated dependencies [[`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131), [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861)]:
+  - @thirdweb-dev/chains@0.1.53
+
 ## 3.10.61
 
 ### Patch Changes

@@ -13,9 +13,7 @@ import { authorize } from "../core/authorize";
 import type { Request } from "@cloudflare/workers-types";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
-import type { RateLimitResult } from "../core/rateLimit/types";
 import type { CoreAuthInput } from "../core/types";
-import { rateLimit } from "../core/rateLimit";
 
 export * from "./usage";
 export * from "../core/services";
@@ -29,8 +27,6 @@ export type WorkerServiceConfig = CoreServiceConfig & {
 };
 
 const DEFAULT_CACHE_TTL_SECONDS = 60;
-// must be > DEFAULT_RATE_LIMIT_WINDOW_SECONDS
-const DEFAULT_RATE_LIMIT_CACHE_TTL_SECONDS = 60;
 
 type AuthInput = CoreAuthInput & {
   req: Request;
@@ -80,19 +76,6 @@ export async function authorizeWorker(
         ),
       ),
     cacheTtlSeconds: serviceConfig.cacheTtlSeconds ?? DEFAULT_CACHE_TTL_SECONDS,
-  });
-}
-
-export async function rateLimitWorker(
-  authzResult: AuthorizationResult,
-  serviceConfig: WorkerServiceConfig,
-): Promise<RateLimitResult> {
-  return await rateLimit(authzResult, serviceConfig, {
-    get: async (bucketId: string) => serviceConfig.kvStore.get(bucketId),
-    put: (bucketId: string, count: string) =>
-      serviceConfig.kvStore.put(bucketId, count, {
-        expirationTtl: DEFAULT_RATE_LIMIT_CACHE_TTL_SECONDS,
-      }),
   });
 }
 
