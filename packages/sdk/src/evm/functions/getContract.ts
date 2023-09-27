@@ -37,13 +37,14 @@ type ReturnedContractType<TContractType extends PrebuiltContractType> =
 export async function getContract<TContractType extends PrebuiltContractType>(
   params: GetContractParams<TContractType>,
 ): Promise<ReturnedContractType<TContractType>> {
-  const resolvedAddress = await resolveAddress(params.address);
-
   const [signer, provider] = getSignerAndProvider(
     params.network,
     params.sdkOptions,
   );
-  const chainId = (await provider.getNetwork()).chainId;
+  const [resolvedAddress, { chainId }] = await Promise.all([
+    resolveAddress(params.address),
+    provider.getNetwork(),
+  ]);
 
   if (inContractCache(resolvedAddress, chainId)) {
     return getCachedContract(

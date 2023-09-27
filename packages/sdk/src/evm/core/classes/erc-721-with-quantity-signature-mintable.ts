@@ -147,30 +147,28 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       signedPayloads: SignedPayload721WithQuantitySignature[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
       const isLegacyNFTContract = await this.isLegacyNFTContract();
-
-      const contractPayloads = await Promise.all(
-        signedPayloads.map(async (s) => {
-          let message;
-
-          if (isLegacyNFTContract) {
-            message = await this.mapLegacyPayloadToContractStruct(s.payload);
-          } else {
-            message = await this.mapPayloadToContractStruct(s.payload);
-          }
-
-          const signature = s.signature;
-          const price = s.payload.price;
-          if (BigNumber.from(price).gt(0)) {
-            throw new Error(
-              "Can only batch free mints. For mints with a price, use regular mint()",
-            );
-          }
-          return {
-            message,
-            signature,
-          };
-        }),
-      );
+      const contractPayloads = (
+        await Promise.all(
+          signedPayloads.map((s) =>
+            isLegacyNFTContract
+              ? this.mapLegacyPayloadToContractStruct(s.payload)
+              : this.mapPayloadToContractStruct(s.payload),
+          ),
+        )
+      ).map((message, index) => {
+        const s = signedPayloads[index];
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      });
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
         if (isLegacyNFTContract) {

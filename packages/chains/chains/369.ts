@@ -11,7 +11,9 @@ export default {
     "https://rpc.pulsechain.com",
     "wss://rpc.pulsechain.com",
     "https://pulsechain.publicnode.com",
-    "wss://pulsechain.publicnode.com"
+    "wss://pulsechain.publicnode.com",
+    "https://rpc-pulsechain.g4mm4.io",
+    "wss://rpc-pulsechain.g4mm4.io"
   ],
   "slip44": 60,
   "features": [
