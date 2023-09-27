@@ -24,7 +24,7 @@ import {
   useChainId,
   useWallet,
 } from "@thirdweb-dev/react-core";
-import { SupportedTokens, TokenInfo } from "./defaultTokens";
+import { SupportedTokens, TokenInfo, defaultTokens } from "./defaultTokens";
 import { useMutation } from "@tanstack/react-query";
 import { utils } from "ethers";
 import LoadingTextAnimation from "../base/LoadingTextAnimation";
@@ -82,8 +82,23 @@ export const SendFundsModal = ({
   onClose,
   supportedTokens,
 }: SendFundsModalProps) => {
-  const [token, setToken] = useState<TokenInfo | undefined>();
   const [showTokenSelector, setShowTokenSelector] = useState(false);
+
+  const chainId = useChainId();
+  let defaultToken: TokenInfo | undefined = undefined;
+  if (
+    // if we know chainId
+    chainId &&
+    // if there is a list of tokens for this chain
+    supportedTokens[chainId] &&
+    // if the list of tokens is not the default list
+    supportedTokens[chainId] !== defaultTokens[chainId]
+  ) {
+    // use the first token in the list as default selected
+    defaultToken = supportedTokens[chainId][0];
+  }
+
+  const [token, setToken] = useState<TokenInfo | undefined>(defaultToken);
 
   const onTokenSelectorPress = () => {
     setShowTokenSelector(true);
@@ -204,10 +219,7 @@ const SendFundsForm = ({
       borderRadius="md"
       p="lg"
     >
-      <ModalHeaderTextClose
-        onBackPress={onCloseInternal}
-        headerText="Send Funds"
-      />
+      <ModalHeaderTextClose onClose={onCloseInternal} headerText="Send Funds" />
       <Text mt="lg" variant="bodySmallSecondary">
         Select Token
       </Text>
@@ -228,11 +240,7 @@ const SendFundsForm = ({
           {token?.icon ? (
             <ImageSvgUri width={32} height={32} imageUrl={token.icon} />
           ) : (
-            <ChainIcon
-              chainIconUrl={chain?.icon?.url}
-              size={32}
-              active={false}
-            />
+            <ChainIcon chainIconUrl={chain?.icon?.url} size={32} />
           )}
           <Box
             ml="md"

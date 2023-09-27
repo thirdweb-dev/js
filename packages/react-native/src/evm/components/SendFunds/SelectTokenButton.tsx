@@ -21,7 +21,7 @@ export function SelectTokenButton(props: {
       {props.token?.icon ? (
         <ImageSvgUri width={32} height={32} imageUrl={props.token.icon} />
       ) : (
-        <ChainIcon chainIconUrl={chain?.icon?.url} size={32} active={false} />
+        <ChainIcon chainIconUrl={chain?.icon?.url} size={32} />
       )}
       <Box ml="md" alignItems="flex-start" justifyContent="center" height={36}>
         <Text variant="bodyLarge">{tokenName}</Text>
