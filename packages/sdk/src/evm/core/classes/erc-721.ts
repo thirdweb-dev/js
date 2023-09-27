@@ -226,9 +226,13 @@ export class Erc721<
     address: AddressOrEns,
     operator: AddressOrEns,
   ): Promise<boolean> {
+    const [_address, _operator] = await Promise.all([
+      resolveAddress(address),
+      resolveAddress(operator),
+    ]);
     return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
       "isApprovedForAll",
-      [await resolveAddress(address), await resolveAddress(operator)],
+      [_address, _operator],
     );
   }
 
@@ -247,11 +251,14 @@ export class Erc721<
    */
   transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, tokenId: BigNumberish) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const [from, _to] = await Promise.all([
+        this.contractWrapper.getSignerAddress(),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
-        args: [from, await resolveAddress(to), tokenId],
+        args: [from, _to, tokenId],
       });
     },
   );
