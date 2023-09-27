@@ -164,10 +164,10 @@ export const LocalWalletImportModal = ({
           borderRadius="md"
           p="lg"
         >
-          <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
-          <Text variant="header" textAlign="center">
-            Import JSON Wallet
-          </Text>
+          <ModalHeaderTextClose
+            headerText={"Import JSON Wallet"}
+            onClose={onCloseInternal}
+          />
           <Text variant="subHeader" mt="md" textAlign="center">
             {
               "The application can authorize any transactions on behalf of the wallet without any approvals. We recommend only connecting to trusted applications."
@@ -202,6 +202,7 @@ export const LocalWalletImportModal = ({
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: onPrivateKeyEntered,
             }}
+            containerProps={{ pl: "xxs" }}
           />
           <Box
             flexDirection="row"

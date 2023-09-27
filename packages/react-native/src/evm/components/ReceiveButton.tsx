@@ -100,7 +100,7 @@ export const ReceiveFundsModal = ({
           p="lg"
         >
           <ModalHeaderTextClose
-            onBackPress={onCloseInternal}
+            onClose={onCloseInternal}
             headerText="Receive Funds"
           />
           <Text
@@ -109,11 +109,11 @@ export const ReceiveFundsModal = ({
             mt="md"
             marginHorizontal="xmd"
           >
-            Paste the wallet address or scan the QR code to send funds to this
+            Copy the wallet address or scan the QR code to send funds to this
             wallet.
           </Text>
           <Text mt="lg" variant="bodySmallSecondary">
-            Current Network
+            Your address
           </Text>
           <BaseButton
             mt="xs"

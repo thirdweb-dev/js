@@ -74,6 +74,7 @@ export const ChooseWalletContent = ({
                   recommended={item.recommended}
                   onPress={() => onChooseWallet(item)}
                   mb={marginBottom}
+                  paddingVertical="xxs"
                 />
               )}
             </Box>

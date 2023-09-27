@@ -4,12 +4,13 @@ import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
 import { useWallet } from "@thirdweb-dev/react-core";
 import { StyleSheet } from "react-native";
-import { LocalWallet } from "@thirdweb-dev/wallets";
+import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
 import Box from "../base/Box";
 import { ConnectWalletDetailsModal } from "./ConnectWalletDetailsModal";
 import { useState } from "react";
 import { TextBalance } from "../base/TextBalance";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
+import { SMART_WALLET_ICON } from "../../assets/svgs";
 
 export type ConnectWalletDetailsProps = {
   address?: string;
@@ -51,6 +52,11 @@ export const WalletDetailsButton = ({
     setIsModalVisible(!isModalVisible);
   };
 
+  const walletIconUrl =
+    activeWallet?.walletId === walletIds.smartWallet
+      ? SMART_WALLET_ICON
+      : activeWallet?.getMeta().iconURL || "";
+
   return (
     <>
       <ConnectWalletDetailsModal
@@ -72,10 +78,7 @@ export const WalletDetailsButton = ({
           onPress={onPress}
         >
           <Box flex={1} flexDirection="row" justifyContent="flex-start">
-            <WalletIcon
-              size={32}
-              iconUri={activeWallet?.getMeta().iconURL || ""}
-            />
+            <WalletIcon size={32} iconUri={walletIconUrl} />
             <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="bodySmall" color="red">

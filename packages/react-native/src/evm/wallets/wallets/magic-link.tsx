@@ -82,12 +82,12 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
         }}
         containerProps={{
           paddingHorizontal: "sm",
-          paddingVertical: "md",
+          paddingVertical: "sm",
         }}
       />
       <BaseButton
         mt="md"
-        paddingVertical="xmd"
+        paddingVertical="md"
         borderRadius="lg"
         borderWidth={1}
         borderColor="border"

@@ -72,8 +72,10 @@ export const ConnectWallet = ({
   theme,
   buttonTitle,
   modalTitle,
+  modalTitleIconUrl,
   extraRows,
   hideTestnetFaucet,
+  displayBalanceToken,
   switchToActiveChain,
   termsOfServiceUrl,
   privacyPolicyUrl,
@@ -151,12 +153,14 @@ export const ConnectWallet = ({
               extraRows={extraRows}
               hideTestnetFaucet={hideTestnetFaucet}
               supportedTokens={supportedTokensMemo}
+              displayBalanceToken={displayBalanceToken}
             />
           )
         ) : (
           <ConnectWalletButton
             modalTitle={modalTitle}
             buttonTitle={buttonTitle}
+            modalTitleIconUrl={modalTitleIconUrl}
             theme={theme}
             termsOfServiceUrl={termsOfServiceUrl}
             privacyPolicyUrl={privacyPolicyUrl}
