@@ -19,33 +19,18 @@ export default {
   "shortName": "txdc",
   "chainId": 51,
   "networkId": 51,
-  "icon": {
-    "url": "ipfs://QmeRq7pabiJE2n1xU3Y5Mb4TZSX9kQ74x7a3P2Z4PqcMRX",
-    "width": 1450,
-    "height": 1450,
-    "format": "png"
-  },
+  "icon": "xdc",
   "explorers": [
     {
       "name": "xdcscan",
       "url": "https://apothem.xinfinscan.com",
-      "icon": {
-        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
+      "icon": "blocksscan",
       "standard": "EIP3091"
     },
     {
       "name": "blocksscan",
       "url": "https://apothem.blocksscan.io",
-      "icon": {
-        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
+      "icon": "blocksscan",
       "standard": "EIP3091"
     }
   ],

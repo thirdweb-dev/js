@@ -20,7 +20,9 @@ export const SmartWalletFlow = ({
   close,
   goBack,
   walletConfig,
-}: ConnectUIProps<SmartWallet>) => {
+  personalWalletConfig,
+  ...props
+}: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
@@ -33,6 +35,8 @@ export const SmartWalletFlow = ({
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
     : false;
+
+  const PersonalWalletConfigUI = personalWalletConfig.connectUI;
 
   const connectSmartWallet = useCallback(
     async (personalWallet: WalletInstance) => {
@@ -63,10 +67,14 @@ export const SmartWalletFlow = ({
   );
 
   useEffect(() => {
-    if (walletConfig.personalWallets?.[0]) {
+    if (walletConfig.personalWallets?.[0] && !PersonalWalletConfigUI) {
       connectPersonalWallet(walletConfig.personalWallets[0]);
     }
-  }, [connectPersonalWallet, walletConfig.personalWallets]);
+  }, [
+    PersonalWalletConfigUI,
+    connectPersonalWallet,
+    walletConfig.personalWallets,
+  ]);
 
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
@@ -81,8 +89,11 @@ export const SmartWalletFlow = ({
   };
 
   const onSwitchNetworkPress = async () => {
-    await connectedPersonalWallet?.switchChain(targetChain.chainId);
-    setPersonalWalletChaindId(targetChain.chainId);
+    if (connectedPersonalWallet) {
+      await connectedPersonalWallet?.switchChain(targetChain.chainId);
+      setPersonalWalletChaindId(targetChain.chainId);
+      connectSmartWallet(connectedPersonalWallet);
+    }
   };
 
   const reset = () => {
@@ -90,38 +101,56 @@ export const SmartWalletFlow = ({
     setPersonalWalletChaindId(undefined);
   };
 
+  const onPersonalWalletConnected = useCallback(
+    (walletInstance: WalletInstance) => {
+      setConnectedPersonalWallet(walletInstance);
+      connectSmartWallet(walletInstance);
+    },
+    [connectSmartWallet],
+  );
+
   return (
     <>
-      <Box paddingHorizontal="xl">
-        <ConnectWalletHeader
-          subHeaderText=""
-          onBackPress={onConnectingBackPress}
-          onClose={onConnectingClosePress}
+      {PersonalWalletConfigUI && !connectedPersonalWallet ? (
+        <PersonalWalletConfigUI
+          {...props}
+          close={close}
+          goBack={goBack}
+          walletConfig={personalWalletConfig}
+          onLocallyConnected={onPersonalWalletConnected}
         />
-        <WalletLoadingThumbnail imageSize={100}>
-          <ImageSvgUri
-            height={80}
-            width={80}
-            imageUrl={walletConfig.meta.iconURL}
+      ) : (
+        <Box paddingHorizontal="xl">
+          <ConnectWalletHeader
+            subHeaderText=""
+            onBackPress={onConnectingBackPress}
+            onClose={onConnectingClosePress}
           />
-        </WalletLoadingThumbnail>
-        <View style={styles.connectingContainer}>
-          <>
-            <Text variant="header" mt="lg">
-              {mismatch
-                ? "Network Mismatch"
-                : `Connecting ${walletConfig.meta.name}`}
-            </Text>
-            {mismatch ? (
-              <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-                {
-                  "There's a network mismatch between your contract and your wallet"
-                }
+          <WalletLoadingThumbnail imageSize={100}>
+            <ImageSvgUri
+              height={80}
+              width={80}
+              imageUrl={walletConfig.meta.iconURL}
+            />
+          </WalletLoadingThumbnail>
+          <View style={styles.connectingContainer}>
+            <>
+              <Text variant="header" mt="lg">
+                {mismatch
+                  ? "Network Mismatch"
+                  : `Connecting ${walletConfig.meta.name}`}
               </Text>
-            ) : null}
-          </>
-        </View>
-      </Box>
+              {mismatch ? (
+                <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
+                  {
+                    "There's a network mismatch between your contract and your wallet"
+                  }
+                </Text>
+              ) : null}
+            </>
+          </View>
+        </Box>
+      )}
 
       {mismatch === true ? (
         <BaseButton

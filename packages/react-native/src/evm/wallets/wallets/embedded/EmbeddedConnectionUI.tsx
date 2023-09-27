@@ -24,6 +24,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   close,
   goBack,
   selectionData,
+  onLocallyConnected,
 }) => {
   const theme = useAppTheme();
   const inputRefs = useRef<(TextInput | null)[]>([]);
@@ -61,8 +62,12 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         (selectionData.emailWallet as EmbeddedWallet)
           .validateEmailOTP(otp)
           .then(async () => {
-            await setConnectedWallet(selectionData.emailWallet);
-            setConnectionStatus("connected");
+            if (onLocallyConnected) {
+              onLocallyConnected(selectionData.emailWallet);
+            } else {
+              await setConnectedWallet(selectionData.emailWallet);
+              setConnectionStatus("connected");
+            }
           })
           .catch((error) => {
             clearCode();
@@ -73,7 +78,14 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           });
       }, 0);
     }
-  }, [close, selectionData, setConnectedWallet, setConnectionStatus, values]);
+  }, [
+    close,
+    onLocallyConnected,
+    selectionData,
+    setConnectedWallet,
+    setConnectionStatus,
+    values,
+  ]);
 
   const handleInputChange = (value: string, index: number) => {
     const newValues = [...values];
