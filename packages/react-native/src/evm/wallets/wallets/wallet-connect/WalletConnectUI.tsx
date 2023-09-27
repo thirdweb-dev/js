@@ -20,8 +20,8 @@ import {
 } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "./WalletConnect";
 import { useAppTheme } from "../../../styles/hooks";
-import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { WalletConnectButton } from "./WalletConnectButton";
+import { ModalHeaderTextClose } from "../../../components/base";
 
 type WCWallet = {
   iconURL: string;
@@ -158,10 +158,11 @@ export function WalletConnectUI({
       <View
         style={[styles.modal, { backgroundColor: theme.colors.background }]}
       >
-        <ConnectWalletHeader
-          subHeaderText={""}
+        <ModalHeaderTextClose
           onBackPress={goBack}
+          headerText="WalletConnect"
           onClose={onClosePress}
+          paddingHorizontal="md"
         />
         <View style={styles.explorerContainer}>
           {loading ? (
@@ -183,9 +184,9 @@ export function WalletConnectUI({
                   flexDirection="row"
                   borderRadius="md"
                   alignItems="center"
+                  marginHorizontal="md"
                   mb="sm"
                   padding="xs"
-                  width={"100%"}
                 >
                   <TextInput
                     onChangeText={onChangeText}
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   listContentContainer: {
-    paddingBottom: 12,
+    paddingBottom: 10,
     flexGrow: 1,
   },
   emptyContainer: {

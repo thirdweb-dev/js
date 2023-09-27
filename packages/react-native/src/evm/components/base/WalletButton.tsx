@@ -20,6 +20,7 @@ export const WalletButton = ({
   name,
   labelText,
   recommended,
+  ...props
 }: WalletButtonProps) => {
   return (
     <BaseButton
@@ -32,6 +33,7 @@ export const WalletButton = ({
       borderRadius="sm"
       backgroundColor="background"
       onPress={onPress}
+      {...props}
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
         <ImageSvgUri imageUrl={walletIconUrl} width={48} height={48} />

@@ -517,8 +517,11 @@ export class Transaction<
     let sentTx;
     let iteration = 1;
     while (!sentTx) {
-      sentTx = await this.provider.getTransaction(txHash);
-
+      try {
+        sentTx = await this.provider.getTransaction(txHash);
+      } catch (err) {
+        // some providers can throw an error if the tx is very recent
+      }
       // Exponential (ish) backoff for polling
       if (!sentTx) {
         await new Promise((resolve) =>
@@ -548,6 +551,7 @@ export class Transaction<
       "No gasless options set on this transaction!",
     );
 
+    const signerAddress = await this.getSignerAddress();
     const args = [...this.args];
 
     if (
@@ -555,9 +559,8 @@ export class Transaction<
       Array.isArray(this.args[0]) &&
       args[0].length > 0
     ) {
-      const from = await this.getSignerAddress();
       args[0] = args[0].map((tx: any) =>
-        utils.solidityPack(["bytes", "address"], [tx, from]),
+        utils.solidityPack(["bytes", "address"], [tx, signerAddress]),
       );
     }
 
@@ -566,8 +569,10 @@ export class Transaction<
       "Cannot execute gasless transaction without valid signer",
     );
 
-    const chainId = (await this.provider.getNetwork()).chainId;
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [{ chainId }, from] = await Promise.all([
+      this.provider.getNetwork(),
+      this.overrides.from || signerAddress,
+    ]);
     const to = this.contract.address;
     const value = this.overrides?.value || 0;
 
@@ -630,8 +635,10 @@ export class Transaction<
     };
 
     // Get metadata for transaction to populate into error
-    const network = await provider.getNetwork();
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [network, from] = await Promise.all([
+      provider.getNetwork(),
+      this.overrides.from || this.getSignerAddress(),
+    ]);
     const to = this.contract.address;
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
@@ -816,8 +823,10 @@ export class DeployTransaction extends TransactionContext {
     };
 
     // Get metadata for transaction to populate into error
-    const network = await provider.getNetwork();
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [network, from] = await Promise.all([
+      provider.getNetwork(),
+      this.overrides.from || this.getSignerAddress(),
+    ]);
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
     const rpcUrl = provider.connection?.url;

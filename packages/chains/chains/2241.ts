@@ -1,15 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "The Krest Network",
+  "name": "Krest Network",
   "chain": "Krest",
   "icon": {
-    "url": "ipfs://bafkreid3bhzhughhjwq3rpgiic5zesj5mekqktawt646itdyqtvjxoupca",
-    "width": 257,
-    "height": 257,
-    "format": "svg"
+    "url": "ipfs://bafkreid732273ib5at7krjdl2t7lteljlepwd3tvifqge7mu7g6naxavhe",
+    "width": 256,
+    "height": 256,
+    "format": "png"
   },
   "rpc": [
-    "https://the-krest-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://krest-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://erpc-krest.peaq.network"
   ],
   "faucets": [],
@@ -35,5 +35,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "the-krest-network"
+  "slug": "krest-network"
 } as const satisfies Chain;

@@ -19,6 +19,12 @@ export type ConnectWalletButtonProps = {
    */
   modalTitle?: string;
   /**
+   * Replace the thirdweb icon next to modalTitle and set your own iconUrl
+   *
+   * Set to empty string to hide the icon
+   */
+  modalTitleIconUrl?: string;
+  /**
    * Set a custom terms of service url
    */
   termsOfServiceUrl?: string;
@@ -31,6 +37,7 @@ export type ConnectWalletButtonProps = {
 
 export const ConnectWalletButton = ({
   modalTitle,
+  modalTitleIconUrl,
   termsOfServiceUrl,
   privacyPolicyUrl,
   buttonTitle,
@@ -72,6 +79,7 @@ export const ConnectWalletButton = ({
       view: "ConnectWalletFlow",
       data: {
         modalTitle,
+        modalTitleIconUrl,
         termsOfServiceUrl,
         privacyPolicyUrl,
         walletConfig:
