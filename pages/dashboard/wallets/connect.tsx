@@ -6,13 +6,6 @@ import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 
-import { IconType } from "react-icons/lib";
-import { BiCrop, BiSolidCustomize } from "react-icons/bi";
-import { FiGlobe } from "react-icons/fi";
-import { PiWrench } from "react-icons/pi";
-import { BsTextParagraph } from "react-icons/bs";
-import { HiOutlineTerminal } from "react-icons/hi";
-
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { SupportedPlatformLink } from "components/wallets/SupportedPlatformLink";
 
@@ -21,70 +14,40 @@ const TRACKING_CATEGORY = "connect-playground";
 const DashboardWalletsConnect: ThirdwebNextPage = () => {
   return (
     <Box>
-      <Grid
-        templateColumns={["1fr", "1fr 1.1fr"]}
-        gap={10}
-        alignItems={"center"}
-      >
-        {/* left   */}
-        <Box>
-          <Heading size="title.xl" as="h1">
-            Connect
-          </Heading>
-          <Spacer height={4} />
-          <Text fontWeight={500}>
-            A complete toolkit for connecting wallets to applications, UI
-            components that work out of the box and Hooks that let you build
-            custom wallet connection UI
-          </Text>
+      <Heading size="title.xl" as="h1">
+        Connect
+      </Heading>
+      <Spacer height={4} />
+      <Text fontWeight={500}>
+        A complete toolkit for connecting wallets to apps, UI components that
+        work out of the box, and hooks that let you build custom Connect Wallet
+        experiences.
+      </Text>
 
-          <Spacer height={5} />
-          <Flex alignItems="center" gap={2}>
-            <Text mr={2} display={["none", "block"]} fontSize={12}>
-              Supports
-            </Text>
-            <SupportedPlatformLink
-              trackingCategory={TRACKING_CATEGORY}
-              size="sm"
-              platform="React"
-              href="https://portal.thirdweb.com/react/react.connectwallet"
-            />
-            <SupportedPlatformLink
-              trackingCategory={TRACKING_CATEGORY}
-              size="sm"
-              platform="React Native"
-              href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
-            />
-            <SupportedPlatformLink
-              trackingCategory={TRACKING_CATEGORY}
-              size="sm"
-              platform="Unity"
-              href="https://portal.thirdweb.com/unity/connectwallet"
-            />
-          </Flex>
-        </Box>
-
-        {/* right */}
-        <Box>
-          <Grid templateColumns={["1fr", "1fr 1fr"]} gap={4}>
-            <Flex gap={3} flexDir="column">
-              <Feature title="Fully Customizable" icon={BiSolidCustomize} />
-              <Feature title="Cross-Platform Support" icon={BiCrop} />
-              <Feature title="Support any EVM Network" icon={FiGlobe} />
-            </Flex>
-
-            <Flex gap={3} flexDir="column">
-              <Feature title="Authenticate users (SIWE)" icon={PiWrench} />
-              <Feature title="Enable seamless UX" icon={BsTextParagraph} />
-              <Feature
-                title="Integrate Account Abstraction"
-                icon={HiOutlineTerminal}
-              />
-            </Flex>
-          </Grid>
-        </Box>
-      </Grid>
-
+      <Spacer height={5} />
+      <Flex alignItems="center" gap={2}>
+        <Text mr={2} display={["none", "block"]} fontSize={12}>
+          Supports
+        </Text>
+        <SupportedPlatformLink
+          trackingCategory={TRACKING_CATEGORY}
+          size="sm"
+          platform="React"
+          href="https://portal.thirdweb.com/react/react.connectwallet"
+        />
+        <SupportedPlatformLink
+          trackingCategory={TRACKING_CATEGORY}
+          size="sm"
+          platform="React Native"
+          href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
+        />
+        <SupportedPlatformLink
+          trackingCategory={TRACKING_CATEGORY}
+          size="sm"
+          platform="Unity"
+          href="https://portal.thirdweb.com/unity/connectwallet"
+        />
+      </Flex>
       <Spacer height={12} />
 
       <ConnectWalletPlayground trackingCategory={TRACKING_CATEGORY} />
@@ -172,7 +135,7 @@ function RelevantGuides() {
           href="https://blog.thirdweb.com/web3-wallet/"
           label="what-is-web3-wallet"
         >
-          what is a web3 wallet?
+          What is a web3 wallet?
         </GuideLink>
 
         <GuideLink
@@ -250,32 +213,13 @@ function ShareYourFeedback() {
         </Flex>
         <Spacer height={3} />
         <Text color="paragraph">
-          Report bugs, echo your thoughts and suggest improvements.
+          Report bugs, echo your thoughts, and suggest improvements.
         </Text>
       </Card>
     </TrackedLink>
   );
 }
 
-function Feature({ title, icon }: { title: string; icon: IconType }) {
-  return (
-    <Flex gap={3} alignItems="center">
-      <Flex
-        p={2}
-        border="1px solid"
-        borderColor="borderColor"
-        justifyContent="center"
-        alignItems="center"
-        borderRadius="md"
-      >
-        <Icon as={icon} w={5} h={5} color="faded" />
-      </Flex>
-      <Text fontWeight={500} color="heading">
-        {title}
-      </Text>
-    </Flex>
-  );
-}
 DashboardWalletsConnect.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true} noOverflowX={true}>
     <WalletsSidebar activePage="connect" />

@@ -17,7 +17,7 @@ export function SupportedPlatformLink(props: {
   let icon: IconType = SiReact;
   if (props.platform === "Unity") {
     icon = SiUnity;
-  } else {
+  } else if (props.platform === "TypeScript") {
     icon = SiTypescript;
   }
 
