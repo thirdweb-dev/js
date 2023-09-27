@@ -46,8 +46,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 0,
       rateLimited: false,
+      requestCount: 0,
+      rateLimit: 0,
     });
   });
 
@@ -61,8 +62,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 50,
       rateLimited: false,
+      requestCount: 50,
+      rateLimit: 50,
     });
     expect(updateRateLimitedAt).not.toHaveBeenCalled();
     expect(mockRedis.expire).not.toHaveBeenCalled();
@@ -78,8 +80,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 51,
       rateLimited: false,
+      requestCount: 51,
+      rateLimit: 50,
     });
     expect(updateRateLimitedAt).toHaveBeenCalled();
     expect(mockRedis.expire).not.toHaveBeenCalled();
@@ -95,8 +98,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 101,
       rateLimited: true,
+      requestCount: 101,
+      rateLimit: 50,
       status: 429,
       errorMessage: `You've exceeded your storage rate limit at 5 reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
       errorCode: "RATE_LIMIT_EXCEEDED",
@@ -115,8 +119,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 1,
       rateLimited: false,
+      requestCount: 1,
+      rateLimit: 50,
     });
     expect(mockRedis.expire).toHaveBeenCalled();
   });
@@ -133,8 +138,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 10,
       rateLimited: false,
+      requestCount: 10,
+      rateLimit: 5,
     });
   });
 
@@ -150,8 +156,9 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      requestCount: 0,
       rateLimited: false,
+      requestCount: 0,
+      rateLimit: 0,
     });
   });
 });

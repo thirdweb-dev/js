@@ -77,7 +77,7 @@ export async function rateLimit(args: {
       return {
         rateLimited: true,
         requestCount,
-        rateLimit: limitPerSecond,
+        rateLimit: limitPerWindow,
         status: 429,
         errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
         errorCode: "RATE_LIMIT_EXCEEDED",
@@ -88,6 +88,6 @@ export async function rateLimit(args: {
   return {
     rateLimited: false,
     requestCount,
-    rateLimit: limitPerSecond,
+    rateLimit: limitPerWindow,
   };
 }
