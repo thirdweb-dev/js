@@ -60,7 +60,7 @@
     "idb-keyval": "^6.2.0",
     "next": "^13.5.2",
     "next-plausible": "^3.9.1",
-    "next-seo": "^6.1.0",
+    "next-seo": "^5.15.0",
     "node-vibrant": "^3.2.1-alpha.1",
     "papaparse": "^5.3.1",
     "pluralize": "^8.0.0",

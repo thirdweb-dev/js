@@ -1,5 +1,5 @@
 import { Flex, Icon } from "@chakra-ui/react";
-import { Link, Text, TrackedLink } from "tw-components";
+import { Text, TrackedLink } from "tw-components";
 
 import { IconType } from "react-icons/lib";
 
