@@ -30,9 +30,9 @@ export async function getContractFromAbi(
     params.network,
     params.sdkOptions,
   );
-  const [resolvedAddress, {chainId}] = await Promise.all([
+  const [resolvedAddress, { chainId }] = await Promise.all([
     resolveAddress(params.address),
-    provider.getNetwork()
+    provider.getNetwork(),
   ]);
 
   if (inContractCache(resolvedAddress, chainId)) {
