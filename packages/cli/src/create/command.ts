@@ -43,6 +43,51 @@ export async function twCreate(
     projectType = "extension";
   }
 
+  // case where users use `npx thirdweb create --option` directly
+  if (!projectType && Object.keys(options).length > 0) {
+    if (options.react) {
+      projectType = "app";
+      language = "typescript";
+      framework = "cra";
+    }
+
+    if (options.next) {
+      projectType = "app";
+      language = "typescript";
+      framework = "next";
+    }
+
+    if (options.vite) {
+      projectType = "app";
+      language = "typescript";
+      framework = "vite";
+    }
+
+    if (options.node) {
+      projectType = "app";
+      language = "typescript";
+      framework = "node";
+    }
+
+    if (options.express) {
+      projectType = "app";
+      language = "typescript";
+      framework = "express";
+    }
+
+    if (options.pwaVite) {
+      projectType = "app";
+      language = "typescript";
+      framework = "pwa-vite";
+    }
+
+    if (options.reactNative) {
+      projectType = "app";
+      language = "typescript";
+      framework = "react-native";
+    }
+  }
+
   if (projectType === "app") {
     if (options.typescript) {
       language = "typescript";
@@ -54,7 +99,7 @@ export async function twCreate(
     if (options.next) {
       framework = "next";
     }
-    if (options.cra) {
+    if (options.react) {
       framework = "cra";
     }
     if (options.vite) {
