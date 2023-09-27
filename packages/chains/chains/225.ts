@@ -9,7 +9,7 @@ export default {
     "format": "png"
   },
   "rpc": [
-    "https://lachain-LA.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://lachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.lachain.io"
   ],
   "faucets": [],
@@ -30,5 +30,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "lachain-LA"
+  "slug": "lachain"
 } as const satisfies Chain;
