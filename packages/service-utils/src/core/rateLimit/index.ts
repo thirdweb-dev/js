@@ -23,11 +23,12 @@ export async function rateLimit(args: {
 }): Promise<RateLimitResult> {
   const { authzResult, serviceConfig, redis, sampleRate = 1.0 } = args;
 
-  const shouldCountRequest = Math.random() < sampleRate;
-  if (!shouldCountRequest || !authzResult.authorized) {
+  const shouldSampleRequest = Math.random() < sampleRate;
+  if (!shouldSampleRequest || !authzResult.authorized) {
     return {
-      requestCount: 0,
       rateLimited: false,
+      requestCount: 0,
+      rateLimit: 0,
     };
   }
 
@@ -35,14 +36,16 @@ export async function rateLimit(args: {
   const accountId = apiKeyMeta?.accountId || accountMeta?.id;
 
   const { serviceScope } = serviceConfig;
-  const { rateLimits } = apiKeyMeta || accountMeta || {};
-  const limitPerSecond = rateLimits?.[serviceScope];
+  const limitPerSecond =
+    apiKeyMeta?.rateLimits?.[serviceScope] ??
+    accountMeta?.rateLimits?.[serviceScope];
 
   if (!limitPerSecond) {
     // No rate limit is provided. Assume the request is not rate limited.
     return {
-      requestCount: 0,
       rateLimited: false,
+      requestCount: 0,
+      rateLimit: 0,
     };
   }
 
@@ -72,8 +75,9 @@ export async function rateLimit(args: {
     // Reject requests when they've exceeded 2x the rate limit.
     if (requestCount > 2 * limitPerWindow) {
       return {
-        requestCount,
         rateLimited: true,
+        requestCount,
+        rateLimit: limitPerSecond,
         status: 429,
         errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
         errorCode: "RATE_LIMIT_EXCEEDED",
@@ -82,7 +86,8 @@ export async function rateLimit(args: {
   }
 
   return {
-    requestCount,
     rateLimited: false,
+    requestCount,
+    rateLimit: limitPerSecond,
   };
 }

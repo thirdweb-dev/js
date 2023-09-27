@@ -1,11 +1,13 @@
 export type RateLimitResult =
   | {
-      requestCount: number;
       rateLimited: false;
+      requestCount: number;
+      rateLimit: number;
     }
   | {
-      requestCount: number;
       rateLimited: true;
+      requestCount: number;
+      rateLimit: number;
       status: number;
       errorMessage: string;
       errorCode: string;
