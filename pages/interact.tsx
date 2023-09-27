@@ -76,7 +76,7 @@ const InteractLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-interact.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/contracts/icon-contract-action.svg")}
             title="An intuitive DX"
@@ -93,7 +93,7 @@ const InteractLanding: ThirdwebNextPage = () => {
             description="Get onchain data & understand activity on your smart contracts with an easy-to-use analytics dashboard."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/contracts/icon-contract-action.svg")}

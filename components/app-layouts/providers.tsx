@@ -12,9 +12,13 @@ import {
   localWallet,
   metamaskWallet,
   paperWallet,
+  rainbowWallet,
   safeWallet,
+  trustWallet,
+  phantomWallet,
   useUser,
   walletConnect,
+  zerionWallet,
 } from "@thirdweb-dev/react";
 import { GLOBAL_AUTH_TOKEN_KEY } from "constants/app";
 import {
@@ -42,6 +46,10 @@ const personalWallets = [
       },
     },
   }),
+  rainbowWallet(),
+  trustWallet(),
+  zerionWallet(),
+  phantomWallet(),
   paperWallet({
     paperClientId: "9a2f6238-c441-4bf4-895f-d13c2faf2ddb",
     advancedOptions: {

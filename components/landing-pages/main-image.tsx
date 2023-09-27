@@ -6,9 +6,8 @@ import {
 } from "./types";
 import { Flex } from "@chakra-ui/react";
 
-interface LandingMainImageProps
-  extends LandingSectionHeadingProps,
-    LandingDesktopMobileImageProps {}
+type LandingMainImageProps = LandingSectionHeadingProps &
+  LandingDesktopMobileImageProps;
 
 export const LandingMainImage: React.FC<LandingMainImageProps> = ({
   image,

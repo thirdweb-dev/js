@@ -89,7 +89,7 @@ const InteractLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-storage.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/infra/icon-ship.svg")}
             title="Go-to-market faster"
@@ -106,7 +106,7 @@ const InteractLanding: ThirdwebNextPage = () => {
             description="Choose how to upload your files. Upload directly through the dashboard, with your CLI or using our SDKs."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/infra/icon-image.svg")}

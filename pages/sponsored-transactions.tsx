@@ -73,7 +73,7 @@ const SponsoredTransactionsLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-sponsored-transactions.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/payments/icon-efficient.svg")}
             title="Abstract away the blockchain"
@@ -90,7 +90,7 @@ const SponsoredTransactionsLanding: ThirdwebNextPage = () => {
             description="Combine gasless & signless transactions to give your users the best user experience — for apps & games that require frequent transactions, on any EVM chain."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>} desktopColumns={2}>
+        <LandingGridSection desktopColumns={2}>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-gasless.svg")}

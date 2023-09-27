@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface LandingGridSectionProps {
-  title: ReactNode;
+  title?: ReactNode;
   desktopColumns?: number;
 }
 
@@ -12,7 +12,7 @@ export const LandingGridSection: ComponentWithChildren<
 > = ({ title, desktopColumns = 3, children }) => {
   return (
     <Flex flexDir="column" gap={8}>
-      {title}
+      {title && title}
       <SimpleGrid columns={{ base: 1, md: desktopColumns }} gap={6}>
         {children}
       </SimpleGrid>

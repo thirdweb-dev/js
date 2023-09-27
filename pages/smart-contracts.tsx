@@ -73,7 +73,7 @@ const ExploreLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-explore.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/contracts/icon-idea.svg")}
             title="Discover your next idea"
@@ -90,7 +90,7 @@ const ExploreLanding: ThirdwebNextPage = () => {
             description="thirdweb is up to 10x cheaper to deploy new contracts, when leveraging proxy contracts."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/contracts/icon-contract.svg")}

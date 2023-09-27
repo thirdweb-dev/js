@@ -73,7 +73,7 @@ const AuthLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-auth.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/wallets/icon-simple-click.svg")}
             title="Instant onboarding"
@@ -90,7 +90,7 @@ const AuthLanding: ThirdwebNextPage = () => {
             description="Powerful SDKs to integrate web3-compatible auth into your app — working with any backend, framework, or service."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/wallets/icon-verified.svg")}

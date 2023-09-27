@@ -76,7 +76,7 @@ const RPCEdgeLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-rpc-edge.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/infra/icon-efficient.svg")}
             title="Build production-grade web3 apps"
@@ -93,7 +93,7 @@ const RPCEdgeLanding: ThirdwebNextPage = () => {
             description="Build on any (or many) chains with full EVM-compatibility — with support for Layer 2 networks, appchains, & more"
           />
         </LandingGridSection>
-        <LandingGridSection desktopColumns={5} title={<></>}>
+        <LandingGridSection desktopColumns={5}>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/infra/icon-verified.svg")}

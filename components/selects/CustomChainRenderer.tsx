@@ -7,6 +7,7 @@ import {
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
 import { RxGear } from "react-icons/rx";
+import { Text } from "tw-components";
 
 export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
   chain,
@@ -23,15 +24,13 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
     <Flex
       w="100%"
       justifyContent="start"
-      bg="inputBg"
       _hover={{
-        bg: "inputBgHover",
+        bg: "inputBg",
       }}
       borderRadius="md"
-      px={3}
+      p="4px 12px"
       cursor="pointer"
       h="auto"
-      minH="56px"
     >
       <Flex role="group" flexGrow={1} alignItems="center">
         <Flex
@@ -43,22 +42,23 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
           alignItems="center"
         >
           <ChainIcon ipfsSrc={chain.icon?.url} size={32} />
-          <Flex gap={2} flexDir="column" alignItems="start" py={3}>
-            {chain.name}
+          <Flex gap={1} flexDir="column" alignItems="start">
+            <Text fontWeight={500}>{chain.name}</Text>
             {switching && (
               <Flex
                 color="blue.500"
-                fontSize="14px"
+                fontSize={12}
+                fontWeight={500}
                 alignItems="center"
                 gap={2}
               >
                 Confirm in your wallet
-                <Spinner size="sm" />
+                <Spinner size="xs" />
               </Flex>
             )}
 
             {switchFailed && (
-              <Box color="red.500" fontSize="14px">
+              <Box color="red.500" fontSize={12} fontWeight={500}>
                 Error switching network
               </Box>
             )}
@@ -68,16 +68,17 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
         <IconButton
           aria-label="Configure Network"
           ml="auto"
-          p={1}
+          p={0}
           variant="ghost"
           _hover={{
-            bg: "inputBgHover",
+            bg: "inputBg",
           }}
+          lineHeight={1}
           opacity={0}
           _groupHover={{
             opacity: 1,
           }}
-          icon={<RxGear />}
+          icon={<RxGear width={4} height={4} />}
           onClick={() => {
             setEditChain(chain);
             addRecentlyUsedChain(chain.chainId);

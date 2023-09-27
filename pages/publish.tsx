@@ -67,7 +67,7 @@ const PublishLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-publish.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/contracts/icon-scale.svg")}
             title="Grow your protocol"
@@ -84,7 +84,7 @@ const PublishLanding: ThirdwebNextPage = () => {
             description="Let your team securely deploy your smart contracts. No need to share private keys or copy, paste ABIs."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/contracts/icon-share.svg")}

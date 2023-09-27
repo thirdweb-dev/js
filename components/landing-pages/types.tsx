@@ -1,3 +1,4 @@
+import { ChakraNextImageProps } from "components/Image";
 import { StaticImageData } from "next/image";
 
 export type Guide = {
@@ -7,10 +8,10 @@ export type Guide = {
   link: string;
 };
 
-export interface LandingDesktopMobileImageProps {
+export type LandingDesktopMobileImageProps = ChakraNextImageProps & {
   image?: StaticImageData;
   mobileImage?: StaticImageData;
-}
+};
 
 export interface LandingSectionHeadingProps {
   blackToWhiteTitle: string;

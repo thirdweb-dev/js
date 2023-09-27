@@ -27,10 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          isExternal
-          href="/account-abstraction"
+          href="/connect"
           category="announcement"
-          label="smart-wallet"
+          label="connect-wallet-v3"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -47,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Introducing: The most complete toolkit for account abstraction.
-                Build web3 apps with ERC-4337
+                Introducing: The complete toolkit to build powerful web3 wallet
+                experiences. Start building with Connect
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

@@ -18,8 +18,9 @@ export const LandingIconSectionItem: React.FC<LandingIconSectionItemProps> = ({
   return (
     <Flex flexDir="column" gap={6}>
       <Flex
-        bgGradient="linear(to-r, #3D3D3D, #4D4D4D)"
         p={3.5}
+        border="2px solid"
+        borderColor="borderColor"
         borderRadius="lg"
         w={14}
       >

@@ -71,7 +71,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-embedded-wallets.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/wallets/icon-personalize.svg")}
             title="Every way to login"
@@ -89,7 +89,7 @@ const EmbeddedWalletsLanding: ThirdwebNextPage = () => {
           />
         </LandingGridSection>
         <Flex flexDir="column" gap={6}>
-          <LandingGridSection title={<></>}>
+          <LandingGridSection>
             <Card p={8}>
               <LandingIconSectionItem
                 icon={require("public/assets/product-pages-icons/wallets/icon-email-signin.svg")}

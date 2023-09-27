@@ -96,7 +96,7 @@ const DeployLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-deploy.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/contracts/icon-simple-click.svg")}
             title="Simplify your workflow"
@@ -113,7 +113,7 @@ const DeployLanding: ThirdwebNextPage = () => {
             description="Unlock a full Web3 development stack for any smart contract. Access powerful tooling that allows you to easily build apps on top of your contracts, including Wallets, SDKs, Payments and Infrastructure. "
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>} desktopColumns={4}>
+        <LandingGridSection desktopColumns={4}>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/contracts/icon-share.svg")}

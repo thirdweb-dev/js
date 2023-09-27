@@ -69,7 +69,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-checkout.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/payments/icon-global.svg")}
             title="Available worldwide & for all payment methods"
@@ -86,7 +86,7 @@ const CheckoutLanding: ThirdwebNextPage = () => {
             description="Fully compliant & enterprise-ready for ultimate peace of mind — with built-in fraud & AML detection and 90%+ authorization rates, out of the box."
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>} desktopColumns={2}>
+        <LandingGridSection desktopColumns={2}>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/payments/icon-share.svg")}

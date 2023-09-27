@@ -100,7 +100,7 @@ const BuildLanding: ThirdwebNextPage = () => {
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-build.png")}
         />
 
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <LandingIconSectionItem
             icon={require("public/assets/product-pages-icons/contracts/icon-ship.svg")}
             title="Ship onchain faster"
@@ -133,7 +133,7 @@ const BuildLanding: ThirdwebNextPage = () => {
             }
           />
         </LandingGridSection>
-        <LandingGridSection title={<></>}>
+        <LandingGridSection>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("public/assets/product-pages-icons/contracts/icon-contract.svg")}
