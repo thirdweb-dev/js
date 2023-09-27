@@ -18,6 +18,7 @@ export type ChooseWalletProps = {
   onClose: () => void;
   wallets: WalletConfig<any>[];
   excludeWalletIds?: string[];
+  modalTitleIconUrl?: string;
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
 };
@@ -27,6 +28,7 @@ export function ChooseWallet({
   subHeaderText,
   wallets,
   onChooseWallet,
+  modalTitleIconUrl,
   onClose,
   excludeWalletIds = [],
   termsOfServiceUrl,
@@ -98,11 +100,21 @@ export function ChooseWallet({
               alignContent="center"
               justifyContent="center"
             >
-              <ThirdwebLogo
-                width={26}
-                height={15}
-                color={theme.colors.backgroundInverted}
-              />
+              {modalTitleIconUrl !== undefined ? (
+                modalTitleIconUrl.length === 0 ? null : (
+                  <ImageSvgUri
+                    width={26}
+                    height={15}
+                    imageUrl={modalTitleIconUrl}
+                  />
+                )
+              ) : (
+                <ThirdwebLogo
+                  width={26}
+                  height={15}
+                  color={theme.colors.backgroundInverted}
+                />
+              )}
               <Text
                 variant="header"
                 ml="xxs"
@@ -181,7 +193,7 @@ export function ChooseWallet({
           marginHorizontal="xl"
           justifyContent="center"
           borderRadius="lg"
-          paddingVertical="xmd"
+          paddingVertical="md"
           borderColor="border"
           flexDirection="row"
           alignItems="center"
@@ -208,7 +220,7 @@ export function ChooseWallet({
         <BaseButton
           marginHorizontal="xl"
           mt="sm"
-          paddingVertical="xmd"
+          paddingVertical="md"
           justifyContent="center"
           borderRadius="lg"
           borderColor="border"
@@ -216,7 +228,10 @@ export function ChooseWallet({
           onPress={onContinueAsGuestPress}
         >
           {isConnecting ? (
-            <ActivityIndicator size={"small"} />
+            <ActivityIndicator
+              size={"small"}
+              color={theme.colors.textPrimary}
+            />
           ) : (
             <Text variant="bodySmall" fontWeight="700">
               Continue as guest

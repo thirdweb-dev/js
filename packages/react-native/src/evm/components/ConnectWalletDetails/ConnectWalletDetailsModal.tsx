@@ -27,6 +27,7 @@ import TransactionIcon from "../../assets/transaction";
 import { ReceiveButton } from "../ReceiveButton";
 import { SendButton } from "../SendFunds/SendButton";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
+import { ActiveDot } from "../base";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -199,6 +200,27 @@ export const ConnectWalletDetailsModal = ({
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
+            {activeWallet?.walletId === SmartWallet.id || smartWallet ? (
+              <BaseButton
+                onPress={() => {
+                  Linking.openURL(
+                    `https://thirdweb.com/${chain?.slug}/${address}/account`,
+                  );
+                }}
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                mt="md"
+              >
+                <Box flexDirection="row">
+                  <ActiveDot width={12} height={12} />
+                  <Text variant="bodySmallSecondary" ml="xxs">
+                    Connected to a Smart Wallet
+                  </Text>
+                </Box>
+                <RightArrowIcon width={10} height={10} />
+              </BaseButton>
+            ) : null}
             <Box flexDirection="row" justifyContent="space-evenly" mt="md">
               <SendButton supportedTokens={supportedTokens} />
               <ReceiveButton />

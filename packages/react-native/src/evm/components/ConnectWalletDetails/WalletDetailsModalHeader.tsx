@@ -10,6 +10,8 @@ import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
 import { useState } from "react";
 import { TextBalance } from "../base/TextBalance";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { SMART_WALLET_ICON } from "../../assets/svgs";
 
 interface WalletDetailsModalHeaderProps {
   address?: string;
@@ -44,10 +46,15 @@ export const WalletDetailsModalHeader = ({
     }, 0);
   };
 
+  const walletIconUrl =
+    activeWallet?.walletId === walletIds.smartWallet
+      ? SMART_WALLET_ICON
+      : activeWallet?.getMeta().iconURL || "";
+
   return (
     <>
       <View style={styles.header}>
-        <WalletIcon size={40} iconUri={activeWallet?.getMeta().iconURL || ""} />
+        <WalletIcon size={40} iconUri={walletIconUrl} />
         <BaseButton
           flex={1}
           justifyContent="flex-start"
