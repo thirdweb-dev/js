@@ -197,10 +197,11 @@ export class Erc20<
    * @twfeature ERC20
    */
   public async allowance(spender: AddressOrEns): Promise<CurrencyValue> {
-    return await this.allowanceOf(
-      await this.contractWrapper.getSignerAddress(),
-      await resolveAddress(spender),
-    );
+    const [owner, spenderAddress] = await Promise.all([
+      this.contractWrapper.getSignerAddress(),
+      resolveAddress(spender),
+    ]);
+    return await this.allowanceOf(owner, spenderAddress);
   }
 
   /**
@@ -224,10 +225,14 @@ export class Erc20<
     owner: AddressOrEns,
     spender: AddressOrEns,
   ): Promise<CurrencyValue> {
+    const args = await Promise.all([
+      resolveAddress(owner),
+      resolveAddress(spender),
+    ]);
     return await this.getValue(
       await (this.contractWrapper as ContractWrapper<BaseERC20>).read(
         "allowance",
-        [await resolveAddress(owner), await resolveAddress(spender)],
+        args,
       ),
     );
   }
@@ -252,7 +257,10 @@ export class Erc20<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transfer",
-        args: [await resolveAddress(to), await this.normalizeAmount(amount)],
+        args: await Promise.all([
+          resolveAddress(to),
+          this.normalizeAmount(amount),
+        ]),
       });
     },
   );
@@ -280,11 +288,11 @@ export class Erc20<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom",
-        args: [
-          await resolveAddress(from),
-          await resolveAddress(to),
-          await this.normalizeAmount(amount),
-        ],
+        args: await Promise.all([
+          resolveAddress(from),
+          resolveAddress(to),
+          this.normalizeAmount(amount),
+        ]),
       });
     },
   );
@@ -307,10 +315,10 @@ export class Erc20<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
-        args: [
-          await resolveAddress(spender),
-          await this.normalizeAmount(amount),
-        ],
+        args: await Promise.all([
+          resolveAddress(spender),
+          this.normalizeAmount(amount),
+        ]),
       });
     },
   );
@@ -340,14 +348,17 @@ export class Erc20<
   transferBatch = /* @__PURE__ */ buildTransactionFunction(
     async (args: TokenMintInput[]) => {
       const contractEncoder = new ContractEncoder(this.contractWrapper);
-      const encoded = await Promise.all(
-        args.map(async (arg) => {
-          const amountWithDecimals = await this.normalizeAmount(arg.amount);
-          return contractEncoder.encode("transfer", [
-            await resolveAddress(arg.toAddress),
-            amountWithDecimals,
-          ]);
-        }),
+      const encoded = (
+        await Promise.all(
+          args.map((arg) =>
+            Promise.all([
+              this.normalizeAmount(arg.amount),
+              resolveAddress(arg.toAddress),
+            ]),
+          ),
+        )
+      ).map(([amountWithDecimals, address]) =>
+        contractEncoder.encode("transfer", [address, amountWithDecimals]),
       );
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
