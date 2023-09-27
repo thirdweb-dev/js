@@ -205,6 +205,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               mobileImage={require("public/assets/product-pages/connect/mobile-account-abstraction.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
               href="https://portal.thirdweb.com/smart-wallet"
+              direction="horizontal"
             />
             <LandingCardWithImage
               title="Wallet analytics"
