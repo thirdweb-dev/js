@@ -107,10 +107,12 @@ export class Erc721Supply implements DetectableFeature {
     const owners = await Promise.all(
       arr.map((i) => this.erc721.ownerOf(i).catch(() => constants.AddressZero)),
     );
-    return arr.map((i) => ({
-      tokenId: i,
-      owner: owners[i],
-    }));
+    return arr
+      .map((i) => ({
+        tokenId: i,
+        owner: owners[i],
+      }))
+      .filter((o) => o.owner !== constants.AddressZero);
   }
 
   /**
