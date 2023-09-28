@@ -9,6 +9,11 @@ import { utils } from "ethers";
 import { sendEmailOTP, validateEmailOTP } from "./embedded/auth";
 import { getEthersSigner } from "./embedded/signer";
 import { logoutUser } from "./embedded/helpers/auth/logout";
+import {
+  clearConnectedEmail,
+  getConnectedEmail,
+  saveConnectedEmail,
+} from "./embedded/helpers/storage/local";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   private options: EmbeddedWalletConnectorOptions;
@@ -20,6 +25,8 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   constructor(options: EmbeddedWalletConnectorOptions) {
     super();
     this.options = options;
+
+    this.email = getConnectedEmail();
   }
 
   async connect(options?: { email?: string; chainId?: number }) {
@@ -72,10 +79,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   async sendEmailOtp(email: string) {
     this.email = email;
+    saveConnectedEmail(email);
     return sendEmailOTP(email, this.options.clientId);
   }
 
   async disconnect(): Promise<void> {
+    clearConnectedEmail();
     await logoutUser(this.options.clientId);
     await this.onDisconnect();
     this.signer = undefined;
@@ -197,7 +206,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.emit("disconnect");
   };
 
-  async getEmail() {
+  getEmail() {
     return this.email;
   }
 }

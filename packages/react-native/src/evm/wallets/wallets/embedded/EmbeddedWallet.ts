@@ -79,6 +79,10 @@ export class EmbeddedWallet extends AbstractClientWallet<
     }
   };
 
+  getEmail() {
+    return this.connector?.getEmail();
+  }
+
   onEmailSent = ({ email }: { email: string }) => {
     this.emit("message", { type: "emailSent", data: email });
   };

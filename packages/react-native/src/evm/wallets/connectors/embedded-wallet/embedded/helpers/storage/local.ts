@@ -7,6 +7,8 @@ import {
 import { MMKV } from "react-native-mmkv";
 import { DEVICE_SHARE_MISSING_MESSAGE } from "../constants";
 
+const CONNECTED_EMAIL_LOCAL_STORAGE_NAME = "embedded-wallet-connected-email";
+
 const storage = new MMKV();
 
 const getItemFromAsyncStorage = (key: string) => {
@@ -19,6 +21,18 @@ const setItemInAsyncStorage = async (key: string, value: string) => {
 const removeItemInAsyncStorage = async (key: string) => {
   storage.delete(key);
 };
+
+export function getConnectedEmail() {
+  return getItemFromAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
+}
+
+export function saveConnectedEmail(email: string) {
+  setItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME, email);
+}
+
+export function clearConnectedEmail() {
+  removeItemInAsyncStorage(CONNECTED_EMAIL_LOCAL_STORAGE_NAME);
+}
 
 export async function isDeviceSharePresentForUser(
   clientId: string,
@@ -36,6 +50,7 @@ export async function isDeviceSharePresentForUser(
 export async function getAuthTokenClient(clientId: string) {
   return getItemFromAsyncStorage(AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId));
 }
+
 export async function setAuthTokenClient(
   cookieString: string,
   clientId: string,
@@ -43,6 +58,7 @@ export async function setAuthTokenClient(
   const authToken = AUTH_TOKEN_LOCAL_STORAGE_NAME(clientId);
   setItemInAsyncStorage(authToken, cookieString);
 }
+
 export async function removeAuthTokenInClient(
   clientId: string,
 ): Promise<boolean> {

@@ -24,7 +24,6 @@ export const TextInput = ({
       flexDirection="row"
       alignItems="center"
       borderColor="border"
-      justifyContent="center"
       borderWidth={1}
       borderRadius="md"
       pr="xs"

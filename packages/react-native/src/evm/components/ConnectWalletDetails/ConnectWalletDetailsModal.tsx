@@ -28,6 +28,7 @@ import { ReceiveButton } from "../ReceiveButton";
 import { SendButton } from "../SendFunds/SendButton";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
+import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -236,6 +237,14 @@ export const ConnectWalletDetailsModal = ({
                   <RightArrowIcon width={10} height={10} />
                 ) : null}
               </BaseButton>
+            ) : null}
+            {activeWallet?.walletId === EmbeddedWallet.id ? (
+              <Box flexDirection="row" alignItems="center" mt="md">
+                <ActiveDot width={10} height={10} />
+                <Text variant="bodySmallSecondary" ml="xxs">
+                  {(activeWallet as EmbeddedWallet).getEmail()}
+                </Text>
+              </Box>
             ) : null}
             <Box flexDirection="row" justifyContent="space-evenly" mt="md">
               <SendButton supportedTokens={supportedTokens} />
