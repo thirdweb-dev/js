@@ -7,6 +7,7 @@ import {
   Flex,
   IconButton,
 } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useRouter } from "next/router";
@@ -36,6 +37,7 @@ export const BillingAlert = () => {
     [DismissedStorageType.RateStorage]: 0,
   });
 
+  const address = useAddress();
   const usageQuery = useAccountUsage();
   const meQuery = useAccount();
 
@@ -116,6 +118,7 @@ export const BillingAlert = () => {
   };
 
   if (
+    !address ||
     meQuery.isLoading ||
     !meQuery.data ||
     usageQuery.isLoading ||

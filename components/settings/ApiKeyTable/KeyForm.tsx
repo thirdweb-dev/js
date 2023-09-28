@@ -84,7 +84,10 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
   const [domainsFieldActive, setDomainsFieldActive] = useState(true);
 
   const enabledServices =
-    form.getValues("services")?.filter((srv) => !!srv.enabled) || [];
+    form
+      .getValues("services")
+      ?.filter((srv) => !!srv.enabled && !HIDDEN_SERVICES.includes(srv.name)) ||
+    [];
 
   const { fields, update } = useFieldArray({
     control: form.control,
@@ -593,7 +596,7 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
         >
           <TabList borderColor="borderColor">
             <Tab>General</Tab>
-            <Tab>Services ({enabledServices?.length || 0})</Tab>
+            <Tab>Services ({enabledServices.length})</Tab>
           </TabList>
 
           <TabPanels>

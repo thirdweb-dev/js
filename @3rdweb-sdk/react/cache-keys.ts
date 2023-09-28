@@ -34,6 +34,14 @@ export const authorizedWallets = {
     [...authorizedWallets.wallet(walletAddress), "authorizedWallets"] as const,
 };
 
+export const embeddedWalletsKeys = {
+  all: ["embeddedWallets"] as const,
+  wallet: (walletAddress: string) =>
+    [...embeddedWalletsKeys.all, walletAddress] as const,
+  embeddedWallets: (walletAddress: string, clientId: string | undefined) =>
+    [...embeddedWalletsKeys.wallet(walletAddress), clientId] as const,
+};
+
 export const contractKeys = {
   all: ["contract"] as const,
   lists: () => [...contractKeys.all, "list"] as const,

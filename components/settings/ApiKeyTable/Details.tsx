@@ -114,8 +114,14 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
     >
       <TabList borderColor="borderColor">
         <Tab>General</Tab>
-        {/* FIXME: Remove with HIDDEN_SERVICES: <Tab>Services ({servicesCount - HIDDEN_SERVICES.length})</Tab> */}
-        <Tab>Services</Tab>
+        <Tab>
+          Services (
+          {
+            (services || []).filter((e) => !HIDDEN_SERVICES.includes(e.name))
+              .length
+          }
+          )
+        </Tab>
       </TabList>
 
       <TabPanels>

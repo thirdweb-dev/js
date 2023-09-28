@@ -195,13 +195,15 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
           </Flex>
         </Center>
       )}
-      {tableProps.data.length === 0 && tableProps.isFetched && (
-        <Center>
-          <Flex py={4} direction="column" gap={4} align="center">
-            <Text>No {pluralize(tableProps.title, 0, false)} found.</Text>
-          </Flex>
-        </Center>
-      )}
+      {!tableProps.isLoading &&
+        tableProps.data.length === 0 &&
+        tableProps.isFetched && (
+          <Center>
+            <Flex py={4} direction="column" gap={4} align="center">
+              <Text>No {pluralize(tableProps.title, 0, false)} found.</Text>
+            </Flex>
+          </Center>
+        )}
       <ShowMoreButton
         shouldShowMore={slicedData.length < tableProps.data.length}
         shouldShowLess={

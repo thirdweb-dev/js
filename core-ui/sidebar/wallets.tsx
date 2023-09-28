@@ -24,7 +24,7 @@ const links: Route[] = [
   },
   {
     path: "/dashboard/wallets/embedded",
-    title: "Embedded Wallet",
+    title: "Embedded Wallets",
     name: "embedded",
   },
   {

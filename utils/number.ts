@@ -5,7 +5,11 @@ export const toUSD = (value: number) => {
   }).format(value);
 };
 
-export const toSize = (value: number) => {
+export const toSize = (value: number, defaultUnit?: string) => {
+  if (value === 0 && defaultUnit) {
+    return `${value}${defaultUnit}`;
+  }
+
   const formatted = new Intl.NumberFormat("en", {
     notation: "compact",
     style: "unit",

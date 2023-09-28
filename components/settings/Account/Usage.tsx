@@ -40,7 +40,9 @@ export const Usage: React.FC<UsageProps> = ({
     const percent = toPercent(consumedBytes, limitBytes);
 
     return {
-      total: `${toSize(consumedBytes)} / ${toSize(limitBytes)} (${percent}%)`,
+      total: `${toSize(consumedBytes, "MB")} / ${toSize(
+        limitBytes,
+      )} (${percent}%)`,
       progress: percent,
       ...(usageData.billableUsd.storage > 0
         ? {

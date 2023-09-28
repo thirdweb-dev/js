@@ -79,7 +79,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
           <HStack alignItems="flex-start" w="full">
             {value.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
-              return !HIDDEN_SERVICES.includes(service.name) ? (
+              return !HIDDEN_SERVICES.includes(service?.name) ? (
                 <Badge
                   key={srv.name}
                   textTransform="capitalize"
