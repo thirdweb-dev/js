@@ -72,11 +72,13 @@ const data: { title: string; icons: Item[] }[] = [
     icons: [
       {
         icon: require("/public/assets/landingpage/howitworks-fiat.png"),
-        title: "Fiat On-Ramp",
+        title: "NFT Checkout",
+        href: "/checkout",
       },
       {
         icon: require("/public/assets/landingpage/howitworks-gasless.png"),
         title: "Sponsored Transactions",
+        href: "/sponsored-transactions",
       },
     ],
   },
@@ -95,7 +97,7 @@ const data: { title: string; icons: Item[] }[] = [
       {
         icon: require("/public/assets/landingpage/howitworks-rpc.png"),
         title: "RPC Edge",
-        href: "/dashboard/rpc-edge",
+        href: "/rpc-edge",
       },
     ],
   },
@@ -238,14 +240,14 @@ export const HowItWorksSection: React.FC = () => {
         <Flex
           w={{ base: "full", md: "auto" }}
           order={{ base: 1, md: 2 }}
-          gap={{ base: 4, md: 8 }}
+          gap={{ base: 12, md: 8 }}
           flexGrow={1}
           flexDir="column"
         >
           <HowItWorksSectionItem
             item={data.find(({ title }) => title === "CONTRACTS")}
           />
-          <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 12, md: 8 }}>
             <HowItWorksSectionItem
               item={data.find(({ title }) => title === "WALLET")}
             />
@@ -291,7 +293,10 @@ const HowItWorksSectionItem: React.FC<HowItWorksSectionItemProps> = ({
         <SimpleGrid
           my="auto"
           w="full"
-          columns={item?.icons.length}
+          columns={{
+            base: 3,
+            lg: item?.icons.length,
+          }}
           gap="1rem 0"
           py={6}
           px={4}
