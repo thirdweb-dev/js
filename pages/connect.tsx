@@ -19,7 +19,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
     <LandingLayout
       bgColor="#0F0F0F"
       seo={{
-        title: "Web3 Onboarding, Built for the Next Billion Users",
+        title: "Web3 Onboarding, For Everyone | thirdweb Connect",
         description:
           "Onboard your users to web3 with a beautiful Connect Wallet modal, customizable auth flows, and sign-in for web2 & web3 — in a few lines of code.",
         openGraph: {
@@ -28,7 +28,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
               url: `${getAbsoluteUrl()}/assets/og-image/thirdweb-connect.png`,
               width: 1200,
               height: 630,
-              alt: "Web3 Onboarding, Built for the Next Billion Users",
+              alt: "Web3 Onboarding, For Everyone",
             },
           ],
         },
@@ -43,7 +43,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
         <LandingHeroWithSideImage
           miniTitle="Connect"
           title="Web3 onboarding,"
-          titleWithGradient="built for the next billion users"
+          titleWithGradient="for everyone"
           subtitle="Onboard all of your users with a beautiful Connect Wallet modal, flexible sign-in options for web2 & web3, and powerful hooks for full customizability."
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="/dashboard/wallets/connect"
