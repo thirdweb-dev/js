@@ -227,11 +227,7 @@ export const ConnectWalletDetailsModal = ({
                 mt="md"
               >
                 <Box flexDirection="row" alignItems="center">
-                  <ActiveDot
-                    width={10}
-                    height={10}
-                    color={isSmartWalletDeployed ? "#00d395" : "yellow"}
-                  />
+                  <ActiveDot width={10} height={10} />
                   <Text variant="bodySmallSecondary" ml="xxs">
                     Connected to a Smart Wallet
                   </Text>
