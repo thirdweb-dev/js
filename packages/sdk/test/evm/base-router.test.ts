@@ -3,10 +3,7 @@ import {
   AbiSchema,
   SmartContract,
   ThirdwebSDK,
-  assertEnabled,
-  detectContractFeature,
   isExtensionEnabled,
-  isFeatureEnabled,
 } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -35,7 +32,7 @@ describe("Base Router for Dynamic Contracts", async () => {
       CoreRouter__factory.abi,
       CoreRouter__factory.bytecode,
       adminWallet,
-      [adminWallet.address],
+      [adminWallet.address, []],
     );
 
     // instantiate custom contract
@@ -126,7 +123,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(extensions[0].metadata.name === "OffersLogic");
   });
 
-  it("should update extensions", async () => {
+  it("should replace extensions", async () => {
     // deploy an extension contract
     // Offers
     const offersLogicAddress = await deployContractAndUploadMetadata(
@@ -149,7 +146,7 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(extensions.length === 1);
     assert(extensions[0].metadata.name === "OffersLogic");
 
-    // update extension
+    // replace extension
     const newAddress = await deployContractAndUploadMetadata(
       OffersLogic__factory.abi,
       OffersLogic__factory.bytecode,
@@ -169,7 +166,7 @@ describe("Base Router for Dynamic Contracts", async () => {
       },
       functions: newFunctions,
     };
-    await coreRouter.extensions.update({ extension: routerInput });
+    await coreRouter.extensions.replace({ extension: routerInput });
 
     // read extension
     extensions = await coreRouter.extensions.getAll();
@@ -212,7 +209,7 @@ describe("Base Router for Dynamic Contracts", async () => {
       adminWallet,
       [],
     );
-    await coreRouter.extensions.updateWithAbi({
+    await coreRouter.extensions.replaceWithAbi({
       extensionName: "OffersLogic",
       extensionAddress: newAddress,
       extensionMetadata: { name: "DirectListings" },
@@ -259,7 +256,9 @@ describe("Base Router for Dynamic Contracts", async () => {
     assert(isExtensionEnabled(coreRouter.abi, "Offers"));
 
     // remove extension
-    await coreRouter.extensions.remove({ extension: routerInput });
+    await coreRouter.extensions.remove({
+      extensionName: routerInput.metadata.name,
+    });
 
     // read extension
     extensions = await coreRouter.extensions.getAll();

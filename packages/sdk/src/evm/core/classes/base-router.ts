@@ -1,4 +1,4 @@
-import type { IBaseRouter } from "@thirdweb-dev/contracts-js";
+import type { BaseRouter } from "@thirdweb-dev/contracts-js";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -27,15 +27,15 @@ import {
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { ExtensionRemovedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
-import { ExtensionUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
+import { ExtensionReplacedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/BaseRouter";
 import { DynamicContractExtensionMetadata } from "../../types";
 
-export class BaseRouterClass<TContract extends IBaseRouter>
+export class BaseRouterClass<TContract extends BaseRouter>
   implements DetectableFeature
 {
   featureName = FEATURE_DYNAMIC_CONTRACT.name;
 
-  private contractWrapper: ContractWrapper<IBaseRouter>;
+  private contractWrapper: ContractWrapper<BaseRouter>;
   private onAbiUpdated: any;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
@@ -66,23 +66,17 @@ export class BaseRouterClass<TContract extends IBaseRouter>
   }
 
   public async getExtensionAddress(extensionName: string): Promise<string> {
-    const extensionAddress: string =
-      await this.contractWrapper.readContract.getExtensionImplementation(
-        extensionName,
-      );
+    const extension = await this.get(extensionName);
 
-    return extensionAddress;
+    return extension.metadata.implementation;
   }
 
   public async getAllFunctions(
     extensionName: string,
   ): Promise<ExtensionFunction[]> {
-    const extensionFunctions: ExtensionFunction[] =
-      await this.contractWrapper.readContract.getAllFunctionsOfExtension(
-        extensionName,
-      );
+    const extension = await this.get(extensionName);
 
-    return extensionFunctions;
+    return extension.functions;
   }
 
   public async getExtensionForFunction(
@@ -99,7 +93,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     }
 
     const extensionMetadata: ExtensionMetadata =
-      await this.contractWrapper.readContract.getExtensionForFunction(selector);
+      await this.contractWrapper.readContract.getMetadataForFunction(selector);
 
     return extensionMetadata;
   }
@@ -310,23 +304,23 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     },
   );
 
-  update = /* @__PURE__ */ buildTransactionFunction(
+  replace = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extension: Extension;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
-        method: "updateExtension",
+        method: "replaceExtension",
         args: [inputArgs.extension],
 
         parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionUpdatedEvent>(
-            "ExtensionUpdated",
+          const events = this.contractWrapper.parseLogs<ExtensionReplacedEvent>(
+            "ExtensionReplaced",
             receipt.logs,
           );
 
           if (events.length < 1) {
-            throw new Error("No ExtensionUpdated event found");
+            throw new Error("No ExtensionReplaced event found");
           }
 
           const extensionAbi = (
@@ -355,7 +349,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     },
   );
 
-  updatePublished = /* @__PURE__ */ buildTransactionFunction(
+  replacePublished = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
       publisherAddress: string;
@@ -400,17 +394,17 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
-        method: "updateExtension",
+        method: "replaceExtension",
         args: [extension],
 
         parse: async (receipt) => {
           const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
-            "ExtensionUpdated",
+            "ExtensionReplaced",
             receipt.logs,
           );
 
           if (events.length < 1) {
-            throw new Error("No ExtensionUpdated event found");
+            throw new Error("No ExtensionReplaced event found");
           }
 
           const contractAbi = this.filterAbiForRemove(
@@ -428,7 +422,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
     },
   );
 
-  updateWithAbi = /* @__PURE__ */ buildTransactionFunction(
+  replaceWithAbi = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
       extensionAddress: string;
@@ -470,17 +464,17 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
-        method: "updateExtension",
+        method: "replaceExtension",
         args: [extension],
 
         parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionUpdatedEvent>(
-            "ExtensionUpdated",
+          const events = this.contractWrapper.parseLogs<ExtensionReplacedEvent>(
+            "ExtensionReplaced",
             receipt.logs,
           );
 
           if (events.length < 1) {
-            throw new Error("No ExtensionUpdated event found");
+            throw new Error("No ExtensionReplaced event found");
           }
 
           const parsedAbi = AbiSchema.parse(extensionAbi);
@@ -501,12 +495,15 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
   remove = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
-      extension: Extension;
+      extensionName: string;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const extensionAddress = await this.getExtensionAddress(
+        inputArgs.extensionName,
+      );
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "removeExtension",
-        args: [inputArgs.extension],
+        args: [inputArgs.extensionName],
 
         parse: async (receipt) => {
           const events = this.contractWrapper.parseLogs<ExtensionRemovedEvent>(
@@ -520,7 +517,7 @@ export class BaseRouterClass<TContract extends IBaseRouter>
 
           const extensionAbi = (
             await fetchContractMetadataFromAddress(
-              inputArgs.extension.metadata.implementation,
+              extensionAddress,
               this.contractWrapper.getProvider(),
               this.contractWrapper.storage,
             )
@@ -529,66 +526,6 @@ export class BaseRouterClass<TContract extends IBaseRouter>
           const updatedAbi = this.filterAbiForRemove(
             AbiSchema.parse(this.contractWrapper.abi),
             extensionAbi,
-          );
-
-          this.contractWrapper.updateAbi(updatedAbi);
-
-          return receipt;
-        },
-      });
-    },
-  );
-
-  removeWithAbi = /* @__PURE__ */ buildTransactionFunction(
-    async (inputArgs: {
-      extensionName: string;
-      extensionAddress: string;
-      extensionAbi?: ContractInterface;
-    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
-      let extensionAbi = inputArgs.extensionAbi;
-      if (extensionAbi) {
-        const metadata = await fetchContractMetadataFromAddress(
-          inputArgs.extensionAddress,
-          this.contractWrapper.getProvider(),
-          this.contractWrapper.storage,
-          this.contractWrapper.options,
-        );
-
-        extensionAbi = metadata.abi;
-      }
-
-      invariant(extensionAbi, "Require extension ABI");
-
-      const extensionFunctions: ExtensionFunction[] =
-        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
-
-      const extension: Extension = {
-        metadata: {
-          name: inputArgs.extensionName,
-          metadataURI: "",
-          implementation: inputArgs.extensionAddress,
-        },
-        functions: extensionFunctions,
-      };
-
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "removeExtension",
-        args: [extension],
-
-        parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionUpdatedEvent>(
-            "ExtensionRemoved",
-            receipt.logs,
-          );
-
-          if (events.length < 1) {
-            throw new Error("No ExtensionRemoved event found");
-          }
-
-          const updatedAbi = this.filterAbiForRemove(
-            AbiSchema.parse(this.contractWrapper.abi),
-            AbiSchema.parse(extensionAbi),
           );
 
           this.contractWrapper.updateAbi(updatedAbi);

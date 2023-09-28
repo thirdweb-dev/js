@@ -62,7 +62,7 @@ import type {
   IAccountCore,
   AirdropERC721,
   AirdropERC1155,
-  IBaseRouter,
+  BaseRouter,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -362,7 +362,7 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
-  get extensions(): BaseRouterClass<IBaseRouter> {
+  get extensions(): BaseRouterClass<BaseRouter> {
     return assertEnabled(this.detectBaseRouter(), FEATURE_DYNAMIC_CONTRACT);
   }
 
@@ -595,7 +595,7 @@ export class SmartContract<
 
   private detectBaseRouter() {
     if (
-      detectContractFeature<IBaseRouter>(
+      detectContractFeature<BaseRouter>(
         this.contractWrapper,
         FEATURE_DYNAMIC_CONTRACT.name,
       )
