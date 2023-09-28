@@ -2,6 +2,7 @@ import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   WALLET_USER_DETAILS_LOCAL_STORAGE_NAME,
+  WALLET_USER_ID_LOCAL_STORAGE_NAME,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import { MMKV } from "react-native-mmkv";
 import { DEVICE_SHARE_MISSING_MESSAGE } from "../constants";
@@ -99,6 +100,7 @@ export async function removeLoggedInWalletUserId(clientId: string) {
   await removeItemInAsyncStorage(
     WALLET_USER_DETAILS_LOCAL_STORAGE_NAME(clientId),
   );
+  await removeItemInAsyncStorage(WALLET_USER_ID_LOCAL_STORAGE_NAME(clientId));
 }
 
 export async function setDeviceShare({
