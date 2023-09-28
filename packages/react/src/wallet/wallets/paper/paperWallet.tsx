@@ -33,7 +33,6 @@ export const paperWallet = (
       return new PaperWallet({
         ...options,
         ...config,
-        clientId: options?.clientId || "",
         advancedOptions: {
           recoveryShareManagement: "AWS_MANAGED",
           ...config?.advancedOptions,
