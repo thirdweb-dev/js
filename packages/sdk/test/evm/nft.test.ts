@@ -273,4 +273,15 @@ describe("NFT Contract", async () => {
     });
     expect(tx.id.toNumber()).to.eq(0);
   });
+
+  it("allOwners() should not return AddressZero as one of the owners", async () => {
+    const metadata = [{ name: "Test1" }, { name: "Test2" }, { name: "Test3" }];
+    await nftContract.mintBatch(metadata);
+
+    // Send one to AddressZero so that we can run the test
+    await nftContract.transfer(AddressZero, 0);
+    const records = await nftContract.erc721.getAllOwners();
+    const hasFaultyRecord = records.some((item) => item.owner === AddressZero);
+    assert.strictEqual(hasFaultyRecord, false);
+  });
 });
