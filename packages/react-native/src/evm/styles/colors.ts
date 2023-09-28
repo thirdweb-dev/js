@@ -40,8 +40,8 @@ export const paletteBase = {
 };
 
 export const paletteLight: Palette = {
-  buttonBackgroundColor: "white",
-  buttonTextColor: "black",
+  buttonBackgroundColor: "black",
+  buttonTextColor: "white",
 
   accentButtonColor: "#3385FF",
   accentButtonTextColor: "white",
@@ -66,8 +66,8 @@ export const paletteLight: Palette = {
 };
 
 export const paletteDark: Palette = {
-  buttonBackgroundColor: "black",
-  buttonTextColor: "white",
+  buttonBackgroundColor: "white",
+  buttonTextColor: "black",
 
   accentButtonColor: "#3385FF",
   accentButtonTextColor: "white",
