@@ -758,46 +758,60 @@ function ConnectedToSmartWallet() {
   const chain = useChain();
   const address = useAddress();
 
-  const [showConnectedToSmartWallet, setShowConnectedToSmartWallet] =
-    useState(false);
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
   useEffect(() => {
     if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
       const smartWallet = activeWallet as SmartWallet;
       smartWallet.isDeployed().then((isDeployed) => {
-        setShowConnectedToSmartWallet(isDeployed);
+        setIsSmartWalletDeployed(isDeployed);
       });
     } else {
-      setShowConnectedToSmartWallet(false);
+      setIsSmartWalletDeployed(false);
     }
   }, [activeWallet]);
 
-  if (showConnectedToSmartWallet && chain && address) {
+  const content = (
+    <Container
+      flex="row"
+      gap="xs"
+      center="y"
+      style={{
+        width: "100%",
+        justifyContent: "space-between",
+      }}
+    >
+      <Container flex="row" gap="xs" center="y">
+        <ActiveDot
+          style={{
+            background: isSmartWalletDeployed ? undefined : "#ffc53d",
+          }}
+        />
+        Connected to Smart Wallet
+      </Container>
+      {isSmartWalletDeployed && (
+        <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+      )}
+    </Container>
+  );
+
+  if (chain && address) {
     return (
       <>
-        <Link
-          color="secondaryText"
-          hoverColor="primaryText"
-          href={`https://thirdweb.com/${chain.slug}/${address}/account`}
-          target="_blank"
-          size="sm"
-        >
-          <Container
-            flex="row"
-            gap="xs"
-            center="y"
-            style={{
-              width: "100%",
-              justifyContent: "space-between",
-            }}
+        {isSmartWalletDeployed ? (
+          <Link
+            color="secondaryText"
+            hoverColor="primaryText"
+            href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+            target="_blank"
+            size="sm"
           >
-            <Container flex="row" gap="xs" center="y">
-              <ActiveDot />
-              Connected to Smart Wallet
-            </Container>
-            <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
-          </Container>
-        </Link>
+            {content}
+          </Link>
+        ) : (
+          <Text size="sm"> {content}</Text>
+        )}
+
         <Spacer y="md" />
       </>
     );

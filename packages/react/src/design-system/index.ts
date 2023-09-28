@@ -8,7 +8,7 @@ const darkColors = {
   primaryText: mauveDark.mauve12,
   secondaryText: mauveDark.mauve10,
   danger: tomato.tomato9,
-  success: green.green7,
+  success: green.green8,
   overlay: "rgba(0, 0, 0, 0.7)",
   accentText: "#3385FF",
   accentBg: "hsl(216 100% 50%)",
