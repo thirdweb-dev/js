@@ -13,7 +13,7 @@ import {
 import { getAuthTokenClient } from "../storage/local";
 import * as Application from "expo-application";
 
-const EMBEDDED_WALLET_TOKEN = "embedded-wallet-token";
+const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-paper-client-id";
 const BUNDLE_ID_HEADER = "x-bundle-id";
 const APP_BUNDLE_ID = Application.applicationId || "";
@@ -48,7 +48,7 @@ export const authFetchEmbeddedWalletUser = async (
   params.headers = params?.headers
     ? {
         ...params.headers,
-        Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
+        Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
         [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
