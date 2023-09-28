@@ -55,7 +55,7 @@ export const authFetchEmbeddedWalletUser = async (
         [PAPER_CLIENT_ID_HEADER]: clientId,
       }
     : {
-        Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
+        Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
         [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
