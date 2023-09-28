@@ -20,7 +20,13 @@ export default {
     {
       "name": "Tectum explorer",
       "url": "https://explorer.tectum.io",
-      "standard": "none"
+      "icon": {
+        "url": "ipfs://QmYvFVprVdAGJH4iHUCXGEmy7pq8MMfxEjM64SuXutz9qx",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      },
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,
