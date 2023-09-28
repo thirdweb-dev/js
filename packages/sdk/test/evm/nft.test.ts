@@ -279,9 +279,12 @@ describe("NFT Contract", async () => {
     await nftContract.mintBatch(metadata);
 
     // Send one to AddressZero so that we can run the test
-    await nftContract.transfer(AddressZero, 0);
+    await nftContract.burn(0);
     const records = await nftContract.erc721.getAllOwners();
     const hasFaultyRecord = records.some((item) => item.owner === AddressZero);
     assert.strictEqual(hasFaultyRecord, false);
+    expect(records).to.be.an("array").length(2);
+    expect(records[0].tokenId).to.eq(1);
+    expect(records[1].tokenId).to.eq(2);
   });
 });
