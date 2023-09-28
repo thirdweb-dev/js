@@ -18,7 +18,12 @@ export default {
   "shortName": "ETL",
   "chainId": 111,
   "networkId": 111,
-  "icon": "etherlite",
+  "icon": {
+    "url": "ipfs://QmbNAai1KnBnw4SPQKgrf6vBddifPCQTg2PePry1bmmZYy",
+    "width": 88,
+    "height": 88,
+    "format": "png"
+  },
   "testnet": false,
   "slug": "etherlite-chain"
 } as const satisfies Chain;

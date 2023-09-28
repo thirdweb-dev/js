@@ -166,11 +166,13 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           <Box
             key={index.toString()}
             flex={1}
-            borderColor={focusedIndex === index ? "white" : "iconPrimary"}
+            borderColor={
+              focusedIndex === index ? "accentButtonColor" : "iconPrimary"
+            }
             marginHorizontal="xxs"
             borderWidth={2}
             justifyContent="center"
-            alignItems="center"
+            alignItems="stretch"
             borderRadius="md"
           >
             <TextInput

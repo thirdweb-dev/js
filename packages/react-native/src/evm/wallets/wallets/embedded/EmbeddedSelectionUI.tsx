@@ -94,7 +94,7 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
       />
       <BaseButton
         mt="md"
-        paddingVertical="xmd"
+        paddingVertical="md"
         borderRadius="lg"
         borderWidth={1}
         borderColor="border"
@@ -102,7 +102,10 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
         onPress={handleNetworkCall}
       >
         {isFetching ? (
-          <ActivityIndicator size={"small"} />
+          <ActivityIndicator
+            size={"small"}
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : (
           <Text
             variant="bodySmall"
