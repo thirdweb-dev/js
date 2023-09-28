@@ -332,7 +332,7 @@ export class Erc721<
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "approve",
-        args: [resolveAddress(operator), tokenId],
+        args: [await resolveAddress(operator), tokenId],
       });
     },
   );
