@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  useAddress,
-  useSupportedChains,
-  useWalletContext,
-} from "@thirdweb-dev/react-core";
 import { getChainProvider } from "@thirdweb-dev/sdk/evm";
 import { providers } from "ethers";
+import { useAddress } from "./wallet";
+import { useSupportedChains } from "./useSupportedChains";
+import { useWalletContext } from "../../core/providers/thirdweb-wallet-provider";
 
 export function useENS() {
   const address = useAddress();
