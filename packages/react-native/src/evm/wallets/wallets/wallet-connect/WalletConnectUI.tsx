@@ -176,27 +176,27 @@ export function WalletConnectUI({
               fadingEdgeLength={20}
               stickyHeaderIndices={[0]}
               ListHeaderComponent={
-                <Box
-                  borderColor="border"
-                  borderWidth={0.5}
-                  backgroundColor="background"
-                  flex={1}
-                  flexDirection="row"
-                  borderRadius="md"
-                  alignItems="center"
-                  marginHorizontal="md"
-                  mb="sm"
-                  padding="xs"
-                >
-                  <TextInput
-                    onChangeText={onChangeText}
-                    placeholder="Search Wallets"
-                    placeholderTextColor={theme.colors.textSecondary}
-                    style={{
-                      ...styles.textInput,
-                      color: theme.colors.textSecondary,
-                    }}
-                  />
+                <Box backgroundColor="background" mb="sm">
+                  <Box
+                    borderColor="border"
+                    borderWidth={0.5}
+                    flex={1}
+                    flexDirection="row"
+                    borderRadius="md"
+                    alignItems="center"
+                    marginHorizontal="md"
+                    padding="xs"
+                  >
+                    <TextInput
+                      onChangeText={onChangeText}
+                      placeholder="Search Wallets"
+                      placeholderTextColor={theme.colors.textSecondary}
+                      style={{
+                        ...styles.textInput,
+                        color: theme.colors.textSecondary,
+                      }}
+                    />
+                  </Box>
                 </Box>
               }
               ListEmptyComponent={

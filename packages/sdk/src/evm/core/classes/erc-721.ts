@@ -279,10 +279,14 @@ export class Erc721<
    */
   transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (from: AddressOrEns, to: AddressOrEns, tokenId: BigNumberish) => {
+      const [fromAddress, toAddress] = await Promise.all([
+        resolveAddress(from),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
-        args: [await resolveAddress(from), await resolveAddress(to), tokenId],
+        args: [fromAddress, toAddress, tokenId],
       });
     },
   );
@@ -422,13 +426,14 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.all(walletAddress);
     } else {
-      const address =
-        walletAddress || (await this.contractWrapper.getSignerAddress());
-      const allOwners = await this.getAllOwners();
-      return Promise.all(
+      const [address, allOwners] = await Promise.all([
+        walletAddress || this.contractWrapper.getSignerAddress(),
+        this.getAllOwners(),
+      ]);
+      return await Promise.all(
         (allOwners || [])
           .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
-          .map(async (i) => await this.get(i.tokenId)),
+          .map((i) => this.get(i.tokenId)),
       );
     }
   }
@@ -445,9 +450,10 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.tokenIds(walletAddress);
     } else {
-      const address =
-        walletAddress || (await this.contractWrapper.getSignerAddress());
-      const allOwners = await this.getAllOwners();
+      const [address, allOwners] = await Promise.all([
+        walletAddress || this.contractWrapper.getSignerAddress(),
+        this.getAllOwners(),
+      ]);
       return (allOwners || [])
         .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
         .map((i) => BigNumber.from(i.tokenId));
@@ -902,9 +908,11 @@ export class Erc721<
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.nextTokenIdToMint()).sub(
-      await this.totalClaimedSupply(),
-    );
+    const [nextTokenIdToMint, totalClaimedSupply] = await Promise.all([
+      this.nextTokenIdToMint(),
+      this.totalClaimedSupply(),
+    ]);
+    return nextTokenIdToMint.sub(totalClaimedSupply);
   }
 
   /**
