@@ -433,7 +433,7 @@ export class Erc721<
       return await Promise.all(
         (allOwners || [])
           .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
-          .map(async (i) => this.get(i.tokenId)),
+          .map((i) => this.get(i.tokenId)),
       );
     }
   }
