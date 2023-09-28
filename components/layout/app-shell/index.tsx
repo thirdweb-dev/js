@@ -1,4 +1,4 @@
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   ButtonGroup,
   Container,
@@ -191,7 +191,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
 
           <ColorModeToggle />
 
-          <ConnectWallet
+          <CustomConnectWallet
             ml={{ base: 0, md: 2 }}
             colorScheme="blue"
             ecosystem={ecosystem}

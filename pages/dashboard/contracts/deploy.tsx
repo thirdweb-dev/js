@@ -1,5 +1,5 @@
 import { useAllContractList } from "@3rdweb-sdk/react";
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
   Flex,
@@ -194,7 +194,7 @@ const Contracts: ThirdwebNextPage = () => {
         title: "Connect your wallet to get started",
         description:
           "In order to interact with your contracts you need to connect an EVM compatible wallet.",
-        children: <ConnectWallet ecosystem="evm" />,
+        children: <CustomConnectWallet ecosystem="evm" />,
         completed: !!address,
       },
 

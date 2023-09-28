@@ -19,7 +19,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
     <LandingLayout
       bgColor="#0F0F0F"
       seo={{
-        title: "Web3 Onboarding, For Everyone | thirdweb Connect",
+        title: "Web3 Onboarding, For Everyone | Connect",
         description:
           "Onboard your users to web3 with a beautiful Connect Wallet modal, customizable auth flows, and sign-in for web2 & web3 — in a few lines of code.",
         openGraph: {

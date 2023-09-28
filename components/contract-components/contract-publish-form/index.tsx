@@ -12,7 +12,7 @@ import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
 import { LandingFieldset } from "./landing-fieldset";
 import { NetworksFieldset } from "./networks-fieldset";
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
@@ -414,7 +414,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
               {!address ? (
                 <>
                   <Box />
-                  <ConnectWallet />
+                  <CustomConnectWallet />
                 </>
               ) : fieldsetToShow === "landing" &&
                 form.watch("deployType") === "standard" ? (

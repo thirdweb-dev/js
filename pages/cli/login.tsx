@@ -1,3 +1,4 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAuthorizeWalletWithAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
@@ -14,7 +15,7 @@ import {
   Switch,
   VStack,
 } from "@chakra-ui/react";
-import { ConnectWallet, useAddress, useAuth } from "@thirdweb-dev/react";
+import { useAddress, useAuth } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
@@ -222,7 +223,7 @@ const LoginPage: ThirdwebNextPage = () => {
           </Heading>
           <Text>In order to continue, you need to sign-in with a wallet.</Text>
           <Divider my={4} />
-          <ConnectWallet />
+          <CustomConnectWallet />
         </Card>
       </Container>
     );

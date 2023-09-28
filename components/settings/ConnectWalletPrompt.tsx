@@ -1,6 +1,6 @@
 import { Container, Divider, Flex } from "@chakra-ui/react";
 import { Card, Heading, Text } from "tw-components";
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
 export const ConnectWalletPrompt = () => {
   return (
@@ -14,7 +14,7 @@ export const ConnectWalletPrompt = () => {
           need to sign-in with a wallet.
         </Text>
         <Divider my={4} />
-        <ConnectWallet ecosystem="evm" />
+        <CustomConnectWallet ecosystem="evm" />
       </Card>
     </Container>
   );

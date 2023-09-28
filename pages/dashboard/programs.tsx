@@ -1,5 +1,5 @@
 import { useAllProgramsList } from "@3rdweb-sdk/react";
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Container, Divider, Flex } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
@@ -47,7 +47,7 @@ const Programs: ThirdwebNextPage = () => {
                   Solana compatible wallet.
                 </Text>
                 <Divider my={4} />
-                <ConnectWallet ecosystem="solana" />
+                <CustomConnectWallet ecosystem="solana" />
               </Card>
             </Container>
           )}

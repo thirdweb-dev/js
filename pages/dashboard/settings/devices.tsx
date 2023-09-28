@@ -1,4 +1,4 @@
-import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
 import { Container, Divider, Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
@@ -24,7 +24,7 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
             In order to manage your account, you need to sign-in with a wallet.
           </Text>
           <Divider my={4} />
-          <ConnectWallet ecosystem="evm" />
+          <CustomConnectWallet ecosystem="evm" />
         </Card>
       </Container>
     );

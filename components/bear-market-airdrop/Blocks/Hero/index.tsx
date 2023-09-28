@@ -1,3 +1,4 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { ClaimAirdrop } from "./ClaimAirdrop";
 import { ContractsDeployed } from "./ContractsDeployed";
 import { OpenPack } from "./OpenPack";
@@ -7,7 +8,6 @@ import { Unboxed } from "./Unboxed";
 import { Box, Flex, SimpleGrid, Spinner, useToast } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
 import {
-  ConnectWallet,
   useAddress,
   useChainId,
   useContract,
@@ -455,7 +455,7 @@ export const Hero: React.FC<HeroProps> = () => {
                   lg: 0,
                 }}
               >
-                <ConnectWallet />
+                <CustomConnectWallet />
               </Box>
             ) : IS_GASLESS_DISABLED && chainId !== 137 ? (
               <Button

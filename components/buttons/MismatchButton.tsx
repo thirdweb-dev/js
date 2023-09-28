@@ -1,5 +1,5 @@
 import {
-  ConnectWallet,
+  CustomConnectWallet,
   ConnectWalletProps,
 } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
@@ -76,7 +76,7 @@ export const MismatchButton = React.forwardRef<
     const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
     if (!wallet && ecosystem === "evm") {
       return (
-        <ConnectWallet
+        <CustomConnectWallet
           borderRadius="md"
           colorScheme="primary"
           ecosystem={ecosystem}
@@ -87,7 +87,7 @@ export const MismatchButton = React.forwardRef<
 
     if (!publicKey && ecosystem === "solana") {
       return (
-        <ConnectWallet
+        <CustomConnectWallet
           borderRadius="md"
           colorScheme="primary"
           ecosystem={ecosystem}
