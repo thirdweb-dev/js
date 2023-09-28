@@ -236,7 +236,9 @@ export const ConnectWalletDetailsModal = ({
                     Connected to a Smart Wallet
                   </Text>
                 </Box>
-                <RightArrowIcon width={10} height={10} />
+                {isSmartWalletDeployed ? (
+                  <RightArrowIcon width={10} height={10} />
+                ) : null}
               </BaseButton>
             ) : null}
             <Box flexDirection="row" justifyContent="space-evenly" mt="md">

@@ -7,12 +7,36 @@ import {
   ROUTE_GET_EMBEDDED_WALLET_DETAILS,
   ROUTE_INIT_RECOVERY_CODE_FREE_WALLET,
   ROUTE_STORE_USER_SHARES,
+  ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   ROUTE_VERIFY_COGNITO_OTP,
 } from "../constants";
 import { getAuthTokenClient } from "../storage/local";
+import * as Application from "expo-application";
 
 const EMBEDDED_WALLET_TOKEN = "embedded-wallet-token";
 const PAPER_CLIENT_ID_HEADER = "x-paper-client-id";
+const BUNDLE_ID_HEADER = "x-bundle-id";
+const APP_BUNDLE_ID = Application.applicationId || "";
+
+export const verifyClientId = async (clientId: string) => {
+  const resp = await fetch(ROUTE_VERIFY_THIRDWEB_CLIENT_ID, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+    },
+    body: JSON.stringify({ clientId, parentDomain: "" }),
+  });
+  if (!resp.ok) {
+    const { error } = await resp.json();
+    throw new Error(
+      `Something went wrong generating auth token from user cognito email otp. ${error}`,
+    );
+  }
+  return {
+    success: true,
+  };
+};
 
 export const authFetchEmbeddedWalletUser = async (
   { clientId }: { clientId: string },
@@ -27,12 +51,14 @@ export const authFetchEmbeddedWalletUser = async (
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
           authTokenClient || ""
         }`,
+        [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN}:${
           authTokenClient || ""
         }`,
+        [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
         [PAPER_CLIENT_ID_HEADER]: clientId,
       };
   return fetch(url, params);
@@ -82,7 +108,10 @@ export async function generateAuthTokenFromCognitoEmailOtp(
 ) {
   const resp = await fetch(ROUTE_VERIFY_COGNITO_OTP, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+    },
     body: JSON.stringify({
       access_token: session.getAccessToken().getJwtToken(),
       refresh_token: session.getRefreshToken().getToken(),

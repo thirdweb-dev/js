@@ -9,6 +9,7 @@ import { Auth } from "aws-amplify";
 import {
   generateAuthTokenFromCognitoEmailOtp,
   getEmbeddedWalletUserDetail,
+  verifyClientId,
 } from "./helpers/api/fetchers";
 import {
   cognitoEmailSignIn,
@@ -23,6 +24,8 @@ export async function sendEmailOTP(
   email: string,
   clientId: string,
 ): Promise<SendEmailOtpReturnType> {
+  await verifyClientId(clientId);
+
   await prePaperAuth({
     authenticationMethod: AuthProvider.COGNITO,
     email,

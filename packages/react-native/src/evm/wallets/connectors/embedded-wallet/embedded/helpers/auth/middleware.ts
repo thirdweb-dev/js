@@ -44,10 +44,6 @@ export async function postPaperAuth(
       console.log("========== Existing user with device share ==========");
     } catch (e) {
       // trying to recreate device share from recovery code to derive wallet
-      console.warn(
-        "Did not manage to automatically recreate wallet for previously logged in user, using recovery code. ",
-        e,
-      );
       const recoveryCode = await getCognitoRecoveryPassword(clientId);
       console.log("========== Existing user on new device ==========");
 

@@ -28,5 +28,6 @@ export const ROUTE_COGNITO_IDENTITY_POOL_URL = `cognito-idp.${AWS_REGION}.amazon
 export const ROUTE_INIT_RECOVERY_CODE_FREE_WALLET = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/init-recovery-code-free-wallet`;
 export const ROUTE_STORE_USER_SHARES = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/store-shares`;
 export const ROUTE_GET_USER_SHARES = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/get-shares`;
+export const ROUTE_VERIFY_THIRDWEB_CLIENT_ID = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/verify-thirdweb-client-id`;
 
 export const ROUTE_AUTH_COGNITO_ID_TOKEN = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/cognito-id-token`;

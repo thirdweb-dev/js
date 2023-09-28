@@ -7,7 +7,7 @@ import {
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { SmartWallet } from "@thirdweb-dev/wallets";
@@ -15,6 +15,7 @@ import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/Wall
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Box from "../../base/Box";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
+import { useAppTheme } from "../../../styles/hooks";
 
 export const SmartWalletFlow = ({
   close,
@@ -23,11 +24,13 @@ export const SmartWalletFlow = ({
   personalWalletConfig,
   ...props
 }: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
+  const theme = useAppTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
     number | undefined
   >();
+  const [switchingNetwork, setSwitchingNetwork] = useState(false);
   const createWalletInstance = useCreateWalletInstance();
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
@@ -90,7 +93,9 @@ export const SmartWalletFlow = ({
 
   const onSwitchNetworkPress = async () => {
     if (connectedPersonalWallet) {
+      setSwitchingNetwork(true);
       await connectedPersonalWallet?.switchChain(targetChain.chainId);
+      setSwitchingNetwork(false);
       setPersonalWalletChaindId(targetChain.chainId);
       connectSmartWallet(connectedPersonalWallet);
     }
@@ -156,7 +161,7 @@ export const SmartWalletFlow = ({
           mt="md"
           marginHorizontal="xl"
           flexDirection="row"
-          justifyContent="flex-start"
+          justifyContent="center"
           alignItems="center"
           paddingHorizontal="md"
           paddingVertical="sm"
@@ -164,9 +169,13 @@ export const SmartWalletFlow = ({
           backgroundColor="backgroundHighlight"
           onPress={onSwitchNetworkPress}
         >
-          <Text variant="bodyLarge" textAlign="center">
-            Switch Network
-          </Text>
+          {switchingNetwork ? (
+            <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+          ) : (
+            <Text variant="bodyLarge" textAlign="center">
+              Switch Network
+            </Text>
+          )}
         </BaseButton>
       ) : null}
     </>

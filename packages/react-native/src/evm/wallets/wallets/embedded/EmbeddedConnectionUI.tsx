@@ -17,6 +17,7 @@ import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/Conne
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
+import * as Clipboard from "expo-clipboard";
 
 const OTP_LENGTH = 6;
 
@@ -61,12 +62,19 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       setTimeout(() => {
         (selectionData.emailWallet as EmbeddedWallet)
           .validateEmailOTP(otp)
-          .then(async () => {
-            if (onLocallyConnected) {
-              onLocallyConnected(selectionData.emailWallet);
+          .then(async (response) => {
+            if (response?.success) {
+              if (onLocallyConnected) {
+                onLocallyConnected(selectionData.emailWallet);
+              } else {
+                await setConnectedWallet(selectionData.emailWallet);
+                setConnectionStatus("connected");
+              }
             } else {
-              await setConnectedWallet(selectionData.emailWallet);
-              setConnectionStatus("connected");
+              clearCode();
+              setErrorMessage(response?.error || "Error validating the code");
+              setCheckingOtp(false);
+              setFocusedIndex(undefined);
             }
           })
           .catch((error) => {
@@ -87,7 +95,20 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     values,
   ]);
 
-  const handleInputChange = (value: string, index: number) => {
+  const handleInputChange = async (value: string, index: number) => {
+    if (value !== "") {
+      const copiedContent = await Clipboard.getStringAsync();
+
+      if (copiedContent.length === 6 && /^\d+$/.test(copiedContent)) {
+        const newValues = [...copiedContent];
+        for (let i = 0; i < 6; i++) {
+          inputRefs.current[i]?.setNativeProps({ text: newValues[i] });
+        }
+        setValues(newValues);
+        return;
+      }
+    }
+
     const newValues = [...values];
     newValues[index] = value;
 

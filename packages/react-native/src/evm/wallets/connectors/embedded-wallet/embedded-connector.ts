@@ -49,15 +49,25 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       });
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
-      return;
+      if (error instanceof Error) {
+        return { error: error.message };
+      } else {
+        return { error: "An unknown error occurred" };
+      }
     }
 
     try {
       await this.getSigner();
       this.emit("connected");
     } catch (error) {
-      console.error(`Error while getting the signer: ${error}`);
+      if (error instanceof Error) {
+        return { error: error.message };
+      } else {
+        return { error: "Error getting the signer" };
+      }
     }
+
+    return { success: true };
   }
 
   async sendEmailOtp(email: string) {
@@ -110,6 +120,12 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
 
     this.signer = signer;
+
+    if (this.options.chain.chainId) {
+      this.signer = this.signer.connect(
+        new providers.JsonRpcProvider(this.options.chain.rpc[0]),
+      );
+    }
 
     return signer;
   }

@@ -16,13 +16,6 @@ import DownloadIcon from "../assets/download";
 import CopyIcon from "../assets/copy";
 import QRCode from "react-native-qrcode-svg";
 
-// type SendButtonProps = {
-//   chain?: Chain;
-//   onPress?: () => void;
-//   switchChainOnPress?: boolean;
-//   onChainSwitched?: () => void;
-// };
-
 export const ReceiveButton = () => {
   const theme = useAppTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);

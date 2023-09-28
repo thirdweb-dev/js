@@ -7,6 +7,7 @@ import {
 import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
 import { EmbeddedWalletConnectionArgs } from "../../connectors/embedded-wallet/types";
 import { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
+import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 
 export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
@@ -20,8 +21,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   static meta = {
     name: "Embedded Wallet",
-    iconURL:
-      "ipfs://QmNx2evQa6tcQs9VTd3YaDm31ckfStvgRGKFGELahUmrbV/emailIcon.svg",
+    iconURL: EMAIL_WALLET_ICON,
   };
 
   static id = walletIds.embeddedWallet;
