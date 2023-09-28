@@ -40,6 +40,7 @@ import {
   useSupportedChains,
   useWallet,
   WalletInstance,
+  useENS,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import {
@@ -58,7 +59,6 @@ import { Link, Text } from "../../components/text";
 import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
-import { useENS } from "../hooks/useENS";
 import { smartWalletIcon } from "./icons/dataUris";
 
 export type DropDownPosition = {

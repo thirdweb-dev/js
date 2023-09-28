@@ -6,7 +6,7 @@ import Text from "./Text";
 import Box from "./Box";
 
 type WalletButtonProps = {
-  onPress: () => void;
+  onPress?: () => void;
   walletIconUrl: string;
   name: string;
   labelText?: string;
