@@ -213,6 +213,8 @@ export abstract class BaseAccountAPI {
         to: detailsForUserOp.target,
         data: detailsForUserOp.data,
       });
+      // add 20% overhead for entrypoint checks
+      callGasLimit = callGasLimit.mul(120).div(100);
       // if the estimation is too low, we use a fixed value of 500k
       if (callGasLimit.lt(30000)) {
         callGasLimit = BigNumber.from(500000);
@@ -366,9 +368,8 @@ export abstract class BaseAccountAPI {
         ...userOp,
         paymasterAndData: "0x",
       };
-      modifiedOp.preVerificationGas = await this.getPreVerificationGas(
-        modifiedOp,
-      );
+      modifiedOp.preVerificationGas =
+        await this.getPreVerificationGas(modifiedOp);
       return {
         ...modifiedOp,
         signature: "",
