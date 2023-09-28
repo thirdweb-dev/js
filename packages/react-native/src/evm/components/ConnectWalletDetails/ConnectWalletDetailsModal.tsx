@@ -63,6 +63,19 @@ export const ConnectWalletDetailsModal = ({
       ? displayBalanceToken[chain?.chainId]
       : undefined;
 
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
+      const connectedSmartWallet = activeWallet as SmartWallet;
+      connectedSmartWallet.isDeployed().then((isDeployed) => {
+        setIsSmartWalletDeployed(isDeployed);
+      });
+    } else {
+      setIsSmartWalletDeployed(false);
+    }
+  }, [activeWallet]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (addressCopied) {
@@ -166,7 +179,7 @@ export const ConnectWalletDetailsModal = ({
           />
 
           {activeWallet?.walletId === LocalWallet.id ? (
-            <Text variant="error" textAlign="left">
+            <Text variant="error" textAlign="left" mb="sm">
               {
                 "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
               }
@@ -202,6 +215,7 @@ export const ConnectWalletDetailsModal = ({
             />
             {activeWallet?.walletId === SmartWallet.id || smartWallet ? (
               <BaseButton
+                disabled={!isSmartWalletDeployed}
                 onPress={() => {
                   Linking.openURL(
                     `https://thirdweb.com/${chain?.slug}/${address}/account`,
@@ -212,8 +226,12 @@ export const ConnectWalletDetailsModal = ({
                 justifyContent="space-between"
                 mt="md"
               >
-                <Box flexDirection="row">
-                  <ActiveDot width={12} height={12} />
+                <Box flexDirection="row" alignItems="center">
+                  <ActiveDot
+                    width={10}
+                    height={10}
+                    color={isSmartWalletDeployed ? "#00d395" : "yellow"}
+                  />
                   <Text variant="bodySmallSecondary" ml="xxs">
                     Connected to a Smart Wallet
                   </Text>

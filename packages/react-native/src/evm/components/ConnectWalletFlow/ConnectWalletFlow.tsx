@@ -60,7 +60,7 @@ export const ConnectWalletFlow = () => {
 
   const onChooseWallet = useCallback(
     (wallet: WalletConfig, data?: any) => {
-      setActiveWallet(() => wallet);
+      setActiveWallet(wallet);
       setSelectionData(data);
 
       // If the wallet has no custom connect UI, then connect it
@@ -73,8 +73,14 @@ export const ConnectWalletFlow = () => {
 
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
-    if (walletConfig && !walletConfig.connectUI) {
-      onChooseWallet(walletConfig);
+    if (walletConfig) {
+      if (walletConfig.connectUI) {
+        // if there's a connection UI, then show it
+        setActiveWallet(walletConfig);
+      } else {
+        // if there's no connection UI, then connect the wallet
+        onChooseWallet(walletConfig);
+      }
     }
   }, [onChooseWallet, walletConfig]);
 
@@ -131,7 +137,7 @@ export const ConnectWalletFlow = () => {
               subHeaderText=""
               content={
                 activeWallet.id === walletIds.localWallet ? (
-                  <Text variant="bodySmallSecondary" mt="md">
+                  <Text variant="bodySmallSecondary" mt="md" textAlign="center">
                     Creating, encrypting and securing your device wallet.
                   </Text>
                 ) : undefined
