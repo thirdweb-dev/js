@@ -7,7 +7,7 @@ import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
 import { useAppTheme } from "../../../styles/hooks";
 import { ChooseWalletContent } from "./ChooseWalletContent";
-import { BaseButton, ImageSvgUri } from "../../base";
+import { BaseButton, ImageSvgUri, WalletButton } from "../../base";
 import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
 
@@ -62,6 +62,10 @@ export function ChooseWallet({
 
   const onConnectAWalletPress = () => {
     setIsConnectAWalletEnabled(true);
+  };
+
+  const onSingleWalletPress = () => {
+    onChooseWallet(connectionWallets[0]);
   };
 
   const onBackPress = () => {
@@ -189,32 +193,44 @@ export function ChooseWallet({
       {emailWallet &&
       !isConnectAWalletEnabled &&
       connectionWallets.length > 0 ? (
-        <BaseButton
-          marginHorizontal="xl"
-          justifyContent="center"
-          borderRadius="lg"
-          paddingVertical="md"
-          borderColor="border"
-          flexDirection="row"
-          alignItems="center"
-          borderWidth={1}
-          onPress={onConnectAWalletPress}
-        >
-          {connectionWallets.map((wallet) => {
-            return (
-              <Box key={wallet.meta.name} mr="xxs">
-                <ImageSvgUri
-                  height={20}
-                  width={20}
-                  imageUrl={wallet.meta.iconURL}
-                />
-              </Box>
-            );
-          })}
-          <Text variant="bodySmall" fontWeight="700">
-            Connect a wallet
-          </Text>
-        </BaseButton>
+        connectionWallets.length === 1 ? (
+          <WalletButton
+            marginHorizontal="xl"
+            paddingHorizontal="none"
+            paddingVertical="none"
+            mb="md"
+            walletIconUrl={connectionWallets[0].meta.iconURL}
+            name={connectionWallets[0].meta.name}
+            onPress={onSingleWalletPress}
+          />
+        ) : (
+          <BaseButton
+            marginHorizontal="xl"
+            justifyContent="center"
+            borderRadius="lg"
+            paddingVertical="md"
+            borderColor="border"
+            flexDirection="row"
+            alignItems="center"
+            borderWidth={1}
+            onPress={onConnectAWalletPress}
+          >
+            {connectionWallets.map((wallet) => {
+              return (
+                <Box key={wallet.meta.name} mr="xxs">
+                  <ImageSvgUri
+                    height={20}
+                    width={20}
+                    imageUrl={wallet.meta.iconURL}
+                  />
+                </Box>
+              );
+            })}
+            <Text variant="bodySmall" fontWeight="700">
+              Connect a wallet
+            </Text>
+          </BaseButton>
+        )
       ) : null}
       {guestWallet ? (
         <BaseButton
