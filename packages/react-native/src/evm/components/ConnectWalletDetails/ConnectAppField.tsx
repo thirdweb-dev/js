@@ -113,17 +113,21 @@ const ConnectAppField = () => {
       {!appMeta && showWCInput ? (
         <Box
           flexDirection="row"
-          mb="sm"
+          mt="xs"
           borderColor="border"
           borderWidth={1}
           borderRadius="md"
         >
           <TextInput
-            onChangeText={onAddressChangeText}
-            flex={1}
-            value={wcUri}
-            placeholder={"wc://..."}
-            placeholderTextColor={theme.colors.textSecondary}
+            textInputProps={{
+              onChangeText: onAddressChangeText,
+              value: wcUri,
+              placeholder: "wc://...",
+              placeholderTextColor: theme.colors.textSecondary,
+            }}
+            containerProps={{
+              flex: 1,
+            }}
           />
           <BaseButton
             onPress={() => onWCPress()}
@@ -153,13 +157,13 @@ const ConnectAppField = () => {
         <BaseButton
           backgroundColor="background"
           borderColor="border"
-          mb="sm"
+          mt="xs"
           justifyContent="space-between"
           style={styles.exportWallet}
           onPress={onConnectDappPress}
         >
           <>
-            {appMeta ? (
+            {appMeta?.iconUrl ? (
               <WalletIcon size={32} iconUri={appMeta.iconUrl} />
             ) : (
               <WalletConnectIcon width={16} height={16} />

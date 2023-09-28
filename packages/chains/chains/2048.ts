@@ -1,8 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Stratos Mainnet",
+  "name": "Stratos",
   "chain": "STOS",
-  "rpc": [],
+  "rpc": [
+    "https://stratos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://web3-rpc.thestratos.org"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "STOS",
@@ -13,7 +16,18 @@ export default {
   "shortName": "stos-mainnet",
   "chainId": 2048,
   "networkId": 2048,
-  "status": "incubating",
+  "explorers": [
+    {
+      "name": "Stratos EVM Explorer (Blockscout)",
+      "url": "https://web3-explorer.thestratos.org",
+      "standard": "none"
+    },
+    {
+      "name": "Stratos Cosmos Explorer (BigDipper)",
+      "url": "https://explorer.thestratos.org",
+      "standard": "none"
+    }
+  ],
   "testnet": false,
   "slug": "stratos"
 } as const satisfies Chain;

@@ -12,16 +12,15 @@ export default {
     "https://avalanche.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://api.avax.network/ext/bc/C/rpc",
-    "https://avalanche-c-chain.publicnode.com"
+    "https://avalanche-c-chain.publicnode.com",
+    "wss://avalanche-c-chain.publicnode.com"
   ],
   "features": [
     {
       "name": "EIP1559"
     }
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Avalanche",
     "symbol": "AVAX",

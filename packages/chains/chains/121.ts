@@ -13,9 +13,7 @@ export default {
     "wss://rcl-dataseed3.rclsidechain.com/v1/",
     "wss://rcl-dataseed4.rclsidechain.com/v1/"
   ],
-  "faucets": [
-    "https://faucet.rclsidechain.com"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Realchain",
     "symbol": "REAL",

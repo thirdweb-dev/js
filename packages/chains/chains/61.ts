@@ -4,11 +4,16 @@ export default {
   "chain": "ETC",
   "rpc": [
     "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://etc.rivet.link"
+    "https://etc.rivet.link",
+    "https://etc.etcdesktop.com",
+    "https://etc.mytokenpocket.vip"
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/?"
+  "features": [
+    {
+      "name": "EIP155"
+    }
   ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Ethereum Classic Ether",
     "symbol": "ETC",
@@ -23,7 +28,7 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.com/etc/mainnet",
-      "standard": "none"
+      "standard": "EIP3091"
     }
   ],
   "testnet": false,

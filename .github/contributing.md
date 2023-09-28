@@ -107,6 +107,27 @@ In your test project, you need to:
 1. Delete the dependencies cache. If you're using Next.js, that is the `.next` directory, and if you're using CRA, that is the `node_modules/.cache` directory.
 2. Restart the development server.
 
+#### Testing from npm
+
+You can also test your changes by publishing a dev package to npm and adding your package as you normally do in your projects.
+
+Once you have your PR up you can add a comment with the text: `/release-pr`. This will trigger a GitHub action that will publish a dev version to npm.
+
+You can see the action progress in GitHub's `Actions` tab, look for the workflow: `release-pr`.
+
+Once the action finishes executing, select it, click on deploy and look for the `Deploy pre-release` item. Scroll all the way to the bottom and you should see something like:
+
+```
+success packages published successfully:
+🦋  @***-dev/auth@0.0.0-dev-06a7cb1-20230901190619
+🦋  @***-dev/react@0.0.0-dev-06a7cb1-20230901190619
+...
+```
+
+These are the versions the GH action published to npm for testing purposes. Let's assume you're working on the `@thirdweb-dev/react` package, you can then run:
+
+`yarn add @thirdweb-dev/react@0.0.0-dev-06a7cb1-20230901190619` to install the dev package.
+
 <br/>
 
 ### Publish Your Changes

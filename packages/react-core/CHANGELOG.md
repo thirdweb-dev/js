@@ -1,5 +1,116 @@
 # @thirdweb-dev/react-core
 
+## 3.16.0
+
+### Patch Changes
+
+- [#1618](https://github.com/thirdweb-dev/js/pull/1618) [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54) Thanks [@MananTank](https://github.com/MananTank)! - ## New smartWallet() API (Breaking Change)
+
+  ### Before
+
+  In the previous API, adding a smart wallet created it's own new entry called "Smart wallet" in the ConnectWallet Modal and you had to pass in the personal wallets which was shown to the user when they clicked on the "Smart wallet".
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet({
+        personalWallets: [metamaskWallet(), coinbaseWallet()],
+        factoryAddress: "....",
+        gassless: true,
+      }),
+    ]}
+  />
+  ```
+
+  ### After
+
+  Since most users don't know what a smart wallet is, this was confusing. So with the new API, you can just use smart wallet under the hood for any wallet you want and it will just show up as that wallet and not a "smart wallet" in ConnectWallet Modal to improve the user experience.
+
+  Once the user is connected, the ConnectWallet Details button shows to the user that they are infact connected to a smart wallet.
+
+  ```tsx
+  const config = {
+    factoryAddress: "....",
+    gassless: true,
+  }
+
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet(metamaskWallet(), config),
+      smartWalet(coinbaseWallet(), config),
+    ]}
+  />
+  ```
+
+  ## New Features added to `ConnectWallet` component
+
+  - ENS Name + Avatar support added
+  - New 'Send funds' button added to ConnectWallet which users can use to send various tokens.
+  - New "Receive funds" button added to ConnectWallet which users scan the QR code from their wallet app on phone to send funds to their other wallet on desktop
+  - Added `supportedTokens` prop to customize the list of tokens for each network in for the "Send Funds" screen.
+  - "Transaction history" button added to ConnectWallet which opens the block explorer
+  - New wallet `embededWallet()` to sign in with Google / Email
+  - Ability to show balance of any token instead of just native token in the ConnectWallet details button using the `displayBalanceToken` prop
+
+- Updated dependencies [[`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131), [`9d553746`](https://github.com/thirdweb-dev/js/commit/9d553746b025ac489f9b8ee357372c9d01c835e1), [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54), [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861), [`c29042b7`](https://github.com/thirdweb-dev/js/commit/c29042b71e266cb11d70d67f0fe2ffcc0fc1f5fa), [`b5b7e524`](https://github.com/thirdweb-dev/js/commit/b5b7e5243df83e3ab60d0917c099fb6967b63439), [`b6df6b89`](https://github.com/thirdweb-dev/js/commit/b6df6b895723947427c515411a7a833edaa324c6), [`94bdcc14`](https://github.com/thirdweb-dev/js/commit/94bdcc142a7fe1e9f53273560404fa6b5ac3a7c4), [`48906a9d`](https://github.com/thirdweb-dev/js/commit/48906a9d8ef2cfdd9ac489822a72d50cbd825628), [`43f188c8`](https://github.com/thirdweb-dev/js/commit/43f188c8a7ec02f394604120b414a039a2650525), [`ea5b9c3e`](https://github.com/thirdweb-dev/js/commit/ea5b9c3ecdd588461fb00f0e9da463de4a30ed1d), [`def6d400`](https://github.com/thirdweb-dev/js/commit/def6d400ab463bda3118d4c9cb00e5cc25a415c2)]:
+  - @thirdweb-dev/chains@0.1.53
+  - @thirdweb-dev/wallets@1.3.0
+  - @thirdweb-dev/sdk@3.10.62
+  - @thirdweb-dev/auth@3.2.43
+
+## 3.15.0
+
+### Patch Changes
+
+- [#1550](https://github.com/thirdweb-dev/js/pull/1550) [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet v3 updates
+
+- Updated dependencies [[`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a), [`3f3c63c0`](https://github.com/thirdweb-dev/js/commit/3f3c63c01e34242ae1f074e62b51787b305c059e), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b), [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/sdk@3.10.61
+  - @thirdweb-dev/wallets@1.2.1
+  - @thirdweb-dev/chains@0.1.52
+  - @thirdweb-dev/auth@3.2.42
+
+## 3.14.41
+
+### Patch Changes
+
+- Updated dependencies [[`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c), [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93), [`2a873d2f`](https://github.com/thirdweb-dev/js/commit/2a873d2f80271208819bac88b32cea0b48761c8d), [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`f9042765`](https://github.com/thirdweb-dev/js/commit/f90427650c037b2c437685734ddc3398ad3e2612), [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1), [`defe5fce`](https://github.com/thirdweb-dev/js/commit/defe5fced3fd738157616a9f1644c5092dcaa5a8), [`2f187d13`](https://github.com/thirdweb-dev/js/commit/2f187d13754f571b7205fc1b743efde767b1b1c8), [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334), [`931ee793`](https://github.com/thirdweb-dev/js/commit/931ee7930f16c25e4d775d2d93538a5cfe770353)]:
+  - @thirdweb-dev/sdk@3.10.60
+  - @thirdweb-dev/wallets@1.2.0
+  - @thirdweb-dev/chains@0.1.51
+  - @thirdweb-dev/auth@3.2.41
+
+## 3.14.40
+
+### Patch Changes
+
+- Updated dependencies [[`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f), [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0), [`a00cbaf7`](https://github.com/thirdweb-dev/js/commit/a00cbaf78c05ea43d3814ba9f9ec8e667f0ddb25), [`a023cb8c`](https://github.com/thirdweb-dev/js/commit/a023cb8cf1e4f08be56a2e33c146c8d307c80f40), [`2088de1c`](https://github.com/thirdweb-dev/js/commit/2088de1cacbc903d4f18a84c21a8f27af8d06b29), [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b)]:
+  - @thirdweb-dev/storage@1.2.10
+  - @thirdweb-dev/sdk@3.10.59
+  - @thirdweb-dev/wallets@1.1.23
+  - @thirdweb-dev/auth@3.2.40
+
+## 3.14.39
+
+### Patch Changes
+
+- Updated dependencies [[`926dd7b0`](https://github.com/thirdweb-dev/js/commit/926dd7b03f38ed25ca303dc23d3323d5edd28005), [`e00dd123`](https://github.com/thirdweb-dev/js/commit/e00dd123579f75752b6fe4fcf613d2cae5419e19)]:
+  - @thirdweb-dev/chains@0.1.50
+  - @thirdweb-dev/sdk@3.10.58
+  - @thirdweb-dev/wallets@1.1.22
+  - @thirdweb-dev/auth@3.2.39
+
+## 3.14.38
+
+### Patch Changes
+
+- Updated dependencies [[`eb463735`](https://github.com/thirdweb-dev/js/commit/eb463735e2f784cd1d212a982835af95cf60766b), [`adec589e`](https://github.com/thirdweb-dev/js/commit/adec589ead8ceff1b57169e05a3e6733b4652cc7), [`b30566c6`](https://github.com/thirdweb-dev/js/commit/b30566c68436ad94ddc938a380eccc13a8a7147d), [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3), [`f5aed34d`](https://github.com/thirdweb-dev/js/commit/f5aed34d3c71065c3f45df2c1eb84ba9c36162d5)]:
+  - @thirdweb-dev/wallets@1.1.21
+  - @thirdweb-dev/sdk@3.10.57
+  - @thirdweb-dev/chains@0.1.49
+  - @thirdweb-dev/storage@1.2.9
+  - @thirdweb-dev/auth@3.2.38
+
 ## 3.14.37
 
 ### Patch Changes

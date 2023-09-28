@@ -21,7 +21,7 @@ export default {
     "symbol": "tMIND",
     "decimals": 18
   },
-  "infoURL": "https://mindscan.info",
+  "infoURL": "https://mindchain.info",
   "shortName": "tMIND",
   "chainId": 9977,
   "networkId": 9977,

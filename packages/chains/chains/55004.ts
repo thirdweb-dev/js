@@ -5,7 +5,7 @@ export default {
   "rpc": [
     "https://titan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.titan.tokamak.network",
-    "wss://rpc.titan.tokamak.network/ws"
+    "wss://rpc.titan.tokamak.network"
   ],
   "faucets": [],
   "nativeCurrency": {

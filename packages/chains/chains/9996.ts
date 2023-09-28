@@ -20,7 +20,7 @@ export default {
     "symbol": "MIND",
     "decimals": 18
   },
-  "infoURL": "https://mindscan.info",
+  "infoURL": "https://mindchain.info",
   "shortName": "MIND",
   "chainId": 9996,
   "networkId": 9996,

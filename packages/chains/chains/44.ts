@@ -1,10 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Darwinia Crab Network",
+  "name": "Crab Network",
   "chain": "crab",
   "rpc": [
-    "https://darwinia-crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://crab-rpc.darwinia.network"
+    "https://crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://crab-rpc.darwinia.network",
+    "https://crab-rpc.darwiniacommunitydao.xyz",
+    "https://crab.api.onfinality.io/public-ws",
+    "https://darwiniacrab-rpc.dwellir.com"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -24,5 +27,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "darwinia-crab-network"
+  "slug": "crab-network"
 } as const satisfies Chain;

@@ -1,15 +1,10 @@
 import { Modal } from "../../components/Modal";
-import { iconSize, media, spacing } from "../../design-system";
-import {
-  HelperLink,
-  ModalDescription,
-  ModalTitle,
-} from "../../components/modalElements";
+import { ModalTitle } from "../../components/modalElements";
 import { useWalletConfig } from "@thirdweb-dev/react-core";
-import { Img } from "../../components/Img";
 import { Spacer } from "../../components/Spacer";
-import { Spinner } from "../../components/Spinner";
-import styled from "@emotion/styled";
+import { Container } from "../../components/basic";
+import { Text } from "../../components/text";
+import { WalletLogoSpinner } from "./screens/WalletLogoSpinner";
 
 export const SignatureModal: React.FC<{
   open: boolean;
@@ -18,66 +13,30 @@ export const SignatureModal: React.FC<{
   const walletConfig = useWalletConfig();
 
   return (
-    <Modal
-      open={props.open}
-      style={{
-        maxWidth: "450px",
-      }}
-      setOpen={props.setOpen}
-    >
-      <Container>
-        {walletConfig && (
-          <Img
-            height={iconSize.xl}
-            src={walletConfig.meta.iconURL}
-            width={iconSize.xl}
-          />
-        )}
-
+    <Modal size="compact" open={props.open} setOpen={props.setOpen}>
+      <Container p="lg">
         <Spacer y="xl" />
+        <Container flex="column" center="x">
+          {walletConfig && (
+            <WalletLogoSpinner
+              error={false}
+              onRetry={() => {}}
+              iconUrl={walletConfig.meta.iconURL}
+            />
+          )}
 
-        <TitleContainer>
+          <Spacer y="xxl" />
+
           <ModalTitle>Signature Request</ModalTitle>
-          <Spinner size="md" color="link" />
-        </TitleContainer>
+          <Spacer y="md" />
 
-        <Spacer y="md" />
+          <Text multiline center>
+            Sign the signature request <br /> in your wallet
+          </Text>
 
-        <Desc>Sign the signature request pop-up in your wallet</Desc>
-
-        <Spacer y="xxl" />
-
-        <HelperLink target="_blank" href="https://support.thirdweb.com/contact">
-          Having troubles connecting to wallet
-        </HelperLink>
+          <Spacer y="lg" />
+        </Container>
       </Container>
     </Modal>
   );
 };
-
-const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-
-  ${media.mobile} {
-    justify-content: center;
-    flex-direction: column;
-    gap: ${spacing.md};
-  }
-`;
-
-const Desc = /* @__PURE__ */ styled(ModalDescription)`
-  ${media.mobile} {
-    max-width: 240px;
-    margin: 0 auto;
-  }
-`;
-
-const Container = styled.div`
-  ${media.mobile} {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-`;

@@ -35,7 +35,7 @@ export class AccountPermissions implements DetectableFeature {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /*********************************
@@ -116,11 +116,10 @@ export class AccountPermissions implements DetectableFeature {
       permissions,
     );
 
-    const isValidSigner =
-      await this.contractWrapper.readContract.verifySignerPermissionRequest(
-        payload,
-        signature,
-      );
+    const isValidSigner = await this.contractWrapper.read(
+      "verifySignerPermissionRequest",
+      [payload, signature],
+    );
     if (!isValidSigner) {
       throw new Error(`Invalid signature.`);
     }
@@ -201,9 +200,7 @@ export class AccountPermissions implements DetectableFeature {
    */
   public async isAdmin(signerAddress: AddressOrEns): Promise<boolean> {
     const resolvedSignerAddress = await resolveAddress(signerAddress);
-    return await this.contractWrapper.readContract.isAdmin(
-      resolvedSignerAddress,
-    );
+    return await this.contractWrapper.read("isAdmin", [resolvedSignerAddress]);
   }
 
   /**
@@ -220,9 +217,9 @@ export class AccountPermissions implements DetectableFeature {
    */
   public async isSigner(signerAddress: AddressOrEns): Promise<boolean> {
     const resolvedSignerAddress = await resolveAddress(signerAddress);
-    return await this.contractWrapper.readContract.isActiveSigner(
+    return await this.contractWrapper.read("isActiveSigner", [
       resolvedSignerAddress,
-    );
+    ]);
   }
 
   /**
@@ -238,7 +235,7 @@ export class AccountPermissions implements DetectableFeature {
    * @twfeature AccountPermissions
    */
   public async getAllAdmins(): Promise<string[]> {
-    return await this.contractWrapper.readContract.getAllAdmins();
+    return await this.contractWrapper.read("getAllAdmins", []);
   }
 
   /**
@@ -255,7 +252,7 @@ export class AccountPermissions implements DetectableFeature {
    */
   public async getAllSigners(): Promise<SignerWithPermissions[]> {
     const activeSignersWithPerms: IAccountPermissions.SignerPermissionsStruct[] =
-      await this.contractWrapper.readContract.getAllActiveSigners();
+      await this.contractWrapper.read("getAllActiveSigners", []);
 
     return await Promise.all(
       activeSignersWithPerms.map(async (signerWithPermissions) => {
@@ -524,9 +521,9 @@ export class AccountPermissions implements DetectableFeature {
       }
 
       const permissions: IAccountPermissions.SignerPermissionsStruct =
-        await this.contractWrapper.readContract.getPermissionsForSigner(
+        await this.contractWrapper.read("getPermissionsForSigner", [
           resolvedSignerAddress,
-        );
+        ]);
 
       if (permissions.approvedTargets.includes(target)) {
         throw new Error("Target is already approved");
@@ -581,9 +578,9 @@ export class AccountPermissions implements DetectableFeature {
       }
 
       const permissions: IAccountPermissions.SignerPermissionsStruct =
-        await this.contractWrapper.readContract.getPermissionsForSigner(
+        await this.contractWrapper.read("getPermissionsForSigner", [
           resolvedSignerAddress,
-        );
+        ]);
 
       if (!permissions.approvedTargets.includes(resolvedTarget)) {
         throw new Error("Target is currently not approved");

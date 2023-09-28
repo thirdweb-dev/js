@@ -46,6 +46,7 @@ const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
     { mode: "ws", infuraApiKey: "SAMPLE_KEY" },
     [
       "wss://mainnet.infura.io/ws/v3/SAMPLE_KEY",
+      "wss://ethereum.publicnode.com",
       "wss://mainnet.gateway.tenderly.co",
     ],
   ],

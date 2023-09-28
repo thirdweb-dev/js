@@ -2,6 +2,10 @@ export type Palette = {
   buttonBackgroundColor: string;
   buttonTextColor: string;
 
+  accentButtonColor: string;
+  accentButtonTextColor: string;
+
+  backgroundInverted: string;
   background: string;
   backgroundHighlight: string;
 
@@ -36,9 +40,13 @@ export const paletteBase = {
 };
 
 export const paletteLight: Palette = {
-  buttonBackgroundColor: "white",
-  buttonTextColor: "black",
+  buttonBackgroundColor: "black",
+  buttonTextColor: "white",
 
+  accentButtonColor: "#3385FF",
+  accentButtonTextColor: "white",
+
+  backgroundInverted: "#131417",
   background: "#F7F7F9",
   backgroundHighlight: "#FFFFFF",
 
@@ -61,6 +69,10 @@ export const paletteDark: Palette = {
   buttonBackgroundColor: "white",
   buttonTextColor: "black",
 
+  accentButtonColor: "#3385FF",
+  accentButtonTextColor: "white",
+
+  backgroundInverted: "white",
   background: "#131417",
   backgroundHighlight: "#232429",
 

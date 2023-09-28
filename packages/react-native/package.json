@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.2.56",
+  "version": "0.2.62",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint src/ && tsc --noEmit",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc",
@@ -42,6 +42,7 @@
     "expo-secure-store": "^12.1.1",
     "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
+    "react-native-qrcode-svg": "6.2.0",
     "react-native-svg": "^13.9.0",
     "tiny-invariant": "^1.2.0"
   },

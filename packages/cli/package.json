@@ -1,12 +1,12 @@
 {
   "name": "thirdweb",
   "main": "dist/cli/index.js",
-  "version": "0.11.20",
+  "version": "0.12.5",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=16.0.0 <19"
+    "node": ">=16.0.0"
   },
   "devDependencies": {
     "@gmrchk/cli-testing-library": "^0.1.2",
