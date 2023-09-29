@@ -16,13 +16,6 @@ import DownloadIcon from "../assets/download";
 import CopyIcon from "../assets/copy";
 import QRCode from "react-native-qrcode-svg";
 
-// type SendButtonProps = {
-//   chain?: Chain;
-//   onPress?: () => void;
-//   switchChainOnPress?: boolean;
-//   onChainSwitched?: () => void;
-// };
-
 export const ReceiveButton = () => {
   const theme = useAppTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -126,7 +119,11 @@ export const ReceiveFundsModal = ({
             onPress={onAddressPress}
             p="md"
           >
-            <AddressDisplay address={address} variant="bodySmall" />
+            <AddressDisplay
+              address={address}
+              variant="bodySmall"
+              extraShort={false}
+            />
             <CopyIcon width={14} height={14} color={theme.colors.iconPrimary} />
           </BaseButton>
           <Text mt="lg" variant="bodySmallSecondary">
