@@ -1,11 +1,6 @@
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
-import {
-  ConnectModalInline,
-  useDisconnect,
-  useConnectionStatus,
-  Theme,
-} from "@thirdweb-dev/react";
-import React, { useEffect } from "react";
+import { ConnectModalInline, Theme } from "@thirdweb-dev/react";
+import React from "react";
 import styles from "./ConnectModalInline.module.css";
 import {
   WalletId,
@@ -46,16 +41,6 @@ export const ConnectModalInlinePreview = (props: {
     { base: true, md: false },
     { ssr: false },
   );
-  const disconnect = useDisconnect();
-  const walletIdsJoin = props.walletIds.join(",");
-  const connectionStatus = useConnectionStatus();
-
-  // if somehow the wallet is connected, disconnect it
-  useEffect(() => {
-    if (connectionStatus === "connected") {
-      disconnect();
-    }
-  }, [walletIdsJoin, disconnect, connectionStatus]);
 
   return (
     <Flex

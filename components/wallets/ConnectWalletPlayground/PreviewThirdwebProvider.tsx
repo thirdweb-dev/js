@@ -12,6 +12,7 @@ export function PreviewThirdwebProvider(props: {
 }) {
   return (
     <ThirdwebProvider
+      autoConnect={false}
       activeChain="mumbai"
       supportedWallets={
         props.supportedWallets.length > 0 ? props.supportedWallets : undefined
