@@ -25,7 +25,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import Fuse from "fuse.js";
 import { Button } from "../../components/buttons";
 import { useEffect } from "react";
-import { Container, Line, noScrollBar } from "../../components/basic";
+import { Container, Line } from "../../components/basic";
 import { Text } from "../../components/text";
 import { ModalTitle } from "../../components/modalElements";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
@@ -221,7 +221,13 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
             )}
 
             <Container px="md">
-              <Tabs.Content className="TabsContent" value="all">
+              <Tabs.Content
+                className="TabsContent"
+                value="all"
+                style={{
+                  outline: "none",
+                }}
+              >
                 <NetworkTab
                   allChains={allChains}
                   type="all"
@@ -233,7 +239,13 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                 />
               </Tabs.Content>
 
-              <Tabs.Content className="TabsContent" value="mainnet">
+              <Tabs.Content
+                className="TabsContent"
+                value="mainnet"
+                style={{
+                  outline: "none",
+                }}
+              >
                 <NetworkTab
                   allChains={allChains}
                   type="mainnet"
@@ -245,7 +257,13 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
                 />
               </Tabs.Content>
 
-              <Tabs.Content className="TabsContent" value="testnet">
+              <Tabs.Content
+                className="TabsContent"
+                value="testnet"
+                style={{
+                  outline: "none",
+                }}
+              >
                 <NetworkTab
                   allChains={allChains}
                   type="testnet"
@@ -327,9 +345,12 @@ const NetworkTab = (props: {
   );
 
   return (
-    <ScrollContainer
+    <Container
+      scrollY
+      animate="fadein"
       style={{
         height: "330px",
+        paddingBottom: spacing.lg,
       }}
     >
       {recentChains.length > 0 && (
@@ -374,7 +395,7 @@ const NetworkTab = (props: {
         renderChain={props.renderChain}
         close={props.close}
       />
-    </ScrollContainer>
+    </Container>
   );
 };
 
@@ -498,9 +519,11 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
                     )}
 
                     {switchingFailed && (
-                      <Text size="xs" color="danger">
-                        Failed to Switch Network
-                      </Text>
+                      <Container animate="fadein">
+                        <Text size="xs" color="danger">
+                          Failed to Switch Network
+                        </Text>
+                      </Container>
                     )}
                   </Container>
                 </div>
@@ -542,13 +565,6 @@ const SectionLabel = styled.p<{ theme?: Theme }>`
   margin: 0;
   display: block;
   padding: 0 ${spacing.xs};
-`;
-
-const ScrollContainer = styled.div<{ theme?: Theme }>`
-  box-sizing: border-box;
-  overflow: auto;
-  padding-bottom: ${spacing.lg};
-  ${noScrollBar};
 `;
 
 const NetworkListUl = styled.ul<{ theme?: Theme }>`
