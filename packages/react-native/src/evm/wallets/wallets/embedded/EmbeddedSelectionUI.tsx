@@ -116,7 +116,11 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
           </Text>
         )}
       </BaseButton>
-      {errorMessage ? <Text variant="error">{errorMessage}</Text> : null}
+      {errorMessage ? (
+        <Text variant="error" mt="xxs">
+          {errorMessage}
+        </Text>
+      ) : null}
     </Box>
   );
 };

@@ -119,7 +119,11 @@ export const ReceiveFundsModal = ({
             onPress={onAddressPress}
             p="md"
           >
-            <AddressDisplay address={address} variant="bodySmall" />
+            <AddressDisplay
+              address={address}
+              variant="bodySmall"
+              extraShort={false}
+            />
             <CopyIcon width={14} height={14} color={theme.colors.iconPrimary} />
           </BaseButton>
           <Text mt="lg" variant="bodySmallSecondary">

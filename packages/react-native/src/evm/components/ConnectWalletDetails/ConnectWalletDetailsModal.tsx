@@ -214,7 +214,7 @@ export const ConnectWalletDetailsModal = ({
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
-            {activeWallet?.walletId === SmartWallet.id || smartWallet ? (
+            {activeWallet?.walletId === SmartWallet.id ? (
               <BaseButton
                 disabled={!isSmartWalletDeployed}
                 onPress={() => {
