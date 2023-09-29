@@ -5,7 +5,9 @@ export default {
   "rpc": [
     "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbeam.network",
-    "wss://wss.api.moonbeam.network"
+    "wss://wss.api.moonbeam.network",
+    "https://moonbeam.publicnode.com",
+    "wss://moonbeam.publicnode.com"
   ],
   "faucets": [],
   "nativeCurrency": {
