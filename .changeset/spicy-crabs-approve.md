@@ -35,5 +35,9 @@ To use the `embeddedWallet` you need to add the following dependencies to your p
     }
     ```
 
+  - When building the iOS app in release mode for RN 0.71 you need to enable the OpenSSL framework in XCode. There are several solutions for this here:
+    - https://github.com/margelo/react-native-quick-crypto/issues/121#issuecomment-1369924076
+    - https://github.com/margelo/react-native-quick-crypto/issues/121#issuecomment-1537576444
+
 - react-native-aes-gcm-crypto
   - This package requires minSdkVersion = 26 on Android
