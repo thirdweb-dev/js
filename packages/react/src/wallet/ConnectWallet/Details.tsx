@@ -782,11 +782,7 @@ function ConnectedToSmartWallet() {
       }}
     >
       <Container flex="row" gap="xs" center="y">
-        <ActiveDot
-          style={{
-            background: isSmartWalletDeployed ? undefined : "#ffc53d",
-          }}
-        />
+        <ActiveDot />
         Connected to Smart Wallet
       </Container>
       {isSmartWalletDeployed && (
