@@ -791,7 +791,7 @@ function ConnectedToSmartWallet() {
     </Container>
   );
 
-  if (chain && address) {
+  if (chain && address && activeWallet?.walletId === walletIds.smartWallet) {
     return (
       <>
         {isSmartWalletDeployed ? (
