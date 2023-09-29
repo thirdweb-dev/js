@@ -61,7 +61,7 @@ const AuthLanding: ThirdwebNextPage = () => {
         gap={{ base: "80px", md: "120px" }}
       >
         <LandingHeroWithSideImage
-          miniTitle="Storage"
+          miniTitle="Auth"
           title="The complete toolkit for"
           titleWithGradient="Web3 Authentication"
           subtitle="Easy auth for the most popular web3 wallets and web2 login flows — so you can verify your users’ identities & prove wallet ownership to off-chain systems."
