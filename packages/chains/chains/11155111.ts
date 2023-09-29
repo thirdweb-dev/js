@@ -12,7 +12,9 @@ export default {
     "https://rpc-sepolia.rockx.com",
     "https://rpc.sepolia.ethpandaops.io",
     "https://sepolia.gateway.tenderly.co",
-    "wss://sepolia.gateway.tenderly.co"
+    "wss://sepolia.gateway.tenderly.co",
+    "https://ethereum-sepolia.publicnode.com",
+    "wss://ethereum-sepolia.publicnode.com"
   ],
   "faucets": [
     "http://fauceth.komputing.org?chain=11155111&address=${ADDRESS}"

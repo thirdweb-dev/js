@@ -4,7 +4,9 @@ export default {
   "chain": "ETH",
   "rpc": [
     "https://holesky.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.holesky.ethpandaops.io"
+    "https://rpc.holesky.ethpandaops.io",
+    "https://ethereum-holesky.publicnode.com",
+    "wss://ethereum-holesky.publicnode.com"
   ],
   "faucets": [
     "https://faucet.holesky.ethpandaops.io",

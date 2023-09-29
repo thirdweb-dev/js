@@ -12,7 +12,9 @@ export default {
     "https://gnosis-chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chiadochain.net",
     "https://rpc.chiado.gnosis.gateway.fm",
-    "wss://rpc.chiadochain.net/wss"
+    "wss://rpc.chiadochain.net/wss",
+    "https://gnosis-chiado.publicnode.com",
+    "wss://gnosis-chiado.publicnode.com"
   ],
   "faucets": [
     "https://gnosisfaucet.com"
