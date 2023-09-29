@@ -97,7 +97,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
             label="learn-more"
             color="primary.500"
           >
-            Learn more
+            Learn more about Embedded Wallet
           </TrackedLink>
         </Text>
       </Flex>
@@ -212,9 +212,9 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
                   </Text>
                   <TrackedLink
                     isExternal
-                    href="https://portal.thirdweb.com/embedded-wallet"
+                    href="https://portal.thirdweb.com/embedded-wallet/getting-started"
                     category={TRACKING_CATEGORY}
-                    label="get-started"
+                    label="getting-started"
                     color="primary.500"
                   >
                     <Text color="primary.500">
@@ -268,25 +268,12 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
                       category={TRACKING_CATEGORY}
                       label="docs"
                       trackingProps={{ breakdown: "full-docs" }}
-                      href="https://docs.withpaper.com/reference/embedded-wallet-service-overview"
+                      href="https://portal.thirdweb.com/embedded-wallet"
                       isExternal
                       _hover={{ opacity: 0.8 }}
                       color="blue.500"
                     >
                       Full Docs
-                    </TrackedLink>
-                  </Text>
-                  <Text as={ListItem} color="blue.500">
-                    <TrackedLink
-                      category={TRACKING_CATEGORY}
-                      label="docs"
-                      trackingProps={{ breakdown: "integration-guide" }}
-                      href="https://docs.withpaper.com/reference/embedded-wallet-service-integration"
-                      isExternal
-                      _hover={{ opacity: 0.8 }}
-                      color="blue.500"
-                    >
-                      Integration guide
                     </TrackedLink>
                   </Text>
                 </UnorderedList>
@@ -310,13 +297,30 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
                     <TrackedLink
                       category={TRACKING_CATEGORY}
                       label="guides"
-                      trackingProps={{ breakdown: "how-to-user-paper" }}
-                      href="https://blog.thirdweb.com/guides/how-to-use-paper-wallet/"
+                      trackingProps={{
+                        breakdown: "getting-started",
+                      }}
+                      href="https://portal.thirdweb.com/embedded-wallet/getting-started"
                       isExternal
                       _hover={{ opacity: 0.8 }}
                       color="blue.500"
                     >
-                      How to use Paper Wallet
+                      Getting started with Embedded Wallet
+                    </TrackedLink>
+                  </Text>
+                  <Text as={ListItem} color="blue.500">
+                    <TrackedLink
+                      category={TRACKING_CATEGORY}
+                      label="guides"
+                      trackingProps={{
+                        breakdown: "gasless-smart-wallet",
+                      }}
+                      href="https://portal.thirdweb.com/embedded-wallet/smart-wallet-and-embedded-wallet"
+                      isExternal
+                      _hover={{ opacity: 0.8 }}
+                      color="blue.500"
+                    >
+                      Enable gasless transactions with Embedded Smart Wallet
                     </TrackedLink>
                   </Text>
                 </UnorderedList>
