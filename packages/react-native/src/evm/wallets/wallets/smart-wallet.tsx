@@ -20,7 +20,7 @@ export const smartWallet = (
         wcStorage: createSyncStorage("smart-wallet"),
       }),
     connectUI(props) {
-      return <SmartWalletFlow {...props} />;
+      return <SmartWalletFlow {...props} personalWalletConfig={wallet} />;
     },
     selectUI: WalletSelectUI
       ? (props) => {

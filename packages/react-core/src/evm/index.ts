@@ -245,6 +245,7 @@ export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
 export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
+export { useENS } from "./hooks/useENS";
 
 // sdk provider
 export { ThirdwebSDKProvider } from "./providers/thirdweb-sdk-provider";

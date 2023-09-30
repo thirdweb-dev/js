@@ -14,6 +14,7 @@ import {
   SignerWithPermissions,
 } from "../../types";
 import { AccountPermissions } from "./account-permissions";
+import { buildTransactionFunction } from "../../common/transactions";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class Account<TContract extends IAccountCore>
@@ -162,12 +163,14 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async grantAdminPermissions(signerAddress: AddressOrEns) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).grantAdminPermissions(signerAddress);
-  }
+  grantAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
+    async (signerAddress: AddressOrEns) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).grantAdminPermissions.prepare(signerAddress);
+    },
+  );
 
   /**
    * Revoke an address' admin access to the account.
@@ -184,12 +187,14 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async revokeAdminPermissions(signerAddress: AddressOrEns) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).revokeAdminPermissions(signerAddress);
-  }
+  revokeAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
+    async (signerAddress: AddressOrEns) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).revokeAdminPermissions.prepare(signerAddress);
+    },
+  );
 
   /**
    * Grant a signer permissions to use the account.
@@ -207,15 +212,17 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async grantPermissions(
-    signerAddress: AddressOrEns,
-    permissions: SignerPermissionsInput,
-  ) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).grantPermissions(signerAddress, permissions);
-  }
+  grantPermissions = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      signerAddress: AddressOrEns,
+      permissions: SignerPermissionsInput,
+    ) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).grantPermissions.prepare(signerAddress, permissions);
+    },
+  );
 
   /**
    * Update the permissions of a signer for using the account.
@@ -233,15 +240,17 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async updatePermissions(
-    signerAddress: AddressOrEns,
-    permissions: SignerPermissionsInput,
-  ) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).updatePermissions(signerAddress, permissions);
-  }
+  updatePermissions = /* @__PURE__ */ buildTransactionFunction(
+    async (
+      signerAddress: AddressOrEns,
+      permissions: SignerPermissionsInput,
+    ) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).updatePermissions.prepare(signerAddress, permissions);
+    },
+  );
 
   /**
    * Revoke a scoped access address to the account
@@ -258,12 +267,14 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async revokeAccess(signerAddress: AddressOrEns) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).revokeAccess(signerAddress);
-  }
+  revokeAccess = /* @__PURE__ */ buildTransactionFunction(
+    async (signerAddress: AddressOrEns) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).revokeAccess.prepare(signerAddress);
+    },
+  );
 
   /**
    * Approve an address as a call target for a given signer on the account
@@ -281,15 +292,14 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async approveTargetForSigner(
-    signerAddress: AddressOrEns,
-    target: AddressOrEns,
-  ) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).approveTargetForSigner(signerAddress, target);
-  }
+  approveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
+    async (signerAddress: AddressOrEns, target: AddressOrEns) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).approveTargetForSigner.prepare(signerAddress, target);
+    },
+  );
 
   /**
    * Disapprove an address as a call target for a given signer on the account
@@ -307,15 +317,14 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async disapproveTargetForSigner(
-    signerAddress: AddressOrEns,
-    target: AddressOrEns,
-  ) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).disapproveTargetForSigner(signerAddress, target);
-  }
+  disapproveTargetForSigner = /* @__PURE__ */ buildTransactionFunction(
+    async (signerAddress: AddressOrEns, target: AddressOrEns) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).disapproveTargetForSigner.prepare(signerAddress, target);
+    },
+  );
 
   /**
    * Set the account's entire snapshot of permissions.
@@ -332,12 +341,12 @@ export class Account<TContract extends IAccountCore>
    *
    * @twfeature AccountPermissions
    */
-  public async resetAllPermissions(
-    permissionSnapshot: PermissionSnapshotInput,
-  ) {
-    return assertEnabled(
-      this.accountPermissions,
-      FEATURE_ACCOUNT_PERMISSIONS,
-    ).resetAllPermissions(permissionSnapshot);
-  }
+  resetAllPermissions = /* @__PURE__ */ buildTransactionFunction(
+    async (permissionSnapshot: PermissionSnapshotInput) => {
+      return assertEnabled(
+        this.accountPermissions,
+        FEATURE_ACCOUNT_PERMISSIONS,
+      ).resetAllPermissions.prepare(permissionSnapshot);
+    },
+  );
 }
