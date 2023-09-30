@@ -77,6 +77,7 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
             color: theme.colors.textPrimary,
             lineHeight: 16,
             padding: 0,
+            flex: 1,
           },
           value: email,
           keyboardType: "email-address",
