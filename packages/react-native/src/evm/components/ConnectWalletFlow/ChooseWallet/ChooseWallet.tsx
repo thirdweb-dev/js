@@ -40,11 +40,14 @@ export function ChooseWallet({
   const [isConnectAWalletEnabled, setIsConnectAWalletEnabled] = useState(false);
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
-  const emailWallet = wallets.find((w) => w.id === walletIds.magicLink);
+  const emailWallet = wallets.find(
+    (w) => w.id === walletIds.magicLink || w.id === walletIds.embeddedWallet,
+  );
   const connectionWallets = wallets
     .filter(
       (wallet) =>
         wallet.id !== walletIds.magicLink &&
+        wallet.id !== walletIds.embeddedWallet &&
         wallet.id !== walletIds.localWallet,
     )
     .slice(0, 2);
@@ -141,6 +144,7 @@ export function ChooseWallet({
               ...excludeWalletIds,
               walletIds.localWallet,
               walletIds.magicLink,
+              walletIds.embeddedWallet,
             ]}
             onChooseWallet={onChooseWallet}
           />

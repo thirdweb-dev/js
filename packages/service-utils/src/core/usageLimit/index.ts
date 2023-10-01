@@ -43,6 +43,18 @@ export async function usageLimit(
     };
   }
 
+  if (
+    serviceScope === "embeddedWallets" &&
+    (usage.embeddedWallets?.countWalletAddresses || 0) > limit
+  ) {
+    return {
+      usageLimited: true,
+      status: 403,
+      errorMessage: `You've used all of your total usage limit for Embedded Wallets. Please add your payment method at https://thirdweb.com/dashboard/settings/billing.`,
+      errorCode: "PAYMENT_METHOD_REQUIRED",
+    };
+  }
+
   return {
     usageLimited: false,
   };

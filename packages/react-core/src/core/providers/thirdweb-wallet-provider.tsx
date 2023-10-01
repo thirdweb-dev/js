@@ -84,7 +84,7 @@ type ThirdwebWalletContextData = {
   setConnectedWallet: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
-  ) => void;
+  ) => Promise<void>;
   /**
    * Get wallet config object from wallet instance
    */
