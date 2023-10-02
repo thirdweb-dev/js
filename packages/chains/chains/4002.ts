@@ -4,6 +4,7 @@ export default {
   "chain": "FTM",
   "rpc": [
     "https://fantom-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "wss://fantom-testnet.publicnode.com",
     "https://fantom-testnet.publicnode.com",
     "https://rpc.testnet.fantom.network"
   ],

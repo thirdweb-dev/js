@@ -80,7 +80,7 @@ export class LocalWallet extends AbstractClientWallet<
    * load saved wallet data from storage or generate a new one and save it.
    */
   async loadOrCreate(options: LoadOrCreateOptions) {
-    if (await this.getSavedData()) {
+    if (await this.getSavedData(options.storage)) {
       await this.load(options);
     } else {
       await this.generate();

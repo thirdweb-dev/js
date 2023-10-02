@@ -1,6 +1,6 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { TrustWallet } from "@thirdweb-dev/wallets";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
@@ -15,8 +15,20 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const { walletConfig, close } = props;
   const connect = useConnect();
   const hideBackButton = props.supportedWallets.length === 1;
+  const [errorConnecting, setErrorConnecting] = useState(false);
 
-  const { goBack } = props;
+  const connectToExtension = useCallback(async () => {
+    try {
+      setErrorConnecting(false);
+      connectPrompted.current = true;
+      setScreen("connecting");
+      await connect(walletConfig);
+      close();
+    } catch (e) {
+      setErrorConnecting(true);
+      console.error(e);
+    }
+  }, [close, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -31,14 +43,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
     // if loading
     (async () => {
       if (isInstalled) {
-        try {
-          connectPrompted.current = true;
-          setScreen("connecting");
-          await connect(walletConfig);
-          close();
-        } catch (e) {
-          goBack();
-        }
+        connectToExtension();
       }
 
       // if trust is not injected
@@ -52,16 +57,23 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         }
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [connectToExtension, walletConfig]);
+
+  const handleGetStarted = () => {
+    setScreen("get-started");
+  };
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        onRetry={connectToExtension}
+        errorConnecting={errorConnecting}
+        onGetStarted={handleGetStarted}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://community.trustwallet.com/c/helpcenter/8"
+        // supportLink="https://community.trustwallet.com/c/helpcenter/8"
       />
     );
   }
@@ -69,12 +81,17 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        onRetry={() => {
+          // NOOP - TODO make onRetry optional
+        }}
+        errorConnecting={errorConnecting}
+        onGetStarted={handleGetStarted}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
         appUriPrefix={trustWalletUris}
-        supportLink="https://support.trustwallet.com/en/support/home"
+        // supportLink="https://support.trustwallet.com/en/support/home"
       />
     );
   }
@@ -87,9 +104,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={() => {
-          setScreen("scanning");
-        }}
+        onBack={props.goBack}
       />
     );
   }

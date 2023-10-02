@@ -1,5 +1,22 @@
 # @thirdweb-dev/storage
 
+## 1.2.10
+
+### Patch Changes
+
+- [#1565](https://github.com/thirdweb-dev/js/pull/1565) [`3eb9592e`](https://github.com/thirdweb-dev/js/commit/3eb9592e10154e06d2fa5effbc0c1a483f62498f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [Storage] Up default download timeout to 60s + expose option to override
+
+- [#1564](https://github.com/thirdweb-dev/js/pull/1564) [`066b9cfa`](https://github.com/thirdweb-dev/js/commit/066b9cfa09df2531c9e5440477a24edc1374e0e0) Thanks [@nessup](https://github.com/nessup)! - Improve IPFS upload error logging in Node
+
+- [#1569](https://github.com/thirdweb-dev/js/pull/1569) [`1e6f9dcc`](https://github.com/thirdweb-dev/js/commit/1e6f9dcc04022c6a8a39d490123a3e22e52b5e0b) Thanks [@Marfuen](https://github.com/Marfuen)! - Use a different globalThis for CLI related flow.
+
+## 1.2.9
+
+### Patch Changes
+
+- [#1422](https://github.com/thirdweb-dev/js/pull/1422) [`0f027069`](https://github.com/thirdweb-dev/js/commit/0f027069064bebe647f9235fa86ef7f165ffc7b3) Thanks [@Marfuen](https://github.com/Marfuen)! - CLI will now use an OAuth like login flow to authenticate the device with the wallet on the dashboard.
+  Any actions performed by the CLI will be linked to your account / wallet on the dashboard, including but not limited to tracking your usage, and billing as needed.
+
 ## 1.2.8
 
 ### Patch Changes

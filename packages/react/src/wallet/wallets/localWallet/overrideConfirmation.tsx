@@ -1,10 +1,8 @@
 import { Button } from "../../../components/buttons";
-import { SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { Spacer } from "../../../components/Spacer";
-import { ModalTitle } from "../../../components/modalElements";
-import { LocalWalletModalHeader } from "./common";
-import { FormFooter } from "../../../components/formElements";
 import { WalletConfig } from "@thirdweb-dev/react-core";
+import { Container, ModalHeader } from "../../../components/basic";
 
 export const OverrideConfirmation: React.FC<{
   onBackup: () => void;
@@ -12,29 +10,29 @@ export const OverrideConfirmation: React.FC<{
   meta: WalletConfig["meta"];
 }> = (props) => {
   return (
-    <>
-      <LocalWalletModalHeader onBack={props.onBack} meta={props.meta} />
-      <ModalTitle>Backup your wallet</ModalTitle>
+    <Container p="lg">
+      <ModalHeader onBack={props.onBack} title="Warning" />
+      <Spacer y="xl" />
 
-      <Spacer y="md" />
-      <div
-        style={{
-          lineHeight: 1.5,
-        }}
-      >
-        <SecondaryText>
+      <Container>
+        <Text multiline>
           Your current wallet will be deleted if you create a new wallet. Backup
           wallet to your device before creating a new wallet
-        </SecondaryText>
+        </Text>
 
         <Spacer y="xl" />
 
-        <FormFooter>
-          <Button variant="inverted" onClick={props.onBackup}>
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button variant="accent" fullWidth onClick={props.onBackup}>
             Backup wallet
           </Button>
-        </FormFooter>
-      </div>
-    </>
+        </Container>
+      </Container>
+    </Container>
   );
 };

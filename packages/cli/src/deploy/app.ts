@@ -8,11 +8,17 @@ import { upload } from "../storage/command";
 export async function deployApp(
   distPath = "dist",
   projectPath = ".",
-  apiSecretKey: string,
+  secretKey: string,
 ) {
-  const storage = new ThirdwebStorage({
-    secretKey: apiSecretKey,
-  });
+  let storage: ThirdwebStorage;
+  if (secretKey) {
+    storage = new ThirdwebStorage({
+      secretKey,
+    });
+  } else {
+    // Since the auth key is being set in the global context, we don't need to pass anything here.
+    storage = new ThirdwebStorage();
+  }
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(
     projectPath,
@@ -74,8 +80,8 @@ export async function deployApp(
       "ipfs://",
       "https://cf-ipfs.com/ipfs/",
     )}`;
-  } catch (err) {
-    console.error("Can't upload project", err);
+  } catch (err: any) {
+    console.error(err.message ? err.message : err);
     return Promise.reject("Can't upload project");
   }
 }

@@ -7,10 +7,7 @@ export default {
     "https://rpc.energyweb.org",
     "wss://rpc.energyweb.org/ws"
   ],
-  "faucets": [
-    "https://faucet.carbonswap.exchange",
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Energy Web Token",
     "symbol": "EWT",

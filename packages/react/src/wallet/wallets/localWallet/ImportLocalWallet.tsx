@@ -1,10 +1,7 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
+import { ModalDescription } from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import {
   useCreateWalletInstance,
@@ -13,10 +10,9 @@ import {
 import { useState } from "react";
 import { DragNDrop } from "../../../components/DragNDrop";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
-import { FormFooter } from "../../../components/formElements";
 import { LocalWallet } from "@thirdweb-dev/wallets";
-import { LocalWalletModalHeader } from "./common";
 import type { LocalWalletConfig } from "./types";
+import { Container, Line, ModalHeader } from "../../../components/basic";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
@@ -70,97 +66,108 @@ export const ImportLocalWallet: React.FC<{
   };
 
   return (
-    <>
-      <LocalWalletModalHeader onBack={props.goBack} meta={meta} />
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Import Wallet
-      </ModalTitle>
-      <Spacer y="md" />
+    <Container>
+      <Container p="lg">
+        <ModalHeader
+          onBack={props.goBack}
+          title="Import Wallet"
+          imgSrc={meta.iconURL}
+        />
+      </Container>
+      <Line />
 
-      <ModalDescription>
-        The application can authorize any transactions on behalf of the wallet
-        without any approvals. We recommend only connecting to trusted
-        applications.
-      </ModalDescription>
+      <Container p="lg">
+        <ModalDescription sm>
+          The application can authorize any transactions on behalf of the wallet
+          without any approvals.
+        </ModalDescription>
 
-      <Spacer y="lg" />
+        <Spacer y="xs" />
 
-      <DragNDrop
-        extension="JSON"
-        accept="application/json"
-        onUpload={(file) => {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            setJsonString(event.target?.result as string);
-            const obj = JSON.parse(event.target?.result as string);
-            setImportedAddress(obj.address);
-          };
-          reader.readAsText(file, "utf-8");
-        }}
-      />
+        <ModalDescription sm>
+          We recommend only connecting to trusted applications.
+        </ModalDescription>
 
-      <Spacer y="lg" />
+        <Spacer y="lg" />
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleImport();
-        }}
-      >
-        {/* Password */}
-        {jsonString && (
-          <>
-            {/* Hidden Account Address as Username */}
-            <input
-              type="text"
-              name="username"
-              autoComplete="off"
-              value={importedAddress || ""}
-              disabled
-              style={{ display: "none" }}
-            />
+        <DragNDrop
+          extension="JSON"
+          accept="application/json"
+          onUpload={(file) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              setJsonString(event.target?.result as string);
+              const obj = JSON.parse(event.target?.result as string);
+              setImportedAddress(obj.address);
+            };
+            reader.readAsText(file, "utf-8");
+          }}
+        />
 
-            <FormFieldWithIconButton
-              required
-              noSave={true}
-              name="password"
-              autocomplete="off"
-              id="password"
-              onChange={(value) => {
-                setPassword(value);
-                setIsWrongPassword(false);
-              }}
-              right={{
-                onClick: () => setShowPassword(!showPassword),
-                icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
-              }}
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              error={isWrongPassword ? "Wrong Password" : ""}
-            />
-            <Spacer y="xl" />
-          </>
-        )}
+        <Spacer y="lg" />
 
-        <FormFooter>
-          <Button
-            variant="inverted"
-            type="submit"
-            disabled={!jsonString}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleImport();
+          }}
+        >
+          {/* Password */}
+          {jsonString && (
+            <>
+              {/* Hidden Account Address as Username */}
+              <input
+                type="text"
+                name="username"
+                autoComplete="off"
+                value={importedAddress || ""}
+                disabled
+                style={{ display: "none" }}
+              />
+
+              <FormFieldWithIconButton
+                required
+                noSave={true}
+                name="password"
+                autocomplete="off"
+                id="password"
+                onChange={(value) => {
+                  setPassword(value);
+                  setIsWrongPassword(false);
+                }}
+                right={{
+                  onClick: () => setShowPassword(!showPassword),
+                  icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+                }}
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                error={isWrongPassword ? "Wrong Password" : ""}
+              />
+              <Spacer y="xl" />
+            </>
+          )}
+
+          <Container
+            flex="row"
             style={{
-              minWidth: "110px",
-              opacity: jsonString ? 1 : 0.5,
+              justifyContent: "flex-end",
             }}
           >
-            Import
-          </Button>
-        </FormFooter>
-      </form>
-    </>
+            <Button
+              variant="accent"
+              type="submit"
+              disabled={!jsonString}
+              style={{
+                minWidth: "110px",
+                opacity: jsonString ? 1 : 0.5,
+              }}
+            >
+              Import
+            </Button>
+          </Container>
+        </form>
+      </Container>
+    </Container>
   );
 };

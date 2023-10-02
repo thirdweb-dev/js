@@ -1,34 +1,35 @@
+import type { BlockTag } from "@ethersproject/abstract-provider";
+import type { IERC20 } from "@thirdweb-dev/contracts-js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  BigNumber,
+  Wallet,
+  utils,
+  type BigNumberish,
+  type Signer,
+  type TypedDataField,
+  type providers,
+} from "ethers";
+import EventEmitter from "eventemitter3";
+import invariant from "tiny-invariant";
+import { getDefaultGasOverrides } from "../../common";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { isNativeToken } from "../../common/currency/isNativeToken";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
 import { LOCAL_NODE_PKEY } from "../../constants/addresses/LOCAL_NODE_PKEY";
 import { ChainId } from "../../constants/chains/ChainId";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { getChainProvider } from "../../constants/urls";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { Amount, CurrencyValue } from "../../types/currency";
+import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import {
-  type BigNumberish,
-  BigNumber,
-  utils,
-  type providers,
-  type Signer,
-  type TypedDataField,
-  Wallet,
-} from "ethers";
-import EventEmitter from "eventemitter3";
-import invariant from "tiny-invariant";
-import type { BlockTag } from "@ethersproject/abstract-provider";
-import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
-import { isNativeToken } from "../../common/currency/isNativeToken";
-import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ContractWrapper } from "../classes/contract-wrapper";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -150,9 +151,9 @@ export class UserWallet {
     if (isNativeToken(resolvedCurrency)) {
       balance = await provider.getBalance(await this.getAddress());
     } else {
-      balance = await this.createErc20(resolvedCurrency).readContract.balanceOf(
+      balance = await this.createErc20(resolvedCurrency).read("balanceOf", [
         await this.getAddress(),
-      );
+      ]);
     }
     return await fetchCurrencyValue(provider, resolvedCurrency, balance);
   }
@@ -282,9 +283,33 @@ export class UserWallet {
    */
   public async sendRawTransaction(
     transactionRequest: providers.TransactionRequest,
-  ): Promise<TransactionResult> {
+  ): Promise<providers.TransactionResponse> {
     const signer = this.requireWallet();
-    const tx = await signer.sendTransaction(transactionRequest);
+    const hasGasPrice = !!transactionRequest.gasPrice;
+    const hasFeeData =
+      !!transactionRequest.maxFeePerGas &&
+      !!transactionRequest.maxPriorityFeePerGas;
+    const hasGasData = hasGasPrice || hasFeeData;
+    if (!hasGasData) {
+      // set default gas values
+      const defaultGas = await getDefaultGasOverrides(
+        this.connection.getProvider(),
+      );
+      transactionRequest.maxFeePerGas = defaultGas.maxFeePerGas;
+      transactionRequest.maxPriorityFeePerGas = defaultGas.maxPriorityFeePerGas;
+      transactionRequest.gasPrice = defaultGas.gasPrice;
+    }
+    return signer.sendTransaction(transactionRequest);
+  }
+
+  /**
+   * Execute a raw transaction to the blockchain from the connected wallet and wait for it to be mined
+   * @param transactionRequest - raw transaction data to send to the blockchain
+   */
+  public async executeRawTransaction(
+    transactionRequest: providers.TransactionRequest,
+  ): Promise<TransactionResult> {
+    const tx = await this.sendRawTransaction(transactionRequest);
     return {
       receipt: await tx.wait(),
     };

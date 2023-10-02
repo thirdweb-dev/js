@@ -46,6 +46,7 @@ export class HttpRpcClient {
         }
       }
 
+      // Dashboard token
       if (
         typeof globalThis !== "undefined" &&
         "TW_AUTH_TOKEN" in globalThis &&
@@ -54,6 +55,18 @@ export class HttpRpcClient {
         headers["authorization"] = `Bearer ${
           (globalThis as any).TW_AUTH_TOKEN as string
         }`;
+      }
+
+      // CLI token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_CLI_AUTH_TOKEN as string
+        }`;
+        headers["x-authorize-wallet"] = "true";
       }
 
       headers["x-sdk-version"] = pkg.version;

@@ -17,6 +17,7 @@ export type WalletClass<I extends WalletInstance = WalletInstance> = {
 };
 
 export type WalletConfig<I extends WalletInstance = WalletInstance> = {
+  category?: "socialLogin" | "walletLogin";
   id: string;
   meta: (typeof AbstractClientWallet)["meta"];
   create: (options: WalletOptions) => I;
@@ -39,6 +40,11 @@ export type WalletConfig<I extends WalletInstance = WalletInstance> = {
    * * ConnectWallet modal will reopen once the personal wallet is connected so that you can render UI for connecting your wallet as the next step
    */
   personalWallets?: WalletConfig[];
+
+  /**
+   * If true, this wallet will be tagged as "recommended" in ConnectWallet Modal and will be shown at the top of the list
+   */
+  recommended?: boolean;
 };
 
 export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
@@ -127,6 +133,20 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
    * List of all supported wallets including your wallet.
    */
   supportedWallets: WalletConfig[];
+
+  /**
+   * Size of the modal
+   *
+   * This is always `compact` on React Native
+   */
+  modalSize: "compact" | "wide";
+
+  /**
+   * Called when the wallet is connected but it's
+   * part of another wallet's connection flow.
+   * @param walleInstance the instance of the connected wallet
+   */
+  onLocallyConnected?: (walleInstance: WalletInstance) => void;
 };
 
 export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
@@ -156,4 +176,11 @@ export type SelectUIProps<I extends WalletInstance = WalletInstance> = {
    * theme of the connect wallet modal
    */
   theme: "dark" | "light";
+
+  /**
+   * Size of the modal
+   *
+   * This is always `compact` on React Native
+   */
+  modalSize: "compact" | "wide";
 };

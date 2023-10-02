@@ -58,11 +58,17 @@ import {
   DirectListingsLogic__factory,
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
+  Forwarder__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
 import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
+import { mockUploadMetadataWithBytecode } from "./utils";
+import {
+  bytecode as TWCloneFactoryBytecode,
+  abi as TWCloneFactoryAbi,
+} from "./metadata/TWCloneFactory";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -131,6 +137,8 @@ export const mochaHooks = {
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
+
+    await uploadAutoFactoryInfra();
 
     const mock_weth_deployer = new ethers.ContractFactory(
       weth.abi,
@@ -404,6 +412,44 @@ async function setupMarketplaceV3(): Promise<string> {
     "MarketplaceV3",
   );
   return marketplaceV3Address;
+}
+
+async function uploadAutoFactoryInfra() {
+  // mock upload Forwarder
+  await mockUploadMetadataWithBytecode(
+    "Forwarder",
+    Forwarder__factory.abi,
+    Forwarder__factory.bytecode,
+    "",
+    {
+      ...extendedMetadataMock,
+      deployType: "standard",
+      networksForDeployment: {
+        allNetworks: true,
+        networksEnabled: [],
+      },
+    },
+    "ipfs://Qmcu8FaqerUvQYb4qPg7PwkXa6dRtEe45LedLJPN42Jwqe/0",
+    // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
+  );
+
+  // mock upload TWCloneFactory
+  await mockUploadMetadataWithBytecode(
+    "Forwarder",
+    TWCloneFactoryAbi,
+    TWCloneFactoryBytecode,
+    "",
+    {
+      ...extendedMetadataMock,
+      deployType: "standard",
+      networksForDeployment: {
+        allNetworks: true,
+        networksEnabled: [],
+      },
+    },
+    "ipfs://QmYfw13Zykqf9jAmJobNgYrEpatEF9waWcQPUHvJ7sctRb/0",
+    // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
+  );
 }
 
 export {

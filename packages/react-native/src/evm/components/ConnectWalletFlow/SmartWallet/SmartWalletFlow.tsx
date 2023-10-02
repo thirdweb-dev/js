@@ -1,211 +1,195 @@
 import { useCallback, useEffect, useState } from "react";
 import {
+  ConnectUIProps,
   WalletConfig,
   WalletInstance,
   useConnect,
   useCreateWalletInstance,
-  useSupportedWallet,
   useWalletContext,
-  useWallets,
 } from "@thirdweb-dev/react-core";
-import { SmartWalletObj } from "../../../wallets/wallets/smart-wallet";
-import { localWallet } from "../../../wallets/wallets/local-wallet";
-import { ChooseWallet } from "../ChooseWallet/ChooseWallet";
-import { LocalWalletFlow } from "../LocalWalletFlow";
-import { ModalHeaderTextClose } from "../../base/modal/ModalHeaderTextClose";
-import { ActivityIndicator, Linking, useColorScheme } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
-import { walletIds } from "@thirdweb-dev/wallets";
+import { SmartWallet } from "@thirdweb-dev/wallets";
+import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/WalletLoadingThumbnail";
+import ImageSvgUri from "../../base/ImageSvgUri";
+import Box from "../../base/Box";
+import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
 import { useAppTheme } from "../../../styles/hooks";
-import { DEFAULT_WALLETS } from "../../../constants/wallets";
 
 export const SmartWalletFlow = ({
-  onClose,
-  onConnect,
-}: {
-  onClose: () => void;
-  onConnect: () => void;
-}) => {
-  const [showLocalWalletFlow, setShowLocalWalletFlow] = useState<boolean>();
+  close,
+  goBack,
+  walletConfig,
+  personalWalletConfig,
+  ...props
+}: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
+  const theme = useAppTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
-  const [isConnecting, setIsConnecting] = useState(false);
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
     number | undefined
   >();
-  const theme = useAppTheme();
+  const [switchingNetwork, setSwitchingNetwork] = useState(false);
   const createWalletInstance = useCreateWalletInstance();
-  const walletObj = useSupportedWallet(walletIds.smartWallet) as SmartWalletObj;
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
-  const colorScheme = useColorScheme();
-  const supportedWallets = useWallets();
 
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
     : false;
 
+  const PersonalWalletConfigUI = personalWalletConfig.connectUI;
+
+  const connectSmartWallet = useCallback(
+    async (personalWallet: WalletInstance) => {
+      const eoaWalletChainId = await personalWallet.getChainId();
+
+      if (eoaWalletChainId === targetChain.chainId) {
+        await connect(walletConfig, {
+          personalWallet: personalWallet,
+        });
+        close();
+      } else {
+        setPersonalWalletChaindId(eoaWalletChainId);
+      }
+    },
+    [close, connect, targetChain.chainId, walletConfig],
+  );
+
   const connectPersonalWallet = useCallback(
     async (wallet: WalletConfig) => {
-      setIsConnecting(true);
       const walletInstance = createWalletInstance(wallet);
       await walletInstance.connect();
 
       setConnectedPersonalWallet(walletInstance);
-    },
-    [createWalletInstance],
-  );
 
-  const onChoosePersonalWallet = useCallback(
-    async (wallet: WalletConfig) => {
-      // if (wallet.id === LocalWallet.id) {
-      //   setShowLocalWalletFlow(true);
-      // } else {
-      connectPersonalWallet(wallet);
-      // }
+      connectSmartWallet(walletInstance);
     },
-    [connectPersonalWallet],
+    [connectSmartWallet, createWalletInstance],
   );
 
   useEffect(() => {
-    if (walletObj.personalWallets?.length === 1) {
-      onChoosePersonalWallet(walletObj.personalWallets[0]);
+    if (walletConfig.personalWallets?.[0] && !PersonalWalletConfigUI) {
+      connectPersonalWallet(walletConfig.personalWallets[0]);
     }
-  }, [onChoosePersonalWallet, walletObj.personalWallets]);
-
-  useEffect(() => {
-    (async () => {
-      if (connectedPersonalWallet) {
-        const chainId = await connectedPersonalWallet.getChainId();
-        setPersonalWalletChaindId(chainId);
-      }
-    })();
-  }, [connectedPersonalWallet]);
-
-  const connectSmartWallet = useCallback(
-    async (personalWallet: WalletInstance) => {
-      if (!mismatch && personalWalletChainId) {
-        await connect(walletObj, {
-          personalWallet: personalWallet,
-        });
-        onConnect();
-      }
-    },
-    [connect, mismatch, onConnect, personalWalletChainId, walletObj],
-  );
-
-  useEffect(() => {
-    if (connectedPersonalWallet) {
-      if (!mismatch) {
-        connectSmartWallet(connectedPersonalWallet);
-      }
-    }
-  }, [connectSmartWallet, connectedPersonalWallet, mismatch]);
-
-  const onConnectedLocalWallet = async (wallet: WalletInstance) => {
-    setIsConnecting(true);
-
-    connectSmartWallet(wallet);
-  };
-
-  const onLocalWalletBackPress = () => {
-    setShowLocalWalletFlow(false);
-  };
+  }, [
+    PersonalWalletConfigUI,
+    connectPersonalWallet,
+    walletConfig.personalWallets,
+  ]);
 
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
     reset();
+    close();
+  };
+
+  const onConnectingBackPress = () => {
+    connectedPersonalWallet?.disconnect();
+    reset();
+    goBack();
   };
 
   const onSwitchNetworkPress = async () => {
-    await connectedPersonalWallet?.switchChain(targetChain.chainId);
-    setPersonalWalletChaindId(targetChain.chainId);
+    if (connectedPersonalWallet) {
+      setSwitchingNetwork(true);
+      await connectedPersonalWallet?.switchChain(targetChain.chainId);
+      setSwitchingNetwork(false);
+      setPersonalWalletChaindId(targetChain.chainId);
+      connectSmartWallet(connectedPersonalWallet);
+    }
   };
 
   const reset = () => {
-    setIsConnecting(false);
     setConnectedPersonalWallet(undefined);
     setPersonalWalletChaindId(undefined);
   };
 
-  const onLearnMorePress = () => {
-    Linking.openURL("https://portal.thirdweb.com/wallet/smart-wallet");
-  };
-
-  if (isConnecting) {
-    return (
-      <>
-        <ModalHeaderTextClose
-          onClose={onConnectingClosePress}
-          headerText={mismatch ? "Network Mismatch" : "Connecting smart wallet"}
-          subHeaderText={
-            mismatch
-              ? "There's a network mismatch between your contract and your wallet"
-              : ""
-          }
-        />
-
-        {mismatch ? null : (
-          <ActivityIndicator size="large" color={theme.colors.linkPrimary} />
-        )}
-
-        {mismatch === true ? (
-          <BaseButton
-            marginVertical="sm"
-            flexDirection="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            paddingHorizontal="md"
-            paddingVertical="sm"
-            borderRadius="sm"
-            backgroundColor="backgroundHighlight"
-            onPress={onSwitchNetworkPress}
-          >
-            <Text variant="bodyLarge">Switch Network</Text>
-          </BaseButton>
-        ) : null}
-      </>
-    );
-  }
-
-  if (showLocalWalletFlow) {
-    return (
-      <LocalWalletFlow
-        theme={colorScheme || "dark"}
-        close={onClose}
-        goBack={onLocalWalletBackPress}
-        onConnected={onConnectedLocalWallet}
-        isOpen={false}
-        open={() => {}}
-        walletConfig={localWallet()}
-        selectionData={undefined} // TODO
-        setSelectionData={() => {}} // TODO
-        supportedWallets={supportedWallets} // TODO - pass personal wallets instead
-      />
-    );
-  }
+  const onPersonalWalletConnected = useCallback(
+    (walletInstance: WalletInstance) => {
+      setConnectedPersonalWallet(walletInstance);
+      connectSmartWallet(walletInstance);
+    },
+    [connectSmartWallet],
+  );
 
   return (
-    <ChooseWallet
-      headerText={"Link key"}
-      subHeaderText={
-        <Text variant="subHeader">
-          {
-            "Choose a personal wallet that acts as your account's key. This controls access to your account. "
-          }
-          <Text
-            variant="subHeader"
-            color="linkPrimary"
-            onPress={onLearnMorePress}
-          >
-            Learn more.
-          </Text>
-        </Text>
-      }
-      wallets={walletObj.personalWallets || DEFAULT_WALLETS}
-      onChooseWallet={onChoosePersonalWallet}
-      onClose={onClose}
-    />
+    <>
+      {PersonalWalletConfigUI && !connectedPersonalWallet ? (
+        <PersonalWalletConfigUI
+          {...props}
+          close={close}
+          goBack={goBack}
+          walletConfig={personalWalletConfig}
+          onLocallyConnected={onPersonalWalletConnected}
+        />
+      ) : (
+        <Box paddingHorizontal="xl">
+          <ConnectWalletHeader
+            subHeaderText=""
+            onBackPress={onConnectingBackPress}
+            onClose={onConnectingClosePress}
+          />
+          <WalletLoadingThumbnail imageSize={100}>
+            <ImageSvgUri
+              height={80}
+              width={80}
+              imageUrl={walletConfig.meta.iconURL}
+            />
+          </WalletLoadingThumbnail>
+          <View style={styles.connectingContainer}>
+            <>
+              <Text variant="header" mt="lg" textAlign="center">
+                {mismatch ? "Network Mismatch" : "Connecting..."}
+              </Text>
+              {mismatch ? (
+                <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
+                  {
+                    "There's a network mismatch between your contract and your wallet"
+                  }
+                </Text>
+              ) : null}
+            </>
+          </View>
+        </Box>
+      )}
+
+      {mismatch === true ? (
+        <BaseButton
+          marginVertical="sm"
+          mt="md"
+          marginHorizontal="xl"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+          paddingHorizontal="md"
+          paddingVertical="sm"
+          borderRadius="sm"
+          backgroundColor="backgroundHighlight"
+          onPress={onSwitchNetworkPress}
+        >
+          {switchingNetwork ? (
+            <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+          ) : (
+            <Text variant="bodyLarge" textAlign="center">
+              Switch Network
+            </Text>
+          )}
+        </BaseButton>
+      ) : null}
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  connectingContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 4,
+    marginBottom: 24,
+    marginTop: 18,
+  },
+});

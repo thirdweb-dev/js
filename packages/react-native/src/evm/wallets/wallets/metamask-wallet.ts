@@ -2,13 +2,14 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WCMeta } from "../types/wc";
 import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
+import { WalletConnectConfig } from "./wallet-connect/wallet-connect";
+import { METAMASK_ICON } from "../../assets/svgs";
 
 export class MetaMaskWallet extends WalletConnectBase {
   static id = walletIds.metamask;
   static meta = {
     name: "MetaMask",
-    iconURL:
-      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+    iconURL: METAMASK_ICON,
     links: {
       native: "metamask:",
       universal: "https://metamask.app.link",
@@ -20,9 +21,7 @@ export class MetaMaskWallet extends WalletConnectBase {
   }
 }
 
-type MetaMaskWalletConfig = { projectId?: string };
-
-export const metamaskWallet = (config?: MetaMaskWalletConfig) => {
+export const metamaskWallet = (config?: WalletConnectConfig) => {
   return {
     id: MetaMaskWallet.id,
     meta: MetaMaskWallet.meta,
@@ -32,5 +31,6 @@ export const metamaskWallet = (config?: MetaMaskWalletConfig) => {
         walletId: walletIds.metamask,
         projectId: config?.projectId,
       }),
+    recommended: config?.recommended,
   } satisfies WalletConfig;
 };

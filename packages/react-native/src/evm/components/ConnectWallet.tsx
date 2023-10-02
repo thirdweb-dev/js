@@ -1,4 +1,3 @@
-import { ThemeProvider } from "../styles/ThemeProvider";
 import {
   ConnectWalletDetailsProps,
   WalletDetailsButton,
@@ -9,12 +8,15 @@ import {
   useSwitchChain,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
+import { useUIContext } from "../providers/ui-context-provider";
+import { ThemeProvider } from "../styles/ThemeProvider";
+import { SupportedTokens, defaultTokens } from "./SendFunds/defaultTokens";
 
 export type ConnectWalletProps = {
   /**
@@ -44,6 +46,25 @@ export type ConnectWalletProps = {
    * @default false
    */
   switchToActiveChain?: boolean;
+
+  /**
+   * Override the default supported tokens for each network
+   *
+   * These tokens will be displayed in "Send Funds" Modal
+   */
+  supportedTokens?: SupportedTokens;
+
+  /**
+   * Show balance of ERC20 token instead of the native token  in the "Connected" button when connected to certain network
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet balanceToken={{
+   *  1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
+   * }} />
+   * ```
+   */
+  displayBalanceToken?: Record<number, string>;
 } & ConnectWalletButtonProps;
 
 export const ConnectWallet = ({
@@ -51,9 +72,14 @@ export const ConnectWallet = ({
   theme,
   buttonTitle,
   modalTitle,
+  modalTitleIconUrl,
   extraRows,
   hideTestnetFaucet,
+  displayBalanceToken,
   switchToActiveChain,
+  termsOfServiceUrl,
+  privacyPolicyUrl,
+  supportedTokens,
 }: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
@@ -62,6 +88,7 @@ export const ConnectWallet = ({
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
   const [switching, setSwitching] = useState(false);
+  const setTheme = useUIContext().setTheme;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -70,6 +97,26 @@ export const ConnectWallet = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+
+  useEffect(() => {
+    if (theme) {
+      setTheme(theme);
+    }
+  }, [setTheme, theme]);
+
+  const supportedTokensMemo = useMemo(() => {
+    if (!supportedTokens) {
+      return defaultTokens;
+    }
+
+    const tokens = { ...defaultTokens };
+    for (const k in supportedTokens) {
+      const key = Number(k);
+      tokens[key] = supportedTokens[key];
+    }
+
+    return tokens;
+  }, [supportedTokens]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -105,13 +152,18 @@ export const ConnectWallet = ({
               detailsButton={detailsButton}
               extraRows={extraRows}
               hideTestnetFaucet={hideTestnetFaucet}
+              supportedTokens={supportedTokensMemo}
+              displayBalanceToken={displayBalanceToken}
             />
           )
         ) : (
           <ConnectWalletButton
             modalTitle={modalTitle}
             buttonTitle={buttonTitle}
+            modalTitleIconUrl={modalTitleIconUrl}
             theme={theme}
+            termsOfServiceUrl={termsOfServiceUrl}
+            privacyPolicyUrl={privacyPolicyUrl}
           />
         )}
       </Animated.View>

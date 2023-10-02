@@ -6,7 +6,9 @@ export default {
     "https://darwinia-pangoro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangoro-rpc.darwinia.network"
   ],
-  "faucets": [],
+  "faucets": [
+    "https://docs.darwinia.network/pangoro-testnet-70cfec5dc9ca42759959ba3803edaec2"
+  ],
   "nativeCurrency": {
     "name": "Pangoro Network Native Token",
     "symbol": "ORING",

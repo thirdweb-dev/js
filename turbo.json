@@ -8,17 +8,12 @@
     "@thirdweb-dev/chains#build": {
       "outputs": ["dist/**", "chains/**"],
       "dependsOn": ["^build"],
-      "inputs": [
-        "package.json",
-        "scripts/**",
-        "data/**",
-        "src/types.ts",
-        "src/utils.ts"
-      ]
+      "inputs": ["package.json", "scripts/**", "data/**", "src/**", "chains/**"]
     },
     "@thirdweb-dev/wallets#build": {
       "outputs": ["dist/**", "evm/**", "solana/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": ["THIRDWEB_EWS_SDK_VERSION"]
     },
     "@thirdweb-dev/pay#build": {
       "outputs": ["dist/**", "integrations/**"],

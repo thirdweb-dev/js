@@ -3,7 +3,7 @@ import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const Spinner: React.FC<{
-  color: keyof Theme["icon"];
+  color: keyof Theme["colors"];
   size: keyof typeof iconSize;
 }> = (props) => {
   const theme = useTheme() as Theme;
@@ -20,7 +20,7 @@ export const Spinner: React.FC<{
         cy="25"
         r="20"
         fill="none"
-        stroke={theme.icon[props.color || "primary"]}
+        stroke={theme.colors[props.color]}
         strokeWidth="4"
       />
     </Svg>

@@ -84,12 +84,13 @@ type ThirdwebWalletContextData = {
   setConnectedWallet: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
-  ) => void;
+  ) => Promise<void>;
   /**
    * Get wallet config object from wallet instance
    */
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
   activeChainSetExplicitly: boolean;
+  clientId?: string;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -483,6 +484,7 @@ export function ThirdwebWalletProvider(
           return walletInstanceToConfig.get(walletInstance);
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
+        clientId: props.clientId,
       }}
     >
       {props.children}

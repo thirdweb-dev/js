@@ -1,14 +1,12 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Unicorn Ultra Testnet",
+  "name": "U2U Solaris Mainnet",
   "chain": "u2u",
   "rpc": [
-    "https://unicorn-ultra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.uniultra.xyz"
+    "https://u2u-solaris.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.uniultra.xyz"
   ],
-  "faucets": [
-    "https://faucet.uniultra.xyz"
-  ],
+  "faucets": [],
   "nativeCurrency": {
     "name": "Unicorn Ultra",
     "symbol": "U2U",
@@ -33,10 +31,10 @@ export default {
         "format": "png"
       },
       "name": "U2U Explorer",
-      "url": "https://testnet.uniultra.xyz",
+      "url": "https://u2uscan.xyz",
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "unicorn-ultra-testnet"
+  "testnet": false,
+  "slug": "u2u-solaris"
 } as const satisfies Chain;

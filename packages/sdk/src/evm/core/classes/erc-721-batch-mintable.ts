@@ -1,18 +1,18 @@
+import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IMintableERC721";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { uploadOrExtractURIs } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_BATCH_MINTABLE } from "../../constants/erc721-features";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import type { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { IMintableERC721 } from "@thirdweb-dev/contracts-js";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { uploadOrExtractURIs } from "../../common/nft";
-import type { IMulticall } from "@thirdweb-dev/contracts-js";
-import type { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IMintableERC721";
 import type { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 
 /**
  * Mint Many ERC721 NFTs at once
@@ -73,15 +73,13 @@ export class Erc721BatchMintable implements DetectableFeature {
       to: AddressOrEns,
       metadatas: NFTMetadataOrUri[],
     ): Promise<Transaction<TransactionResultWithId<NFT>[]>> => {
-      const uris = await uploadOrExtractURIs(metadatas, this.storage);
-      const resolvedAddress = await resolveAddress(to);
-      const encoded = await Promise.all(
-        uris.map(async (uri) =>
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "mintTo",
-            [resolvedAddress, uri],
-          ),
-        ),
+      const [uris, resolvedAddress] = await Promise.all([
+        uploadOrExtractURIs(metadatas, this.storage),
+        resolveAddress(to),
+      ]);
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
+      const encoded = uris.map((uri) =>
+        contractEncoder.encode("mintTo", [resolvedAddress, uri]),
       );
 
       return Transaction.fromContractWrapper({

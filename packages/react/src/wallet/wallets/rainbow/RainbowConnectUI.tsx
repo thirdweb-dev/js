@@ -1,22 +1,36 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
-import { WalletConnect } from "@thirdweb-dev/wallets";
-import { useEffect, useRef, useState } from "react";
-import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
-import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { isMobile } from "../../../evm/utils/isMobile";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RainbowScan } from "./RainbowScan";
+import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
+import { RainbowWallet } from "@thirdweb-dev/wallets";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { wait } from "../../../utils/wait";
 
-export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
+export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, close } = props;
   const connect = useConnect();
+  const [errorConnecting, setErrorConnecting] = useState(false);
 
   const hideBackButton = props.supportedWallets.length === 1;
 
-  const { goBack } = props;
+  const connectToExtension = useCallback(async () => {
+    try {
+      setErrorConnecting(false);
+      connectPrompted.current = true;
+      setScreen("connecting");
+      await wait(1000);
+      await connect(walletConfig);
+      close();
+    } catch (e) {
+      setErrorConnecting(true);
+      console.error(e);
+    }
+  }, [close, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -24,26 +38,41 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
       return;
     }
 
+    const isInstalled = walletConfig.isInstalled
+      ? walletConfig.isInstalled()
+      : false;
+
     // if loading
     (async () => {
-      // on mobile, open rainbow app link
-      if (isMobile()) {
-        setScreen("open-wc-uri");
-      } else {
-        // on desktop, show the rainbow scan qr code
-        setScreen("scanning");
+      if (isInstalled) {
+        connectToExtension();
+      }
+
+      // if rainbow is not injected
+      else {
+        // on mobile, open rainbow app link
+        if (isMobile()) {
+          setScreen("open-wc-uri");
+        } else {
+          // on desktop, show the rainbow scan qr code
+          setScreen("scanning");
+        }
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [connectToExtension, walletConfig]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        onRetry={connectToExtension}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://rainbow.me/"
       />
     );
   }
@@ -51,11 +80,17 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        onRetry={() => {
+          // NOOP - TODO make onRetry optional
+        }}
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         onConnected={close}
         walletConfig={walletConfig}
-        supportLink="https://rainbow.me/"
         appUriPrefix={{
           ios: "rainbow://",
           android: "https://rnbwapp.com/",
@@ -73,9 +108,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<WalletConnect>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={() => {
-          setScreen("scanning");
-        }}
+        onBack={props.goBack}
       />
     );
   }

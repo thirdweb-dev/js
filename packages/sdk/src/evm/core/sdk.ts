@@ -103,7 +103,7 @@ import {
   utils,
   ContractFactory as ethersContractFactory,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import {
@@ -185,14 +185,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     let signerWithProvider = signer;
-    if (network && !signer.provider) {
-      const provider = getChainProvider(network, options);
-      signerWithProvider = signer.connect(provider);
+    if (network) {
+      try {
+        const provider = getChainProvider(network, options);
+        signerWithProvider = signer.connect(provider);
+      } catch {
+        // We have to catch here because browser wallets throw when trying to override provider
+      }
     }
 
     const sdk = new ThirdwebSDK(
       network || signerWithProvider,
-      options,
+      network ? addChainToSupportedChains(network, options) : options,
       storage,
     );
     sdk.updateSignerOrProvider(signerWithProvider);
@@ -227,7 +231,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new EthersWallet(privateKey, provider);
-    return new ThirdwebSDK(signer, options, storage);
+    return new ThirdwebSDK(
+      signer,
+      addChainToSupportedChains(network, options),
+      storage,
+    );
   }
 
   /**
@@ -281,14 +289,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
     checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
 
-    if (isChainConfig(network)) {
-      options = {
-        ...options,
-        // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
-        supportedChains: [network, ...(options.supportedChains || [])],
-      };
-    }
-
+    options = addChainToSupportedChains(network, options);
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
@@ -879,6 +880,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public getPublisher(): ContractPublisher {
     return this._publisher;
   }
+}
+
+function addChainToSupportedChains(
+  network: NetworkInput,
+  options: SDKOptions | undefined,
+) {
+  if (isChainConfig(network)) {
+    options = {
+      ...options,
+      // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
+      supportedChains: [...(options?.supportedChains || []), network],
+    };
+  }
+  return options;
 }
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";

@@ -37,6 +37,13 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
+  embeddedWallets: {
+    name: "embeddedWallets",
+    title: "Embedded Wallets",
+    description: "E-mail and social login wallets for easy web3 onboarding",
+    // all actions allowed
+    actions: [],
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(

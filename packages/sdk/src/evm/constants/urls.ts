@@ -64,9 +64,8 @@ export function getChainProvider(
 
   // if we still don't have an url fall back to just using the chainId or slug in the rpc and try that
   if (!rpcUrl) {
-    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${
-      options.clientId || ""
-    }`;
+    rpcUrl = `https://${chainId || network}.rpc.thirdweb.com/${options.clientId || ""
+      }`;
   }
 
   if (!rpcUrl) {
@@ -244,6 +243,14 @@ export function getProviderFromRpcUrl(
         authStrategy = "twAuthToken";
       }
 
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers["x-authorize-wallet"] = "true";
+      }
+
       const bundleId =
         typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
           ? ((globalThis as any).APP_BUNDLE_ID as string)
@@ -278,18 +285,18 @@ export function getProviderFromRpcUrl(
           // Otherwise, create a new provider on the specific network
           const newProvider = chainId
             ? // If we know the chainId we should use the StaticJsonRpcBatchProvider
-              new StaticJsonRpcBatchProvider(
-                {
-                  url: rpcUrl,
-                  headers,
-                },
-                chainId,
-              )
-            : // Otherwise fall back to the built in json rpc batch provider
-              new providers.JsonRpcBatchProvider({
+            new StaticJsonRpcBatchProvider(
+              {
                 url: rpcUrl,
                 headers,
-              });
+              },
+              chainId,
+            )
+            : // Otherwise fall back to the built in json rpc batch provider
+            new providers.JsonRpcBatchProvider({
+              url: rpcUrl,
+              headers,
+            });
 
           // Save the provider in our cache
           RPC_PROVIDER_MAP.set(seralizedOpts, newProvider);

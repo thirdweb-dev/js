@@ -1,15 +1,16 @@
+import { useContext } from "react";
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import { Spinner } from "../../../components/Spinner";
 import {
-  BackButton,
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
-import { fontSize, iconSize, spacing } from "../../../design-system";
-import type { Theme } from "../../../design-system/index";
-import styled from "@emotion/styled";
+  Container,
+  ModalHeader,
+  ScreenBottomContainer,
+} from "../../../components/basic";
+import { fontSize, iconSize } from "../../../design-system";
+import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { Text } from "../../../components/text";
+import { Button } from "../../../components/buttons";
 
 export const ScanScreen: React.FC<{
   onBack: () => void;
@@ -19,81 +20,62 @@ export const ScanScreen: React.FC<{
   walletIconURL: string;
   hideBackButton: boolean;
 }> = (props) => {
+  const modalConfig = useContext(ModalConfigCtx);
   const walletName = props.walletName.toLowerCase().includes("wallet")
     ? props.walletName
     : `${props.walletName} wallet`;
   return (
-    <>
-      {!props.hideBackButton && (
-        <BackButton
-          onClick={props.onBack}
-          style={{
-            position: "absolute",
-            zIndex: 10,
-            left: spacing.lg,
-            top: spacing.lg,
-          }}
-        />
-      )}
-      <div
-        style={{
-          textAlign: "center",
-        }}
-      >
-        <QRCode
-          qrCodeUri={props.qrCodeUri}
-          QRIcon={
-            <Img
-              width={iconSize.lg}
-              height={iconSize.lg}
-              src={props.walletIconURL}
-            />
-          }
-        />
+    <Container fullHeight flex="column" animate="fadein">
+      <Container p="lg">
+        <ModalHeader onBack={props.onBack} title={props.walletName} />
+      </Container>
 
-        <Spacer y="xl" />
+      {modalConfig.modalSize === "compact" && <Spacer y="xs" />}
 
-        <ModalTitle
+      <Container expand flex="column" px="lg" center="both">
+        <div
           style={{
             textAlign: "center",
           }}
         >
-          Scan with {walletName}{" "}
-        </ModalTitle>
-        <Spacer y="md" />
+          <QRCode
+            qrCodeUri={props.qrCodeUri}
+            size={310}
+            QRIcon={
+              <Img
+                width={iconSize.xxl}
+                height={iconSize.xxl}
+                src={props.walletIconURL}
+              />
+            }
+          />
 
-        <ModalDescription>
-          Scan this QR code with your phone <br />
-          camera or {walletName} to connect
-        </ModalDescription>
+          <Spacer y="lg" />
 
-        <Spacer y="md" />
+          <Text center multiline>
+            Scan this with {walletName} <br /> or camera app to connect
+          </Text>
 
-        <div
+          <Spacer y="lg" />
+        </div>
+      </Container>
+
+      <ScreenBottomContainer
+        style={{
+          border: modalConfig.modalSize === "compact" ? undefined : "none",
+        }}
+      >
+        <Button
+          variant="link"
+          onClick={props.onGetStarted}
           style={{
-            display: "flex",
-            justifyContent: "center",
+            fontSize: fontSize.sm,
+            textAlign: "center",
           }}
         >
-          <Spinner size="md" color="link" />
-        </div>
-
-        <Spacer y="xl" />
-
-        <LinkButton onClick={props.onGetStarted}>
           {`Don't`} have {walletName}?
-        </LinkButton>
-      </div>
-    </>
+        </Button>
+      </ScreenBottomContainer>
+    </Container>
   );
 };
-
-const LinkButton = styled.button<{ theme?: Theme }>`
-  all: unset;
-  color: ${(p) => p.theme.link.primary};
-  font-size: ${fontSize.sm};
-  cursor: pointer;
-  &:hover {
-    color: ${(p) => p.theme.link.primaryHover};
-  }
-`;

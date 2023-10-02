@@ -18,10 +18,8 @@ import {
   CeloAlfajoresTestnet,
   CeloBaklavaTestnet,
   Celo,
-  Mumbai,
-  Polygon,
 } from "@thirdweb-dev/chains";
-import { getPolygonGasPriorityFee } from "@thirdweb-dev/sdk";
+import { getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -215,6 +213,8 @@ export abstract class BaseAccountAPI {
         to: detailsForUserOp.target,
         data: detailsForUserOp.data,
       });
+      // add 20% overhead for entrypoint checks
+      callGasLimit = callGasLimit.mul(120).div(100);
       // if the estimation is too low, we use a fixed value of 500k
       if (callGasLimit.lt(30000)) {
         callGasLimit = BigNumber.from(500000);
@@ -293,7 +293,9 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      const feeData = await this.provider.getFeeData();
+      const feeData = await getDynamicFeeData(
+        this.provider as providers.JsonRpcProvider,
+      );
       if (!maxPriorityFeePerGas) {
         maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
       }
@@ -308,22 +310,6 @@ export abstract class BaseAccountAPI {
           chainId === CeloBaklavaTestnet.chainId
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
-        }
-
-        if (
-          maxPriorityFeePerGas &&
-          (chainId === Mumbai.chainId || chainId === Polygon.chainId)
-        ) {
-          // for polygon/mumbai, override fee data from gas station
-          const block = await this.provider.getBlock("latest");
-          const baseBlockFee =
-            block && block.baseFeePerGas
-              ? block.baseFeePerGas
-              : utils.parseUnits("1", "gwei");
-          maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
-          // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-          const baseMaxFeePerGas = baseBlockFee.mul(2);
-          maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
         }
       }
     }
@@ -382,9 +368,8 @@ export abstract class BaseAccountAPI {
         ...userOp,
         paymasterAndData: "0x",
       };
-      modifiedOp.preVerificationGas = await this.getPreVerificationGas(
-        modifiedOp,
-      );
+      modifiedOp.preVerificationGas =
+        await this.getPreVerificationGas(modifiedOp);
       return {
         ...modifiedOp,
         signature: "",
