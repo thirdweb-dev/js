@@ -1,7 +1,8 @@
 import fs from "fs/promises";
 import { ApiChain, Chain } from "../src/types";
 
-const BASE_URI = process.env.BASE_URI as string;
+// default to production api
+const BASE_URI = (process.env.BASE_URI as string) || "https://api.thirdweb.com";
 
 async function getAllPaginatedChains(
   chains: any[] = [],

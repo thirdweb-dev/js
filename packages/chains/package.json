@@ -49,8 +49,8 @@
   },
   "sideEffects": false,
   "scripts": {
-    "seed": "bun scripts/seed-db.ts",
-    "sync": "bun scripts/sync-db.ts",
+    "db:seed": "bun scripts/seed-db.ts",
+    "db:sync": "bun scripts/sync-db.ts",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
     "plop": "plop",
