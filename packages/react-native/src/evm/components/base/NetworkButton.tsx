@@ -72,7 +72,7 @@ export const NetworkButton = ({
     <>
       <BaseButton
         p={padding || "sm"}
-        borderRadius="xs"
+        borderRadius="md"
         borderWidth={0.5}
         flexDirection="row"
         alignItems="center"
@@ -82,7 +82,7 @@ export const NetworkButton = ({
         {...props}
       >
         <Box flexDirection="row" alignItems="center">
-          <ChainIcon chainIconUrl={chain?.icon?.url} size={32} active={false} />
+          <ChainIcon chainIconUrl={chain?.icon?.url} size={32} />
           <Box
             ml="md"
             alignItems="flex-start"

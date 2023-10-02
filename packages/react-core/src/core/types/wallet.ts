@@ -143,6 +143,13 @@ export type ConnectUIProps<I extends WalletInstance = WalletInstance> = {
    * This is always `compact` on React Native
    */
   modalSize: "compact" | "wide";
+
+  /**
+   * Called when the wallet is connected but it's
+   * part of another wallet's connection flow.
+   * @param walleInstance the instance of the connected wallet
+   */
+  onLocallyConnected?: (walleInstance: WalletInstance) => void;
 };
 
 export type SelectUIProps<I extends WalletInstance = WalletInstance> = {

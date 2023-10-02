@@ -1,5 +1,63 @@
 # @thirdweb-dev/react-core
 
+## 3.16.0
+
+### Patch Changes
+
+- [#1618](https://github.com/thirdweb-dev/js/pull/1618) [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54) Thanks [@MananTank](https://github.com/MananTank)! - ## New smartWallet() API (Breaking Change)
+
+  ### Before
+
+  In the previous API, adding a smart wallet created it's own new entry called "Smart wallet" in the ConnectWallet Modal and you had to pass in the personal wallets which was shown to the user when they clicked on the "Smart wallet".
+
+  ```tsx
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet({
+        personalWallets: [metamaskWallet(), coinbaseWallet()],
+        factoryAddress: "....",
+        gassless: true,
+      }),
+    ]}
+  />
+  ```
+
+  ### After
+
+  Since most users don't know what a smart wallet is, this was confusing. So with the new API, you can just use smart wallet under the hood for any wallet you want and it will just show up as that wallet and not a "smart wallet" in ConnectWallet Modal to improve the user experience.
+
+  Once the user is connected, the ConnectWallet Details button shows to the user that they are infact connected to a smart wallet.
+
+  ```tsx
+  const config = {
+    factoryAddress: "....",
+    gassless: true,
+  }
+
+  <ThirdwebProvider
+    supportedWallets={[
+      smartWalet(metamaskWallet(), config),
+      smartWalet(coinbaseWallet(), config),
+    ]}
+  />
+  ```
+
+  ## New Features added to `ConnectWallet` component
+
+  - ENS Name + Avatar support added
+  - New 'Send funds' button added to ConnectWallet which users can use to send various tokens.
+  - New "Receive funds" button added to ConnectWallet which users scan the QR code from their wallet app on phone to send funds to their other wallet on desktop
+  - Added `supportedTokens` prop to customize the list of tokens for each network in for the "Send Funds" screen.
+  - "Transaction history" button added to ConnectWallet which opens the block explorer
+  - New wallet `embededWallet()` to sign in with Google / Email
+  - Ability to show balance of any token instead of just native token in the ConnectWallet details button using the `displayBalanceToken` prop
+
+- Updated dependencies [[`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131), [`9d553746`](https://github.com/thirdweb-dev/js/commit/9d553746b025ac489f9b8ee357372c9d01c835e1), [`64528263`](https://github.com/thirdweb-dev/js/commit/64528263f42bd2c564aad5e777f9f6dbba30af54), [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861), [`c29042b7`](https://github.com/thirdweb-dev/js/commit/c29042b71e266cb11d70d67f0fe2ffcc0fc1f5fa), [`b5b7e524`](https://github.com/thirdweb-dev/js/commit/b5b7e5243df83e3ab60d0917c099fb6967b63439), [`b6df6b89`](https://github.com/thirdweb-dev/js/commit/b6df6b895723947427c515411a7a833edaa324c6), [`94bdcc14`](https://github.com/thirdweb-dev/js/commit/94bdcc142a7fe1e9f53273560404fa6b5ac3a7c4), [`48906a9d`](https://github.com/thirdweb-dev/js/commit/48906a9d8ef2cfdd9ac489822a72d50cbd825628), [`43f188c8`](https://github.com/thirdweb-dev/js/commit/43f188c8a7ec02f394604120b414a039a2650525), [`ea5b9c3e`](https://github.com/thirdweb-dev/js/commit/ea5b9c3ecdd588461fb00f0e9da463de4a30ed1d), [`def6d400`](https://github.com/thirdweb-dev/js/commit/def6d400ab463bda3118d4c9cb00e5cc25a415c2)]:
+  - @thirdweb-dev/chains@0.1.53
+  - @thirdweb-dev/wallets@1.3.0
+  - @thirdweb-dev/sdk@3.10.62
+  - @thirdweb-dev/auth@3.2.43
+
 ## 3.15.0
 
 ### Patch Changes

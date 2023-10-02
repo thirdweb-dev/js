@@ -22,7 +22,11 @@ export const IconTextButton = ({
     <BaseButton
       p={p || "sm"}
       backgroundColor="background"
-      style={styles.networkContainer}
+      borderRadius="md"
+      borderWidth={0.5}
+      flexDirection="row"
+      justifyContent="flex-start"
+      alignItems="center"
       onPress={onPress}
       borderColor="border"
       {...args}
@@ -38,14 +42,6 @@ export const IconTextButton = ({
 
 const styles = StyleSheet.create({
   networkText: {
-    marginLeft: 16,
-  },
-  networkContainer: {
-    borderRadius: 8,
-    borderWidth: 0.5,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    marginLeft: 8,
   },
 });

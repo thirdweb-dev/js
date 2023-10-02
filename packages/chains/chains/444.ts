@@ -36,6 +36,12 @@ export default {
       }
     ]
   },
+  "icon": {
+    "url": "ipfs://QmX2Z71QszaZvpMppdNWeCLqmeWk8NA6KMDLMqAt5VRyVi/synapse.webp",
+    "height": 720,
+    "width": 720,
+    "format": "webp"
+  },
   "testnet": true,
   "slug": "synapse-chain-testnet"
 } as const satisfies Chain;

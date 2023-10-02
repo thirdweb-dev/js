@@ -3,8 +3,7 @@ import { ChooseWallet } from "./ChooseWallet/ChooseWallet";
 import { ConnectingWallet } from "./ConnectingWallet/ConnectingWallet";
 import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
-import { SmartWallet, walletIds } from "@thirdweb-dev/wallets";
-import { SmartWalletFlow } from "./SmartWallet/SmartWalletFlow";
+import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
 import { useModalState } from "../../providers/ui-context-provider";
 import {
@@ -17,9 +16,13 @@ import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
-  const { modalTitle, privacyPolicyUrl, termsOfServiceUrl, walletConfig } = (
-    modalState as ConnectWalletFlowModal
-  ).data;
+  const {
+    modalTitle,
+    modalTitleIconUrl,
+    privacyPolicyUrl,
+    termsOfServiceUrl,
+    walletConfig,
+  } = (modalState as ConnectWalletFlowModal).data;
 
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
@@ -57,13 +60,11 @@ export const ConnectWalletFlow = () => {
 
   const onChooseWallet = useCallback(
     (wallet: WalletConfig, data?: any) => {
-      setActiveWallet(() => wallet);
+      setActiveWallet(wallet);
       setSelectionData(data);
 
-      // If not smart wallet (sw has it's own flow, need to migrate it to connectUI)
-      // &&
       // If the wallet has no custom connect UI, then connect it
-      if (wallet.id !== SmartWallet.id && !wallet.connectUI) {
+      if (!wallet.connectUI) {
         connectActiveWallet(wallet, data);
       }
     },
@@ -72,8 +73,14 @@ export const ConnectWalletFlow = () => {
 
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
-    if (walletConfig && !walletConfig.connectUI) {
-      onChooseWallet(walletConfig);
+    if (walletConfig) {
+      if (walletConfig.connectUI) {
+        // if there's a connection UI, then show it
+        setActiveWallet(walletConfig);
+      } else {
+        // if there's no connection UI, then connect the wallet
+        onChooseWallet(walletConfig);
+      }
     }
   }, [onChooseWallet, walletConfig]);
 
@@ -85,10 +92,6 @@ export const ConnectWalletFlow = () => {
     resetModal();
   }, []);
 
-  const onConnected = useCallback(() => {
-    onClose(true);
-  }, [onClose]);
-
   const resetModal = () => {
     setActiveWallet(undefined);
     setIsConnecting(false);
@@ -99,11 +102,6 @@ export const ConnectWalletFlow = () => {
   }, [onClose]);
 
   const getComponentForWallet = useCallback(() => {
-    switch (activeWallet?.id) {
-      case SmartWallet.id:
-        return <SmartWalletFlow onClose={onClose} onConnect={onConnected} />;
-    }
-
     if (activeWallet?.connectUI) {
       return (
         <activeWallet.connectUI
@@ -126,8 +124,6 @@ export const ConnectWalletFlow = () => {
     handleClose,
     modalVisible,
     onBackPress,
-    onClose,
-    onConnected,
     selectionData,
     supportedWallets,
     theme,
@@ -142,7 +138,7 @@ export const ConnectWalletFlow = () => {
               subHeaderText=""
               content={
                 activeWallet.id === walletIds.localWallet ? (
-                  <Text variant="bodySmallSecondary" mt="md">
+                  <Text variant="bodySmallSecondary" mt="md" textAlign="center">
                     Creating, encrypting and securing your device wallet.
                   </Text>
                 ) : undefined
@@ -157,6 +153,7 @@ export const ConnectWalletFlow = () => {
         ) : (
           <ChooseWallet
             headerText={modalTitle}
+            modalTitleIconUrl={modalTitleIconUrl}
             privacyPolicyUrl={privacyPolicyUrl}
             termsOfServiceUrl={termsOfServiceUrl}
             wallets={supportedWallets}

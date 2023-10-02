@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "name": "Quantum Chain Testnet",
-  "chain": "QNET",
+  "chain": "tQNET",
   "icon": {
     "url": "ipfs://bafkreibwywok67uewqbtqdzgr7nlk3lvvg7hxmbgwtn7kdwxe34useucvm",
     "width": 1024,
@@ -15,11 +15,11 @@ export default {
   "faucets": [],
   "nativeCurrency": {
     "name": "Quantum Chain",
-    "symbol": "QNET",
+    "symbol": "tQNET",
     "decimals": 18
   },
   "infoURL": "https://quantumnetwork.gg",
-  "shortName": "qnet",
+  "shortName": "tqnet",
   "chainId": 12890,
   "networkId": 12890,
   "explorers": [
