@@ -305,4 +305,15 @@ describe("NFT Contract", async () => {
     expect(nftPage2[0].metadata.id).to.eq("6");
     expect(nftPage2[1].metadata.id).to.eq("7");
   });
+
+  it("getOwned pagination should return all records when queryParams.count is greater than the total supply", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
+  });
 });
