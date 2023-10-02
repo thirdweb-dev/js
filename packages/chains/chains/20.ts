@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Elastos Smart Chain",
   "chain": "ETH",
-  "rpc": [
-    "https://elastos-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.elastos.io/eth"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Elastos",
-    "symbol": "ELA",
-    "decimals": 18
-  },
-  "infoURL": "https://www.elastos.org/",
-  "shortName": "esc",
   "chainId": 20,
-  "networkId": 20,
   "explorers": [
     {
       "name": "elastos esc explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "elastos-smart-chain"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://www.elastos.org/",
+  "name": "Elastos Smart Chain",
+  "nativeCurrency": {
+    "name": "Elastos",
+    "symbol": "ELA",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://elastos-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.elastos.io/eth"
+  ],
+  "shortName": "esc",
+  "slug": "elastos-smart-chain",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "IOLite",
   "chain": "ILT",
-  "rpc": [
-    "https://iolite.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://net.iolite.io"
-  ],
+  "chainId": 18289463,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://iolite.io",
+  "name": "IOLite",
   "nativeCurrency": {
     "name": "IOLite Ether",
     "symbol": "ILT",
     "decimals": 18
   },
-  "infoURL": "https://iolite.io",
+  "redFlags": [],
+  "rpc": [
+    "https://iolite.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://net.iolite.io"
+  ],
   "shortName": "ilt",
-  "chainId": 18289463,
-  "networkId": 18289463,
-  "testnet": false,
-  "slug": "iolite"
+  "slug": "iolite",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,51 +1,40 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Teleport",
   "chain": "Teleport",
-  "rpc": [
-    "https://teleport.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm-rpc.teleport.network"
+  "chainId": 8000,
+  "explorers": [
+    {
+      "name": "Teleport Cosmos Explorer (Big Dipper)",
+      "url": "https://explorer.teleport.network",
+      "standard": "none"
+    },
+    {
+      "name": "Teleport EVM Explorer (Blockscout)",
+      "url": "https://evm-explorer.teleport.network",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Tele",
-    "symbol": "TELE",
-    "decimals": 18
-  },
-  "infoURL": "https://teleport.network",
-  "shortName": "teleport",
-  "chainId": 8000,
-  "networkId": 8000,
+  "features": [],
   "icon": {
     "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
     "width": 390,
     "height": 390,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "Teleport EVM Explorer (Blockscout)",
-      "url": "https://evm-explorer.teleport.network",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
-        "width": 390,
-        "height": 390,
-        "format": "svg"
-      }
-    },
-    {
-      "name": "Teleport Cosmos Explorer (Big Dipper)",
-      "url": "https://explorer.teleport.network",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmdP1sLnsmW9dwnfb1GxAXU1nHDzCvWBQNumvMXpdbCSuz",
-        "width": 390,
-        "height": 390,
-        "format": "svg"
-      }
-    }
+  "infoURL": "https://teleport.network",
+  "name": "Teleport",
+  "nativeCurrency": {
+    "name": "Tele",
+    "symbol": "TELE",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://teleport.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm-rpc.teleport.network"
   ],
-  "testnet": false,
-  "slug": "teleport"
+  "shortName": "teleport",
+  "slug": "teleport",
+  "testnet": false
 } as const satisfies Chain;

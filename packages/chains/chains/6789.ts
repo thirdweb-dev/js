@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gold Smart Chain Mainnet",
   "chain": "STAND",
-  "icon": {
-    "url": "ipfs://QmPNuymyaKLJhCaXnyrsL8358FeTxabZFsaxMmWNU4Tzt3",
-    "width": 396,
-    "height": 418,
-    "format": "png"
-  },
-  "rpc": [
-    "https://gold-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet.goldsmartchain.com"
-  ],
-  "faucets": [
-    "https://faucet.goldsmartchain.com"
-  ],
-  "nativeCurrency": {
-    "name": "Standard in Gold",
-    "symbol": "STAND",
-    "decimals": 18
-  },
-  "infoURL": "https://goldsmartchain.com",
-  "shortName": "STANDm",
   "chainId": 6789,
-  "networkId": 6789,
   "explorers": [
     {
       "name": "Gold Smart Chain",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "gold-smart-chain"
+  "faucets": [
+    "https://faucet.goldsmartchain.com"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmPNuymyaKLJhCaXnyrsL8358FeTxabZFsaxMmWNU4Tzt3",
+    "width": 396,
+    "height": 418,
+    "format": "png"
+  },
+  "infoURL": "https://goldsmartchain.com",
+  "name": "Gold Smart Chain Mainnet",
+  "nativeCurrency": {
+    "name": "Standard in Gold",
+    "symbol": "STAND",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://gold-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.goldsmartchain.com"
+  ],
+  "shortName": "STANDm",
+  "slug": "gold-smart-chain",
+  "testnet": false
 } as const satisfies Chain;

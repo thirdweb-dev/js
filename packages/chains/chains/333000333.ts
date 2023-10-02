@@ -1,19 +1,16 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Meld",
-  "title": "Meld Mainnet",
   "chain": "MELD",
-  "rpc": [
-    "https://meld.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/meld/mainnet/rpc"
+  "chainId": 333000333,
+  "explorers": [
+    {
+      "name": "explorer",
+      "url": "https://subnets.avax.network/meld",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
   "features": [],
-  "nativeCurrency": {
-    "name": "gMeld",
-    "symbol": "gMELD",
-    "decimals": 18
-  },
   "icon": {
     "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
     "width": 4000,
@@ -21,22 +18,18 @@ export default {
     "format": "png"
   },
   "infoURL": "https://meld.com",
-  "shortName": "meld",
-  "chainId": 333000333,
-  "networkId": 333000333,
-  "explorers": [
-    {
-      "name": "explorer",
-      "url": "https://subnets.avax.network/meld",
-      "icon": {
-        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
-        "width": 4000,
-        "height": 4000,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "name": "Meld",
+  "nativeCurrency": {
+    "name": "gMeld",
+    "symbol": "gMELD",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://meld.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/meld/mainnet/rpc"
   ],
-  "testnet": false,
-  "slug": "meld"
+  "shortName": "meld",
+  "slug": "meld",
+  "testnet": false
 } as const satisfies Chain;

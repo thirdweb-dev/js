@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SatoshIE",
   "chain": "TUSHY",
-  "rpc": [
-    "https://satoshie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://rpc.satosh.ie"
+  "chainId": 1985,
+  "explorers": [
+    {
+      "name": "mainnetexplorer",
+      "url": "http://explore.satosh.ie",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Tushy Token",
-    "symbol": "TUSHY",
-    "decimals": 18
-  },
-  "infoURL": "https://satosh.ie",
-  "shortName": "satoshie",
-  "chainId": 1985,
-  "networkId": 1985,
+  "features": [],
   "icon": {
     "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
     "width": 1024,
     "height": 1024,
     "format": "jpg"
   },
-  "explorers": [
-    {
-      "name": "mainnetexplorer",
-      "url": "http://explore.satosh.ie",
-      "icon": {
-        "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
-        "width": 1024,
-        "height": 1024,
-        "format": "jpg"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://satosh.ie",
+  "name": "SatoshIE",
+  "nativeCurrency": {
+    "name": "Tushy Token",
+    "symbol": "TUSHY",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://satoshie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://rpc.satosh.ie"
   ],
-  "testnet": false,
-  "slug": "satoshie"
+  "shortName": "satoshie",
+  "slug": "satoshie",
+  "testnet": false
 } as const satisfies Chain;

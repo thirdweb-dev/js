@@ -1,53 +1,42 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Astra Testnet",
   "chain": "Astra",
-  "rpc": [
-    "https://astra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.astranaut.dev"
+  "chainId": 11115,
+  "explorers": [
+    {
+      "name": "Astra PingPub Explorer",
+      "url": "https://ping.astranaut.dev/astra",
+      "standard": "none"
+    },
+    {
+      "name": "Astra EVM Explorer",
+      "url": "https://explorer.astranaut.dev",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://faucet.astranaut.dev"
   ],
-  "nativeCurrency": {
-    "name": "test-Astra",
-    "symbol": "tASA",
-    "decimals": 18
-  },
-  "infoURL": "https://astranaut.io",
-  "shortName": "astra-testnet",
-  "chainId": 11115,
-  "networkId": 11115,
+  "features": [],
   "icon": {
     "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
     "width": 104,
     "height": 80,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Astra EVM Explorer",
-      "url": "https://explorer.astranaut.dev",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-        "width": 104,
-        "height": 80,
-        "format": "png"
-      }
-    },
-    {
-      "name": "Astra PingPub Explorer",
-      "url": "https://ping.astranaut.dev/astra",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
-        "width": 104,
-        "height": 80,
-        "format": "png"
-      }
-    }
+  "infoURL": "https://astranaut.io",
+  "name": "Astra Testnet",
+  "nativeCurrency": {
+    "name": "test-Astra",
+    "symbol": "tASA",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://astra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.astranaut.dev"
   ],
-  "testnet": true,
-  "slug": "astra-testnet"
+  "shortName": "astra-testnet",
+  "slug": "astra-testnet",
+  "testnet": true
 } as const satisfies Chain;
