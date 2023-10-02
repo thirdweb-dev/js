@@ -273,4 +273,22 @@ describe("NFT Contract", async () => {
     });
     expect(tx.id.toNumber()).to.eq(0);
   });
+
+  it("should respect pagination for getOwned", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nftPage1 = await nftContract.getOwned(undefined, {
+      count: 2,
+      start: 1,
+    });
+    expect(nftPage1).to.be.an("array").length(2);
+    const nftPage2 = await nftContract.getOwned(undefined, {
+      count: 3,
+      start: 3,
+    });
+    expect(nftPage2).to.be.an("array").length(3);
+    expect(nftPage2[0].metadata.id).to.eq("6");
+    expect(nftPage2[1].metadata.id).to.eq("7");
+  });
 });

@@ -17,7 +17,10 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import type { QueryAllParams } from "../../../core/schema/QueryParams";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  type QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
@@ -411,24 +414,35 @@ export class Erc721<
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getOwned(walletAddress?: AddressOrEns) {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
 
     if (this.query?.owned) {
-      return this.query.owned.all(walletAddress);
+      return this.query.owned.all(walletAddress, queryParams);
     } else {
       const address =
         walletAddress || (await this.contractWrapper.getSignerAddress());
       const allOwners = await this.getAllOwners();
-      return Promise.all(
-        (allOwners || [])
-          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
-          .map(async (i) => await this.get(i.tokenId)),
+      let ownedTokens = (allOwners || []).filter(
+        (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
+      );
+      if (queryParams) {
+        const page = queryParams?.start || 0;
+        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+        const startIndex = page * count;
+        ownedTokens = ownedTokens.slice(startIndex, startIndex + count);
+      }
+      return await Promise.all(
+        ownedTokens.map(async (i) => this.get(i.tokenId)),
       );
     }
   }
