@@ -139,7 +139,7 @@
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "prettier": "^3.0.0",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "zksync-web3": "^0.14.3"
   },
   "peerDependencies": {

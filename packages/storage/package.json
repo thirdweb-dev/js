@@ -61,7 +61,7 @@
     "eslint-config-thirdweb": "workspace:*",
     "esm": "^3.2.25",
     "mocha": "^10.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "cid-tool": "^3.0.0",
