@@ -27,6 +27,9 @@ export type Account = {
   currentBillingPeriodStartsAt: string;
   currentBillingPeriodEndsAt: string;
   onboardedAt?: string;
+  emailConfirmedAt?: string;
+  unconfirmedEmail?: string;
+  onboardSkipped?: boolean;
   notificationPreferences?: {
     billing: "email" | "none";
     updates: "email" | "none";
@@ -37,11 +40,16 @@ export interface UpdateAccountInput {
   name?: string;
   email?: string;
   subscribeToUpdates?: boolean;
+  onboardSkipped?: boolean;
 }
 
 export interface UpdateAccountNotificationsInput {
   billing: "email" | "none";
   updates: "email" | "none";
+}
+
+export interface ConfirmEmailInput {
+  confirmationToken: string;
 }
 
 export type ApiKeyService = {
@@ -147,7 +155,7 @@ export function useAccount() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data as Account;
@@ -172,7 +180,7 @@ export function useAccountUsage() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data as UsageBillableByService;
@@ -200,7 +208,7 @@ export function useUpdateAccount() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -234,7 +242,7 @@ export function useUpdateNotifications() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -249,26 +257,85 @@ export function useUpdateNotifications() {
   );
 }
 
-export function useCreateAccountPlan() {
+export function useCreateBillingSession() {
+  const { user } = useUser();
+
+  return useMutationWithInvalidate(async () => {
+    invariant(user, "No user is logged in");
+
+    const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/billingSession`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await res.json();
+
+    if (json.error) {
+      throw new Error(json.message);
+    }
+
+    return json.data;
+  });
+}
+
+export function useConfirmEmail() {
   const { user } = useUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
-    async () => {
+    async (input: ConfirmEmailInput) => {
       invariant(user, "No user is logged in");
 
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/confirmEmail`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          accountKeys.me(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+export function useCreatePaymentMethod() {
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async (paymentMethodId: string) => {
+      invariant(user, "No user is logged in");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/paymentMethod`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          paymentMethodId,
+        }),
       });
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -299,7 +366,7 @@ export function useApiKeys() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data as ApiKey[];
@@ -327,7 +394,7 @@ export function useCreateApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data as ApiKey;
@@ -361,7 +428,7 @@ export function useUpdateApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -395,7 +462,7 @@ export function useRevokeApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -429,7 +496,7 @@ export function useGenerateApiKey() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -442,43 +509,6 @@ export function useGenerateApiKey() {
       },
     },
   );
-}
-
-export async function fetchApiKeyAvailability(name: string) {
-  const res = await fetch(
-    `${THIRDWEB_API_HOST}/v1/keys/availability?name=${name}`,
-    {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  const json = await res.json();
-
-  if (json.error) {
-    throw new Error(json.error?.message || json.error);
-  }
-
-  return !!json.data.available;
-}
-
-export async function fetchAuthToken() {
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const json = await res.json();
-
-  if (json.error) {
-    throw new Error(json.error?.message || json.error);
-  }
-
-  return json.data.jwt;
 }
 
 export function useAuthorizeWalletWithAccount() {
@@ -502,7 +532,7 @@ export function useAuthorizeWalletWithAccount() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -533,7 +563,7 @@ export function useRevokeAuthorizedWallet() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data;
@@ -564,11 +594,88 @@ export function useAuthorizedWallets() {
       const json = await res.json();
 
       if (json.error) {
-        throw new Error(json.error?.message || json.error);
+        throw new Error(json.message);
       }
 
       return json.data as AuthorizedWallet[];
     },
     { enabled: !!user?.address, cacheTime: 0 },
   );
+}
+
+export async function fetchAuthToken() {
+  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await res.json();
+
+  if (json.error) {
+    throw new Error(json.message);
+  }
+
+  return json.data.jwt;
+}
+
+/**
+ * @deprecated
+ */
+export function useCreateAccountPlan() {
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async () => {
+      invariant(user, "No user is logged in");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          accountKeys.me(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+/**
+ * @deprecated
+ */
+export async function fetchApiKeyAvailability(name: string) {
+  const res = await fetch(
+    `${THIRDWEB_API_HOST}/v1/keys/availability?name=${name}`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const json = await res.json();
+
+  if (json.error) {
+    throw new Error(json.message);
+  }
+
+  return !!json.data.available;
 }

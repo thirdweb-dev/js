@@ -179,6 +179,9 @@ const ConsoleApp = memo(function ConsoleApp({
           body {
             font-variant-ligatures: none !important;
           }
+          .chakra-checkbox__control > div > svg {
+            font-size: 10px !important;
+          }
         `}
       />
       <DefaultSeo

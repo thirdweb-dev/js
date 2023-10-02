@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   font-src 'self';
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.thirdweb.com vercel.live;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.thirdweb.com vercel.live js.stripe.com;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;

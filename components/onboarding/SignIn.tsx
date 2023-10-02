@@ -19,6 +19,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useRef } from "react";
 import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
 import { OnboardingModal } from "./Modal";
+import { OnboardingTitle } from "./Title";
 
 const TRACKING_CATEGORY = "notice";
 
@@ -50,9 +51,13 @@ export const SignInModal: React.FC = () => {
 
   return (
     <OnboardingModal isOpen onClose={() => {}}>
-      <Heading size="title.md" mb={6} textAlign="center">
-        Welcome to <strong>thirdweb</strong>
-      </Heading>
+      <OnboardingTitle
+        heading={
+          <>
+            Welcome to <strong>thirdweb</strong>
+          </>
+        }
+      />
 
       <VStack w="full" gap={3}>
         <Popover
@@ -134,7 +139,7 @@ export const SignInModal: React.FC = () => {
         </Button>
       </VStack>
 
-      <Text textAlign="center" opacity={0.4}>
+      <Text opacity={0.4}>
         By connecting your wallet and using the thirdweb dashboard, you agree to
         our{" "}
         <TrackedLink

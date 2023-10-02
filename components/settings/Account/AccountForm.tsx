@@ -14,7 +14,6 @@ import {
   VStack,
   HStack,
   useColorModeValue,
-  Switch,
 } from "@chakra-ui/react";
 import {
   Button,
@@ -23,6 +22,7 @@ import {
   FormErrorMessage,
   Heading,
   Text,
+  Checkbox,
 } from "tw-components";
 import { Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -35,18 +35,21 @@ interface AccountFormProps {
   previewEnabled?: boolean;
   showBillingButton?: boolean;
   showSubscription?: boolean;
+  showCancelButton?: boolean;
   buttonProps?: ButtonProps;
   buttonText?: string;
   padded?: boolean;
   optional?: boolean;
   trackingCategory?: string;
   disableUnchanged?: boolean;
-  onSave?: () => void;
+  onSave?: (email: string) => void;
+  onCancel?: () => void;
 }
 
 export const AccountForm: React.FC<AccountFormProps> = ({
   account,
   onSave,
+  onCancel,
   buttonProps,
   buttonText = "Save",
   horizontal = false,
@@ -54,6 +57,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   showBillingButton = false,
   showSubscription = false,
   disableUnchanged = false,
+  showCancelButton = false,
   padded = true,
   optional = false,
 }) => {
@@ -71,7 +75,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     ),
     values: {
       name: account.name || "",
-      email: account.email || "",
+      email: account.unconfirmedEmail || account.email || "",
     },
   });
 
@@ -83,8 +87,13 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   );
 
   const handleSubmit = form.handleSubmit((values) => {
-    if (optional && onSave) {
-      onSave();
+    if (showCancelButton && !values.email) {
+      handleCancel();
+      return;
+    }
+
+    if (onSave) {
+      onSave(values.email);
     }
 
     const formData = {
@@ -105,14 +114,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
 
     updateMutation.mutate(formData, {
       onSuccess: (data) => {
-        if (!optional) {
-          onSuccess();
-
-          // already called
-          if (!optional && onSave) {
-            onSave();
-          }
-        }
+        onSuccess();
 
         trackEvent({
           category: "account",
@@ -122,10 +124,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
         });
       },
       onError: (error) => {
-        // don't show errors when form is optional
-        if (!optional) {
-          onError(error);
-        }
+        onError(error);
 
         trackEvent({
           category: "account",
@@ -136,6 +135,42 @@ export const AccountForm: React.FC<AccountFormProps> = ({
       },
     });
   });
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+
+    trackEvent({
+      category: "account",
+      action: "onboardSkipped",
+      label: "attempt",
+    });
+
+    updateMutation.mutate(
+      {
+        onboardSkipped: true,
+      },
+      {
+        onSuccess: (data) => {
+          trackEvent({
+            category: "account",
+            action: "onboardSkipped",
+            label: "success",
+            data,
+          });
+        },
+        onError: (error) => {
+          trackEvent({
+            category: "account",
+            action: "onboardSkipped",
+            label: "error",
+            error,
+          });
+        },
+      },
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -224,16 +259,16 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           </FormControl>
 
           {showSubscription && (
-            <HStack gap={2} justifyContent="center">
-              <Text>Subscribe to new features and key product updates</Text>
-              <Switch
+            <HStack gap={2}>
+              <Checkbox
                 isDisabled={
                   !form.getValues("email").length ||
                   !!form.getFieldState("email", form.formState).error
                 }
-                isChecked={isSubscribing}
+                defaultChecked
                 onChange={(e) => setIsSubscribing(e.target.checked)}
               />
+              <Text>Subscribe to new features and key product updates</Text>
             </HStack>
           )}
         </Flex>
@@ -245,19 +280,37 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           {showBillingButton && <ManageBillingButton account={account} />}
 
           {!previewEnabled && (
-            <Button
-              {...buttonProps}
-              type="button"
-              onClick={handleSubmit}
-              colorScheme="blue"
-              isDisabled={
-                updateMutation.isLoading ||
-                (disableUnchanged && !form.formState.isDirty)
-              }
-              isLoading={updateMutation.isLoading}
+            <Flex
+              flexDir="column"
+              gap={3}
+              w={showCancelButton ? "full" : "auto"}
             >
-              {buttonText}
-            </Button>
+              <Button
+                {...buttonProps}
+                type="button"
+                onClick={handleSubmit}
+                colorScheme={buttonProps?.variant ? undefined : "blue"}
+                isDisabled={
+                  updateMutation.isLoading ||
+                  (disableUnchanged && !form.formState.isDirty)
+                }
+                isLoading={updateMutation.isLoading}
+              >
+                {buttonText}
+              </Button>
+
+              {showCancelButton && (
+                <Button
+                  w="full"
+                  size="lg"
+                  fontSize="md"
+                  variant="outline"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </Button>
+              )}
+            </Flex>
           )}
         </HStack>
       </VStack>

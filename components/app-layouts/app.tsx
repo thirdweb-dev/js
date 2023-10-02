@@ -130,6 +130,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                       <PosthogIdentifier />
                       <SignInModal />
                       <ConfigModal />
+
                       <OnboardingModal />
 
                       <AppShell {...props} />
