@@ -74,7 +74,9 @@ export class HttpRpcClient {
       headers["x-sdk-platform"] = bundleId
         ? "react-native"
         : isBrowser()
-        ? "browser"
+        ? (window as any).bridge !== undefined
+          ? "webGL"
+          : "browser"
         : "node";
     }
 
