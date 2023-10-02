@@ -17,7 +17,7 @@ import {
 import { ExternalApprovalNotice } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRef } from "react";
-import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
+import { Button, Card, Text, TrackedLink } from "tw-components";
 import { OnboardingModal } from "./Modal";
 import { OnboardingTitle } from "./Title";
 

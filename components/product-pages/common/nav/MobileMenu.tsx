@@ -17,7 +17,7 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
   const disclosure = useDisclosure();
 
   return (
-    <Flex gap={2} {...props}>
+    <Flex gap={2} {...props} alignItems="center">
       <TrackedLinkButton
         bgColor="white"
         _hover={{

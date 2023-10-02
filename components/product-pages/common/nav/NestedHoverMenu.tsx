@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Card, Text } from "tw-components";
 import { ProductNavCard } from "./ProductNavCard";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SectionItemProps, SectionProps } from "./types";
 
 interface NestedHoverMenuProps {
@@ -17,19 +17,21 @@ interface NestedHoverMenuProps {
   items: SectionItemProps[];
   sections: SectionProps[];
   initialSection: string;
-  leftOffset?: string;
 }
+
+const WIDTH = 672;
+const DEFAULT_OFFSET = -32;
 
 export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
   title,
   items,
   sections,
   initialSection,
-  leftOffset = "0px",
 }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
+  const [offset, setOffset] = useState(DEFAULT_OFFSET);
   const [hoveredSection, setHoveredSection] = useState<string>(initialSection);
-
+  const triggerRef = useRef<HTMLDivElement | null>(null);
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -61,32 +63,61 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
     }, 100);
   };
 
+  const updateOffset = () => {
+    const el = triggerRef.current;
+
+    if (el && isOpen) {
+      const { right } = el.getBoundingClientRect();
+      const isOverflowing = right + WIDTH > window.innerWidth;
+      const newOffset = isOverflowing
+        ? window.innerWidth - (right + WIDTH)
+        : DEFAULT_OFFSET;
+      setOffset(newOffset);
+    }
+  };
+
+  useEffect(() => {
+    updateOffset();
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", updateOffset);
+
+      return () => {
+        window.removeEventListener("resize", updateOffset);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   return (
     <Box onMouseLeave={handleBoxLeave}>
-      <Text
-        color="white"
-        fontSize="16px"
-        cursor="pointer"
-        opacity={isOpen ? 0.8 : 1}
-        transition="opacity 0.1s"
-        onMouseEnter={onOpen}
-        py="10px"
-      >
-        {title}
-      </Text>
+      <div ref={triggerRef}>
+        <Text
+          color="white"
+          fontSize="16px"
+          cursor="pointer"
+          opacity={isOpen ? 0.8 : 1}
+          transition="opacity 0.1s"
+          onMouseEnter={onOpen}
+          py="10px"
+        >
+          {title}
+        </Text>
+      </div>
 
-      <Box position="relative" display={isOpen ? "block" : "none"}>
+      <Box position="relative" visibility={isOpen ? "visible" : "hidden"}>
         <Fade in={isOpen}>
           <Card
             p={0}
             position="absolute"
             top={0}
-            left={leftOffset}
+            left={offset}
             borderColor="whiteAlpha.100"
             bg="black"
             borderWidth="2px"
             overflow="hidden"
             borderRadius="8px"
+            width={WIDTH}
           >
             <Flex>
               <Flex
@@ -97,7 +128,6 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
                 {sections.map((section) => (
                   <Stack
                     key={section.name}
-                    width={"300px"}
                     onMouseEnter={() => handleMouseEnter(section.label)}
                     onMouseLeave={handleMouseLeave}
                   >

@@ -28,9 +28,8 @@ export const DesktopMenu: React.FC = () => {
           initialSection="contracts"
           sections={PRODUCT_SECTIONS}
           items={PRODUCTS}
-          leftOffset="-26px"
         />
-        <HoverMenu title="Solutions" items={SOLUTIONS} leftOffset="-28px" />
+        <HoverMenu title="Solutions" items={SOLUTIONS} />
         <TrackedLink
           fontWeight={400}
           href="/pricing"
@@ -48,9 +47,8 @@ export const DesktopMenu: React.FC = () => {
           initialSection="resources"
           sections={DEVELOPER_SECTIONS}
           items={DEVELOPER_RESOURCES}
-          leftOffset="-334px"
         />
-        <HoverMenu title="Company" items={COMPANY} leftOffset="-102px" />
+        <HoverMenu title="Company" items={COMPANY} />
         <TrackedLinkButton
           display={{ base: "none", xl: "flex" }}
           bgColor="white"
