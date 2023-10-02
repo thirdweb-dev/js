@@ -1,5 +1,6 @@
 import { MMKV } from "react-native-mmkv";
 import { WC2Options, WalletConnectBase } from "./WalletConnectBase";
+import { WALLETCONNECT_ICON } from "../../../assets/svgs";
 
 const PREFIX = "__TW__WALLET__CONNECT__";
 
@@ -7,8 +8,7 @@ export class WalletConnect extends WalletConnectBase {
   static id = "WalletConnect" as const;
   static meta = {
     name: "WalletConnect",
-    iconURL:
-      "ipfs://QmX58KPRaTC9JYZ7KriuBzeoEaV2P9eZcA3qbFnTHZazKw/wallet-connect.svg",
+    iconURL: WALLETCONNECT_ICON,
     links: {
       native: "wc:",
       universal: "wc:",

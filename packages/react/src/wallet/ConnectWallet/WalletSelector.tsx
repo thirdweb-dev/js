@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Img } from "../../components/Img";
 import {
   noScrollBar,
@@ -91,9 +91,42 @@ export const WalletSelector: React.FC<{
     </Button>
   );
 
+  // prevent accidental clicks on the TW icon when clicking on back icon from previous screen
+  const enableTWIconLink = useRef(false);
+  useEffect(() => {
+    setTimeout(() => {
+      enableTWIconLink.current = true;
+    }, 1000);
+  }, []);
+
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
-      <TWIcon size={iconSize.md} />
+      {modalConfig.titleIconUrl === undefined ? (
+        <Link
+          color="primaryText"
+          hoverColor="accentText"
+          target="_blank"
+          href="https://thirdweb.com/dashboard/wallets/connect"
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+          onClick={(e) => {
+            if (!enableTWIconLink.current) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <TWIcon size={iconSize.md} />
+        </Link>
+      ) : modalConfig.titleIconUrl === "" ? null : (
+        <Img
+          src={modalConfig.titleIconUrl}
+          width={iconSize.md}
+          height={iconSize.md}
+        />
+      )}
+
       <ModalTitle> {props.title} </ModalTitle>
     </Container>
   );
@@ -127,13 +160,14 @@ export const WalletSelector: React.FC<{
       <Container
         expand
         scrollY
-        px="md"
+        px={nonLocalWalletConfigs.length === 1 ? "lg" : "md"}
         style={{
           paddingTop: "2px",
         }}
       >
         {showGroupsUI ? (
           <>
+            {/* list of EOA wallets */}
             {isWalletGroupExpanded ? (
               <WalletSelection
                 walletConfigs={eoaWallets}
@@ -216,7 +250,7 @@ export const WalletSelector: React.FC<{
                 weight={500}
                 size="sm"
                 target="_blank"
-                href="https://ethereum.org/en/wallets/find-wallet/"
+                href="https://blog.thirdweb.com/web3-wallet/"
               >
                 Get started
               </Link>
@@ -319,23 +353,15 @@ export function WalletEntryButton(props: {
       />
 
       <Container flex="column" gap="xxs" expand>
-        <Text color="primaryText" weight={500}>
+        <Text color="primaryText" weight={600}>
           {walletConfig.meta.name}
         </Text>
 
-        {isRecommended && (
-          <Text size="sm" color="accentText" weight={500}>
-            Recommended
-          </Text>
-        )}
+        {isRecommended && <Text size="sm">Recommended</Text>}
 
         {!isRecommended &&
           walletConfig.isInstalled &&
-          walletConfig.isInstalled() && (
-            <Text size="sm" weight={500}>
-              Installed
-            </Text>
-          )}
+          walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
       </Container>
     </WalletButton>
   );

@@ -12,7 +12,8 @@ export default {
     "https://filecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.node.glif.io/",
     "https://rpc.ankr.com/filecoin",
-    "https://filecoin-mainnet.chainstacklabs.com/rpc/v1"
+    "https://filecoin-mainnet.chainstacklabs.com/rpc/v1",
+    "https://filfox.info/rpc/v1"
   ],
   "faucets": [],
   "nativeCurrency": {

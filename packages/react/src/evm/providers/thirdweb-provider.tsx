@@ -81,7 +81,7 @@ export const ThirdwebProvider = <
   );
 
   return (
-    <WalletUIStatesProvider theme={theme} modalSize="wide">
+    <WalletUIStatesProvider theme={theme}>
       <CustomThemeProvider theme={theme}>
         <ThirdwebProviderCore
           {...restProps}

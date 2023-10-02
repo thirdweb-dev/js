@@ -30,7 +30,7 @@ export function ConnectingWallet({
         subHeaderText={subHeaderText}
         onClose={onClose}
       />
-      <WalletLoadingThumbnail imageSize={80}>
+      <WalletLoadingThumbnail imageSize={100}>
         <ImageSvgUri height={80} width={80} imageUrl={wallet.meta.iconURL} />
       </WalletLoadingThumbnail>
       <View style={styles.connectingContainer}>
@@ -42,7 +42,7 @@ export function ConnectingWallet({
               Connecting your wallet
             </Text>
             <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-              Login and connect your wallet through the metamask pop-up
+              {`Login and connect your wallet through the ${wallet.meta.name} pop-up`}
             </Text>
           </>
         )}

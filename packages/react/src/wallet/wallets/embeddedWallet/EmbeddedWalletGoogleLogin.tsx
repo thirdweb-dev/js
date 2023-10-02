@@ -6,6 +6,7 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { useEffect } from "react";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, ModalHeader } from "../../../components/basic";
@@ -28,14 +29,34 @@ export const EmbeddedWalletGoogleLogin = (
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      await embeddedWallet.connect({ googleLogin: true });
+      const googleWindow = window.open("", "Login", "width=350, height=500");
+      if (!googleWindow) {
+        throw new Error("Failed to open google login window");
+      }
+
+      await embeddedWallet.connect({
+        loginType: "headless_google_oauth",
+        openedWindow: googleWindow,
+        closeOpenedWindow: (openedWindow) => {
+          openedWindow.close();
+        },
+      });
+
       setConnectedWallet(embeddedWallet);
       props.close();
     } catch (e) {
       setConnectionStatus("disconnected");
-      console.error(e);
+      console.error("Error logging into google", e);
     }
   };
+
+  const closeModal = props.close;
+
+  useEffect(() => {
+    if (connectionStatus === "connected") {
+      closeModal();
+    }
+  }, [connectionStatus, closeModal]);
 
   return (
     <Container animate="fadein" flex="column" fullHeight>

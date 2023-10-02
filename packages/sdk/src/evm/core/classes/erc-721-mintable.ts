@@ -74,11 +74,14 @@ export class Erc721Mintable implements DetectableFeature {
       to: AddressOrEns,
       metadata: NFTMetadataOrUri,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const uri = await uploadOrExtractURI(metadata, this.storage);
+      const [uri, toAddress] = await Promise.all([
+        uploadOrExtractURI(metadata, this.storage),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "mintTo",
-        args: [await resolveAddress(to), uri],
+        args: [toAddress, uri],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<TransferEvent>(
             "Transfer",

@@ -89,8 +89,8 @@ const PaperSelectionUI: React.FC<
   return (
     <div>
       <PaperFormUI
-        // props.recoveryShareManagement !== "USER_MANAGED"
-        googleLoginSupported={false}
+        walletConfig={props.walletConfig}
+        googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
         showOrSeparator={props.supportedWallets.length > 1}
         onSelect={props.onSelect}
       />
@@ -139,8 +139,8 @@ const PaperConnectUI = (
 
   return (
     <PaperFormUIScreen
-      // props.recoveryShareManagement !== "USER_MANAGED"
-      googleLoginSupported={false}
+      walletConfig={props.walletConfig}
+      googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
       modalSize={props.modalSize}
       onSelect={(_loginType) => {
         setLoginType(_loginType);

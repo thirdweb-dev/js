@@ -30,9 +30,9 @@ export default {
   "chainId": 1089,
   "networkId": 1089,
   "icon": {
-    "url": "ipfs://QmU83haX3TNifDDjBx6RP6ByqES1Kg9VqeJC87X9ipKyCS",
-    "width": 386,
-    "height": 397,
+    "url": "ipfs://QmX6XuoQDTTjYqAmdNJiieLDZSwHHyUx44yQb4E3tmHmEA",
+    "width": 400,
+    "height": 400,
     "format": "png"
   },
   "explorers": [
