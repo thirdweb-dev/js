@@ -2,7 +2,9 @@ import { smartWallet } from "@thirdweb-dev/react";
 import { useState } from "react";
 import { walletInfoRecord, WalletId } from "./walletInfoRecord";
 
-export function usePlaygroundWallets() {
+type WalletSelection = Record<WalletId, boolean | "recommended">;
+
+export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
   const [smartWalletOptions, setSmartWalletOptions] = useState({
     factoryAddress: "0x549BceA1590B6239b967fB46E5487b8177B7cf4D",
     enabled: false,
@@ -11,21 +13,7 @@ export function usePlaygroundWallets() {
 
   const [walletSelection, setWalletSelection] = useState<
     Record<WalletId, boolean | "recommended">
-  >({
-    MetaMask: "recommended",
-    Coinbase: true,
-    WalletConnect: true,
-    Safe: false,
-    "Guest Mode": false,
-    "Email Wallet": false,
-    Trust: true,
-    Zerion: true,
-    Blocto: false,
-    "Magic Link": false,
-    Frame: false,
-    Rainbow: true,
-    Phantom: true,
-  });
+  >(defaultWalletSelection);
 
   const enabledWallets = Object.entries(walletSelection)
     .filter((x) => x[1])

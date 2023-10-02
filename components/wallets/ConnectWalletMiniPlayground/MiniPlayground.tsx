@@ -56,7 +56,21 @@ export const MiniPlayground: React.FC<{
   const [modalSize, setModalSize] = useState<"compact" | "wide">("wide");
 
   const { supportedWallets, walletSelection, setWalletSelection } =
-    usePlaygroundWallets();
+    usePlaygroundWallets({
+      MetaMask: true,
+      Coinbase: true,
+      WalletConnect: true,
+      Safe: false,
+      "Guest Mode": false,
+      "Email Wallet": false,
+      Trust: true,
+      Zerion: true,
+      Blocto: false,
+      "Magic Link": false,
+      Frame: false,
+      Rainbow: true,
+      Phantom: true,
+    });
   const walletIds = supportedWallets.map((x) => x.id) as WalletId[];
   const canShowInlineModal = useCanShowInlineModal(walletIds);
 

@@ -13,7 +13,14 @@ import {
 } from "@chakra-ui/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
-import { Button, Heading, Text, FormLabel, CodeBlock } from "tw-components";
+import {
+  Button,
+  Heading,
+  Text,
+  FormLabel,
+  CodeBlock,
+  TrackedLink,
+} from "tw-components";
 import { format } from "prettier/standalone";
 import parserBabel from "prettier/plugins/babel";
 import estree from "prettier/plugins/estree";
@@ -74,7 +81,7 @@ export const ConnectWalletPlayground: React.FC<{
   const { colorMode, toggleColorMode } = useColorMode();
   const selectedTheme = colorMode === "light" ? "light" : "dark";
   const [authEnabled, setAuthEnabled] = useState(false);
-  const [switchToActiveChain, setSwitchToActiveChain] = useState(false);
+  const [switchToActiveChain, setSwitchToActiveChain] = useState(true);
   const [code, setCode] = useState("");
 
   const { colorOverrides, themeObj, setColorOverrides } =
@@ -87,7 +94,21 @@ export const ConnectWalletPlayground: React.FC<{
     smartWalletOptions,
     setSmartWalletOptions,
     supportedWallets,
-  } = usePlaygroundWallets();
+  } = usePlaygroundWallets({
+    MetaMask: "recommended",
+    Coinbase: true,
+    WalletConnect: true,
+    Safe: false,
+    "Guest Mode": true,
+    "Email Wallet": true,
+    Trust: false,
+    Zerion: false,
+    Blocto: false,
+    "Magic Link": false,
+    Frame: false,
+    Rainbow: false,
+    Phantom: false,
+  });
 
   useEffect(() => {
     const _code = getCode({
@@ -443,6 +464,25 @@ export const ConnectWalletPlayground: React.FC<{
             );
           })}
       </Grid>
+      <Spacer height={3} />
+
+      <TrackedLink
+        category={trackingCategory}
+        label="build-wallet"
+        href="https://portal.thirdweb.com/wallet/build-a-wallet"
+        alignItems="center"
+        color="blue.500"
+        gap={1}
+        isExternal
+        fontSize={14}
+        _hover={{
+          color: "heading",
+          textDecor: "none",
+        }}
+      >
+        Don{`'t`} see the wallet you are looking for? <br />
+        Integrate it with ConnectWallet
+      </TrackedLink>
     </>
   );
 
@@ -612,7 +652,7 @@ export const ConnectWalletPlayground: React.FC<{
       {/* Smart wallet */}
       <SwitchFormItem
         label="Smart Wallets"
-        description="Use ERC-4337 (Account Abstraction) compatible smart wallets"
+        description="Use ERC-4337 (Account Abstraction) compatible smart wallets. Enabling this will connect user to the associated smart wallet"
         onCheck={(_isChecked) => {
           if (_isChecked) {
             trackCustomize("smart-wallet");
