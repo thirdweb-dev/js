@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows you to manually run the workflow from the Actions tab
 
 jobs:
-  build:
+  sync-chains:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
