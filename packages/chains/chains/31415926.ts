@@ -1,27 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Filecoin - Local testnet",
   "chain": "FIL",
-  "status": "incubating",
-  "rpc": [],
+  "chainId": 31415926,
+  "explorers": [],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "testnet filecoin",
-    "symbol": "tFIL",
-    "decimals": 18
-  },
-  "infoURL": "https://filecoin.io",
-  "shortName": "filecoin-local",
+  "features": [],
   "icon": {
     "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
     "width": 1000,
     "height": 1000,
     "format": "png"
   },
-  "chainId": 31415926,
-  "networkId": 31415926,
-  "slip44": 1,
-  "explorers": [],
-  "testnet": true,
-  "slug": "filecoin-local-testnet"
+  "infoURL": "https://filecoin.io",
+  "name": "Filecoin - Local testnet",
+  "nativeCurrency": {
+    "name": "testnet filecoin",
+    "symbol": "tFIL",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "filecoin-local",
+  "slug": "filecoin-local-testnet",
+  "status": "incubating",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,7 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Base",
   "chain": "ETH",
+  "chainId": 8453,
+  "explorers": [
+    {
+      "name": "basescan",
+      "url": "https://basescan.org",
+      "standard": "none"
+    },
+    {
+      "name": "basescout",
+      "url": "https://base.blockscout.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://base.org",
+  "name": "Base",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://base.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.base.org/",
@@ -11,41 +39,8 @@ export default {
     "https://base.publicnode.com",
     "wss://base.publicnode.com"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://base.org",
   "shortName": "base",
-  "chainId": 8453,
-  "networkId": 8453,
-  "icon": {
-    "url": "ipfs://QmW5Vn15HeRkScMfPcW12ZdZcC2yUASpu6eCsECRdEmjjj/base-512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "explorers": [
-    {
-      "name": "basescout",
-      "url": "https://base.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    },
-    {
-      "name": "basescan",
-      "url": "https://basescan.org",
-      "standard": "none"
-    }
-  ],
+  "slug": "base",
   "status": "active",
-  "testnet": false,
-  "slug": "base"
+  "testnet": false
 } as const satisfies Chain;

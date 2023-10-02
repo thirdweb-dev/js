@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cronos Testnet",
   "chain": "CRO",
-  "rpc": [
-    "https://cronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm-t3.cronos.org"
-  ],
-  "faucets": [
-    "https://cronos.org/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "Cronos Test Coin",
-    "symbol": "TCRO",
-    "decimals": 18
-  },
-  "infoURL": "https://cronos.org",
-  "shortName": "tcro",
   "chainId": 338,
-  "networkId": 338,
   "explorers": [
     {
       "name": "Cronos Testnet Explorer",
@@ -25,6 +9,23 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "cronos-testnet"
+  "faucets": [
+    "https://cronos.org/faucet"
+  ],
+  "features": [],
+  "infoURL": "https://cronos.org",
+  "name": "Cronos Testnet",
+  "nativeCurrency": {
+    "name": "Cronos Test Coin",
+    "symbol": "TCRO",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://cronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm-t3.cronos.org"
+  ],
+  "shortName": "tcro",
+  "slug": "cronos-testnet",
+  "testnet": true
 } as const satisfies Chain;

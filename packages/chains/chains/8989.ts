@@ -1,41 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Giant Mammoth Mainnet",
-  "title": "Giant Mammoth Chain",
   "chain": "GMMT",
-  "rpc": [
-    "https://giant-mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-asia.gmmtchain.io"
+  "chainId": 8989,
+  "explorers": [
+    {
+      "name": "gmmtscan",
+      "url": "https://scan.gmmtchain.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Giant Mammoth Coin",
-    "symbol": "GMMT",
-    "decimals": 18
-  },
-  "infoURL": "https://gmmtchain.io/",
-  "shortName": "gmmt",
-  "chainId": 8989,
-  "networkId": 8989,
+  "features": [],
   "icon": {
     "url": "ipfs://QmVth4aPeskDTFqRifUugJx6gyEHCmx2PFbMWUtsCSQFkF",
     "width": 468,
     "height": 518,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "gmmtscan",
-      "url": "https://scan.gmmtchain.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmVth4aPeskDTFqRifUugJx6gyEHCmx2PFbMWUtsCSQFkF",
-        "width": 468,
-        "height": 518,
-        "format": "png"
-      }
-    }
+  "infoURL": "https://gmmtchain.io/",
+  "name": "Giant Mammoth Mainnet",
+  "nativeCurrency": {
+    "name": "Giant Mammoth Coin",
+    "symbol": "GMMT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://giant-mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-asia.gmmtchain.io"
   ],
-  "testnet": false,
-  "slug": "giant-mammoth"
+  "shortName": "gmmt",
+  "slug": "giant-mammoth",
+  "testnet": false
 } as const satisfies Chain;

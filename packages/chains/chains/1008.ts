@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eurus Mainnet",
   "chain": "EUN",
-  "rpc": [
-    "https://eurus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.eurus.network/"
+  "chainId": 1008,
+  "explorers": [
+    {
+      "name": "eurusexplorer",
+      "url": "https://explorer.eurus.network",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Eurus",
-    "symbol": "EUN",
-    "decimals": 18
-  },
-  "infoURL": "https://eurus.network",
-  "shortName": "eun",
-  "chainId": 1008,
-  "networkId": 1008,
+  "features": [],
   "icon": {
     "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
     "width": 471,
     "height": 471,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "eurusexplorer",
-      "url": "https://explorer.eurus.network",
-      "icon": {
-        "url": "ipfs://QmaGd5L9jGPbfyGXBFhu9gjinWJ66YtNrXq8x6Q98Eep9e",
-        "width": 471,
-        "height": 471,
-        "format": "svg"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://eurus.network",
+  "name": "Eurus Mainnet",
+  "nativeCurrency": {
+    "name": "Eurus",
+    "symbol": "EUN",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://eurus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.eurus.network/"
   ],
-  "testnet": false,
-  "slug": "eurus"
+  "shortName": "eun",
+  "slug": "eurus",
+  "testnet": false
 } as const satisfies Chain;

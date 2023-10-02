@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ConnectorManager Robin",
   "chain": "Rangers",
-  "icon": {
-    "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
-  },
-  "rpc": [
-    "https://connectormanager-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://robin-cm.rangersprotocol.com/api/jsonrpc"
-  ],
-  "faucets": [
-    "https://robin-faucet.rangersprotocol.com"
-  ],
-  "nativeCurrency": {
-    "name": "Rangers Protocol Gas",
-    "symbol": "ttRPG",
-    "decimals": 18
-  },
-  "infoURL": "https://rangersprotocol.com",
-  "shortName": "ttrpg",
   "chainId": 38401,
-  "networkId": 38401,
   "explorers": [
     {
       "name": "rangersscan-robin",
@@ -31,6 +9,29 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "connectormanager-robin"
+  "faucets": [
+    "https://robin-faucet.rangersprotocol.com"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
+    "width": 2000,
+    "height": 2000,
+    "format": "png"
+  },
+  "infoURL": "https://rangersprotocol.com",
+  "name": "ConnectorManager Robin",
+  "nativeCurrency": {
+    "name": "Rangers Protocol Gas",
+    "symbol": "RPG",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://connectormanager-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://robin-cm.rangersprotocol.com/api/jsonrpc"
+  ],
+  "shortName": "ttrpg",
+  "slug": "connectormanager-robin",
+  "testnet": false
 } as const satisfies Chain;

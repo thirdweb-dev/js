@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Smart Trade Networks",
   "chain": "Smart Trade Networks",
-  "rpc": [
-    "https://smart-trade-networks.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://beefledgerwallet.com:8544"
+  "chainId": 18122,
+  "explorers": [
+    {
+      "name": "stnscan",
+      "url": "https://stnscan.com",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "STN",
-    "symbol": "STN",
-    "decimals": 18
-  },
-  "infoURL": "https://www.smarttradenetworks.com",
-  "shortName": "STN",
-  "chainId": 18122,
-  "networkId": 18122,
+  "features": [],
   "icon": {
     "url": "ipfs://QmRgZVpjik4cH3Sb6wLRpdnfv9kiMEZ8fugfkzTgk3bpRW",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "stnscan",
-      "url": "https://stnscan.com",
-      "icon": {
-        "url": "ipfs://QmRgZVpjik4cH3Sb6wLRpdnfv9kiMEZ8fugfkzTgk3bpRW",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://www.smarttradenetworks.com",
+  "name": "Smart Trade Networks",
+  "nativeCurrency": {
+    "name": "STN",
+    "symbol": "STN",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://smart-trade-networks.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://beefledgerwallet.com:8544"
   ],
-  "testnet": false,
-  "slug": "smart-trade-networks"
+  "shortName": "STN",
+  "slug": "smart-trade-networks",
+  "testnet": false
 } as const satisfies Chain;

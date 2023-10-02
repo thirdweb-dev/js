@@ -1,37 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bronos Mainnet",
   "chain": "Bronos",
-  "rpc": [],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BRO",
-    "symbol": "BRO",
-    "decimals": 18
-  },
-  "infoURL": "https://bronos.org",
-  "shortName": "bronos-mainnet",
   "chainId": 1039,
-  "networkId": 1039,
+  "explorers": [
+    {
+      "name": "Bronos Explorer",
+      "url": "https://broscan.bronos.org",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Bronos Explorer",
-      "url": "https://broscan.bronos.org",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
-    }
-  ],
-  "testnet": false,
-  "slug": "bronos"
+  "infoURL": "https://bronos.org",
+  "name": "Bronos Mainnet",
+  "nativeCurrency": {
+    "name": "BRO",
+    "symbol": "BRO",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "bronos-mainnet",
+  "slug": "bronos",
+  "testnet": false
 } as const satisfies Chain;
