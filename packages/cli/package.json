@@ -53,7 +53,7 @@
     "node-fetch": "^3.3.2",
     "open": "^8.4.0",
     "prompts": "^2.4.2",
-    "rimraf": "^3.0.2",
+    "rimraf": "^5.0.5",
     "solc": "0.8.17",
     "tar": "^6.1.15",
     "update-notifier": "^6.0.2",
