@@ -294,12 +294,12 @@ describe("NFT Contract", async () => {
     await nftContract.mintBatch(metadata);
     const nftPage1 = await nftContract.getOwned(undefined, {
       count: 2,
-      page: 1,
+      start: 0,
     });
     expect(nftPage1).to.be.an("array").length(2);
     const nftPage2 = await nftContract.getOwned(undefined, {
       count: 3,
-      page: 3,
+      start: 2,
     });
     expect(nftPage2).to.be.an("array").length(3);
     expect(nftPage2[0].metadata.id).to.eq("6");
