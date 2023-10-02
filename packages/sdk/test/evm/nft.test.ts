@@ -274,18 +274,32 @@ describe("NFT Contract", async () => {
     expect(tx.id.toNumber()).to.eq(0);
   });
 
+  it("allOwners() should not return AddressZero as one of the owners", async () => {
+    const metadata = [{ name: "Test1" }, { name: "Test2" }, { name: "Test3" }];
+    await nftContract.mintBatch(metadata);
+
+    // Send one to AddressZero so that we can run the test
+    await nftContract.burn(0);
+    const records = await nftContract.erc721.getAllOwners();
+    const hasFaultyRecord = records.some((item) => item.owner === AddressZero);
+    assert.strictEqual(hasFaultyRecord, false);
+    expect(records).to.be.an("array").length(2);
+    expect(records[0].tokenId).to.eq(1);
+    expect(records[1].tokenId).to.eq(2);
+  });
+
   it("should respect pagination for getOwned", async () => {
     const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
     const nftPage1 = await nftContract.getOwned(undefined, {
       count: 2,
-      start: 1,
+      page: 1,
     });
     expect(nftPage1).to.be.an("array").length(2);
     const nftPage2 = await nftContract.getOwned(undefined, {
       count: 3,
-      start: 3,
+      page: 3,
     });
     expect(nftPage2).to.be.an("array").length(3);
     expect(nftPage2[0].metadata.id).to.eq("6");

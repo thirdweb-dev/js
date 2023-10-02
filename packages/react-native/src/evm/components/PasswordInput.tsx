@@ -25,6 +25,7 @@ export const PasswordInput = ({
       borderWidth={1}
       borderRadius="md"
       pr="xs"
+      pl="xxs"
     >
       <TextInput
         style={{ ...styles.textInput, color: theme.colors.textPrimary }}
@@ -62,6 +63,5 @@ const styles = StyleSheet.create({
     textAlign: "left",
     flex: 1,
     height: 40,
-    paddingLeft: 5,
   },
 });

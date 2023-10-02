@@ -28,6 +28,7 @@ import { ReceiveButton } from "../ReceiveButton";
 import { SendButton } from "../SendFunds/SendButton";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
+import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -62,6 +63,19 @@ export const ConnectWalletDetailsModal = ({
     chain?.chainId && displayBalanceToken
       ? displayBalanceToken[chain?.chainId]
       : undefined;
+
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
+      const connectedSmartWallet = activeWallet as SmartWallet;
+      connectedSmartWallet.isDeployed().then((isDeployed) => {
+        setIsSmartWalletDeployed(isDeployed);
+      });
+    } else {
+      setIsSmartWalletDeployed(false);
+    }
+  }, [activeWallet]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -166,7 +180,7 @@ export const ConnectWalletDetailsModal = ({
           />
 
           {activeWallet?.walletId === LocalWallet.id ? (
-            <Text variant="error" textAlign="left">
+            <Text variant="error" textAlign="left" mb="sm">
               {
                 "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
               }
@@ -200,8 +214,9 @@ export const ConnectWalletDetailsModal = ({
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
-            {activeWallet?.walletId === SmartWallet.id || smartWallet ? (
+            {activeWallet?.walletId === SmartWallet.id ? (
               <BaseButton
+                disabled={!isSmartWalletDeployed}
                 onPress={() => {
                   Linking.openURL(
                     `https://thirdweb.com/${chain?.slug}/${address}/account`,
@@ -212,14 +227,24 @@ export const ConnectWalletDetailsModal = ({
                 justifyContent="space-between"
                 mt="md"
               >
-                <Box flexDirection="row">
-                  <ActiveDot width={12} height={12} />
+                <Box flexDirection="row" alignItems="center">
+                  <ActiveDot width={10} height={10} />
                   <Text variant="bodySmallSecondary" ml="xxs">
                     Connected to a Smart Wallet
                   </Text>
                 </Box>
-                <RightArrowIcon width={10} height={10} />
+                {isSmartWalletDeployed ? (
+                  <RightArrowIcon width={10} height={10} />
+                ) : null}
               </BaseButton>
+            ) : null}
+            {activeWallet?.walletId === EmbeddedWallet.id ? (
+              <Box flexDirection="row" alignItems="center" mt="md">
+                <ActiveDot width={10} height={10} />
+                <Text variant="bodySmallSecondary" ml="xxs">
+                  {(activeWallet as EmbeddedWallet).getEmail()}
+                </Text>
+              </Box>
             ) : null}
             <Box flexDirection="row" justifyContent="space-evenly" mt="md">
               <SendButton supportedTokens={supportedTokens} />

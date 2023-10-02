@@ -164,6 +164,7 @@ const MagicConnectionUI: React.FC<
 
   return (
     <ConnectingWallet
+      subHeaderText=""
       wallet={walletConfig}
       onClose={close}
       onBackPress={goBack}

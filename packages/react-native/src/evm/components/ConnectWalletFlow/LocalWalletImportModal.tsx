@@ -192,9 +192,18 @@ export const LocalWalletImportModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
-          <Text variant="bodySmall" m="xs" textAlign="center">
-            ---- Or Private key or Mnemonic ----
-          </Text>
+          <Box
+            mb="xs"
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box height={1} flex={1} backgroundColor="border" />
+            <Text variant="bodySmall" textAlign="center" marginHorizontal="xxs">
+              Or Private key or Mnemonic
+            </Text>
+            <Box height={1} flex={1} backgroundColor="border" />
+          </Box>
           <TextInput
             textInputProps={{
               secureTextEntry: true,

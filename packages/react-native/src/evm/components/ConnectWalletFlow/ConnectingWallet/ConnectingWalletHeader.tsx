@@ -1,13 +1,12 @@
 import { Icon } from "../../../assets/icon";
 import { useAppTheme } from "../../../styles/hooks";
-import ImageSvgUri from "../../base/ImageSvgUri";
 import Text from "../../base/Text";
 import { FlexAlignType, StyleSheet, View } from "react-native";
 
 interface ConnectWalletHeaderProps {
   onClose: () => void;
   onBackPress?: () => void;
-  walletLogoUrl?: string;
+  middleContent?: React.ReactNode;
   headerText?: string;
   subHeaderText?: string;
   alignHeader?: FlexAlignType;
@@ -17,7 +16,7 @@ export const ConnectWalletHeader = ({
   headerText,
   subHeaderText = "Connecting your wallet",
   alignHeader = "center",
-  walletLogoUrl,
+  middleContent,
   onClose,
   onBackPress,
 }: ConnectWalletHeaderProps) => {
@@ -33,10 +32,10 @@ export const ConnectWalletHeader = ({
             onPress={onBackPress}
             color={theme.colors.iconPrimary}
           />
-        ) : null}
-        {walletLogoUrl ? (
-          <ImageSvgUri width={56} height={56} imageUrl={walletLogoUrl} />
-        ) : null}
+        ) : (
+          <View />
+        )}
+        {middleContent ? middleContent : null}
         <Icon
           type="close"
           width={14}
