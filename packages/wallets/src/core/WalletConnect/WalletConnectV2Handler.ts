@@ -145,9 +145,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
-        const signedMessage = message
-          ? await wallet.signMessage(message)
-          : message;
+        const signedMessage = await wallet.signMessage(message || ""); // TODO: handle empty message
 
         response = formatJsonRpcResult(id, signedMessage);
         break;
@@ -355,11 +353,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
    * If it is a hex string, it gets converted to utf8 string
    */
   #getSignParamsMessage(params: string[]) {
-    const message = params.filter((p) => !utils.isAddress(p))[0];
-
-    if (!message) {
-      return message;
-    }
+    const message = params.filter((p) => !utils.isAddress(p))[0] || ""; // TODO: handle empty message
 
     if (utils.isHexString(message)) {
       return utils.toUtf8String(message);
