@@ -5,6 +5,13 @@ type Icon = {
   format: string;
 };
 
+export type ChainExplorer = {
+  name: string;
+  url: string;
+  icon?: Icon;
+  standard: string;
+};
+
 export type Chain = {
   name: string;
   title?: string;
@@ -25,14 +32,7 @@ export type Chain = {
   ens?: {
     registry: string;
   };
-  explorers?: Readonly<
-    Array<{
-      name: string;
-      url: string;
-      icon?: Icon;
-      standard: string;
-    }>
-  >;
+  explorers?: Readonly<Array<ChainExplorer>>;
   testnet: boolean;
   slug: string;
   slip44?: number;
@@ -43,6 +43,10 @@ export type Chain = {
     type: string;
     bridges?: Readonly<Array<{ url: string }>>;
   };
+};
+
+export type ApiChain = Omit<Chain, "features"> & {
+  features: string[];
 };
 
 // MinimalChain is a subset of Chain with only the fields that are required / non-optional

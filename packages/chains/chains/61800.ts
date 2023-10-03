@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AxelChain Dev-Net",
   "chain": "AXEL",
-  "rpc": [
-    "https://axelchain-dev-net.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://aium-rpc-dev.viacube.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Axelium",
-    "symbol": "AIUM",
-    "decimals": 18
-  },
-  "infoURL": "https://www.axel.org",
-  "shortName": "aium-dev",
   "chainId": 61800,
-  "networkId": 61800,
-  "icon": {
-    "url": "ipfs://QmNx8FRacfNeawhkjk5p57EKzDHkLGMaBBmK2VRL5CB2P2",
-    "width": 40,
-    "height": 40,
-    "format": "svg"
-  },
   "explorers": [
     {
       "name": "AxelChain Dev-Net Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "axelchain-dev-net"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmNx8FRacfNeawhkjk5p57EKzDHkLGMaBBmK2VRL5CB2P2",
+    "width": 40,
+    "height": 40,
+    "format": "svg"
+  },
+  "infoURL": "https://www.axel.org",
+  "name": "AxelChain Dev-Net",
+  "nativeCurrency": {
+    "name": "Axelium",
+    "symbol": "AIUM",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://axelchain-dev-net.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://aium-rpc-dev.viacube.com"
+  ],
+  "shortName": "aium-dev",
+  "slug": "axelchain-dev-net",
+  "testnet": false
 } as const satisfies Chain;

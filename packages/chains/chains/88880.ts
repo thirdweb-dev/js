@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Chiliz Scoville Testnet",
   "chain": "CHZ",
-  "rpc": [
-    "https://chiliz-scoville-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://scoville-rpc.chiliz.com"
-  ],
-  "faucets": [
-    "https://scoville-faucet.chiliz.com"
-  ],
-  "nativeCurrency": {
-    "name": "Chiliz",
-    "symbol": "CHZ",
-    "decimals": 18
-  },
-  "icon": {
-    "url": "ipfs://QmYV5xUVZhHRzLy7ie9D8qZeygJHvNZZAxwnB9GXYy6EED",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
-  "infoURL": "https://www.chiliz.com/en/chain",
-  "shortName": "chz",
   "chainId": 88880,
-  "networkId": 88880,
   "explorers": [
     {
       "name": "scoville-explorer",
@@ -31,6 +9,29 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "chiliz-scoville-testnet"
+  "faucets": [
+    "https://scoville-faucet.chiliz.com"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmYV5xUVZhHRzLy7ie9D8qZeygJHvNZZAxwnB9GXYy6EED",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "infoURL": "https://www.chiliz.com/en/chain",
+  "name": "Chiliz Scoville Testnet",
+  "nativeCurrency": {
+    "name": "Chiliz",
+    "symbol": "CHZ",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://chiliz-scoville-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://scoville-rpc.chiliz.com"
+  ],
+  "shortName": "chz",
+  "slug": "chiliz-scoville-testnet",
+  "testnet": true
 } as const satisfies Chain;

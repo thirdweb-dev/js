@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aerie Network",
   "chain": "Aerie",
-  "rpc": [
-    "https://aerie-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.aerielab.io"
+  "chainId": 84886,
+  "explorers": [
+    {
+      "name": "Aerie Explorer",
+      "url": "https://explorer.aerielab.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Aerie",
-    "symbol": "AER",
-    "decimals": 18
-  },
-  "infoURL": "https://aerielab.io/",
-  "shortName": "Aerie",
-  "chainId": 84886,
-  "networkId": 84886,
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreig54jss26xllpjbclmfgwvot72m4ku7qxignhlqei6mijvwi2m4pu",
     "width": 1062,
     "height": 1069,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Aerie Explorer",
-      "url": "https://explorer.aerielab.io",
-      "icon": {
-        "url": "ipfs://bafkreig54jss26xllpjbclmfgwvot72m4ku7qxignhlqei6mijvwi2m4pu",
-        "width": 1062,
-        "height": 1069,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://aerielab.io/",
+  "name": "Aerie Network",
+  "nativeCurrency": {
+    "name": "Aerie",
+    "symbol": "AER",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://aerie-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.aerielab.io"
   ],
-  "testnet": false,
-  "slug": "aerie-network"
+  "shortName": "Aerie",
+  "slug": "aerie-network",
+  "testnet": false
 } as const satisfies Chain;

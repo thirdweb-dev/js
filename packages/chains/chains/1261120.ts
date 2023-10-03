@@ -1,32 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "zKatana",
-  "shortName": "azktn",
-  "title": "Astar zkEVM Testnet zKatana",
   "chain": "ETH",
+  "chainId": 1261120,
+  "explorers": [],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmZm2RfbEfWjnqu7MLSG5ChhAsjnKqTvmHM5eJWvYGAwG8",
     "width": 800,
     "height": 264,
     "format": "png"
   },
-  "rpc": [],
-  "faucets": [],
+  "infoURL": "https://astar.network",
+  "name": "zKatana",
   "nativeCurrency": {
     "name": "Sepolia Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://astar.network",
-  "chainId": 1261120,
-  "networkId": 1261120,
-  "explorers": [],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-11155111",
-    "bridges": []
-  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "azktn",
+  "slug": "zkatana",
   "status": "incubating",
-  "testnet": true,
-  "slug": "zkatana"
+  "testnet": true
 } as const satisfies Chain;

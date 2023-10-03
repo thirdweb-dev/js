@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Social Smart Chain Mainnet",
   "chain": "SoChain",
-  "rpc": [
-    "https://social-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://socialsmartchain.digitalnext.business"
-  ],
+  "chainId": 281121,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://digitalnext.business/SocialSmartChain",
+  "name": "Social Smart Chain Mainnet",
   "nativeCurrency": {
     "name": "SoChain",
     "symbol": "$OC",
     "decimals": 18
   },
-  "infoURL": "https://digitalnext.business/SocialSmartChain",
+  "redFlags": [],
+  "rpc": [
+    "https://social-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://socialsmartchain.digitalnext.business"
+  ],
   "shortName": "SoChain",
-  "chainId": 281121,
-  "networkId": 281121,
-  "explorers": [],
-  "testnet": false,
-  "slug": "social-smart-chain"
+  "slug": "social-smart-chain",
+  "testnet": false
 } as const satisfies Chain;

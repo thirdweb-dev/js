@@ -1,13 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fibonacci Mainnet",
   "chain": "FIBO",
+  "chainId": 12306,
+  "explorers": [
+    {
+      "name": "fiboscan",
+      "url": "https://scan.fibochain.org",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://test.fibochain.org/faucets"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreidiedaz3jugxmh2ylzlc4nympbd5iwab33adhwkcnblyop6vvj25y",
     "width": 1494,
     "height": 1494,
     "format": "png"
   },
+  "infoURL": "https://fibochain.org",
+  "name": "Fibonacci Mainnet",
+  "nativeCurrency": {
+    "name": "FIBONACCI UTILITY TOKEN",
+    "symbol": "FIBO",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://fibonacci.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.fibo-api.asia",
@@ -25,25 +44,7 @@ export default {
     "https://node6.fibo-rpc.asia",
     "https://node7.fibo-rpc.asia"
   ],
-  "faucets": [
-    "https://test.fibochain.org/faucets"
-  ],
-  "nativeCurrency": {
-    "name": "FIBONACCI UTILITY TOKEN",
-    "symbol": "FIBO",
-    "decimals": 18
-  },
-  "infoURL": "https://fibochain.org",
   "shortName": "fibo",
-  "chainId": 12306,
-  "networkId": 1230,
-  "explorers": [
-    {
-      "name": "fiboscan",
-      "url": "https://scan.fibochain.org",
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": true,
-  "slug": "fibonacci"
+  "slug": "fibonacci",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,30 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AIA Mainnet",
   "chain": "AIA",
-  "icon": {
-    "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
-    "width": 160,
-    "height": 160,
-    "format": "png"
-  },
-  "rpc": [
-    "https://aia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://aia-dataseed1.aiachain.org",
-    "https://aia-dataseed2.aiachain.org",
-    "https://aia-dataseed3.aiachain.org",
-    "https://aia-dataseed4.aiachain.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "AIA Mainnet",
-    "symbol": "AIA",
-    "decimals": 18
-  },
-  "infoURL": "https://aiachain.org/",
-  "shortName": "aia",
   "chainId": 1319,
-  "networkId": 1319,
   "explorers": [
     {
       "name": "AIA Chain Explorer Mainnet",
@@ -32,6 +9,30 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "aia"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
+    "width": 160,
+    "height": 160,
+    "format": "png"
+  },
+  "infoURL": "https://aiachain.org/",
+  "name": "AIA Mainnet",
+  "nativeCurrency": {
+    "name": "AIA Mainnet",
+    "symbol": "AIA",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://aia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://aia-dataseed1.aiachain.org",
+    "https://aia-dataseed2.aiachain.org",
+    "https://aia-dataseed3.aiachain.org",
+    "https://aia-dataseed4.aiachain.org"
+  ],
+  "shortName": "aia",
+  "slug": "aia",
+  "testnet": false
 } as const satisfies Chain;

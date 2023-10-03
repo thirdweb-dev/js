@@ -1,51 +1,40 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taycan",
   "chain": "Taycan",
-  "rpc": [
-    "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://taycan-rpc.hupayx.io:8545"
+  "chainId": 22023,
+  "explorers": [
+    {
+      "name": "Taycan Cosmos Explorer(BigDipper)",
+      "url": "https://taycan-cosmoscan.hupayx.io",
+      "standard": "none"
+    },
+    {
+      "name": "Taycan Explorer(Blockscout)",
+      "url": "https://taycan-evmscan.hupayx.io",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "shuffle",
-    "symbol": "SFL",
-    "decimals": 18
-  },
-  "infoURL": "https://hupayx.io",
-  "shortName": "SFL",
-  "chainId": 22023,
-  "networkId": 22023,
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
     "width": 1000,
     "height": 1206,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Taycan Explorer(Blockscout)",
-      "url": "https://taycan-evmscan.hupayx.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-        "width": 1000,
-        "height": 1206,
-        "format": "png"
-      }
-    },
-    {
-      "name": "Taycan Cosmos Explorer(BigDipper)",
-      "url": "https://taycan-cosmoscan.hupayx.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-        "width": 1000,
-        "height": 1206,
-        "format": "png"
-      }
-    }
+  "infoURL": "https://hupayx.io",
+  "name": "Taycan",
+  "nativeCurrency": {
+    "name": "shuffle",
+    "symbol": "SFL",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://taycan-rpc.hupayx.io:8545"
   ],
-  "testnet": false,
-  "slug": "taycan"
+  "shortName": "SFL",
+  "slug": "taycan",
+  "testnet": false
 } as const satisfies Chain;
