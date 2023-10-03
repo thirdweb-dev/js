@@ -98,7 +98,9 @@ export abstract class MagicBaseConnector extends WagmiConnector<
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: utils.getAddress(accounts[0]) });
+      if (accounts[0]) {
+        this.emit("change", { account: utils.getAddress(accounts[0]) });
+      }
     }
   }
 
@@ -264,7 +266,7 @@ export class MagicAuthConnector extends MagicBaseConnector {
       const chain = this.chains.find((c) => c.chainId === chainId);
       if (chain) {
         options.network = {
-          rpcUrl: chain.rpc[0],
+          rpcUrl: chain.rpc[0] || "", // TODO handle empty RPC array
           chainId: chain.chainId,
         };
       }

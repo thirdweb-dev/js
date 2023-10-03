@@ -192,7 +192,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     const tokens = { ...defaultTokens };
     for (const k in props.supportedTokens) {
       const key = Number(k);
-      tokens[key] = props.supportedTokens[key];
+      const tokenList = props.supportedTokens[key];
+      if (tokenList) {
+        tokens[key] = tokenList;
+      }
     }
 
     return tokens;

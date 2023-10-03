@@ -1,5 +1,15 @@
 # @thirdweb-dev/react
 
+## 3.16.2
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+  - @thirdweb-dev/react-core@3.16.2
+  - @thirdweb-dev/sdk@3.10.64
+  - @thirdweb-dev/wallets@1.3.2
+
 ## 3.16.1
 
 ### Patch Changes

@@ -259,7 +259,9 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: ethers.utils.getAddress(accounts[0]) });
+      if (accounts[0]) {
+        this.emit("change", { account: ethers.utils.getAddress(accounts[0]) });
+      }
     }
   }
 
