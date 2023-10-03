@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Posichain Devnet Shard 0",
   "chain": "PSC",
-  "rpc": [
-    "https://posichain-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.s0.d.posichain.org"
-  ],
-  "faucets": [
-    "https://faucet.posichain.org/"
-  ],
-  "nativeCurrency": {
-    "name": "Posichain Native Token",
-    "symbol": "POSI",
-    "decimals": 18
-  },
-  "infoURL": "https://posichain.org",
-  "shortName": "psc-d-s0",
   "chainId": 920000,
-  "networkId": 920000,
   "explorers": [
     {
       "name": "Posichain Explorer Devnet",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "posichain-devnet-shard-0"
+  "faucets": [
+    "https://faucet.posichain.org/"
+  ],
+  "features": [],
+  "infoURL": "https://posichain.org",
+  "name": "Posichain Devnet Shard 0",
+  "nativeCurrency": {
+    "name": "Posichain Native Token",
+    "symbol": "POSI",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://posichain-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.s0.d.posichain.org"
+  ],
+  "shortName": "psc-d-s0",
+  "slug": "posichain-devnet-shard-0",
+  "testnet": false
 } as const satisfies Chain;

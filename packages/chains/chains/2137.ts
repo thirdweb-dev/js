@@ -1,23 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BigShortBets",
   "chain": "BIGSB",
-  "rpc": [
-    "https://bigshortbets.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://market.bigsb.io",
-    "wss://market.bigsb.io"
-  ],
+  "chainId": 2137,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://bigshortbets.com/",
+  "name": "BigShortBets",
   "nativeCurrency": {
     "name": "USD Coin",
     "symbol": "USDC",
     "decimals": 18
   },
-  "infoURL": "https://bigshortbets.com/",
+  "redFlags": [],
+  "rpc": [
+    "https://bigshortbets.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://market.bigsb.io",
+    "wss://market.bigsb.io"
+  ],
   "shortName": "bigsb",
-  "chainId": 2137,
-  "networkId": 2137,
-  "explorers": [],
-  "testnet": false,
-  "slug": "bigshortbets"
+  "slug": "bigshortbets",
+  "testnet": false
 } as const satisfies Chain;

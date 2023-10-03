@@ -1,13 +1,42 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Edgeware EdgeEVM Mainnet",
   "chain": "EDG",
+  "chainId": 2021,
+  "explorers": [
+    {
+      "name": "Edgscan by Bharathcoorg",
+      "url": "https://edgscan.live",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "Subscan",
+      "url": "https://edgeware.subscan.io",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
   "icon": {
     "url": "ipfs://QmS3ERgAKYTmV7bSWcUPSvrrCC9wHQYxtZqEQYx9Rw4RGA",
     "width": 352,
     "height": 304,
     "format": "png"
   },
+  "infoURL": "https://edgeware.io",
+  "name": "Edgeware EdgeEVM Mainnet",
+  "nativeCurrency": {
+    "name": "Edgeware",
+    "symbol": "EDG",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://edgeware-edgeevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgeware-evm.jelliedowl.net",
@@ -21,43 +50,7 @@ export default {
     "wss://mainnet4.edgewa.re",
     "wss://mainnet5.edgewa.re"
   ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Edgeware",
-    "symbol": "EDG",
-    "decimals": 18
-  },
-  "infoURL": "https://edgeware.io",
   "shortName": "edg",
-  "chainId": 2021,
-  "networkId": 2021,
-  "slip44": 523,
-  "explorers": [
-    {
-      "name": "Edgscan by Bharathcoorg",
-      "url": "https://edgscan.live",
-      "standard": "EIP3091"
-    },
-    {
-      "name": "Subscan",
-      "url": "https://edgeware.subscan.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
-    }
-  ],
-  "testnet": false,
-  "slug": "edgeware-edgeevm"
+  "slug": "edgeware-edgeevm",
+  "testnet": false
 } as const satisfies Chain;

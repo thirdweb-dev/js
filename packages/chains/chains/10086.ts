@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SJATSH",
   "chain": "ETH",
-  "rpc": [
-    "https://sjatsh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://geth.free.idcfengye.com"
-  ],
+  "chainId": 10086,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://sjis.me",
+  "name": "SJATSH",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://sjis.me",
+  "redFlags": [],
+  "rpc": [
+    "https://sjatsh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://geth.free.idcfengye.com"
+  ],
   "shortName": "SJ",
-  "chainId": 10086,
-  "networkId": 10086,
-  "testnet": false,
-  "slug": "sjatsh"
+  "slug": "sjatsh",
+  "testnet": false
 } as const satisfies Chain;

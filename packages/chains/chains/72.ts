@@ -1,23 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DxChain Testnet",
   "chain": "DxChain",
-  "rpc": [
-    "https://dxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-http.dxchain.com"
-  ],
+  "chainId": 72,
+  "explorers": [],
   "faucets": [
     "https://faucet.dxscan.io"
   ],
+  "features": [],
+  "infoURL": "https://testnet.dxscan.io/",
+  "name": "DxChain Testnet",
   "nativeCurrency": {
     "name": "DxChain Testnet",
     "symbol": "DX",
     "decimals": 18
   },
-  "infoURL": "https://testnet.dxscan.io/",
+  "redFlags": [],
+  "rpc": [
+    "https://dxchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-http.dxchain.com"
+  ],
   "shortName": "dxc",
-  "chainId": 72,
-  "networkId": 72,
-  "testnet": true,
-  "slug": "dxchain-testnet"
+  "slug": "dxchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

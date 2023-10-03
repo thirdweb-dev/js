@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "QuarkChain Devnet Root",
   "chain": "QuarkChain",
-  "rpc": [
-    "https://quarkchain-devnet-root.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://jrpc.devnet.quarkchain.io:38391"
-  ],
+  "chainId": 110000,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://www.quarkchain.io",
+  "name": "QuarkChain Devnet Root",
   "nativeCurrency": {
     "name": "QKC",
     "symbol": "QKC",
     "decimals": 18
   },
-  "infoURL": "https://www.quarkchain.io",
+  "redFlags": [],
+  "rpc": [
+    "https://quarkchain-devnet-root.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://jrpc.devnet.quarkchain.io:38391"
+  ],
   "shortName": "qkc-d-r",
-  "chainId": 110000,
-  "networkId": 110000,
-  "testnet": false,
-  "slug": "quarkchain-devnet-root"
+  "slug": "quarkchain-devnet-root",
+  "testnet": false
 } as const satisfies Chain;

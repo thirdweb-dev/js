@@ -1,18 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Vision - Mainnet",
   "chain": "Vision",
-  "rpc": [
-    "https://vision.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://infragrid.v.network/ethereum/compatible"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "VS",
-    "symbol": "VS",
-    "decimals": 18
-  },
-  "infoURL": "https://www.v.network",
+  "chainId": 888888,
   "explorers": [
     {
       "name": "Visionscan",
@@ -20,10 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://www.v.network",
+  "name": "Vision - Mainnet",
+  "nativeCurrency": {
+    "name": "VS",
+    "symbol": "VS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://vision.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://infragrid.v.network/ethereum/compatible"
+  ],
   "shortName": "vision",
-  "chainId": 888888,
-  "networkId": 888888,
-  "slip44": 60,
-  "testnet": false,
-  "slug": "vision"
+  "slug": "vision",
+  "testnet": false
 } as const satisfies Chain;

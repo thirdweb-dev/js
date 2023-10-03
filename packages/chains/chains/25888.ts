@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hammer Chain Mainnet",
   "chain": "HammerChain",
-  "rpc": [
-    "https://hammer-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.hammerchain.io/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "GOLDT",
-    "symbol": "GOLDT",
-    "decimals": 18
-  },
-  "infoURL": "https://www.hammerchain.io",
-  "shortName": "GOLDT",
   "chainId": 25888,
-  "networkId": 25888,
   "explorers": [
     {
       "name": "Hammer Chain Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "hammer-chain"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://www.hammerchain.io",
+  "name": "Hammer Chain Mainnet",
+  "nativeCurrency": {
+    "name": "GOLDT",
+    "symbol": "GOLDT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://hammer-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://www.hammerchain.io/rpc"
+  ],
+  "shortName": "GOLDT",
+  "slug": "hammer-chain",
+  "testnet": false
 } as const satisfies Chain;

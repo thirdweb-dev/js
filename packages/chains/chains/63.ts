@@ -1,30 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Testnet Mordor",
   "chain": "ETC",
-  "rpc": [
-    "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mordor.etccooperative.org"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    }
-  ],
-  "faucets": [
-    "https://mordor.canhaz.net/",
-    "https://easy.hebeswap.com/#/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "Mordor Classic Testnet Ether",
-    "symbol": "METC",
-    "decimals": 18
-  },
-  "infoURL": "https://github.com/eth-classic/mordor/",
-  "shortName": "metc",
   "chainId": 63,
-  "networkId": 7,
-  "slip44": 63,
   "explorers": [
     {
       "name": "blockscout",
@@ -32,6 +9,28 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ethereum-classic-testnet-mordor"
+  "faucets": [
+    "https://mordor.canhaz.net/",
+    "https://easy.hebeswap.com/#/faucet"
+  ],
+  "features": [
+    {
+      "name": "EIP155"
+    }
+  ],
+  "infoURL": "https://github.com/eth-classic/mordor/",
+  "name": "Ethereum Classic Testnet Mordor",
+  "nativeCurrency": {
+    "name": "Mordor Classic Testnet Ether",
+    "symbol": "METC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mordor.etccooperative.org"
+  ],
+  "shortName": "metc",
+  "slug": "ethereum-classic-testnet-mordor",
+  "testnet": true
 } as const satisfies Chain;

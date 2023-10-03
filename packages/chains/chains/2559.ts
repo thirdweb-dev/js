@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kortho Mainnet",
   "chain": "Kortho Chain",
-  "rpc": [
-    "https://kortho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.kortho-chain.com"
-  ],
+  "chainId": 2559,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://www.kortho.io/",
+  "name": "Kortho Mainnet",
   "nativeCurrency": {
     "name": "KorthoChain",
     "symbol": "KTO",
     "decimals": 11
   },
-  "infoURL": "https://www.kortho.io/",
+  "redFlags": [],
+  "rpc": [
+    "https://kortho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://www.kortho-chain.com"
+  ],
   "shortName": "ktoc",
-  "chainId": 2559,
-  "networkId": 2559,
-  "testnet": false,
-  "slug": "kortho"
+  "slug": "kortho",
+  "testnet": false
 } as const satisfies Chain;

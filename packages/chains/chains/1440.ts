@@ -1,28 +1,30 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Living Assets Mainnet",
   "chain": "LAS",
+  "chainId": 1440,
+  "explorers": [],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmRidubY7BVwC737BQwGEttenP1npAXN7ZNryktE416uUW",
     "width": 500,
     "height": 500,
     "format": "jpg"
   },
-  "rpc": [
-    "https://living-assets.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://beta.mainnet.livingassets.io/rpc",
-    "https://gamma.mainnet.livingassets.io/rpc"
-  ],
-  "faucets": [],
+  "infoURL": "https://dev.livingassets.io/",
+  "name": "Living Assets Mainnet",
   "nativeCurrency": {
     "name": "LAS",
     "symbol": "LAS",
     "decimals": 18
   },
-  "infoURL": "https://dev.livingassets.io/",
+  "redFlags": [],
+  "rpc": [
+    "https://living-assets.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://beta.mainnet.livingassets.io/rpc",
+    "https://gamma.mainnet.livingassets.io/rpc"
+  ],
   "shortName": "LAS",
-  "chainId": 1440,
-  "networkId": 1440,
-  "testnet": false,
-  "slug": "living-assets"
+  "slug": "living-assets",
+  "testnet": false
 } as const satisfies Chain;
