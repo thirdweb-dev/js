@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "pegglecoin",
   "chain": "42069",
-  "rpc": [],
+  "chainId": 42069,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://teampeggle.com",
+  "name": "pegglecoin",
   "nativeCurrency": {
     "name": "pegglecoin",
     "symbol": "peggle",
     "decimals": 18
   },
-  "infoURL": "https://teampeggle.com",
+  "redFlags": [],
+  "rpc": [],
   "shortName": "PC",
-  "chainId": 42069,
-  "networkId": 42069,
-  "testnet": false,
-  "slug": "pegglecoin"
+  "slug": "pegglecoin",
+  "testnet": false
 } as const satisfies Chain;

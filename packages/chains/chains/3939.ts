@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DOS Tesnet",
   "chain": "DOS",
-  "rpc": [
-    "https://dos-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test.doschain.com"
+  "chainId": 3939,
+  "explorers": [
+    {
+      "name": "DOScan-Test",
+      "url": "https://test.doscan.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "DOS",
-    "symbol": "DOS",
-    "decimals": 18
-  },
-  "infoURL": "http://doschain.io/",
-  "shortName": "dost",
-  "chainId": 3939,
-  "networkId": 3939,
+  "features": [],
   "icon": {
     "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "DOScan-Test",
-      "url": "https://test.doscan.io",
-      "icon": {
-        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "http://doschain.io/",
+  "name": "DOS Tesnet",
+  "nativeCurrency": {
+    "name": "DOS",
+    "symbol": "DOS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://dos-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test.doschain.com"
   ],
-  "testnet": true,
-  "slug": "dos-tesnet"
+  "shortName": "dost",
+  "slug": "dos-tesnet",
+  "testnet": true
 } as const satisfies Chain;

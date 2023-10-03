@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kekchain",
   "chain": "kek",
-  "rpc": [
-    "https://kekchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.kekchain.com"
+  "chainId": 420420,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://mainnet-explorer.kekchain.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "KEK",
-    "symbol": "KEK",
-    "decimals": 18
-  },
-  "infoURL": "https://kekchain.com",
-  "shortName": "KEK",
-  "chainId": 420420,
-  "networkId": 103090,
+  "features": [],
   "icon": {
     "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
     "width": 401,
     "height": 401,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://mainnet-explorer.kekchain.com",
-      "icon": {
-        "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
-        "width": 401,
-        "height": 401,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://kekchain.com",
+  "name": "Kekchain",
+  "nativeCurrency": {
+    "name": "KEK",
+    "symbol": "KEK",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://kekchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.kekchain.com"
   ],
-  "testnet": false,
-  "slug": "kekchain"
+  "shortName": "KEK",
+  "slug": "kekchain",
+  "testnet": false
 } as const satisfies Chain;

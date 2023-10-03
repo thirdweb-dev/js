@@ -464,7 +464,7 @@ export const ConnectedWalletDetails: React.FC<{
           )}
 
         {/* Explorer link */}
-        {chain?.explorers && (
+        {chain?.explorers && chain.explorers[0]?.url && (
           <MenuLink
             href={chain.explorers[0].url + "/address/" + address}
             target="_blank"

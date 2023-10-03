@@ -1,42 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TTcoin Smart Chain Mainnet",
   "chain": "TSC",
+  "chainId": 330844,
+  "explorers": [
+    {
+      "name": "TTcoin Smart Chain Explorer",
+      "url": "https://tscscan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://faucet.tscscan.com"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmS7ipvvyZ16weG1DM7AZbi1v9ixYwU2FjP25Jj5jkLiuf",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://ttcoin-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.tscscan.com"
-  ],
-  "faucets": [
-    "https://faucet.tscscan.com"
-  ],
+  "infoURL": "https://ttcoin.info/",
+  "name": "TTcoin Smart Chain Mainnet",
   "nativeCurrency": {
     "name": "TTcoin",
     "symbol": "TC",
     "decimals": 18
   },
-  "infoURL": "https://ttcoin.info/",
-  "shortName": "tc",
-  "chainId": 330844,
-  "networkId": 330844,
-  "explorers": [
-    {
-      "name": "TTcoin Smart Chain Explorer",
-      "url": "https://tscscan.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmS7ipvvyZ16weG1DM7AZbi1v9ixYwU2FjP25Jj5jkLiuf",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://ttcoin-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.tscscan.com"
   ],
-  "testnet": false,
-  "slug": "ttcoin-smart-chain"
+  "shortName": "tc",
+  "slug": "ttcoin-smart-chain",
+  "testnet": false
 } as const satisfies Chain;

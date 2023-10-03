@@ -13,6 +13,7 @@ import {
   createAsyncLocalStorage,
   CreateAsyncStorage,
   DAppMetaData,
+  SignerWallet,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
@@ -20,7 +21,7 @@ import React, { useMemo } from "react";
  * The possible props for the ThirdwebProvider.
  */
 export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
-  extends ThirdwebSDKProviderProps<TChains> {
+  extends Omit<ThirdwebSDKProviderProps<TChains>, "signer"> {
   /**
    * An array of wallets that the dApp supports
    * If not provided, will default to Metamask (injected), Coinbase wallet and Device wallet
@@ -70,6 +71,8 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
    * @defaultValue 15000
    */
   autoConnectTimeout?: number;
+
+  signerWallet?: WalletConfig<SignerWallet>;
 }
 
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
@@ -153,6 +156,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>({
         autoConnectTimeout={props.autoConnectTimeout}
         clientId={props.clientId}
         activeChainSetExplicitly={!!props.activeChain}
+        signerWallet={props.signerWallet}
       >
         <ThirdwebSDKProviderWrapper
           queryClient={props.queryClient}

@@ -1,32 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Astar zkEVM",
-  "shortName": "astrzk",
-  "title": "Astar zkEVM Mainnet",
   "chain": "ETH",
+  "chainId": 12611,
+  "explorers": [],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmZm2RfbEfWjnqu7MLSG5ChhAsjnKqTvmHM5eJWvYGAwG8",
     "width": 800,
     "height": 264,
     "format": "png"
   },
-  "rpc": [],
-  "faucets": [],
+  "infoURL": "https://astar.network",
+  "name": "Astar zkEVM",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://astar.network",
-  "chainId": 12611,
-  "networkId": 12611,
-  "explorers": [],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": []
-  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "astrzk",
+  "slug": "astar-zkevm",
   "status": "incubating",
-  "testnet": false,
-  "slug": "astar-zkevm"
+  "testnet": false
 } as const satisfies Chain;
