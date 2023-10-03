@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Firenze test network",
   "chain": "ETH",
-  "rpc": [
-    "https://firenze-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ethnode.primusmoney.com/firenze"
-  ],
+  "chainId": 78110,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://primusmoney.com",
+  "name": "Firenze test network",
   "nativeCurrency": {
     "name": "Firenze Ether",
     "symbol": "FIN",
     "decimals": 18
   },
-  "infoURL": "https://primusmoney.com",
+  "redFlags": [],
+  "rpc": [
+    "https://firenze-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ethnode.primusmoney.com/firenze"
+  ],
   "shortName": "firenze",
-  "chainId": 78110,
-  "networkId": 78110,
-  "testnet": true,
-  "slug": "firenze-test-network"
+  "slug": "firenze-test-network",
+  "testnet": true
 } as const satisfies Chain;

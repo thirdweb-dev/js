@@ -1,5 +1,6 @@
-import { PaperWallet } from "@thirdweb-dev/wallets";
+import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
+import { PaperWallet } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
@@ -10,16 +11,18 @@ import { Button } from "../../../components/buttons";
 import { Input } from "../../../components/formElements";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
-import styled from "@emotion/styled";
 import { RecoveryShareManagement } from "./types";
 
 type PaperOTPLoginUIProps = ConnectUIProps<PaperWallet> & {
   recoveryShareManagement: RecoveryShareManagement;
 };
+
 type SentEmailInfo = {
   isNewDevice: boolean;
   isNewUser: boolean;
+  recoveryShareManagement: RecoveryShareManagement;
 };
+
 export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
@@ -28,59 +31,59 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
     useWalletContext();
 
   const [wallet, setWallet] = useState<PaperWallet | null>(null);
+  const isWideModal = props.modalSize === "wide";
 
   const [verifyStatus, setVerifyStatus] = useState<
     "verifying" | "invalid" | "valid" | "idle"
   >("idle");
 
-  const [sentEmailInfo, setSentEmailInfo] = useState<
-    SentEmailInfo | null | "error"
-  >(null);
+  const [sendEmailStatus, setSendEmailStatus] = useState<
+    SentEmailInfo | "sending" | "error"
+  >("sending");
 
   const recoveryCodeRequired = !!(
-    props.recoveryShareManagement !== "AWS_MANAGED" &&
-    sentEmailInfo &&
-    sentEmailInfo !== "error" &&
-    sentEmailInfo.isNewDevice &&
-    !sentEmailInfo.isNewUser
+    typeof sendEmailStatus !== "string" &&
+    sendEmailStatus.recoveryShareManagement !== "AWS_MANAGED" &&
+    sendEmailStatus.isNewDevice &&
+    !sendEmailStatus.isNewUser
   );
 
   const sendEmail = useCallback(async () => {
     setOtpInput("");
     setVerifyStatus("idle");
-    setSentEmailInfo(null);
+    setSendEmailStatus("sending");
 
     try {
       const _wallet = createWalletInstance(props.walletConfig);
       setWallet(_wallet);
       const _paperSDK = await _wallet.getPaperSDK();
 
-      const { isNewDevice, isNewUser } =
+      const { isNewDevice, isNewUser, recoveryShareManagement } =
         await _paperSDK.auth.sendPaperEmailLoginOtp({
           email: email,
         });
 
-      setSentEmailInfo({ isNewDevice, isNewUser });
+      setSendEmailStatus({ isNewDevice, isNewUser, recoveryShareManagement });
     } catch (e) {
       console.error(e);
       setVerifyStatus("idle");
-      setSentEmailInfo("error");
+      setSendEmailStatus("error");
     }
   }, [createWalletInstance, email, props.walletConfig]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (otp: string) => {
     if (recoveryCodeRequired && !recoveryCode) {
       return;
     }
 
-    if (!sentEmailInfo || otpInput.length !== 6) {
+    if (typeof sendEmailStatus === "string" || otp.length !== 6) {
       return;
     }
 
-    verifyCodes();
+    verifyCodes(otp);
   };
 
-  const verifyCodes = async () => {
+  const verifyCodes = async (otp: string) => {
     setVerifyStatus("idle");
 
     if (!wallet) {
@@ -92,7 +95,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
       setConnectionStatus("connecting");
       await wallet.connect({
         email,
-        otp: otpInput,
+        otp,
         recoveryCode: recoveryCodeRequired ? recoveryCode : undefined,
       });
 
@@ -115,8 +118,10 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   }, [sendEmail]);
 
   return (
-    <Container fullHeight flex="column" p="lg" animate="fadein">
-      <ModalHeader title="Sign in" onBack={props.goBack} />
+    <Container fullHeight flex="column" animate="fadein">
+      <Container p="lg">
+        <ModalHeader title="Sign in" onBack={props.goBack} />
+      </Container>
 
       <Container expand flex="column" center="y">
         <form
@@ -129,7 +134,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
               textAlign: "center",
             }}
           >
-            <Spacer y="xxl" />
+            {!isWideModal && <Spacer y="lg" />}
             <Text>Enter the OTP sent to</Text>
             <Spacer y="sm" />
             <Text color="primaryText">{email}</Text>
@@ -142,24 +147,28 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
             value={otpInput}
             setValue={(value) => {
               setOtpInput(value);
-              setVerifyStatus("idle");
+              setVerifyStatus("idle"); // reset error
+              if (!recoveryCodeRequired) {
+                handleSubmit(value);
+              }
             }}
-            onEnter={handleSubmit}
+            onEnter={() => {
+              handleSubmit(otpInput);
+            }}
           />
 
           {recoveryCodeRequired && (
-            <div
+            <Container
+              px="lg"
               style={{
                 textAlign: "center",
               }}
             >
-              <Spacer y="xl" />
-              <Line />
-              <Spacer y="xl" />
-
+              <Spacer y="xxl" />
               <Text color="primaryText">New device detected</Text>
               <Spacer y="sm" />
               <Text
+                size="sm"
                 multiline
                 style={{
                   maxWidth: "350px",
@@ -169,8 +178,9 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 signed up
               </Text>
 
-              <Spacer y="md" />
+              <Spacer y="lg" />
               <Input
+                sm
                 autoComplete="off"
                 required
                 data-error={verifyStatus === "invalid"}
@@ -183,73 +193,77 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 onChange={(e) => setRecoveryCode(e.target.value)}
                 placeholder="Enter your recovery code"
               />
-            </div>
+            </Container>
           )}
 
           {verifyStatus === "invalid" && (
             <FadeIn>
-              <Spacer y="sm" />
-              <Container flex="row" center="x">
-                <Text size="sm" color="danger">
-                  Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
-                </Text>
-              </Container>
+              <Spacer y="md" />
+              <Text size="sm" color="danger" center>
+                Invalid OTP {recoveryCodeRequired ? "or recovery code" : ""}
+              </Text>
             </FadeIn>
           )}
 
-          <Spacer y="xl" />
+          <Spacer y={recoveryCodeRequired ? "xl" : "xxl"} />
 
-          {verifyStatus === "verifying" ? (
-            <>
-              <Spacer y="md" />
-              <Container flex="row" center="x">
-                <Spinner size="md" color="accentText" />
+          <Container px={isWideModal ? "xxl" : "lg"}>
+            {verifyStatus === "verifying" ? (
+              <>
+                <Container flex="row" center="x" animate="fadein">
+                  <Spinner size="lg" color="accentText" />
+                </Container>
+              </>
+            ) : (
+              <Container animate="fadein" key="btn-container">
+                <Button
+                  onClick={() => handleSubmit(otpInput)}
+                  variant="accent"
+                  type="submit"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  Verify
+                </Button>
               </Container>
-              <Spacer y="md" />
-            </>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              variant="accent"
-              type="submit"
-              style={{
-                width: "100%",
-              }}
-            >
-              Verify
-            </Button>
-          )}
+            )}
+          </Container>
 
-          <Spacer y="lg" />
+          <Spacer y={recoveryCodeRequired ? "xl" : "xxl"} />
 
-          {sentEmailInfo === "error" && (
-            <>
-              <Text size="sm" center color="danger">
-                Failed to send OTP
-              </Text>
-              <Spacer y="md" />
-            </>
-          )}
+          {!isWideModal && <Line />}
 
-          {!sentEmailInfo && (
-            <Container
-              flex="row"
-              center="both"
-              gap="xs"
-              style={{
-                textAlign: "center",
-              }}
-            >
-              <Text size="sm">Sending OTP</Text>
-              <Spinner size="xs" color="secondaryText" />
-            </Container>
-          )}
+          <Container p={isWideModal ? undefined : "lg"}>
+            {sendEmailStatus === "error" && (
+              <>
+                <Text size="sm" center color="danger">
+                  Failed to send OTP
+                </Text>
+                <Spacer y="md" />
+              </>
+            )}
 
-          {sentEmailInfo && (
-            <LinkButton onClick={sendEmail} type="button">
-              Resend OTP
-            </LinkButton>
-          )}
+            {sendEmailStatus === "sending" && (
+              <Container
+                flex="row"
+                center="both"
+                gap="xs"
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <Text size="sm">Sending OTP</Text>
+                <Spinner size="xs" color="secondaryText" />
+              </Container>
+            )}
+
+            {typeof sendEmailStatus !== "string" && (
+              <LinkButton onClick={sendEmail} type="button">
+                Resend OTP
+              </LinkButton>
+            )}
+          </Container>
         </form>
       </Container>
     </Container>

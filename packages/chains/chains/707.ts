@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BlockChain Station Mainnet",
   "chain": "BCS",
-  "rpc": [
-    "https://blockchain-station.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet.bcsdev.io",
-    "wss://rpc-ws-mainnet.bcsdev.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BCS Token",
-    "symbol": "BCS",
-    "decimals": 18
-  },
-  "infoURL": "https://blockchainstation.io",
-  "shortName": "bcs",
   "chainId": 707,
-  "networkId": 707,
   "explorers": [
     {
       "name": "BlockChain Station Explorer",
@@ -24,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "blockchain-station"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://blockchainstation.io",
+  "name": "BlockChain Station Mainnet",
+  "nativeCurrency": {
+    "name": "BCS Token",
+    "symbol": "BCS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://blockchain-station.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.bcsdev.io",
+    "wss://rpc-ws-mainnet.bcsdev.io"
+  ],
+  "shortName": "bcs",
+  "slug": "blockchain-station",
+  "testnet": false
 } as const satisfies Chain;

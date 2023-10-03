@@ -1,23 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lisinski",
   "chain": "CRO",
-  "rpc": [
-    "https://lisinski.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-bitfalls1.lisinski.online"
-  ],
+  "chainId": 385,
+  "explorers": [],
   "faucets": [
     "https://pipa.lisinski.online"
   ],
+  "features": [],
+  "infoURL": "https://lisinski.online",
+  "name": "Lisinski",
   "nativeCurrency": {
     "name": "Lisinski Ether",
     "symbol": "LISINS",
     "decimals": 18
   },
-  "infoURL": "https://lisinski.online",
+  "redFlags": [],
+  "rpc": [
+    "https://lisinski.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-bitfalls1.lisinski.online"
+  ],
   "shortName": "lisinski",
-  "chainId": 385,
-  "networkId": 385,
-  "testnet": false,
-  "slug": "lisinski"
+  "slug": "lisinski",
+  "testnet": false
 } as const satisfies Chain;

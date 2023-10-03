@@ -1,22 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MathChain",
   "chain": "MATH",
-  "rpc": [
-    "https://mathchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mathchain-asia.maiziqianbao.net/rpc",
-    "https://mathchain-us.maiziqianbao.net/rpc"
-  ],
+  "chainId": 1139,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://mathchain.org",
+  "name": "MathChain",
   "nativeCurrency": {
     "name": "MathChain",
     "symbol": "MATH",
     "decimals": 18
   },
-  "infoURL": "https://mathchain.org",
+  "redFlags": [],
+  "rpc": [
+    "https://mathchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mathchain-asia.maiziqianbao.net/rpc",
+    "https://mathchain-us.maiziqianbao.net/rpc"
+  ],
   "shortName": "MATH",
-  "chainId": 1139,
-  "networkId": 1139,
-  "testnet": false,
-  "slug": "mathchain"
+  "slug": "mathchain",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,7 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Humans.ai Mainnet",
   "chain": "Humans",
+  "chainId": 1089,
+  "explorers": [
+    {
+      "name": "explorer.guru",
+      "url": "https://humans.explorers.guru",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "icon": {
+    "url": "ipfs://QmX6XuoQDTTjYqAmdNJiieLDZSwHHyUx44yQb4E3tmHmEA",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "infoURL": "https://humans.ai",
+  "name": "Humans.ai Mainnet",
+  "nativeCurrency": {
+    "name": "HEART",
+    "symbol": "HEART",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://humans-ai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.humans.nodestake.top",
@@ -11,43 +41,7 @@ export default {
     "https://mainnet-humans-evm.konsortech.xyz",
     "https://evm-rpc.mainnet.humans.zone"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "HEART",
-    "symbol": "HEART",
-    "decimals": 18
-  },
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "infoURL": "https://humans.ai",
   "shortName": "humans",
-  "chainId": 1089,
-  "networkId": 1089,
-  "icon": {
-    "url": "ipfs://QmU83haX3TNifDDjBx6RP6ByqES1Kg9VqeJC87X9ipKyCS",
-    "width": 386,
-    "height": 397,
-    "format": "png"
-  },
-  "explorers": [
-    {
-      "name": "explorer.guru",
-      "url": "https://humans.explorers.guru",
-      "icon": {
-        "url": "ipfs://QmU83haX3TNifDDjBx6RP6ByqES1Kg9VqeJC87X9ipKyCS",
-        "width": 386,
-        "height": 397,
-        "format": "png"
-      },
-      "standard": "none"
-    }
-  ],
-  "testnet": false,
-  "slug": "humans-ai"
+  "slug": "humans-ai",
+  "testnet": false
 } as const satisfies Chain;

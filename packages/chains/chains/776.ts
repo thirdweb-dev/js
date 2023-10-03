@@ -1,20 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OpenChain Testnet",
   "chain": "OpenChain Testnet",
-  "rpc": [],
-  "faucets": [
-    "https://faucet.openchain.info/"
-  ],
-  "nativeCurrency": {
-    "name": "Openchain Testnet",
-    "symbol": "TOPC",
-    "decimals": 18
-  },
-  "infoURL": "https://testnet.openchain.info/",
-  "shortName": "opc",
   "chainId": 776,
-  "networkId": 776,
   "explorers": [
     {
       "name": "OPEN CHAIN TESTNET",
@@ -22,6 +9,20 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "openchain-testnet"
+  "faucets": [
+    "https://faucet.openchain.info/"
+  ],
+  "features": [],
+  "infoURL": "https://testnet.openchain.info/",
+  "name": "OpenChain Testnet",
+  "nativeCurrency": {
+    "name": "Openchain Testnet",
+    "symbol": "TOPC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "opc",
+  "slug": "openchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

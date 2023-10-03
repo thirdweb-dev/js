@@ -1,22 +1,29 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Humanode Mainnet",
   "chain": "HMND",
-  "rpc": [
-    "https://humanode.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://explorer-rpc-http.mainnet.stages.humanode.io"
+  "chainId": 5234,
+  "explorers": [
+    {
+      "name": "Subscan",
+      "url": "https://humanode.subscan.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://humanode.io",
+  "name": "Humanode Mainnet",
   "nativeCurrency": {
     "name": "eHMND",
     "symbol": "eHMND",
     "decimals": 18
   },
-  "infoURL": "https://humanode.io",
+  "redFlags": [],
+  "rpc": [
+    "https://humanode.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://explorer-rpc-http.mainnet.stages.humanode.io"
+  ],
   "shortName": "hmnd",
-  "chainId": 5234,
-  "networkId": 5234,
-  "explorers": [],
-  "testnet": false,
-  "slug": "humanode"
+  "slug": "humanode",
+  "testnet": false
 } as const satisfies Chain;

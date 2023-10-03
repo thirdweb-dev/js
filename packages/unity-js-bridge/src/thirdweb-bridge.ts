@@ -18,6 +18,7 @@ import { MagicLink } from "@thirdweb-dev/wallets/evm/wallets/magic";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { PaperWallet } from "@thirdweb-dev/wallets/evm/wallets/paper-wallet";
+import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
 import { BigNumber } from "ethers";
 import {
   Ethereum,
@@ -59,6 +60,7 @@ const WALLETS = [
   LocalWallet,
   MagicLink,
   SmartWallet,
+  EmbeddedWallet,
 ] as const;
 
 type PossibleWallet = (typeof WALLETS)[number]["id"];
@@ -240,8 +242,15 @@ class ThirdwebBridge implements TWBridge {
             // paymasterAPI: sdkOptions.smartWalletConfig?.paymasterAPI,
             entryPointAddress: sdkOptions.smartWalletConfig?.entryPointAddress,
           };
-
           walletInstance = new SmartWallet(config);
+          break;
+        case walletIds.embeddedWallet:
+          walletInstance = new EmbeddedWallet({
+            clientId: sdkOptions.clientId,
+            chain: Ethereum,
+            dappMetadata,
+            chains: supportedChains,
+          });
           break;
         default:
           throw new Error(`Unknown wallet type: ${possibleWallet.id}`);
@@ -285,6 +294,16 @@ class ThirdwebBridge implements TWBridge {
           throw new Error("Email is required for Magic Link Wallet");
         }
         await magicLinkWallet.connect({ chainId: chainIdNumber, email: email });
+      } else if (walletInstance.walletId === walletIds.embeddedWallet) {
+        const embeddedWallet = walletInstance as EmbeddedWallet;
+        if (!email) {
+          throw new Error("Email is required for EmbeddedWallet");
+        }
+        await embeddedWallet.connect({
+          chainId: chainIdNumber,
+          email: email,
+          loginType: "ui_email_otp",
+        });
       } else if (walletInstance.walletId === walletIds.paper) {
         const paperWallet = walletInstance as PaperWallet;
         if (!email) {

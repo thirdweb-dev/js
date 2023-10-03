@@ -1,13 +1,30 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BeOne Chain Mainnet",
   "chain": "BOC",
+  "chainId": 818,
+  "explorers": [
+    {
+      "name": "BeOne Chain Mainnet",
+      "url": "https://beonescan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
     "width": 500,
     "height": 500,
     "format": "png"
   },
+  "infoURL": "https://beonechain.com",
+  "name": "BeOne Chain Mainnet",
+  "nativeCurrency": {
+    "name": "BeOne Chain Mainnet",
+    "symbol": "BOC",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed1.beonechain.com",
@@ -17,24 +34,7 @@ export default {
     "https://dataseed-uk1.beonechain.com",
     "https://dataseed-uk2.beonechain.com"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BeOne Chain Mainnet",
-    "symbol": "BOC",
-    "decimals": 18
-  },
-  "infoURL": "https://beonechain.com",
   "shortName": "BOC",
-  "chainId": 818,
-  "networkId": 818,
-  "slip44": 8181,
-  "explorers": [
-    {
-      "name": "BeOne Chain Mainnet",
-      "url": "https://beonescan.com",
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "beone-chain"
+  "slug": "beone-chain",
+  "testnet": false
 } as const satisfies Chain;

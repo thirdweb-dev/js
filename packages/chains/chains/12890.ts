@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Quantum Chain Testnet",
-  "chain": "QNET",
-  "icon": {
-    "url": "ipfs://bafkreibwywok67uewqbtqdzgr7nlk3lvvg7hxmbgwtn7kdwxe34useucvm",
-    "width": 1024,
-    "height": 1024,
-    "format": "png"
-  },
-  "rpc": [
-    "https://quantum-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.quantumscan.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Quantum Chain",
-    "symbol": "QNET",
-    "decimals": 18
-  },
-  "infoURL": "https://quantumnetwork.gg",
-  "shortName": "qnet",
+  "chain": "tQNET",
   "chainId": 12890,
-  "networkId": 12890,
   "explorers": [
     {
       "name": "Quantum Scan Testnet",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "quantum-chain-testnet"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://bafkreibwywok67uewqbtqdzgr7nlk3lvvg7hxmbgwtn7kdwxe34useucvm",
+    "width": 1024,
+    "height": 1024,
+    "format": "png"
+  },
+  "infoURL": "https://quantumnetwork.gg",
+  "name": "Quantum Chain Testnet",
+  "nativeCurrency": {
+    "name": "Quantum Chain",
+    "symbol": "tQNET",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://quantum-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.quantumscan.org"
+  ],
+  "shortName": "tqnet",
+  "slug": "quantum-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

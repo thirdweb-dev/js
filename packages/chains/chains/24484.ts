@@ -1,19 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Webchain",
   "chain": "WEB",
-  "rpc": [],
+  "chainId": 24484,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://webchain.network",
+  "name": "Webchain",
   "nativeCurrency": {
     "name": "Webchain Ether",
     "symbol": "WEB",
     "decimals": 18
   },
-  "infoURL": "https://webchain.network",
+  "redFlags": [],
+  "rpc": [],
   "shortName": "web",
-  "chainId": 24484,
-  "networkId": 37129,
-  "slip44": 227,
-  "testnet": false,
-  "slug": "webchain"
+  "slug": "webchain",
+  "testnet": false
 } as const satisfies Chain;

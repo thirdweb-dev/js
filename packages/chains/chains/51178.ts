@@ -1,18 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Opside Testnet Pre-Alpha",
   "chain": "ETH",
-  "rpc": [
-    "https://opside-testnet-pre-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pre-alpha-us-http-geth.opside.network",
-    "https://pre-alpha-hk-http-geth.opside.network"
+  "chainId": 51178,
+  "explorers": [
+    {
+      "name": "OpsideTestnetInfo",
+      "url": "https://pre-alpha.opside.info",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "IDE Test Token",
-    "symbol": "IDE",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -21,29 +18,26 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://opsi.de/",
-  "shortName": "Opside-Testnet",
-  "chainId": 51178,
-  "networkId": 51178,
   "icon": {
     "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
     "width": 401,
     "height": 400,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "OpsideTestnetInfo",
-      "url": "https://pre-alpha.opside.info",
-      "icon": {
-        "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
-        "width": 401,
-        "height": 400,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://opsi.de/",
+  "name": "Opside Testnet Pre-Alpha",
+  "nativeCurrency": {
+    "name": "IDE Test Token",
+    "symbol": "IDE",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://opside-testnet-pre-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://pre-alpha-us-http-geth.opside.network",
+    "https://pre-alpha-hk-http-geth.opside.network"
   ],
-  "testnet": true,
-  "slug": "opside-testnet-pre-alpha"
+  "shortName": "Opside-Testnet",
+  "slug": "opside-testnet-pre-alpha",
+  "testnet": true
 } as const satisfies Chain;

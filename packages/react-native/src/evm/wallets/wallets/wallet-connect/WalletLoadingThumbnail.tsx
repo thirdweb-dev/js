@@ -5,6 +5,9 @@ import { useAppTheme } from "../../../styles/hooks";
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
+const PADDING = 10;
+const INTERNAL_PADDING = 6;
+
 interface Props {
   children?: React.ReactNode;
   imageSize?: number;
@@ -43,16 +46,16 @@ function WalletLoadingThumbnail({
   return (
     <View style={styles.container}>
       <Svg
-        width={imageSize + 10}
-        height={imageSize + 10}
-        viewBox={`0 0 ${imageSize + 10} ${imageSize + 10}`}
+        width={imageSize + PADDING}
+        height={imageSize + PADDING}
+        viewBox={`0 0 ${imageSize + PADDING} ${imageSize + PADDING}`}
         style={styles.loader}
       >
         <AnimatedRect
           x="2"
           y="2"
-          width={imageSize + 6}
-          height={imageSize + 6}
+          width={imageSize + INTERNAL_PADDING}
+          height={imageSize + INTERNAL_PADDING}
           rx={15}
           stroke={showError ? "transparent" : Theme.colors.linkPrimary}
           strokeWidth={2}
@@ -67,8 +70,8 @@ function WalletLoadingThumbnail({
             {
               position: "absolute",
               borderWidth: 2,
-              height: imageSize + 6,
-              width: imageSize + 6,
+              height: imageSize + INTERNAL_PADDING,
+              width: imageSize + INTERNAL_PADDING,
               borderRadius: 30 / 3.5,
               borderColor: Theme.colors.border,
             },
