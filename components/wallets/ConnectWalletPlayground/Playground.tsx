@@ -155,6 +155,10 @@ export const ConnectWalletPlayground: React.FC<{
         modalTitleIconUrl: modalTitleIconUrl.enabled
           ? `"${modalTitleIconUrl.url}"`
           : undefined,
+        termsOfServiceUrl: tosUrl.enabled ? `"${tosUrl.url}"` : undefined,
+        privacyPolicyUrl: privacyPolicyUrl.enabled
+          ? `"${privacyPolicyUrl.url}"`
+          : undefined,
       },
     });
 
@@ -177,6 +181,8 @@ export const ConnectWalletPlayground: React.FC<{
     modalTitleIconUrl,
     welcomeScreen,
     colorOverrides,
+    tosUrl,
+    privacyPolicyUrl,
   ]);
 
   const welcomeScreenContent = (

@@ -16,6 +16,8 @@ type WalletSetupOptions = {
     modalSize?: string;
     modalTitleIconUrl?: string;
     welcomeScreen?: string;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   baseTheme: "light" | "dark";
   colorOverrides: Record<string, string>;
