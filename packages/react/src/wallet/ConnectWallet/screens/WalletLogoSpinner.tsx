@@ -1,21 +1,9 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { Img } from "../../../components/Img";
-import { IconButton } from "../../../components/buttons";
-import {
-  iconSize,
-  spacing,
-  radius,
-  shadow,
-  Theme,
-} from "../../../design-system";
+import { radius, Theme } from "../../../design-system";
 
-export function WalletLogoSpinner(props: {
-  onRetry: () => void;
-  error: boolean;
-  iconUrl: string;
-}) {
+export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
   return (
     <LogoContainer data-error={props.error}>
       <div
@@ -29,23 +17,10 @@ export function WalletLogoSpinner(props: {
             <Img src={props.iconUrl} width={"80"} height={"80"} />
           </div>
         </div>
-
-        {props.error && (
-          <RetryButton onClick={props.onRetry} aria-label="retry">
-            <ReloadIcon width={iconSize.md} height={iconSize.md} />
-          </RetryButton>
-        )}
       </div>
     </LogoContainer>
   );
 }
-
-const retryFadeIn = keyframes`
-  from {
-    transform: translate(50%, 50%) scale(0.5) rotate(-180deg);
-    opacity: 0;
-  }
-`;
 
 const rotateAnimation = keyframes`
   0% {
@@ -102,10 +77,10 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   }
 
   [data-gradient] {
-    padding: 2px; /* width of ring */
+    padding: 3px; /* width of ring */
     position: relative;
     overflow: hidden;
-    border-radius: ${radius.xl};
+    border-radius: 18px;
   }
 
   [data-gradient]:not([data-error="true"]) {
@@ -136,31 +111,13 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   }
 
   [data-blocker] {
-    padding: ${spacing.xs};
+    padding: 6px;
     background: ${(p) => p.theme.colors.modalBg};
     position: relative;
     z-index: 1;
-    border-radius: ${radius.xl};
-  }
-`;
-
-const RetryButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
-  animation: ${retryFadeIn} 0.3s ease;
-  position: absolute;
-  background: ${(p) => p.theme.colors.danger};
-  color: ${(p) => p.theme.colors.modalBg};
-  box-shadow: ${shadow.sm};
-  bottom: 5px;
-  right: 5px;
-  transform: translate(50%, 50%);
-  z-index: 100;
-  padding: ${spacing.xs};
-  border-radius: 50%;
-  transition: all 200ms ease;
-
-  &:hover {
-    background: ${(p) => p.theme.colors.danger};
-    color: ${(p) => p.theme.colors.modalBg};
-    transform: translate(50%, 50%) scale(1.2) rotate(35deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 14px;
   }
 `;

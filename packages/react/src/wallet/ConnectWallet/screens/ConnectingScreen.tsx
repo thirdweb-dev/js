@@ -1,12 +1,13 @@
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader, Line } from "../../../components/basic";
-import { fontSize } from "../../../design-system";
+import { fontSize, iconSize, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { WalletLogoSpinner } from "./WalletLogoSpinner";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -31,7 +32,6 @@ export const ConnectingScreen: React.FC<{
 
       <Container flex="column" center="both" expand p="lg" relative>
         <WalletLogoSpinner
-          onRetry={props.onRetry}
           error={props.errorConnecting}
           iconUrl={props.walletIconURL}
         />
@@ -61,13 +61,18 @@ export const ConnectingScreen: React.FC<{
               {isMobile() ? "application" : "pop-up"}
             </Text>
           ) : (
-            <Text
-              style={{
-                textAlign: "center",
-              }}
-            >
-              click on button above to try again
-            </Text>
+            <Container flex="row" center="x" animate="fadein">
+              <Button
+                variant="outline"
+                onClick={props.onRetry}
+                style={{
+                  gap: spacing.sm,
+                  alignItems: "center",
+                }}
+              >
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Retry{" "}
+              </Button>
+            </Container>
           )}
         </Container>
       </Container>

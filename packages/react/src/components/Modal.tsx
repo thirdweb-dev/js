@@ -97,6 +97,7 @@ export const CrossContainer = styled.div`
   position: absolute;
   top: ${spacing.lg};
   right: ${spacing.lg};
+  transform: translateX(15%);
 
   ${media.mobile} {
     right: ${spacing.md};

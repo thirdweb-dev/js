@@ -1,21 +1,25 @@
-import { ModalTitle } from "../../components/modalElements";
 import { useLogin, useSigner, useWalletConfig } from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
-import { Container } from "../../components/basic";
+import { Container, Line, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
 import { WalletLogoSpinner } from "./screens/WalletLogoSpinner";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 import { wait } from "../../utils/wait";
+import { Button } from "../../components/buttons";
+import { fontSize, iconSize, spacing } from "../../design-system";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
   onDone,
 }) => {
+  const modalSize = useContext(ModalConfigCtx).modalSize;
   const walletConfig = useWalletConfig();
   const { auth } = useContext(ModalConfigCtx);
   const [status, setStatus] = useState<"signing" | "failed">("signing");
   const { login } = useLogin();
   const signer = useSigner();
+  const [tryId, setTryId] = useState(0);
 
   const signIn = useCallback(async () => {
     try {
@@ -42,40 +46,72 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
     mounted.current = true;
   }, [signer, signIn]);
 
-  return (
-    <Container p="lg" animate="fadein" fullHeight flex="column">
-      <Spacer y="xxl" />
+  const handleRetry = () => {
+    signIn();
+    setTryId(tryId + 1);
+  };
 
-      <Container flex="column" center="both" expand>
+  return (
+    <Container animate="fadein" fullHeight flex="column">
+      <Container p="lg">
+        <ModalHeader title="Sign in" />
+      </Container>
+
+      <Container flex="column" p="lg" center="both" expand>
+        <Spacer y="md" />
+
         {walletConfig && (
           <WalletLogoSpinner
+            key={String(tryId)} // to replay enter animation
             error={status === "failed"}
-            onRetry={signIn}
             iconUrl={walletConfig.meta.iconURL}
           />
         )}
 
         <Spacer y="xxl" />
 
-        <ModalTitle>
+        <Text size="lg" center color="primaryText">
           {status === "failed" ? "Failed to sign in" : "Signing in"}
-        </ModalTitle>
-        <Spacer y="md" />
-
-        <Text multiline center>
-          {status === "failed" ? (
-            <>
-              Click on Retry button above <br /> to try again
-            </>
-          ) : (
-            <>
-              {" "}
-              Sign the signature request <br /> in your wallet{" "}
-            </>
-          )}
         </Text>
 
         <Spacer y="lg" />
+
+        {status === "failed" ? (
+          <Container flex="row" center="x" animate="fadein">
+            <Button
+              variant="outline"
+              onClick={handleRetry}
+              style={{
+                gap: spacing.sm,
+                alignItems: "center",
+              }}
+            >
+              <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Retry{" "}
+            </Button>
+          </Container>
+        ) : (
+          <Text center multiline>
+            Sign the signature request <br /> in your wallet{" "}
+          </Text>
+        )}
+      </Container>
+
+      <Spacer y="md" />
+
+      {modalSize === "compact" && <Line />}
+
+      <Container p="lg" flex="row" center="x">
+        <Button
+          variant="link"
+          onClick={handleRetry}
+          style={{
+            fontSize: fontSize.sm,
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          {`Don't see signature request in wallet?`}{" "}
+        </Button>
       </Container>
     </Container>
   );
