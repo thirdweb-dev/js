@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Joseon Mainnet",
   "chain": "Joseon",
-  "icon": {
-    "url": "ipfs://QmQjwcNRCLXU8JBtSkPLUnbWVrpoqbnZVffpJ9Bu8rG34e",
-    "width": 148,
-    "height": 148,
-    "format": "svg"
-  },
-  "rpc": [
-    "https://joseon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.modchain.net/blockchain.joseon.com/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Joseon Mun",
-    "symbol": "JSM",
-    "decimals": 18
-  },
-  "infoURL": "https://www.joseon.com/",
-  "shortName": "mun",
   "chainId": 1392,
-  "networkId": 1392,
   "explorers": [
     {
       "name": "BlockExplorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "joseon"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmQjwcNRCLXU8JBtSkPLUnbWVrpoqbnZVffpJ9Bu8rG34e",
+    "width": 148,
+    "height": 148,
+    "format": "svg"
+  },
+  "infoURL": "https://www.joseon.com/",
+  "name": "Joseon Mainnet",
+  "nativeCurrency": {
+    "name": "Joseon Mun",
+    "symbol": "JSM",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://joseon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.modchain.net/blockchain.joseon.com/rpc"
+  ],
+  "shortName": "mun",
+  "slug": "joseon",
+  "testnet": false
 } as const satisfies Chain;

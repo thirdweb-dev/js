@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Autobahn Network",
   "chain": "TXL",
-  "rpc": [
-    "https://autobahn-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.autobahn.network"
+  "chainId": 45000,
+  "explorers": [
+    {
+      "name": "autobahn explorer",
+      "url": "https://explorer.autobahn.network",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "TXL",
-    "symbol": "TXL",
-    "decimals": 18
-  },
-  "infoURL": "https://autobahn.network",
-  "shortName": "AutobahnNetwork",
-  "chainId": 45000,
-  "networkId": 45000,
+  "features": [],
   "icon": {
     "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
     "width": 489,
     "height": 489,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "autobahn explorer",
-      "url": "https://explorer.autobahn.network",
-      "icon": {
-        "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
-        "width": 489,
-        "height": 489,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://autobahn.network",
+  "name": "Autobahn Network",
+  "nativeCurrency": {
+    "name": "TXL",
+    "symbol": "TXL",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://autobahn-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.autobahn.network"
   ],
-  "testnet": false,
-  "slug": "autobahn-network"
+  "shortName": "AutobahnNetwork",
+  "slug": "autobahn-network",
+  "testnet": false
 } as const satisfies Chain;

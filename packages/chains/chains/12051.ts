@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Singularity ZERO Testnet",
   "chain": "ZERO",
-  "rpc": [
-    "https://singularity-zero-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://betaenv.singularity.gold:18545"
-  ],
-  "faucets": [
-    "https://nft.singularity.gold"
-  ],
-  "nativeCurrency": {
-    "name": "ZERO",
-    "symbol": "tZERO",
-    "decimals": 18
-  },
-  "infoURL": "https://www.singularity.gold",
-  "shortName": "tZERO",
   "chainId": 12051,
-  "networkId": 12051,
   "explorers": [
     {
       "name": "zeroscan",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "singularity-zero-testnet"
+  "faucets": [
+    "https://nft.singularity.gold"
+  ],
+  "features": [],
+  "infoURL": "https://www.singularity.gold",
+  "name": "Singularity ZERO Testnet",
+  "nativeCurrency": {
+    "name": "ZERO",
+    "symbol": "tZERO",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://singularity-zero-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://betaenv.singularity.gold:18545"
+  ],
+  "shortName": "tZERO",
+  "slug": "singularity-zero-testnet",
+  "testnet": true
 } as const satisfies Chain;

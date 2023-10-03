@@ -1,37 +1,31 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Chaos (SKALE Testnet)",
-  "title": "Chaos Testnet",
   "chain": "staging-fast-active-bellatrix",
-  "rpc": [
-    "https://chaos-skale-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix"
+  "chainId": 1351057110,
+  "explorers": [
+    {
+      "name": "Blockscout",
+      "url": "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://sfuel.skale.network/staging/chaos"
   ],
+  "features": [],
+  "infoURL": "https://docs.skale.network/develop/",
+  "name": "Chaos (SKALE Testnet)",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
     "decimals": 18
   },
-  "infoURL": "https://docs.skale.network/develop/",
-  "shortName": "chaos-tenet",
-  "chainId": 1351057110,
-  "networkId": 1351057110,
-  "explorers": [
-    {
-      "name": "Blockscout",
-      "url": "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
-      "icon": {
-        "url": "ipfs://QmbYYCoU2G4LUfRr9ofGowF3eatfvWv9FiPVhqKndZeqwA",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://chaos-skale-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix"
   ],
-  "testnet": true,
-  "slug": "chaos-skale-testnet"
+  "shortName": "chaos-tenet",
+  "slug": "chaos-skale-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,41 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CyberdeckNet",
   "chain": "cyberdeck",
-  "rpc": [
-    "https://cyberdecknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://cybeth1.cyberdeck.eu:8545"
+  "chainId": 1146703430,
+  "explorers": [
+    {
+      "name": "CybEthExplorer",
+      "url": "http://cybeth1.cyberdeck.eu:8000",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Cyb",
-    "symbol": "CYB",
-    "decimals": 18
-  },
-  "infoURL": "https://cyberdeck.eu",
-  "shortName": "cyb",
-  "chainId": 1146703430,
-  "networkId": 1146703430,
+  "features": [],
   "icon": {
     "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
     "width": 193,
     "height": 214,
     "format": "png"
   },
-  "status": "active",
-  "explorers": [
-    {
-      "name": "CybEthExplorer",
-      "url": "http://cybeth1.cyberdeck.eu:8000",
-      "icon": {
-        "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
-        "width": 193,
-        "height": 214,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://cyberdeck.eu",
+  "name": "CyberdeckNet",
+  "nativeCurrency": {
+    "name": "Cyb",
+    "symbol": "CYB",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://cyberdecknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://cybeth1.cyberdeck.eu:8545"
   ],
-  "testnet": false,
-  "slug": "cyberdecknet"
+  "shortName": "cyb",
+  "slug": "cyberdecknet",
+  "status": "active",
+  "testnet": false
 } as const satisfies Chain;

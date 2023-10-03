@@ -1,18 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ELA-DID-Sidechain Mainnet",
   "chain": "ETH",
-  "rpc": [],
+  "chainId": 22,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://www.elastos.org/",
+  "name": "ELA-DID-Sidechain Mainnet",
   "nativeCurrency": {
     "name": "Elastos",
     "symbol": "ELA",
     "decimals": 18
   },
-  "infoURL": "https://www.elastos.org/",
+  "redFlags": [],
+  "rpc": [],
   "shortName": "eladid",
-  "chainId": 22,
-  "networkId": 22,
-  "testnet": false,
-  "slug": "ela-did-sidechain"
+  "slug": "ela-did-sidechain",
+  "testnet": false
 } as const satisfies Chain;

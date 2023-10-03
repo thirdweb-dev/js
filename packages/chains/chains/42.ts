@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "LUKSO Mainnet",
   "chain": "LUKSO",
-  "icon": {
-    "url": "ipfs://Qmeg9sFF5tAGi6MCx7YjtVHW6a23zqvHRK1xwzSdp9iE7z",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "rpc": [
-    "https://lukso.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mainnet.lukso.network",
-    "wss://ws-rpc.mainnet.lukso.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "LUKSO",
-    "symbol": "LYX",
-    "decimals": 18
-  },
+  "chainId": 42,
   "explorers": [
     {
       "name": "Blockscout",
@@ -26,10 +9,7 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "infoURL": "https://lukso.network",
-  "shortName": "lukso",
-  "chainId": 42,
-  "networkId": 42,
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -38,9 +18,28 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://Qmeg9sFF5tAGi6MCx7YjtVHW6a23zqvHRK1xwzSdp9iE7z",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://lukso.network",
+  "name": "LUKSO Mainnet",
+  "nativeCurrency": {
+    "name": "LUKSO",
+    "symbol": "LYX",
+    "decimals": 18
+  },
   "redFlags": [
     "reusedChainId"
   ],
-  "testnet": false,
-  "slug": "lukso"
+  "rpc": [
+    "https://lukso.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mainnet.lukso.network",
+    "wss://ws-rpc.mainnet.lukso.network"
+  ],
+  "shortName": "lukso",
+  "slug": "lukso",
+  "testnet": false
 } as const satisfies Chain;

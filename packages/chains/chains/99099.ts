@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "eLiberty Testnet",
   "chain": "$EL",
-  "icon": {
-    "url": "ipfs://Qmcr8US1DZcK3ooiMtE8tEQPgep12abXzxPw1jCkgZhji9",
-    "width": 150,
-    "height": 150,
-    "format": "png"
-  },
-  "rpc": [
-    "https://eliberty-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.eliberty.ngo"
-  ],
-  "faucets": [
-    "https://faucet.eliberty.ngo"
-  ],
-  "nativeCurrency": {
-    "name": "eLiberty",
-    "symbol": "$EL",
-    "decimals": 18
-  },
-  "infoURL": "https://eliberty.ngo",
-  "shortName": "ELt",
   "chainId": 99099,
-  "networkId": 99099,
   "explorers": [
     {
       "name": "eLiberty Testnet",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "eliberty-testnet"
+  "faucets": [
+    "https://faucet.eliberty.ngo"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://Qmcr8US1DZcK3ooiMtE8tEQPgep12abXzxPw1jCkgZhji9",
+    "width": 150,
+    "height": 150,
+    "format": "png"
+  },
+  "infoURL": "https://eliberty.ngo",
+  "name": "eLiberty Testnet",
+  "nativeCurrency": {
+    "name": "eLiberty",
+    "symbol": "$EL",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://eliberty-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.eliberty.ngo"
+  ],
+  "shortName": "ELt",
+  "slug": "eliberty-testnet",
+  "testnet": true
 } as const satisfies Chain;
