@@ -441,9 +441,9 @@ export class Erc721<
         (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
       );
       if (queryParams) {
-        const page = queryParams?.start || 0;
+        const start = queryParams?.start || 0;
         const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-        const startIndex = page * count;
+        const startIndex = start * count;
         ownedTokens = ownedTokens.slice(startIndex, startIndex + count);
       }
       return await Promise.all(

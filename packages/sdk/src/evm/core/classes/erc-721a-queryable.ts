@@ -60,9 +60,9 @@ export class Erc721AQueryable implements DetectableFeature {
   ): Promise<NFT[]> {
     let tokenIds = await this.tokenIds(walletAddress);
     if (queryParams) {
-      const page = queryParams?.start || 0;
+      const start = queryParams?.start || 0;
       const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-      const startIndex = page * count;
+      const startIndex = start * count;
       tokenIds = tokenIds.slice(startIndex, startIndex + count);
     }
     return await Promise.all(

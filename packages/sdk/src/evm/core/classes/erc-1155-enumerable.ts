@@ -126,9 +126,9 @@ export class Erc1155Enumerable implements DetectableFeature {
       })
       .filter((b) => b.balance.gt(0));
     if (queryParams) {
-      const page = queryParams?.start || 0;
+      const start = queryParams?.start || 0;
       const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-      const startIndex = page * count;
+      const startIndex = start * count;
       ownedBalances = ownedBalances.slice(startIndex, startIndex + count);
     }
     const nfts = (
