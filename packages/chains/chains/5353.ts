@@ -1,43 +1,38 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tritanium Testnet",
   "chain": "TRITANIUM",
-  "rpc": [
-    "https://tritanium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://nodetestnet-station-one.tritanium.network/",
-    "https://nodetestnet-station-two.tritanium.network/"
+  "chainId": 5353,
+  "explorers": [
+    {
+      "name": "TRITANIUM Testnet Explorer",
+      "url": "https://testnet.tritanium.network",
+      "standard": "none"
+    }
   ],
   "faucets": [
     "https://faucet.tritanium.network"
   ],
-  "nativeCurrency": {
-    "name": "Tritanium Native Token",
-    "symbol": "tTRN",
-    "decimals": 18
-  },
-  "infoURL": "https://tritanium.network",
-  "shortName": "ttrn",
-  "chainId": 5353,
-  "networkId": 5353,
+  "features": [],
   "icon": {
     "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "TRITANIUM Testnet Explorer",
-      "icon": {
-        "url": "ipfs://QmRm6gcEPJmU9a86zrmyP7FALTN4Toz9HrnrL2Kwg6FPeh",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "url": "https://testnet.tritanium.network",
-      "standard": "none"
-    }
+  "infoURL": "https://tritanium.network",
+  "name": "Tritanium Testnet",
+  "nativeCurrency": {
+    "name": "Tritanium Native Token",
+    "symbol": "tTRN",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://tritanium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://nodetestnet-station-one.tritanium.network/",
+    "https://nodetestnet-station-two.tritanium.network/"
   ],
-  "testnet": true,
-  "slug": "tritanium-testnet"
+  "shortName": "ttrn",
+  "slug": "tritanium-testnet",
+  "testnet": true
 } as const satisfies Chain;

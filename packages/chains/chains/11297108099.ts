@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Palm Testnet",
   "chain": "Palm",
-  "icon": {
-    "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
-    "width": 72,
-    "height": 72,
-    "format": "svg"
-  },
-  "rpc": [
-    "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "PALM",
-    "symbol": "PALM",
-    "decimals": 18
-  },
-  "infoURL": "https://palm.io",
-  "shortName": "tpalm",
   "chainId": 11297108099,
-  "networkId": 11297108099,
   "explorers": [
     {
       "name": "Palm Testnet Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "palm-testnet"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
+    "width": 72,
+    "height": 72,
+    "format": "svg"
+  },
+  "infoURL": "https://palm.io",
+  "name": "Palm Testnet",
+  "nativeCurrency": {
+    "name": "PALM",
+    "symbol": "PALM",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
+  ],
+  "shortName": "tpalm",
+  "slug": "palm-testnet",
+  "testnet": true
 } as const satisfies Chain;

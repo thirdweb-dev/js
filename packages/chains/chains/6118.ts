@@ -1,32 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "UPTN Testnet",
   "chain": "UPTN",
-  "icon": {
-    "url": "ipfs://Qma6cGPCDcJPFxy5KQaMBrLtuVQiqeLncXVybcBoQuhai5",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
-  "rpc": [
-    "https://uptn-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node-api.alp.uptn.io/v1/ext/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "UPTN",
-    "symbol": "UPTN",
-    "decimals": 18
-  },
-  "infoURL": "https://uptn.io",
-  "shortName": "UPTN-TEST",
   "chainId": 6118,
-  "networkId": 6118,
   "explorers": [
     {
       "name": "UPTN Testnet Explorer",
@@ -34,6 +9,31 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "uptn-testnet"
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "icon": {
+    "url": "ipfs://Qma6cGPCDcJPFxy5KQaMBrLtuVQiqeLncXVybcBoQuhai5",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
+  "infoURL": "https://uptn.io",
+  "name": "UPTN Testnet",
+  "nativeCurrency": {
+    "name": "UPTN",
+    "symbol": "UPTN",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://uptn-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node-api.alp.uptn.io/v1/ext/rpc"
+  ],
+  "shortName": "UPTN-TEST",
+  "slug": "uptn-testnet",
+  "testnet": true
 } as const satisfies Chain;

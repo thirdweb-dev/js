@@ -1,38 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hedera Testnet",
   "chain": "Hedera",
-  "icon": {
-    "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
-    "width": 1500,
-    "height": 1500,
-    "format": "png"
-  },
-  "rpc": [
-    "https://hedera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.hashio.io/api"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [
-    "https://portal.hedera.com"
-  ],
-  "nativeCurrency": {
-    "name": "hbar",
-    "symbol": "HBAR",
-    "decimals": 18
-  },
-  "infoURL": "https://hedera.com",
-  "shortName": "hedera-testnet",
   "chainId": 296,
-  "networkId": 296,
-  "slip44": 3030,
   "explorers": [
     {
       "name": "HashScan",
@@ -60,6 +29,36 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "hedera-testnet"
+  "faucets": [
+    "https://portal.hedera.com"
+  ],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "icon": {
+    "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
+    "width": 1500,
+    "height": 1500,
+    "format": "png"
+  },
+  "infoURL": "https://hedera.com",
+  "name": "Hedera Testnet",
+  "nativeCurrency": {
+    "name": "hbar",
+    "symbol": "HBAR",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://hedera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.hashio.io/api"
+  ],
+  "shortName": "hedera-testnet",
+  "slug": "hedera-testnet",
+  "testnet": true
 } as const satisfies Chain;

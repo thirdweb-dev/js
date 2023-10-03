@@ -1,25 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Amana Privnet",
   "chain": "MEER",
-  "rpc": [],
+  "chainId": 81343,
+  "explorers": [],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Amana Privnet",
-    "symbol": "MEER-P",
-    "decimals": 18
-  },
-  "infoURL": "https://github.com/Qitmeer",
-  "shortName": "amanapriv",
+  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "chainId": 81343,
-  "networkId": 81343,
+  "infoURL": "https://github.com/Qitmeer",
+  "name": "Amana Privnet",
+  "nativeCurrency": {
+    "name": "Amana Privnet",
+    "symbol": "MEER-P",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "amanapriv",
+  "slug": "amana-privnet",
   "status": "incubating",
-  "testnet": false,
-  "slug": "amana-privnet"
+  "testnet": false
 } as const satisfies Chain;

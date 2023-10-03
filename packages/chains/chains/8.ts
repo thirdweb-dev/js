@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ubiq",
   "chain": "UBQ",
-  "rpc": [
-    "https://ubiq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.octano.dev",
-    "https://pyrus2.ubiqscan.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ubiq Ether",
-    "symbol": "UBQ",
-    "decimals": 18
-  },
-  "infoURL": "https://ubiqsmart.com",
-  "shortName": "ubq",
   "chainId": 8,
-  "networkId": 8,
-  "slip44": 108,
   "explorers": [
     {
       "name": "ubiqscan",
@@ -25,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "ubiq"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://ubiqsmart.com",
+  "name": "Ubiq",
+  "nativeCurrency": {
+    "name": "Ubiq Ether",
+    "symbol": "UBQ",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://ubiq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.octano.dev",
+    "https://pyrus2.ubiqscan.io"
+  ],
+  "shortName": "ubq",
+  "slug": "ubiq",
+  "testnet": false
 } as const satisfies Chain;

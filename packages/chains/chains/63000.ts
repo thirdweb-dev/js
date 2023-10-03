@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "eCredits Mainnet",
   "chain": "ECS",
-  "rpc": [
-    "https://ecredits.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.ecredits.com"
+  "chainId": 63000,
+  "explorers": [
+    {
+      "name": "eCredits MainNet Explorer",
+      "url": "https://explorer.ecredits.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "eCredits",
-    "symbol": "ECS",
-    "decimals": 18
-  },
-  "infoURL": "https://ecredits.com",
-  "shortName": "ecs",
-  "chainId": 63000,
-  "networkId": 63000,
+  "features": [],
   "icon": {
     "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
     "width": 32,
     "height": 32,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "eCredits MainNet Explorer",
-      "url": "https://explorer.ecredits.com",
-      "icon": {
-        "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
-        "width": 32,
-        "height": 32,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://ecredits.com",
+  "name": "eCredits Mainnet",
+  "nativeCurrency": {
+    "name": "eCredits",
+    "symbol": "ECS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://ecredits.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ecredits.com"
   ],
-  "testnet": false,
-  "slug": "ecredits"
+  "shortName": "ecs",
+  "slug": "ecredits",
+  "testnet": false
 } as const satisfies Chain;

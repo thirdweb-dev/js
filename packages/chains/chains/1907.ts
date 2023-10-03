@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitcichain Mainnet",
   "chain": "BITCI",
-  "icon": {
-    "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
-    "width": 64,
-    "height": 64,
-    "format": "svg"
-  },
-  "rpc": [
-    "https://bitcichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.bitci.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Bitci",
-    "symbol": "BITCI",
-    "decimals": 18
-  },
-  "infoURL": "https://www.bitcichain.com",
-  "shortName": "bitci",
   "chainId": 1907,
-  "networkId": 1907,
   "explorers": [
     {
       "name": "Bitci Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bitcichain"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
+    "width": 64,
+    "height": 64,
+    "format": "svg"
+  },
+  "infoURL": "https://www.bitcichain.com",
+  "name": "Bitcichain Mainnet",
+  "nativeCurrency": {
+    "name": "Bitci",
+    "symbol": "BITCI",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://bitcichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.bitci.com"
+  ],
+  "shortName": "bitci",
+  "slug": "bitcichain",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,18 +1,13 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mantis Testnet (Hexapod)",
   "chain": "Mantis",
-  "icon": {
-    "url": "ipfs://Qma8dDhxSSVUyzV8Pu5bo252WaZEEikYFndRh7LVktvQEy",
-    "width": 512,
-    "height": 330,
-    "format": "png"
-  },
-  "rpc": [
-    "https://mantis-testnet-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mantis-rpc.switch.ch",
-    "https://mantis-rpc.kore-technologies.ch",
-    "https://mantis-rpc.phoenix-systems.io"
+  "chainId": 96970,
+  "explorers": [
+    {
+      "name": "Mantis Blockscout",
+      "url": "https://blockscout.mantis.hexapod.network",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://mantis.switch.ch/faucet",
@@ -20,28 +15,28 @@ export default {
     "https://mantis.phoenix-systems.io/faucet",
     "https://mantis.block-spirit.ch/faucet"
   ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://Qma8dDhxSSVUyzV8Pu5bo252WaZEEikYFndRh7LVktvQEy",
+    "width": 512,
+    "height": 330,
+    "format": "png"
+  },
+  "infoURL": "https://hexapod.network",
+  "name": "Mantis Testnet (Hexapod)",
   "nativeCurrency": {
     "name": "Mantis",
     "symbol": "MANTIS",
     "decimals": 18
   },
-  "infoURL": "https://hexapod.network",
-  "shortName": "mantis",
-  "chainId": 96970,
-  "networkId": 96970,
-  "explorers": [
-    {
-      "name": "Mantis Blockscout",
-      "url": "https://blockscout.mantis.hexapod.network",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://mantis-testnet-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mantis-rpc.switch.ch",
+    "https://mantis-rpc.kore-technologies.ch",
+    "https://mantis-rpc.phoenix-systems.io"
   ],
-  "testnet": true,
-  "slug": "mantis-testnet-hexapod"
+  "shortName": "mantis",
+  "slug": "mantis-testnet-hexapod",
+  "testnet": true
 } as const satisfies Chain;

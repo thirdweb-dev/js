@@ -1,30 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PlatON Dev Testnet2",
   "chain": "PlatON",
-  "rpc": [
-    "https://platon-dev-testnet2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet2openapi.platon.network/rpc",
-    "wss://devnet2openapi.platon.network/ws"
-  ],
-  "faucets": [
-    "https://devnet2faucet.platon.network/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "LAT",
-    "symbol": "lat",
-    "decimals": 18
-  },
-  "infoURL": "https://www.platon.network",
-  "shortName": "platondev2",
   "chainId": 2206132,
-  "networkId": 1,
-  "icon": {
-    "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
-    "width": 180,
-    "height": 180,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "PlatON explorer",
@@ -32,6 +9,30 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "platon-dev-testnet2"
+  "faucets": [
+    "https://devnet2faucet.platon.network/faucet"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
+    "width": 180,
+    "height": 180,
+    "format": "png"
+  },
+  "infoURL": "https://www.platon.network",
+  "name": "PlatON Dev Testnet2",
+  "nativeCurrency": {
+    "name": "LAT",
+    "symbol": "lat",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://platon-dev-testnet2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://devnet2openapi.platon.network/rpc",
+    "wss://devnet2openapi.platon.network/ws"
+  ],
+  "shortName": "platondev2",
+  "slug": "platon-dev-testnet2",
+  "testnet": true
 } as const satisfies Chain;
