@@ -7,7 +7,7 @@ import type {
 import { BigNumber, constants } from "ethers";
 import type { QueryAllParams } from "../../../core/schema/QueryParams";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import type { NFT } from "../../../core/schema/nft";
+import type { NFT, NFTWithoutMetadata } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
@@ -79,6 +79,46 @@ export class Erc721Supply implements DetectableFeature {
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
         this.erc721.get((start + i).toString()),
+      ),
+    );
+  }
+
+  /**
+   * Get all NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   * This function is similar to getAll() however it does not return the metadata of the NFTs
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.nft.query.allWithoutMetadata();
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
+   */
+  public async allWithoutMetadata(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTWithoutMetadata[]> {
+    let startTokenId = BigNumber.from(0);
+    if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
+      startTokenId = await this.contractWrapper.read("startTokenId", []);
+    }
+    const start = BigNumber.from(queryParams?.start || 0)
+      .add(startTokenId)
+      .toNumber();
+    const count = BigNumber.from(
+      queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
+    ).toNumber();
+
+    const maxSupply = await this.erc721.nextTokenIdToMint();
+    const maxId = Math.min(
+      maxSupply.add(startTokenId).toNumber(),
+      start + count,
+    );
+    return await Promise.all(
+      [...Array(maxId - start).keys()].map((i) =>
+        this.erc721.getWithoutMetadata((start + i).toString()),
       ),
     );
   }

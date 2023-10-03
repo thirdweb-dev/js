@@ -6,7 +6,7 @@ import type {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
 import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT } from "../../../core/schema/nft";
+import { NFT, NFTWithoutMetadata } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { Address } from "../../schema/shared/Address";
@@ -82,6 +82,12 @@ export class StandardErc721<
     return this.erc721.getAll(queryParams);
   }
 
+  public async getAllWithoutMetadata(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTWithoutMetadata[]> {
+    return this.erc721.getAllWithoutMetadata(queryParams);
+  }
+
   /**
    * Get all NFTs owned by a specific wallet
    *
@@ -102,6 +108,15 @@ export class StandardErc721<
       walletAddress = await resolveAddress(walletAddress);
     }
     return this.erc721.getOwned(walletAddress);
+  }
+
+  public async getOwnedWithoutMetadata(
+    walletAddress?: AddressOrEns,
+  ): Promise<NFTWithoutMetadata[]> {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
+    return this.erc721.getOwnedWithoutMetadata(walletAddress);
   }
 
   /**

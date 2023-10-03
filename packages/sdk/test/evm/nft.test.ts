@@ -287,4 +287,90 @@ describe("NFT Contract", async () => {
     expect(records[0].tokenId).to.eq(1);
     expect(records[1].tokenId).to.eq(2);
   });
+
+  it("getAllWithoutMetadata should return results without the metadata", async () => {
+    await nftContract.mintBatch([
+      {
+        name: "Test0",
+      },
+      {
+        name: "Test1",
+      },
+      {
+        name: "Test2",
+      },
+    ]);
+    const nfts = await nftContract.getAllWithoutMetadata();
+    let hasNoMetadata = true;
+    for (let i = 0; i < nfts.length; i++) {
+      const keys = Object.keys(nfts[i].metadata);
+      if (keys.length !== 1 || keys[0] !== "id") {
+        hasNoMetadata = false;
+        break;
+      }
+    }
+    assert.strictEqual(hasNoMetadata, true);
+  });
+
+  it("getAllWithoutMetadata should return identical results as getAll", async () => {
+    await nftContract.mintBatch([
+      {
+        name: "Test0",
+      },
+      {
+        name: "Test1",
+      },
+      {
+        name: "Test2",
+      },
+    ]);
+
+    const [nfts, nftsWithoutMetadata] = await Promise.all([
+      nftContract.getAll(),
+      nftContract.getAllWithoutMetadata(),
+    ]);
+
+    const sameLength = nfts.length === nftsWithoutMetadata.length;
+    assert.strictEqual(sameLength, true);
+
+    let identicalTokenIds = true;
+    for (let i = 0; i < nfts.length; i++) {
+      if (nfts[i].metadata.id !== nftsWithoutMetadata[i].metadata.id) {
+        identicalTokenIds = false;
+        break;
+      }
+    }
+    assert.strictEqual(identicalTokenIds, true);
+  });
+
+  it("When a token was burned, getAllWithoutMetadata should return identical results as getAll", async () => {
+    await nftContract.mintBatch([
+      {
+        name: "Test0",
+      },
+      {
+        name: "Test1",
+      },
+      {
+        name: "Test2",
+      },
+    ]);
+    await nftContract.burn("0");
+    const [nfts, nftsWithoutMetadata] = await Promise.all([
+      nftContract.getAll(),
+      nftContract.getAllWithoutMetadata(),
+    ]);
+
+    const sameLength = nfts.length === nftsWithoutMetadata.length;
+    assert.strictEqual(sameLength, true);
+
+    let allTokenIdsAreSimilar = true;
+    for (let i = 0; i < nfts.length; i++) {
+      if (nfts[i].metadata.id !== nftsWithoutMetadata[i].metadata.id) {
+        allTokenIdsAreSimilar = false;
+        break;
+      }
+    }
+    assert.strictEqual(allTokenIdsAreSimilar, true);
+  });
 });

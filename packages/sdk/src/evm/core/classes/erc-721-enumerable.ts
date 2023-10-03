@@ -1,6 +1,6 @@
 import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
-import type { NFT } from "../../../core/schema/nft";
+import type { NFT, NFTWithoutMetadata } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -52,6 +52,17 @@ export class Erc721Enumerable implements DetectableFeature {
     const tokenIds = await this.tokenIds(walletAddress);
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
+    );
+  }
+
+  public async allWithoutMetadata(
+    walletAddress?: AddressOrEns,
+  ): Promise<NFTWithoutMetadata[]> {
+    const tokenIds = await this.tokenIds(walletAddress);
+    return await Promise.all(
+      tokenIds.map((tokenId) =>
+        this.erc721.getWithoutMetadata(tokenId.toString()),
+      ),
     );
   }
 

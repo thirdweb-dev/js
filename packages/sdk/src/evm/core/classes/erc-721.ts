@@ -22,6 +22,7 @@ import type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
+  NFTWithoutMetadata,
 } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
@@ -174,6 +175,20 @@ export class Erc721<
       })),
     ]);
     return { owner, metadata, type: "ERC721", supply: "1" };
+  }
+
+  public async getWithoutMetadata(
+    tokenId: BigNumberish,
+  ): Promise<NFTWithoutMetadata> {
+    const owner = await this.ownerOf(tokenId).catch(
+      () => constants.AddressZero,
+    );
+    return {
+      owner,
+      metadata: { id: tokenId.toString() },
+      type: "ERC721",
+      supply: "1",
+    };
   }
 
   /**
@@ -359,6 +374,12 @@ export class Erc721<
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).all(queryParams);
   }
 
+  public async getAllWithoutMetadata(queryParams?: QueryAllParams) {
+    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allWithoutMetadata(
+      queryParams,
+    );
+  }
+
   /**
    * Get all NFT owners
    * @example
@@ -434,6 +455,26 @@ export class Erc721<
         (allOwners || [])
           .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
           .map((i) => this.get(i.tokenId)),
+      );
+    }
+  }
+
+  public async getOwnedWithoutMetadata(walletAddress?: AddressOrEns) {
+    if (walletAddress) {
+      walletAddress = await resolveAddress(walletAddress);
+    }
+
+    if (this.query?.owned) {
+      return this.query.owned.allWithoutMetadata(walletAddress);
+    } else {
+      const [address, allOwners] = await Promise.all([
+        walletAddress || this.contractWrapper.getSignerAddress(),
+        this.getAllOwners(),
+      ]);
+      return await Promise.all(
+        (allOwners || [])
+          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
+          .map((i) => this.getWithoutMetadata(i.tokenId)),
       );
     }
   }
