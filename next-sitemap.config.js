@@ -39,6 +39,7 @@ module.exports = {
     };
   },
   additionalPaths: async (config) => {
+    // TODO - update this to instead use the chainList api
     return [
       ...allChains.map((chain) => {
         return {

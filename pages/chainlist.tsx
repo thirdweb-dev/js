@@ -11,9 +11,10 @@ import {
   SimpleGrid,
   Spinner,
 } from "@chakra-ui/react";
-import { Chain, allChains } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { AppLayout } from "components/app-layouts/app";
 import { ChainIcon } from "components/icons/ChainIcon";
+import { THIRDWEB_API_HOST } from "constants/urls";
 import Fuse from "fuse.js";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
@@ -55,7 +56,7 @@ export const ChainsLanding: ThirdwebNextPage = (
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const filteredChains = useMemo(() => {
-    if (!deferredSearchTerm || !allChains.length) {
+    if (!deferredSearchTerm) {
       return props.chains || [];
     }
 
@@ -242,8 +243,30 @@ interface DashboardRPCProps {
 
 // server side ----------------
 
+// helper function to get all chains
+// TODO replace this with proper SSR partial rendering of chains and paginate on the frontend
+async function getAllPaginatedChains(
+  chains: Chain[] = [],
+  pathname = "/v1/chains",
+): Promise<Chain[]> {
+  const url = new URL(THIRDWEB_API_HOST);
+  url.pathname = pathname;
+  const res = await fetch(decodeURIComponent(url.toString()));
+  const json = await res.json();
+
+  if (json.error) {
+    console.error("Failed to fully load chains from DB", json.error);
+    return chains;
+  }
+  if (json.next) {
+    return getAllPaginatedChains([...chains, ...json.data], json.next);
+  }
+  return [...chains, ...json.data];
+}
+
 export const getStaticProps: GetStaticProps<DashboardRPCProps> = async () => {
-  const chains = allChains
+  const chains = await getAllPaginatedChains();
+  const minimalChains = chains
     .filter((c) => c.chainId !== 1337)
     .map((chain) => ({
       slug: chain.slug,
@@ -256,8 +279,9 @@ export const getStaticProps: GetStaticProps<DashboardRPCProps> = async () => {
         chain.rpc.findIndex((c) => c.indexOf("thirdweb.com") > -1) > -1,
     }));
   return {
+    revalidate: 60,
     props: {
-      chains,
+      chains: minimalChains,
     },
   };
 };
