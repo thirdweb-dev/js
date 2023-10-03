@@ -6,10 +6,12 @@ import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { metamaskUris } from "./metamaskUris";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
-    "connecting" | "scanning" | "get-started"
+    "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
   const { walletConfig, connected } = props;
   const connect = useConnect();
@@ -17,64 +19,76 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
 
   const hideBackButton = props.supportedWallets.length === 1;
 
-  const connectToExtension = useCallback(async () => {
-    try {
-      connectPrompted.current = true;
-      setErrorConnecting(false);
-      setScreen("connecting");
-      await wait(1000);
-      await connect(walletConfig);
-      connected();
-    } catch (e) {
-      setErrorConnecting(true);
-      console.error(e);
-    }
-  }, [connected, connect, walletConfig]);
-
-  const connectPrompted = useRef(false);
-  useEffect(() => {
-    if (connectPrompted.current) {
-      return;
-    }
-
-    const isInstalled = walletConfig.isInstalled
+  const connectWallet = useCallback(() => {
+    const _isInstalled = walletConfig.isInstalled
       ? walletConfig.isInstalled()
       : false;
 
-    // if loading
     (async () => {
-      if (isInstalled) {
-        connectToExtension();
+      if (_isInstalled) {
+        try {
+          connectPrompted.current = true;
+          setErrorConnecting(false);
+          setScreen("connecting");
+          await wait(1000);
+          await connect(walletConfig);
+          connected();
+        } catch (e) {
+          setErrorConnecting(true);
+          console.error(e);
+        }
       }
 
       // if metamask is not injected
       else {
         // on mobile, open metamask app link
         if (isMobile()) {
-          window.open(
-            `https://metamask.app.link/dapp/${window.location.toString()}`,
-          );
+          setScreen("open-wc-uri");
         } else {
           // on desktop, show the metamask scan qr code
           setScreen("scanning");
         }
       }
     })();
-  }, [connectToExtension, walletConfig]);
+  }, [connect, connected, walletConfig]);
+
+  const connectPrompted = useRef(false);
+  useEffect(() => {
+    if (connectPrompted.current) {
+      return;
+    }
+    connectWallet();
+  }, [connectWallet]);
+
+  const handleGetStarted = () => {
+    setScreen("get-started");
+  };
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
         errorConnecting={errorConnecting}
-        onGetStarted={() => {
-          setScreen("get-started");
-        }}
-        onRetry={connectToExtension}
+        onGetStarted={handleGetStarted}
+        onRetry={connectWallet}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        // supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
+      />
+    );
+  }
+
+  if (screen === "open-wc-uri") {
+    return (
+      <WCOpenURI
+        errorConnecting={errorConnecting}
+        onGetStarted={handleGetStarted}
+        onRetry={connectWallet}
+        hideBackButton={hideBackButton}
+        onBack={props.goBack}
+        onConnected={close}
+        walletConfig={walletConfig}
+        appUriPrefix={metamaskUris}
       />
     );
   }
@@ -95,11 +109,12 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "scanning") {
     return (
       <MetamaskScan
+        onConnectFailed={() => {
+          setErrorConnecting(true);
+        }}
         onBack={props.goBack}
         onConnected={props.connected}
-        onGetStarted={() => {
-          setScreen("get-started");
-        }}
+        onGetStarted={handleGetStarted}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
       />

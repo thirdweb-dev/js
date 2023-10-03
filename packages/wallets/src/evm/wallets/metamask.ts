@@ -35,6 +35,7 @@ type ConnectWithQrCodeArgs = {
   chainId?: number;
   onQrCodeUri: (uri: string) => void;
   onConnected: (accountAddress: string) => void;
+  onConnectFailed: () => void;
 };
 
 export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptions> {
@@ -148,7 +149,9 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     });
 
     // trigger connect flow
-    this.connect({ chainId: options.chainId }).then(options.onConnected);
+    this.connect({ chainId: options.chainId })
+      .then(options.onConnected)
+      .catch(options.onConnectFailed);
   }
 
   async switchAccount() {

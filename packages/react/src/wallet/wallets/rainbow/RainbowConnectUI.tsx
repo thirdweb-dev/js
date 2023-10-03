@@ -7,6 +7,7 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { RainbowWallet } from "@thirdweb-dev/wallets";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 import { wait } from "../../../utils/wait";
+import { rainbowWalletUris } from "./rainbowWalletUris";
 
 export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
   const [screen, setScreen] = useState<
@@ -91,11 +92,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
         onBack={props.goBack}
         onConnected={connected}
         walletConfig={walletConfig}
-        appUriPrefix={{
-          ios: "rainbow://",
-          android: "https://rnbwapp.com/",
-          other: "https://rnbwapp.com/",
-        }}
+        appUriPrefix={rainbowWalletUris}
       />
     );
   }
