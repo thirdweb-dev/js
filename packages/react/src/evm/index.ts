@@ -18,6 +18,8 @@ export * from "./components/NftMedia";
 export * from "./components/Web3Button";
 export { ThirdwebProvider } from "./providers/thirdweb-provider";
 
+export type { MediaRendererProps } from "./components/types";
+
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
 
