@@ -19,7 +19,7 @@ import { TransactionResult } from "@thirdweb-dev/sdk";
 import { ModalTitle } from "../../components/modalElements";
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { utils } from "ethers";
-import { SupportedTokens, TokenInfo } from "./defaultTokens";
+import { SupportedTokens, TokenInfo, defaultTokens } from "./defaultTokens";
 import { Img } from "../../components/Img";
 import styled from "@emotion/styled";
 import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
@@ -30,7 +30,26 @@ type TXError = Error & { data?: { message?: string } };
 
 export function SendFunds(props: { supportedTokens: SupportedTokens }) {
   const [screen, setScreen] = useState<"base" | "tokenSelector">("base");
-  const [token, setToken] = useState<TokenInfo | undefined>();
+
+  const chainId = useChainId();
+  let defaultToken: TokenInfo | undefined = undefined;
+  if (
+    // if we know chainId
+    chainId &&
+    // if there is a list of tokens for this chain
+    props.supportedTokens[chainId] &&
+    // if the list of tokens is not the default list
+    props.supportedTokens[chainId] !== defaultTokens[chainId]
+  ) {
+    // use the first token in the list as default selected
+    const tokensForChain = props.supportedTokens[chainId];
+    const firstToken = tokensForChain && tokensForChain[0];
+    if (firstToken) {
+      defaultToken = firstToken;
+    }
+  }
+
+  const [token, setToken] = useState<TokenInfo | undefined>(defaultToken);
   const [receieverAddress, setReceieverAddress] = useState("");
   const [amount, setAmount] = useState("0");
 
@@ -74,7 +93,12 @@ export function SendFundsForm(props: {
   const tokenAddress = props.token?.address;
   const balanceQuery = useBalance(tokenAddress);
 
-  const { receieverAddress, setReceieverAddress, amount, setAmount } = props;
+  const {
+    receieverAddress: receiverAddress,
+    setReceieverAddress,
+    amount,
+    setAmount,
+  } = props;
 
   const chain = useChain();
   const chainId = useChainId();
@@ -83,17 +107,17 @@ export function SendFundsForm(props: {
   // Ethereum or Rinkeby or Goerli
   const isENSSupprted = chainId === 1 || chainId === 5 || chainId === 4;
 
-  const isValidReceieverAddress = useMemo(() => {
-    const isENS = receieverAddress.endsWith(".eth");
+  const isValidReceiverAddress = useMemo(() => {
+    const isENS = receiverAddress.endsWith(".eth");
 
     if (!isENSSupprted && isENS) {
       return false;
     }
 
-    return isENS || utils.isAddress(receieverAddress);
-  }, [receieverAddress, isENSSupprted]);
+    return isENS || utils.isAddress(receiverAddress);
+  }, [receiverAddress, isENSSupprted]);
 
-  const showInvalidAddressError = receieverAddress && !isValidReceieverAddress;
+  const showInvalidAddressError = receiverAddress && !isValidReceiverAddress;
 
   const sendTokenMutation = useMutation<TransactionResult | undefined, TXError>(
     async () => {
@@ -101,7 +125,7 @@ export function SendFundsForm(props: {
         return;
       }
 
-      return wallet.transfer(receieverAddress, amount, tokenAddress);
+      return wallet.transfer(receiverAddress, amount, tokenAddress);
     },
   );
 
@@ -227,7 +251,7 @@ export function SendFundsForm(props: {
           id="receiever"
           placeholder={isENSSupprted ? `0x... / ENS name` : "0x..."}
           variant="outline"
-          value={receieverAddress}
+          value={receiverAddress}
           onChange={(e) => {
             setReceieverAddress(e.target.value);
           }}
@@ -274,7 +298,7 @@ export function SendFundsForm(props: {
           variant="accent"
           type="submit"
           onClick={async () => {
-            if (!receieverAddress || !wallet || !amount) {
+            if (!receiverAddress || !wallet || !amount) {
               return;
             }
 

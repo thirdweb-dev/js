@@ -152,7 +152,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       (item) =>
         ethers.utils.getAddress(item.signer) ===
         ethers.utils.getAddress(signerAddress),
-    )[0].permissions;
+    )[0]?.permissions;
+
+    if (!restrictions) {
+      return false;
+    }
 
     return restrictions.approvedCallTargets.includes(transaction.getTarget());
   }

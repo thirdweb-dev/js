@@ -1,7 +1,30 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BNB Smart Chain Mainnet",
   "chain": "BSC",
+  "chainId": 56,
+  "explorers": [
+    {
+      "name": "bscscan",
+      "url": "https://bscscan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://www.bnbchain.org/en",
+  "name": "BNB Smart Chain Mainnet",
+  "nativeCurrency": {
+    "name": "BNB Chain Native Token",
+    "symbol": "BNB",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://bsc-ws-node.nariox.org",
@@ -20,30 +43,7 @@ export default {
     "https://bsc-dataseed2.bnbchain.org",
     "https://bsc-dataseed1.bnbchain.org"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BNB Chain Native Token",
-    "symbol": "BNB",
-    "decimals": 18
-  },
-  "infoURL": "https://www.bnbchain.org/en",
   "shortName": "bnb",
-  "chainId": 56,
-  "networkId": 56,
-  "slip44": 714,
-  "explorers": [
-    {
-      "name": "bscscan",
-      "url": "https://bscscan.com",
-      "standard": "EIP3091"
-    }
-  ],
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "testnet": false,
-  "slug": "binance"
+  "slug": "binance",
+  "testnet": false
 } as const satisfies Chain;

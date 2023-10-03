@@ -1,28 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taiko Jolnir L2",
   "chain": "ETH",
-  "status": "incubating",
-  "icon": {
-    "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
-    "width": 288,
-    "height": 258,
-    "format": "png"
-  },
-  "rpc": [
-    "https://taiko-jolnir-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.jolnir.taiko.xyz"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://taiko.xyz",
-  "shortName": "tko-jolnir",
   "chainId": 167007,
-  "networkId": 167007,
   "explorers": [
     {
       "name": "blockscout",
@@ -30,6 +9,28 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "taiko-jolnir-l2"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
+    "width": 288,
+    "height": 258,
+    "format": "png"
+  },
+  "infoURL": "https://taiko.xyz",
+  "name": "Taiko Jolnir L2",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://taiko-jolnir-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.jolnir.taiko.xyz"
+  ],
+  "shortName": "tko-jolnir",
+  "slug": "taiko-jolnir-l2",
+  "status": "incubating",
+  "testnet": false
 } as const satisfies Chain;

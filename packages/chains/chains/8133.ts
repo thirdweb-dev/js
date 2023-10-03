@@ -1,25 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Qitmeer Network Privnet",
   "chain": "MEER",
-  "rpc": [],
+  "chainId": 8133,
+  "explorers": [],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Qitmeer Privnet",
-    "symbol": "MEER-P",
-    "decimals": 18
-  },
-  "infoURL": "https://github.com/Qitmeer",
-  "shortName": "meerpriv",
+  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "chainId": 8133,
-  "networkId": 8133,
+  "infoURL": "https://github.com/Qitmeer",
+  "name": "Qitmeer Network Privnet",
+  "nativeCurrency": {
+    "name": "Qitmeer Privnet",
+    "symbol": "MEER-P",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "meerpriv",
+  "slug": "qitmeer-network-privnet",
   "status": "incubating",
-  "testnet": false,
-  "slug": "qitmeer-network-privnet"
+  "testnet": false
 } as const satisfies Chain;

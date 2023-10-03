@@ -1,14 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mumbai",
-  "title": "Polygon Testnet Mumbai",
   "chain": "Polygon",
+  "chainId": 80001,
+  "explorers": [
+    {
+      "name": "polygonscan",
+      "url": "https://mumbai.polygonscan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://faucet.polygon.technology/"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
-    "height": 512,
     "width": 512,
+    "height": 512,
     "format": "png"
   },
+  "infoURL": "https://polygon.technology/",
+  "name": "Mumbai",
+  "nativeCurrency": {
+    "name": "MATIC",
+    "symbol": "MATIC",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}",
@@ -19,25 +37,7 @@ export default {
     "https://polygon-mumbai.gateway.tenderly.co",
     "wss://polygon-mumbai.gateway.tenderly.co"
   ],
-  "faucets": [
-    "https://faucet.polygon.technology/"
-  ],
-  "nativeCurrency": {
-    "name": "MATIC",
-    "symbol": "MATIC",
-    "decimals": 18
-  },
-  "infoURL": "https://polygon.technology/",
   "shortName": "maticmum",
-  "chainId": 80001,
-  "networkId": 80001,
-  "explorers": [
-    {
-      "name": "polygonscan",
-      "url": "https://mumbai.polygonscan.com",
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": true,
-  "slug": "mumbai"
+  "slug": "mumbai",
+  "testnet": true
 } as const satisfies Chain;

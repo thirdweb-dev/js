@@ -254,12 +254,13 @@ const main = async () => {
     .option("--forge", "Initialize as a Forge project.")
     .option("--hardhat", "Initialize as a Hardhat project.")
     .option("--extension", "Create a smart contract extension.")
-    .option("--cra", "Initialize as a Create React App project.")
+    .option("--react", "Initialize as a Create React App project.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
     .option("--reactNative", "Initialize as a React Native project.")
     .option("--express", "Initialize as a Express project.")
     .option("--node", "Initialize as a Node project.")
+    .option("--pwaVite", "Initialize as a PWA project.")
     .option(
       "--use-npm",
       "Explicitly tell the CLI to bootstrap the app using npm",
@@ -296,7 +297,9 @@ const main = async () => {
 
   program
     .command("deploy")
-    .description("Securely deploy your contract to any EVM network without having to deal with scripts, private keys, or ABIs")
+    .description(
+      "Securely deploy your contract to any EVM network without having to deal with scripts, private keys, or ABIs",
+    )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--clean", "clear the cache before building")
     .option("--dry-run", "dry run (skip actually publishing)")
@@ -495,18 +498,20 @@ const main = async () => {
       "Authorize your device to use the thirdweb CLI by authenticating with your wallet from our dashboard",
     )
     .action(async (options) => {
-      await loginUser({
-        credsConfigPath,
-        cliWalletPath,
-        tokenPath,
-      }, options, true);
+      await loginUser(
+        {
+          credsConfigPath,
+          cliWalletPath,
+          tokenPath,
+        },
+        options,
+        true,
+      );
     });
 
   program
     .command("logout")
-    .description(
-      "Logout of the thirdweb CLI",
-    )
+    .description("Logout of the thirdweb CLI")
     .action(async () => {
       await logoutUser(credsConfigPath, tokenPath, cliWalletPath);
     });

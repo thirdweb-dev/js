@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.2.61",
+  "version": "0.3.1",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -24,9 +24,12 @@
     "android"
   ],
   "dependencies": {
+    "@aws-sdk/client-lambda": "3.350.0",
+    "@aws-sdk/credential-providers": "3.350.0",
     "@coinbase/wallet-mobile-sdk": "1.0.7",
     "@magic-sdk/provider": "17.2.0",
     "@magic-sdk/react-native-bare": "^18.5.0",
+    "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",
     "@shopify/restyle": "^2.4.2",
     "@tanstack/react-query": "^4.33.0",
     "@thirdweb-dev/chains": "workspace:*",
@@ -35,14 +38,16 @@
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "abitype": "^0.2.5",
+    "aws-amplify": "^5.3.8",
     "expo-application": "^5.3.0",
     "expo-clipboard": "^4.1.2",
     "expo-document-picker": "^11.2.2",
     "expo-file-system": "^15.2.2",
     "expo-secure-store": "^12.1.1",
-    "react-native-mmkv": "2.5.1",
     "react-native-modal": "^13.0.1",
+    "react-native-qrcode-svg": "6.2.0",
     "react-native-svg": "^13.9.0",
+    "secrets.js-34r7h": "^2.0.2",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {
@@ -71,6 +76,7 @@
     "react-native": "^0.71.11",
     "react-native-camera": "^4.2.1",
     "react-native-device-info": "10.6.0",
+    "react-native-mmkv": "2.5.1",
     "react-native-safe-area-context": "4.5.3",
     "react-native-webview": "12.1.0",
     "typescript": "^5.1.6"
@@ -79,7 +85,11 @@
     "react-native-camera": "^4.2.1",
     "react-native-device-info": "10.6.0",
     "react-native-safe-area-context": "4.5.3",
-    "react-native-webview": "12.1.0"
+    "react-native-webview": "12.1.0",
+    "amazon-cognito-identity-js": "^6.3.3",
+    "react-native-quick-base64": "^2.0.7",
+    "react-native-quick-crypto": "^0.6.1",
+    "react-native-aes-gcm-crypto": "^0.2.2"
   },
   "peerDependencies": {
     "ethers": ">=5.5.1 <6",

@@ -1,24 +1,26 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Huobi ECO Chain Testnet",
   "chain": "Heco",
-  "rpc": [
-    "https://huobi-eco-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://http-testnet.hecochain.com",
-    "wss://ws-testnet.hecochain.com"
-  ],
+  "chainId": 256,
+  "explorers": [],
   "faucets": [
     "https://scan-testnet.hecochain.com/faucet"
   ],
+  "features": [],
+  "infoURL": "https://testnet.hecoinfo.com",
+  "name": "Huobi ECO Chain Testnet",
   "nativeCurrency": {
     "name": "Huobi ECO Chain Test Native Token",
     "symbol": "htt",
     "decimals": 18
   },
-  "infoURL": "https://testnet.hecoinfo.com",
+  "redFlags": [],
+  "rpc": [
+    "https://huobi-eco-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://http-testnet.hecochain.com",
+    "wss://ws-testnet.hecochain.com"
+  ],
   "shortName": "hecot",
-  "chainId": 256,
-  "networkId": 256,
-  "testnet": true,
-  "slug": "huobi-eco-chain-testnet"
+  "slug": "huobi-eco-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "QuarkChain Mainnet Shard 5",
   "chain": "QuarkChain",
-  "rpc": [
-    "https://quarkchain-shard-5.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-s5-ethapi.quarkchain.io",
-    "http://eth-jrpc.mainnet.quarkchain.io:39005"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "QKC",
-    "symbol": "QKC",
-    "decimals": 18
-  },
-  "infoURL": "https://www.quarkchain.io",
-  "shortName": "qkc-s5",
   "chainId": 100006,
-  "networkId": 100006,
-  "parent": {
-    "chain": "eip155-100000",
-    "type": "shard"
-  },
   "explorers": [
     {
       "name": "quarkchain-mainnet",
@@ -28,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "quarkchain-shard-5"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://www.quarkchain.io",
+  "name": "QuarkChain Mainnet Shard 5",
+  "nativeCurrency": {
+    "name": "QKC",
+    "symbol": "QKC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://quarkchain-shard-5.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-s5-ethapi.quarkchain.io",
+    "http://eth-jrpc.mainnet.quarkchain.io:39005"
+  ],
+  "shortName": "qkc-s5",
+  "slug": "quarkchain-shard-5",
+  "testnet": false
 } as const satisfies Chain;

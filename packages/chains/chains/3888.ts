@@ -1,17 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KalyChain Mainnet",
   "chain": "KLC",
-  "icon": {
-    "url": "ipfs://QmUaXcPewLuQtY5a7xPTzJyVdjkH487VfV7gSR8UXrbxQ3",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "rpc": [
-    "https://kalychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.kalychain.io/rpc"
+  "chainId": 3888,
+  "explorers": [
+    {
+      "name": "KalyScan",
+      "url": "https://kalyscan.io",
+      "standard": "EIP3091"
+    }
   ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -20,23 +18,25 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmUaXcPewLuQtY5a7xPTzJyVdjkH487VfV7gSR8UXrbxQ3",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://kalychain.io",
+  "name": "KalyChain Mainnet",
   "nativeCurrency": {
     "name": "KalyCoin",
     "symbol": "KLC",
     "decimals": 18
   },
-  "infoURL": "https://kalychain.io",
-  "shortName": "kalymainnet",
-  "chainId": 3888,
-  "networkId": 3888,
-  "explorers": [
-    {
-      "name": "KalyScan",
-      "url": "https://kalyscan.io",
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://kalychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.kalychain.io/rpc"
   ],
-  "testnet": false,
-  "slug": "kalychain"
+  "shortName": "kalymainnet",
+  "slug": "kalychain",
+  "testnet": false
 } as const satisfies Chain;
