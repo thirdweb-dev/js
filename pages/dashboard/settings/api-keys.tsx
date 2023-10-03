@@ -44,7 +44,6 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           justifyContent="space-between"
           direction={{ base: "column", md: "row" }}
           gap={4}
-          h={10}
         >
           <Heading size="title.lg" as="h1">
             API Keys
