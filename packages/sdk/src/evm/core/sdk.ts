@@ -558,18 +558,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getContract(
     address: AddressOrEns,
     abi: ContractInterface,
-    ignoreCache?: boolean,
   ): Promise<SmartContract>;
   public async getContract(
     address: AddressOrEns,
     contractTypeOrABI?: PrebuiltContractType | ContractInterface,
-    ignoreCache?: boolean,
   ): Promise<ValidContractInstance> {
     const resolvedAddress = await resolveAddress(address);
 
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
-    if (this.contractCache.has(resolvedAddress) && !ignoreCache) {
+    if (this.contractCache.has(resolvedAddress)) {
       // we know this will be there since we check the has above
       return this.contractCache.get(resolvedAddress) as ValidContractInstance;
     }
@@ -578,7 +576,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       return await this.getContractFromAbi(
         resolvedAddress,
         (GENERATED_ABI as any)[resolvedAddress],
-        ignoreCache,
       );
     }
 
@@ -595,7 +592,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         newContract = await this.getContractFromAbi(
           resolvedAddress,
           metadata.abi,
-          ignoreCache,
         );
       } catch (e) {
         // fallback to
@@ -607,11 +603,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           // otherwise if it's a prebuilt contract we can just use the contract type
           const contractAbi = await PREBUILT_CONTRACTS_MAP[
             resolvedContractType
-          ].getAbi(address, this.getProvider(), this.storage);
+          ].getAbi(resolvedAddress, this.getProvider(), this.storage);
           newContract = await this.getContractFromAbi(
-            address,
+            resolvedAddress,
             contractAbi,
-            ignoreCache,
           );
         } else {
           // we cant fetch the ABI, and we don't know the contract type, throw the original error
@@ -638,7 +633,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       newContract = await this.getContractFromAbi(
         resolvedAddress,
         contractTypeOrABI,
-        ignoreCache,
       );
     }
 
@@ -832,11 +826,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getContractFromAbi(
     address: AddressOrEns,
     abi: ContractInterface,
-    ignoreCache?: boolean,
   ) {
     const resolvedAddress = await resolveAddress(address);
 
-    if (this.contractCache.has(resolvedAddress) && !ignoreCache) {
+    if (this.contractCache.has(resolvedAddress)) {
       return this.contractCache.get(resolvedAddress) as SmartContract;
     }
     const [, provider] = getSignerAndProvider(
@@ -1110,7 +1103,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata.seller_fee_basis_points,
       ];
 
-      return await this.deployReleasedContract.prepare(
+      return await this.deployPublishedContract.prepare(
         THIRDWEB_DEPLOYER,
         "OpenEditionERC721",
         deployArgs,

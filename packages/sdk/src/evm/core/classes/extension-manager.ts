@@ -17,12 +17,12 @@ import { utils } from "ethers";
 import invariant from "tiny-invariant";
 import { ExtensionAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
 import {
+  THIRDWEB_DEPLOYER,
   deployContractDeterministic,
   deployWithThrowawayDeployer,
   fetchContractMetadataFromAddress,
   fetchPublishedContractFromPolygon,
   getDeploymentInfo,
-  resolveAddress,
 } from "../../common";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
@@ -30,17 +30,13 @@ import { ExtensionRemovedEvent } from "@thirdweb-dev/contracts-js/dist/declarati
 import { ExtensionReplacedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/BaseRouter";
 import { DynamicContractExtensionMetadata } from "../../types";
 
-export class BaseRouterClass<TContract extends BaseRouter>
-  implements DetectableFeature
-{
+export class ExtensionManager implements DetectableFeature {
   featureName = FEATURE_DYNAMIC_CONTRACT.name;
 
   private contractWrapper: ContractWrapper<BaseRouter>;
-  private onAbiUpdated: any;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(contractWrapper: ContractWrapper<BaseRouter>) {
     this.contractWrapper = contractWrapper;
-    // this.onAbiUpdated = onAbiUpdated.bind(contractInstance);
   }
 
   getAddress(): string {
@@ -67,7 +63,6 @@ export class BaseRouterClass<TContract extends BaseRouter>
 
   public async getExtensionAddress(extensionName: string): Promise<string> {
     const extension = await this.get(extensionName);
-
     return extension.metadata.implementation;
   }
 
@@ -75,7 +70,6 @@ export class BaseRouterClass<TContract extends BaseRouter>
     extensionName: string,
   ): Promise<ExtensionFunction[]> {
     const extension = await this.get(extensionName);
-
     return extension.functions;
   }
 
@@ -102,7 +96,6 @@ export class BaseRouterClass<TContract extends BaseRouter>
     functionInput: FunctionInput,
   ): Promise<string> {
     const extensionMetadata = await this.getExtensionForFunction(functionInput);
-
     return extensionMetadata.implementation;
   }
 
@@ -158,23 +151,28 @@ export class BaseRouterClass<TContract extends BaseRouter>
   addPublished = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
-      publisherAddress: string;
+      publisherAddress?: string;
       version?: string;
-      extensionMetadata: DynamicContractExtensionMetadata;
+      extensionMetadataOverride?: DynamicContractExtensionMetadata;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       const version = inputArgs.version || "latest";
-      const parsedMetadata = await CommonContractSchema.parseAsync(
-        inputArgs.extensionMetadata,
-      );
-      const extensionMetadataUri = await this.contractWrapper.storage.upload(
-        parsedMetadata,
-      );
 
-      const deployedExtensionAddress = await this.deployExtension(
-        inputArgs.extensionName,
-        inputArgs.publisherAddress,
-        version,
-      );
+      const { deployedExtensionAddress, extensionMetadata } =
+        await this.deployExtension(
+          inputArgs.extensionName,
+          inputArgs.publisherAddress || THIRDWEB_DEPLOYER,
+          version,
+        );
+
+      let extensionMetadataUri = extensionMetadata;
+      if (inputArgs.extensionMetadataOverride) {
+        const parsedMetadata = await CommonContractSchema.parseAsync(
+          inputArgs.extensionMetadataOverride,
+        );
+        extensionMetadataUri = await this.contractWrapper.storage.upload(
+          parsedMetadata,
+        );
+      }
 
       const metadata = await fetchContractMetadataFromAddress(
         deployedExtensionAddress,
@@ -231,20 +229,13 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
-  addWithAbi = /* @__PURE__ */ buildTransactionFunction(
+  addDeployed = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
       extensionAddress: string;
-      extensionMetadata: DynamicContractExtensionMetadata;
+      extensionMetadata?: DynamicContractExtensionMetadata;
       extensionAbi?: ContractInterface;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
-      const parsedMetadata = await CommonContractSchema.parseAsync(
-        inputArgs.extensionMetadata,
-      );
-      const extensionMetadataUri = await this.contractWrapper.storage.upload(
-        parsedMetadata,
-      );
-
       let extensionAbi = inputArgs.extensionAbi;
       if (!extensionAbi) {
         const metadata = await fetchContractMetadataFromAddress(
@@ -258,6 +249,16 @@ export class BaseRouterClass<TContract extends BaseRouter>
       }
 
       invariant(extensionAbi, "Require extension ABI");
+
+      let extensionMetadataUri = "";
+      if (inputArgs.extensionMetadata) {
+        const parsedMetadata = await CommonContractSchema.parseAsync(
+          inputArgs.extensionMetadata,
+        );
+        extensionMetadataUri = await this.contractWrapper.storage.upload(
+          parsedMetadata,
+        );
+      }
 
       const extensionFunctions: ExtensionFunction[] =
         generateExtensionFunctions(AbiSchema.parse(extensionAbi));
@@ -352,23 +353,28 @@ export class BaseRouterClass<TContract extends BaseRouter>
   replacePublished = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
-      publisherAddress: string;
+      publisherAddress?: string;
       version?: string;
-      extensionMetadata: DynamicContractExtensionMetadata;
+      extensionMetadataOverride?: DynamicContractExtensionMetadata;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       const version = inputArgs.version || "latest";
-      const parsedMetadata = await CommonContractSchema.parseAsync(
-        inputArgs.extensionMetadata,
-      );
-      const extensionMetadataUri = await this.contractWrapper.storage.upload(
-        parsedMetadata,
-      );
 
-      const deployedExtensionAddress = await this.deployExtension(
-        inputArgs.extensionName,
-        inputArgs.publisherAddress,
-        version,
-      );
+      const { deployedExtensionAddress, extensionMetadata } =
+        await this.deployExtension(
+          inputArgs.extensionName,
+          inputArgs.publisherAddress || THIRDWEB_DEPLOYER,
+          version,
+        );
+
+      let extensionMetadataUri = extensionMetadata;
+      if (inputArgs.extensionMetadataOverride) {
+        const parsedMetadata = await CommonContractSchema.parseAsync(
+          inputArgs.extensionMetadataOverride,
+        );
+        extensionMetadataUri = await this.contractWrapper.storage.upload(
+          parsedMetadata,
+        );
+      }
 
       const metadata = await fetchContractMetadataFromAddress(
         deployedExtensionAddress,
@@ -422,11 +428,11 @@ export class BaseRouterClass<TContract extends BaseRouter>
     },
   );
 
-  replaceWithAbi = /* @__PURE__ */ buildTransactionFunction(
+  replaceDeployed = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
       extensionAddress: string;
-      extensionMetadata: DynamicContractExtensionMetadata;
+      extensionMetadata?: DynamicContractExtensionMetadata;
       extensionAbi?: ContractInterface;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       const parsedMetadata = await CommonContractSchema.parseAsync(
@@ -584,7 +590,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     extensionName: string,
     publisherAddress: string,
     version: string = "latest",
-  ): Promise<string> {
+  ): Promise<{ deployedExtensionAddress: string; extensionMetadata: string }> {
     const published = await fetchPublishedContractFromPolygon(
       publisherAddress,
       extensionName,
@@ -638,7 +644,7 @@ export class BaseRouterClass<TContract extends BaseRouter>
     // process txns one at a time
     for (const tx of transactionsforDirectDeploy) {
       try {
-        await deployContractDeterministic(signer, tx, {});
+        await deployContractDeterministic(signer, tx);
       } catch (e) {
         console.debug(
           `Error deploying contract at ${tx.predictedAddress}`,
@@ -647,10 +653,9 @@ export class BaseRouterClass<TContract extends BaseRouter>
       }
     }
 
-    const resolvedImplementationAddress = await resolveAddress(
-      implementationAddress,
-    );
-
-    return resolvedImplementationAddress;
+    return {
+      deployedExtensionAddress: implementationAddress,
+      extensionMetadata: published.metadataUri,
+    };
   }
 }

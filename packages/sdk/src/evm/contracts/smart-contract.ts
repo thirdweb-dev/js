@@ -78,7 +78,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { Address } from "../schema/shared/Address";
 import { BaseContractInterface } from "../types/contract";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import { BaseRouterClass } from "../core/classes/base-router";
+import { ExtensionManager } from "../core/classes/extension-manager";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -119,7 +119,6 @@ export class SmartContract<
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  // public abi: Abi;
   public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
 
   get abi(): Abi {
@@ -362,7 +361,7 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
-  get extensions(): BaseRouterClass<BaseRouter> {
+  get extensions(): ExtensionManager {
     return assertEnabled(this.detectBaseRouter(), FEATURE_DYNAMIC_CONTRACT);
   }
 
@@ -600,7 +599,7 @@ export class SmartContract<
         FEATURE_DYNAMIC_CONTRACT.name,
       )
     ) {
-      return new BaseRouterClass(this.contractWrapper);
+      return new ExtensionManager(this.contractWrapper);
     }
     return undefined;
   }

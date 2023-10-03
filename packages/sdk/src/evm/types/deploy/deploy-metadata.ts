@@ -415,7 +415,7 @@ export interface DynamicContractExtensionMetadata {
   /**
    * name of the contract
    */
-  name: string;
+  name?: string;
   /**
    * Optional description of the contract
    */
