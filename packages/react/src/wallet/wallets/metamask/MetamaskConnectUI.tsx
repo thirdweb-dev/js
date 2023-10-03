@@ -86,7 +86,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         onRetry={connectWallet}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={connected}
         walletConfig={walletConfig}
         appUriPrefix={metamaskUris}
       />
@@ -113,7 +113,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
           setErrorConnecting(true);
         }}
         onBack={props.goBack}
-        onConnected={props.connected}
+        onConnected={connected}
         onGetStarted={handleGetStarted}
         hideBackButton={hideBackButton}
         walletConfig={walletConfig}
