@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SX Network Mainnet",
   "chain": "SX",
-  "icon": {
-    "url": "ipfs://QmSXLXqyr2H6Ja5XrmznXbWTEvF2gFaL8RXNXgyLmDHjAF",
-    "width": 896,
-    "height": 690,
-    "format": "png"
-  },
-  "rpc": [
-    "https://sx-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.sx.technology"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "SX Network",
-    "symbol": "SX",
-    "decimals": 18
-  },
-  "infoURL": "https://www.sx.technology",
-  "shortName": "SX",
   "chainId": 416,
-  "networkId": 416,
   "explorers": [
     {
       "name": "SX Network Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "sx-network"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmSXLXqyr2H6Ja5XrmznXbWTEvF2gFaL8RXNXgyLmDHjAF",
+    "width": 896,
+    "height": 690,
+    "format": "png"
+  },
+  "infoURL": "https://www.sx.technology",
+  "name": "SX Network Mainnet",
+  "nativeCurrency": {
+    "name": "SX Network",
+    "symbol": "SX",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://sx-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.sx.technology"
+  ],
+  "shortName": "SX",
+  "slug": "sx-network",
+  "testnet": false
 } as const satisfies Chain;

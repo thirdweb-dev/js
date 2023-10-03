@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "UB Smart Chain",
   "chain": "USC",
-  "rpc": [
-    "https://ub-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.uschain.network"
-  ],
+  "chainId": 99999,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://www.ubchain.site/",
+  "name": "UB Smart Chain",
   "nativeCurrency": {
     "name": "UBC",
     "symbol": "UBC",
     "decimals": 18
   },
-  "infoURL": "https://www.ubchain.site/",
+  "redFlags": [],
+  "rpc": [
+    "https://ub-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.uschain.network"
+  ],
   "shortName": "usc",
-  "chainId": 99999,
-  "networkId": 99999,
-  "testnet": false,
-  "slug": "ub-smart-chain"
+  "slug": "ub-smart-chain",
+  "testnet": false
 } as const satisfies Chain;

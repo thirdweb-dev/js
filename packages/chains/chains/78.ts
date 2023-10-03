@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PrimusChain mainnet",
   "chain": "PC",
-  "rpc": [
-    "https://primuschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ethnode.primusmoney.com/mainnet"
-  ],
+  "chainId": 78,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://primusmoney.com",
+  "name": "PrimusChain mainnet",
   "nativeCurrency": {
     "name": "Primus Ether",
     "symbol": "PETH",
     "decimals": 18
   },
-  "infoURL": "https://primusmoney.com",
+  "redFlags": [],
+  "rpc": [
+    "https://primuschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ethnode.primusmoney.com/mainnet"
+  ],
   "shortName": "primuschain",
-  "chainId": 78,
-  "networkId": 78,
-  "testnet": false,
-  "slug": "primuschain"
+  "slug": "primuschain",
+  "testnet": false
 } as const satisfies Chain;

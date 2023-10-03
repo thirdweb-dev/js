@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Atheios",
   "chain": "ATH",
-  "rpc": [
-    "https://atheios.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.atheios.org/"
-  ],
+  "chainId": 1620,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://atheios.org",
+  "name": "Atheios",
   "nativeCurrency": {
     "name": "Atheios Ether",
     "symbol": "ATH",
     "decimals": 18
   },
-  "infoURL": "https://atheios.org",
+  "redFlags": [],
+  "rpc": [
+    "https://atheios.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.atheios.org/"
+  ],
   "shortName": "ath",
-  "chainId": 1620,
-  "networkId": 11235813,
-  "slip44": 1620,
-  "testnet": false,
-  "slug": "atheios"
+  "slug": "atheios",
+  "testnet": false
 } as const satisfies Chain;

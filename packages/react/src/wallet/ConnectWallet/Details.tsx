@@ -782,11 +782,7 @@ function ConnectedToSmartWallet() {
       }}
     >
       <Container flex="row" gap="xs" center="y">
-        <ActiveDot
-          style={{
-            background: isSmartWalletDeployed ? undefined : "#ffc53d",
-          }}
-        />
+        <ActiveDot />
         Connected to Smart Wallet
       </Container>
       {isSmartWalletDeployed && (
@@ -795,7 +791,7 @@ function ConnectedToSmartWallet() {
     </Container>
   );
 
-  if (chain && address) {
+  if (chain && address && activeWallet?.walletId === walletIds.smartWallet) {
     return (
       <>
         {isSmartWalletDeployed ? (

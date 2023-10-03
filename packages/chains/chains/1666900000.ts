@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Harmony Devnet Shard 0",
   "chain": "Harmony",
-  "rpc": [
-    "https://harmony-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.s0.ps.hmny.io"
-  ],
+  "chainId": 1666900000,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://www.harmony.one/",
+  "name": "Harmony Devnet Shard 0",
   "nativeCurrency": {
     "name": "ONE",
     "symbol": "ONE",
     "decimals": 18
   },
-  "infoURL": "https://www.harmony.one/",
+  "redFlags": [],
+  "rpc": [
+    "https://harmony-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.s0.ps.hmny.io"
+  ],
   "shortName": "hmy-ps-s0",
-  "chainId": 1666900000,
-  "networkId": 1666900000,
-  "explorers": [],
-  "testnet": false,
-  "slug": "harmony-devnet-shard-0"
+  "slug": "harmony-devnet-shard-0",
+  "testnet": false
 } as const satisfies Chain;

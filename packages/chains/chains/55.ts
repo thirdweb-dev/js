@@ -1,7 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Zyx Mainnet",
   "chain": "ZYX",
+  "chainId": 55,
+  "explorers": [
+    {
+      "name": "zyxscan",
+      "url": "https://zyxscan.com",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://zyx.network/",
+  "name": "Zyx Mainnet",
+  "nativeCurrency": {
+    "name": "Zyx",
+    "symbol": "ZYX",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://zyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.zyx.network/",
@@ -11,23 +28,7 @@ export default {
     "https://rpc-5.zyx.network/",
     "https://rpc-6.zyx.network/"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Zyx",
-    "symbol": "ZYX",
-    "decimals": 18
-  },
-  "infoURL": "https://zyx.network/",
   "shortName": "ZYX",
-  "chainId": 55,
-  "networkId": 55,
-  "explorers": [
-    {
-      "name": "zyxscan",
-      "url": "https://zyxscan.com",
-      "standard": "none"
-    }
-  ],
-  "testnet": false,
-  "slug": "zyx"
+  "slug": "zyx",
+  "testnet": false
 } as const satisfies Chain;

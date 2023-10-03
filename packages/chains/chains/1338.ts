@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Elysium Testnet",
-  "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged",
   "chain": "Elysium",
-  "rpc": [
-    "https://elysium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://elysium-test-rpc.vulcanforged.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "LAVA",
-    "symbol": "LAVA",
-    "decimals": 18
-  },
-  "infoURL": "https://elysiumscan.vulcanforged.com",
-  "shortName": "ELST",
   "chainId": 1338,
-  "networkId": 1338,
   "explorers": [
     {
       "name": "Elysium testnet explorer",
@@ -24,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "elysium-testnet"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://elysiumscan.vulcanforged.com",
+  "name": "Elysium Testnet",
+  "nativeCurrency": {
+    "name": "LAVA",
+    "symbol": "LAVA",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://elysium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://elysium-test-rpc.vulcanforged.com"
+  ],
+  "shortName": "ELST",
+  "slug": "elysium-testnet",
+  "testnet": true
 } as const satisfies Chain;
