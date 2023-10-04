@@ -151,7 +151,7 @@ export class SmartWallet
   async createSessionKey(
     keyAddress: string,
     permissions: SignerPermissionsInput,
-  ) {
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.grantPermissions(keyAddress, permissions);
   }
@@ -160,7 +160,7 @@ export class SmartWallet
    * Remove a session key from the smart wallet.
    * @param keyAddress the address of the session key to remove.
    */
-  async revokeSessionKey(keyAddress: string) {
+  async revokeSessionKey(keyAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.revokePermissions(keyAddress);
   }
@@ -169,7 +169,7 @@ export class SmartWallet
    * Add another admin to the smart wallet.
    * @param adminAddress the address of the admin to add.
    */
-  async addAdmin(adminAddress: string) {
+  async addAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.addAdmin(adminAddress);
   }
@@ -178,7 +178,7 @@ export class SmartWallet
    * Remove an admin from the smart wallet.
    * @param adminAddress the address of the admin to remove.
    */
-  async removeAdmin(adminAddress: string) {
+  async removeAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.removeAdmin(adminAddress);
   }

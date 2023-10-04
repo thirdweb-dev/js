@@ -251,31 +251,31 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     }
   }
 
-  async grantPermissions(target: string, permissions: SignerPermissionsInput) {
+  async grantPermissions(
+    target: string,
+    permissions: SignerPermissionsInput,
+  ): Promise<TransactionResult> {
     await this.deployIfNeeded();
     const accountContract = await this.getAccountContract();
-    return accountContract.account.grantPermissions.prepare(
-      target,
-      permissions,
-    );
+    return accountContract.account.grantPermissions(target, permissions);
   }
 
-  async revokePermissions(target: string) {
+  async revokePermissions(target: string): Promise<TransactionResult> {
     await this.deployIfNeeded();
     const accountContract = await this.getAccountContract();
-    return accountContract.account.revokeAccess.prepare(target);
+    return accountContract.account.revokeAccess(target);
   }
 
-  async addAdmin(target: string) {
+  async addAdmin(target: string): Promise<TransactionResult> {
     await this.deployIfNeeded();
     const accountContract = await this.getAccountContract();
-    return accountContract.account.grantAdminPermissions.prepare(target);
+    return accountContract.account.grantAdminPermissions(target);
   }
 
-  async removeAdmin(target: string) {
+  async removeAdmin(target: string): Promise<TransactionResult> {
     await this.deployIfNeeded();
     const accountContract = await this.getAccountContract();
-    return accountContract.account.revokeAdminPermissions.prepare(target);
+    return accountContract.account.revokeAdminPermissions(target);
   }
 
   /**
