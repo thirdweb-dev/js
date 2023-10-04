@@ -10,13 +10,14 @@ import {
   SmartWalletConfig,
   SmartWalletConnectionArgs,
 } from "./types";
-import { ENTRYPOINT_ADDRESS } from "./lib/constants";
+import { ENTRYPOINT_ADDRESS, ACCOUNT_CORE_ABI } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
   ChainOrRpcUrl,
   getChainProvider,
+  SignerPermissionsInput,
   SmartContract,
   ThirdwebSDK,
   Transaction,
@@ -243,17 +244,45 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return await this.accountApi.isAcountDeployed();
   }
 
+  async deployIfNeeded(): Promise<void> {
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      await this.deploy();
+    }
+  }
+
+  async grantPermissions(target: string, permissions: SignerPermissionsInput) {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.grantPermissions.prepare(
+      target,
+      permissions,
+    );
+  }
+
+  async revokePermissions(target: string) {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.revokeAccess.prepare(target);
+  }
+
+  async addAdmin(target: string) {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.grantAdminPermissions.prepare(target);
+  }
+
+  async removeAdmin(target: string) {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.revokeAdminPermissions.prepare(target);
+  }
+
   /**
    * Get the underlying account contract of the smart wallet.
    * @returns the account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
-    const isDeployed = await this.isDeployed();
-    if (!isDeployed) {
-      throw new Error(
-        "Account contract is not deployed yet. You can deploy it manually using SmartWallet.deploy(), or by executing a transaction from this wallet.",
-      );
-    }
     // getting a new instance everytime
     // to avoid caching issues pre/post deployment
     const sdk = ThirdwebSDK.fromSigner(
@@ -264,14 +293,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         secretKey: this.config.secretKey,
       },
     );
-    if (this.config.accountInfo?.abi) {
-      return sdk.getContract(
-        await this.getAddress(),
-        this.config.accountInfo.abi,
-      );
-    } else {
-      return sdk.getContract(await this.getAddress());
-    }
+    return sdk.getContract(
+      await this.getAddress(),
+      this.config.accountInfo?.abi || ACCOUNT_CORE_ABI,
+    );
   }
 
   /**

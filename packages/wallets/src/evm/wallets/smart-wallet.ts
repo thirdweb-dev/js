@@ -9,6 +9,7 @@ import {
   Transaction,
   TransactionResult,
   SmartContract,
+  SignerPermissionsInput,
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
@@ -124,12 +125,62 @@ export class SmartWallet
   }
 
   /**
+   * Manually deploy the smart wallet contract. If already deployed this will do nothing.
+   * Note that this is not necessary as the smart wallet will be deployed automatically on the first transaction the user makes.
+   * @returns the transaction receipt
+   */
+  async deployIfNeeded(): Promise<void> {
+    const connector = await this.getConnector();
+    return connector.deployIfNeeded();
+  }
+
+  /**
    * Check if the smart wallet contract is deployed
    * @returns true if the smart wallet contract is deployed
    */
   async isDeployed(): Promise<boolean> {
     const connector = await this.getConnector();
     return connector.isDeployed();
+  }
+
+  /**
+   * Create and add a session key to the smart wallet.
+   * @param keyAddress the address of the session key to add.
+   * @param permissions the permissions to grant to the session key.
+   */
+  async createSessionKey(
+    keyAddress: string,
+    permissions: SignerPermissionsInput,
+  ) {
+    const connector = await this.getConnector();
+    return connector.grantPermissions(keyAddress, permissions);
+  }
+
+  /**
+   * Remove a session key from the smart wallet.
+   * @param keyAddress the address of the session key to remove.
+   */
+  async revokeSessionKey(keyAddress: string) {
+    const connector = await this.getConnector();
+    return connector.revokePermissions(keyAddress);
+  }
+
+  /**
+   * Add another admin to the smart wallet.
+   * @param adminAddress the address of the admin to add.
+   */
+  async addAdmin(adminAddress: string) {
+    const connector = await this.getConnector();
+    return connector.addAdmin(adminAddress);
+  }
+
+  /**
+   * Remove an admin from the smart wallet.
+   * @param adminAddress the address of the admin to remove.
+   */
+  async removeAdmin(adminAddress: string) {
+    const connector = await this.getConnector();
+    return connector.removeAdmin(adminAddress);
   }
 
   /**
