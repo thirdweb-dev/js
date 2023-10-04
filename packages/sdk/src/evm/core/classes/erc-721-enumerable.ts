@@ -61,8 +61,7 @@ export class Erc721Enumerable implements DetectableFeature {
     if (queryParams) {
       const start = queryParams?.start || 0;
       const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-      const startIndex = start * count;
-      tokenIds = tokenIds.slice(startIndex, startIndex + count);
+      tokenIds = tokenIds.slice(start, start + count);
     }
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),

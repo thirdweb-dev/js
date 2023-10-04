@@ -443,8 +443,7 @@ export class Erc721<
       if (queryParams) {
         const start = queryParams?.start || 0;
         const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-        const startIndex = start * count;
-        ownedTokens = ownedTokens.slice(startIndex, startIndex + count);
+        ownedTokens = ownedTokens.slice(start, start + count);
       }
       return await Promise.all(
         ownedTokens.map(async (i) => this.get(i.tokenId)),

@@ -128,8 +128,7 @@ export class Erc1155Enumerable implements DetectableFeature {
     if (queryParams) {
       const start = queryParams?.start || 0;
       const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-      const startIndex = start * count;
-      ownedBalances = ownedBalances.slice(startIndex, startIndex + count);
+      ownedBalances = ownedBalances.slice(start, start + count);
     }
     const nfts = (
       await Promise.all(
