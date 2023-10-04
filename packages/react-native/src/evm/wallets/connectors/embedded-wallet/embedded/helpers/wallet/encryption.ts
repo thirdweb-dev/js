@@ -3,8 +3,8 @@ import QuickCrypto from "react-native-quick-crypto";
 import { getRandomValues } from "../getRandomValues";
 
 const ENCRYPTION_SEPARATOR = ":";
-const DEPRECATED_KEY_ITERATION_COUNT = 5_000_000;
-const CURRENT_KEY_ITERATION_COUNT = 650_000;
+const DEPRECATED_KEY_ITERATION_COUNT = 5000000;
+const CURRENT_KEY_ITERATION_COUNT = 650000;
 const KEY_LENGTH = 256;
 
 export async function getEncryptionKey(
@@ -59,7 +59,7 @@ export async function encryptShareWeb(
     encryptedValue.iv
   }${ENCRYPTION_SEPARATOR}${bufferToBase64(salt)}${ENCRYPTION_SEPARATOR}${
     encryptedValue.tag
-  }${ENCRYPTION_SEPARATOR}${CURRENT_KEY_ITERATION_COUNT}}`;
+  }${ENCRYPTION_SEPARATOR}${CURRENT_KEY_ITERATION_COUNT}`;
 
   return returnValue;
 }
