@@ -1,19 +1,21 @@
 import AesGcmCrypto from "react-native-aes-gcm-crypto";
-import { getRandomValues } from "../getRandomValues";
 import QuickCrypto from "react-native-quick-crypto";
+import { getRandomValues } from "../getRandomValues";
 
 const ENCRYPTION_SEPARATOR = ":";
-const KEY_ITERATION_COUNT = 5000000;
+const DEPRECATED_KEY_ITERATION_COUNT = 5_000_000;
+const CURRENT_KEY_ITERATION_COUNT = 650_000;
 const KEY_LENGTH = 256;
 
 export async function getEncryptionKey(
   pwd: string,
   salt: ArrayBuffer,
+  iterationCounts: number,
 ): Promise<string> {
   const key = QuickCrypto.pbkdf2Sync(
     pwd,
     salt,
-    KEY_ITERATION_COUNT,
+    iterationCounts,
     KEY_LENGTH,
     "sha256",
   );
@@ -40,7 +42,11 @@ export async function encryptShareWeb(
   pwd: string,
 ): Promise<string> {
   const salt = getRandomValues(new Uint8Array(16));
-  const keyBase64 = await getEncryptionKey(pwd, salt);
+  const keyBase64 = await getEncryptionKey(
+    pwd,
+    salt,
+    CURRENT_KEY_ITERATION_COUNT,
+  );
 
   let encryptedValue;
   try {
@@ -53,7 +59,7 @@ export async function encryptShareWeb(
     encryptedValue.iv
   }${ENCRYPTION_SEPARATOR}${bufferToBase64(salt)}${ENCRYPTION_SEPARATOR}${
     encryptedValue.tag
-  }`;
+  }${ENCRYPTION_SEPARATOR}${CURRENT_KEY_ITERATION_COUNT}}`;
 
   return returnValue;
 }
@@ -62,10 +68,14 @@ export async function decryptShareWeb(
   encryptedShareDetails: string,
   pwd: string,
 ): Promise<string> {
-  const [encryptedShare, iv, salt, tag] =
+  const [encryptedShare, iv, salt, tag, maybeIterationCount] =
     encryptedShareDetails.split(ENCRYPTION_SEPARATOR);
 
-  const key = await getEncryptionKey(pwd, base64ToBuffer(salt));
+  const iterationCount = maybeIterationCount
+    ? parseInt(maybeIterationCount)
+    : DEPRECATED_KEY_ITERATION_COUNT;
+
+  const key = await getEncryptionKey(pwd, base64ToBuffer(salt), iterationCount);
 
   const normalizedShare = await AesGcmCrypto.decrypt(
     encryptedShare,
