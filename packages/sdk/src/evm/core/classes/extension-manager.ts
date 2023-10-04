@@ -28,7 +28,10 @@ import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { ExtensionRemovedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
 import { ExtensionReplacedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/BaseRouter";
-import { DynamicContractExtensionMetadata } from "../../types";
+import {
+  DynamicContractExtensionMetadata,
+  DynamicContractExtensionMetadataOrUri,
+} from "../../types";
 
 export class ExtensionManager implements DetectableFeature {
   featureName = FEATURE_DYNAMIC_CONTRACT.name;
@@ -103,9 +106,13 @@ export class ExtensionManager implements DetectableFeature {
    * WRITE FUNCTIONS
    *******************************/
 
+  /**
+   * Adds an extension to the contract
+   */
   add = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extension: Extension;
+      extensionAbi?: ContractInterface;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -122,13 +129,15 @@ export class ExtensionManager implements DetectableFeature {
             throw new Error("No ExtensionAdded event found");
           }
 
-          const extensionAbi = (
-            await fetchContractMetadataFromAddress(
-              inputArgs.extension.metadata.implementation,
-              this.contractWrapper.getProvider(),
-              this.contractWrapper.storage,
-            )
-          ).abi;
+          const extensionAbi = inputArgs.extensionAbi
+            ? AbiSchema.parse(inputArgs.extensionAbi)
+            : (
+                await fetchContractMetadataFromAddress(
+                  inputArgs.extension.metadata.implementation,
+                  this.contractWrapper.getProvider(),
+                  this.contractWrapper.storage,
+                )
+              ).abi;
 
           const abiToAdd = this.filterAbiForAdd(
             extensionAbi,
@@ -148,92 +157,14 @@ export class ExtensionManager implements DetectableFeature {
     },
   );
 
-  addPublished = /* @__PURE__ */ buildTransactionFunction(
-    async (inputArgs: {
-      extensionName: string;
-      publisherAddress?: string;
-      version?: string;
-      extensionMetadataOverride?: DynamicContractExtensionMetadata;
-    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
-      const version = inputArgs.version || "latest";
-
-      const { deployedExtensionAddress, extensionMetadata } =
-        await this.deployExtension(
-          inputArgs.extensionName,
-          inputArgs.publisherAddress || THIRDWEB_DEPLOYER,
-          version,
-        );
-
-      let extensionMetadataUri = extensionMetadata;
-      if (inputArgs.extensionMetadataOverride) {
-        const parsedMetadata = await CommonContractSchema.parseAsync(
-          inputArgs.extensionMetadataOverride,
-        );
-        extensionMetadataUri = await this.contractWrapper.storage.upload(
-          parsedMetadata,
-        );
-      }
-
-      const metadata = await fetchContractMetadataFromAddress(
-        deployedExtensionAddress,
-        this.contractWrapper.getProvider(),
-        this.contractWrapper.storage,
-        this.contractWrapper.options,
-      );
-
-      const extensionAbi = metadata.abi;
-      invariant(extensionAbi, "Require extension ABI");
-
-      const extensionFunctions: ExtensionFunction[] =
-        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
-
-      const extension: Extension = {
-        metadata: {
-          name: inputArgs.extensionName,
-          metadataURI: extensionMetadataUri,
-          implementation: deployedExtensionAddress,
-        },
-        functions: extensionFunctions,
-      };
-
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "addExtension",
-        args: [extension],
-
-        parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
-            "ExtensionAdded",
-            receipt.logs,
-          );
-
-          if (events.length < 1) {
-            throw new Error("No ExtensionAdded event found");
-          }
-
-          const abiToAdd = this.filterAbiForAdd(
-            AbiSchema.parse(extensionAbi),
-            extension,
-          );
-
-          const updatedAbi = joinABIs([
-            AbiSchema.parse(this.contractWrapper.abi),
-            abiToAdd,
-          ]);
-
-          this.contractWrapper.updateAbi(updatedAbi);
-
-          return receipt;
-        },
-      });
-    },
-  );
-
+  /**
+   * Adds a deployed extension to the contract
+   */
   addDeployed = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
       extensionAddress: string;
-      extensionMetadata?: DynamicContractExtensionMetadata;
+      extensionMetadata?: DynamicContractExtensionMetadataOrUri;
       extensionAbi?: ContractInterface;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       let extensionAbi = inputArgs.extensionAbi;
@@ -252,12 +183,16 @@ export class ExtensionManager implements DetectableFeature {
 
       let extensionMetadataUri = "";
       if (inputArgs.extensionMetadata) {
-        const parsedMetadata = await CommonContractSchema.parseAsync(
-          inputArgs.extensionMetadata,
-        );
-        extensionMetadataUri = await this.contractWrapper.storage.upload(
-          parsedMetadata,
-        );
+        if (typeof inputArgs.extensionMetadata === "string") {
+          extensionMetadataUri = inputArgs.extensionMetadata;
+        } else {
+          const parsedMetadata = await CommonContractSchema.parseAsync(
+            inputArgs.extensionMetadata,
+          );
+          extensionMetadataUri = await this.contractWrapper.storage.upload(
+            parsedMetadata,
+          );
+        }
       }
 
       const extensionFunctions: ExtensionFunction[] =
@@ -272,35 +207,34 @@ export class ExtensionManager implements DetectableFeature {
         functions: extensionFunctions,
       };
 
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "addExtension",
-        args: [extension],
+      return this.add.prepare({ extension, extensionAbi });
+    },
+  );
 
-        parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
-            "ExtensionAdded",
-            receipt.logs,
-          );
+  /**
+   * Adds a published extension to the contract, and deploys it deterministically if necessary
+   */
+  addPublished = /* @__PURE__ */ buildTransactionFunction(
+    async (inputArgs: {
+      extensionName: string;
+      publisherAddress?: string;
+      version?: string;
+      extensionMetadataOverride?: DynamicContractExtensionMetadataOrUri;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const version = inputArgs.version || "latest";
 
-          if (events.length < 1) {
-            throw new Error("No ExtensionAdded event found");
-          }
+      const { deployedExtensionAddress, extensionMetadata } =
+        await this.deployExtension(
+          inputArgs.extensionName,
+          inputArgs.publisherAddress || THIRDWEB_DEPLOYER,
+          version,
+        );
 
-          const abiToAdd = this.filterAbiForAdd(
-            AbiSchema.parse(extensionAbi),
-            extension,
-          );
-
-          const updatedAbi = joinABIs([
-            AbiSchema.parse(this.contractWrapper.abi),
-            abiToAdd,
-          ]);
-
-          this.contractWrapper.updateAbi(updatedAbi);
-
-          return receipt;
-        },
+      return this.addDeployed.prepare({
+        extensionName: inputArgs.extensionName,
+        extensionAddress: deployedExtensionAddress,
+        extensionMetadata:
+          inputArgs.extensionMetadataOverride || extensionMetadata,
       });
     },
   );
@@ -308,6 +242,7 @@ export class ExtensionManager implements DetectableFeature {
   replace = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extension: Extension;
+      extensionAbi?: ContractInterface;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -324,13 +259,15 @@ export class ExtensionManager implements DetectableFeature {
             throw new Error("No ExtensionReplaced event found");
           }
 
-          const extensionAbi = (
-            await fetchContractMetadataFromAddress(
-              inputArgs.extension.metadata.implementation,
-              this.contractWrapper.getProvider(),
-              this.contractWrapper.storage,
-            )
-          ).abi;
+          const extensionAbi = inputArgs.extensionAbi
+            ? AbiSchema.parse(inputArgs.extensionAbi)
+            : (
+                await fetchContractMetadataFromAddress(
+                  inputArgs.extension.metadata.implementation,
+                  this.contractWrapper.getProvider(),
+                  this.contractWrapper.storage,
+                )
+              ).abi;
 
           const contractAbi = this.filterAbiForRemove(
             AbiSchema.parse(this.contractWrapper.abi),
@@ -350,98 +287,13 @@ export class ExtensionManager implements DetectableFeature {
     },
   );
 
-  replacePublished = /* @__PURE__ */ buildTransactionFunction(
-    async (inputArgs: {
-      extensionName: string;
-      publisherAddress?: string;
-      version?: string;
-      extensionMetadataOverride?: DynamicContractExtensionMetadata;
-    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
-      const version = inputArgs.version || "latest";
-
-      const { deployedExtensionAddress, extensionMetadata } =
-        await this.deployExtension(
-          inputArgs.extensionName,
-          inputArgs.publisherAddress || THIRDWEB_DEPLOYER,
-          version,
-        );
-
-      let extensionMetadataUri = extensionMetadata;
-      if (inputArgs.extensionMetadataOverride) {
-        const parsedMetadata = await CommonContractSchema.parseAsync(
-          inputArgs.extensionMetadataOverride,
-        );
-        extensionMetadataUri = await this.contractWrapper.storage.upload(
-          parsedMetadata,
-        );
-      }
-
-      const metadata = await fetchContractMetadataFromAddress(
-        deployedExtensionAddress,
-        this.contractWrapper.getProvider(),
-        this.contractWrapper.storage,
-        this.contractWrapper.options,
-      );
-
-      const extensionAbi = metadata.abi;
-      invariant(extensionAbi, "Require extension ABI");
-
-      const extensionFunctions: ExtensionFunction[] =
-        generateExtensionFunctions(AbiSchema.parse(extensionAbi));
-
-      const extension: Extension = {
-        metadata: {
-          name: inputArgs.extensionName,
-          metadataURI: extensionMetadataUri,
-          implementation: deployedExtensionAddress,
-        },
-        functions: extensionFunctions,
-      };
-
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "replaceExtension",
-        args: [extension],
-
-        parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionAddedEvent>(
-            "ExtensionReplaced",
-            receipt.logs,
-          );
-
-          if (events.length < 1) {
-            throw new Error("No ExtensionReplaced event found");
-          }
-
-          const contractAbi = this.filterAbiForRemove(
-            AbiSchema.parse(this.contractWrapper.abi),
-            extensionAbi,
-          );
-          const abiToAdd = this.filterAbiForAdd(extensionAbi, extension);
-          const updatedAbi = joinABIs([contractAbi, abiToAdd]);
-
-          this.contractWrapper.updateAbi(updatedAbi);
-
-          return receipt;
-        },
-      });
-    },
-  );
-
   replaceDeployed = /* @__PURE__ */ buildTransactionFunction(
     async (inputArgs: {
       extensionName: string;
       extensionAddress: string;
-      extensionMetadata?: DynamicContractExtensionMetadata;
+      extensionMetadata?: DynamicContractExtensionMetadataOrUri;
       extensionAbi?: ContractInterface;
     }): Promise<Transaction<Promise<TransactionReceipt>>> => {
-      const parsedMetadata = await CommonContractSchema.parseAsync(
-        inputArgs.extensionMetadata,
-      );
-      const extensionMetadataUri = await this.contractWrapper.storage.upload(
-        parsedMetadata,
-      );
-
       let extensionAbi = inputArgs.extensionAbi;
       if (!extensionAbi) {
         const metadata = await fetchContractMetadataFromAddress(
@@ -456,6 +308,20 @@ export class ExtensionManager implements DetectableFeature {
 
       invariant(extensionAbi, "Require extension ABI");
 
+      let extensionMetadataUri = "";
+      if (inputArgs.extensionMetadata) {
+        if (typeof inputArgs.extensionMetadata === "string") {
+          extensionMetadataUri = inputArgs.extensionMetadata;
+        } else {
+          const parsedMetadata = await CommonContractSchema.parseAsync(
+            inputArgs.extensionMetadata,
+          );
+          extensionMetadataUri = await this.contractWrapper.storage.upload(
+            parsedMetadata,
+          );
+        }
+      }
+
       const extensionFunctions: ExtensionFunction[] =
         generateExtensionFunctions(AbiSchema.parse(extensionAbi));
 
@@ -468,33 +334,31 @@ export class ExtensionManager implements DetectableFeature {
         functions: extensionFunctions,
       };
 
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "replaceExtension",
-        args: [extension],
+      return this.replace.prepare({ extension, extensionAbi });
+    },
+  );
 
-        parse: async (receipt) => {
-          const events = this.contractWrapper.parseLogs<ExtensionReplacedEvent>(
-            "ExtensionReplaced",
-            receipt.logs,
-          );
+  replacePublished = /* @__PURE__ */ buildTransactionFunction(
+    async (inputArgs: {
+      extensionName: string;
+      publisherAddress?: string;
+      version?: string;
+      extensionMetadataOverride?: DynamicContractExtensionMetadataOrUri;
+    }): Promise<Transaction<Promise<TransactionReceipt>>> => {
+      const version = inputArgs.version || "latest";
 
-          if (events.length < 1) {
-            throw new Error("No ExtensionReplaced event found");
-          }
+      const { deployedExtensionAddress, extensionMetadata } =
+        await this.deployExtension(
+          inputArgs.extensionName,
+          inputArgs.publisherAddress || THIRDWEB_DEPLOYER,
+          version,
+        );
 
-          const parsedAbi = AbiSchema.parse(extensionAbi);
-          const contractAbi = this.filterAbiForRemove(
-            AbiSchema.parse(this.contractWrapper.abi),
-            parsedAbi,
-          );
-          const abiToAdd = this.filterAbiForAdd(parsedAbi, extension);
-          const updatedAbi = joinABIs([contractAbi, abiToAdd]);
-
-          this.contractWrapper.updateAbi(updatedAbi);
-
-          return receipt;
-        },
+      return this.replaceDeployed.prepare({
+        extensionName: inputArgs.extensionName,
+        extensionAddress: deployedExtensionAddress,
+        extensionMetadata:
+          inputArgs.extensionMetadataOverride || extensionMetadata,
       });
     },
   );

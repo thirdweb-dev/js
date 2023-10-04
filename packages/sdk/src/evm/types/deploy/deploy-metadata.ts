@@ -429,3 +429,10 @@ export interface DynamicContractExtensionMetadata {
    */
   external_link?: string;
 }
+
+/**
+ * @public
+ */
+export type DynamicContractExtensionMetadataOrUri =
+  | DynamicContractExtensionMetadata
+  | string;
