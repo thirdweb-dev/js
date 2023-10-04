@@ -1,6 +1,6 @@
-import { WalletInstance } from "../../../dist/declarations/src";
 import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
+import { WalletInstance } from "../types/wallet";
 
 /**
  * @returns the current active wallet instance
