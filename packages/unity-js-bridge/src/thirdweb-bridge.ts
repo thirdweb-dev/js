@@ -77,6 +77,7 @@ interface TWBridge {
     password?: string,
     email?: string,
     personalWallet?: PossibleWallet,
+    useGoogle?: string,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: string) => Promise<void>;
@@ -275,6 +276,7 @@ class ThirdwebBridge implements TWBridge {
     password?: string,
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
+    useGoogle?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -296,14 +298,23 @@ class ThirdwebBridge implements TWBridge {
         await magicLinkWallet.connect({ chainId: chainIdNumber, email: email });
       } else if (walletInstance.walletId === walletIds.embeddedWallet) {
         const embeddedWallet = walletInstance as EmbeddedWallet;
-        if (!email) {
-          throw new Error("Email is required for EmbeddedWallet");
+
+        if (useGoogle?.toLowerCase() === "true") {
+          console.log("Using Google OAuth");
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            loginType: "headless_google_oauth",
+          });
+        } else {
+          if (!email) {
+            throw new Error("Email is required for EmbeddedWallet");
+          }
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            email: email,
+            loginType: "ui_email_otp",
+          });
         }
-        await embeddedWallet.connect({
-          chainId: chainIdNumber,
-          email: email,
-          loginType: "ui_email_otp",
-        });
       } else if (walletInstance.walletId === walletIds.paper) {
         const paperWallet = walletInstance as PaperWallet;
         if (!email) {
