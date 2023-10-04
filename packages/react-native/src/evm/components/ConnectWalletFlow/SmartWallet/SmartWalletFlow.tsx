@@ -7,7 +7,7 @@ import {
   useCreateWalletInstance,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import BaseButton from "../../base/BaseButton";
 import Text from "../../base/Text";
 import { SmartWallet } from "@thirdweb-dev/wallets";
@@ -15,17 +15,22 @@ import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/Wall
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Box from "../../base/Box";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
+import { useAppTheme } from "../../../styles/hooks";
 
 export const SmartWalletFlow = ({
   close,
   goBack,
   walletConfig,
-}: ConnectUIProps<SmartWallet>) => {
+  personalWalletConfig,
+  ...props
+}: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
+  const theme = useAppTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
     number | undefined
   >();
+  const [switchingNetwork, setSwitchingNetwork] = useState(false);
   const createWalletInstance = useCreateWalletInstance();
   const connect = useConnect();
   const targetChain = useWalletContext().activeChain;
@@ -33,6 +38,8 @@ export const SmartWalletFlow = ({
   const mismatch = personalWalletChainId
     ? personalWalletChainId !== targetChain.chainId
     : false;
+
+  const PersonalWalletConfigUI = personalWalletConfig.connectUI;
 
   const connectSmartWallet = useCallback(
     async (personalWallet: WalletInstance) => {
@@ -63,10 +70,14 @@ export const SmartWalletFlow = ({
   );
 
   useEffect(() => {
-    if (walletConfig.personalWallets?.[0]) {
+    if (walletConfig.personalWallets?.[0] && !PersonalWalletConfigUI) {
       connectPersonalWallet(walletConfig.personalWallets[0]);
     }
-  }, [connectPersonalWallet, walletConfig.personalWallets]);
+  }, [
+    PersonalWalletConfigUI,
+    connectPersonalWallet,
+    walletConfig.personalWallets,
+  ]);
 
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
@@ -81,8 +92,13 @@ export const SmartWalletFlow = ({
   };
 
   const onSwitchNetworkPress = async () => {
-    await connectedPersonalWallet?.switchChain(targetChain.chainId);
-    setPersonalWalletChaindId(targetChain.chainId);
+    if (connectedPersonalWallet) {
+      setSwitchingNetwork(true);
+      await connectedPersonalWallet?.switchChain(targetChain.chainId);
+      setSwitchingNetwork(false);
+      setPersonalWalletChaindId(targetChain.chainId);
+      connectSmartWallet(connectedPersonalWallet);
+    }
   };
 
   const reset = () => {
@@ -90,36 +106,54 @@ export const SmartWalletFlow = ({
     setPersonalWalletChaindId(undefined);
   };
 
+  const onPersonalWalletConnected = useCallback(
+    (walletInstance: WalletInstance) => {
+      setConnectedPersonalWallet(walletInstance);
+      connectSmartWallet(walletInstance);
+    },
+    [connectSmartWallet],
+  );
+
   return (
     <>
-      <Box paddingHorizontal="xl">
-        <ConnectWalletHeader
-          subHeaderText=""
-          onBackPress={onConnectingBackPress}
-          onClose={onConnectingClosePress}
+      {PersonalWalletConfigUI && !connectedPersonalWallet ? (
+        <PersonalWalletConfigUI
+          {...props}
+          close={close}
+          goBack={goBack}
+          walletConfig={personalWalletConfig}
+          onLocallyConnected={onPersonalWalletConnected}
         />
-        <WalletLoadingThumbnail imageSize={100}>
-          <ImageSvgUri
-            height={80}
-            width={80}
-            imageUrl={walletConfig.meta.iconURL}
+      ) : (
+        <Box paddingHorizontal="xl">
+          <ConnectWalletHeader
+            subHeaderText=""
+            onBackPress={onConnectingBackPress}
+            onClose={onConnectingClosePress}
           />
-        </WalletLoadingThumbnail>
-        <View style={styles.connectingContainer}>
-          <>
-            <Text variant="header" mt="lg" textAlign="center">
-              {mismatch ? "Network Mismatch" : "Connecting..."}
-            </Text>
-            {mismatch ? (
-              <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-                {
-                  "There's a network mismatch between your contract and your wallet"
-                }
+          <WalletLoadingThumbnail imageSize={100}>
+            <ImageSvgUri
+              height={80}
+              width={80}
+              imageUrl={walletConfig.meta.iconURL}
+            />
+          </WalletLoadingThumbnail>
+          <View style={styles.connectingContainer}>
+            <>
+              <Text variant="header" mt="lg" textAlign="center">
+                {mismatch ? "Network Mismatch" : "Connecting..."}
               </Text>
-            ) : null}
-          </>
-        </View>
-      </Box>
+              {mismatch ? (
+                <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
+                  {
+                    "There's a network mismatch between your contract and your wallet"
+                  }
+                </Text>
+              ) : null}
+            </>
+          </View>
+        </Box>
+      )}
 
       {mismatch === true ? (
         <BaseButton
@@ -127,7 +161,7 @@ export const SmartWalletFlow = ({
           mt="md"
           marginHorizontal="xl"
           flexDirection="row"
-          justifyContent="flex-start"
+          justifyContent="center"
           alignItems="center"
           paddingHorizontal="md"
           paddingVertical="sm"
@@ -135,9 +169,13 @@ export const SmartWalletFlow = ({
           backgroundColor="backgroundHighlight"
           onPress={onSwitchNetworkPress}
         >
-          <Text variant="bodyLarge" textAlign="center">
-            Switch Network
-          </Text>
+          {switchingNetwork ? (
+            <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+          ) : (
+            <Text variant="bodyLarge" textAlign="center">
+              Switch Network
+            </Text>
+          )}
         </BaseButton>
       ) : null}
     </>

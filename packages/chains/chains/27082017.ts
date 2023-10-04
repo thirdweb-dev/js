@@ -1,42 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Excoincial Chain Volta-Testnet",
   "chain": "TEXL",
+  "chainId": 27082017,
+  "explorers": [
+    {
+      "name": "exlscan",
+      "url": "https://testnet-explorer.exlscan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://faucet.exlscan.com"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "rpc": [
-    "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.exlscan.com"
-  ],
-  "faucets": [
-    "https://faucet.exlscan.com"
-  ],
+  "name": "Excoincial Chain Volta-Testnet",
   "nativeCurrency": {
     "name": "TExlcoin",
     "symbol": "TEXL",
     "decimals": 18
   },
-  "infoURL": "",
-  "shortName": "exlvolta",
-  "chainId": 27082017,
-  "networkId": 27082017,
-  "explorers": [
-    {
-      "name": "exlscan",
-      "url": "https://testnet-explorer.exlscan.com",
-      "icon": {
-        "url": "ipfs://QmeooM7QicT1YbgY93XPd5p7JsCjYhN3qjWt68X57g6bVC",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.exlscan.com"
   ],
-  "testnet": true,
-  "slug": "excoincial-chain-volta-testnet"
+  "shortName": "exlvolta",
+  "slug": "excoincial-chain-volta-testnet",
+  "testnet": true
 } as const satisfies Chain;

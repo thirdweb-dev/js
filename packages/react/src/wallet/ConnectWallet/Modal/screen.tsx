@@ -11,9 +11,9 @@ export const ScreenContext = /* @__PURE__ */ createContext<Screen | undefined>(
 export function useScreen() {
   const walletConfigs = useWallets();
   const initialScreen =
-    walletConfigs.length === 1 && !walletConfigs[0].selectUI
+    (walletConfigs.length === 1 && !walletConfigs[0]?.selectUI
       ? walletConfigs[0]
-      : reservedScreens.main;
+      : reservedScreens.main) || reservedScreens.main;
 
   const [screen, setScreen] = useState<string | WalletConfig>(initialScreen);
   const prevInitialScreen = useRef(initialScreen);

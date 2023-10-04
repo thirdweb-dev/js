@@ -1,13 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gnosis Chiado Testnet",
   "chain": "GNO",
+  "chainId": 10200,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://gnosis-chiado.blockscout.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://gnosisfaucet.com"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
     "width": 1800,
     "height": 1800,
     "format": "png"
   },
+  "infoURL": "https://docs.gnosischain.com",
+  "name": "Gnosis Chiado Testnet",
+  "nativeCurrency": {
+    "name": "Chiado xDAI",
+    "symbol": "XDAI",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://gnosis-chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chiadochain.net",
@@ -16,31 +35,7 @@ export default {
     "https://gnosis-chiado.publicnode.com",
     "wss://gnosis-chiado.publicnode.com"
   ],
-  "faucets": [
-    "https://gnosisfaucet.com"
-  ],
-  "nativeCurrency": {
-    "name": "Chiado xDAI",
-    "symbol": "XDAI",
-    "decimals": 18
-  },
-  "infoURL": "https://docs.gnosischain.com",
   "shortName": "chi",
-  "chainId": 10200,
-  "networkId": 10200,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://gnosis-chiado.blockscout.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": true,
-  "slug": "gnosis-chiado-testnet"
+  "slug": "gnosis-chiado-testnet",
+  "testnet": true
 } as const satisfies Chain;

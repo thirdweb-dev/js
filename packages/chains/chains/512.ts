@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Double-A Chain Mainnet",
   "chain": "AAC",
-  "rpc": [
-    "https://double-a-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.acuteangle.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Acuteangle Native Token",
-    "symbol": "AAC",
-    "decimals": 18
-  },
-  "infoURL": "https://www.acuteangle.com/",
-  "shortName": "aac",
   "chainId": 512,
-  "networkId": 512,
-  "slip44": 1512,
   "explorers": [
     {
       "name": "aacscan",
@@ -24,12 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmRUrz4dULaoaMpnqd8qXT7ehwz3aaqnYKY4ePsy7isGaF",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "testnet": false,
-  "slug": "double-a-chain"
+  "infoURL": "https://www.acuteangle.com/",
+  "name": "Double-A Chain Mainnet",
+  "nativeCurrency": {
+    "name": "Acuteangle Native Token",
+    "symbol": "AAC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://double-a-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.acuteangle.com"
+  ],
+  "shortName": "aac",
+  "slug": "double-a-chain",
+  "testnet": false
 } as const satisfies Chain;

@@ -94,7 +94,10 @@ export function OTPInput(props: {
               let value = e.target.value;
 
               if (value.length > 1) {
-                value = value[value.length - 1];
+                const lastValue = value[value.length - 1];
+                if (lastValue) {
+                  value = lastValue;
+                }
               }
 
               if (!/[0-9]/.test(value) && value !== "") {

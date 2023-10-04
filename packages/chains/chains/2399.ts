@@ -1,42 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BOMB Chain Testnet",
   "chain": "BOMB",
-  "rpc": [
-    "https://bomb-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bombchain-testnet.ankr.com/bas_full_rpc_1"
+  "chainId": 2399,
+  "explorers": [
+    {
+      "name": "bombscan-testnet",
+      "url": "https://explorer.bombchain-testnet.ankr.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://faucet.bombchain-testnet.ankr.com/"
   ],
-  "nativeCurrency": {
-    "name": "BOMB Token",
-    "symbol": "tBOMB",
-    "decimals": 18
-  },
-  "infoURL": "https://www.bombmoney.com",
-  "shortName": "bombt",
-  "chainId": 2399,
-  "networkId": 2399,
+  "features": [],
   "icon": {
     "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
     "width": 1024,
     "height": 1024,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "bombscan-testnet",
-      "icon": {
-        "url": "ipfs://Qmc44uSjfdNHdcxPTgZAL8eZ8TLe4UmSHibcvKQFyGJxTB",
-        "width": 1024,
-        "height": 1024,
-        "format": "png"
-      },
-      "url": "https://explorer.bombchain-testnet.ankr.com",
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://www.bombmoney.com",
+  "name": "BOMB Chain Testnet",
+  "nativeCurrency": {
+    "name": "BOMB Token",
+    "symbol": "BOMB",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://bomb-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bombchain-testnet.ankr.com/bas_full_rpc_1"
   ],
-  "testnet": true,
-  "slug": "bomb-chain-testnet"
+  "shortName": "bombt",
+  "slug": "bomb-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

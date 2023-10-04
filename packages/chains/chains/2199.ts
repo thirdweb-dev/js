@@ -1,44 +1,38 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Moonsama Network",
   "chain": "MSN",
-  "rpc": [
-    "https://moonsama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.moonsama.com",
-    "wss://rpc.moonsama.com/ws"
+  "chainId": 2199,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://explorer.moonsama.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://multiverse.moonsama.com/faucet"
   ],
-  "nativeCurrency": {
-    "name": "Sama Token",
-    "symbol": "SAMA",
-    "decimals": 18
-  },
-  "infoURL": "https://moonsama.com",
-  "shortName": "msn",
-  "chainId": 2199,
-  "networkId": 2199,
-  "slip44": 2199,
+  "features": [],
   "icon": {
     "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
     "width": 468,
     "height": 468,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://explorer.moonsama.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://moonsama.com",
+  "name": "Moonsama Network",
+  "nativeCurrency": {
+    "name": "Sama Token",
+    "symbol": "SAMA",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://moonsama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.moonsama.com",
+    "wss://rpc.moonsama.com/ws"
   ],
-  "testnet": false,
-  "slug": "moonsama-network"
+  "shortName": "msn",
+  "slug": "moonsama-network",
+  "testnet": false
 } as const satisfies Chain;

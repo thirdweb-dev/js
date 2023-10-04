@@ -1,25 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Flana",
   "chain": "MEER",
-  "rpc": [],
+  "chainId": 8135,
+  "explorers": [],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Flana Mainnet",
-    "symbol": "MEER",
-    "decimals": 18
-  },
-  "infoURL": "https://github.com/Qitmeer",
-  "shortName": "flana",
+  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "chainId": 8135,
-  "networkId": 8135,
+  "infoURL": "https://github.com/Qitmeer",
+  "name": "Flana",
+  "nativeCurrency": {
+    "name": "Flana Mainnet",
+    "symbol": "MEER",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "flana",
+  "slug": "flana",
   "status": "incubating",
-  "testnet": false,
-  "slug": "flana"
+  "testnet": false
 } as const satisfies Chain;

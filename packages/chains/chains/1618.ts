@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Catecoin Chain Mainnet",
   "chain": "Catechain",
-  "rpc": [
-    "https://catecoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://send.catechain.com"
-  ],
+  "chainId": 1618,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://catechain.com",
+  "name": "Catecoin Chain Mainnet",
   "nativeCurrency": {
     "name": "Catecoin",
     "symbol": "CATE",
     "decimals": 18
   },
-  "infoURL": "https://catechain.com",
+  "redFlags": [],
+  "rpc": [
+    "https://catecoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://send.catechain.com"
+  ],
   "shortName": "cate",
-  "chainId": 1618,
-  "networkId": 1618,
-  "testnet": false,
-  "slug": "catecoin-chain"
+  "slug": "catecoin-chain",
+  "testnet": false
 } as const satisfies Chain;

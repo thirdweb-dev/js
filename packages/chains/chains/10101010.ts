@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Soverun Mainnet",
   "chain": "SVRN",
-  "icon": {
-    "url": "ipfs://QmTYazUzgY9Nn2mCjWwFUSLy3dG6i2PvALpwCNQvx1zXyi",
-    "width": 1154,
-    "height": 1154,
-    "format": "png"
-  },
-  "rpc": [
-    "https://soverun.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.soverun.com"
-  ],
-  "faucets": [
-    "https://faucet.soverun.com"
-  ],
-  "nativeCurrency": {
-    "name": "Soverun",
-    "symbol": "SVRN",
-    "decimals": 18
-  },
-  "infoURL": "https://soverun.com",
-  "shortName": "SVRNm",
   "chainId": 10101010,
-  "networkId": 10101010,
   "explorers": [
     {
       "name": "Soverun",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "soverun"
+  "faucets": [
+    "https://faucet.soverun.com"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmTYazUzgY9Nn2mCjWwFUSLy3dG6i2PvALpwCNQvx1zXyi",
+    "width": 1154,
+    "height": 1154,
+    "format": "png"
+  },
+  "infoURL": "https://soverun.com",
+  "name": "Soverun Mainnet",
+  "nativeCurrency": {
+    "name": "Soverun",
+    "symbol": "SVRN",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://soverun.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.soverun.com"
+  ],
+  "shortName": "SVRNm",
+  "slug": "soverun",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tipboxcoin Mainnet",
   "chain": "TPBX",
-  "icon": {
-    "url": "ipfs://QmbiaHnR3fVVofZ7Xq2GYZxwHkLEy3Fh5qDtqnqXD6ACAh",
-    "width": 192,
-    "height": 192,
-    "format": "png"
-  },
-  "rpc": [
-    "https://tipboxcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.tipboxcoin.net"
-  ],
-  "faucets": [
-    "https://faucet.tipboxcoin.net"
-  ],
-  "nativeCurrency": {
-    "name": "Tipboxcoin",
-    "symbol": "TPBX",
-    "decimals": 18
-  },
-  "infoURL": "https://tipboxcoin.net",
-  "shortName": "TPBXm",
   "chainId": 404040,
-  "networkId": 404040,
   "explorers": [
     {
       "name": "Tipboxcoin",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "tipboxcoin"
+  "faucets": [
+    "https://faucet.tipboxcoin.net"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmbiaHnR3fVVofZ7Xq2GYZxwHkLEy3Fh5qDtqnqXD6ACAh",
+    "width": 192,
+    "height": 192,
+    "format": "png"
+  },
+  "infoURL": "https://tipboxcoin.net",
+  "name": "Tipboxcoin Mainnet",
+  "nativeCurrency": {
+    "name": "Tipboxcoin",
+    "symbol": "TPBX",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://tipboxcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.tipboxcoin.net"
+  ],
+  "shortName": "TPBXm",
+  "slug": "tipboxcoin",
+  "testnet": false
 } as const satisfies Chain;
