@@ -225,10 +225,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Smart wallet already deployed");
     }
     const signer = await this.getSigner();
-    const tx = await signer.sendTransaction({
-      to: await signer.getAddress(),
-      data: "0x",
-    });
+    const tx = await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: "0x",
+      },
+      true, // batched tx flag to avoid hitting the Router fallback method
+    );
     const receipt = await tx.wait();
     return { receipt };
   }
