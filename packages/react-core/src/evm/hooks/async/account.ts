@@ -165,8 +165,6 @@ export type CreateSessionKeyInput = {
  * };
  * ```
  *
- * @param contract - an instance of a account contract
- * @returns a mutation object that can be used to set the account signers
  * @twfeature Account
  */
 export function useCreateSessionKey(): UseMutationResult<
@@ -208,8 +206,6 @@ export function useCreateSessionKey(): UseMutationResult<
  * };
  * ```
  *
- * @param contract - an instance of a account contract
- * @returns a mutation object that can be used to set the account signers
  * @twfeature Account
  */
 export function useRevokeSessionKey(): UseMutationResult<
@@ -221,5 +217,87 @@ export function useRevokeSessionKey(): UseMutationResult<
   return useMutation(async (keyAddress: string) => {
     requiredParamInvariant(smartWallet, "wallet is not connected");
     return smartWallet.revokeSessionKey(keyAddress);
+  });
+}
+
+/**
+ * Add an additional admin on the smart wallet
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: addAdmin,
+ *     isLoading,
+ *     error,
+ *   } = useAddAdmin();
+ *
+ *   if (error) {
+ *     console.error("failed to add admin", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => addAdmin("0x...")}
+ *     >
+ *       Add admin
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @twfeature Account
+ */
+export function useAddAdmin(): UseMutationResult<
+  TransactionResult,
+  unknown,
+  string
+> {
+  const smartWallet = useWallet<SmartWallet>();
+  return useMutation(async (adminAddress: string) => {
+    requiredParamInvariant(smartWallet, "wallet is not connected");
+    return smartWallet.addAdmin(adminAddress);
+  });
+}
+
+/**
+ * Add an additional admin on the smart wallet
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: removeAdmin,
+ *     isLoading,
+ *     error,
+ *   } = useRemoveAdmin();
+ *
+ *   if (error) {
+ *     console.error("failed to remove admin", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => removeAdmin("0x...")}
+ *     >
+ *       Remove admin
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @twfeature Account
+ */
+export function useRemoveAdmin(): UseMutationResult<
+  TransactionResult,
+  unknown,
+  string
+> {
+  const smartWallet = useWallet<SmartWallet>();
+  return useMutation(async (adminAddress: string) => {
+    requiredParamInvariant(smartWallet, "wallet is not connected");
+    return smartWallet.removeAdmin(adminAddress);
   });
 }
