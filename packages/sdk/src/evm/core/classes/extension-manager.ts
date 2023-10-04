@@ -28,10 +28,7 @@ import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { ExtensionRemovedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/CoreRouter";
 import { ExtensionReplacedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/BaseRouter";
-import {
-  DynamicContractExtensionMetadata,
-  DynamicContractExtensionMetadataOrUri,
-} from "../../types";
+import { DynamicContractExtensionMetadataOrUri } from "../../types";
 
 export class ExtensionManager implements DetectableFeature {
   featureName = FEATURE_DYNAMIC_CONTRACT.name;
