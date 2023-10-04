@@ -1,15 +1,9 @@
 import { assert } from "chai";
-import {
-  AbiSchema,
-  SmartContract,
-  ThirdwebSDK,
-  isExtensionEnabled,
-} from "../../src/evm";
+import { AbiSchema, SmartContract, isExtensionEnabled } from "../../src/evm";
 import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   CoreRouter__factory,
-  DirectListingsLogic__factory,
   OffersLogic__factory,
 } from "@thirdweb-dev/contracts-js";
 import { deployContractAndUploadMetadata } from "./utils";

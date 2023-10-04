@@ -1,6 +1,7 @@
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { FileOrBufferOrString } from "@thirdweb-dev/storage";
 import type { BigNumberish, Bytes } from "ethers";
+import { CommonContractSchemaInput } from "../../schema";
 
 /**
  * Options for deploying an NFT contract
@@ -411,28 +412,6 @@ export interface AirdropContractDeployMetadata {
 /**
  * @public
  */
-export interface DynamicContractExtensionMetadata {
-  /**
-   * name of the contract
-   */
-  name?: string;
-  /**
-   * Optional description of the contract
-   */
-  description?: string;
-  /**
-   * Optional image for the contract
-   */
-  image?: FileOrBufferOrString;
-  /**
-   * Optional url for the contract
-   */
-  external_link?: string;
-}
-
-/**
- * @public
- */
 export type DynamicContractExtensionMetadataOrUri =
-  | DynamicContractExtensionMetadata
+  | CommonContractSchemaInput
   | string;
