@@ -1,7 +1,7 @@
 import { useConfirmEmail } from "@3rdweb-sdk/react/hooks/useApi";
 import { Button } from "tw-components";
 import OtpInput from "react-otp-input";
-import { useState } from "react";
+import { useState, ClipboardEvent } from "react";
 import { Input, Flex } from "@chakra-ui/react";
 import { OnboardingTitle } from "./Title";
 import { useForm } from "react-hook-form";
@@ -84,6 +84,14 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
     });
   });
 
+  const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
+    const data = e.clipboardData.getData("text");
+    if (data?.match(/^[A-Z]{6}$/)) {
+      form.setValue("confirmationToken", data);
+      handleSubmit();
+    }
+  };
+
   return (
     <>
       <OnboardingTitle
@@ -102,6 +110,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
             shouldAutoFocus
             value={token}
             onChange={handleChange}
+            onPaste={handlePaste}
             skipDefaultStyles
             numInputs={6}
             containerStyle={{
