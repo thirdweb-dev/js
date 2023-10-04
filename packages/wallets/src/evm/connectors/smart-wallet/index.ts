@@ -282,11 +282,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return accountContract.account.revokeAdminPermissions(target);
   }
 
-  async getAllAdminsAndSessionKeys(): Promise<SignerWithPermissions[]> {
+  async getAllActiveSigners(): Promise<SignerWithPermissions[]> {
     const isDeployed = await this.isDeployed();
     if (isDeployed) {
       const accountContract = await this.getAccountContract();
-      return accountContract.account.getAllSigners();
+      return accountContract.account.getAllAdminsAndSigners();
     } else {
       const personalWallet = await this.personalWallet?.getSigner();
       if (!personalWallet) {

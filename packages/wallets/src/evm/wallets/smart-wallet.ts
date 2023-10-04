@@ -187,9 +187,9 @@ export class SmartWallet
   /**
    * Get all the admins and session keys active on the smart wallet.
    */
-  async getAllAdminsAndSessionKeys(): Promise<SignerWithPermissions[]> {
+  async getAllActiveSigners(): Promise<SignerWithPermissions[]> {
     const connector = await this.getConnector();
-    return connector.getAllAdminsAndSessionKeys();
+    return connector.getAllActiveSigners();
   }
 
   /**
