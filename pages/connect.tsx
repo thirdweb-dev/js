@@ -30,7 +30,7 @@ const GUIDES = [
   {
     title: "Create Your Own Custom Connect Wallet Button",
     image:
-      "https://blog.thirdweb.com/guides/create-a-custom-connect-wallet-button/",
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/10/Create-a-Customizable-Connect-Wallet-Button.png",
     link: "https://blog.thirdweb.com/guides/create-a-custom-connect-wallet-button/",
   },
 ];

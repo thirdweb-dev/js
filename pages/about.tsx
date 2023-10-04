@@ -10,20 +10,12 @@ import { ThirdwebNextPage } from "utils/types";
 
 const employees = [
   {
-    name: "Adam Lee",
-    twitter: "AdamLeeBG",
+    name: "Abbas Khan",
+    twitter: "KhanAbbas201",
   },
   {
     name: "Adam Majmudar",
     twitter: "MajmudarAdam",
-  },
-  {
-    name: "Anshu Tukol",
-    twitter: "AnshuTukol",
-  },
-  {
-    name: "Atharva Deosthale",
-    twitter: "athudeosthale",
   },
   {
     name: "Atif Khan",
@@ -42,19 +34,28 @@ const employees = [
     twitter: "PartTimePlug",
   },
   {
+    name: "Carmen Li",
+    twitter: "someorsalt",
+  },
+  {
     name: "Catty Berragan",
+    twitter: "cattybk",
   },
   {
     name: "Ciara Nightingale",
     twitter: "ciaranightingal",
   },
   {
-    name: "Danny Friday",
-    twitter: "dannibles",
-  },
-  {
     name: "Devin Rattray",
     twitter: "dvnsctt",
+  },
+  {
+    name: "Dustin Turska",
+    twitter: "DustinTurska",
+  },
+  {
+    name: "Edward Sun",
+    twitter: "eedwardsun",
   },
   {
     name: "Eiman Abdelmoneim",
@@ -65,16 +66,27 @@ const employees = [
     twitter: "heyerikakhanna",
   },
   {
+    name: "Gerry Saporito",
+    twitter: "SaporitoEth",
+  },
+  {
     name: "Farhan Khwaja",
     twitter: "farhan_khwaja",
+  },
+  {
+    name: "Firekeeper",
+  },
+  {
+    name: "Isaac Dubuque",
+    twitter: "isaac_dubuque",
   },
   {
     name: "Jake Loo",
     twitter: "jake_loo",
   },
   {
-    name: "Jarrod Watts",
-    twitter: "jarrodwattsdev",
+    name: "James Sun",
+    twitter: "JamesZmSun",
   },
   {
     name: "Jason Hitchcock",
@@ -109,8 +121,7 @@ const employees = [
     twitter: "MananTank_",
   },
   {
-    name: "Mariano Fuentes",
-    twitter: "Marfuenn",
+    name: "Matt Cheong",
   },
   {
     name: "Mike Shin",
@@ -125,16 +136,12 @@ const employees = [
     twitter: "nachoiacovino",
   },
   {
-    name: "Patrick Kearney",
-    twitter: "theyoungpatrice",
+    name: "Phillip Ho",
+    twitter: "arcoraven",
   },
   {
     name: "Rahul Menon",
     twitter: "rahulphenomenon",
-  },
-  {
-    name: "Rohit Ramesh",
-    twitter: "Rohit7101",
   },
   {
     name: "Samina Kabir",
@@ -155,6 +162,10 @@ const employees = [
   {
     name: "Waren Gonzaga",
     twitter: "warengonzaga",
+  },
+  {
+    name: "Winston Yeo",
+    twitter: "winston_yeo",
   },
   {
     name: "Yan Giet",
