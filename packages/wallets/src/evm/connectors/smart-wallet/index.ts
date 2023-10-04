@@ -18,6 +18,7 @@ import {
   ChainOrRpcUrl,
   getChainProvider,
   SignerPermissionsInput,
+  SignerWithPermissions,
   SmartContract,
   ThirdwebSDK,
   Transaction,
@@ -279,6 +280,31 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     await this.deployIfNeeded();
     const accountContract = await this.getAccountContract();
     return accountContract.account.revokeAdminPermissions(target);
+  }
+
+  async getAllAdminsAndSessionKeys(): Promise<SignerWithPermissions[]> {
+    const isDeployed = await this.isDeployed();
+    if (isDeployed) {
+      const accountContract = await this.getAccountContract();
+      return accountContract.account.getAllSigners();
+    } else {
+      const personalWallet = await this.personalWallet?.getSigner();
+      if (!personalWallet) {
+        throw new Error("Personal wallet not connected");
+      }
+      return [
+        {
+          isAdmin: true,
+          signer: await personalWallet.getAddress(),
+          permissions: {
+            startDate: new Date(0),
+            expirationDate: new Date(0),
+            nativeTokenLimitPerTransaction: BigNumber.from(0),
+            approvedCallTargets: [],
+          },
+        },
+      ];
+    }
   }
 
   /**

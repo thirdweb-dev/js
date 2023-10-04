@@ -10,6 +10,7 @@ import {
   TransactionResult,
   SmartContract,
   SignerPermissionsInput,
+  SignerWithPermissions,
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
@@ -181,6 +182,14 @@ export class SmartWallet
   async removeAdmin(adminAddress: string): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.removeAdmin(adminAddress);
+  }
+
+  /**
+   * Get all the admins and session keys active on the smart wallet.
+   */
+  async getAllAdminsAndSessionKeys(): Promise<SignerWithPermissions[]> {
+    const connector = await this.getConnector();
+    return connector.getAllAdminsAndSessionKeys();
   }
 
   /**
