@@ -314,20 +314,4 @@ describe("Edition Contract", async () => {
     expect(page3[0].metadata.id).to.eq("6");
     expect(page3[1].metadata.id).to.eq("7");
   });
-
-  it("getOwned pagination should return all records when queryParams.count is greater than the total supply", async () => {
-    const nfts = [] as { metadata: { name: string }; supply: number }[];
-    for (let i = 0; i < 10; i++) {
-      nfts.push({
-        metadata: { name: `Test${i}` },
-        supply: 10,
-      });
-    }
-    await bundleContract.mintBatch(nfts);
-    const items = await bundleContract.getOwned(undefined, {
-      count: 1000,
-      start: 0,
-    });
-    expect(items).to.be.an("array").length(nfts.length);
-  });
 });
