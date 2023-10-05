@@ -113,8 +113,16 @@ const employees = [
     twitter: "juandoleal",
   },
   {
+    name: "Kien Ngo",
+    twitter: "kienngo_",
+  },
+  {
     name: "Krishang Nadgauda",
-    twitter: "monkeymeaning",
+    twitter: "MonkeyMeaning",
+  },
+  {
+    name: "Lakshay Garg",
+    twitter: "lakshayg18",
   },
   {
     name: "Manan Tank",
