@@ -312,6 +312,12 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @returns the account contract of the smart wallet.
    */
   async getAccountContract(): Promise<SmartContract> {
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      throw new Error(
+        "Account contract is not deployed yet. You can deploy it manually using SmartWallet.deploy(), or by executing a transaction from this wallet.",
+      );
+    }
     // getting a new instance everytime
     // to avoid caching issues pre/post deployment
     const sdk = ThirdwebSDK.fromSigner(
@@ -322,10 +328,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         secretKey: this.config.secretKey,
       },
     );
-    return sdk.getContract(
-      await this.getAddress(),
-      this.config.accountInfo?.abi || ACCOUNT_CORE_ABI,
-    );
+    if (this.config.accountInfo?.abi) {
+      return sdk.getContract(
+        await this.getAddress(),
+        this.config.accountInfo.abi,
+      );
+    } else {
+      return sdk.getContract(await this.getAddress());
+    }
   }
 
   /**
