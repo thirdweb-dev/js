@@ -15,6 +15,7 @@ import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
 import { iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize } = props;
@@ -29,7 +30,7 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = window.open("", "Login", "width=350, height=500");
+      const googleWindow = openGoogleSignInWindow();
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
