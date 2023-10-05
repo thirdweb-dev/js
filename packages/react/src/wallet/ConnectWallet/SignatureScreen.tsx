@@ -1,24 +1,24 @@
-import { useLogin, useSigner, useWalletConfig } from "@thirdweb-dev/react-core";
+import { useLogin, useWalletConfig } from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
-import { Container, Line, ModalHeader } from "../../components/basic";
+import { Container, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
 import { WalletLogoSpinner } from "./screens/WalletLogoSpinner";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { ModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 import { wait } from "../../utils/wait";
 import { Button } from "../../components/buttons";
-import { fontSize, iconSize, spacing } from "../../design-system";
+import { Theme, iconSize, radius, spacing } from "../../design-system";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Img } from "../../components/Img";
+import styled from "@emotion/styled";
 
 export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
   onDone,
 }) => {
-  const modalSize = useContext(ModalConfigCtx).modalSize;
   const walletConfig = useWalletConfig();
   const { auth } = useContext(ModalConfigCtx);
-  const [status, setStatus] = useState<"signing" | "failed">("signing");
+  const [status, setStatus] = useState<"signing" | "failed" | "idle">("idle");
   const { login } = useLogin();
-  const signer = useSigner();
   const [tryId, setTryId] = useState(0);
 
   const signIn = useCallback(async () => {
@@ -34,18 +34,6 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
     }
   }, [auth, login, onDone]);
 
-  const mounted = useRef(false);
-  useEffect(() => {
-    if (!signer) {
-      return;
-    }
-    if (mounted.current) {
-      return;
-    }
-    signIn();
-    mounted.current = true;
-  }, [signer, signIn]);
-
   const handleRetry = () => {
     signIn();
     setTryId(tryId + 1);
@@ -57,62 +45,116 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
         <ModalHeader title="Sign in" />
       </Container>
 
-      <Container flex="column" p="lg" center="both" expand>
-        <Spacer y="md" />
+      <Spacer y="lg" />
 
-        {walletConfig && (
-          <WalletLogoSpinner
-            key={String(tryId)} // to replay enter animation
-            error={status === "failed"}
-            iconUrl={walletConfig.meta.iconURL}
-          />
+      <Container flex="column" p="lg" center="both" expand>
+        {status === "idle" && (
+          <>
+            {walletConfig && (
+              <PulsatingContainer>
+                <Img
+                  src={walletConfig.meta.iconURL}
+                  width={"80"}
+                  height={"80"}
+                />
+              </PulsatingContainer>
+            )}
+
+            <Spacer y="xxl" />
+
+            <Text center multiline>
+              Please sign the message request <br />
+              in your wallet to continue
+            </Text>
+          </>
         )}
 
-        <Spacer y="xxl" />
+        {status !== "idle" && (
+          <>
+            {walletConfig && (
+              <WalletLogoSpinner
+                key={String(tryId)} // to replay enter animation
+                error={status === "failed"}
+                iconUrl={walletConfig.meta.iconURL}
+              />
+            )}
 
-        <Text size="lg" center color="primaryText">
-          {status === "failed" ? "Failed to sign in" : "Signing in"}
-        </Text>
+            <Spacer y="xxl" />
+            <Spacer y="sm" />
 
-        <Spacer y="lg" />
+            <Text size="lg" center color="primaryText">
+              {status === "failed"
+                ? "Failed to sign in"
+                : "Awaiting Confirmation"}
+            </Text>
 
-        {status === "failed" ? (
-          <Container flex="row" center="x" animate="fadein">
+            {status !== "failed" && (
+              <>
+                <Spacer y="lg" />
+                <Text center multiline>
+                  Sign the signature request <br /> in your wallet{" "}
+                </Text>
+                <Spacer y="lg" />
+              </>
+            )}
+          </>
+        )}
+      </Container>
+
+      {status !== "signing" && (
+        <>
+          <Container animate="fadein" px="lg">
             <Button
-              variant="outline"
+              fullWidth
+              variant="accent"
               onClick={handleRetry}
               style={{
-                gap: spacing.sm,
+                gap: spacing.xs,
                 alignItems: "center",
+                padding: spacing.md,
               }}
             >
-              <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Retry{" "}
+              {status === "idle" && <>Sign in</>}
+
+              {status === "failed" && (
+                <>
+                  <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
+                  Try again
+                </>
+              )}
             </Button>
           </Container>
-        ) : (
-          <Text center multiline>
-            Sign the signature request <br /> in your wallet{" "}
-          </Text>
-        )}
-      </Container>
-
-      <Spacer y="md" />
-
-      {modalSize === "compact" && <Line />}
-
-      <Container p="lg" flex="row" center="x">
-        <Button
-          variant="link"
-          onClick={handleRetry}
-          style={{
-            fontSize: fontSize.sm,
-            textAlign: "center",
-          }}
-        >
-          {" "}
-          {`Don't see signature request in wallet?`}{" "}
-        </Button>
-      </Container>
+          <Spacer y="lg" />
+        </>
+      )}
     </Container>
   );
 };
+
+const PulsatingContainer = styled.div<{ theme?: Theme }>`
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: ${(p) => p.theme.colors.accentText};
+    animation: pulse 2s cubic-bezier(0.175, 0.885, 0.32, 1.1) infinite;
+    z-index: -1;
+    border-radius: ${radius.xl};
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.4);
+    }
+  }
+`;
