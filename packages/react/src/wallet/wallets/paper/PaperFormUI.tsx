@@ -14,6 +14,7 @@ import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { InputSelectionUI } from "../InputSelectionUI";
 import { PaperLoginType } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
+import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
@@ -30,7 +31,7 @@ export const PaperFormUI = (props: {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = window.open("", "Login", "width=350, height=500");
+      const googleWindow = openGoogleSignInWindow();
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }

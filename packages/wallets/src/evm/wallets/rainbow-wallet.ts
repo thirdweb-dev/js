@@ -55,7 +55,7 @@ export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions
     },
   };
 
-  static id = walletIds.rainbow;
+  static id = walletIds.rainbow as string;
 
   public get walletName() {
     return "Rainbow Wallet" as const;
