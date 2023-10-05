@@ -1,16 +1,17 @@
 import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
+import { WalletInstance } from "../types/wallet";
 
 /**
  * @returns the current active wallet instance
  */
-export function useWallet() {
+export function useWallet<T extends WalletInstance = WalletInstance>() {
   const context = useWalletContext();
   invariant(
     context,
     "useWallet() hook must be used within a <ThirdwebProvider/>",
   );
-  return context.activeWallet;
+  return context.activeWallet as T;
 }
 
 /**
