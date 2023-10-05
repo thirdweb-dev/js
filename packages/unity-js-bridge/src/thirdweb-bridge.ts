@@ -96,7 +96,7 @@ interface TWBridge {
 const w = window;
 
 class ThirdwebBridge implements TWBridge {
-  private walletMap: Map<string, AbstractClientWallet> = new Map();
+  private walletMap: Map<PossibleWallet, AbstractClientWallet> = new Map();
   private activeWallet: AbstractClientWallet | undefined;
   private initializedChain: ChainIdOrName | undefined;
   private activeSDK: ThirdwebSDK | undefined;
@@ -253,8 +253,10 @@ class ThirdwebBridge implements TWBridge {
             chains: supportedChains,
           });
           break;
-        default:
-          throw new Error(`Unknown wallet type: ${possibleWallet.id}`);
+        default: {
+          console.log("Unknown wallet:", possibleWallet);
+          throw new Error(`Unknown wallet type`);
+        }
       }
       if (walletInstance) {
         walletInstance.on("connect", async () =>
@@ -326,7 +328,7 @@ class ThirdwebBridge implements TWBridge {
         const eoaWallet = this.walletMap.get(personalWallet);
         // Connect flow for EOA first
         await this.connect(
-          eoaWallet?.walletId,
+          eoaWallet?.walletId as PossibleWallet | undefined,
           chainId,
           password,
           email,
