@@ -1,5 +1,45 @@
 # @thirdweb-dev/sdk
 
+## 3.10.65
+
+### Patch Changes
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
+- [#1686](https://github.com/thirdweb-dev/js/pull/1686) [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update & add unit test for ERC1155 Enumerable
+
+- Updated dependencies [[`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9)]:
+  - @thirdweb-dev/storage@1.2.11
+
+## 3.10.64
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+
+## 3.10.63
+
+### Patch Changes
+
+- [#1670](https://github.com/thirdweb-dev/js/pull/1670) [`a9b4b0c5`](https://github.com/thirdweb-dev/js/commit/a9b4b0c5d875dec660694466e5e322cc574bb21b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose proxy resolver helper function
+
+- [#1681](https://github.com/thirdweb-dev/js/pull/1681) [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix error handling when wallets have no funds
+
+- [#1667](https://github.com/thirdweb-dev/js/pull/1667) [`96e832cc`](https://github.com/thirdweb-dev/js/commit/96e832cc80692da38279c53f1289265b3728cb19) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve data fetching for erc20 interfaces
+
+- [#1674](https://github.com/thirdweb-dev/js/pull/1674) [`b16c09df`](https://github.com/thirdweb-dev/js/commit/b16c09df75c7193a91b832db7d9c92612ae09357) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix error on waiting for receipt after gasless tx for certain chains
+
+- [#1678](https://github.com/thirdweb-dev/js/pull/1678) [`6897ad65`](https://github.com/thirdweb-dev/js/commit/6897ad6502d585d55a8c7b2312b4af30663336c3) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Performance improvement to various function for ERC721
+
+- [#1672](https://github.com/thirdweb-dev/js/pull/1672) [`ee028e12`](https://github.com/thirdweb-dev/js/commit/ee028e12092fd306f076f6ea1d49a2295802dd6b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve data fetching for gas & transaction methods
+
+- [#1666](https://github.com/thirdweb-dev/js/pull/1666) [`d28b1c0f`](https://github.com/thirdweb-dev/js/commit/d28b1c0f1e1e53eedc8f331be555e22b64fb920d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve data fetching for some ERC721 modules
+
+- [#1679](https://github.com/thirdweb-dev/js/pull/1679) [`de05c2da`](https://github.com/thirdweb-dev/js/commit/de05c2da174a69315f2d34dd32a811bbd9a0b604) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add unit test for getting all owners of ERC721 collection
+
+- [#1668](https://github.com/thirdweb-dev/js/pull/1668) [`bdb2ccc7`](https://github.com/thirdweb-dev/js/commit/bdb2ccc7a66c33ec5dc331b6fa792e6361769e88) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Slight improvement for getContract() and getContractFromAbi()
+
 ## 3.10.62
 
 ### Patch Changes

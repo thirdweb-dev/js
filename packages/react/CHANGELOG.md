@@ -1,5 +1,43 @@
 # @thirdweb-dev/react
 
+## 3.16.3
+
+### Patch Changes
+
+- [#1707](https://github.com/thirdweb-dev/js/pull/1707) [`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650) Thanks [@MananTank](https://github.com/MananTank)! - Fix Unchecked Index accesses
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/react-core@3.16.3
+
+## 3.16.2
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+  - @thirdweb-dev/react-core@3.16.2
+  - @thirdweb-dev/sdk@3.10.64
+  - @thirdweb-dev/wallets@1.3.2
+
+## 3.16.1
+
+### Patch Changes
+
+- [#1637](https://github.com/thirdweb-dev/js/pull/1637) [`54f83a50`](https://github.com/thirdweb-dev/js/commit/54f83a5013ed65ddd5a787e13ba7e5d86625537d) Thanks [@MananTank](https://github.com/MananTank)! - add SignerWallet
+
+- [#1682](https://github.com/thirdweb-dev/js/pull/1682) [`eb9e9f0c`](https://github.com/thirdweb-dev/js/commit/eb9e9f0ce8019570a00660724a9bf669910959b9) Thanks [@MananTank](https://github.com/MananTank)! - - Always show "Connected to Smart Wallet" text in ConnectWallet dropdown but only link to dashboard if it is deployed
+
+  - Show QR code in the Receive funds screen on mobile too
+
+- [#1687](https://github.com/thirdweb-dev/js/pull/1687) [`fd378ec3`](https://github.com/thirdweb-dev/js/commit/fd378ec3e41c17bca6b67ff2969d3591e4e0f047) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet UI Improvements for OTP screen and other minor UI tweaks
+
+- Updated dependencies [[`54f83a50`](https://github.com/thirdweb-dev/js/commit/54f83a5013ed65ddd5a787e13ba7e5d86625537d), [`a9b4b0c5`](https://github.com/thirdweb-dev/js/commit/a9b4b0c5d875dec660694466e5e322cc574bb21b), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3), [`96e832cc`](https://github.com/thirdweb-dev/js/commit/96e832cc80692da38279c53f1289265b3728cb19), [`b16c09df`](https://github.com/thirdweb-dev/js/commit/b16c09df75c7193a91b832db7d9c92612ae09357), [`6897ad65`](https://github.com/thirdweb-dev/js/commit/6897ad6502d585d55a8c7b2312b4af30663336c3), [`ee028e12`](https://github.com/thirdweb-dev/js/commit/ee028e12092fd306f076f6ea1d49a2295802dd6b), [`d28b1c0f`](https://github.com/thirdweb-dev/js/commit/d28b1c0f1e1e53eedc8f331be555e22b64fb920d), [`c085d690`](https://github.com/thirdweb-dev/js/commit/c085d69060c68b3335761bdb2cc0c3e082548702), [`de05c2da`](https://github.com/thirdweb-dev/js/commit/de05c2da174a69315f2d34dd32a811bbd9a0b604), [`bdb2ccc7`](https://github.com/thirdweb-dev/js/commit/bdb2ccc7a66c33ec5dc331b6fa792e6361769e88), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3)]:
+  - @thirdweb-dev/wallets@1.3.1
+  - @thirdweb-dev/sdk@3.10.63
+  - @thirdweb-dev/react-core@3.16.1
+
 ## 3.16.0
 
 ### Minor Changes

@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Canxium Mainnet",
   "chain": "CAU",
-  "icon": {
-    "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
-    "width": 938,
-    "height": 938,
-    "format": "png"
-  },
-  "rpc": [
-    "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.canxium.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Canxium",
-    "symbol": "CAU",
-    "decimals": 18
-  },
-  "infoURL": "https://canxium.org",
-  "shortName": "cau",
   "chainId": 3003,
-  "networkId": 3003,
   "explorers": [
     {
       "name": "canxium explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "canxium"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
+    "width": 938,
+    "height": 938,
+    "format": "png"
+  },
+  "infoURL": "https://canxium.org",
+  "name": "Canxium Mainnet",
+  "nativeCurrency": {
+    "name": "Canxium",
+    "symbol": "CAU",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://canxium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.canxium.org"
+  ],
+  "shortName": "cau",
+  "slug": "canxium",
+  "testnet": false
 } as const satisfies Chain;

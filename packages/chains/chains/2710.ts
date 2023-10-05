@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Morphism Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://morphism-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.morphism.xyz"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://morphism.xyz",
-  "shortName": "tmorph",
   "chainId": 2710,
-  "networkId": 2710,
   "explorers": [
     {
       "name": "Morphism Testnet Explorer",
@@ -23,15 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge-testnet.morphism.xyz"
-      }
-    ]
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://morphism.xyz",
+  "name": "Morphism Testnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
   },
-  "testnet": true,
-  "slug": "morphism-testnet"
+  "redFlags": [],
+  "rpc": [
+    "https://morphism-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.morphism.xyz"
+  ],
+  "shortName": "tmorph",
+  "slug": "morphism-testnet",
+  "testnet": true
 } as const satisfies Chain;

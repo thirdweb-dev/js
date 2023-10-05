@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shrapnel Subnet",
   "chain": "shrapnel",
-  "rpc": [
-    "https://shrapnel-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/shrapnel/mainnet/rpc"
-  ],
+  "chainId": 2044,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://www.shrapnel.com/",
+  "name": "Shrapnel Subnet",
   "nativeCurrency": {
     "name": "Shrapnel Gas Token",
     "symbol": "SHRAPG",
     "decimals": 18
   },
-  "infoURL": "https://www.shrapnel.com/",
+  "redFlags": [],
+  "rpc": [
+    "https://shrapnel-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/shrapnel/mainnet/rpc"
+  ],
   "shortName": "Shrapnel",
-  "chainId": 2044,
-  "networkId": 2044,
-  "testnet": false,
-  "slug": "shrapnel-subnet"
+  "slug": "shrapnel-subnet",
+  "testnet": false
 } as const satisfies Chain;

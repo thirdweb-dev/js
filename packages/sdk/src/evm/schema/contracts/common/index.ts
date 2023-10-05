@@ -10,14 +10,16 @@ import { z } from "zod";
  * @internal
  */
 export const CommonContractSchema = /* @__PURE__ */ (() =>
-  z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    image: FileOrBufferOrStringSchema.optional(),
-    external_link: z.string().optional(),
-    app_uri: z.string().optional(),
-    social_urls: z.record(z.string()).optional(),
-  }))();
+  z
+    .object({
+      name: z.string(),
+      description: z.string().optional(),
+      image: FileOrBufferOrStringSchema.optional(),
+      external_link: z.string().optional(),
+      app_uri: z.string().optional(),
+      social_urls: z.record(z.string()).optional(),
+    })
+    .catchall(z.unknown()))();
 
 export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;
 

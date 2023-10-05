@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Moonbase Alpha",
   "chain": "MOON",
-  "rpc": [
-    "https://moonbase-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.api.moonbase.moonbeam.network",
-    "wss://wss.api.moonbase.moonbeam.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Dev",
-    "symbol": "DEV",
-    "decimals": 18
-  },
-  "infoURL": "https://docs.moonbeam.network/networks/testnet/",
-  "shortName": "mbase",
   "chainId": 1287,
-  "networkId": 1287,
   "explorers": [
     {
       "name": "moonscan",
@@ -24,6 +9,22 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "moonbase-alpha"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://docs.moonbeam.network/networks/testnet/",
+  "name": "Moonbase Alpha",
+  "nativeCurrency": {
+    "name": "Dev",
+    "symbol": "DEV",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://moonbase-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.api.moonbase.moonbeam.network",
+    "wss://wss.api.moonbase.moonbeam.network"
+  ],
+  "shortName": "mbase",
+  "slug": "moonbase-alpha",
+  "testnet": true
 } as const satisfies Chain;

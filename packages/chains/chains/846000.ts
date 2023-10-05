@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "4GoodNetwork",
   "chain": "4GN",
-  "rpc": [
-    "https://4goodnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://chain.deptofgood.com"
-  ],
+  "chainId": 846000,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://bloqs4good.com",
+  "name": "4GoodNetwork",
   "nativeCurrency": {
     "name": "APTA",
     "symbol": "APTA",
     "decimals": 18
   },
-  "infoURL": "https://bloqs4good.com",
+  "redFlags": [],
+  "rpc": [
+    "https://4goodnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://chain.deptofgood.com"
+  ],
   "shortName": "bloqs4good",
-  "chainId": 846000,
-  "networkId": 846000,
-  "testnet": false,
-  "slug": "4goodnetwork"
+  "slug": "4goodnetwork",
+  "testnet": false
 } as const satisfies Chain;

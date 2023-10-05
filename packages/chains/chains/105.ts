@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Web3Games Devnet",
   "chain": "Web3Games",
-  "icon": {
-    "url": "ipfs://QmUc57w3UTHiWapNW9oQb1dP57ymtdemTTbpvGkjVHBRCo",
-    "width": 192,
-    "height": 192,
-    "format": "png"
-  },
-  "rpc": [
-    "https://web3games-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://devnet.web3games.org/evm"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Web3Games",
-    "symbol": "W3G",
-    "decimals": 18
-  },
-  "infoURL": "https://web3games.org/",
-  "shortName": "dw3g",
   "chainId": 105,
-  "networkId": 105,
   "explorers": [
     {
       "name": "Web3Games Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "web3games-devnet"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmUc57w3UTHiWapNW9oQb1dP57ymtdemTTbpvGkjVHBRCo",
+    "width": 192,
+    "height": 192,
+    "format": "png"
+  },
+  "infoURL": "https://web3games.org/",
+  "name": "Web3Games Devnet",
+  "nativeCurrency": {
+    "name": "Web3Games",
+    "symbol": "W3G",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://web3games-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://devnet.web3games.org/evm"
+  ],
+  "shortName": "dw3g",
+  "slug": "web3games-devnet",
+  "testnet": false
 } as const satisfies Chain;

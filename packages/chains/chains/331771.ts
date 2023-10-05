@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "POP Mainnet",
   "chain": "POP",
-  "shortName": "POP",
   "chainId": 331771,
-  "testnet": false,
-  "icon": {
-    "format": "png",
-    "url": "ipfs://QmP8rYvcc7aJB3c2YZxjxaySvHapHnoK8MnxuSuDT4PtF2",
-    "height": 400,
-    "width": 400
-  },
-  "rpc": [
-    "https://pop.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc00.proofofpepe.tech",
-    "https://rpc01.proofofpepe.tech",
-    "https://rpc02.proofofpepe.tech"
-  ],
-  "nativeCurrency": {
-    "name": "Pepe",
-    "symbol": "PEPE",
-    "decimals": 18
-  },
   "explorers": [
     {
       "name": "Pepescan",
@@ -29,5 +9,28 @@ export default {
       "standard": "none"
     }
   ],
-  "slug": "pop"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmP8rYvcc7aJB3c2YZxjxaySvHapHnoK8MnxuSuDT4PtF2",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "name": "POP Mainnet",
+  "nativeCurrency": {
+    "name": "Pepe",
+    "symbol": "PEPE",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://pop.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc00.proofofpepe.tech",
+    "https://rpc01.proofofpepe.tech",
+    "https://rpc02.proofofpepe.tech"
+  ],
+  "shortName": "POP",
+  "slug": "pop",
+  "testnet": false
 } as const satisfies Chain;

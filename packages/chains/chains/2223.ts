@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "VChain Mainnet",
   "chain": "VChain",
-  "rpc": [
-    "https://vchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bc.vcex.xyz"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "VNDT",
-    "symbol": "VNDT",
-    "decimals": 18
-  },
-  "infoURL": "https://bo.vcex.xyz/",
-  "shortName": "VChain",
   "chainId": 2223,
-  "networkId": 2223,
   "explorers": [
     {
       "name": "VChain Scan",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "vchain"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://bo.vcex.xyz/",
+  "name": "VChain Mainnet",
+  "nativeCurrency": {
+    "name": "VNDT",
+    "symbol": "VNDT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://vchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bc.vcex.xyz"
+  ],
+  "shortName": "VChain",
+  "slug": "vchain",
+  "testnet": false
 } as const satisfies Chain;

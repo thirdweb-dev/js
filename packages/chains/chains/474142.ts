@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OpenChain Mainnet",
   "chain": "OpenChain",
-  "rpc": [
-    "https://openchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://baas-rpc.luniverse.io:18545?lChainId=1641349324562974539"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "OpenCoin",
-    "symbol": "OPC",
-    "decimals": 10
-  },
-  "infoURL": "https://www.openchain.live",
-  "shortName": "oc",
   "chainId": 474142,
-  "networkId": 474142,
   "explorers": [
     {
       "name": "SIDE SCAN",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "openchain"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://www.openchain.live",
+  "name": "OpenChain Mainnet",
+  "nativeCurrency": {
+    "name": "OpenCoin",
+    "symbol": "OPC",
+    "decimals": 10
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://openchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://baas-rpc.luniverse.io:18545?lChainId=1641349324562974539"
+  ],
+  "shortName": "oc",
+  "slug": "openchain",
+  "testnet": false
 } as const satisfies Chain;

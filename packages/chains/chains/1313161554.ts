@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aurora Mainnet",
   "chain": "NEAR",
-  "rpc": [
-    "https://aurora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.aurora.dev"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://aurora.dev",
-  "shortName": "aurora",
   "chainId": 1313161554,
-  "networkId": 1313161554,
   "explorers": [
     {
       "name": "aurorascan.dev",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "aurora"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://aurora.dev",
+  "name": "Aurora Mainnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://aurora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.aurora.dev"
+  ],
+  "shortName": "aurora",
+  "slug": "aurora",
+  "testnet": false
 } as const satisfies Chain;

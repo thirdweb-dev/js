@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Mixin Virtual Machine",
   "chain": "MVM",
-  "rpc": [
-    "https://mixin-virtual-machine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://geth.mvm.dev"
+  "chainId": 73927,
+  "explorers": [
+    {
+      "name": "mvmscan",
+      "url": "https://scan.mvm.dev",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://mvm.dev",
-  "shortName": "mvm",
-  "chainId": 73927,
-  "networkId": 73927,
+  "features": [],
   "icon": {
     "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
     "width": 471,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "mvmscan",
-      "url": "https://scan.mvm.dev",
-      "icon": {
-        "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
-        "width": 471,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://mvm.dev",
+  "name": "Mixin Virtual Machine",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://mixin-virtual-machine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://geth.mvm.dev"
   ],
-  "testnet": false,
-  "slug": "mixin-virtual-machine"
+  "shortName": "mvm",
+  "slug": "mixin-virtual-machine",
+  "testnet": false
 } as const satisfies Chain;

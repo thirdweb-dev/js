@@ -1,41 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Altcoinchain",
   "chain": "mainnet",
-  "rpc": [
-    "https://altcoinchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc0.altcoinchain.org/rpc"
+  "chainId": 2330,
+  "explorers": [
+    {
+      "name": "expedition",
+      "url": "http://expedition.altcoinchain.org",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Altcoin",
-    "symbol": "ALT",
-    "decimals": 18
-  },
-  "infoURL": "https://altcoinchain.org",
-  "shortName": "alt",
-  "chainId": 2330,
-  "networkId": 2330,
+  "features": [],
   "icon": {
     "url": "ipfs://QmYwHmGC9CRVcKo1LSesqxU31SDj9vk2iQxcFjQArzhix4",
     "width": 720,
     "height": 720,
     "format": "png"
   },
-  "status": "active",
-  "explorers": [
-    {
-      "name": "expedition",
-      "url": "http://expedition.altcoinchain.org",
-      "icon": {
-        "url": "ipfs://QmYwHmGC9CRVcKo1LSesqxU31SDj9vk2iQxcFjQArzhix4",
-        "width": 720,
-        "height": 720,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://altcoinchain.org",
+  "name": "Altcoinchain",
+  "nativeCurrency": {
+    "name": "Altcoin",
+    "symbol": "ALT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://altcoinchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc0.altcoinchain.org/rpc"
   ],
-  "testnet": false,
-  "slug": "altcoinchain"
+  "shortName": "alt",
+  "slug": "altcoinchain",
+  "status": "active",
+  "testnet": false
 } as const satisfies Chain;

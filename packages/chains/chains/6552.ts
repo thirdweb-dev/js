@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scolcoin WeiChain Testnet",
   "chain": "SCOLWEI-testnet",
-  "rpc": [
-    "https://scolcoin-weichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.scolcoin.com"
-  ],
-  "faucets": [
-    "https://faucet.scolcoin.com"
-  ],
-  "nativeCurrency": {
-    "name": "Scolcoin",
-    "symbol": "SCOL",
-    "decimals": 18
-  },
-  "infoURL": "https://scolcoin.com",
-  "shortName": "SRC-test",
   "chainId": 6552,
-  "networkId": 6552,
-  "icon": {
-    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
-    "width": 792,
-    "height": 822,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Scolscan Testnet Explorer",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "scolcoin-weichain-testnet"
+  "faucets": [
+    "https://faucet.scolcoin.com"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
+    "width": 792,
+    "height": 822,
+    "format": "png"
+  },
+  "infoURL": "https://scolcoin.com",
+  "name": "Scolcoin WeiChain Testnet",
+  "nativeCurrency": {
+    "name": "Scolcoin",
+    "symbol": "SCOL",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://scolcoin-weichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.scolcoin.com"
+  ],
+  "shortName": "SRC-test",
+  "slug": "scolcoin-weichain-testnet",
+  "testnet": true
 } as const satisfies Chain;
