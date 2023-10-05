@@ -25,6 +25,7 @@ import { useContext, useState } from "react";
 import { SafeWalletConfig } from "./types";
 import {
   Container,
+  Line,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -116,6 +117,8 @@ export const SelectAccount: React.FC<{
           />
         </Container>
 
+        <Line />
+
         <Container
           expand
           flex="column"
@@ -125,7 +128,7 @@ export const SelectAccount: React.FC<{
             paddingTop: 0,
           }}
         >
-          <Spacer y="md" />
+          <Spacer y="xl" />
 
           <Text color="primaryText" size="lg" weight={500}>
             Enter your safe details
