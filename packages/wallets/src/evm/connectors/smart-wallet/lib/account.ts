@@ -2,7 +2,7 @@ import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { BigNumberish, BigNumber, ethers, utils } from "ethers";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
-import { MINIMAL_ACCOUNT_ABI } from "./constants";
+import { ACCOUNT_CORE_ABI } from "./constants";
 
 export class AccountAPI extends BaseAccountAPI {
   sdk: ThirdwebSDK;
@@ -42,7 +42,7 @@ export class AccountAPI extends BaseAccountAPI {
       } else {
         this.accountContract = await this.sdk.getContract(
           await this.getAccountAddress(),
-          MINIMAL_ACCOUNT_ABI,
+          ACCOUNT_CORE_ABI,
         );
       }
     }
