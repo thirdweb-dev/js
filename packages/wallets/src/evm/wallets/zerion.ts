@@ -40,7 +40,7 @@ export class ZerionWallet extends AbstractClientWallet<ZerionAdditionalOptions> 
   walletConnectConnector?: WalletConnectConnectorType;
   isInjected: boolean;
 
-  static id = "zerion" as const;
+  static id = "zerion" as string;
   static meta = {
     name: "Zerion Wallet",
     iconURL: "ipfs://Qmb1LhNtMUkzbgk1V8ZiUSRXjMJGRkS5HH3R71KyRgjdBG/zerion.png",

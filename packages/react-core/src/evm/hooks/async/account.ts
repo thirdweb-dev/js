@@ -18,7 +18,6 @@ import type {
 import invariant from "tiny-invariant";
 import { WalletAddress } from "../../types";
 import { useWallet } from "../../../core/hooks/wallet-hooks";
-import { SmartWallet } from "@thirdweb-dev/wallets";
 
 /** **********************/
 /**       READ HOOKS    **/
@@ -172,7 +171,7 @@ export function useCreateSessionKey(): UseMutationResult<
   unknown,
   CreateSessionKeyInput
 > {
-  const smartWallet = useWallet<SmartWallet>();
+  const smartWallet = useWallet("smartWallet");
   return useMutation(async (args: CreateSessionKeyInput) => {
     requiredParamInvariant(smartWallet, "wallet is not connected");
     return smartWallet.createSessionKey(args.keyAddress, args.permissions);
@@ -213,7 +212,7 @@ export function useRevokeSessionKey(): UseMutationResult<
   unknown,
   string
 > {
-  const smartWallet = useWallet<SmartWallet>();
+  const smartWallet = useWallet("smartWallet");
   return useMutation(async (keyAddress: string) => {
     requiredParamInvariant(smartWallet, "wallet is not connected");
     return smartWallet.revokeSessionKey(keyAddress);
@@ -254,7 +253,7 @@ export function useAddAdmin(): UseMutationResult<
   unknown,
   string
 > {
-  const smartWallet = useWallet<SmartWallet>();
+  const smartWallet = useWallet("smartWallet");
   return useMutation(async (adminAddress: string) => {
     requiredParamInvariant(smartWallet, "wallet is not connected");
     return smartWallet.addAdmin(adminAddress);
@@ -295,7 +294,7 @@ export function useRemoveAdmin(): UseMutationResult<
   unknown,
   string
 > {
-  const smartWallet = useWallet<SmartWallet>();
+  const smartWallet = useWallet("smartWallet");
   return useMutation(async (adminAddress: string) => {
     requiredParamInvariant(smartWallet, "wallet is not connected");
     return smartWallet.removeAdmin(adminAddress);

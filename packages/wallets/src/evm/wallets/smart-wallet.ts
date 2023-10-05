@@ -43,7 +43,7 @@ export class SmartWallet
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
   };
 
-  static id = walletIds.smartWallet;
+  static id = walletIds.smartWallet as string;
   public get walletName() {
     return "Smart Wallet" as const;
   }

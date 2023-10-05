@@ -23,7 +23,7 @@ export class SafeWallet extends AbstractClientWallet<
       "ipfs://QmbbyxDDmmLQh8DzzeUR6X6B75bESsNUFmbdvS3ZsQ2pN1/SafeToken.svg",
   };
 
-  static id = walletIds.safe;
+  static id = walletIds.safe as string;
   public get walletName() {
     return "Safe Wallet" as const;
   }
