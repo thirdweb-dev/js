@@ -1,19 +1,21 @@
 import AesGcmCrypto from "react-native-aes-gcm-crypto";
-import { getRandomValues } from "../getRandomValues";
 import QuickCrypto from "react-native-quick-crypto";
+import { getRandomValues } from "../getRandomValues";
 
 const ENCRYPTION_SEPARATOR = ":";
-const KEY_ITERATION_COUNT = 5000000;
+const DEPRECATED_KEY_ITERATION_COUNT = 5000000;
+const CURRENT_KEY_ITERATION_COUNT = 650000;
 const KEY_LENGTH = 256;
 
 export async function getEncryptionKey(
   pwd: string,
   salt: ArrayBuffer,
+  iterationCounts: number,
 ): Promise<string> {
   const key = QuickCrypto.pbkdf2Sync(
     pwd,
     salt,
-    KEY_ITERATION_COUNT,
+    iterationCounts,
     KEY_LENGTH,
     "sha256",
   );
@@ -40,7 +42,9 @@ export async function encryptShareWeb(
   pwd: string,
 ): Promise<string> {
   const salt = getRandomValues(new Uint8Array(16));
-  const keyBase64 = await getEncryptionKey(pwd, salt);
+  const iterationCount = CURRENT_KEY_ITERATION_COUNT;
+
+  const keyBase64 = await getEncryptionKey(pwd, salt, iterationCount);
 
   let encryptedValue;
   try {
@@ -65,7 +69,7 @@ export async function encryptShareWeb(
     cipherTextWithTag,
   )}${ENCRYPTION_SEPARATOR}${ivBase64}${ENCRYPTION_SEPARATOR}${bufferToBase64(
     salt,
-  )}`;
+  )}${ENCRYPTION_SEPARATOR}${iterationCount}`;
 
   return returnValue;
 }
@@ -74,10 +78,25 @@ export async function decryptShareWeb(
   encryptedShareDetails: string,
   pwd: string,
 ): Promise<string> {
-  const [encryptedShareWithTagBase64, ivBase64, saltBase64] =
-    encryptedShareDetails.split(ENCRYPTION_SEPARATOR);
+  const [
+    encryptedShareWithTagBase64,
+    ivBase64,
+    saltBase64,
+    maybeIterationCount,
+  ] = encryptedShareDetails.split(ENCRYPTION_SEPARATOR);
 
-  const key = await getEncryptionKey(pwd, base64ToBuffer(saltBase64));
+  let iterationCount = maybeIterationCount
+    ? parseInt(maybeIterationCount)
+    : undefined;
+  if (!iterationCount) {
+    iterationCount = DEPRECATED_KEY_ITERATION_COUNT;
+  }
+
+  const key = await getEncryptionKey(
+    pwd,
+    base64ToBuffer(saltBase64),
+    iterationCount,
+  );
 
   const encryptedShareWithTagBuffer = Buffer.from(
     encryptedShareWithTagBase64,
