@@ -34,9 +34,10 @@ interface EmbedSetupProps {
   ercOrMarketplace: string;
 }
 
-// MAKE SURE THIS IS v1 emmbed hashes!!
-const IPFS_URI = "bafybeigtqeyfmqkfbdu7ubjlwhtqkdqckvee7waks4uwhmzdfvpfaqzdwm";
-const ERC721_IPFS_URI = `bafybeihazpt6pkm4azgtupdz7hc2j3o4zpjsvtcgfq4t2keozxkss3ud6q`;
+// MAKE SURE THIS IS v1 embed hashes!!
+const IPFS_URI = "bafybeigdie2yyiazou7grjowoevmuip6akk33nqb55vrpezqdwfssrxyfy";
+const ERC721_IPFS_URI =
+  "bafybeicd3qfzelz4su7ng6n523virdsgobrc5pcbarhwqv3dj3drh645pi";
 
 interface IframeSrcOptions {
   clientId: string;

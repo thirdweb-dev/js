@@ -14,7 +14,6 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { useContract } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
@@ -204,16 +203,6 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
     </Modal>
   );
 };
-
-function useDefaultChainsRecord() {
-  return useMemo(() => {
-    const record: Record<number, Chain> = {};
-    for (const chain of defaultChains) {
-      record[chain.chainId] = chain;
-    }
-    return record;
-  }, []);
-}
 
 export const CustomContractSourcesPage: React.FC<
   CustomContractSourcesPageProps
