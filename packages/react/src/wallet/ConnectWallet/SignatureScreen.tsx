@@ -43,7 +43,6 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
     try {
       setStatus("signing");
       await wait(1000);
-      await wait(1000000); // TODO: remove this line
       const token = await login();
       auth?.onLogin?.(token);
       onDone();
