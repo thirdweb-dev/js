@@ -30,16 +30,7 @@ import {
 } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
-
-export const gnosisAddressPrefixToChainId = {
-  eth: 1,
-  matic: 137,
-  avax: 43114,
-  bnb: 56,
-  oeth: 10,
-  gor: 5,
-  "base-gor": 84531,
-} as const;
+import { safeSlugToChainId } from "./safeChainSlug";
 
 export const SelectAccount: React.FC<{
   onBack: () => void;
@@ -173,11 +164,9 @@ export const SelectAccount: React.FC<{
               if (value.length > 4) {
                 const prefix = value.split(":")[0];
 
-                if (prefix && prefix in gnosisAddressPrefixToChainId) {
+                if (prefix && prefix in safeSlugToChainId) {
                   setSafeChainId(
-                    gnosisAddressPrefixToChainId[
-                      prefix as keyof typeof gnosisAddressPrefixToChainId
-                    ],
+                    safeSlugToChainId[prefix as keyof typeof safeSlugToChainId],
                   );
                   setSafeAddress(value.slice(prefix.length + 1));
                 } else {

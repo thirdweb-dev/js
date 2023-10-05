@@ -1,7 +1,13 @@
-import { useLogin, useWalletConfig } from "@thirdweb-dev/react-core";
+import {
+  useAddress,
+  useChainId,
+  useLogin,
+  useWallet,
+  useWalletConfig,
+} from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
-import { Container, ModalHeader } from "../../components/basic";
-import { Text } from "../../components/text";
+import { Container, Line, ModalHeader } from "../../components/basic";
+import { Link, Text } from "../../components/text";
 import { WalletLogoSpinner } from "./screens/WalletLogoSpinner";
 import { useCallback, useContext, useState } from "react";
 import { ModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
@@ -11,20 +17,33 @@ import { Theme, iconSize, radius, spacing } from "../../design-system";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Img } from "../../components/Img";
 import styled from "@emotion/styled";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { safeChainIdToSlug } from "../wallets/safe/safeChainSlug";
 
 export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
   onDone,
 }) => {
   const walletConfig = useWalletConfig();
+  const wallet = useWallet();
   const { auth } = useContext(ModalConfigCtx);
   const [status, setStatus] = useState<"signing" | "failed" | "idle">("idle");
   const { login } = useLogin();
   const [tryId, setTryId] = useState(0);
 
+  const isSafeWallet = wallet?.walletId === walletIds.safe;
+  const chainId = useChainId();
+
+  const address = useAddress();
+  const safeChainSlug =
+    chainId && chainId in safeChainIdToSlug
+      ? safeChainIdToSlug[chainId as keyof typeof safeChainIdToSlug]
+      : undefined;
+
   const signIn = useCallback(async () => {
     try {
       setStatus("signing");
       await wait(1000);
+      await wait(1000000); // TODO: remove this line
       const token = await login();
       auth?.onLogin?.(token);
       onDone();
@@ -45,7 +64,7 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
         <ModalHeader title="Sign in" />
       </Container>
 
-      <Spacer y="lg" />
+      <Spacer y="sm" />
 
       <Container flex="column" p="lg" center="both" expand>
         {status === "idle" && (
@@ -93,8 +112,9 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
                 <Spacer y="lg" />
                 <Text center multiline>
                   Sign the signature request <br /> in your wallet{" "}
+                  {isSafeWallet && <>& approve transaction</>}
                 </Text>
-                <Spacer y="lg" />
+                <Spacer y="md" />
               </>
             )}
           </>
@@ -125,6 +145,24 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
             </Button>
           </Container>
           <Spacer y="lg" />
+        </>
+      )}
+
+      {isSafeWallet && status === "signing" && (
+        <>
+          <Line />
+          <Container p="lg" animate="fadein">
+            <Link
+              center
+              target="_blank"
+              href={`
+              https://app.safe.global/transactions/queue?safe=${safeChainSlug}:${address}
+            `}
+            >
+              {" "}
+              Approve transaction in Safe{" "}
+            </Link>
+          </Container>
         </>
       )}
     </Container>
