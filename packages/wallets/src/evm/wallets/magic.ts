@@ -30,7 +30,7 @@ export class MagicLink extends AbstractClientWallet<
     name: "Magic Link",
   };
 
-  static id = walletIds.magicLink;
+  static id = walletIds.magicLink as string;
 
   public get walletName() {
     return "Magic Link" as const;

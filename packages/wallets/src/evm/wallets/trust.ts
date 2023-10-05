@@ -56,7 +56,7 @@ export class TrustWallet extends AbstractClientWallet<TrustAdditionalOptions> {
     },
   };
 
-  static id = walletIds.trust;
+  static id = walletIds.trust as string;
 
   public get walletName() {
     return "Trust Wallet" as const;
