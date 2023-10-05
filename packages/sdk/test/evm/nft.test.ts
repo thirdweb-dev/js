@@ -288,7 +288,7 @@ describe("NFT Contract", async () => {
     expect(records[1].tokenId).to.eq(2);
   });
 
-  it("should respect pagination for getOwned (for erc-721-standard.ts)", async () => {
+  it("should respect pagination for getOwned (erc-721-standard.ts)", async () => {
     const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
@@ -310,7 +310,7 @@ describe("NFT Contract", async () => {
     expect(nftPage1[2].metadata.id).to.eq("4");
   });
 
-  it("should respect pagination for getOwned (for erc-721.ts)", async () => {
+  it("should respect pagination for getOwned (erc-721.ts)", async () => {
     const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
@@ -330,5 +330,27 @@ describe("NFT Contract", async () => {
     expect(nftPage2[0].metadata.id).to.eq("2");
     expect(nftPage2[1].metadata.id).to.eq("3");
     expect(nftPage1[2].metadata.id).to.eq("4");
+  });
+
+  it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
+  });
+
+  it("getOwned should return all items when queryParams.count is greater than the total supply (erc-721.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.erc721.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
   });
 });

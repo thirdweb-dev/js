@@ -353,4 +353,36 @@ describe("Edition Contract", async () => {
     expect(nftPage2[1].metadata.id).to.eq("3");
     expect(nftPage1[2].metadata.id).to.eq("4");
   });
+
+  it("getOwned should return all items when queryParams.count is greater than the total supply (edition.ts)", async () => {
+    const nfts = [] as { metadata: { name: string }; supply: number }[];
+    for (let i = 0; i < 10; i++) {
+      nfts.push({
+        metadata: { name: `Test${i}` },
+        supply: 10,
+      });
+    }
+    await bundleContract.mintBatch(nfts);
+    const items = await bundleContract.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(items).to.be.an("array").length(nfts.length);
+  });
+
+  it("getOwned should return all items when queryParams.count is greater than the total supply (erc-1155.ts)", async () => {
+    const nfts = [] as { metadata: { name: string }; supply: number }[];
+    for (let i = 0; i < 10; i++) {
+      nfts.push({
+        metadata: { name: `Test${i}` },
+        supply: 10,
+      });
+    }
+    await bundleContract.mintBatch(nfts);
+    const items = await bundleContract.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(items).to.be.an("array").length(nfts.length);
+  });
 });
