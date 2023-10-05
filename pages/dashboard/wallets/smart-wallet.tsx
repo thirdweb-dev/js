@@ -312,7 +312,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   label="node-template"
-                  href="https://github.com/thirdweb-example/smart-wallet-react"
+                  href="https://github.com/thirdweb-example/smart-wallet-script"
                   isExternal
                   _hover={{ opacity: 0.8 }}
                   color="blue.500"
