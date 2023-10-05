@@ -1,17 +1,71 @@
 import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
+import {
+  BloctoWallet,
+  CoinbaseWallet,
+  EmbeddedWallet,
+  FrameWallet,
+  LocalWallet,
+  MagicLink,
+  MetaMaskWallet,
+  PaperWallet,
+  PhantomWallet,
+  RainbowWallet,
+  SafeWallet,
+  SmartWallet,
+  TrustWallet,
+  WalletConnect,
+  walletIds,
+} from "@thirdweb-dev/wallets";
 import { WalletInstance } from "../types/wallet";
 
+export type WalletId = (typeof walletIds)[keyof typeof walletIds];
+
+type WalletIdToWalletTypeMap = {
+  metamask: MetaMaskWallet;
+  coinbase: CoinbaseWallet;
+  rainbowWallet: RainbowWallet;
+  blocto: BloctoWallet;
+  frame: FrameWallet;
+  localWallet: LocalWallet;
+  magicLink: MagicLink;
+  paper: PaperWallet;
+  smartWallet: SmartWallet;
+  safe: SafeWallet;
+  trust: TrustWallet;
+  embeddedWallet: EmbeddedWallet;
+  walletConnect: WalletConnect;
+  phantom: PhantomWallet;
+  walletConnectV1: WalletConnect;
+};
 /**
  * @returns the current active wallet instance
  */
-export function useWallet<T extends WalletInstance = WalletInstance>() {
+export function useWallet<T extends WalletId>(
+  walletId?: T,
+): undefined extends T
+  ? WalletInstance | undefined
+  : WalletIdToWalletTypeMap[T] | undefined {
   const context = useWalletContext();
   invariant(
     context,
     "useWallet() hook must be used within a <ThirdwebProvider/>",
   );
-  return context.activeWallet as T;
+  const activeWallet = context.activeWallet;
+  if (!activeWallet) {
+    return undefined;
+  }
+  if (!walletId) {
+    return activeWallet;
+  }
+  if (walletId) {
+    if (context.activeWallet?.walletId === walletId) {
+      return context.activeWallet as WalletIdToWalletTypeMap[T];
+    } else {
+      return undefined;
+    }
+  }
+  return context.activeWallet;
 }
 
 /**
