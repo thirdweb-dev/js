@@ -316,7 +316,7 @@ describe("Edition Contract", async () => {
     expect(nftPage2).to.be.an("array").length(3);
     expect(nftPage2[0].metadata.id).to.eq("2");
     expect(nftPage2[1].metadata.id).to.eq("3");
-    expect(nftPage1[2].metadata.id).to.eq("4");
+    expect(nftPage2[2].metadata.id).to.eq("4");
   });
 
   it("should respect pagination for getOwned (for erc-1155.ts)", async () => {
@@ -351,7 +351,7 @@ describe("Edition Contract", async () => {
     expect(nftPage2).to.be.an("array").length(3);
     expect(nftPage2[0].metadata.id).to.eq("2");
     expect(nftPage2[1].metadata.id).to.eq("3");
-    expect(nftPage1[2].metadata.id).to.eq("4");
+    expect(nftPage2[2].metadata.id).to.eq("4");
   });
 
   it("getOwned should return all items when queryParams.count is greater than the total supply (edition.ts)", async () => {
