@@ -1,11 +1,19 @@
-import { Theme, ThemeObjectOrType } from "../../design-system";
+import {
+  Theme,
+  ThemeObjectOrType,
+  iconSize,
+  spacing,
+} from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
+  useAddress,
   useConnectionStatus,
+  useDisconnect,
   useLogout,
   useNetworkMismatch,
   useSwitchChain,
   useThirdwebAuthContext,
+  useUser,
   useWallet,
   useWalletContext,
   useWallets,
@@ -26,6 +34,11 @@ import { WelcomeScreen } from "./screens/types";
 import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
 import { SupportedTokens, defaultTokens } from "./defaultTokens";
+import { Container } from "../../components/basic";
+import { shortenAddress } from "../../evm/utils/addresses";
+import { LockIcon } from "./icons/LockIcon";
+import { SignatureScreen } from "./SignatureScreen";
+import { Modal } from "../../components/Modal";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -154,6 +167,15 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const isNetworkMismatch = useNetworkMismatch();
   const { activeChainSetExplicitly } = useWalletContext();
 
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const address = useAddress();
+  const { user } = useUser();
+  const disconnect = useDisconnect();
+
+  const requiresSignIn = props.auth?.loginOptional
+    ? false
+    : !!authConfig?.authUrl && !!address && !user?.address;
+
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {
       return defaultTokens;
@@ -170,6 +192,21 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 
   return (
     <CustomThemeProvider theme={theme}>
+      {showSignatureModal && (
+        <Modal
+          size="compact"
+          open={true}
+          setOpen={(value) => {
+            if (!value) {
+              disconnect();
+              setShowSignatureModal(false);
+            }
+          }}
+        >
+          <SignatureScreen onDone={() => setShowSignatureModal(false)} />
+        </Modal>
+      )}
+
       {(() => {
         // wallet is not connected
         if (!activeWallet) {
@@ -231,6 +268,39 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               style={props.style}
               className={props.className}
             />
+          );
+        }
+
+        // sign in button
+        else if (requiresSignIn) {
+          return (
+            <Button
+              variant="primary"
+              onClick={() => {
+                setShowSignatureModal(true);
+              }}
+              data-theme={theme}
+              className={`${TW_CONNECT_WALLET}--sign-in ${
+                props.className || ""
+              }`}
+              style={props.style}
+              data-test="sign-in-button"
+            >
+              <Container
+                flex="row"
+                center="y"
+                gap="sm"
+                style={{
+                  paddingRight: spacing.xs,
+                  borderRight: "1px solid",
+                  marginRight: spacing.xs,
+                }}
+              >
+                <LockIcon size={iconSize.sm} />
+                <span> Sign in </span>
+              </Container>
+              <span>{shortenAddress(address || "", true)}</span>
+            </Button>
           );
         }
 
