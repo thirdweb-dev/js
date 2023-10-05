@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.10.64",
+  "version": "3.10.65",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
