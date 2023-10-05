@@ -12,7 +12,7 @@
     "fix": "next lint --fix",
     "format": "prettier --write .",
     "gen:theme-typings": "chakra-cli tokens theme/index.ts",
-    "postinstall": "bun run gen:theme-typings && ./sentry-postinstall.sh",
+    "postinstall": "bun run gen:theme-typings",
     "find:unused": "next-unused",
     "postbuild": "next-sitemap",
     "build:analyze": "ANALYZE=true bun run build"
