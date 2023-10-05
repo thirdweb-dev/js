@@ -99,6 +99,22 @@ export class ContractWrapper<
     ) as TContract;
   }
 
+  public updateAbi(updatedAbi: ContractInterface): void {
+    // re-connect the contract with the new signer / provider
+    this.writeContract = new Contract(
+      this.address,
+      updatedAbi,
+      this.getSignerOrProvider(),
+    ) as TContract;
+
+    // setup the read only contract
+    this.readContract = this.writeContract.connect(
+      this.getProvider(),
+    ) as TContract;
+
+    this.abi = AbiSchema.parse(updatedAbi);
+  }
+
   /**
    * @internal
    */
