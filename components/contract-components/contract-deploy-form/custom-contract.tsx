@@ -477,13 +477,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           </Text>
         </Flex>
 
-        <Flex alignItems="center" gap={3}>
-          <Checkbox
-            {...form.register("addToDashboard")}
-            isChecked={form.watch("addToDashboard")}
-          />
-
-          <Text mt={1}>
+        <Checkbox
+          {...form.register("addToDashboard")}
+          isChecked={form.watch("addToDashboard")}
+        >
+          <Text>
             Add to dashboard so I can find it in the list of my contracts at{" "}
             <TrackedLink
               href="https://thirdweb.com/dashboard"
@@ -496,7 +494,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             </TrackedLink>
             .
           </Text>
-        </Flex>
+        </Checkbox>
 
         {fullPublishMetadata.data?.deployType === "standard" && (
           <Flex gap={4} flexDir="column">
@@ -516,11 +514,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   flexDir="column"
                   gap={4}
                 >
-                  <Flex alignItems="center" gap={3}>
-                    <Checkbox
-                      {...form.register("deployDeterministic")}
-                      isChecked={form.watch("deployDeterministic")}
-                    />
+                  <Checkbox
+                    {...form.register("deployDeterministic")}
+                    isChecked={form.watch("deployDeterministic")}
+                  >
                     <Tooltip
                       label={
                         <Card py={2} px={4} bgColor="backgroundHighlight">
@@ -543,8 +540,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         <Icon as={FiHelpCircle} />
                       </HStack>
                     </Tooltip>
-                    {/* <Text mt={1}></Text> */}
-                  </Flex>
+                  </Checkbox>
 
                   {isCreate2Deployment && (
                     <FormControl>

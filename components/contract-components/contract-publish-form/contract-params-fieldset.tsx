@@ -250,15 +250,14 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                         ).error
                       }
                     >
-                      <Flex gap={2} justifyContent="start">
-                        <Checkbox
-                          placeSelf="start"
-                          {...form.register(
-                            `constructorParams.${
-                              param.name ? param.name : "*"
-                            }.hidden`,
-                          )}
-                        />
+                      <Checkbox
+                        placeSelf="start"
+                        {...form.register(
+                          `constructorParams.${
+                            param.name ? param.name : "*"
+                          }.hidden`,
+                        )}
+                      >
                         <Flex flexDir="column">
                           <FormLabel as={Text} m={0}>
                             Advanced Parameter
@@ -268,7 +267,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                             section.
                           </Text>
                         </Flex>
-                      </Flex>
+                      </Checkbox>
                     </FormControl>
                   </Flex>
                 )}

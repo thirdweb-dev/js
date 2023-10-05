@@ -306,8 +306,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
               />
               {(form.watch("revealType") || props.ecosystem === "solana") && (
                 <>
-                  <Flex alignItems="center" gap={3} mt={3}>
-                    <Checkbox {...form.register("shuffle")} />
+                  <Checkbox {...form.register("shuffle")} mt={3}>
                     <Flex gap={1} flexDir={{ base: "column", md: "row" }}>
                       <Text>
                         Shuffle the order of the NFTs before uploading.
@@ -316,7 +315,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                         This is an off-chain operation and is not provable.
                       </Text>
                     </Flex>
-                  </Flex>
+                  </Checkbox>
                   <Box maxW={{ base: "100%", md: "61%" }}>
                     <TransactionButton
                       ecosystem={props.ecosystem}

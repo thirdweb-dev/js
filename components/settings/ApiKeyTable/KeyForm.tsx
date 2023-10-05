@@ -198,15 +198,14 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
                 <FormLabel size="label.sm" mb={0}>
                   Allowed Domains
                 </FormLabel>
-                <HStack alignItems="center">
-                  <Checkbox
-                    isChecked={form.watch("domains") === "*"}
-                    onChange={(e) => {
-                      form.setValue("domains", e.target.checked ? "*" : "");
-                    }}
-                  />
+                <Checkbox
+                  isChecked={form.watch("domains") === "*"}
+                  onChange={(e) => {
+                    form.setValue("domains", e.target.checked ? "*" : "");
+                  }}
+                >
                   <Text>Unrestricted access</Text>
-                </HStack>
+                </Checkbox>
               </HStack>
 
               <Textarea
@@ -249,15 +248,14 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
                 <FormLabel size="label.sm" mb={0}>
                   Allowed Bundle IDs
                 </FormLabel>
-                <HStack alignItems="center">
-                  <Checkbox
-                    isChecked={form.watch("bundleIds") === "*"}
-                    onChange={(e) => {
-                      form.setValue("bundleIds", e.target.checked ? "*" : "");
-                    }}
-                  />
+                <Checkbox
+                  isChecked={form.watch("bundleIds") === "*"}
+                  onChange={(e) => {
+                    form.setValue("bundleIds", e.target.checked ? "*" : "");
+                  }}
+                >
                   <Text>Unrestricted access</Text>
-                </HStack>
+                </Checkbox>
               </HStack>
 
               <Textarea
@@ -356,21 +354,21 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
                         <FormLabel size="label.sm" mb={0}>
                           Allowed Contract addresses
                         </FormLabel>
-                        <HStack alignItems="center">
-                          <Checkbox
-                            isChecked={
-                              form.watch(`services.${idx}.targetAddresses`) ===
-                              "*"
-                            }
-                            onChange={(e) => {
-                              form.setValue(
-                                `services.${idx}.targetAddresses`,
-                                e.target.checked ? "*" : "",
-                              );
-                            }}
-                          />
+
+                        <Checkbox
+                          isChecked={
+                            form.watch(`services.${idx}.targetAddresses`) ===
+                            "*"
+                          }
+                          onChange={(e) => {
+                            form.setValue(
+                              `services.${idx}.targetAddresses`,
+                              e.target.checked ? "*" : "",
+                            );
+                          }}
+                        >
                           <Text>Unrestricted access</Text>
-                        </HStack>
+                        </Checkbox>
                       </HStack>
 
                       <Textarea
@@ -424,20 +422,15 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
                           bg="transparent"
                           boxShadow="none"
                         >
-                          <HStack gap={1} cursor="help">
-                            <Checkbox
-                              isChecked={srv.actions.includes(sa.name)}
-                              onChange={(e) =>
-                                handleAction(
-                                  idx,
-                                  srv,
-                                  sa.name,
-                                  e.target.checked,
-                                )
-                              }
-                            />
+                          <Checkbox
+                            cursor="help"
+                            isChecked={srv.actions.includes(sa.name)}
+                            onChange={(e) =>
+                              handleAction(idx, srv, sa.name, e.target.checked)
+                            }
+                          >
                             <Text>{sa.title}</Text>
-                          </HStack>
+                          </Checkbox>
                         </Tooltip>
                       ))}
                     </HStack>

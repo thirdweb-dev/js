@@ -27,7 +27,7 @@ import {
 import { Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ManageBillingButton } from "components/settings/Account/ManageBillingButton";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 interface AccountFormProps {
   account: Account;
@@ -259,17 +259,18 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           </FormControl>
 
           {showSubscription && (
-            <HStack gap={2}>
-              <Checkbox
-                isDisabled={
-                  !form.getValues("email").length ||
-                  !!form.getFieldState("email", form.formState).error
-                }
-                defaultChecked
-                onChange={(e) => setIsSubscribing(e.target.checked)}
-              />
+            <Checkbox
+              isDisabled={
+                !form.getValues("email").length ||
+                !!form.getFieldState("email", form.formState).error
+              }
+              defaultChecked
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setIsSubscribing(e.target.checked)
+              }
+            >
               <Text>Subscribe to new features and key product updates</Text>
-            </HStack>
+            </Checkbox>
           )}
         </Flex>
 
