@@ -720,9 +720,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     walletAddress: AddressOrEns,
     chains: Chain[] = defaultChains,
   ): Promise<ContractWithMetadata[]> {
-    const contracts = await this.multiChainRegistry.getContractAddresses(
+    let contracts = await this.multiChainRegistry.getContractAddresses(
       walletAddress,
     );
+
+    // filter out any contracts that are not on the supported chains
+    contracts = contracts.filter((contract) => {
+      return chains.some((chain) => chain.chainId === contract.chainId);
+    });
 
     const chainMap = chains.reduce(
       (acc, chain) => {

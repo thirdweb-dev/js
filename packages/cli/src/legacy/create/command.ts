@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /* eslint-disable import/no-extraneous-dependencies */
-import { CREATE_MESSAGES } from "../../constants/constants";
+import { CREATE_MESSAGES } from "../../../constants/constants";
 import detect from "../core/detection/detect";
 import { DownloadError, createApp } from "./helpers/create-app";
 import { createContractProject } from "./helpers/create-contract";

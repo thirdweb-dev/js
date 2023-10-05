@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "../../../constants/constants";
+import { ERROR_MESSAGES } from "../../../../constants/constants";
 import { info, logger, warn } from "../helpers/logger";
 import { ProjectType } from "../types/ProjectType";
 import { Detector } from "./detector";

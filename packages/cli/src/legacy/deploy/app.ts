@@ -1,24 +1,23 @@
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+// import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import detectFramework from "../core/detection/detectFramework";
 import detectPackageManager from "../core/detection/detectPackageManager";
 import { logger } from "../core/helpers/logger";
 import { runCommand } from "../create/helpers/run-command";
-import { upload } from "../storage/command";
 
 export async function deployApp(
   distPath = "dist",
   projectPath = ".",
-  secretKey: string,
+  // secretKey: string,
 ) {
-  let storage: ThirdwebStorage;
-  if (secretKey) {
-    storage = new ThirdwebStorage({
-      secretKey,
-    });
-  } else {
-    // Since the auth key is being set in the global context, we don't need to pass anything here.
-    storage = new ThirdwebStorage();
-  }
+  // let storage: ThirdwebStorage;
+  // if (secretKey) {
+  //   storage = new ThirdwebStorage({
+  //     secretKey,
+  //   });
+  // } else {
+  //   // Since the auth key is being set in the global context, we don't need to pass anything here.
+  //   storage = new ThirdwebStorage();
+  // }
   const detectedPackageManager = await detectPackageManager(projectPath, {});
   const detectedFramework = await detectFramework(
     projectPath,
@@ -75,11 +74,10 @@ export async function deployApp(
   }
 
   try {
-    const uri = await upload(storage, distPath);
-    return `${uri.replace(
-      "ipfs://",
-      "https://cf-ipfs.com/ipfs/",
-    )}`;
+    // TODO fix this
+    // const uri = await upload(storage, distPath);
+    // return `${uri.replace("ipfs://", "https://cf-ipfs.com/ipfs/")}`;
+    return "";
   } catch (err: any) {
     console.error(err.message ? err.message : err);
     return Promise.reject("Can't upload project");

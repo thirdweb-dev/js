@@ -8,11 +8,11 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fs from "fs";
 import ora from "ora";
 import prompts from "prompts";
-import { GENERATE_MESSAGES } from "../../constants/constants";
 import { findMatches } from "../common/file-helper";
 import { info } from "../core/helpers/logger";
 import { GenerateOptions, ThirdwebConfig } from "./types";
 import { CHAIN_OPTIONS, getContractsForAddresses } from "./utils";
+import { GENERATE_MESSAGES } from "../../../constants/constants";
 
 export async function generate(options: GenerateOptions, secretKey: string) {
   const projectPath: string = options.path?.replace(/\/$/, "") || ".";
@@ -55,7 +55,8 @@ export async function generate(options: GenerateOptions, secretKey: string) {
         const numberOfNewContracts =
           contracts.length - thirdwebConfig.contracts.length;
         info(
-          `Updated thirdweb.json with ${numberOfNewContracts} new contract${numberOfNewContracts === 1 ? "" : "s"
+          `Updated thirdweb.json with ${numberOfNewContracts} new contract${
+            numberOfNewContracts === 1 ? "" : "s"
           }`,
         );
       }
@@ -85,8 +86,10 @@ export async function generate(options: GenerateOptions, secretKey: string) {
     );
 
     info(
-      `Created a thirdweb.json file with configuration for ${contracts.length
-      } contract${contracts.length === 1 ? "" : "s"
+      `Created a thirdweb.json file with configuration for ${
+        contracts.length
+      } contract${
+        contracts.length === 1 ? "" : "s"
       } detected in your project.\n\n - You can also update this configuration manually by editing the file.\n`,
     );
   }
@@ -189,7 +192,8 @@ export async function generate(options: GenerateOptions, secretKey: string) {
   }
 
   ora(
-    `Downloaded and cached ABIs for ${metadata.length} smart contract${metadata.length === 1 ? "" : "s"
+    `Downloaded and cached ABIs for ${metadata.length} smart contract${
+      metadata.length === 1 ? "" : "s"
     }`,
   ).succeed();
 

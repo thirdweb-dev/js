@@ -16,7 +16,7 @@ export class HardhatBuilder extends BaseBuilder {
     // then we look up the hardhat config extractor file path from there
     const configExtractorScriptPath = resolve(
       __dirname,
-      "../helpers/hardhat-config-extractor.js",
+      "../legacy/helpers/hardhat-config-extractor.js",
     );
 
     //the hardhat extractor **logs out** the runtime config of hardhat, we take that stdout and parse it

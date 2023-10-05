@@ -10,6 +10,7 @@ type DeployOptions = {
   app: boolean;
   path?: string;
   distPath?: string;
+  ci?: boolean;
 };
 
 export async function deploy(options: DeployOptions, secretKey: string) {
@@ -45,10 +46,12 @@ export async function deploy(options: DeployOptions, secretKey: string) {
   }
 
   const url = await processProject(options, "deploy", secretKey);
+  const stringUrl = url.toString();
   info(
-    `Open this link to deploy your contracts: ${chalk.blueBright(
-      url.toString(),
-    )}`,
+    `Open this link to deploy your contracts: ${chalk.blueBright(stringUrl)}`,
   );
-  return url.toString();
+  // don't attempt to open the browser in CI
+  if (stringUrl && !options.ci) {
+    open(stringUrl);
+  }
 }
