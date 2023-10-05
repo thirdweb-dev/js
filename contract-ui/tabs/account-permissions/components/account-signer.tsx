@@ -71,11 +71,12 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
               </Text>
             </Flex>
             <Flex direction="column">
-              <Text fontWeight="bold">Expires In</Text>
+              <Text fontWeight="bold">Expiration</Text>
               <Text textTransform="capitalize">
                 {formatDistance(
-                  signer.permissions.expirationDate,
-                  signer.permissions.startDate,
+                  new Date(signer.permissions.expirationDate),
+                  new Date(),
+                  { addSuffix: true },
                 )}
               </Text>
             </Flex>
