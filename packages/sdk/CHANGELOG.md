@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.10.65
+
+### Patch Changes
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
+- [#1686](https://github.com/thirdweb-dev/js/pull/1686) [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update & add unit test for ERC1155 Enumerable
+
+- Updated dependencies [[`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9)]:
+  - @thirdweb-dev/storage@1.2.11
+
 ## 3.10.64
 
 ### Patch Changes

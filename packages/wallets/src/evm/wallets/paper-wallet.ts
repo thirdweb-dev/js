@@ -17,7 +17,7 @@ export class PaperWallet extends AbstractClientWallet<
 > {
   connector?: Connector;
 
-  static id = walletIds.paper;
+  static id = walletIds.paper as string;
 
   static meta = {
     name: "Paper Wallet",

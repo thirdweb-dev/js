@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.2.11
+
+### Patch Changes
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
 ## 1.2.10
 
 ### Patch Changes

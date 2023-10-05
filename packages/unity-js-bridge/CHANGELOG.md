@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.83
+
+### Patch Changes
+
+- [#1688](https://github.com/thirdweb-dev/js/pull/1688) [`fde77a7e`](https://github.com/thirdweb-dev/js/commit/fde77a7e19a03b8c932785ec11a01710218c8acc) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] Google login option for EWS
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/storage@1.2.11
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/auth@3.2.46
+
 ## 0.2.82
 
 ### Patch Changes
