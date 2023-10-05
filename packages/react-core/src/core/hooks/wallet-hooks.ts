@@ -1,6 +1,6 @@
 import { useWalletContext } from "../providers/thirdweb-wallet-provider";
 import invariant from "tiny-invariant";
-import {
+import type {
   BloctoWallet,
   CoinbaseWallet,
   EmbeddedWallet,
@@ -38,34 +38,40 @@ type WalletIdToWalletTypeMap = {
   phantom: PhantomWallet;
   walletConnectV1: WalletConnect;
 };
+
+type UseWalletsReturnType<T extends WalletId | undefined> = T extends WalletId
+  ? WalletIdToWalletTypeMap[T]
+  : WalletInstance;
+
 /**
  * @returns the current active wallet instance
  */
-export function useWallet<T extends WalletId>(
-  walletId?: T,
-): undefined extends T
-  ? WalletInstance | undefined
-  : WalletIdToWalletTypeMap[T] | undefined {
+export function useWallet<
+  Args extends [walletId: WalletId] | [walletId?: never],
+>(...args: Args): UseWalletsReturnType<Args[0]> | undefined {
+  const walletId = args[0];
   const context = useWalletContext();
+
   invariant(
     context,
     "useWallet() hook must be used within a <ThirdwebProvider/>",
   );
   const activeWallet = context.activeWallet;
+
   if (!activeWallet) {
     return undefined;
   }
-  if (!walletId) {
-    return activeWallet;
-  }
+
+  // if walletId is provided, return the wallet instance only if it matches the walletId
   if (walletId) {
-    if (context.activeWallet?.walletId === walletId) {
-      return context.activeWallet as WalletIdToWalletTypeMap[T];
+    if (activeWallet.walletId === walletId) {
+      return activeWallet as UseWalletsReturnType<Args[0]>;
     } else {
       return undefined;
     }
   }
-  return context.activeWallet;
+
+  return activeWallet as UseWalletsReturnType<Args[0]>;
 }
 
 /**
