@@ -283,34 +283,47 @@ public async void ConnectWallet()
     },
   },
   {
-    id: "paper",
-    name: "Paper",
-    description: "Connect with email via Paper",
+    id: "embedded-wallet",
+    name: "Embedded Wallet",
+    description: "Connect with email and social logins",
     iconUrl:
       "ipfs://QmNrLXtPoFrh4yjZbXui39zUMozS1oetpgU8dvZhFAxfRa/paper-logo-icon.svg",
-    link: "https://portal.thirdweb.com/wallet/paper",
+    link: "https://portal.thirdweb.com/wallet/embedded-wallet",
     supportedLanguages: {
-      javascript: `import { PaperWallet } from "@thirdweb-dev/wallets";
+      javascript: `import { EmbeddedWallet } from "@thirdweb-dev/wallets";
 import { Ethereum } from "@thirdweb-dev/chains";
 
-const wallet = new PaperWallet({
+const wallet = new EmbeddedWallet({
   chain: Ethereum, //  chain to connect to
   clientId: "YOUR_CLIENT_ID", // Your thirdweb client ID
 });
 
 wallet.connect();`,
-      react: `import { ThirdwebProvider, ConnectWallet, paperWallet } from "@thirdweb-dev/react";
+      react: `import { ThirdwebProvider, ConnectWallet, embeddedWallet } from "@thirdweb-dev/react";
 
 export default function App() {
 return (
     <ThirdwebProvider
       clientId="YOUR_CLIENT_ID"
-      supportedWallets={[ paperWallet() ]}
+      supportedWallets={[ embeddedWallet() ]}
     >
       <ConnectWallet />
     </ThirdwebProvider>
   );
 }`,
+      "react-native": `import { ThirdwebProvider, ConnectWallet, embeddedWallet } from "@thirdweb-dev/react-native";
+
+export default function App() {
+return (
+    <ThirdwebProvider
+      clientId="YOUR_CLIENT_ID"
+      supportedWallets={[ embeddedWallet() ]}
+    >
+      <ConnectWallet />
+    </ThirdwebProvider>
+  );
+}`,
+
       unity: `using Thirdweb;
 
 public async void ConnectWallet()
@@ -320,9 +333,9 @@ public async void ConnectWallet()
 
     // Configure the connection
     var connection = new WalletConnection(
-      provider: WalletProvider.Paper,          // The wallet provider you want to connect to (Required)
-      chainId: 1,                              // The chain you want to connect to (Required)
-      email: "email@email.com"                 // The email you want to authenticate with (Required)
+      provider: WalletProvider.EmbeddedWallet,
+      chainId: 1,
+      email: "email@email.com"
     );
 
     // Connect the wallet

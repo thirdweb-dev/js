@@ -245,7 +245,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
               environment={environment}
               setEnvironment={setEnvironment}
               snippet={
-                WALLETS_SNIPPETS.find((w) => w.id === "paper")
+                WALLETS_SNIPPETS.find((w) => w.id === "embedded-wallet")
                   ?.supportedLanguages || {}
               }
             />
