@@ -238,7 +238,8 @@ export const ConnectWalletDetailsModal = ({
                 ) : null}
               </BaseButton>
             ) : null}
-            {activeWallet?.walletId === EmbeddedWallet.id ? (
+            {activeWallet?.walletId === EmbeddedWallet.id &&
+            (activeWallet as EmbeddedWallet).getEmail() ? (
               <Box flexDirection="row" alignItems="center" mt="md">
                 <ActiveDot width={10} height={10} />
                 <Text variant="bodySmallSecondary" ml="xxs">

@@ -6,16 +6,25 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
+import { OauthOptions } from "../../connectors/embedded-wallet/types";
+import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
 
 export type EmbeddedWalletConfig = {
   recommended?: boolean;
+  oauthOptions?: Omit<OauthOptions, "providers">;
 };
 
 export const embeddedWallet = (
   config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
-    <EmailSelectionUI {...props} />
+    <EmailSelectionUI
+      {...props}
+      oauthOptions={{
+        providers: [AuthProvider.GOOGLE],
+        redirectUrl: config?.oauthOptions?.redirectUrl || "",
+      }}
+    />
   );
 
   return {

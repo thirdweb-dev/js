@@ -44,6 +44,7 @@
     "expo-document-picker": "^11.2.2",
     "expo-file-system": "^15.2.2",
     "expo-secure-store": "^12.1.1",
+    "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-modal": "^13.0.1",
     "react-native-qrcode-svg": "6.2.0",
     "react-native-svg": "^13.9.0",
