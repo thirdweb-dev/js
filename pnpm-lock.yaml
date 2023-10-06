@@ -828,9 +828,6 @@ importers:
       expo-secure-store:
         specifier: ^12.1.1
         version: 12.1.1(expo@47.0.14)
-      react-native-inappbrowser-reborn:
-        specifier: ^3.7.0
-        version: 3.7.0(react-native@0.71.11)
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.71.11)(react@18.2.0)
@@ -859,6 +856,9 @@ importers:
       react-native-device-info:
         specifier: 10.6.0
         version: 10.6.0(react-native@0.71.11)
+      react-native-inappbrowser-reborn:
+        specifier: ^3.7.0
+        version: 3.7.0(react-native@0.71.11)
       react-native-quick-base64:
         specifier: ^2.0.7
         version: 2.0.7(react-native@0.71.11)(react@18.2.0)
@@ -26044,7 +26044,9 @@ packages:
   /opencollective-postinstall@2.0.3:
     resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
     hasBin: true
+    requiresBuild: true
     dev: false
+    optional: true
 
   /openid-client@5.4.0:
     resolution: {integrity: sha512-hgJa2aQKcM2hn3eyVtN12tEA45ECjTJPXCgUh5YzTzy9qwapCvmDTVPWOcWVL0d34zeQoQ/hbG9lJhl3AYxJlQ==}
@@ -28047,6 +28049,7 @@ packages:
       opencollective-postinstall: 2.0.3
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
     dev: false
+    optional: true
 
   /react-native-mmkv@2.4.3(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-0hYNOTbsjJ5j5cpX+qjwReGIxuYE9MWRsyPQ72fTOvzmEjYXCF4Wr2VQoqx8R6W1/Uinekvln7dGvJ4RExmHhQ==}
