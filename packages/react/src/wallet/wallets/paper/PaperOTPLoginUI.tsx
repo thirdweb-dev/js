@@ -240,7 +240,6 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 <Text size="sm" center color="danger">
                   Failed to send OTP
                 </Text>
-                <Spacer y="md" />
               </>
             )}
 

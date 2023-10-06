@@ -11,6 +11,7 @@ import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
   compactmodalMaxHeight,
+  modalCloseFadeOutDuration,
 } from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
 import { noScrollBar } from "./basic";
@@ -20,6 +21,7 @@ import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { DynamicHeight } from "./DynamicHeight";
+import { useEffect, useRef, useState } from "react";
 
 export const Modal: React.FC<{
   trigger?: React.ReactNode;
@@ -31,8 +33,39 @@ export const Modal: React.FC<{
   size: "wide" | "compact";
   hide?: boolean;
 }> = (props) => {
+  const [open, setOpen] = useState(props.open);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!props.open) {
+      if (contentRef.current) {
+        const animationConfig = {
+          duration: modalCloseFadeOutDuration,
+          fill: "forwards",
+          easing: "ease",
+        } as const;
+
+        contentRef.current.animate([{ opacity: 0 }], {
+          ...animationConfig,
+        }).onfinish = () => {
+          setOpen(false);
+        };
+
+        overlayRef.current?.animate([{ opacity: 0 }], {
+          ...animationConfig,
+          duration: modalCloseFadeOutDuration + 100,
+        });
+      } else {
+        setOpen(props.open);
+      }
+    } else {
+      setOpen(props.open);
+    }
+  }, [props.open]);
+
   return (
-    <Dialog.Root open={props.open} onOpenChange={props.setOpen}>
+    <Dialog.Root open={open} onOpenChange={props.setOpen}>
       {/* Trigger */}
       {props.trigger && (
         <Dialog.Trigger asChild>{props.trigger}</Dialog.Trigger>
@@ -43,12 +76,13 @@ export const Modal: React.FC<{
         {/* Overlay */}
         {!props.hide && (
           <Dialog.Overlay asChild>
-            <Overlay />
+            <Overlay ref={overlayRef} />
           </Dialog.Overlay>
         )}
 
         <Dialog.Content asChild>
           <DialogContent
+            ref={contentRef}
             style={
               props.hide
                 ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }

@@ -13,3 +13,5 @@ export const widemodalMaxHeight = "550px";
 export const compactmodalMaxHeight = "600px";
 
 export const defaultTheme = "dark";
+
+export const modalCloseFadeOutDuration = 250;

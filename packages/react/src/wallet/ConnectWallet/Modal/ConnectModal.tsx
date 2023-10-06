@@ -16,7 +16,11 @@ import {
   useSetIsWalletModalOpen,
 } from "../../../evm/providers/wallet-ui-states-provider";
 import { useCallback, useEffect, useContext, useState } from "react";
-import { reservedScreens, compactmodalMaxHeight } from "../constants";
+import {
+  reservedScreens,
+  compactmodalMaxHeight,
+  modalCloseFadeOutDuration,
+} from "../constants";
 import { HeadlessConnectUI } from "../../wallets/headlessConnectUI";
 import styled from "@emotion/styled";
 import { Container, noScrollBar } from "../../../components/basic";
@@ -53,7 +57,9 @@ export const ConnectModalContent = (props: {
   const authConfig = useThirdwebAuthContext();
 
   const closeModal = () => {
-    setScreen(initialScreen);
+    setTimeout(() => {
+      setScreen(initialScreen);
+    }, modalCloseFadeOutDuration + 100);
     setIsWalletModalOpen(false);
   };
 
@@ -67,8 +73,10 @@ export const ConnectModalContent = (props: {
       return;
     }
 
-    setScreen(initialScreen);
     setIsWalletModalOpen(false);
+    setTimeout(() => {
+      setScreen(initialScreen);
+    }, modalCloseFadeOutDuration + 100);
   }, [
     modalConfig.auth?.loginOptional,
     authConfig?.authUrl,
@@ -242,7 +250,9 @@ export const ConnectModal = () => {
 
           setIsWalletModalOpen(value);
           if (!value) {
-            setScreen(initialScreen); // reset screen
+            setTimeout(() => {
+              setScreen(initialScreen);
+            }, modalCloseFadeOutDuration + 100);
           }
           if (connectionStatus === "connecting" || requiresSignIn) {
             disconnect();

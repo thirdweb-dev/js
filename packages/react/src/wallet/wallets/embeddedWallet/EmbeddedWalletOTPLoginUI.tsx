@@ -178,7 +178,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                 <Text size="sm" center color="danger">
                   Failed to send OTP
                 </Text>
-                <Spacer y="md" />
               </>
             )}
 
