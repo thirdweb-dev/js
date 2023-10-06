@@ -42,6 +42,7 @@ type RenderChain = React.FC<{
 export type NetworkSelectorProps = {
   theme: "dark" | "light" | Theme;
   onClose?: () => void;
+  open: boolean;
   chains?: Chain[];
   popularChains?: Chain[];
   recentChains?: Chain[];
@@ -136,7 +137,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
     <CustomThemeProvider theme={theme}>
       <Modal
         size={"compact"}
-        open={true}
+        open={props.open}
         setOpen={(value) => {
           if (!value && onClose) {
             onClose();
