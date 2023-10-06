@@ -2,20 +2,14 @@ import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
 import { ModalDescription } from "../../../components/modalElements";
-import {
-  EyeClosedIcon,
-  EyeOpenIcon,
-  PinBottomIcon,
-  PlusIcon,
-} from "@radix-ui/react-icons";
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { ImportLocalWallet } from "./ImportLocalWallet";
 import { Container, Line, ModalHeader } from "../../../components/basic";
-import { TextDivider } from "../../../components/TextDivider";
 import { Spinner } from "../../../components/Spinner";
-import { iconSize, spacing } from "../../../design-system";
+import { spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
 import { wait } from "../../../utils/wait";
 
@@ -86,7 +80,7 @@ export const CreateLocalWallet_Password: React.FC<{
   };
 
   return (
-    <Container fullHeight>
+    <Container fullHeight flex="column">
       <Container p="lg">
         <ModalHeader
           onBack={props.renderBackButton ? props.goBack : undefined}
@@ -96,8 +90,7 @@ export const CreateLocalWallet_Password: React.FC<{
       </Container>
 
       <Line />
-
-      <Container p="lg">
+      <Container expand p="lg">
         <ModalDescription sm>
           Choose a password for your wallet. <br /> You{`'`}ll be able to access
           and export this wallet with the same password.
@@ -156,14 +149,16 @@ export const CreateLocalWallet_Password: React.FC<{
             value={confirmPassword}
             error={passwordMismatch ? "Passwords don't match" : ""}
             dataTest="confirm-password"
+            noErrorShift
           />
 
-          <Spacer y="lg" />
+          <Spacer y="md" />
 
           {/* Create */}
           <Button
             variant="accent"
             type="submit"
+            disabled={isConnecting}
             fullWidth
             style={{
               gap: spacing.xs,
@@ -173,26 +168,19 @@ export const CreateLocalWallet_Password: React.FC<{
             }}
             data-test="create-new-wallet-button"
           >
-            {!isConnecting && (
-              <PlusIcon width={iconSize.sm} height={iconSize.sm} />
-            )}
             {isConnecting ? "Connecting" : "Create new wallet"}
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
+      </Container>
 
-        <Spacer y="lg" />
-
-        <TextDivider>
-          <span>OR</span>
-        </TextDivider>
-
-        <Spacer y="lg" />
-
+      <Spacer y="sm" />
+      <Line />
+      <Container p="lg">
         {/* Import */}
         <Button
           fullWidth
-          variant="outline"
+          variant="link"
           onClick={() => {
             setShowImportScreen(true);
           }}
@@ -202,7 +190,6 @@ export const CreateLocalWallet_Password: React.FC<{
             alignItems: "center",
           }}
         >
-          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
           Import wallet
         </Button>
       </Container>

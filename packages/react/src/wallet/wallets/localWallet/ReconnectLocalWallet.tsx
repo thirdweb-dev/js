@@ -15,7 +15,6 @@ import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
-import { TextDivider } from "../../../components/TextDivider";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -124,7 +123,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   };
 
   return (
-    <Container animate="fadein">
+    <Container animate="fadein" flex="column" fullHeight>
       <Container p="lg">
         <ModalHeader
           onBack={props.renderBackButton ? props.goBack : undefined}
@@ -134,7 +133,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
       </Container>
       <Line />
 
-      <Container p="lg">
+      <Container p="lg" expand>
         <Text multiline size="lg" color="primaryText">
           Connect to saved wallet
         </Text>
@@ -204,17 +203,13 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
+      </Container>
 
-        <Spacer y="xl" />
-
-        <TextDivider>
-          <span> OR </span>
-        </TextDivider>
-
-        <Spacer y="xl" />
-
+      <Spacer y="sm" />
+      <Line />
+      <Container p="lg">
         <Button
-          variant="outline"
+          variant="link"
           fullWidth
           style={{
             textAlign: "center",
