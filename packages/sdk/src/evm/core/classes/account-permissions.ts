@@ -409,7 +409,7 @@ export class AccountPermissions implements DetectableFeature {
    *
    * @example
    * ```javascript
-   * const tx = await contract.account.updateAccess(signer, restrictions);
+   * const tx = await contract.account.updatePermissions(signer, permissions);
    * const receipt = tx.receipt();
    * ```
    *
