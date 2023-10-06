@@ -39,23 +39,20 @@ type WalletIdToWalletTypeMap = {
   walletConnectV1: WalletConnect;
 };
 
-type UseWalletsReturnType<T extends WalletId | undefined> = T extends WalletId
-  ? WalletIdToWalletTypeMap[T]
-  : WalletInstance;
-
 /**
  * @returns the current active wallet instance
  */
-export function useWallet<
-  Args extends [walletId: WalletId] | [walletId?: never],
->(...args: Args): UseWalletsReturnType<Args[0]> | undefined {
-  const walletId = args[0];
+export function useWallet<T extends WalletId>(
+  walletId: T,
+): WalletIdToWalletTypeMap[T] | undefined;
+export function useWallet(): WalletInstance | undefined;
+export function useWallet<T extends WalletId>(walletId?: T) {
   const context = useWalletContext();
-
   invariant(
     context,
     "useWallet() hook must be used within a <ThirdwebProvider/>",
   );
+
   const activeWallet = context.activeWallet;
 
   if (!activeWallet) {
@@ -65,13 +62,13 @@ export function useWallet<
   // if walletId is provided, return the wallet instance only if it matches the walletId
   if (walletId) {
     if (activeWallet.walletId === walletId) {
-      return activeWallet as UseWalletsReturnType<Args[0]>;
+      return activeWallet as WalletIdToWalletTypeMap[T];
     } else {
       return undefined;
     }
   }
 
-  return activeWallet as UseWalletsReturnType<Args[0]>;
+  return activeWallet;
 }
 
 /**
