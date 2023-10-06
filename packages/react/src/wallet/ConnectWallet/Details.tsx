@@ -72,7 +72,10 @@ export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
   style?: React.CSSProperties;
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  networkSelector?: Omit<
+    NetworkSelectorProps,
+    "theme" | "onClose" | "chains" | "open"
+  >;
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;

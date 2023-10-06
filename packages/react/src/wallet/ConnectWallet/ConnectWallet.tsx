@@ -71,7 +71,10 @@ export type ConnectWalletProps = {
 
   style?: React.CSSProperties;
 
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  networkSelector?: Omit<
+    NetworkSelectorProps,
+    "theme" | "onClose" | "chains" | "open"
+  >;
 
   /**
    * Hide option to request testnet funds for testnets in dropdown
