@@ -300,10 +300,21 @@ class ThirdwebBridge implements TWBridge {
         const embeddedWallet = walletInstance as EmbeddedWallet;
 
         if (useGoogle?.toLowerCase() === "true") {
-          console.log("Using Google OAuth");
+          const googleWindow = window.open(
+            "",
+            "Login",
+            "width=500,height=600,menubar=no,toolbar=no,location=no",
+          );
+          if (!googleWindow) {
+            throw new Error("Failed to open google login window");
+          }
           await embeddedWallet.connect({
             chainId: chainIdNumber,
             loginType: "headless_google_oauth",
+            openedWindow: googleWindow,
+            closeOpenedWindow: (openedWindow) => {
+              openedWindow.close();
+            },
           });
         } else {
           if (!email) {
