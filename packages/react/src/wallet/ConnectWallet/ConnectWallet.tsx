@@ -195,20 +195,23 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 
   return (
     <CustomThemeProvider theme={theme}>
-      {showSignatureModal && (
-        <Modal
-          size="compact"
-          open={true}
-          setOpen={(value) => {
-            if (!value) {
-              disconnect();
-              setShowSignatureModal(false);
-            }
-          }}
-        >
-          <SignatureScreen onDone={() => setShowSignatureModal(false)} />
-        </Modal>
-      )}
+      <Modal
+        size="compact"
+        open={showSignatureModal}
+        setOpen={(value) => {
+          if (!value) {
+            disconnect();
+            setShowSignatureModal(false);
+          }
+        }}
+      >
+        <SignatureScreen
+          modalSize="compact"
+          termsOfServiceUrl={props.termsOfServiceUrl}
+          privacyPolicyUrl={props.privacyPolicyUrl}
+          onDone={() => setShowSignatureModal(false)}
+        />
+      </Modal>
 
       {(() => {
         // wallet is not connected

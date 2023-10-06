@@ -140,7 +140,12 @@ export const ConnectModalContent = (props: {
           <LeftContainer> {walletList} </LeftContainer>
           <Container flex="column" scrollY relative>
             {screen === reservedScreens.signIn && (
-              <SignatureScreen onDone={closeModal} />
+              <SignatureScreen
+                onDone={closeModal}
+                modalSize={modalSize}
+                termsOfServiceUrl={modalConfig.termsOfServiceUrl}
+                privacyPolicyUrl={modalConfig.privacyPolicyUrl}
+              />
             )}
             {screen === reservedScreens.main && <>{getStarted}</>}
             {screen === reservedScreens.getStarted && getStarted}
@@ -157,7 +162,12 @@ export const ConnectModalContent = (props: {
           }}
         >
           {screen === reservedScreens.signIn && (
-            <SignatureScreen onDone={closeModal} />
+            <SignatureScreen
+              onDone={closeModal}
+              modalSize={modalSize}
+              termsOfServiceUrl={modalConfig.termsOfServiceUrl}
+              privacyPolicyUrl={modalConfig.privacyPolicyUrl}
+            />
           )}
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}

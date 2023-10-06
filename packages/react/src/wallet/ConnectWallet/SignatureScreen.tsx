@@ -22,11 +22,13 @@ import { safeChainIdToSlug } from "../wallets/safe/safeChainSlug";
 import { TOS } from "./Modal/TOS";
 import { keyframes } from "@emotion/react";
 
-export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
-  onDone,
-}) => {
+export const SignatureScreen: React.FC<{
+  onDone: () => void;
+  modalSize: "compact" | "wide";
+  termsOfServiceUrl?: string;
+  privacyPolicyUrl?: string;
+}> = ({ onDone, modalSize, termsOfServiceUrl, privacyPolicyUrl }) => {
   const walletConfig = useWalletConfig();
-  const modalConfig = useContext(ModalConfigCtx);
   const wallet = useWallet();
   const { auth } = useContext(ModalConfigCtx);
   const [status, setStatus] = useState<"signing" | "failed" | "idle">("idle");
@@ -71,7 +73,7 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
           minHeight: "250px",
         }}
         flex="column"
-        px={modalConfig.modalSize === "compact" ? "lg" : "xxl"}
+        px={modalSize === "compact" ? "lg" : "xxl"}
         py="lg"
         center="y"
         expand
@@ -184,11 +186,11 @@ export const SignatureScreen: React.FC<{ onDone: () => void }> = ({
         )}
       </Container>
 
-      {(modalConfig.termsOfServiceUrl || modalConfig.privacyPolicyUrl) && (
+      {(termsOfServiceUrl || privacyPolicyUrl) && (
         <Container p="md" animate="fadein">
           <TOS
-            termsOfServiceUrl={modalConfig.termsOfServiceUrl}
-            privacyPolicyUrl={modalConfig.privacyPolicyUrl}
+            termsOfServiceUrl={termsOfServiceUrl}
+            privacyPolicyUrl={privacyPolicyUrl}
           />
         </Container>
       )}
