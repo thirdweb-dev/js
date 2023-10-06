@@ -55,7 +55,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     },
   };
 
-  static id = walletIds.metamask;
+  static id = walletIds.metamask as string;
 
   public get walletName() {
     return "MetaMask" as const;

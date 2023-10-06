@@ -1,5 +1,18 @@
 # @thirdweb-dev/react
 
+## 3.16.4
+
+### Patch Changes
+
+- [#1713](https://github.com/thirdweb-dev/js/pull/1713) [`46672a49`](https://github.com/thirdweb-dev/js/commit/46672a490a82924e3c4a003419e3eaad10d6dd8b) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update upsell link
+
+- [#1717](https://github.com/thirdweb-dev/js/pull/1717) [`ffb1bb0a`](https://github.com/thirdweb-dev/js/commit/ffb1bb0a603a69c22eb8b6429326c23a2977e5a6) Thanks [@MananTank](https://github.com/MananTank)! - Add spinner in the Google Sign in popup instead of blank page
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d), [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c), [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/react-core@3.16.4
+  - @thirdweb-dev/sdk@3.10.66
+
 ## 3.16.3
 
 ### Patch Changes

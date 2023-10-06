@@ -32,7 +32,7 @@ export class LocalWallet extends AbstractClientWallet<
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
-  static id = walletIds.localWallet;
+  static id = walletIds.localWallet as string;
 
   static meta = {
     name: "Local Wallet",

@@ -4,7 +4,7 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 export class InjectedWallet extends AbstractClientWallet {
   connector?: Connector;
 
-  static id = "injected" as const;
+  static id = "injected" as string;
   public get walletName() {
     return "Injected Wallet";
   }

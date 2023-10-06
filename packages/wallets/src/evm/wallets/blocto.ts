@@ -12,7 +12,7 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
   connector?: Connector;
   name: string = "Blocto";
 
-  static id = walletIds.blocto;
+  static id = walletIds.blocto as string;
   static meta: WalletMeta = {
     name: "Blocto",
     iconURL:
