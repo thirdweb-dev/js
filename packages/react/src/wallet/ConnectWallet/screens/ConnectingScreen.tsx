@@ -28,8 +28,6 @@ export const ConnectingScreen: React.FC<{
         />
       </Container>
 
-      <Spacer y="lg" />
-
       <Container flex="column" center="both" expand p="lg" relative>
         <WalletLogoSpinner
           error={props.errorConnecting}
@@ -44,10 +42,12 @@ export const ConnectingScreen: React.FC<{
           }}
         >
           <Text center color="primaryText" size="lg" weight={600}>
-            {props.errorConnecting ? "Connection Failed" : "Connecting"}
+            {props.errorConnecting
+              ? "Connection Failed"
+              : "Awaiting Confirmation"}
           </Text>
 
-          <Spacer y="lg" />
+          <Spacer y="md" />
 
           {!props.errorConnecting ? (
             <Text
@@ -77,7 +77,6 @@ export const ConnectingScreen: React.FC<{
         </Container>
       </Container>
 
-      <Spacer y="lg" />
       {modalConfig.modalSize === "compact" && <Line />}
 
       <Container flex="row" center="x" p="lg">

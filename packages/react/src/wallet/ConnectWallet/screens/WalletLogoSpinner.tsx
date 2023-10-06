@@ -111,7 +111,7 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   }
 
   [data-blocker] {
-    padding: 6px;
+    padding: 4px;
     background: ${(p) => p.theme.colors.modalBg};
     position: relative;
     z-index: 1;

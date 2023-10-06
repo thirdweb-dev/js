@@ -6,7 +6,7 @@ import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider
 import { TOS } from "../Modal/TOS";
 import { GlobeIcon } from "../icons/GlobalIcon";
 import styled from "@emotion/styled";
-import { Theme, spacing } from "../../../design-system";
+import { Theme } from "../../../design-system";
 import { keyframes } from "@emotion/react";
 import { Img } from "../../../components/Img";
 
@@ -81,15 +81,13 @@ export function StartScreen() {
       </Container>
 
       <Container px="xl">
-        <LinkContainer data-seperator={!!showTOS}>
-          <Link
-            target="_blank"
-            center
-            href="https://blog.thirdweb.com/web3-wallet/"
-          >
-            New to wallets?
-          </Link>
-        </LinkContainer>
+        <Link
+          target="_blank"
+          center
+          href="https://blog.thirdweb.com/web3-wallet/"
+        >
+          New to wallets?
+        </Link>
       </Container>
 
       {showTOS && (
@@ -103,17 +101,6 @@ export function StartScreen() {
     </Container>
   );
 }
-
-const LinkContainer = styled.div<{ theme?: Theme }>`
-  &[data-seperator="true"] {
-    padding-bottom: ${spacing.lg};
-    border-bottom: 1px solid ${(p) => p.theme.colors.separatorLine};
-  }
-
-  &[data-seperator="false"] {
-    padding: ${spacing.lg};
-  }
-`;
 
 const floatingAnimation = keyframes`
   from {

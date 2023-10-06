@@ -23,12 +23,7 @@ import { SafeSupportedChainsSet } from "@thirdweb-dev/wallets";
 import { utils } from "ethers";
 import { useContext, useState } from "react";
 import { SafeWalletConfig } from "./types";
-import {
-  Container,
-  Line,
-  ModalHeader,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { safeSlugToChainId } from "./safeChainSlug";
@@ -311,74 +306,67 @@ export const SelectAccount: React.FC<{
           )}
         </Container>
 
-        <ScreenBottomContainer
+        <Container
+          p="lg"
+          flex="row"
           style={{
-            borderTop: modalConfig.modalSize === "wide" ? "none" : undefined,
+            paddingTop: 0,
+            justifyContent: "flex-end",
           }}
         >
-          <div>
-            <div
+          {mismatch ? (
+            <Button
+              type="button"
+              variant="primary"
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: spacing.sm,
+                width: modalConfig.modalSize === "compact" ? "100%" : undefined,
+              }}
+              onClick={async () => {
+                if (!activeWallet) {
+                  throw new Error("No active wallet");
+                }
+                setSafeConnectError(false);
+                setSwitchError(false);
+                setSwitchingNetwork(true);
+                try {
+                  await switchChain(safeChainId);
+                } catch (e) {
+                  setSwitchError(true);
+                } finally {
+                  setSwitchingNetwork(false);
+                }
               }}
             >
-              {mismatch ? (
-                <Button
-                  type="button"
-                  variant="primary"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: spacing.sm,
-                    width:
-                      modalConfig.modalSize === "compact" ? "100%" : undefined,
-                  }}
-                  onClick={async () => {
-                    if (!activeWallet) {
-                      throw new Error("No active wallet");
-                    }
-                    setSafeConnectError(false);
-                    setSwitchError(false);
-                    setSwitchingNetwork(true);
-                    try {
-                      await switchChain(safeChainId);
-                    } catch (e) {
-                      setSwitchError(true);
-                    } finally {
-                      setSwitchingNetwork(false);
-                    }
-                  }}
-                >
-                  {" "}
-                  {switchingNetwork ? "Switching" : "Switch Network"}
-                  {switchingNetwork && (
-                    <Spinner size="sm" color="primaryButtonText" />
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  variant="accent"
-                  type="submit"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: spacing.sm,
-                    width:
-                      modalConfig.modalSize === "compact" ? "100%" : undefined,
-                  }}
-                >
-                  {connectionStatus === "connecting"
-                    ? "Connecting"
-                    : "Connect to Safe"}
-                  {connectionStatus === "connecting" && (
-                    <Spinner size="sm" color="accentButtonText" />
-                  )}
-                </Button>
+              {" "}
+              {switchingNetwork ? "Switching" : "Switch Network"}
+              {switchingNetwork && (
+                <Spinner size="sm" color="primaryButtonText" />
               )}
-            </div>
-          </div>
-        </ScreenBottomContainer>
+            </Button>
+          ) : (
+            <Button
+              variant="accent"
+              type="submit"
+              disabled={connectionStatus === "connecting"}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: spacing.sm,
+                width: modalConfig.modalSize === "compact" ? "100%" : undefined,
+              }}
+            >
+              {connectionStatus === "connecting"
+                ? "Connecting"
+                : "Connect to Safe"}
+              {connectionStatus === "connecting" && (
+                <Spinner size="sm" color="accentButtonText" />
+              )}
+            </Button>
+          )}
+        </Container>
       </form>
     </Container>
   );
