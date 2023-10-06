@@ -91,9 +91,9 @@ export const CreateLocalWallet_Password: React.FC<{
 
       <Line />
       <Container expand p="lg">
-        <ModalDescription sm>
-          Choose a password for your wallet. <br /> You{`'`}ll be able to access
-          and export this wallet with the same password.
+        <ModalDescription>
+          Choose a password for your wallet <br /> You{`'`}ll be able to access
+          and export this wallet with the same password
         </ModalDescription>
 
         <Spacer y="lg" />

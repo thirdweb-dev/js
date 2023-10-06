@@ -15,3 +15,7 @@ export const compactmodalMaxHeight = "600px";
 export const defaultTheme = "dark";
 
 export const modalCloseFadeOutDuration = 250;
+
+export function onModalUnmount(cb: () => void) {
+  setTimeout(cb, modalCloseFadeOutDuration + 100);
+}

@@ -80,8 +80,9 @@ export const SignatureScreen: React.FC<{
       >
         {status === "idle" ? (
           <>
+            <Spacer y="sm" />
             {walletConfig && (
-              <Container flex="row" center="x">
+              <Container flex="row" center="x" animate="fadein">
                 <PulsatingContainer>
                   <Img
                     src={walletConfig.meta.iconURL}

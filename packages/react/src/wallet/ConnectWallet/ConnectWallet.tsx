@@ -27,7 +27,7 @@ import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
 import type { NetworkSelectorProps } from "./NetworkSelector";
-import { defaultModalTitle } from "./constants";
+import { defaultModalTitle, onModalUnmount } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
@@ -200,8 +200,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
         open={showSignatureModal}
         setOpen={(value) => {
           if (!value) {
-            disconnect();
             setShowSignatureModal(false);
+            onModalUnmount(() => {
+              disconnect();
+            });
           }
         }}
       >

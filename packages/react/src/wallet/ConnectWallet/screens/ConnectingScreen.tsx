@@ -29,11 +29,13 @@ export const ConnectingScreen: React.FC<{
       </Container>
 
       <Container flex="column" center="both" expand p="lg" relative>
+        <Spacer y="sm" />
         <WalletLogoSpinner
           error={props.errorConnecting}
           iconUrl={props.walletIconURL}
         />
         <Spacer y="xxl" />
+        <Spacer y="sm" />
 
         <Container
           animate="fadein"
