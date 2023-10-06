@@ -66,7 +66,7 @@ export const ImportLocalWallet: React.FC<{
   };
 
   return (
-    <Container>
+    <Container animate="fadein">
       <Container p="lg">
         <ModalHeader
           onBack={props.goBack}

@@ -80,7 +80,7 @@ export const CreateLocalWallet_Password: React.FC<{
   };
 
   return (
-    <Container fullHeight flex="column">
+    <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
         <ModalHeader
           onBack={props.renderBackButton ? props.goBack : undefined}

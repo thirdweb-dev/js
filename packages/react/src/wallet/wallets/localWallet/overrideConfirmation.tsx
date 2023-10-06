@@ -15,7 +15,7 @@ export const OverrideConfirmation: React.FC<{
 }> = (props) => {
   const isCompact = useContext(ModalConfigCtx).modalSize === "compact";
   return (
-    <Container fullHeight flex="column">
+    <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title="Warning" />
       </Container>
