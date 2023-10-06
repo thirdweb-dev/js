@@ -19,6 +19,9 @@ import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
+import { InAppBrowser } from "react-native-inappbrowser-reborn";
+import { OauthOption } from "../types";
+import { ROUTE_HEADLESS_GOOGLE_LOGIN_REDIRECT } from "./helpers/constants";
 
 export async function sendEmailOTP(
   email: string,
@@ -119,6 +122,68 @@ export async function validateEmailOTP({
       `Malformed response from the verify one time password: ${JSON.stringify(
         e,
       )}`,
+    );
+  }
+}
+
+export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
+  const completeLoginUrl = `${ROUTE_HEADLESS_GOOGLE_LOGIN_REDIRECT}?developerClientId=${encodeURIComponent(
+    clientId || "",
+  )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
+    oauthOptions.redirectUrl,
+  )}`;
+
+  // const res = await fetch(completeLoginUrl);
+  // if (!res.ok) {
+  //   throw new Error('Error fetching login link');
+  // }
+  // const {googleLoginLink} = await res.json();
+  const result = await InAppBrowser.openAuth(
+    completeLoginUrl,
+    oauthOptions.redirectUrl,
+    {
+      // iOS Properties
+      ephemeralWebSession: false,
+      // Android Properties
+      showTitle: false,
+      enableUrlBarHiding: false,
+      enableDefaultShare: false,
+    },
+  );
+
+  if (result.type !== "success") {
+    throw new Error("Error signing in. Please try again later.");
+  }
+
+  const decodedUrl = decodeURIComponent(result.url);
+
+  const parts = decodedUrl.split("?authResult=");
+  if (parts.length < 2) {
+    throw new Error("Malformed response from the login redirect");
+  }
+
+  const authResult = parts[1];
+
+  const { storedToken } = JSON.parse(authResult);
+
+  try {
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: storedToken.jwtToken,
+      authDetails: storedToken.authDetails,
+      authProvider: storedToken.authProvider,
+      developerClientId: storedToken.developerClientId,
+      cookieString: storedToken.cookieString,
+      // we should always store the jwt cookie since there's no concept of cookie in react native
+      shouldStoreCookieString: true,
+      isNewUser: storedToken.isNewUser,
+    };
+
+    await postPaperAuth(toStoreToken, clientId);
+
+    return { storedToken };
+  } catch (e) {
+    throw new Error(
+      `Malformed response from post authentication: ${JSON.stringify(e)}`,
     );
   }
 }

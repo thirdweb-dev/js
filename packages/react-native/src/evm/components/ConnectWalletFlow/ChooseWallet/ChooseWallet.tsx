@@ -261,9 +261,7 @@ export function ChooseWallet({
       ) : null}
       {showToSPrivacyPolicy ? (
         <Box
-          mt="md"
-          pt="md"
-          height={50}
+          mt="sm"
           marginHorizontal={!isConnectAWalletEnabled ? "xl" : "none"}
           alignItems="center"
         >

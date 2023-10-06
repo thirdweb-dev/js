@@ -10,14 +10,17 @@ import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
+import { GOOGLE_ICON } from "../../../assets/svgs";
+import { WalletButton } from "../../../components/base/WalletButton";
+import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
+import { OauthOptions } from "../../connectors/embedded-wallet/types";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
-export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
-  onSelect,
-  walletConfig,
-}) => {
+export const EmailSelectionUI: React.FC<
+  SelectUIProps<EmbeddedWallet> & { oauthOptions?: OauthOptions }
+> = ({ onSelect, walletConfig, oauthOptions }) => {
   const theme = useAppTheme();
   const [email, setEmail] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -65,8 +68,48 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
     }
   };
 
+  const onGoogleSignInPress = () => {
+    onSelect({
+      email,
+      emailWallet,
+      oauthOptions: {
+        provider: oauthOptions?.providers[0],
+        redirectUrl: oauthOptions?.redirectUrl,
+      },
+    });
+  };
+
   return (
     <Box paddingHorizontal="xl" mt="lg">
+      {oauthOptions?.providers.includes(AuthProvider.GOOGLE) ? (
+        <Box justifyContent="center">
+          <WalletButton
+            iconHeight={28}
+            iconWidth={28}
+            borderRadius="lg"
+            borderWidth={1}
+            borderColor="backgroundHighlight"
+            backgroundColor="backgroundHighlight"
+            justifyContent="center"
+            name="Sign in with Google"
+            walletIconUrl={GOOGLE_ICON}
+            onPress={onGoogleSignInPress}
+          />
+          <Box
+            mb="md"
+            mt="md"
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box height={1} flex={1} backgroundColor="border" />
+            <Text variant="subHeader" textAlign="center" marginHorizontal="xxs">
+              OR
+            </Text>
+            <Box height={1} flex={1} backgroundColor="border" />
+          </Box>
+        </Box>
+      ) : null}
       <TextInput
         textInputProps={{
           placeholder: "Enter your email address",
