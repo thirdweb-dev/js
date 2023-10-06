@@ -5,7 +5,7 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 export class FrameWallet extends AbstractClientWallet {
   connector?: Connector;
 
-  static id = walletIds.frame;
+  static id = walletIds.frame as string;
   public get walletName() {
     return "Frame Wallet";
   }

@@ -205,7 +205,10 @@ export {
 // account
 export {
   useAccountSigners,
-  useSetAccountSigners,
+  useAddAdmin,
+  useRemoveAdmin,
+  useCreateSessionKey,
+  useRevokeSessionKey,
   useAccountAdmins,
   useAccountAdminsAndSigners,
 } from "./hooks/async/account";

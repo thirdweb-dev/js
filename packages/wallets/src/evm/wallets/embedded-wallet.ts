@@ -18,7 +18,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
 > {
   connector?: Connector;
 
-  static id = walletIds.embeddedWallet;
+  static id = walletIds.embeddedWallet as string;
 
   static meta = {
     name: "Embedded Wallet",
