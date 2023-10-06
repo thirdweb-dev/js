@@ -14,6 +14,8 @@ import invariant from "tiny-invariant";
 import { ContractCard } from "components/explore/contract-card";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
 import { FactoryContracts } from "components/contract-components/tables/factory-contracts";
+import { NextSeo } from "next-seo";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
@@ -77,8 +79,30 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
     );
   }, [apiKeys, account]);
 
+  const seo = {
+    title: "The Complete Account Abstraction Toolkit | thirdweb",
+    desc: "Add smart wallets to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
+  };
+
   return (
     <Flex flexDir="column" gap={10} mt={{ base: 2, md: 6 }}>
+      <NextSeo
+        title={seo.title}
+        description={seo.desc}
+        openGraph={{
+          title: seo.title,
+          description: seo.desc,
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/dashboard-wallets-smart-wallet.png`,
+              width: 1200,
+              height: 630,
+              alt: seo.title,
+            },
+          ],
+        }}
+      />
+
       {address && hasSmartWalletsWithoutBilling && <SmartWalletsBillingAlert />}
 
       <Flex flexDir="column" gap={4}>
