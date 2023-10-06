@@ -69,6 +69,7 @@ export async function sendEmailOTP(
       };
 }
 
+// testing
 export async function validateEmailOTP({
   clientId,
   otp,
