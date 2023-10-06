@@ -1,5 +1,56 @@
 # @thirdweb-dev/react-core
 
+## 3.16.4
+
+### Patch Changes
+
+- [#1719](https://github.com/thirdweb-dev/js/pull/1719) [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d) Thanks [@MananTank](https://github.com/MananTank)! - Type refactor for useWallet hook
+
+- [#1716](https://github.com/thirdweb-dev/js/pull/1716) [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better `useWallet()` API to obtain specific wallet instances.
+
+  ```
+  const smartWallet = useWallet("smartWallet"); // returns a SmartWallet instance
+  const embeddedWallet = useWallet("embeddedWallet"); // returns a EmbeddedWallet instance
+  ```
+
+- [#1712](https://github.com/thirdweb-dev/js/pull/1712) [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add `useCreateSessionKey` and `useRevokeSessionKey` hooks
+
+  ```
+  const Component = () => {
+      const {
+        mutate: createSessionKey,
+        isLoading,
+        error,
+      } = useCreateSessionKey();
+
+      if (error) {
+        console.error("failed to create session key", error);
+      }
+
+      return (
+        <button
+          disabled={isLoading}
+          onClick={() => createSessionKey(
+            "0x...",
+            {
+              approvedCallTargets: ["0x..."], // the addresses of contracts that the session key can call
+              nativeTokenLimitPerTransaction: 0.1, // the maximum amount of native token (in ETH) that the session key can spend per transaction
+              startDate: new Date(), // the date when the session key becomes active
+              expirationDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // the date when the session key expires
+            }
+           )}
+        >
+          Create Session Key
+        </button>
+      );
+  };
+  ```
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/sdk@3.10.66
+  - @thirdweb-dev/auth@3.2.47
+
 ## 3.16.3
 
 ### Patch Changes

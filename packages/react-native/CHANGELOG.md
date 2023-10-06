@@ -1,5 +1,18 @@
 # @thirdweb-dev/react-native
 
+## 0.3.3
+
+### Patch Changes
+
+- [#1715](https://github.com/thirdweb-dev/js/pull/1715) [`f5caf6a3`](https://github.com/thirdweb-dev/js/commit/f5caf6a3502905666ae57f3304bb9074e09c9366) Thanks [@iketw](https://github.com/iketw)! - Fix encryption/decryption bug in embeddedWallet for React Native
+
+- [#1709](https://github.com/thirdweb-dev/js/pull/1709) [`6f4c5cd7`](https://github.com/thirdweb-dev/js/commit/6f4c5cd746caf07f057e272aec9f204ba5905cd3) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(react-native): update iteration count for embedded-wallet for better speed and future updates
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d), [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c), [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/react-core@3.16.4
+  - @thirdweb-dev/sdk@3.10.66
+
 ## 0.3.2
 
 ### Patch Changes
