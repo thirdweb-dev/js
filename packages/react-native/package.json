@@ -44,7 +44,6 @@
     "expo-document-picker": "^11.2.2",
     "expo-file-system": "^15.2.2",
     "expo-secure-store": "^12.1.1",
-    "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-modal": "^13.0.1",
     "react-native-qrcode-svg": "6.2.0",
     "react-native-svg": "^13.9.0",
@@ -90,7 +89,8 @@
     "amazon-cognito-identity-js": "^6.3.3",
     "react-native-quick-base64": "^2.0.7",
     "react-native-quick-crypto": "^0.6.1",
-    "react-native-aes-gcm-crypto": "^0.2.2"
+    "react-native-aes-gcm-crypto": "^0.2.2",
+    "react-native-inappbrowser-reborn": "^3.7.0"
   },
   "peerDependencies": {
     "ethers": ">=5.5.1 <6",
