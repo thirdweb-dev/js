@@ -85,7 +85,6 @@ export const CreateLocalWallet_Password: React.FC<{
         <ModalHeader
           onBack={props.renderBackButton ? props.goBack : undefined}
           title={props.localWalletConf.meta.name}
-          imgSrc={props.localWalletConf.meta.iconURL}
         />
       </Container>
 

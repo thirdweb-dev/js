@@ -21,7 +21,7 @@ export const ImportLocalWallet: React.FC<{
   persist: boolean;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet, meta } = useLocalWalletInfo(
+  const { setLocalWallet } = useLocalWalletInfo(
     props.localWalletConf,
     props.persist,
   );
@@ -68,11 +68,7 @@ export const ImportLocalWallet: React.FC<{
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader
-          onBack={props.goBack}
-          title="Import Wallet"
-          imgSrc={meta.iconURL}
-        />
+        <ModalHeader onBack={props.goBack} title="Import Wallet" />
       </Container>
       <Line />
 

@@ -128,7 +128,6 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
         <ModalHeader
           onBack={props.renderBackButton ? props.goBack : undefined}
           title={meta.name}
-          imgSrc={meta.iconURL}
         />
       </Container>
       <Line />
