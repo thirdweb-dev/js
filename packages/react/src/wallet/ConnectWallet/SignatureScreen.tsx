@@ -1,26 +1,35 @@
 import {
+  WalletInstance,
   useAddress,
   useChainId,
   useLogin,
   useWallet,
   useWalletConfig,
+  useWalletContext,
 } from "@thirdweb-dev/react-core";
 import { Spacer } from "../../components/Spacer";
 import { Container, ModalHeader } from "../../components/basic";
 import { Text } from "../../components/text";
 import { WalletLogoSpinner } from "./screens/WalletLogoSpinner";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ModalConfigCtx } from "../../evm/providers/wallet-ui-states-provider";
 import { wait } from "../../utils/wait";
 import { Button } from "../../components/buttons";
 import { Theme, iconSize, radius, spacing } from "../../design-system";
-import { ExternalLinkIcon, ReloadIcon } from "@radix-ui/react-icons";
+import {
+  CrossCircledIcon,
+  ExternalLinkIcon,
+  ReloadIcon,
+} from "@radix-ui/react-icons";
 import { Img } from "../../components/Img";
 import styled from "@emotion/styled";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { safeChainIdToSlug } from "../wallets/safe/safeChainSlug";
 import { TOS } from "./Modal/TOS";
 import { keyframes } from "@emotion/react";
+import { Spinner } from "../../components/Spinner";
+
+type Status = "signing" | "failed" | "idle";
 
 export const SignatureScreen: React.FC<{
   onDone: () => void;
@@ -31,11 +40,12 @@ export const SignatureScreen: React.FC<{
   const walletConfig = useWalletConfig();
   const wallet = useWallet();
   const { auth } = useContext(ModalConfigCtx);
-  const [status, setStatus] = useState<"signing" | "failed" | "idle">("idle");
+  const [status, setStatus] = useState<Status>("idle");
   const { login } = useLogin();
   const [tryId, setTryId] = useState(0);
 
   const isSafeWallet = wallet?.walletId === walletIds.safe;
+
   const chainId = useChainId();
 
   const address = useAddress();
@@ -56,6 +66,10 @@ export const SignatureScreen: React.FC<{
       console.error("failed to log in", err);
     }
   }, [auth, login, onDone]);
+
+  if (walletConfig?.isHeadless) {
+    return <HeadlessSignIn signIn={signIn} status={status} />;
+  }
 
   const handleRetry = () => {
     signIn();
@@ -133,8 +147,13 @@ export const SignatureScreen: React.FC<{
               </Text>
 
               <Text center multiline>
-                Sign the signature request <br /> in your wallet{" "}
-                {isSafeWallet && <>& approve transaction</>}
+                {isSafeWallet ? (
+                  <SafeWalletInstruction />
+                ) : (
+                  <>
+                    Sign the signature request <br /> in your wallet
+                  </>
+                )}
               </Text>
 
               {isSafeWallet && status === "signing" && (
@@ -198,6 +217,75 @@ export const SignatureScreen: React.FC<{
     </Container>
   );
 };
+
+function SafeWalletInstruction() {
+  const { getWalletConfig } = useWalletContext();
+  const wallet = useWallet();
+  const personalWallet = wallet?.getPersonalWallet() as
+    | WalletInstance
+    | undefined;
+  const isSafePersonalWalletHeadless =
+    personalWallet && getWalletConfig(personalWallet)?.isHeadless;
+
+  return (
+    <>
+      {isSafePersonalWalletHeadless ? (
+        <>Approve transaction in Safe</>
+      ) : (
+        <>
+          Sign signature request in your wallet <br /> & approve transaction in
+          Safe
+        </>
+      )}
+    </>
+  );
+}
+
+function HeadlessSignIn({
+  signIn,
+  status,
+}: {
+  signIn: () => void;
+  status: Status;
+}) {
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (mounted.current) {
+      return;
+    }
+    mounted.current = true;
+    signIn();
+  }, [signIn]);
+
+  return (
+    <Container p="lg" fullHeight flex="column" animate="fadein">
+      <ModalHeader title="Signing in" />
+      <Container
+        expand
+        flex="row"
+        center="both"
+        style={{
+          minHeight: "250px",
+        }}
+      >
+        {status === "failed" ? (
+          <Container
+            flex="column"
+            gap="lg"
+            color="danger"
+            center="both"
+            animate="fadein"
+          >
+            <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+            <Text color="danger"> Failed to Sign in </Text>
+          </Container>
+        ) : (
+          <Spinner size="xl" color="accentText" />
+        )}
+      </Container>
+    </Container>
+  );
+}
 
 const plusAnimation = keyframes`
 0% {

@@ -43,6 +43,7 @@ export const HeadlessConnectUI = ({
       style={{
         minHeight: "250px",
       }}
+      p="lg"
     >
       <Spinner size="lg" color="accentText" />
     </Container>
