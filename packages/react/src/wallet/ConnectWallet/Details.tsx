@@ -561,9 +561,6 @@ export const ConnectedWalletDetails: React.FC<{
         <ExportLocalWallet
           modalSize="compact"
           localWalletConfig={activeWalletConfig as LocalWalletConfig}
-          onBack={() => {
-            setShowExportModal(false);
-          }}
           onExport={() => {
             setShowExportModal(false);
           }}

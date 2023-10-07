@@ -30,7 +30,7 @@ import {
 import type { LocalWalletConfig } from "./types";
 
 export const ExportLocalWallet: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
