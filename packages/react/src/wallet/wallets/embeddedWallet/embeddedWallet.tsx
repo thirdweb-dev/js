@@ -24,6 +24,7 @@ export const embeddedWallet = (
 ): WalletConfig<EmbeddedWallet> => {
   return {
     category: "socialLogin",
+    isHeadless: true,
     id: EmbeddedWallet.id,
     recommended: config?.recommended,
     meta: {

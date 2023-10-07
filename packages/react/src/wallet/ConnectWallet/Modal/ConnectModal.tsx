@@ -63,20 +63,26 @@ export const ConnectModalContent = (props: {
     });
   };
 
+  const { setHideModal } = props;
   const handleConnected = useCallback(() => {
     const requiresSignIn = modalConfig.auth?.loginOptional
       ? false
       : !!authConfig?.authUrl && !user?.address;
 
+    setHideModal(false);
+
+    // show sign in screen if required
     if (requiresSignIn) {
       setScreen(reservedScreens.signIn);
-      return;
     }
 
-    setIsWalletModalOpen(false);
-    onModalUnmount(() => {
-      setScreen(initialScreen);
-    });
+    // close modal and reset screen
+    else {
+      setIsWalletModalOpen(false);
+      onModalUnmount(() => {
+        setScreen(initialScreen);
+      });
+    }
   }, [
     modalConfig.auth?.loginOptional,
     authConfig?.authUrl,
@@ -84,6 +90,7 @@ export const ConnectModalContent = (props: {
     setIsWalletModalOpen,
     setScreen,
     initialScreen,
+    setHideModal,
   ]);
 
   const handleBack = useCallback(() => {

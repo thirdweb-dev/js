@@ -22,6 +22,7 @@ export const paperWallet = (
 
   return {
     category: "socialLogin",
+    isHeadless: true,
     id: PaperWallet.id,
     recommended: config?.recommended,
     meta: {

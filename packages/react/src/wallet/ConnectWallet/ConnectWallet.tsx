@@ -1,9 +1,4 @@
-import {
-  Theme,
-  ThemeObjectOrType,
-  iconSize,
-  spacing,
-} from "../../design-system";
+import { Theme, ThemeObjectOrType, iconSize } from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
   useAddress,
@@ -35,7 +30,6 @@ import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
 import { SupportedTokens, defaultTokens } from "./defaultTokens";
 import { Container } from "../../components/basic";
-import { shortenAddress } from "../../evm/utils/addresses";
 import { LockIcon } from "./icons/LockIcon";
 import { SignatureScreen } from "./SignatureScreen";
 import { Modal } from "../../components/Modal";
@@ -294,23 +288,16 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
               className={`${TW_CONNECT_WALLET}--sign-in ${
                 props.className || ""
               }`}
-              style={props.style}
+              style={{
+                minWidth: "140px",
+                ...props.style,
+              }}
               data-test="sign-in-button"
             >
-              <Container
-                flex="row"
-                center="y"
-                gap="sm"
-                style={{
-                  paddingRight: spacing.xs,
-                  borderRight: "1px solid",
-                  marginRight: spacing.xs,
-                }}
-              >
+              <Container flex="row" center="y" gap="sm">
                 <LockIcon size={iconSize.sm} />
                 <span> Sign in </span>
               </Container>
-              <span>{shortenAddress(address || "", true)}</span>
             </Button>
           );
         }

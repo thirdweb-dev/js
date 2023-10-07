@@ -366,10 +366,10 @@ const MagicConnectionUICompact: React.FC<
       flex="row"
       center="both"
       style={{
-        minHeight: "250px",
+        minHeight: "350px",
       }}
     >
-      <Spinner size="md" color="accentText" />
+      <Spinner size="xl" color="accentText" />
     </Container>
   );
 };
