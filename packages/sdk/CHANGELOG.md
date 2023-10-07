@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.10.66
+
+### Patch Changes
+
+- [#1308](https://github.com/thirdweb-dev/js/pull/1308) [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Base Router for dynamic contracts
+
 ## 3.10.65
 
 ### Patch Changes

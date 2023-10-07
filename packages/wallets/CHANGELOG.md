@@ -1,5 +1,27 @@
 # @thirdweb-dev/wallets
 
+## 1.3.4
+
+### Patch Changes
+
+- [#1712](https://github.com/thirdweb-dev/js/pull/1712) [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New SmartWallet API for session keys
+
+  You can now add admins and scoped session keys to smart wallets directly with a simple API:
+
+  ```
+  const smartWallet = new SmartWallet(config);
+  await smartWallet.connect({ personalWallet })
+
+  await smartWallet.createSessionKey(keyAddress, permissions);
+  await smartWallet.revokeSessionKey(keyAddress);
+
+  await smartWallet.addAdmin(adminAddress);
+  await smartWallet.removeAdmin(adminAddress);
+  ```
+
+- Updated dependencies [[`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c)]:
+  - @thirdweb-dev/sdk@3.10.66
+
 ## 1.3.3
 
 ### Patch Changes
