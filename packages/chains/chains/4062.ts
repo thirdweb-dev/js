@@ -1,49 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nahmii 3 Testnet",
   "chain": "Nahmii",
-  "rpc": [
-    "https://nahmii-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ngeth.testnet.n3.nahmii.io"
+  "chainId": 4062,
+  "explorers": [
+    {
+      "name": "Nahmii 3 Testnet Explorer",
+      "url": "https://explorer.testnet.n3.nahmii.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Goerli Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://nahmii.io",
-  "shortName": "Nahmii3Testnet",
-  "chainId": 4062,
-  "networkId": 4062,
+  "features": [],
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
     "height": 384,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Nahmii 3 Testnet Explorer",
-      "url": "https://explorer.testnet.n3.nahmii.io",
-      "icon": {
-        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
-        "width": 384,
-        "height": 384,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-3",
-    "bridges": [
-      {
-        "url": "https://bridge.testnet.n3.nahmii.io"
-      }
-    ]
+  "infoURL": "https://nahmii.io",
+  "name": "Nahmii 3 Testnet",
+  "nativeCurrency": {
+    "name": "Goerli Ether",
+    "symbol": "ETH",
+    "decimals": 18
   },
-  "testnet": true,
-  "slug": "nahmii-3-testnet"
+  "redFlags": [],
+  "rpc": [
+    "https://nahmii-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ngeth.testnet.n3.nahmii.io"
+  ],
+  "shortName": "Nahmii3Testnet",
+  "slug": "nahmii-3-testnet",
+  "testnet": true
 } as const satisfies Chain;

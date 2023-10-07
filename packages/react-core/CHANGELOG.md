@@ -1,5 +1,85 @@
 # @thirdweb-dev/react-core
 
+## 3.16.4
+
+### Patch Changes
+
+- [#1719](https://github.com/thirdweb-dev/js/pull/1719) [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d) Thanks [@MananTank](https://github.com/MananTank)! - Type refactor for useWallet hook
+
+- [#1716](https://github.com/thirdweb-dev/js/pull/1716) [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better `useWallet()` API to obtain specific wallet instances.
+
+  ```
+  const smartWallet = useWallet("smartWallet"); // returns a SmartWallet instance
+  const embeddedWallet = useWallet("embeddedWallet"); // returns a EmbeddedWallet instance
+  ```
+
+- [#1712](https://github.com/thirdweb-dev/js/pull/1712) [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add `useCreateSessionKey` and `useRevokeSessionKey` hooks
+
+  ```
+  const Component = () => {
+      const {
+        mutate: createSessionKey,
+        isLoading,
+        error,
+      } = useCreateSessionKey();
+
+      if (error) {
+        console.error("failed to create session key", error);
+      }
+
+      return (
+        <button
+          disabled={isLoading}
+          onClick={() => createSessionKey(
+            "0x...",
+            {
+              approvedCallTargets: ["0x..."], // the addresses of contracts that the session key can call
+              nativeTokenLimitPerTransaction: 0.1, // the maximum amount of native token (in ETH) that the session key can spend per transaction
+              startDate: new Date(), // the date when the session key becomes active
+              expirationDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // the date when the session key expires
+            }
+           )}
+        >
+          Create Session Key
+        </button>
+      );
+  };
+  ```
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/sdk@3.10.66
+  - @thirdweb-dev/auth@3.2.47
+
+## 3.16.3
+
+### Patch Changes
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/storage@1.2.11
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/auth@3.2.46
+
+## 3.16.2
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+  - @thirdweb-dev/sdk@3.10.64
+  - @thirdweb-dev/wallets@1.3.2
+  - @thirdweb-dev/auth@3.2.45
+
+## 3.16.1
+
+### Patch Changes
+
+- Updated dependencies [[`54f83a50`](https://github.com/thirdweb-dev/js/commit/54f83a5013ed65ddd5a787e13ba7e5d86625537d), [`a9b4b0c5`](https://github.com/thirdweb-dev/js/commit/a9b4b0c5d875dec660694466e5e322cc574bb21b), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3), [`96e832cc`](https://github.com/thirdweb-dev/js/commit/96e832cc80692da38279c53f1289265b3728cb19), [`b16c09df`](https://github.com/thirdweb-dev/js/commit/b16c09df75c7193a91b832db7d9c92612ae09357), [`6897ad65`](https://github.com/thirdweb-dev/js/commit/6897ad6502d585d55a8c7b2312b4af30663336c3), [`ee028e12`](https://github.com/thirdweb-dev/js/commit/ee028e12092fd306f076f6ea1d49a2295802dd6b), [`d28b1c0f`](https://github.com/thirdweb-dev/js/commit/d28b1c0f1e1e53eedc8f331be555e22b64fb920d), [`c085d690`](https://github.com/thirdweb-dev/js/commit/c085d69060c68b3335761bdb2cc0c3e082548702), [`de05c2da`](https://github.com/thirdweb-dev/js/commit/de05c2da174a69315f2d34dd32a811bbd9a0b604), [`bdb2ccc7`](https://github.com/thirdweb-dev/js/commit/bdb2ccc7a66c33ec5dc331b6fa792e6361769e88), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3)]:
+  - @thirdweb-dev/wallets@1.3.1
+  - @thirdweb-dev/sdk@3.10.63
+  - @thirdweb-dev/auth@3.2.44
+
 ## 3.16.0
 
 ### Patch Changes

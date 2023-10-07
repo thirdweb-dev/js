@@ -368,8 +368,9 @@ export abstract class BaseAccountAPI {
         ...userOp,
         paymasterAndData: "0x",
       };
-      modifiedOp.preVerificationGas =
-        await this.getPreVerificationGas(modifiedOp);
+      modifiedOp.preVerificationGas = await this.getPreVerificationGas(
+        modifiedOp,
+      );
       return {
         ...modifiedOp,
         signature: "",
@@ -420,7 +421,7 @@ export abstract class BaseAccountAPI {
       const events = await this.entryPointView.queryFilter(
         this.entryPointView.filters.UserOperationEvent(userOpHash),
       );
-      if (events.length > 0) {
+      if (events[0]) {
         return events[0].transactionHash;
       }
       await new Promise((resolve) => setTimeout(resolve, interval));

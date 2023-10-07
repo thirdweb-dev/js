@@ -1,23 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HOO Smart Chain Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://hoo-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://http-testnet.hoosmartchain.com"
-  ],
+  "chainId": 170,
+  "explorers": [],
   "faucets": [
     "https://faucet-testnet.hscscan.com/"
   ],
+  "features": [],
+  "infoURL": "https://www.hoosmartchain.com",
+  "name": "HOO Smart Chain Testnet",
   "nativeCurrency": {
     "name": "HOO",
     "symbol": "HOO",
     "decimals": 18
   },
-  "infoURL": "https://www.hoosmartchain.com",
+  "redFlags": [],
+  "rpc": [
+    "https://hoo-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://http-testnet.hoosmartchain.com"
+  ],
   "shortName": "hoosmartchain",
-  "chainId": 170,
-  "networkId": 170,
-  "testnet": true,
-  "slug": "hoo-smart-chain-testnet"
+  "slug": "hoo-smart-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

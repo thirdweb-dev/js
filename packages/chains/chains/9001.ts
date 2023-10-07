@@ -1,41 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Evmos",
   "chain": "Evmos",
-  "rpc": [
-    "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evmos-evm.publicnode.com",
-    "wss://evmos-evm.publicnode.com"
+  "chainId": 9001,
+  "explorers": [
+    {
+      "name": "Evmos Explorer (Escan)",
+      "url": "https://escan.live",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Evmos",
-    "symbol": "EVMOS",
-    "decimals": 18
-  },
-  "infoURL": "https://evmos.org",
-  "shortName": "evmos",
-  "chainId": 9001,
-  "networkId": 9001,
+  "features": [],
   "icon": {
     "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Evmos Explorer (Escan)",
-      "url": "https://escan.live",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
-    }
+  "infoURL": "https://evmos.org",
+  "name": "Evmos",
+  "nativeCurrency": {
+    "name": "Evmos",
+    "symbol": "EVMOS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evmos-evm.publicnode.com",
+    "wss://evmos-evm.publicnode.com"
   ],
-  "testnet": false,
-  "slug": "evmos"
+  "shortName": "evmos",
+  "slug": "evmos",
+  "testnet": false
 } as const satisfies Chain;

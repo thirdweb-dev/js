@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metis Goerli Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://metis-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://goerli.gateway.metisdevops.link"
-  ],
-  "faucets": [
-    "https://goerli.faucet.metisdevops.link"
-  ],
-  "nativeCurrency": {
-    "name": "Goerli Metis",
-    "symbol": "METIS",
-    "decimals": 18
-  },
-  "infoURL": "https://www.metis.io",
-  "shortName": "metis-goerli",
   "chainId": 599,
-  "networkId": 599,
   "explorers": [
     {
       "name": "blockscout",
@@ -25,21 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-4",
-    "bridges": [
-      {
-        "url": "https://testnet-bridge.metis.io"
-      }
-    ]
-  },
+  "faucets": [
+    "https://goerli.faucet.metisdevops.link"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmbWKNucbMtrMPPkHG5ZmVmvNUo8CzqHHcrpk1C2BVQsEG/2022_H-Brand_Stacked_WhiteGreen.svg",
-    "format": "svg",
+    "width": 512,
     "height": 512,
-    "width": 512
+    "format": "svg"
   },
-  "testnet": true,
-  "slug": "metis-goerli-testnet"
+  "infoURL": "https://www.metis.io",
+  "name": "Metis Goerli Testnet",
+  "nativeCurrency": {
+    "name": "Goerli Metis",
+    "symbol": "METIS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://metis-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://goerli.gateway.metisdevops.link"
+  ],
+  "shortName": "metis-goerli",
+  "slug": "metis-goerli-testnet",
+  "testnet": true
 } as const satisfies Chain;

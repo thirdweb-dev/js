@@ -1,5 +1,96 @@
 # @thirdweb-dev/react-native
 
+## 0.3.3
+
+### Patch Changes
+
+- [#1715](https://github.com/thirdweb-dev/js/pull/1715) [`f5caf6a3`](https://github.com/thirdweb-dev/js/commit/f5caf6a3502905666ae57f3304bb9074e09c9366) Thanks [@iketw](https://github.com/iketw)! - Fix encryption/decryption bug in embeddedWallet for React Native
+
+- [#1709](https://github.com/thirdweb-dev/js/pull/1709) [`6f4c5cd7`](https://github.com/thirdweb-dev/js/commit/6f4c5cd746caf07f057e272aec9f204ba5905cd3) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(react-native): update iteration count for embedded-wallet for better speed and future updates
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d), [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c), [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/react-core@3.16.4
+  - @thirdweb-dev/sdk@3.10.66
+
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/storage@1.2.11
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/react-core@3.16.3
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+  - @thirdweb-dev/react-core@3.16.2
+  - @thirdweb-dev/sdk@3.10.64
+  - @thirdweb-dev/wallets@1.3.2
+
+## 0.3.0
+
+### Minor Changes
+
+- [#1676](https://github.com/thirdweb-dev/js/pull/1676) [`81797ffd`](https://github.com/thirdweb-dev/js/commit/81797ffde34817b457fdbf5241b1c06a13627e51) Thanks [@iketw](https://github.com/iketw)! - Minor version bump for React Native
+
+### Patch Changes
+
+- [#1675](https://github.com/thirdweb-dev/js/pull/1675) [`69e82085`](https://github.com/thirdweb-dev/js/commit/69e8208538886a13072b640013a8f4b46850903b) Thanks [@iketw](https://github.com/iketw)! - Lots of small UI fixes
+
+- [#1683](https://github.com/thirdweb-dev/js/pull/1683) [`bd23cec7`](https://github.com/thirdweb-dev/js/commit/bd23cec7d1101a422e5c0abebf683595f1bac99f) Thanks [@iketw](https://github.com/iketw)! - Update guest wallet icon
+
+- [#1561](https://github.com/thirdweb-dev/js/pull/1561) [`5dc372fc`](https://github.com/thirdweb-dev/js/commit/5dc372fc460beced53fdaa3a62c780c1163bcdf2) Thanks [@iketw](https://github.com/iketw)! - Adds EmbeddedWallet (email) to React Native
+
+  You can now do:
+
+  ```javascript
+  import { ThirdwebProvider, embeddedWallet } from "@thirdweb-dev/react-native";
+
+  <ThirdwebProvider
+    clientId="your-client-id"
+    supportedWallets={[embeddedWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  To use the `embeddedWallet` you need to add the following dependencies to your project:
+
+  - `"amazon-cognito-identity-js": "^6.3.3"`
+  - react-native-quick-base64
+  - react-native-quick-crypto
+
+    - There's an open issue on RN > 0.72: https://github.com/margelo/react-native-quick-crypto/issues/186 which you can [fix by](https://github.com/margelo/react-native-quick-crypto/issues/186#issuecomment-1663666739) adding the following to your `android/app/build.gradle` file:
+
+      ```
+      packagingOptions {
+          pickFirst 'lib/x86/libcrypto.so'
+          pickFirst 'lib/x86_64/libcrypto.so'
+          pickFirst 'lib/armeabi-v7a/libcrypto.so'
+          pickFirst 'lib/arm64-v8a/libcrypto.so'
+      }
+      ```
+
+    - When building the iOS app in release mode for RN 0.71 you need to enable the OpenSSL framework in XCode. There are several solutions for this here:
+      - https://github.com/margelo/react-native-quick-crypto/issues/121#issuecomment-1369924076
+      - https://github.com/margelo/react-native-quick-crypto/issues/121#issuecomment-1537576444
+
+  - react-native-aes-gcm-crypto
+    - This package requires minSdkVersion = 26 on Android
+
+- [#1680](https://github.com/thirdweb-dev/js/pull/1680) [`ed4172dd`](https://github.com/thirdweb-dev/js/commit/ed4172dddf63eca19cc6cce265bdfef8b702c5d1) Thanks [@iketw](https://github.com/iketw)! - Small UI improvements
+
+- Updated dependencies [[`54f83a50`](https://github.com/thirdweb-dev/js/commit/54f83a5013ed65ddd5a787e13ba7e5d86625537d), [`a9b4b0c5`](https://github.com/thirdweb-dev/js/commit/a9b4b0c5d875dec660694466e5e322cc574bb21b), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3), [`96e832cc`](https://github.com/thirdweb-dev/js/commit/96e832cc80692da38279c53f1289265b3728cb19), [`b16c09df`](https://github.com/thirdweb-dev/js/commit/b16c09df75c7193a91b832db7d9c92612ae09357), [`6897ad65`](https://github.com/thirdweb-dev/js/commit/6897ad6502d585d55a8c7b2312b4af30663336c3), [`ee028e12`](https://github.com/thirdweb-dev/js/commit/ee028e12092fd306f076f6ea1d49a2295802dd6b), [`d28b1c0f`](https://github.com/thirdweb-dev/js/commit/d28b1c0f1e1e53eedc8f331be555e22b64fb920d), [`c085d690`](https://github.com/thirdweb-dev/js/commit/c085d69060c68b3335761bdb2cc0c3e082548702), [`de05c2da`](https://github.com/thirdweb-dev/js/commit/de05c2da174a69315f2d34dd32a811bbd9a0b604), [`bdb2ccc7`](https://github.com/thirdweb-dev/js/commit/bdb2ccc7a66c33ec5dc331b6fa792e6361769e88), [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3)]:
+  - @thirdweb-dev/wallets@1.3.1
+  - @thirdweb-dev/sdk@3.10.63
+  - @thirdweb-dev/react-core@3.16.1
+
 ## 0.2.62
 
 ### Patch Changes

@@ -268,7 +268,7 @@ describe("Custom Contracts", async () => {
     try {
       c.roles.get("admin");
     } catch (e) {
-      expectError(e, "contract does not implement the 'permissions' Extension");
+      expectError(e, "contract does not implement the 'Permissions' Extension");
     }
   });
 

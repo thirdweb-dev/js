@@ -37,14 +37,7 @@ const ImageSvgUri = ({
   return (
     <Box style={{ width: width, height: height }}>
       {error ? (
-        <SvgUri
-          width={width}
-          height={height}
-          uri={resolvedImageUrl}
-          onError={(err) => {
-            console.warn("Error loading an svg image: ", err);
-          }}
-        />
+        <SvgUri width={width} height={height} uri={resolvedImageUrl} />
       ) : (
         // always try to render Image first, if error then try to render svg
         // Image from RN handles onError better than SvgUri

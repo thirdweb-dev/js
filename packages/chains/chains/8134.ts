@@ -1,25 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Amana",
   "chain": "MEER",
-  "rpc": [],
+  "chainId": 8134,
+  "explorers": [],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Amana Mainnet",
-    "symbol": "MEER",
-    "decimals": 18
-  },
-  "infoURL": "https://github.com/Qitmeer",
-  "shortName": "amana",
+  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "chainId": 8134,
-  "networkId": 8134,
+  "infoURL": "https://github.com/Qitmeer",
+  "name": "Amana",
+  "nativeCurrency": {
+    "name": "Amana Mainnet",
+    "symbol": "MEER",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "amana",
+  "slug": "amana",
   "status": "incubating",
-  "testnet": false,
-  "slug": "amana"
+  "testnet": false
 } as const satisfies Chain;

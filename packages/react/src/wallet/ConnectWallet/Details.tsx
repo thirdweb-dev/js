@@ -40,6 +40,7 @@ import {
   useSupportedChains,
   useWallet,
   WalletInstance,
+  useENS,
 } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import {
@@ -58,7 +59,6 @@ import { Link, Text } from "../../components/text";
 import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
-import { useENS } from "../hooks/useENS";
 import { smartWalletIcon } from "./icons/dataUris";
 
 export type DropDownPosition = {
@@ -464,7 +464,7 @@ export const ConnectedWalletDetails: React.FC<{
           )}
 
         {/* Explorer link */}
-        {chain?.explorers && (
+        {chain?.explorers && chain.explorers[0]?.url && (
           <MenuLink
             href={chain.explorers[0].url + "/address/" + address}
             target="_blank"
@@ -758,46 +758,56 @@ function ConnectedToSmartWallet() {
   const chain = useChain();
   const address = useAddress();
 
-  const [showConnectedToSmartWallet, setShowConnectedToSmartWallet] =
-    useState(false);
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
   useEffect(() => {
     if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
       const smartWallet = activeWallet as SmartWallet;
       smartWallet.isDeployed().then((isDeployed) => {
-        setShowConnectedToSmartWallet(isDeployed);
+        setIsSmartWalletDeployed(isDeployed);
       });
     } else {
-      setShowConnectedToSmartWallet(false);
+      setIsSmartWalletDeployed(false);
     }
   }, [activeWallet]);
 
-  if (showConnectedToSmartWallet && chain && address) {
+  const content = (
+    <Container
+      flex="row"
+      gap="xs"
+      center="y"
+      style={{
+        width: "100%",
+        justifyContent: "space-between",
+      }}
+    >
+      <Container flex="row" gap="xs" center="y">
+        <ActiveDot />
+        Connected to Smart Wallet
+      </Container>
+      {isSmartWalletDeployed && (
+        <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+      )}
+    </Container>
+  );
+
+  if (chain && address && activeWallet?.walletId === walletIds.smartWallet) {
     return (
       <>
-        <Link
-          color="secondaryText"
-          hoverColor="primaryText"
-          href={`https://thirdweb.com/${chain.slug}/${address}/account`}
-          target="_blank"
-          size="sm"
-        >
-          <Container
-            flex="row"
-            gap="xs"
-            center="y"
-            style={{
-              width: "100%",
-              justifyContent: "space-between",
-            }}
+        {isSmartWalletDeployed ? (
+          <Link
+            color="secondaryText"
+            hoverColor="primaryText"
+            href={`https://thirdweb.com/${chain.slug}/${address}/account`}
+            target="_blank"
+            size="sm"
           >
-            <Container flex="row" gap="xs" center="y">
-              <ActiveDot />
-              Connected to Smart Wallet
-            </Container>
-            <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
-          </Container>
-        </Link>
+            {content}
+          </Link>
+        ) : (
+          <Text size="sm"> {content}</Text>
+        )}
+
         <Spacer y="md" />
       </>
     );

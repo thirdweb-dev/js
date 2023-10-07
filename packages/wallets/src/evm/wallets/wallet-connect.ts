@@ -44,7 +44,7 @@ export class WalletConnect extends AbstractClientWallet<WalletConnectOptions> {
 
   connector?: Connector;
 
-  static id = walletIds.walletConnect;
+  static id = walletIds.walletConnect as string;
 
   static meta = {
     name: "WalletConnect",

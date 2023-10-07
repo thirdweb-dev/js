@@ -7,13 +7,11 @@ import { CopyIcon } from "../../components/CopyIcon";
 import styled from "@emotion/styled";
 import { Theme, iconSize, radius, spacing } from "../../design-system";
 import { QRCode } from "../../components/QRCode";
-import { isMobile } from "../../evm/utils/isMobile";
 import { Img } from "../../components/Img";
 import { useClipboard } from "../../evm/components/hooks/useCopyClipboard";
 
 export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();
-  const isMob = isMobile();
   const { hasCopied, onCopy } = useClipboard(address || "");
 
   return (
@@ -22,24 +20,20 @@ export function ReceiveFunds(props: { iconUrl: string }) {
 
       <Spacer y="xl" />
 
-      {!isMob && (
-        <>
-          <Container flex="row" center="x">
-            <QRCode
-              qrCodeUri={address}
-              size={310}
-              QRIcon={
-                <Img
-                  src={props.iconUrl}
-                  width={iconSize.xxl}
-                  height={iconSize.xxl}
-                />
-              }
+      <Container flex="row" center="x">
+        <QRCode
+          qrCodeUri={address}
+          size={310}
+          QRIcon={
+            <Img
+              src={props.iconUrl}
+              width={iconSize.xxl}
+              height={iconSize.xxl}
             />
-          </Container>
-          <Spacer y="xl" />
-        </>
-      )}
+          }
+        />
+      </Container>
+      <Spacer y="xl" />
 
       <WalletAddressContianer onClick={onCopy}>
         <Text color="primaryText" size="md">
@@ -54,20 +48,10 @@ export function ReceiveFunds(props: { iconUrl: string }) {
 
       <Spacer y="lg" />
 
-      {!isMob ? (
-        <Text multiline center>
-          Copy the wallet address or scan the <br /> QR code to send funds to
-          this wallet.
-        </Text>
-      ) : (
-        <>
-          <Text multiline center>
-            Copy the wallet address to <br />
-            send funds to this wallet
-          </Text>
-          <Spacer y="xl" />
-        </>
-      )}
+      <Text multiline center>
+        Copy the wallet address to <br />
+        send funds to this wallet
+      </Text>
     </Container>
   );
 }

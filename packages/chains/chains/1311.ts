@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dos Fuji Subnet",
   "chain": "DOS",
-  "rpc": [
-    "https://dos-fuji-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test.doschain.com/jsonrpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Dos Native Token",
-    "symbol": "DOS",
-    "decimals": 18
-  },
-  "infoURL": "http://doschain.io/",
-  "shortName": "TDOS",
   "chainId": 1311,
-  "networkId": 1311,
   "explorers": [
     {
       "name": "dos-testnet",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "dos-fuji-subnet"
+  "faucets": [],
+  "features": [],
+  "infoURL": "http://doschain.io/",
+  "name": "Dos Fuji Subnet",
+  "nativeCurrency": {
+    "name": "Dos Native Token",
+    "symbol": "DOS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://dos-fuji-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test.doschain.com/jsonrpc"
+  ],
+  "shortName": "TDOS",
+  "slug": "dos-fuji-subnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PHI Network v2",
   "chain": "PHI",
-  "rpc": [
-    "https://phi-network-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.phi.network"
+  "chainId": 144,
+  "explorers": [
+    {
+      "name": "Phiscan",
+      "url": "https://phiscan.com",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "PHI",
-    "symbol": "Φ",
-    "decimals": 18
-  },
-  "infoURL": "https://phi.network",
-  "shortName": "PHI",
-  "chainId": 144,
-  "networkId": 144,
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreid6pm3mic7izp3a6zlfwhhe7etd276bjfsq2xash6a4s2vmcdf65a",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Phiscan",
-      "url": "https://phiscan.com",
-      "icon": {
-        "url": "ipfs://bafkreid6pm3mic7izp3a6zlfwhhe7etd276bjfsq2xash6a4s2vmcdf65a",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://phi.network",
+  "name": "PHI Network v2",
+  "nativeCurrency": {
+    "name": "PHI",
+    "symbol": "Φ",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://phi-network-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://connect.phi.network"
   ],
-  "testnet": false,
-  "slug": "phi-network-v2"
+  "shortName": "PHI",
+  "slug": "phi-network-v2",
+  "testnet": false
 } as const satisfies Chain;

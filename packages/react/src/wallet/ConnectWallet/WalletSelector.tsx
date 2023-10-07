@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Img } from "../../components/Img";
 import {
   noScrollBar,
@@ -91,6 +91,14 @@ export const WalletSelector: React.FC<{
     </Button>
   );
 
+  // prevent accidental clicks on the TW icon when clicking on back icon from previous screen
+  const enableTWIconLink = useRef(false);
+  useEffect(() => {
+    setTimeout(() => {
+      enableTWIconLink.current = true;
+    }, 1000);
+  }, []);
+
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
       {modalConfig.titleIconUrl === undefined ? (
@@ -98,10 +106,15 @@ export const WalletSelector: React.FC<{
           color="primaryText"
           hoverColor="accentText"
           target="_blank"
-          href="https://thirdweb.com/dashboard/wallets/connect"
+          href="https://thirdweb.com/connect?utm_source=cw"
           style={{
             display: "flex",
             alignItems: "center",
+          }}
+          onClick={(e) => {
+            if (!enableTWIconLink.current) {
+              e.preventDefault();
+            }
           }}
         >
           <TWIcon size={iconSize.md} />

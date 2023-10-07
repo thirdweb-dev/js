@@ -2,12 +2,12 @@ import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet } from "@thirdweb-dev/react-core";
+import { useENS, useWallet } from "@thirdweb-dev/react-core";
 import { StyleSheet } from "react-native";
 import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
 import Box from "../base/Box";
 import { ConnectWalletDetailsModal } from "./ConnectWalletDetailsModal";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TextBalance } from "../base/TextBalance";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { SMART_WALLET_ICON } from "../../assets/svgs";
@@ -47,10 +47,17 @@ export const WalletDetailsButton = ({
 }: ConnectWalletDetailsProps) => {
   const activeWallet = useWallet();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const ensQuery = useENS();
 
   const onPress = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  const ens = useMemo(() => ensQuery.data?.ens, [ensQuery.data?.ens]);
+  const avatarUrl = useMemo(
+    () => ensQuery.data?.avatarUrl,
+    [ensQuery.data?.avatarUrl],
+  );
 
   const walletIconUrl =
     activeWallet?.walletId === walletIds.smartWallet
@@ -77,13 +84,20 @@ export const WalletDetailsButton = ({
           style={styles.walletDetails}
           onPress={onPress}
         >
-          <Box flex={1} flexDirection="row" justifyContent="flex-start">
-            <WalletIcon size={32} iconUri={walletIconUrl} />
+          <Box
+            flex={1}
+            flexDirection="row"
+            alignContent="center"
+            justifyContent="flex-start"
+          >
+            <WalletIcon size={32} iconUri={avatarUrl || walletIconUrl} />
             <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="bodySmall" color="red">
                   Guest
                 </Text>
+              ) : ens ? (
+                <Text variant="bodySmall">{ens}</Text>
               ) : (
                 <AddressDisplay
                   variant="bodySmall"

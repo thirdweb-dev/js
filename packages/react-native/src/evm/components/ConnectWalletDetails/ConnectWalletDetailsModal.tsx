@@ -28,6 +28,7 @@ import { ReceiveButton } from "../ReceiveButton";
 import { SendButton } from "../SendFunds/SendButton";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
+import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -213,7 +214,7 @@ export const ConnectWalletDetailsModal = ({
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
-            {activeWallet?.walletId === SmartWallet.id || smartWallet ? (
+            {activeWallet?.walletId === SmartWallet.id ? (
               <BaseButton
                 disabled={!isSmartWalletDeployed}
                 onPress={() => {
@@ -227,17 +228,23 @@ export const ConnectWalletDetailsModal = ({
                 mt="md"
               >
                 <Box flexDirection="row" alignItems="center">
-                  <ActiveDot
-                    width={10}
-                    height={10}
-                    color={isSmartWalletDeployed ? "#00d395" : "yellow"}
-                  />
+                  <ActiveDot width={10} height={10} />
                   <Text variant="bodySmallSecondary" ml="xxs">
                     Connected to a Smart Wallet
                   </Text>
                 </Box>
-                <RightArrowIcon width={10} height={10} />
+                {isSmartWalletDeployed ? (
+                  <RightArrowIcon width={10} height={10} />
+                ) : null}
               </BaseButton>
+            ) : null}
+            {activeWallet?.walletId === EmbeddedWallet.id ? (
+              <Box flexDirection="row" alignItems="center" mt="md">
+                <ActiveDot width={10} height={10} />
+                <Text variant="bodySmallSecondary" ml="xxs">
+                  {(activeWallet as EmbeddedWallet).getEmail()}
+                </Text>
+              </Box>
             ) : null}
             <Box flexDirection="row" justifyContent="space-evenly" mt="md">
               <SendButton supportedTokens={supportedTokens} />

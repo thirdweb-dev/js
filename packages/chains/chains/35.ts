@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TBWG Chain",
   "chain": "TBWG",
-  "rpc": [
-    "https://tbwg-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.tbwg.io"
-  ],
+  "chainId": 35,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://tbwg.io",
+  "name": "TBWG Chain",
   "nativeCurrency": {
     "name": "TBWG Ether",
     "symbol": "TBG",
     "decimals": 18
   },
-  "infoURL": "https://tbwg.io",
+  "redFlags": [],
+  "rpc": [
+    "https://tbwg-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.tbwg.io"
+  ],
   "shortName": "tbwg",
-  "chainId": 35,
-  "networkId": 35,
-  "testnet": false,
-  "slug": "tbwg-chain"
+  "slug": "tbwg-chain",
+  "testnet": false
 } as const satisfies Chain;

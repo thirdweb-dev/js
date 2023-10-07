@@ -1,23 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Gear Zero Network Testnet",
   "chain": "GearZero",
-  "rpc": [
-    "https://gear-zero-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://gzn-test.linksme.info"
-  ],
+  "chainId": 266256,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://token.gearzero.ca/testnet",
+  "name": "Gear Zero Network Testnet",
   "nativeCurrency": {
     "name": "Gear Zero Network Native Token",
     "symbol": "GZN",
     "decimals": 18
   },
-  "infoURL": "https://token.gearzero.ca/testnet",
+  "redFlags": [],
+  "rpc": [
+    "https://gear-zero-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gzn-test.linksme.info"
+  ],
   "shortName": "gz-testnet",
-  "chainId": 266256,
-  "networkId": 266256,
-  "slip44": 266256,
-  "explorers": [],
-  "testnet": true,
-  "slug": "gear-zero-network-testnet"
+  "slug": "gear-zero-network-testnet",
+  "testnet": true
 } as const satisfies Chain;
