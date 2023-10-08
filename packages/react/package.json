@@ -77,6 +77,7 @@
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-snippets-solana.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
+    "dev": "preconstruct build",
     "push": "yalc push"
   },
   "sideEffects:": false,

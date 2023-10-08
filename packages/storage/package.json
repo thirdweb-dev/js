@@ -27,6 +27,7 @@
     "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
+    "dev": "preconstruct build",
     "test:all": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "pnpm test:all",
     "test:single": "NODE_ENV=test SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",

@@ -125,6 +125,7 @@
       "outputs": []
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false
     },
     "clean": {

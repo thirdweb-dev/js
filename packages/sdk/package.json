@@ -94,7 +94,8 @@
     "test:solana:all": "SWC_NODE_PROJECT=./tsconfig.test.json nyc --reporter lcovonly --report-dir ./coverage/solana  mocha --config './test/solana/.mocharc.json' --timeout 30000 --parallel './test/solana/**/*.test.ts'",
     "test:solana": "make test-sol",
     "test:solana:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/solana/.mocharc.json' --timeout 30000",
-    "push": "yalc push"
+    "push": "yalc push",
+    "dev": "preconstruct build"
   },
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.378.0",

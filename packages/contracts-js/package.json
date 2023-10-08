@@ -44,6 +44,7 @@
     "typechain": "rm -rf ./src && cp ./external_abis/*.json ./node_modules/@thirdweb-dev/contracts/abi && typechain --target ethers-v5 --out-dir src './node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-abi": "node ./scripts/extract-abis.mjs",
     "build": "pnpm typechain && tsc && pnpm preconstruct build && pnpm extract-abi",
+    "dev": "pnpm run build",
     "push": "yalc push"
   }
 }
