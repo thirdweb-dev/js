@@ -1,6 +1,6 @@
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader, Line } from "../../../components/basic";
-import { fontSize, iconSize, spacing } from "../../../design-system";
+import { iconSize, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
@@ -21,21 +21,34 @@ export const ConnectingScreen: React.FC<{
   const modalConfig = useContext(ModalConfigCtx);
   return (
     <Container animate="fadein" fullHeight flex="column">
-      <Container p="lg">
+      <Container
+        p="lg"
+        style={{
+          paddingBottom: 0,
+        }}
+      >
         <ModalHeader
           title={props.walletName}
           onBack={props.hideBackButton ? undefined : props.onBack}
         />
       </Container>
 
-      <Container flex="column" center="both" expand p="lg" relative>
-        <Spacer y="sm" />
-        <WalletLogoSpinner
-          error={props.errorConnecting}
-          iconUrl={props.walletIconURL}
-        />
-        <Spacer y="xxl" />
-        <Spacer y="sm" />
+      <Container
+        flex="column"
+        center="y"
+        expand
+        px={modalConfig.modalSize === "compact" ? "lg" : "xxl"}
+        relative
+        style={{
+          paddingTop: 0,
+        }}
+      >
+        <Container py="3xl">
+          <WalletLogoSpinner
+            error={props.errorConnecting}
+            iconUrl={props.walletIconURL}
+          />
+        </Container>
 
         <Container
           animate="fadein"
@@ -65,31 +78,26 @@ export const ConnectingScreen: React.FC<{
           ) : (
             <Container flex="row" center="x" animate="fadein">
               <Button
-                variant="outline"
+                fullWidth
+                variant="accent"
                 onClick={props.onRetry}
                 style={{
                   gap: spacing.sm,
                   alignItems: "center",
                 }}
               >
-                <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Retry{" "}
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Try Agin{" "}
               </Button>
             </Container>
           )}
         </Container>
       </Container>
 
-      {modalConfig.modalSize === "compact" && <Line />}
+      <Spacer y="xl" />
+      <Line />
 
       <Container flex="row" center="x" p="lg">
-        <Button
-          variant="link"
-          onClick={props.onGetStarted}
-          style={{
-            textAlign: "center",
-            fontSize: fontSize.sm,
-          }}
-        >
+        <Button variant="link" onClick={props.onGetStarted}>
           Don{`'`}t have {props.walletName}?
         </Button>
       </Container>

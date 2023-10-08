@@ -2,33 +2,58 @@ import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Img } from "../../../components/Img";
 import { radius, Theme } from "../../../design-system";
+import { fadeInAnimation } from "../../../design-system/animations";
 
 export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
+  const loaderRadius = 20;
+  const radiusFactor = 36 - loaderRadius;
+  const dashArrayStart = 116 + radiusFactor;
+  const dashArrayEnd = 245 + radiusFactor;
+  const dashOffset = 360 + radiusFactor * 1.75;
+
   return (
     <LogoContainer data-error={props.error}>
       <div
         data-container
         style={{
           position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <div data-gradient data-error={props.error}>
-          <div data-blocker>
-            <Img src={props.iconUrl} width={"80"} height={"80"} />
-          </div>
+        <svg
+          viewBox="0 0 110 110"
+          style={{
+            display: props.error ? "none" : "block",
+          }}
+        >
+          <rect
+            x="2"
+            y="2"
+            width="106"
+            height="106"
+            rx={loaderRadius}
+            strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
+            strokeDashoffset={dashOffset}
+            strokeLinecap="round"
+            fill="none"
+            strokeWidth={4}
+          />
+        </svg>
+
+        <div data-img-container>
+          <Img src={props.iconUrl} width={"80"} height={"80"} />
         </div>
       </div>
     </LogoContainer>
   );
 }
 
-const rotateAnimation = keyframes`
-  0% {
-    transform: scale(1.5) rotate(0deg);
-  }
-  100% {
-    transform: scale(1.5) rotate(360deg);
-  }
+const dashRotateAnimation = keyframes`
+from {
+  stroke-dashoffset: 0px;
+}
 `;
 
 const shakeErrorAnimation = keyframes`
@@ -49,26 +74,19 @@ const shakeErrorAnimation = keyframes`
   }
 `;
 
-const scaleFadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(80px) scale(0.2) ;
-  }
-`;
-
-const floatingAnimation = keyframes`
-  from {
-    transform: translateY(5px);
-  }
-  to {
-    transform: translateY(-5px);
-  }
+const plusAnimation = keyframes`
+0% {
+  transform: scale(0.95);
+}
+100% {
+  opacity: 0;
+  transform: scale(1.4);
+}
 `;
 
 const LogoContainer = styled.div<{ theme?: Theme }>`
   display: flex;
   justify-content: center;
-  animation: ${scaleFadeIn} 400ms cubic-bezier(0.15, 1.15, 0.6, 1);
   position: relative;
   border-radius: ${radius.xl};
 
@@ -76,48 +94,30 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
     animation: ${shakeErrorAnimation} 0.25s linear;
   }
 
-  [data-gradient] {
-    padding: 3px; /* width of ring */
-    position: relative;
-    overflow: hidden;
-    border-radius: 18px;
-  }
-
-  [data-gradient]:not([data-error="true"]) {
-    animation: ${floatingAnimation} 1.2s ease infinite alternate;
-  }
-
-  [data-gradient]::before {
+  &[data-error="true"] [data-img-container]::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-
-    background: linear-gradient(
-      to right,
-      transparent 60%,
-      ${(p) => p.theme.colors.accentText}
-    );
-
-    animation: ${rotateAnimation} 1.2s linear infinite;
-  }
-
-  [data-gradient][data-error="true"]::before {
+    inset: 0;
     animation: none;
     background: ${(p) => p.theme.colors.danger};
-    box-shadow: 0 0 10px ${(p) => p.theme.colors.danger};
+    animation: ${plusAnimation} 1.5s ease infinite;
+    border-radius: 20px;
+    z-index: -1;
+    outline: 1px solid red;
   }
 
-  [data-blocker] {
-    padding: 4px;
-    background: ${(p) => p.theme.colors.modalBg};
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 14px;
+  svg {
+    position: absolute;
+    inset: -8px;
+    animation: ${fadeInAnimation} 400ms ease;
+  }
+
+  img {
+    z-index: 100;
+  }
+
+  rect {
+    animation: ${dashRotateAnimation} 1.5s linear infinite;
+    stroke: ${(p) => p.theme.colors.accentText};
   }
 `;

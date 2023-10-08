@@ -78,25 +78,29 @@ export const SignatureScreen: React.FC<{
 
   return (
     <Container animate="fadein" fullHeight flex="column">
-      <Container p="lg">
+      <Container
+        p="lg"
+        style={{
+          paddingBottom: 0,
+        }}
+      >
         <ModalHeader title="Sign in" />
       </Container>
 
       <Container
         style={{
-          minHeight: "250px",
+          paddingTop: 0,
+          paddingBottom: spacing.xl,
         }}
         flex="column"
         px={modalSize === "compact" ? "lg" : "xxl"}
-        py="lg"
         center="y"
         expand
       >
         {status === "idle" ? (
           <>
-            <Spacer y="sm" />
             {walletConfig && (
-              <Container flex="row" center="x" animate="fadein">
+              <Container flex="row" center="x" animate="fadein" py="3xl">
                 <PulsatingContainer>
                   <Img
                     src={walletConfig.meta.iconURL}
@@ -106,8 +110,6 @@ export const SignatureScreen: React.FC<{
                 </PulsatingContainer>
               </Container>
             )}
-
-            <Spacer y="xxl" />
 
             <Text center multiline>
               Please sign the message request <br />
@@ -130,16 +132,16 @@ export const SignatureScreen: React.FC<{
         ) : (
           <>
             {walletConfig && (
-              <WalletLogoSpinner
-                key={String(tryId)}
-                error={status === "failed"}
-                iconUrl={walletConfig.meta.iconURL}
-              />
+              <Container py="3xl">
+                <WalletLogoSpinner
+                  key={String(tryId)}
+                  error={status === "failed"}
+                  iconUrl={walletConfig.meta.iconURL}
+                />
+              </Container>
             )}
 
-            <Spacer y="xxl" />
-
-            <Container flex="column" gap="md">
+            <Container flex="column" gap="md" animate="fadein" key={status}>
               <Text size="lg" center color="primaryText">
                 {status === "failed"
                   ? "Failed to sign in"
