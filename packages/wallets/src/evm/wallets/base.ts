@@ -5,6 +5,7 @@ import { DEFAULT_DAPP_META } from "../constants/dappMeta";
 import { EVMWallet } from "../interfaces";
 import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractWallet } from "./abstract";
+import { track } from "../utils/analytics";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
@@ -13,6 +14,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   walletStorage?: AsyncStorage;
   dappMetadata?: DAppMetaData;
   clientId?: string;
+  analytics?: "enabled" | "disabled";
 } & TOpts;
 
 export type WalletMeta = {
@@ -122,6 +124,16 @@ export abstract class AbstractClientWallet<
 
     try {
       const address = await connector.connect(connectOptions);
+      const shouldTrack = this.options?.analytics !== "disabled";
+      if (shouldTrack) {
+        track({
+          clientId: this.options?.clientId || "",
+          source: "wallet",
+          action: "connect",
+          walletType: this.walletId,
+          walletAddress: address,
+        });
+      }
       return address;
     } catch (error) {
       throw new Error((error as Error).message);
