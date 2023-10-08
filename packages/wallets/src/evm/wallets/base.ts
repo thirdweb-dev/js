@@ -115,6 +115,7 @@ export abstract class AbstractClientWallet<
         chainId: await this.getChainId(),
       });
 
+      this.#trackConnection(address);
       return address;
     }
 
@@ -124,19 +125,23 @@ export abstract class AbstractClientWallet<
 
     try {
       const address = await connector.connect(connectOptions);
-      const shouldTrack = this.options?.analytics !== "disabled";
-      if (shouldTrack) {
-        track({
-          clientId: this.options?.clientId || "",
-          source: "wallet",
-          action: "connect",
-          walletType: this.walletId,
-          walletAddress: address,
-        });
-      }
+      this.#trackConnection(address);
       return address;
     } catch (error) {
       throw new Error((error as Error).message);
+    }
+  }
+
+  #trackConnection(address: string) {
+    const shouldTrack = this.options?.analytics !== "disabled";
+    if (shouldTrack) {
+      track({
+        clientId: this.options?.clientId || "",
+        source: "wallet",
+        action: "connect",
+        walletType: this.walletId,
+        walletAddress: address,
+      });
     }
   }
 
