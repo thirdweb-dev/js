@@ -29,9 +29,9 @@ export function getCode(options: WalletSetupOptions) {
   if (hasThemeOverrides) {
     themeFn = options.baseTheme === "dark" ? "darkTheme" : "lightTheme";
 
-    options.connectWallet.theme = `${themeFn}(${JSON.stringify(
-      options.colorOverrides,
-    )})`;
+    options.connectWallet.theme = `${themeFn}(${JSON.stringify({
+      colors: options.colorOverrides,
+    })})`;
   }
 
   return `\
