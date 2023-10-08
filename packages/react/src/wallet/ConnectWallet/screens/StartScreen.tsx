@@ -45,7 +45,7 @@ export function StartScreen() {
         style={{
           minHeight: "300px",
         }}
-        px="lg"
+        p="lg"
       >
         <Container flex="row" center="x">
           {img ? (
@@ -80,7 +80,7 @@ export function StartScreen() {
         </Text>
       </Container>
 
-      <Container px="xl">
+      <Container py="lg" flex="column" gap="lg">
         <Link
           target="_blank"
           center
@@ -88,16 +88,14 @@ export function StartScreen() {
         >
           New to wallets?
         </Link>
-      </Container>
 
-      {showTOS && (
-        <Container p="lg">
+        {showTOS && (
           <TOS
             termsOfServiceUrl={termsOfServiceUrl}
             privacyPolicyUrl={privacyPolicyUrl}
           />
-        </Container>
-      )}
+        )}
+      </Container>
     </Container>
   );
 }

@@ -30,7 +30,7 @@ export const ScanScreen: React.FC<{
         <ModalHeader onBack={props.onBack} title={props.walletName} />
       </Container>
 
-      {modalConfig.modalSize === "compact" && <Spacer y="xs" />}
+      <Spacer y="sm" />
 
       <Container expand flex="column" px="lg" center="both">
         <div
@@ -40,7 +40,6 @@ export const ScanScreen: React.FC<{
         >
           <QRCode
             qrCodeUri={props.qrCodeUri}
-            size={310}
             QRIcon={
               <Img
                 width={iconSize.xxl}
@@ -55,10 +54,10 @@ export const ScanScreen: React.FC<{
           <Text center multiline>
             Scan this with {walletName} <br /> or camera app to connect
           </Text>
-
-          <Spacer y="lg" />
         </div>
       </Container>
+
+      <Spacer y="lg" />
 
       <ScreenBottomContainer
         style={{
