@@ -3569,10 +3569,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/pluralize@^0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@types/pluralize/-/pluralize-0.0.30.tgz#cddb9923240c20d15e6d5f98fd576ec856b9b3db"
-  integrity sha512-kVww6xZrW/db5BR9OqiT71J9huRdQ+z/r+LbDuT7/EK50mCmj5FoaIARnVv0rvjUS/YpDox0cDU9lpQT011VBA==
+"@types/pluralize@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@types/pluralize/-/pluralize-0.0.31.tgz#9e7408526c28e265795e83454a141ec8375d3508"
+  integrity sha512-MQh69PPwFlYAL2qz/Mw5Zc34VTdt7pTck0Xbb6pbPSzdt5oaLB87iyJJxEMS5Dco/s7lXHunEezAvQurZZdrsQ==
 
 "@types/prismjs@^1.26.0":
   version "1.26.1"
