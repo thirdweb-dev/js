@@ -22,27 +22,27 @@ export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
           alignItems: "center",
         }}
       >
-        <svg
-          viewBox="0 0 110 110"
-          style={{
-            display: props.error ? "none" : "block",
-          }}
-        >
-          <rect
-            x="2"
-            y="2"
-            width="106"
-            height="106"
-            rx={loaderRadius}
-            strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
-            strokeDashoffset={dashOffset}
-            strokeLinecap="round"
-            fill="none"
-            strokeWidth={4}
-          />
-        </svg>
-
         <div data-img-container>
+          <svg
+            viewBox="0 0 110 110"
+            style={{
+              display: props.error ? "none" : "block",
+            }}
+          >
+            <rect
+              x="2"
+              y="2"
+              width="106"
+              height="106"
+              rx={loaderRadius}
+              strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
+              strokeDashoffset={dashOffset}
+              strokeLinecap="round"
+              fill="none"
+              strokeWidth={4}
+            />
+          </svg>
+
           <Img src={props.iconUrl} width={"80"} height={"80"} />
         </div>
       </div>
@@ -90,6 +90,10 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   position: relative;
   border-radius: ${radius.xl};
 
+  [data-img-container] {
+    position: relative;
+  }
+
   &[data-error="true"] [data-container] {
     animation: ${shakeErrorAnimation} 0.25s linear;
   }
@@ -103,12 +107,15 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
     animation: ${plusAnimation} 1.5s ease infinite;
     border-radius: 20px;
     z-index: -1;
-    outline: 1px solid red;
   }
 
   svg {
     position: absolute;
-    inset: -8px;
+    /* can't use inset because safari doesn't like it */
+    left: -8px;
+    top: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
     animation: ${fadeInAnimation} 400ms ease;
   }
 
