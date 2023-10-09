@@ -185,6 +185,10 @@ const MagicUI: React.FC<{
   }
 
   const showInputUI = isEmailEnabled || isSMSEnabled;
+  const screen = useScreenContext();
+  const showSeparator =
+    props.modalSize === "wide" ||
+    (screen !== reservedScreens.main && props.modalSize === "compact");
 
   return (
     <Container
@@ -252,7 +256,7 @@ const MagicUI: React.FC<{
 
       {showInputUI && (
         <>
-          {props.modalSize === "wide" && (
+          {showSeparator && (
             <TextDivider>
               <span> OR </span>
             </TextDivider>
@@ -441,8 +445,13 @@ const MagicConnectionUIScreen: React.FC<
       }}
     >
       <ModalHeader onBack={props.goBack} title="Sign in" />
-      <Spacer y="lg" />
-      <Container expand flex="column" center="both">
+      <Spacer y="xl" />
+      <Container
+        expand
+        flex="column"
+        center="both"
+        px={props.modalSize === "wide" ? "lg" : undefined}
+      >
         <MagicUI
           {...props}
           onSelect={(data) => {
