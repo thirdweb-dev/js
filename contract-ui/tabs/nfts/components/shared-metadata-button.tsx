@@ -36,7 +36,6 @@ export const NFTSharedMetadataButton: React.FC<
         <NFTMintForm
           contract={contractQuery.contract}
           sharedMetadataMutation={mutation}
-          ecosystem={"evm"}
         />
       </Drawer>
       <Button

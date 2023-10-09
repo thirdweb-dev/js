@@ -15,7 +15,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
-import { useWallet as useWalletSol } from "@solana/wallet-adapter-react";
 import {
   ChainId,
   useBalance,
@@ -27,10 +26,6 @@ import {
   useSwitchChain,
   useWallet,
 } from "@thirdweb-dev/react";
-import {
-  useBalance as useSolBalance,
-  useSDK as useSolanaSDK,
-} from "@thirdweb-dev/react/solana";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -49,7 +44,6 @@ export const MismatchButton = React.forwardRef<
       onClick,
       loadingText,
       type,
-      ecosystem = "evm",
       upsellTestnet = false,
       onChainSelect,
       ...props
@@ -57,12 +51,9 @@ export const MismatchButton = React.forwardRef<
     ref,
   ) => {
     const wallet = useWallet();
-    const { publicKey } = useWalletSol();
     const evmBalance = useBalance();
-    const solBalance = useSolBalance();
-    const solNetwork = useSolanaSDK()?.network;
     const initialFocusRef = useRef<HTMLButtonElement>(null);
-    const networksMismatch = useNetworkMismatch() && ecosystem === "evm";
+    const networksMismatch = useNetworkMismatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const trackEvent = useTrack();
 
@@ -74,66 +65,42 @@ export const MismatchButton = React.forwardRef<
       (chainInfo.chainId === ChainId.Localhost ||
         (chainInfo.faucets && chainInfo.faucets.length > 0));
     const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
-    if (!wallet && ecosystem === "evm") {
+    if (!wallet) {
       return (
         <CustomConnectWallet
           borderRadius="md"
           colorScheme="primary"
-          ecosystem={ecosystem}
           {...props}
         />
       );
     }
-
-    if (!publicKey && ecosystem === "solana") {
-      return (
-        <CustomConnectWallet
-          borderRadius="md"
-          colorScheme="primary"
-          ecosystem={ecosystem}
-          {...props}
-        />
-      );
-    }
-
-    const shouldShowSolanaFaucet =
-      ecosystem === "solana" &&
-      BigNumber.from(solBalance.data?.value || 0).eq(0) &&
-      solNetwork === "devnet";
-
-    const shouldShowEVMFaucet =
-      ecosystem === "evm" && BigNumber.from(evmBalance.data?.value || 0).eq(0);
-
-    const shouldShowEitherFaucet =
-      shouldShowSolanaFaucet || shouldShowEVMFaucet;
-
+    const shouldShowEVMFaucet = BigNumber.from(evmBalance.data?.value || 0).eq(
+      0,
+    );
     return (
       <Popover
         initialFocusRef={initialFocusRef}
         isLazy
         isOpen={isOpen}
-        onOpen={networksMismatch || shouldShowEitherFaucet ? onOpen : undefined}
+        onOpen={networksMismatch || shouldShowEVMFaucet ? onOpen : undefined}
         onClose={onClose}
       >
         <PopoverTrigger>
           <Button
-            isLoading={
-              (ecosystem === "evm" && evmBalance.isLoading) ||
-              (ecosystem === "solana" && solBalance.isLoading)
-            }
+            isLoading={evmBalance.isLoading}
             {...props}
-            type={networksMismatch || shouldShowEitherFaucet ? "button" : type}
+            type={networksMismatch || shouldShowEVMFaucet ? "button" : type}
             loadingText={loadingText}
             onClick={(e) => {
               e.stopPropagation();
-              if (shouldShowEitherFaucet) {
+              if (shouldShowEVMFaucet) {
                 trackEvent({
                   category: "no-funds",
                   action: "popover",
-                  label: ecosystem,
+                  label: "evm",
                 });
               }
-              if (networksMismatch || shouldShowEitherFaucet) {
+              if (networksMismatch || shouldShowEVMFaucet) {
                 eventRef.current = e;
                 return undefined;
               }
@@ -172,24 +139,14 @@ export const MismatchButton = React.forwardRef<
                   }
                 }}
               />
-            ) : !hasFaucet &&
-              upsellTestnet &&
-              ecosystem === "evm" &&
-              onChainSelect ? (
+            ) : !hasFaucet && upsellTestnet && onChainSelect ? (
               <UpsellTestnetNotice
                 initialFocusRef={initialFocusRef}
                 onClose={onClose}
                 onChainSelect={onChainSelect}
               />
             ) : (
-              <NoFundsNotice
-                symbol={
-                  ecosystem === "solana"
-                    ? "SOL"
-                    : chainInfo?.nativeCurrency.symbol || ""
-                }
-                ecosystem={ecosystem}
-              />
+              <NoFundsNotice symbol={chainInfo?.nativeCurrency.symbol || ""} />
             )}
           </PopoverBody>
         </Card>
@@ -289,10 +246,9 @@ const MismatchNotice: React.FC<{
 
 interface NoFundsNoticeProps {
   symbol: string;
-  ecosystem: "solana" | "evm" | "either";
 }
 
-const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol, ecosystem }) => {
+const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
   const trackEvent = useTrack();
 
   const balanceQuery = useBalance();
@@ -306,9 +262,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol, ecosystem }) => {
       (chainInfo.faucets && chainInfo.faucets.length > 0));
 
   const requestFunds = async () => {
-    if (ecosystem === "solana") {
-      window.open("/faucet/solana", "_blank");
-    } else if (sdk && hasFaucet) {
+    if (sdk && hasFaucet) {
       trackEvent({
         category: "no-funds",
         action: "click",

@@ -26,7 +26,7 @@ import type {
   AuctionListing,
   DirectListing,
   Marketplace,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";

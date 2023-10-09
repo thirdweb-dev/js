@@ -1,10 +1,6 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getAllChainRecords } from "utils/allChainsRecords";
-import {
-  getSolNetworkFromNetworkPath,
-  isSupportedSOLNetwork,
-} from "utils/solanaUtils";
 
 // ignore assets, api - only intercept page routes
 export const config = {
@@ -61,14 +57,15 @@ export function middleware(request: NextRequest) {
   }
 
   // solana contract page
-  if (isSupportedSOLNetwork(networkOrAddress)) {
-    const solNetwork = getSolNetworkFromNetworkPath(networkOrAddress);
-    if (!solNetwork) {
-      return redirect(request, "/404");
-    } else {
-      return rewrite(request, `/sol${pathname}`);
-    }
-  }
+  // if (isSupportedSOLNetwork(networkOrAddress)) {
+  //   const solNetwork = getSolNetworkFromNetworkPath(networkOrAddress);
+  //   if (!solNetwork) {
+  //     return redirect(request, "/404");
+  //   } else {
+  //     return rewrite(request, `/sol${pathname}`);
+  //   }
+  // }
+
   // evm contract page
   // /<network>/... or /<chainId>/...
   if (isPossibleEVMAddress(catchAll[0])) {

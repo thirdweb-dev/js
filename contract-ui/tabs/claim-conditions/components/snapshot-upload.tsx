@@ -24,7 +24,7 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { ClaimCondition, resolveAddress } from "@thirdweb-dev/sdk/evm";
+import { ClaimCondition, resolveAddress } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
 import { utils } from "ethers";
 import Papa from "papaparse";

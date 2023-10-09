@@ -24,7 +24,7 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
             In order to manage your account, you need to sign-in with a wallet.
           </Text>
           <Divider my={4} />
-          <CustomConnectWallet ecosystem="evm" />
+          <CustomConnectWallet />
         </Card>
       </Container>
     );

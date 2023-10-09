@@ -1,10 +1,8 @@
-import BuiltinSolanaDeployForm from "../contract-deploy-form/solana-program";
 import { PublishedContractDetails } from "../hooks";
 import {
   Flex,
   Icon,
   Image,
-  Select,
   Spinner,
   Table,
   TableContainer,
@@ -14,47 +12,27 @@ import {
   Thead,
   Tooltip,
   Tr,
-  UseDisclosureReturn,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ThirdwebSDKProvider, useSDK } from "@thirdweb-dev/react/solana";
-import { ContractType } from "@thirdweb-dev/sdk/evm";
-import type {
-  NFTCollectionMetadataInput,
-  NFTDropContractInput,
-  TokenMetadataInput,
-} from "@thirdweb-dev/sdk/solana";
+import { ContractType } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { replaceDeployerAddress } from "components/explore/publisher";
-import { BuiltinContractDetails, SolContractType } from "constants/mappings";
-import { getSOLRPC } from "constants/rpc";
+import { BuiltinContractDetails } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
-import React, { useId, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { FiArrowRight } from "react-icons/fi";
 import { Column, Row, useTable } from "react-table";
-import invariant from "tiny-invariant";
 import {
   Card,
-  Drawer,
   Heading,
   LinkButton,
   Text,
   TrackedIconButton,
-  TrackedLink,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
-import {
-  DashboardSolanaNetwork,
-  SupportedSolanaNetworkToUrlMap,
-} from "utils/solanaUtils";
 
 interface PublishedContractTableProps {
   contractDetails: ContractDataInput[];
@@ -64,9 +42,8 @@ interface PublishedContractTableProps {
 
 type ContractDataInput = BuiltinContractDetails | PublishedContractDetails;
 type ContractDataRow = ContractDataInput["metadata"] & {
-  ecosystem: "evm" | "solana";
   id: string;
-  contractType: ContractType | SolContractType;
+  contractType: ContractType;
 };
 
 function convertContractDataToRowData(
@@ -75,7 +52,6 @@ function convertContractDataToRowData(
   return {
     id: input.id,
     ...input.metadata,
-    ecosystem: (input as BuiltinContractDetails)?.ecosytem || "evm",
     contractType: (input as BuiltinContractDetails)?.contractType || "custom",
   };
 }
@@ -134,7 +110,7 @@ export const PublishedContractTable: ComponentWithChildren<
       },
       {
         id: "audit-badge",
-        accessor: (row) => ({ audit: row.audit, ecosystem: row.ecosystem }),
+        accessor: (row) => ({ audit: row.audit }),
         Cell: (cell: any) => (
           <Flex align="center" as="span" gap="2">
             {cell.value.audit ? (
@@ -236,16 +212,9 @@ interface ContractTableRowProps {
 
 const ContractTableRow: React.FC<ContractTableRowProps> = ({ row }) => {
   const router = useRouter();
-  const modalState = useDisclosure();
 
   return (
     <>
-      {row.original.ecosystem === "solana" && (
-        <SolanaDeployDrawer
-          contractDetails={row.original}
-          disclosure={modalState}
-        />
-      )}
       <Tr
         borderBottomWidth={1}
         cursor="pointer"
@@ -257,19 +226,15 @@ const ContractTableRow: React.FC<ContractTableRowProps> = ({ row }) => {
           },
         }}
         onClick={() => {
-          if (row.original.ecosystem === "evm") {
-            router.push(
-              replaceDeployerAddress(
-                `/${row.original.publisher}/${row.original.id}`,
-              ),
-              undefined,
-              {
-                scroll: true,
-              },
-            );
-            return;
-          }
-          modalState.onOpen();
+          router.push(
+            replaceDeployerAddress(
+              `/${row.original.publisher}/${row.original.id}`,
+            ),
+            undefined,
+            {
+              scroll: true,
+            },
+          );
         }}
         {...row.getRowProps()}
       >
@@ -289,207 +254,5 @@ const ContractTableRow: React.FC<ContractTableRowProps> = ({ row }) => {
         </Td>
       </Tr>
     </>
-  );
-};
-type UseDpeloySolanaParams<TContractType extends SolContractType> =
-  TContractType extends "token"
-    ? TokenMetadataInput
-    : TContractType extends "nft-collection"
-    ? NFTCollectionMetadataInput
-    : TContractType extends "nft-drop"
-    ? NFTDropContractInput
-    : never;
-
-function useDeploySolana<TContractType extends SolContractType>(
-  contractType: TContractType,
-) {
-  const sdk = useSDK();
-  return useMutation(async (data: UseDpeloySolanaParams<TContractType>) => {
-    invariant(sdk, "SDK not initialized");
-
-    if (contractType === "token") {
-      return await sdk.deployer.createToken(data as TokenMetadataInput);
-    } else if (contractType === "nft-collection") {
-      return await sdk.deployer.createNftCollection(
-        data as NFTCollectionMetadataInput,
-      );
-    } else if (contractType === "nft-drop") {
-      return await sdk.deployer.createNftDrop(data as NFTDropContractInput);
-    }
-    throw new Error("invalid contract type");
-  }, {});
-}
-
-interface SolanaDeployDrawerProps {
-  contractDetails: ContractDataRow;
-  disclosure: UseDisclosureReturn;
-}
-
-const SolanaDeployDrawer: React.FC<SolanaDeployDrawerProps> = (props) => {
-  const [network, setNetwork] =
-    useState<DashboardSolanaNetwork>("mainnet-beta");
-  const wallet = useWallet();
-  const queryClient = useQueryClient();
-
-  const endpoint = useMemo(() => network && getSOLRPC(network), [network]);
-
-  return (
-    <ThirdwebSDKProvider
-      wallet={wallet}
-      queryClient={queryClient}
-      network={endpoint}
-    >
-      <WrappedSolanaDeployDrawer
-        {...props}
-        network={network}
-        setNetwork={setNetwork}
-      />
-    </ThirdwebSDKProvider>
-  );
-};
-
-const WrappedSolanaDeployDrawer: React.FC<
-  SolanaDeployDrawerProps & {
-    network: DashboardSolanaNetwork;
-    setNetwork: React.Dispatch<React.SetStateAction<"mainnet-beta" | "devnet">>;
-  }
-> = ({ contractDetails, disclosure, network, setNetwork }) => {
-  const formId = useId();
-  const deployMutation = useDeploySolana(
-    contractDetails.contractType as SolContractType,
-  );
-
-  const trackEvent = useTrack();
-
-  const router = useRouter();
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully deployed program",
-    "Failed to deploy program",
-  );
-
-  return (
-    <Drawer
-      size="lg"
-      isOpen={disclosure.isOpen}
-      onClose={disclosure.onClose}
-      header={{
-        children: (
-          <Flex gap={4} align="center">
-            <ChakraNextImage
-              boxSize={12}
-              src={contractDetails.logo || ""}
-              alt=""
-            />
-            <Flex direction="column">
-              <Flex gap={2}>
-                <Heading minW="60px" size="title.sm">
-                  {contractDetails.name}
-                </Heading>
-              </Flex>
-              <Text maxW="xs" fontStyle="italic" noOfLines={2}>
-                {contractDetails.description}
-              </Text>
-            </Flex>
-          </Flex>
-        ),
-      }}
-      footer={{
-        children: (
-          <Flex direction="column" gap={4}>
-            <Flex direction="column">
-              <Heading size="subtitle.md">Network</Heading>
-              <Text size="body.md" fontStyle="italic">
-                Select a network to deploy this program on. We recommend
-                starting with Devnet.{" "}
-                <TrackedLink
-                  href="https://blog.thirdweb.com/guides/which-network-should-you-use"
-                  color="primary.600"
-                  category="deploy"
-                  label="learn-networks"
-                  isExternal
-                >
-                  Learn more about the different networks.
-                </TrackedLink>{" "}
-              </Text>
-              <Text fontWeight="600" mt={2}>
-                ⚠️ To deploy on Devnet, you&apos;ll need to manually switch
-                networks on the Developer Settings of your Phantom wallet.
-              </Text>
-            </Flex>
-            <Flex w="100%" gap={4} direction={{ base: "column", md: "row" }}>
-              <Select
-                isDisabled={deployMutation.isLoading}
-                onChange={(e) => {
-                  setNetwork(e.target.value as DashboardSolanaNetwork);
-                }}
-              >
-                <option value="mainnet-beta">Mainnet Beta</option>
-                <option value="devnet">Devnet</option>
-              </Select>
-              <TransactionButton
-                flexShrink={0}
-                type="submit"
-                form={formId}
-                ecosystem="solana"
-                isLoading={deployMutation.isLoading}
-                colorScheme="blue"
-                transactionCount={1}
-              >
-                Deploy Now
-              </TransactionButton>
-            </Flex>
-          </Flex>
-        ),
-      }}
-    >
-      <BuiltinSolanaDeployForm
-        formId={formId}
-        contractType={contractDetails.contractType as SolContractType}
-        onSubmitForm={(d) => {
-          trackEvent({
-            category: "program",
-            action: "deploy",
-            label: "attempt",
-            programId: contractDetails.contractType,
-            deployData: d,
-            network,
-          });
-          deployMutation.mutate(d, {
-            onSuccess: (contractAddress, variables) => {
-              trackEvent({
-                category: "program",
-                action: "deploy",
-                label: "success",
-                programId: contractDetails.contractType,
-                deployData: variables,
-                contractAddress,
-                network,
-              });
-              onSuccess();
-              router.push(
-                `/${
-                  SupportedSolanaNetworkToUrlMap[
-                    network as DashboardSolanaNetwork
-                  ]
-                }/${contractAddress}`,
-              );
-            },
-            onError: (error, variables) => {
-              trackEvent({
-                category: "program",
-                action: "deploy",
-                label: "error",
-                programId: contractDetails.contractType,
-                deployData: variables,
-                error,
-                network,
-              });
-              onError(error);
-            },
-          });
-        }}
-      />
-    </Drawer>
   );
 };

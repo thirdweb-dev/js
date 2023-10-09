@@ -7,7 +7,7 @@ import {
   useContractType,
   useSetAllRoleMembers,
 } from "@thirdweb-dev/react";
-import { Role } from "@thirdweb-dev/sdk/evm";
+import { Role } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";

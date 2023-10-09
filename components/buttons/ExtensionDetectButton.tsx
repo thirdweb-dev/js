@@ -1,7 +1,7 @@
 import { useContract } from "@thirdweb-dev/react";
 import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import { ContractWrapper } from "@thirdweb-dev/sdk/dist/declarations/src/evm/core/classes/contract-wrapper";
-import { detectContractFeature } from "@thirdweb-dev/sdk/evm";
+import { detectContractFeature } from "@thirdweb-dev/sdk";
 import { ButtonProps } from "tw-components";
 
 export interface FeatureDetectButtonProps

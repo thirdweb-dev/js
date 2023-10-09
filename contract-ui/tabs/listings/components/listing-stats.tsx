@@ -12,7 +12,7 @@ import {
   useListingsCount,
 } from "@thirdweb-dev/react";
 import { Marketplace } from "@thirdweb-dev/sdk";
-import { MarketplaceV3 } from "@thirdweb-dev/sdk/evm";
+import { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { Card } from "tw-components";

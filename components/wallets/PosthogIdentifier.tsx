@@ -1,12 +1,10 @@
 import posthog from "posthog-js";
-import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
 import {
   useAddress,
   useBalance,
   useChainId,
   useWallet,
 } from "@thirdweb-dev/react";
-import { useSDK } from "@thirdweb-dev/react/solana";
 import React, { useEffect } from "react";
 
 const walletIdToPHName: Record<string, string> = {
@@ -19,11 +17,9 @@ const walletIdToPHName: Record<string, string> = {
 };
 
 export const PosthogIdentifier: React.FC = () => {
-  const publicKey = useSolanaWallet().publicKey;
   const address = useAddress();
   const chainId = useChainId();
   const balance = useBalance();
-  const solSDKNetwork = useSDK()?.network;
   const wallet = useWallet();
 
   useEffect(() => {
@@ -37,23 +33,15 @@ export const PosthogIdentifier: React.FC = () => {
   useEffect(() => {
     if (address) {
       posthog.identify(address);
-    } else if (publicKey) {
-      posthog.identify(publicKey.toBase58());
     }
-  }, [address, publicKey]);
+  }, [address]);
 
   useEffect(() => {
     if (chainId) {
       posthog.unregister("network");
       posthog.register({ chain_id: chainId, ecosystem: "evm" });
-    } else if (solSDKNetwork) {
-      posthog.unregister("chain_id");
-      posthog.register({
-        network: solSDKNetwork || "unknown_network",
-        ecosystem: "solana",
-      });
     }
-  }, [chainId, solSDKNetwork]);
+  }, [chainId]);
 
   useEffect(() => {
     if (balance?.data?.displayValue) {

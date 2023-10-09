@@ -1,7 +1,7 @@
 import { GasEstimate } from "@3rdweb-sdk/react/hooks/useGas";
 import { Box, BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
-import { ContractType } from "@thirdweb-dev/sdk/evm";
+import { ContractType } from "@thirdweb-dev/sdk";
 import {
   CONTRACT_TYPE_NAME_MAP,
   GasEstimatorMap,

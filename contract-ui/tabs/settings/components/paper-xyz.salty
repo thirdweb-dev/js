@@ -2,7 +2,7 @@ import { useDashboardNetwork } from "@3rdweb-sdk/react";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Code, Divider, Flex, Icon } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import type { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk/evm";
+import type { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
 import {
   formatError,
   formatResponseData,
@@ -178,7 +178,7 @@ function createCodeSnippet(
   let code = "";
   if (language === "javascript") {
     code = `
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 async function createCheckoutIntent() {
   const sdk = new ThirdwebSDK("${network}");

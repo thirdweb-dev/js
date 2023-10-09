@@ -1,5 +1,4 @@
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
@@ -45,12 +44,9 @@ const GET_STARTED_SECTIONS = [
 const Dashboard: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
-  const { publicKey } = useWallet();
   const connectionStatus = useConnectionStatus();
   const showFTUX =
-    connectionStatus !== "connected" &&
-    connectionStatus !== "connecting" &&
-    !publicKey;
+    connectionStatus !== "connected" && connectionStatus !== "connecting";
   const isLoading = connectionStatus === "unknown";
 
   return (

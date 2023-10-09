@@ -97,7 +97,7 @@ public class Example : MonoBehaviour {
 };
 
 const authSnippets = {
-  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 const sdk = new ThirdwebSDK("goerli");
 

@@ -5,7 +5,7 @@ import {
 } from "./query/useQueryWithNetwork";
 import { useToast } from "@chakra-ui/react";
 import { useSDKChainId } from "@thirdweb-dev/react";
-import type { Split } from "@thirdweb-dev/sdk/evm";
+import type { Split } from "@thirdweb-dev/sdk";
 import {
   BalanceQueryRequest,
   BalanceQueryResponse,

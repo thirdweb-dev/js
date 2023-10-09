@@ -7,7 +7,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import type { TransactionError } from "@thirdweb-dev/sdk/evm";
+import type { TransactionError } from "@thirdweb-dev/sdk";
 import {
   createContext,
   useCallback,

@@ -1,4 +1,4 @@
-import type { ContractType } from "@thirdweb-dev/sdk/evm";
+import type { ContractType } from "@thirdweb-dev/sdk";
 
 export type ContractId = ContractType | string;
 export type ContractCellContext = "deploy" | "publish";

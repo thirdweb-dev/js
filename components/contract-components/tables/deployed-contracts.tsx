@@ -27,7 +27,7 @@ import {
   ContractWithMetadata,
   PrebuiltContractType,
   SchemaForPrebuiltContractType,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { GettingStartedBox } from "components/getting-started/box";
 import { GettingStartedCard } from "components/getting-started/card";

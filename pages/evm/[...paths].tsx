@@ -28,7 +28,7 @@ import {
   useContract,
   useContractMetadata,
 } from "@thirdweb-dev/react";
-import { detectContractFeature } from "@thirdweb-dev/sdk/evm";
+import { detectContractFeature } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";

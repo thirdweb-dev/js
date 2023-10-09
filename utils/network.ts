@@ -1,6 +1,5 @@
 /* eslint-disable line-comment-position */
-import { DashboardSolanaNetwork } from "./solanaUtils";
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 
 export const SupportedNetworkToChainIdMap = {
   ethereum: ChainId.Mainnet, // 1
@@ -42,6 +41,4 @@ export const NetworkToBlockTimeMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Hardhat]: "1",
 };
 
-export type SupportedNetwork =
-  | keyof typeof SupportedNetworkToChainIdMap
-  | DashboardSolanaNetwork;
+export type SupportedNetwork = keyof typeof SupportedNetworkToChainIdMap;

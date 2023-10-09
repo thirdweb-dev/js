@@ -16,7 +16,7 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { constants, utils } from "ethers";
 import { useState } from "react";

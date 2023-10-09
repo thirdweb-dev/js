@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
-import type { SDKOptions } from "@thirdweb-dev/sdk/evm";
+import type { SDKOptions } from "@thirdweb-dev/sdk";
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
   DASHBOARD_THIRDWEB_SECRET_KEY,

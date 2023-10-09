@@ -100,6 +100,7 @@ export const SettingsMetadata = <
 
   const { fields, append, remove } = useFieldArray({
     control,
+    // @ts-expect-error - TODO: fix this
     name: "dashboard_social_urls",
   });
 
@@ -253,7 +254,7 @@ export const SettingsMetadata = <
                   isDisabled={metadata.isLoading || metadataMutation.isLoading}
                 >
                   <FormLabel textTransform="capitalize">
-                    {item.key ||
+                    {item.id ||
                       extractDomain(
                         watch(`dashboard_social_urls.${index}.value`),
                       ) ||

@@ -2,7 +2,6 @@ import { SidebarNav } from "./nav";
 import { NavLink } from "./nav-link";
 import { Box, Flex, Image, Skeleton, useDisclosure } from "@chakra-ui/react";
 import type { useContractMetadata } from "@thirdweb-dev/react/evm";
-import type { useProgramMetadata } from "@thirdweb-dev/react/solana";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { EnhancedRoute } from "contract-ui/types/types";
 import { useRouter } from "next/router";
@@ -13,9 +12,7 @@ import { shortenIfAddress } from "utils/usedapp-external";
 
 type ContractSidebarProps = {
   address: string;
-  metadataQuery:
-    | ReturnType<typeof useContractMetadata>
-    | ReturnType<typeof useProgramMetadata>;
+  metadataQuery: ReturnType<typeof useContractMetadata>;
   routes: EnhancedRoute[];
   activeRoute?: EnhancedRoute;
 };

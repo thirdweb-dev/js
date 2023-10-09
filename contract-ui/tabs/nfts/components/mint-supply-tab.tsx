@@ -1,6 +1,6 @@
 import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { useAddress, useMintNFTSupply } from "@thirdweb-dev/react";
-import { Erc1155 } from "@thirdweb-dev/sdk/evm";
+import { Erc1155 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";

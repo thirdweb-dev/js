@@ -1,5 +1,5 @@
 import { useContract, useContractEvents } from "@thirdweb-dev/react";
-import { ContractEvent } from "@thirdweb-dev/sdk/evm";
+import { ContractEvent } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
 
 interface InternalTransaction {

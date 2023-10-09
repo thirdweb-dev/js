@@ -22,7 +22,7 @@ import type {
   DirectListingV3,
   EnglishAuction,
   MarketplaceV3,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import { BigNumber } from "ethers";

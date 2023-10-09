@@ -1,6 +1,6 @@
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { UseContractResult } from "@thirdweb-dev/react";
-import type { Split } from "@thirdweb-dev/sdk/evm";
+import type { Split } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";

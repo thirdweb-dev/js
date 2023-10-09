@@ -29,7 +29,7 @@ const Published: ThirdwebNextPage = () => {
         title: "Connect your wallet to get started",
         description:
           "In order to interact with your contracts you need to connect an EVM compatible wallet.",
-        children: <CustomConnectWallet ecosystem="evm" />,
+        children: <CustomConnectWallet />,
         completed: !!address,
       },
       {
@@ -79,7 +79,7 @@ const Published: ThirdwebNextPage = () => {
 };
 
 Published.getLayout = (page, props) => (
-  <AppLayout ecosystem="evm" {...props} hasSidebar={true}>
+  <AppLayout {...props} hasSidebar={true}>
     <ContractsSidebar activePage="publish" />
     {page}
   </AppLayout>

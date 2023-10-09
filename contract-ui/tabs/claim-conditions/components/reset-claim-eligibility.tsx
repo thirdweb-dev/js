@@ -1,7 +1,7 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Box } from "@chakra-ui/react";
 import { DropContract, useResetClaimConditions } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { useTrack } from "hooks/analytics/useTrack";

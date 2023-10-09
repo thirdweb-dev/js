@@ -6,7 +6,6 @@ import {
   PopoverTrigger,
   VStack,
 } from "@chakra-ui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
 import {
   useAddress,
   useDisconnect,
@@ -26,21 +25,14 @@ const TRACKING_CATEGORY = "notice";
 export const SignInModal: React.FC = () => {
   const track = useTrack();
   const evmAddress = useAddress();
-  const solAddress = useWallet().publicKey?.toBase58();
   const walletId = useWalletConfig()?.id;
   const { isLoading, isLoggedIn } = useUser();
   const { login, isLoading: loginLoading } = useLogin();
   const disconnect = useDisconnect();
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
-  if (!evmAddress && !solAddress) {
-    // if neither solana or evm wallets are connected then don't show the notice
-    return null;
-  }
-
-  // temporary
-  if (!evmAddress && solAddress) {
-    // don't show the notice if it's solana
+  if (!evmAddress) {
+    // if wallet is not connected don't show the notice
     return null;
   }
 

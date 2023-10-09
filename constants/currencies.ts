@@ -1,4 +1,4 @@
-import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk/evm";
+import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
 
 export interface CurrencyMetadata {
   address: string;
@@ -210,41 +210,6 @@ const BinanceTestnet: CurrencyMetadata[] = [
   },
 ];
 
-const Solana: CurrencyMetadata[] = [
-  {
-    address: "SOLANA_NATIVE_TOKEN",
-    name: "Solana",
-    symbol: "SOL",
-  },
-  {
-    address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-    name: "USD Coin",
-    symbol: "USDC",
-  },
-  {
-    address: "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
-    name: "Wrapped ETH",
-    symbol: "WETH",
-  },
-  {
-    address: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-    name: "Tether",
-    symbol: "USDT",
-  },
-];
-
-const SolanaDevnet: CurrencyMetadata[] = [
-  {
-    address: "SOLANA_NATIVE_TOKEN",
-    name: "Solana",
-    symbol: "SOL",
-  },
-  {
-    address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-    name: "USD Coin",
-    symbol: "USDC",
-  },
-];
 export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.Mainnet]: Ethereum,
   [ChainId.Goerli]: Goerli,
@@ -260,9 +225,4 @@ export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.ArbitrumGoerli]: ArbitrumGoerli,
   [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
   [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
-} as const;
-
-export const SOLANA_CURRENCIES: Record<string, CurrencyMetadata[]> = {
-  "mainnet-beta": Solana,
-  devnet: SolanaDevnet,
 } as const;

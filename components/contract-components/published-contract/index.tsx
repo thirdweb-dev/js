@@ -26,7 +26,7 @@ import {
   PublishedContract as PublishedContractType,
   PublishedMetadata,
   fetchSourceFilesFromMetadata,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { replaceDeployerAddress } from "components/explore/publisher";
 import { ShareButton } from "components/share-buttom";

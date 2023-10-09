@@ -29,7 +29,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   SnapshotEntry,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { detectFeatures } from "components/contract-components/utils";

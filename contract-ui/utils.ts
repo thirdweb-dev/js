@@ -5,7 +5,7 @@ import {
   EditionDrop,
   NFTDrop,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
 export function isPrebuiltContract(

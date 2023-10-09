@@ -1,4 +1,4 @@
-import type { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import type { ComponentType } from "react";
 

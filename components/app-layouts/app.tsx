@@ -76,7 +76,6 @@ const persister: Persister = createAsyncStoragePersister({
         clientState: {
           ...data.clientState,
           queries: data.clientState.queries.filter(
-            // covers solana as well as evm
             (q) => !shouldNeverPersistQuery(q.queryKey),
           ),
         },

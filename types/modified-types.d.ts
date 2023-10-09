@@ -1,4 +1,4 @@
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk/evm";
+import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 
 export type NFTMetadataInputLimited = Pick<
   NFTMetadataInput,

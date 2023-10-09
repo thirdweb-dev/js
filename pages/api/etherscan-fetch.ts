@@ -1,4 +1,4 @@
-import { ChainId } from "@thirdweb-dev/sdk/evm";
+import { ChainId } from "@thirdweb-dev/sdk";
 import { apiKeyMap, apiMap } from "lib/maps";
 import { NextApiRequest, NextApiResponse } from "next";
 

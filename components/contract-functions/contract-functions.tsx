@@ -12,7 +12,7 @@ import type {
   AbiEvent,
   AbiFunction,
   SmartContract,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { SourceFile } from "components/contract-components/types";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";

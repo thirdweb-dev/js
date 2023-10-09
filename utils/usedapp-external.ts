@@ -1,7 +1,4 @@
-import {
-  isPossibleEVMAddress,
-  isPossibleSolanaAddress,
-} from "lib/address-utils";
+import { isPossibleEVMAddress } from "lib/address-utils";
 
 export function shortenString(str: string, extraShort = true) {
   return `${str.substring(0, extraShort ? 4 : 6)}...${str.substring(
@@ -15,7 +12,7 @@ export function shortenIfAddress(
   if (!address) {
     return "";
   }
-  if (isPossibleSolanaAddress(address) || isPossibleEVMAddress(address, true)) {
+  if (isPossibleEVMAddress(address, true)) {
     return shortenString(address, extraShort);
   }
   return address;

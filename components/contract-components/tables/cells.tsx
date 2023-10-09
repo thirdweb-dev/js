@@ -1,7 +1,7 @@
 import {
   PrebuiltContractType,
   SchemaForPrebuiltContractType,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 
 import { Skeleton } from "@chakra-ui/react";
 

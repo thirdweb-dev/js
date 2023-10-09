@@ -10,7 +10,6 @@ import {
   Tabs,
   usePrevious,
 } from "@chakra-ui/react";
-import { PublicKey } from "@solana/web3.js";
 import type { NFT } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import React from "react";
@@ -39,10 +38,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     return null;
   }
 
-  const tokenId =
-    renderData.metadata.id === PublicKey.default.toBase58()
-      ? "Unclaimed"
-      : renderData.metadata.id;
+  const tokenId = renderData.metadata.id;
   return (
     <Drawer
       allowPinchZoom

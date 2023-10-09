@@ -1,4 +1,4 @@
-import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 
 export interface IMintFormProps {
   contract?: ValidContractInstance;

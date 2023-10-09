@@ -14,7 +14,6 @@ import {
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { UseMutationResult } from "@tanstack/react-query";
 import {
   NFTContract,
@@ -22,7 +21,6 @@ import {
   useMintNFT,
   useSetSharedMetadata,
 } from "@thirdweb-dev/react";
-import type { useMintNFT as useMintNFTSolana } from "@thirdweb-dev/react/solana";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -48,12 +46,10 @@ const MINT_FORM_ID = "nft-mint-form";
 type NFTMintForm =
   | {
       contract?: NFTContract;
-      mintMutation:
-        | ReturnType<typeof useMintNFT>
-        | ReturnType<typeof useMintNFTSolana>;
+      mintMutation: ReturnType<typeof useMintNFT>;
+
       lazyMintMutation?: undefined;
       sharedMetadataMutation?: undefined;
-      ecosystem: "evm" | "solana";
     }
   | {
       contract?: NFTContract;
@@ -64,29 +60,23 @@ type NFTMintForm =
       >;
       mintMutation?: undefined;
       sharedMetadataMutation?: undefined;
-      ecosystem: "evm" | "solana";
     }
   | {
       contract?: NFTContract;
       sharedMetadataMutation: ReturnType<typeof useSetSharedMetadata>;
       mintMutation?: undefined;
       lazyMintMutation?: undefined;
-      ecosystem: "evm" | "solana";
     };
 
 export const NFTMintForm: React.FC<NFTMintForm> = ({
   contract,
   lazyMintMutation,
   mintMutation,
-  ecosystem,
   sharedMetadataMutation,
 }) => {
   const trackEvent = useTrack();
-  const evmAddress = useAddress();
-  // eslint-disable-next-line line-comment-position
-  const wallet = useWallet(); // TODO (SOL) as single address hook?
-  const address =
-    ecosystem === "evm" ? evmAddress : wallet?.publicKey?.toBase58();
+  const address = useAddress();
+
   const mutation = mintMutation || lazyMintMutation || sharedMetadataMutation;
 
   const {
@@ -472,7 +462,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           Cancel
         </Button>
         <TransactionButton
-          ecosystem={ecosystem}
           transactionCount={1}
           isLoading={mutation?.isLoading || false}
           form={MINT_FORM_ID}

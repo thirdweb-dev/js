@@ -10,7 +10,7 @@ import {
   fetchContractMetadataFromAddress,
   getEncodedConstructorParamsForThirdwebContract,
   verify,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { apiKeyMap, apiMap } from "lib/maps";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";

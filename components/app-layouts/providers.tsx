@@ -1,5 +1,4 @@
 import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
-import { SolanaProvider } from "./solana-provider";
 import {
   EVMContractInfo,
   useEVMContractInfo,
@@ -113,7 +112,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
       }}
     >
       <GlobalAuthTokenProvider />
-      <SolanaProvider>{children}</SolanaProvider>
+      {children}
     </ThirdwebProvider>
   );
 };

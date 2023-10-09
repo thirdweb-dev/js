@@ -36,7 +36,6 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
       mintQuery={mint}
       decimals={decimals.data}
       address={address}
-      ecosystem="evm"
     />
   );
 };
@@ -45,8 +44,7 @@ export const TokenMintFormLayout: React.FC<{
   mintQuery: UseMutationResult<unknown, unknown, TokenParams>;
   decimals: number | undefined;
   address: string | undefined;
-  ecosystem: "evm" | "solana";
-}> = ({ mintQuery, decimals, address, ecosystem }) => {
+}> = ({ mintQuery, decimals, address }) => {
   const trackEvent = useTrack();
   const {
     register,
@@ -122,7 +120,6 @@ export const TokenMintFormLayout: React.FC<{
           Cancel
         </Button>
         <TransactionButton
-          ecosystem={ecosystem}
           transactionCount={1}
           isLoading={mintQuery.isLoading}
           form={MINT_FORM_ID}

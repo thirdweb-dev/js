@@ -5,7 +5,7 @@ import {
   AddContractInput,
   ValidContractInstance,
   isExtensionEnabled,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";

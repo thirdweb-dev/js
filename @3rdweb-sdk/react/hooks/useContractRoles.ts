@@ -6,7 +6,7 @@ import {
   useContractType,
   useRoleMembers,
 } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 
 export function isContractWithRoles(

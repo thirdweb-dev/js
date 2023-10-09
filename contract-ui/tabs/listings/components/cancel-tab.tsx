@@ -1,7 +1,7 @@
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Stack } from "@chakra-ui/react";
 import { useCancelListing } from "@thirdweb-dev/react";
-import type { ListingType, Marketplace } from "@thirdweb-dev/sdk/evm";
+import type { ListingType, Marketplace } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";

@@ -14,7 +14,7 @@ export const ConnectWalletPrompt = () => {
           need to sign-in with a wallet.
         </Text>
         <Divider my={4} />
-        <CustomConnectWallet ecosystem="evm" />
+        <CustomConnectWallet />
       </Card>
     </Container>
   );

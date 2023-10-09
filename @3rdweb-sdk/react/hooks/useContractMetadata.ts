@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   PrebuiltContractType,
   SchemaForPrebuiltContractType,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { z } from "zod";
 
 export function useContractMetadataWithAddress(

@@ -10,9 +10,9 @@ import {
   ProposalState,
   Proposal as ProposalType,
   VoteType,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 // eslint-disable-next-line no-duplicate-imports
-import type { Vote } from "@thirdweb-dev/sdk/evm";
+import type { Vote } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { utils } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";

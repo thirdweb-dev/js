@@ -7,7 +7,6 @@ import {
 } from "@chakra-ui/react";
 import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
-
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -21,7 +20,6 @@ interface MetadataHeaderProps {
     description?: string | null;
     image?: string | null;
   };
-  ecosystem?: "solana" | "evm";
   chain?: Chain;
 }
 
@@ -30,7 +28,6 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   isError,
   address,
   data,
-  ecosystem,
   chain,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -67,10 +64,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
 
       <Flex direction="column" gap={2} align="flex-start" w="full">
         {isError ? (
-          <Heading size="title.md">
-            No {ecosystem === "solana" ? "Program" : "Contract"} Metadata
-            Detected
-          </Heading>
+          <Heading size="title.md">No Contract Metadata Detected</Heading>
         ) : (
           <Flex
             gap={4}
@@ -122,9 +116,8 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         )}
         {isError ? (
           <Text maxW="lg" size="body.sm" noOfLines={3}>
-            This {ecosystem === "solana" ? "program" : "contract"} does not
-            implement any standards that can be used to retrieve metadata. All
-            other functionality is still available.
+            This contract does not implement any standards that can be used to
+            retrieve metadata. All other functionality is still available.
           </Text>
         ) : (
           <Skeleton isLoaded={isLoaded}>

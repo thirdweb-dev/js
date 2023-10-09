@@ -1,5 +1,4 @@
 import { Chain } from "@thirdweb-dev/chains";
-import { useRouter } from "next/router";
 import {
   createContext,
   useCallback,
@@ -8,7 +7,6 @@ import {
   useState,
 } from "react";
 import invariant from "tiny-invariant";
-import { getSolNetworkFromNetworkPath } from "utils/solanaUtils";
 
 export type EVMContractInfo = {
   // using null instead of undefined here so that this type can be JSON stringified
@@ -84,15 +82,4 @@ export function useSetEVMContractInfo() {
 export function useDashboardEVMChainId() {
   const contractInfo = useEVMContractInfo();
   return contractInfo?.chain?.chainId;
-}
-
-// for SOL - get network name from URL
-export function useDashboardSOLNetworkId() {
-  const router = useRouter();
-
-  const dashboardNetwork = router.query.paths
-    ? router.query.paths[0]
-    : undefined;
-
-  return getSolNetworkFromNetworkPath(dashboardNetwork);
 }

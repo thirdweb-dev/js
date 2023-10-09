@@ -38,7 +38,6 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
         <NFTMintForm
           contract={contractQuery.contract}
           mintMutation={mutation}
-          ecosystem={"evm"}
         />
       </Drawer>
       <Button

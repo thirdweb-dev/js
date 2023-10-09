@@ -1,6 +1,6 @@
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
 import { useAddress, useAirdropNFT } from "@thirdweb-dev/react";
-import { Erc1155 } from "@thirdweb-dev/sdk/evm";
+import { Erc1155 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   AirdropAddressInput,

@@ -23,12 +23,6 @@ const GUIDES = [
       "https://blog.thirdweb.com/content/images/size/w2000/2022/10/This-is-the-one--13-.png",
     link: "https://blog.thirdweb.com/guides/how-to-add-permissions-to-your-smart-contract-contractkit/",
   },
-  {
-    title: "How to Create an NFT Drop on Solana without writing any code",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/10/This-is-the-one--12-.png",
-    link: "https://blog.thirdweb.com/guides/how-to-create-an-nft-collection-on-solana-without-code/",
-  },
 ];
 
 const TRACKING_CATEGORY = "dashboards";

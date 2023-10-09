@@ -17,7 +17,7 @@ import type {
   DirectListingV3,
   EnglishAuction,
   MarketplaceV3,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";

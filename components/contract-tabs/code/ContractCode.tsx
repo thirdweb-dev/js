@@ -7,10 +7,9 @@ import {
 } from "./types";
 import { usePascalCaseContractName } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { useQuery } from "@tanstack/react-query";
 import { useAddress, useContract } from "@thirdweb-dev/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { constants } from "ethers";
 import { useCallback, useMemo, useState } from "react";
@@ -46,43 +45,26 @@ function replaceVariablesInCodeSnippet(
 interface ContractCodeProps {
   contractAddress?: string | undefined;
   contractType: string;
-  ecosystem: "evm" | "solana";
 }
 
 const INSTALL_COMMANDS = {
-  evm: {
-    typescript: "npm install @thirdweb-dev/sdk ethers@5",
-    javascript: "npm install @thirdweb-dev/sdk ethers@5",
-    react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
-    "react-native":
-      "npm install 'ethers@5' node-libs-browser react-native-crypto react-native-randombytes react-native-get-random-values react-native-svg react-native-mmkv@2.5.1 @react-native-async-storage/async-storage @thirdweb-dev/react-native @thirdweb-dev/react-native-compat",
-    python: "pip install thirdweb-sdk",
-    go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
-    unity: ``,
-  },
-  solana: {
-    typescript: "npm install @thirdweb-dev/sdk",
-    javascript: "npm install @thirdweb-dev/sdk",
-    react:
-      "npm install @thirdweb-dev/sdk @thirdweb-dev/react @solana/wallet-adapter-wallets @solana/wallet-adapter-react",
-    "react-native": "",
-    python: "pip install thirdweb-sdk",
-    go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
-    unity: ``,
-  },
+  typescript: "npm install @thirdweb-dev/sdk ethers@5",
+  javascript: "npm install @thirdweb-dev/sdk ethers@5",
+  react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
+  "react-native":
+    "npm install 'ethers@5' node-libs-browser react-native-crypto react-native-randombytes react-native-get-random-values react-native-svg react-native-mmkv@2.5.1 @react-native-async-storage/async-storage @thirdweb-dev/react-native @thirdweb-dev/react-native-compat",
+  python: "pip install thirdweb-sdk",
+  go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
+  unity: ``,
 };
 
-const CREATE_APP_COMMANDS = {
-  evm: "npx thirdweb create app --evm",
-  solana: "npx thirdweb create app --solana",
-};
+const CREATE_APP_COMMAND = "npx thirdweb create app";
 
 export const ContractCode: React.FC<ContractCodeProps> = ({
   contractAddress = constants.AddressZero,
   contractType,
-  ecosystem,
 }) => {
-  const { data, isLoading } = useContractCodeSnippetQuery(ecosystem);
+  const { data, isLoading } = useContractCodeSnippetQuery();
 
   // TODO jonas - bring this back when we figure out what the SDK inputs are going to be for this
   const chainName = "";
@@ -93,9 +75,8 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
     return getContractSnippets(data, contractName);
   }, [data, contractName]);
 
-  const evmAddress = useAddress();
-  const solanaAddress = useWallet().publicKey?.toBase58();
-  const address = evmAddress || solanaAddress;
+  const address = useAddress();
+
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 
   const replaceSnippetVars = useCallback(
@@ -175,10 +156,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
               <Text>
                 Get up and running in seconds using a template React project
               </Text>
-              <CodeBlock
-                language="bash"
-                code={CREATE_APP_COMMANDS[ecosystem]}
-              />
+              <CodeBlock language="bash" code={CREATE_APP_COMMAND} />
             </>
           ) : (
             <>
@@ -187,7 +165,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
               <CodeBlock
                 language="bash"
                 code={
-                  INSTALL_COMMANDS[ecosystem][
+                  INSTALL_COMMANDS[
                     environment !== "web3button" ? environment : "react"
                   ]
                 }
@@ -222,11 +200,10 @@ function getContractSnippets(
   return contractName && snippets ? snippets[contractName] : null;
 }
 
-function useContractCodeSnippetQuery(ecosystem: "evm" | "solana") {
+function useContractCodeSnippetQuery() {
   return useQuery(["code-snippet"], async () => {
-    const filename = ecosystem === "evm" ? "snippets" : "snippets_solana";
     const res = await fetch(
-      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/${filename}.json`,
+      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json`,
     );
     return (await res.json()) as SnippetApiResponse;
   });

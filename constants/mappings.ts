@@ -3,7 +3,7 @@ import {
   ContractType,
   FullPublishMetadata,
   Role,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { StaticImageData } from "next/image";
 
 const FeatureIconMap: Record<ContractType, StaticImageData> = {
@@ -33,7 +33,6 @@ export interface BuiltinContractDetails {
   contractType: ContractType;
   erc?: "ERC721" | "ERC20" | "ERC1155" | "ERC721A";
   roles?: readonly Role[];
-  ecosytem: "evm" | "solana";
   metadata: Omit<FullPublishMetadata, "logo"> & { logo: StaticImageData };
 }
 
@@ -71,148 +70,70 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       title: "NFT Drop",
       description: "One NFT, one owner",
       erc: "ERC721",
-      ecosytem: "evm",
     }),
     "signature-drop": buildContractForContractMap("signature-drop", {
       title: "Signature Drop",
       description: "ERC721A NFTs that other people can claim",
       erc: "ERC721A",
-      ecosytem: "evm",
     }),
     marketplace: buildContractForContractMap("marketplace", {
       title: "Marketplace",
       description: "Marketplace for ERC721/ERC1155 NFTs",
-      ecosytem: "evm",
     }),
     "marketplace-v3": buildContractForContractMap("marketplace-v3", {
       title: "Marketplace",
       description: "Marketplace for ERC721/ERC1155 NFTs",
-      ecosytem: "evm",
     }),
     "edition-drop": buildContractForContractMap("edition-drop", {
       title: "Edition Drop",
       description: "One NFT, multiple owners",
       erc: "ERC1155",
-      ecosytem: "evm",
     }),
     multiwrap: buildContractForContractMap("multiwrap", {
       title: "Multiwrap",
       description:
         "Bundle multiple ERC721/ERC1155/ERC20 tokens into a single ERC721",
       erc: "ERC721",
-      ecosytem: "evm",
     }),
     token: buildContractForContractMap("token", {
       title: "Token",
       description: "ERC20 token",
       erc: "ERC20",
-      ecosytem: "evm",
     }),
     edition: buildContractForContractMap("edition", {
       title: "Edition",
       description: "ERC1155 mintable NFTs",
       erc: "ERC1155",
-      ecosytem: "evm",
     }),
     "token-drop": buildContractForContractMap("token-drop", {
       title: "Token Drop",
       description: "ERC20 token that you can sell for other tokens",
       erc: "ERC20",
-      ecosytem: "evm",
     }),
     split: buildContractForContractMap("split", {
       title: "Split",
       description: "Fee splitting for your primary sales and royalties",
-      ecosytem: "evm",
     }),
     "nft-collection": buildContractForContractMap("nft-collection", {
       title: "NFT Collection",
       description: "ERC721 mintable NFTs",
       erc: "ERC721",
-      ecosytem: "evm",
     }),
     vote: buildContractForContractMap("vote", {
       title: "Vote",
       description: "On-chain ERC20-based voting",
-      ecosytem: "evm",
     }),
     pack: buildContractForContractMap("pack", {
       title: "Pack",
       description:
         "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
       erc: "ERC1155",
-      ecosytem: "evm",
     }),
     custom: buildContractForContractMap("custom", {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
-      ecosytem: "evm",
     }),
   };
-
-export type SolContractType = "nft-collection" | "nft-drop" | "token";
-
-export const PREBUILT_SOLANA_CONTRACTS_MAP: Record<
-  SolContractType,
-  Omit<BuiltinContractDetails, "contractType"> & {
-    contractType: SolContractType;
-  }
-> = {
-  "nft-collection": {
-    id: "SolNFTCollection",
-    title: "NFT Collection",
-    description: "Solana NFTs",
-    icon: FeatureIconMap["nft-collection"],
-    contractType: "nft-collection",
-    roles: [],
-    ecosytem: "solana",
-    metadata: {
-      name: "NFT Collection",
-      description: "Solana NFTs",
-      version: "1.0.0",
-      bytecodeUri: "",
-      metadataUri: "",
-      logo: FeatureIconMap["nft-collection"],
-      publisher: "deployer.thirdweb.eth",
-    },
-  },
-  "nft-drop": {
-    id: "SolNFTDrop",
-    title: "NFT Drop",
-    description: "Solana NFT Drop",
-    icon: FeatureIconMap["nft-drop"],
-    contractType: "nft-drop",
-    roles: [],
-    ecosytem: "solana",
-    metadata: {
-      name: "NFT Drop",
-      description: "Solana NFT Drop",
-      version: "1.0.0",
-      bytecodeUri: "",
-      metadataUri: "",
-      logo: FeatureIconMap["nft-drop"],
-      publisher: "deployer.thirdweb.eth",
-    },
-  },
-  token: {
-    id: "SolToken",
-    title: "Token",
-    description: "Solana Token",
-    icon: FeatureIconMap["token"],
-    contractType: "token",
-    roles: [],
-    ecosytem: "solana",
-    metadata: {
-      name: "Token",
-      description: "Solana Token",
-      version: "1.0.0",
-      bytecodeUri: "",
-      metadataUri: "",
-      logo: FeatureIconMap["token"],
-      publisher: "deployer.thirdweb.eth",
-    },
-  },
-};
 
 export interface GasPrice {
   deployContract: number;

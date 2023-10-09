@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useAddress, useContractWrite } from "@thirdweb-dev/react";
-import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk/evm";
+import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";

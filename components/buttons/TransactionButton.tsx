@@ -13,7 +13,7 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
-import { useWallet as useSolWallet } from "@solana/wallet-adapter-react";
+
 import {
   useAddress,
   useChainId,
@@ -58,7 +58,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   size,
   colorScheme,
   variant,
-  ecosystem,
   isGasless,
   upsellTestnet,
   onChainSelect,
@@ -78,16 +77,10 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   }, [transactionCount]);
 
   const evmAddress = useAddress();
-  const solAddress = useSolWallet().publicKey;
 
   const isConnected = useMemo(() => {
-    if (ecosystem === "evm") {
-      return !!evmAddress;
-    } else if (ecosystem === "solana") {
-      return !!solAddress?.toBase58();
-    }
-    return !!evmAddress || !!solAddress?.toBase58();
-  }, [ecosystem, evmAddress, solAddress]);
+    return !!evmAddress;
+  }, [evmAddress]);
 
   const ButtonComponent = useMemo(() => {
     return isGasless ? Button : MismatchButton;
@@ -104,7 +97,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
         <ButtonComponent
           upsellTestnet={upsellTestnet}
           onChainSelect={onChainSelect}
-          ecosystem={ecosystem}
           borderRadius="md"
           position="relative"
           role="group"

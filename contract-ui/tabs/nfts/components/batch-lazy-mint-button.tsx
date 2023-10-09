@@ -7,7 +7,7 @@ import {
   useLazyMint,
   useTotalCount,
 } from "@thirdweb-dev/react";
-import { UploadProgressEvent } from "@thirdweb-dev/sdk/evm";
+import { UploadProgressEvent } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
@@ -125,7 +125,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
           nextTokenIdToMint={BigNumber.from(
             nextTokenIdToMint.data || 0,
           ).toNumber()}
-          ecosystem="evm"
           isRevealable={isRevealable}
         >
           {mintBatchMutation.isLoading ? (

@@ -46,7 +46,7 @@ import {
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
   getTrustedForwarders,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
@@ -65,7 +65,7 @@ import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-web3";
 import { z } from "zod";
 
-const HEADLESS_WALLET_IDS = [
+const HEADLESS_WALLET_IDS: string[] = [
   walletIds.localWallet,
   walletIds.magicLink,
   walletIds.paper,

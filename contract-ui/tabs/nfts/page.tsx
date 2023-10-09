@@ -27,7 +27,6 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const tokenId = router.query?.paths?.[3];
   const { data: nft } = useNFT(contractQuery.contract, tokenId);
   const tabs = useNFTDrawerTabs(
-    "evm",
     contractQuery.contract as NFTContract,
     nft || null,
   );

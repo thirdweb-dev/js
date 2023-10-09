@@ -26,7 +26,7 @@ import {
   SmartContract,
   extractFunctionsFromAbi,
   joinABIs,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { useContractEnabledExtensions } from "components/contract-components/hooks";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";

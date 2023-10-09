@@ -9,7 +9,7 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react";
-import type { OptionalPropertiesInput } from "@thirdweb-dev/sdk/evm";
+import type { OptionalPropertiesInput } from "@thirdweb-dev/sdk";
 import { FileInput } from "components/shared/FileInput";
 import React, { useEffect } from "react";
 import {

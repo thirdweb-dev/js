@@ -7,7 +7,6 @@ import {
   GridItem,
   Icon,
 } from "@chakra-ui/react";
-// import { Ethereum } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
@@ -27,7 +26,6 @@ import { ComponentWithChildren } from "types/component-with-children";
 
 export interface AppShellProps {
   layout?: "custom-contract";
-  ecosystem?: "evm" | "solana" | "either";
   noSEOOverride?: boolean;
   hasSidebar?: boolean;
   noOverflowX?: boolean;
@@ -36,7 +34,6 @@ export interface AppShellProps {
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
-  ecosystem,
   hasSidebar,
   noOverflowX,
 }) => {
@@ -47,7 +44,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
       templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
       backgroundColor="backgroundBody"
     >
-      <AppHeader ecosystem={ecosystem} />
+      <AppHeader />
 
       <GridItem
         id={SIDEBAR_TUNNEL_ID}
@@ -87,9 +84,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   );
 };
 
-const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
-  ecosystem,
-}) => {
+const AppHeader: React.FC = () => {
   const { pathname, route } = useRouter();
 
   return (
@@ -191,11 +186,7 @@ const AppHeader: React.FC<Pick<AppShellProps, "ecosystem">> = ({
 
           <ColorModeToggle />
 
-          <CustomConnectWallet
-            ml={{ base: 0, md: 2 }}
-            colorScheme="blue"
-            ecosystem={ecosystem}
-          />
+          <CustomConnectWallet ml={{ base: 0, md: 2 }} colorScheme="blue" />
         </Flex>
       </Container>
       <Container

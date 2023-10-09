@@ -28,7 +28,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   NewAuctionListing,
   NewDirectListing,
-} from "@thirdweb-dev/sdk/evm";
+} from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { formatEther, parseEther } from "ethers/lib/utils";

@@ -6,7 +6,7 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { CurrencyValue } from "@thirdweb-dev/sdk/evm";
+import { CurrencyValue } from "@thirdweb-dev/sdk/evm/";
 import { Card } from "tw-components";
 
 interface TokenSupplyLayoutProps {

@@ -55,18 +55,12 @@ type InstantSubmit = {
 type SubmitType = DelayedSubmit | InstantSubmit;
 
 interface BatchLazyMintEVMProps {
-  ecosystem: "evm";
   nextTokenIdToMint: number;
   isRevealable: boolean;
   onSubmit: (formData: SubmitType) => Promise<any>;
 }
 
-interface BatchLazyMintSolanaProps {
-  ecosystem: "solana";
-  onSubmit: (formData: InstantSubmit) => Promise<any>;
-}
-
-type BatchLazyMintProps = BatchLazyMintEVMProps | BatchLazyMintSolanaProps;
+type BatchLazyMintProps = BatchLazyMintEVMProps;
 
 const BatchLazyMintFormSchema = z
   .object({
@@ -101,12 +95,12 @@ type BatchLazyMintFormType = z.output<typeof BatchLazyMintFormSchema> & {
   metadatas: NFTMetadataInput[];
 };
 
-function useBatchLazyMintForm(ecosystem: "solana" | "evm") {
+function useBatchLazyMintForm() {
   return useForm<BatchLazyMintFormType>({
     resolver: zodResolver(BatchLazyMintFormSchema),
     defaultValues: {
       metadatas: [],
-      revealType: ecosystem === "solana" ? "instant" : undefined,
+      revealType: undefined,
       shuffle: false,
     },
   });
@@ -117,7 +111,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
 ) => {
   const [step, setStep] = useState(0);
 
-  const form = useBatchLazyMintForm(props.ecosystem);
+  const form = useBatchLazyMintForm();
 
   const nftMetadatas = form.watch("metadatas");
   const hasError = !!form.getFieldState("metadatas", form.formState).error;
@@ -158,49 +152,42 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
         const shuffledMetadatas = data.shuffle
           ? shuffleData(data.metadatas)
           : data.metadatas;
-        // in solana there is only instant submit
-        if (props.ecosystem === "solana") {
+
+        // check submit is instant
+        if (data.revealType === "instant") {
           return props.onSubmit({
             revealType: "instant",
             data: { metadatas: shuffledMetadatas },
           });
         } else {
-          // check submit is instant
-          if (data.revealType === "instant") {
-            return props.onSubmit({
-              revealType: "instant",
-              data: { metadatas: shuffledMetadatas },
+          // validate password
+          if (!data.password) {
+            form.setError("password", {
+              message: "A password is required for delayed reveal.",
+              type: "validate",
             });
-          } else {
-            // validate password
-            if (!data.password) {
-              form.setError("password", {
-                message: "A password is required for delayed reveal.",
-                type: "validate",
-              });
-              return;
-            }
-            // validate placeholder
-            if (!data.placeHolder?.name) {
-              form.setError("placeHolder.name", {
-                message: "A name is required for delayed reveal.",
-                type: "validate",
-              });
-            }
-            // submit
-            return props.onSubmit({
-              revealType: "delayed",
-              data: {
-                metadatas: shuffledMetadatas,
-                password: data.password,
-                placeholder: {
-                  name: data.placeHolder?.name,
-                  description: data.placeHolder?.description,
-                  image: data.placeHolder?.image,
-                },
-              },
+            return;
+          }
+          // validate placeholder
+          if (!data.placeHolder?.name) {
+            form.setError("placeHolder.name", {
+              message: "A name is required for delayed reveal.",
+              type: "validate",
             });
           }
+          // submit
+          return props.onSubmit({
+            revealType: "delayed",
+            data: {
+              metadatas: shuffledMetadatas,
+              password: data.password,
+              placeholder: {
+                name: data.placeHolder?.name,
+                description: data.placeHolder?.description,
+                image: data.placeHolder?.image,
+              },
+            },
+          });
         }
       })}
     >
@@ -222,9 +209,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   <BatchTable
                     portalRef={paginationPortalRef}
                     data={nftMetadatas}
-                    {...(props.ecosystem === "evm"
-                      ? { nextTokenIdToMint: props.nextTokenIdToMint }
-                      : {})}
+                    nextTokenIdToMint={props.nextTokenIdToMint}
                   />
                 ) : (
                   <UploadStep
@@ -297,14 +282,8 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   </Heading>
                 </HStack>
               </Flex>
-              <SelectReveal
-                form={form}
-                ecosystem={props.ecosystem}
-                isRevealable={
-                  props.ecosystem === "evm" ? props.isRevealable : false
-                }
-              />
-              {(form.watch("revealType") || props.ecosystem === "solana") && (
+              <SelectReveal form={form} isRevealable={props.isRevealable} />
+              {form.watch("revealType") && (
                 <>
                   <Checkbox {...form.register("shuffle")} mt={3}>
                     <Flex gap={1} flexDir={{ base: "column", md: "row" }}>
@@ -318,7 +297,6 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   </Checkbox>
                   <Box maxW={{ base: "100%", md: "61%" }}>
                     <TransactionButton
-                      ecosystem={props.ecosystem}
                       mt={4}
                       colorScheme="primary"
                       transactionCount={1}
@@ -354,15 +332,10 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
 
 interface SelectRevealProps {
   form: ReturnType<typeof useBatchLazyMintForm>;
-  ecosystem: "evm" | "solana";
   isRevealable: boolean;
 }
 
-const SelectReveal: React.FC<SelectRevealProps> = ({
-  form,
-  ecosystem,
-  isRevealable,
-}) => {
+const SelectReveal: React.FC<SelectRevealProps> = ({ form, isRevealable }) => {
   const [show, setShow] = useState(false);
 
   const imageUrl = useImageFileOrUrl(form.watch("placeHolder.image"));
@@ -385,11 +358,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
           isActive={form.watch("revealType") === "delayed"}
           onClick={() => form.setValue("revealType", "delayed")}
           disabled={!isRevealable}
-          disabledText={
-            ecosystem === "evm"
-              ? "This contract doesn't implement Delayed Reveal"
-              : "Delayed Reveal is not yet supported on Solana"
-          }
+          disabledText="This contract doesn't implement Delayed Reveal"
         />
       </Flex>
       <Flex>

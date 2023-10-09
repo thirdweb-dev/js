@@ -1,4 +1,4 @@
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { CURRENCIES } from "constants/currencies";
 import { constants, utils } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";

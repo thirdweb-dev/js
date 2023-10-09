@@ -1,4 +1,4 @@
-import type { ContractType } from "@thirdweb-dev/sdk/evm";
+import type { ContractType } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 
 export const networkKeys = {

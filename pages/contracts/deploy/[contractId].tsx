@@ -10,7 +10,7 @@ import {
   LinkOverlay,
   Skeleton,
 } from "@chakra-ui/react";
-import type { FeatureWithEnabled } from "@thirdweb-dev/sdk/evm";
+import type { FeatureWithEnabled } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import {
