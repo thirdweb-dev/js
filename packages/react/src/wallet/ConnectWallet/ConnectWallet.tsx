@@ -13,7 +13,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -190,6 +190,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     return tokens;
   }, [props.supportedTokens]);
 
+  // if wallet gets disconnected, close the signature modal
+  useEffect(() => {
+    if (!activeWallet) {
+      setShowSignatureModal(false);
+    }
+  }, [activeWallet]);
+
   return (
     <CustomThemeProvider theme={theme}>
       <Modal
@@ -282,7 +289,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             <Button
               variant="primary"
               onClick={() => {
-                setShowSignatureModal(true);
+                if (activeWallet) {
+                  setShowSignatureModal(true);
+                }
               }}
               data-theme={theme}
               className={`${TW_CONNECT_WALLET}--sign-in ${

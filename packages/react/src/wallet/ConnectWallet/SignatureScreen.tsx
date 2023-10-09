@@ -67,6 +67,21 @@ export const SignatureScreen: React.FC<{
     }
   }, [auth, login, onDone]);
 
+  // if wallet is not connected - just show spinner
+  if (!walletConfig || !wallet) {
+    return (
+      <Container
+        flex="row"
+        center="both"
+        style={{
+          minHeight: "300px",
+        }}
+      >
+        <Spinner size="xl" color="accentText" />
+      </Container>
+    );
+  }
+
   if (walletConfig?.isHeadless) {
     return <HeadlessSignIn signIn={signIn} status={status} />;
   }

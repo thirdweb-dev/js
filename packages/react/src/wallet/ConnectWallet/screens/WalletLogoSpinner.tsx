@@ -91,6 +91,9 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   border-radius: ${radius.xl};
 
   [data-img-container] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
   }
 
@@ -124,7 +127,7 @@ const LogoContainer = styled.div<{ theme?: Theme }>`
   }
 
   rect {
-    animation: ${dashRotateAnimation} 1.5s linear infinite;
+    animation: ${dashRotateAnimation} 1.2s linear infinite;
     stroke: ${(p) => p.theme.colors.accentText};
   }
 `;
