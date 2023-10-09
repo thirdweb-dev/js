@@ -35,16 +35,16 @@ export const WalletConnectScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const rainbow = createInstance(walletConfig);
+    const walletInstance = createInstance(walletConfig);
 
     setConnectionStatus("connecting");
-    rainbow.connectWithQrCode({
+    walletInstance.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },
       onConnected() {
-        setConnectedWallet(rainbow);
+        setConnectedWallet(walletInstance);
         onConnected();
       },
     });
