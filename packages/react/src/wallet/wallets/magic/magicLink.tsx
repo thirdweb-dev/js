@@ -62,6 +62,7 @@ export function magicLink(
     category: "socialLogin",
     id: MagicLink.id,
     recommended: config?.recommended,
+    isHeadless: true,
     meta: {
       ...MagicLink.meta,
       name: iconText,
