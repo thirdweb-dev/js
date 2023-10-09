@@ -1,4 +1,5 @@
 import { ContractType } from "../contracts";
+import { Abi } from "../schema/contracts/custom";
 import type { Address } from "../schema/shared/Address";
 import type { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
 
@@ -21,5 +22,6 @@ export type ContractWithMetadata = {
   chainId: number;
   contractType: () => Promise<ContractType>;
   metadata: () => Promise<{ name: string; image?: string }>;
+  abi: () => Promise<Abi>;
   extensions: () => Promise<string[]>;
 };

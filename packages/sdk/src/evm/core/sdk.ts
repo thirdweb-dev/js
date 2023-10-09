@@ -699,18 +699,35 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     const chainId = (await this.getProvider().getNetwork()).chainId;
 
+    // perf: we can re-use the getContract promise
+    let getContractPromise: ReturnType<typeof this.getContract>;
+
     return await Promise.all(
       addresses.map(async (address) => {
         return {
           address: address,
           chainId,
           contractType: () => this.resolveContractType(address),
-          metadata: async () =>
-            (await this.getContract(address)).metadata.get(),
-          extensions: async () =>
-            getAllDetectedExtensionNames(
-              (await this.getContract(address)).abi as Abi,
-            ),
+          metadata: async () => {
+            if (!getContractPromise) {
+              getContractPromise = this.getContract(address);
+            }
+            return (await getContractPromise).metadata.get();
+          },
+          abi: async () => {
+            if (!getContractPromise) {
+              getContractPromise = this.getContract(address);
+            }
+            return (await getContractPromise).abi as Abi;
+          },
+          extensions: async () => {
+            if (!getContractPromise) {
+              getContractPromise = this.getContract(address);
+            }
+            return getAllDetectedExtensionNames(
+              (await getContractPromise).abi as Abi,
+            );
+          },
         };
       }),
     );
@@ -747,6 +764,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           contractType: async () => "custom" as const,
           metadata: async () => ({ name: "" }),
+          abi: async () => [],
           extensions: async () => [],
         };
       }
@@ -767,16 +785,33 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           sdkMap[chainId] = chainSDK;
         }
 
+        // perf: we can re-use the getContract promise
+        let getContractPromise: ReturnType<typeof chainSDK.getContract>;
+
         return {
           address,
           chainId,
           contractType: () => chainSDK.resolveContractType(address),
-          metadata: async () =>
-            (await chainSDK.getContract(address)).metadata.get(),
-          extensions: async () =>
-            getAllDetectedExtensionNames(
-              (await chainSDK.getContract(address)).abi as Abi,
-            ),
+          metadata: async () => {
+            if (!getContractPromise) {
+              getContractPromise = chainSDK.getContract(address);
+            }
+            return (await getContractPromise).metadata.get();
+          },
+          abi: async () => {
+            if (!getContractPromise) {
+              getContractPromise = chainSDK.getContract(address);
+            }
+            return (await getContractPromise).abi as Abi;
+          },
+          extensions: async () => {
+            if (!getContractPromise) {
+              getContractPromise = chainSDK.getContract(address);
+            }
+            return getAllDetectedExtensionNames(
+              (await getContractPromise).abi as Abi,
+            );
+          },
         };
       } catch (e) {
         return {
@@ -784,6 +819,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           chainId,
           contractType: async () => "custom" as const,
           metadata: async () => ({ name: "" }),
+          abi: async () => [],
           extensions: async () => [],
         };
       }

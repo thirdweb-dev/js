@@ -27,7 +27,8 @@ export async function getChains(
     }
   }
   // if we don't have the chains in the cache load them from the api
-  const chains = await getAllPaginatedChains();
+  let chains = await getAllPaginatedChains();
+  chains = chains.map((c) => ({ ...c, chainId: parseInt(`${c.chainId}`) }));
   await cache.set(chains);
   return chains;
 }

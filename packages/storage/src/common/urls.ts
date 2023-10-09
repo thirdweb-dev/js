@@ -137,14 +137,40 @@ export function prepareGatewayUrls(
           // this is on purpose because we're using the crypto module only in node
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           const crypto = require("crypto");
-          const hashedSecretKey = crypto
+          const hashedSecretKey: string = crypto
             .createHash("sha256")
             .update(secretKey)
             .digest("hex");
           const derivedClientId = hashedSecretKey.slice(0, 32);
           return url.replace("{clientId}", derivedClientId);
         } else if (url.includes("{clientId}")) {
-          // if no client id passed, filter out the url
+          // check if we maybe have a global auth token
+          const maybeCliAuthToken =
+            //   CLI
+            typeof globalThis !== "undefined" &&
+            "TW_CLI_AUTH_TOKEN" in globalThis &&
+            typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+              ? globalThis["TW_CLI_AUTH_TOKEN"]
+              : null;
+          //   Dashboard
+
+          if (maybeCliAuthToken) {
+            // this is on purpose because we're using the crypto module only in node/CLI
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const crypto = require("crypto");
+            const hashedCliAuthToken: string = crypto
+              .createHash("sha256")
+              .update(maybeCliAuthToken)
+              .digest("hex");
+            // prepend `cli_` to the hashed token to make it clear that this is a CLI token
+            // only use the first 32 characters of the resulting token
+            return url.replace(
+              "{clientId}",
+              `cli_${hashedCliAuthToken}`.slice(0, 32),
+            );
+          }
+
+          // otherwise filter out the url
           return undefined;
         } else {
           return url;

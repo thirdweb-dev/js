@@ -3,9 +3,14 @@ import { ensureAuth, getSession } from "../../auth";
 import prompts from "prompts";
 import { getChains } from "./chains/chain-cache";
 import { getAccount } from "../../auth/account";
-import { getContractsForChains } from "./contracts/account-contracts";
+import {
+  enrichContractMetadata,
+  getContractsForChains,
+} from "./contracts/account-contracts";
 import { logger } from "../../utils/logger";
 import chalk from "chalk";
+import { Chain } from "@thirdweb-dev/chains";
+import ora from "ora";
 
 export const generate = new Command("generate")
   .description(
@@ -24,35 +29,63 @@ export const generate = new Command("generate")
     const token = (await getSession()) || "";
     const { creatorWalletAddress } = await getAccount({ token, secretKey });
 
-    const possibleChains = await getChains({ noCache: options.cache });
+    const chainSpinner = ora("Loading chains.").start();
+    const possibleChains = await getChains({ noCache: options.cache }).catch(
+      (err) => {
+        chainSpinner.fail("Failed to load chains.");
+        throw err;
+      },
+    );
+    chainSpinner.succeed("Chains loaded.");
 
-    const chainResponse = await prompts({
-      type: "autocompleteMultiselect",
-      choices: possibleChains.map((chain) => ({
-        title: `${chalk.bold(chain.name)} ${chalk.grey(`(${chain.chainId})`)}`,
-        value: chain,
-      })),
-      instructions: false,
-      name: "chains",
-      message: "Which chains do you want to use?",
-    });
+    const [chainResponse, allUserContracts] = await Promise.all([
+      prompts({
+        type: "autocompleteMultiselect",
+        choices: possibleChains.map((chain) => ({
+          title: `${chalk.bold(chain.name)} ${chalk.grey(
+            `(${chain.chainId})`,
+          )}`,
+          value: chain,
+        })),
+        instructions: false,
+        name: "chains",
+        message: "Which chains do you want to use?",
+      }),
+      getContractsForChains(creatorWalletAddress, possibleChains, secretKey),
+    ]);
 
-    for (const pickedChain of chainResponse.chains) {
-      const contractsForChain = await getContractsForChains(
-        creatorWalletAddress,
-        [{ ...pickedChain, chainId: parseInt(pickedChain.chainId) }],
-        secretKey,
+    const selectedChains: Chain[] = chainResponse.chains;
+
+    const chainsWithContracts = selectedChains.map((chain) => ({
+      chain,
+      contracts: allUserContracts.filter((c) => c.chainId === chain.chainId),
+    }));
+
+    const enrichedContractsPromiseByChainid = new Map<
+      number,
+      ReturnType<typeof enrichContractMetadata> | null
+    >();
+    for (const chain of chainsWithContracts) {
+      enrichedContractsPromiseByChainid.set(
+        chain.chain.chainId,
+        chain.contracts ? enrichContractMetadata(chain.contracts) : null,
+      );
+    }
+
+    for (const pickedChain of chainsWithContracts) {
+      const contractsForChainPromise = enrichedContractsPromiseByChainid.get(
+        pickedChain.chain.chainId,
       );
       // if no contracts found for this chain go next
-      if (contractsForChain.length === 0) {
+      if (!contractsForChainPromise) {
         logger.log(
-          `No contracts found for ${pickedChain.name} (${pickedChain.chainId})`,
+          `No contracts found for ${pickedChain.chain.name} (${pickedChain.chain.chainId})`,
         );
         continue;
       }
       const contractsResponse = await prompts({
         type: "autocompleteMultiselect",
-        choices: contractsForChain.map((contract) => ({
+        choices: (await contractsForChainPromise).map((contract) => ({
           title: contract.metadata?.name
             ? `${chalk.bold(contract.metadata.name)} ${chalk.gray(
                 `(${contract.address.slice(0, 6)}...${contract.address.slice(
@@ -65,15 +98,15 @@ export const generate = new Command("generate")
         })),
         instructions: false,
         name: "contracts",
-        message: `Which contracts do you want to use for "${pickedChain.name}"?`,
+        message: `Which contracts do you want to use for "${pickedChain.chain.name}"?`,
       });
 
       pickedChain.contracts = contractsResponse.contracts;
     }
 
-    console.log(
-      chainResponse.chains.map((ch: any) => ({
-        chainId: ch.chainId,
+    logger.log(
+      chainsWithContracts.map((ch) => ({
+        chainId: ch.chain.chainId,
         contracts: ch.contracts.map((c: any) => c.address),
       })),
     );

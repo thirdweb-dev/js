@@ -1,9 +1,20 @@
-// taken from: https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/logger.ts
+// initial version from: https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/logger.ts
 
 import { format } from "node:util";
 import chalk from "chalk";
 import CLITable from "cli-table3";
 import { formatMessagesSync } from "esbuild";
+
+// assign the original "console" to a variable so we can use it later
+const originalConsole = globalThis.console;
+// overwrite the original console with noop functions
+globalThis.console = {
+  debug: () => {},
+  log: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {},
+} as any;
 
 export const LOGGER_LEVELS = {
   none: -1,
@@ -58,7 +69,9 @@ export class Logger {
 
   private doLog(messageLevel: Exclude<LoggerLevel, "none">, args: unknown[]) {
     if (LOGGER_LEVELS[this.loggerLevel] >= LOGGER_LEVELS[messageLevel]) {
-      console[messageLevel](this.formatMessage(messageLevel, format(...args)));
+      originalConsole[messageLevel](
+        this.formatMessage(messageLevel, format(...args)),
+      );
     }
   }
 
