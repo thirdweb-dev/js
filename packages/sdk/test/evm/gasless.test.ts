@@ -5,8 +5,6 @@ import { ethers, Wallet } from "ethers";
 
 const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
 
-global.fetch = require("cross-fetch");
-
 describe("Gasless Forwarder", async () => {
   it.skip("should use sdk with biconomy", async () => {
     const BUNDLE_DROP_ADDRESS = "0xEBed8e37a32660dbCeeeC19cCBb952b7d214f008";

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "3.2.47",
+  "version": "3.2.48",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -27,13 +27,6 @@
         "default": "./next/dist/thirdweb-dev-auth-next.esm.js"
       },
       "default": "./next/dist/thirdweb-dev-auth-next.cjs.js"
-    },
-    "./solana": {
-      "module": {
-        "browser": "./solana/dist/thirdweb-dev-auth-solana.browser.esm.js",
-        "default": "./solana/dist/thirdweb-dev-auth-solana.esm.js"
-      },
-      "default": "./solana/dist/thirdweb-dev-auth-solana.cjs.js"
     },
     "./express": {
       "module": {
@@ -70,8 +63,7 @@
       "express/index.ts",
       "next/index.ts",
       "next-auth/index.ts",
-      "evm/index.ts",
-      "solana/index.ts"
+      "evm/index.ts"
     ],
     "exports": {
       "envConditions": [
@@ -87,7 +79,6 @@
     "@microsoft/api-extractor": "^7.36.3",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "2.7.0",
-    "@solana/web3.js": "^1.62.0",
     "@swc-node/register": "^1.6.6",
     "@swc/core": "^1.3.71",
     "@thirdweb-dev/tsconfig": "workspace:*",
@@ -117,7 +108,6 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1.73.0",
     "cookie-parser": "^1.4.6",
     "ethers": "^5",
     "express": "^4",
@@ -125,9 +115,6 @@
     "next-auth": "^4"
   },
   "peerDependenciesMeta": {
-    "@solana/web3.js": {
-      "optional": true
-    },
     "cookie-parser": {
       "optional": true
     },
