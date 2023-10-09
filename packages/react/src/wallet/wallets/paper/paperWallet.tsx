@@ -92,7 +92,6 @@ const PaperSelectionUI: React.FC<
       <PaperFormUI
         walletConfig={props.walletConfig}
         googleLoginSupported={props.recoveryShareManagement !== "USER_MANAGED"}
-        showOrSeparator={props.supportedWallets.length > 1}
         onSelect={props.onSelect}
       />
     </div>
