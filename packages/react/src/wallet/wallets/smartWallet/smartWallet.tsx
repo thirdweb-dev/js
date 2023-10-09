@@ -44,7 +44,7 @@ export const SmartConnectUI = (
       ...props,
       walletConfig: PersonalWalletConfig,
       connected: () => {
-        console.log("connected to personal wallet");
+        // override to no-op
       },
     };
 

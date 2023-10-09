@@ -56,7 +56,6 @@ export const SafeConnectUI = (
         setPersonalWalletConfig(undefined);
       },
       connected() {
-        console.log("connected to personal wallet");
         setPersonalWalletConfig(undefined);
       },
       isOpen: props.isOpen,
