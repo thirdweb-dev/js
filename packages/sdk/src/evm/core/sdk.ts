@@ -1103,7 +1103,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata.seller_fee_basis_points,
       ];
 
-      return await this.deployReleasedContract.prepare(
+      return await this.deployPublishedContract.prepare(
         THIRDWEB_DEPLOYER,
         "OpenEditionERC721",
         deployArgs,

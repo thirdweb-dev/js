@@ -1,5 +1,45 @@
 # @thirdweb-dev/wallets
 
+## 1.3.5
+
+### Patch Changes
+
+- Updated dependencies [[`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9), [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae), [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48)]:
+  - @thirdweb-dev/sdk@3.10.67
+
+## 1.3.4
+
+### Patch Changes
+
+- [#1712](https://github.com/thirdweb-dev/js/pull/1712) [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New SmartWallet API for session keys
+
+  You can now add admins and scoped session keys to smart wallets directly with a simple API:
+
+  ```
+  const smartWallet = new SmartWallet(config);
+  await smartWallet.connect({ personalWallet })
+
+  await smartWallet.createSessionKey(keyAddress, permissions);
+  await smartWallet.revokeSessionKey(keyAddress);
+
+  await smartWallet.addAdmin(adminAddress);
+  await smartWallet.removeAdmin(adminAddress);
+  ```
+
+- Updated dependencies [[`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c)]:
+  - @thirdweb-dev/sdk@3.10.66
+
+## 1.3.3
+
+### Patch Changes
+
+- [#1707](https://github.com/thirdweb-dev/js/pull/1707) [`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650) Thanks [@MananTank](https://github.com/MananTank)! - Fix Unchecked Index accesses
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
+- Updated dependencies [[`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/sdk@3.10.65
+
 ## 1.3.2
 
 ### Patch Changes

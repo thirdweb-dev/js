@@ -26,7 +26,7 @@ export class PhantomWallet extends AbstractClientWallet {
     },
   };
 
-  static id = walletIds.phantom;
+  static id = walletIds.phantom as string;
 
   public get walletName() {
     return "Phantom" as const;

@@ -1,5 +1,32 @@
 # @thirdweb-dev/sdk
 
+## 3.10.67
+
+### Patch Changes
+
+- [#1731](https://github.com/thirdweb-dev/js/pull/1731) [`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve add/removeContract methods
+
+- [#1727](https://github.com/thirdweb-dev/js/pull/1727) [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Improve concurrent requests on NFT-related code
+
+- [#1728](https://github.com/thirdweb-dev/js/pull/1728) [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Improve transfer function for user wallet
+
+## 3.10.66
+
+### Patch Changes
+
+- [#1308](https://github.com/thirdweb-dev/js/pull/1308) [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Base Router for dynamic contracts
+
+## 3.10.65
+
+### Patch Changes
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
+- [#1686](https://github.com/thirdweb-dev/js/pull/1686) [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update & add unit test for ERC1155 Enumerable
+
+- Updated dependencies [[`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9)]:
+  - @thirdweb-dev/storage@1.2.11
+
 ## 3.10.64
 
 ### Patch Changes

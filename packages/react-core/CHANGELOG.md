@@ -1,5 +1,75 @@
 # @thirdweb-dev/react-core
 
+## 3.16.5
+
+### Patch Changes
+
+- Updated dependencies [[`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9), [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae), [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48)]:
+  - @thirdweb-dev/sdk@3.10.67
+  - @thirdweb-dev/wallets@1.3.5
+  - @thirdweb-dev/auth@3.2.48
+
+## 3.16.4
+
+### Patch Changes
+
+- [#1719](https://github.com/thirdweb-dev/js/pull/1719) [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d) Thanks [@MananTank](https://github.com/MananTank)! - Type refactor for useWallet hook
+
+- [#1716](https://github.com/thirdweb-dev/js/pull/1716) [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better `useWallet()` API to obtain specific wallet instances.
+
+  ```
+  const smartWallet = useWallet("smartWallet"); // returns a SmartWallet instance
+  const embeddedWallet = useWallet("embeddedWallet"); // returns a EmbeddedWallet instance
+  ```
+
+- [#1712](https://github.com/thirdweb-dev/js/pull/1712) [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add `useCreateSessionKey` and `useRevokeSessionKey` hooks
+
+  ```
+  const Component = () => {
+      const {
+        mutate: createSessionKey,
+        isLoading,
+        error,
+      } = useCreateSessionKey();
+
+      if (error) {
+        console.error("failed to create session key", error);
+      }
+
+      return (
+        <button
+          disabled={isLoading}
+          onClick={() => createSessionKey(
+            "0x...",
+            {
+              approvedCallTargets: ["0x..."], // the addresses of contracts that the session key can call
+              nativeTokenLimitPerTransaction: 0.1, // the maximum amount of native token (in ETH) that the session key can spend per transaction
+              startDate: new Date(), // the date when the session key becomes active
+              expirationDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // the date when the session key expires
+            }
+           )}
+        >
+          Create Session Key
+        </button>
+      );
+  };
+  ```
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/sdk@3.10.66
+  - @thirdweb-dev/auth@3.2.47
+
+## 3.16.3
+
+### Patch Changes
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/storage@1.2.11
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/auth@3.2.46
+
 ## 3.16.2
 
 ### Patch Changes

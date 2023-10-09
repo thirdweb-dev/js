@@ -257,4 +257,34 @@ describe("Edition Contract", async () => {
       i++;
     });
   });
+
+  it("getOwned() should not return the ERC1155 if the supply is zero", async () => {
+    // According to the code: .filter((b) => b.balance.gt(0));
+    await bundleContract.mintBatch([
+      {
+        metadata: {
+          name: "To be burned",
+        },
+        supply: 5,
+      },
+      {
+        metadata: {
+          name: "Test1",
+        },
+        supply: 5,
+      },
+    ]);
+
+    // Burn the tokenId #0
+    await bundleContract.burn(0, 5);
+    const nfts = await bundleContract.getOwned(adminWallet.address);
+
+    // Only the editions from tokenId#1 should be returned
+    // since the editions from #0 were burned
+    expect(nfts).to.be.an("array").length(1);
+    expect(nfts[0].owner).to.be.equal(adminWallet.address);
+    expect(nfts[0].quantityOwned).to.be.equal("5");
+    expect(nfts[0].supply).to.be.equal("5");
+    expect(nfts[0].metadata.id).to.be.equal("1");
+  });
 });

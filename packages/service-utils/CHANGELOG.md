@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.6
+
+### Patch Changes
+
+- [#1729](https://github.com/thirdweb-dev/js/pull/1729) [`52b1a0fc`](https://github.com/thirdweb-dev/js/commit/52b1a0fcacb136e8da417d883e5365f2ab558d59) Thanks [@arcoraven](https://github.com/arcoraven)! - Make accountId optional in publishUsageEvents. This will be hydrated internally.
+
 ## 0.4.5
 
 ### Patch Changes

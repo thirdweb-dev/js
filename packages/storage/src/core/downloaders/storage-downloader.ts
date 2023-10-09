@@ -131,7 +131,9 @@ export class StorageDownloader implements IStorageDownloader {
       headers["x-sdk-platform"] = bundleId
         ? "react-native"
         : isBrowser()
-        ? "browser"
+        ? (window as any).bridge !== undefined
+          ? "webGL"
+          : "browser"
         : "node";
     }
 

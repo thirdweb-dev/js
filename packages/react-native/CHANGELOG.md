@@ -1,5 +1,37 @@
 # @thirdweb-dev/react-native
 
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies [[`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9), [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae), [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48)]:
+  - @thirdweb-dev/sdk@3.10.67
+  - @thirdweb-dev/react-core@3.16.5
+  - @thirdweb-dev/wallets@1.3.5
+
+## 0.3.3
+
+### Patch Changes
+
+- [#1715](https://github.com/thirdweb-dev/js/pull/1715) [`f5caf6a3`](https://github.com/thirdweb-dev/js/commit/f5caf6a3502905666ae57f3304bb9074e09c9366) Thanks [@iketw](https://github.com/iketw)! - Fix encryption/decryption bug in embeddedWallet for React Native
+
+- [#1709](https://github.com/thirdweb-dev/js/pull/1709) [`6f4c5cd7`](https://github.com/thirdweb-dev/js/commit/6f4c5cd746caf07f057e272aec9f204ba5905cd3) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(react-native): update iteration count for embedded-wallet for better speed and future updates
+
+- Updated dependencies [[`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101), [`93127047`](https://github.com/thirdweb-dev/js/commit/931270479ef227556a1077357a8c000b08de6e8d), [`d3c8626a`](https://github.com/thirdweb-dev/js/commit/d3c8626a5a8def882c1592b236048ebe88e85d49), [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c), [`9bd01de5`](https://github.com/thirdweb-dev/js/commit/9bd01de5f9c388e758fba9af7899dc4a9c5a0101)]:
+  - @thirdweb-dev/wallets@1.3.4
+  - @thirdweb-dev/react-core@3.16.4
+  - @thirdweb-dev/sdk@3.10.66
+
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`6d3d76cf`](https://github.com/thirdweb-dev/js/commit/6d3d76cff8018015faa191a1f8bd4f34506a6650), [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9), [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787)]:
+  - @thirdweb-dev/wallets@1.3.3
+  - @thirdweb-dev/storage@1.2.11
+  - @thirdweb-dev/sdk@3.10.65
+  - @thirdweb-dev/react-core@3.16.3
+
 ## 0.3.1
 
 ### Patch Changes
