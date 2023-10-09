@@ -18,7 +18,6 @@ import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
-  showOrSeparator?: boolean;
   walletConfig: WalletConfig<EmbeddedWallet>;
 }) => {
   const createWalletInstance = useCreateWalletInstance();
@@ -86,7 +85,6 @@ export const EmbeddedWalletFormUI = (props: {
           }
         }}
         emptyErrorMessage="email address is required"
-        showOrSeparator={props.showOrSeparator}
       />
     </div>
   );
@@ -121,7 +119,6 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         <EmbeddedWalletFormUI
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
-          showOrSeparator={false}
         />
       </Container>
     </Container>

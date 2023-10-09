@@ -11,7 +11,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
-  const { walletConfig, close } = props;
+  const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
 
@@ -24,12 +24,12 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
       setScreen("connecting");
       await wait(1000);
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [close, connect, walletConfig]);
+  }, [connected, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -74,7 +74,6 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        // supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
   }
@@ -96,7 +95,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
     return (
       <MetamaskScan
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

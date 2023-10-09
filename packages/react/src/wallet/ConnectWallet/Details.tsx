@@ -72,7 +72,10 @@ export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
   style?: React.CSSProperties;
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  networkSelector?: Omit<
+    NetworkSelectorProps,
+    "theme" | "onClose" | "chains" | "open"
+  >;
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
@@ -542,41 +545,39 @@ export const ConnectedWalletDetails: React.FC<{
         </DropdownMenu.Root>
       )}
 
-      {showNetworkSelector && (
-        <NetworkSelector
-          theme={props.theme}
-          chains={chains}
-          {...props.networkSelector}
-          onClose={() => setShowNetworkSelector(false)}
+      <NetworkSelector
+        open={showNetworkSelector}
+        theme={props.theme}
+        chains={chains}
+        {...props.networkSelector}
+        onClose={() => setShowNetworkSelector(false)}
+      />
+
+      <Modal
+        size={"compact"}
+        open={showExportModal}
+        setOpen={setShowExportModal}
+      >
+        <ExportLocalWallet
+          modalSize="compact"
+          localWalletConfig={activeWalletConfig as LocalWalletConfig}
+          onExport={() => {
+            setShowExportModal(false);
+          }}
         />
-      )}
+      </Modal>
 
-      {showExportModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
-          <ExportLocalWallet
-            modalSize="compact"
-            localWalletConfig={activeWalletConfig as LocalWalletConfig}
-            onBack={() => {
-              setShowExportModal(false);
-            }}
-            onExport={() => {
-              setShowExportModal(false);
-            }}
-          />
-        </Modal>
-      )}
+      <Modal size={"compact"} open={showSendModal} setOpen={setShowSendModal}>
+        <SendFunds supportedTokens={props.supportedTokens} />
+      </Modal>
 
-      {showSendModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowSendModal}>
-          <SendFunds supportedTokens={props.supportedTokens} />
-        </Modal>
-      )}
-
-      {showReceiveModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
-          <ReceiveFunds iconUrl={activeWalletIconURL} />
-        </Modal>
-      )}
+      <Modal
+        size={"compact"}
+        open={showReceiveModal}
+        setOpen={setShowReceiveModal}
+      >
+        <ReceiveFunds iconUrl={activeWalletIconURL} />
+      </Modal>
     </>
   );
 };

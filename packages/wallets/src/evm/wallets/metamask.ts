@@ -148,7 +148,8 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     });
 
     // trigger connect flow
-    this.connect({ chainId: options.chainId }).then(options.onConnected);
+    this.connect({ chainId: options.chainId })
+      .then(options.onConnected)
   }
 
   async switchAccount() {

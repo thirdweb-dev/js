@@ -57,7 +57,7 @@ export const walletConnect = (
       return (
         <WalletConnectScan
           onBack={props.goBack}
-          onConnected={props.close}
+          onConnected={props.connected}
           walletConfig={props.walletConfig}
           hideBackButton={props.supportedWallets.length > 1}
           modalSize={props.modalSize}
