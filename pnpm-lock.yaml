@@ -791,8 +791,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(expo@47.0.14)
       expo-document-picker:
-        specifier: ^11.2.2
-        version: 11.2.2(expo@47.0.14)
+        specifier: ^11.7.0
+        version: 11.7.0(expo@47.0.14)
       expo-file-system:
         specifier: ^15.2.2
         version: 15.2.2(expo@47.0.14)
@@ -18315,8 +18315,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /expo-document-picker@11.2.2(expo@47.0.14):
-    resolution: {integrity: sha512-EeonRKxkK9E20LEAh93IvlwFjNkUCJKnhBEama9PmIDYWW7RyANZ8eP9C2PupThTDbivzRDNp7Ec7dIeyDAWjw==}
+  /expo-document-picker@11.7.0(expo@47.0.14):
+    resolution: {integrity: sha512-y5OgUuJlip/Vj3CXi6Rfx6PqMkoYwytKmgN6x8afRPehVcYVk3j/EZxvz1MLgUhCmjyFnIpfgG5WTf8uSNbIiA==}
     peerDependencies:
       expo: '*'
     dependencies:
