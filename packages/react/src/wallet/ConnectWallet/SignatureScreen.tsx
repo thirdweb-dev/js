@@ -148,15 +148,17 @@ export const SignatureScreen: React.FC<{
                   : "Awaiting Confirmation"}
               </Text>
 
-              <Text center multiline>
-                {isSafeWallet ? (
-                  <SafeWalletInstruction />
-                ) : (
-                  <>
-                    Sign the signature request <br /> in your wallet
-                  </>
-                )}
-              </Text>
+              {status === "signing" && (
+                <Text center multiline>
+                  {isSafeWallet ? (
+                    <SafeWalletInstruction />
+                  ) : (
+                    <>
+                      Sign the signature request <br /> in your wallet
+                    </>
+                  )}
+                </Text>
+              )}
 
               {isSafeWallet && status === "signing" && (
                 <Container>

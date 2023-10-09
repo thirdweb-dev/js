@@ -242,7 +242,22 @@ export const ConnectModal = () => {
     if (!isWalletModalOpen) {
       setHideModal(false);
     }
-  }, [isWalletModalOpen]);
+  }, [isWalletModalOpen, setIsWalletModalOpen, screen]);
+
+  // if wallet is suddenly disconnected when showing the sign in screen, close the modal and reset the screen
+  useEffect(() => {
+    if (isWalletModalOpen && screen === reservedScreens.signIn && !wallet) {
+      setScreen(initialScreen);
+      setIsWalletModalOpen(false);
+    }
+  }, [
+    initialScreen,
+    isWalletModalOpen,
+    screen,
+    setIsWalletModalOpen,
+    setScreen,
+    wallet,
+  ]);
 
   return (
     <CustomThemeProvider theme={theme}>

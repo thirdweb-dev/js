@@ -9,7 +9,7 @@ export function WalletLogoSpinner(props: { error: boolean; iconUrl: string }) {
   const radiusFactor = 36 - loaderRadius;
   const dashArrayStart = 116 + radiusFactor;
   const dashArrayEnd = 245 + radiusFactor;
-  const dashOffset = 360 + radiusFactor * 1.75;
+  const dashOffset = -1 * (360 + radiusFactor * 1.75);
 
   return (
     <LogoContainer data-error={props.error}>
