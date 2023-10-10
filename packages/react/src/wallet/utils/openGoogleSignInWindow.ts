@@ -1,9 +1,31 @@
-export function openGoogleSignInWindow() {
-  const win = window.open("", undefined, "width=350, height=500");
+import { Theme } from "../../design-system";
+
+export function openGoogleSignInWindow(themeObj: Theme) {
+  // open the popup in the center of the screen
+  const width = 350;
+  const height = 500;
+  const top = (window.innerHeight - height) / 2;
+  const left = (window.innerWidth - width) / 2;
+
+  const win = window.open(
+    "",
+    undefined,
+    `width=${width}, height=${height}, top=${top}, left=${left}`,
+  );
   if (win) {
     win.document.title = "Sign In - Google Accounts";
     win.document.body.innerHTML = spinnerWindowHtml;
+    win.document.body.style.background = themeObj.colors.modalBg;
+    win.document.body.style.color = themeObj.colors.accentText;
   }
+
+  // close it when current window is closed or refreshed
+  if (win) {
+    window.addEventListener("beforeunload", () => {
+      win?.close();
+    });
+  }
+
   return win;
 }
 
@@ -14,7 +36,7 @@ const spinnerWindowHtml = `
     cy="25"
     r="20"
     fill="none"
-    stroke="#000"
+    stroke="currentColor"
     stroke-width="4"
   />
 </svg>

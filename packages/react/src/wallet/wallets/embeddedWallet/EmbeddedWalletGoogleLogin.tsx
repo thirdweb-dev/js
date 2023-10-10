@@ -13,9 +13,10 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { iconSize } from "../../../design-system";
+import { Theme, iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { useTheme } from "@emotion/react";
 
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
@@ -25,12 +26,13 @@ export const EmbeddedWalletGoogleLogin = (
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
+  const themeObj = useTheme() as Theme;
 
   const googleLogin = async () => {
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow();
+      const googleWindow = openGoogleSignInWindow(themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
