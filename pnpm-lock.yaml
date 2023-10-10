@@ -78,8 +78,8 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.0.1
+        version: 9.0.1
       zod:
         specifier: ^3.22.3
         version: 3.22.3
@@ -130,8 +130,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.1
       '@types/uuid':
-        specifier: ^9.0.2
-        version: 9.0.2
+        specifier: ^9.0.5
+        version: 9.0.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.2.0
         version: 6.2.0(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -574,8 +574,8 @@ importers:
         specifier: ^18.2.7
         version: 18.2.7
       '@types/uuid':
-        specifier: ^9.0.2
-        version: 9.0.2
+        specifier: ^9.0.5
+        version: 9.0.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.2.0
         version: 6.2.0(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -1007,8 +1007,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.0.1
+        version: 9.0.1
       yaml:
         specifier: ^2.3.1
         version: 2.3.1
@@ -1065,8 +1065,8 @@ importers:
         specifier: ^18.17.1
         version: 18.17.1
       '@types/uuid':
-        specifier: ^9.0.2
-        version: 9.0.2
+        specifier: ^9.0.5
+        version: 9.0.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.2.0
         version: 6.2.0(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -1195,8 +1195,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -1229,8 +1229,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.1
       '@types/uuid':
-        specifier: ^9.0.2
-        version: 9.0.2
+        specifier: ^9.0.5
+        version: 9.0.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.2.0
         version: 6.2.0(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -12630,8 +12630,8 @@ packages:
       boxen: 7.0.0
     dev: true
 
-  /@types/uuid@9.0.2:
-    resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+  /@types/uuid@9.0.5:
+    resolution: {integrity: sha512-xfHdwa1FMJ082prjSJpoEI57GZITiQz10r3vEJCHa2khEFQjKy91aWKz6+zybzssCvXUwE1LQWgWVwZ4nYUvHQ==}
     dev: true
 
   /@types/validate-npm-package-name@4.0.0:
@@ -28946,6 +28946,11 @@ packages:
 
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
     dev: false
 
