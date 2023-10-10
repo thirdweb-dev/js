@@ -18,16 +18,16 @@ const employees = [
     twitter: "MajmudarAdam",
   },
   {
+    name: "Andrew Begafria",
+    twitter: "akbmotion",
+  },
+  {
     name: "Atif Khan",
     twitter: "atifkhan31",
   },
   {
     name: "Avneesh Agarwal",
     twitter: "avneesh0612",
-  },
-  {
-    name: "Beverly Rivas",
-    twitter: "BevRivas",
   },
   {
     name: "Bobby Wang",
@@ -123,6 +123,10 @@ const employees = [
   {
     name: "Lakshay Garg",
     twitter: "lakshayg18",
+  },
+  {
+    name: "Mago Khamidov",
+    twitter: "KosmosDeveloper",
   },
   {
     name: "Manan Tank",
