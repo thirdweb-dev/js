@@ -44,7 +44,7 @@ export function getChainProvider(
     options.supportedChains = [
       // @ts-expect-error - we know this is a chain and it will work to build the map
       network,
-      ...options.supportedChains.filter((c) => c.chainId !== network.chainId),
+      ...options.supportedChains.filter((c) => c.chainId === network.chainId),
     ];
   }
 
