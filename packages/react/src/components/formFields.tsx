@@ -20,7 +20,22 @@ export const FormFieldWithIconButton: React.FC<{
   noSave?: boolean;
   dataTest?: string;
   placeholder?: string;
+  noErrorShift?: boolean;
 }> = (props) => {
+  const errorEl = (
+    <div
+      style={{
+        opacity: props.error ? 1 : 0,
+        transition: "opacity 0.2s ease",
+      }}
+    >
+      <Spacer y="sm" />
+      <Text color="danger" size="sm">
+        {props.error} &nbsp;
+      </Text>
+    </div>
+  );
+
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
@@ -28,7 +43,6 @@ export const FormFieldWithIconButton: React.FC<{
 
       <InputContainer data-error={!!props.error}>
         <Input
-          sm
           variant="transparent"
           required={props.required}
           name={props.name}
@@ -53,14 +67,8 @@ export const FormFieldWithIconButton: React.FC<{
         </InputButton>
       </InputContainer>
 
-      {props.error && (
-        <>
-          <Spacer y="sm" />
-          <Text color="danger" size="sm">
-            {props.error}
-          </Text>
-        </>
-      )}
+      {props.error && !props.noErrorShift && errorEl}
+      {props.noErrorShift && errorEl}
     </div>
   );
 };

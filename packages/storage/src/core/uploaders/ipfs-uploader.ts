@@ -11,7 +11,6 @@ import {
   IpfsUploaderOptions,
   IStorageUploader,
 } from "../../types";
-import fetch from "cross-fetch";
 import FormData from "form-data";
 import pkg from "../../../package.json";
 

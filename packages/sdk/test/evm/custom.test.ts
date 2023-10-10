@@ -24,8 +24,6 @@ import {
   greeterCompilerMetadata,
 } from "./mock/greeterContractMetadata";
 
-global.fetch = require("cross-fetch");
-
 describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;

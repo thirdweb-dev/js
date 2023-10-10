@@ -6,7 +6,7 @@ import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider
 import { TOS } from "../Modal/TOS";
 import { GlobeIcon } from "../icons/GlobalIcon";
 import styled from "@emotion/styled";
-import { Theme, spacing } from "../../../design-system";
+import { Theme } from "../../../design-system";
 import { keyframes } from "@emotion/react";
 import { Img } from "../../../components/Img";
 
@@ -45,7 +45,7 @@ export function StartScreen() {
         style={{
           minHeight: "300px",
         }}
-        px="lg"
+        p="lg"
       >
         <Container flex="row" center="x">
           {img ? (
@@ -80,40 +80,25 @@ export function StartScreen() {
         </Text>
       </Container>
 
-      <Container px="xl">
-        <LinkContainer data-seperator={!!showTOS}>
-          <Link
-            target="_blank"
-            center
-            href="https://blog.thirdweb.com/web3-wallet/"
-          >
-            New to wallets?
-          </Link>
-        </LinkContainer>
-      </Container>
+      <Container py="lg" flex="column" gap="lg">
+        <Link
+          target="_blank"
+          center
+          href="https://blog.thirdweb.com/web3-wallet/"
+        >
+          New to wallets?
+        </Link>
 
-      {showTOS && (
-        <Container p="lg">
+        {showTOS && (
           <TOS
             termsOfServiceUrl={termsOfServiceUrl}
             privacyPolicyUrl={privacyPolicyUrl}
           />
-        </Container>
-      )}
+        )}
+      </Container>
     </Container>
   );
 }
-
-const LinkContainer = styled.div<{ theme?: Theme }>`
-  &[data-seperator="true"] {
-    padding-bottom: ${spacing.lg};
-    border-bottom: 1px solid ${(p) => p.theme.colors.separatorLine};
-  }
-
-  &[data-seperator="false"] {
-    padding: ${spacing.lg};
-  }
-`;
 
 const floatingAnimation = keyframes`
   from {

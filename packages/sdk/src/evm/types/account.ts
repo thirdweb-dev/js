@@ -12,12 +12,13 @@ export type SignerPermissions = {
   approvedCallTargets: string[];
 };
 
-export const SignerPermissionsSchema = /* @__PURE__ */ z.object({
-  startDate: StartDateSchema,
-  expirationDate: EndDateSchema,
-  nativeTokenLimitPerTransaction: /* @__PURE__ */ AmountSchema.default(0),
-  approvedCallTargets: /* @__PURE__ */ z.array(AddressOrEnsSchema),
-});
+export const SignerPermissionsSchema = /* @__PURE__ */ (() =>
+  z.object({
+    startDate: StartDateSchema,
+    expirationDate: EndDateSchema,
+    nativeTokenLimitPerTransaction: AmountSchema.default(0),
+    approvedCallTargets: z.array(AddressOrEnsSchema),
+  }))();
 
 export type SignerPermissionsInput = z.input<typeof SignerPermissionsSchema>;
 export type SignerPermissionsOutput = z.output<typeof SignerPermissionsSchema>;
@@ -28,13 +29,15 @@ export type SignerWithPermissions = {
   permissions: SignerPermissions;
 };
 
-export const PermissionSnapshotSchema = /* @__PURE__ */ z.array(
-  /* @__PURE__ */ z.object({
-    signer: AddressOrEnsSchema,
-    makeAdmin: /* @__PURE__ */ z.boolean(),
-    permissions: SignerPermissionsSchema,
-  }),
-);
+export const PermissionSnapshotSchema = /* @__PURE__ */ (() =>
+  z.array(
+    z.object({
+      signer: AddressOrEnsSchema,
+      makeAdmin: z.boolean(),
+      permissions: SignerPermissionsSchema,
+    }),
+  ))();
+
 export type PermissionSnapshotInput = z.input<typeof PermissionSnapshotSchema>;
 export type PermissionSnapshotOutput = z.output<
   typeof PermissionSnapshotSchema

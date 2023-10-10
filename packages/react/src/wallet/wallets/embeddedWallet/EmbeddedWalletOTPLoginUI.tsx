@@ -80,7 +80,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
       setConnectedWallet(wallet);
       setVerifyStatus("valid");
-      props.close();
+      props.connected();
     } catch (e) {
       setVerifyStatus("invalid");
       console.error(e);
@@ -178,7 +178,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                 <Text size="sm" center color="danger">
                   Failed to send OTP
                 </Text>
-                <Spacer y="md" />
               </>
             )}
 

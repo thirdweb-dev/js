@@ -18,7 +18,6 @@ import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
-  showOrSeparator?: boolean;
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
 }) => {
@@ -90,7 +89,6 @@ export const PaperFormUI = (props: {
           }
         }}
         emptyErrorMessage="email address is required"
-        showOrSeparator={props.showOrSeparator}
       />
     </div>
   );
@@ -127,7 +125,6 @@ export const PaperFormUIScreen: React.FC<{
           walletConfig={props.walletConfig}
           googleLoginSupported={props.googleLoginSupported}
           onSelect={props.onSelect}
-          showOrSeparator={false}
         />
       </Container>
     </Container>

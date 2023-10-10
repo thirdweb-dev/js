@@ -9,10 +9,11 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const EditionMetadataOutputSchema = /* @__PURE__ */ z.object({
-  supply: BigNumberSchema,
-  metadata: CommonNFTOutput,
-});
+export const EditionMetadataOutputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    supply: BigNumberSchema,
+    metadata: CommonNFTOutput,
+  }))();
 
 /**
  * @internal
@@ -26,18 +27,20 @@ export const EditionMetadataWithOwnerOutputSchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const EditionMetadataInputSchema = /* @__PURE__ */ z.object({
-  supply: BigNumberishSchema,
-  metadata: CommonNFTInput,
-});
+export const EditionMetadataInputSchema = /* @__PURE__ */ (() =>
+  z.object({
+    supply: BigNumberishSchema,
+    metadata: CommonNFTInput,
+  }))();
 
 /**
  * @internal
  */
-export const EditionMetadataInputOrUriSchema = /* @__PURE__ */ z.object({
-  supply: BigNumberishSchema,
-  metadata: NFTInputOrUriSchema,
-});
+export const EditionMetadataInputOrUriSchema = /* @__PURE__ */ (() =>
+  z.object({
+    supply: BigNumberishSchema,
+    metadata: NFTInputOrUriSchema,
+  }))();
 
 /**
  * @public
