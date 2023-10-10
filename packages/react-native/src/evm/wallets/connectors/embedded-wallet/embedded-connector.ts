@@ -86,7 +86,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   async socialLogin(oauthOption: OauthOption) {
     try {
-      await socialLogin(oauthOption, this.options.clientId);
+      const { email } = await socialLogin(oauthOption, this.options.clientId);
+      this.email = email;
+      saveConnectedEmail(email);
     } catch (error) {
       console.error(
         `Error while signing in with: ${oauthOption.provider}. ${error}`,

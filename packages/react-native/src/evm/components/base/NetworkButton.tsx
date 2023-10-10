@@ -72,6 +72,7 @@ export const NetworkButton = ({
     <>
       <BaseButton
         p={padding || "sm"}
+        paddingVertical="xs"
         borderRadius="md"
         borderWidth={0.5}
         flexDirection="row"
@@ -82,13 +83,8 @@ export const NetworkButton = ({
         {...props}
       >
         <Box flexDirection="row" alignItems="center">
-          <ChainIcon chainIconUrl={chain?.icon?.url} size={32} />
-          <Box
-            ml="md"
-            alignItems="flex-start"
-            justifyContent="center"
-            height={36}
-          >
+          <ChainIcon chainIconUrl={chain?.icon?.url} size={28} />
+          <Box ml="md" alignItems="flex-start" justifyContent="center">
             <Text variant="bodyLarge">{chain?.name || "Unknown Network"}</Text>
             {isSwitching ? (
               <Box flexDirection="row" alignItems="center">

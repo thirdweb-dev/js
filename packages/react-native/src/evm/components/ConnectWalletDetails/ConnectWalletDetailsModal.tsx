@@ -247,7 +247,11 @@ export const ConnectWalletDetailsModal = ({
                 </Text>
               </Box>
             ) : null}
-            <Box flexDirection="row" justifyContent="space-evenly" mt="md">
+            <Box
+              flexDirection="row"
+              justifyContent="space-evenly"
+              marginVertical="md"
+            >
               <SendButton supportedTokens={supportedTokens} />
               <ReceiveButton />
             </Box>
@@ -331,7 +335,6 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    marginTop: 24,
     marginBottom: 8,
   },
 });

@@ -164,7 +164,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   if (selectionData?.oauthOptions) {
     return (
       <EmbeddedSocialConnection
-        close={close}
+        connected={() => {}}
         goBack={goBack}
         onLocallyConnected={onLocallyConnected}
         selectionData={selectionData}

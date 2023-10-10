@@ -6,12 +6,22 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
-import { OauthOptions } from "../../connectors/embedded-wallet/types";
 import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
+
+type OAuthProvider = "google"; // currently we only have one
 
 export type EmbeddedWalletConfig = {
   recommended?: boolean;
-  oauthOptions?: Omit<OauthOptions, "providers">;
+  // @default true - set false to disable
+  email?: boolean;
+
+  // @default { providers: ['google'] } - set false to disable
+  oauthOptions?:
+    | {
+        providers: OAuthProvider[];
+        redirectUrl: string;
+      }
+    | false;
 };
 
 export const embeddedWallet = (
@@ -20,10 +30,16 @@ export const embeddedWallet = (
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
     <EmailSelectionUI
       {...props}
-      oauthOptions={{
-        providers: [AuthProvider.GOOGLE],
-        redirectUrl: config?.oauthOptions?.redirectUrl || "",
-      }}
+      oauthOptions={
+        config?.oauthOptions
+          ? {
+              providers: [AuthProvider.GOOGLE],
+              redirectUrl: config.oauthOptions.redirectUrl,
+            }
+          : undefined
+      }
+      // you cannot disable both email and oauth
+      email={!config?.oauthOptions && !config?.email ? true : config?.email}
     />
   );
 

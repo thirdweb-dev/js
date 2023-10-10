@@ -4,11 +4,13 @@ import ImageSvgUri from "./ImageSvgUri";
 import { Label } from "./Label";
 import Text from "./Text";
 import Box from "./Box";
+import { Palette } from "../../styles/colors";
 
 type WalletButtonProps = {
   onPress?: () => void;
   walletIconUrl: string;
   name: string;
+  nameColor?: keyof Palette;
   labelText?: string;
   recommended?: boolean;
   iconWidth?: number;
@@ -22,6 +24,7 @@ export const WalletButton = ({
   onPress,
   walletIconUrl,
   name,
+  nameColor = "textPrimary",
   labelText,
   recommended,
   ...props
@@ -46,7 +49,9 @@ export const WalletButton = ({
           height={iconHeight}
         />
         <Box ml="sm" alignItems="flex-start">
-          <Text variant="bodyLarge">{name}</Text>
+          <Text variant="bodyLarge" color={nameColor}>
+            {name}
+          </Text>
           {recommended ? <Text variant="link">Recommended</Text> : null}
         </Box>
       </Box>

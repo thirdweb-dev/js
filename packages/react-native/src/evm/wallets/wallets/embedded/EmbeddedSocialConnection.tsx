@@ -13,7 +13,7 @@ import { Box, Text, WalletButton } from "../../../components/base";
 
 export const EmbeddedSocialConnection: React.FC<
   ConnectUIProps<EmbeddedWallet>
-> = ({ goBack, close, selectionData, onLocallyConnected }) => {
+> = ({ goBack, selectionData, onLocallyConnected }) => {
   const setConnectedWallet = useSetConnectedWallet();
   const setConnectionStatus = useSetConnectionStatus();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -68,7 +68,7 @@ export const EmbeddedSocialConnection: React.FC<
         }
         subHeaderText={""}
         onBackPress={goBack}
-        onClose={close}
+        onClose={goBack}
       />
       <Box flex={1} justifyContent="center" alignItems="center">
         {!errorMessage ? (

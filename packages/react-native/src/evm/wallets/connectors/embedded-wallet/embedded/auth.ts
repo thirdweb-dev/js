@@ -21,7 +21,7 @@ import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { OauthOption } from "../types";
-import { ROUTE_HEADLESS_GOOGLE_LOGIN_REDIRECT } from "./helpers/constants";
+import { ROUTE_HEADLESS_GOOGLE_LOGIN } from "./helpers/constants";
 
 export async function sendEmailOTP(
   email: string,
@@ -127,17 +127,28 @@ export async function validateEmailOTP({
 }
 
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
-  const completeLoginUrl = `${ROUTE_HEADLESS_GOOGLE_LOGIN_REDIRECT}?developerClientId=${encodeURIComponent(
+  const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_GOOGLE_LOGIN}?authProvider=${encodeURIComponent(
+    "google",
+  )}&baseUrl=${encodeURIComponent(
+    "https://ews.thirdweb.com",
+  )}&platform=${encodeURIComponent("mobile")}`;
+
+  const resp = await fetch(headlessLoginLinkWithParams);
+
+  if (!resp.ok) {
+    throw new Error("Error getting headless login link");
+  }
+
+  const json = await resp.json();
+
+  const { platformLoginLink } = json;
+
+  const completeLoginUrl = `${platformLoginLink}?developerClientId=${encodeURIComponent(
     clientId || "",
   )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
     oauthOptions.redirectUrl,
   )}`;
 
-  // const res = await fetch(completeLoginUrl);
-  // if (!res.ok) {
-  //   throw new Error('Error fetching login link');
-  // }
-  // const {googleLoginLink} = await res.json();
   const result = await InAppBrowser.openAuth(
     completeLoginUrl,
     oauthOptions.redirectUrl,
@@ -161,9 +172,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   if (parts.length < 2) {
     throw new Error("Malformed response from the login redirect");
   }
-
   const authResult = parts[1];
-
   const { storedToken } = JSON.parse(authResult);
 
   try {
@@ -180,7 +189,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 
     await postPaperAuth(toStoreToken, clientId);
 
-    return { storedToken };
+    return { storedToken, email: storedToken.authDetails.email };
   } catch (e) {
     throw new Error(
       `Malformed response from post authentication: ${JSON.stringify(e)}`,
