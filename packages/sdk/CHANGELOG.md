@@ -1,5 +1,28 @@
 # @thirdweb-dev/sdk
 
+## 4.0.0
+
+### Major Changes
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Solana**:
+
+  - We've decided to drop support for Solana across our SDKs.
+  - Starting with this version of our SDKs all previous solana related functionality will be removed.
+  - Previous versions of our SDKs will continue to work with Solana. However, we will not be providing any further updates or bug fixes for Solana.
+  - You can read a detailed explanation of our decision [on our blog](https://blog.thirdweb.com/discontinuing-solana-support/).
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Node 16**:
+
+  - As part of our commitment to maintain up-to-date with the evolving ecosystem and provide the best support for our users, we have made the decision to cease support for Node 16. Starting with this version, our SDKs will no longer be tested against or guaranteed to work with Node.js version 16.
+  - We encourage users to upgrade to a more recent version of Node.js to continue to benefit from the latest features, improvements, and security updates.
+  - If you are unable to upgrade to a more recent version of Node.js, you can continue to use the previous version of our SDKs. However, we will not be providing any further updates or bug fixes for Node 16.
+  - For more information on EOL status of Node 16, see [Node.js Release Cycle](https://nodejs.dev/en/about/releases/).
+
+### Patch Changes
+
+- Updated dependencies [[`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8), [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8)]:
+  - @thirdweb-dev/storage@2.0.0
+
 ## 3.10.67
 
 ### Patch Changes
