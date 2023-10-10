@@ -110,7 +110,9 @@ export class SmartWallet
    * @param transactions
    * @returns the transaction receipt
    */
-  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+  async executeBatch(
+    transactions: Transaction<any>[],
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
   }
