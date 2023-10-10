@@ -1,5 +1,21 @@
 # @thirdweb-dev/react-native
 
+## 0.3.5
+
+### Patch Changes
+
+- [#1645](https://github.com/thirdweb-dev/js/pull/1645) [`79f91ee2`](https://github.com/thirdweb-dev/js/commit/79f91ee2d96e3a9591d6104c542496bce11f3c71) Thanks [@MananTank](https://github.com/MananTank)! - `WalletConfig.connectUI`` props updated:
+
+  - `close` and `open` removed - wallet can no longer "close" the Modal
+  - `hide` and `show` added to only allow hiding and showing the Modal
+  - `connected` added - use this instead of `close` when wallet is connected and Modal is safe to close.
+
+- Updated dependencies [[`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8), [`79f91ee2`](https://github.com/thirdweb-dev/js/commit/79f91ee2d96e3a9591d6104c542496bce11f3c71), [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8)]:
+  - @thirdweb-dev/react-core@4.0.0
+  - @thirdweb-dev/storage@2.0.0
+  - @thirdweb-dev/wallets@2.0.0
+  - @thirdweb-dev/sdk@4.0.0
+
 ## 0.3.4
 
 ### Patch Changes
