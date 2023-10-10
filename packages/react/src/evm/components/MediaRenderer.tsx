@@ -247,8 +247,6 @@ const AudioPlayer = /* @__PURE__ */ (() =>
     );
   }))();
 
-AudioPlayer.displayName = "AudioPlayer";
-
 const IframePlayer = /* @__PURE__ */ (() =>
   React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
     function Iframe_Player(
@@ -303,8 +301,6 @@ const IframePlayer = /* @__PURE__ */ (() =>
       );
     },
   ))();
-
-IframePlayer.displayName = "IframePlayer";
 
 const LinkPlayer = /* @__PURE__ */ (() =>
   React.forwardRef<HTMLAnchorElement, MediaRendererProps>(function Link_Player(
