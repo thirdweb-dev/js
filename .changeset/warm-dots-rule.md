@@ -12,8 +12,12 @@ You need to add the `react-native-inappbrowser-reborn` package to your app, then
   clientId={"your-client-id"}
   supportedWallets={[
     embeddedWallet({
+      // if this is true AND oauthOptions is not set we set it to false internally
+      email: true,
+      // if this is set we enable Sign in with Google
       oauthOptions: {
-        redirectUrl: "deepLinkToYourApp://",
+        redirectUrl: "test15app://",
+        providers: ["google"],
       },
     }),
   ]}
