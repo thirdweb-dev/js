@@ -47,7 +47,7 @@
     "detect-package-manager": "^2.0.1",
     "enquirer": "^2.3.6",
     "ethers": "^5.7.2",
-    "got": "11.8.5",
+    "got": "13.0.0",
     "inquirer": "^8.2.3",
     "js-yaml": "^4.1.0",
     "open": "^8.4.0",
