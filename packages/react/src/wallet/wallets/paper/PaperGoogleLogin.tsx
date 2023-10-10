@@ -13,9 +13,10 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { iconSize } from "../../../design-system";
+import { Theme, iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { useTheme } from "@emotion/react";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const { goBack, modalSize, connected } = props;
@@ -24,13 +25,14 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
+  const themeObj = useTheme() as Theme;
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow();
+      const googleWindow = openGoogleSignInWindow(themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }

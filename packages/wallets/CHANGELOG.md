@@ -1,5 +1,11 @@
 # @thirdweb-dev/wallets
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1742](https://github.com/thirdweb-dev/js/pull/1742) [`e684d05e`](https://github.com/thirdweb-dev/js/commit/e684d05e222458f02c8158eb9385d68c879dd946) Thanks [@MananTank](https://github.com/MananTank)! - Fix RPCs not updated in given `chain` object when `clientId` is passed to the `EmbeddedWallet`, `PaperWallet`, `SmartWallet`, `BloctoWallet`, `SignerWallet` constructors.
+
 ## 2.0.0
 
 ### Major Changes

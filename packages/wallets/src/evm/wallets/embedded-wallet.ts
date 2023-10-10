@@ -1,3 +1,4 @@
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
 import {
   EmbeddedWalletAdditionalOptions,
@@ -37,7 +38,14 @@ export class EmbeddedWallet extends AbstractClientWallet<
       ...options,
     });
 
-    this.chain = options.chain;
+    try {
+      this.chain = {
+        ...options.chain,
+        rpc: getValidChainRPCs(options.chain, options.clientId),
+      };
+    } catch {
+      this.chain = options.chain;
+    }
   }
 
   protected async getConnector(): Promise<Connector> {

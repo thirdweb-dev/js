@@ -1,5 +1,15 @@
 # @thirdweb-dev/react
 
+## 4.0.1
+
+### Patch Changes
+
+- [#1742](https://github.com/thirdweb-dev/js/pull/1742) [`e684d05e`](https://github.com/thirdweb-dev/js/commit/e684d05e222458f02c8158eb9385d68c879dd946) Thanks [@MananTank](https://github.com/MananTank)! - Apply ConnectWallet theme to Google Sign in popup opened from paperWallet, embeddedWallet
+
+- Updated dependencies [[`e684d05e`](https://github.com/thirdweb-dev/js/commit/e684d05e222458f02c8158eb9385d68c879dd946)]:
+  - @thirdweb-dev/wallets@2.0.1
+  - @thirdweb-dev/react-core@4.0.1
+
 ## 4.0.0
 
 ### Major Changes
