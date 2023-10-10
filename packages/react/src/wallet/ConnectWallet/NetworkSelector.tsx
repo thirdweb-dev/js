@@ -539,7 +539,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   );
 });
 
-const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
+const TabButton = /* @__PURE__ */ (() => styled(Tabs.Trigger)<{
   theme?: Theme;
 }>`
   all: unset;
@@ -558,7 +558,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
     background: ${(p) => p.theme.colors.secondaryButtonBg};
     color: ${(p) => p.theme.colors.primaryText};
   }
-`;
+`)();
 
 const SectionLabel = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
