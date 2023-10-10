@@ -7,16 +7,16 @@ import {
   CommonTrustedForwarderSchema,
 } from "./common";
 
-export const TokenErc20ContractInput =
-  /* @__PURE__ */ CommonContractSchema.merge(CommonSymbolSchema);
+export const TokenErc20ContractInput = /* @__PURE__ */ (() =>
+  CommonContractSchema.merge(CommonSymbolSchema))();
 
-export const TokenErc20ContractOutput =
-  /* @__PURE__ */ CommonContractOutputSchema.merge(CommonSymbolSchema);
+export const TokenErc20ContractOutput = /* @__PURE__ */ (() =>
+  CommonContractOutputSchema.merge(CommonSymbolSchema))();
 
-export const TokenErc20ContractDeploy =
-  /* @__PURE__ */ TokenErc20ContractInput.merge(CommonPlatformFeeSchema)
+export const TokenErc20ContractDeploy = /* @__PURE__ */ (() =>
+  TokenErc20ContractInput.merge(CommonPlatformFeeSchema)
     .merge(CommonPrimarySaleSchema)
-    .merge(CommonTrustedForwarderSchema);
+    .merge(CommonTrustedForwarderSchema))();
 
 export const TokenErc20ContractSchema = {
   deploy: TokenErc20ContractDeploy,

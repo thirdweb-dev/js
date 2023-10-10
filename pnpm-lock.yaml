@@ -592,8 +592,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       eslint-plugin-better-tree-shaking:
-        specifier: 0.0.3
-        version: 0.0.3(eslint@8.45.0)
+        specifier: 0.0.4
+        version: 0.0.4(eslint@8.45.0)
       eslint-plugin-import:
         specifier: ^2.26.0
         version: 2.27.5(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)
@@ -710,8 +710,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       eslint-plugin-better-tree-shaking:
-        specifier: 0.0.3
-        version: 0.0.3(eslint@8.45.0)
+        specifier: 0.0.4
+        version: 0.0.4(eslint@8.45.0)
       eslint-plugin-import:
         specifier: ^2.26.0
         version: 2.27.5(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)
@@ -1092,8 +1092,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       eslint-plugin-better-tree-shaking:
-        specifier: 0.0.3
-        version: 0.0.3(eslint@8.45.0)
+        specifier: 0.0.4
+        version: 0.0.4(eslint@8.45.0)
       eslint-plugin-import:
         specifier: ^2.26.0
         version: 2.27.5(@typescript-eslint/parser@6.2.0)(eslint@8.45.0)
@@ -1428,8 +1428,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       eslint-plugin-better-tree-shaking:
-        specifier: 0.0.3
-        version: 0.0.3(eslint@8.45.0)
+        specifier: 0.0.4
+        version: 0.0.4(eslint@8.45.0)
       ethereum-provider:
         specifier: ^0.7.7
         version: 0.7.7
@@ -17470,8 +17470,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /eslint-plugin-better-tree-shaking@0.0.3(eslint@8.45.0):
-    resolution: {integrity: sha512-U5OjauLSVcXvlh2La3ptPwIs6JwLPJKP20OQdTDBe2oh0cHvBeEwhQ8mjFrEoCMdQdmMdrSBkSRLG3gLxFjK3A==}
+  /eslint-plugin-better-tree-shaking@0.0.4(eslint@8.45.0):
+    resolution: {integrity: sha512-Silr3osATHKt3i4SNhqIV52hvZKNvhxs042vlPsw4pUfOkOI9eCZIFg+Q5qZ2zFSNWRAfLbXfG0oHCIz7CbN7w==}
     peerDependencies:
       eslint: '>=4.0.0'
     dependencies:

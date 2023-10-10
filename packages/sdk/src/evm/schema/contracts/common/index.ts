@@ -59,12 +59,13 @@ export const CommonRoyaltySchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const CommonPrimarySaleSchema = /* @__PURE__ */ z.object({
-  /**
-   * primary sale recipient address
-   */
-  primary_sale_recipient: AddressOrEnsSchema,
-});
+export const CommonPrimarySaleSchema = /* @__PURE__ */ (() =>
+  z.object({
+    /**
+     * primary sale recipient address
+     */
+    primary_sale_recipient: AddressOrEnsSchema,
+  }))();
 
 /**
  * @internal

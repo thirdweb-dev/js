@@ -593,9 +593,9 @@ const dropdownContentFade = keyframes`
   }
 `;
 
-const DropDownContent = /* @__PURE__ */ styled(
-  /* @__PURE__ */ DropdownMenu.Content,
-)<{ theme?: Theme }>`
+const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
+  theme?: Theme;
+}>`
   width: 320px;
   box-sizing: border-box;
   max-width: 100%;
@@ -608,7 +608,7 @@ const DropDownContent = /* @__PURE__ */ styled(
   --bg: ${(props) => props.theme.colors.dropdownBg};
   z-index: 1000000;
   line-height: 1;
-`;
+`)();
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
@@ -689,13 +689,13 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const MenuLink = /* @__PURE__ */ MenuButton.withComponent("a");
+const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
-export const DropdownMenuItem = /* @__PURE__ */ styled(
-  /* @__PURE__ */ DropdownMenu.Item,
+export const DropdownMenuItem = /* @__PURE__ */ (() => styled(
+  DropdownMenu.Item,
 )<{ theme?: Theme }>`
   outline: none;
-`;
+`)();
 
 export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
