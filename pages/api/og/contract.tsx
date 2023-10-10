@@ -93,6 +93,21 @@ function textShortener(text: string) {
   return `${words.join(" ")} ...`;
 }
 
+const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  : "https://ipfs.io/ipfs/";
+
+function replaceAnyIpfsUrlWithGateway(url: string) {
+  if (url.startsWith("ipfs://")) {
+    return `${IPFS_GATEWAY}${url.slice(7)}`;
+  }
+  if (url.includes("/ipfs/")) {
+    const [, after] = url.split("/ipfs/");
+    return `${IPFS_GATEWAY}${after}`;
+  }
+  return url;
+}
+
 export default async function handler(req: NextRequest) {
   if (req.method !== "GET") {
     return new Response("Method not allowed", { status: 405 });
@@ -124,7 +139,7 @@ export default async function handler(req: NextRequest) {
             <img
               alt=""
               tw="w-50 h-50 rounded-lg mb-8 flex mx-auto"
-              src={contractData.logo}
+              src={replaceAnyIpfsUrlWithGateway(contractData.logo)}
             />
           )}
 

@@ -69,6 +69,21 @@ const TWLogo: React.FC = () => (
 
 const { chainIdToChain } = getAllChainRecords();
 
+const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  : "https://ipfs.io/ipfs/";
+
+function replaceAnyIpfsUrlWithGateway(url: string) {
+  if (url.startsWith("ipfs://")) {
+    return `${IPFS_GATEWAY}${url.slice(7)}`;
+  }
+  if (url.includes("/ipfs/")) {
+    const [, after] = url.split("/ipfs/");
+    return `${IPFS_GATEWAY}${after}`;
+  }
+  return url;
+}
+
 export default async function handler(req: NextRequest) {
   if (req.method !== "GET") {
     return new Response("Method not allowed", { status: 405 });
@@ -88,10 +103,9 @@ export default async function handler(req: NextRequest) {
     return new Response("Chain not found", { status: 400 });
   }
 
-  const iconUrl = chain.icon?.url.replace(
-    "ipfs://",
-    `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`,
-  );
+  const iconUrl = chain.icon?.url
+    ? replaceAnyIpfsUrlWithGateway(chain.icon.url)
+    : undefined;
 
   const [inter400, inter500, inter700, imageData] = await Promise.all([
     inter400_,

@@ -154,6 +154,21 @@ function descriptionShortener(description: string) {
   return `${words.join(" ")} ...`;
 }
 
+const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  : "https://ipfs.io/ipfs/";
+
+function replaceAnyIpfsUrlWithGateway(url: string) {
+  if (url.startsWith("ipfs://")) {
+    return `${IPFS_GATEWAY}${url.slice(7)}`;
+  }
+  if (url.includes("/ipfs/")) {
+    const [, after] = url.split("/ipfs/");
+    return `${IPFS_GATEWAY}${after}`;
+  }
+  return url;
+}
+
 export default async function handler(req: NextRequest) {
   if (req.method !== "GET") {
     return new Response("Method not allowed", { status: 405 });
@@ -195,7 +210,7 @@ export default async function handler(req: NextRequest) {
           src={imageData}
           width="1200px"
           height="630px"
-          tw="absolute object-cover"
+          tw="absolute"
         />
         {/* the actual component starts here */}
 
@@ -206,9 +221,8 @@ export default async function handler(req: NextRequest) {
               <div tw="flex items-center">
                 {publishedContractData.logo && (
                   <img
-                    src={publishedContractData.logo.replace(
-                      "ipfs://",
-                      `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`,
+                    src={replaceAnyIpfsUrlWithGateway(
+                      publishedContractData.logo,
                     )}
                     tw="w-16 h-16 rounded-xl mr-4"
                     alt=""
@@ -229,8 +243,11 @@ export default async function handler(req: NextRequest) {
                 alt=""
                 tw="w-32 h-32 rounded-full"
                 src={
-                  publishedContractData.publisherAvatar ||
-                  `https://source.boringavatars.com/marble/120/${publishedContractData.publisher}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
+                  publishedContractData.publisherAvatar
+                    ? replaceAnyIpfsUrlWithGateway(
+                        publishedContractData.publisherAvatar,
+                      )
+                    : `https://source.boringavatars.com/marble/120/${publishedContractData.publisher}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
                 }
               />
               <h2 tw="text-2xl text-white font-medium max-w-full">
