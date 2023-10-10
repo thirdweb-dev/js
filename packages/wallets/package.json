@@ -386,7 +386,7 @@
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.1",
     "@walletconnect/types": "^2.9.1",
-    "@walletconnect/utils": "^2.9.1",
+    "@walletconnect/utils": "^2.10.2",
     "@walletconnect/web3wallet": "^1.8.7",
     "buffer": "^6.0.3",
     "crypto-js": "^4.1.1",
