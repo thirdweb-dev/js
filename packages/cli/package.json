@@ -1,7 +1,7 @@
 {
   "name": "thirdweb",
+  "version": "0.13.1",
   "main": "dist/index.js",
-  "version": "0.12.8",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -53,7 +53,7 @@
     "got": "11.8.5",
     "gradient-string": "^2.0.2",
     "inquirer": "^8.2.3",
-    "node-fetch": "^3.3.2",
+    "js-yaml": "^4.1.0",
     "open": "^8.4.0",
     "prompts": "^2.4.2",
     "rimraf": "^3.0.2",

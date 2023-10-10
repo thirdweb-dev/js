@@ -12,11 +12,12 @@ import { z } from "zod";
 /**
  * @internal
  */
-const ERC20RewardSchema = /* @__PURE__ */ ERC20WrappableSchema.omit({
-  quantity: true,
-}).extend({
-  quantityPerReward: AmountSchema,
-});
+const ERC20RewardSchema = /* @__PURE__ */ (() =>
+  ERC20WrappableSchema.omit({
+    quantity: true,
+  }).extend({
+    quantityPerReward: AmountSchema,
+  }))();
 
 /**
  * @internal
@@ -26,11 +27,12 @@ const ERC721RewardSchema = ERC721WrappableSchema;
 /**
  * @internal
  */
-const ERC1155RewardSchema = /* @__PURE__ */ ERC1155WrappableSchema.omit({
-  quantity: true,
-}).extend({
-  quantityPerReward: BigNumberishSchema,
-});
+const ERC1155RewardSchema = /* @__PURE__ */ (() =>
+  ERC1155WrappableSchema.omit({
+    quantity: true,
+  }).extend({
+    quantityPerReward: BigNumberishSchema,
+  }))();
 
 /**
  * @internal

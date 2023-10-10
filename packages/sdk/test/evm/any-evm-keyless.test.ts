@@ -28,6 +28,8 @@ import {
   pluginMapCompilerMetadata,
 } from "./mock/pluginMapMetadata";
 
+const itIf = (condition: boolean) => (condition ? it : it.skip);
+
 describe("Any EVM Keyless Deploy", async () => {
   let contract: SmartContract;
   let adminWallet: SignerWithAddress;
@@ -253,7 +255,8 @@ describe("Any EVM Keyless Deploy", async () => {
     expect(transactionCount).to.equal(1);
   });
 
-  it("deploy marketplacev3", async () => {
+  // can only work if secret key is set, skip otherwise
+  itIf(process.env.TW_SECRET_KEY)("deploy marketplacev3", async () => {
     notificationCounter = 0;
     transactionCount = 0;
     const marketplace = await deployMarketplaceV3();

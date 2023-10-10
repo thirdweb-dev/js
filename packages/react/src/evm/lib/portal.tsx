@@ -91,5 +91,3 @@ export type PortalProps = PropsWithChildren<{
   containerRef?: React.RefObject<Node>;
   unstable_skipInitialRender?: boolean;
 }>;
-
-Portal.displayName = "Portal";

@@ -6,8 +6,6 @@ import { Signer, ethers } from "ethers";
 import hardhat from "hardhat";
 import { ThirdwebSDK } from "../../src/evm";
 
-global.fetch = require("cross-fetch");
-
 class EthersWallet {
   signer: Signer;
   constructor(signer: Signer) {

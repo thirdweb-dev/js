@@ -13,24 +13,26 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { ModalTitle } from "../../../components/modalElements";
 import { Text } from "../../../components/text";
-import { iconSize } from "../../../design-system";
+import { Theme, iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { useTheme } from "@emotion/react";
 
 export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
-  const { goBack, modalSize } = props;
+  const { goBack, modalSize, connected } = props;
 
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const connectionStatus = useConnectionStatus();
+  const themeObj = useTheme() as Theme;
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
       const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      const googleWindow = openGoogleSignInWindow();
+      const googleWindow = openGoogleSignInWindow(themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
@@ -44,20 +46,18 @@ export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
         },
       });
       setConnectedWallet(paperWallet);
-      props.close();
+      props.connected();
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error(e);
     }
   };
 
-  const closeModal = props.close;
-
   useEffect(() => {
     if (connectionStatus === "connected") {
-      closeModal();
+      connected();
     }
-  }, [connectionStatus, closeModal]);
+  }, [connectionStatus, connected]);
 
   return (
     <Container animate="fadein" flex="column" fullHeight>

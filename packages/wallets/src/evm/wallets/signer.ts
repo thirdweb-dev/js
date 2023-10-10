@@ -2,7 +2,12 @@ import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
+import {
+  Chain,
+  defaultChains,
+  Ethereum,
+  updateChainRPCs,
+} from "@thirdweb-dev/chains";
 import { Signer } from "ethers";
 
 export type SignerWalletAdditionalOptions = {
@@ -26,6 +31,11 @@ export class SignerWallet extends AbstractClientWallet<
 
   constructor(options: WalletOptions<SignerWalletAdditionalOptions>) {
     super("signerWallet", options);
+
+    if (options.clientId && options.chain) {
+      options.chain = updateChainRPCs(options.chain, options.clientId);
+    }
+
     this.options = options;
     this.signer = options.signer;
     this.#storage =
@@ -40,14 +50,18 @@ export class SignerWallet extends AbstractClientWallet<
         this.signer = this.options.signer;
       }
 
-      const defaults = this.options.chain
-        ? [...defaultChains, this.options.chain]
-        : defaultChains;
+      const defaults = (
+        this.options.chain
+          ? [...defaultChains, this.options.chain]
+          : defaultChains
+      ).map((c) => updateChainRPCs(c, this.options.clientId));
 
       this.connector = new SignerConnector({
-        chain: this.options.chain || Ethereum,
+        chain:
+          this.options.chain ||
+          updateChainRPCs(Ethereum, this.options.clientId),
         signer: this.signer,
-        chains: this.options.chains || defaults,
+        chains: this.chains || defaults,
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
       });

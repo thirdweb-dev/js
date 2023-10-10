@@ -19,8 +19,6 @@ describe("npx thirdweb create", () => {
     await pressKey("enter");
     await waitForText(CREATE_MESSAGES.projectName);
     await pressKey("enter");
-    await waitForText(CREATE_MESSAGES.chain);
-    await pressKey("enter");
     await waitForText(CREATE_MESSAGES.framework);
     // select CRA
     await pressKey("arrowDown");

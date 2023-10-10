@@ -11,8 +11,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import invariant from "tiny-invariant";
 
-global.fetch = require("cross-fetch");
-
 describe("Token Drop Contract (v4)", async () => {
   let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,

@@ -95,7 +95,7 @@ export const SelectpersonalWallet: React.FC<{
       {guestWallet && (
         <ScreenBottomContainer>
           <Button
-            variant="outline"
+            variant="link"
             fullWidth
             onClick={() => {
               props.selectWallet(guestWallet);

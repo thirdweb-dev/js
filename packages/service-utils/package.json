@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -66,6 +66,6 @@
   },
   "dependencies": {
     "aws4fetch": "^1.0.17",
-    "zod": "^3.20.2"
+    "zod": "^3.22.3"
   }
 }

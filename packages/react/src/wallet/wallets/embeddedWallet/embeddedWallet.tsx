@@ -24,6 +24,7 @@ export const embeddedWallet = (
 ): WalletConfig<EmbeddedWallet> => {
   return {
     category: "socialLogin",
+    isHeadless: true,
     id: EmbeddedWallet.id,
     recommended: config?.recommended,
     meta: {
@@ -72,7 +73,6 @@ const EmbeddedWalletSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = (
   return (
     <div>
       <EmbeddedWalletFormUI
-        showOrSeparator={props.supportedWallets.length > 1}
         onSelect={props.onSelect}
         walletConfig={props.walletConfig}
       />

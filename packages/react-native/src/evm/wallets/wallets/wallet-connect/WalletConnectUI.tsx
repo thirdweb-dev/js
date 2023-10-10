@@ -36,7 +36,7 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
 export function WalletConnectUI({
-  close,
+  connected,
   walletConfig,
   goBack,
   projectId,
@@ -140,13 +140,13 @@ export function WalletConnectUI({
         console.error(`Error connecting with WalletConnect: ${e}`);
       })
       .finally(() => {
-        close();
+        connected();
       });
   };
 
   const onClosePress = () => {
     setConnectionStatus("disconnected");
-    close();
+    connected();
   };
 
   return (
