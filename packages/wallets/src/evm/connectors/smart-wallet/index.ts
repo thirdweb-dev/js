@@ -186,7 +186,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @param transactions
    * @returns the transaction receipt
    */
-  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+  async executeBatch(
+    transactions: Transaction<any>[],
+  ): Promise<TransactionResult> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
