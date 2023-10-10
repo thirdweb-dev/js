@@ -2,7 +2,12 @@ import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
+import {
+  Chain,
+  defaultChains,
+  Ethereum,
+  updateChainRPCs,
+} from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
 
 export type LocalWalletOptions = {
@@ -46,7 +51,13 @@ export class LocalWallet extends AbstractClientWallet<
 
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
+
+    if (options?.chain && options.clientId) {
+      options.chain = updateChainRPCs(options.chain, options.clientId);
+    }
+
     this.options = options || {};
+
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
