@@ -1,3 +1,4 @@
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { PaperWalletConnector } from "../connectors/paper";
 import {
   PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,
@@ -37,9 +38,15 @@ export class PaperWallet extends AbstractClientWallet<
       ...options,
     });
 
+    this.chain = {
+      ...options.chain,
+      rpc: getValidChainRPCs(options.chain, options.clientId),
+    };
+
+    console.log("this chain", this.chain);
+
     if (options.paperClientId && options.paperClientId === "uninitialized") {
       this.paperClientId = "00000000-0000-0000-0000-000000000000";
-      this.chain = options.chain;
       return;
     }
 
@@ -75,7 +82,6 @@ export class PaperWallet extends AbstractClientWallet<
 
     // cast is okay because we assert that either clientId or paperClientId is defined above
     this.paperClientId = (options.paperClientId ?? options.clientId) as string;
-    this.chain = options.chain;
   }
   private isClientIdLegacyPaper(clientId: string): boolean {
     return clientId.indexOf("-") > 0 && clientId.length === 36;
