@@ -47,8 +47,6 @@ export class PaperWallet extends AbstractClientWallet<
       this.chain = options.chain;
     }
 
-    console.log("this chain", this.chain);
-
     if (options.paperClientId && options.paperClientId === "uninitialized") {
       this.paperClientId = "00000000-0000-0000-0000-000000000000";
       return;
