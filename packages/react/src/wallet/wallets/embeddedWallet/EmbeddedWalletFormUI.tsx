@@ -15,6 +15,7 @@ import { InputSelectionUI } from "../InputSelectionUI";
 import type { EmbeddedWalletLoginType } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
+import { useTheme } from "@emotion/react";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -23,6 +24,7 @@ export const EmbeddedWalletFormUI = (props: {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
+  const themeObj = useTheme() as Theme;
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
@@ -30,7 +32,7 @@ export const EmbeddedWalletFormUI = (props: {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
 
-      const googleWindow = openGoogleSignInWindow();
+      const googleWindow = openGoogleSignInWindow(themeObj);
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
