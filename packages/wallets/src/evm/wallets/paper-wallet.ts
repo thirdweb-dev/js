@@ -38,10 +38,14 @@ export class PaperWallet extends AbstractClientWallet<
       ...options,
     });
 
-    this.chain = {
-      ...options.chain,
-      rpc: getValidChainRPCs(options.chain, options.clientId),
-    };
+    try {
+      this.chain = {
+        ...options.chain,
+        rpc: getValidChainRPCs(options.chain, options.clientId),
+      };
+    } catch {
+      this.chain = options.chain;
+    }
 
     console.log("this chain", this.chain);
 
