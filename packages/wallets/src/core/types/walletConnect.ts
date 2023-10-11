@@ -8,7 +8,6 @@ export type WalletConnectMetadata = IWeb3Wallet["metadata"];
 // connect dapp support through wcv2 protocol
 export type WalletConnectReceiverConfig = {
   enableConnectApp?: boolean;
-  wcVersion?: "v1" | "v2";
   walletConnectWalletMetadata?: WCMetadata;
   walletConenctV2ProjectId?: string;
   walletConnectV2RelayUrl?: string;
