@@ -256,11 +256,7 @@ const MagicUI: React.FC<{
 
       {showInputUI && (
         <>
-          {showSeparator && (
-            <TextDivider>
-              <span> OR </span>
-            </TextDivider>
-          )}
+          {showSeparator && <TextDivider text="OR" />}
           <InputSelectionUI
             onSelect={props.onSelect}
             placeholder={placeholder}
