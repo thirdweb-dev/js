@@ -21,11 +21,16 @@ const usageEventSchema = z.object({
     "bundler",
     "paymaster",
     "relayer",
+    "connectWallet",
   ]),
   action: z.string(),
-  accountId: z.string(),
 
-  // Optional
+  /**
+   * The following fields are optional.
+   */
+
+  accountId: z.string().optional(),
+  isClientEvent: z.boolean().optional(),
   apiKeyId: z.string().optional(),
   creatorWalletAddress: z.string().optional(),
   clientId: z.string().optional(),

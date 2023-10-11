@@ -22,7 +22,7 @@ import * as Clipboard from "expo-clipboard";
 const OTP_LENGTH = 6;
 
 export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
-  close,
+  connected,
   goBack,
   selectionData,
   onLocallyConnected,
@@ -44,9 +44,9 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   useEffect(() => {
     if (address) {
       setCheckingOtp(false);
-      close();
+      connected();
     }
-  }, [address, close]);
+  }, [address, connected]);
 
   useEffect(() => {
     if (
@@ -87,7 +87,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       }, 0);
     }
   }, [
-    close,
     onLocallyConnected,
     selectionData,
     setConnectedWallet,
@@ -164,7 +163,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         middleContent={<Text variant="header">Sign In</Text>}
         subHeaderText={"Please enter the code sent to"}
         onBackPress={goBack}
-        onClose={close}
+        onClose={connected}
       />
       <Text
         variant="subHeader"

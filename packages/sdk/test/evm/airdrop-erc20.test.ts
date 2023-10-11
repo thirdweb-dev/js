@@ -24,8 +24,6 @@ import {
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
 
-global.fetch = require("cross-fetch");
-
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
 
 /**

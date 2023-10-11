@@ -156,7 +156,6 @@ export const getDependenciesForPython = (
 
 export const getLatestVersion = async (packageName: string): Promise<any> => {
   try {
-    const fetch = (await import("node-fetch")).default;
     const url = `https://registry.npmjs.org/${packageName}`;
     const response = await fetch(url);
     if (!response.ok) {

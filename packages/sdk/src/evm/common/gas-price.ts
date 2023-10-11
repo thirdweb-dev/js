@@ -1,5 +1,4 @@
 import { ChainId } from "../constants/chains/ChainId";
-import fetch from "cross-fetch";
 import { BigNumber, utils, providers } from "ethers";
 import { Mumbai, Polygon } from "@thirdweb-dev/chains";
 import { isBrowser } from "./utils";
@@ -112,9 +111,11 @@ function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
   }
 }
 
-const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ utils.parseUnits("31", "gwei");
+const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ (() =>
+  utils.parseUnits("31", "gwei"))();
 
-const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ utils.parseUnits("1", "gwei");
+const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ (() =>
+  utils.parseUnits("1", "gwei"))();
 
 /**
  * @internal

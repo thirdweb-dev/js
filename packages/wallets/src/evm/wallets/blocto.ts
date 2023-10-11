@@ -1,7 +1,7 @@
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletMeta, WalletOptions } from "./base";
 import { walletIds } from "../constants/walletIds";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, updateChainRPCs } from "@thirdweb-dev/chains";
 
 type BloctoOptions = {
   appId?: string;
@@ -25,6 +25,10 @@ export class BloctoWallet extends AbstractClientWallet<BloctoOptions> {
   };
 
   constructor(options?: WalletOptions<BloctoOptions>) {
+    if (options?.chain && options.clientId) {
+      options.chain = updateChainRPCs(options.chain, options.clientId);
+    }
+
     super(BloctoWallet.id, options);
   }
 

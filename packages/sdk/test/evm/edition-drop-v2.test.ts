@@ -13,8 +13,6 @@ import { assert, expect, use } from "chai";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
-global.fetch = require("cross-fetch");
-
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
 use(deepEqualInAnyOrder);

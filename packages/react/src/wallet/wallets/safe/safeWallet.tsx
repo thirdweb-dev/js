@@ -51,16 +51,16 @@ export const SafeConnectUI = (
   const disconnect = useDisconnect();
 
   if (personalWalletConfig) {
-    const _props = {
-      close: () => {
-        setPersonalWalletConfig(undefined);
-        props.close(false); // do not reset
-      },
+    const _props: ConnectUIProps = {
       goBack: () => {
         setPersonalWalletConfig(undefined);
       },
+      connected() {
+        setPersonalWalletConfig(undefined);
+      },
       isOpen: props.isOpen,
-      open: props.open,
+      hide: props.hide,
+      show: props.show,
       theme: props.theme,
       walletConfig: personalWalletConfig,
       supportedWallets: props.personalWallets,
@@ -95,7 +95,7 @@ export const SafeConnectUI = (
         disconnect();
         props.goBack();
       }}
-      onConnect={props.close}
+      onConnect={props.connected}
       safeWalletConfig={props.walletConfig}
     />
   );
