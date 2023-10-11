@@ -30,6 +30,7 @@ const usageEventSchema = z.object({
   creatorWalletAddress: z.string().optional(),
   clientId: z.string().optional(),
   walletAddress: z.string().optional(),
+  walletType: z.string().optional(),
   chainId: z.number().int().positive().optional(),
   provider: z.string().optional(),
   mimeType: z.string().optional(),
