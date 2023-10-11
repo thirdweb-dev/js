@@ -1,13 +1,14 @@
-import { Box, Flex, Grid, Icon, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Grid, Icon, SlideFade, Spacer } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ConnectWalletPlayground } from "components/wallets/ConnectWalletPlayground/Playground";
 import { WalletsSidebar } from "core-ui/sidebar/wallets";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
-import { Card, Heading, Text, TrackedLink } from "tw-components";
-
+import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { SupportedPlatformLink } from "components/wallets/SupportedPlatformLink";
+import { ChakraNextImage } from "components/Image";
+import { useEffect, useState } from "react";
 
 const TRACKING_CATEGORY = "connect-playground";
 
@@ -52,6 +53,8 @@ const DashboardWalletsConnect: ThirdwebNextPage = () => {
 
       <ConnectWalletPlayground trackingCategory={TRACKING_CATEGORY} />
 
+      <Spacer height={20} />
+      <BuildCustomBanner />
       <Spacer height={20} />
 
       <FooterSection />
@@ -217,6 +220,154 @@ function ShareYourFeedback() {
         </Text>
       </Card>
     </TrackedLink>
+  );
+}
+
+function BuildCustomBanner() {
+  const [bannerImageIndex, setBannerImageIndex] = useState(1);
+
+  const bannerPosters = [
+    {
+      img: require("public/assets/connect/pixels-cw.png"),
+      position: "flex-end",
+      padding: 0,
+    },
+    {
+      img: require("public/assets/connect/w3w-cw.png"),
+      position: "center",
+      padding: 4,
+    },
+    {
+      img: require("public/assets/connect/lv-cw.png"),
+      position: "flex-end",
+      padding: 0,
+    },
+  ];
+
+  // update banner image every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBannerImageIndex((prev) => {
+        const nextIndex = prev + 1;
+        if (nextIndex === bannerPosters.length) {
+          return 0;
+        }
+        return nextIndex;
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [bannerPosters.length]);
+
+  return (
+    <Box
+      as="article"
+      bg="bgWhite"
+      border="1px solid"
+      borderColor="borderColor"
+      borderRadius="lg"
+      overflow="hidden"
+    >
+      <Grid templateColumns={["1fr", "1fr 1fr"]}>
+        {/* Left */}
+        <Box px={["6", "14"]} py="8">
+          <Text color="faded">Hooks & Functions</Text>
+          <Spacer h={2} />
+          <Heading fontSize={32} letterSpacing={"-0.02em"}>
+            Build a completely custom onboarding experience.
+          </Heading>
+
+          <Spacer h={6} />
+          <Flex alignItems="center" gap={2} flexWrap="wrap">
+            <SupportedPlatformLink
+              trackingCategory={TRACKING_CATEGORY}
+              size="sm"
+              platform="React"
+              href="https://portal.thirdweb.com/react/react.connectwallet"
+            />
+            <SupportedPlatformLink
+              trackingCategory={TRACKING_CATEGORY}
+              size="sm"
+              platform="React Native"
+              href="https://portal.thirdweb.com/react-native/react-native.connectwallet"
+            />
+            <SupportedPlatformLink
+              trackingCategory={TRACKING_CATEGORY}
+              size="sm"
+              platform="Unity"
+              href="https://portal.thirdweb.com/unity/connectwallet"
+            />
+            <SupportedPlatformLink
+              trackingCategory={TRACKING_CATEGORY}
+              size="sm"
+              platform="TypeScript"
+              href="https://portal.thirdweb.com/wallet/usage-with-typescript-sdk"
+            />
+          </Flex>
+
+          <Spacer h={6} />
+          <Flex justifyContent={["center", "flex-start"]}>
+            <Button
+              w={["100%", "auto"]}
+              as={TrackedLink}
+              isExternal
+              category={TRACKING_CATEGORY}
+              label="custom-ui-cta"
+              href="https://portal.thirdweb.com/react/connecting-wallets"
+              bg="bgBlack"
+              color="bgWhite"
+              minW="180px"
+              p={6}
+              _hover={{
+                textDecor: "none",
+              }}
+            >
+              Get Started
+            </Button>
+          </Flex>
+        </Box>
+        {/* Right */}
+        <Box>
+          {/* Preload images */}
+          <Box visibility="hidden" w={0} h={0}>
+            {bannerPosters.map((poster) => {
+              return (
+                <ChakraNextImage
+                  priority={true}
+                  src={bannerPosters[0].img}
+                  alt=""
+                  key={poster.img}
+                />
+              );
+            })}
+          </Box>
+
+          <SlideFade
+            in
+            offsetY={80}
+            key={bannerImageIndex}
+            transition={{
+              enter: {
+                duration: 0.3,
+              },
+            }}
+          >
+            <Flex
+              h={["220px", "320px"]}
+              justifyContent="center"
+              alignItems={bannerPosters[bannerImageIndex].position}
+              p={bannerPosters[bannerImageIndex].padding}
+            >
+              <ChakraNextImage
+                alt=""
+                w={["calc(100% - 20px)", "80%"]}
+                maxH="100%"
+                src={bannerPosters[bannerImageIndex].img}
+              />
+            </Flex>
+          </SlideFade>
+        </Box>
+      </Grid>
+    </Box>
   );
 }
 
