@@ -27,6 +27,7 @@ export const CreateApiKeyButton: React.FC = () => {
       name: "",
       domains: "",
       bundleIds: "",
+      redirectUrls: "",
       // FIXME: Enable when wallets restrictions is in use
       // walletAddresses: "*",
       services: SERVICES.map((srv) => {
@@ -56,6 +57,7 @@ export const CreateApiKeyButton: React.FC = () => {
         name: values.name,
         domains: toArrFromList(values.domains),
         bundleIds: toArrFromList(values.bundleIds),
+        redirectUrls: toArrFromList(values.redirectUrls, true),
         // FIXME: Enable when wallets restrictions is in use
         // walletAddresses: toArrFromList(values.walletAddresses),
         services: (values.services || [])

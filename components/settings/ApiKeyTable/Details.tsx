@@ -1,5 +1,3 @@
-import { ApiKeyDetailsRow } from "./DetailsRow";
-import { HIDDEN_SERVICES } from "./validations";
 import { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   HStack,
@@ -21,11 +19,13 @@ import { useMemo } from "react";
 import { Badge, Card, CodeBlock, Heading, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
 import {
-  NoDomainsAlert,
+  AnyBundleIdAlert,
   AnyDomainAlert,
   NoBundleIdsAlert,
-  AnyBundleIdAlert,
+  NoDomainsAlert,
 } from "./Alerts";
+import { ApiKeyDetailsRow } from "./DetailsRow";
+import { HIDDEN_SERVICES } from "./validations";
 
 interface ApiKeyDetailsProps {
   apiKey: ApiKey;
@@ -42,6 +42,7 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
     secretMasked,
     domains,
     bundleIds,
+    redirectUrls,
     createdAt,
     updatedAt,
     lastAccessedAt,
@@ -73,6 +74,18 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
     return <CodeBlock code={bundleIds.join("\n")} canCopy={false} />;
   }, [bundleIds]);
+
+  const redirectUrlContent = useMemo(() => {
+    if (redirectUrls.length === 0) {
+      return "None";
+    }
+
+    if (redirectUrls.includes("*")) {
+      return 'Forbidden "*" found';
+    }
+
+    return <CodeBlock code={redirectUrls.join("\n")} canCopy={false} />;
+  }, [redirectUrls]);
 
   // FIXME: Enable when wallets restrictions is in use
   // const walletsContent = useMemo(() => {
@@ -189,7 +202,6 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
 
             {sortedServices.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
-
               return service ? (
                 <Card
                   w="full"
@@ -210,6 +222,13 @@ export const ApiKeyDetails: React.FC<ApiKeyDetailsProps> = ({
                       title="Destination Contracts"
                       tooltip={`Restrict contracts your wallets can interact with through the thirdweb ${service.title} service.`}
                       content={renderServicesContent(srv)}
+                    />
+                  )}
+                  {service.name === "embeddedWallets" && (
+                    <ApiKeyDetailsRow
+                      title="Redirect URIs"
+                      tooltip={`Prevent phishing attacks restricting redirect URIs to your application deep links. Currently only relevant on Unity and React Native platforms.`}
+                      content={redirectUrlContent}
                     />
                   )}
 

@@ -1,4 +1,4 @@
-export const toArrFromList = (str: string) => {
+export const toArrFromList = (str: string, allowTrailingSlash = false) => {
   if (!str) {
     return [];
   }
@@ -9,7 +9,7 @@ export const toArrFromList = (str: string) => {
   // remove empty elements
   return str
     .split(/[\n,]/)
-    .map((v) => v.trim().replace(/\/$/, ""))
+    .map((v) => (allowTrailingSlash ? v.trim() : v.trim().replace(/\/$/, "")))
     .filter((v) => v.length > 0);
 };
 

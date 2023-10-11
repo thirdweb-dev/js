@@ -70,6 +70,7 @@ export type ApiKey = {
   walletAddresses: string[];
   domains: string[];
   bundleIds: string[];
+  redirectUrls: string[];
   revokedAt: string;
   lastAccessedAt: string;
   createdAt: string;

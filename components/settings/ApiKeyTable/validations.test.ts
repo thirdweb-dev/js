@@ -10,6 +10,7 @@ describe("apiKeyValidationSchema", () => {
     name: "Api Key Name",
     domains: "example.com",
     bundleIds: "com.example.app",
+    redirectUrls: "thirdweb://",
   };
 
   it("is valid", () => {

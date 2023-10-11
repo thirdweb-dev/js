@@ -31,7 +31,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
   onClose,
   onSubmit,
 }) => {
-  const { id, name, domains, bundleIds, services } = apiKey;
+  const { id, name, domains, bundleIds, redirectUrls, services } = apiKey;
   const trackEvent = useTrack();
   const [editing, setEditing] = useState(false);
   const mutation = useUpdateApiKey();
@@ -44,6 +44,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
       name,
       domains: fromArrayToList(domains),
       bundleIds: fromArrayToList(bundleIds),
+      redirectUrls: fromArrayToList(redirectUrls),
       // FIXME: Enable when wallets restrictions is in use
       // walletAddresses: fromArrayToList(walletAddresses),
       services: SERVICES.map((srv) => {
@@ -78,6 +79,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
         name: values.name,
         domains: toArrFromList(values.domains),
         bundleIds: toArrFromList(values.bundleIds),
+        redirectUrls: toArrFromList(values.redirectUrls, true),
         // FIXME: Enable when wallets restrictions is in use
         // walletAddresses: toArrFromList(values.walletAddresses),
         services: (values.services || [])
