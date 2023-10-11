@@ -52,6 +52,7 @@
     "framer-motion": "^10.16.4",
     "fuse.js": "^6.6.2",
     "idb-keyval": "^6.2.0",
+    "lottie-react": "^2.4.0",
     "next": "^13.5.4",
     "next-plausible": "^3.9.1",
     "next-seo": "^5.15.0",
