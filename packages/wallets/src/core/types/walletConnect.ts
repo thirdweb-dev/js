@@ -9,7 +9,7 @@ export type WalletConnectMetadata = IWeb3Wallet["metadata"];
 export type WalletConnectReceiverConfig = {
   enableConnectApp?: boolean;
   walletConnectWalletMetadata?: WCMetadata;
-  walletConenctV2ProjectId?: string;
+  walletConnectV2ProjectId?: string;
   walletConnectV2RelayUrl?: string;
   wcStorage?: SyncStorage;
 };
