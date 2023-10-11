@@ -317,10 +317,10 @@ const LoginPage: ThirdwebNextPage = () => {
         )}
         <Heading mb={4}>Link this device to your thirdweb account</Heading>
         <Text mb={8}>
-          By clicking the button below you are authorizing this device to take
-          actions that will be linked to your thirdweb account. You will need to
-          sign a transaction with the wallet that you use with thirdweb. This
-          needs to be done only once per device.
+          By clicking the button below, you are authorizing this device to
+          access your thirdweb account. You will be required to sign a
+          transaction using the wallet associated with thirdweb. This needs to
+          be done only once per device.
         </Text>
         <FormControl mb={8}>
           <FormLabel>
@@ -342,7 +342,7 @@ const LoginPage: ThirdwebNextPage = () => {
           />
         </FormControl>
         <Button
-          variant="outline"
+          variant="inverted"
           isDisabled={!address || (isBrave && !hasRemovedShield)}
           isLoading={loading}
           onClick={authorizeDevice}

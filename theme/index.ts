@@ -106,6 +106,11 @@ const chakraTheme: Theme = extendTheme({
           _hover: {
             opacity: 0.8,
           },
+          _disabled: {
+            _hover: {
+              bg: "bgBlack !important",
+            },
+          },
         },
         outline: {
           borderWidth: "1px",
