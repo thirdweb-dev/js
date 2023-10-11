@@ -133,16 +133,13 @@ export abstract class AbstractClientWallet<
   }
 
   #trackConnection(address: string) {
-    const shouldTrack = this.options?.analytics !== "disabled";
-    if (shouldTrack) {
-      track({
-        clientId: this.options?.clientId || "",
-        source: "connectWallet",
-        action: "connect",
-        walletType: this.walletId,
-        walletAddress: address,
-      });
-    }
+    track({
+      clientId: this.options?.clientId || "",
+      source: "connectWallet",
+      action: "connect",
+      walletType: this.walletId,
+      walletAddress: address,
+    });
   }
 
   async #subscribeToEvents(connector: Connector) {

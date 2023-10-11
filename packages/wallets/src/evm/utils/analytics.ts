@@ -1,3 +1,5 @@
+import { isWalletAnalyticsEnabled } from "./setWalletAnaltyicsEnabled";
+
 const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 
 export function track(args: {
@@ -7,6 +9,9 @@ export function track(args: {
   walletType: string;
   walletAddress: string;
 }) {
+  if (!isWalletAnalyticsEnabled()) {
+    return;
+  }
   const { clientId, walletType, walletAddress, source, action } = args;
   const body = {
     source,
