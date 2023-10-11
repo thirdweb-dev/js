@@ -177,6 +177,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
         const signature = await signerSign.signTransaction(signTransaction);
         response = formatJsonRpcResult(id, signature);
+        break;
       default:
         const error = {
           id,
