@@ -190,6 +190,13 @@
       },
       "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.cjs.js"
     },
+    "./evm/wallets/cometh-connect": {
+      "module": {
+        "browser": "./evm/wallets/cometh-connect/dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.browser.esm.js",
+        "default": "./evm/wallets/cometh-connect/dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.esm.js"
+      },
+      "default": "./evm/wallets/cometh-connect/dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.cjs.js"
+    },
     "./evm/wallets/rainbow-wallet": {
       "module": {
         "browser": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.browser.esm.js",
@@ -302,6 +309,13 @@
       },
       "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.cjs.js"
     },
+    "./evm/connectors/cometh-connect": {
+      "module": {
+        "browser": "./evm/connectors/cometh-connect/dist/thirdweb-dev-wallets-evm-connectors-cometh-connect.browser.esm.js",
+        "default": "./evm/connectors/cometh-connect/dist/thirdweb-dev-wallets-evm-connectors-cometh-connect.esm.js"
+      },
+      "default": "./evm/connectors/cometh-connect/dist/thirdweb-dev-wallets-evm-connectors-cometh-connect.cjs.js"
+    },
     "./evm/connectors/wallet-connect": {
       "module": {
         "browser": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.browser.esm.js",
@@ -368,6 +382,7 @@
     "@account-abstraction/contracts": "^0.5.0",
     "@account-abstraction/sdk": "^0.5.0",
     "@account-abstraction/utils": "^0.5.0",
+    "@cometh/connect-sdk": "^1.1.0",
     "@blocto/sdk": "^0.5.4",
     "@coinbase/wallet-sdk": "^3.7.1",
     "@magic-ext/connect": "^6.7.2",
