@@ -1,4 +1,4 @@
-const ANALYTICS_ENDPOINT = "https://c.thirdweb-dev.com/event";
+const ANALYTICS_ENDPOINT = "https://c.thirdweb.com/event";
 
 export function track(args: {
   clientId: string;
