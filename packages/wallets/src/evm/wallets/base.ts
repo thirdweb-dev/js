@@ -137,7 +137,7 @@ export abstract class AbstractClientWallet<
     if (shouldTrack) {
       track({
         clientId: this.options?.clientId || "",
-        source: "wallet",
+        source: "connectWallet",
         action: "connect",
         walletType: this.walletId,
         walletAddress: address,
