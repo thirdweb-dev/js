@@ -53,6 +53,7 @@ export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhan
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
 export { getInjectedCoinbaseProvider } from "./connectors/coinbase-wallet/getInjectedCoinbaseProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
+export * from "./utils/setWalletAnaltyicsEnabled";
 
 // ThirdwebEmbeddedWalletSdk
 export * from "./connectors/embedded-wallet/implementations";
