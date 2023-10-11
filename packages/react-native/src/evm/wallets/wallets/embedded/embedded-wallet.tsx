@@ -11,7 +11,6 @@ import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
 type OAuthProvider = "google"; // currently we only have one
 
 export type EmbeddedWalletConfig = {
-  recommended?: boolean;
   // @default true - set false to disable
   email?: boolean;
 
@@ -54,6 +53,5 @@ export const embeddedWallet = (
     },
     selectUI: selectUI,
     connectUI: EmbeddedConnectionUI,
-    recommended: config?.recommended,
   };
 };
