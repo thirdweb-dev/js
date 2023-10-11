@@ -109,6 +109,7 @@ export const spacing = {
   lg: "24px",
   xl: "32px",
   xxl: "48px",
+  "3xl": "64px",
 };
 
 export const radius = {

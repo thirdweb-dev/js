@@ -101,7 +101,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
 
       setConnectedWallet(wallet);
       setVerifyStatus("valid");
-      props.close();
+      props.connected();
     } catch (e) {
       setVerifyStatus("invalid");
       console.error(e);
@@ -240,7 +240,6 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 <Text size="sm" center color="danger">
                   Failed to send OTP
                 </Text>
-                <Spacer y="md" />
               </>
             )}
 

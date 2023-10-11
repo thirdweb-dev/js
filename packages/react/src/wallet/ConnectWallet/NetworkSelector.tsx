@@ -42,6 +42,7 @@ type RenderChain = React.FC<{
 export type NetworkSelectorProps = {
   theme: "dark" | "light" | Theme;
   onClose?: () => void;
+  open: boolean;
   chains?: Chain[];
   popularChains?: Chain[];
   recentChains?: Chain[];
@@ -136,7 +137,7 @@ export const NetworkSelector: React.FC<NetworkSelectorProps> = (props) => {
     <CustomThemeProvider theme={theme}>
       <Modal
         size={"compact"}
-        open={true}
+        open={props.open}
         setOpen={(value) => {
           if (!value && onClose) {
             onClose();
@@ -538,7 +539,7 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(props: {
   );
 });
 
-const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
+const TabButton = /* @__PURE__ */ (() => styled(Tabs.Trigger)<{
   theme?: Theme;
 }>`
   all: unset;
@@ -557,7 +558,7 @@ const TabButton = /* @__PURE__ */ styled(/* @__PURE__ */ Tabs.Trigger)<{
     background: ${(p) => p.theme.colors.secondaryButtonBg};
     color: ${(p) => p.theme.colors.primaryText};
   }
-`;
+`)();
 
 const SectionLabel = styled.p<{ theme?: Theme }>`
   font-size: ${fontSize.sm};
