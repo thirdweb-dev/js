@@ -2,7 +2,7 @@ import { Connector } from "../interfaces/connector";
 import { AbstractClientWallet } from "./base";
 import { walletIds } from "../constants/walletIds";
 import { WalletOptions } from "./base";
-import { Chain } from "@thirdweb-dev/chains";
+import { Chain, updateChainRPCs } from "@thirdweb-dev/chains";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ComethAdditionalOptions = {
@@ -21,10 +21,6 @@ export type ComethAdditionalOptions = {
    *
    */
   walletAddress?: string;
-  /**
-   * JSON RPC URL to use for the connection.
-   */
-  rpcUrl?: string;
 };
 
 export class ComethConnect extends AbstractClientWallet<ComethAdditionalOptions> {
@@ -33,14 +29,12 @@ export class ComethConnect extends AbstractClientWallet<ComethAdditionalOptions>
   private apiKey: string;
   private chain: Chain;
   private walletAddress?: string;
-  private rpcUrl?: string;
 
   constructor(options: WalletOptions<ComethAdditionalOptions>) {
     super(walletIds.comethConnect, options);
-    this.chain = options.chain;
+    this.chain = updateChainRPCs(options.chain, options.clientId);
     this.apiKey = options.apiKey;
     this.walletAddress = options?.walletAddress;
-    this.rpcUrl = options?.rpcUrl;
   }
 
   protected async getConnector(): Promise<Connector> {
@@ -51,7 +45,7 @@ export class ComethConnect extends AbstractClientWallet<ComethAdditionalOptions>
         chain: this.chain,
         apiKey: this.apiKey,
         walletAddress: this.walletAddress,
-        rpcUrl: this.rpcUrl,
+        rpcUrl: this.chain.rpc[0],
       });
     }
     return this.connector;
