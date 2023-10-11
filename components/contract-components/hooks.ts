@@ -69,7 +69,7 @@ const HEADLESS_WALLET_IDS: string[] = [
   walletIds.localWallet,
   walletIds.magicLink,
   walletIds.paper,
-];
+] as string[];
 
 export interface ContractPublishMetadata {
   image: string | StaticImageData;

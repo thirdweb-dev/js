@@ -16,7 +16,6 @@ import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNe
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { Onboarding as OnboardingModal } from "components/onboarding";
-import { SignInModal } from "components/onboarding/SignIn";
 import { PosthogIdentifier } from "components/wallets/PosthogIdentifier";
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
@@ -127,7 +126,6 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
                   <DashboardThirdwebProvider>
                     <SanctionedAddressesChecker>
                       <PosthogIdentifier />
-                      <SignInModal />
                       <ConfigModal />
 
                       <OnboardingModal />

@@ -12,7 +12,7 @@ export function PreviewThirdwebProvider(props: {
 }) {
   return (
     <ThirdwebProvider
-      activeChain="mumbai"
+      activeChain="goerli"
       supportedWallets={
         props.supportedWallets.length > 0 ? props.supportedWallets : undefined
       }

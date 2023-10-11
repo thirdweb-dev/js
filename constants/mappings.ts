@@ -249,6 +249,7 @@ export const GNOSIS_TO_CHAIN_ID = {
   oeth: 10,
   // supported testnets
   gor: 5,
+  "base-gor": 84531,
 } as const;
 
 export const CHAIN_ID_TO_GNOSIS = Object.entries(GNOSIS_TO_CHAIN_ID).reduce(

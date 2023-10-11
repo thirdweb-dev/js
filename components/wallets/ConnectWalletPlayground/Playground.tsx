@@ -81,7 +81,7 @@ export const ConnectWalletPlayground: React.FC<{
   const { colorMode, toggleColorMode } = useColorMode();
   const selectedTheme = colorMode === "light" ? "light" : "dark";
   const [authEnabled, setAuthEnabled] = useState(false);
-  const [switchToActiveChain, setSwitchToActiveChain] = useState(true);
+  const [switchToActiveChain, setSwitchToActiveChain] = useState(false);
   const [code, setCode] = useState("");
 
   const { colorOverrides, themeObj, setColorOverrides } =
@@ -95,8 +95,8 @@ export const ConnectWalletPlayground: React.FC<{
     setSmartWalletOptions,
     supportedWallets,
   } = usePlaygroundWallets({
-    MetaMask: "recommended",
-    Coinbase: true,
+    MetaMask: true,
+    Coinbase: "recommended",
     WalletConnect: true,
     Safe: false,
     "Guest Mode": true,
@@ -111,6 +111,35 @@ export const ConnectWalletPlayground: React.FC<{
   });
 
   useEffect(() => {
+    const getSupportedWalletsCode = (walletIds: WalletId[]): string => {
+      return `[${walletIds
+        .map((walletId) => {
+          const recommended = walletInfoRecord[walletId].component.recommended;
+
+          if (walletId === "Safe") {
+            const personalWalletIds = walletIds.filter((w) => w !== "Safe");
+            if (personalWalletIds.length === 0) {
+              return recommended
+                ? `safeWallet({ recommended: true })`
+                : `safeWallet()`;
+            }
+            return `safeWallet({
+              ${recommended ? "recommended: true," : ""}
+              personalWallets: ${getSupportedWalletsCode(
+                walletIds.filter((w) => w !== "Safe"),
+              )}
+            })`;
+          }
+
+          const walletCode = walletInfoRecord[walletId].code(recommended);
+
+          return smartWalletOptions.enabled
+            ? `smartWallet(${walletCode}, smartWalletOptions)`
+            : walletCode;
+        })
+        .join(",")}]`;
+    };
+
     const _code = getCode({
       baseTheme: selectedTheme,
       colorOverrides,
@@ -125,17 +154,7 @@ export const ConnectWalletPlayground: React.FC<{
       thirdwebProvider: {
         supportedWallets:
           enabledWallets.length > 0
-            ? `[${enabledWallets
-                .map((walletId) => {
-                  const walletCode = walletInfoRecord[walletId].code(
-                    walletInfoRecord[walletId].component.recommended,
-                  );
-
-                  return smartWalletOptions.enabled
-                    ? `smartWallet(${walletCode}, smartWalletOptions)`
-                    : walletCode;
-                })
-                .join(",")}]`
+            ? getSupportedWalletsCode(enabledWallets)
             : undefined,
         authConfig: authEnabled
           ? `{ authUrl: "/api/auth", domain: "https://example.com" }`
@@ -912,6 +931,10 @@ export const ConnectWalletPlayground: React.FC<{
                 // also change dropdownBg
                 if (colorInfo.key === "modalBg") {
                   setColorOverrides((c) => ({ ...c, dropdownBg: value }));
+                }
+
+                if (colorInfo.key === "accentText") {
+                  setColorOverrides((c) => ({ ...c, accentButtonBg: value }));
                 }
               }}
             />

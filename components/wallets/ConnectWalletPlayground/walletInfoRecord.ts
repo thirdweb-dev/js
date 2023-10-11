@@ -140,10 +140,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     type: "social",
   },
   Safe: {
-    code: (isReccomended) =>
-      isReccomended
-        ? `safeWallet({ recommended: true, personalWallets: [ metamaskWallet(), coinbaseWallet(), walletConnect() ] })`
-        : `safeWallet({ personalWallets: [ metamaskWallet(), coinbaseWallet(), walletConnect() ] })`,
+    code: () => "safeWallet()",
     component: safeWallet({
       personalWallets: [metamaskWallet(), coinbaseWallet(), walletConnect()],
     }),
