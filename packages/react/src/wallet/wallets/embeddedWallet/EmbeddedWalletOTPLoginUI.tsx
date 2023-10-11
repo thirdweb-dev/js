@@ -114,10 +114,10 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             }}
           >
             {!isWideModal && <Spacer y="xl" />}
-            <Text>Enter the OTP sent to</Text>
+            <Text>Enter the verification code sent to</Text>
             <Spacer y="sm" />
             <Text color="primaryText">{email}</Text>
-            <Spacer y="xxl" />
+            <Spacer y="xl" />
           </div>
 
           <OTPInput
@@ -138,12 +138,12 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             <FadeIn>
               <Spacer y="md" />
               <Text size="sm" color="danger" center>
-                Invalid OTP
+                Invalid verification code
               </Text>
             </FadeIn>
           )}
 
-          <Spacer y="xxl" />
+          <Spacer y="xl" />
 
           <Container px={isWideModal ? "xxl" : "lg"}>
             {verifyStatus === "verifying" ? (
@@ -168,7 +168,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             )}
           </Container>
 
-          <Spacer y="xxl" />
+          <Spacer y="xl" />
 
           {!isWideModal && <Line />}
 
@@ -176,7 +176,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             {sendEmailOtpStatus === "error" && (
               <>
                 <Text size="sm" center color="danger">
-                  Failed to send OTP
+                  Failed to send verification code
                 </Text>
               </>
             )}
@@ -190,14 +190,14 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                   textAlign: "center",
                 }}
               >
-                <Text size="sm">Sending OTP</Text>
+                <Text size="sm">Sending verification code</Text>
                 <Spinner size="xs" color="secondaryText" />
               </Container>
             )}
 
             {sendEmailOtpStatus === "sent" && (
               <LinkButton onClick={sendEmail} type="button">
-                Resend OTP
+                Resend verification code
               </LinkButton>
             )}
           </Container>
