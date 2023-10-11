@@ -64,15 +64,7 @@ export const EmbeddedWalletFormUI = (props: {
         <GoogleIcon size={iconSize.md} />
         Sign in with Google
       </SocialButton>
-
-      <Spacer y="lg" />
-
-      <TextDivider>
-        <span>OR</span>
-      </TextDivider>
-
-      <Spacer y="lg" />
-
+      <TextDivider text="OR" py="lg" />
       <InputSelectionUI
         onSelect={(email) => props.onSelect({ email })}
         placeholder="Enter your email address"

@@ -246,9 +246,7 @@ export const WalletSelector: React.FC<{
             />
             {eoaWallets.length > 0 && (
               <>
-                <TextDivider>
-                  <span> OR </span>
-                </TextDivider>
+                <TextDivider text="OR" />
                 <Spacer y="lg" />
               </>
             )}
