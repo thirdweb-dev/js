@@ -1,5 +1,3 @@
-import { fetch } from "cross-fetch";
-
 const ANALYTICS_ENDPOINT = "https://c.thirdweb-dev.com/event";
 
 export function track(args: {
