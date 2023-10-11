@@ -724,13 +724,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce(
-      (acc, chain) => {
-        acc[chain.chainId] = chain;
-        return acc;
-      },
-      {} as Record<number, Chain>,
-    );
+    const chainMap = chains.reduce((acc, chain) => {
+      acc[chain.chainId] = chain;
+      return acc;
+    }, {} as Record<number, Chain>);
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
@@ -890,7 +887,7 @@ function addChainToSupportedChains(
     options = {
       ...options,
       // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
-      supportedChains: [...(options?.supportedChains || []), network],
+      supportedChains: [network, ...(options?.supportedChains || [])],
     };
   }
   return options;

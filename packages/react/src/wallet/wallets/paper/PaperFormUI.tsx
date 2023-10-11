@@ -67,13 +67,7 @@ export const PaperFormUI = (props: {
             Sign in with Google
           </SocialButton>
 
-          <Spacer y="lg" />
-
-          <TextDivider>
-            <span>OR</span>
-          </TextDivider>
-
-          <Spacer y="lg" />
+          <TextDivider text="OR" py="lg" />
         </>
       )}
 
