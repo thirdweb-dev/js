@@ -63,7 +63,7 @@ function createThemeObj(colors: typeof darkColors) {
       scrollbarBg: colors.base2,
       walletSelectorButtonHoverBg: colors.base2,
 
-      separatorLine: colors.base3,
+      separatorLine: colors.base4,
 
       secondaryIconColor: colors.secondaryText,
       secondaryIconHoverBg: colors.base3,
