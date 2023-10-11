@@ -69,7 +69,7 @@ function createThemeObj(colors: typeof darkColors) {
       secondaryIconHoverBg: colors.base3,
       secondaryIconHoverColor: colors.primaryText,
 
-      borderColor: colors.base3,
+      borderColor: colors.base4,
       skeletonBg: colors.base3,
 
       selectedTextColor: colors.base1,
