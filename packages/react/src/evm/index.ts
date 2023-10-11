@@ -64,4 +64,5 @@ export {
   SignerWallet,
   InjectedWallet,
   ComethConnect,
+  setWalletAnalyticsEnabled,
 } from "@thirdweb-dev/wallets";
