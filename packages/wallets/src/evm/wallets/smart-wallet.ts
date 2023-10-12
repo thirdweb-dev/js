@@ -67,7 +67,7 @@ export class SmartWallet
     this.#wcWallet = this.enableConnectApp
       ? new WalletConnectV2Handler({
           walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2ProjectId: options?.walletConnectV2ProjectId,
           walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
         })
       : new NoOpWalletConnectHandler();

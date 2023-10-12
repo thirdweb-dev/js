@@ -72,8 +72,11 @@ import {
   bytecode as TWCloneFactoryBytecode,
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
-import { Extension } from "../../src/evm/types/extensions";
-import { NativeTokenWrapper } from "../../src/evm/common/infra-data";
+import {
+  Extension,
+  ExtensionFunction,
+  ExtensionMetadata,
+} from "../../src/evm/types/extensions";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -365,48 +368,68 @@ async function setupMultichainRegistry(
 // Setup marketplace-v3 for tests
 // TODO switch to using extension based marketplace-v3 setup
 async function setupMarketplaceV3(): Promise<string> {
+  let extensions: Extension[] = [];
+
   // Direct Listings
-  const directListingsPluginAddress = await deployContractAndUploadMetadata(
+  const directListingsExtensionAddress = await deployContractAndUploadMetadata(
     DirectListingsLogic__factory.abi,
     DirectListingsLogic__factory.bytecode,
     signer,
     [mock_weth_address],
   );
-  const pluginsDirectListings: Plugin[] = generatePluginFunctions(
-    directListingsPluginAddress,
-    AbiSchema.parse(DirectListingsLogic__factory.abi),
-  );
+  const directListingsFunctions: ExtensionFunction[] =
+    generateExtensionFunctions(
+      AbiSchema.parse(DirectListingsLogic__factory.abi),
+    );
+  const directListingsExtensionMetadata: ExtensionMetadata = {
+    name: "DirectListingsLogic",
+    metadataURI: "",
+    implementation: directListingsExtensionAddress,
+  };
+  extensions.push({
+    metadata: directListingsExtensionMetadata,
+    functions: directListingsFunctions,
+  });
 
   // English Auctions
-  const englishAuctionPluginAddress = await deployContractAndUploadMetadata(
+  const englishAuctionExtensionAddress = await deployContractAndUploadMetadata(
     EnglishAuctionsLogic__factory.abi,
     EnglishAuctionsLogic__factory.bytecode,
     signer,
     [mock_weth_address],
   );
-  const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
-    englishAuctionPluginAddress,
-    AbiSchema.parse(EnglishAuctionsLogic__factory.abi),
-  );
+  const englishAuctionsFunctions: ExtensionFunction[] =
+    generateExtensionFunctions(
+      AbiSchema.parse(EnglishAuctionsLogic__factory.abi),
+    );
+  const englishAuctionsExtensionMetadata: ExtensionMetadata = {
+    name: "EnglishAuctionsLogic",
+    metadataURI: "",
+    implementation: englishAuctionExtensionAddress,
+  };
+  extensions.push({
+    metadata: englishAuctionsExtensionMetadata,
+    functions: englishAuctionsFunctions,
+  });
 
   // Offers
-  const offersLogicPluginAddress = await deployContractAndUploadMetadata(
+  const offersLogicExtensionAddress = await deployContractAndUploadMetadata(
     OffersLogic__factory.abi,
     OffersLogic__factory.bytecode,
     signer,
   );
-  const pluginsOffers: Plugin[] = generatePluginFunctions(
-    offersLogicPluginAddress,
+  const offersFunctions: ExtensionFunction[] = generateExtensionFunctions(
     AbiSchema.parse(OffersLogic__factory.abi),
   );
-
-  // Map
-  const pluginMapAddress = await deployContractAndUploadMetadata(
-    PluginMap__factory.abi,
-    PluginMap__factory.bytecode,
-    signer,
-    [[...pluginsDirectListings, ...pluginsEnglishAuctions, ...pluginsOffers]],
-  );
+  const offersExtensionMetadata: ExtensionMetadata = {
+    name: "OffersLogic",
+    metadataURI: "",
+    implementation: offersLogicExtensionAddress,
+  };
+  extensions.push({
+    metadata: offersExtensionMetadata,
+    functions: offersFunctions,
+  });
 
   // Router
   const royaltyEngineAddress = constants.AddressZero;
@@ -414,7 +437,13 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.abi,
     MarketplaceV3__factory.bytecode,
     signer,
-    [pluginMapAddress, royaltyEngineAddress],
+    [
+      {
+        extensions: extensions,
+        royaltyEngineAddress: royaltyEngineAddress,
+        nativeTokenWrapper: mock_weth_address,
+      },
+    ],
     "MarketplaceV3",
   );
   return marketplaceV3Address;

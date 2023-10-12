@@ -29,6 +29,7 @@ export type ApiKeyMetadata = {
   walletAddresses: string[];
   domains: string[];
   bundleIds: string[];
+  redirectUrls: string[];
   services: {
     name: string;
     targetAddresses: string[];
