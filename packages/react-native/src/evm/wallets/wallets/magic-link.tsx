@@ -108,7 +108,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
 
 const MagicConnectionUI: React.FC<
   ConnectUIProps<MagicLink> & { magicLinkOptions: MagicLinkOptions }
-> = ({ selectionData, walletConfig, close, goBack, magicLinkOptions }) => {
+> = ({ selectionData, walletConfig, connected, goBack, magicLinkOptions }) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectedWallet = useSetConnectedWallet();
   const chainToConnect = useWalletContext().chainToConnect;
@@ -140,7 +140,7 @@ const MagicConnectionUI: React.FC<
             ? { email: selectionData }
             : { phoneNumber: selectionData }),
         };
-        close();
+        connected();
         await ctxMagicLink.connect(connectParams);
         await ctxMagicLink.getMagicSDK().user.getMetadata();
 
@@ -154,7 +154,7 @@ const MagicConnectionUI: React.FC<
   }, [
     selectionData,
     walletConfig,
-    close,
+    connected,
     ctxMagicLink,
     setConnectedWallet,
     setConnectionStatus,
@@ -166,7 +166,7 @@ const MagicConnectionUI: React.FC<
     <ConnectingWallet
       subHeaderText=""
       wallet={walletConfig}
-      onClose={close}
+      onClose={connected}
       onBackPress={goBack}
     />
   );

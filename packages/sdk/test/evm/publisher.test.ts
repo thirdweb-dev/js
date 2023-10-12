@@ -45,8 +45,6 @@ import {
 } from "./mock/constructorParamWithTuplesMetadata";
 import { catAttackBytecode, catAttackMetadata } from "./mock/catAttackMetadata";
 
-global.fetch = require("cross-fetch");
-
 export const uploadContractMetadata = async (
   contractName: string,
   storage: ThirdwebStorage,
@@ -210,9 +208,8 @@ describe("Publishing", async () => {
 
   it.skip("should fetch metadata", async () => {
     const publisher = sdk.getPublisher();
-    const meta = await publisher.fetchCompilerMetadataFromPredeployURI(
-      simpleContractUri,
-    );
+    const meta =
+      await publisher.fetchCompilerMetadataFromPredeployURI(simpleContractUri);
     expect(meta.licenses.join()).to.eq("MIT,Apache-2.0");
   });
 

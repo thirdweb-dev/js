@@ -77,6 +77,7 @@ export function Container(props: {
   style?: React.CSSProperties;
   p?: keyof typeof spacing;
   px?: keyof typeof spacing;
+  py?: keyof typeof spacing;
   relative?: boolean;
   scrollY?: boolean;
   color?: keyof Theme["colors"];
@@ -137,6 +138,11 @@ export function Container(props: {
   if (props.px) {
     styles.paddingLeft = spacing[props.px];
     styles.paddingRight = spacing[props.px];
+  }
+
+  if (props.py) {
+    styles.paddingTop = spacing[props.py];
+    styles.paddingBottom = spacing[props.py];
   }
 
   if (props.debug) {

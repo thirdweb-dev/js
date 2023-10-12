@@ -9,7 +9,7 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   const [screen, setScreen] = useState<"connecting" | "get-started">(
     "connecting",
   );
-  const { walletConfig, close } = props;
+  const { walletConfig, connected } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
   const connect = useConnect();
 
@@ -23,12 +23,12 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
       setErrorConnecting(false);
       await wait(1000);
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [walletConfig, close, connect]);
+  }, [walletConfig, connected, connect]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -50,7 +50,7 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
         setScreen("get-started");
       }
     })();
-  }, [walletConfig, close, connect, goBack, connectToExtension]);
+  }, [walletConfig, connected, connect, goBack, connectToExtension]);
 
   if (screen === "connecting") {
     return (

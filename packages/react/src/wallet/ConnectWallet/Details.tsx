@@ -72,7 +72,10 @@ export const ConnectedWalletDetails: React.FC<{
   dropdownPosition?: DropDownPosition;
   onDisconnect: () => void;
   style?: React.CSSProperties;
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  networkSelector?: Omit<
+    NetworkSelectorProps,
+    "theme" | "onClose" | "chains" | "open"
+  >;
   className?: string;
   detailsBtn?: () => JSX.Element;
   hideTestnetFaucet?: boolean;
@@ -542,41 +545,39 @@ export const ConnectedWalletDetails: React.FC<{
         </DropdownMenu.Root>
       )}
 
-      {showNetworkSelector && (
-        <NetworkSelector
-          theme={props.theme}
-          chains={chains}
-          {...props.networkSelector}
-          onClose={() => setShowNetworkSelector(false)}
+      <NetworkSelector
+        open={showNetworkSelector}
+        theme={props.theme}
+        chains={chains}
+        {...props.networkSelector}
+        onClose={() => setShowNetworkSelector(false)}
+      />
+
+      <Modal
+        size={"compact"}
+        open={showExportModal}
+        setOpen={setShowExportModal}
+      >
+        <ExportLocalWallet
+          modalSize="compact"
+          localWalletConfig={activeWalletConfig as LocalWalletConfig}
+          onExport={() => {
+            setShowExportModal(false);
+          }}
         />
-      )}
+      </Modal>
 
-      {showExportModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowExportModal}>
-          <ExportLocalWallet
-            modalSize="compact"
-            localWalletConfig={activeWalletConfig as LocalWalletConfig}
-            onBack={() => {
-              setShowExportModal(false);
-            }}
-            onExport={() => {
-              setShowExportModal(false);
-            }}
-          />
-        </Modal>
-      )}
+      <Modal size={"compact"} open={showSendModal} setOpen={setShowSendModal}>
+        <SendFunds supportedTokens={props.supportedTokens} />
+      </Modal>
 
-      {showSendModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowSendModal}>
-          <SendFunds supportedTokens={props.supportedTokens} />
-        </Modal>
-      )}
-
-      {showReceiveModal && (
-        <Modal size={"compact"} open={true} setOpen={setShowReceiveModal}>
-          <ReceiveFunds iconUrl={activeWalletIconURL} />
-        </Modal>
-      )}
+      <Modal
+        size={"compact"}
+        open={showReceiveModal}
+        setOpen={setShowReceiveModal}
+      >
+        <ReceiveFunds iconUrl={activeWalletIconURL} />
+      </Modal>
     </>
   );
 };
@@ -592,9 +593,9 @@ const dropdownContentFade = keyframes`
   }
 `;
 
-const DropDownContent = /* @__PURE__ */ styled(
-  /* @__PURE__ */ DropdownMenu.Content,
-)<{ theme?: Theme }>`
+const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
+  theme?: Theme;
+}>`
   width: 320px;
   box-sizing: border-box;
   max-width: 100%;
@@ -607,7 +608,7 @@ const DropDownContent = /* @__PURE__ */ styled(
   --bg: ${(props) => props.theme.colors.dropdownBg};
   z-index: 1000000;
   line-height: 1;
-`;
+`)();
 
 const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
@@ -688,13 +689,13 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   }
 `;
 
-const MenuLink = /* @__PURE__ */ MenuButton.withComponent("a");
+const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
-export const DropdownMenuItem = /* @__PURE__ */ styled(
-  /* @__PURE__ */ DropdownMenu.Item,
+export const DropdownMenuItem = /* @__PURE__ */ (() => styled(
+  DropdownMenu.Item,
 )<{ theme?: Theme }>`
   outline: none;
-`;
+`)();
 
 export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,

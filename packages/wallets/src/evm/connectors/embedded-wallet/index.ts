@@ -18,7 +18,7 @@ import {
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   readonly id: string = walletIds.paper;
-  readonly name: string = "Paper Wallet";
+  readonly name: string = "Embedded Wallet";
   ready = true;
 
   private user: InitializedUser | null = null;
@@ -108,6 +108,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     const paper = await this.#embeddedWalletSdk;
     await paper?.auth.logout();
     this.#signer = undefined;
+    this.#embeddedWalletSdk = undefined;
     this.user = null;
   }
 

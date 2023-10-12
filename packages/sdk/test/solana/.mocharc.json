@@ -1,4 +1,0 @@
-{
-  "extension": ["ts"],
-  "require": ["@swc-node/register", "./test/solana/before-setup.ts"]
-}

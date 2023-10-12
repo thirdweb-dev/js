@@ -7,12 +7,13 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { RainbowWallet } from "@thirdweb-dev/wallets";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 import { wait } from "../../../utils/wait";
+import { rainbowWalletUris } from "./rainbowWalletUris";
 
 export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const { walletConfig, close } = props;
+  const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
 
@@ -25,12 +26,12 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
       setScreen("connecting");
       await wait(1000);
       await connect(walletConfig);
-      close();
+      connected();
     } catch (e) {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [close, connect, walletConfig]);
+  }, [connected, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -89,13 +90,9 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
         }}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={connected}
         walletConfig={walletConfig}
-        appUriPrefix={{
-          ios: "rainbow://",
-          android: "https://rnbwapp.com/",
-          other: "https://rnbwapp.com/",
-        }}
+        appUriPrefix={rainbowWalletUris}
       />
     );
   }
@@ -117,7 +114,7 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
     return (
       <RainbowScan
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

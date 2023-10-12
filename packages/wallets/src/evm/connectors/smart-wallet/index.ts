@@ -17,6 +17,8 @@ import { BigNumber, ethers, providers } from "ethers";
 import {
   ChainOrRpcUrl,
   getChainProvider,
+  SignerPermissionsInput,
+  SignerWithPermissions,
   SmartContract,
   ThirdwebSDK,
   Transaction,
@@ -184,7 +186,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @param transactions
    * @returns the transaction receipt
    */
-  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+  async executeBatch(
+    transactions: Transaction<any>[],
+  ): Promise<TransactionResult> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
@@ -224,10 +228,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Smart wallet already deployed");
     }
     const signer = await this.getSigner();
-    const tx = await signer.sendTransaction({
-      to: await signer.getAddress(),
-      data: "0x",
-    });
+    const tx = await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: "0x",
+      },
+      true, // batched tx flag to avoid hitting the Router fallback method
+    );
     const receipt = await tx.wait();
     return { receipt };
   }
@@ -241,6 +248,65 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     return await this.accountApi.isAcountDeployed();
+  }
+
+  async deployIfNeeded(): Promise<void> {
+    const isDeployed = await this.isDeployed();
+    if (!isDeployed) {
+      await this.deploy();
+    }
+  }
+
+  async grantPermissions(
+    target: string,
+    permissions: SignerPermissionsInput,
+  ): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.grantPermissions(target, permissions);
+  }
+
+  async revokePermissions(target: string): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.revokeAccess(target);
+  }
+
+  async addAdmin(target: string): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.grantAdminPermissions(target);
+  }
+
+  async removeAdmin(target: string): Promise<TransactionResult> {
+    await this.deployIfNeeded();
+    const accountContract = await this.getAccountContract();
+    return accountContract.account.revokeAdminPermissions(target);
+  }
+
+  async getAllActiveSigners(): Promise<SignerWithPermissions[]> {
+    const isDeployed = await this.isDeployed();
+    if (isDeployed) {
+      const accountContract = await this.getAccountContract();
+      return accountContract.account.getAllAdminsAndSigners();
+    } else {
+      const personalWallet = await this.personalWallet?.getSigner();
+      if (!personalWallet) {
+        throw new Error("Personal wallet not connected");
+      }
+      return [
+        {
+          isAdmin: true,
+          signer: await personalWallet.getAddress(),
+          permissions: {
+            startDate: new Date(0),
+            expirationDate: new Date(0),
+            nativeTokenLimitPerTransaction: BigNumber.from(0),
+            approvedCallTargets: [],
+          },
+        },
+      ];
+    }
   }
 
   /**
