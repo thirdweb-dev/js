@@ -13,8 +13,8 @@ import {
   SignerPermissionsInput,
   SignerWithPermissions,
 } from "../../types";
-import { AccountPermissions } from "./account-permissions";
 import { buildTransactionFunction } from "../../common/transactions";
+import { AccountPermissions } from "./account-permissions";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TO BE REMOVED IN V4
 export class Account<TContract extends IAccountCore>

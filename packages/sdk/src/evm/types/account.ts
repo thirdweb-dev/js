@@ -1,5 +1,5 @@
 import type { IAccountPermissions } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BytesLike } from "ethers";
+import { BigNumber, BytesLike, Signer } from "ethers";
 import { z } from "zod";
 import { AmountSchema } from "../../core/schema/shared";
 import { EndDateSchema, StartDateSchema } from "../schema";
@@ -10,6 +10,19 @@ export type SignerPermissions = {
   expirationDate: Date;
   nativeTokenLimitPerTransaction: BigNumber;
   approvedCallTargets: string[];
+};
+
+export enum AdminFlag {
+  None = 0,
+  AddAdmin = 1,
+  RemoveAdmin = 2,
+}
+
+export const DEFAULT_PERMISSIONS = {
+  startDate: BigNumber.from(0),
+  expirationDate: BigNumber.from(0),
+  approvedCallTargets: [],
+  nativeTokenLimitPerTransaction: "0",
 };
 
 export const SignerPermissionsSchema = /* @__PURE__ */ (() =>
@@ -56,5 +69,6 @@ export const SignerPermissionRequest = [
   { name: "permissionEndTimestamp", type: "uint128" },
   { name: "reqValidityStartTimestamp", type: "uint128" },
   { name: "reqValidityEndTimestamp", type: "uint128" },
+  { name: "isAdmin", type: "uint8" },
   { name: "uid", type: "bytes32" },
 ];

@@ -63,12 +63,17 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
-import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
+import {
+  generateExtensionFunctions,
+  generatePluginFunctions,
+} from "../../src/evm/common/plugin/generatePluginFunctions";
 import { mockUploadMetadataWithBytecode } from "./utils";
 import {
   bytecode as TWCloneFactoryBytecode,
   abi as TWCloneFactoryAbi,
 } from "./metadata/TWCloneFactory";
+import { Extension } from "../../src/evm/types/extensions";
+import { NativeTokenWrapper } from "../../src/evm/common/infra-data";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -358,6 +363,7 @@ async function setupMultichainRegistry(
 }
 
 // Setup marketplace-v3 for tests
+// TODO switch to using extension based marketplace-v3 setup
 async function setupMarketplaceV3(): Promise<string> {
   // Direct Listings
   const directListingsPluginAddress = await deployContractAndUploadMetadata(

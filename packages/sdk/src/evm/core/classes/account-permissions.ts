@@ -14,6 +14,8 @@ import { resolveOrGenerateId } from "../../common/signature-minting";
 import { buildTransactionFunction } from "../../common/transactions";
 import { AddressOrEns } from "../../schema";
 import {
+  AdminFlag,
+  DEFAULT_PERMISSIONS,
   PermissionSnapshotInput,
   PermissionSnapshotOutput,
   PermissionSnapshotSchema,
@@ -85,10 +87,12 @@ export class AccountPermissions implements DetectableFeature {
   private async sendSignerPermissionRequest(
     signerAddress: string,
     permissions: SignerPermissionsOutput,
+    adminFlag: AdminFlag,
   ): Promise<Transaction> {
     const { payload, signature } = await this.generatePayload(
       signerAddress,
       permissions,
+      adminFlag,
     );
 
     const [success] = await this.contractWrapper.read(
@@ -110,10 +114,12 @@ export class AccountPermissions implements DetectableFeature {
   private async buildSignerPermissionRequest(
     signerAddress: string,
     permissions: SignerPermissionsOutput,
+    adminFlag: AdminFlag,
   ): Promise<string> {
     const { payload, signature } = await this.generatePayload(
       signerAddress,
       permissions,
+      adminFlag,
     );
 
     const isValidSigner = await this.contractWrapper.read(
@@ -141,10 +147,12 @@ export class AccountPermissions implements DetectableFeature {
   private async generatePayload(
     signerAddress: string,
     permissions: SignerPermissionsOutput,
+    isAdmin: AdminFlag,
   ): Promise<SignedSignerPermissionsPayload> {
     // Get payload struct.
     const payload: IAccountPermissions.SignerPermissionRequestStruct = {
       signer: signerAddress,
+      isAdmin: isAdmin.valueOf(),
       approvedTargets: permissions.approvedCallTargets,
       nativeTokenLimitPerTransaction: utils.parseEther(
         permissions.nativeTokenLimitPerTransaction,
@@ -320,11 +328,11 @@ export class AccountPermissions implements DetectableFeature {
   grantAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "setAdmin",
-        args: [resolvedSignerAddress, true],
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        DEFAULT_PERMISSIONS,
+        AdminFlag.AddAdmin,
+      );
     },
   );
 
@@ -346,11 +354,11 @@ export class AccountPermissions implements DetectableFeature {
   revokeAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "setAdmin",
-        args: [resolvedSignerAddress, false],
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        DEFAULT_PERMISSIONS,
+        AdminFlag.RemoveAdmin,
+      );
     },
   );
 
@@ -395,6 +403,7 @@ export class AccountPermissions implements DetectableFeature {
       return await this.sendSignerPermissionRequest(
         resolvedSignerAddress,
         resolvedPermissions,
+        AdminFlag.None,
       );
     },
   );
@@ -440,6 +449,7 @@ export class AccountPermissions implements DetectableFeature {
       return await this.sendSignerPermissionRequest(
         resolvedSignerAddress,
         resolvedPermissions,
+        AdminFlag.None,
       );
     },
   );
@@ -475,12 +485,16 @@ export class AccountPermissions implements DetectableFeature {
         );
       }
 
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(0),
-        expirationDate: BigNumber.from(0),
-        approvedCallTargets: [],
-        nativeTokenLimitPerTransaction: "0",
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        {
+          startDate: BigNumber.from(0),
+          expirationDate: BigNumber.from(0),
+          approvedCallTargets: [],
+          nativeTokenLimitPerTransaction: "0",
+        },
+        AdminFlag.None,
+      );
     },
   );
 
@@ -531,13 +545,17 @@ export class AccountPermissions implements DetectableFeature {
 
       const newTargets = [...permissions.approvedTargets, resolvedTarget];
 
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(permissions.startTimestamp),
-        expirationDate: BigNumber.from(permissions.endTimestamp),
-        approvedCallTargets: newTargets,
-        nativeTokenLimitPerTransaction:
-          permissions.nativeTokenLimitPerTransaction.toString(),
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        {
+          startDate: BigNumber.from(permissions.startTimestamp),
+          expirationDate: BigNumber.from(permissions.endTimestamp),
+          approvedCallTargets: newTargets,
+          nativeTokenLimitPerTransaction:
+            permissions.nativeTokenLimitPerTransaction.toString(),
+        },
+        AdminFlag.None,
+      );
     },
   );
 
@@ -591,13 +609,17 @@ export class AccountPermissions implements DetectableFeature {
           utils.getAddress(approvedTarget) !== utils.getAddress(resolvedTarget),
       );
 
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(permissions.startTimestamp),
-        expirationDate: BigNumber.from(permissions.endTimestamp),
-        approvedCallTargets: newTargets,
-        nativeTokenLimitPerTransaction:
-          permissions.nativeTokenLimitPerTransaction.toString(),
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        {
+          startDate: BigNumber.from(permissions.startTimestamp),
+          expirationDate: BigNumber.from(permissions.endTimestamp),
+          approvedCallTargets: newTargets,
+          nativeTokenLimitPerTransaction:
+            permissions.nativeTokenLimitPerTransaction.toString(),
+        },
+        AdminFlag.None,
+      );
     },
   );
 
@@ -651,14 +673,14 @@ export class AccountPermissions implements DetectableFeature {
       const allToMakeAdmin = resolvedSnapshot
         .filter((item) => item.makeAdmin)
         .map((item) => item.signer);
-      allAdmins.forEach((admin) => {
+      allAdmins.forEach(async (admin) => {
         if (!allToMakeAdmin.includes(admin)) {
-          removeAdminData.push(
-            this.contractWrapper.writeContract.interface.encodeFunctionData(
-              "setAdmin",
-              [admin, false],
-            ),
+          const data = await this.buildSignerPermissionRequest(
+            admin,
+            DEFAULT_PERMISSIONS,
+            AdminFlag.RemoveAdmin,
           );
+          removeAdminData.push(data);
         }
       });
 
@@ -672,13 +694,11 @@ export class AccountPermissions implements DetectableFeature {
       await Promise.all(
         allSigners.map(async (item) => {
           if (!allToMakeSigners.includes(item.signer)) {
-            const data = await this.buildSignerPermissionRequest(item.signer, {
-              startDate: BigNumber.from(0),
-              expirationDate: BigNumber.from(0),
-              approvedCallTargets: [],
-              nativeTokenLimitPerTransaction: "0",
-            });
-
+            const data = await this.buildSignerPermissionRequest(
+              item.signer,
+              DEFAULT_PERMISSIONS,
+              AdminFlag.None,
+            );
             removeSignerData.push(data);
           }
         }),
@@ -687,17 +707,18 @@ export class AccountPermissions implements DetectableFeature {
       for (const member of resolvedSnapshot) {
         // Add new admin
         if (member.makeAdmin) {
-          addAdminData.push(
-            this.contractWrapper.writeContract.interface.encodeFunctionData(
-              "setAdmin",
-              [member.signer, true],
-            ),
+          const data = await this.buildSignerPermissionRequest(
+            member.signer,
+            DEFAULT_PERMISSIONS,
+            AdminFlag.AddAdmin,
           );
+          addAdminData.push(data);
         } else {
           // Add new scoped
           const data = await this.buildSignerPermissionRequest(
             member.signer,
             member.permissions,
+            AdminFlag.None,
           );
           addOrUpdateSignerData.push(data);
         }
