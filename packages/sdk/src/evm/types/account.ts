@@ -1,5 +1,5 @@
 import type { IAccountPermissions } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BytesLike, Signer } from "ethers";
+import { BigNumber, BytesLike } from "ethers";
 import { z } from "zod";
 import { AmountSchema } from "../../core/schema/shared";
 import { EndDateSchema, StartDateSchema } from "../schema";
@@ -19,7 +19,9 @@ export enum AdminFlag {
 }
 
 export const DEFAULT_PERMISSIONS = {
+  // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
   startDate: BigNumber.from(0),
+  // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
   expirationDate: BigNumber.from(0),
   approvedCallTargets: [],
   nativeTokenLimitPerTransaction: "0",
