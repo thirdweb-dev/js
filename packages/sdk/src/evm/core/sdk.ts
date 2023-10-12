@@ -724,10 +724,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       walletAddress,
     );
 
-    const chainMap = chains.reduce((acc, chain) => {
-      acc[chain.chainId] = chain;
-      return acc;
-    }, {} as Record<number, Chain>);
+    const chainMap = chains.reduce(
+      (acc, chain) => {
+        acc[chain.chainId] = chain;
+        return acc;
+      },
+      {} as Record<number, Chain>,
+    );
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 

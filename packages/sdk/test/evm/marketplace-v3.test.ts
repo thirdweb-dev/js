@@ -46,11 +46,11 @@ describe("Marketplace V3", async () => {
         MarketplaceV3Initializer.contractType,
         {
           name: "Test Marketplace",
+          platform_fee_recipient: adminWallet.address,
         },
       ),
       "marketplace-v3",
     );
-
     dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(
         NFTCollectionInitializer.contractType,
@@ -228,8 +228,9 @@ describe("Marketplace V3", async () => {
           isReservedListing: false,
         });
 
-      const listing =
-        await marketplaceContract.directListings.getListing(listingId);
+      const listing = await marketplaceContract.directListings.getListing(
+        listingId,
+      );
       expect(listing.currencyContractAddress.toLowerCase()).to.equal(
         NATIVE_TOKEN_ADDRESS.toLowerCase(),
       );
@@ -374,10 +375,12 @@ describe("Marketplace V3", async () => {
     });
 
     it("should return correct listing", async () => {
-      const listingOne =
-        await marketplaceContract.directListings.getListing(directListingOneId);
-      const listingTwo =
-        await marketplaceContract.directListings.getListing(directListingTwoId);
+      const listingOne = await marketplaceContract.directListings.getListing(
+        directListingOneId,
+      );
+      const listingTwo = await marketplaceContract.directListings.getListing(
+        directListingTwoId,
+      );
       assert.equal(listingOne.tokenId.toString(), "0");
       assert.equal(listingOne.asset.id.toString(), "0");
       assert.equal(listingOne.asset.name, "Test 0");
@@ -463,8 +466,9 @@ describe("Marketplace V3", async () => {
     });
 
     it("should correctly cancel a direct listing", async () => {
-      const listing =
-        await marketplaceContract.directListings.getListing(directListingId);
+      const listing = await marketplaceContract.directListings.getListing(
+        directListingId,
+      );
       assert.equal(listing.quantity.toString(), "1");
       await marketplaceContract.directListings.cancelListing(directListingId);
 
@@ -646,10 +650,12 @@ describe("Marketplace V3", async () => {
     });
 
     it("should return correct auction", async () => {
-      const auctionOne =
-        await marketplaceContract.englishAuctions.getAuction(auctionOneId);
-      const auctionTwo =
-        await marketplaceContract.englishAuctions.getAuction(auctionTwoId);
+      const auctionOne = await marketplaceContract.englishAuctions.getAuction(
+        auctionOneId,
+      );
+      const auctionTwo = await marketplaceContract.englishAuctions.getAuction(
+        auctionTwoId,
+      );
       assert.equal(auctionOne.tokenId.toString(), "2");
       assert.equal(auctionOne.asset.id.toString(), "2");
       assert.equal(auctionOne.asset.name, "Test 3");
@@ -692,8 +698,9 @@ describe("Marketplace V3", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
       await marketplaceContract.englishAuctions.makeBid(auctionId, 0.3);
 
-      let winningBid =
-        await marketplaceContract.englishAuctions.getWinningBid(auctionId);
+      let winningBid = await marketplaceContract.englishAuctions.getWinningBid(
+        auctionId,
+      );
 
       assert.equal(winningBid?.bidderAddress, bobWallet.address);
       assert.equal(
@@ -706,8 +713,9 @@ describe("Marketplace V3", async () => {
       await sdk.updateSignerOrProvider(samWallet);
       await marketplaceContract.englishAuctions.makeBid(auctionId, 0.6);
 
-      winningBid =
-        await marketplaceContract.englishAuctions.getWinningBid(auctionId);
+      winningBid = await marketplaceContract.englishAuctions.getWinningBid(
+        auctionId,
+      );
       assert.equal(winningBid?.bidderAddress, samWallet.address);
       assert.equal(
         winningBid?.bidAmount.toString(),
@@ -1095,8 +1103,9 @@ describe("Marketplace V3", async () => {
     it("should not allow you to update an active direct listing", async () => {
       const pricePerToken = ethers.utils.parseUnits("0.1");
 
-      const directListing =
-        await marketplaceContract.directListings.getListing(directListingId);
+      const directListing = await marketplaceContract.directListings.getListing(
+        directListingId,
+      );
       assert.equal(
         directListing.pricePerToken.toString(),
         pricePerToken.toString(),
