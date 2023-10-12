@@ -27,6 +27,7 @@ import {
   SignerPermissionsSchema,
   SignerWithPermissions,
 } from "../../types";
+import { AddressZero } from "../../constants/addresses/AddressZero";
 
 export class AccountPermissions implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_PERMISSIONS.name;
@@ -134,7 +135,10 @@ export class AccountPermissions implements DetectableFeature {
     const payload: IAccountPermissions.SignerPermissionRequestStruct = {
       signer: signerAddress,
       isAdmin: isAdmin.valueOf(),
-      approvedTargets: permissions.approvedCallTargets,
+      approvedTargets:
+        permissions.approvedCallTargets === "*"
+          ? [AddressZero]
+          : permissions.approvedCallTargets,
       nativeTokenLimitPerTransaction: utils.parseEther(
         permissions.nativeTokenLimitPerTransaction,
       ),

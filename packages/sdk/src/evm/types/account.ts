@@ -32,7 +32,7 @@ export const SignerPermissionsSchema = /* @__PURE__ */ (() =>
     startDate: StartDateSchema,
     expirationDate: EndDateSchema,
     nativeTokenLimitPerTransaction: AmountSchema.default(0),
-    approvedCallTargets: z.array(AddressOrEnsSchema),
+    approvedCallTargets: z.union([z.array(AddressOrEnsSchema), z.literal("*")]),
   }))();
 
 export type SignerPermissionsInput = z.input<typeof SignerPermissionsSchema>;
