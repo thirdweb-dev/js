@@ -1,9 +1,21 @@
-import type { WalletConfig } from "@thirdweb-dev/react-core";
+import {
+  ConnectUIProps,
+  useConnect,
+  type WalletConfig,
+} from "@thirdweb-dev/react-core";
 import {
   ComethConnect,
   ComethAdditionalOptions,
   walletIds,
 } from "@thirdweb-dev/wallets";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Spinner } from "../../../components/Spinner";
+import { Container } from "../../../components/basic";
+import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { iconSize, spacing } from "../../../design-system";
+import { Spacer } from "../../../components/Spacer";
+import { Text } from "../../../components/text";
+import { Button } from "../../../components/buttons";
 
 export const comethConnect = (
   config: Omit<ComethAdditionalOptions, "chain">,
@@ -20,7 +32,72 @@ export const comethConnect = (
       ...config,
     });
   },
+  connectUI: ComethConnectUI,
   isInstalled() {
     return false;
   },
 });
+
+export const ComethConnectUI = ({
+  connected,
+  walletConfig,
+}: ConnectUIProps<ComethConnect>) => {
+  const connect = useConnect();
+  const [status, setStatus] = useState<"loading" | "error">("loading");
+  const prompted = useRef(false);
+
+  const connectWallet = useCallback(async () => {
+    try {
+      setStatus("loading");
+      await connect(walletConfig);
+      connected();
+    } catch (e) {
+      setStatus("error");
+      console.error(e);
+    }
+  }, [connect, connected, walletConfig]);
+
+  useEffect(() => {
+    if (prompted.current) {
+      return;
+    }
+    prompted.current = true;
+    connectWallet();
+  }, [connectWallet]);
+
+  return (
+    <Container flex="row" animate="fadein" fullHeight p="lg">
+      <Container
+        expand
+        center="both"
+        flex="column"
+        style={{
+          minHeight: "250px",
+        }}
+      >
+        {status === "loading" && <Spinner size="xl" color="accentText" />}
+        {status === "error" && (
+          <Container color="danger" flex="column" center="x" animate="fadein">
+            <ExclamationTriangleIcon width={iconSize.xl} height={iconSize.xl} />
+            <Spacer y="md" />
+            <Text color="danger">Failed to sign in</Text>
+          </Container>
+        )}
+      </Container>
+
+      {status === "error" && (
+        <Button
+          fullWidth
+          variant="accent"
+          onClick={connectWallet}
+          style={{
+            gap: spacing.sm,
+          }}
+        >
+          <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
+          Try Again
+        </Button>
+      )}
+    </Container>
+  );
+};
