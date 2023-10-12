@@ -1316,8 +1316,8 @@ importers:
         specifier: ^3.7.1
         version: 3.7.1
       '@cometh/connect-sdk':
-        specifier: ^1.1.0
-        version: 1.1.0(@babel/core@7.22.9)(@babel/runtime@7.22.6)(@solana/web3.js@1.73.3)(@walletconnect/types@2.9.1)(react-is@18.2.0)
+        specifier: ^1.1.1
+        version: 1.1.1(@babel/core@7.22.9)(@babel/runtime@7.22.6)(@solana/web3.js@1.73.3)(@walletconnect/types@2.9.1)(react-is@18.2.0)
       '@magic-ext/connect':
         specifier: ^6.7.2
         version: 6.7.2
@@ -6638,8 +6638,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@cometh/connect-sdk@1.1.0(@babel/core@7.22.9)(@babel/runtime@7.22.6)(@solana/web3.js@1.73.3)(@walletconnect/types@2.9.1)(react-is@18.2.0):
-    resolution: {integrity: sha512-Y0u6AftBC5PsDNY0P/3seFugmtKlIzz55wRNN2bdoAzuwnBg298haJXB+HUlnBheZngEN+euaIf/QbNqlr/UNw==}
+  /@cometh/connect-sdk@1.1.1(@babel/core@7.22.9)(@babel/runtime@7.22.6)(@solana/web3.js@1.73.3)(@walletconnect/types@2.9.1)(react-is@18.2.0):
+    resolution: {integrity: sha512-CHV4LVAUaXIRV4/b6lOWaxjvUcP66YxOjwNq7wEiO/hOOe1GNYSh9tpRXFRArTzVLDLb+C3hQYgOUjhtxDH9bg==}
     dependencies:
       '@alembic/ui': 1.5.2(@babel/core@7.22.9)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
       '@ethersproject/abstract-provider': 5.7.0
@@ -9916,7 +9916,7 @@ packages:
     dependencies:
       '@peculiar/asn1-schema': 2.3.6
       asn1js: 3.0.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@peculiar/asn1-ecc@2.3.6:
@@ -9925,7 +9925,7 @@ packages:
       '@peculiar/asn1-schema': 2.3.6
       '@peculiar/asn1-x509': 2.3.6
       asn1js: 3.0.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@peculiar/asn1-rsa@2.3.6:
@@ -9934,7 +9934,7 @@ packages:
       '@peculiar/asn1-schema': 2.3.6
       '@peculiar/asn1-x509': 2.3.6
       asn1js: 3.0.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@peculiar/asn1-schema@2.3.6:
@@ -9942,7 +9942,7 @@ packages:
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@peculiar/asn1-x509@2.3.6:
@@ -9952,7 +9952,7 @@ packages:
       asn1js: 3.0.5
       ipaddr.js: 2.0.1
       pvtsutils: 1.3.5
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /@pedrouid/environment@1.0.1:
@@ -10887,7 +10887,7 @@ packages:
       cosmiconfig: 5.2.1
       deepmerge: 3.3.0
       glob: 7.2.3
-      joi: 17.8.4
+      joi: 17.9.1
     transitivePeerDependencies:
       - encoding
 
@@ -11023,7 +11023,7 @@ packages:
   /@react-native-community/cli-types@10.0.0:
     resolution: {integrity: sha512-31oUM6/rFBZQfSmDQsT1DX/5fjqfxg7sf2u8kTPJK7rXVya5SRpAMaCXsPAG0omsmJxXt+J9HxUi3Ic+5Ux5Iw==}
     dependencies:
-      joi: 17.8.4
+      joi: 17.9.1
 
   /@react-native-community/cli@10.2.4(@babel/core@7.22.9):
     resolution: {integrity: sha512-E9BUDHfLEsnjkjeJqECuCjl4E/1Ox9Nl6hkQBhEqjZm4AaQxgU7M6AyFfOgaXn5v3am16/R4ZOUTrJnGJWS3GA==}
@@ -15014,7 +15014,7 @@ packages:
     dependencies:
       pvtsutils: 1.3.5
       pvutils: 1.1.3
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /assert@2.0.0:
@@ -15039,7 +15039,7 @@ packages:
     resolution: {integrity: sha512-O0yuUDnZeQDL+ncNGlJ78BiO4jnYI3bvMsD5prT0/nsgijG/LpNBIr63gTjVTNsiGkgQhiyCShTgxt8oXOrklA==}
     engines: {node: '>=4'}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
 
   /astral-regex@1.0.0:
     resolution: {integrity: sha512-+Ryf6g3BKoRc7jfp7ad8tM4TtMiaWvbF/1/sQcZPkkS7ag3D5nMBCe2UfOTONtAkaG0tO0ij3C5Lwmf1EiyjHg==}
@@ -15057,7 +15057,7 @@ packages:
   /async-mutex@0.4.0:
     resolution: {integrity: sha512-eJFZ1YhRR8UN8eBLoNzcDPcy/jqjsg6I1AP+KvWQX80BqOSW1oJPJXDylPUEeMr2ZQvHgnQ//Lp6f3RQ1zI7HA==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: false
 
   /async-retry@1.3.3:
@@ -23020,15 +23020,6 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: true
 
-  /joi@17.8.4:
-    resolution: {integrity: sha512-jjdRHb5WtL+KgSHvOULQEPPv4kcl+ixd1ybOFQq3rWLgEEqc03QMmilodL0GVJE14U/SQDXkUhQUSZANGDH/AA==}
-    dependencies:
-      '@hapi/hoek': 9.3.0
-      '@hapi/topo': 5.1.0
-      '@sideway/address': 4.1.4
-      '@sideway/formula': 3.0.1
-      '@sideway/pinpoint': 2.0.0
-
   /joi@17.9.1:
     resolution: {integrity: sha512-FariIi9j6QODKATGBrEX7HZcja8Bsh3rfdGYy/Sb65sGlZWK/QWesU1ghk7aJWDj95knjXlQfSmzFSPPkLVsfw==}
     dependencies:
@@ -23037,7 +23028,6 @@ packages:
       '@sideway/address': 4.1.4
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
-    dev: false
 
   /join-component@1.1.0:
     resolution: {integrity: sha512-bF7vcQxbODoGK1imE2P9GS9aw4zD0Sd+Hni68IMZLj7zRnquH7dXUmMw9hDI5S/Jzt7q+IyTXN0rSg2GI0IKhQ==}
@@ -27242,7 +27232,7 @@ packages:
       react: 18.2.0
       react-syntax-highlighter: 12.2.1(react@18.2.0)
       styled-components: 5.3.11(@babel/core@7.22.9)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
-      tslib: 2.5.0
+      tslib: 2.6.2
     transitivePeerDependencies:
       - '@babel/core'
       - react-dom
@@ -29979,7 +29969,6 @@ packages:
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
-    dev: false
 
   /tsort@0.0.1:
     resolution: {integrity: sha512-Tyrf5mxF8Ofs1tNoxA13lFeZ2Zrbd6cKbuH3V+MQ5sb6DtBj5FjrXVsRWT8YvNAQTqNoz66dz1WsbigI22aEnw==}
