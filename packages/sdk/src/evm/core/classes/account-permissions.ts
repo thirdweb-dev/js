@@ -94,16 +94,6 @@ export class AccountPermissions implements DetectableFeature {
       permissions,
       adminFlag,
     );
-
-    const [success] = await this.contractWrapper.read(
-      "verifySignerPermissionRequest",
-      [payload, signature],
-    );
-
-    if (!success) {
-      throw new Error(`Invalid signature.`);
-    }
-
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "setPermissionsForSigner",
@@ -121,15 +111,6 @@ export class AccountPermissions implements DetectableFeature {
       permissions,
       adminFlag,
     );
-
-    const isValidSigner = await this.contractWrapper.read(
-      "verifySignerPermissionRequest",
-      [payload, signature],
-    );
-    if (!isValidSigner) {
-      throw new Error(`Invalid signature.`);
-    }
-
     return this.contractWrapper.writeContract.interface.encodeFunctionData(
       "setPermissionsForSigner",
       [payload, signature],

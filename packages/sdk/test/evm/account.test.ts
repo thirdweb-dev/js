@@ -9,7 +9,6 @@ import {
 } from "../../src/evm";
 import { ContractFactory, utils } from "ethers";
 import EntrypointArtifact from "./mock/EntryPoint.json";
-import AccountFactoryArtifact from "./mock/AccountFactory.json";
 
 // Target ABIs
 import IAccountCoreAbi from "@thirdweb-dev/contracts-js/dist/abis/IAccountCore.json";
@@ -17,7 +16,11 @@ import {
   deployContractAndUploadMetadata,
   mockUploadContractMetadata,
 } from "./utils";
-import { IAccountCore, IAccountFactory } from "@thirdweb-dev/contracts-js";
+import {
+  AccountFactory__factory,
+  IAccountCore,
+  IAccountFactory,
+} from "@thirdweb-dev/contracts-js";
 
 describe("Accounts with account factory", function () {
   let accountFactory: AccountFactory<IAccountFactory>;
@@ -57,8 +60,8 @@ describe("Accounts with account factory", function () {
       adminWallet,
     ).deploy();
     const factoryAddress = await deployContractAndUploadMetadata(
-      AccountFactoryArtifact.abi,
-      AccountFactoryArtifact.bytecode.object,
+      AccountFactory__factory.abi,
+      AccountFactory__factory.bytecode,
       adminWallet,
       [entrypoint.address],
     );
@@ -124,8 +127,8 @@ describe("Accounts with account factory", function () {
         accountAddress,
         IAccountCoreAbi,
       );
-      const account = (await sdk.getContract(accountAddress)).account;
-      const allAdmins = await account.getAllAdmins();
+      const acc = (await sdk.getContract(accountAddress)).account;
+      const allAdmins = await acc.getAllAdmins();
       assert.isTrue(
         allAdmins.length === 1,
         "Account should only have one admin.",
@@ -139,8 +142,9 @@ describe("Accounts with account factory", function () {
         "Correct admin for account.",
       );
 
-      const associatedAccounts =
-        await accountFactory.getAssociatedAccounts(admin);
+      const associatedAccounts = await accountFactory.getAssociatedAccounts(
+        admin,
+      );
 
       assert.isTrue(
         associatedAccounts.length === 1,
