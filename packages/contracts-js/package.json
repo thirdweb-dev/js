@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.10.1-0"
+    "@thirdweb-dev/contracts": "3.10.2-3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
