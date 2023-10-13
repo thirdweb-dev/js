@@ -11,7 +11,7 @@ export type Guide = {
 export type LandingDesktopMobileImageProps = ChakraNextImageProps & {
   image?: StaticImageData;
   mobileImage?: StaticImageData;
-  lottie?: {};
+  video?: string;
 };
 
 export interface LandingSectionHeadingProps {

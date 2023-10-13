@@ -1,14 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { LandingDesktopMobileImageProps } from "./types";
 import { ChakraNextImage } from "components/Image";
-import Lottie from "lottie-react";
 
 export const LandingDesktopMobileImage: React.FC<
   LandingDesktopMobileImageProps
-> = ({ lottie, image, mobileImage, ...props }) => {
+> = ({ image, mobileImage, ...props }) => {
   return (
     <>
-      {mobileImage && (
+      {!props.video && mobileImage && (
         <ChakraNextImage
           {...props}
           display={{ base: "block", md: "none" }}
@@ -16,7 +15,8 @@ export const LandingDesktopMobileImage: React.FC<
           alt=""
         />
       )}
-      {!lottie && image && (
+
+      {!props.video && image && (
         <ChakraNextImage
           {...props}
           src={image}
@@ -24,14 +24,21 @@ export const LandingDesktopMobileImage: React.FC<
           display={{ base: mobileImage ? "none" : "block", md: "block" }}
         />
       )}
-      {lottie && (
+
+      {props.video && (
         <Box
-          w="100%"
-          h="100%"
-          display={{ base: mobileImage ? "none" : "block", md: "block" }}
-        >
-          <Lottie animationData={lottie} loop={true} />
-        </Box>
+          as="video"
+          loop
+          playsInline
+          preload="auto"
+          width="550"
+          height="400"
+          autoPlay
+          src={props.video}
+          muted
+          boxShadow="0 0 50px #0e0d0f"
+          borderRadius="50px"
+        />
       )}
     </>
   );
