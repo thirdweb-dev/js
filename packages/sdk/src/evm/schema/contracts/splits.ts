@@ -13,11 +13,11 @@ const SplitRecipientInputSchema = /* @__PURE__ */ (() =>
     sharesBps: BasisPointsSchema.gt(0, "Shares must be greater than 0"),
   }))();
 
-const SplitRecipientOuputSchema =
-  /* @__PURE__ */ SplitRecipientInputSchema.extend({
+const SplitRecipientOuputSchema = /* @__PURE__ */ (() =>
+  SplitRecipientInputSchema.extend({
     address: AddressOrEnsSchema,
     sharesBps: BasisPointsSchema,
-  });
+  }))();
 
 export const SplitsContractInput = /* @__PURE__ */ (() =>
   CommonContractSchema.extend({
@@ -63,9 +63,10 @@ export const SplitsContractOutput = /* @__PURE__ */ (() =>
     recipients: z.array(SplitRecipientOuputSchema),
   }))();
 
-export const SplitsContractDeploy = /* @__PURE__ */ SplitsContractInput.merge(
-  SplitsContractInput,
-).merge(CommonTrustedForwarderSchema);
+export const SplitsContractDeploy = /* @__PURE__ */ (() =>
+  SplitsContractInput.merge(SplitsContractInput).merge(
+    CommonTrustedForwarderSchema,
+  ))();
 
 export const SplitsContractSchema = {
   deploy: SplitsContractDeploy,

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Spacer } from "../../components/Spacer";
-import { TextDivider } from "../../components/TextDivider";
 import { Button } from "../../components/buttons";
 import { Text } from "../../components/text";
 import { Input } from "../../components/formElements";
@@ -12,9 +11,6 @@ export function InputSelectionUI(props: {
   type: string;
   errorMessage?: (input: string) => string | undefined;
   emptyErrorMessage?: string;
-  showOrSeparator?: boolean;
-  footer?: React.ReactNode;
-  noInput?: boolean;
 }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
@@ -35,36 +31,34 @@ export function InputSelectionUI(props: {
 
   return (
     <div>
-      {!props.noInput && (
-        <div
-          style={{
-            position: "relative",
+      <div
+        style={{
+          position: "relative",
+        }}
+      >
+        <Input
+          tabIndex={-1}
+          placeholder={props.placeholder}
+          variant="outline"
+          type={props.type}
+          name={props.name}
+          value={input}
+          data-error={renderingError}
+          onChange={(e) => {
+            setInput(e.target.value);
+            if (props.errorMessage) {
+              setError(props.errorMessage(e.target.value));
+            } else {
+              setError(undefined);
+            }
           }}
-        >
-          <Input
-            tabIndex={-1}
-            placeholder={props.placeholder}
-            variant="outline"
-            type={props.type}
-            name={props.name}
-            value={input}
-            data-error={renderingError}
-            onChange={(e) => {
-              setInput(e.target.value);
-              if (props.errorMessage) {
-                setError(props.errorMessage(e.target.value));
-              } else {
-                setError(undefined);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSelect();
-              }
-            }}
-          />
-        </div>
-      )}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSelect();
+            }
+          }}
+        />
+      </div>
 
       {showError && error && (
         <>
@@ -91,17 +85,6 @@ export function InputSelectionUI(props: {
       <Button variant="accent" onClick={handleSelect} fullWidth>
         Continue
       </Button>
-      {props.footer}
-
-      {props.showOrSeparator && (
-        <>
-          <Spacer y="lg" />
-          <TextDivider>
-            <span> OR </span>
-          </TextDivider>
-          <Spacer y="md" />
-        </>
-      )}
     </div>
   );
 }

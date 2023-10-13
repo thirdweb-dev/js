@@ -42,7 +42,11 @@ export function SendFunds(props: { supportedTokens: SupportedTokens }) {
     props.supportedTokens[chainId] !== defaultTokens[chainId]
   ) {
     // use the first token in the list as default selected
-    defaultToken = props.supportedTokens[chainId][0];
+    const tokensForChain = props.supportedTokens[chainId];
+    const firstToken = tokensForChain && tokensForChain[0];
+    if (firstToken) {
+      defaultToken = firstToken;
+    }
   }
 
   const [token, setToken] = useState<TokenInfo | undefined>(defaultToken);
@@ -286,7 +290,7 @@ export function SendFundsForm(props: {
           </CurrencyBadge>
         </Container>
 
-        <Spacer y="xl" />
+        <Spacer y="xxl" />
 
         {/* Submit */}
         <Button
@@ -303,6 +307,7 @@ export function SendFundsForm(props: {
           style={{
             alignItems: "center",
             gap: spacing.sm,
+            padding: spacing.md,
           }}
         >
           {sendTokenMutation.isLoading ? "Sending" : "Send"}

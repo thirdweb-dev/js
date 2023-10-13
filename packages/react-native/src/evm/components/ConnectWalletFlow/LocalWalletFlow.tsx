@@ -20,7 +20,7 @@ type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
 
 export function LocalWalletFlow({
   goBack,
-  close,
+  connected,
   walletConfig,
   onConnected,
 }: LocalWalletFlowUIProps) {
@@ -61,7 +61,7 @@ export function LocalWalletFlow({
         headerText="Guest Wallet"
         alignHeader="flex-start"
         subHeaderText={""}
-        onClose={close}
+        onClose={connected}
       />
       <View style={styles.connectingContainer}>
         <BaseButton

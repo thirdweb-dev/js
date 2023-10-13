@@ -18,6 +18,8 @@ export * from "./components/NftMedia";
 export * from "./components/Web3Button";
 export { ThirdwebProvider } from "./providers/thirdweb-provider";
 
+export type { MediaRendererProps } from "./components/types";
+
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
 
@@ -41,3 +43,24 @@ export {
 
 // react-core
 export * from "@thirdweb-dev/react-core";
+// wallets
+export {
+  LocalWallet,
+  EmbeddedWallet,
+  SmartWallet,
+  SafeWallet,
+  WalletConnect,
+  PhantomWallet,
+  RainbowWallet,
+  MetaMaskWallet,
+  TrustWallet,
+  CoinbaseWallet,
+  BloctoWallet,
+  FrameWallet,
+  PaperWallet,
+  ZerionWallet,
+  MagicLink,
+  SignerWallet,
+  InjectedWallet,
+  setWalletAnalyticsEnabled,
+} from "@thirdweb-dev/wallets";

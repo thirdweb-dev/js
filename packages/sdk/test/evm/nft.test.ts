@@ -5,8 +5,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 
-global.fetch = require("cross-fetch");
-
 describe("NFT Contract", async () => {
   type NewType = NFTCollection;
   let nftContract: NewType;
@@ -372,5 +370,71 @@ describe("NFT Contract", async () => {
       }
     }
     assert.strictEqual(allTokenIdsAreSimilar, true);
+  });
+
+  it("should respect pagination for getOwned (erc-721-standard.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nftPage1 = await nftContract.getOwned(undefined, {
+      count: 2,
+      start: 0,
+    });
+    expect(nftPage1).to.be.an("array").length(2);
+    expect(nftPage1[0].metadata.id).to.eq("0");
+    expect(nftPage1[1].metadata.id).to.eq("1");
+
+    const nftPage2 = await nftContract.getOwned(undefined, {
+      count: 3,
+      start: 2,
+    });
+    expect(nftPage2).to.be.an("array").length(3);
+    expect(nftPage2[0].metadata.id).to.eq("2");
+    expect(nftPage2[1].metadata.id).to.eq("3");
+    expect(nftPage2[2].metadata.id).to.eq("4");
+  });
+
+  it("should respect pagination for getOwned (erc-721.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nftPage1 = await nftContract.erc721.getOwned(undefined, {
+      count: 2,
+      start: 0,
+    });
+    expect(nftPage1).to.be.an("array").length(2);
+    expect(nftPage1[0].metadata.id).to.eq("0");
+    expect(nftPage1[1].metadata.id).to.eq("1");
+
+    const nftPage2 = await nftContract.erc721.getOwned(undefined, {
+      count: 3,
+      start: 2,
+    });
+    expect(nftPage2).to.be.an("array").length(3);
+    expect(nftPage2[0].metadata.id).to.eq("2");
+    expect(nftPage2[1].metadata.id).to.eq("3");
+    expect(nftPage2[2].metadata.id).to.eq("4");
+  });
+
+  it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
+  });
+
+  it("getOwned should return all items when queryParams.count is greater than the total supply (erc-721.ts)", async () => {
+    const _tokenIds: number[] = Array.from({ length: 11 }, (_, index) => index); // [0, 1, ... 10]
+    const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
+    await nftContract.mintBatch(metadata);
+    const nfts = await nftContract.erc721.getOwned(undefined, {
+      count: 1000,
+      start: 0,
+    });
+    expect(nfts).to.be.an("array").length(_tokenIds.length);
   });
 });

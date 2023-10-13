@@ -8,7 +8,6 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
 import { Contract, utils, providers } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
-import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
@@ -464,9 +463,8 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
       getChainProvider("polygon", {}),
     ) as ContractPublisher;
 
-    const publishedMetadataUri = await contract.getPublishedUriFromCompilerUri(
-      compilerMetaUri,
-    );
+    const publishedMetadataUri =
+      await contract.getPublishedUriFromCompilerUri(compilerMetaUri);
     if (publishedMetadataUri.length === 0) {
       throw Error(
         `Could not resolve published metadata URI from ${compilerMetaUri}`,

@@ -1,6 +1,6 @@
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 import Text from "../Text";
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
-import { useAppTheme } from "../../../styles/hooks";
 
 export const ModalFooter = ({
   footer,
@@ -11,7 +11,7 @@ export const ModalFooter = ({
   isLoading?: boolean;
   onPress?: () => void;
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   return (
     <TouchableOpacity style={styles.footer} onPress={onPress}>

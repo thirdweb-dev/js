@@ -24,8 +24,6 @@ import {
   greeterCompilerMetadata,
 } from "./mock/greeterContractMetadata";
 
-global.fetch = require("cross-fetch");
-
 describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;
@@ -268,7 +266,7 @@ describe("Custom Contracts", async () => {
     try {
       c.roles.get("admin");
     } catch (e) {
-      expectError(e, "contract does not implement the 'permissions' Extension");
+      expectError(e, "contract does not implement the 'Permissions' Extension");
     }
   });
 

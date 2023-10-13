@@ -6,7 +6,6 @@ import {
   IpfsDownloaderOptions,
   SingleDownloadOptions,
 } from "../../types";
-import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
 
 /**
@@ -107,7 +106,9 @@ export class StorageDownloader implements IStorageDownloader {
       ) {
         headers = {
           ...headers,
-          authorization: `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
+          authorization: `Bearer ${
+            (globalThis as any).TW_AUTH_TOKEN as string
+          }`,
         };
       }
 
@@ -118,7 +119,9 @@ export class StorageDownloader implements IStorageDownloader {
       ) {
         headers = {
           ...headers,
-          authorization: `Bearer ${(globalThis as any).TW_CLI_AUTH_TOKEN as string}`,
+          authorization: `Bearer ${
+            (globalThis as any).TW_CLI_AUTH_TOKEN as string
+          }`,
         };
         headers["x-authorize-wallet"] = "true";
       }
@@ -128,8 +131,10 @@ export class StorageDownloader implements IStorageDownloader {
       headers["x-sdk-platform"] = bundleId
         ? "react-native"
         : isBrowser()
-          ? "browser"
-          : "node";
+        ? (window as any).bridge !== undefined
+          ? "webGL"
+          : "browser"
+        : "node";
     }
 
     if (isTooManyRequests(resolvedUri)) {
@@ -155,9 +160,10 @@ export class StorageDownloader implements IStorageDownloader {
     if (!("status" in resOrErr)) {
       // early exit if we don't have a status code
       throw new Error(
-        `Request timed out after ${timeoutInSeconds} seconds. ${isTwGatewayUrl(resolvedUri)
-          ? "You can update the timeoutInSeconds option to increase the timeout."
-          : "You're using a public IPFS gateway, pass in a clientId or secretKey for a reliable IPFS gateway."
+        `Request timed out after ${timeoutInSeconds} seconds. ${
+          isTwGatewayUrl(resolvedUri)
+            ? "You can update the timeoutInSeconds option to increase the timeout."
+            : "You're using a public IPFS gateway, pass in a clientId or secretKey for a reliable IPFS gateway."
         }`,
       );
     }

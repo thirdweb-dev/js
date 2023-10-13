@@ -47,8 +47,11 @@ export const DragNDrop: React.FC<{
     e.stopPropagation();
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFileUpload(e.dataTransfer.files[0]);
-      e.dataTransfer.clearData();
+      const fileContent = e.dataTransfer.files[0];
+      if (fileContent) {
+        handleFileUpload(fileContent);
+        e.dataTransfer.clearData();
+      }
     }
   };
 
@@ -83,7 +86,7 @@ export const DragNDrop: React.FC<{
             display: "none",
           }}
           onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) {
+            if (e.target.files && e.target.files[0]) {
               handleFileUpload(e.target.files[0]);
             }
           }}

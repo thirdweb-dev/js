@@ -1,7 +1,7 @@
 import { PaymasterAPI } from "@account-abstraction/sdk";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 import { toJSON } from "./utils";
-import fetch from "cross-fetch";
+
 import { isTwUrl } from "../../../utils/url";
 
 export const SIG_SIZE = 65;
@@ -59,7 +59,9 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         "TW_AUTH_TOKEN" in globalThis &&
         typeof (globalThis as any).TW_AUTH_TOKEN === "string"
       ) {
-        headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`;
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_AUTH_TOKEN as string
+        }`;
       }
 
       // CLI token.
@@ -68,7 +70,9 @@ class VerifyingPaymasterAPI extends PaymasterAPI {
         "TW_CLI_AUTH_TOKEN" in globalThis &&
         typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
       ) {
-        headers["authorization"] = `Bearer ${(globalThis as any).TW_CLI_AUTH_TOKEN as string}`;
+        headers["authorization"] = `Bearer ${
+          (globalThis as any).TW_CLI_AUTH_TOKEN as string
+        }`;
         headers["x-authorize-wallet"] = "true";
       }
     }

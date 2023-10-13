@@ -40,19 +40,19 @@ export const BaseSignaturePayloadInput = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const Signature20PayloadInput =
-  /* @__PURE__ */ BaseSignaturePayloadInput.extend({
+export const Signature20PayloadInput = /* @__PURE__ */ (() =>
+  BaseSignaturePayloadInput.extend({
     quantity: AmountSchema,
-  });
+  }))();
 
 /**
  * @internal
  */
-export const Signature20PayloadOutput =
-  /* @__PURE__ */ Signature20PayloadInput.extend({
+export const Signature20PayloadOutput = /* @__PURE__ */ (() =>
+  Signature20PayloadInput.extend({
     mintStartTime: BigNumberSchema,
     mintEndTime: BigNumberSchema,
-  });
+  }))();
 
 /**
  * @internal
@@ -88,19 +88,19 @@ export const Signature1155PayloadInput = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const Signature1155PayloadInputWithTokenId =
-  /* @__PURE__ */ Signature1155PayloadInput.extend({
+export const Signature1155PayloadInputWithTokenId = /* @__PURE__ */ (() =>
+  Signature1155PayloadInput.extend({
     tokenId: BigNumberishSchema,
-  });
+  }))();
 
 /**
  * @internal
  */
-export const Signature1155PayloadOutput =
-  /* @__PURE__ */ Signature721PayloadOutput.extend({
+export const Signature1155PayloadOutput = /* @__PURE__ */ (() =>
+  Signature721PayloadOutput.extend({
     tokenId: BigNumberSchema,
     quantity: BigNumberSchema,
-  });
+  }))();
 
 /**
  * @internal

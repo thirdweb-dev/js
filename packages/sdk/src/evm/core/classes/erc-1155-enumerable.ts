@@ -102,17 +102,22 @@ export class Erc1155Enumerable implements DetectableFeature {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async owned(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    const address = await resolveAddress(
-      walletAddress || (await this.contractWrapper.getSignerAddress()),
-    );
-    const maxId = await this.contractWrapper.read("nextTokenIdToMint", []);
+  public async owned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    const [address, maxId] = await Promise.all([
+      resolveAddress(
+        walletAddress || (await this.contractWrapper.getSignerAddress()),
+      ),
+      this.contractWrapper.read("nextTokenIdToMint", []),
+    ]);
     const balances = await this.contractWrapper.read("balanceOfBatch", [
       Array(maxId.toNumber()).fill(address),
       Array.from(Array(maxId.toNumber()).keys()),
     ]);
 
-    const ownedBalances = balances
+    let ownedBalances = balances
       .map((b, i) => {
         return {
           tokenId: i,
@@ -120,15 +125,20 @@ export class Erc1155Enumerable implements DetectableFeature {
         };
       })
       .filter((b) => b.balance.gt(0));
-    return await Promise.all(
-      ownedBalances.map(async (b) => {
-        const editionMetadata = await this.erc1155.get(b.tokenId.toString());
-        return {
-          ...editionMetadata,
-          owner: address,
-          quantityOwned: b.balance.toString(),
-        };
-      }),
-    );
+    if (queryParams) {
+      const start = queryParams?.start || 0;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      ownedBalances = ownedBalances.slice(start, start + count);
+    }
+    const nfts = (
+      await Promise.all(
+        ownedBalances.map((item) => this.erc1155.get(item.tokenId.toString())),
+      )
+    ).map((editionMetadata, index) => ({
+      ...editionMetadata,
+      owner: address,
+      quantityOwned: ownedBalances[index].balance.toString(),
+    }));
+    return nfts;
   }
 }

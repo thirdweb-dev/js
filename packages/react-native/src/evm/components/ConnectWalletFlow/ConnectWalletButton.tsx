@@ -2,9 +2,11 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import { BaseButton, Text } from "../base";
 import { useConnectionStatus, useWallets } from "@thirdweb-dev/react-core";
 import { useState, useEffect } from "react";
-import { useModalState } from "../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useModalState,
+} from "../../providers/ui-context-provider";
 import { ThemeProvider, ThemeProviderProps } from "../../styles/ThemeProvider";
-import { useAppTheme } from "../../styles/hooks";
 
 export type ConnectWalletButtonProps = {
   theme?: ThemeProviderProps["theme"];
@@ -43,7 +45,7 @@ export const ConnectWalletButton = ({
   buttonTitle,
   theme,
 }: ConnectWalletButtonProps) => {
-  const appTheme = useAppTheme();
+  const appTheme = useGlobalTheme();
   const connectionStatus = useConnectionStatus();
   const isWalletConnecting = connectionStatus === "connecting";
 
