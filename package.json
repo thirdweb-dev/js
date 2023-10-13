@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev:no-cache": "rm -rf .next/cache && bun run dev",
+    "dev:no-cache": "rm -rf .next/cache && yarn run dev",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -12,10 +12,10 @@
     "fix": "next lint --fix",
     "format": "prettier --write .",
     "gen:theme-typings": "chakra-cli tokens theme/index.ts",
-    "postinstall": "bun run gen:theme-typings",
+    "postinstall": "yarn run gen:theme-typings",
     "find:unused": "next-unused",
     "postbuild": "next-sitemap",
-    "build:analyze": "ANALYZE=true bun run build"
+    "build:analyze": "ANALYZE=true yarn run build"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.4",
