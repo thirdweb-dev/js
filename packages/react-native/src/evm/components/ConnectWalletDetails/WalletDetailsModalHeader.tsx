@@ -1,5 +1,4 @@
 import { Icon } from "../../assets/icon";
-import { useAppTheme } from "../../styles/hooks";
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import { WalletIcon } from "../base/WalletIcon";
@@ -13,6 +12,7 @@ import { TextBalance } from "../base/TextBalance";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { SMART_WALLET_ICON } from "../../assets/svgs";
 import Text from "../base/Text";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 interface WalletDetailsModalHeaderProps {
   address?: string;
@@ -28,7 +28,7 @@ export const WalletDetailsModalHeader = ({
   onAddressCopied,
   tokenAddress,
 }: WalletDetailsModalHeaderProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const activeWallet = useWallet();
   const [showLoading, setShowLoading] = useState(false);
   const ensQuery = useENS();

@@ -14,8 +14,8 @@ import { useSwitchChain, useSupportedChains } from "@thirdweb-dev/react-core";
 import Box from "./Box";
 import { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
 import { TWModal } from "./modal/TWModal";
-import { useAppTheme } from "../../styles/hooks";
 import { Chain } from "@thirdweb-dev/chains";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 type NetworkButtonProps = {
   chain?: Chain;
@@ -35,7 +35,7 @@ export const NetworkButton = ({
   padding,
   ...props
 }: NetworkButtonProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [switchError, setSwitchError] = useState<string | undefined>();
   const [isSwitching, setIsSwitching] = useState(false);
@@ -72,6 +72,7 @@ export const NetworkButton = ({
     <>
       <BaseButton
         p={padding || "sm"}
+        paddingVertical="xs"
         borderRadius="md"
         borderWidth={0.5}
         flexDirection="row"
@@ -82,13 +83,8 @@ export const NetworkButton = ({
         {...props}
       >
         <Box flexDirection="row" alignItems="center">
-          <ChainIcon chainIconUrl={chain?.icon?.url} size={32} />
-          <Box
-            ml="md"
-            alignItems="flex-start"
-            justifyContent="center"
-            height={36}
-          >
+          <ChainIcon chainIconUrl={chain?.icon?.url} size={28} />
+          <Box ml="md" alignItems="flex-start" justifyContent="center">
             <Text variant="bodyLarge">{chain?.name || "Unknown Network"}</Text>
             {isSwitching ? (
               <Box flexDirection="row" alignItems="center">

@@ -17,9 +17,9 @@ import { TextInput } from "../../components/base/TextInput";
 import Text from "../../components/base/Text";
 import { useMagicLink } from "../../providers/context-provider";
 import BaseButton from "../../components/base/BaseButton";
-import { useAppTheme } from "../../styles/hooks";
 import React from "react";
 import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export const magicLink = (
   magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
@@ -54,7 +54,7 @@ export const magicLink = (
 };
 
 const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [email, setEmail] = React.useState("");
 
   const onContinuePress = () => {
