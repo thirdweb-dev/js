@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 4.0.1
+
+### Patch Changes
+
+- [#1747](https://github.com/thirdweb-dev/js/pull/1747) [`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle upgradeable proxies and optimize proxy resolution
+
+- [#1695](https://github.com/thirdweb-dev/js/pull/1695) [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add optional pagination to getOwned NFTs
+
+- [#1746](https://github.com/thirdweb-dev/js/pull/1746) [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606) Thanks [@farhanW3](https://github.com/farhanW3)! - Fix for RPC Override Implementation to get user provided Url and not default RPC Url for the chain
+
+- [#1757](https://github.com/thirdweb-dev/js/pull/1757) [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update deployment and tests for MarketplaceV3 latest
+
+- Updated dependencies [[`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/contracts-js@1.3.14
+
 ## 4.0.0
 
 ### Major Changes
