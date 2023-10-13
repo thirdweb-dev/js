@@ -1,7 +1,6 @@
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
 import Text from "../base/Text";
-import { WalletIcon } from "../base/WalletIcon";
 import { useENS, useWallet } from "@thirdweb-dev/react-core";
 import { StyleSheet } from "react-native";
 import { LocalWallet, walletIds } from "@thirdweb-dev/wallets";
@@ -11,6 +10,7 @@ import { useMemo, useState } from "react";
 import { TextBalance } from "../base/TextBalance";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { SMART_WALLET_ICON } from "../../assets/svgs";
+import { ImageSvgUri } from "../base";
 
 export type ConnectWalletDetailsProps = {
   address?: string;
@@ -90,7 +90,13 @@ export const WalletDetailsButton = ({
             alignContent="center"
             justifyContent="flex-start"
           >
-            <WalletIcon size={32} iconUri={avatarUrl || walletIconUrl} />
+            <Box borderRadius="lg" overflow="hidden">
+              <ImageSvgUri
+                width={32}
+                height={32}
+                imageUrl={avatarUrl || walletIconUrl}
+              />
+            </Box>
             <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="bodySmall" color="red">

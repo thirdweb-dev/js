@@ -12,7 +12,7 @@ import { TWModal } from "./base/modal/TWModal";
 import Box from "./base/Box";
 // import { useAppTheme } from "../styles/hooks";
 
-const MODAL_HEIGHT = Dimensions.get("window").height * 0.6;
+const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 export const MainModal = () => {

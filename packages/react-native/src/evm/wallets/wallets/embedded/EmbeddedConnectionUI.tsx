@@ -17,6 +17,8 @@ import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import * as Clipboard from "expo-clipboard";
+import { StyleSheet } from "react-native";
+import { EmbeddedSocialConnection } from "./EmbeddedSocialConnection";
 import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 const OTP_LENGTH = 6;
@@ -26,6 +28,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   goBack,
   selectionData,
   onLocallyConnected,
+  ...props
 }) => {
   const theme = useGlobalTheme();
   const inputRefs = useRef<(TextInput | null)[]>([]);
@@ -104,6 +107,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           inputRefs.current[i]?.setNativeProps({ text: newValues[i] });
         }
         setValues(newValues);
+        Clipboard.setStringAsync("");
         return;
       }
     }
@@ -157,6 +161,18 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       });
   };
 
+  if (selectionData?.oauthOptions) {
+    return (
+      <EmbeddedSocialConnection
+        connected={() => {}}
+        goBack={goBack}
+        onLocallyConnected={onLocallyConnected}
+        selectionData={selectionData}
+        {...props}
+      />
+    );
+  }
+
   return (
     <Box marginHorizontal="xl">
       <ConnectWalletHeader
@@ -198,10 +214,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
             <TextInput
               ref={(ref) => (inputRefs.current[index] = ref)}
               style={{
-                fontSize: 20,
+                ...styles.textInput,
                 color: theme.colors.textPrimary,
-                textAlign: "center",
-                height: 50,
               }}
               keyboardType="number-pad"
               editable={!checkingOtp}
@@ -246,3 +260,11 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     </Box>
   );
 };
+
+const styles = StyleSheet.create({
+  textInput: {
+    fontSize: 20,
+    textAlign: "center",
+    height: 50,
+  },
+});

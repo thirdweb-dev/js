@@ -9,21 +9,29 @@ import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
+import { GOOGLE_ICON } from "../../../assets/svgs";
+import { WalletButton } from "../../../components/base/WalletButton";
+import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
+import { OauthOptions } from "../../connectors/embedded-wallet/types";
 import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
  */
-export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
-  onSelect,
-  walletConfig,
-}) => {
+export const EmailSelectionUI: React.FC<
+  SelectUIProps<EmbeddedWallet> & {
+    oauthOptions?: OauthOptions;
+    email?: boolean;
+  }
+> = ({ onSelect, walletConfig, oauthOptions, email }) => {
   const theme = useGlobalTheme();
-  const [email, setEmail] = useState<string>("");
+  const [emailInput, setEmailInput] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
+
+  const isEmailEnabled = email === false ? false : true;
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -39,17 +47,18 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
   };
 
   const handleNetworkCall = () => {
-    if (validateEmail(email)) {
+    if (validateEmail(emailInput)) {
       setErrorMessage("");
       setIsFetching(true);
 
       emailWallet
-        ?.sendEmailOTP(email)
+        ?.sendEmailOTP(emailInput)
         .then((response) => {
           onSelect({
             ...response,
-            email,
+            email: emailInput,
             emailWallet,
+            oauthOptions: undefined,
           });
         })
         .catch((error) => {
@@ -65,58 +74,109 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
     }
   };
 
+  const onGoogleSignInPress = () => {
+    onSelect({
+      email: emailInput,
+      emailWallet,
+      oauthOptions: {
+        provider: oauthOptions?.providers[0],
+        redirectUrl: oauthOptions?.redirectUrl,
+      },
+    });
+  };
+
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      <TextInput
-        textInputProps={{
-          placeholder: "Enter your email address",
-          placeholderTextColor: theme.colors.textSecondary,
-          onChangeText: setEmail,
-          style: {
-            fontSize: 14,
-            color: theme.colors.textPrimary,
-            lineHeight: 16,
-            padding: 0,
-            flex: 1,
-          },
-          value: email,
-          keyboardType: "email-address",
-          returnKeyType: "done",
-          autoCapitalize: "none",
-          autoCorrect: false,
-          autoComplete: "off",
-          clearTextOnFocus: false,
-        }}
-        containerProps={{
-          paddingHorizontal: "sm",
-          paddingVertical: "sm",
-          justifyContent: "flex-start",
-        }}
-      />
-      <BaseButton
-        mt="md"
-        paddingVertical="md"
-        borderRadius="lg"
-        borderWidth={1}
-        borderColor="border"
-        backgroundColor="accentButtonColor"
-        onPress={handleNetworkCall}
-      >
-        {isFetching ? (
-          <ActivityIndicator
-            size={"small"}
-            color={theme.colors.accentButtonTextColor}
+      {oauthOptions?.providers.includes(AuthProvider.GOOGLE) ? (
+        <Box justifyContent="center">
+          <WalletButton
+            iconHeight={28}
+            iconWidth={28}
+            borderRadius="lg"
+            borderWidth={1}
+            borderColor="buttonBackgroundColor"
+            backgroundColor="buttonBackgroundColor"
+            nameColor="buttonTextColor"
+            justifyContent="center"
+            name="Sign in with Google"
+            walletIconUrl={GOOGLE_ICON}
+            onPress={onGoogleSignInPress}
           />
-        ) : (
-          <Text
-            variant="bodySmall"
-            color="accentButtonTextColor"
-            fontWeight="700"
+          {isEmailEnabled ? (
+            <Box
+              mb="md"
+              mt="md"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Box height={1} flex={1} backgroundColor="border" />
+              <Text
+                variant="subHeader"
+                textAlign="center"
+                marginHorizontal="xxs"
+              >
+                OR
+              </Text>
+              <Box height={1} flex={1} backgroundColor="border" />
+            </Box>
+          ) : null}
+        </Box>
+      ) : null}
+      {isEmailEnabled ? (
+        <>
+          <TextInput
+            textInputProps={{
+              placeholder: "Enter your email address",
+              placeholderTextColor: theme.colors.textSecondary,
+              onChangeText: setEmailInput,
+              style: {
+                fontSize: 14,
+                color: theme.colors.textPrimary,
+                lineHeight: 16,
+                padding: 0,
+                flex: 1,
+              },
+              value: emailInput,
+              keyboardType: "email-address",
+              returnKeyType: "done",
+              autoCapitalize: "none",
+              autoCorrect: false,
+              autoComplete: "off",
+              clearTextOnFocus: false,
+            }}
+            containerProps={{
+              paddingHorizontal: "sm",
+              paddingVertical: "sm",
+              justifyContent: "flex-start",
+            }}
+          />
+          <BaseButton
+            mt="md"
+            paddingVertical="md"
+            borderRadius="lg"
+            borderWidth={1}
+            borderColor="border"
+            backgroundColor="accentButtonColor"
+            onPress={handleNetworkCall}
           >
-            Continue
-          </Text>
-        )}
-      </BaseButton>
+            {isFetching ? (
+              <ActivityIndicator
+                size={"small"}
+                color={theme.colors.accentButtonTextColor}
+              />
+            ) : (
+              <Text
+                variant="bodySmall"
+                color="accentButtonTextColor"
+                fontWeight="700"
+              >
+                Continue
+              </Text>
+            )}
+          </BaseButton>
+        </>
+      ) : null}
       {errorMessage ? (
         <Text variant="error" mt="xxs">
           {errorMessage}
