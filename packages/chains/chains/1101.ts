@@ -1,50 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Polygon zkEVM",
-  "title": "Polygon zkEVM",
   "chain": "Polygon",
-  "rpc": [
-    "https://polygon-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://zkevm-rpc.com"
+  "chainId": 1101,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://zkevm.polygonscan.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://polygon.technology/polygon-zkevm",
-  "shortName": "zkevm",
-  "chainId": 1101,
-  "networkId": 1101,
+  "features": [],
   "icon": {
     "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
     "width": 122,
     "height": 135,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://zkevm.polygonscan.com",
-      "icon": {
-        "url": "ipfs://QmNmJZkQgx9RcFLS3rvxQTVYcPfyAFPr667keHTUxB9PDv",
-        "width": 122,
-        "height": 135,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-1",
-    "bridges": [
-      {
-        "url": "https://bridge.zkevm-rpc.com"
-      }
-    ]
+  "infoURL": "https://polygon.technology/polygon-zkevm",
+  "name": "Polygon zkEVM",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
   },
-  "testnet": false,
-  "slug": "polygon-zkevm"
+  "redFlags": [],
+  "rpc": [
+    "https://polygon-zkevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://zkevm-rpc.com"
+  ],
+  "shortName": "zkevm",
+  "slug": "polygon-zkevm",
+  "testnet": false
 } as const satisfies Chain;

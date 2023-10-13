@@ -103,16 +103,16 @@ export class Erc721Supply implements DetectableFeature {
 
     // TODO use multicall3 if available
     // TODO can't call toNumber() here, this can be a very large number
-    return (
-      await Promise.all(
-        [...new Array(totalCount.toNumber()).keys()].map(async (i) => ({
-          tokenId: i,
-          owner: await this.erc721
-            .ownerOf(i)
-            .catch(() => constants.AddressZero),
-        })),
-      )
-    ).filter((o) => o.owner !== constants.AddressZero);
+    const arr = [...new Array(totalCount.toNumber()).keys()];
+    const owners = await Promise.all(
+      arr.map((i) => this.erc721.ownerOf(i).catch(() => constants.AddressZero)),
+    );
+    return arr
+      .map((i) => ({
+        tokenId: i,
+        owner: owners[i],
+      }))
+      .filter((o) => o.owner !== constants.AddressZero);
   }
 
   /**

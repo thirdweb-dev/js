@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Teslafunds",
   "chain": "TSF",
-  "rpc": [
-    "https://teslafunds.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://tsfapi.europool.me"
-  ],
+  "chainId": 1856,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://teslafunds.io",
+  "name": "Teslafunds",
   "nativeCurrency": {
     "name": "Teslafunds Ether",
     "symbol": "TSF",
     "decimals": 18
   },
-  "infoURL": "https://teslafunds.io",
+  "redFlags": [],
+  "rpc": [
+    "https://teslafunds.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://tsfapi.europool.me"
+  ],
   "shortName": "tsf",
-  "chainId": 1856,
-  "networkId": 1,
-  "testnet": false,
-  "slug": "teslafunds"
+  "slug": "teslafunds",
+  "testnet": false
 } as const satisfies Chain;

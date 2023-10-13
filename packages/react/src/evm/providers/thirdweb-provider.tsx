@@ -6,15 +6,17 @@ import {
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
 import { ThemeObjectOrType } from "../../design-system";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { signerWallet } from "../../wallet/wallets/signerWallet";
+import { Signer } from "ethers";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "createWalletStorage" | "supportedWallets" | "signer" | "theme"
+    "createWalletStorage" | "supportedWallets" | "theme"
   > {
   /**
    * Wallets supported by the dApp
@@ -36,6 +38,8 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * @defaultValue "dark"
    */
   theme?: ThemeObjectOrType;
+
+  signer?: Signer;
 }
 
 /**
@@ -64,19 +68,26 @@ export const ThirdwebProvider = <
 >({
   supportedWallets,
   children,
+  signer,
   theme: _theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
   const theme = _theme || "dark";
 
+  const signerWalletConfig = useMemo(
+    () => (signer ? (signerWallet(signer) as WalletConfig<any>) : undefined),
+    [signer],
+  );
+
   return (
-    <WalletUIStatesProvider theme={theme} modalSize="wide">
+    <WalletUIStatesProvider theme={theme}>
       <CustomThemeProvider theme={theme}>
         <ThirdwebProviderCore
           {...restProps}
           theme={typeof theme === "string" ? theme : theme.type}
           supportedWallets={wallets}
+          signerWallet={signerWalletConfig}
         >
           {children}
           <ConnectModal />

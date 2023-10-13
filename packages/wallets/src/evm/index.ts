@@ -32,6 +32,7 @@ export * from "./wallets/ethers";
 export * from "./wallets/frame";
 export * from "./wallets/injected";
 export * from "./wallets/local-wallet";
+export * from "./wallets/signer";
 export * from "./wallets/magic";
 export * from "./wallets/metamask";
 export * from "./wallets/phantom";

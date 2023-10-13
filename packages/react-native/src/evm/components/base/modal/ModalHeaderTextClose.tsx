@@ -1,3 +1,4 @@
+import { View } from "react-native";
 import { Icon } from "../../../assets/icon";
 import { useAppTheme } from "../../../styles/hooks";
 import Box from "../Box";
@@ -5,7 +6,7 @@ import Text from "../Text";
 import { ReactNode } from "react";
 
 interface ModalHeaderTextCloseProps {
-  onClose: () => void;
+  onClose?: () => void;
   headerText?: ReactNode | string;
   subHeaderText?: ReactNode | string;
   onBackPress?: () => void;
@@ -41,13 +42,17 @@ export const ModalHeaderTextClose = ({
         ) : (
           headerText
         )}
-        <Icon
-          type="close"
-          width={16}
-          height={16}
-          color={theme.colors.iconSecondary}
-          onPress={onClose}
-        />
+        {onClose ? (
+          <Icon
+            type="close"
+            width={16}
+            height={16}
+            color={theme.colors.iconSecondary}
+            onPress={onClose}
+          />
+        ) : (
+          <View />
+        )}
       </Box>
       <Box flexDirection="row" justifyContent="space-between" mt="md">
         {typeof subHeaderText === "string" ? (

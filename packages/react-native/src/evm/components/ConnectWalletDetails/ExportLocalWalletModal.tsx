@@ -16,7 +16,6 @@ import * as FileSystem from "expo-file-system";
 import { SmartWallet } from "@thirdweb-dev/wallets";
 import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { shortenWalletAddress } from "../../utils/addresses";
-import { WalletIcon } from "../base/WalletIcon";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import { TWModal } from "../base/modal/TWModal";
 
@@ -150,13 +149,10 @@ export const ExportLocalWalletModal = ({
           borderRadius="md"
           p="lg"
         >
-          <Box flexDirection="row" justifyContent="space-between" mb="sm">
-            <WalletIcon size={32} iconUri={LocalWallet.meta.iconURL} />
-            <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
-          </Box>
-          <Text variant="header" textAlign="left">
-            Backup your Wallet
-          </Text>
+          <ModalHeaderTextClose
+            onClose={onCloseInternal}
+            headerText="Backup your Wallet"
+          />
           <Text variant="subHeader" mt="md" textAlign="left">
             {
               "This will download a JSON file containing your wallet information onto your device encrypted with the password."

@@ -31,7 +31,7 @@ export class CoinbaseWallet extends AbstractClientWallet {
     },
   };
 
-  static id = walletIds.coinbase;
+  static id= walletIds.coinbase as string;
   public get walletName() {
     return "Coinbase Wallet" as const;
   }

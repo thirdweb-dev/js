@@ -26,13 +26,14 @@ export type GetContractFromAbiParams = {
 export async function getContractFromAbi(
   params: GetContractFromAbiParams,
 ): Promise<SmartContract> {
-  const resolvedAddress = await resolveAddress(params.address);
-
   const [signer, provider] = getSignerAndProvider(
     params.network,
     params.sdkOptions,
   );
-  const chainId = (await provider.getNetwork()).chainId;
+  const [resolvedAddress, { chainId }] = await Promise.all([
+    resolveAddress(params.address),
+    provider.getNetwork(),
+  ]);
 
   if (inContractCache(resolvedAddress, chainId)) {
     return getCachedContract(resolvedAddress, chainId) as SmartContract;

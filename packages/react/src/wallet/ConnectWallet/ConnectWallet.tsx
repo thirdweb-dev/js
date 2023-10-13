@@ -18,7 +18,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -37,6 +37,7 @@ import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
 import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
+import { SupportedTokens, defaultTokens } from "./defaultTokens";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -48,6 +49,14 @@ export type ConnectWalletProps = {
    * @default "Connect"
    */
   modalTitle?: string;
+
+  /**
+   * Replace the thirdweb icon next to modalTitle and set your own iconUrl
+   *
+   * Set to empty string to hide the icon
+   */
+  modalTitleIconUrl?: string;
+
   /**
    * render a custom button to display the connected wallet details instead of the default button
    */
@@ -108,6 +117,25 @@ export type ConnectWalletProps = {
    * or an object with title, subtitle and imgSrc to change the content of the default screen
    */
   welcomeScreen?: WelcomeScreen;
+
+  /**
+   * Override the default supported tokens for each network
+   *
+   * These tokens will be displayed in "Send Funds" Modal
+   */
+  supportedTokens?: SupportedTokens;
+
+  /**
+   * Show balance of ERC20 token instead of the native token  in the "Connected" button when connected to certain network
+   *
+   * @example
+   * ```tsx
+   * <ConnectWallet balanceToken={{
+   *  1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" // show USDC balance when connected to Ethereum mainnet
+   * }} />
+   * ```
+   */
+  displayBalanceToken?: Record<number, string>;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -156,6 +184,23 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     setShowSignatureModal(false);
   };
 
+  const supportedTokens = useMemo(() => {
+    if (!props.supportedTokens) {
+      return defaultTokens;
+    }
+
+    const tokens = { ...defaultTokens };
+    for (const k in props.supportedTokens) {
+      const key = Number(k);
+      const tokenList = props.supportedTokens[key];
+      if (tokenList) {
+        tokens[key] = tokenList;
+      }
+    }
+
+    return tokens;
+  }, [props.supportedTokens]);
+
   return (
     <CustomThemeProvider theme={theme}>
       {showSignatureModal && (
@@ -199,6 +244,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   termsOfServiceUrl: props.termsOfServiceUrl,
                   privacyPolicyUrl: props.privacyPolicyUrl,
                   welcomeScreen: props.welcomeScreen,
+                  titleIconUrl: props.modalTitleIconUrl,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -268,6 +314,8 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             style={props.style}
             detailsBtn={props.detailsBtn}
             hideTestnetFaucet={props.hideTestnetFaucet}
+            supportedTokens={supportedTokens}
+            displayBalanceToken={props.displayBalanceToken}
             onDisconnect={() => {
               if (authConfig?.authUrl) {
                 logout();

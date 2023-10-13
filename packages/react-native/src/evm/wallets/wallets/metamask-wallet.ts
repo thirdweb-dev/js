@@ -3,13 +3,13 @@ import { WalletOptions, WalletConfig } from "@thirdweb-dev/react-core";
 import { WCMeta } from "../types/wc";
 import { WalletConnectBase } from "./wallet-connect/WalletConnectBase";
 import { WalletConnectConfig } from "./wallet-connect/wallet-connect";
+import { METAMASK_ICON } from "../../assets/svgs";
 
 export class MetaMaskWallet extends WalletConnectBase {
   static id = walletIds.metamask;
   static meta = {
     name: "MetaMask",
-    iconURL:
-      "ipfs://QmZZHcw7zcXursywnLDAyY6Hfxzqop5GKgwoq8NB9jjrkN/metamask.svg",
+    iconURL: METAMASK_ICON,
     links: {
       native: "metamask:",
       universal: "https://metamask.app.link",

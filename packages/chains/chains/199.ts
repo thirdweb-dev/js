@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BitTorrent Chain Mainnet",
   "chain": "BTTC",
-  "rpc": [
-    "https://bittorrent-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.bittorrentchain.io/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BitTorrent",
-    "symbol": "BTT",
-    "decimals": 18
-  },
-  "infoURL": "https:/bt.io",
-  "shortName": "BTT",
   "chainId": 199,
-  "networkId": 199,
   "explorers": [
     {
       "name": "BitTorrent Chain Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bittorrent-chain"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https:/bt.io",
+  "name": "BitTorrent Chain Mainnet",
+  "nativeCurrency": {
+    "name": "BitTorrent",
+    "symbol": "BTT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://bittorrent-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.bittorrentchain.io/"
+  ],
+  "shortName": "BTT",
+  "slug": "bittorrent-chain",
+  "testnet": false
 } as const satisfies Chain;

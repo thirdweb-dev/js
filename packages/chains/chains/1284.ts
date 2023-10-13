@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Moonbeam",
   "chain": "MOON",
-  "rpc": [
-    "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.api.moonbeam.network",
-    "wss://wss.api.moonbeam.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Glimmer",
-    "symbol": "GLMR",
-    "decimals": 18
-  },
-  "infoURL": "https://moonbeam.network/networks/moonbeam/",
-  "shortName": "mbeam",
   "chainId": 1284,
-  "networkId": 1284,
   "explorers": [
     {
       "name": "moonscan",
@@ -24,6 +9,24 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "moonbeam"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://moonbeam.network/networks/moonbeam/",
+  "name": "Moonbeam",
+  "nativeCurrency": {
+    "name": "Glimmer",
+    "symbol": "GLMR",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.api.moonbeam.network",
+    "wss://wss.api.moonbeam.network",
+    "https://moonbeam.publicnode.com",
+    "wss://moonbeam.publicnode.com"
+  ],
+  "shortName": "mbeam",
+  "slug": "moonbeam",
+  "testnet": false
 } as const satisfies Chain;

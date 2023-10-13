@@ -1,11 +1,4 @@
 import styled from "@emotion/styled";
-import { Spacer } from "../../../components/Spacer";
-import { Container, ModalHeader } from "../../../components/basic";
-import { Button } from "../../../components/buttons";
-import { Theme, iconSize, spacing } from "../../../design-system";
-import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
-import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType } from "./types";
 import {
   WalletConfig,
   useCreateWalletInstance,
@@ -13,6 +6,15 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { Spacer } from "../../../components/Spacer";
+import { Container, ModalHeader } from "../../../components/basic";
+import { Button } from "../../../components/buttons";
+import { Theme, iconSize, spacing } from "../../../design-system";
+import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { InputSelectionUI } from "../InputSelectionUI";
+import type { EmbeddedWalletLoginType } from "./types";
+import { TextDivider } from "../../../components/TextDivider";
+import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
@@ -28,9 +30,20 @@ export const EmbeddedWalletFormUI = (props: {
     try {
       const embeddedWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      await embeddedWallet.connect({ googleLogin: true });
+
+      const googleWindow = openGoogleSignInWindow();
+      if (!googleWindow) {
+        throw new Error("Failed to open google login window");
+      }
+      await embeddedWallet.connect({
+        loginType: "headless_google_oauth",
+        openedWindow: googleWindow,
+        closeOpenedWindow: (openedWindow) => {
+          openedWindow.close();
+        },
+      });
+
       setConnectedWallet(embeddedWallet);
-      close();
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error(e);
@@ -50,6 +63,12 @@ export const EmbeddedWalletFormUI = (props: {
         <GoogleIcon size={iconSize.md} />
         Sign in with Google
       </SocialButton>
+
+      <Spacer y="lg" />
+
+      <TextDivider>
+        <span>OR</span>
+      </TextDivider>
 
       <Spacer y="lg" />
 

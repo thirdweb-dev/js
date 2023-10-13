@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Btachain",
   "chain": "btachain",
-  "rpc": [
-    "https://btachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dataseed1.btachain.com/"
-  ],
+  "chainId": 1657,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://bitcoinasset.io/",
+  "name": "Btachain",
   "nativeCurrency": {
     "name": "Bitcoin Asset",
     "symbol": "BTA",
     "decimals": 18
   },
-  "infoURL": "https://bitcoinasset.io/",
+  "redFlags": [],
+  "rpc": [
+    "https://btachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://dataseed1.btachain.com/"
+  ],
   "shortName": "bta",
-  "chainId": 1657,
-  "networkId": 1657,
-  "testnet": false,
-  "slug": "btachain"
+  "slug": "btachain",
+  "testnet": false
 } as const satisfies Chain;

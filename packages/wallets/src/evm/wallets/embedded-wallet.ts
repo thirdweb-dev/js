@@ -4,7 +4,7 @@ import {
   EmbeddedWalletConnectionArgs,
 } from "../connectors/embedded-wallet/types";
 import { walletIds } from "../constants/walletIds";
-import { Connector } from "../interfaces/connector";
+import { ConnectParams, Connector } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
 
 export type EmbeddedWalletOptions =
@@ -18,7 +18,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
 > {
   connector?: Connector;
 
-  static id = walletIds.embeddedWallet;
+  static id = walletIds.embeddedWallet as string;
 
   static meta = {
     name: "Embedded Wallet",
@@ -50,6 +50,24 @@ export class EmbeddedWallet extends AbstractClientWallet<
       });
     }
     return this.connector;
+  }
+
+  getConnectParams(): ConnectParams<EmbeddedWalletConnectionArgs> | undefined {
+    const connectParams = super.getConnectParams();
+
+    if (!connectParams) {
+      return undefined;
+    }
+
+    // do not return non-serializable params to make auto-connect work
+    if (connectParams.loginType === "headless_google_oauth") {
+      return {
+        loginType: connectParams.loginType,
+        chainId: connectParams.chainId,
+      };
+    }
+
+    return connectParams;
   }
 
   async getEmail() {

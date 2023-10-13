@@ -4,8 +4,8 @@ import type {
   PaperEmbeddedWalletSdk,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import {
-  UserStatus,
   RecoveryShareManagement,
+  UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
@@ -13,7 +13,10 @@ import { utils } from "ethers";
 import { normalizeChainId } from "../../../lib/wagmi-core";
 import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
-import { PaperWalletConnectorOptions } from "./types";
+import {
+  PaperWalletConnectionArgs,
+  PaperWalletConnectorOptions,
+} from "./types";
 
 export class PaperWalletConnector extends Connector<Record<string, never>> {
   readonly id: string = walletIds.paper;
@@ -69,13 +72,11 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
     return this.paper;
   }
 
-  async connect(options?: {
-    email?: string;
-    chainId?: number;
-    otp?: string;
-    recoveryCode?: string;
-    googleLogin?: true;
-  }) {
+  async connect(
+    options?: {
+      chainId?: number;
+    } & PaperWalletConnectionArgs,
+  ) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
@@ -87,7 +88,10 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
 
         // Show Google popup
         if (options?.googleLogin) {
-          authResult = await paperSDK.auth.loginWithGoogle();
+          const arg = options.googleLogin;
+          authResult = await paperSDK.auth.loginWithGoogle(
+            typeof arg === "object" ? arg : undefined,
+          );
         }
 
         // Headless
@@ -115,6 +119,16 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
         break;
       }
       case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
+        if (typeof options?.googleLogin === "object") {
+          if (
+            options.googleLogin.closeOpenedWindow &&
+            options.googleLogin.openedWindow
+          ) {
+            options.googleLogin.closeOpenedWindow(
+              options.googleLogin.openedWindow,
+            );
+          }
+        }
         this.user = user;
         break;
       }
@@ -177,7 +191,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
     }
 
     const signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: this.options.chain.rpc[0],
+      rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
     if (!signer) {
@@ -204,7 +218,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
 
     // update signer
     this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0],
+      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
     this.emit("change", { chain: { id: chainId, unsupported: false } });

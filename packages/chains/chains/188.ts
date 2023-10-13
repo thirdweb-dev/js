@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BMC Mainnet",
   "chain": "BMC",
-  "rpc": [
-    "https://bmc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.bmcchain.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BTM",
-    "symbol": "BTM",
-    "decimals": 18
-  },
-  "infoURL": "https://bmc.bytom.io/",
-  "shortName": "BMC",
   "chainId": 188,
-  "networkId": 188,
   "explorers": [
     {
       "name": "Blockmeta",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "bmc"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://bmc.bytom.io/",
+  "name": "BMC Mainnet",
+  "nativeCurrency": {
+    "name": "BTM",
+    "symbol": "BTM",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://bmc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.bmcchain.com/"
+  ],
+  "shortName": "BMC",
+  "slug": "bmc",
+  "testnet": false
 } as const satisfies Chain;

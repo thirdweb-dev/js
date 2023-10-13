@@ -30,7 +30,7 @@ export const WalletConnectButton = ({
       onPress={onWalletPress}
     >
       {isAnimating ? (
-        <WalletLoadingThumbnail>
+        <WalletLoadingThumbnail imageSize={55}>
           <Image
             alt={item.name}
             source={{ uri: item.iconURL }}
@@ -58,7 +58,12 @@ export const WalletConnectButton = ({
           ]}
         />
       )}
-      <Text variant="bodySmallSecondary" fontSize={12} numberOfLines={1}>
+      <Text
+        variant="bodySmallSecondary"
+        fontSize={12}
+        numberOfLines={1}
+        mt="xxs"
+      >
         {item.name.split(" ")[0]}
       </Text>
     </BaseButton>

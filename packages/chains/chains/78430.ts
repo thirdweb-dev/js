@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Amplify Subnet",
   "chain": "AMPLIFY",
-  "rpc": [
-    "https://amplify-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/amplify/testnet/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "AMP",
-    "symbol": "AMP",
-    "decimals": 18
-  },
-  "infoURL": "https://www.avax.network",
-  "shortName": "amplify",
   "chainId": 78430,
-  "networkId": 78430,
   "explorers": [
     {
       "name": "AMPLIFY Explorer",
@@ -28,6 +9,25 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "amplify-subnet"
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "infoURL": "https://www.avax.network",
+  "name": "Amplify Subnet",
+  "nativeCurrency": {
+    "name": "AMP",
+    "symbol": "AMP",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://amplify-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/amplify/testnet/rpc"
+  ],
+  "shortName": "amplify",
+  "slug": "amplify-subnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,42 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Quadrans Blockchain",
   "chain": "QDC",
+  "chainId": 10946,
+  "explorers": [
+    {
+      "name": "explorer",
+      "url": "https://explorer.quadrans.io",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
     "width": 1024,
     "height": 1024,
     "format": "png"
   },
+  "infoURL": "https://quadrans.io",
+  "name": "Quadrans Blockchain",
+  "nativeCurrency": {
+    "name": "Quadrans Coin",
+    "symbol": "QDC",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://quadrans-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.quadrans.io",
     "https://rpcna.quadrans.io",
     "https://rpceu.quadrans.io"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Quadrans Coin",
-    "symbol": "QDC",
-    "decimals": 18
-  },
-  "infoURL": "https://quadrans.io",
   "shortName": "quadrans",
-  "chainId": 10946,
-  "networkId": 10946,
-  "explorers": [
-    {
-      "name": "explorer",
-      "url": "https://explorer.quadrans.io",
-      "icon": {
-        "url": "ipfs://QmZFiYHnE4TrezPz8wSap9nMxG6m98w4fv7ataj2TfLNck",
-        "width": 1024,
-        "height": 1024,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "quadrans-blockchain"
+  "slug": "quadrans-blockchain",
+  "testnet": false
 } as const satisfies Chain;

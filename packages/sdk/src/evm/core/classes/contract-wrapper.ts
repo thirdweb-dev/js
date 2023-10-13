@@ -98,6 +98,22 @@ export class ContractWrapper<
     ) as TContract;
   }
 
+  public updateAbi(updatedAbi: ContractInterface): void {
+    // re-connect the contract with the new signer / provider
+    this.writeContract = new Contract(
+      this.address,
+      updatedAbi,
+      this.getSignerOrProvider(),
+    ) as TContract;
+
+    // setup the read only contract
+    this.readContract = this.writeContract.connect(
+      this.getProvider(),
+    ) as TContract;
+
+    this.abi = AbiSchema.parse(updatedAbi);
+  }
+
   /**
    * @internal
    */
@@ -411,21 +427,6 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (err) {
-      const from = await (callOverrides.from || this.getSignerAddress());
-      const value = await (callOverrides.value ? callOverrides.value : 0);
-      const balance = await this.getProvider().getBalance(from);
-
-      if (balance.eq(0) || (value && balance.lt(value))) {
-        throw await this.formatError(
-          new Error(
-            "You have insufficient funds in your account to execute this transaction.",
-          ),
-          fn,
-          args,
-          callOverrides,
-        );
-      }
-
       throw await this.formatError(err, fn, args, callOverrides);
     }
   }

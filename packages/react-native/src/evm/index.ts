@@ -19,6 +19,8 @@ export { magicWallet } from "./wallets/wallets/magic-link";
 export { MagicWallet } from "./wallets/wallets/MagicLink";
 export { MagicLink } from "./wallets/wallets/MagicLink";
 export { magicLink } from "./wallets/wallets/magic-link";
+export { EmbeddedWallet } from "./wallets/wallets/embedded/EmbeddedWallet";
+export { embeddedWallet } from "./wallets/wallets/embedded/embedded-wallet";
 export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
 export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";
 export { walletConnect } from "./wallets/wallets/wallet-connect/wallet-connect";
@@ -42,6 +44,7 @@ export { ThirdwebStorage } from "../core/storage/storage";
 
 // ui components
 export * from "./components/base";
+export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 
 // assets / icons
 export * from "./assets";

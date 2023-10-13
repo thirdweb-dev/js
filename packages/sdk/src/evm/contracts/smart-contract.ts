@@ -14,6 +14,7 @@ import type {
   IRoyalty,
   OffersLogic,
   Ownable,
+  BaseRouter,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides } from "ethers";
@@ -38,6 +39,7 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_DYNAMIC_CONTRACT,
 } from "../constants/thirdweb-features";
 import { Account } from "../core/classes/account";
 import { AccountFactory } from "../core/classes/account-factory";
@@ -76,6 +78,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { Address } from "../schema/shared/Address";
 import { BaseContractInterface } from "../types/contract";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
+import { ExtensionManager } from "../core/classes/extension-manager";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -116,8 +119,11 @@ export class SmartContract<
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public abi: Abi;
   public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
+
+  get abi(): Abi {
+    return AbiSchema.parse(this.contractWrapper.abi || []);
+  }
 
   /**
    * Handle royalties
@@ -355,6 +361,10 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
+  get extensions(): ExtensionManager {
+    return assertEnabled(this.detectBaseRouter(), FEATURE_DYNAMIC_CONTRACT);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -378,7 +388,6 @@ export class SmartContract<
     this._chainId = chainId;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.abi = AbiSchema.parse(abi || []);
 
     this.events = new ContractEvents(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -579,6 +588,18 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectBaseRouter() {
+    if (
+      detectContractFeature<BaseRouter>(
+        this.contractWrapper,
+        FEATURE_DYNAMIC_CONTRACT.name,
+      )
+    ) {
+      return new ExtensionManager(this.contractWrapper);
     }
     return undefined;
   }

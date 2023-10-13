@@ -1,51 +1,63 @@
 import {
   ConnectUIProps,
+  useConnectionStatus,
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { useState } from "react";
-import {
-  Container,
-  ModalHeader,
-  ScreenBottomContainer,
-} from "../../../components/basic";
-import { Spinner } from "../../../components/Spinner";
 import { PaperWallet } from "@thirdweb-dev/wallets";
-import { Text } from "../../../components/text";
+import { useEffect } from "react";
 import { Spacer } from "../../../components/Spacer";
-import { iconSize } from "../../../design-system";
+import { Spinner } from "../../../components/Spinner";
+import { Container, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
-import { HelperLink, ModalTitle } from "../../../components/modalElements";
+import { ModalTitle } from "../../../components/modalElements";
+import { Text } from "../../../components/text";
+import { iconSize } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
+import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 
-export const PaperGoogleLogin = ({
-  close,
-  walletConfig,
-  goBack,
-  modalSize,
-}: ConnectUIProps<PaperWallet>) => {
+export const PaperGoogleLogin = (props: ConnectUIProps<PaperWallet>) => {
+  const { goBack, modalSize } = props;
+
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
-  const [UIStatus, setUIStatus] = useState<"idle" | "connecting" | "failed">(
-    "idle",
-  );
+  const connectionStatus = useConnectionStatus();
 
+  // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
     try {
-      const paper = createWalletInstance(walletConfig);
-      setUIStatus("connecting");
+      const paperWallet = createWalletInstance(props.walletConfig);
       setConnectionStatus("connecting");
-      await paper.connect({ googleLogin: true });
-      setConnectedWallet(paper);
-      close();
+      const googleWindow = openGoogleSignInWindow();
+      if (!googleWindow) {
+        throw new Error("Failed to open google login window");
+      }
+
+      await paperWallet.connect({
+        googleLogin: {
+          openedWindow: googleWindow,
+          closeOpenedWindow: (openedWindow) => {
+            openedWindow.close();
+          },
+        },
+      });
+      setConnectedWallet(paperWallet);
+      props.close();
     } catch (e) {
       setConnectionStatus("disconnected");
-      setUIStatus("failed");
       console.error(e);
     }
   };
+
+  const closeModal = props.close;
+
+  useEffect(() => {
+    if (connectionStatus === "connected") {
+      closeModal();
+    }
+  }, [connectionStatus, closeModal]);
 
   return (
     <Container animate="fadein" flex="column" fullHeight>
@@ -69,26 +81,17 @@ export const PaperGoogleLogin = ({
 
         {modalSize === "compact" ? <Spacer y="xl" /> : null}
 
-        <div
+        <Container
+          flex="column"
+          center="both"
+          expand
           style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
             textAlign: "center",
+            minHeight: "250px",
           }}
         >
-          {UIStatus === "idle" && (
-            <Container p="xl" flex="row" center="x">
-              <Button onClick={googleLogin} variant="primary">
-                Sign in
-              </Button>
-            </Container>
-          )}
-
-          {UIStatus === "connecting" && (
-            <>
+          {connectionStatus === "connecting" && (
+            <Container animate="fadein">
               <Text
                 color="primaryText"
                 multiline
@@ -104,10 +107,11 @@ export const PaperGoogleLogin = ({
               </Container>
 
               <Spacer y="xxl" />
-            </>
+            </Container>
           )}
-          {UIStatus === "failed" && (
-            <>
+
+          {connectionStatus === "disconnected" && (
+            <Container animate="fadein">
               <Text color="danger">Failed to sign in</Text>
               <Spacer y="lg" />
               <Button variant="primary" onClick={googleLogin}>
@@ -115,49 +119,10 @@ export const PaperGoogleLogin = ({
                 Retry{" "}
               </Button>
               <Spacer y="xxl" />
-            </>
+            </Container>
           )}
-        </div>
+        </Container>
       </Container>
-
-      <ScreenBottomContainer
-        style={{
-          borderTop: modalSize === "wide" ? "none" : undefined,
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <Text size="sm" multiline>
-            Make sure you have enabled <br /> pop-ups for this site
-          </Text>
-
-          <Spacer y="sm" />
-
-          <Text size="sm" multiline>
-            The option to enable pop-ups can <br /> be found in {`browser's`}{" "}
-            address bar
-          </Text>
-
-          <Spacer y="sm" />
-
-          <Text size="sm" multiline>
-            Once you have enabled pop-ups, <br />
-            click on{" "}
-            <HelperLink
-              onClick={googleLogin}
-              style={{
-                display: "inline",
-              }}
-            >
-              Retry
-            </HelperLink>
-            to try again.
-          </Text>
-        </div>
-      </ScreenBottomContainer>
     </Container>
   );
 };

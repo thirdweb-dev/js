@@ -1,22 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EtherInc",
   "chain": "ETI",
-  "rpc": [
-    "https://etherinc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.einc.io/jsonrpc/mainnet"
-  ],
+  "chainId": 101,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://einc.io",
+  "name": "EtherInc",
   "nativeCurrency": {
     "name": "EtherInc Ether",
     "symbol": "ETI",
     "decimals": 18
   },
-  "infoURL": "https://einc.io",
+  "redFlags": [],
+  "rpc": [
+    "https://etherinc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.einc.io/jsonrpc/mainnet"
+  ],
   "shortName": "eti",
-  "chainId": 101,
-  "networkId": 1,
-  "slip44": 464,
-  "testnet": false,
-  "slug": "etherinc"
+  "slug": "etherinc",
+  "testnet": false
 } as const satisfies Chain;

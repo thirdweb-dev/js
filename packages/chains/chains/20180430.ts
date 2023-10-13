@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SmartMesh Mainnet",
   "chain": "Spectrum",
-  "rpc": [
-    "https://smartmesh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jsonapi1.smartmesh.cn"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "SmartMesh Native Token",
-    "symbol": "SMT",
-    "decimals": 18
-  },
-  "infoURL": "https://smartmesh.io",
-  "shortName": "spectrum",
   "chainId": 20180430,
-  "networkId": 1,
   "explorers": [
     {
       "name": "spectrum",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "smartmesh"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://smartmesh.io",
+  "name": "SmartMesh Mainnet",
+  "nativeCurrency": {
+    "name": "SmartMesh Native Token",
+    "symbol": "SMT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://smartmesh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://jsonapi1.smartmesh.cn"
+  ],
+  "shortName": "spectrum",
+  "slug": "smartmesh",
+  "testnet": false
 } as const satisfies Chain;

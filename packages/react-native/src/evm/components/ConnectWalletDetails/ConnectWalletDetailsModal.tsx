@@ -23,6 +23,12 @@ import { IconTextButton } from "../base/IconTextButton";
 import MoneyIcon from "../../assets/money";
 import { TWModal } from "../base/modal/TWModal";
 import { ThemeProvider } from "../../styles/ThemeProvider";
+import TransactionIcon from "../../assets/transaction";
+import { ReceiveButton } from "../ReceiveButton";
+import { SendButton } from "../SendFunds/SendButton";
+import { SupportedTokens } from "../SendFunds/defaultTokens";
+import { ActiveDot } from "../base";
+import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -33,12 +39,16 @@ export const ConnectWalletDetailsModal = ({
   extraRows,
   address,
   hideTestnetFaucet,
+  supportedTokens,
+  displayBalanceToken,
 }: {
   isVisible: boolean;
   onClosePress: () => void;
   extraRows?: React.FC;
   address?: string;
   hideTestnetFaucet?: boolean;
+  supportedTokens: SupportedTokens;
+  displayBalanceToken?: Record<number, string>;
 }) => {
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const activeWallet = useWallet();
@@ -48,6 +58,24 @@ export const ConnectWalletDetailsModal = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const setConnectedWallet = useSetConnectedWallet();
+
+  const tokenAddress =
+    chain?.chainId && displayBalanceToken
+      ? displayBalanceToken[chain?.chainId]
+      : undefined;
+
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
+
+  useEffect(() => {
+    if (activeWallet && activeWallet.walletId === walletIds.smartWallet) {
+      const connectedSmartWallet = activeWallet as SmartWallet;
+      connectedSmartWallet.isDeployed().then((isDeployed) => {
+        setIsSmartWalletDeployed(isDeployed);
+      });
+    } else {
+      setIsSmartWalletDeployed(false);
+    }
+  }, [activeWallet]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -152,7 +180,7 @@ export const ConnectWalletDetailsModal = ({
           />
 
           {activeWallet?.walletId === LocalWallet.id ? (
-            <Text variant="error" textAlign="left">
+            <Text variant="error" textAlign="left" mb="sm">
               {
                 "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
               }
@@ -181,10 +209,47 @@ export const ConnectWalletDetailsModal = ({
               onClose={onExportModalClose}
             />
             <WalletDetailsModalHeader
+              tokenAddress={tokenAddress}
               address={address}
               onDisconnectPress={onDisconnectPress}
               onAddressCopied={onAddressCopied}
             />
+            {activeWallet?.walletId === SmartWallet.id ? (
+              <BaseButton
+                disabled={!isSmartWalletDeployed}
+                onPress={() => {
+                  Linking.openURL(
+                    `https://thirdweb.com/${chain?.slug}/${address}/account`,
+                  );
+                }}
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                mt="md"
+              >
+                <Box flexDirection="row" alignItems="center">
+                  <ActiveDot width={10} height={10} />
+                  <Text variant="bodySmallSecondary" ml="xxs">
+                    Connected to a Smart Wallet
+                  </Text>
+                </Box>
+                {isSmartWalletDeployed ? (
+                  <RightArrowIcon width={10} height={10} />
+                ) : null}
+              </BaseButton>
+            ) : null}
+            {activeWallet?.walletId === EmbeddedWallet.id ? (
+              <Box flexDirection="row" alignItems="center" mt="md">
+                <ActiveDot width={10} height={10} />
+                <Text variant="bodySmallSecondary" ml="xxs">
+                  {(activeWallet as EmbeddedWallet).getEmail()}
+                </Text>
+              </Box>
+            ) : null}
+            <Box flexDirection="row" justifyContent="space-evenly" mt="md">
+              <SendButton supportedTokens={supportedTokens} />
+              <ReceiveButton />
+            </Box>
             <View style={styles.currentNetwork}>
               <Text variant="bodySmallSecondary">Current Network</Text>
             </View>
@@ -193,7 +258,7 @@ export const ConnectWalletDetailsModal = ({
               <IconTextButton
                 mt="xs"
                 text="Request Testnet Funds"
-                icon={<MoneyIcon height={10} width={10} />}
+                icon={<MoneyIcon height={16} width={16} />}
                 onPress={() => {
                   if (chain?.faucets?.[0]) {
                     Linking.openURL(chain.faucets[0]);
@@ -201,6 +266,18 @@ export const ConnectWalletDetailsModal = ({
                 }}
               />
             ) : null}
+            {chain?.explorers && chain?.explorers?.[0] && (
+              <IconTextButton
+                mt="xs"
+                text="View Transaction History"
+                icon={<TransactionIcon height={16} width={16} />}
+                onPress={() => {
+                  Linking.openURL(
+                    chain?.explorers?.[0].url + "/address/" + address,
+                  );
+                }}
+              />
+            )}
             {getAdditionalActions()}
             {extraRows ? extraRows({}) : null}
             {addressCopied === true ? (
