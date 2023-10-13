@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { IconTextButton } from "./base/IconTextButton";
 import { useAddress } from "@thirdweb-dev/react-core";
 import { Dimensions, KeyboardAvoidingView } from "react-native";
-import { useAppTheme } from "../styles/hooks";
 import {
   TWModal,
   Box,
@@ -15,9 +14,10 @@ import {
 import DownloadIcon from "../assets/download";
 import CopyIcon from "../assets/copy";
 import QRCode from "react-native-qrcode-svg";
+import { useGlobalTheme } from "../providers/ui-context-provider";
 
 export const ReceiveButton = () => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onClose = () => {
@@ -60,7 +60,7 @@ export const ReceiveFundsModal = ({
   isVisible,
   onClose,
 }: ReceiveFundsModalProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const address = useAddress();
   const [addressCopied, setAddressCopied] = useState(false);
 

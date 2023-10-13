@@ -12,7 +12,6 @@ import {
   TextInput,
   TextInputKeyPressEventData,
 } from "react-native";
-import { useAppTheme } from "../../../styles/hooks";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
@@ -20,6 +19,7 @@ import BaseButton from "../../../components/base/BaseButton";
 import * as Clipboard from "expo-clipboard";
 import { StyleSheet } from "react-native";
 import { EmbeddedSocialConnection } from "./EmbeddedSocialConnection";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 const OTP_LENGTH = 6;
 
@@ -30,7 +30,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   onLocallyConnected,
   ...props
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const [values, setValues] = useState<string[]>(
     new Array(OTP_LENGTH).fill(""),
