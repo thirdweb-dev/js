@@ -9,12 +9,36 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { SupportedPlatformLink } from "components/wallets/SupportedPlatformLink";
 import { ChakraNextImage } from "components/Image";
 import { useEffect, useState } from "react";
+import { NextSeo } from "next-seo";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 
 const TRACKING_CATEGORY = "connect-playground";
+
+const seo = {
+  title: "Build Your Own Connect Wallet Modal | Connect",
+  desc: "Onboard your users to web3 with a beautiful Connect Wallet modal, customizable auth flows, and sign-in for web2 & web3 — in a few lines of code.",
+};
 
 const DashboardWalletsConnect: ThirdwebNextPage = () => {
   return (
     <Box>
+      <NextSeo
+        title={seo.title}
+        description={seo.desc}
+        openGraph={{
+          title: seo.title,
+          description: seo.desc,
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/connect-wallet.png`,
+              width: 1200,
+              height: 630,
+              alt: seo.title,
+            },
+          ],
+        }}
+      />
+
       <Heading size="title.xl" as="h1">
         Connect
       </Heading>
