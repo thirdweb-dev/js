@@ -144,7 +144,7 @@ const SendFundsForm = ({
   const wallet = useWallet();
   const chainId = useChainId();
   const [receiverAddress, setReceiverAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("0");
   const [showIcon, setShowIcon] = useState(false);
   const tokenAddress = token?.address;
 
@@ -313,6 +313,7 @@ const SendFundsForm = ({
           editable={!sendTokenMutation.isLoading}
           returnKeyType={"done"}
           keyboardType="numeric"
+          value={amount}
           clearTextOnFocus={false}
           style={{
             color: theme.colors.textPrimary,
@@ -322,8 +323,6 @@ const SendFundsForm = ({
             paddingHorizontal: 16,
           }}
           onChangeText={setAmount}
-          placeholder="0"
-          placeholderTextColor={theme.colors.textPrimary}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -348,9 +347,16 @@ const SendFundsForm = ({
         }}
       >
         {sendTokenMutation.isLoading ? (
-          <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+          <ActivityIndicator
+            size="small"
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : showIcon ? (
-          <CheckIcon width={20} height={13} color={theme.colors.textPrimary} />
+          <CheckIcon
+            width={20}
+            height={13}
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : (
           <Text variant="bodySmall" color="accentButtonTextColor" mr="sm">
             Send

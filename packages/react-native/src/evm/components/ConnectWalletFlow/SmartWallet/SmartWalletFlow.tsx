@@ -131,7 +131,7 @@ export const SmartWalletFlow = ({
             onBackPress={onConnectingBackPress}
             onClose={onConnectingClosePress}
           />
-          <WalletLoadingThumbnail imageSize={100}>
+          <WalletLoadingThumbnail imageSize={85}>
             <ImageSvgUri
               height={80}
               width={80}

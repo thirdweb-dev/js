@@ -62,8 +62,8 @@ export const ConnectWalletFlow = () => {
 
   const onChooseWallet = useCallback(
     (wallet: WalletConfig, data?: any) => {
-      setActiveWallet(wallet);
       setSelectionData(data);
+      setActiveWallet(wallet);
 
       // If the wallet has no custom connect UI, then connect it
       if (!wallet.connectUI) {
