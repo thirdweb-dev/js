@@ -74,13 +74,19 @@ export const ConnectWalletFlow = () => {
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
     if (walletConfig) {
-      if (walletConfig.connectUI) {
-        // if there's a connection UI, then show it
-        setActiveWallet(walletConfig);
-      } else {
-        // if there's no connection UI, then connect the wallet
-        onChooseWallet(walletConfig);
+      // if there's a selection UI, then continue with the flow
+      if (walletConfig.selectUI) {
+        return;
       }
+
+      if (walletConfig.connectUI) {
+        // if there's a connection UI and no selection UI, then show it
+        setActiveWallet(walletConfig);
+        return;
+      }
+
+      // if there's no connection UI or selectionUI, then automatically select it
+      onChooseWallet(walletConfig);
     }
   }, [onChooseWallet, walletConfig]);
 
