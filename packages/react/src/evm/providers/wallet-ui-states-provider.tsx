@@ -15,6 +15,11 @@ export type ModalConfig = {
   privacyPolicyUrl?: string;
   welcomeScreen?: WelcomeScreen;
   titleIconUrl?: string;
+  auth?: {
+    loginOptional?: boolean;
+    onLogin?: (token: string) => void;
+    onLogout?: () => void;
+  };
 };
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);

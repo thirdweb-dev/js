@@ -22,6 +22,7 @@ import {
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -49,6 +50,15 @@ export class SmartWallet
   }
 
   constructor(options: WalletOptions<SmartWalletConfig>) {
+    if (options.clientId && typeof options.chain === "object") {
+      try {
+        options.chain = {
+          ...options.chain,
+          rpc: getValidChainRPCs(options.chain, options.clientId),
+        };
+      } catch {}
+    }
+
     super(SmartWallet.id, {
       ...options,
     });
@@ -57,7 +67,7 @@ export class SmartWallet
     this.#wcWallet = this.enableConnectApp
       ? new WalletConnectV2Handler({
           walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2ProjectId: options?.walletConnectV2ProjectId,
           walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
         })
       : new NoOpWalletConnectHandler();
@@ -110,7 +120,9 @@ export class SmartWallet
    * @param transactions
    * @returns the transaction receipt
    */
-  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+  async executeBatch(
+    transactions: Transaction<any>[],
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
   }

@@ -21,7 +21,7 @@ export const ImportLocalWallet: React.FC<{
   persist: boolean;
 }> = (props) => {
   const [jsonString, setJsonString] = useState<string | undefined>();
-  const { setLocalWallet, meta } = useLocalWalletInfo(
+  const { setLocalWallet } = useLocalWalletInfo(
     props.localWalletConf,
     props.persist,
   );
@@ -66,26 +66,22 @@ export const ImportLocalWallet: React.FC<{
   };
 
   return (
-    <Container>
+    <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader
-          onBack={props.goBack}
-          title="Import Wallet"
-          imgSrc={meta.iconURL}
-        />
+        <ModalHeader onBack={props.goBack} title="Import Wallet" />
       </Container>
       <Line />
 
       <Container p="lg">
-        <ModalDescription sm>
+        <ModalDescription>
           The application can authorize any transactions on behalf of the wallet
-          without any approvals.
+          without any approvals
         </ModalDescription>
 
         <Spacer y="xs" />
 
-        <ModalDescription sm>
-          We recommend only connecting to trusted applications.
+        <ModalDescription>
+          We recommend only connecting to trusted applications
         </ModalDescription>
 
         <Spacer y="lg" />

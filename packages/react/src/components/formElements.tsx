@@ -8,6 +8,7 @@ export const Label = styled.label<{
   font-size: ${fontSize.sm};
   color: ${(p) => p.theme.colors[p.color || "primaryText"]};
   display: block;
+  font-weight: 500;
 `;
 
 export const Input = styled.input<{

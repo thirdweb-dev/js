@@ -13,8 +13,6 @@ import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
-global.fetch = require("cross-fetch");
-
 describe("NFT Drop Contract (v4)", async () => {
   let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,

@@ -1,4 +1,3 @@
-import { useAppTheme } from "../../styles/hooks";
 import React, { useEffect, useMemo, useState } from "react";
 import SendIcon from "../../assets/send";
 import {
@@ -30,13 +29,14 @@ import { utils } from "ethers";
 import LoadingTextAnimation from "../base/LoadingTextAnimation";
 import CheckIcon from "../../assets/check";
 import { TokenSelector } from "./TokenSelector";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export const SendButton = ({
   supportedTokens,
 }: {
   supportedTokens: SupportedTokens;
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onClose = () => {
@@ -139,7 +139,7 @@ const SendFundsForm = ({
   onTokenSelectorPress: () => void;
   token?: TokenInfo;
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const chain = useChain();
   const wallet = useWallet();
   const chainId = useChainId();
@@ -352,7 +352,7 @@ const SendFundsForm = ({
         ) : showIcon ? (
           <CheckIcon width={20} height={13} color={theme.colors.textPrimary} />
         ) : (
-          <Text variant="bodySmall" mr="sm">
+          <Text variant="bodySmall" color="accentButtonTextColor" mr="sm">
             Send
           </Text>
         )}

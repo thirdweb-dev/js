@@ -98,15 +98,17 @@ export class UserWallet {
     amount: Amount,
     currencyAddress: AddressOrEns = NATIVE_TOKEN_ADDRESS,
   ): Promise<TransactionResult> {
-    const resolvedTo = await resolveAddress(to);
-    const resolvedCurrency = await resolveAddress(currencyAddress);
+    const [resolvedTo, resolvedCurrency, amountInWei] = await Promise.all([
+      resolveAddress(to),
+      resolveAddress(currencyAddress),
+      normalizePriceValue(
+        this.connection.getProvider(),
+        amount,
+        currencyAddress,
+      ),
+    ]);
 
     const signer = this.requireWallet();
-    const amountInWei = await normalizePriceValue(
-      this.connection.getProvider(),
-      amount,
-      currencyAddress,
-    );
     if (isNativeToken(resolvedCurrency)) {
       // native token transfer
       const from = await signer.getAddress();

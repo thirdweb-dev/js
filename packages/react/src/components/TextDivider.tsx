@@ -1,7 +1,22 @@
 import styled from "@emotion/styled";
-import { fontSize, Theme } from "../design-system";
+import { fontSize, spacing, Theme } from "../design-system";
 
-export const TextDivider = styled.div<{ theme?: Theme }>`
+export const TextDivider = (props: {
+  text: string;
+  py?: keyof typeof spacing;
+}) => {
+  return (
+    <TextDividerEl
+      style={{
+        paddingBlock: props.py ? spacing[props.py] : 0,
+      }}
+    >
+      <span> {props.text}</span>
+    </TextDividerEl>
+  );
+};
+
+export const TextDividerEl = styled.div<{ theme?: Theme }>`
   display: flex;
   align-items: center;
   color: ${(p) => p.theme.colors.secondaryText};

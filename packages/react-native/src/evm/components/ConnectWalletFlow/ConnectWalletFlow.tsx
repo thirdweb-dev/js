@@ -5,14 +5,16 @@ import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
-import { useModalState } from "../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useModalState,
+} from "../../providers/ui-context-provider";
 import {
   CLOSE_MODAL_STATE,
   ConnectWalletFlowModal,
 } from "../../utils/modalTypes";
 import Box from "../base/Box";
 import { ThemeProvider } from "../../styles/ThemeProvider";
-import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
@@ -30,7 +32,7 @@ export const ConnectWalletFlow = () => {
   const [selectionData, setSelectionData] = useState<any>();
   const supportedWallets = useWallets();
   const theme = useColorScheme();
-  const appTheme = useAppTheme();
+  const appTheme = useGlobalTheme();
   const connect = useConnect();
 
   const onClose = useCallback(
@@ -74,13 +76,19 @@ export const ConnectWalletFlow = () => {
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
     if (walletConfig) {
-      if (walletConfig.connectUI) {
-        // if there's a connection UI, then show it
-        setActiveWallet(walletConfig);
-      } else {
-        // if there's no connection UI, then connect the wallet
-        onChooseWallet(walletConfig);
+      // if there's a selection UI, then continue with the flow
+      if (walletConfig.selectUI) {
+        return;
       }
+
+      if (walletConfig.connectUI) {
+        // if there's a connection UI and no selection UI, then show it
+        setActiveWallet(walletConfig);
+        return;
+      }
+
+      // if there's no connection UI or selectionUI, then automatically select it
+      onChooseWallet(walletConfig);
     }
   }, [onChooseWallet, walletConfig]);
 
@@ -108,9 +116,10 @@ export const ConnectWalletFlow = () => {
           modalSize="compact"
           theme={theme || "dark"}
           goBack={onBackPress}
-          close={handleClose}
+          connected={handleClose}
           isOpen={modalVisible}
-          open={onOpenModal}
+          show={onOpenModal}
+          hide={() => {}}
           walletConfig={activeWallet}
           supportedWallets={supportedWallets}
           selectionData={selectionData}

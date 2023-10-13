@@ -15,16 +15,16 @@ import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/Wall
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Box from "../../base/Box";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
-import { useAppTheme } from "../../../styles/hooks";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 export const SmartWalletFlow = ({
-  close,
+  connected,
   goBack,
   walletConfig,
   personalWalletConfig,
   ...props
 }: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
@@ -49,12 +49,12 @@ export const SmartWalletFlow = ({
         await connect(walletConfig, {
           personalWallet: personalWallet,
         });
-        close();
+        connected();
       } else {
         setPersonalWalletChaindId(eoaWalletChainId);
       }
     },
-    [close, connect, targetChain.chainId, walletConfig],
+    [connected, connect, targetChain.chainId, walletConfig],
   );
 
   const connectPersonalWallet = useCallback(
@@ -82,7 +82,7 @@ export const SmartWalletFlow = ({
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
     reset();
-    close();
+    connected();
   };
 
   const onConnectingBackPress = () => {
@@ -119,7 +119,7 @@ export const SmartWalletFlow = ({
       {PersonalWalletConfigUI && !connectedPersonalWallet ? (
         <PersonalWalletConfigUI
           {...props}
-          close={close}
+          connected={connected}
           goBack={goBack}
           walletConfig={personalWalletConfig}
           onLocallyConnected={onPersonalWalletConnected}

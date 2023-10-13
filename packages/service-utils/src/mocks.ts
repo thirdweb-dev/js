@@ -8,6 +8,7 @@ export const validApiKeyMeta: ApiKeyMetadata = {
   walletAddresses: [],
   domains: ["example.com", "*.example.com"],
   bundleIds: [],
+  redirectUrls: [],
   accountId: "test-account-id",
   accountStatus: "noCustomer",
   accountPlan: "free",

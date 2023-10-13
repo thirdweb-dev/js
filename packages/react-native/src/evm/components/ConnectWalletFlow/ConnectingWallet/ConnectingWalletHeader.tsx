@@ -1,5 +1,5 @@
 import { Icon } from "../../../assets/icon";
-import { useAppTheme } from "../../../styles/hooks";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 import Text from "../../base/Text";
 import { FlexAlignType, StyleSheet, View } from "react-native";
 
@@ -20,7 +20,7 @@ export const ConnectWalletHeader = ({
   onClose,
   onBackPress,
 }: ConnectWalletHeaderProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   return (
     <>
       <View style={styles.header}>

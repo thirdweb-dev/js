@@ -62,4 +62,5 @@ export {
   MagicLink,
   SignerWallet,
   InjectedWallet,
+  setWalletAnalyticsEnabled,
 } from "@thirdweb-dev/wallets";

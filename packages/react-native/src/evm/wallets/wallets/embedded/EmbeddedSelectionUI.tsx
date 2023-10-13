@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
 import { ActivityIndicator } from "react-native";
-import { useAppTheme } from "../../../styles/hooks";
 import {
   SelectUIProps,
   useCreateWalletInstance,
@@ -10,6 +9,7 @@ import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
@@ -18,7 +18,7 @@ export const EmailSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = ({
   onSelect,
   walletConfig,
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [email, setEmail] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isFetching, setIsFetching] = useState<boolean>(false);
