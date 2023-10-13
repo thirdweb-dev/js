@@ -63,9 +63,8 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="rarible" />
         <PartnerLogo partner="fractal" />
         <PartnerLogo partner="buildspace" />
+        <PartnerLogo partner="aws" />
         <PartnerLogo partner="shopify" />
-        <PartnerLogo partner="paradigm" />
-        <PartnerLogo partner="unlock" />
         <PartnerLogo partner="animoca" />
         <PartnerLogo partner="pixels" />
         <PartnerLogo partner="nyfw" />
@@ -73,6 +72,8 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="mirror" />
         <PartnerLogo partner="heroic_story" />
         <PartnerLogo partner="layer3" />
+        <PartnerLogo partner="paradigm" />
+        <PartnerLogo partner="unlock" />
       </Marquee>
 
       {/* mobile - 2 rows with logos split in two rows */}
@@ -80,6 +81,7 @@ export const PartnerCarousel: React.FC = () => {
         <PartnerLogo partner="rarible" />
         <PartnerLogo partner="fractal" />
         <PartnerLogo partner="buildspace" />
+        <PartnerLogo partner="aws" />
         <PartnerLogo partner="shopify" />
         <PartnerLogo partner="paradigm" />
         <PartnerLogo partner="unlock" />
