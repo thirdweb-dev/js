@@ -6,6 +6,10 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/rarible.png"),
     filter: undefined,
   },
+  aws: {
+    img: require("./logos/aws.png"),
+    filter: undefined,
+  },
   fractal: {
     img: require("./logos/fractal.png"),
     filter: "brightness(0) invert(1)",
