@@ -1,13 +1,30 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Polygon Mainnet",
   "chain": "Polygon",
+  "chainId": 137,
+  "explorers": [
+    {
+      "name": "polygonscan",
+      "url": "https://polygonscan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
-    "height": 512,
     "width": 512,
+    "height": 512,
     "format": "png"
   },
+  "infoURL": "https://polygon.technology/",
+  "name": "Polygon Mainnet",
+  "nativeCurrency": {
+    "name": "MATIC",
+    "symbol": "MATIC",
+    "decimals": 18
+  },
+  "redFlags": [],
   "rpc": [
     "https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}",
@@ -18,26 +35,12 @@ export default {
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mainnet.matic.quiknode.pro",
     "https://matic-mainnet-full-rpc.bwarelabs.com",
-    "https://polygon-bor.publicnode.com"
+    "https://polygon-bor.publicnode.com",
+    "wss://polygon-bor.publicnode.com",
+    "https://polygon.gateway.tenderly.co",
+    "wss://polygon.gateway.tenderly.co"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "MATIC",
-    "symbol": "MATIC",
-    "decimals": 18
-  },
-  "infoURL": "https://polygon.technology/",
   "shortName": "matic",
-  "chainId": 137,
-  "networkId": 137,
-  "slip44": 966,
-  "explorers": [
-    {
-      "name": "polygonscan",
-      "url": "https://polygonscan.com",
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "polygon"
+  "slug": "polygon",
+  "testnet": false
 } as const satisfies Chain;

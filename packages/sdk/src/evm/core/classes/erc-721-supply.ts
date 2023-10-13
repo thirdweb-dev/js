@@ -1,10 +1,3 @@
-import type { QueryAllParams } from "../../../core/schema/QueryParams";
-import type { NFT } from "../../../core/schema/nft";
-import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
-import type { BaseERC721 } from "../../types/eips";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import type { ContractWrapper } from "./contract-wrapper";
 import type {
   IERC721AQueryableUpgradeable,
   IERC721Enumerable,
@@ -12,10 +5,17 @@ import type {
   OpenEditionERC721,
 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, constants } from "ethers";
+import type { QueryAllParams } from "../../../core/schema/QueryParams";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
+import type { NFT } from "../../../core/schema/nft";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
+import type { BaseERC721 } from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import type { ContractWrapper } from "./contract-wrapper";
 import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
-import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { Erc721AQueryable } from "./erc-721a-queryable";
 
 /**
@@ -62,7 +62,7 @@ export class Erc721Supply implements DetectableFeature {
   public async all(queryParams?: QueryAllParams): Promise<NFT[]> {
     let startTokenId = BigNumber.from(0);
     if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
-      startTokenId = await this.contractWrapper.readContract.startTokenId();
+      startTokenId = await this.contractWrapper.read("startTokenId", []);
     }
     const start = BigNumber.from(queryParams?.start || 0)
       .add(startTokenId)
@@ -91,7 +91,7 @@ export class Erc721Supply implements DetectableFeature {
     let totalCount: BigNumber;
     let startTokenId = BigNumber.from(0);
     if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
-      startTokenId = await this.contractWrapper.readContract.startTokenId();
+      startTokenId = await this.contractWrapper.read("startTokenId", []);
     }
     try {
       totalCount = await this.erc721.totalClaimedSupply();
@@ -103,16 +103,16 @@ export class Erc721Supply implements DetectableFeature {
 
     // TODO use multicall3 if available
     // TODO can't call toNumber() here, this can be a very large number
-    return (
-      await Promise.all(
-        [...new Array(totalCount.toNumber()).keys()].map(async (i) => ({
-          tokenId: i,
-          owner: await this.erc721
-            .ownerOf(i)
-            .catch(() => constants.AddressZero),
-        })),
-      )
-    ).filter((o) => o.owner !== constants.AddressZero);
+    const arr = [...new Array(totalCount.toNumber()).keys()];
+    const owners = await Promise.all(
+      arr.map((i) => this.erc721.ownerOf(i).catch(() => constants.AddressZero)),
+    );
+    return arr
+      .map((i) => ({
+        tokenId: i,
+        owner: owners[i],
+      }))
+      .filter((o) => o.owner !== constants.AddressZero);
   }
 
   /**
@@ -132,7 +132,7 @@ export class Erc721Supply implements DetectableFeature {
    * @public
    */
   public async totalCirculatingSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalSupply();
+    return await this.contractWrapper.read("totalSupply", []);
   }
 
   private detectErc721Owned(): Erc721Enumerable | Erc721AQueryable | undefined {

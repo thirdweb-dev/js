@@ -19,6 +19,7 @@ import {
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
+import { getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -212,6 +213,8 @@ export abstract class BaseAccountAPI {
         to: detailsForUserOp.target,
         data: detailsForUserOp.data,
       });
+      // add 20% overhead for entrypoint checks
+      callGasLimit = callGasLimit.mul(120).div(100);
       // if the estimation is too low, we use a fixed value of 500k
       if (callGasLimit.lt(30000)) {
         callGasLimit = BigNumber.from(500000);
@@ -290,7 +293,12 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      const feeData = await this.provider.getFeeData();
+      const feeData = await getDynamicFeeData(
+        this.provider as providers.JsonRpcProvider,
+      );
+      if (!maxPriorityFeePerGas) {
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+      }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
@@ -303,9 +311,6 @@ export abstract class BaseAccountAPI {
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
-      }
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
       }
     }
 
@@ -416,7 +421,7 @@ export abstract class BaseAccountAPI {
       const events = await this.entryPointView.queryFilter(
         this.entryPointView.filters.UserOperationEvent(userOpHash),
       );
-      if (events.length > 0) {
+      if (events[0]) {
         return events[0].transactionHash;
       }
       await new Promise((resolve) => setTimeout(resolve, interval));

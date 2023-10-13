@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Celo Mainnet",
-  "chainId": 42220,
-  "shortName": "celo",
   "chain": "CELO",
-  "networkId": 42220,
-  "nativeCurrency": {
-    "name": "CELO",
-    "symbol": "CELO",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://celo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://forno.celo.org",
-    "wss://forno.celo.org/ws"
-  ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
-  "infoURL": "https://docs.celo.org/",
+  "chainId": 42220,
   "explorers": [
     {
       "name": "blockscout",
@@ -31,6 +14,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "celo"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://docs.celo.org/",
+  "name": "Celo Mainnet",
+  "nativeCurrency": {
+    "name": "CELO",
+    "symbol": "CELO",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://celo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://forno.celo.org",
+    "wss://forno.celo.org/ws"
+  ],
+  "shortName": "celo",
+  "slug": "celo",
+  "testnet": false
 } as const satisfies Chain;

@@ -2,17 +2,17 @@ import { type Theme, fontSize, media } from "../design-system";
 import { iconSize } from "../design-system";
 import { IconButton } from "./buttons";
 import styled from "@emotion/styled";
-import { Title } from "@radix-ui/react-dialog";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = /* @__PURE__ */ styled(Title)<{
+export const ModalTitle = /* @__PURE__ */ styled.h2<{
   theme?: Theme;
   centerOnMobile?: boolean;
 }>`
   margin: 0;
   font-weight: 600;
   font-size: ${fontSize.lg};
-  color: ${(p) => p.theme.text.neutral};
+  color: ${(p) => p.theme.colors.primaryText};
+  line-height: 1.3;
   text-align: left;
   ${media.mobile} {
     text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
@@ -27,7 +27,7 @@ export const ModalDescription = styled.p<{
   all: unset;
   display: block;
   font-size: ${(p) => (p.sm ? fontSize.sm : fontSize.md)};
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   line-height: 1.5;
   ${media.mobile} {
     text-align: ${(p) => (p.centerOnMobile ? "center" : "left")};
@@ -40,9 +40,8 @@ export const BackButton: React.FC<{
 }> = (props) => {
   return (
     <IconButton
-      variant="secondary"
       onClick={props.onClick}
-      style={props.style}
+      style={{ transform: "translateX(-25%)", ...props.style }}
       type="button"
     >
       <ChevronLeftIcon
@@ -58,15 +57,16 @@ export const BackButton: React.FC<{
 export const HelperLink = styled.a<{ theme?: Theme; md?: boolean }>`
   all: unset;
   cursor: pointer;
-  color: ${(p) => p.theme.link.primary};
+  color: ${(p) => p.theme.colors.accentText};
   font-size: ${(p) => (p.md ? fontSize.md : fontSize.sm)};
   text-decoration: none;
   display: block;
+  line-height: 1.5;
   ${media.mobile} {
     text-align: center;
   }
   &:hover {
-    color: ${(p) => p.theme.link.primaryHover};
+    color: ${(p) => p.theme.colors.primaryText};
     text-decoration: none;
   }
 `;

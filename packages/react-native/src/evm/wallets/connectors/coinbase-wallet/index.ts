@@ -4,7 +4,6 @@ import type {
   WalletMobileSDKProviderOptions,
 } from "@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider";
 import type { ConfigurationParams } from "@coinbase/wallet-mobile-sdk/src/CoinbaseWalletSDK.types";
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import {
   UserRejectedRequestError,
   ChainNotConfiguredError,
@@ -18,6 +17,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import type { Address } from "abitype";
 import { providers, utils } from "ethers";
+import { getValidPublicRPCUrl } from "../../../utils/uri";
 
 export type CoinbaseWalletConnectorOptions = WalletMobileSDKProviderOptions &
   ConfigurationParams & {
@@ -227,7 +227,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [getValidChainRPCs(chain)],
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

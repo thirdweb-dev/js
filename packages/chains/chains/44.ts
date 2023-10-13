@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Darwinia Crab Network",
   "chain": "crab",
-  "rpc": [
-    "https://darwinia-crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://crab-rpc.darwinia.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Crab Network Native Token",
-    "symbol": "CRAB",
-    "decimals": 18
-  },
-  "infoURL": "https://crab.network/",
-  "shortName": "crab",
   "chainId": 44,
-  "networkId": 44,
   "explorers": [
     {
       "name": "subscan",
@@ -23,6 +9,24 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "darwinia-crab-network"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://crab.network/",
+  "name": "Crab Network",
+  "nativeCurrency": {
+    "name": "Crab Network Native Token",
+    "symbol": "CRAB",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://crab-rpc.darwinia.network",
+    "https://crab-rpc.darwiniacommunitydao.xyz",
+    "https://crab.api.onfinality.io/public-ws",
+    "https://darwiniacrab-rpc.dwellir.com"
+  ],
+  "shortName": "crab",
+  "slug": "crab-network",
+  "testnet": false
 } as const satisfies Chain;

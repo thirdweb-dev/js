@@ -41,8 +41,11 @@ export function getChainProvider(
   // Add the chain to the supportedChains
   const options = SDKOptionsSchema.parse(sdkOptions);
   if (isChainConfig(network)) {
-    // @ts-expect-error - we know this is a chain and it will work to build the map
-    options.supportedChains = [network, ...options.supportedChains];
+    options.supportedChains = [
+      // @ts-expect-error - we know this is a chain and it will work to build the map
+      network,
+      ...options.supportedChains.filter((c) => c.chainId === network.chainId),
+    ];
   }
 
   // Build a map of chainId -> ChainInfo based on the supportedChains
@@ -105,10 +108,35 @@ export function getChainIdFromNetwork(
   );
 }
 
+export async function getChainIdOrName(
+  network: NetworkInput,
+): Promise<number | string> {
+  if (isChainConfig(network)) {
+    // If it's a chain just return the chain id
+    return network.chainId;
+  } else if (typeof network === "number") {
+    // If it's a number (chainId) return it directly
+    return network;
+  } else if (typeof network === "number") {
+    // If it's a string (chain name) return the chain id from the map
+    return network;
+  } else if (isProvider(network)) {
+    return network.getNetwork().then((n) => n.chainId);
+  } else if (isSigner(network)) {
+    if (!network.provider) {
+      throw new Error("Signer does not have a provider");
+    }
+    return network.provider.getNetwork().then((n) => n.chainId);
+  }
+  throw new Error(`Cannot resolve chainId from: ${network}.`);
+}
+
 /**
  * Check whether a NetworkInput value is a Chain config (naively, without parsing)
  */
-export function isChainConfig(network: NetworkInput): network is Chain {
+export function isChainConfig(
+  network: NetworkInput,
+): network is Chain | ChainInfo {
   return (
     typeof network !== "string" &&
     typeof network !== "number" &&
@@ -216,6 +244,14 @@ export function getProviderFromRpcUrl(
         authStrategy = "twAuthToken";
       }
 
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers["x-authorize-wallet"] = "true";
+      }
+
       const bundleId =
         typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
           ? ((globalThis as any).APP_BUNDLE_ID as string)
@@ -229,7 +265,9 @@ export function getProviderFromRpcUrl(
       headers["x-sdk-platform"] = bundleId
         ? "react-native"
         : isBrowser()
-        ? "browser"
+        ? (window as any).bridge !== undefined
+          ? "webGL"
+          : "browser"
         : "node";
     }
     const match = rpcUrl.match(/^(ws|http)s?:/i);

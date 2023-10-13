@@ -1,17 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Decimal Smart Chain Mainnet",
   "chain": "DSC",
-  "rpc": [
-    "https://decimal-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.decimalchain.com/web3/"
+  "chainId": 75,
+  "explorers": [
+    {
+      "name": "DSC Explorer Mainnet",
+      "url": "https://explorer.decimalchain.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Decimal",
-    "symbol": "DEL",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +18,29 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://decimalchain.com",
-  "shortName": "DSC",
-  "chainId": 75,
-  "networkId": 75,
   "icon": {
     "url": "ipfs://QmSgzwKnJJjys3Uq2aVVdwJ3NffLj3CXMVCph9uByTBegc",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "DSC Explorer Mainnet",
-      "url": "https://explorer.decimalchain.com",
-      "icon": {
-        "url": "ipfs://QmSgzwKnJJjys3Uq2aVVdwJ3NffLj3CXMVCph9uByTBegc",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://decimalchain.com",
+  "name": "Decimal Smart Chain Mainnet",
+  "nativeCurrency": {
+    "name": "Decimal",
+    "symbol": "DEL",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://decimal-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node.decimalchain.com/web3/",
+    "https://node1-mainnet.decimalchain.com/web3/",
+    "https://node2-mainnet.decimalchain.com/web3/",
+    "https://node3-mainnet.decimalchain.com/web3/",
+    "https://node4-mainnet.decimalchain.com/web3/"
   ],
-  "testnet": false,
-  "slug": "decimal-smart-chain"
+  "shortName": "DSC",
+  "slug": "decimal-smart-chain",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,15 +1,15 @@
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import React, { createContext, PropsWithChildren, useContext } from "react";
+import invariant from "tiny-invariant";
 
 interface ThirdwebConfigContext {
   chains: Chain[];
   clientId?: string;
 }
 
-const ThirdwebConfigContext =
-  /* @__PURE__ */ createContext<ThirdwebConfigContext>({
-    chains: defaultChains,
-  });
+export const ThirdwebConfigContext = /* @__PURE__ */ createContext<
+  ThirdwebConfigContext | undefined
+>(undefined);
 
 export const ThirdwebConfigProvider: React.FC<
   PropsWithChildren<{
@@ -22,5 +22,10 @@ export const ThirdwebConfigProvider: React.FC<
 );
 
 export function useThirdwebConfigContext() {
-  return useContext(ThirdwebConfigContext);
+  const context = useContext(ThirdwebConfigContext);
+  invariant(
+    context,
+    "useThirdwebConfigContext() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context;
 }

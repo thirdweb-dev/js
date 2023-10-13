@@ -29,11 +29,11 @@ export async function getCompositePluginABI(
       AbiSchema.parse(abi),
       "PluginRouter",
     );
-    const isExtensionRouter: boolean = isFeatureEnabled(
+    const isbaseRouter: boolean = isFeatureEnabled(
       AbiSchema.parse(abi),
-      "ExtensionRouter",
+      "DynamicContract",
     );
-    if (isExtensionRouter) {
+    if (isbaseRouter) {
       const contract = new ContractWrapper(
         provider,
         address,

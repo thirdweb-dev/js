@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ultron Testnet",
   "chain": "Ultron",
+  "chainId": 1230,
+  "explorers": [
+    {
+      "name": "Ultron Testnet Explorer",
+      "url": "https://explorer.ultron-dev.io",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
+  "features": [],
   "icon": {
-    "url": "ipfs://QmS4W4kY7XYBA4f52vuuytXh3YaTcNBXF14V9tEY6SNqhz",
+    "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "rpc": [
-    "https://ultron-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ultron-dev.io"
-  ],
-  "faucets": [],
+  "infoURL": "https://ultron.foundation",
+  "name": "Ultron Testnet",
   "nativeCurrency": {
     "name": "Ultron",
     "symbol": "ULX",
     "decimals": 18
   },
-  "infoURL": "https://ultron.foundation",
-  "shortName": "UltronTestnet",
-  "chainId": 1230,
-  "networkId": 1230,
-  "explorers": [
-    {
-      "name": "Ultron Testnet Explorer",
-      "url": "https://explorer.ultron-dev.io",
-      "icon": {
-        "url": "ipfs://QmS4W4kY7XYBA4f52vuuytXh3YaTcNBXF14V9tEY6SNqhz",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://ultron-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://ultron-dev.io"
   ],
-  "testnet": true,
-  "slug": "ultron-testnet"
+  "shortName": "UltronTestnet",
+  "slug": "ultron-testnet",
+  "testnet": true
 } as const satisfies Chain;

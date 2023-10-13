@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tomb Chain Mainnet",
   "chain": "Tomb Chain",
-  "rpc": [
-    "https://tomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.tombchain.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Tomb",
-    "symbol": "TOMB",
-    "decimals": 18
-  },
-  "infoURL": "https://tombchain.com/",
-  "shortName": "tombchain",
   "chainId": 6969,
-  "networkId": 6969,
   "explorers": [
     {
       "name": "tombscout",
@@ -23,15 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "parent": {
-    "type": "L2",
-    "chain": "eip155-250",
-    "bridges": [
-      {
-        "url": "https://lif3.com/bridge"
-      }
-    ]
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://tombchain.com/",
+  "name": "Tomb Chain Mainnet",
+  "nativeCurrency": {
+    "name": "Tomb",
+    "symbol": "TOMB",
+    "decimals": 18
   },
-  "testnet": false,
-  "slug": "tomb-chain"
+  "redFlags": [],
+  "rpc": [
+    "https://tomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.tombchain.com/"
+  ],
+  "shortName": "tombchain",
+  "slug": "tomb-chain",
+  "testnet": false
 } as const satisfies Chain;

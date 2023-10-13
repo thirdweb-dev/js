@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
-import { StyleSheet, View, FlatList } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { WalletButton } from "../../base/WalletButton";
 import Box from "../../base/Box";
 import { useTheme } from "@shopify/restyle";
@@ -11,29 +11,45 @@ interface ChooseWalletContentProps {
   onChooseWallet: (wallet: WalletConfig, data?: any) => void;
 }
 
+const MAX_HEIGHT = Dimensions.get("window").height * 0.3;
+
 export const ChooseWalletContent = ({
   wallets,
   excludeWalletIds,
   onChooseWallet,
 }: ChooseWalletContentProps) => {
-  const walletsToDisplay = useMemo(() => {
-    return wallets.filter(
-      (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
-    );
-  }, [wallets, excludeWalletIds]);
   const theme = useTheme();
 
+  const walletsToDisplay = useMemo(() => {
+    const filteredWallets = wallets.filter(
+      (w) => !!!excludeWalletIds?.find((ewId) => ewId === w.id),
+    );
+
+    const trueItems = filteredWallets.filter(
+      (item) => item.recommended === true,
+    );
+    const falseItems = filteredWallets.filter(
+      (item) => item.recommended !== true,
+    );
+    const sortedWallets = [...trueItems, ...falseItems];
+
+    return sortedWallets;
+  }, [wallets, excludeWalletIds]);
+
   return (
-    <View style={styles.explorerContainer}>
-      <FlatList
-        keyExtractor={(item) => item.meta.name}
-        data={walletsToDisplay}
-        renderItem={({ item, index }) => {
+    <View style={{ flexDirection: "column", maxHeight: MAX_HEIGHT }}>
+      <ScrollView
+        style={{
+          marginTop: 16,
+          paddingBottom: 16,
+          paddingHorizontal: 16,
+        }}
+      >
+        {walletsToDisplay.map((item, index) => {
           const marginBottom =
             index === walletsToDisplay.length - 1 ? "none" : "xxs";
-
           return (
-            <>
+            <Box key={item.id}>
               {item.selectUI ? (
                 <Box
                   mb={marginBottom}
@@ -43,6 +59,7 @@ export const ChooseWalletContent = ({
                   borderRadius="sm"
                 >
                   <item.selectUI
+                    modalSize="compact"
                     theme={theme}
                     supportedWallets={wallets}
                     onSelect={(data) => {
@@ -55,26 +72,16 @@ export const ChooseWalletContent = ({
                 <WalletButton
                   walletIconUrl={item.meta.iconURL}
                   name={item.meta.name}
+                  recommended={item.recommended}
                   onPress={() => onChooseWallet(item)}
                   mb={marginBottom}
+                  paddingVertical="xxs"
                 />
               )}
-            </>
+            </Box>
           );
-        }}
-      />
+        })}
+      </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  explorerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 4,
-    marginTop: 25,
-  },
-});

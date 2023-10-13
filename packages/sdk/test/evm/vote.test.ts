@@ -4,8 +4,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
 
-global.fetch = require("cross-fetch");
-
 describe("Vote Contract", async () => {
   let voteContract: Vote;
   let currencyContract: Token;

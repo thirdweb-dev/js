@@ -18,6 +18,7 @@ const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
       "https://api.mycryptoapi.com/eth",
       "https://cloudflare-eth.com",
       "https://ethereum.publicnode.com",
+      "https://mainnet.gateway.tenderly.co",
     ],
   ],
   [
@@ -27,6 +28,7 @@ const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
       "https://api.mycryptoapi.com/eth",
       "https://cloudflare-eth.com",
       "https://ethereum.publicnode.com",
+      "https://mainnet.gateway.tenderly.co",
     ],
   ],
   [
@@ -36,12 +38,17 @@ const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
       "https://api.mycryptoapi.com/eth",
       "https://cloudflare-eth.com",
       "https://ethereum.publicnode.com",
+      "https://mainnet.gateway.tenderly.co",
     ],
   ],
   // infura is supported for both http and ws
   [
     { mode: "ws", infuraApiKey: "SAMPLE_KEY" },
-    ["wss://mainnet.infura.io/ws/v3/SAMPLE_KEY"],
+    [
+      "wss://mainnet.infura.io/ws/v3/SAMPLE_KEY",
+      "wss://ethereum.publicnode.com",
+      "wss://mainnet.gateway.tenderly.co",
+    ],
   ],
 ];
 
@@ -53,12 +60,6 @@ describe("chains/utils", () => {
     },
   );
 
-  test("Should throw error if no processedRPCs (getChainRPCs(%p))", () => {
-    expect(() => {
-      getChainRPCs(Ethereum, { mode: "ws" });
-    }).toThrowError('No RPC available for chainId "1" with mode ws');
-  });
-
   test.each([
     [
       undefined,
@@ -68,6 +69,7 @@ describe("chains/utils", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
     [
@@ -78,6 +80,7 @@ describe("chains/utils", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
     [
@@ -88,6 +91,7 @@ describe("chains/utils", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
     [
@@ -98,23 +102,12 @@ describe("chains/utils", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
   ])("getValidChainRPCs(Ethereum, %s, %s) = %p", (clientId, mode, expected) => {
     expect(getValidChainRPCs(Ethereum, clientId, mode)).toEqual(expected);
   });
-
-  test.each([
-    [undefined, "ws"],
-    ["SAMPLE_CLIENT_KEY", "ws"],
-  ])(
-    "Should throw error if no processedRPCs (getValidChainRPCs(Ethereum, %s, %s))",
-    (clientId, mode) => {
-      expect(() => {
-        getValidChainRPCs(Ethereum, clientId, mode);
-      }).toThrowError('No RPC available for chainId "1" with mode ws');
-    },
-  );
 
   test.each(CHAIN_RPC_TEST_CASES)(
     "getChainRPC(%p) = %p",
@@ -174,6 +167,7 @@ describe("chains/utils", () => {
           "https://api.mycryptoapi.com/eth",
           "https://cloudflare-eth.com",
           "https://ethereum.publicnode.com",
+          "https://mainnet.gateway.tenderly.co",
         ],
       },
     ],
@@ -187,6 +181,7 @@ describe("chains/utils", () => {
           "https://api.mycryptoapi.com/eth",
           "https://cloudflare-eth.com",
           "https://ethereum.publicnode.com",
+          "https://mainnet.gateway.tenderly.co",
         ],
       },
     ],
@@ -210,6 +205,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
     [
@@ -220,6 +216,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
     [
@@ -230,6 +227,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
     [
@@ -240,6 +238,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
         "https://api.mycryptoapi.com/eth",
         "https://cloudflare-eth.com",
         "https://ethereum.publicnode.com",
+        "https://mainnet.gateway.tenderly.co",
       ],
     ],
   ])("getValidChainRPCs(Ethereum, %s, %s) = %p", (clientId, mode, expected) => {
@@ -257,6 +256,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
           "https://api.mycryptoapi.com/eth",
           "https://cloudflare-eth.com",
           "https://ethereum.publicnode.com",
+          "https://mainnet.gateway.tenderly.co",
         ],
       },
     ],
@@ -270,6 +270,7 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
           "https://api.mycryptoapi.com/eth",
           "https://cloudflare-eth.com",
           "https://ethereum.publicnode.com",
+          "https://mainnet.gateway.tenderly.co",
         ],
       },
     ],

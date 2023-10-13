@@ -1,27 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SeedCoin-Network",
-  "chain": "SeedCoin-Network",
-  "rpc": [
-    "https://seedcoin-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.seedcoin.network"
+  "chain": "XPLA",
+  "chainId": 37,
+  "explorers": [
+    {
+      "name": "XPLA Explorer",
+      "url": "https://explorer.xpla.io",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "SeedCoin",
-    "symbol": "SEED",
-    "decimals": 18
-  },
-  "infoURL": "https://www.seedcoin.network/",
-  "shortName": "SEED",
+  "features": [],
   "icon": {
-    "url": "ipfs://QmSchLvCCZjBzcv5n22v1oFDAc2yHJ42NERyjZeL9hBgrh",
-    "width": 64,
-    "height": 64,
+    "url": "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
+    "width": 512,
+    "height": 512,
     "format": "png"
   },
-  "chainId": 37,
-  "networkId": 37,
-  "testnet": false,
-  "slug": "seedcoin-network"
+  "infoURL": "https://xpla.io/",
+  "name": "Xpla Mainnet",
+  "nativeCurrency": {
+    "name": "XPLA",
+    "symbol": "XPLA",
+    "decimals": 18
+  },
+  "redFlags": [
+    "reusedChainId"
+  ],
+  "rpc": [
+    "https://xpla.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://dimension-evm-rpc.xpla.dev"
+  ],
+  "shortName": "xpla",
+  "slug": "xpla",
+  "testnet": false
 } as const satisfies Chain;

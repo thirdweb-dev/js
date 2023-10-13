@@ -5,17 +5,21 @@ import {
 } from "../schema/contracts/custom";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 
+const CONTRACT_METADATA_TIMEOUT_SEC = 2;
+
 /**
  * @internal
  * @param compilerMetadataUri
  * @param storage
  */
-
 export async function fetchContractMetadata(
   compilerMetadataUri: string,
   storage: ThirdwebStorage,
 ): Promise<PublishedMetadata> {
-  const metadata = await storage.downloadJSON(compilerMetadataUri);
+  // short timeout to avoid hanging on unpinned contract metadata CIDs
+  const metadata = await storage.downloadJSON(compilerMetadataUri, {
+    timeoutInSeconds: CONTRACT_METADATA_TIMEOUT_SEC,
+  });
   if (!metadata || !metadata.output) {
     throw new Error(
       `Could not resolve metadata for contract at ${compilerMetadataUri}`,

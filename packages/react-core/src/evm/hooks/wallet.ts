@@ -1,10 +1,14 @@
-import { useThirdwebConnectedWalletContext } from "../contexts/thirdweb-wallet";
+import invariant from "tiny-invariant";
+import {
+  ThirdwebConnectedWalletContext,
+  useThirdwebConnectedWalletContext,
+} from "../contexts/thirdweb-wallet";
 import { ContractAddress } from "../types";
 import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 
 /**
  * A hook to get the native or (optional) ERC20 token balance of the connected wallet.
@@ -40,7 +44,12 @@ export function useBalance(tokenAddress?: ContractAddress) {
  * @internal
  */
 export function useConnectedWallet() {
-  return useThirdwebConnectedWalletContext().wallet;
+  const context = useContext(ThirdwebConnectedWalletContext);
+  invariant(
+    context,
+    "useConnectedWallet() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context.signer;
 }
 
 /**
@@ -71,7 +80,12 @@ export function useConnectedWallet() {
  * @public
  */
 export function useAddress(): string | undefined {
-  return useThirdwebConnectedWalletContext().address;
+  const context = useContext(ThirdwebConnectedWalletContext);
+  invariant(
+    context,
+    "useAddress() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context.address;
 }
 
 /**
@@ -96,7 +110,12 @@ export function useAddress(): string | undefined {
  * @public
  */
 export function useChainId(): number | undefined {
-  return useThirdwebConnectedWalletContext().chainId;
+  const context = useContext(ThirdwebConnectedWalletContext);
+  invariant(
+    context,
+    "useChainId() hook must be used within a <ThirdwebProvider/>",
+  );
+  return context.chainId;
 }
 
 /**

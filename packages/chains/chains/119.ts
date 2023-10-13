@@ -1,41 +1,36 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ENULS Mainnet",
   "chain": "ENULS",
-  "rpc": [
-    "https://enuls.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evmapi.nuls.io",
-    "https://evmapi2.nuls.io"
+  "chainId": 119,
+  "explorers": [
+    {
+      "name": "enulsscan",
+      "url": "https://evmscan.nuls.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "NULS",
-    "symbol": "NULS",
-    "decimals": 18
-  },
-  "infoURL": "https://nuls.io",
-  "shortName": "enuls",
-  "chainId": 119,
-  "networkId": 119,
+  "features": [],
   "icon": {
     "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
     "width": 26,
     "height": 41,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "enulsscan",
-      "url": "https://evmscan.nuls.io",
-      "icon": {
-        "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
-        "width": 26,
-        "height": 41,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://nuls.io",
+  "name": "ENULS Mainnet",
+  "nativeCurrency": {
+    "name": "NULS",
+    "symbol": "NULS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://enuls.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evmapi.nuls.io",
+    "https://evmapi2.nuls.io"
   ],
-  "testnet": false,
-  "slug": "enuls"
+  "shortName": "enuls",
+  "slug": "enuls",
+  "testnet": false
 } as const satisfies Chain;

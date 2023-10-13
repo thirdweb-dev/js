@@ -1,23 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MathChain Testnet",
   "chain": "MATH",
-  "rpc": [
-    "https://mathchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://galois-hk.maiziqianbao.net/rpc"
-  ],
+  "chainId": 1140,
+  "explorers": [],
   "faucets": [
     "https://scan.boka.network/#/Galois/faucet"
   ],
+  "features": [],
+  "infoURL": "https://mathchain.org",
+  "name": "MathChain Testnet",
   "nativeCurrency": {
     "name": "MathChain",
     "symbol": "MATH",
     "decimals": 18
   },
-  "infoURL": "https://mathchain.org",
+  "redFlags": [],
+  "rpc": [
+    "https://mathchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://galois-hk.maiziqianbao.net/rpc"
+  ],
   "shortName": "tMATH",
-  "chainId": 1140,
-  "networkId": 1140,
-  "testnet": true,
-  "slug": "mathchain-testnet"
+  "slug": "mathchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -58,11 +58,25 @@ import {
   DirectListingsLogic__factory,
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
+  Forwarder__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, ContractInterface, ethers } from "ethers";
 import hardhat from "hardhat";
-import { generatePluginFunctions } from "../../src/evm/common/plugin/generatePluginFunctions";
+import {
+  generateExtensionFunctions,
+  generatePluginFunctions,
+} from "../../src/evm/common/plugin/generatePluginFunctions";
+import { mockUploadMetadataWithBytecode } from "./utils";
+import {
+  bytecode as TWCloneFactoryBytecode,
+  abi as TWCloneFactoryAbi,
+} from "./metadata/TWCloneFactory";
+import {
+  Extension,
+  ExtensionFunction,
+  ExtensionMetadata,
+} from "../../src/evm/types/extensions";
 
 // it's there, trust me bro
 const hardhatEthers = (hardhat as any).ethers;
@@ -131,6 +145,8 @@ export const mochaHooks = {
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
+
+    await uploadAutoFactoryInfra();
 
     const mock_weth_deployer = new ethers.ContractFactory(
       weth.abi,
@@ -351,48 +367,68 @@ async function setupMultichainRegistry(
 
 // Setup marketplace-v3 for tests
 async function setupMarketplaceV3(): Promise<string> {
+  let extensions: Extension[] = [];
+
   // Direct Listings
-  const directListingsPluginAddress = await deployContractAndUploadMetadata(
+  const directListingsExtensionAddress = await deployContractAndUploadMetadata(
     DirectListingsLogic__factory.abi,
     DirectListingsLogic__factory.bytecode,
     signer,
     [mock_weth_address],
   );
-  const pluginsDirectListings: Plugin[] = generatePluginFunctions(
-    directListingsPluginAddress,
-    AbiSchema.parse(DirectListingsLogic__factory.abi),
-  );
+  const directListingsFunctions: ExtensionFunction[] =
+    generateExtensionFunctions(
+      AbiSchema.parse(DirectListingsLogic__factory.abi),
+    );
+  const directListingsExtensionMetadata: ExtensionMetadata = {
+    name: "DirectListingsLogic",
+    metadataURI: "",
+    implementation: directListingsExtensionAddress,
+  };
+  extensions.push({
+    metadata: directListingsExtensionMetadata,
+    functions: directListingsFunctions,
+  });
 
   // English Auctions
-  const englishAuctionPluginAddress = await deployContractAndUploadMetadata(
+  const englishAuctionExtensionAddress = await deployContractAndUploadMetadata(
     EnglishAuctionsLogic__factory.abi,
     EnglishAuctionsLogic__factory.bytecode,
     signer,
     [mock_weth_address],
   );
-  const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
-    englishAuctionPluginAddress,
-    AbiSchema.parse(EnglishAuctionsLogic__factory.abi),
-  );
+  const englishAuctionsFunctions: ExtensionFunction[] =
+    generateExtensionFunctions(
+      AbiSchema.parse(EnglishAuctionsLogic__factory.abi),
+    );
+  const englishAuctionsExtensionMetadata: ExtensionMetadata = {
+    name: "EnglishAuctionsLogic",
+    metadataURI: "",
+    implementation: englishAuctionExtensionAddress,
+  };
+  extensions.push({
+    metadata: englishAuctionsExtensionMetadata,
+    functions: englishAuctionsFunctions,
+  });
 
   // Offers
-  const offersLogicPluginAddress = await deployContractAndUploadMetadata(
+  const offersLogicExtensionAddress = await deployContractAndUploadMetadata(
     OffersLogic__factory.abi,
     OffersLogic__factory.bytecode,
     signer,
   );
-  const pluginsOffers: Plugin[] = generatePluginFunctions(
-    offersLogicPluginAddress,
+  const offersFunctions: ExtensionFunction[] = generateExtensionFunctions(
     AbiSchema.parse(OffersLogic__factory.abi),
   );
-
-  // Map
-  const pluginMapAddress = await deployContractAndUploadMetadata(
-    PluginMap__factory.abi,
-    PluginMap__factory.bytecode,
-    signer,
-    [[...pluginsDirectListings, ...pluginsEnglishAuctions, ...pluginsOffers]],
-  );
+  const offersExtensionMetadata: ExtensionMetadata = {
+    name: "OffersLogic",
+    metadataURI: "",
+    implementation: offersLogicExtensionAddress,
+  };
+  extensions.push({
+    metadata: offersExtensionMetadata,
+    functions: offersFunctions,
+  });
 
   // Router
   const royaltyEngineAddress = constants.AddressZero;
@@ -400,10 +436,54 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.abi,
     MarketplaceV3__factory.bytecode,
     signer,
-    [pluginMapAddress, royaltyEngineAddress],
+    [
+      {
+        extensions: extensions,
+        royaltyEngineAddress: royaltyEngineAddress,
+        nativeTokenWrapper: mock_weth_address,
+      },
+    ],
     "MarketplaceV3",
   );
   return marketplaceV3Address;
+}
+
+async function uploadAutoFactoryInfra() {
+  // mock upload Forwarder
+  await mockUploadMetadataWithBytecode(
+    "Forwarder",
+    Forwarder__factory.abi,
+    Forwarder__factory.bytecode,
+    "",
+    {
+      ...extendedMetadataMock,
+      deployType: "standard",
+      networksForDeployment: {
+        allNetworks: true,
+        networksEnabled: [],
+      },
+    },
+    "ipfs://Qmcu8FaqerUvQYb4qPg7PwkXa6dRtEe45LedLJPN42Jwqe/0",
+    // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
+  );
+
+  // mock upload TWCloneFactory
+  await mockUploadMetadataWithBytecode(
+    "Forwarder",
+    TWCloneFactoryAbi,
+    TWCloneFactoryBytecode,
+    "",
+    {
+      ...extendedMetadataMock,
+      deployType: "standard",
+      networksForDeployment: {
+        allNetworks: true,
+        networksEnabled: [],
+      },
+    },
+    "ipfs://QmYfw13Zykqf9jAmJobNgYrEpatEF9waWcQPUHvJ7sctRb/0",
+    // ^ we use actual publish uri as mock uri here, because this contract's uri is fetched from publisher by contractName
+  );
 }
 
 export {
@@ -417,5 +497,5 @@ export {
   implementations,
   hardhatEthers,
   thirdwebFactory,
-  extendedMetadataMock
+  extendedMetadataMock,
 };

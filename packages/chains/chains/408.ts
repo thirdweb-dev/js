@@ -1,24 +1,28 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Omega Mainnet",
   "chain": "OmegaNetwork",
-  "shortName": "OmegaNetwork",
   "chainId": 408,
-  "testnet": false,
+  "explorers": [],
+  "faucets": [],
+  "features": [],
   "icon": {
-    "format": "png",
     "url": "ipfs://bafkreig676zxfhwhcx5bvvvjxedx6ftr2wq4iiznrwm3c6ozrprbc4oxwm",
+    "width": 512,
     "height": 512,
-    "width": 512
+    "format": "png"
   },
-  "rpc": [
-    "https://omega.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.omtch.com"
-  ],
+  "name": "Omega Mainnet",
   "nativeCurrency": {
     "name": "Omega Network Coin",
     "symbol": "OMN",
     "decimals": 18
   },
-  "slug": "omega"
+  "redFlags": [],
+  "rpc": [
+    "https://omega.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.omtch.com"
+  ],
+  "shortName": "OmegaNetwork",
+  "slug": "omega",
+  "testnet": false
 } as const satisfies Chain;

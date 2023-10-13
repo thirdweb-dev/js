@@ -205,7 +205,10 @@ export {
 // account
 export {
   useAccountSigners,
-  useSetAccountSigners,
+  useAddAdmin,
+  useRemoveAdmin,
+  useCreateSessionKey,
+  useRevokeSessionKey,
   useAccountAdmins,
   useAccountAdminsAndSigners,
 } from "./hooks/async/account";
@@ -245,11 +248,15 @@ export { useSigner } from "./hooks/useSigner";
 export { useSupportedChains } from "./hooks/useSupportedChains";
 export { useSupportedWallet } from "./hooks/useSupportedWallet";
 export { useAppURI, useSetAppURI } from "./hooks/async/app";
+export { useENS } from "./hooks/useENS";
 
 // sdk provider
 export { ThirdwebSDKProvider } from "./providers/thirdweb-sdk-provider";
 export { useSDK, useSDKChainId } from "./hooks/useSDK";
 export type { ThirdwebSDKProviderProps } from "./providers/types";
+
+// utils
+export { invalidateContractAndBalances } from "./utils/cache-keys";
 
 // types
 export type {

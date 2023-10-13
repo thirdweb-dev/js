@@ -69,9 +69,9 @@ export async function upload(
     );
     try {
       uri = await storage.upload(file, { uploadWithoutDirectory: true });
-    } catch (err) {
+    } catch (err: any) {
       spin.fail("Failed to upload file to IPFS.");
-      return Promise.reject(err);
+      return Promise.reject(err.message ? err.message : err);
     }
     spin.succeed("Successfully uploaded file to IPFS.");
   } else {

@@ -13,8 +13,9 @@ import {
 } from "../../../lib/wagmi-core";
 import { assertWindowEthereum } from "../../utils/assertWindowEthereum";
 import { getInjectedName } from "../../utils/getInjectedName";
+import { getValidPublicRPCUrl } from "../../utils/url";
 import { Ethereum } from "./types";
-import type { Chain } from "@thirdweb-dev/chains";
+import { type Chain } from "@thirdweb-dev/chains";
 import { utils, providers } from "ethers";
 
 export type InjectedConnectorOptions = {
@@ -348,7 +349,7 @@ export class InjectedConnector extends WagmiConnector<
                 chainId: chainIdHex,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: chain.rpc as string[],
+                rpcUrls: getValidPublicRPCUrl(chain), // no client id on purpose here
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

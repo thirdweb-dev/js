@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { ModalState } from "../utils/modalTypes";
 import { ThemeProviderProps } from "../styles/ThemeProvider";
-import { Theme, darkTheme, lightTheme } from "../styles/theme";
+import { Theme, _darkTheme, _lightTheme } from "../styles/theme";
 import { useAppTheme } from "../styles/hooks";
 import { useTheme } from "@shopify/restyle";
 import { PropsWithChildren } from "react";
@@ -22,7 +22,7 @@ const UIContext = createContext<UIContextType>({
     caller: "init",
   },
   setModalState: () => undefined,
-  theme: darkTheme(),
+  theme: "light",
   setTheme: () => undefined,
 });
 
@@ -65,9 +65,9 @@ export const useModalState = (): {
 
 const getThemeObj = (theme?: ThemeProviderProps["theme"]) => {
   if (theme === "dark" || !theme) {
-    return darkTheme();
+    return _darkTheme;
   } else if (theme === "light") {
-    return lightTheme();
+    return _lightTheme;
   } else {
     return theme;
   }
@@ -78,7 +78,7 @@ export const useGlobalTheme = (theme?: ThemeProviderProps["theme"]): Theme => {
   const appTheme = useTheme();
 
   const resultTheme = useMemo(() => {
-    const resp = getThemeObj(theme) || getThemeObj(context.theme) || appTheme;
+    const resp = getThemeObj(context.theme) || getThemeObj(theme) || appTheme;
     return resp;
   }, [theme, context, appTheme]);
 

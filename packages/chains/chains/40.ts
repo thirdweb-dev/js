@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Telos EVM Mainnet",
   "chain": "TLOS",
-  "rpc": [
-    "https://telos-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.telos.net/evm"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Telos",
-    "symbol": "TLOS",
-    "decimals": 18
-  },
-  "infoURL": "https://telos.net",
-  "shortName": "TelosEVM",
   "chainId": 40,
-  "networkId": 40,
   "explorers": [
     {
       "name": "teloscan",
@@ -23,12 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmdkgQDtDedsNNth3ZVgWfwRZPCePLA13MtLvV4CEYSuTR/TLOS.png",
-    "format": "png",
     "width": 228,
-    "height": 228
+    "height": 228,
+    "format": "png"
   },
-  "testnet": false,
-  "slug": "telos-evm"
+  "infoURL": "https://telos.net",
+  "name": "Telos EVM Mainnet",
+  "nativeCurrency": {
+    "name": "Telos",
+    "symbol": "TLOS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://telos-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.telos.net/evm"
+  ],
+  "shortName": "TelosEVM",
+  "slug": "telos-evm",
+  "testnet": false
 } as const satisfies Chain;

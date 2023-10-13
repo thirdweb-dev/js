@@ -1,8 +1,24 @@
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  BaseContract,
+  BigNumber,
+  Contract,
+  ContractTransaction,
+  constants,
+  utils,
+  type BytesLike,
+  type CallOverrides,
+  type ContractFunction,
+  type ContractInterface,
+  type Signer,
+  type providers,
+} from "ethers";
+import invariant from "tiny-invariant";
 import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";
-import { parseRevertReason, TransactionError } from "../../common/error";
+import { TransactionError, parseRevertReason } from "../../common/error";
 import { extractFunctionsFromAbi } from "../../common/feature-detection/extractFunctionsFromAbi";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
@@ -10,16 +26,17 @@ import {
   ForwardRequest,
   getAndIncrementNonce,
 } from "../../common/forwarder";
-import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { getDefaultGasOverrides } from "../../common/gas-price";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
-import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains/ChainId";
+import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
+import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 import { EventType } from "../../constants/events";
-import { Address } from "../../schema/shared/Address";
-import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { CallOverrideSchema } from "../../schema/shared/CallOverrideSchema";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -27,26 +44,6 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import fetch from "cross-fetch";
-import {
-  BaseContract,
-  BigNumber,
-  type BytesLike,
-  type CallOverrides,
-  Contract,
-  type ContractInterface,
-  type ContractTransaction,
-  utils,
-  type ContractFunction,
-  type providers,
-  type Signer,
-  constants,
-} from "ethers";
-import invariant from "tiny-invariant";
-import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
-import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
 
 /**
  * @internal
@@ -63,6 +60,7 @@ export class ContractWrapper<
   public writeContract;
   public readContract;
   public abi;
+  public address;
 
   constructor(
     network: NetworkInput,
@@ -73,6 +71,7 @@ export class ContractWrapper<
   ) {
     super(network, options);
     this.abi = contractAbi;
+    this.address = contractAddress;
     // set up the contract
     this.writeContract = new Contract(
       contractAddress,
@@ -97,6 +96,22 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
+  }
+
+  public updateAbi(updatedAbi: ContractInterface): void {
+    // re-connect the contract with the new signer / provider
+    this.writeContract = new Contract(
+      this.address,
+      updatedAbi,
+      this.getSignerOrProvider(),
+    ) as TContract;
+
+    // setup the read only contract
+    this.readContract = this.writeContract.connect(
+      this.getProvider(),
+    ) as TContract;
+
+    this.abi = AbiSchema.parse(updatedAbi);
   }
 
   /**
@@ -131,105 +146,7 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
-    if (isBrowser()) {
-      // When running in the browser, let the wallet suggest gas estimates
-      // this means that the gas speed preferences set in the SDK options are ignored in a browser context
-      // but it also allows users to select their own gas speed prefs per tx from their wallet directly
-      return {};
-    }
-    const feeData = await this.getProvider().getFeeData();
-    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
-    if (supports1559) {
-      const chainId = await this.getChainID();
-      const block = await this.getProvider().getBlock("latest");
-      const baseBlockFee =
-        block && block.baseFeePerGas
-          ? block.baseFeePerGas
-          : utils.parseUnits("1", "gwei");
-      let defaultPriorityFee: BigNumber;
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
-        // for polygon, get fee data from gas station
-        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
-      } else {
-        // otherwise get it from ethers
-        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
-      }
-      // then add additional fee based on user preferences
-      const maxPriorityFeePerGas =
-        this.getPreferredPriorityFee(defaultPriorityFee);
-      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-      const baseMaxFeePerGas = baseBlockFee.mul(2);
-      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-      };
-    } else {
-      return {
-        gasPrice: await this.getPreferredGasPrice(),
-      };
-    }
-  }
-
-  /**
-   * Calculates the priority fee per gas according to user preferences
-   * @param defaultPriorityFeePerGas - the base priority fee
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const speed = this.options.gasSettings.speed;
-    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
-    let extraTip;
-    switch (speed) {
-      case "standard":
-        extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
-        break;
-      case "fast":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 5% - 2.625 gwei / 32.5 gwei
-        break;
-      case "fastest":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34.1 gwei
-        break;
-    }
-    let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
-    const min = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-    if (txGasPrice.gt(max)) {
-      txGasPrice = max;
-    }
-    if (txGasPrice.lt(min)) {
-      txGasPrice = min;
-    }
-    return txGasPrice;
-  }
-
-  /**
-   * Calculates the gas price for transactions according to user preferences
-   */
-  public async getPreferredGasPrice(): Promise<BigNumber> {
-    const gasPrice = await this.getProvider().getGasPrice();
-    const speed = this.options.gasSettings.speed;
-    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
-    let txGasPrice = gasPrice;
-    let extraTip;
-    switch (speed) {
-      case "standard":
-        extraTip = BigNumber.from(1); // min 1 wei
-        break;
-      case "fast":
-        extraTip = gasPrice.div(100).mul(5); // + 5%
-        break;
-      case "fastest":
-        extraTip = gasPrice.div(100).mul(10); // + 10%
-        break;
-    }
-    txGasPrice = txGasPrice.add(extraTip);
-    const max = utils.parseUnits(maxGasPrice.toString(), "gwei");
-    if (txGasPrice.gt(max)) {
-      txGasPrice = max;
-    }
-    return txGasPrice;
+    return getDefaultGasOverrides(this.getProvider());
   }
 
   /**
@@ -269,6 +186,74 @@ export class ContractWrapper<
    */
   public withTransactionOverride(hook: () => CallOverrides) {
     this.customOverrides = hook;
+  }
+
+  /**
+   *
+   * @param functionName The function name on the contract to call
+   * @param args The arguments to be passed to the functionName
+   * @returns The return value of the function call
+   */
+  public async read<
+    OverrideContract extends BaseContract = TContract,
+    FnName extends
+      keyof OverrideContract["functions"] = keyof OverrideContract["functions"],
+    Param extends Parameters<
+      OverrideContract["functions"][FnName]
+    > = Parameters<OverrideContract["functions"][FnName]>,
+  >(
+    functionName: FnName,
+    args: Param,
+  ): Promise<
+    Awaited<ReturnType<OverrideContract["functions"][FnName]>> extends {
+      length: 1;
+    }
+      ? Awaited<ReturnType<OverrideContract["functions"][FnName]>>[0]
+      : Awaited<ReturnType<OverrideContract["functions"][FnName]>>
+  > {
+    const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
+      (f) => f.name === functionName,
+    );
+
+    if (!functions.length) {
+      throw new Error(
+        `Function "${functionName.toString()}" not found in contract. Check your dashboard for the list of functions available`,
+      );
+    }
+    const fn = functions.find(
+      (f) => f.name === functionName && f.inputs.length === args.length,
+    );
+
+    // TODO extract this and re-use for deploy function to check constructor args
+    if (!fn) {
+      throw new Error(
+        `Function "${functionName.toString()}" requires ${
+          functions[0].inputs.length
+        } arguments, but ${
+          args.length
+        } were provided.\nExpected function signature: ${
+          functions[0].signature
+        }`,
+      );
+    }
+
+    const ethersFnName = `${functionName.toString()}(${fn.inputs
+      .map((i) => i.type)
+      .join()})`;
+
+    // check if the function exists on the contract, otherwise use the name passed in
+    const fnName =
+      ethersFnName in this.readContract.functions ? ethersFnName : functionName;
+
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
+      // read function
+      const result = await (this.readContract as any)[fnName.toString()](
+        ...args,
+      );
+      return result;
+    }
+
+    throw new Error("Cannot call a write function with read()");
   }
 
   /**
@@ -367,9 +352,7 @@ export class ContractWrapper<
     } else {
       // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
       if (!this.isValidContract) {
-        const code = await this.getProvider().getCode(
-          this.readContract.address,
-        );
+        const code = await this.getProvider().getCode(this.address);
         this.isValidContract = code !== "0x";
         if (!this.isValidContract) {
           throw new Error(
@@ -444,21 +427,6 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (err) {
-      const from = await (callOverrides.from || this.getSignerAddress());
-      const value = await (callOverrides.value ? callOverrides.value : 0);
-      const balance = await this.getProvider().getBalance(from);
-
-      if (balance.eq(0) || (value && balance.lt(value))) {
-        throw await this.formatError(
-          new Error(
-            "You have insufficient funds in your account to execute this transaction.",
-          ),
-          fn,
-          args,
-          callOverrides,
-        );
-      }
-
       throw await this.formatError(err, fn, args, callOverrides);
     }
   }
@@ -476,7 +444,7 @@ export class ContractWrapper<
     // Get metadata for transaction to populate into error
     const network = await provider.getNetwork();
     const from = await (callOverrides.from || this.getSignerAddress());
-    const to = this.readContract.address;
+    const to = this.address;
     const data = this.readContract.interface.encodeFunctionData(
       fn as string,
       args,
@@ -516,9 +484,10 @@ export class ContractWrapper<
     let contractName: string | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
-        this.readContract.address,
+        this.address,
         this.getProvider(),
         this.storage,
+        this.options,
       );
 
       if (metadata.name) {
@@ -796,11 +765,23 @@ export class ContractWrapper<
         ? CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
           ].openzeppelinForwarderEOA ||
-          (await computeEOAForwarderAddress(this.getProvider(), this.storage))
+          (await computeEOAForwarderAddress(
+            this.getProvider(),
+            this.storage,
+            "",
+            this.options.clientId,
+            this.options.secretKey,
+          ))
         : CONTRACT_ADDRESSES[
             transaction.chainId as keyof typeof CONTRACT_ADDRESSES
           ].openzeppelinForwarder ||
-          (await computeForwarderAddress(this.getProvider(), this.storage)));
+          (await computeForwarderAddress(
+            this.getProvider(),
+            this.storage,
+            "",
+            this.options.clientId,
+            this.options.secretKey,
+          )));
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -875,7 +856,7 @@ export class ContractWrapper<
       const { r, s, v } = utils.splitSignature(sig);
 
       message = {
-        to: this.readContract.address,
+        to: this.address,
         owner: permit.owner,
         spender: permit.spender,
         value: BigNumber.from(permit.value).toString(),

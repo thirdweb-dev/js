@@ -1,5 +1,92 @@
 # @thirdweb-dev/react-native-compat
 
+## 0.3.7
+
+## 0.3.6
+
+## 0.3.5
+
+## 0.3.4
+
+## 0.3.3
+
+## 0.3.2
+
+## 0.3.1
+
+## 0.3.0
+
+### Patch Changes
+
+- [#1561](https://github.com/thirdweb-dev/js/pull/1561) [`5dc372fc`](https://github.com/thirdweb-dev/js/commit/5dc372fc460beced53fdaa3a62c780c1163bcdf2) Thanks [@iketw](https://github.com/iketw)! - Adds EmbeddedWallet (email) to React Native
+
+  You can now do:
+
+  ```javascript
+  import { ThirdwebProvider, embeddedWallet } from "@thirdweb-dev/react-native";
+
+  <ThirdwebProvider
+    clientId="your-client-id"
+    supportedWallets={[embeddedWallet()]}
+  >
+    <App />
+  </ThirdwebProvider>;
+  ```
+
+  To use the `embeddedWallet` you need to add the following dependencies to your project:
+
+  - `"amazon-cognito-identity-js": "^6.3.3"`
+  - react-native-quick-base64
+  - react-native-quick-crypto
+
+    - There's an open issue on RN > 0.72: https://github.com/margelo/react-native-quick-crypto/issues/186 which you can [fix by](https://github.com/margelo/react-native-quick-crypto/issues/186#issuecomment-1663666739) adding the following to your `android/app/build.gradle` file:
+
+      ```
+      packagingOptions {
+          pickFirst 'lib/x86/libcrypto.so'
+          pickFirst 'lib/x86_64/libcrypto.so'
+          pickFirst 'lib/armeabi-v7a/libcrypto.so'
+          pickFirst 'lib/arm64-v8a/libcrypto.so'
+      }
+      ```
+
+    - When building the iOS app in release mode for RN 0.71 you need to enable the OpenSSL framework in XCode. There are several solutions for this here:
+      - https://github.com/margelo/react-native-quick-crypto/issues/121#issuecomment-1369924076
+      - https://github.com/margelo/react-native-quick-crypto/issues/121#issuecomment-1537576444
+
+  - react-native-aes-gcm-crypto
+    - This package requires minSdkVersion = 26 on Android
+
+## 0.2.62
+
+## 0.2.61
+
+## 0.2.60
+
+## 0.2.59
+
+## 0.2.58
+
+## 0.2.57
+
+## 0.2.56
+
+## 0.2.55
+
+## 0.2.54
+
+## 0.2.53
+
+## 0.2.52
+
+## 0.2.51
+
+## 0.2.50
+
+## 0.2.49
+
+## 0.2.48
+
 ## 0.2.47
 
 ## 0.2.46

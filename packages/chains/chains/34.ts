@@ -1,29 +1,31 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Dithereum Testnet",
   "chain": "DTH",
+  "chainId": 34,
+  "explorers": [],
+  "faucets": [
+    "https://faucet.dithereum.org"
+  ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmSHN5GtRGpMMpszSn1hF47ZSLRLqrLxWsQ48YYdJPyjLf",
     "width": 500,
     "height": 500,
     "format": "png"
   },
-  "rpc": [
-    "https://dithereum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node-testnet.dithereum.io"
-  ],
-  "faucets": [
-    "https://faucet.dithereum.org"
-  ],
+  "infoURL": "https://dithereum.org",
+  "name": "Dithereum Testnet",
   "nativeCurrency": {
     "name": "Dither",
     "symbol": "DTH",
     "decimals": 18
   },
-  "infoURL": "https://dithereum.org",
+  "redFlags": [],
+  "rpc": [
+    "https://dithereum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node-testnet.dithereum.io"
+  ],
   "shortName": "dth",
-  "chainId": 34,
-  "networkId": 34,
-  "testnet": true,
-  "slug": "dithereum-testnet"
+  "slug": "dithereum-testnet",
+  "testnet": true
 } as const satisfies Chain;

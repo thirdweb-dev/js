@@ -1,10 +1,8 @@
 import { TransactionError, parseRevertReason } from "../../common/error";
-import { getPolygonGasPriorityFee } from "../../common/gas-price";
+import { getDefaultGasOverrides, getGasPrice } from "../../common/gas-price";
 import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 import { isRouterContract } from "../../common/plugin/isRouterContract";
-import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants/chains/ChainId";
 import { ContractSource } from "../../schema/contracts/custom";
 import { SDKOptionsOutput } from "../../schema/sdk-options";
 import type {
@@ -44,7 +42,6 @@ import {
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
-import fetch from "cross-fetch";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
@@ -191,8 +188,10 @@ abstract class TransactionContext {
    * Estimate the total gas cost of this transaction (in both ether and wei)
    */
   public async estimateGasCost() {
-    const gasLimit = await this.estimateGasLimit();
-    const gasPrice = await this.getGasPrice();
+    const [gasLimit, gasPrice] = await Promise.all([
+      this.estimateGasLimit(),
+      this.getGasPrice(),
+    ]);
     const gasCost = gasLimit.mul(gasPrice);
 
     return {
@@ -205,16 +204,7 @@ abstract class TransactionContext {
    * Calculates the gas price for transactions (adding a 10% tip buffer)
    */
   public async getGasPrice(): Promise<BigNumber> {
-    const gasPrice = await this.provider.getGasPrice();
-    const maxGasPrice = utils.parseUnits("300", "gwei"); // 300 gwei
-    const extraTip = gasPrice.div(100).mul(10); // + 10%
-    const txGasPrice = gasPrice.add(extraTip);
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-
-    return txGasPrice;
+    return getGasPrice(this.provider);
   }
 
   /**
@@ -228,43 +218,7 @@ abstract class TransactionContext {
    * Get gas overrides for the transaction
    */
   protected async getGasOverrides() {
-    // If we're running in the browser, let users configure gas price in their wallet UI
-    if (isBrowser()) {
-      return {};
-    }
-
-    const feeData = await this.provider.getFeeData();
-    const supports1559 = feeData.maxFeePerGas && feeData.maxPriorityFeePerGas;
-    if (supports1559) {
-      const chainId = (await this.provider.getNetwork()).chainId;
-      const block = await this.provider.getBlock("latest");
-      const baseBlockFee =
-        block && block.baseFeePerGas
-          ? block.baseFeePerGas
-          : utils.parseUnits("1", "gwei");
-      let defaultPriorityFee: BigNumber;
-      if (chainId === ChainId.Mumbai || chainId === ChainId.Polygon) {
-        // for polygon, get fee data from gas station
-        defaultPriorityFee = await getPolygonGasPriorityFee(chainId);
-      } else {
-        // otherwise get it from ethers
-        defaultPriorityFee = BigNumber.from(feeData.maxPriorityFeePerGas);
-      }
-      // then add additional fee based on user preferences
-      const maxPriorityFeePerGas =
-        this.getPreferredPriorityFee(defaultPriorityFee);
-      // See: https://eips.ethereum.org/EIPS/eip-1559 for formula
-      const baseMaxFeePerGas = baseBlockFee.mul(2);
-      const maxFeePerGas = baseMaxFeePerGas.add(maxPriorityFeePerGas);
-      return {
-        maxFeePerGas,
-        maxPriorityFeePerGas,
-      };
-    } else {
-      return {
-        gasPrice: await this.getGasPrice(),
-      };
-    }
+    return getDefaultGasOverrides(this.provider);
   }
 
   /**
@@ -275,16 +229,6 @@ abstract class TransactionContext {
   ): BigNumber {
     const extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10%
     const txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const maxGasPrice = utils.parseUnits("300", "gwei"); // no more than 300 gwei
-    const minGasPrice = utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-
-    if (txGasPrice.gt(maxGasPrice)) {
-      return maxGasPrice;
-    }
-    if (txGasPrice.lt(minGasPrice)) {
-      return minGasPrice;
-    }
-
     return txGasPrice;
   }
 }
@@ -413,6 +357,12 @@ export class Transaction<
    * Get the signed transaction
    */
   async sign(): Promise<string> {
+    const populatedTx = await this.populateTransaction();
+    const signedTx = await this.contract.signer.signTransaction(populatedTx);
+    return signedTx;
+  }
+
+  async populateTransaction(): Promise<providers.TransactionRequest> {
     const gasOverrides = await this.getGasOverrides();
     const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
@@ -426,8 +376,7 @@ export class Transaction<
       overrides,
     );
     const populatedTx = await this.contract.signer.populateTransaction(tx);
-    const signedTx = await this.contract.signer.signTransaction(populatedTx);
-    return signedTx;
+    return populatedTx;
   }
 
   /**
@@ -567,8 +516,11 @@ export class Transaction<
     let sentTx;
     let iteration = 1;
     while (!sentTx) {
-      sentTx = await this.provider.getTransaction(txHash);
-
+      try {
+        sentTx = await this.provider.getTransaction(txHash);
+      } catch (err) {
+        // some providers can throw an error if the tx is very recent
+      }
       // Exponential (ish) backoff for polling
       if (!sentTx) {
         await new Promise((resolve) =>
@@ -598,6 +550,7 @@ export class Transaction<
       "No gasless options set on this transaction!",
     );
 
+    const signerAddress = await this.getSignerAddress();
     const args = [...this.args];
 
     if (
@@ -605,9 +558,8 @@ export class Transaction<
       Array.isArray(this.args[0]) &&
       args[0].length > 0
     ) {
-      const from = await this.getSignerAddress();
       args[0] = args[0].map((tx: any) =>
-        utils.solidityPack(["bytes", "address"], [tx, from]),
+        utils.solidityPack(["bytes", "address"], [tx, signerAddress]),
       );
     }
 
@@ -616,8 +568,10 @@ export class Transaction<
       "Cannot execute gasless transaction without valid signer",
     );
 
-    const chainId = (await this.provider.getNetwork()).chainId;
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [{ chainId }, from] = await Promise.all([
+      this.provider.getNetwork(),
+      this.overrides.from || signerAddress,
+    ]);
     const to = this.contract.address;
     const value = this.overrides?.value || 0;
 
@@ -680,8 +634,10 @@ export class Transaction<
     };
 
     // Get metadata for transaction to populate into error
-    const network = await provider.getNetwork();
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [network, from] = await Promise.all([
+      provider.getNetwork(),
+      this.overrides.from || this.getSignerAddress(),
+    ]);
     const to = this.contract.address;
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
@@ -845,7 +801,7 @@ export class DeployTransaction extends TransactionContext {
     return contractAddress;
   }
 
-  private async populateTransaction(): Promise<providers.TransactionRequest> {
+  public async populateTransaction(): Promise<providers.TransactionRequest> {
     const gasOverrides = await this.getGasOverrides();
     const overrides: CallOverrides = { ...gasOverrides, ...this.overrides };
 
@@ -866,8 +822,10 @@ export class DeployTransaction extends TransactionContext {
     };
 
     // Get metadata for transaction to populate into error
-    const network = await provider.getNetwork();
-    const from = await (this.overrides.from || this.getSignerAddress());
+    const [network, from] = await Promise.all([
+      provider.getNetwork(),
+      this.overrides.from || this.getSignerAddress(),
+    ]);
     const data = this.encode();
     const value = BigNumber.from(this.overrides.value || 0);
     const rpcUrl = provider.connection?.url;

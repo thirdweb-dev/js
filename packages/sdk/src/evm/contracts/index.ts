@@ -1,28 +1,30 @@
-import { fetchAndCachePublishedContractURI } from "../common/any-evm-utils/fetchAndCachePublishedContractURI";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { providers } from "ethers";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "../common/any-evm-utils/fetchPublishedContractFromPolygon";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
+import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
+import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
 import { ALL_ROLES } from "../common/role";
-import type { NetworkInput } from "../core/types";
 import { getSignerAndProvider } from "../constants/urls";
+import type { NetworkInput } from "../core/types";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
+import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
+import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
+import { PackContractSchema } from "../schema/contracts/packs";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
-import { Address } from "../schema/shared/Address";
-import { PackContractSchema } from "../schema/contracts/packs";
-import { SDKOptions } from "../schema/sdk-options";
 import { VoteContractSchema } from "../schema/contracts/vote";
-import { Abi, AbiSchema } from "../schema/contracts/custom";
-import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
-import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { providers } from "ethers";
-import type { SmartContract as SmartContractType } from "./smart-contract";
-import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { SDKOptions } from "../schema/sdk-options";
+import { Address } from "../schema/shared/Address";
 import {
   ADMIN_ROLE,
   MARKETPLACE_CONTRACT_ROLES,
@@ -31,6 +33,7 @@ import {
   PACK_CONTRACT_ROLES,
   TOKEN_DROP_CONTRACT_ROLES,
 } from "./contractRoles";
+import type { SmartContract as SmartContractType } from "./smart-contract";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -67,7 +70,7 @@ export const EditionDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      await EditionDropInitializer.getAbi(address, provider, storage),
+      EditionDropInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/edition-drop"),
       provider.getNetwork(),
     ]);
@@ -194,7 +197,7 @@ export const MarketplaceV3Initializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      MarketplaceV3Initializer.getAbi(address, provider, storage),
+      MarketplaceV3Initializer.getAbi(address, provider, storage, options),
       import("./prebuilt-implementations/marketplacev3"),
       provider.getNetwork(),
     ]);
@@ -212,6 +215,7 @@ export const MarketplaceV3Initializer = {
     address: Address,
     provider: providers.Provider,
     storage: ThirdwebStorage,
+    options?: SDKOptions,
   ) => {
     const chainId = (await provider.getNetwork()).chainId;
     const isZkSync = chainId === 280 || chainId === 324;
@@ -219,7 +223,15 @@ export const MarketplaceV3Initializer = {
     // Can't resolve IPFS hash from plugin bytecode on ZkSync
     // Thus, pull the composite ABI from the release page
     if (isZkSync) {
-      const uri = await fetchAndCachePublishedContractURI("MarketplaceV3");
+      const publishedContract = await fetchPublishedContractFromPolygon(
+        THIRDWEB_DEPLOYER,
+        "MarketplaceV3",
+        "latest",
+        storage,
+        options?.clientId,
+        options?.secretKey,
+      );
+      const uri = publishedContract.metadataUri;
       const compositeAbi = await getCompositeABIfromRelease(uri, storage);
 
       return compositeAbi;

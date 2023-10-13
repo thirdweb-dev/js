@@ -4,8 +4,8 @@ import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
+  SingleDownloadOptions,
 } from "../../types";
-import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
 
 /**
@@ -28,20 +28,28 @@ import pkg from "../../../package.json";
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
+  DEFAULT_TIMEOUT_IN_SECONDS = 60;
+  DEFAULT_MAX_RETRIES = 3;
+
   private secretKey?: string;
   private clientId?: string;
+  private defaultTimeout: number;
 
   constructor(options: IpfsDownloaderOptions) {
     this.secretKey = options.secretKey;
     this.clientId = options.clientId;
+    this.defaultTimeout =
+      options.timeoutInSeconds || this.DEFAULT_TIMEOUT_IN_SECONDS;
   }
 
   async download(
     uri: string,
     gatewayUrls: GatewayUrls,
+    options?: SingleDownloadOptions,
     attempts = 0,
   ): Promise<Response> {
-    if (attempts > 3) {
+    const maxRetries = options?.maxRetries || this.DEFAULT_MAX_RETRIES;
+    if (attempts > maxRetries) {
       console.error(
         "[FAILED_TO_DOWNLOAD_ERROR] Failed to download from URI - too many attempts failed.",
       );
@@ -104,22 +112,42 @@ export class StorageDownloader implements IStorageDownloader {
         };
       }
 
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        headers = {
+          ...headers,
+          authorization: `Bearer ${
+            (globalThis as any).TW_CLI_AUTH_TOKEN as string
+          }`,
+        };
+        headers["x-authorize-wallet"] = "true";
+      }
+
       headers["x-sdk-version"] = pkg.version;
       headers["x-sdk-name"] = pkg.name;
       headers["x-sdk-platform"] = bundleId
         ? "react-native"
         : isBrowser()
-        ? "browser"
+        ? (window as any).bridge !== undefined
+          ? "webGL"
+          : "browser"
         : "node";
     }
 
     if (isTooManyRequests(resolvedUri)) {
       // skip the request if we're getting too many request error from the gateway
-      return this.download(uri, gatewayUrls, attempts + 1);
+      return this.download(uri, gatewayUrls, options, attempts + 1);
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeoutInSeconds = options?.timeoutInSeconds || this.defaultTimeout;
+    const timeout = setTimeout(
+      () => controller.abort(),
+      timeoutInSeconds * 1000,
+    );
     const resOrErr: Response | Error = await fetch(resolvedUri, {
       headers,
       signal: controller.signal,
@@ -131,7 +159,13 @@ export class StorageDownloader implements IStorageDownloader {
 
     if (!("status" in resOrErr)) {
       // early exit if we don't have a status code
-      return this.download(uri, gatewayUrls, attempts + 1);
+      throw new Error(
+        `Request timed out after ${timeoutInSeconds} seconds. ${
+          isTwGatewayUrl(resolvedUri)
+            ? "You can update the timeoutInSeconds option to increase the timeout."
+            : "You're using a public IPFS gateway, pass in a clientId or secretKey for a reliable IPFS gateway."
+        }`,
+      );
     }
 
     // if the request is good we can skip everything else
@@ -143,7 +177,7 @@ export class StorageDownloader implements IStorageDownloader {
       // track that we got a too many requests error
       tooManyRequestsBackOff(resolvedUri, resOrErr);
       // Since the current gateway failed, recursively try the next one we know about
-      return this.download(uri, gatewayUrls, attempts + 1);
+      return this.download(uri, gatewayUrls, options, attempts + 1);
     }
 
     if (resOrErr.status === 410) {
@@ -172,10 +206,11 @@ export class StorageDownloader implements IStorageDownloader {
       resOrErr.status !== 429 &&
       resOrErr.status < 500
     ) {
+      return resOrErr;
     }
 
     // Since the current gateway failed, recursively try the next one we know about
-    return this.download(uri, gatewayUrls, attempts + 1);
+    return this.download(uri, gatewayUrls, options, attempts + 1);
   }
 }
 

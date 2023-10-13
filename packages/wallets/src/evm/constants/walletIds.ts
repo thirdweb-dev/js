@@ -1,15 +1,19 @@
 export const walletIds = {
+  blocto: "blocto",
   coinbase: "coinbase",
   frame: "frame",
-  metamask: "metamask",
   localWallet: "localWallet",
+  magicLink: "magicLink",
+  metamask: "metamask",
+  paper: "paper",
+  rainbow: "rainbowWallet",
   smartWallet: "smartWallet",
   tokenBoundSmartWallet: "tokenBoundSmartWallet",
   safe: "safe",
   trust: "trust",
+  embeddedWallet: "embeddedWallet",
   walletConnectV1: "walletConnectV1",
   walletConnect: "walletConnect",
-  magicLink: "magicLink",
-  paper: "paper",
-  blocto: "blocto",
-};
+  phantom: "phantom",
+  // add new ids sorted alphabetically
+} as const;

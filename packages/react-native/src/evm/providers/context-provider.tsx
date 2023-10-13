@@ -7,47 +7,47 @@ import {
   useState,
 } from "react";
 import { useWalletConnectListener } from "../wallets/hooks/useWalletConnectListener";
-import { MagicWallet } from "../wallets/wallets/MagicWallet";
+import { MagicLink } from "../wallets/wallets/MagicLink";
 import { useWalletContext } from "@thirdweb-dev/react-core";
 
 type DappContextType = {
   smartWallet?: SmartWallet;
   setSmartWallet?: (value?: SmartWallet) => void;
-  magicWallet?: MagicWallet;
-  setMagicWallet?: (value?: MagicWallet) => void;
+  magicLink?: MagicLink;
+  setMagicLink?: (value?: MagicLink) => void;
 };
 
 const DappContext = createContext<DappContextType>({});
 
 export const DappContextProvider = (props: React.PropsWithChildren) => {
   const [smartWallet, setSmartWallet] = useState<SmartWallet | undefined>();
-  const [magicWallet, setMagicWallet] = useState<MagicWallet | undefined>();
+  const [magicLink, setMagicLink] = useState<MagicLink | undefined>();
   const createdWalletInstance = useWalletContext().createdWalletInstance;
 
   useEffect(() => {
     if (createdWalletInstance?.walletId === walletIds.magicLink) {
-      setMagicWallet(createdWalletInstance as MagicWallet);
+      setMagicLink(createdWalletInstance as MagicLink);
     }
-  }, [createdWalletInstance, setMagicWallet]);
+  }, [createdWalletInstance, setMagicLink]);
 
   useWalletConnectListener();
 
   const magicSDK = useCallback(() => {
-    if (magicWallet) {
-      const magic = magicWallet.getMagicSDK();
+    if (magicLink) {
+      const magic = magicLink.getMagicSDK();
       return <magic.Relayer />;
     }
 
     return null;
-  }, [magicWallet]);
+  }, [magicLink]);
 
   return (
     <DappContext.Provider
       value={{
         smartWallet,
         setSmartWallet,
-        magicWallet: magicWallet,
-        setMagicWallet: setMagicWallet,
+        magicLink: magicLink,
+        setMagicLink: setMagicLink,
       }}
     >
       {props.children}
@@ -66,11 +66,11 @@ export const useSmartWallet = () => {
   return [context.smartWallet, context.setSmartWallet] as const;
 };
 
-export const useMagicWallet = () => {
+export const useMagicLink = () => {
   const context = useContext(DappContext);
 
   return {
-    magicWallet: context.magicWallet,
-    setMagicWallet: context.setMagicWallet,
+    magicLink: context.magicLink,
+    setMagicLink: context.setMagicLink,
   } as const;
 };

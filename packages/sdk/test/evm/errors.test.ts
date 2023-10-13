@@ -2,6 +2,7 @@ import { ThirdwebSDK } from "../../src/evm";
 import { expectError, sdk } from "./before-setup";
 import { expect } from "chai";
 import { Wallet } from "ethers";
+import { MockStorage } from "./mock/MockStorage";
 
 describe("Error Handling", async () => {
   it("should throw proper error on account with no balance", async () => {
@@ -9,6 +10,7 @@ describe("Error Handling", async () => {
       Wallet.createRandom().connect(sdk.getProvider()),
       undefined,
       { secretKey: process.env.TW_SECRET_KEY },
+      MockStorage(),
     );
 
     try {

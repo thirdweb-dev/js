@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Titan",
   "chain": "ETH",
-  "rpc": [
-    "https://titan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.titan.tokamak.network",
-    "wss://rpc.titan.tokamak.network/ws"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://tokamak.network",
-  "shortName": "teth",
   "chainId": 55004,
-  "networkId": 55004,
   "explorers": [
     {
       "name": "blockscout",
@@ -24,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "titan"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://tokamak.network",
+  "name": "Titan",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://titan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.titan.tokamak.network",
+    "wss://rpc.titan.tokamak.network"
+  ],
+  "shortName": "teth",
+  "slug": "titan",
+  "testnet": false
 } as const satisfies Chain;

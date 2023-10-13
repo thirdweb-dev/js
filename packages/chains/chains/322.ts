@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KCC Testnet",
   "chain": "KCC",
-  "rpc": [
-    "https://kcc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.kcc.network"
-  ],
-  "faucets": [
-    "https://faucet-testnet.kcc.network"
-  ],
-  "nativeCurrency": {
-    "name": "KuCoin Testnet Token",
-    "symbol": "tKCS",
-    "decimals": 18
-  },
-  "infoURL": "https://scan-testnet.kcc.network",
-  "shortName": "kcst",
   "chainId": 322,
-  "networkId": 322,
   "explorers": [
     {
       "name": "kcc-scan-testnet",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "kcc-testnet"
+  "faucets": [
+    "https://faucet-testnet.kcc.network"
+  ],
+  "features": [],
+  "infoURL": "https://scan-testnet.kcc.network",
+  "name": "KCC Testnet",
+  "nativeCurrency": {
+    "name": "KuCoin Testnet Token",
+    "symbol": "tKCS",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://kcc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.kcc.network"
+  ],
+  "shortName": "kcst",
+  "slug": "kcc-testnet",
+  "testnet": true
 } as const satisfies Chain;

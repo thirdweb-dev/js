@@ -1,24 +1,20 @@
 import { Spacer } from "../../../components/Spacer";
 import { Button } from "../../../components/buttons";
 import { FormFieldWithIconButton } from "../../../components/formFields";
-import {
-  ModalDescription,
-  ModalTitle,
-} from "../../../components/modalElements";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { WalletConfig, useWalletContext } from "@thirdweb-dev/react-core";
 import { useState } from "react";
-import { FormFooter, Label } from "../../../components/formElements";
+import { Label } from "../../../components/formElements";
 import { spacing } from "../../../design-system";
 import { Spinner } from "../../../components/Spinner";
 import { shortenAddress } from "../../../evm/utils/addresses";
-import { LocalWalletModalHeader } from "./common";
-import { SecondaryText } from "../../../components/text";
+import { Text } from "../../../components/text";
 import { CreateLocalWallet_Password } from "./CreateLocalWallet";
 import { OverrideConfirmation } from "./overrideConfirmation";
 import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
+import { Container, Line, ModalHeader } from "../../../components/basic";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -27,6 +23,7 @@ type ReconnectLocalWalletProps = {
   supportedWallets: WalletConfig[];
   renderBackButton: boolean;
   persist: boolean;
+  modalSize: "wide" | "compact";
 };
 
 /**
@@ -61,6 +58,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
     return (
       <ExportLocalWallet
+        modalSize={props.modalSize}
         localWalletConfig={props.localWallet}
         onBack={() => {
           setShowExport(false);
@@ -125,106 +123,103 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   };
 
   return (
-    <>
-      <LocalWalletModalHeader
-        onBack={props.goBack}
-        meta={meta}
-        hideBack={!props.renderBackButton}
-      />
-      <ModalTitle
-        style={{
-          textAlign: "left",
-        }}
-      >
-        Guest Wallet
-      </ModalTitle>
-      <Spacer y="xs" />
-      <ModalDescription>
-        Connect to saved wallet on your device
-      </ModalDescription>
-
-      <Spacer y="lg" />
-
-      <Label>Saved Wallet</Label>
-
-      <Spacer y="sm" />
-
-      <SecondaryText>
-        {savedAddress === "" ? "Loading..." : shortenAddress(savedAddress)}
-      </SecondaryText>
-
-      <Spacer y="lg" />
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleReconnect();
-        }}
-      >
-        {/* Hidden Account Address as Username */}
-        <input
-          type="text"
-          name="username"
-          autoComplete="off"
-          value={savedAddress}
-          disabled
-          style={{ display: "none" }}
+    <Container animate="fadein" flex="column" fullHeight>
+      <Container p="lg">
+        <ModalHeader
+          onBack={props.renderBackButton ? props.goBack : undefined}
+          title={meta.name}
         />
+      </Container>
+      <Line />
 
-        {/* Password */}
-        <FormFieldWithIconButton
-          required
-          name="current-password"
-          autocomplete="current-password"
-          id="current-password"
-          onChange={(value) => {
-            setPassword(value);
-            setIsWrongPassword(false);
+      <Container p="lg" expand>
+        <Text multiline size="lg" color="primaryText">
+          Connect to saved wallet
+        </Text>
+
+        <Spacer y="xl" />
+
+        <Label>Saved Wallet</Label>
+        <Spacer y="sm" />
+
+        <Text>
+          {savedAddress === "" ? "Loading..." : shortenAddress(savedAddress)}
+        </Text>
+
+        <Spacer y="xl" />
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleReconnect();
           }}
-          right={{
-            onClick: () => setShowPassword(!showPassword),
-            icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
-          }}
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          error={isWrongPassword ? "Wrong Password" : ""}
-          dataTest="current-password"
-        />
+        >
+          {/* Hidden Account Address as Username */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="off"
+            value={savedAddress}
+            disabled
+            style={{ display: "none" }}
+          />
 
-        <Spacer y="lg" />
+          {/* Password */}
+          <FormFieldWithIconButton
+            required
+            name="current-password"
+            autocomplete="current-password"
+            id="current-password"
+            onChange={(value) => {
+              setPassword(value);
+              setIsWrongPassword(false);
+            }}
+            right={{
+              onClick: () => setShowPassword(!showPassword),
+              icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
+            }}
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            error={isWrongPassword ? "Wrong Password" : ""}
+            dataTest="current-password"
+            placeholder="Enter your password"
+          />
 
-        {/* Connect Button */}
-        <FormFooter>
+          <Spacer y="md" />
+
+          {/* Connect Button */}
           <Button
-            variant="inverted"
+            variant="accent"
             type="submit"
+            fullWidth
             style={{
               display: "flex",
               gap: spacing.sm,
             }}
           >
-            Connect
-            {isConnecting && <Spinner size="sm" color="inverted" />}
+            Continue
+            {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
-        </FormFooter>
-      </form>
+        </form>
+      </Container>
 
-      <Spacer y="xxl" />
-
-      <Button
-        variant="link"
-        style={{
-          textAlign: "center",
-          width: "100%",
-          padding: "2px",
-        }}
-        onClick={() => {
-          setShowBackupConfirmation(true);
-        }}
-      >
-        Create a new wallet
-      </Button>
-    </>
+      <Spacer y="sm" />
+      <Line />
+      <Container p="lg">
+        <Button
+          variant="link"
+          fullWidth
+          style={{
+            textAlign: "center",
+          }}
+          onClick={() => {
+            setShowBackupConfirmation(true);
+          }}
+        >
+          Create a new wallet
+        </Button>
+      </Container>
+    </Container>
   );
 };

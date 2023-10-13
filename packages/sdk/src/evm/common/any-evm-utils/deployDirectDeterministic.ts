@@ -16,6 +16,7 @@ import { deployCreate2Factory } from "./deployCreate2Factory";
 import { convertParamValues } from "./convertParamValues";
 import { AbiInput } from "../../schema";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
+import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
 
 /**
  * Direct deploy a contract at a deterministic address, using Create2 method
@@ -36,7 +37,7 @@ export async function directDeployDeterministic(
   constructorArgs: any[],
   saltForCreate2?: string,
   gasLimit: number = 7000000,
-) {
+): Promise<string> {
   invariant(signer.provider, "Provider is required");
 
   const bytecodePrefixed = bytecode.startsWith("0x")
@@ -47,17 +48,24 @@ export async function directDeployDeterministic(
   const create2Factory = await deployCreate2Factory(signer);
 
   // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
-    (p) => {
-      return p.type;
-    },
-  );
+  const constructorParams = extractConstructorParamsFromAbi(abi);
+  const constructorParamTypes = constructorParams.map((p) => {
+    return p.type;
+  });
   const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
   );
+
+  const paramTypesForEncoder = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const encodedArgs = utils.defaultAbiCoder.encode(
-    constructorParamTypes,
+    paramTypesForEncoder,
     paramValues,
   );
 
@@ -97,6 +105,8 @@ export async function directDeployDeterministic(
   } else {
     throw new Error(`Contract already deployed at ${address}`);
   }
+
+  return address;
 }
 
 /**
@@ -118,13 +128,73 @@ export async function directDeployDeterministicWithUri(
   constructorArgs: any[],
   saltForCreate2?: string,
   gasLimit: number = 7000000,
-) {
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    publishMetadataUri,
-    storage,
+): Promise<string> {
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
   );
 
-  await directDeployDeterministic(
+  return await directDeployDeterministic(
+    compilerMetadata.bytecode,
+    compilerMetadata.abi,
+    signer,
+    constructorArgs,
+    saltForCreate2,
+    gasLimit,
+  );
+}
+
+/**
+ * Direct deploy a contract at a deterministic address, using Create2 method
+ * Address depends on the Create2 factory address and salt (if provided).
+ *
+ * @public
+ *
+ * @param contractName
+ * @param publisherAddress
+ * @param contractVersion
+ * @param constructorArgs
+ * @param signer
+ * @param storage
+ * @param clientId
+ * @param secretKey
+ * @param constructorArgs
+ * @param saltForCreate2
+ */
+export async function directDeployDeterministicPublished(
+  contractName: string,
+  publisherAddress: string,
+  contractVersion: string = "latest",
+  constructorArgs: any[],
+  signer: Signer,
+  storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
+  saltForCreate2?: string,
+  gasLimit: number = 7000000,
+): Promise<string> {
+  const publishMetadataUri = (
+    await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      contractVersion,
+      storage,
+      clientId,
+      secretKey,
+    )
+  ).metadataUri;
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
+  );
+
+  return await directDeployDeterministic(
     compilerMetadata.bytecode,
     compilerMetadata.abi,
     signer,
@@ -140,7 +210,7 @@ export async function predictAddressDeterministic(
   provider: providers.Provider,
   constructorArgs: any[],
   saltForCreate2?: string,
-) {
+): Promise<string> {
   const bytecodePrefixed = bytecode.startsWith("0x")
     ? bytecode
     : `0x${bytecode}`;
@@ -149,18 +219,24 @@ export async function predictAddressDeterministic(
   const create2Factory = await getCreate2FactoryAddress(provider);
 
   // 2. Encode constructor params
-  const constructorParamTypes = extractConstructorParamsFromAbi(abi).map(
-    (p) => {
-      return p.type;
-    },
-  );
-
+  const constructorParams = extractConstructorParamsFromAbi(abi);
+  const constructorParamTypes = constructorParams.map((p) => {
+    return p.type;
+  });
   const paramValues = convertParamValues(
     constructorParamTypes,
     constructorArgs,
   );
+
+  const paramTypesForEncoder = constructorParams.map((p) => {
+    if (p.type === "tuple[]") {
+      return utils.ParamType.from(p);
+    } else {
+      return p.type;
+    }
+  });
   const encodedArgs = utils.defaultAbiCoder.encode(
-    constructorParamTypes,
+    paramTypesForEncoder,
     paramValues,
   );
 
@@ -182,9 +258,50 @@ export async function predictAddressDeterministicWithUri(
   constructorArgs: any[],
   saltForCreate2?: string,
 ): Promise<string> {
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    publishMetadataUri,
-    storage,
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
+  );
+
+  return await predictAddressDeterministic(
+    compilerMetadata.bytecode,
+    compilerMetadata.abi,
+    provider,
+    constructorArgs,
+    saltForCreate2,
+  );
+}
+
+export async function predictAddressDeterministicPublished(
+  contractName: string,
+  publisherAddress: string,
+  contractVersion: string = "latest",
+  constructorArgs: any[],
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  clientId?: string,
+  secretKey?: string,
+  saltForCreate2?: string,
+): Promise<string> {
+  const publishMetadataUri = (
+    await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      contractVersion,
+      storage,
+      clientId,
+      secretKey,
+    )
+  ).metadataUri;
+  const { compilerMetadata, extendedMetadata } =
+    await fetchAndCacheDeployMetadata(publishMetadataUri, storage);
+
+  invariant(
+    extendedMetadata?.deployType === "standard",
+    "Must be direct deploy",
   );
 
   return await predictAddressDeterministic(

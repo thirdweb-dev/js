@@ -1,8 +1,9 @@
 import { noopStorage } from "../../../core/AsyncStorage";
 import type {
-  CoinbaseWalletConnector,
+  CoinbaseWalletConnector as CoinbaseWalletConnectorType,
   CoinbaseWalletConnectorOptions,
 } from "../connectors/coinbase-wallet";
+import { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
 import {
   AbstractClientWallet,
   Connector,
@@ -10,10 +11,8 @@ import {
   WalletOptions,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import {
-  WalletConfig,
-  WalletOptions as WalletOptionsRC,
-} from "@thirdweb-dev/react-core";
+import { WalletOptions as WalletOptionsRC } from "@thirdweb-dev/react-core";
+import { COINBASE_ICON } from "../../assets/svgs";
 
 type CoinbaseWalletOptions = Omit<
   WalletOptions<CoinbaseWalletConnectorOptions>,
@@ -23,13 +22,12 @@ type CoinbaseWalletOptions = Omit<
 export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnectorOptions> {
   static meta = {
     name: "Coinbase Wallet",
-    iconURL:
-      "ipfs://QmcJBHopbwfJcLqJpX2xEufSS84aLbF7bHavYhaXUcrLaH/coinbase.svg",
+    iconURL: COINBASE_ICON,
   };
 
   connector?: Connector;
-  coinbaseConnector?: CoinbaseWalletConnector;
-  provider?: CoinbaseWalletConnector["provider"];
+  coinbaseConnector?: CoinbaseWalletConnectorType;
+  provider?: CoinbaseWalletConnectorType["provider"];
 
   static id = walletIds.coinbase;
   public get walletName() {
@@ -50,11 +48,6 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      // import the connector dynamically
-      const { CoinbaseWalletConnector: CoinbaseWalletConnector } = await import(
-        "../connectors/coinbase-wallet"
-      );
-
       const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {
@@ -73,7 +66,10 @@ export class CoinbaseWallet extends AbstractClientWallet<CoinbaseWalletConnector
   }
 }
 
-export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
+export const coinbaseWallet = (config?: {
+  callbackURL?: URL;
+  recommended?: boolean;
+}) => {
   const callbackURLNonNull =
     config?.callbackURL || new URL("https://thirdweb.com/wsegue");
   return {
@@ -81,5 +77,7 @@ export const coinbaseWallet = (config?: { callbackURL?: URL }) => {
     meta: CoinbaseWallet.meta,
     create: (options: WalletOptionsRC) =>
       new CoinbaseWallet({ ...options, callbackURL: callbackURLNonNull }),
-  } satisfies WalletConfig<CoinbaseWallet>;
+    config: config,
+    recommended: config?.recommended,
+  };
 };

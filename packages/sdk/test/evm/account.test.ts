@@ -19,9 +19,7 @@ import {
 } from "./utils";
 import { IAccountCore, IAccountFactory } from "@thirdweb-dev/contracts-js";
 
-global.fetch = /* @__PURE__ */ require("cross-fetch");
-
-/* @__PURE__ */ describe("Accounts with account factory", function () {
+describe("Accounts with account factory", function () {
   let accountFactory: AccountFactory<IAccountFactory>;
   let account: Account<IAccountCore>;
 
@@ -141,9 +139,8 @@ global.fetch = /* @__PURE__ */ require("cross-fetch");
         "Correct admin for account.",
       );
 
-      const associatedAccounts = await accountFactory.getAssociatedAccounts(
-        admin,
-      );
+      const associatedAccounts =
+        await accountFactory.getAssociatedAccounts(admin);
 
       assert.isTrue(
         associatedAccounts.length === 1,

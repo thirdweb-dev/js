@@ -15,30 +15,41 @@ function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
  */
 const usageEventSchema = z.object({
   source: z.enum([
-    "wallet",
+    "embeddedWallets",
     "rpc",
     "storage",
     "bundler",
     "paymaster",
     "relayer",
+    "connectWallet",
   ]),
   action: z.string(),
-  accountId: z.string(),
 
-  // Optional
+  /**
+   * The following fields are optional.
+   */
+
+  accountId: z.string().optional(),
+  isClientEvent: z.boolean().optional(),
   apiKeyId: z.string().optional(),
   creatorWalletAddress: z.string().optional(),
   clientId: z.string().optional(),
   walletAddress: z.string().optional(),
+  walletType: z.string().optional(),
   chainId: z.number().int().positive().optional(),
   provider: z.string().optional(),
   mimeType: z.string().optional(),
   fileSize: z.number().int().nonnegative().optional(),
   fileCid: z.string().optional(),
-  transactionHash: z.string().optional(),
+  evmMethod: z.string().optional(),
+  userOpHash: z.string().optional(),
   gasLimit: z.number().nonnegative().optional(),
   gasPricePerUnit: z.string().optional(),
-  userOpHash: z.string().optional(),
+  transactionHash: z.string().optional(),
+  sdkName: z.string().optional(),
+  sdkVersion: z.string().optional(),
+  sdkPlatform: z.string().optional(),
+  productName: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 

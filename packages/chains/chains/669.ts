@@ -1,0 +1,32 @@
+import type { Chain } from "../src/types";
+export default {
+  "chain": "JuncaChain testnet",
+  "chainId": 669,
+  "explorers": [
+    {
+      "name": "JuncaScan",
+      "url": "https://scan-testnet.juncachain.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://faucet-testnet.juncachain.com"
+  ],
+  "features": [],
+  "infoURL": "https://junca-cash.world",
+  "name": "JuncaChain testnet",
+  "nativeCurrency": {
+    "name": "JuncaChain Testnet Native Token",
+    "symbol": "JGCT",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://juncachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.juncachain.com",
+    "wss://ws-testnet.juncachain.com"
+  ],
+  "shortName": "juncat",
+  "slug": "juncachain-testnet",
+  "testnet": true
+} as const satisfies Chain;

@@ -14,17 +14,17 @@ import { useSwitchChain, useSupportedChains } from "@thirdweb-dev/react-core";
 import Box from "./Box";
 import { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
 import { TWModal } from "./modal/TWModal";
-import { useAppTheme } from "../../styles/hooks";
 import { Chain } from "@thirdweb-dev/chains";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 type NetworkButtonProps = {
-  chain: Chain;
+  chain?: Chain;
   padding?: keyof Theme["spacing"];
   onPress?: () => void;
   enableSwitchModal?: boolean;
   switchChainOnPress?: boolean;
   onChainSwitched?: () => void;
-} & (typeof BaseButton)["arguments"];
+} & React.ComponentProps<typeof Box>;
 
 export const NetworkButton = ({
   onPress,
@@ -35,7 +35,7 @@ export const NetworkButton = ({
   padding,
   ...props
 }: NetworkButtonProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [switchError, setSwitchError] = useState<string | undefined>();
   const [isSwitching, setIsSwitching] = useState(false);
@@ -51,6 +51,10 @@ export const NetworkButton = ({
     } else if (switchChainOnPress) {
       setIsSwitching(true);
       setTimeout(async () => {
+        if (!chain?.chainId) {
+          throw new Error(`Empty chainId for chain: ${chain?.name}`);
+        }
+
         try {
           await switchChain(chain.chainId);
           setIsSwitching(false);
@@ -68,7 +72,8 @@ export const NetworkButton = ({
     <>
       <BaseButton
         p={padding || "sm"}
-        borderRadius="xs"
+        paddingVertical="xs"
+        borderRadius="md"
         borderWidth={0.5}
         flexDirection="row"
         alignItems="center"
@@ -78,20 +83,9 @@ export const NetworkButton = ({
         {...props}
       >
         <Box flexDirection="row" alignItems="center">
-          {chain.icon.url ? (
-            <ChainIcon
-              chainIconUrl={chain.icon.url || ""}
-              size={32}
-              active={false}
-            />
-          ) : null}
-          <Box
-            ml="md"
-            alignItems="flex-start"
-            justifyContent="center"
-            height={36}
-          >
-            <Text variant="bodyLarge">{chain.name || "Unknown Network"}</Text>
+          <ChainIcon chainIconUrl={chain?.icon?.url} size={28} />
+          <Box ml="md" alignItems="flex-start" justifyContent="center">
+            <Text variant="bodyLarge">{chain?.name || "Unknown Network"}</Text>
             {isSwitching ? (
               <Box flexDirection="row" alignItems="center">
                 <Text

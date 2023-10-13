@@ -1,5 +1,8 @@
-import { getRoleHash } from "../../common/role";
+import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { CallOverrides, constants } from "ethers";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -22,10 +25,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { TokenMintInput } from "../../schema/tokens/token";
-import type { CurrencyValue, Amount } from "../../types/currency";
-import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CallOverrides, constants } from "ethers";
+import type { Amount, CurrencyValue } from "../../types/currency";
 import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -58,7 +58,7 @@ export class Token extends StandardErc20<TokenERC20> {
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
   public platformFees: ContractPlatformFee<TokenERC20>;
-  public sales: ContractPrimarySale<TokenERC20>;
+  public sales: ContractPrimarySale;
   /**
    * Signature Minting
    * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
@@ -136,7 +136,7 @@ export class Token extends StandardErc20<TokenERC20> {
 
   public async getVoteBalanceOf(account: AddressOrEns): Promise<CurrencyValue> {
     return await this.erc20.getValue(
-      await this.contractWrapper.readContract.getVotes(account),
+      await this.contractWrapper.read("getVotes", [account]),
     );
   }
 
@@ -157,19 +157,19 @@ export class Token extends StandardErc20<TokenERC20> {
    * @returns the address of your vote delegatee
    */
   public async getDelegationOf(account: AddressOrEns): Promise<Address> {
-    return await this.contractWrapper.readContract.delegates(
+    return await this.contractWrapper.read("delegates", [
       await resolveAddress(account),
-    );
+    ]);
   }
 
   /**
    * Get whether users can transfer tokens from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 

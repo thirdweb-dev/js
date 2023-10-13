@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Conflux eSpace",
   "chain": "Conflux",
-  "rpc": [
-    "https://conflux-espace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.confluxrpc.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "CFX",
-    "symbol": "CFX",
-    "decimals": 18
-  },
-  "infoURL": "https://confluxnetwork.org",
-  "shortName": "cfx",
   "chainId": 1030,
-  "networkId": 1030,
-  "icon": {
-    "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
-    "width": 460,
-    "height": 576,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Conflux Scan",
@@ -29,6 +9,27 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "conflux-espace"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
+    "width": 460,
+    "height": 576,
+    "format": "png"
+  },
+  "infoURL": "https://confluxnetwork.org",
+  "name": "Conflux eSpace",
+  "nativeCurrency": {
+    "name": "CFX",
+    "symbol": "CFX",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://conflux-espace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.confluxrpc.com"
+  ],
+  "shortName": "cfx",
+  "slug": "conflux-espace",
+  "testnet": false
 } as const satisfies Chain;

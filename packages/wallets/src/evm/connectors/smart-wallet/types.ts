@@ -10,10 +10,10 @@ import type {
   ContractInterface,
   Signer,
 } from "ethers";
+import type { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 import { EVMWallet } from "../../interfaces";
 import { WalletOptions } from "../../wallets/base";
 import { BaseApiParams } from "./lib/base-api";
-import { WalletConnectReceiverConfig } from "../../../core/types/walletConnect";
 
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;

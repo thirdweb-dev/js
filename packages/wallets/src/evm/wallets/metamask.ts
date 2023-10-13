@@ -55,7 +55,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     },
   };
 
-  static id = walletIds.metamask;
+  static id = walletIds.metamask as string;
 
   public get walletName() {
     return "MetaMask" as const;
@@ -148,7 +148,8 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     });
 
     // trigger connect flow
-    this.connect({ chainId: options.chainId }).then(options.onConnected);
+    this.connect({ chainId: options.chainId })
+      .then(options.onConnected)
   }
 
   async switchAccount() {
