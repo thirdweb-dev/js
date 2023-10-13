@@ -35,7 +35,7 @@ const ImageSvgUri = ({
   }
 
   return (
-    <Box style={{ width: width, height: height }}>
+    <Box width={width} height={height}>
       {error ? (
         <SvgUri width={width} height={height} uri={resolvedImageUrl} />
       ) : (

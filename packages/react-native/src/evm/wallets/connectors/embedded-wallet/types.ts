@@ -1,10 +1,20 @@
 import { Chain } from "@thirdweb-dev/chains";
 import { WalletOptions } from "@thirdweb-dev/wallets";
-
 import type {
   RecoveryShareManagement,
   PaperConstructorType,
+  AuthProvider,
 } from "@paperxyz/embedded-wallet-service-sdk";
+
+export type OauthOptions = {
+  providers: AuthProvider[];
+  redirectUrl: string;
+};
+
+export type OauthOption = {
+  provider: AuthProvider;
+  redirectUrl: string;
+};
 
 export interface EmbeddedConnectorOptions {
   chains?: Chain[];

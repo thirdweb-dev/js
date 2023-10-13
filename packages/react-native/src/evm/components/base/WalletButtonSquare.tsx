@@ -1,4 +1,4 @@
-import { useAppTheme } from "../../styles/hooks";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 import BaseButton from "./BaseButton";
 import Box from "./Box";
 import ImageSvgUri from "./ImageSvgUri";
@@ -17,7 +17,7 @@ export const WalletButtonSquare = ({
   name,
   size,
 }: WalletButtonSquareProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const marginVertical = theme.spacing.xs;
   return (
