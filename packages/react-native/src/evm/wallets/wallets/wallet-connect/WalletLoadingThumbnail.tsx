@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Animated, Easing, StyleSheet, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
-import { useAppTheme } from "../../../styles/hooks";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
@@ -19,7 +19,7 @@ function WalletLoadingThumbnail({
   showError,
   imageSize = 50,
 }: Props) {
-  const Theme = useAppTheme();
+  const Theme = useGlobalTheme();
   const spinValue = useRef(new Animated.Value(0));
 
   useEffect(() => {

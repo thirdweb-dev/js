@@ -5,14 +5,16 @@ import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
-import { useModalState } from "../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useModalState,
+} from "../../providers/ui-context-provider";
 import {
   CLOSE_MODAL_STATE,
   ConnectWalletFlowModal,
 } from "../../utils/modalTypes";
 import Box from "../base/Box";
 import { ThemeProvider } from "../../styles/ThemeProvider";
-import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
   const { modalState, setModalState } = useModalState();
@@ -30,7 +32,7 @@ export const ConnectWalletFlow = () => {
   const [selectionData, setSelectionData] = useState<any>();
   const supportedWallets = useWallets();
   const theme = useColorScheme();
-  const appTheme = useAppTheme();
+  const appTheme = useGlobalTheme();
   const connect = useConnect();
 
   const onClose = useCallback(

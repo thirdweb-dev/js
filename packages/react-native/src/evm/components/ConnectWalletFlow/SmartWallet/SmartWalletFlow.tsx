@@ -15,7 +15,7 @@ import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/Wall
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Box from "../../base/Box";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
-import { useAppTheme } from "../../../styles/hooks";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 export const SmartWalletFlow = ({
   connected,
@@ -24,7 +24,7 @@ export const SmartWalletFlow = ({
   personalWalletConfig,
   ...props
 }: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
