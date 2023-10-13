@@ -239,12 +239,6 @@ export class DropClaimConditions<
     let activeConditionIndex: BigNumber;
     let claimCondition: ClaimCondition;
 
-    const decimals = await this.getTokenDecimals();
-    const quantityWithDecimals = utils.parseUnits(
-      AmountSchema.parse(quantity),
-      decimals,
-    );
-
     if (addressToCheck === undefined) {
       try {
         addressToCheck = await this.contractWrapper.getSignerAddress();
@@ -258,7 +252,15 @@ export class DropClaimConditions<
       return [ClaimEligibility.NoWallet];
     }
 
-    const resolvedAddress = await resolveAddress(addressToCheck);
+    const [resolvedAddress, decimals] = await Promise.all([
+      resolveAddress(addressToCheck),
+      this.getTokenDecimals(),
+    ]);
+
+    const quantityWithDecimals = utils.parseUnits(
+      AmountSchema.parse(quantity),
+      decimals,
+    );
 
     try {
       claimCondition = await this.getActive();
@@ -490,7 +492,7 @@ export class DropClaimConditions<
       }
     }
 
-    // if not within a browser conetext, check for wallet balance.
+    // if not within a browser context, check for wallet balance.
     // In browser context, let the wallet do that job
     if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
