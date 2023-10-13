@@ -245,29 +245,31 @@ export const ConnectWalletPlayground: React.FC<{
       </FormItem>
 
       {/* Welcome Screen Image */}
-      <FormItem label="Splash Image">
-        <Flex gap={3} alignItems="center">
-          <Switch
-            size="lg"
-            isChecked={!!welcomeScreen.img}
-            onChange={() => {
-              trackCustomize("splash-image-switch");
-              setWelcomeScreen({
-                ...welcomeScreen,
-                img: welcomeScreen.img
-                  ? undefined
-                  : {
-                      src: "",
-                      width: 150,
-                      height: 150,
-                    },
-              });
-            }}
-          ></Switch>
-          <Text>{welcomeScreen.img ? "Custom" : "Default"}</Text>
-        </Flex>
-        <Spacer height={4} />
-
+      <FormItem
+        label="Splash Image"
+        addOn={
+          <Flex gap={3} alignItems="center">
+            <Text>{welcomeScreen.img ? "Custom" : "Default"}</Text>
+            <Switch
+              size="lg"
+              isChecked={!!welcomeScreen.img}
+              onChange={() => {
+                trackCustomize("splash-image-switch");
+                setWelcomeScreen({
+                  ...welcomeScreen,
+                  img: welcomeScreen.img
+                    ? undefined
+                    : {
+                        src: "",
+                        width: 150,
+                        height: 150,
+                      },
+                });
+              }}
+            />
+          </Flex>
+        }
+      >
         {welcomeScreen.img && (
           <Flex flexDir="column" gap={3}>
             <Box>
@@ -781,27 +783,26 @@ export const ConnectWalletPlayground: React.FC<{
           <FormItem
             label="Modal Title Icon"
             description="Icon to shown next to the modal title"
-          >
-            <Flex gap={3} alignItems="center">
-              <Switch
-                size="lg"
-                isChecked={modalTitleIconUrl.enabled}
-                onChange={() => {
-                  if (!modalTitleIconUrl.enabled) {
-                    trackCustomize("modal-title-icon-switch");
-                  }
+            addOn={
+              <Flex gap={3} alignItems="center">
+                <Text>{modalTitleIconUrl.enabled ? "Custom" : "Default"}</Text>
+                <Switch
+                  size="lg"
+                  isChecked={modalTitleIconUrl.enabled}
+                  onChange={() => {
+                    if (!modalTitleIconUrl.enabled) {
+                      trackCustomize("modal-title-icon-switch");
+                    }
 
-                  setModalTitleIconUrl({
-                    ...modalTitleIconUrl,
-                    enabled: !modalTitleIconUrl.enabled,
-                  });
-                }}
-              ></Switch>
-              <Text>
-                {"custom" in modalTitleIconUrl ? "Custom" : "Default"}
-              </Text>
-            </Flex>
-            <Spacer height={2} />
+                    setModalTitleIconUrl({
+                      ...modalTitleIconUrl,
+                      enabled: !modalTitleIconUrl.enabled,
+                    });
+                  }}
+                ></Switch>
+              </Flex>
+            }
+          >
             {modalTitleIconUrl.enabled && (
               <Input
                 placeholder="https://..."
@@ -1104,7 +1105,7 @@ export const ConnectWalletPlayground: React.FC<{
         }}
         gap={{
           base: 14,
-          md: 4,
+          md: 8,
         }}
       >
         {/* left */}
