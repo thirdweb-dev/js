@@ -254,7 +254,8 @@ export const SettingsMetadata = <
                   isDisabled={metadata.isLoading || metadataMutation.isLoading}
                 >
                   <FormLabel textTransform="capitalize">
-                    {item.id ||
+                    {/* // TODO: Fix this */}
+                    {(item as any).key ||
                       extractDomain(
                         watch(`dashboard_social_urls.${index}.value`),
                       ) ||
