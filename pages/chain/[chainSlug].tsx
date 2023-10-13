@@ -603,7 +603,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   const chain = (await res.json()).data as Chain;
 
   // determine if the chainSlug is a chainId and not a slug
-  if (chain.slug !== chainSlug) {
+  if (chain?.slug !== chainSlug) {
     return {
       redirect: {
         destination: `/${chain.slug}`,
