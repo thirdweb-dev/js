@@ -58,6 +58,7 @@ export const EmailSelectionUI: React.FC<
             ...response,
             email: emailInput,
             emailWallet,
+            oauthOptions: undefined,
           });
         })
         .catch((error) => {

@@ -33,12 +33,14 @@ export const EmbeddedSocialConnection: React.FC<
               setConnectionStatus("connected");
             }
           } else {
-            setErrorMessage(response?.error || "Error validating the code");
+            setErrorMessage(
+              response?.error || "Error login in. Please try again later.",
+            );
           }
         })
         .catch((error) => {
           console.error("Error validating otp: ", error);
-          setErrorMessage("Error validating the code");
+          setErrorMessage("Error login in. Please try again later.");
         });
     }, 0);
   }, [
