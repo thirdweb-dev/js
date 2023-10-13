@@ -5,11 +5,11 @@ import { ReactNode, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
-import { useAppTheme } from "../../../styles/hooks";
 import { ChooseWalletContent } from "./ChooseWalletContent";
 import { BaseButton, ImageSvgUri, WalletButton } from "../../base";
 import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
@@ -34,7 +34,7 @@ export function ChooseWallet({
   termsOfServiceUrl,
   privacyPolicyUrl,
 }: ChooseWalletProps) {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const themeLightDark = useTheme();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnectAWalletEnabled, setIsConnectAWalletEnabled] = useState(false);

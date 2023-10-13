@@ -14,8 +14,8 @@ import { useSwitchChain, useSupportedChains } from "@thirdweb-dev/react-core";
 import Box from "./Box";
 import { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
 import { TWModal } from "./modal/TWModal";
-import { useAppTheme } from "../../styles/hooks";
 import { Chain } from "@thirdweb-dev/chains";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 type NetworkButtonProps = {
   chain?: Chain;
@@ -35,7 +35,7 @@ export const NetworkButton = ({
   padding,
   ...props
 }: NetworkButtonProps) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [switchError, setSwitchError] = useState<string | undefined>();
   const [isSwitching, setIsSwitching] = useState(false);
