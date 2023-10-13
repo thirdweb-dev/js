@@ -1,4 +1,7 @@
-import type { IAccountPermissions } from "@thirdweb-dev/contracts-js";
+import type {
+  IAccountPermissions,
+  IAccountPermissions_V1,
+} from "@thirdweb-dev/contracts-js";
 import { BigNumber, BytesLike } from "ethers";
 import { z } from "zod";
 import { AmountSchema } from "../../core/schema/shared";
@@ -62,6 +65,22 @@ export type SignedSignerPermissionsPayload = {
   payload: IAccountPermissions.SignerPermissionRequestStruct;
   signature: BytesLike;
 };
+
+export type SignedSignerPermissionsPayloadV1 = {
+  payload: IAccountPermissions_V1.SignerPermissionRequestStruct;
+  signature: BytesLike;
+};
+
+export const SignerPermissionRequestV1 = [
+  { name: "signer", type: "address" },
+  { name: "approvedTargets", type: "address[]" },
+  { name: "nativeTokenLimitPerTransaction", type: "uint256" },
+  { name: "permissionStartTimestamp", type: "uint128" },
+  { name: "permissionEndTimestamp", type: "uint128" },
+  { name: "reqValidityStartTimestamp", type: "uint128" },
+  { name: "reqValidityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+];
 
 export const SignerPermissionRequest = [
   { name: "signer", type: "address" },

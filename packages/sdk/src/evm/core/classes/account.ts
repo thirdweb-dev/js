@@ -34,6 +34,10 @@ export class Account<TContract extends IAccountCore>
       detectContractFeature<IAccountCore>(
         this.contractWrapper,
         "AccountPermissions",
+      ) ||
+      detectContractFeature<IAccountCore>(
+        this.contractWrapper,
+        "AccountPermissionsV1",
       )
     ) {
       return new AccountPermissions(this.contractWrapper);

@@ -7,9 +7,10 @@ import { Transaction } from "./transactions";
 import type {
   IAccountCore,
   IAccountPermissions,
+  IAccountPermissions_V1,
 } from "@thirdweb-dev/contracts-js";
 import invariant from "tiny-invariant";
-import { resolveAddress } from "../../common";
+import { detectContractFeature, resolveAddress } from "../../common";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { buildTransactionFunction } from "../../common/transactions";
 import { AddressOrEns } from "../../schema";
@@ -20,7 +21,9 @@ import {
   PermissionSnapshotOutput,
   PermissionSnapshotSchema,
   SignedSignerPermissionsPayload,
+  SignedSignerPermissionsPayloadV1,
   SignerPermissionRequest,
+  SignerPermissionRequestV1,
   SignerPermissions,
   SignerPermissionsInput,
   SignerPermissionsOutput,
@@ -90,6 +93,37 @@ export class AccountPermissions implements DetectableFeature {
     permissions: SignerPermissionsOutput,
     adminFlag: AdminFlag,
   ): Promise<Transaction> {
+    if (
+      detectContractFeature<IAccountPermissions_V1>(
+        this.contractWrapper,
+        "AccountPermissionsV1",
+      )
+    ) {
+      // legacy account permissions contract
+      // admin is set only via EOA
+      // signer permissions are set via EOA or admin but no wildcard
+      if (
+        adminFlag === AdminFlag.AddAdmin ||
+        adminFlag === AdminFlag.RemoveAdmin
+      ) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "setAdmin",
+          args: [signerAddress, adminFlag === AdminFlag.AddAdmin],
+        });
+      } else {
+        const { payload, signature } = await this.generateLegacyPayload(
+          signerAddress,
+          permissions,
+        );
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "setPermissionsForSigner",
+          args: [payload, signature],
+        });
+      }
+    }
+
     const { payload, signature } = await this.generatePayload(
       signerAddress,
       permissions,
@@ -100,22 +134,6 @@ export class AccountPermissions implements DetectableFeature {
       method: "setPermissionsForSigner",
       args: [payload, signature],
     });
-  }
-
-  private async buildSignerPermissionRequest(
-    signerAddress: string,
-    permissions: SignerPermissionsOutput,
-    adminFlag: AdminFlag,
-  ): Promise<string> {
-    const { payload, signature } = await this.generatePayload(
-      signerAddress,
-      permissions,
-      adminFlag,
-    );
-    return this.contractWrapper.writeContract.interface.encodeFunctionData(
-      "setPermissionsForSigner",
-      [payload, signature],
-    );
   }
 
   /**
@@ -172,6 +190,53 @@ export class AccountPermissions implements DetectableFeature {
       payload,
     );
 
+    return { payload, signature };
+  }
+
+  private async generateLegacyPayload(
+    signerAddress: string,
+    permissions: SignerPermissionsOutput,
+  ): Promise<SignedSignerPermissionsPayloadV1> {
+    if (permissions.approvedCallTargets === "*") {
+      throw new Error(
+        "Wildcard call targets are not supported on legacy account permissions contract, please deploy an updated contract factory.",
+      );
+    }
+    // legacy account permissions contract
+    // admin is set only via EOA
+    // signer permissions are set via EOA or admin but no wildcard
+    const payload: IAccountPermissions_V1.SignerPermissionRequestStruct = {
+      signer: signerAddress,
+      approvedTargets: permissions.approvedCallTargets,
+      nativeTokenLimitPerTransaction: utils.parseEther(
+        permissions.nativeTokenLimitPerTransaction,
+      ),
+      permissionStartTimestamp: permissions.startDate,
+      permissionEndTimestamp: permissions.expirationDate,
+      reqValidityStartTimestamp: 0,
+      // Req validity ends 10 years from now.
+      reqValidityEndTimestamp: BigNumber.from(
+        Math.floor(
+          new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10).getTime() /
+            1000,
+        ),
+      ),
+      uid: resolveOrGenerateId(undefined),
+    };
+    const chainId = await this.contractWrapper.getChainID();
+    const connectedSigner = this.contractWrapper.getSigner();
+    invariant(connectedSigner, "No signer available");
+    const signature = await this.contractWrapper.signTypedData(
+      connectedSigner,
+      {
+        name: "Account",
+        version: "1",
+        chainId,
+        verifyingContract: this.getAddress(),
+      },
+      { SignerPermissionRequest: SignerPermissionRequestV1 },
+      payload,
+    );
     return { payload, signature };
   }
 
@@ -660,11 +725,13 @@ export class AccountPermissions implements DetectableFeature {
         .map((item) => item.signer);
       allAdmins.forEach(async (admin) => {
         if (!allToMakeAdmin.includes(admin)) {
-          const data = await this.buildSignerPermissionRequest(
-            admin,
-            DEFAULT_PERMISSIONS,
-            AdminFlag.RemoveAdmin,
-          );
+          const data = (
+            await this.sendSignerPermissionRequest(
+              admin,
+              DEFAULT_PERMISSIONS,
+              AdminFlag.RemoveAdmin,
+            )
+          ).encode();
           removeAdminData.push(data);
         }
       });
@@ -679,11 +746,13 @@ export class AccountPermissions implements DetectableFeature {
       await Promise.all(
         allSigners.map(async (item) => {
           if (!allToMakeSigners.includes(item.signer)) {
-            const data = await this.buildSignerPermissionRequest(
-              item.signer,
-              DEFAULT_PERMISSIONS,
-              AdminFlag.None,
-            );
+            const data = (
+              await this.sendSignerPermissionRequest(
+                item.signer,
+                DEFAULT_PERMISSIONS,
+                AdminFlag.None,
+              )
+            ).encode();
             removeSignerData.push(data);
           }
         }),
@@ -692,19 +761,23 @@ export class AccountPermissions implements DetectableFeature {
       for (const member of resolvedSnapshot) {
         // Add new admin
         if (member.makeAdmin) {
-          const data = await this.buildSignerPermissionRequest(
-            member.signer,
-            DEFAULT_PERMISSIONS,
-            AdminFlag.AddAdmin,
-          );
+          const data = (
+            await this.sendSignerPermissionRequest(
+              member.signer,
+              DEFAULT_PERMISSIONS,
+              AdminFlag.AddAdmin,
+            )
+          ).encode();
           addAdminData.push(data);
         } else {
           // Add new scoped
-          const data = await this.buildSignerPermissionRequest(
-            member.signer,
-            member.permissions,
-            AdminFlag.None,
-          );
+          const data = (
+            await this.sendSignerPermissionRequest(
+              member.signer,
+              member.permissions,
+              AdminFlag.None,
+            )
+          ).encode();
           addOrUpdateSignerData.push(data);
         }
       }
