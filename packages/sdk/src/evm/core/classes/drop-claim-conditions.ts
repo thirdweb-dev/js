@@ -100,11 +100,14 @@ export class DropClaimConditions<
   public async getActive(
     options?: ClaimConditionFetchOptions,
   ): Promise<ClaimCondition> {
-    const cc = await this.get();
-    const metadata = await this.metadata.get();
+    const [cc, metadata, tokenDecimals] = await Promise.all([
+      this.get(),
+      this.metadata.get(),
+      this.getTokenDecimals(),
+    ]);
     return await transformResultToClaimCondition(
       cc,
-      await this.getTokenDecimals(),
+      tokenDecimals,
       this.contractWrapper.getProvider(),
       metadata.merkle || {},
       this.storage,
@@ -528,8 +531,10 @@ export class DropClaimConditions<
     const merkleRoot = claimCondition.merkleRoot;
     const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
-      const metadata = await this.metadata.get();
-      const resolvedAddress = await resolveAddress(claimerAddress);
+      const [metadata, resolvedAddress] = await Promise.all([
+        this.metadata.get(),
+        resolveAddress(claimerAddress),
+      ]);
       return await fetchSnapshotEntryForAddress(
         resolvedAddress,
         merkleRoot.toString(),
@@ -820,13 +825,14 @@ export class DropClaimConditions<
     decimals = 0,
     address?: string,
   ): Promise<ClaimVerification> {
-    const addressToClaim = address
-      ? address
-      : await this.contractWrapper.getSignerAddress();
+    const [addressToClaim, activeClaimConditions] = await Promise.all([
+      address ? address : this.contractWrapper.getSignerAddress(),
+      this.getActive(),
+    ]);
     return prepareClaim(
       addressToClaim,
       quantity,
-      await this.getActive(),
+      activeClaimConditions,
       async () => (await this.metadata.get()).merkle,
       decimals,
       this.contractWrapper,
