@@ -5,5 +5,6 @@ export type TokenBoundSmartWalletConfig = {
   tokenContract: string;
   tokenId: BigNumberish;
   accountImplementation?: string;
+  registryAddress?: string;
   salt?: BigNumberish;
 } & Omit<SmartWalletConfig, "factoryAddress">;

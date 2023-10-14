@@ -1,4 +1,4 @@
-import { Chain, getChainByChainId } from "@thirdweb-dev/chains";
+import { Chain } from "@thirdweb-dev/chains";
 import { ConnectParams, Connector } from "../../interfaces/connector";
 import { ERC4337EthersProvider } from "./lib/erc4337-provider";
 import { getVerifyingPaymaster } from "./lib/paymaster";
@@ -126,7 +126,6 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   async switchChain(chainId: number): Promise<void> {
-    // TODO implement chain switching
     const provider = await this.getProvider();
     const currentChainId = (await provider.getNetwork()).chainId;
     if (currentChainId !== chainId) {

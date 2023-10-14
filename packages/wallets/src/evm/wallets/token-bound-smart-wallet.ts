@@ -26,7 +26,8 @@ export class TokenBoundSmartWallet extends SmartWallet {
   constructor(options: WalletOptions<TokenBoundSmartWalletConfig>) {
     super({
       ...options,
-      factoryAddress: ERC6551_REGISTRY,
+      // TODO default account implementation address
+      factoryAddress: options.registryAddress || ERC6551_REGISTRY,
     });
     this.tbaOptions = options;
   }

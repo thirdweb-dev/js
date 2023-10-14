@@ -17,8 +17,7 @@ export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
 
   protected defaultFactoryInfo(): FactoryContractInfo {
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      createAccount: async (factory, owner) => {
+      createAccount: async (factory) => {
         return factory.prepare("createAccount", [
           this.tbaConfig.accountImplementation,
           this.chainId,
@@ -28,8 +27,7 @@ export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
           ethers.utils.toUtf8Bytes(""),
         ]);
       },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      getAccountAddress: async (factory, owner) => {
+      getAccountAddress: async (factory) => {
         return await factory.call("account", [
           this.tbaConfig.accountImplementation,
           this.chainId,
