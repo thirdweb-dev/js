@@ -15,7 +15,6 @@ import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers } from "ethers";
 import {
-  ChainOrRpcUrl,
   getChainProvider,
   SignerPermissionsInput,
   SignerWithPermissions,
@@ -45,11 +44,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       secretKey: config.secretKey,
     }) as providers.BaseProvider;
     this.chainId = (await originalProvider.getNetwork()).chainId;
-    const chainSlug = await this.getChainSlug(config.chain, originalProvider);
     const bundlerUrl =
-      this.config.bundlerUrl || `https://${chainSlug}.bundler.thirdweb.com`;
+      this.config.bundlerUrl || `https://${this.chainId}.bundler.thirdweb.com`;
     const paymasterUrl =
-      this.config.paymasterUrl || `https://${chainSlug}.bundler.thirdweb.com`;
+      this.config.paymasterUrl ||
+      `https://${this.chainId}.bundler.thirdweb.com`;
     const entryPointAddress = config.entryPointAddress || ENTRYPOINT_ADDRESS;
     const localSigner = await params.personalWallet.getSigner();
     const providerConfig: ProviderConfig = {
@@ -80,6 +79,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       providerConfig,
       accountApi,
       originalProvider,
+      this.chainId,
     );
     this.accountApi = accountApi;
   }
@@ -396,30 +396,5 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         return account.call("getNonce", []);
       },
     };
-  }
-
-  private async getChainSlug(
-    chainOrRpc: ChainOrRpcUrl,
-    provider: ethers.providers.Provider,
-  ): Promise<string> {
-    if (typeof chainOrRpc === "object") {
-      return chainOrRpc.slug;
-    }
-    if (typeof chainOrRpc === "number") {
-      const chain = getChainByChainId(chainOrRpc);
-      return chain.slug;
-    }
-    if (typeof chainOrRpc === "string") {
-      if (chainOrRpc.startsWith("http") || chainOrRpc.startsWith("ws")) {
-        // if it's a url, try to get the chain id from the provider
-        const chainId = (await provider.getNetwork()).chainId;
-        const chain = getChainByChainId(chainId);
-        return chain.slug;
-      }
-      // otherwise its the network name
-      return chainOrRpc;
-    } else {
-      throw new Error(`Invalid network: ${chainOrRpc}`);
-    }
   }
 }
