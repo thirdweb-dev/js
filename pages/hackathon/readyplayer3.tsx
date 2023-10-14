@@ -144,7 +144,7 @@ const scheduleItems = [
   {
     day: 16,
     month: "jan",
-    title: "Hackathon Kickoff + Intro to GamingKit",
+    title: "Hackathon Kickoff + Intro to Gaming",
     href: "https://lu.ma/rp3kickoff",
   },
   {
@@ -174,7 +174,7 @@ const scheduleItems = [
   {
     day: 25,
     month: "jan",
-    title: "thirdweb & Coinbase Cloud Code-Along: Build With GamingKit",
+    title: "thirdweb & Coinbase Cloud Code-Along: Build With Gaming",
     href: "https://lu.ma/rp3gamecodealong",
   },
   {

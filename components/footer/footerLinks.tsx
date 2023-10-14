@@ -4,24 +4,6 @@ export interface FooterLinkInfo {
   link: string;
 }
 
-export const SOLUTIONS: FooterLinkInfo[] = [
-  {
-    name: "CommerceKit",
-    label: "commerce",
-    link: "/solutions/commerce",
-  },
-  {
-    link: "/solutions/gaming",
-    name: "GamingKit",
-    label: "gaming",
-  },
-  {
-    link: "/solutions/minting",
-    name: "Minting",
-    label: "minting",
-  },
-];
-
 export const COMMUNITY: FooterLinkInfo[] = [
   {
     label: "events",

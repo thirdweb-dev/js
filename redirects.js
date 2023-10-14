@@ -195,6 +195,11 @@ function redirects() {
       destination: "https://portal.thirdweb.com/wallet",
       permanent: false,
     },
+    {
+      source: "/solutions/commerce",
+      destination: "/solutions/loyalty",
+      permanent: false,
+    },
   ];
 }
 

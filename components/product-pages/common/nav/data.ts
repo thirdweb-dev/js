@@ -1,7 +1,3 @@
-import { FiShoppingCart } from "react-icons/fi";
-import { IoGameControllerOutline } from "react-icons/io5";
-import { MdOutlineLoyalty } from "react-icons/md";
-import { TfiStamp } from "react-icons/tfi";
 import { SectionItemProps, SectionProps } from "./types";
 
 export const PRODUCT_SECTIONS: SectionProps[] = [
@@ -146,21 +142,16 @@ export const PRODUCTS: SectionItemProps[] = [
   },
 ];
 
+const PRODUCT_LABELS = PRODUCTS.map((product) => product.label);
+export type ProductLabel = (typeof PRODUCT_LABELS)[number];
+
 export const SOLUTIONS: SectionItemProps[] = [
   {
-    name: "CommerceKit",
-    label: "commerce",
-    description: "Integrate web3 into commerce apps",
-    link: "/solutions/commerce",
-    iconType: FiShoppingCart,
-    section: "solutions",
-  },
-  {
-    name: "GamingKit",
+    name: "Gaming",
     label: "gaming",
     description: "Integrate web3 into games",
     link: "/solutions/gaming",
-    iconType: IoGameControllerOutline,
+    icon: require("public/assets/solutions-icons/gaming.svg"),
     section: "solutions",
   },
   {
@@ -168,7 +159,7 @@ export const SOLUTIONS: SectionItemProps[] = [
     label: "minting",
     description: "Build and mint NFTs at scale easily",
     link: "/solutions/minting",
-    iconType: TfiStamp,
+    icon: require("public/assets/solutions-icons/minting.svg"),
     section: "solutions",
   },
   {
@@ -176,7 +167,39 @@ export const SOLUTIONS: SectionItemProps[] = [
     label: "loyalty",
     description: "Activate new customer experiences",
     link: "/solutions/loyalty",
-    iconType: MdOutlineLoyalty,
+    icon: require("public/assets/solutions-icons/loyalty.svg"),
+    section: "solutions",
+  },
+  {
+    name: "Marketplace",
+    label: "marketplace",
+    description: "Add marketplaces to any app or game",
+    link: "/solutions/marketplace",
+    icon: require("public/assets/solutions-icons/marketplace.svg"),
+    section: "solutions",
+  },
+  {
+    name: "Chains",
+    label: "chains",
+    description: "All-in-one dev tools for your chain",
+    link: "/solutions/chains",
+    icon: require("public/assets/solutions-icons/chains.svg"),
+    section: "solutions",
+  },
+  {
+    name: "Appchain API",
+    label: "appchain-api",
+    description: "Instant dev tools for your appchain",
+    link: "/solutions/appchain-api",
+    icon: require("public/assets/solutions-icons/appchain-api.svg"),
+    section: "solutions",
+  },
+  {
+    name: "Web2 Onboarding",
+    label: "web2-onboarding",
+    description: "Seamless Web3 onboarding for everyone",
+    link: "/solutions/web2-onboarding",
+    icon: require("public/assets/solutions-icons/web2-onboarding.svg"),
     section: "solutions",
   },
 ];

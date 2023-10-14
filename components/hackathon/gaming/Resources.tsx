@@ -4,17 +4,17 @@ import { Heading, TrackedLink } from "tw-components";
 export const Resources: React.FC = () => {
   const resources = [
     {
-      name: "GamingKit",
+      name: "Gaming",
       link: "https://portal.thirdweb.com/gamingkit",
       image: "/assets/hackathon/resources/readyplayer3/gamingkit.png",
     },
     {
-      name: "GamingKit Guides & Tutorials",
+      name: "Gaming Guides & Tutorials",
       link: "https://blog.thirdweb.com/tag/gaming",
       image: "/assets/hackathon/resources/readyplayer3/gamingkit-blogs.png",
     },
     {
-      name: "GamingKit Quickstart",
+      name: "Gaming Quickstart",
       link: "https://portal.thirdweb.com/gamingkit/quickstart",
       image: "/assets/hackathon/resources/readyplayer3/quickstart.png",
     },

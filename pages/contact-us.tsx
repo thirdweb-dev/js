@@ -258,7 +258,7 @@ const ContactUs: ThirdwebNextPage = () => {
                     color="black"
                     {...form.register("products", { required: true })}
                   >
-                    <option value="GamingKit">GamingKit</option>
+                    <option value="Gaming">Gaming</option>
                     <option value="CommerceKit">CommerceKit</option>
                     <option value="MintingAPI">Minting API</option>
                     <option value="Wallets">Wallets</option>

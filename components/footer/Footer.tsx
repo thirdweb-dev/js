@@ -4,7 +4,6 @@ import {
   FooterLinkInfo,
   NETWORKS,
   SDKs,
-  SOLUTIONS,
 } from "./footerLinks";
 import { SOCIALS } from "./socialLinks";
 import {
@@ -18,6 +17,7 @@ import { Logo } from "components/logo";
 import {
   DEVELOPER_RESOURCES,
   PRODUCTS,
+  SOLUTIONS,
 } from "components/product-pages/common/nav/data";
 import {
   Heading,

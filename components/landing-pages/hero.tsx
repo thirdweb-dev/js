@@ -12,10 +12,13 @@ interface LandingHeroProps {
   inPartnershipWith?: StaticImageData;
   trackingCategory: string;
   ctaText?: string;
-  ctaLink: string;
+  ctaLink?: string;
   gradient: string;
   image?: StaticImageData;
   mobileImage?: StaticImageData;
+  noCta?: boolean;
+  contactUsTitle?: string;
+  contactUsLink?: string;
 }
 
 export const LandingHero: React.FC<LandingHeroProps> = ({
@@ -29,15 +32,17 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   gradient,
   image,
   mobileImage,
+  noCta,
+  contactUsTitle,
+  contactUsLink,
 }) => {
   return (
     <Flex
       flexDir="column"
       gap={{ base: 12, md: 20 }}
-      paddingY={{ base: 0, md: "64px" }}
-      mb={{ base: "80px", md: "120px" }}
+      paddingTop={{ base: 0, md: "64px" }}
     >
-      <Container maxW="container.md" paddingX={{ base: 4, md: 16 }}>
+      <Container maxW="container.lg" paddingX={{ base: 4, md: 16 }}>
         <Flex flexDir="column" gap={{ base: 6, md: 8 }}>
           <Flex flexDir="column" gap={4}>
             {inPartnershipWith && (
@@ -64,13 +69,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               </Box>
             </Heading>
           </Flex>
-          <Text textAlign="center" size="body.xl">
+          <Text textAlign="center" size="body.lg">
             {subtitle}
           </Text>
           <LandingCTAButtons
+            noCta={noCta}
             ctaText={ctaText}
             ctaLink={ctaLink}
             trackingCategory={trackingCategory}
+            contactUsTitle={contactUsTitle}
+            contactUsLink={contactUsLink}
           />
         </Flex>
       </Container>
