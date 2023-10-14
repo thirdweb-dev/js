@@ -13,6 +13,7 @@ import type {
   RainbowWallet,
   SafeWallet,
   SmartWallet,
+  TokenBoundSmartWallet,
   TrustWallet,
   WalletConnect,
   walletIds,
@@ -31,6 +32,7 @@ type WalletIdToWalletTypeMap = {
   magicLink: MagicLink;
   paper: PaperWallet;
   smartWallet: SmartWallet;
+  tokenBoundSmartWallet: TokenBoundSmartWallet;
   safe: SafeWallet;
   trust: TrustWallet;
   embeddedWallet: EmbeddedWallet;
