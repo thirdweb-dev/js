@@ -7,11 +7,11 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": ">=16.7.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "test": "turbo run test test:evm test:solana --filter=./packages/*",
+    "test": "turbo run test --filter=./packages/*",
     "e2e": "turbo run e2e",
     "build": "turbo run build --filter=./packages/*",
     "build:release": "turbo run build --force --filter=./packages/*",
@@ -26,12 +26,14 @@
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
+    "version-packages:next": "node scripts/pre-nightly.mjs && changeset version --snapshot next",
+    "release:next": "node ./scripts/pre-release.mjs && changeset publish --tag next",
     "push": "turbo run push --filter=./packages/*",
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs",
     "explain:major": "node ./scripts/changeset-explain-major.mjs"
   },
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "pnpm@8.9.0",
   "dependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
@@ -54,10 +56,8 @@
   },
   "pnpm": {
     "overrides": {
-      "cross-fetch@>=3.0.0 <3.1.5": ">=3.1.5",
       "got@<11.8.5": ">=11.8.5",
       "glob-parent@<5.1.2": ">=5.1.2",
-      "node-fetch@<2.6.7": ">=2.6.7",
       "nth-check@<2.0.1": ">=2.0.1",
       "socket.io-parser@>=4.0.4 <4.2.3": ">=4.2.3",
       "fast-xml-parser@<4.2.4": ">=4.2.4",

@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.14
+
+### Patch Changes
+
+- [#1757](https://github.com/thirdweb-dev/js/pull/1757) [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update deployment and tests for MarketplaceV3 latest
+
 ## 1.3.13
 
 ### Patch Changes

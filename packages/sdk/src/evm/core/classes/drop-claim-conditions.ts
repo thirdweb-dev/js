@@ -100,11 +100,14 @@ export class DropClaimConditions<
   public async getActive(
     options?: ClaimConditionFetchOptions,
   ): Promise<ClaimCondition> {
-    const cc = await this.get();
-    const metadata = await this.metadata.get();
+    const [cc, metadata, tokenDecimals] = await Promise.all([
+      this.get(),
+      this.metadata.get(),
+      this.getTokenDecimals(),
+    ]);
     return await transformResultToClaimCondition(
       cc,
-      await this.getTokenDecimals(),
+      tokenDecimals,
       this.contractWrapper.getProvider(),
       metadata.merkle || {},
       this.storage,
@@ -236,12 +239,6 @@ export class DropClaimConditions<
     let activeConditionIndex: BigNumber;
     let claimCondition: ClaimCondition;
 
-    const decimals = await this.getTokenDecimals();
-    const quantityWithDecimals = utils.parseUnits(
-      AmountSchema.parse(quantity),
-      decimals,
-    );
-
     if (addressToCheck === undefined) {
       try {
         addressToCheck = await this.contractWrapper.getSignerAddress();
@@ -255,7 +252,15 @@ export class DropClaimConditions<
       return [ClaimEligibility.NoWallet];
     }
 
-    const resolvedAddress = await resolveAddress(addressToCheck);
+    const [resolvedAddress, decimals] = await Promise.all([
+      resolveAddress(addressToCheck),
+      this.getTokenDecimals(),
+    ]);
+
+    const quantityWithDecimals = utils.parseUnits(
+      AmountSchema.parse(quantity),
+      decimals,
+    );
 
     try {
       claimCondition = await this.getActive();
@@ -487,7 +492,7 @@ export class DropClaimConditions<
       }
     }
 
-    // if not within a browser conetext, check for wallet balance.
+    // if not within a browser context, check for wallet balance.
     // In browser context, let the wallet do that job
     if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
@@ -528,8 +533,10 @@ export class DropClaimConditions<
     const merkleRoot = claimCondition.merkleRoot;
     const merkleRootArray = utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
-      const metadata = await this.metadata.get();
-      const resolvedAddress = await resolveAddress(claimerAddress);
+      const [metadata, resolvedAddress] = await Promise.all([
+        this.metadata.get(),
+        resolveAddress(claimerAddress),
+      ]);
       return await fetchSnapshotEntryForAddress(
         resolvedAddress,
         merkleRoot.toString(),
@@ -820,13 +827,14 @@ export class DropClaimConditions<
     decimals = 0,
     address?: string,
   ): Promise<ClaimVerification> {
-    const addressToClaim = address
-      ? address
-      : await this.contractWrapper.getSignerAddress();
+    const [addressToClaim, activeClaimConditions] = await Promise.all([
+      address ? address : this.contractWrapper.getSignerAddress(),
+      this.getActive(),
+    ]);
     return prepareClaim(
       addressToClaim,
       quantity,
-      await this.getActive(),
+      activeClaimConditions,
       async () => (await this.metadata.get()).merkle,
       decimals,
       this.contractWrapper,

@@ -9,6 +9,8 @@ require("dotenv-mono").load();
 
 const secretKey = process.env.TW_SECRET_KEY as string;
 
+const itIfCI = process.env.CI ? it : it.skip;
+
 describe("IPFS", async () => {
   if (!secretKey) {
     throw new Error("TW_SECRET_KEY is not set in the environment variables");
@@ -410,26 +412,30 @@ describe("IPFS", async () => {
     );
   });
 
-  it("Should return URIs with gateway URLs if specified on function", async () => {
-    const uri = await storage.upload(
-      {
-        name: "String",
-        image: readFileSync("test/files/0.jpg"),
-      },
-      {
-        uploadWithGatewayUrl: true,
-        alwaysUpload: true,
-      },
-    );
+  // only run this in CI because on local it will always be different (different api key)
+  itIfCI(
+    "Should return URIs with gateway URLs if specified on function",
+    async () => {
+      const uri = await storage.upload(
+        {
+          name: "String",
+          image: readFileSync("test/files/0.jpg"),
+        },
+        {
+          uploadWithGatewayUrl: true,
+          alwaysUpload: true,
+        },
+      );
 
-    expect(uri).to.equal(
-      getGatewayUrlForCid(
-        authorizedUrls["ipfs://"][0],
-        // CID changes based on file contents (prod gateway vs staging gateway since they get written)
-        `bafybeicn4fmtzb7kcg5idlzoo7ahomt5khqyz7lrpv2r5zz5n7sb4s2uvm/0`,
-      ),
-    );
-  });
+      expect(uri).to.equal(
+        getGatewayUrlForCid(
+          authorizedUrls["ipfs://"][0],
+          // CID changes based on file contents (prod gateway vs staging gateway since they get written)
+          `bafybeicn4fmtzb7kcg5idlzoo7ahomt5khqyz7lrpv2r5zz5n7sb4s2uvm/0`,
+        ),
+      );
+    },
+  );
 
   it("Should return URIs with gateway URLs if specified on class", async () => {
     const uploader = new IpfsUploader({

@@ -17,9 +17,9 @@ import { TextInput } from "../../components/base/TextInput";
 import Text from "../../components/base/Text";
 import { useMagicLink } from "../../providers/context-provider";
 import BaseButton from "../../components/base/BaseButton";
-import { useAppTheme } from "../../styles/hooks";
 import React from "react";
 import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export const magicLink = (
   magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
@@ -54,7 +54,7 @@ export const magicLink = (
 };
 
 const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [email, setEmail] = React.useState("");
 
   const onContinuePress = () => {
@@ -108,7 +108,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
 
 const MagicConnectionUI: React.FC<
   ConnectUIProps<MagicLink> & { magicLinkOptions: MagicLinkOptions }
-> = ({ selectionData, walletConfig, close, goBack, magicLinkOptions }) => {
+> = ({ selectionData, walletConfig, connected, goBack, magicLinkOptions }) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectedWallet = useSetConnectedWallet();
   const chainToConnect = useWalletContext().chainToConnect;
@@ -140,7 +140,7 @@ const MagicConnectionUI: React.FC<
             ? { email: selectionData }
             : { phoneNumber: selectionData }),
         };
-        close();
+        connected();
         await ctxMagicLink.connect(connectParams);
         await ctxMagicLink.getMagicSDK().user.getMetadata();
 
@@ -154,7 +154,7 @@ const MagicConnectionUI: React.FC<
   }, [
     selectionData,
     walletConfig,
-    close,
+    connected,
     ctxMagicLink,
     setConnectedWallet,
     setConnectionStatus,
@@ -166,7 +166,7 @@ const MagicConnectionUI: React.FC<
     <ConnectingWallet
       subHeaderText=""
       wallet={walletConfig}
-      onClose={close}
+      onClose={connected}
       onBackPress={goBack}
     />
   );

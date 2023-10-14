@@ -290,7 +290,7 @@ export function SendFundsForm(props: {
           </CurrencyBadge>
         </Container>
 
-        <Spacer y="xl" />
+        <Spacer y="xxl" />
 
         {/* Submit */}
         <Button
@@ -307,6 +307,7 @@ export function SendFundsForm(props: {
           style={{
             alignItems: "center",
             gap: spacing.sm,
+            padding: spacing.md,
           }}
         >
           {sendTokenMutation.isLoading ? "Sending" : "Send"}

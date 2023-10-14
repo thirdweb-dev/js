@@ -890,7 +890,7 @@ function addChainToSupportedChains(
     options = {
       ...options,
       // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
-      supportedChains: [...(options?.supportedChains || []), network],
+      supportedChains: [network, ...(options?.supportedChains || [])],
     };
   }
   return options;

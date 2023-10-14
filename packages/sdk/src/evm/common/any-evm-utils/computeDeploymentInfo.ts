@@ -135,7 +135,7 @@ export async function encodeConstructorParamsForImplementation(
     compilerMetadata.abi,
   );
   const constructorParamTypes = constructorParams.map((p) => {
-    if (p.type === "tuple[]") {
+    if (p.type === "tuple[]" || p.type === "tuple") {
       return utils.ParamType.from(p);
     } else {
       return p.type;
@@ -156,30 +156,13 @@ export async function encodeConstructorParamsForImplementation(
         return constructorParamMap[p.name].value;
       }
       if (p.name && p.name.includes("nativeTokenWrapper")) {
-        let nativeTokenWrapperAddress =
-          getNativeTokenByChainId(chainId).wrapped.address;
-
-        if (nativeTokenWrapperAddress === constants.AddressZero) {
-          const deploymentInfo = await computeDeploymentInfo(
-            "infra",
-            provider,
-            storage,
-            create2Factory,
-            {
-              contractName: "WETH9",
-            },
-            clientId,
-            secretKey,
-          );
-          if (!caches.deploymentPresets["WETH9"]) {
-            caches.deploymentPresets["WETH9"] = deploymentInfo;
-          }
-
-          nativeTokenWrapperAddress =
-            deploymentInfo.transaction.predictedAddress;
-        }
-
-        return nativeTokenWrapperAddress;
+        return await nativeTokenInputArg(
+          provider,
+          storage,
+          create2Factory,
+          clientId,
+          secretKey,
+        );
       } else if (p.name && p.name.includes("trustedForwarder")) {
         if (compilerMetadata.name === "Pack") {
           // EOAForwarder for Pack
@@ -218,6 +201,27 @@ export async function encodeConstructorParamsForImplementation(
         return deploymentInfo.transaction.predictedAddress;
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {
         return getRoyaltyEngineV1ByChainId(chainId);
+      } else if (p.name && p.name.includes("marketplaceV3Params")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        const royaltyEngineAddress = getRoyaltyEngineV1ByChainId(chainId);
+
+        const nativeTokenWrapper = await nativeTokenInputArg(
+          provider,
+          storage,
+          create2Factory,
+          clientId,
+          secretKey,
+        );
+
+        const extensions = constructorParamMap
+          ? constructorParamMap["_extensions"].value
+          : [];
+
+        return {
+          extensions: extensions,
+          royaltyEngineAddress: royaltyEngineAddress,
+          nativeTokenWrapper: nativeTokenWrapper,
+        };
       } else {
         throw new Error("Can't resolve constructor arguments");
       }
@@ -229,4 +233,37 @@ export async function encodeConstructorParamsForImplementation(
     constructorParamValues,
   );
   return encodedArgs;
+}
+
+async function nativeTokenInputArg(
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  create2Factory: string,
+  clientId?: string,
+  secretKey?: string,
+): Promise<string> {
+  const chainId = (await provider.getNetwork()).chainId;
+  let nativeTokenWrapperAddress =
+    getNativeTokenByChainId(chainId).wrapped.address;
+
+  if (nativeTokenWrapperAddress === constants.AddressZero) {
+    const deploymentInfo = await computeDeploymentInfo(
+      "infra",
+      provider,
+      storage,
+      create2Factory,
+      {
+        contractName: "WETH9",
+      },
+      clientId,
+      secretKey,
+    );
+    if (!caches.deploymentPresets["WETH9"]) {
+      caches.deploymentPresets["WETH9"] = deploymentInfo;
+    }
+
+    nativeTokenWrapperAddress = deploymentInfo.transaction.predictedAddress;
+  }
+
+  return nativeTokenWrapperAddress;
 }

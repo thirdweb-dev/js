@@ -1,14 +1,9 @@
-import {
-  Theme,
-  ThemeObjectOrType,
-  iconSize,
-  spacing,
-} from "../../design-system";
+import { Theme, ThemeObjectOrType, iconSize } from "../../design-system";
 import { ConnectedWalletDetails, type DropDownPosition } from "./Details";
 import {
   useAddress,
   useConnectionStatus,
-  useLogin,
+  useDisconnect,
   useLogout,
   useNetworkMismatch,
   useSwitchChain,
@@ -18,7 +13,7 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   SetModalConfigCtx,
   useSetIsWalletModalOpen,
@@ -26,18 +21,18 @@ import {
 import { Button } from "../../components/buttons";
 import { Spinner } from "../../components/Spinner";
 import styled from "@emotion/styled";
-import { LockIcon } from "./icons/LockIcon";
-import { Container } from "../../components/basic";
-import { shortenAddress } from "../../evm/utils/addresses";
-import { SignatureModal } from "./SignatureModal";
 import type { NetworkSelectorProps } from "./NetworkSelector";
-import { defaultModalTitle } from "./constants";
+import { defaultModalTitle, onModalUnmount } from "./constants";
 import { isMobile } from "../../evm/utils/isMobile";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { WelcomeScreen } from "./screens/types";
 import { useTheme } from "@emotion/react";
 import { fadeInAnimation } from "../../design-system/animations";
 import { SupportedTokens, defaultTokens } from "./defaultTokens";
+import { Container } from "../../components/basic";
+import { LockIcon } from "./icons/LockIcon";
+import { SignatureScreen } from "./SignatureScreen";
+import { Modal } from "../../components/Modal";
 
 export type ConnectWalletProps = {
   className?: string;
@@ -70,7 +65,10 @@ export type ConnectWalletProps = {
 
   style?: React.CSSProperties;
 
-  networkSelector?: Omit<NetworkSelectorProps, "theme" | "onClose" | "chains">;
+  networkSelector?: Omit<
+    NetworkSelectorProps,
+    "theme" | "onClose" | "chains" | "open"
+  >;
 
   /**
    * Hide option to request testnet funds for testnets in dropdown
@@ -160,29 +158,20 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 
   const setModalConfig = useContext(SetModalConfigCtx);
 
-  const address = useAddress();
-  const [showSignatureModal, setShowSignatureModal] = useState(false);
   const authConfig = useThirdwebAuthContext();
-  const { user } = useUser();
-  const { login } = useLogin();
+
   const { logout } = useLogout();
   const isNetworkMismatch = useNetworkMismatch();
   const { activeChainSetExplicitly } = useWalletContext();
 
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const address = useAddress();
+  const { user } = useUser();
+  const disconnect = useDisconnect();
+
   const requiresSignIn = props.auth?.loginOptional
     ? false
     : !!authConfig?.authUrl && !!address && !user?.address;
-
-  const signIn = async () => {
-    try {
-      setShowSignatureModal(true);
-      const token = await login();
-      props?.auth?.onLogin?.(token);
-    } catch (err) {
-      console.error("failed to log in", err);
-    }
-    setShowSignatureModal(false);
-  };
 
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {
@@ -201,14 +190,34 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
     return tokens;
   }, [props.supportedTokens]);
 
+  // if wallet gets disconnected, close the signature modal
+  useEffect(() => {
+    if (!activeWallet) {
+      setShowSignatureModal(false);
+    }
+  }, [activeWallet]);
+
   return (
     <CustomThemeProvider theme={theme}>
-      {showSignatureModal && (
-        <SignatureModal
-          open={showSignatureModal}
-          setOpen={setShowSignatureModal}
+      <Modal
+        size="compact"
+        open={showSignatureModal}
+        setOpen={(value) => {
+          if (!value) {
+            setShowSignatureModal(false);
+            onModalUnmount(() => {
+              disconnect();
+            });
+          }
+        }}
+      >
+        <SignatureScreen
+          modalSize="compact"
+          termsOfServiceUrl={props.termsOfServiceUrl}
+          privacyPolicyUrl={props.privacyPolicyUrl}
+          onDone={() => setShowSignatureModal(false)}
         />
-      )}
+      </Modal>
 
       {(() => {
         // wallet is not connected
@@ -245,6 +254,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                   privacyPolicyUrl: props.privacyPolicyUrl,
                   welcomeScreen: props.welcomeScreen,
                   titleIconUrl: props.modalTitleIconUrl,
+                  auth: props.auth,
                 });
                 setIsWalletModalOpen(true);
               }}
@@ -278,28 +288,25 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
           return (
             <Button
               variant="primary"
-              onClick={signIn}
+              onClick={() => {
+                if (activeWallet) {
+                  setShowSignatureModal(true);
+                }
+              }}
               data-theme={theme}
               className={`${TW_CONNECT_WALLET}--sign-in ${
                 props.className || ""
               }`}
-              style={props.style}
+              style={{
+                minWidth: "140px",
+                ...props.style,
+              }}
               data-test="sign-in-button"
             >
-              <Container
-                flex="row"
-                center="y"
-                gap="sm"
-                style={{
-                  paddingRight: spacing.xs,
-                  borderRight: "1px solid",
-                  marginRight: spacing.xs,
-                }}
-              >
+              <Container flex="row" center="y" gap="sm">
                 <LockIcon size={iconSize.sm} />
                 <span> Sign in </span>
               </Container>
-              <span>{shortenAddress(address || "", true)}</span>
             </Button>
           );
         }

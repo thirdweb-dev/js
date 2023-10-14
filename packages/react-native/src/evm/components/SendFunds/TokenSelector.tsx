@@ -15,10 +15,10 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import { useAppTheme } from "../../styles/hooks";
 import { SelectTokenButton } from "./SelectTokenButton";
 import CloseIcon from "../../assets/close";
 import Text from "../base/Text";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export function useToken(tokenAddress: string): {
   isLoading: boolean;
@@ -82,7 +82,7 @@ export function TokenSelector(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
 }) {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [input, setInput] = useState("");
   const chainId = useChainId();
   const nativeTokenInfo = useNativeToken();

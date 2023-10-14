@@ -9,8 +9,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 
-global.fetch = require("cross-fetch");
-
 describe("Token sig minting", async () => {
   let contract: Token;
   let customTokenContract: Token;

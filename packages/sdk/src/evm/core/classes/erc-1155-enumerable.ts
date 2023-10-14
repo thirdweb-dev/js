@@ -102,7 +102,10 @@ export class Erc1155Enumerable implements DetectableFeature {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async owned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+  public async owned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
     const [address, maxId] = await Promise.all([
       resolveAddress(
         walletAddress || (await this.contractWrapper.getSignerAddress()),
@@ -114,7 +117,7 @@ export class Erc1155Enumerable implements DetectableFeature {
       Array.from(Array(maxId.toNumber()).keys()),
     ]);
 
-    const ownedBalances = balances
+    let ownedBalances = balances
       .map((b, i) => {
         return {
           tokenId: i,
@@ -122,6 +125,11 @@ export class Erc1155Enumerable implements DetectableFeature {
         };
       })
       .filter((b) => b.balance.gt(0));
+    if (queryParams) {
+      const start = queryParams?.start || 0;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      ownedBalances = ownedBalances.slice(start, start + count);
+    }
     const nfts = (
       await Promise.all(
         ownedBalances.map((item) => this.erc1155.get(item.tokenId.toString())),

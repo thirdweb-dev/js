@@ -12,9 +12,9 @@ import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
 import ConnectAppField from "./ConnectAppField";
-import { useAppTheme } from "../../styles/hooks";
 import DisconnectIcon from "../../assets/disconnect";
 import { IconTextButton } from "../base/IconTextButton";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
@@ -26,7 +26,7 @@ export const SmartWalletAdditionalActions = ({
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const wallet = showSmartWallet
     ? smartWallet

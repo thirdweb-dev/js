@@ -59,11 +59,13 @@ export const coinbaseWallet = (
 };
 
 export const CoinbaseNativeModalConnectUI = ({
-  close,
+  connected,
   walletConfig,
-  open,
+  show,
+  hide,
   supportedWallets,
   theme,
+  goBack,
 }: ConnectUIProps<CoinbaseWallet>) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -78,30 +80,34 @@ export const CoinbaseNativeModalConnectUI = ({
     prompted.current = true;
 
     (async () => {
-      close();
+      hide();
       const wallet = createWalletInstance(walletConfig);
       wallet.theme = theme;
       setConnectionStatus("connecting");
       try {
         await wallet.connect();
         setConnectedWallet(wallet);
+        connected();
       } catch (e) {
         setConnectionStatus("disconnected");
         if (!singleWallet) {
-          open();
+          goBack();
+          show();
         }
         console.error(e);
       }
     })();
   }, [
     walletConfig,
-    close,
-    open,
     singleWallet,
     createWalletInstance,
     theme,
     setConnectionStatus,
     setConnectedWallet,
+    hide,
+    connected,
+    goBack,
+    show,
   ]);
 
   return null;

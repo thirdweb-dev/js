@@ -4,20 +4,27 @@ import ImageSvgUri from "./ImageSvgUri";
 import { Label } from "./Label";
 import Text from "./Text";
 import Box from "./Box";
+import { Palette } from "../../styles/colors";
 
 type WalletButtonProps = {
   onPress?: () => void;
   walletIconUrl: string;
   name: string;
+  nameColor?: keyof Palette;
   labelText?: string;
   recommended?: boolean;
+  iconWidth?: number;
+  iconHeight?: number;
 } & React.ComponentProps<typeof BaseButton>;
 
 export const WalletButton = ({
+  iconWidth = 48,
+  iconHeight = 48,
   mb,
   onPress,
   walletIconUrl,
   name,
+  nameColor = "textPrimary",
   labelText,
   recommended,
   ...props
@@ -36,9 +43,15 @@ export const WalletButton = ({
       {...props}
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
-        <ImageSvgUri imageUrl={walletIconUrl} width={48} height={48} />
+        <ImageSvgUri
+          imageUrl={walletIconUrl}
+          width={iconWidth}
+          height={iconHeight}
+        />
         <Box ml="sm" alignItems="flex-start">
-          <Text variant="bodyLarge">{name}</Text>
+          <Text variant="bodyLarge" color={nameColor}>
+            {name}
+          </Text>
           {recommended ? <Text variant="link">Recommended</Text> : null}
         </Box>
       </Box>

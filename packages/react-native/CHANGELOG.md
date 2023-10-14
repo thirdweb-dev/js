@@ -1,5 +1,55 @@
 # @thirdweb-dev/react-native
 
+## 0.3.7
+
+### Patch Changes
+
+- [#1754](https://github.com/thirdweb-dev/js/pull/1754) [`dcdb0dcb`](https://github.com/thirdweb-dev/js/commit/dcdb0dcb838168a22c8335738852316dfb6e6fc9) Thanks [@iketw](https://github.com/iketw)! - Fix typos in SmartWallet api
+
+- [#1760](https://github.com/thirdweb-dev/js/pull/1760) [`f41ee6fb`](https://github.com/thirdweb-dev/js/commit/f41ee6fb1cc3b1e58cc273fa45087d4c92ff97d1) Thanks [@iketw](https://github.com/iketw)! - Correctly pass theme via ConnectWallet
+
+- [#1753](https://github.com/thirdweb-dev/js/pull/1753) [`b3b9edca`](https://github.com/thirdweb-dev/js/commit/b3b9edca29e7d4053b14270a61caa89c34fecf9e) Thanks [@iketw](https://github.com/iketw)! - Minor bug and UI fix for connecting an external app to a smart wallet
+
+- [#1759](https://github.com/thirdweb-dev/js/pull/1759) [`513c332e`](https://github.com/thirdweb-dev/js/commit/513c332ed02df4ac316076cc03178a4702b12110) Thanks [@iketw](https://github.com/iketw)! - Fixes bug when passing only one wallet as a supportedWallet. The selectUI component must be displayed.
+
+- Updated dependencies [[`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800), [`74941603`](https://github.com/thirdweb-dev/js/commit/74941603a96456da46a47147f67c98235ac55022), [`4b98e487`](https://github.com/thirdweb-dev/js/commit/4b98e487d4b47225d7095e5444dc5e7608db48a3), [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125), [`dcdb0dcb`](https://github.com/thirdweb-dev/js/commit/dcdb0dcb838168a22c8335738852316dfb6e6fc9), [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606), [`b3b9edca`](https://github.com/thirdweb-dev/js/commit/b3b9edca29e7d4053b14270a61caa89c34fecf9e), [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/sdk@4.0.1
+  - @thirdweb-dev/wallets@2.0.2
+  - @thirdweb-dev/react-core@4.0.2
+
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies [[`e684d05e`](https://github.com/thirdweb-dev/js/commit/e684d05e222458f02c8158eb9385d68c879dd946)]:
+  - @thirdweb-dev/wallets@2.0.1
+  - @thirdweb-dev/react-core@4.0.1
+
+## 0.3.5
+
+### Patch Changes
+
+- [#1645](https://github.com/thirdweb-dev/js/pull/1645) [`79f91ee2`](https://github.com/thirdweb-dev/js/commit/79f91ee2d96e3a9591d6104c542496bce11f3c71) Thanks [@MananTank](https://github.com/MananTank)! - `WalletConfig.connectUI`` props updated:
+
+  - `close` and `open` removed - wallet can no longer "close" the Modal
+  - `hide` and `show` added to only allow hiding and showing the Modal
+  - `connected` added - use this instead of `close` when wallet is connected and Modal is safe to close.
+
+- Updated dependencies [[`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8), [`79f91ee2`](https://github.com/thirdweb-dev/js/commit/79f91ee2d96e3a9591d6104c542496bce11f3c71), [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8)]:
+  - @thirdweb-dev/react-core@4.0.0
+  - @thirdweb-dev/storage@2.0.0
+  - @thirdweb-dev/wallets@2.0.0
+  - @thirdweb-dev/sdk@4.0.0
+
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies [[`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9), [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae), [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48)]:
+  - @thirdweb-dev/sdk@3.10.67
+  - @thirdweb-dev/react-core@3.16.5
+  - @thirdweb-dev/wallets@1.3.5
+
 ## 0.3.3
 
 ### Patch Changes
