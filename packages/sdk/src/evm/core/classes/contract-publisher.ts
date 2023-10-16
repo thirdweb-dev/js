@@ -21,10 +21,7 @@ import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchR
 import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
 import { fetchContractMetadata } from "../../common/fetchContractMetadata";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import {
-  fetchAbiFromAddress,
-  fetchContractMetadataFromAddress,
-} from "../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
@@ -45,6 +42,7 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
+  PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -141,10 +139,11 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
    * @param address
    */
-  public async fetchCompilerMetadataFromAddress(address: AddressOrEns) {
+  public async fetchCompilerMetadataFromAddress(
+    address: AddressOrEns,
+  ): Promise<PublishedMetadata> {
     const resolvedAddress = await resolveAddress(address);
     return fetchContractMetadataFromAddress(
       resolvedAddress,
