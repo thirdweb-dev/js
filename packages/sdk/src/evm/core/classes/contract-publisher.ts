@@ -21,12 +21,16 @@ import { fetchRawPredeployMetadata } from "../../common/feature-detection/fetchR
 import { resolveContractUriFromAddress } from "../../common/feature-detection/resolveContractUriFromAddress";
 import { fetchContractMetadata } from "../../common/fetchContractMetadata";
 import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
-import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import {
+  fetchAbiFromAddress,
+  fetchContractMetadataFromAddress,
+} from "../../common/metadata-resolver";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import {
+  Abi,
   AbiFunction,
   AbiSchema,
   ContractParam,
@@ -217,7 +221,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
+   * Fetch all sources for a contract from its address
    * @param address
    */
   public async fetchContractSourcesFromAddress(
@@ -228,6 +232,22 @@ export class ContractPublisher extends RPCConnectionHandler {
       resolvedAddress,
     );
     return await fetchSourceFilesFromMetadata(metadata, this.storage);
+  }
+
+  /**
+   * Fetch ABI from a contract, or undefined if not found
+   * @param address
+   */
+  public async fetchContractAbiFromAddress(
+    address: AddressOrEns,
+  ): Promise<Abi | undefined> {
+    const resolvedAddress = await resolveAddress(address);
+    const meta = await fetchContractMetadataFromAddress(
+      resolvedAddress,
+      this.getProvider(),
+      this.storage,
+    );
+    return meta.abi;
   }
 
   /**
