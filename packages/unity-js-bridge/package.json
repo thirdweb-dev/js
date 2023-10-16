@@ -18,7 +18,7 @@
     "@thirdweb-dev/sdk": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
-    "ethers": "^5.7.2"
+    "ethers": "^6.8.0"
   },
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",

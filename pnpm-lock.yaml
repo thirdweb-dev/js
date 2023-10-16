@@ -166,8 +166,8 @@ importers:
         specifier: ^0.2.16
         version: 0.2.17
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       express:
         specifier: ^4.18.1
         version: 4.18.2
@@ -262,8 +262,8 @@ importers:
         specifier: ^2.3.6
         version: 2.3.6
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       got:
         specifier: 11.8.5
         version: 11.8.5
@@ -381,7 +381,7 @@ importers:
     dependencies:
       '@thirdweb-dev/contracts':
         specifier: 3.10.3
-        version: 3.10.3(ethers@5.7.2)
+        version: 3.10.3(ethers@6.8.0)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -403,13 +403,13 @@ importers:
         version: link:../tw-tsconfig
       '@typechain/ethers-v5':
         specifier: 10.0.0
-        version: 10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typechain@8.3.1)(typescript@5.1.6)
+        version: 10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2)(ethers@6.8.0)(typechain@8.3.1)(typescript@5.1.6)
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       typechain:
         specifier: ^8.3.1
         version: 8.3.1(typescript@5.1.6)
@@ -607,8 +607,8 @@ importers:
         specifier: ^0.2.16
         version: 0.2.17
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -725,8 +725,8 @@ importers:
         specifier: ^0.2.16
         version: 0.2.17
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -895,8 +895,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(eslint-config-prettier@8.9.0)(eslint@8.45.0)(prettier@3.0.0)
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       expo:
         specifier: ^47.0.14
         version: 47.0.14(@babel/core@7.22.9)
@@ -956,8 +956,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1036,7 +1036,7 @@ importers:
         version: 0.14.2
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.17.0)
+        version: 2.2.3(ethers@6.8.0)(hardhat@2.17.0)
       '@preconstruct/cli':
         specifier: 2.7.0
         version: 2.7.0
@@ -1110,8 +1110,8 @@ importers:
         specifier: ^0.2.16
         version: 0.2.17
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       ethers-aws-kms-signer:
         specifier: ^1.3.2
         version: 1.3.2
@@ -1132,7 +1132,7 @@ importers:
         version: 5.1.6
       zksync-web3:
         specifier: ^0.14.3
-        version: 0.14.3(ethers@5.7.2)
+        version: 0.14.3(ethers@6.8.0)
 
   packages/service-utils:
     dependencies:
@@ -1282,8 +1282,8 @@ importers:
         specifier: workspace:*
         version: link:../wallets
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
     devDependencies:
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
@@ -1437,8 +1437,8 @@ importers:
         specifier: ^0.7.7
         version: 0.7.7
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       ethers-aws-kms-signer:
         specifier: ^1.3.2
         version: 1.3.2
@@ -1461,8 +1461,8 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/sdk
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1489,8 +1489,8 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/sdk
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       next:
         specifier: ^13.4.12
         version: 13.4.12(react-dom@18.2.0)(react@18.2.0)
@@ -1523,8 +1523,8 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/sdk
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ^6.8.0
+        version: 6.8.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1591,6 +1591,9 @@ packages:
       - supports-color
       - utf-8-validate
     dev: false
+
+  /@adraffy/ens-normalize@1.10.0:
+    resolution: {integrity: sha512-nA9XHtlAkYfJxY7bce8DcN7eKxWWCWkU+1GR9d+U6MbNpfwQp8TI7vqOsBsMcHoT4mBu2kypKoSKnghEzOOq5Q==}
 
   /@ampproject/remapping@2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -6260,10 +6263,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@chainlink/contracts@0.6.1(ethers@5.7.2):
+  /@chainlink/contracts@0.6.1(ethers@6.8.0):
     resolution: {integrity: sha512-EuwijGexttw0UjfrW+HygwhQIrGAbqpf1ue28R55HhWMHBzphEH0PhWm8DQmFfj5OZNy8Io66N4L0nStkZ3QKQ==}
     dependencies:
-      '@eth-optimism/contracts': 0.5.40(ethers@5.7.2)
+      '@eth-optimism/contracts': 0.5.40(ethers@6.8.0)
       '@openzeppelin/contracts': 4.9.3
       '@openzeppelin/contracts-upgradeable': 4.7.3
       '@openzeppelin/contracts-v0.7': /@openzeppelin/contracts@3.4.2
@@ -7115,7 +7118,7 @@ packages:
     resolution: {integrity: sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /@eth-optimism/contracts@0.5.40(ethers@5.7.2):
+  /@eth-optimism/contracts@0.5.40(ethers@6.8.0):
     resolution: {integrity: sha512-MrzV0nvsymfO/fursTB7m/KunkPsCndltVgfdHaT1Aj5Vi6R/doKIGGkOofHX+8B6VMZpuZosKCMQ5lQuqjt8w==}
     peerDependencies:
       ethers: ^5
@@ -7123,7 +7126,7 @@ packages:
       '@eth-optimism/core-utils': 0.12.0
       '@ethersproject/abstract-provider': 5.7.0
       '@ethersproject/abstract-signer': 5.7.0
-      ethers: 5.7.2
+      ethers: 6.8.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -9330,11 +9333,21 @@ packages:
     dependencies:
       eslint-scope: 5.1.1
 
+  /@noble/curves@1.2.0:
+    resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
+    dependencies:
+      '@noble/hashes': 1.3.2
+
   /@noble/ed25519@1.7.3:
     resolution: {integrity: sha512-iR8GBkDt0Q3GyaVcIu7mSsVIqnFbkbRzGLWlvhwunacoLwt4J3swfKhfaM6rN6WY+TBGoYT1GtT1mIh2/jGbRQ==}
 
   /@noble/hashes@1.2.0:
     resolution: {integrity: sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==}
+    dev: true
+
+  /@noble/hashes@1.3.2:
+    resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
+    engines: {node: '>= 16'}
 
   /@noble/secp256k1@1.7.1:
     resolution: {integrity: sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==}
@@ -9621,13 +9634,13 @@ packages:
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
     dev: true
 
-  /@nomiclabs/hardhat-ethers@2.2.3(ethers@5.7.2)(hardhat@2.17.0):
+  /@nomiclabs/hardhat-ethers@2.2.3(ethers@6.8.0)(hardhat@2.17.0):
     resolution: {integrity: sha512-YhzPdzb612X591FOe68q+qXVXGG2ANZRvDo0RRUtimev85rCrAlv/TLMEZw5c+kq9AbzocLTVX/h2jVIFPL9Xg==}
     peerDependencies:
       ethers: ^5.0.0
       hardhat: ^2.0.0
     dependencies:
-      ethers: 5.7.2
+      ethers: 6.8.0
       hardhat: 2.17.0(ts-node@10.9.1)(typescript@5.1.6)
     dev: true
 
@@ -11567,7 +11580,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.21.0
       '@noble/ed25519': 1.7.3
-      '@noble/hashes': 1.2.0
+      '@noble/hashes': 1.3.2
       '@noble/secp256k1': 1.7.1
       '@solana/buffer-layout': 4.0.1
       agentkeepalive: 4.3.0
@@ -12033,11 +12046,11 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.10.3(ethers@5.7.2):
+  /@thirdweb-dev/contracts@3.10.3(ethers@6.8.0):
     resolution: {integrity: sha512-wSVNaEoosn0AgUtnxlvv7rgK+3EUMzJm2ZasofPgJgqGS3gYH5nDBmK29VMquA2BLc38OAPyYMWc/iQCiCikMg==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@chainlink/contracts': 0.6.1(ethers@5.7.2)
+      '@chainlink/contracts': 0.6.1(ethers@6.8.0)
       '@openzeppelin/contracts': 4.9.3
       '@openzeppelin/contracts-upgradeable': 4.7.3
       '@thirdweb-dev/dynamic-contracts': 1.1.4
@@ -12115,7 +12128,7 @@ packages:
       '@turf/helpers': 6.5.0
     dev: false
 
-  /@typechain/ethers-v5@10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typechain@8.3.1)(typescript@5.1.6):
+  /@typechain/ethers-v5@10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2)(ethers@6.8.0)(typechain@8.3.1)(typescript@5.1.6):
     resolution: {integrity: sha512-Kot7fwAqnH96ZbI8xrRgj5Kpv9yCEdjo7mxRqrH7bYpEgijT5MmuOo8IVsdhOu7Uog4ONg7k/d5UdbAtTKUgsA==}
     peerDependencies:
       '@ethersproject/abi': ^5.0.0
@@ -12128,7 +12141,7 @@ packages:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/providers': 5.7.2
-      ethers: 5.7.2
+      ethers: 6.8.0
       lodash: 4.17.21
       ts-essentials: 7.0.3(typescript@5.1.6)
       typechain: 8.3.1(typescript@5.1.6)
@@ -12478,6 +12491,9 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@types/node@18.15.13:
+    resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
 
   /@types/node@18.17.1:
     resolution: {integrity: sha512-xlR1jahfizdplZYRU59JlUx9uzF1ARa8jbhM11ccpCJya8kvos5jwdm2ZAgxSCwOl0fq21svP18EVwPBXMQudw==}
@@ -13672,6 +13688,9 @@ packages:
 
   /aes-js@3.0.0:
     resolution: {integrity: sha512-H7wUZRn8WpTq9jocdxQ2c8x2sKo9ZVmzfRE13GiNJXfp7NcKYEdvl3vspKjXox6RIG2VtaRe4JFvxG4rqp2Zuw==}
+
+  /aes-js@4.0.0-beta.5:
+    resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==}
 
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -18166,6 +18185,21 @@ packages:
       '@ethersproject/wallet': 5.7.0
       '@ethersproject/web': 5.7.1
       '@ethersproject/wordlists': 5.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  /ethers@6.8.0:
+    resolution: {integrity: sha512-zrFbmQRlraM+cU5mE4CZTLBurZTs2gdp2ld0nG/f3ecBK+x6lZ69KSxBqZ4NjclxwfTxl5LeNufcBbMsTdY53Q==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.0
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@types/node': 18.15.13
+      aes-js: 4.0.0-beta.5
+      tslib: 2.4.0
+      ws: 8.5.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -28369,6 +28403,9 @@ packages:
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
+  /tslib@2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+
   /tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
@@ -29993,6 +30030,18 @@ packages:
       bufferutil: 4.0.7
       utf-8-validate: 5.0.10
 
+  /ws@8.5.0:
+    resolution: {integrity: sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   /ws@8.9.0:
     resolution: {integrity: sha512-Ja7nszREasGaYUYCI2k4lCKIRTt+y7XuqVoHR44YpI49TtryyqbqvDMn5eqfW7e6HzTukDRIsXqzVHScqRcafg==}
     engines: {node: '>=10.0.0'}
@@ -30255,12 +30304,12 @@ packages:
       zen-observable: 0.7.1
     dev: false
 
-  /zksync-web3@0.14.3(ethers@5.7.2):
+  /zksync-web3@0.14.3(ethers@6.8.0):
     resolution: {integrity: sha512-hT72th4AnqyLW1d5Jlv8N2B/qhEnl2NePK2A3org7tAa24niem/UAaHMkEvmWI3SF9waYUPtqAtjpf+yvQ9zvQ==}
     peerDependencies:
       ethers: ^5.7.0
     dependencies:
-      ethers: 5.7.2
+      ethers: 6.8.0
     dev: true
 
   /zod@3.21.4:

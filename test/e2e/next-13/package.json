@@ -10,7 +10,7 @@
   "dependencies": {
     "@thirdweb-dev/react": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "ethers": "^5.7.2",
+    "ethers": "^6.8.0",
     "next": "^13.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
