@@ -230,7 +230,7 @@ export const mochaHooks = {
       if (contractType === "custom" || contractType === "marketplace-v3") {
         continue;
       }
-      let factories: any[] = [];
+      const factories: any[] = [];
       switch (contractType) {
         case TokenInitializer.contractType:
           factories.push(TokenERC20__factory);
@@ -367,7 +367,7 @@ async function setupMultichainRegistry(
 
 // Setup marketplace-v3 for tests
 async function setupMarketplaceV3(): Promise<string> {
-  let extensions: Extension[] = [];
+  const extensions: Extension[] = [];
 
   // Direct Listings
   const directListingsExtensionAddress = await deployContractAndUploadMetadata(
