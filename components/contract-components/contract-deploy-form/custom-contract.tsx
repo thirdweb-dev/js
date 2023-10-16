@@ -111,6 +111,12 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     fullPublishMetadata.data?.deployType === "autoFactory" ||
     fullPublishMetadata.data?.deployType === "customFactory";
 
+  const isAccountFactory =
+    (fullPublishMetadata.data?.publisher === "deployer.thirdweb.eth" ||
+      fullPublishMetadata.data?.publisher ===
+        "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024") &&
+    fullPublishMetadata.data?.name.includes("AccountFactory");
+
   const deployParams = isFactoryDeployment
     ? initializerParams
     : constructorParams;
@@ -163,14 +169,14 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   }>({
     defaultValues: {
       addToDashboard: shouldDefaulCheckAddToDashboard,
-      deployDeterministic: false,
+      deployDeterministic: isAccountFactory,
       saltForCreate2: "",
       signerAsSalt: true,
       deployParams: parseDeployParams,
     },
     values: {
       addToDashboard: shouldDefaulCheckAddToDashboard,
-      deployDeterministic: false,
+      deployDeterministic: isAccountFactory,
       saltForCreate2: "",
       signerAsSalt: true,
       deployParams: parseDeployParams,
@@ -498,81 +504,62 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
         {fullPublishMetadata.data?.deployType === "standard" && (
           <Flex gap={4} flexDir="column">
-            <Accordion allowToggle>
-              <AccordionItem borderColor="borderColor" borderBottom="none">
-                <AccordionButton px={0}>
-                  <Text flex="1" textAlign="left">
-                    Advanced deployment options
-                  </Text>
-                  <AccordionIcon />
-                </AccordionButton>
+            <Checkbox
+              {...form.register("deployDeterministic")}
+              isChecked={form.watch("deployDeterministic")}
+            >
+              <Tooltip
+                label={
+                  <Card py={2} px={4} bgColor="backgroundHighlight">
+                    <Text fontSize="small" lineHeight={6}>
+                      Allows having the same contract address on multiple
+                      chains. You can control the address by specifying a salt
+                      for create2 deployment below.
+                    </Text>
+                  </Card>
+                }
+                isDisabled={false}
+                p={0}
+                bg="transparent"
+                boxShadow="none"
+              >
+                <HStack>
+                  <Heading as="label" size="label.md">
+                    Deploy at a deterministic address
+                  </Heading>
+                  <Icon as={FiHelpCircle} />
+                </HStack>
+              </Tooltip>
+            </Checkbox>
 
-                <AccordionPanel
-                  py={4}
-                  px={0}
-                  as={Flex}
-                  flexDir="column"
-                  gap={4}
-                >
+            {isCreate2Deployment && (
+              <FormControl>
+                <Flex alignItems="center" my={1}>
+                  <FormLabel mb={0} flex="1" display="flex">
+                    <Flex alignItems="baseline" gap={1}>
+                      Optional Salt Input
+                      <Text size="label.sm">(saltForCreate2)</Text>
+                    </Flex>
+                  </FormLabel>
+                  <FormHelperText mt={0}>string</FormHelperText>
+                </Flex>
+                <SolidityInput
+                  defaultValue={""}
+                  solidityType={"string"}
+                  {...form.register(`saltForCreate2`)}
+                />
+                <Flex alignItems="center" gap={3}>
                   <Checkbox
-                    {...form.register("deployDeterministic")}
-                    isChecked={form.watch("deployDeterministic")}
-                  >
-                    <Tooltip
-                      label={
-                        <Card py={2} px={4} bgColor="backgroundHighlight">
-                          <Text fontSize="small" lineHeight={6}>
-                            Allows having the same contract address on multiple
-                            chains. You can control the address by specifying a
-                            salt for create2 deployment below.
-                          </Text>
-                        </Card>
-                      }
-                      isDisabled={false}
-                      p={0}
-                      bg="transparent"
-                      boxShadow="none"
-                    >
-                      <HStack>
-                        <Heading as="label" size="label.md">
-                          Deterministic address
-                        </Heading>
-                        <Icon as={FiHelpCircle} />
-                      </HStack>
-                    </Tooltip>
-                  </Checkbox>
+                    {...form.register("signerAsSalt")}
+                    isChecked={form.watch("signerAsSalt")}
+                  />
 
-                  {isCreate2Deployment && (
-                    <FormControl>
-                      <Flex alignItems="center" my={1}>
-                        <FormLabel mb={0} flex="1" display="flex">
-                          <Flex alignItems="baseline" gap={1}>
-                            Optional Salt Input
-                            <Text size="label.sm">(saltForCreate2)</Text>
-                          </Flex>
-                        </FormLabel>
-                        <FormHelperText mt={0}>string</FormHelperText>
-                      </Flex>
-                      <SolidityInput
-                        defaultValue={""}
-                        solidityType={"string"}
-                        {...form.register(`saltForCreate2`)}
-                      />
-                      <Flex alignItems="center" gap={3}>
-                        <Checkbox
-                          {...form.register("signerAsSalt")}
-                          isChecked={form.watch("signerAsSalt")}
-                        />
-
-                        <Text mt={1}>
-                          Include deployer wallet address in salt (recommended)
-                        </Text>
-                      </Flex>
-                    </FormControl>
-                  )}
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+                  <Text mt={1}>
+                    Include deployer wallet address in salt (recommended)
+                  </Text>
+                </Flex>
+              </FormControl>
+            )}
           </Flex>
         )}
 
