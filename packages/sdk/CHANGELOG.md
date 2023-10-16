@@ -1,5 +1,12 @@
 # @thirdweb-dev/sdk
 
+## 4.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`6c30b7ef`](https://github.com/thirdweb-dev/js/commit/6c30b7efc708e1244f3be3e10eac8f3b8b14a8c3)]:
+  - @thirdweb-dev/contracts-js@1.3.16
+
 ## 4.0.3
 
 ### Patch Changes
