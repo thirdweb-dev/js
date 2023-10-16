@@ -753,7 +753,7 @@ importers:
         version: 17.2.0(localforage@1.10.0)
       '@magic-sdk/react-native-bare':
         specifier: ^18.5.0
-        version: 18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0)
+        version: 18.5.0(@react-native-async-storage/async-storage@1.19.3)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0)
       '@paperxyz/embedded-wallet-service-sdk':
         specifier: ^1.2.4
         version: 1.2.4
@@ -850,8 +850,8 @@ importers:
         specifier: ^7.22.9
         version: 7.22.9(@babel/core@7.22.9)
       '@react-native-async-storage/async-storage':
-        specifier: ^1.18.2
-        version: 1.18.2(react-native@0.71.11)
+        specifier: ^1.19.3
+        version: 1.19.3(react-native@0.71.11)
       '@react-native-community/eslint-config':
         specifier: ^3.0.2
         version: 3.2.0(eslint@8.45.0)(jest@29.6.2)(prettier@3.0.0)(typescript@5.1.6)
@@ -926,7 +926,7 @@ importers:
         version: 5.7.0
       '@walletconnect/react-native-compat':
         specifier: ^2.8.6
-        version: 2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0)
+        version: 2.8.6(@react-native-async-storage/async-storage@1.19.3)(react-native-get-random-values@1.9.0)
       base-64:
         specifier: ^1.0.0
         version: 1.0.0
@@ -1611,7 +1611,7 @@ packages:
       leven: 3.1.0
     dev: false
 
-  /@aveq-research/localforage-asyncstorage-driver@3.0.1(@react-native-async-storage/async-storage@1.18.2)(localforage@1.10.0)(react-native@0.71.11)(react@18.2.0):
+  /@aveq-research/localforage-asyncstorage-driver@3.0.1(@react-native-async-storage/async-storage@1.19.3)(localforage@1.10.0)(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-e2KbwjU9eLjRB323In1mp4FbHHyar1xT8wvq5x0HLL7//QOb5wMm3ruCVSebUNSz86NKgchOn2ksGDBZGeyALw==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
@@ -1619,7 +1619,7 @@ packages:
       react: '*'
       react-native: '*'
     dependencies:
-      '@react-native-async-storage/async-storage': 1.18.2(react-native@0.71.11)
+      '@react-native-async-storage/async-storage': 1.19.3(react-native@0.71.11)
       localforage: 1.10.0
       react: 18.2.0
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
@@ -8825,7 +8825,7 @@ packages:
       - supports-color
     dev: false
 
-  /@magic-sdk/react-native-bare@18.5.0(@react-native-async-storage/async-storage@1.18.2)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0):
+  /@magic-sdk/react-native-bare@18.5.0(@react-native-async-storage/async-storage@1.19.3)(react-native-device-info@10.6.0)(react-native-safe-area-context@4.5.3)(react-native-webview@12.1.0)(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-DyG6/lkfjD3EXVzOoW3InJkd52mTyIWzDcKb7YU+RXXPGVxJda3W/RTe5OWXB8R48Tm3/elxoUD05+i0v7zXSg==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '>=1.15.5'
@@ -8835,11 +8835,11 @@ packages:
       react-native-safe-area-context: '>=4.4.1'
       react-native-webview: '>=11.0.0'
     dependencies:
-      '@aveq-research/localforage-asyncstorage-driver': 3.0.1(@react-native-async-storage/async-storage@1.18.2)(localforage@1.10.0)(react-native@0.71.11)(react@18.2.0)
+      '@aveq-research/localforage-asyncstorage-driver': 3.0.1(@react-native-async-storage/async-storage@1.19.3)(localforage@1.10.0)(react-native@0.71.11)(react@18.2.0)
       '@magic-sdk/commons': 13.4.0(@magic-sdk/provider@17.4.0)(@magic-sdk/types@15.6.0)
       '@magic-sdk/provider': 17.4.0(localforage@1.10.0)
       '@magic-sdk/types': 15.6.0
-      '@react-native-async-storage/async-storage': 1.18.2(react-native@0.71.11)
+      '@react-native-async-storage/async-storage': 1.19.3(react-native@0.71.11)
       '@types/lodash': 4.14.195
       buffer: 5.6.1
       localforage: 1.10.0
@@ -10584,8 +10584,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-native-async-storage/async-storage@1.18.2(react-native@0.71.11):
-    resolution: {integrity: sha512-dM8AfdoeIxlh+zqgr0o5+vCTPQ0Ru1mrPzONZMsr7ufp5h+6WgNxQNza7t0r5qQ6b04AJqTlBNixTWZxqP649Q==}
+  /@react-native-async-storage/async-storage@1.19.3(react-native@0.71.11):
+    resolution: {integrity: sha512-CwGfoHCWdPOTPS+2fW6YRE1fFBpT9++ahLEroX5hkgwyoQ+TkmjOaUxixdEIoVua9Pz5EF2pGOIJzqOTMWfBlA==}
     peerDependencies:
       react-native: ^0.0.0-0 || 0.60 - 0.72 || 1000.0.0
     dependencies:
@@ -13231,13 +13231,13 @@ packages:
       - react
     dev: false
 
-  /@walletconnect/react-native-compat@2.8.6(@react-native-async-storage/async-storage@1.18.2)(react-native-get-random-values@1.9.0):
+  /@walletconnect/react-native-compat@2.8.6(@react-native-async-storage/async-storage@1.19.3)(react-native-get-random-values@1.9.0):
     resolution: {integrity: sha512-jC7Sgr/vGMZIWW+9vP+y0EKj3DL+Y6YIAszb2o3ZBACynAebr5s0r7y9SaKi1jlKNppoeg4iNt3yIt811B7Q0w==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
       react-native-get-random-values: '*'
     dependencies:
-      '@react-native-async-storage/async-storage': 1.18.2(react-native@0.71.11)
+      '@react-native-async-storage/async-storage': 1.19.3(react-native@0.71.11)
       events: 3.3.0
       fast-text-encoding: 1.0.6
       react-native-get-random-values: 1.9.0(react-native@0.71.11)
