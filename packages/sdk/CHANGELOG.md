@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.5
+
+### Patch Changes
+
+- [#1781](https://github.com/thirdweb-dev/js/pull/1781) [`07544252`](https://github.com/thirdweb-dev/js/commit/07544252b49163e1ae84ba2cc76b99597a1c4553) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utility functions for fetching ABI / sources
+
 ## 4.0.4
 
 ### Patch Changes
