@@ -44,7 +44,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     };
 
     this.#core = new Core({
-      projectId: options?.walletConenctV2ProjectId || TW_WC_PROJECT_ID,
+      projectId: options?.walletConnectV2ProjectId || TW_WC_PROJECT_ID,
       relayUrl: options?.walletConnectV2RelayUrl || WC_RELAY_URL,
     });
   }
@@ -177,6 +177,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
         const signature = await signerSign.signTransaction(signTransaction);
         response = formatJsonRpcResult(id, signature);
+        break;
       default:
         const error = {
           id,

@@ -1,5 +1,82 @@
 # @thirdweb-dev/react-native
 
+## 0.3.11
+
+### Patch Changes
+
+- Updated dependencies [[`07544252`](https://github.com/thirdweb-dev/js/commit/07544252b49163e1ae84ba2cc76b99597a1c4553)]:
+  - @thirdweb-dev/sdk@4.0.5
+  - @thirdweb-dev/react-core@4.0.6
+  - @thirdweb-dev/wallets@2.0.6
+
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.4
+  - @thirdweb-dev/wallets@2.0.5
+  - @thirdweb-dev/react-core@4.0.5
+
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/sdk@4.0.3
+  - @thirdweb-dev/wallets@2.0.4
+  - @thirdweb-dev/react-core@4.0.4
+
+## 0.3.8
+
+### Patch Changes
+
+- [#1724](https://github.com/thirdweb-dev/js/pull/1724) [`fc62b91e`](https://github.com/thirdweb-dev/js/commit/fc62b91ee55b0adba01298f33b21352004d1b71d) Thanks [@iketw](https://github.com/iketw)! - Adds Google sign in to embeddedWallet in React Native
+
+  You need to add the `react-native-inappbrowser-reborn` package to your app, then you can do:
+
+  ```javascript
+  <ThirdwebProvider
+    activeChain={activeChain}
+    clientId={"your-client-id"}
+    supportedWallets={[
+      embeddedWallet({
+        // if this is true AND oauthOptions is not set we set it to false internally
+        email: true,
+        // if this is set we enable Sign in with Google
+        oauthOptions: {
+          redirectUrl: "test15app://",
+          providers: ["google"],
+        },
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+- Updated dependencies [[`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6), [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06), [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223), [`08e9cd20`](https://github.com/thirdweb-dev/js/commit/08e9cd206bcc37cf1e84a878dc78bc4f38e5092c), [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd)]:
+  - @thirdweb-dev/sdk@4.0.2
+  - @thirdweb-dev/react-core@4.0.3
+  - @thirdweb-dev/wallets@2.0.3
+
+## 0.3.7
+
+### Patch Changes
+
+- [#1754](https://github.com/thirdweb-dev/js/pull/1754) [`dcdb0dcb`](https://github.com/thirdweb-dev/js/commit/dcdb0dcb838168a22c8335738852316dfb6e6fc9) Thanks [@iketw](https://github.com/iketw)! - Fix typos in SmartWallet api
+
+- [#1760](https://github.com/thirdweb-dev/js/pull/1760) [`f41ee6fb`](https://github.com/thirdweb-dev/js/commit/f41ee6fb1cc3b1e58cc273fa45087d4c92ff97d1) Thanks [@iketw](https://github.com/iketw)! - Correctly pass theme via ConnectWallet
+
+- [#1753](https://github.com/thirdweb-dev/js/pull/1753) [`b3b9edca`](https://github.com/thirdweb-dev/js/commit/b3b9edca29e7d4053b14270a61caa89c34fecf9e) Thanks [@iketw](https://github.com/iketw)! - Minor bug and UI fix for connecting an external app to a smart wallet
+
+- [#1759](https://github.com/thirdweb-dev/js/pull/1759) [`513c332e`](https://github.com/thirdweb-dev/js/commit/513c332ed02df4ac316076cc03178a4702b12110) Thanks [@iketw](https://github.com/iketw)! - Fixes bug when passing only one wallet as a supportedWallet. The selectUI component must be displayed.
+
+- Updated dependencies [[`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800), [`74941603`](https://github.com/thirdweb-dev/js/commit/74941603a96456da46a47147f67c98235ac55022), [`4b98e487`](https://github.com/thirdweb-dev/js/commit/4b98e487d4b47225d7095e5444dc5e7608db48a3), [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125), [`dcdb0dcb`](https://github.com/thirdweb-dev/js/commit/dcdb0dcb838168a22c8335738852316dfb6e6fc9), [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606), [`b3b9edca`](https://github.com/thirdweb-dev/js/commit/b3b9edca29e7d4053b14270a61caa89c34fecf9e), [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/sdk@4.0.1
+  - @thirdweb-dev/wallets@2.0.2
+  - @thirdweb-dev/react-core@4.0.2
+
 ## 0.3.6
 
 ### Patch Changes

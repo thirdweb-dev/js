@@ -1,5 +1,23 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.16
+
+### Patch Changes
+
+- [#1771](https://github.com/thirdweb-dev/js/pull/1771) [`6c30b7ef`](https://github.com/thirdweb-dev/js/commit/6c30b7efc708e1244f3be3e10eac8f3b8b14a8c3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated to latest contracts package
+
+## 1.3.15
+
+### Patch Changes
+
+- [#1756](https://github.com/thirdweb-dev/js/pull/1756) [`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable adding smart wallet admins via bundler for new account contracts
+
+## 1.3.14
+
+### Patch Changes
+
+- [#1757](https://github.com/thirdweb-dev/js/pull/1757) [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update deployment and tests for MarketplaceV3 latest
+
 ## 1.3.13
 
 ### Patch Changes

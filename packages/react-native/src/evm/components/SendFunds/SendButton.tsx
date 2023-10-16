@@ -1,4 +1,3 @@
-import { useAppTheme } from "../../styles/hooks";
 import React, { useEffect, useMemo, useState } from "react";
 import SendIcon from "../../assets/send";
 import {
@@ -30,13 +29,14 @@ import { utils } from "ethers";
 import LoadingTextAnimation from "../base/LoadingTextAnimation";
 import CheckIcon from "../../assets/check";
 import { TokenSelector } from "./TokenSelector";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export const SendButton = ({
   supportedTokens,
 }: {
   supportedTokens: SupportedTokens;
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onClose = () => {
@@ -139,12 +139,12 @@ const SendFundsForm = ({
   onTokenSelectorPress: () => void;
   token?: TokenInfo;
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const chain = useChain();
   const wallet = useWallet();
   const chainId = useChainId();
   const [receiverAddress, setReceiverAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("0");
   const [showIcon, setShowIcon] = useState(false);
   const tokenAddress = token?.address;
 
@@ -313,6 +313,7 @@ const SendFundsForm = ({
           editable={!sendTokenMutation.isLoading}
           returnKeyType={"done"}
           keyboardType="numeric"
+          value={amount}
           clearTextOnFocus={false}
           style={{
             color: theme.colors.textPrimary,
@@ -322,8 +323,6 @@ const SendFundsForm = ({
             paddingHorizontal: 16,
           }}
           onChangeText={setAmount}
-          placeholder="0"
-          placeholderTextColor={theme.colors.textPrimary}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -348,11 +347,18 @@ const SendFundsForm = ({
         }}
       >
         {sendTokenMutation.isLoading ? (
-          <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+          <ActivityIndicator
+            size="small"
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : showIcon ? (
-          <CheckIcon width={20} height={13} color={theme.colors.textPrimary} />
+          <CheckIcon
+            width={20}
+            height={13}
+            color={theme.colors.accentButtonTextColor}
+          />
         ) : (
-          <Text variant="bodySmall" mr="sm">
+          <Text variant="bodySmall" color="accentButtonTextColor" mr="sm">
             Send
           </Text>
         )}

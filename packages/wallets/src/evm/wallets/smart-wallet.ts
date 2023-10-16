@@ -67,7 +67,7 @@ export class SmartWallet
     this.#wcWallet = this.enableConnectApp
       ? new WalletConnectV2Handler({
           walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
-          walletConenctV2ProjectId: options?.walletConenctV2ProjectId,
+          walletConnectV2ProjectId: options?.walletConnectV2ProjectId,
           walletConnectV2RelayUrl: options?.walletConnectV2RelayUrl,
         })
       : new NoOpWalletConnectHandler();
@@ -120,7 +120,9 @@ export class SmartWallet
    * @param transactions
    * @returns the transaction receipt
    */
-  async executeBatch(transactions: Transaction[]): Promise<TransactionResult> {
+  async executeBatch(
+    transactions: Transaction<any>[],
+  ): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
   }

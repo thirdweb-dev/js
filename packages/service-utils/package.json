@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
