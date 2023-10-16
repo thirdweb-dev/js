@@ -27,7 +27,7 @@ const solutions: SolutionCardProps[] = [
     gradient: "linear-gradient(90deg, #A79AF9, #7AA8D2)",
     description:
       "The all-in-one platform for developers to easily bring their games onto web3. Build a stronger community around your game by giving players ownership of in-game assets.",
-    img: "/assets/landingpage/Gaming.png",
+    img: "/assets/landingpage/GamingKit.png",
     partnerIcon: "/assets/landingpage/icons/Coinbase.svg",
     href: "/solutions/gaming",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
