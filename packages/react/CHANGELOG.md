@@ -1,5 +1,16 @@
 # @thirdweb-dev/react
 
+## 4.0.4
+
+### Patch Changes
+
+- [#1769](https://github.com/thirdweb-dev/js/pull/1769) [`010955ff`](https://github.com/thirdweb-dev/js/commit/010955ff5cc35a975b54c25992b8e65b40e033a1) Thanks [@MananTank](https://github.com/MananTank)! - Fix OTP input not working well with Japanese keyboard
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/sdk@4.0.3
+  - @thirdweb-dev/wallets@2.0.4
+  - @thirdweb-dev/react-core@4.0.4
+
 ## 4.0.3
 
 ### Patch Changes

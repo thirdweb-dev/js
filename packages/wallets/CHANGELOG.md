@@ -1,5 +1,13 @@
 # @thirdweb-dev/wallets
 
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/contracts-js@1.3.15
+  - @thirdweb-dev/sdk@4.0.3
+
 ## 2.0.3
 
 ### Patch Changes
