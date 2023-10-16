@@ -27,7 +27,7 @@ export type Chain = {
   };
   infoURL?: string;
   shortName: string;
-  chainId: number | string;
+  chainId: number;
   networkId?: number;
   ens?: {
     registry: string;

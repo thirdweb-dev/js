@@ -38,7 +38,8 @@ async function sync() {
       try {
         chainId = Number(chainId);
       } catch {
-        // if we fail we ignore this, most likely the chain was out of bounds of i32 and so we leave it as a string
+        // if we fail here then we cannot use this chain in the chains package for now, so we skip it
+        return null;
       }
 
       const pkgChain: Chain = {
@@ -50,24 +51,19 @@ async function sync() {
       };
       // remove all null values
       Object.keys(pkgChain).forEach((key) => {
-        // @ts-ignore
         if (pkgChain[key] === null || pkgChain[key] === undefined) {
-          // @ts-ignore
           delete pkgChain[key];
         }
       });
 
       // sort top level keys alphabetically
-      // @ts-ignore
-      const sortedChain: Chain = {};
+      const sortedChain = {} as Chain;
       Object.keys(pkgChain)
         .sort()
         .forEach((key) => {
-          // @ts-ignore
           sortedChain[key] = pkgChain[key];
         });
 
-      // @ts-ignore
       await fs.writeFile(
         `${chainsDir}/${sortedChain.chainId}.ts`,
         `import type { Chain } from "../src/types";
@@ -102,20 +98,21 @@ export default ${JSON.stringify(
 
   const { imports, exports, exportNames, exportNameToChain } = results.reduce(
     (acc, result) => {
-      // @ts-ignore
+      // if it's a null result skip it (can happen when we skip chains above because their chainID is out of bounds)
+      if (result === null) {
+        return acc;
+      }
       acc.imports.push(result.imp);
-      // @ts-ignore
       acc.exports.push(result.exp);
-      // @ts-ignore
       acc.exportNames.push(result.key);
       acc.exportNameToChain[result.key] = result.chain;
       return acc;
     },
     {
-      imports: [],
-      exports: [],
-      exportNames: [],
-      exportNameToChain: {},
+      imports: [] as string[],
+      exports: [] as string[],
+      exportNames: [] as string[],
+      exportNameToChain: {} as Record<string, Chain>,
     },
   );
 
