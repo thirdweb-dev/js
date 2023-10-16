@@ -393,7 +393,7 @@
     "eth-provider": "^0.13.6",
     "eventemitter3": "^5.0.1",
     "magic-sdk": "^13.6.2",
-    "web3-core": "1.5.2"
+    "web3-core": "4.2.0"
   },
   "peerDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.256.0",
