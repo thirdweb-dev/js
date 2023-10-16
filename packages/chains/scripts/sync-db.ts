@@ -6,7 +6,7 @@ const BASE_URI = (process.env.BASE_URI as string) || "https://api.thirdweb.com";
 
 async function getAllPaginatedChains(
   chains: any[] = [],
-  pathname = "/v1/chains",
+  pathname = "/v1/chains?limit=100",
 ) {
   const url = new URL(BASE_URI);
   url.pathname = pathname;
@@ -33,9 +33,19 @@ async function sync() {
 
   const results = await Promise.all(
     allChainsInDB.map(async (chain) => {
+      let chainId = chain.chainId;
+      // try to convert to number for legacy reasons
+      try {
+        chainId = Number(chainId);
+      } catch {
+        // if we fail we ignore this, most likely the chain was out of bounds of i32 and so we leave it as a string
+      }
+
       const pkgChain: Chain = {
         ...chain,
-        chainId: Number(chain.chainId),
+        // assing back the chainId
+        chainId,
+        // map the features to the legacy format
         features: chain.features?.map((feature) => ({ name: feature })),
       };
       // remove all null values
@@ -78,16 +88,7 @@ export default ${JSON.stringify(
         exportName = `_${exportName}`;
       }
 
-      // imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
-
-      // exports.push(
-      //   `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
-      // );
-
       const key = `c${sortedChain.chainId}`;
-
-      // exportNames.push(key);
-      // exportNameToChain[key] = chain;
 
       return {
         imp: `import c${sortedChain.chainId} from "../chains/${sortedChain.chainId}";`,
@@ -147,8 +148,8 @@ type ChainIdsBySlug = {
     .join(",\n")}
 };
 
-let _chainsById: Record<number, Chain>;
-let _chainIdsBySlug: Record<string, number>;
+let _chainsById: Record<string, Chain>;
+let _chainIdsBySlug: Record<string, string | number>;
 
 function getChainsById() {
   if (_chainsById) {

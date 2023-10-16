@@ -4272,8 +4272,8 @@ type ChainIdsBySlug = {
 "molereum-network": 6022140761023
 };
 
-let _chainsById: Record<number, Chain>;
-let _chainIdsBySlug: Record<string, number>;
+let _chainsById: Record<string, Chain>;
+let _chainIdsBySlug: Record<string, string | number>;
 
 function getChainsById() {
   if (_chainsById) {
