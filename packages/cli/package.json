@@ -45,7 +45,7 @@
     "async-retry": "^1.3.3",
     "commander": "^9.1.0",
     "detect-package-manager": "^2.0.1",
-    "enquirer": "^2.3.6",
+    "enquirer": "^2.4.1",
     "ethers": "^5.7.2",
     "got": "11.8.5",
     "inquirer": "^8.2.3",
