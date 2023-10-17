@@ -239,7 +239,10 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   );
 
   const hasExtensionsParam = useMemo(
-    () => constructorParams.some((param) => param.name === "_extensions"),
+    () =>
+      constructorParams.some(
+        (param) => param.name === "_extensions" || "_marketplaceV3Params",
+      ),
     [constructorParams],
   );
 
