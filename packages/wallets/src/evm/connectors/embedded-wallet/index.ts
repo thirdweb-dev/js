@@ -43,6 +43,14 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
+  async sendEmailOtp({ email }: { email: string }) {
+    const thirdwebSDK = await this.getEmbeddedWalletSDK();
+    if (!thirdwebSDK) {
+      throw new Error("EmbeddedWallet SDK not initialized");
+    }
+    return thirdwebSDK.auth.sendEmailLoginOtp({ email });
+  }
+
   async connect(options?: EmbeddedWalletConnectionArgs) {
     const thirdwebSDK = await this.getEmbeddedWalletSDK();
     if (!thirdwebSDK) {
@@ -65,6 +73,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
             authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
               email: options.email,
               otp: options.otp,
+              recoveryCode: options.recoveryCode,
             });
             break;
           }

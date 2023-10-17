@@ -26,6 +26,7 @@ export type EmbeddedWalletConnectionArgs = {
       loginType: "headless_email_otp_verification";
       email: string;
       otp: string;
+      recoveryCode?: string;
     }
   | {
       loginType: "ui_email_otp";
