@@ -7,11 +7,6 @@ export default {
       "name": "lineascan",
       "url": "https://lineascan.build",
       "standard": "EIP3091"
-    },
-    {
-      "name": "Linea Scan",
-      "url": "https://lineascan.build",
-      "standard": ""
     }
   ],
   "faucets": [

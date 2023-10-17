@@ -18,7 +18,7 @@ export default {
     "format": "png"
   },
   "infoURL": "http://doschain.io/",
-  "name": "DOS Tesnet",
+  "name": "DOS Testnet",
   "nativeCurrency": {
     "name": "DOS",
     "symbol": "DOS",
@@ -26,10 +26,10 @@ export default {
   },
   "redFlags": [],
   "rpc": [
-    "https://dos-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://dos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.doschain.com"
   ],
   "shortName": "dost",
-  "slug": "dos-tesnet",
+  "slug": "dos-testnet",
   "testnet": true
 } as const satisfies Chain;
