@@ -4,13 +4,13 @@ export default {
   "chainId": 100,
   "explorers": [
     {
-      "name": "gnosisscan",
-      "url": "https://gnosisscan.io",
+      "name": "blockscout",
+      "url": "https://gnosis.blockscout.com",
       "standard": "EIP3091"
     },
     {
-      "name": "blockscout",
-      "url": "https://gnosis.blockscout.com",
+      "name": "gnosisscan",
+      "url": "https://gnosisscan.io",
       "standard": "EIP3091"
     }
   ],

@@ -4,13 +4,13 @@ export default {
   "chainId": 369,
   "explorers": [
     {
-      "name": "otterscan",
-      "url": "https://otter.pulsechain.com",
+      "name": "blockscout",
+      "url": "https://scan.pulsechain.com",
       "standard": "EIP3091"
     },
     {
-      "name": "blockscout",
-      "url": "https://scan.pulsechain.com",
+      "name": "otterscan",
+      "url": "https://otter.pulsechain.com",
       "standard": "EIP3091"
     }
   ],

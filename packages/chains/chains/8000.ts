@@ -4,13 +4,13 @@ export default {
   "chainId": 8000,
   "explorers": [
     {
-      "name": "Teleport Cosmos Explorer (Big Dipper)",
-      "url": "https://explorer.teleport.network",
+      "name": "Teleport EVM Explorer (Blockscout)",
+      "url": "https://evm-explorer.teleport.network",
       "standard": "none"
     },
     {
-      "name": "Teleport EVM Explorer (Blockscout)",
-      "url": "https://evm-explorer.teleport.network",
+      "name": "Teleport Cosmos Explorer (Big Dipper)",
+      "url": "https://explorer.teleport.network",
       "standard": "none"
     }
   ],
