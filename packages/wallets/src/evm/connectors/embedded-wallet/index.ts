@@ -231,8 +231,17 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     // implicit call to set the user
     await this.getSigner();
     if (!this.user) {
-      throw new Error("No user found, Paper Wallet is not connected");
+      throw new Error("No user found, Embedded Wallet is not connected");
     }
     return this.user.authDetails.email;
+  }
+
+  async getRecoveryInformation() {
+    // implicit call to set the user
+    await this.getSigner();
+    if (!this.user) {
+      throw new Error("No user found, Embedded Wallet is not connected");
+    }
+    return this.user.authDetails;
   }
 }
