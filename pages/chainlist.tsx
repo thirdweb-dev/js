@@ -247,7 +247,7 @@ interface DashboardRPCProps {
 // TODO replace this with proper SSR partial rendering of chains and paginate on the frontend
 async function getAllPaginatedChains(
   chains: Chain[] = [],
-  pathname = "/v1/chains",
+  pathname = "/v1/chains?limit=100",
 ): Promise<Chain[]> {
   const url = new URL(THIRDWEB_API_HOST);
   url.pathname = pathname;
@@ -266,18 +266,31 @@ async function getAllPaginatedChains(
 
 export const getStaticProps: GetStaticProps<DashboardRPCProps> = async () => {
   const chains = await getAllPaginatedChains();
+
   const minimalChains = chains
     .filter((c) => c.chainId !== 1337)
-    .map((chain) => ({
-      slug: chain.slug,
-      name: chain.name,
-      chainId: chain.chainId,
-      iconUrl: chain?.icon?.url || "",
-      symbol: chain.nativeCurrency.symbol,
-      hasRpc:
-        "rpc" in chain &&
-        chain.rpc.findIndex((c) => c.indexOf("thirdweb.com") > -1) > -1,
-    }));
+    .map((chain) => {
+      let hasRpc = chain.rpc.length > 0;
+      if (hasRpc) {
+        try {
+          const firstRpcUrl = new URL(chain.rpc[0]);
+          // check if the rpc url specifically is thirdweb rpc
+          hasRpc = firstRpcUrl.hostname.endsWith(".thirdweb.com");
+        } catch {
+          // ignore the failure, probably failed to parse the url
+          hasRpc = false;
+        }
+      }
+
+      return {
+        slug: chain.slug,
+        name: chain.name,
+        chainId: chain.chainId,
+        iconUrl: chain?.icon?.url || "",
+        symbol: chain.nativeCurrency.symbol,
+        hasRpc,
+      };
+    });
   return {
     revalidate: 60,
     props: {
