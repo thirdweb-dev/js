@@ -14,6 +14,7 @@ type LoginQuerierTypes = {
   verifyThirdwebEmailLoginOtp: {
     email: string;
     otp: string;
+    recoveryCode?: string;
   };
   injectDeveloperClientId: void;
   getHeadlessGoogleLoginLink: void;
@@ -26,6 +27,7 @@ export abstract class AbstractLogin<
   EMAIL_VERIFICATION extends { email: string; otp: string } = {
     email: string;
     otp: string;
+    recoveryCode?: string;
   },
 > {
   protected LoginQuerier: EmbeddedWalletIframeCommunicator<LoginQuerierTypes>;

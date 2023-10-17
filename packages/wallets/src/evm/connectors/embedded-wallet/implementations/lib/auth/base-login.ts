@@ -7,11 +7,9 @@ import type {
 import { AbstractLogin } from "./abstract-login";
 
 export class BaseLogin extends AbstractLogin<
-  {
-    getRecoveryCode: (userWalletId: string) => Promise<string | undefined>;
-  },
+  void,
   { email: string },
-  { email: string; otp: string }
+  { email: string; otp: string; recoveryCode?: string }
 > {
   private async getGoogleLoginUrl(): Promise<GetHeadlessLoginLinkReturnType> {
     const result = await this.LoginQuerier.call<GetHeadlessLoginLinkReturnType>(
@@ -166,13 +164,15 @@ export class BaseLogin extends AbstractLogin<
   override async verifyEmailLoginOtp({
     email,
     otp,
+    recoveryCode,
   }: {
     email: string;
     otp: string;
+    recoveryCode?: string;
   }): Promise<AuthLoginReturnType> {
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "verifyThirdwebEmailLoginOtp",
-      params: { email, otp },
+      params: { email, otp, recoveryCode },
     });
     return this.postLogin(result);
   }
