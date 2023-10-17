@@ -11,20 +11,19 @@ const keyEncoder = new KeyEncoder("secp256k1");
 /* eslint-disable func-names */
 const EcdsaSigAsnParse: {
   decode: (asnStringBuffer: Buffer, format: "der") => { r: BN; s: BN };
-} = /* @__PURE__ */ asn1.define("EcdsaSig", function (this: any) {
+  // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
+} = asn1.define("EcdsaSig", function (this: any) {
   // parsing this according to https://tools.ietf.org/html/rfc3279#section-2.2.3
   this.seq().obj(this.key("r").int(), this.key("s").int());
 });
-const EcdsaPubKey = /* @__PURE__ */ asn1.define(
-  "EcdsaPubKey",
-  function (this: any) {
-    // parsing this according to https://tools.ietf.org/html/rfc5480#section-2
-    this.seq().obj(
-      this.key("algo").seq().obj(this.key("a").objid(), this.key("b").objid()),
-      this.key("pubKey").bitstr(),
-    );
-  },
-);
+// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
+const EcdsaPubKey = asn1.define("EcdsaPubKey", function (this: any) {
+  // parsing this according to https://tools.ietf.org/html/rfc5480#section-2
+  this.seq().obj(
+    this.key("algo").seq().obj(this.key("a").objid(), this.key("b").objid()),
+    this.key("pubKey").bitstr(),
+  );
+});
 /* eslint-enable func-names */
 
 function getClientCredentials(kmsCredentials: GcpKmsSignerCredentials) {
