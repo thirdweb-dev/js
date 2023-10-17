@@ -921,6 +921,12 @@ importers:
       react-native-mmkv:
         specifier: 2.5.1
         version: 2.5.1(react-native@0.71.11)(react@18.2.0)
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      typedoc:
+        specifier: ^0.25.2
+        version: 0.25.2(typescript@5.1.6)
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -1133,6 +1139,12 @@ importers:
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      typedoc:
+        specifier: ^0.25.2
+        version: 0.25.2(typescript@5.1.6)
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -1451,9 +1463,15 @@ importers:
       ethers-gcp-kms-signer:
         specifier: ^1.1.6
         version: 1.1.6
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
       tweetnacl:
         specifier: ^1.0.3
         version: 1.0.3
+      typedoc:
+        specifier: ^0.25.2
+        version: 0.25.2(typescript@5.1.6)
       typescript:
         specifier: ^5.1.6
         version: 5.1.6

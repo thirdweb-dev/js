@@ -342,8 +342,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Create Pack
-   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet.
-   * @remarks See {@link Pack.createTo}
+   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet. See {@link Pack.createTo}
    *
    * @param metadataWithRewards - the metadata and rewards to include in the pack
    * @example
@@ -396,8 +395,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Add Pack Contents
-   * @remarks Add contents to an existing pack.
-   * @remarks See {@link Pack.addPackContents}
+   * @remarks Add contents to an existing pack. See {@link Pack.addPackContents}
    *
    * @param packId - token Id of the pack to add contents to
    * @param packContents - the rewards to include in the pack

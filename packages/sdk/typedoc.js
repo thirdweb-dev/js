@@ -8,18 +8,9 @@ async function main() {
   const app = await TypeDoc.Application.bootstrapWithPlugins({
     entryPoints: ["src/index.ts"],
     excludeInternal: true,
-    externalPattern: [
-      "**/node_modules/**",
-      "**/packages/sdk/**",
-      "**/packages/wallets/**",
-      "**/packages/chains/**",
-    ],
-    exclude: [
-      "**/node_modules/**",
-      "**/packages/sdk/**",
-      "**/packages/wallets/**",
-      "**/packages/chains/**",
-    ],
+    externalPattern: ["**/node_modules/**"],
+    exclude: ["**/node_modules/**"],
+    pretty: false,
   });
 
   const project = await app.convert();

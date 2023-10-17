@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, better-tree-shaking/no-top-level-side-effects
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const TypeDoc = require("typedoc");
 
 async function main() {
@@ -35,5 +35,4 @@ async function main() {
   }
 }
 
-// eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
 main();
