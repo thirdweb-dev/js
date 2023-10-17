@@ -47,6 +47,13 @@ export interface EmbeddedWalletConnectorOptions {
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 
+export interface AuthOptions {
+  jwt: string;
+  authProvider: string;
+  recoveryCode: string;
+}
+
 export interface EmbeddedWalletConnectionArgs {
   email?: string;
+  authOptions?: AuthOptions;
 }
