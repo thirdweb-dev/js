@@ -4,6 +4,8 @@ import {
   getInjectedMetamaskProvider,
 } from "@thirdweb-dev/wallets";
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
+import { metamaskUris } from "./metamaskUris";
+import { handelWCSessionRequest } from "../handleWCSessionRequest";
 
 type MetamaskWalletOptions = {
   /**
@@ -37,6 +39,8 @@ export const metamaskWallet = (
         projectId: options?.projectId,
         qrcode: false,
       });
+
+      handelWCSessionRequest(wallet, metamaskUris);
 
       return wallet;
     },
