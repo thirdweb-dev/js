@@ -26,6 +26,8 @@ export type AuthDetails = {
   email?: string;
   userWalletId: string;
   recoveryCode?: string;
+  backupRecoveryCodes?: string[];
+  recoveryShareManagement: RecoveryShareManagement;
 };
 
 export type InitializedUser = {

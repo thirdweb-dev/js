@@ -12,7 +12,10 @@ export type {
   AuthStoredTokenWithCookieReturnType,
   StoredTokenType,
 } from "./interfaces/auth";
-export { UserStatus } from "./interfaces/embedded-wallets/embedded-wallets";
+export {
+  UserStatus,
+  UserWalletStatus,
+} from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
   AuthDetails,
   EmbeddedWalletConstructorType,

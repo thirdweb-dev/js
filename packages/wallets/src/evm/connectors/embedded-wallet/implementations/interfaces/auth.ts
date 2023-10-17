@@ -11,6 +11,8 @@ export enum RecoveryShareManagement {
 
 export enum AuthProvider {
   COGNITO = "Cognito",
+  GOOGLE = "Google",
+  EMAIL_OTP = "EmailOtp",
 }
 
 export type GetHeadlessLoginLinkReturnType = {
