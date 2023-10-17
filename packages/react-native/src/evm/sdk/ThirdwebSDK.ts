@@ -1,8 +1,5 @@
-import {
-  NetworkInput,
-  SDKOptions,
-  ThirdwebSDK as ThirdwebSDKCore,
-} from "@thirdweb-dev/react-core";
+import { NetworkInput, SDKOptions } from "@thirdweb-dev/react-core";
+import { ThirdwebSDK as ThirdwebSDKCore } from "@thirdweb-dev/sdk";
 import { IThirdwebStorage } from "@thirdweb-dev/storage";
 import { ThirdwebStorage } from "../../core/storage/storage";
 
