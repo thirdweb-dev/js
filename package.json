@@ -83,7 +83,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.15",
     "@chakra-ui/cli": "^2.4.0",
-    "@next/bundle-analyzer": "^13.4.19",
+    "@next/bundle-analyzer": "^13.5.5",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/airtable": "^0.10.1",
     "@types/color": "^3.0.2",
