@@ -48,9 +48,9 @@ export interface EmbeddedWalletConnectorOptions {
 }
 
 export interface AuthOptions {
-  jwt: string;
-  authProvider: string;
-  recoveryCode: string;
+  jwtToken: string;
+  authProvider: string; // AuthProvider.CustomJwt
+  recoveryCode?: string;
 }
 
 export interface EmbeddedWalletConnectionArgs {
