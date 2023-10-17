@@ -4,13 +4,13 @@ export default {
   "chainId": 11110,
   "explorers": [
     {
-      "name": "Astra PingPub Explorer",
-      "url": "https://ping.astranaut.io/astra",
+      "name": "Astra EVM Explorer (Blockscout)",
+      "url": "https://explorer.astranaut.io",
       "standard": "none"
     },
     {
-      "name": "Astra EVM Explorer (Blockscout)",
-      "url": "https://explorer.astranaut.io",
+      "name": "Astra PingPub Explorer",
+      "url": "https://ping.astranaut.io/astra",
       "standard": "none"
     }
   ],
