@@ -7,9 +7,9 @@ import { OTPInput } from "../../../components/OTPInput";
 import { Spacer } from "../../../components/Spacer";
 import { Spinner } from "../../../components/Spinner";
 import { Container, Line, ModalHeader } from "../../../components/basic";
+import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
-import { Button } from "../../../components/buttons";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
@@ -40,11 +40,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
     try {
       const _wallet = createWalletInstance(props.walletConfig);
       setWallet(_wallet);
-      const _embeddedWalletSdk = await _wallet.getEmbeddedWalletSDK();
-
-      await _embeddedWalletSdk.auth.sendEmailLoginOtp({
-        email: email,
-      });
+      await _wallet.sendEmailOtp({ email });
 
       setSendEmailOtpStatus("sent");
     } catch (e) {
