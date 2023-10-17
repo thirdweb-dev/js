@@ -27,8 +27,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://wireshape-floripa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-floripa.wireshape.org",
-    "https://wireshape-floripa-testnet.rpc.thirdweb.com"
+    "https://rpc-floripa.wireshape.org"
   ],
   "shortName": "floripa",
   "slug": "wireshape-floripa-testnet",

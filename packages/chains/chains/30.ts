@@ -4,13 +4,13 @@ export default {
   "chainId": 30,
   "explorers": [
     {
-      "name": "Rootstock Explorer",
-      "url": "https://explorer.rsk.co",
+      "name": "blockscout",
+      "url": "https://rootstock.blockscout.com",
       "standard": "EIP3091"
     },
     {
-      "name": "blockscout",
-      "url": "https://rootstock.blockscout.com",
+      "name": "Rootstock Explorer",
+      "url": "https://explorer.rsk.co",
       "standard": "EIP3091"
     }
   ],

@@ -4,14 +4,14 @@ export default {
   "chainId": 84531,
   "explorers": [
     {
-      "name": "basescan",
-      "url": "https://goerli.basescan.org",
-      "standard": "none"
-    },
-    {
       "name": "basescout",
       "url": "https://base-goerli.blockscout.com",
       "standard": "EIP3091"
+    },
+    {
+      "name": "basescan",
+      "url": "https://goerli.basescan.org",
+      "standard": "none"
     }
   ],
   "faucets": [

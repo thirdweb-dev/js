@@ -4,13 +4,13 @@ export default {
   "chainId": 50,
   "explorers": [
     {
-      "name": "blocksscan",
-      "url": "https://xdc.blocksscan.io",
+      "name": "xdcscan",
+      "url": "https://xdcscan.io",
       "standard": "EIP3091"
     },
     {
-      "name": "xdcscan",
-      "url": "https://xdcscan.io",
+      "name": "blocksscan",
+      "url": "https://xdc.blocksscan.io",
       "standard": "EIP3091"
     }
   ],

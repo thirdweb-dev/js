@@ -1,5 +1,75 @@
 # @thirdweb-dev/react-native
 
+## 0.3.12
+
+### Patch Changes
+
+- Updated dependencies [[`137f46a5`](https://github.com/thirdweb-dev/js/commit/137f46a5470d2b5f9d7f9eda9b2d839a53ddeb64)]:
+  - @thirdweb-dev/chains@0.1.55
+  - @thirdweb-dev/react-core@4.0.7
+  - @thirdweb-dev/sdk@4.0.6
+  - @thirdweb-dev/wallets@2.0.7
+
+## 0.3.11
+
+### Patch Changes
+
+- Updated dependencies [[`07544252`](https://github.com/thirdweb-dev/js/commit/07544252b49163e1ae84ba2cc76b99597a1c4553)]:
+  - @thirdweb-dev/sdk@4.0.5
+  - @thirdweb-dev/react-core@4.0.6
+  - @thirdweb-dev/wallets@2.0.6
+
+## 0.3.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.4
+  - @thirdweb-dev/wallets@2.0.5
+  - @thirdweb-dev/react-core@4.0.5
+
+## 0.3.9
+
+### Patch Changes
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/sdk@4.0.3
+  - @thirdweb-dev/wallets@2.0.4
+  - @thirdweb-dev/react-core@4.0.4
+
+## 0.3.8
+
+### Patch Changes
+
+- [#1724](https://github.com/thirdweb-dev/js/pull/1724) [`fc62b91e`](https://github.com/thirdweb-dev/js/commit/fc62b91ee55b0adba01298f33b21352004d1b71d) Thanks [@iketw](https://github.com/iketw)! - Adds Google sign in to embeddedWallet in React Native
+
+  You need to add the `react-native-inappbrowser-reborn` package to your app, then you can do:
+
+  ```javascript
+  <ThirdwebProvider
+    activeChain={activeChain}
+    clientId={"your-client-id"}
+    supportedWallets={[
+      embeddedWallet({
+        // if this is true AND oauthOptions is not set we set it to false internally
+        email: true,
+        // if this is set we enable Sign in with Google
+        oauthOptions: {
+          redirectUrl: "test15app://",
+          providers: ["google"],
+        },
+      }),
+    ]}
+  >
+    <App />
+  </ThirdwebProvider>
+  ```
+
+- Updated dependencies [[`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6), [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06), [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223), [`08e9cd20`](https://github.com/thirdweb-dev/js/commit/08e9cd206bcc37cf1e84a878dc78bc4f38e5092c), [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd)]:
+  - @thirdweb-dev/sdk@4.0.2
+  - @thirdweb-dev/react-core@4.0.3
+  - @thirdweb-dev/wallets@2.0.3
+
 ## 0.3.7
 
 ### Patch Changes

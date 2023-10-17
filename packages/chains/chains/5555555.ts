@@ -4,14 +4,14 @@ export default {
   "chainId": 5555555,
   "explorers": [
     {
-      "name": "Imversed Cosmos Explorer (Big Dipper)",
-      "url": "https://tex-c.imversed.com",
-      "standard": "none"
-    },
-    {
       "name": "Imversed EVM explorer (Blockscout)",
       "url": "https://txe.imversed.network",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Imversed Cosmos Explorer (Big Dipper)",
+      "url": "https://tex-c.imversed.com",
+      "standard": "none"
     }
   ],
   "faucets": [],

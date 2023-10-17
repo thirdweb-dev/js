@@ -1587,7 +1587,7 @@ export { default as Alveychain } from "../chains/3797"
 export { default as Kalychain } from "../chains/3888"
 export { default as KalychainTestnet } from "../chains/3889"
 export { default as DracNetwork } from "../chains/3912"
-export { default as DosTesnet } from "../chains/3939"
+export { default as DosTestnet } from "../chains/3939"
 export { default as Dyno } from "../chains/3966"
 export { default as DynoTestnet } from "../chains/3967"
 export { default as Yuanchain } from "../chains/3999"
@@ -3727,7 +3727,7 @@ type ChainIdsBySlug = {
 "kalychain": 3888,
 "kalychain-testnet": 3889,
 "drac-network": 3912,
-"dos-tesnet": 3939,
+"dos-testnet": 3939,
 "dyno": 3966,
 "dyno-testnet": 3967,
 "yuanchain": 3999,
