@@ -44,12 +44,7 @@ export const BackButton: React.FC<{
       style={{ transform: "translateX(-25%)", ...props.style }}
       type="button"
     >
-      <ChevronLeftIcon
-        style={{
-          width: iconSize.md,
-          height: iconSize.md,
-        }}
-      />
+      <ChevronLeftIcon width={iconSize.md} height={iconSize.md} />
     </IconButton>
   );
 };
