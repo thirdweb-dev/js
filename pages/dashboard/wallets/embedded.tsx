@@ -49,7 +49,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
   const [onlyActive, setOnlyActive] = useState(true);
   const walletsQuery = useEmbeddedWallets(selectedKey?.key as string);
 
-  const apiKeys = keysQuery?.data || [];
+  const apiKeys = useMemo(() => keysQuery?.data || [], [keysQuery]);
   const wallets = walletsQuery?.data || [];
 
   const hasApiKeys = apiKeys.length > 0;
@@ -69,16 +69,15 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
   }, [walletsQuery]);
 
   useEffect(() => {
-    if (
-      apiKeys.length > 0 &&
-      (!selectedKey || !apiKeys.find((key) => key.id === selectedKey.id))
-    ) {
+    if (selectedKey) {
+      return;
+    }
+    if (apiKeys.length > 0) {
       setSelectedKey(apiKeys[0]);
     } else {
       setSelectedKey(undefined);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiKeys]);
+  }, [apiKeys, selectedKey]);
 
   return (
     <Flex flexDir="column" gap={10} mt={{ base: 2, md: 6 }}>

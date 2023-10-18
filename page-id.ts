@@ -134,6 +134,8 @@ export enum PageId {
   DashboardWalletsLocal = "dashboard-wallets-local",
   // thirdweb.com/dashboard/wallets/auth
   DashboardWalletsAuth = "dashboard-wallets-auth",
+  // thirdweb.com/dashboard/wallets/auth
+  DashboardWalletsAnalytics = "dashboard-wallets-analytics",
 
   // thirdweb.com/dashboard/contracts/build
   DashboardContractsBuild = "dashboard-contracts-build",

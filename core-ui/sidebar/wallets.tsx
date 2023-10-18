@@ -4,6 +4,7 @@ import { Route } from "./types";
 type WalletsSidebarProps = {
   activePage:
     | "connect"
+    | "analytics"
     | "wallet-sdk"
     | "smart-wallet"
     | "embedded"
@@ -16,6 +17,11 @@ const links: Route[] = [
     path: "/dashboard/wallets/connect",
     title: "Connect",
     name: "connect",
+  },
+  {
+    path: "/dashboard/wallets/analytics",
+    title: "Analytics",
+    name: "analytics",
   },
   {
     path: "/dashboard/wallets/smart-wallet",

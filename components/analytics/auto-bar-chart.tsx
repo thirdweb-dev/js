@@ -27,9 +27,10 @@ export interface AutoBarChartProps<
   };
   showXAxis?: boolean;
   showYAxis?: boolean;
+  stacked?: boolean;
 }
 
-const BAR_COLORS_LIGHT = [
+export const BAR_COLORS_LIGHT = [
   "#649CDD",
   "#92BBE8",
   "#407DCC",
@@ -50,7 +51,7 @@ const BAR_COLORS_LIGHT = [
   "#CEE9E9",
 ];
 
-const BAR_COLORS_DARK = [
+export const BAR_COLORS_DARK = [
   "#3682DA",
   "#6AADF5",
   "#1769D3",
@@ -79,6 +80,7 @@ export const AutoBarChart = <
   index,
   showXAxis,
   showYAxis,
+  stacked,
   ...boxProps
 }: AutoBarChartProps<TData, TIndexKey>) => {
   const { colorMode } = useColorMode();
@@ -161,7 +163,7 @@ export const AutoBarChart = <
             <Bar
               key={`${cat.id as string}`}
               dataKey={cat.id as string}
-              stackId="a"
+              stackId={stacked ? "a" : (cat.id as string)}
               stroke={cat.color || "#3385FF"}
               fill={`url(#bar_color_${id}_${cat.id as string})`}
               opacity={cat.id === hoverKey || !hoverKey ? 1 : 0.5}

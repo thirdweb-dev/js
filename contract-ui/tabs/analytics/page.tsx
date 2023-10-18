@@ -274,7 +274,13 @@ export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
 
   if (categories === "auto") {
     return (
-      <AutoBarChart data={data} index={{ id: index }} showXAxis showYAxis />
+      <AutoBarChart
+        data={data}
+        index={{ id: index }}
+        showXAxis
+        showYAxis
+        stacked
+      />
     );
   }
 

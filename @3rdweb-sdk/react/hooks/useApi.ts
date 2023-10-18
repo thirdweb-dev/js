@@ -142,6 +142,16 @@ export interface UsageBillableByService {
   };
 }
 
+export interface WalletStats {
+  timeSeries: {
+    dayTime: string;
+    clientId: string;
+    walletType: string;
+    totalWallets: number;
+    uniqueWallets: number;
+  }[];
+}
+
 export function useAccount() {
   const { user, isLoggedIn } = useLoggedInUser();
 
@@ -189,6 +199,34 @@ export function useAccountUsage() {
       return json.data as UsageBillableByService;
     },
     { enabled: !!user?.address && isLoggedIn },
+  );
+}
+
+export function useWalletStats(clientId: string | undefined) {
+  const { user, isLoggedIn } = useLoggedInUser();
+
+  return useQuery(
+    accountKeys.walletStats(user?.address as string, clientId as string),
+    async () => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/account/wallets?clientId=${clientId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.data as WalletStats;
+    },
+    { enabled: !!clientId && !!user?.address && isLoggedIn },
   );
 }
 
