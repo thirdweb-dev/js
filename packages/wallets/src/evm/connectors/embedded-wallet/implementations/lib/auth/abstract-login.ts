@@ -8,7 +8,8 @@ import type {
 } from "../../interfaces/embedded-wallets/embedded-wallets";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
-type LoginQuerierTypes = {
+export type LoginQuerierTypes = {
+  loginWithJwtAuthCallback: { token: string; recoveryCode: string };
   loginWithThirdwebModal: undefined | { email: string };
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
@@ -58,6 +59,10 @@ export abstract class AbstractLogin<
     this.clientId = clientId;
   }
 
+  abstract loginWithJwtToken(args: {
+    token: string;
+    recoveryCode: string;
+  }): Promise<AuthLoginReturnType>;
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
   abstract loginWithEmailOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
   abstract loginWithGoogle(args?: {

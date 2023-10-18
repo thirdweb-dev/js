@@ -4,7 +4,7 @@ import type {
   AuthLoginReturnType,
   GetHeadlessLoginLinkReturnType,
 } from "../../interfaces/auth";
-import { AbstractLogin } from "./abstract-login";
+import { AbstractLogin, LoginQuerierTypes } from "./abstract-login";
 
 export class BaseLogin extends AbstractLogin<
   void,
@@ -161,15 +161,22 @@ export class BaseLogin extends AbstractLogin<
     });
   }
 
+  override async loginWithJwtToken({
+    recoveryCode,
+    token,
+  }: LoginQuerierTypes["loginWithJwtAuthCallback"]): Promise<AuthLoginReturnType> {
+    const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
+      procedureName: "loginWithJwtAuthCallback",
+      params: { recoveryCode, token },
+    });
+    return this.postLogin(result);
+  }
+
   override async verifyEmailLoginOtp({
     email,
     otp,
     recoveryCode,
-  }: {
-    email: string;
-    otp: string;
-    recoveryCode?: string;
-  }): Promise<AuthLoginReturnType> {
+  }: LoginQuerierTypes["verifyThirdwebEmailLoginOtp"]): Promise<AuthLoginReturnType> {
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "verifyThirdwebEmailLoginOtp",
       params: { email, otp, recoveryCode },
