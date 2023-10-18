@@ -4,14 +4,14 @@ export default {
   "chainId": 336,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://shiden.subscan.io",
-      "standard": "none"
-    },
-    {
       "name": "blockscout",
       "url": "https://blockscout.com/shiden",
       "standard": "EIP3091"
+    },
+    {
+      "name": "subscan",
+      "url": "https://shiden.subscan.io",
+      "standard": "none"
     }
   ],
   "faucets": [],

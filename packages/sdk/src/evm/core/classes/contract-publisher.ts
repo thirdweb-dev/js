@@ -27,6 +27,7 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import {
+  Abi,
   AbiFunction,
   AbiSchema,
   ContractParam,
@@ -41,6 +42,7 @@ import {
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
+  PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -137,10 +139,11 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
    * @param address
    */
-  public async fetchCompilerMetadataFromAddress(address: AddressOrEns) {
+  public async fetchCompilerMetadataFromAddress(
+    address: AddressOrEns,
+  ): Promise<PublishedMetadata> {
     const resolvedAddress = await resolveAddress(address);
     return fetchContractMetadataFromAddress(
       resolvedAddress,
@@ -217,7 +220,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   /**
-   * @internal
+   * Fetch all sources for a contract from its address
    * @param address
    */
   public async fetchContractSourcesFromAddress(
@@ -228,6 +231,22 @@ export class ContractPublisher extends RPCConnectionHandler {
       resolvedAddress,
     );
     return await fetchSourceFilesFromMetadata(metadata, this.storage);
+  }
+
+  /**
+   * Fetch ABI from a contract, or undefined if not found
+   * @param address
+   */
+  public async fetchContractAbiFromAddress(
+    address: AddressOrEns,
+  ): Promise<Abi | undefined> {
+    const resolvedAddress = await resolveAddress(address);
+    const meta = await fetchContractMetadataFromAddress(
+      resolvedAddress,
+      this.getProvider(),
+      this.storage,
+    );
+    return meta.abi;
   }
 
   /**

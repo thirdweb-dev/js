@@ -4,14 +4,14 @@ export default {
   "chainId": 592,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://astar.subscan.io",
-      "standard": "none"
-    },
-    {
       "name": "blockscout",
       "url": "https://blockscout.com/astar",
       "standard": "EIP3091"
+    },
+    {
+      "name": "subscan",
+      "url": "https://astar.subscan.io",
+      "standard": "none"
     }
   ],
   "faucets": [],

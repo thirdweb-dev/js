@@ -7,9 +7,11 @@ import {
   AbiEvent,
   AbiFunction,
   AbiSchema,
+  ContractSource,
   PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
+import { fetchSourceFilesFromMetadata } from "../../common";
 
 /**
  * Handles publish metadata for a contract
@@ -45,6 +47,14 @@ export class ContractPublishedMetadata<TContract extends BaseContract> {
       this.contractWrapper.options,
     );
     return this._cachedMetadata;
+  }
+
+  /**
+   * @public
+   */
+  public async extractSources(): Promise<ContractSource[]> {
+    const publishedMetadata = await this.get();
+    return fetchSourceFilesFromMetadata(publishedMetadata, this.storage);
   }
 
   /**

@@ -1,5 +1,46 @@
 # @thirdweb-dev/sdk
 
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`137f46a5`](https://github.com/thirdweb-dev/js/commit/137f46a5470d2b5f9d7f9eda9b2d839a53ddeb64)]:
+  - @thirdweb-dev/chains@0.1.55
+
+## 4.0.5
+
+### Patch Changes
+
+- [#1781](https://github.com/thirdweb-dev/js/pull/1781) [`07544252`](https://github.com/thirdweb-dev/js/commit/07544252b49163e1ae84ba2cc76b99597a1c4553) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utility functions for fetching ABI / sources
+
+## 4.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`6c30b7ef`](https://github.com/thirdweb-dev/js/commit/6c30b7efc708e1244f3be3e10eac8f3b8b14a8c3)]:
+  - @thirdweb-dev/contracts-js@1.3.16
+
+## 4.0.3
+
+### Patch Changes
+
+- [#1756](https://github.com/thirdweb-dev/js/pull/1756) [`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable adding smart wallet admins via bundler for new account contracts
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/contracts-js@1.3.15
+
+## 4.0.2
+
+### Patch Changes
+
+- [#1764](https://github.com/thirdweb-dev/js/pull/1764) [`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for marketplace methods
+
+- [#1763](https://github.com/thirdweb-dev/js/pull/1763) [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve fetchPublishedContractFromPolygon
+
+- [#1765](https://github.com/thirdweb-dev/js/pull/1765) [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for getting deployment info
+
+- [#1762](https://github.com/thirdweb-dev/js/pull/1762) [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for drop-claim-condition
+
 ## 4.0.1
 
 ### Patch Changes
