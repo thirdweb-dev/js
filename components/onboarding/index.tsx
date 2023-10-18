@@ -1,5 +1,4 @@
 import { Account, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useUser } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import { OnboardingModal } from "./Modal";
 import { OnboardingGeneral } from "./General";
@@ -7,11 +6,12 @@ import { OnboardingConfirmEmail } from "./ConfirmEmail";
 import { useRouter } from "next/router";
 import { OnboardingBilling } from "./Billing";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
   const router = useRouter();
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
 
   const [state, setState] = useState<
@@ -94,6 +94,10 @@ export const Onboarding: React.FC = () => {
   }, [isLoggedIn, account, router, state]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
+    return null;
+  }
+  if (state === "billing" && !process.env.NEXT_PUBLIC_STRIPE_KEY) {
+    // can't do billing without stripe key
     return null;
   }
 

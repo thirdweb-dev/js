@@ -1,6 +1,8 @@
 import { Icon } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useStorageUpload } from "@thirdweb-dev/react";
 import { FileInput } from "components/shared/FileInput";
+import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
 import { FiUpload } from "react-icons/fi";
 import { Button } from "tw-components";
@@ -10,6 +12,7 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
 }) => {
   const errorHandler = useErrorHandler();
   const storageUpload = useStorageUpload();
+  const queryClient = useQueryClient();
 
   const handleIconUpload = (file: File) => {
     // if file size is larger than 5000kB, show error
@@ -23,6 +26,8 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
       {
         onSuccess([uri]) {
           onUpload(uri);
+          // also refetch the files list
+          queryClient.invalidateQueries([PINNED_FILES_QUERY_KEY_ROOT]);
         },
         onError(error) {
           errorHandler.onError(error, "Failed to upload file");

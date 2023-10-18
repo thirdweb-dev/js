@@ -13,12 +13,14 @@ import {
   Tooltip,
   chakra,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   MediaRenderer,
   useAddress,
   useStorageUpload,
 } from "@thirdweb-dev/react";
 import { UploadProgressEvent } from "@thirdweb-dev/storage";
+import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
@@ -146,6 +148,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
       uploadedFrom: "thirdweb-dashboard",
     },
   });
+  const queryClient = useQueryClient();
   const [ipfsHashes, setIpfsHashes] = useState<string[]>([]);
   const { onError } = useErrorHandler();
 
@@ -447,6 +450,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                               : uris[0].split("/").slice(0, -1).join("/"),
                         });
                         setIpfsHashes(uris);
+                        // also refetch the files list
+                        queryClient.invalidateQueries([
+                          PINNED_FILES_QUERY_KEY_ROOT,
+                        ]);
                       },
                       onSettled: () => {
                         setProgress({

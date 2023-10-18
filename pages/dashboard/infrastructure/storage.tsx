@@ -67,6 +67,8 @@ const DashboardStorage: ThirdwebNextPage = () => {
               <IpfsUploadDropzone />
             </Flex>
           </Flex>
+          {/* TODO: uncomment this when API is ready */}
+          {/* <YourFilesSection /> */}
           <Flex flexDir="column" w="full" gap={4}>
             <Heading size="title.md" as="h2">
               Gateway

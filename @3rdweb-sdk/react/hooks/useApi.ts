@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { apiKeys, accountKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUser } from "@thirdweb-dev/react";
+
 import invariant from "tiny-invariant";
+import { useLoggedInUser } from "./useLoggedInUser";
 
 export type AuthorizedWallet = {
   id: string;
@@ -141,7 +143,7 @@ export interface UsageBillableByService {
 }
 
 export function useAccount() {
-  const { user, isLoggedIn } = useUser();
+  const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery(
     accountKeys.me(user?.address as string),
@@ -166,7 +168,7 @@ export function useAccount() {
 }
 
 export function useAccountUsage() {
-  const { user, isLoggedIn } = useUser();
+  const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery(
     accountKeys.usage(user?.address as string),
@@ -191,7 +193,7 @@ export function useAccountUsage() {
 }
 
 export function useUpdateAccount() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -225,7 +227,7 @@ export function useUpdateAccount() {
 }
 
 export function useUpdateNotifications() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -259,7 +261,7 @@ export function useUpdateNotifications() {
 }
 
 export function useCreateBillingSession() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
 
   return useMutationWithInvalidate(async () => {
     invariant(user?.address, "walletAddress is required");
@@ -282,7 +284,7 @@ export function useCreateBillingSession() {
 }
 
 export function useConfirmEmail() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -316,7 +318,7 @@ export function useConfirmEmail() {
 }
 
 export function useCreatePaymentMethod() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -352,7 +354,7 @@ export function useCreatePaymentMethod() {
 }
 
 export function useApiKeys() {
-  const { user, isLoggedIn } = useUser();
+  const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery(
     apiKeys.keys(user?.address as string),
@@ -377,7 +379,7 @@ export function useApiKeys() {
 }
 
 export function useCreateApiKey() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -411,7 +413,7 @@ export function useCreateApiKey() {
 }
 
 export function useUpdateApiKey() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -445,7 +447,7 @@ export function useUpdateApiKey() {
 }
 
 export function useRevokeApiKey() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -479,7 +481,7 @@ export function useRevokeApiKey() {
 }
 
 export function useGenerateApiKey() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -513,7 +515,7 @@ export function useGenerateApiKey() {
 }
 
 export function useAuthorizeWalletWithAccount() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
 
   return useMutationWithInvalidate(
     async (variables: { token: string; deviceName?: string }) => {
@@ -542,7 +544,7 @@ export function useAuthorizeWalletWithAccount() {
 }
 
 export function useRevokeAuthorizedWallet() {
-  const { user } = useUser();
+  const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -581,7 +583,7 @@ export function useRevokeAuthorizedWallet() {
 }
 
 export function useAuthorizedWallets() {
-  const { user, isLoggedIn } = useUser();
+  const { user, isLoggedIn } = useLoggedInUser();
 
   return useQuery(
     authorizedWallets.authorizedWallets(user?.address as string),
@@ -605,21 +607,93 @@ export function useAuthorizedWallets() {
   );
 }
 
-export async function fetchAuthToken() {
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const json = await res.json();
+const TOKEN_PROMISE_MAP = new Map<string, Promise<string>>();
 
-  if (json.error) {
-    throw new Error(json.message);
+async function fetchAuthToken(
+  address: string,
+  abortController?: AbortController,
+): Promise<string> {
+  if (!address) {
+    throw new Error("address is required");
   }
+  if (TOKEN_PROMISE_MAP.has(address)) {
+    return TOKEN_PROMISE_MAP.get(address) as Promise<string>;
+  }
+  const promise = new Promise<string>((resolve, reject) => {
+    return fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController?.signal,
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.error) {
+          throw new Error(json.message);
+        }
+        return json.data.jwt as string;
+      })
+      .then(resolve)
+      .catch(reject);
+  });
+  TOKEN_PROMISE_MAP.set(address, promise);
+  return promise;
+}
 
-  return json.data.jwt;
+// keep the promise around so we don't fetch it multiple times even if the hook gets called from different places
+let inflightPromise: Promise<string> | null = null;
+export function useApiAuthToken() {
+  const { user } = useLoggedInUser();
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  // not using a query because we don't want to store this in any cache
+
+  useEffect(() => {
+    let mounted = true;
+    setError(null);
+    setIsLoading(false);
+    if (!user?.address) {
+      return;
+    }
+    setIsLoading(true);
+
+    const abortController = new AbortController();
+
+    if (!inflightPromise) {
+      inflightPromise = fetchAuthToken(user.address, abortController);
+    }
+
+    inflightPromise
+      .then((t) => {
+        if (mounted) {
+          setToken(t);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          setError(err);
+        }
+      })
+      .finally(() => {
+        if (mounted) {
+          inflightPromise = null;
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+      // cancel the fetch if it's still in flight
+      abortController.abort();
+      inflightPromise = null;
+      setToken(null);
+    };
+  }, [user?.address]);
+
+  return { error, isLoading, token };
 }
 
 /**

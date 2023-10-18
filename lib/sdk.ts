@@ -81,7 +81,7 @@ class SpecialDownloader implements IStorageDownloader {
   }
 }
 
-const DASHBOARD_UPLOAD_URL =
+export const DASHBOARD_STORAGE_URL =
   process.env.NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER ||
   "https://storage.thirdweb.com";
 
@@ -89,7 +89,7 @@ export const StorageSingleton = new ThirdwebStorage({
   gatewayUrls: [IPFS_GATEWAY_URL],
   clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
   secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
-  uploadServerUrl: DASHBOARD_UPLOAD_URL,
+  uploadServerUrl: DASHBOARD_STORAGE_URL,
   downloader: new SpecialDownloader(),
 });
 

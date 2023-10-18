@@ -10,7 +10,6 @@ import {
   useAddress,
   useDisconnect,
   useLogin,
-  useUser,
   useWalletConfig,
 } from "@thirdweb-dev/react";
 import { ExternalApprovalNotice } from "components/buttons/TransactionButton";
@@ -19,6 +18,7 @@ import { useRef } from "react";
 import { Button, Card, Text, TrackedLink } from "tw-components";
 import { OnboardingModal } from "./Modal";
 import { OnboardingTitle } from "./Title";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const TRACKING_CATEGORY = "notice";
 
@@ -26,7 +26,7 @@ export const SignInModal: React.FC = () => {
   const track = useTrack();
   const evmAddress = useAddress();
   const walletId = useWalletConfig()?.id;
-  const { isLoading, isLoggedIn } = useUser();
+  const { isLoading, isLoggedIn } = useLoggedInUser();
   const { login, isLoading: loginLoading } = useLogin();
   const disconnect = useDisconnect();
   const initialFocusRef = useRef<HTMLButtonElement>(null);

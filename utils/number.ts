@@ -5,7 +5,7 @@ export const toUSD = (value: number) => {
   }).format(value);
 };
 
-export const toSize = (value: number, defaultUnit?: string) => {
+export const toSize = (value: number | bigint, defaultUnit?: string) => {
   if (value === 0 && defaultUnit) {
     return `${value}${defaultUnit}`;
   }

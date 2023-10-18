@@ -59,10 +59,12 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   };
 
   useEffect(() => {
-    const init = async () => {
-      setStripePromise(loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? ""));
-    };
-    init();
+    if (process.env.NEXT_PUBLIC_STRIPE_KEY) {
+      const init = async () => {
+        setStripePromise(loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? ""));
+      };
+      init();
+    }
   }, []);
 
   return (
