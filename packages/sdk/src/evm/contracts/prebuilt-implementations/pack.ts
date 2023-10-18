@@ -521,15 +521,11 @@ export class Pack extends StandardErc1155<PackContract> {
       to: AddressOrEns,
       metadataWithRewards: PackMetadataInput,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const [uri, parsedMetadata] = await Promise.all([
-        uploadOrExtractURI(
-          metadataWithRewards.packMetadata,
-          this.storage,
-        ),
-        PackMetadataInputSchema.parseAsync(
-          metadataWithRewards,
-        )
-      ])
+      const [uri, parsedMetadata, toAddress] = await Promise.all([
+        uploadOrExtractURI(metadataWithRewards.packMetadata, this.storage),
+        PackMetadataInputSchema.parseAsync(metadataWithRewards),
+        resolveAddress(to),
+      ]);
       const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
       const rewardsData: PackRewardsOutput = {
         erc20Rewards,
@@ -549,7 +545,7 @@ export class Pack extends StandardErc1155<PackContract> {
           uri,
           parsedMetadata.openStartTime,
           parsedMetadata.rewardsPerPack,
-          await resolveAddress(to),
+          toAddress,
         ],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
