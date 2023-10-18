@@ -45,7 +45,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
 
     switch (options?.loginType) {
-      case "headless_google_oauth":
+      case "google_oauth":
         {
           await socialLogin(
             {
@@ -56,7 +56,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           );
         }
         break;
-      case "headless_email_otp_verification": {
+      case "email_otp_verification": {
         await this.validateEmailOtp(options.otp);
         break;
       }

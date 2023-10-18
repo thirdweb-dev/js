@@ -1,31 +1,26 @@
-import { useAddress } from "@thirdweb-dev/react-core";
 import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text, TextInput } from "../../../components/base";
-import { shortenWalletAddress } from "../../../utils/addresses";
 import { useGlobalTheme } from "../../../providers/ui-context-provider";
-import { PasswordInput } from "../../../components/PasswordInput";
 
 export type EnterPasswordProps = {
   goBack: () => void;
   close: () => void;
-  email: string;
 };
 
-export const AccountRecovery = ({
-  close,
-  goBack,
-  email,
-}: EnterPasswordProps) => {
+export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
   const theme = useGlobalTheme();
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [checkingPass, setCheckingPass] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>("");
+  const [checkingRecoveryCode, setCheckingRecoveryCode] =
+    useState<boolean>(false);
+  const [recoveryCode, setRecoveryCode] = useState<string>("");
 
-  const onNextPress = async () => {};
-
-  const onForgotPress = () => {};
+  const onNextPress = async () => {
+    setCheckingRecoveryCode(true);
+    // Call enter recovery code
+    setErrorMessage("test");
+  };
 
   return (
     <Box marginHorizontal="xl">
@@ -41,9 +36,9 @@ export const AccountRecovery = ({
       />
       <TextInput
         textInputProps={{
-          placeholder: "Enter your email address",
+          placeholder: "Enter your recovery code",
           placeholderTextColor: theme.colors.textSecondary,
-          onChangeText: setEmailInput,
+          onChangeText: setRecoveryCode,
           style: {
             fontSize: 14,
             color: theme.colors.textPrimary,
@@ -51,8 +46,7 @@ export const AccountRecovery = ({
             padding: 0,
             flex: 1,
           },
-          value: emailInput,
-          keyboardType: "email-address",
+          value: recoveryCode,
           returnKeyType: "done",
           autoCapitalize: "none",
           autoCorrect: false,
@@ -78,7 +72,7 @@ export const AccountRecovery = ({
         height={theme.textVariants.bodySmallSecondary.fontSize}
         onPress={onNextPress}
       >
-        {checkingPass ? (
+        {checkingRecoveryCode ? (
           <ActivityIndicator size={"small"} color={theme.colors.linkPrimary} />
         ) : (
           <Text variant="bodySmallSecondary" color="linkPrimary">

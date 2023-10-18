@@ -24,7 +24,7 @@ export const EmbeddedSocialConnection: React.FC<
     setTimeout(() => {
       (selectionData.emailWallet as EmbeddedWallet)
         .connect({
-          loginType: "headless_google_oauth",
+          loginType: "google_oauth",
           redirectUrl: selectionData.oauthOptions?.redirectUrl,
         })
         .then(async (response) => {

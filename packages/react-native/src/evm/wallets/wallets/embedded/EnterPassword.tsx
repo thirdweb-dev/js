@@ -1,9 +1,7 @@
-import { useAddress } from "@thirdweb-dev/react-core";
 import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text } from "../../../components/base";
-import { shortenWalletAddress } from "../../../utils/addresses";
 import { useGlobalTheme } from "../../../providers/ui-context-provider";
 import { PasswordInput } from "../../../components/PasswordInput";
 
@@ -11,39 +9,68 @@ export type EnterPasswordProps = {
   goBack: () => void;
   close: () => void;
   email: string;
+  type: "create_password" | "enter_password";
 };
 
-export const EnterPassword = ({ close, goBack, email }: EnterPasswordProps) => {
+export const EnterPassword = ({
+  close,
+  goBack,
+  email,
+  type,
+}: EnterPasswordProps) => {
   const theme = useGlobalTheme();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [checkingPass, setCheckingPass] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
 
-  const onNextPress = async () => {};
+  const isCreatePassword = type === "create_password";
+
+  const onNextPress = async () => {
+    setCheckingPass(true);
+    if (isCreatePassword) {
+      // Call create password
+      console.log("password", password);
+    } else {
+      // Call enter password
+      setErrorMessage("test");
+    }
+  };
 
   const onForgotPress = () => {};
+
+  const onLearnMorePress = () => {};
 
   return (
     <Box marginHorizontal="xl">
       <ConnectWalletHeader
-        middleContent={<Text variant="header">Enter password</Text>}
-        subHeaderText={`Enter the password for email: ${email}`}
+        middleContent={
+          <Text variant="header">
+            {isCreatePassword ? "Create password" : "Enter password"}
+          </Text>
+        }
+        subHeaderText={
+          isCreatePassword
+            ? "Set a password for your account"
+            : `Enter the password for email: ${email}`
+        }
         onBackPress={goBack}
         onClose={close}
       />
       <Box mt="sm" flexDirection="column" marginTop="xl" mb="md">
         <PasswordInput onChangeText={setPassword} />
 
-        <BaseButton
-          mt="sm"
-          borderWidth={1}
-          borderBottomColor="linkPrimary"
-          onPress={onForgotPress}
-        >
-          <Text variant="bodySmallSecondary" color="linkPrimary">
-            Forgot password
-          </Text>
-        </BaseButton>
+        {isCreatePassword ? null : (
+          <BaseButton
+            mt="sm"
+            borderWidth={1}
+            borderBottomColor="linkPrimary"
+            onPress={onForgotPress}
+          >
+            <Text variant="bodySmallSecondary" color="linkPrimary">
+              Forgot password
+            </Text>
+          </BaseButton>
+        )}
       </Box>
       {errorMessage ? (
         <Text variant="error" numberOfLines={1}>
@@ -52,20 +79,33 @@ export const EnterPassword = ({ close, goBack, email }: EnterPasswordProps) => {
       ) : (
         <Box height={20} />
       )}
-      <BaseButton
-        mt="sm"
-        alignItems="center"
-        height={theme.textVariants.bodySmallSecondary.fontSize}
-        onPress={onNextPress}
-      >
-        {checkingPass ? (
-          <ActivityIndicator size={"small"} color={theme.colors.linkPrimary} />
-        ) : (
-          <Text variant="bodySmallSecondary" color="linkPrimary">
-            Next
-          </Text>
-        )}
-      </BaseButton>
+      <Box flex={1} flexDirection="row" justifyContent="flex-end">
+        {isCreatePassword ? (
+          <BaseButton onPress={onLearnMorePress}>
+            <Text variant="bodySmallSecondary" color="linkPrimary">
+              Learn More
+            </Text>
+          </BaseButton>
+        ) : null}
+        <BaseButton
+          mt="sm"
+          flexDirection="row"
+          alignItems="center"
+          height={theme.textVariants.bodySmallSecondary.fontSize}
+          onPress={onNextPress}
+        >
+          {checkingPass ? (
+            <ActivityIndicator
+              size={"small"}
+              color={theme.colors.linkPrimary}
+            />
+          ) : (
+            <Text variant="bodySmallSecondary" color="linkPrimary">
+              Next
+            </Text>
+          )}
+        </BaseButton>
+      </Box>
     </Box>
   );
 };
