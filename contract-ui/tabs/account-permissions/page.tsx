@@ -15,7 +15,7 @@ export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
 
   const detectedFeature = extensionDetectedState({
     contractQuery,
-    feature: ["AccountPermissions"],
+    feature: ["AccountPermissions", "AccountPermissionsV1"],
   });
 
   if (contractQuery.isLoading) {

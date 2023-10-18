@@ -242,7 +242,7 @@ export function useContractRouteConfig(
       path: "account-permissions",
       isEnabled: extensionDetectedState({
         contractQuery,
-        feature: ["AccountPermissions"],
+        feature: ["AccountPermissions", "AccountPermissionsV1"],
       }),
       component: LazyContractAccountPermissionsPage,
     },
