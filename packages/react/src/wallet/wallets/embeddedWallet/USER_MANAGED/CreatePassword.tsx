@@ -18,6 +18,7 @@ export function CreatePassword(props: {
   goBack: () => void;
   email: string;
   onPassword: (password: string) => Promise<void>;
+  modalSize: "wide" | "compact";
 }) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -32,33 +33,38 @@ export function CreatePassword(props: {
 
       <Line />
 
-      <Container flex="row" center="x" py="xxl" color="accentText">
-        <BounceContainer>
-          <LockOpen1Icon width={iconSize.xxl} height={iconSize.xxl} />
-        </BounceContainer>
-      </Container>
-
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setLoading(false);
-          setError(false);
-          if (password) {
-            try {
-              setLoading(true);
-              await props.onPassword(password);
-            } catch (err: any) {
-              setError(true);
-              console.error(err);
-            }
-            setLoading(false);
-          }
+      <Container
+        expand
+        px={props.modalSize === "wide" ? "xxl" : "lg"}
+        flex="column"
+        center="y"
+        style={{
+          paddingTop: 0,
         }}
       >
-        <Container
-          p="lg"
-          style={{
-            paddingTop: 0,
+        {props.modalSize === "compact" && <Spacer y="xxl" />}
+        <Container flex="row" center="x" color="accentText">
+          <BounceContainer>
+            <LockOpen1Icon width={iconSize.xxl} height={iconSize.xxl} />
+          </BounceContainer>
+        </Container>
+        <Spacer y="xxl" />
+
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setLoading(false);
+            setError(false);
+            if (password) {
+              try {
+                setLoading(true);
+                await props.onPassword(password);
+              } catch (err: any) {
+                setError(true);
+                console.error(err);
+              }
+              setLoading(false);
+            }
           }}
         >
           <Text center multiline>
@@ -68,7 +74,7 @@ export function CreatePassword(props: {
           <Text center color="primaryText">
             {props.email}
           </Text>
-          <Spacer y="xxl" />
+          <Spacer y="xl" />
 
           <InputContainer>
             <Input
@@ -116,8 +122,9 @@ export function CreatePassword(props: {
               </Text>
             </Container>
           )}
-        </Container>
-      </form>
+        </form>
+      </Container>
+      <Spacer y="xl" />
     </Container>
   );
 }

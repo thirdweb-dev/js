@@ -12,7 +12,7 @@ import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
 import { BackupAccount } from "./USER_MANAGED/BackupAccount";
 import { CreatePassword } from "./USER_MANAGED/CreatePassword";
-import { EnterPassword } from "./USER_MANAGED/EnterPassword";
+import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
@@ -44,7 +44,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
 
-  const [screen, setScreen] = useState<ScreenToShow>("base");
+  const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
   const [recoveryCodes, setRecoveryCodes] = useState<string[] | undefined>();
 
   const sendEmail = useCallback(async () => {
@@ -86,8 +86,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       setVerifyStatus("verifying");
       setConnectionStatus("connecting");
 
-      console.log({ sendEmailOtpStatus: emailStatus });
-
       // USER_MANAGED
       if (isUserManaged) {
         if (emailStatus.isNewUser) {
@@ -100,14 +98,25 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("recovery code")) {
-              console.log("missing recovery, correct OTP");
               setScreen("create-password");
             } else {
               throw e;
             }
           }
         } else if (emailStatus.isNewDevice) {
-          setScreen("enter-password-or-recovery-code");
+          try {
+            await wallet.connect({
+              loginType: "headless_email_otp_verification",
+              email,
+              otp,
+            });
+          } catch (e: any) {
+            if (e instanceof Error && e.message.includes("recovery code")) {
+              setScreen("enter-password-or-recovery-code");
+            } else {
+              throw e;
+            }
+          }
         }
       }
 
@@ -141,6 +150,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   if (screen === "create-password") {
     return (
       <CreatePassword
+        modalSize={props.modalSize}
         email={email}
         goBack={props.goBack}
         onPassword={async (password) => {
@@ -155,12 +165,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             recoveryCode: password,
           });
 
-          console.log("connected");
-
           const info = await wallet.getRecoveryInformation();
-
-          console.log("recovery info is", info);
-
           setRecoveryCodes(info.backupRecoveryCodes);
           setScreen("backup-account");
         }}
@@ -171,6 +176,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   if (screen === "backup-account") {
     return (
       <BackupAccount
+        modalSize={props.modalSize}
         goBack={props.goBack}
         recoveryCodes={recoveryCodes}
         email={email}
@@ -186,15 +192,21 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   if (screen === "enter-password-or-recovery-code") {
     return (
-      <EnterPassword
+      <EnterPasswordOrRecovery
+        modalSize={props.modalSize}
+        goBack={props.goBack}
+        email={email}
         onVerify={async (passwordOrRecoveryCode) => {
           if (wallet) {
             await wallet.connect({
               loginType: "headless_email_otp_verification",
               email,
               otp: otpInput,
-              recoveryCode: passwordOrRecoveryCode, // question: can we use the set password here too?
+              recoveryCode: passwordOrRecoveryCode,
             });
+
+            setConnectedWallet(wallet);
+            props.connected();
           }
         }}
       />

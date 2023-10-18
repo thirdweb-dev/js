@@ -14,6 +14,7 @@ export function BackupAccount(props: {
   goBack: () => void;
   onNext: () => void;
   email: string;
+  modalSize: "wide" | "compact";
 }) {
   const [showCodes, setShowCodes] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -40,10 +41,15 @@ export function BackupAccount(props: {
         <Spacer y="lg" />
 
         <Container
+          scrollY
           px="lg"
-          style={{
-            maxHeight: "350px",
-          }}
+          style={
+            props.modalSize === "compact"
+              ? {
+                  maxHeight: "280px",
+                }
+              : undefined
+          }
         >
           {props.recoveryCodes ? (
             <Container flex="column" gap="sm" scrollY>
@@ -95,7 +101,7 @@ export function BackupAccount(props: {
         </Text>
       </Container>
 
-      <Container px="lg" flex="column" gap="sm">
+      <Container px="lg" flex="column" gap="sm" expand>
         {showCodes ? (
           <div>
             {props.recoveryCodes ? (
@@ -104,7 +110,7 @@ export function BackupAccount(props: {
                 gap="sm"
                 scrollY
                 style={{
-                  maxHeight: "300px",
+                  maxHeight: "260px",
                 }}
               >
                 {props.recoveryCodes.map((code, i) => {
@@ -206,7 +212,7 @@ function CopyRecoveryCode(props: { code: string }) {
 }
 
 const CopyContainer = styled.div<{ theme?: Theme }>`
-  padding: ${spacing.sm};
+  padding: ${spacing.md};
   border: 1px solid ${(p) => p.theme.colors.borderColor};
   border-radius: ${radius.md};
 `;
