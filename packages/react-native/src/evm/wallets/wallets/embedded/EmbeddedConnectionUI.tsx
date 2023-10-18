@@ -64,9 +64,13 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
 
       setTimeout(() => {
         (selectionData.emailWallet as EmbeddedWallet)
-          .validateEmailOTP(otp)
+          .connect({
+            loginType: "headless_email_otp_verification",
+            otp,
+            email: selectionData.email,
+          })
           .then(async (response) => {
-            if (response?.success) {
+            if (response) {
               if (onLocallyConnected) {
                 onLocallyConnected(selectionData.emailWallet);
               } else {
@@ -75,7 +79,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
               }
             } else {
               clearCode();
-              setErrorMessage(response?.error || "Error validating the code");
+              setErrorMessage(response || "Error validating the code");
               setCheckingOtp(false);
               setFocusedIndex(undefined);
             }

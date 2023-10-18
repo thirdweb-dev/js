@@ -21,6 +21,7 @@ import {
   getConnectedEmail,
   saveConnectedEmail,
 } from "./embedded/helpers/storage/local";
+import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   private options: EmbeddedWalletConnectorOptions;
@@ -36,16 +37,38 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.email = getConnectedEmail();
   }
 
-  async connect(
-    options?: { chainId?: number } & Omit<
-      EmbeddedWalletConnectionArgs,
-      "email"
-    >,
-  ) {
+  async connect(options?: { chainId?: number } & EmbeddedWalletConnectionArgs) {
     const connected = await this.isConnected();
 
-    if (!connected) {
-      // const;
+    if (connected) {
+      return this.getAddress();
+    }
+
+    switch (options?.loginType) {
+      case "headless_google_oauth":
+        {
+          await socialLogin(
+            {
+              provider: AuthProvider.GOOGLE,
+              redirectUrl: options.redirectUrl,
+            },
+            this.options.clientId,
+          );
+        }
+        break;
+      case "headless_email_otp_verification": {
+        await this.validateEmailOtp(options.otp);
+        break;
+      }
+      case "custom_jwt": {
+        await this.customJwt({
+          jwtToken: options.jwtToken,
+          encryptionKey: options.encryptionKey,
+        });
+        break;
+      }
+      default:
+        throw new Error("Invalid login type");
     }
 
     if (options?.chainId) {
@@ -125,7 +148,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return { success: true };
   }
 
-  async verifyAuth(authOptions: AuthOptions) {
+  async customJwt(authOptions: AuthOptions) {
     try {
       const resp = await customJwt(authOptions, this.options.clientId);
       this.email = resp.email;
@@ -183,12 +206,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       return this.signer;
     }
 
-    let signer;
-    try {
-      signer = await getEthersSigner(this.options.clientId);
-    } catch (error) {
-      console.error(`Error while getting the signer: ${error}`);
-    }
+    const signer = await getEthersSigner(this.options.clientId);
 
     if (!signer) {
       throw new Error("Error fetching the signer");

@@ -201,14 +201,14 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 }
 
 export async function customJwt(authOptions: AuthOptions, clientId: string) {
-  const { jwt, authProvider } = authOptions;
+  const { jwtToken } = authOptions;
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      jwt,
-      authProvider,
+      jwtToken,
+      authProvider: AuthProvider.CUSTOM_JWT,
       developerClientId: clientId,
     }),
   });

@@ -49,11 +49,24 @@ export interface EmbeddedWalletConnectorOptions {
 
 export interface AuthOptions {
   jwtToken: string;
-  authProvider: string; // AuthProvider.CustomJwt
-  recoveryCode?: string;
+  encryptionKey: string;
 }
 
-export interface EmbeddedWalletConnectionArgs {
-  email?: string;
-  authOptions?: AuthOptions;
-}
+export type EmbeddedWalletConnectionArgs = {
+  chainId?: number;
+} & (
+  | {
+      loginType: "headless_google_oauth";
+      redirectUrl: string;
+    }
+  | {
+      loginType: "headless_email_otp_verification";
+      email: string;
+      otp: string;
+    }
+  | {
+      loginType: "custom_jwt";
+      jwtToken: string;
+      encryptionKey: string;
+    }
+);
