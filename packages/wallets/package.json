@@ -36,6 +36,13 @@
       },
       "default": "./evm/wallets/safe/dist/thirdweb-dev-wallets-evm-wallets-safe.cjs.js"
     },
+    "./evm/wallets/async": {
+      "module": {
+        "browser": "./evm/wallets/async/dist/thirdweb-dev-wallets-evm-wallets-async.browser.esm.js",
+        "default": "./evm/wallets/async/dist/thirdweb-dev-wallets-evm-wallets-async.esm.js"
+      },
+      "default": "./evm/wallets/async/dist/thirdweb-dev-wallets-evm-wallets-async.cjs.js"
+    },
     "./evm/wallets/frame": {
       "module": {
         "browser": "./evm/wallets/frame/dist/thirdweb-dev-wallets-evm-wallets-frame.browser.esm.js",
