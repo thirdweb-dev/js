@@ -152,7 +152,6 @@ export class Vote implements UpdateableNetwork {
   public async getAll(): Promise<Proposal[]> {
     const _proposals =
       (await this.contractWrapper.read("getAllProposals", [])) ?? [];
-    if (!_proposals.length) return [];
     const _items = await Promise.all(
       _proposals.map((item) =>
         Promise.all([
