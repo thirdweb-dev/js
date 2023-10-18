@@ -1273,6 +1273,12 @@ importers:
       mocha:
         specifier: ^10.2.0
         version: 10.2.0
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      typedoc:
+        specifier: ^0.25.2
+        version: 0.25.2(typescript@5.1.6)
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
