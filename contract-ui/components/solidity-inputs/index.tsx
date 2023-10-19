@@ -22,6 +22,7 @@ export interface SolidityInputWithTypeProps extends SolidityInputProps {
         name: string;
       }[]
     | undefined;
+  functionName?: string;
 }
 export interface SolidityInputPropsOptionalFormProps extends InputProps {
   solidityType: string;
@@ -34,6 +35,7 @@ export interface SolidityInputPropsOptionalFormProps extends InputProps {
       }[]
     | undefined;
   formContext?: UseFormReturn<any, any>;
+  functionName?: string;
 }
 
 // has to be forwardref otherwise we get react runtime errors
