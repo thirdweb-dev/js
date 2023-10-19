@@ -1,6 +1,5 @@
 ---
 "@thirdweb-dev/wallets": minor
-"@thirdweb-dev/react": minor
 ---
 
 feat (wallets): Add support for user managed encryption key login flows for embedded wallets in all flows except Google Login
