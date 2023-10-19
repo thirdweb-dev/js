@@ -11,11 +11,9 @@ export type {
   AuthLoginReturnType,
   AuthStoredTokenWithCookieReturnType,
   StoredTokenType,
+  GetHeadlessLoginLinkReturnType,
 } from "./interfaces/auth";
-export {
-  UserStatus,
-  UserWalletStatus,
-} from "./interfaces/embedded-wallets/embedded-wallets";
+export { UserWalletStatus } from "./interfaces/embedded-wallets/embedded-wallets";
 export type {
   AuthDetails,
   EmbeddedWalletConstructorType,

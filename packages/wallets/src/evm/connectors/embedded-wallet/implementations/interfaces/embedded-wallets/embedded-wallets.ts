@@ -31,17 +31,13 @@ export type AuthDetails = {
 };
 
 export type InitializedUser = {
-  status: UserStatus.LOGGED_IN_WALLET_INITIALIZED;
+  status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
   wallet: EmbeddedWallet;
   walletAddress: string;
   authDetails: AuthDetails;
 };
 
 // Embedded Wallet Types
-export enum UserStatus {
-  LOGGED_OUT = "Logged Out",
-  LOGGED_IN_WALLET_INITIALIZED = "Logged In, Wallet Initialized",
-}
 export enum UserWalletStatus {
   LOGGED_OUT = "Logged Out",
   LOGGED_IN_WALLET_UNINITIALIZED = "Logged In, Wallet Uninitialized",
@@ -87,27 +83,17 @@ export type GetUserWalletStatusRpcReturnType =
     };
 
 // this is the return type from the EmbeddedWallet Class getUserWalletStatus method
-export type GetUserWalletStatusFnReturnType =
+export type GetUser =
   | {
       status: UserWalletStatus.LOGGED_OUT;
-      user: undefined;
     }
   | {
       status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED;
-      user: { authDetails: AuthDetails };
+      authDetails: AuthDetails;
     }
   | {
       status: UserWalletStatus.LOGGED_IN_NEW_DEVICE;
-      user: { authDetails: AuthDetails; walletAddress: string };
-    }
-  | {
-      status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
-      user: Omit<InitializedUser, "status">;
-    };
-
-// This is returned from the getUser method in PaperEmbeddedWalletSdk
-export type GetUser =
-  | {
-      status: UserStatus.LOGGED_OUT;
+      authDetails: AuthDetails;
+      walletAddress: string;
     }
   | InitializedUser;

@@ -6,7 +6,7 @@ export const HEADLESS_GOOGLE_OAUTH_ROUTE = `/auth/headless-google-login-managed`
 export const GET_IFRAME_BASE_URL = () =>
   `${getPaperOriginUrl().replace(
     "withpaper.com",
-    "embedded-wallet.thirdweb-preview.com",
+    "embedded-wallet.thirdweb.com",
   )}`;
 
 export const WALLET_USER_DETAILS_LOCAL_STORAGE_NAME = (clientId: string) =>

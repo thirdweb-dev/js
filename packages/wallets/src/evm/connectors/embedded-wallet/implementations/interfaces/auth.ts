@@ -6,13 +6,15 @@ import type {
 
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
-  AWS_MANAGED = "AWS_MANAGED",
+  CLOUD_MANAGED = "AWS_MANAGED",
+  CUSTOM_JWT = "CUSTOM_JWT",
 }
 
 export enum AuthProvider {
   COGNITO = "Cognito",
   GOOGLE = "Google",
   EMAIL_OTP = "EmailOtp",
+  CUSTOM_JWT = "CustomJwt",
 }
 
 export type GetHeadlessLoginLinkReturnType = {

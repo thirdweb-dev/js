@@ -9,7 +9,7 @@ import {
   AuthLoginReturnType,
   EmbeddedWalletSdk,
   InitializedUser,
-  UserStatus,
+  UserWalletStatus,
 } from "./implementations";
 import {
   EmbeddedWalletConnectionArgs,
@@ -51,56 +51,42 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return thirdwebSDK.auth.sendEmailLoginOtp({ email });
   }
 
-  async connect(options?: EmbeddedWalletConnectionArgs) {
+  async connect(options?: EmbeddedWalletConnectionArgs): Promise<string> {
     const thirdwebSDK = await this.getEmbeddedWalletSDK();
     if (!thirdwebSDK) {
       throw new Error("EmbeddedWallet SDK not initialized");
     }
-    const user = await thirdwebSDK.getUser();
-    switch (user.status) {
-      case UserStatus.LOGGED_OUT: {
-        let authResult: AuthLoginReturnType;
+    let authResult: AuthLoginReturnType;
 
-        switch (options?.loginType) {
-          case "headless_google_oauth": {
-            authResult = await thirdwebSDK.auth.loginWithGoogle({
-              closeOpenedWindow: options.closeOpenedWindow,
-              openedWindow: options.openedWindow,
-            });
-            break;
-          }
-          case "headless_email_otp_verification": {
-            authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
-              email: options.email,
-              otp: options.otp,
-              recoveryCode: options.recoveryCode,
-            });
-            break;
-          }
-          case "ui_email_otp": {
-            authResult = await thirdwebSDK.auth.loginWithEmailOtp({
-              email: options.email,
-            });
-            break;
-          }
-          default: {
-            authResult = await thirdwebSDK.auth.loginWithModal();
-            break;
-          }
-        }
-        this.user = authResult.user;
+    switch (options?.loginType) {
+      case "headless_google_oauth": {
+        authResult = await thirdwebSDK.auth.loginWithGoogle({
+          closeOpenedWindow: options.closeOpenedWindow,
+          openedWindow: options.openedWindow,
+        });
         break;
       }
-      case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
-        if (options?.loginType === "headless_google_oauth") {
-          if (options.closeOpenedWindow && options.openedWindow) {
-            options.closeOpenedWindow(options.openedWindow);
-          }
-        }
-        this.user = user;
+      case "headless_email_otp_verification": {
+        authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
+          email: options.email,
+          otp: options.otp,
+          recoveryCode: options.recoveryCode,
+        });
+        break;
+      }
+      case "ui_email_otp": {
+        authResult = await thirdwebSDK.auth.loginWithEmailOtp({
+          email: options.email,
+        });
+        break;
+      }
+      default: {
+        authResult = await thirdwebSDK.auth.loginWithModal();
         break;
       }
     }
+    this.user = authResult.user;
+
     if (!this.user) {
       throw new Error("Error connecting User");
     }
@@ -152,7 +138,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       const embeddedWalletSdk = await this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
       switch (user.status) {
-        case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
+        case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
           this.user = user;
           break;
         }
