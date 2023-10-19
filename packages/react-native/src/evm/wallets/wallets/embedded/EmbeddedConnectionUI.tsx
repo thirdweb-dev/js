@@ -65,7 +65,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       setTimeout(() => {
         (selectionData.emailWallet as EmbeddedWallet)
           .connect({
-            loginType: "email_otp_verification",
+            loginType: "headless_email_otp_verification",
             otp,
             email: selectionData.email,
           })

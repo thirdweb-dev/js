@@ -45,7 +45,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
 
     switch (options?.loginType) {
-      case "google_oauth":
+      case "headless_google_oauth":
         {
           await socialLogin(
             {
@@ -56,11 +56,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           );
         }
         break;
-      case "email_otp_verification": {
+      case "headless_email_otp_verification": {
         await this.validateEmailOtp(options.otp);
         break;
       }
-      case "custom_jwt": {
+      case "custom_jwt_auth": {
         await this.customJwt({
           jwtToken: options.jwtToken,
           encryptionKey: options.encryptionKey,

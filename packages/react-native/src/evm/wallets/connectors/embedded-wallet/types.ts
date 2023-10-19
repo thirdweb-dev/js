@@ -61,16 +61,16 @@ export type EmbeddedWalletConnectionArgs = {
   chainId?: number;
 } & (
   | {
-      loginType: "google_oauth";
+      loginType: "headless_google_oauth";
       redirectUrl: string;
     }
   | {
-      loginType: "email_otp_verification";
+      loginType: "headless_email_otp_verification";
       email: string;
       otp: string;
     }
   | {
-      loginType: "custom_jwt";
+      loginType: "custom_jwt_auth";
       jwtToken: string;
       encryptionKey: string;
     }
