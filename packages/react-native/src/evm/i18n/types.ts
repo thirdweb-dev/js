@@ -1,4 +1,4 @@
-export type Locale = LocaleType | "en" | "es";
+export type Locale = LocaleType | "en";
 
 export type LocaleType = typeof _en;
 
@@ -90,95 +90,5 @@ export const _en = {
     or: "OR",
     from: "from",
     to: "from",
-  },
-};
-
-export const _es = {
-  connect_wallet: {
-    label: "Conectar Cartera",
-  },
-  connect_wallet_details: {
-    additional_actions: "Acciones Adicionales",
-    address_copied_clipboard: "Dirección copiada al portapapeles",
-    backup_wallet: "Respaldar Cartera",
-    backup_personal_wallet: "Respaldar cartera personal",
-    import_wallet: "Importar Cartera",
-    connected_to_smart_wallet: "Conectado a una Cartera Inteligente",
-    current_network: "Red Actual",
-    backup: "Respaldo",
-    connect_to_app: "Conectar a la Aplicación",
-    guest: "Invitado",
-    connect: "Conectar",
-    view_transaction_history: "Ver Historial de Transacciones",
-    new_to_wallets: "¿Nuevo en carteras?",
-    get_started: "Comenzar",
-    receive_funds: "Recibir Fondos",
-    connect_a_wallet: "Conectar una cartera",
-    continue_as_guest: "Continuar como invitado",
-    tos: "Términos de Servicio",
-    privacy_policy: "Política de Privacidad",
-    by_connecting_you_agree: "Al conectar, aceptas los",
-    copy_address_or_scan:
-      "Copia la dirección de la cartera o escanea el código QR para enviar fondos a esta cartera.",
-    request_testnet_funds: "Solicitar Fondos de Testnet",
-    view_transatcion_history: "Ver Historial de Transacciones",
-    your_address: "Tu dirección",
-    qr_code: "Código QR",
-    select_token: "Seleccionar Token",
-    send_to: "Enviar a",
-    no_tokens_found: "No se encontraron tokens",
-    confirm_in_wallet: "Confirmar en tu cartera",
-    select_network: "Seleccionar Red",
-    switch_to: "Cambiar a",
-    no_supported_chains_detected: "No se detectaron cadenas soportadas",
-    recommended: "Recomendado",
-    network_mismatch: "Hay un desajuste de red entre tu contrato y tu cartera",
-  },
-  connecting_wallet: {
-    creating_encrypting:
-      "Creando, cifrando y asegurando tu cartera del dispositivo.",
-    connecting_your_wallet: "Conectando tu cartera",
-    connecting_through_pop_up:
-      "Iniciar sesión y conectar tu aplicación a través del pop-up de la cartera",
-  },
-  local_wallet: {
-    create_new_wallet: "Crear nueva cartera",
-    private_key_mnemonic: "O clave privada o mnemónico",
-    private_key_mnemonic_placeholder: "Clave privada / Mnemónico",
-    application_can_authorize_transactions:
-      "La aplicación puede autorizar cualquier transacción en nombre de la cartera sin ninguna aprobación. Recomendamos conectar solo con aplicaciones de confianza.",
-    double_check_password: "Por favor, verifica tu contraseña o clave privada.",
-    error_accessing_file: "Error al acceder al archivo. Intente nuevamente.",
-    wallet_address: "Dirección de la Cartera",
-    this_will_download_json:
-      "Esto descargará un archivo JSON que contiene información de tu cartera en tu dispositivo, cifrado con la contraseña.",
-    this_is_a_temporary_wallet:
-      "Esta es una cartera de invitado temporal. Descarga un respaldo si no quieres perder acceso a ella.",
-  },
-  smart_wallet: {
-    switch_to_smart: "Cambiar a Cartera Inteligente",
-    switch_to_personal: "Cambiar a Cartera Personal",
-  },
-  embedded_wallet: {
-    request_new_code: "Solicitar nuevo código",
-    sign_in: "Iniciar Sesión",
-  },
-  wallet_connect: {
-    no_results_found: "No se encontraron resultados",
-  },
-  common: {
-    password: "Contraseña",
-    reject: "Rechazar",
-    approve: "Aprobar",
-    switch_network: "Cambiar de Red",
-    import: "Importar",
-    username: "Nombre de usuario",
-    amount: "Cantidad",
-    send: "Enviar",
-    continue: "Continuar",
-    error_switching_network: "Error al cambiar de red",
-    or: "O",
-    from: "de",
-    to: "a",
   },
 };
