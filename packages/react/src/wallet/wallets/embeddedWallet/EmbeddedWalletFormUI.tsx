@@ -12,7 +12,7 @@ import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType } from "./types";
+import type { EmbeddedWalletLoginType, OAuthProvider } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
@@ -20,11 +20,14 @@ import { useTheme } from "@emotion/react";
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
+  providers?: OAuthProvider[];
 }) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
   const themeObj = useTheme() as Theme;
+
+  const enableGoogleLogin = props.providers?.includes("google");
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
@@ -53,18 +56,23 @@ export const EmbeddedWalletFormUI = (props: {
 
   return (
     <div>
-      <SocialButton
-        variant="secondary"
-        fullWidth
-        onClick={() => {
-          googleLogin();
-          props.onSelect({ google: true });
-        }}
-      >
-        <GoogleIcon size={iconSize.md} />
-        Sign in with Google
-      </SocialButton>
-      <TextDivider text="OR" py="lg" />
+      {enableGoogleLogin && (
+        <>
+          <SocialButton
+            variant="secondary"
+            fullWidth
+            onClick={() => {
+              googleLogin();
+              props.onSelect({ google: true });
+            }}
+          >
+            <GoogleIcon size={iconSize.md} />
+            Sign in with Google
+          </SocialButton>
+          <TextDivider text="OR" py="lg" />
+        </>
+      )}
+
       <InputSelectionUI
         onSelect={(email) => props.onSelect({ email })}
         placeholder="Enter your email address"
@@ -89,6 +97,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   onBack: () => void;
   modalSize: "compact" | "wide";
   walletConfig: WalletConfig<EmbeddedWallet>;
+  providers?: OAuthProvider[];
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   return (
@@ -111,6 +120,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         p={isCompact ? undefined : "lg"}
       >
         <EmbeddedWalletFormUI
+          providers={props.providers}
           walletConfig={props.walletConfig}
           onSelect={props.onSelect}
         />

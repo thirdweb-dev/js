@@ -17,11 +17,23 @@ import {
 } from "./EmbeddedWalletFormUI";
 import { EmbeddedWalletGoogleLogin } from "./EmbeddedWalletGoogleLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
-import { EmbeddedWalletConfig } from "./types";
+import { EmbeddedWalletConfig, OAuthProvider } from "./types";
 
 export const embeddedWallet = (
-  config?: EmbeddedWalletConfig,
+  _config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
+  const defaultConfig: EmbeddedWalletConfig = {
+    oauthOptions: {
+      providers: ["google"],
+    },
+  };
+
+  const config: EmbeddedWalletConfig = _config
+    ? { ...defaultConfig, ..._config }
+    : defaultConfig;
+
+  const { oauthOptions } = config;
+
   return {
     category: "socialLogin",
     isHeadless: true,
@@ -40,17 +52,29 @@ export const embeddedWallet = (
       });
     },
     selectUI(props) {
-      return <EmbeddedWalletSelectionUI {...props} />;
+      return (
+        <EmbeddedWalletSelectionUI
+          {...props}
+          providers={oauthOptions ? oauthOptions?.providers : undefined}
+        />
+      );
     },
     connectUI(props) {
-      return <EmbeddedWalletConnectUI {...props} />;
+      return (
+        <EmbeddedWalletConnectUI
+          {...props}
+          providers={oauthOptions ? oauthOptions?.providers : undefined}
+        />
+      );
     },
   };
 };
 
-const EmbeddedWalletSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = (
-  props,
-) => {
+const EmbeddedWalletSelectionUI: React.FC<
+  SelectUIProps<EmbeddedWallet> & {
+    providers?: OAuthProvider[];
+  }
+> = (props) => {
   const screen = useScreenContext();
 
   // show the icon + text if
@@ -75,12 +99,17 @@ const EmbeddedWalletSelectionUI: React.FC<SelectUIProps<EmbeddedWallet>> = (
       <EmbeddedWalletFormUI
         onSelect={props.onSelect}
         walletConfig={props.walletConfig}
+        providers={props.providers}
       />
     </div>
   );
 };
 
-const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
+const EmbeddedWalletConnectUI = (
+  props: ConnectUIProps<EmbeddedWallet> & {
+    providers?: OAuthProvider[];
+  },
+) => {
   const [loginType, setLoginType] = useState<PaperLoginType | undefined>(
     props.selectionData as PaperLoginType,
   );
@@ -109,9 +138,11 @@ const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
     }
 
     // google
-    else {
+    else if (props.providers?.includes("google")) {
       return <EmbeddedWalletGoogleLogin {...props} goBack={handleBack} />;
     }
+
+    return null;
   }
 
   return (
@@ -122,6 +153,7 @@ const EmbeddedWalletConnectUI = (props: ConnectUIProps<EmbeddedWallet>) => {
       }}
       walletConfig={props.walletConfig}
       onBack={props.goBack}
+      providers={props.providers}
     />
   );
 };
