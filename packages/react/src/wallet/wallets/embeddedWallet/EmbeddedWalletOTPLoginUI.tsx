@@ -97,7 +97,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               otp,
             });
           } catch (e: any) {
-            if (e instanceof Error && e.message.includes("recovery code")) {
+            if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("create-password");
             } else {
               throw e;
@@ -111,7 +111,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               otp,
             });
           } catch (e: any) {
-            if (e instanceof Error && e.message.includes("recovery code")) {
+            if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("enter-password-or-recovery-code");
             } else {
               throw e;
@@ -162,7 +162,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             loginType: "headless_email_otp_verification",
             email,
             otp: otpInput,
-            recoveryCode: password,
+            encryptionKey: password,
           });
 
           const info = await wallet.getRecoveryInformation();
@@ -202,7 +202,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               loginType: "headless_email_otp_verification",
               email,
               otp: otpInput,
-              recoveryCode: passwordOrRecoveryCode,
+              encryptionKey: passwordOrRecoveryCode,
             });
 
             setConnectedWallet(wallet);

@@ -25,7 +25,7 @@ export type ClientIdWithQuerierAndChainType = ClientIdWithQuerierType & {
 export type AuthDetails = {
   email?: string;
   userWalletId: string;
-  recoveryCode?: string;
+  encryptionKey?: string;
   backupRecoveryCodes?: string[];
   recoveryShareManagement: RecoveryShareManagement;
 };
