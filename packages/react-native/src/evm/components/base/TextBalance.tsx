@@ -4,7 +4,7 @@ import LoadingTextAnimation from "./LoadingTextAnimation";
 import { baseTheme } from "../../styles/theme";
 
 type TextBalance = {
-  textVariant: keyof typeof baseTheme.textVariants;
+  textVariant: keyof Omit<typeof baseTheme.textVariants, "defaults">;
   tokenAddress?: string;
 };
 
