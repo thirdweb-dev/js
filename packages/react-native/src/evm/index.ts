@@ -31,7 +31,10 @@ export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
 export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
 export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
 
-export { ConnectWallet } from "./components/ConnectWallet";
+export {
+  ConnectWallet,
+  type ConnectWalletProps,
+} from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";
 
 // utilities

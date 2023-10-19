@@ -85,6 +85,8 @@ export const SmartWalletAdditionalActions = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             mt="xs"
             justifyContent="space-between"
@@ -141,8 +143,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 12,
-    borderWidth: 0.5,
     paddingHorizontal: 10,
     paddingVertical: 12,
     minWidth: 200,
