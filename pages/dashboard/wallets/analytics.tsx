@@ -5,6 +5,10 @@ import {
   MenuButton,
   MenuList,
   Stack,
+  Stat,
+  StatLabel,
+  StatNumber,
+  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
@@ -48,6 +52,7 @@ const RADIAN = Math.PI / 180;
 
 const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
   const { colorMode } = useColorMode();
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const barColors = useMemo(() => {
     if (colorMode === "light") {
       return BAR_COLORS_LIGHT;
@@ -133,6 +138,18 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
           ),
         )
       : [];
+  }, [statsQuery.data]);
+  const totalStasData = useMemo(() => {
+    return statsQuery.data
+      ? statsQuery.data.timeSeries.reduce(
+          (acc, curr) => {
+            acc.totalWallets += curr.totalWallets;
+            acc.uniqueWallets += curr.uniqueWallets;
+            return acc;
+          },
+          { uniqueWallets: 0, totalWallets: 0 },
+        )
+      : { uniqueWallets: 0, totalWallets: 0 };
   }, [statsQuery.data]);
 
   const renderActiveShape = (props: any) => {
@@ -282,13 +299,23 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
           <Flex flexDir="column" gap={8}>
             {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
               <>
+                <Flex gap={4}>
+                  <WalletStatCard
+                    label="Connections"
+                    value={totalStasData.totalWallets}
+                  />
+                  <WalletStatCard
+                    label="Unique Users"
+                    value={totalStasData.uniqueWallets}
+                  />
+                </Flex>
                 <Flex
                   flexDir="column"
                   gap={4}
                   as={Card}
                   bg="backgroundHighlight"
                 >
-                  <Stack spacing={0} padding={6}>
+                  <Stack spacing={0} padding={{ base: 2, md: 6 }}>
                     <Heading as="h3" size="subtitle.sm">
                       Users Connected
                     </Heading>
@@ -314,7 +341,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                   as={Card}
                   bg="backgroundHighlight"
                 >
-                  <Stack spacing={0} padding={6}>
+                  <Stack spacing={0} padding={{ base: 2, md: 6 }}>
                     <Heading as="h3" size="subtitle.sm">
                       Wallet Connectors
                     </Heading>
@@ -341,7 +368,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                   as={Card}
                   bg="backgroundHighlight"
                 >
-                  <Stack spacing={0} padding={6}>
+                  <Stack spacing={0} padding={{ base: 2, md: 6 }}>
                     <Heading as="h3" size="subtitle.sm">
                       Wallet Distribution
                     </Heading>
@@ -349,7 +376,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                       Distribution of wallet types used to connect to your app.
                     </Text>
                   </Stack>
-                  <ChartContainer w="full" ratio={21 / 9}>
+                  <ChartContainer w="full" ratio={isMobile ? 1.5 : 21 / 9}>
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -357,8 +384,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                           activeShape={renderActiveShape}
                           onMouseEnter={onPieEnter}
                           data={pieChartData}
-                          cx={"50%"}
-                          cy={"45%"}
+                          outerRadius={"70%"}
                           dataKey="totalWallets"
                           valueKey="walletType"
                           nameKey="walletType"
@@ -372,7 +398,10 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                             />
                           ))}
                         </Pie>
-                        <Legend layout="radial" verticalAlign="middle" />
+                        <Legend
+                          layout={isMobile ? "horizontal" : "radial"}
+                          verticalAlign={isMobile ? "bottom" : "middle"}
+                        />
                       </PieChart>
                     </ResponsiveContainer>
                   </ChartContainer>
@@ -410,6 +439,18 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         </>
       )}
     </Flex>
+  );
+};
+
+const WalletStatCard: React.FC<{ label: string; value?: number }> = ({
+  label,
+  value,
+}) => {
+  return (
+    <Card as={Stat}>
+      <StatLabel mb={{ base: 1, md: 0 }}>{label}</StatLabel>
+      <StatNumber>{value}</StatNumber>
+    </Card>
   );
 };
 
