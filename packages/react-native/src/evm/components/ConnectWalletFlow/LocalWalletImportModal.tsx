@@ -209,6 +209,10 @@ export const LocalWalletImportModal = ({
               placeholder: l.local_wallet.private_key_mnemonic_placeholder,
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: onPrivateKeyEntered,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+              },
             }}
             containerProps={{ pl: "xxs" }}
           />
