@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { OnboardingBilling } from "./Billing";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { RE_INTERNAL_TEST_EMAIL } from "utils/regex";
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
@@ -35,11 +34,6 @@ export const Onboarding: React.FC = () => {
     if (state === "onboarding") {
       if (email) {
         setUpdatedEmail(email);
-
-        if (email.match(RE_INTERNAL_TEST_EMAIL)) {
-          setState("skipped");
-          return;
-        }
       }
       setState("confirming");
 
