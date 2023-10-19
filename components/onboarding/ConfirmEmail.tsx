@@ -95,7 +95,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   return (
     <>
       <OnboardingTitle
-        heading="Verify your email"
+        heading="You're almost done! Verify your email."
         description={
           <>
             We&apos;ve sent a 6 letter confirmation code to{" "}
@@ -156,7 +156,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
               onClick={onBack}
               isDisabled={saving}
             >
-              Change email
+              Update email
             </Button>
           </Flex>
         </Flex>

@@ -119,7 +119,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
               isDisabled={saving}
               onClick={onCancel}
             >
-              Skip
+              I&apos;ll do this later
             </Button>
           </Flex>
         )}

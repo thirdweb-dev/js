@@ -5,31 +5,24 @@ import { OnboardingTitle } from "./Title";
 type OnboardingGeneralProps = {
   account: Account;
   onSave: (email: string) => void;
-  onCancel: () => void;
 };
 
 export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   account,
   onSave,
-  onCancel,
 }) => {
   return (
     <>
       <OnboardingTitle
-        heading={
-          <>
-            Welcome to <strong>thirdweb</strong>
-          </>
-        }
-        description="Enter a name and email to manage your billing info, and receive our latest product updates."
+        heading="Create your thirdweb account"
+        description="Start building web3 apps and games, faster."
       />
 
       <AccountForm
-        showCancelButton
         showSubscription
         optional
         account={account}
-        buttonText="Next"
+        buttonText="Get Started for Free"
         trackingCategory="onboarding"
         padded={false}
         buttonProps={{
@@ -39,7 +32,6 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
           variant: "inverted",
         }}
         onSave={onSave}
-        onCancel={onCancel}
       />
     </>
   );

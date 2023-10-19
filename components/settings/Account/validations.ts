@@ -16,8 +16,8 @@ export const accountValidationSchema = z.object({
 });
 
 export const accountValidationOptionalSchema = z.object({
+  email: emailValidation,
   name: nameValidation.or(z.literal("")),
-  email: emailValidation.or(z.literal("")),
 });
 
 export const emailConfirmationValidationSchema = z.object({

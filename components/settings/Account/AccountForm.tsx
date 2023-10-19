@@ -35,7 +35,6 @@ interface AccountFormProps {
   previewEnabled?: boolean;
   showBillingButton?: boolean;
   showSubscription?: boolean;
-  showCancelButton?: boolean;
   buttonProps?: ButtonProps;
   buttonText?: string;
   padded?: boolean;
@@ -43,13 +42,11 @@ interface AccountFormProps {
   trackingCategory?: string;
   disableUnchanged?: boolean;
   onSave?: (email: string) => void;
-  onCancel?: () => void;
 }
 
 export const AccountForm: React.FC<AccountFormProps> = ({
   account,
   onSave,
-  onCancel,
   buttonProps,
   buttonText = "Save",
   horizontal = false,
@@ -57,7 +54,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   showBillingButton = false,
   showSubscription = false,
   disableUnchanged = false,
-  showCancelButton = false,
   padded = true,
   optional = false,
 }) => {
@@ -87,11 +83,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
   );
 
   const handleSubmit = form.handleSubmit((values) => {
-    if (showCancelButton && !values.email) {
-      handleCancel();
-      return;
-    }
-
     if (onSave) {
       onSave(values.email);
     }
@@ -136,42 +127,6 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     });
   });
 
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
-
-    trackEvent({
-      category: "account",
-      action: "onboardSkipped",
-      label: "attempt",
-    });
-
-    updateMutation.mutate(
-      {
-        onboardSkipped: true,
-      },
-      {
-        onSuccess: (data) => {
-          trackEvent({
-            category: "account",
-            action: "onboardSkipped",
-            label: "success",
-            data,
-          });
-        },
-        onError: (error) => {
-          trackEvent({
-            category: "account",
-            action: "onboardSkipped",
-            label: "error",
-            error,
-          });
-        },
-      },
-    );
-  };
-
   return (
     <form onSubmit={handleSubmit}>
       <VStack
@@ -190,6 +145,38 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           flexDir={horizontal ? "row" : "column"}
           w="full"
         >
+          <FormControl
+            isRequired
+            isInvalid={!!form.getFieldState("email", form.formState).error}
+          >
+            <FormLabel>Email</FormLabel>
+
+            {previewEnabled ? (
+              <Flex
+                borderRadius="md"
+                borderColor="borderColor"
+                borderWidth={1}
+                h={10}
+                px={3}
+                alignItems="center"
+              >
+                <Heading size="subtitle.sm">{form.getValues("email")}</Heading>
+              </Flex>
+            ) : (
+              <Input
+                placeholder="you@company.com"
+                type="email"
+                {...form.register("email")}
+              />
+            )}
+
+            {form.getFieldState("email", form.formState).error && (
+              <FormErrorMessage size="body.sm">
+                {form.getFieldState("email", form.formState).error?.message}
+              </FormErrorMessage>
+            )}
+          </FormControl>
+
           <FormControl
             isRequired={!previewEnabled && !optional}
             isInvalid={!!form.getFieldState("name", form.formState).error}
@@ -211,7 +198,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
               </Flex>
             ) : (
               <Input
-                placeholder="ACME Inc."
+                placeholder="Company Inc."
                 type="text"
                 {...form.register("name")}
               />
@@ -224,46 +211,8 @@ export const AccountForm: React.FC<AccountFormProps> = ({
             )}
           </FormControl>
 
-          <FormControl
-            isRequired={!previewEnabled && !optional}
-            isInvalid={!!form.getFieldState("email", form.formState).error}
-          >
-            <FormLabel>
-              Billing email {optional && <Text as="span">(optional)</Text>}
-            </FormLabel>
-
-            {previewEnabled ? (
-              <Flex
-                borderRadius="md"
-                borderColor="borderColor"
-                borderWidth={1}
-                h={10}
-                px={3}
-                alignItems="center"
-              >
-                <Heading size="subtitle.sm">{form.getValues("email")}</Heading>
-              </Flex>
-            ) : (
-              <Input
-                placeholder="billing@acme.co"
-                type="email"
-                {...form.register("email")}
-              />
-            )}
-
-            {form.getFieldState("email", form.formState).error && (
-              <FormErrorMessage size="body.sm">
-                {form.getFieldState("email", form.formState).error?.message}
-              </FormErrorMessage>
-            )}
-          </FormControl>
-
           {showSubscription && (
             <Checkbox
-              isDisabled={
-                !form.getValues("email").length ||
-                !!form.getFieldState("email", form.formState).error
-              }
               defaultChecked
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setIsSubscribing(e.target.checked)
@@ -281,37 +230,19 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           {showBillingButton && <ManageBillingButton account={account} />}
 
           {!previewEnabled && (
-            <Flex
-              flexDir="column"
-              gap={3}
-              w={showCancelButton ? "full" : "auto"}
+            <Button
+              {...buttonProps}
+              type="button"
+              onClick={handleSubmit}
+              colorScheme={buttonProps?.variant ? undefined : "blue"}
+              isDisabled={
+                updateMutation.isLoading ||
+                (disableUnchanged && !form.formState.isDirty)
+              }
+              isLoading={updateMutation.isLoading}
             >
-              <Button
-                {...buttonProps}
-                type="button"
-                onClick={handleSubmit}
-                colorScheme={buttonProps?.variant ? undefined : "blue"}
-                isDisabled={
-                  updateMutation.isLoading ||
-                  (disableUnchanged && !form.formState.isDirty)
-                }
-                isLoading={updateMutation.isLoading}
-              >
-                {buttonText}
-              </Button>
-
-              {showCancelButton && (
-                <Button
-                  w="full"
-                  size="lg"
-                  fontSize="md"
-                  variant="outline"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
-              )}
-            </Flex>
+              {buttonText}
+            </Button>
           )}
         </HStack>
       </VStack>

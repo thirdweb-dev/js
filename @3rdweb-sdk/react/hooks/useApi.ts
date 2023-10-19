@@ -28,7 +28,6 @@ export type Account = {
   email?: string;
   currentBillingPeriodStartsAt: string;
   currentBillingPeriodEndsAt: string;
-  onboardedAt?: string;
   emailConfirmedAt?: string;
   unconfirmedEmail?: string;
   stripePaymentActionUrl?: string;
