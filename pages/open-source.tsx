@@ -170,10 +170,13 @@ interface GithubContributor {
   contributions: number;
 }
 
+const orgNames = ["thirdweb-dev", "thirdweb-example"];
+
 interface GithubRepository {
   id: number;
   name: string;
   fork: boolean;
+  owner: { login: string };
 }
 
 const RepoCard: React.FC<RepoCardProps> = ({ title, description, url }) => {
@@ -310,7 +313,7 @@ const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
               gap={8}
               justifyContent="space-evenly"
             >
-              {contributors.slice(0, 12).map((contributor) => (
+              {contributors.slice(0, 16).map((contributor) => (
                 <Flex
                   key={contributor.login}
                   flexDir="row"
@@ -422,8 +425,6 @@ OSS.pageId = PageId.OSS;
 export default OSS;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const orgName = "thirdweb-dev";
-
   if (!process.env.GITHUB_API_TOKEN) {
     throw new Error("Missing GITHUB_API_TOKEN");
   }
@@ -435,50 +436,50 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 
   // Fetch the list of all repositories belonging to the organization
-  const reposResponse = await fetch(
-    `https://api.github.com/orgs/${orgName}/repos?per_page=100`,
-    authHeader,
-  );
-
-  const reposData = (await reposResponse.json()) as GithubRepository[];
-
-  const repos = reposData
+  const reposData = (
+    (
+      await Promise.all(
+        orgNames.map((orgName) =>
+          fetch(
+            `https://api.github.com/orgs/${orgName}/repos?per_page=100&type=public`,
+            authHeader,
+          ).then((r) => r.json()),
+        ),
+      )
+    ).flat(1) as GithubRepository[]
+  )
     .filter((repo) => repo.fork === false)
-    .filter((repo) => repo.name !== "shopify-thirdweb-theme")
-    .map((repo) => repo.name);
-
-  const contributors: Record<string, GithubContributor> = {};
+    .filter((repo) => repo.name !== "shopify-thirdweb-theme");
 
   // fetch the contributors for each repository and aggregate them
 
-  const contributorData = await Promise.all(
-    repos.map(async (repo) => {
-      const response = await fetch(
-        `https://api.github.com/repos/${orgName}/${repo}/contributors`,
-        authHeader,
-      );
-      const data = (await response.json()) as GithubContributor[];
+  const contributorData: GithubContributor[] = (
+    await Promise.all(
+      reposData.map((repo) =>
+        fetch(
+          `https://api.github.com/repos/${repo.owner.login}/${repo.name}/contributors`,
+          authHeader,
+        ).then((r) => r.json()),
+      ),
+    )
+  ).flat(1);
 
-      return data;
-    }),
-  );
+  const contributors: Record<string, GithubContributor> = {};
 
-  for (const data of contributorData) {
-    data.forEach((contributor) => {
-      const login = contributor.login;
-      const contributions = contributor.contributions;
-      if (contributors[login]) {
-        contributors[login].contributions += contributions;
-      } else {
-        contributors[login] = {
-          login,
-          avatar_url: contributor.avatar_url,
-          html_url: contributor.html_url,
-          contributions,
-        };
-      }
-    });
-  }
+  contributorData.forEach((contributor) => {
+    const login = contributor.login;
+    const contributions = contributor.contributions;
+    if (contributors[login]) {
+      contributors[login].contributions += contributions;
+    } else {
+      contributors[login] = {
+        login,
+        avatar_url: contributor.avatar_url,
+        html_url: contributor.html_url,
+        contributions,
+      };
+    }
+  });
 
   // Sort the contributors by their contributions in descending order
   const sortedContributors = Object.values(contributors).sort(
