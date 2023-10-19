@@ -11,7 +11,7 @@ import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { ManageBillingButton } from "components/settings/Account/ManageBillingButton";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useEffect, useMemo, useState } from "react";
-import { FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { FiCheckCircle, FiAlertCircle, FiInfo } from "react-icons/fi";
 import { BillingPlan } from "components/settings/Account/BillingPlan";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
@@ -19,6 +19,7 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   const meQuery = useAccount();
   const { data: account } = meQuery;
   const validPayment = account?.status === "validPayment";
+  const paymentVerification = account?.status === "paymentVerification";
 
   const [stepsCompleted, setStepsCompleted] = useState<
     | undefined
@@ -84,7 +85,9 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   useEffect(() => {
     let refetchInterval: ReturnType<typeof setInterval> | undefined;
 
-    if (account?.status === "noPayment") {
+    if (
+      ["noPayment", "paymentVerification"].includes(account?.status as string)
+    ) {
       refetchInterval = setInterval(() => {
         meQuery.refetch();
       }, 3000);
@@ -104,10 +107,10 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
     if (!stepsCompleted && account) {
       setStepsCompleted({
         account: !!account.email,
-        payment: validPayment,
+        payment: validPayment || paymentVerification,
       });
     }
-  }, [account, stepsCompleted, validPayment]);
+  }, [account, stepsCompleted, validPayment, paymentVerification]);
 
   if (!address) {
     return <ConnectWalletPrompt />;
@@ -154,11 +157,27 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
               >
                 <HStack>
                   <Icon
-                    as={validPayment ? FiCheckCircle : FiAlertCircle}
-                    color={validPayment ? "green.500" : "red.500"}
+                    as={
+                      validPayment
+                        ? FiCheckCircle
+                        : paymentVerification
+                        ? FiInfo
+                        : FiAlertCircle
+                    }
+                    color={
+                      validPayment
+                        ? "green.500"
+                        : paymentVerification
+                        ? "orange.500"
+                        : "red.500"
+                    }
                   />
                   <Text size="label.sm">
-                    {validPayment ? "Valid payment" : "Invalid payment"}
+                    {validPayment
+                      ? "Valid payment"
+                      : paymentVerification
+                      ? "Needs verification"
+                      : "Invalid payment"}
                   </Text>
                 </HStack>
               </Badge>

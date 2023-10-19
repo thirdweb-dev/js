@@ -45,8 +45,11 @@ export const Onboarding: React.FC = () => {
         },
       });
     } else if (state === "confirming") {
-      const newState =
-        account.status === "validPayment" ? "skipped" : "billing";
+      const newState = ["validPayment", "paymentVerification"].includes(
+        account.status,
+      )
+        ? "skipped"
+        : "billing";
       setState(newState);
 
       trackEvent({
@@ -87,7 +90,7 @@ export const Onboarding: React.FC = () => {
     else if (
       account.email &&
       !account.onboardSkipped &&
-      account.status !== "validPayment"
+      !["validPayment", "paymentVerification"].includes(account.status)
     ) {
       setState("billing");
     }

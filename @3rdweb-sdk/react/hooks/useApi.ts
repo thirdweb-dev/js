@@ -31,6 +31,7 @@ export type Account = {
   onboardedAt?: string;
   emailConfirmedAt?: string;
   unconfirmedEmail?: string;
+  stripePaymentActionUrl?: string;
   onboardSkipped?: boolean;
   notificationPreferences?: {
     billing: "email" | "none";

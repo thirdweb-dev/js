@@ -127,7 +127,24 @@ export const BillingAlert = () => {
     return null;
   }
 
-  const { status } = meQuery.data;
+  const { status, stripePaymentActionUrl } = meQuery.data;
+
+  if (status === "paymentVerification") {
+    const message = !stripePaymentActionUrl?.startsWith(
+      "https://payments.stripe.com/microdeposit",
+    )
+      ? "To verify your bank account, we've deposited $0.01 and it should arrive within 1-2 working days. Once you receive it"
+      : "Your card requires further verification. To proceed";
+
+    return (
+      <BillingTypeAlert
+        title="Your payment method is not verified"
+        description={message}
+        status="warning"
+        ctaText="verify your payment method"
+      />
+    );
+  }
 
   if (status === "invalidPayment") {
     return (
