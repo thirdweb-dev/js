@@ -167,7 +167,7 @@ export const EmailSelectionUI: React.FC<
                 color={theme.colors.accentButtonTextColor}
               />
             ) : (
-              <Text variant="bodySmall" color="accentButtonTextColor">
+              <Text variant="bodySmallBold" color="accentButtonTextColor">
                 Continue
               </Text>
             )}

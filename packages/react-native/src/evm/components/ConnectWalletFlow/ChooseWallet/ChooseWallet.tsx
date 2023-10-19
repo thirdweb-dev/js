@@ -224,7 +224,7 @@ export function ChooseWallet({
                 </Box>
               );
             })}
-            <Text variant="bodyLarge">Connect a wallet</Text>
+            <Text variant="bodySmallBold">Connect a wallet</Text>
           </BaseButton>
         )
       ) : null}
@@ -245,7 +245,7 @@ export function ChooseWallet({
               color={theme.colors.textPrimary}
             />
           ) : (
-            <Text variant="bodySmall">Continue as guest</Text>
+            <Text variant="bodySmallBold">Continue as guest</Text>
           )}
         </BaseButton>
       ) : null}
