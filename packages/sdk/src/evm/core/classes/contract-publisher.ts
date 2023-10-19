@@ -382,6 +382,8 @@ export class ContractPublisher extends RPCConnectionHandler {
       predeployUri: string,
       extraMetadata: ExtraPublishMetadata,
     ): Promise<Transaction<TransactionResult<PublishedContract>>> => {
+      const extraMetadataCleaned =
+        this.cleanupOldPublishFlowData(extraMetadata);
       const signer = this.getSigner();
       invariant(signer, "A signer is required");
       const publisher = await signer.getAddress();
@@ -403,7 +405,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         AbiSchema.parse(compilerMetadata.abi),
         "DynamicContract",
       );
-      extraMetadata.routerType = isPlugin
+      extraMetadataCleaned.routerType = isPlugin
         ? "plugin"
         : isDynamic
         ? "dynamic"
@@ -411,7 +413,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
       // For a dynamic contract Router, try to fetch plugin/extension metadata
       if (isDynamic || isPlugin) {
-        const defaultExtensions = extraMetadata.defaultExtensions;
+        const defaultExtensions = extraMetadataCleaned.defaultExtensions;
 
         if (defaultExtensions && defaultExtensions.length > 0) {
           try {
@@ -444,7 +446,7 @@ export class ContractPublisher extends RPCConnectionHandler {
               compilerMetadata.abi,
               ...extensionABIs,
             ]);
-            extraMetadata.compositeAbi = AbiSchema.parse(composite);
+            extraMetadataCleaned.compositeAbi = AbiSchema.parse(composite);
           } catch {}
         }
       }
@@ -460,9 +462,11 @@ export class ContractPublisher extends RPCConnectionHandler {
         );
 
         const latestVersion = latestMetadata.publishedMetadata.version;
-        if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
+        if (
+          !isIncrementalVersion(latestVersion, extraMetadataCleaned.version)
+        ) {
           throw Error(
-            `Version ${extraMetadata.version} is not greater than ${latestVersion}`,
+            `Version ${extraMetadataCleaned.version} is not greater than ${latestVersion}`,
           );
         }
       }
@@ -478,7 +482,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       const contractId = predeployMetadata.name;
 
       const fullMetadata = await FullPublishMetadataSchemaInput.parseAsync({
-        ...extraMetadata,
+        ...extraMetadataCleaned,
         metadataUri: predeployMetadata.metadataUri,
         bytecodeUri: predeployMetadata.bytecodeUri,
         name: predeployMetadata.name,
@@ -540,5 +544,20 @@ export class ContractPublisher extends RPCConnectionHandler {
       timestamp: contractModel.publishTimestamp,
       metadataUri: contractModel.publishMetadataUri,
     });
+  }
+
+  private cleanupOldPublishFlowData(
+    extraMetadata: ExtraPublishMetadata,
+  ): ExtraPublishMetadata {
+    return {
+      ...extraMetadata,
+      isDeployableViaFactory: false,
+      isDeployableViaProxy: false,
+      factoryDeploymentData: {
+        ...extraMetadata.factoryDeploymentData,
+        implementationAddresses: {},
+        factoryAddresses: {},
+      },
+    };
   }
 }
