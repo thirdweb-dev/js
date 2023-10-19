@@ -57,6 +57,11 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     name: "BitTorrent Chain",
     gasPrice: 300_000 * 10 ** 9,
   },
+  [88882]: {
+    name: "Spicy Chain",
+    gasPrice: 2500 * 10 ** 9,
+    gasLimit: 200_000,
+  },
 };
 /* eslint-enable no-useless-computed-key */
 

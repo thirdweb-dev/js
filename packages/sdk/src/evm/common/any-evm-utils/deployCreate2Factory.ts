@@ -34,11 +34,11 @@ export async function deployCreate2Factory(
   const chainId = enforceEip155 ? networkId : 0;
   console.debug(`ChainId ${networkId} enforces EIP155: ${enforceEip155}`);
   const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
-    ? getCreate2FactoryDeploymentInfo(
-        chainId,
-        CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
-      )
-    : getCreate2FactoryDeploymentInfo(chainId);
+    ? getCreate2FactoryDeploymentInfo(chainId, {
+        gasPrice: CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
+        gasLimit: CUSTOM_GAS_FOR_CHAIN[networkId].gasLimit,
+      })
+    : getCreate2FactoryDeploymentInfo(chainId, {});
 
   const factoryExists = await isContractDeployed(
     deploymentInfo.deployment,
@@ -47,10 +47,19 @@ export async function deployCreate2Factory(
 
   // deploy community factory if not already deployed
   if (!factoryExists) {
+    const gasPrice = CUSTOM_GAS_FOR_CHAIN[networkId]?.gasPrice
+      ? CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice
+      : 100 * 10 ** 9;
+    const gasLimit = CUSTOM_GAS_FOR_CHAIN[networkId]?.gasLimit
+      ? CUSTOM_GAS_FOR_CHAIN[networkId].gasLimit
+      : 100000;
+
+    invariant(gasLimit, "gasLimit undefined for create2 factory deploy");
+    invariant(gasPrice, "gasPrice undefined for create2 factory deploy");
+
     // send balance to the keyless signer
-    const valueToSend = CUSTOM_GAS_FOR_CHAIN[networkId]
-      ? BigNumber.from(CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice).mul(100000)
-      : toWei("0.01");
+    const valueToSend = BigNumber.from(gasPrice).mul(gasLimit);
+
     if (
       (await signer.provider.getBalance(deploymentInfo.signer)).lt(valueToSend)
     ) {
