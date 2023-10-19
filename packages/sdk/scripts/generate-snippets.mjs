@@ -154,4 +154,3 @@ export function generateSnippets(ecosystem) {
 }
 
 generateSnippets("evm");
-generateSnippets("solana");
