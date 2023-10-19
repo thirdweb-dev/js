@@ -1,7 +1,20 @@
 export const textVariants = {
+  defaults: {
+    fontFamily: "none",
+    fontSize: 24,
+    fontWeight: "700",
+    lineHeight: 32,
+    color: "textPrimary",
+  },
   header: {
     fontSize: 24,
     fontWeight: "600",
+    lineHeight: 32,
+    color: "textPrimary",
+  },
+  headerBold: {
+    fontSize: 24,
+    fontWeight: "700",
     lineHeight: 32,
     color: "textPrimary",
   },
@@ -29,6 +42,13 @@ export const textVariants = {
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  bodySmallBold: {
+    color: "textPrimary",
+    textAlign: "center",
+    fontWeight: "700",
     fontSize: 14,
     lineHeight: 16,
   },

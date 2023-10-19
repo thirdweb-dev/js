@@ -151,7 +151,7 @@ export const SwitchChainModal = ({
             </Text>
             <ModalHeaderTextClose flex={1} onClose={onCloseInternal} />
           </Box>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
             {supportedChains?.length > 0 ? (
               supportedChains.map((chain) => {
                 return (
