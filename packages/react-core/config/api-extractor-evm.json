@@ -109,7 +109,7 @@
     /**
      * (REQUIRED) Whether to generate an API report.
      */
-    "enabled": true,
+    "enabled": true
 
     /**
      * The filename for the API report files.  It will be combined with "reportFolder" or "reportTempFolder" to produce
@@ -135,7 +135,7 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/etc/"
      */
-    "reportFolder": "<projectFolder>/temp/"
+    // "reportFolder": "<projectFolder>/etc/",
 
     /**
      * Specifies the folder where the temporary report file is written.  The file name portion is determined by
