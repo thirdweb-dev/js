@@ -82,7 +82,7 @@ export default async function handler(
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(exp * 1000),
       httpOnly: true,
-      secure: true,
+      secure: ctx.cookieOptions?.secure || true,
     },
   );
   await res.setCookie(
@@ -94,7 +94,7 @@ export default async function handler(
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(exp * 1000),
       httpOnly: true,
-      secure: true,
+      secure: ctx.cookieOptions?.secure || true,
     },
   );
 

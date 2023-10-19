@@ -88,7 +88,7 @@ export default async function handler(
         sameSite: ctx.cookieOptions?.sameSite || "none",
         expires: new Date(exp * 1000),
         httpOnly: true,
-        secure: true,
+        secure: ctx.cookieOptions?.secure || true,
       },
     ),
     serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.address, {
@@ -97,7 +97,7 @@ export default async function handler(
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(exp * 1000),
       httpOnly: true,
-      secure: true,
+      secure: ctx.cookieOptions?.secure || true,
     }),
   ]);
 

@@ -56,7 +56,7 @@ export default async function handler(
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: cookieExpiration,
       httpOnly: true,
-      secure: true,
+      secure: ctx.cookieOptions?.secure || true,
     },
   );
 

@@ -52,7 +52,7 @@ export default async function handler(
             sameSite: ctx.cookieOptions?.sameSite || "none",
             expires: new Date(refreshedPayload.payload.exp * 1000),
             httpOnly: true,
-            secure: true,
+            secure: ctx.cookieOptions?.secure || true,
           },
         );
         res.setCookie(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, user.address, {
@@ -61,7 +61,7 @@ export default async function handler(
           sameSite: ctx.cookieOptions?.sameSite || "none",
           expires: new Date(refreshedPayload.payload.exp * 1000),
           httpOnly: true,
-          secure: true,
+          secure: ctx.cookieOptions?.secure || true,
         });
       }
     }

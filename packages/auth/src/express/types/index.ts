@@ -52,6 +52,7 @@ export type ThirdwebAuthConfig<
     domain?: string;
     path?: string;
     sameSite?: "lax" | "strict" | "none";
+    secure?: boolean;
   };
   callbacks?: {
     onLogin?:
