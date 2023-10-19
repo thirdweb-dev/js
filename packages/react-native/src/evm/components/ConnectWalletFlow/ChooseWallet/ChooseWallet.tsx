@@ -122,13 +122,7 @@ export function ChooseWallet({
                   color={theme.colors.backgroundInverted}
                 />
               )}
-              <Text
-                variant="header"
-                ml="xxs"
-                fontWeight="700"
-                fontSize={20}
-                lineHeight={24}
-              >
+              <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
                 Connect
               </Text>
             </Box>
@@ -180,7 +174,6 @@ export function ChooseWallet({
       !isConnectAWalletEnabled &&
       (guestWallet || connectionWallets.length > 0) ? (
         <Box
-          mb="md"
           mt="md"
           marginHorizontal="xl"
           flexDirection="row"
@@ -202,7 +195,7 @@ export function ChooseWallet({
             marginHorizontal="xl"
             paddingHorizontal="none"
             paddingVertical="none"
-            mb="md"
+            mt="md"
             walletIconUrl={connectionWallets[0].meta.iconURL}
             name={connectionWallets[0].meta.name}
             onPress={onSingleWalletPress}
@@ -212,6 +205,7 @@ export function ChooseWallet({
             marginHorizontal="xl"
             justifyContent="center"
             borderRadius="lg"
+            mt="md"
             paddingVertical="md"
             borderColor="border"
             flexDirection="row"
@@ -230,9 +224,7 @@ export function ChooseWallet({
                 </Box>
               );
             })}
-            <Text variant="bodySmall" fontWeight="700">
-              Connect a wallet
-            </Text>
+            <Text variant="bodySmallBold">Connect a wallet</Text>
           </BaseButton>
         )
       ) : null}
@@ -253,9 +245,7 @@ export function ChooseWallet({
               color={theme.colors.textPrimary}
             />
           ) : (
-            <Text variant="bodySmall" fontWeight="700">
-              Continue as guest
-            </Text>
+            <Text variant="bodySmallBold">Continue as guest</Text>
           )}
         </BaseButton>
       ) : null}
