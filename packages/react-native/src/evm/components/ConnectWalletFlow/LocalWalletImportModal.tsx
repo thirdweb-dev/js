@@ -210,6 +210,10 @@ export const LocalWalletImportModal = ({
               placeholder: "Private key / Mnemonic",
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: onPrivateKeyEntered,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+              },
             }}
             containerProps={{ pl: "xxs" }}
           />
