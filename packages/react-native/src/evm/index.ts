@@ -45,6 +45,8 @@ export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 export { ThirdwebStorage } from "../core/storage/storage";
 
+export * from "./i18n/strings";
+
 // ui components
 export * from "./components/base";
 export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";

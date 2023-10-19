@@ -18,7 +18,7 @@ import {
 import { SelectTokenButton } from "./SelectTokenButton";
 import CloseIcon from "../../assets/close";
 import Text from "../base/Text";
-import { useGlobalTheme } from "../../providers/ui-context-provider";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export function useToken(tokenAddress: string): {
   isLoading: boolean;
@@ -82,6 +82,7 @@ export function TokenSelector(props: {
   onBack: () => void;
   supportedTokens: SupportedTokens;
 }) {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [input, setInput] = useState("");
   const chainId = useChainId();
@@ -120,7 +121,7 @@ export function TokenSelector(props: {
       <Box>
         <ModalHeaderTextClose
           onBackPress={props.onBack}
-          headerText="Select a Token"
+          headerText={l.connect_wallet_details.select_token}
         />
 
         <Box
@@ -199,7 +200,9 @@ export function TokenSelector(props: {
           paddingTop="none"
         >
           <CloseIcon width={16} height={16} color={theme.colors.border} />
-          <Text variant="bodySmall">No Tokens found</Text>
+          <Text variant="bodySmall">
+            {l.connect_wallet_details.no_tokens_found}
+          </Text>
         </Box>
       )}
     </Box>
