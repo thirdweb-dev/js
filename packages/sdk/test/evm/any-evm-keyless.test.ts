@@ -97,46 +97,42 @@ describe("Any EVM Keyless Deploy", async () => {
       "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7";
     const walletAddress = await sdk.wallet.getAddress();
 
-    // This needs to match the published contract for the currently used ABI
-    // const publishUri = "ipfs://QmP2QPzc81zg5rqhU9u7cDeSyD4aZH8RdVF8Nuh6rCCgxV";
-    // "ipfs://QmaibbXVEJSdW2xkbsVpGq6PKiqspi9LKaT22hoLjigtMt/0";
-    const publishUri =
-      // "ipfs://QmVMYjPmtsQCxzbPALaXE2WwhnGE8F6mNn4FQE8iAqUTuD/0";
-      // "ipfs://QmaE7HVb4nwHp96omxmyPc7nKPZqsGB7ZbW6psznN6cSMk/";
-      await mockUploadMetadataWithBytecode(
-        "MarketplaceV3",
-        marketplaceV3CompilerMetadata.output.abi,
-        marketplaceV3Bytecode,
-        "",
-        {
-          ...extendedMetadataMock,
-          deployType: "autoFactory",
-          routerType: "dynamic",
-          defaultExtensions: [
-            {
-              extensionName: "DirectListingsLogic",
-              extensionVersion: "latest",
-              publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
-            },
-            {
-              extensionName: "EnglishAuctionsLogic",
-              extensionVersion: "latest",
-              publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
-            },
-            {
-              extensionName: "OffersLogic",
-              extensionVersion: "latest",
-              publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
-            },
-          ],
-          networksForDeployment: {
-            allNetworks: true,
-            networksEnabled: [],
+    // IPFS URIs here and below This needs to match the published contract URIs for the contract and extensions
+    // the URI can be found by querying the ContractPublisher for those contracts: https://thirdweb.com/polygon/0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7/explorer
+    const publishUri = await mockUploadMetadataWithBytecode(
+      "MarketplaceV3",
+      marketplaceV3CompilerMetadata.output.abi,
+      marketplaceV3Bytecode,
+      "",
+      {
+        ...extendedMetadataMock,
+        deployType: "autoFactory",
+        routerType: "dynamic",
+        defaultExtensions: [
+          {
+            extensionName: "DirectListingsLogic",
+            extensionVersion: "latest",
+            publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
           },
-          publisher: await adminWallet.getAddress(),
+          {
+            extensionName: "EnglishAuctionsLogic",
+            extensionVersion: "latest",
+            publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+          },
+          {
+            extensionName: "OffersLogic",
+            extensionVersion: "latest",
+            publisherAddress: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+          },
+        ],
+        networksForDeployment: {
+          allNetworks: true,
+          networksEnabled: [],
         },
-        "ipfs://QmWrPyWEMDjnR3a5zp1rJHzU1EUGx6DR2hPBVHAkGGjhgm/0",
-      );
+        publisher: await adminWallet.getAddress(),
+      },
+      "ipfs://QmYzMgBcabZe9hV2QrC4JMR6f2qmFodiWdtTdqkokvBcYL/0",
+    );
     transactionCount = (await sdk.deployer.getTransactionsForDeploy(publishUri))
       .length;
 
@@ -144,7 +140,7 @@ describe("Any EVM Keyless Deploy", async () => {
       publishUri,
       [
         walletAddress, // defaultAdmin
-        "ipfs://QmWrPyWEMDjnR3a5zp1rJHzU1EUGx6DR2hPBVHAkGGjhgm/0", // contractUri
+        "ipfs://QmYzMgBcabZe9hV2QrC4JMR6f2qmFodiWdtTdqkokvBcYL/0", // contractUri
         [], // trustedForwarders
         walletAddress, // platform fee recipient
         0, // platform fee bps
@@ -180,7 +176,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmPDuyh4iAj79Cv2gcUgxELeKr4kz72LF7vRvosRkRbcq5/0",
+      "ipfs://QmRqErmPh5jpQUEbvKfHx9Wq8FnmjMrokF9x9b8Pw8iGJo/0",
     );
 
     await mockUploadMetadataWithBytecode(
@@ -197,7 +193,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://Qmb2t399P7ZoFCjn5WSkxfVHj3TnSYjdp19FyTpYec9DP4/0",
+      "ipfs://QmSmtyccp5pamJB4GzG8ph3p68aheqSyu88tEPx2qD11gY/0",
     );
 
     await mockUploadMetadataWithBytecode(
@@ -214,7 +210,7 @@ describe("Any EVM Keyless Deploy", async () => {
         },
         publisher: adminWallet.address,
       },
-      "ipfs://QmRQEuSAwVswHhpNjBGydybsWdD2DExi2Mv8iXJBvYAuxV/0",
+      "ipfs://QmaHC2woTYRbL2tfZujHLt7mDZ5pDJNCCepSGkM5neWYK4/0",
     );
   });
 
