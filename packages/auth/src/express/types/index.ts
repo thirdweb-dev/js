@@ -56,17 +56,17 @@ export type ThirdwebAuthConfig<
   };
   callbacks?: {
     onLogin?:
-      | ((address: string, req?: Request) => void | TSession)
-      | ((address: string, req?: Request) => Promise<void | TSession>);
+      | ((address: string, req: Request) => void | TSession)
+      | ((address: string, req: Request) => Promise<void | TSession>);
     onToken?:
-      | ((token: string, req?: Request) => void)
-      | ((token: string, req?: Request) => Promise<void>);
+      | ((token: string, req: Request) => void)
+      | ((token: string, req: Request) => Promise<void>);
     onUser?:
-      | ((user: User<TSession>, req?: Request) => void | TData)
-      | ((user: User<TSession>, req?: Request) => Promise<void | TData>);
+      | ((user: User<TSession>, req: Request) => void | TData)
+      | ((user: User<TSession>, req: Request) => Promise<void | TData>);
     onLogout?:
-      | ((user: User, req?: Request) => void)
-      | ((user: User, req?: Request) => Promise<void>);
+      | ((user: User, req: Request) => void)
+      | ((user: User, req: Request) => Promise<void>);
   };
 };
 

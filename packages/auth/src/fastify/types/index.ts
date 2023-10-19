@@ -64,14 +64,14 @@ export type ThirdwebAuthConfig<
   };
   callbacks?: {
     onLogin?:
-      | ((address: string, req?: FastifyRequest) => void | TSession)
-      | ((address: string, req?: FastifyRequest) => Promise<void | TSession>);
+      | ((address: string, req: FastifyRequest) => void | TSession)
+      | ((address: string, req: FastifyRequest) => Promise<void | TSession>);
     onToken?:
-      | ((token: string, req?: FastifyRequest) => void)
-      | ((token: string, req?: FastifyRequest) => Promise<void>);
+      | ((token: string, req: FastifyRequest) => void)
+      | ((token: string, req: FastifyRequest) => Promise<void>);
     onUser?:
-      | ((user: User<TSession>, req?: FastifyRequest) => void | TData)
-      | ((user: User<TSession>, req?: FastifyRequest) => Promise<void | TData>);
+      | ((user: User<TSession>, req: FastifyRequest) => void | TData)
+      | ((user: User<TSession>, req: FastifyRequest) => Promise<void | TData>);
     onLogout?:
       | ((user: User, req?: FastifyRequest) => void)
       | ((user: User, req?: FastifyRequest) => Promise<void>);

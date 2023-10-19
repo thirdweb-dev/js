@@ -66,23 +66,23 @@ export type ThirdwebAuthConfig<
   };
   callbacks?: {
     onLogin?:
-      | ((address: string, req?: NextApiRequest) => void | TSession)
-      | ((address: string, req?: NextApiRequest) => Promise<void | TSession>);
+      | ((address: string, req: NextApiRequest) => void | TSession)
+      | ((address: string, req: NextApiRequest) => Promise<void | TSession>);
     onToken?:
-      | ((token: string, req?: NextApiRequest) => void)
-      | ((token: string, req?: NextApiRequest) => Promise<void>);
+      | ((token: string, req: NextApiRequest) => void)
+      | ((token: string, req: NextApiRequest) => Promise<void>);
     onUser?:
       | (<TRequestType extends RequestType = RequestType>(
           user: User<TSession>,
-          req?: TRequestType,
+          req: TRequestType,
         ) => void | TData)
       | (<TRequestType extends RequestType = RequestType>(
           user: User<TSession>,
           req?: TRequestType,
         ) => Promise<void | TData>);
     onLogout?:
-      | ((user: User, req?: NextApiRequest) => void)
-      | ((user: User, req?: NextApiRequest) => Promise<void>);
+      | ((user: User, req: NextApiRequest) => void)
+      | ((user: User, req: NextApiRequest) => Promise<void>);
   };
 };
 
