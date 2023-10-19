@@ -14,13 +14,14 @@ import RightArrowIcon from "../../assets/right-arrow";
 import ConnectAppField from "./ConnectAppField";
 import DisconnectIcon from "../../assets/disconnect";
 import { IconTextButton } from "../base/IconTextButton";
-import { useGlobalTheme } from "../../providers/ui-context-provider";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
 }: {
   onExportPress: () => void;
 }) => {
+  const l = useLocale();
   const { setConnectedWallet } = useWalletContext();
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
@@ -64,8 +65,8 @@ export const SmartWalletAdditionalActions = ({
         mt="xs"
         text={
           showSmartWallet
-            ? "Switch to Smart Wallet"
-            : "Switch to Personal Wallet"
+            ? l.smart_wallet.switch_to_smart
+            : l.smart_wallet.switch_to_personal
         }
         icon={
           <DisconnectIcon
@@ -98,8 +99,8 @@ export const SmartWalletAdditionalActions = ({
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">
                   {wallet?.walletId === walletIds.localWallet
-                    ? "Backup personal wallet"
-                    : "Backup wallet"}
+                    ? l.connect_wallet_details.backup_personal_wallet
+                    : l.connect_wallet_details.backup_wallet}
                 </Text>
               </View>
             </>
@@ -110,9 +111,7 @@ export const SmartWalletAdditionalActions = ({
             />
           </BaseButton>
           <Text variant="error" textAlign="left" mb="sm">
-            {
-              "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
-            }
+            {l.local_wallet.this_is_a_temporary_wallet}
           </Text>
         </>
       ) : null}

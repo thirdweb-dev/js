@@ -1,4 +1,4 @@
-import { DeepPartial } from "../types/deepPartial";
+import { DeepPartial, deepMerge } from "../types/deepPartial";
 import { Locale, LocaleType, _en, _es } from "./types";
 
 export const setLocale = (locale: Locale): LocaleType => {
@@ -13,15 +13,15 @@ export const setLocale = (locale: Locale): LocaleType => {
 };
 
 export const en = (locale?: DeepPartial<LocaleType>): LocaleType => {
-  return {
-    ..._en,
-    ...locale,
-  } as LocaleType;
+  if (!locale) {
+    return _en;
+  }
+  return deepMerge(_en, locale);
 };
 
 export const es = (locale?: DeepPartial<LocaleType>): LocaleType => {
-  return {
-    ..._es,
-    ...locale,
-  } as LocaleType;
+  if (!locale) {
+    return _es;
+  }
+  return deepMerge(_es, locale);
 };

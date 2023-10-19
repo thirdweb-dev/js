@@ -21,7 +21,10 @@ import {
 import { WalletConnect } from "./WalletConnect";
 import { WalletConnectButton } from "./WalletConnectButton";
 import { ModalHeaderTextClose } from "../../../components/base";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 type WCWallet = {
   iconURL: string;
@@ -41,6 +44,7 @@ export function WalletConnectUI({
   goBack,
   projectId,
 }: ConnectUIProps<WalletConnect> & { projectId: string }) {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [wallets, setWallets] = useState<WCWallet[]>([]);
   const [error, setError] = useState<string | undefined>();
@@ -209,7 +213,9 @@ export function WalletConnectUI({
                       { height: Math.round(MODAL_HEIGHT) },
                     ]}
                   >
-                    <Text variant="bodySmall">No results found</Text>
+                    <Text variant="bodySmall">
+                      {l.wallet_connect.no_results_found}
+                    </Text>
                   </View>
                 )
               }
