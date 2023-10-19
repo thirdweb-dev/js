@@ -18,3 +18,10 @@ export const en = (locale?: DeepPartial<LocaleType>): LocaleType => {
   }
   return deepMerge(_en, locale);
 };
+
+export const es = (locale?: DeepPartial<LocaleType>): LocaleType => {
+  if (!locale) {
+    return _es;
+  }
+  return deepMerge(_es, locale);
+};

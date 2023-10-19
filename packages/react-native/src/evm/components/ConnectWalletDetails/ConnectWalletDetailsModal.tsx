@@ -193,9 +193,7 @@ export const ConnectWalletDetailsModal = ({
 
           {activeWallet?.walletId === LocalWallet.id ? (
             <Text variant="error" textAlign="left" mb="sm">
-              {
-                "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
-              }
+              {l.local_wallet.this_is_a_temporary_wallet}
             </Text>
           ) : null}
         </>
