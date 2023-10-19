@@ -67,7 +67,7 @@ export type ConnectWalletProps = {
   displayBalanceToken?: Record<number, string>;
 } & ConnectWalletButtonProps;
 
-export const ConnectWallet: React.FC<ConnectWalletProps> = ({
+export const ConnectWallet = ({
   detailsButton,
   theme,
   buttonTitle,
@@ -80,7 +80,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   termsOfServiceUrl,
   privacyPolicyUrl,
   supportedTokens,
-}) => {
+}: ConnectWalletProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
   const isNetworkMismatch = useNetworkMismatch();
