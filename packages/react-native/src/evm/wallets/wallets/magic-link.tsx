@@ -76,6 +76,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
           style: {
             fontSize: 14,
             color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
             lineHeight: 16,
             padding: 0,
           },

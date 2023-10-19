@@ -142,6 +142,8 @@ export const ConnectWalletDetailsModal = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             justifyContent="space-between"
             style={styles.exportWallet}
@@ -159,6 +161,8 @@ export const ConnectWalletDetailsModal = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             justifyContent="space-between"
             style={styles.exportWallet}
@@ -323,8 +327,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 12,
-    borderWidth: 0.5,
     paddingHorizontal: 10,
     paddingVertical: 12,
     minWidth: 200,
@@ -336,5 +338,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     marginBottom: 8,
+    marginTop: 12,
   },
 });
