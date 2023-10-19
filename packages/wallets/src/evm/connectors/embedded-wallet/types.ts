@@ -32,4 +32,9 @@ export type EmbeddedWalletConnectionArgs = {
       loginType: "ui_email_otp";
       email: string;
     }
+  | {
+      loginType: "custom_jwt_auth";
+      jwt: string;
+      encryptionKey: string;
+    }
 );
