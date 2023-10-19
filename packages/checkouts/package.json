@@ -1,380 +1,380 @@
 {
-  "name": "@thirdweb-dev/wallets",
+  "name": "@thirdweb-dev/checkouts",
   "version": "1.3.3",
-  "main": "dist/thirdweb-dev-wallets.cjs.js",
-  "module": "dist/thirdweb-dev-wallets.esm.js",
-  "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
+  "main": "dist/thirdweb-dev-checkouts.cjs.js",
+  "module": "dist/thirdweb-dev-checkouts.esm.js",
+  "types": "dist/thirdweb-dev-checkouts.cjs.d.ts",
   "browser": {
-    "./dist/thirdweb-dev-wallets.esm.js": "./dist/thirdweb-dev-wallets.browser.esm.js"
+    "./dist/thirdweb-dev-checkouts.esm.js": "./dist/thirdweb-dev-checkouts.browser.esm.js"
   },
   "exports": {
     ".": {
       "module": {
-        "browser": "./dist/thirdweb-dev-wallets.browser.esm.js",
-        "default": "./dist/thirdweb-dev-wallets.esm.js"
+        "browser": "./dist/thirdweb-dev-checkouts.browser.esm.js",
+        "default": "./dist/thirdweb-dev-checkouts.esm.js"
       },
-      "default": "./dist/thirdweb-dev-wallets.cjs.js"
+      "default": "./dist/thirdweb-dev-checkouts.cjs.js"
     },
     "./evm": {
       "module": {
-        "browser": "./evm/dist/thirdweb-dev-wallets-evm.browser.esm.js",
-        "default": "./evm/dist/thirdweb-dev-wallets-evm.esm.js"
+        "browser": "./evm/dist/thirdweb-dev-checkouts-evm.browser.esm.js",
+        "default": "./evm/dist/thirdweb-dev-checkouts-evm.esm.js"
       },
-      "default": "./evm/dist/thirdweb-dev-wallets-evm.cjs.js"
+      "default": "./evm/dist/thirdweb-dev-checkouts-evm.cjs.js"
     },
     "./solana": {
       "module": {
-        "browser": "./solana/dist/thirdweb-dev-wallets-solana.browser.esm.js",
-        "default": "./solana/dist/thirdweb-dev-wallets-solana.esm.js"
+        "browser": "./solana/dist/thirdweb-dev-checkouts-solana.browser.esm.js",
+        "default": "./solana/dist/thirdweb-dev-checkouts-solana.esm.js"
       },
-      "default": "./solana/dist/thirdweb-dev-wallets-solana.cjs.js"
+      "default": "./solana/dist/thirdweb-dev-checkouts-solana.cjs.js"
     },
-    "./evm/wallets/base": {
+    "./evm/checkouts/base": {
       "module": {
-        "browser": "./evm/wallets/base/dist/thirdweb-dev-wallets-evm-wallets-base.browser.esm.js",
-        "default": "./evm/wallets/base/dist/thirdweb-dev-wallets-evm-wallets-base.esm.js"
+        "browser": "./evm/checkouts/base/dist/thirdweb-dev-checkouts-evm-checkouts-base.browser.esm.js",
+        "default": "./evm/checkouts/base/dist/thirdweb-dev-checkouts-evm-checkouts-base.esm.js"
       },
-      "default": "./evm/wallets/base/dist/thirdweb-dev-wallets-evm-wallets-base.cjs.js"
+      "default": "./evm/checkouts/base/dist/thirdweb-dev-checkouts-evm-checkouts-base.cjs.js"
     },
-    "./evm/wallets/safe": {
+    "./evm/checkouts/safe": {
       "module": {
-        "browser": "./evm/wallets/safe/dist/thirdweb-dev-wallets-evm-wallets-safe.browser.esm.js",
-        "default": "./evm/wallets/safe/dist/thirdweb-dev-wallets-evm-wallets-safe.esm.js"
+        "browser": "./evm/checkouts/safe/dist/thirdweb-dev-checkouts-evm-checkouts-safe.browser.esm.js",
+        "default": "./evm/checkouts/safe/dist/thirdweb-dev-checkouts-evm-checkouts-safe.esm.js"
       },
-      "default": "./evm/wallets/safe/dist/thirdweb-dev-wallets-evm-wallets-safe.cjs.js"
+      "default": "./evm/checkouts/safe/dist/thirdweb-dev-checkouts-evm-checkouts-safe.cjs.js"
     },
-    "./evm/wallets/frame": {
+    "./evm/checkouts/frame": {
       "module": {
-        "browser": "./evm/wallets/frame/dist/thirdweb-dev-wallets-evm-wallets-frame.browser.esm.js",
-        "default": "./evm/wallets/frame/dist/thirdweb-dev-wallets-evm-wallets-frame.esm.js"
+        "browser": "./evm/checkouts/frame/dist/thirdweb-dev-checkouts-evm-checkouts-frame.browser.esm.js",
+        "default": "./evm/checkouts/frame/dist/thirdweb-dev-checkouts-evm-checkouts-frame.esm.js"
       },
-      "default": "./evm/wallets/frame/dist/thirdweb-dev-wallets-evm-wallets-frame.cjs.js"
+      "default": "./evm/checkouts/frame/dist/thirdweb-dev-checkouts-evm-checkouts-frame.cjs.js"
     },
-    "./evm/wallets/magic": {
+    "./evm/checkouts/magic": {
       "module": {
-        "browser": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.browser.esm.js",
-        "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.esm.js"
+        "browser": "./evm/checkouts/magic/dist/thirdweb-dev-checkouts-evm-checkouts-magic.browser.esm.js",
+        "default": "./evm/checkouts/magic/dist/thirdweb-dev-checkouts-evm-checkouts-magic.esm.js"
       },
-      "default": "./evm/wallets/magic/dist/thirdweb-dev-wallets-evm-wallets-magic.cjs.js"
+      "default": "./evm/checkouts/magic/dist/thirdweb-dev-checkouts-evm-checkouts-magic.cjs.js"
     },
-    "./evm/wallets/trust": {
+    "./evm/checkouts/trust": {
       "module": {
-        "browser": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.browser.esm.js",
-        "default": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.esm.js"
+        "browser": "./evm/checkouts/trust/dist/thirdweb-dev-checkouts-evm-checkouts-trust.browser.esm.js",
+        "default": "./evm/checkouts/trust/dist/thirdweb-dev-checkouts-evm-checkouts-trust.esm.js"
       },
-      "default": "./evm/wallets/trust/dist/thirdweb-dev-wallets-evm-wallets-trust.cjs.js"
+      "default": "./evm/checkouts/trust/dist/thirdweb-dev-checkouts-evm-checkouts-trust.cjs.js"
     },
-    "./evm/wallets/blocto": {
+    "./evm/checkouts/blocto": {
       "module": {
-        "browser": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.browser.esm.js",
-        "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.esm.js"
+        "browser": "./evm/checkouts/blocto/dist/thirdweb-dev-checkouts-evm-checkouts-blocto.browser.esm.js",
+        "default": "./evm/checkouts/blocto/dist/thirdweb-dev-checkouts-evm-checkouts-blocto.esm.js"
       },
-      "default": "./evm/wallets/blocto/dist/thirdweb-dev-wallets-evm-wallets-blocto.cjs.js"
+      "default": "./evm/checkouts/blocto/dist/thirdweb-dev-checkouts-evm-checkouts-blocto.cjs.js"
     },
-    "./evm/wallets/ethers": {
+    "./evm/checkouts/ethers": {
       "module": {
-        "browser": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.browser.esm.js",
-        "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.esm.js"
+        "browser": "./evm/checkouts/ethers/dist/thirdweb-dev-checkouts-evm-checkouts-ethers.browser.esm.js",
+        "default": "./evm/checkouts/ethers/dist/thirdweb-dev-checkouts-evm-checkouts-ethers.esm.js"
       },
-      "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.cjs.js"
+      "default": "./evm/checkouts/ethers/dist/thirdweb-dev-checkouts-evm-checkouts-ethers.cjs.js"
     },
-    "./evm/wallets/signer": {
+    "./evm/checkouts/signer": {
       "module": {
-        "browser": "./evm/wallets/signer/dist/thirdweb-dev-wallets-evm-wallets-signer.browser.esm.js",
-        "default": "./evm/wallets/signer/dist/thirdweb-dev-wallets-evm-wallets-signer.esm.js"
+        "browser": "./evm/checkouts/signer/dist/thirdweb-dev-checkouts-evm-checkouts-signer.browser.esm.js",
+        "default": "./evm/checkouts/signer/dist/thirdweb-dev-checkouts-evm-checkouts-signer.esm.js"
       },
-      "default": "./evm/wallets/signer/dist/thirdweb-dev-wallets-evm-wallets-signer.cjs.js"
+      "default": "./evm/checkouts/signer/dist/thirdweb-dev-checkouts-evm-checkouts-signer.cjs.js"
     },
-    "./evm/wallets/zerion": {
+    "./evm/checkouts/zerion": {
       "module": {
-        "browser": "./evm/wallets/zerion/dist/thirdweb-dev-wallets-evm-wallets-zerion.browser.esm.js",
-        "default": "./evm/wallets/zerion/dist/thirdweb-dev-wallets-evm-wallets-zerion.esm.js"
+        "browser": "./evm/checkouts/zerion/dist/thirdweb-dev-checkouts-evm-checkouts-zerion.browser.esm.js",
+        "default": "./evm/checkouts/zerion/dist/thirdweb-dev-checkouts-evm-checkouts-zerion.esm.js"
       },
-      "default": "./evm/wallets/zerion/dist/thirdweb-dev-wallets-evm-wallets-zerion.cjs.js"
+      "default": "./evm/checkouts/zerion/dist/thirdweb-dev-checkouts-evm-checkouts-zerion.cjs.js"
     },
-    "./evm/wallets/aws-kms": {
+    "./evm/checkouts/aws-kms": {
       "module": {
-        "browser": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.browser.esm.js",
-        "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.esm.js"
+        "browser": "./evm/checkouts/aws-kms/dist/thirdweb-dev-checkouts-evm-checkouts-aws-kms.browser.esm.js",
+        "default": "./evm/checkouts/aws-kms/dist/thirdweb-dev-checkouts-evm-checkouts-aws-kms.esm.js"
       },
-      "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.cjs.js"
+      "default": "./evm/checkouts/aws-kms/dist/thirdweb-dev-checkouts-evm-checkouts-aws-kms.cjs.js"
     },
-    "./evm/wallets/gcp-kms": {
+    "./evm/checkouts/gcp-kms": {
       "module": {
-        "browser": "./evm/wallets/gcp-kms/dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.browser.esm.js",
-        "default": "./evm/wallets/gcp-kms/dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.esm.js"
+        "browser": "./evm/checkouts/gcp-kms/dist/thirdweb-dev-checkouts-evm-checkouts-gcp-kms.browser.esm.js",
+        "default": "./evm/checkouts/gcp-kms/dist/thirdweb-dev-checkouts-evm-checkouts-gcp-kms.esm.js"
       },
-      "default": "./evm/wallets/gcp-kms/dist/thirdweb-dev-wallets-evm-wallets-gcp-kms.cjs.js"
+      "default": "./evm/checkouts/gcp-kms/dist/thirdweb-dev-checkouts-evm-checkouts-gcp-kms.cjs.js"
     },
-    "./evm/wallets/phantom": {
+    "./evm/checkouts/phantom": {
       "module": {
-        "browser": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.browser.esm.js",
-        "default": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.esm.js"
+        "browser": "./evm/checkouts/phantom/dist/thirdweb-dev-checkouts-evm-checkouts-phantom.browser.esm.js",
+        "default": "./evm/checkouts/phantom/dist/thirdweb-dev-checkouts-evm-checkouts-phantom.esm.js"
       },
-      "default": "./evm/wallets/phantom/dist/thirdweb-dev-wallets-evm-wallets-phantom.cjs.js"
+      "default": "./evm/checkouts/phantom/dist/thirdweb-dev-checkouts-evm-checkouts-phantom.cjs.js"
     },
-    "./solana/wallets/base": {
+    "./solana/checkouts/base": {
       "module": {
-        "browser": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.browser.esm.js",
-        "default": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.esm.js"
+        "browser": "./solana/checkouts/base/dist/thirdweb-dev-checkouts-solana-checkouts-base.browser.esm.js",
+        "default": "./solana/checkouts/base/dist/thirdweb-dev-checkouts-solana-checkouts-base.esm.js"
       },
-      "default": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.cjs.js"
+      "default": "./solana/checkouts/base/dist/thirdweb-dev-checkouts-solana-checkouts-base.cjs.js"
     },
-    "./evm/wallets/abstract": {
+    "./evm/checkouts/abstract": {
       "module": {
-        "browser": "./evm/wallets/abstract/dist/thirdweb-dev-wallets-evm-wallets-abstract.browser.esm.js",
-        "default": "./evm/wallets/abstract/dist/thirdweb-dev-wallets-evm-wallets-abstract.esm.js"
+        "browser": "./evm/checkouts/abstract/dist/thirdweb-dev-checkouts-evm-checkouts-abstract.browser.esm.js",
+        "default": "./evm/checkouts/abstract/dist/thirdweb-dev-checkouts-evm-checkouts-abstract.esm.js"
       },
-      "default": "./evm/wallets/abstract/dist/thirdweb-dev-wallets-evm-wallets-abstract.cjs.js"
+      "default": "./evm/checkouts/abstract/dist/thirdweb-dev-checkouts-evm-checkouts-abstract.cjs.js"
     },
-    "./evm/wallets/injected": {
+    "./evm/checkouts/injected": {
       "module": {
-        "browser": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.browser.esm.js",
-        "default": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.esm.js"
+        "browser": "./evm/checkouts/injected/dist/thirdweb-dev-checkouts-evm-checkouts-injected.browser.esm.js",
+        "default": "./evm/checkouts/injected/dist/thirdweb-dev-checkouts-evm-checkouts-injected.esm.js"
       },
-      "default": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.cjs.js"
+      "default": "./evm/checkouts/injected/dist/thirdweb-dev-checkouts-evm-checkouts-injected.cjs.js"
     },
-    "./evm/wallets/metamask": {
+    "./evm/checkouts/metamask": {
       "module": {
-        "browser": "./evm/wallets/metamask/dist/thirdweb-dev-wallets-evm-wallets-metamask.browser.esm.js",
-        "default": "./evm/wallets/metamask/dist/thirdweb-dev-wallets-evm-wallets-metamask.esm.js"
+        "browser": "./evm/checkouts/metamask/dist/thirdweb-dev-checkouts-evm-checkouts-metamask.browser.esm.js",
+        "default": "./evm/checkouts/metamask/dist/thirdweb-dev-checkouts-evm-checkouts-metamask.esm.js"
       },
-      "default": "./evm/wallets/metamask/dist/thirdweb-dev-wallets-evm-wallets-metamask.cjs.js"
+      "default": "./evm/checkouts/metamask/dist/thirdweb-dev-checkouts-evm-checkouts-metamask.cjs.js"
     },
-    "./solana/wallets/signer": {
+    "./solana/checkouts/signer": {
       "module": {
-        "browser": "./solana/wallets/signer/dist/thirdweb-dev-wallets-solana-wallets-signer.browser.esm.js",
-        "default": "./solana/wallets/signer/dist/thirdweb-dev-wallets-solana-wallets-signer.esm.js"
+        "browser": "./solana/checkouts/signer/dist/thirdweb-dev-checkouts-solana-checkouts-signer.browser.esm.js",
+        "default": "./solana/checkouts/signer/dist/thirdweb-dev-checkouts-solana-checkouts-signer.esm.js"
       },
-      "default": "./solana/wallets/signer/dist/thirdweb-dev-wallets-solana-wallets-signer.cjs.js"
+      "default": "./solana/checkouts/signer/dist/thirdweb-dev-checkouts-solana-checkouts-signer.cjs.js"
     },
-    "./solana/wallets/keypair": {
+    "./solana/checkouts/keypair": {
       "module": {
-        "browser": "./solana/wallets/keypair/dist/thirdweb-dev-wallets-solana-wallets-keypair.browser.esm.js",
-        "default": "./solana/wallets/keypair/dist/thirdweb-dev-wallets-solana-wallets-keypair.esm.js"
+        "browser": "./solana/checkouts/keypair/dist/thirdweb-dev-checkouts-solana-checkouts-keypair.browser.esm.js",
+        "default": "./solana/checkouts/keypair/dist/thirdweb-dev-checkouts-solana-checkouts-keypair.esm.js"
       },
-      "default": "./solana/wallets/keypair/dist/thirdweb-dev-wallets-solana-wallets-keypair.cjs.js"
+      "default": "./solana/checkouts/keypair/dist/thirdweb-dev-checkouts-solana-checkouts-keypair.cjs.js"
     },
-    "./evm/wallets/private-key": {
+    "./evm/checkouts/private-key": {
       "module": {
-        "browser": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.browser.esm.js",
-        "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js"
+        "browser": "./evm/checkouts/private-key/dist/thirdweb-dev-checkouts-evm-checkouts-private-key.browser.esm.js",
+        "default": "./evm/checkouts/private-key/dist/thirdweb-dev-checkouts-evm-checkouts-private-key.esm.js"
       },
-      "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
+      "default": "./evm/checkouts/private-key/dist/thirdweb-dev-checkouts-evm-checkouts-private-key.cjs.js"
     },
-    "./evm/wallets/local-wallet": {
+    "./evm/checkouts/local-wallet": {
       "module": {
-        "browser": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.browser.esm.js",
-        "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.esm.js"
+        "browser": "./evm/checkouts/local-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-local-wallet.browser.esm.js",
+        "default": "./evm/checkouts/local-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-local-wallet.esm.js"
       },
-      "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.cjs.js"
+      "default": "./evm/checkouts/local-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-local-wallet.cjs.js"
     },
-    "./evm/wallets/paper-wallet": {
+    "./evm/checkouts/paper-wallet": {
       "module": {
-        "browser": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.browser.esm.js",
-        "default": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.esm.js"
+        "browser": "./evm/checkouts/paper-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-paper-wallet.browser.esm.js",
+        "default": "./evm/checkouts/paper-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-paper-wallet.esm.js"
       },
-      "default": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.cjs.js"
+      "default": "./evm/checkouts/paper-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-paper-wallet.cjs.js"
     },
-    "./evm/wallets/smart-wallet": {
+    "./evm/checkouts/smart-wallet": {
       "module": {
-        "browser": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.browser.esm.js",
-        "default": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.esm.js"
+        "browser": "./evm/checkouts/smart-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-smart-wallet.browser.esm.js",
+        "default": "./evm/checkouts/smart-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-smart-wallet.esm.js"
       },
-      "default": "./evm/wallets/smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-smart-wallet.cjs.js"
+      "default": "./evm/checkouts/smart-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-smart-wallet.cjs.js"
     },
     "./evm/connectors/safe": {
       "module": {
-        "browser": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.browser.esm.js",
-        "default": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.esm.js"
+        "browser": "./evm/connectors/safe/dist/thirdweb-dev-checkouts-evm-connectors-safe.browser.esm.js",
+        "default": "./evm/connectors/safe/dist/thirdweb-dev-checkouts-evm-connectors-safe.esm.js"
       },
-      "default": "./evm/connectors/safe/dist/thirdweb-dev-wallets-evm-connectors-safe.cjs.js"
+      "default": "./evm/connectors/safe/dist/thirdweb-dev-checkouts-evm-connectors-safe.cjs.js"
     },
     "./evm/connectors/frame": {
       "module": {
-        "browser": "./evm/connectors/frame/dist/thirdweb-dev-wallets-evm-connectors-frame.browser.esm.js",
-        "default": "./evm/connectors/frame/dist/thirdweb-dev-wallets-evm-connectors-frame.esm.js"
+        "browser": "./evm/connectors/frame/dist/thirdweb-dev-checkouts-evm-connectors-frame.browser.esm.js",
+        "default": "./evm/connectors/frame/dist/thirdweb-dev-checkouts-evm-connectors-frame.esm.js"
       },
-      "default": "./evm/connectors/frame/dist/thirdweb-dev-wallets-evm-connectors-frame.cjs.js"
+      "default": "./evm/connectors/frame/dist/thirdweb-dev-checkouts-evm-connectors-frame.cjs.js"
     },
     "./evm/connectors/magic": {
       "module": {
-        "browser": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.browser.esm.js",
-        "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js"
+        "browser": "./evm/connectors/magic/dist/thirdweb-dev-checkouts-evm-connectors-magic.browser.esm.js",
+        "default": "./evm/connectors/magic/dist/thirdweb-dev-checkouts-evm-connectors-magic.esm.js"
       },
-      "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js"
+      "default": "./evm/connectors/magic/dist/thirdweb-dev-checkouts-evm-connectors-magic.cjs.js"
     },
     "./evm/connectors/paper": {
       "module": {
-        "browser": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.browser.esm.js",
-        "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js"
+        "browser": "./evm/connectors/paper/dist/thirdweb-dev-checkouts-evm-connectors-paper.browser.esm.js",
+        "default": "./evm/connectors/paper/dist/thirdweb-dev-checkouts-evm-connectors-paper.esm.js"
       },
-      "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.cjs.js"
+      "default": "./evm/connectors/paper/dist/thirdweb-dev-checkouts-evm-connectors-paper.cjs.js"
     },
     "./evm/connectors/trust": {
       "module": {
-        "browser": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.browser.esm.js",
-        "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.esm.js"
+        "browser": "./evm/connectors/trust/dist/thirdweb-dev-checkouts-evm-connectors-trust.browser.esm.js",
+        "default": "./evm/connectors/trust/dist/thirdweb-dev-checkouts-evm-connectors-trust.esm.js"
       },
-      "default": "./evm/connectors/trust/dist/thirdweb-dev-wallets-evm-connectors-trust.cjs.js"
+      "default": "./evm/connectors/trust/dist/thirdweb-dev-checkouts-evm-connectors-trust.cjs.js"
     },
-    "./evm/wallets/rainbow-wallet": {
+    "./evm/checkouts/rainbow-wallet": {
       "module": {
-        "browser": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.browser.esm.js",
-        "default": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.esm.js"
+        "browser": "./evm/checkouts/rainbow-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-rainbow-wallet.browser.esm.js",
+        "default": "./evm/checkouts/rainbow-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-rainbow-wallet.esm.js"
       },
-      "default": "./evm/wallets/rainbow-wallet/dist/thirdweb-dev-wallets-evm-wallets-rainbow-wallet.cjs.js"
+      "default": "./evm/checkouts/rainbow-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-rainbow-wallet.cjs.js"
     },
-    "./evm/wallets/wallet-connect": {
+    "./evm/checkouts/wallet-connect": {
       "module": {
-        "browser": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.browser.esm.js",
-        "default": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.esm.js"
+        "browser": "./evm/checkouts/wallet-connect/dist/thirdweb-dev-checkouts-evm-checkouts-wallet-connect.browser.esm.js",
+        "default": "./evm/checkouts/wallet-connect/dist/thirdweb-dev-checkouts-evm-checkouts-wallet-connect.esm.js"
       },
-      "default": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.cjs.js"
+      "default": "./evm/checkouts/wallet-connect/dist/thirdweb-dev-checkouts-evm-checkouts-wallet-connect.cjs.js"
     },
-    "./solana/wallets/private-key": {
+    "./solana/checkouts/private-key": {
       "module": {
-        "browser": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.browser.esm.js",
-        "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.esm.js"
+        "browser": "./solana/checkouts/private-key/dist/thirdweb-dev-checkouts-solana-checkouts-private-key.browser.esm.js",
+        "default": "./solana/checkouts/private-key/dist/thirdweb-dev-checkouts-solana-checkouts-private-key.esm.js"
       },
-      "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.cjs.js"
+      "default": "./solana/checkouts/private-key/dist/thirdweb-dev-checkouts-solana-checkouts-private-key.cjs.js"
     },
     "./evm/connectors/blocto": {
       "module": {
-        "browser": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.browser.esm.js",
-        "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.esm.js"
+        "browser": "./evm/connectors/blocto/dist/thirdweb-dev-checkouts-evm-connectors-blocto.browser.esm.js",
+        "default": "./evm/connectors/blocto/dist/thirdweb-dev-checkouts-evm-connectors-blocto.esm.js"
       },
-      "default": "./evm/connectors/blocto/dist/thirdweb-dev-wallets-evm-connectors-blocto.cjs.js"
+      "default": "./evm/connectors/blocto/dist/thirdweb-dev-checkouts-evm-connectors-blocto.cjs.js"
     },
     "./evm/connectors/signer": {
       "module": {
-        "browser": "./evm/connectors/signer/dist/thirdweb-dev-wallets-evm-connectors-signer.browser.esm.js",
-        "default": "./evm/connectors/signer/dist/thirdweb-dev-wallets-evm-connectors-signer.esm.js"
+        "browser": "./evm/connectors/signer/dist/thirdweb-dev-checkouts-evm-connectors-signer.browser.esm.js",
+        "default": "./evm/connectors/signer/dist/thirdweb-dev-checkouts-evm-connectors-signer.esm.js"
       },
-      "default": "./evm/connectors/signer/dist/thirdweb-dev-wallets-evm-connectors-signer.cjs.js"
+      "default": "./evm/connectors/signer/dist/thirdweb-dev-checkouts-evm-connectors-signer.cjs.js"
     },
     "./evm/connectors/zerion": {
       "module": {
-        "browser": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.browser.esm.js",
-        "default": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.esm.js"
+        "browser": "./evm/connectors/zerion/dist/thirdweb-dev-checkouts-evm-connectors-zerion.browser.esm.js",
+        "default": "./evm/connectors/zerion/dist/thirdweb-dev-checkouts-evm-connectors-zerion.esm.js"
       },
-      "default": "./evm/connectors/zerion/dist/thirdweb-dev-wallets-evm-connectors-zerion.cjs.js"
+      "default": "./evm/connectors/zerion/dist/thirdweb-dev-checkouts-evm-connectors-zerion.cjs.js"
     },
-    "./evm/wallets/coinbase-wallet": {
+    "./evm/checkouts/coinbase-wallet": {
       "module": {
-        "browser": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.browser.esm.js",
-        "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.esm.js"
+        "browser": "./evm/checkouts/coinbase-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-coinbase-wallet.browser.esm.js",
+        "default": "./evm/checkouts/coinbase-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-coinbase-wallet.esm.js"
       },
-      "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
+      "default": "./evm/checkouts/coinbase-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-coinbase-wallet.cjs.js"
     },
-    "./evm/wallets/embedded-wallet": {
+    "./evm/checkouts/embedded-wallet": {
       "module": {
-        "browser": "./evm/wallets/embedded-wallet/dist/thirdweb-dev-wallets-evm-wallets-embedded-wallet.browser.esm.js",
-        "default": "./evm/wallets/embedded-wallet/dist/thirdweb-dev-wallets-evm-wallets-embedded-wallet.esm.js"
+        "browser": "./evm/checkouts/embedded-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-embedded-wallet.browser.esm.js",
+        "default": "./evm/checkouts/embedded-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-embedded-wallet.esm.js"
       },
-      "default": "./evm/wallets/embedded-wallet/dist/thirdweb-dev-wallets-evm-wallets-embedded-wallet.cjs.js"
+      "default": "./evm/checkouts/embedded-wallet/dist/thirdweb-dev-checkouts-evm-checkouts-embedded-wallet.cjs.js"
     },
     "./evm/connectors/phantom": {
       "module": {
-        "browser": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.browser.esm.js",
-        "default": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.esm.js"
+        "browser": "./evm/connectors/phantom/dist/thirdweb-dev-checkouts-evm-connectors-phantom.browser.esm.js",
+        "default": "./evm/connectors/phantom/dist/thirdweb-dev-checkouts-evm-connectors-phantom.esm.js"
       },
-      "default": "./evm/connectors/phantom/dist/thirdweb-dev-wallets-evm-connectors-phantom.cjs.js"
+      "default": "./evm/connectors/phantom/dist/thirdweb-dev-checkouts-evm-connectors-phantom.cjs.js"
     },
     "./evm/connectors/rainbow": {
       "module": {
-        "browser": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.browser.esm.js",
-        "default": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.esm.js"
+        "browser": "./evm/connectors/rainbow/dist/thirdweb-dev-checkouts-evm-connectors-rainbow.browser.esm.js",
+        "default": "./evm/connectors/rainbow/dist/thirdweb-dev-checkouts-evm-connectors-rainbow.esm.js"
       },
-      "default": "./evm/connectors/rainbow/dist/thirdweb-dev-wallets-evm-connectors-rainbow.cjs.js"
+      "default": "./evm/connectors/rainbow/dist/thirdweb-dev-checkouts-evm-connectors-rainbow.cjs.js"
     },
     "./evm/connectors/injected": {
       "module": {
-        "browser": "./evm/connectors/injected/dist/thirdweb-dev-wallets-evm-connectors-injected.browser.esm.js",
-        "default": "./evm/connectors/injected/dist/thirdweb-dev-wallets-evm-connectors-injected.esm.js"
+        "browser": "./evm/connectors/injected/dist/thirdweb-dev-checkouts-evm-connectors-injected.browser.esm.js",
+        "default": "./evm/connectors/injected/dist/thirdweb-dev-checkouts-evm-connectors-injected.esm.js"
       },
-      "default": "./evm/connectors/injected/dist/thirdweb-dev-wallets-evm-connectors-injected.cjs.js"
+      "default": "./evm/connectors/injected/dist/thirdweb-dev-checkouts-evm-connectors-injected.cjs.js"
     },
     "./evm/connectors/metamask": {
       "module": {
-        "browser": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.browser.esm.js",
-        "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.esm.js"
+        "browser": "./evm/connectors/metamask/dist/thirdweb-dev-checkouts-evm-connectors-metamask.browser.esm.js",
+        "default": "./evm/connectors/metamask/dist/thirdweb-dev-checkouts-evm-connectors-metamask.esm.js"
       },
-      "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.cjs.js"
+      "default": "./evm/connectors/metamask/dist/thirdweb-dev-checkouts-evm-connectors-metamask.cjs.js"
     },
-    "./evm/wallets/local-wallet-node": {
+    "./evm/checkouts/local-wallet-node": {
       "module": {
-        "browser": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.browser.esm.js",
-        "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.esm.js"
+        "browser": "./evm/checkouts/local-wallet-node/dist/thirdweb-dev-checkouts-evm-checkouts-local-wallet-node.browser.esm.js",
+        "default": "./evm/checkouts/local-wallet-node/dist/thirdweb-dev-checkouts-evm-checkouts-local-wallet-node.esm.js"
       },
-      "default": "./evm/wallets/local-wallet-node/dist/thirdweb-dev-wallets-evm-wallets-local-wallet-node.cjs.js"
+      "default": "./evm/checkouts/local-wallet-node/dist/thirdweb-dev-checkouts-evm-checkouts-local-wallet-node.cjs.js"
     },
-    "./evm/wallets/wallet-connect-v1": {
+    "./evm/checkouts/wallet-connect-v1": {
       "module": {
-        "browser": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.browser.esm.js",
-        "default": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.esm.js"
+        "browser": "./evm/checkouts/wallet-connect-v1/dist/thirdweb-dev-checkouts-evm-checkouts-wallet-connect-v1.browser.esm.js",
+        "default": "./evm/checkouts/wallet-connect-v1/dist/thirdweb-dev-checkouts-evm-checkouts-wallet-connect-v1.esm.js"
       },
-      "default": "./evm/wallets/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect-v1.cjs.js"
+      "default": "./evm/checkouts/wallet-connect-v1/dist/thirdweb-dev-checkouts-evm-checkouts-wallet-connect-v1.cjs.js"
     },
-    "./evm/wallets/aws-secrets-manager": {
+    "./evm/checkouts/aws-secrets-manager": {
       "module": {
-        "browser": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.browser.esm.js",
-        "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.esm.js"
+        "browser": "./evm/checkouts/aws-secrets-manager/dist/thirdweb-dev-checkouts-evm-checkouts-aws-secrets-manager.browser.esm.js",
+        "default": "./evm/checkouts/aws-secrets-manager/dist/thirdweb-dev-checkouts-evm-checkouts-aws-secrets-manager.esm.js"
       },
-      "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js"
+      "default": "./evm/checkouts/aws-secrets-manager/dist/thirdweb-dev-checkouts-evm-checkouts-aws-secrets-manager.cjs.js"
     },
     "./evm/connectors/local-wallet": {
       "module": {
-        "browser": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.browser.esm.js",
-        "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.esm.js"
+        "browser": "./evm/connectors/local-wallet/dist/thirdweb-dev-checkouts-evm-connectors-local-wallet.browser.esm.js",
+        "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-checkouts-evm-connectors-local-wallet.esm.js"
       },
-      "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-wallets-evm-connectors-local-wallet.cjs.js"
+      "default": "./evm/connectors/local-wallet/dist/thirdweb-dev-checkouts-evm-connectors-local-wallet.cjs.js"
     },
     "./evm/connectors/smart-wallet": {
       "module": {
-        "browser": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.browser.esm.js",
-        "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.esm.js"
+        "browser": "./evm/connectors/smart-wallet/dist/thirdweb-dev-checkouts-evm-connectors-smart-wallet.browser.esm.js",
+        "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-checkouts-evm-connectors-smart-wallet.esm.js"
       },
-      "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-smart-wallet.cjs.js"
+      "default": "./evm/connectors/smart-wallet/dist/thirdweb-dev-checkouts-evm-connectors-smart-wallet.cjs.js"
     },
     "./evm/connectors/wallet-connect": {
       "module": {
-        "browser": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.browser.esm.js",
-        "default": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.esm.js"
+        "browser": "./evm/connectors/wallet-connect/dist/thirdweb-dev-checkouts-evm-connectors-wallet-connect.browser.esm.js",
+        "default": "./evm/connectors/wallet-connect/dist/thirdweb-dev-checkouts-evm-connectors-wallet-connect.esm.js"
       },
-      "default": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.cjs.js"
+      "default": "./evm/connectors/wallet-connect/dist/thirdweb-dev-checkouts-evm-connectors-wallet-connect.cjs.js"
     },
     "./evm/connectors/coinbase-wallet": {
       "module": {
-        "browser": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.browser.esm.js",
-        "default": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.esm.js"
+        "browser": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-checkouts-evm-connectors-coinbase-wallet.browser.esm.js",
+        "default": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-checkouts-evm-connectors-coinbase-wallet.esm.js"
       },
-      "default": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.cjs.js"
+      "default": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-checkouts-evm-connectors-coinbase-wallet.cjs.js"
     },
     "./evm/connectors/embedded-wallet": {
       "module": {
-        "browser": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.browser.esm.js",
-        "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.esm.js"
+        "browser": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-checkouts-evm-connectors-embedded-wallet.browser.esm.js",
+        "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-checkouts-evm-connectors-embedded-wallet.esm.js"
       },
-      "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.cjs.js"
+      "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-checkouts-evm-connectors-embedded-wallet.cjs.js"
     },
     "./evm/connectors/wallet-connect-v1": {
       "module": {
-        "browser": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.browser.esm.js",
-        "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.esm.js"
+        "browser": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-checkouts-evm-connectors-wallet-connect-v1.browser.esm.js",
+        "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-checkouts-evm-connectors-wallet-connect-v1.esm.js"
       },
-      "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
+      "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-checkouts-evm-connectors-wallet-connect-v1.cjs.js"
     },
     "./evm/connectors/embedded-wallet/implementations": {
       "module": {
-        "browser": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet-implementations.browser.esm.js",
-        "default": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet-implementations.esm.js"
+        "browser": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-checkouts-evm-connectors-embedded-wallet-implementations.browser.esm.js",
+        "default": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-checkouts-evm-connectors-embedded-wallet-implementations.esm.js"
       },
-      "default": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet-implementations.cjs.js"
+      "default": "./evm/connectors/embedded-wallet/implementations/dist/thirdweb-dev-checkouts-evm-connectors-embedded-wallet-implementations.cjs.js"
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/checkouts",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
@@ -391,9 +391,9 @@
       "evm/index.ts",
       "evm/connectors/*/index.ts",
       "evm/connectors/embedded-wallet/implementations/index.ts",
-      "evm/wallets/**",
+      "evm/checkouts/**",
       "solana/index.ts",
-      "solana/wallets/**"
+      "solana/checkouts/**"
     ],
     "exports": {
       "envConditions": [
