@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { OnboardingBilling } from "./Billing";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { RE_INTERNAL_TEST_EMAIL } from "utils/regex";
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
@@ -34,6 +35,11 @@ export const Onboarding: React.FC = () => {
     if (state === "onboarding") {
       if (email) {
         setUpdatedEmail(email);
+
+        if (email.match(RE_INTERNAL_TEST_EMAIL)) {
+          setState("skipped");
+          return;
+        }
       }
       setState("confirming");
 
@@ -45,11 +51,11 @@ export const Onboarding: React.FC = () => {
         },
       });
     } else if (state === "confirming") {
-      const newState = ["validPayment", "paymentVerification"].includes(
-        account.status,
-      )
-        ? "skipped"
-        : "billing";
+      const newState =
+        ["validPayment", "paymentVerification"].includes(account.status) ||
+        account.onboardSkipped
+          ? "skipped"
+          : "billing";
       setState(newState);
 
       trackEvent({
@@ -78,7 +84,7 @@ export const Onboarding: React.FC = () => {
     }
 
     // user hasn't confirmed email
-    if (!account.emailConfirmedAt) {
+    if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       setState("onboarding");
     }
     // user has changed email and needs to confirm

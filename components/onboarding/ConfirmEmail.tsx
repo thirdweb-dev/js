@@ -1,5 +1,8 @@
-import { useConfirmEmail } from "@3rdweb-sdk/react/hooks/useApi";
-import { Button } from "tw-components";
+import {
+  useConfirmEmail,
+  useResendEmailConfirmation,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import { Button, Text } from "tw-components";
 import OtpInput from "react-otp-input";
 import { useState, ClipboardEvent } from "react";
 import { Input, Flex } from "@chakra-ui/react";
@@ -12,6 +15,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 
 interface OnboardingConfirmEmailProps {
   email: string;
@@ -29,6 +33,12 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   const { onError } = useErrorHandler();
   const trackEvent = useTrack();
 
+  const { onSuccess: onResendSuccess, onError: onResendError } =
+    useTxNotifications(
+      "We've sent you a new email confirmation code.",
+      "Couldn't send email confirmation. Try later!",
+    );
+
   const form = useForm<EmailConfirmationValidationSchema>({
     resolver: zodResolver(emailConfirmationValidationSchema),
     values: {
@@ -37,6 +47,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   });
 
   const mutation = useConfirmEmail();
+  const resendMutation = useResendEmailConfirmation();
 
   const handleChange = (value: string) => {
     setToken(value.toUpperCase());
@@ -84,6 +95,42 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
     });
   });
 
+  const handleResend = () => {
+    setSaving(true);
+
+    trackEvent({
+      category: "account",
+      action: "resendEmailConfirmation",
+      label: "attempt",
+    });
+
+    resendMutation.mutate(undefined, {
+      onSuccess: () => {
+        setSaving(false);
+        onResendSuccess();
+
+        trackEvent({
+          category: "account",
+          action: "resendEmailConfirmation",
+          label: "success",
+        });
+      },
+      onError: (error) => {
+        onResendError(error);
+        form.reset();
+        setToken("");
+        setSaving(false);
+
+        trackEvent({
+          category: "account",
+          action: "resendEmailConfirmation",
+          label: "error",
+          error,
+        });
+      },
+    });
+  };
+
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     const data = e.clipboardData.getData("text");
     if (data?.match(/^[A-Z]{6}$/)) {
@@ -106,34 +153,48 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
 
       <form onSubmit={handleSubmit}>
         <Flex gap={8} flexDir="column" w="full">
-          <OtpInput
-            shouldAutoFocus
-            value={token}
-            onChange={handleChange}
-            onPaste={handlePaste}
-            skipDefaultStyles
-            numInputs={6}
-            containerStyle={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "12px",
-            }}
-            renderInput={(props) => (
-              <Input
-                {...props}
-                w={20}
-                h={16}
-                rounded="md"
-                textAlign="center"
-                fontSize="larger"
-                borderColor={
-                  form.getFieldState("confirmationToken", form.formState).error
-                    ? "red.500"
-                    : "borderColor"
-                }
-              />
-            )}
-          />
+          <Flex gap={3} flexDir="column" w="full">
+            <OtpInput
+              shouldAutoFocus
+              value={token}
+              onChange={handleChange}
+              onPaste={handlePaste}
+              skipDefaultStyles
+              numInputs={6}
+              containerStyle={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "12px",
+              }}
+              renderInput={(props) => (
+                <Input
+                  {...props}
+                  w={20}
+                  h={16}
+                  rounded="md"
+                  textAlign="center"
+                  fontSize="larger"
+                  borderColor={
+                    form.getFieldState("confirmationToken", form.formState)
+                      .error
+                      ? "red.500"
+                      : "borderColor"
+                  }
+                />
+              )}
+            />
+
+            <Button
+              size="lg"
+              fontSize="sm"
+              variant="link"
+              onClick={handleResend}
+              colorScheme="blue"
+              isDisabled={saving}
+            >
+              <Text color="blue.500">Resend code</Text>
+            </Button>
+          </Flex>
 
           <Flex flexDir="column" gap={3}>
             <Button

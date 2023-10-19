@@ -355,6 +355,43 @@ export function useConfirmEmail() {
   );
 }
 
+export function useResendEmailConfirmation() {
+  const { user } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutationWithInvalidate(
+    async () => {
+      invariant(user?.address, "walletAddress is required");
+
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/account/resendEmailConfirmation`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}),
+        },
+      );
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.message);
+      }
+
+      return json.data;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          accountKeys.me(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
 export function useCreatePaymentMethod() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();

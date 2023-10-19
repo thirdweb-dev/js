@@ -8,7 +8,7 @@ import {
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FormEvent, useState } from "react";
-import { Button } from "tw-components";
+import { Button, Text } from "tw-components";
 
 interface OnboardingPaymentForm {
   onSave: () => void;
@@ -112,14 +112,14 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
               Add payment
             </Button>
             <Button
-              w="full"
               size="lg"
-              fontSize="md"
-              variant="outline"
-              isDisabled={saving}
+              fontSize="sm"
+              variant="link"
               onClick={onCancel}
+              isDisabled={saving}
+              colorScheme="blue"
             >
-              I&apos;ll do this later
+              <Text color="blue.500">I&apos;ll do this later</Text>
             </Button>
           </Flex>
         )}

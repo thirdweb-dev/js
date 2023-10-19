@@ -71,7 +71,7 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
     <Flex flexDir="column" gap={8}>
       <OnboardingTitle
         heading="Add a payment method"
-        description="To continue using thirdweb without interruption after exceeding your Starter plan limits, please add a payment method. Your card will be used for verification, no charges will be made without notice."
+        description="thirdweb is free to get started with free monthly usage limits. We recommend that you add a payment method so that you can use thirdweb services without interruption after you exceed free usage limits."
       />
       <Flex flexDir="column" gap={8}>
         {stripePromise && (
