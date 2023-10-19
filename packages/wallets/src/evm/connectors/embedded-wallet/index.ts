@@ -70,7 +70,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
           email: options.email,
           otp: options.otp,
-          recoveryCode: options.recoveryCode,
+          recoveryCode: options.encryptionKey,
         });
         break;
       }
