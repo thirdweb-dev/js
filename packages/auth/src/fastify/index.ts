@@ -1,11 +1,16 @@
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyRequest } from "fastify";
 import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import fastifyCookie, { FastifyCookie } from "@fastify/cookie";
-import payloadHandler from "./routes/payload";
-import loginHandler from "./routes/login";
-import userHandler from "./routes/user";
-import switchAccountHandler from "./routes/switch-account";
-import logoutHandler from "./routes/logout";
+import { payloadHandler } from "./routes/payload";
+import { loginHandler } from "./routes/login";
+import { userHandler } from "./routes/user";
+import { logoutHandler } from "./routes/logout";
+import { switchAccountHandler } from "./routes/switch-account";
+import {
+  ZodTypeProvider,
+  serializerCompiler,
+  validatorCompiler,
+} from "fastify-type-provider-zod";
 import { getUser } from "./helpers/user";
 import {
   ThirdwebAuthConfig,
@@ -20,7 +25,11 @@ type ThirdwebAuthReturnType<
   TData extends Json = Json,
   TSession extends Json = Json,
 > = {
-  authRouter: (fastify: FastifyInstance) => void;
+  authRouter: (
+    fastify: FastifyInstance,
+    opts: FastifyPluginOptions,
+    done: (err?: Error | undefined) => void,
+  ) => void;
   authMiddleware: FastifyCookie;
   getUser: (
     req: FastifyRequest,
@@ -38,28 +47,28 @@ export function ThirdwebAuth<
     auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
   };
 
-  const authRouter = async (fastify: FastifyInstance) => {
-    await fastify.register(fastifyCookie);
+  const authRouter = async (
+    fastify: FastifyInstance,
+    _opts: FastifyPluginOptions,
+    done: (err?: Error | undefined) => void,
+  ) => {
+    // Setup plugin to use zod as a type provider
+    fastify.setValidatorCompiler(validatorCompiler);
+    fastify.setSerializerCompiler(serializerCompiler);
+    const plugin = fastify.withTypeProvider<ZodTypeProvider>();
 
-    fastify.post("/payload", async (req, res) => {
-      payloadHandler(req, res, ctx as ThirdwebAuthContext);
-    });
+    // Register the fastify cookie middleware with this plugin
+    await plugin.register(fastifyCookie);
 
-    fastify.post("/login", async (req, res) => {
-      loginHandler(req, res, ctx as ThirdwebAuthContext);
-    });
+    // Register individual auth endpoints
+    payloadHandler(plugin, ctx as ThirdwebAuthContext);
+    loginHandler(plugin, ctx as ThirdwebAuthContext);
+    logoutHandler(plugin, ctx as ThirdwebAuthContext);
+    userHandler(plugin, ctx as ThirdwebAuthContext);
+    switchAccountHandler(plugin, ctx as ThirdwebAuthContext);
 
-    fastify.get("/user", async (req, res) => {
-      userHandler(req, res, ctx as ThirdwebAuthContext);
-    });
-
-    fastify.post("/logout", async (req, res) => {
-      logoutHandler(req, res, ctx as ThirdwebAuthContext);
-    });
-
-    fastify.post("/switch-account", async (req, res) => {
-      switchAccountHandler(req, res, ctx as ThirdwebAuthContext);
-    });
+    // Mark plugin creation as complete
+    done();
   };
 
   return {

@@ -1,7 +1,14 @@
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
-import { FastifyRequest } from "fastify";
+import {
+  FastifyBaseLogger,
+  FastifyInstance,
+  FastifyRequest,
+  RawServerDefault,
+} from "fastify";
 import { z } from "zod";
+import { IncomingMessage, ServerResponse } from "http";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export const PayloadBodySchema = z.object({
   address: z.string(),
@@ -14,6 +21,10 @@ export const ActiveBodySchema = z.object({
 
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
+});
+
+export const ErrorResponseSchema = z.object({
+  error: z.string(),
 });
 
 export type ThirdwebAuthUser<
@@ -73,3 +84,11 @@ export type ThirdwebAuthContext<
 > = Omit<Omit<ThirdwebAuthConfig<TData, TSession>, "wallet">, "domain"> & {
   auth: ThirdwebAuth;
 };
+
+export type FastifyInstanceWithZod = FastifyInstance<
+  RawServerDefault,
+  IncomingMessage,
+  ServerResponse<IncomingMessage>,
+  FastifyBaseLogger,
+  ZodTypeProvider
+>;
