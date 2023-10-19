@@ -95,7 +95,7 @@ export const ReceiveFundsModal = ({
         >
           <ModalHeaderTextClose
             onClose={onCloseInternal}
-            headerText="Receive Funds"
+            headerText={l.connect_wallet_details.receive_funds}
           />
           <Text
             variant="bodySmallSecondary"

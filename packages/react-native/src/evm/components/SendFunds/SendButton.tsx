@@ -319,6 +319,7 @@ const SendFundsForm = ({
           clearTextOnFocus={false}
           style={{
             color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
             textAlign: "left",
             flex: 1,
             height: 40,

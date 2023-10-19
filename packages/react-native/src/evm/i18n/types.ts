@@ -20,6 +20,7 @@ export const _en = {
     connect: "Connect",
     new_to_wallets: "New to wallets?",
     get_started: "Get started",
+    receive_funds: "Receive Funds",
     connect_a_wallet: "Connect a wallet",
     continue_as_guest: "Continue as guest",
     tos: "Terms of Service",
