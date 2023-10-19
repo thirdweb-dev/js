@@ -13,6 +13,9 @@ import {
   ThirdwebAuthUser,
 } from "./types";
 
+export * from "./types";
+export { getToken } from "./helpers/user";
+
 type ThirdwebAuthReturnType<
   TData extends Json = Json,
   TSession extends Json = Json,
