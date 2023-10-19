@@ -2,7 +2,7 @@ import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
-import { GenerateOptions } from "../../core";
+import { GenerateOptionsWithOptionalDomain } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -41,7 +41,7 @@ export default async function handler(
     ? new Date(Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds)
     : undefined;
 
-  const generateOptions: GenerateOptions = {
+  const generateOptions: GenerateOptionsWithOptionalDomain = {
     verifyOptions: {
       statement: ctx.authOptions?.statement,
       uri: ctx.authOptions?.uri,
@@ -66,6 +66,10 @@ export default async function handler(
     } else {
       return res.status(400).json({ error: "Invalid login payload" });
     }
+  }
+
+  if (ctx.callbacks?.onToken) {
+    await ctx.callbacks.onToken(token, req);
   }
 
   const {

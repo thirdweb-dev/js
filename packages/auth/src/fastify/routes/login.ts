@@ -1,26 +1,21 @@
+import { FastifyReply, FastifyRequest } from "fastify";
+import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
+import { GenerateOptionsWithOptionalDomain } from "../../core";
 import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
-import { GenerateOptionsWithOptionalDomain } from "../../core";
-import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
-import { serialize } from "cookie";
-import { Request, Response } from "express";
 
 export default async function handler(
-  req: Request,
-  res: Response,
+  req: FastifyRequest,
+  res: FastifyReply,
   ctx: ThirdwebAuthContext,
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
   const parsedPayload = LoginPayloadBodySchema.safeParse(req.body);
 
   // Get signed login payload from the frontend
   if (!parsedPayload.success) {
-    return res.status(400).json({ error: "Invalid login payload" });
+    return res.status(400).send({ error: "Invalid login payload" });
   }
 
   const payload = parsedPayload.data.payload;
@@ -60,11 +55,11 @@ export default async function handler(
     token = await ctx.auth.generate(payload, generateOptions);
   } catch (err: any) {
     if (err.message) {
-      return res.status(400).json({ error: err.message });
+      return res.status(400).send({ error: err.message });
     } else if (typeof err === "string") {
-      return res.status(400).json({ error: err });
+      return res.status(400).send({ error: err });
     } else {
-      return res.status(400).json({ error: "Invalid login payload" });
+      return res.status(400).send({ error: "Invalid login payload" });
     }
   }
 
@@ -78,29 +73,30 @@ export default async function handler(
 
   // Securely set httpOnly cookie on request to prevent XSS on frontend
   // And set path to / to enable thirdweb_auth_token usage on all endpoints
-  res.setHeader("Set-Cookie", [
-    serialize(
-      `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${payload.payload.address}`,
-      token,
-      {
-        domain: ctx.cookieOptions?.domain,
-        path: ctx.cookieOptions?.path || "/",
-        sameSite: ctx.cookieOptions?.sameSite || "none",
-        expires: new Date(exp * 1000),
-        httpOnly: true,
-        secure: true,
-      },
-    ),
-    serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.address, {
+  await res.setCookie(
+    `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${payload.payload.address}`,
+    token,
+    {
       domain: ctx.cookieOptions?.domain,
       path: ctx.cookieOptions?.path || "/",
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(exp * 1000),
       httpOnly: true,
       secure: true,
-    }),
-  ]);
+    },
+  );
+  await res.setCookie(
+    THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
+    payload.payload.address,
+    {
+      domain: ctx.cookieOptions?.domain,
+      path: ctx.cookieOptions?.path || "/",
+      sameSite: ctx.cookieOptions?.sameSite || "none",
+      expires: new Date(exp * 1000),
+      httpOnly: true,
+      secure: true,
+    },
+  );
 
-  // Send token in body and as cookie for frontend and backend use cases
-  return res.status(200).json({ token });
+  return res.status(200).send({ success: true });
 }

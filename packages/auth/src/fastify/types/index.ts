@@ -1,7 +1,6 @@
-import { ThirdwebAuth } from "../../core";
-import { Json, LoginPayloadOutputSchema, User } from "../../core";
-import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
-import { Request } from "express";
+import { GenericAuthWallet } from "@thirdweb-dev/wallets";
+import { Json, LoginPayloadOutputSchema, ThirdwebAuth, User } from "../../core";
+import { FastifyRequest } from "fastify";
 import { z } from "zod";
 
 export const PayloadBodySchema = z.object({
@@ -16,8 +15,6 @@ export const ActiveBodySchema = z.object({
 export const LoginPayloadBodySchema = z.object({
   payload: LoginPayloadOutputSchema,
 });
-
-export type ThirdwebAuthRoute = "login" | "user" | "logout";
 
 export type ThirdwebAuthUser<
   TData extends Json = Json,
@@ -55,17 +52,17 @@ export type ThirdwebAuthConfig<
   };
   callbacks?: {
     onLogin?:
-      | ((address: string, req?: Request) => void | TSession)
-      | ((address: string, req?: Request) => Promise<void | TSession>);
+      | ((address: string, req?: FastifyRequest) => void | TSession)
+      | ((address: string, req?: FastifyRequest) => Promise<void | TSession>);
     onToken?:
-      | ((token: string, req?: Request) => void)
-      | ((token: string, req?: Request) => Promise<void>);
+      | ((token: string, req?: FastifyRequest) => void)
+      | ((token: string, req?: FastifyRequest) => Promise<void>);
     onUser?:
-      | ((user: User<TSession>, req?: Request) => void | TData)
-      | ((user: User<TSession>, req?: Request) => Promise<void | TData>);
+      | ((user: User<TSession>, req?: FastifyRequest) => void | TData)
+      | ((user: User<TSession>, req?: FastifyRequest) => Promise<void | TData>);
     onLogout?:
-      | ((user: User, req?: Request) => void)
-      | ((user: User, req?: Request) => Promise<void>);
+      | ((user: User, req?: FastifyRequest) => void)
+      | ((user: User, req?: FastifyRequest) => Promise<void>);
   };
 };
 

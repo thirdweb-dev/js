@@ -4,17 +4,16 @@ import {
 } from "../../constants";
 import { Json } from "../../core";
 import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
-import { Request } from "express";
+import { FastifyRequest } from "fastify";
 
-export function getCookie(req: Request, cookie: string): string | undefined {
-  if (typeof req.cookies.get === "function") {
-    return req.cookies.get(cookie);
-  }
-
+export function getCookie(
+  req: FastifyRequest,
+  cookie: string,
+): string | undefined {
   return req.cookies[cookie];
 }
 
-export function getActiveCookie(req: Request): string | undefined {
+export function getActiveCookie(req: FastifyRequest): string | undefined {
   if (!req.cookies) {
     return undefined;
   }
@@ -33,9 +32,9 @@ export function getActiveCookie(req: Request): string | undefined {
  * @param req
  * @returns
  */
-export function getToken(req: Request): string | undefined {
-  if (req.headers["authorization"]) {
-    const authorizationHeader = req.headers["authorization"].split(" ");
+export function getToken(req: FastifyRequest): string | undefined {
+  if (req.headers.authorization) {
+    const authorizationHeader = req.headers.authorization.split(" ");
     if (authorizationHeader?.length === 2) {
       return authorizationHeader[1];
     }
@@ -57,7 +56,7 @@ export async function getUser<
   TData extends Json = Json,
   TSession extends Json = Json,
 >(
-  req: Request,
+  req: FastifyRequest,
   ctx: ThirdwebAuthContext<TData, TSession>,
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken(req);

@@ -67,6 +67,9 @@ export type ThirdwebAuthConfig<
     onLogin?:
       | ((address: string, req?: NextApiRequest) => void | TSession)
       | ((address: string, req?: NextApiRequest) => Promise<void | TSession>);
+    onToken?:
+      | ((token: string, req?: NextApiRequest) => void)
+      | ((token: string, req?: NextApiRequest) => Promise<void>);
     onUser?:
       | (<TRequestType extends RequestType = RequestType>(
           user: User<TSession>,
