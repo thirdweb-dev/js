@@ -78,7 +78,7 @@ export type ThirdwebAuthConfig<
         ) => void | TData)
       | (<TRequestType extends RequestType = RequestType>(
           user: User<TSession>,
-          req?: TRequestType,
+          req: TRequestType,
         ) => Promise<void | TData>);
     onLogout?:
       | ((user: User, req: NextApiRequest) => void)

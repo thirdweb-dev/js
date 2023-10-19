@@ -73,8 +73,8 @@ export type ThirdwebAuthConfig<
       | ((user: User<TSession>, req: FastifyRequest) => void | TData)
       | ((user: User<TSession>, req: FastifyRequest) => Promise<void | TData>);
     onLogout?:
-      | ((user: User, req?: FastifyRequest) => void)
-      | ((user: User, req?: FastifyRequest) => Promise<void>);
+      | ((user: User, req: FastifyRequest) => void)
+      | ((user: User, req: FastifyRequest) => Promise<void>);
   };
 };
 
