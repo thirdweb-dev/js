@@ -4,7 +4,8 @@ import { Flex, HStack } from "@chakra-ui/react";
 
 const PLAN_TITLE = {
   free: "Starter",
-  enterprise: "Pro",
+  pro: "Pro",
+  enterprise: "Enterprise",
 };
 
 interface BillingPlanProps {
