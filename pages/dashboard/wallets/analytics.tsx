@@ -22,6 +22,7 @@ import {
   LinkButton,
   MenuItem,
   Text,
+  TrackedLink,
 } from "tw-components";
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -49,6 +50,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
 const RADIAN = Math.PI / 180;
+const TRACKING_CATEGORY = "wallet-analytics";
 
 const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
   const { colorMode } = useColorMode();
@@ -299,13 +301,25 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
           <Flex flexDir="column" gap={8}>
             {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
               <>
+                <Text size="body.md">
+                  Showing data for the <b>last 7 days</b>. Need more insights?{" "}
+                  <TrackedLink
+                    href="https://thirdweb.com/contact-us"
+                    category={TRACKING_CATEGORY}
+                    label="contact-us"
+                    color="blue.500"
+                    isExternal
+                  >
+                    Contact us.
+                  </TrackedLink>
+                </Text>
                 <Flex gap={4}>
                   <WalletStatCard
                     label="Connections"
                     value={totalStasData.totalWallets}
                   />
                   <WalletStatCard
-                    label="Unique Users"
+                    label="Unique Wallets"
                     value={totalStasData.uniqueWallets}
                   />
                 </Flex>
@@ -317,11 +331,11 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                 >
                   <Stack spacing={0} padding={{ base: 2, md: 6 }}>
                     <Heading as="h3" size="subtitle.sm">
-                      Users Connected
+                      Daily Connections
                     </Heading>
                     <Text>
                       Total and unique wallets addresses that connected to your
-                      app.
+                      app each day.
                     </Text>
                   </Stack>
                   <ChartContainer w="full" ratio={21 / 9}>
@@ -346,8 +360,8 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                       Wallet Connectors
                     </Heading>
                     <Text>
-                      The different types of wallets used to connect to your
-                      app.
+                      The different types of wallets used to connect to your app
+                      each day.
                     </Text>
                   </Stack>
                   <ChartContainer w="full" ratio={21 / 9}>
