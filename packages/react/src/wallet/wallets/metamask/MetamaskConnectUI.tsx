@@ -1,21 +1,35 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { isMobile } from "../../../evm/utils/isMobile";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
+import { wait } from "../../../utils/wait";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
-  const { walletConfig, close } = props;
+  const { walletConfig, connected } = props;
   const connect = useConnect();
+  const [errorConnecting, setErrorConnecting] = useState(false);
 
   const hideBackButton = props.supportedWallets.length === 1;
 
-  const { goBack } = props;
+  const connectToExtension = useCallback(async () => {
+    try {
+      connectPrompted.current = true;
+      setErrorConnecting(false);
+      setScreen("connecting");
+      await wait(1000);
+      await connect(walletConfig);
+      connected();
+    } catch (e) {
+      setErrorConnecting(true);
+      console.error(e);
+    }
+  }, [connected, connect, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -30,14 +44,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
     // if loading
     (async () => {
       if (isInstalled) {
-        try {
-          connectPrompted.current = true;
-          setScreen("connecting");
-          await connect(walletConfig);
-          close();
-        } catch (e) {
-          goBack();
-        }
+        connectToExtension();
       }
 
       // if metamask is not injected
@@ -53,16 +60,20 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         }
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [connectToExtension, walletConfig]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        errorConnecting={errorConnecting}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        onRetry={connectToExtension}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://support.metamask.io/hc/en-us/articles/4406430256539-User-Guide-Troubleshooting"
       />
     );
   }
@@ -75,9 +86,7 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={() => {
-          setScreen("scanning");
-        }}
+        onBack={props.goBack}
       />
     );
   }
@@ -85,8 +94,8 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "scanning") {
     return (
       <MetamaskScan
-        onBack={goBack}
-        onConnected={close}
+        onBack={props.goBack}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

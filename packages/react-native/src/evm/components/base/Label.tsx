@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 
 type LabelProps = {
   text: string;
-} & (typeof Text)["arguments"];
+} & React.ComponentProps<typeof Text>;
 
 export const Label = ({ text, ...props }: LabelProps) => {
   return (
@@ -15,13 +15,7 @@ export const Label = ({ text, ...props }: LabelProps) => {
       borderRadius="md"
       backgroundColor="labelBackground"
     >
-      <Text
-        variant="bodySmall"
-        style={{
-          ...style.text,
-          ...props,
-        }}
-      >
+      <Text variant="bodySmall" style={style.text} {...props}>
         {text}
       </Text>
     </Box>

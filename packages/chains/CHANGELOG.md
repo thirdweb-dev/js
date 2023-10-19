@@ -1,5 +1,39 @@
 # @thirdweb-dev/chains
 
+## 0.1.55
+
+### Patch Changes
+
+- [#1783](https://github.com/thirdweb-dev/js/pull/1783) [`137f46a5`](https://github.com/thirdweb-dev/js/commit/137f46a5470d2b5f9d7f9eda9b2d839a53ddeb64) Thanks [@jnsdls](https://github.com/jnsdls)! - sync chains
+
+## 0.1.54
+
+### Patch Changes
+
+- [#1702](https://github.com/thirdweb-dev/js/pull/1702) [`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f) Thanks [@jnsdls](https://github.com/jnsdls)! - updated chains
+
+## 0.1.53
+
+### Patch Changes
+
+- [#1631](https://github.com/thirdweb-dev/js/pull/1631) [`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131) Thanks [@jnsdls](https://github.com/jnsdls)! - add & update chains
+
+- [#1662](https://github.com/thirdweb-dev/js/pull/1662) [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861) Thanks [@jnsdls](https://github.com/jnsdls)! - added & updated chains
+
+## 0.1.52
+
+### Patch Changes
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - feat(chains): add new chain information
+
+## 0.1.51
+
+### Patch Changes
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1599](https://github.com/thirdweb-dev/js/pull/1599) [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1) Thanks [@MananTank](https://github.com/MananTank)! - Update chains
+
 ## 0.1.50
 
 ### Patch Changes

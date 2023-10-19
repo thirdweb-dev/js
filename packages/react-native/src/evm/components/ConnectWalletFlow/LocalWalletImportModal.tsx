@@ -16,7 +16,7 @@ import * as FileSystem from "expo-file-system";
 import { TWModal } from "../base/modal/TWModal";
 import { localWallet } from "../../wallets/wallets/local-wallet";
 import { TextInput } from "../base";
-import { useAppTheme } from "../../styles/hooks";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
@@ -37,7 +37,7 @@ export const LocalWalletImportModal = ({
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const createLocalWalletFromJsonFile = async () => {
     if (!jsonFile || !password) {
@@ -164,10 +164,10 @@ export const LocalWalletImportModal = ({
           borderRadius="md"
           p="lg"
         >
-          <ModalHeaderTextClose headerText={""} onClose={onCloseInternal} />
-          <Text variant="header" textAlign="center">
-            Import JSON Wallet
-          </Text>
+          <ModalHeaderTextClose
+            headerText={"Import JSON Wallet"}
+            onClose={onCloseInternal}
+          />
           <Text variant="subHeader" mt="md" textAlign="center">
             {
               "The application can authorize any transactions on behalf of the wallet without any approvals. We recommend only connecting to trusted applications."
@@ -192,14 +192,26 @@ export const LocalWalletImportModal = ({
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
             {error}
           </Text>
-          <Text variant="bodySmall" m="xs" textAlign="center">
-            ---- Or Private key or Mnemonic ----
-          </Text>
+          <Box
+            mb="xs"
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box height={1} flex={1} backgroundColor="border" />
+            <Text variant="bodySmall" textAlign="center" marginHorizontal="xxs">
+              Or Private key or Mnemonic
+            </Text>
+            <Box height={1} flex={1} backgroundColor="border" />
+          </Box>
           <TextInput
-            secureTextEntry={true}
-            placeholder={"Private key / Mnemonic"}
-            placeholderTextColor={theme.colors.textSecondary}
-            onChangeText={onPrivateKeyEntered}
+            textInputProps={{
+              secureTextEntry: true,
+              placeholder: "Private key / Mnemonic",
+              placeholderTextColor: theme.colors.textSecondary,
+              onChangeText: onPrivateKeyEntered,
+            }}
+            containerProps={{ pl: "xxs" }}
           />
           <Box
             flexDirection="row"

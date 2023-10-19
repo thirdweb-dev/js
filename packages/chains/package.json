@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.50",
+  "version": "0.1.55",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "browser": {
@@ -49,7 +49,9 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "node ./scripts/generate-package.mjs && tsc && preconstruct build",
+    "db:seed": "bun scripts/seed-db.ts",
+    "db:sync": "bun scripts/sync-db.ts",
+    "build": "tsc && preconstruct build",
     "push": "yalc push",
     "plop": "plop",
     "add-chain": "plop add-chain",

@@ -16,11 +16,12 @@ import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
+import { useColorScheme } from "react-native";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "supportedWallets" | "secretKey"
+    "supportedWallets" | "secretKey" | "signer"
   > {
   /**
    * Wallets that will be supported by the dApp
@@ -70,8 +71,16 @@ export const ThirdwebProvider = <
   sdkOptions,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+  const colorScheme = useColorScheme();
+
+  const coinbaseWalletObj = supportedWallets.find(
+    (w) => w.id === walletIds.coinbase,
+  );
   useCoinbaseWalletListener(
-    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+    !!coinbaseWalletObj,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    coinbaseWalletObj?.config?.callbackURL,
   );
 
   const hasMagicConfig = useMemo(
@@ -102,7 +111,9 @@ export const ThirdwebProvider = <
       {...sdkOptions}
       {...restProps}
     >
-      <ThemeProvider theme={theme}>
+      <ThemeProvider
+        theme={theme ? theme : colorScheme === "dark" ? "dark" : "light"}
+      >
         <UIContextProvider>
           {hasMagicConfig ? (
             <SafeAreaProvider>

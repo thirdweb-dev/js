@@ -12,8 +12,6 @@ import { MockContractPublisher__factory } from "@thirdweb-dev/contracts-js";
 import { expect } from "chai";
 import { ethers } from "ethers";
 
-global.fetch = require("cross-fetch");
-
 describe("Events", async () => {
   let dropContract: NFTDrop;
   let dropContract2: NFTDrop;

@@ -2,7 +2,12 @@ import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import { Chain, defaultChains, Ethereum } from "@thirdweb-dev/chains";
+import {
+  Chain,
+  defaultChains,
+  Ethereum,
+  updateChainRPCs,
+} from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
 
 export type LocalWalletOptions = {
@@ -32,7 +37,7 @@ export class LocalWallet extends AbstractClientWallet<
   ethersWallet?: Wallet;
   #storage: AsyncStorage;
 
-  static id = walletIds.localWallet;
+  static id = walletIds.localWallet as string;
 
   static meta = {
     name: "Local Wallet",
@@ -46,7 +51,13 @@ export class LocalWallet extends AbstractClientWallet<
 
   constructor(options?: WalletOptions<LocalWalletOptions>) {
     super(LocalWallet.id, options);
+
+    if (options?.chain && options.clientId) {
+      options.chain = updateChainRPCs(options.chain, options.clientId);
+    }
+
     this.options = options || {};
+
     this.#storage =
       options?.storage || createAsyncLocalStorage(walletIds.localWallet);
   }
@@ -61,14 +72,18 @@ export class LocalWallet extends AbstractClientWallet<
         throw new Error("wallet is not initialized");
       }
 
-      const defaults = this.options.chain
-        ? [...defaultChains, this.options.chain]
-        : defaultChains;
+      const defaults = (
+        this.options.chain
+          ? [...defaultChains, this.options.chain]
+          : defaultChains
+      ).map((c) => updateChainRPCs(c, this.options.clientId));
 
       this.connector = new LocalWalletConnector({
-        chain: this.options.chain || Ethereum,
+        chain:
+          this.options.chain ||
+          updateChainRPCs(Ethereum, this.options.clientId),
         ethersWallet: this.ethersWallet,
-        chains: this.options.chains || defaults,
+        chains: this.chains || defaults,
         clientId: this.options.clientId,
         secretKey: this.options.secretKey,
       });
@@ -80,7 +95,7 @@ export class LocalWallet extends AbstractClientWallet<
    * load saved wallet data from storage or generate a new one and save it.
    */
   async loadOrCreate(options: LoadOrCreateOptions) {
-    if (await this.getSavedData()) {
+    if (await this.getSavedData(options.storage)) {
       await this.load(options);
     } else {
       await this.generate();
@@ -380,85 +395,85 @@ export class LocalWallet extends AbstractClientWallet<
 
 type DecryptOptions =
   | {
-    decrypt?: (message: string, password: string) => Promise<string>;
-    password: string;
-  }
+      decrypt?: (message: string, password: string) => Promise<string>;
+      password: string;
+    }
   | false;
 
 type EncryptOptions =
   | {
-    encrypt?: (message: string, password: string) => Promise<string>;
-    password: string;
-  }
+      encrypt?: (message: string, password: string) => Promise<string>;
+      password: string;
+    }
   | false;
 
 type ImportOptions =
   | {
-    privateKey: string;
-    encryption: DecryptOptions;
-  }
+      privateKey: string;
+      encryption: DecryptOptions;
+    }
   | {
-    mnemonic: string;
-    encryption: DecryptOptions;
-  }
+      mnemonic: string;
+      encryption: DecryptOptions;
+    }
   | {
-    encryptedJson: string;
-    password: string;
-  };
+      encryptedJson: string;
+      password: string;
+    };
 
 type LoadOptions =
   | {
-    strategy: "encryptedJson";
-    password: string;
-    storage?: AsyncStorage;
-  }
+      strategy: "encryptedJson";
+      password: string;
+      storage?: AsyncStorage;
+    }
   | {
-    strategy: "privateKey";
-    storage?: AsyncStorage;
-    encryption: DecryptOptions;
-  }
+      strategy: "privateKey";
+      storage?: AsyncStorage;
+      encryption: DecryptOptions;
+    }
   | {
-    strategy: "mnemonic";
-    storage?: AsyncStorage;
-    encryption: DecryptOptions;
-  };
+      strategy: "mnemonic";
+      storage?: AsyncStorage;
+      encryption: DecryptOptions;
+    };
 
 // omit the mnemonic strategy option from LoadOptions
 type LoadOrCreateOptions =
   | {
-    strategy: "encryptedJson";
-    password: string;
-    storage?: AsyncStorage;
-  }
+      strategy: "encryptedJson";
+      password: string;
+      storage?: AsyncStorage;
+    }
   | {
-    strategy: "privateKey";
-    storage?: AsyncStorage;
-    encryption: DecryptOptions;
-  };
+      strategy: "privateKey";
+      storage?: AsyncStorage;
+      encryption: DecryptOptions;
+    };
 
 type SaveOptions =
   | { strategy: "encryptedJson"; password: string; storage?: AsyncStorage }
   | {
-    strategy: "privateKey";
-    encryption: EncryptOptions;
-    storage?: AsyncStorage;
-  }
+      strategy: "privateKey";
+      encryption: EncryptOptions;
+      storage?: AsyncStorage;
+    }
   | {
-    strategy: "mnemonic";
-    encryption: EncryptOptions;
-    storage?: AsyncStorage;
-  };
+      strategy: "mnemonic";
+      encryption: EncryptOptions;
+      storage?: AsyncStorage;
+    };
 
 type ExportOptions =
   | { strategy: "encryptedJson"; password: string }
   | {
-    strategy: "privateKey";
-    encryption: EncryptOptions;
-  }
+      strategy: "privateKey";
+      encryption: EncryptOptions;
+    }
   | {
-    strategy: "mnemonic";
-    encryption: EncryptOptions;
-  };
+      strategy: "mnemonic";
+      encryption: EncryptOptions;
+    };
 
 async function defaultEncrypt(message: string, password: string) {
   const cryptoJS = (await import("crypto-js")).default;
@@ -481,7 +496,7 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
-      (encryption.decrypt || defaultDecrypt)(msg, encryption.password)
+        (encryption.decrypt || defaultDecrypt)(msg, encryption.password)
     : noop;
 }
 
@@ -496,7 +511,7 @@ function getEncryptor(encryption: EncryptOptions | undefined) {
   const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
-      (encryption.encrypt || defaultEncrypt)(msg, encryption.password)
+        (encryption.encrypt || defaultEncrypt)(msg, encryption.password)
     : noop;
 }
 

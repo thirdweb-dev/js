@@ -1,6 +1,6 @@
 import { useWallet } from "@thirdweb-dev/react-core";
 import { IWalletConnectReceiver } from "@thirdweb-dev/wallets";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Box from "../base/Box";
 import BaseButton from "../base/BaseButton";
 import DisconnectIcon from "../../assets/disconnect";
@@ -21,6 +21,7 @@ const ConnectAppField = () => {
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
   const wallet = useWallet();
   const [showQRCodeScan, setShowQRCodeScan] = useState(false);
+  const wcUriRef = useRef<string | undefined>();
 
   const getAppMeta = useCallback(() => {
     if (wallet && "isWCReceiverEnabled" in wallet) {
@@ -80,9 +81,10 @@ const ConnectAppField = () => {
   };
 
   const onQRCodeScan = (data: string) => {
-    if (wcUri !== data && data.startsWith("wc:")) {
+    if (wcUriRef.current !== data && data.startsWith("wc:")) {
       setWCUri(data);
       setShowQRCodeScan(false);
+      wcUriRef.current = data;
 
       onWCPress(data);
     }
@@ -102,6 +104,9 @@ const ConnectAppField = () => {
     if (uriToUse?.startsWith("wc:")) {
       (wallet as unknown as IWalletConnectReceiver).connectApp(uriToUse);
     }
+
+    setWCUri(undefined);
+    wcUriRef.current = undefined;
   };
 
   const onScanQRPress = () => {
@@ -113,17 +118,23 @@ const ConnectAppField = () => {
       {!appMeta && showWCInput ? (
         <Box
           flexDirection="row"
-          mb="sm"
+          mt="xs"
           borderColor="border"
           borderWidth={1}
           borderRadius="md"
         >
           <TextInput
-            onChangeText={onAddressChangeText}
-            flex={1}
-            value={wcUri}
-            placeholder={"wc://..."}
-            placeholderTextColor={theme.colors.textSecondary}
+            textInputProps={{
+              onChangeText: onAddressChangeText,
+              value: wcUri,
+              placeholder: "wc://...",
+              placeholderTextColor: theme.colors.textSecondary,
+              numberOfLines: 1,
+            }}
+            containerProps={{
+              flex: 1,
+              pl: "xxs",
+            }}
           />
           <BaseButton
             onPress={() => onWCPress()}
@@ -153,19 +164,19 @@ const ConnectAppField = () => {
         <BaseButton
           backgroundColor="background"
           borderColor="border"
-          mb="sm"
+          mt="xs"
           justifyContent="space-between"
           style={styles.exportWallet}
           onPress={onConnectDappPress}
         >
           <>
-            {appMeta ? (
-              <WalletIcon size={32} iconUri={appMeta.iconUrl} />
+            {appMeta?.iconUrl ? (
+              <WalletIcon size={24} iconUri={appMeta.iconUrl} />
             ) : (
-              <WalletConnectIcon width={16} height={16} />
+              <WalletConnectIcon width={24} height={24} />
             )}
             <View style={styles.exportWalletInfo}>
-              <Text variant="bodySmall">
+              <Text variant="bodySmall" numberOfLines={1}>
                 {appMeta ? appMeta.name : "Connect app"}
               </Text>
             </View>
@@ -211,8 +222,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     alignContent: "center",
-    flexDirection: "column",
+    flexDirection: "row",
     marginLeft: 8,
+    marginRight: 8,
   },
   exportWallet: {
     display: "flex",

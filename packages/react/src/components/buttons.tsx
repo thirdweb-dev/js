@@ -1,87 +1,78 @@
 import { fontSize, radius, spacing, Theme } from "../design-system";
 import styled from "@emotion/styled";
 
-// for rendering a conventional button
 export const Button = styled.button<{
-  variant: "inverted" | "secondary" | "link" | "danger";
+  variant: "primary" | "secondary" | "link" | "accent" | "outline";
   theme?: Theme;
+  fullWidth?: boolean;
 }>`
   all: unset;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: ${radius.md};
-  padding: ${spacing.sm} ${spacing.sm};
+  padding: ${fontSize.sm} ${fontSize.sm};
   font-size: ${fontSize.md};
   font-weight: 500;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
   flex-shrink: 0;
+  transition: border 200ms ease;
 
-  &:focus {
-    box-shadow: 0 0 0 3px
-      ${(p) => {
-        switch (p.variant) {
-          case "inverted":
-            return p.theme.bg.invertedFocused;
-          case "secondary":
-            return p.theme.bg.highlighted;
-          case "link":
-            return "none";
-          case "danger":
-            return p.theme.text.danger;
-        }
-      }};
-  }
+  ${(p) => p.fullWidth && `width: 100%;`};
 
-  box-shadow: ${(p) => {
+  background: ${(p) => {
     switch (p.variant) {
-      case "danger":
-        return `0 0 0 2px ${p.theme.text.danger}`;
-      case "link":
-        return "none";
+      case "primary":
+        return p.theme.colors.primaryButtonBg;
+      case "accent":
+        return p.theme.colors.accentButtonBg;
+      case "secondary":
+        return p.theme.colors.secondaryButtonBg;
       default:
         return "none";
     }
   }};
 
-  background: ${(p) => {
-    switch (p.variant) {
-      case "inverted":
-        return p.theme.bg.inverted;
-      case "secondary":
-        return p.theme.bg.elevated;
-      case "link":
-        return "transparent";
-      case "danger":
-        return "none";
-    }
-  }};
   color: ${(p) => {
     switch (p.variant) {
-      case "inverted":
-        return p.theme.text.inverted;
+      case "primary":
+        return p.theme.colors.primaryButtonText;
+      case "accent":
+        return p.theme.colors.accentButtonText;
       case "secondary":
-        return p.theme.text.neutral;
+        return p.theme.colors.secondaryButtonText;
+      case "outline":
+        return p.theme.colors.secondaryButtonText;
       case "link":
-        return p.theme.link.primary;
-      case "danger":
-        return p.theme.text.danger;
+        return p.theme.colors.accentText;
+      default:
+        return p.theme.colors.primaryButtonText;
     }
   }};
+
+  ${(p) => {
+    if (p.variant === "outline") {
+      return `
+      border: 1.5px solid ${p.theme.colors.borderColor};
+      &:hover {
+        border-color: ${p.theme.colors.accentText};
+      }
+    `;
+    }
+  }}
 
   ${(p) => {
     if (p.variant === "link") {
       return `
       padding: 0;
       &:hover {
-        color: ${p.theme.text.neutral};
+        color: ${p.theme.colors.primaryText};
       }`;
     }
   }}
-
-  cursor: pointer;
 
   /* pressed effect */
   &:active {
@@ -93,9 +84,7 @@ export const Button = styled.button<{
   }
 `;
 
-// for rendering a button with an icon
 export const IconButton = styled.button<{
-  variant: "neutral" | "secondary";
   theme?: Theme;
 }>`
   all: unset;
@@ -105,25 +94,18 @@ export const IconButton = styled.button<{
   justify-content: center;
   border-radius: ${radius.sm};
   -webkit-tap-highlight-color: transparent;
-  color: ${(p) => {
-    switch (p.variant) {
-      case "neutral":
-        return p.theme.text.neutral;
-      case "secondary":
-        return p.theme.text.secondary;
-    }
-  }};
+  color: ${(p) => p.theme.colors.secondaryIconColor};
   padding: 2px;
   transition:
     background 0.2s ease,
     color 0.2s ease;
+
   &:hover {
-    background: ${(p) => p.theme.bg.elevated};
-    color: ${(p) => p.theme.text.neutral};
+    background: ${(p) => p.theme.colors.secondaryIconHoverBg};
+    color: ${(p) => p.theme.colors.secondaryIconHoverColor};
   }
 `;
 
-// for rendering a button next to input
 export const InputButton = styled.button<{ theme?: Theme }>`
   all: unset;
   display: flex;
@@ -133,9 +115,9 @@ export const InputButton = styled.button<{ theme?: Theme }>`
   padding: ${spacing.sm};
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  color: ${(p) => p.theme.text.secondary};
+  color: ${(p) => p.theme.colors.secondaryText};
   &:hover {
-    color: ${(p) => p.theme.text.neutral};
+    color: ${(p) => p.theme.colors.primaryText};
   }
   &[disabled] {
     cursor: not-allowed;

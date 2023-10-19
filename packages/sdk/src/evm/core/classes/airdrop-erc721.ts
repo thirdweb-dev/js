@@ -1,3 +1,4 @@
+import type { AirdropERC721, IAirdropERC721 } from "@thirdweb-dev/contracts-js";
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC721 } from "../../constants/thirdweb-features";
@@ -6,7 +7,6 @@ import { Airdrop721Content, Airdrop721Output } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { AirdropERC721, IAirdropERC721 } from "@thirdweb-dev/contracts-js";
 
 /**
  * @public
@@ -25,7 +25,7 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
    * @internal
    */
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -74,7 +74,7 @@ export class Airdrop721<T extends IAirdropERC721 | AirdropERC721>
     ): Promise<Transaction<Airdrop721Output>> => {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
-        method: "airdrop",
+        method: "airdropERC721",
         args: [tokenAddress, tokenOwner, contents],
         parse: (receipt) => {
           const events = this.contractWrapper.parseLogs<AirdropFailedEvent>(

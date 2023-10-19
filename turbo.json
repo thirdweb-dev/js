@@ -8,32 +8,27 @@
     "@thirdweb-dev/chains#build": {
       "outputs": ["dist/**", "chains/**"],
       "dependsOn": ["^build"],
-      "inputs": [
-        "package.json",
-        "scripts/**",
-        "data/**",
-        "src/types.ts",
-        "src/utils.ts"
-      ]
+      "inputs": ["package.json", "scripts/**", "data/**", "src/**", "chains/**"]
     },
     "@thirdweb-dev/wallets#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
-      "dependsOn": ["^build"]
+      "outputs": ["dist/**", "evm/**"],
+      "dependsOn": ["^build"],
+      "env": ["THIRDWEB_EWS_SDK_VERSION"]
     },
     "@thirdweb-dev/pay#build": {
       "outputs": ["dist/**", "integrations/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/sdk#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
+      "outputs": ["dist/**", "evm/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/react#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
+      "outputs": ["dist/**", "evm/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/react-core#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
+      "outputs": ["dist/**", "evm/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/react-native#build": {
@@ -45,14 +40,7 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/auth#build": {
-      "outputs": [
-        "dist/**",
-        "evm/**",
-        "solana/**",
-        "express/**",
-        "next/**",
-        "next-auth/**"
-      ],
+      "outputs": ["dist/**", "evm/**", "express/**", "next/**", "next-auth/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/contracts-js#build": {
@@ -67,18 +55,6 @@
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["build"],
-      "env": ["TW_SECRET_KEY"]
-    },
-    "test:solana": {
-      "outputs": ["coverage/solana/**"],
-      "inputs": ["src/core/**", "src/solana/**", "test/solana/**"],
-      "dependsOn": ["build"],
-      "env": ["TW_SECRET_KEY"]
-    },
-    "test:evm": {
-      "outputs": ["coverage/evm/**"],
-      "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
       "dependsOn": ["build"],
       "env": ["TW_SECRET_KEY"]
     },

@@ -1,13 +1,33 @@
+import type {
+  IERC1155,
+  IERC165,
+  IERC721,
+  IMarketplace,
+  Marketplace,
+} from "@thirdweb-dev/contracts-js";
+import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
+import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
+import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
+import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
-  ListingNotFoundError,
-  WrongListingTypeError,
-} from "../../common/error";
+  BigNumber,
+  Contract,
+  constants,
+  utils,
+  type BigNumberish,
+} from "ethers";
+import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import {
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
 import {
   handleTokenApproval,
   isTokenApprovedForTransfer,
@@ -28,29 +48,9 @@ import {
   NewDirectListing,
   Offer,
 } from "../../types/marketplace";
+import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type {
-  IERC1155,
-  IERC165,
-  IERC721,
-  IMarketplace,
-  Marketplace,
-} from "@thirdweb-dev/contracts-js";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  type BigNumberish,
-  Contract,
-  constants,
-  utils,
-} from "ethers";
-import invariant from "tiny-invariant";
-import { TransactionResultWithId } from "../types";
 
 /**
  * Handles direct listings
@@ -69,7 +69,7 @@ export class MarketplaceDirect {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -83,7 +83,7 @@ export class MarketplaceDirect {
    * @returns the Direct listing object
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
+    const listing = await this.contractWrapper.read("listings", [listingId]);
 
     if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
@@ -112,10 +112,10 @@ export class MarketplaceDirect {
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
     invariant(utils.isAddress(address), "Address must be a valid address");
-    const offers = await this.contractWrapper.readContract.offers(
+    const offers = await this.contractWrapper.read("offers", [
       listingId,
       await resolveAddress(address),
-    );
+    ]);
     if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
@@ -239,12 +239,11 @@ export class MarketplaceDirect {
     async (
       listings: NewDirectListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createListing.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createListing.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -374,10 +373,10 @@ export class MarketplaceDirect {
        */
       await this.validateListing(BigNumber.from(listingId));
       const resolvedAddress = await resolveAddress(addressOfOfferor);
-      const offer = await this.contractWrapper.readContract.offers(
+      const offer = await this.contractWrapper.read("offers", [
         listingId,
         resolvedAddress,
-      );
+      ]);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

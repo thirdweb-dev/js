@@ -7,24 +7,30 @@ import { Transaction } from "./transactions";
 import type {
   IAccountCore,
   IAccountPermissions,
+  IAccountPermissions_V1,
 } from "@thirdweb-dev/contracts-js";
 import invariant from "tiny-invariant";
-import { resolveAddress } from "../../common";
+import { detectContractFeature, resolveAddress } from "../../common";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { buildTransactionFunction } from "../../common/transactions";
 import { AddressOrEns } from "../../schema";
 import {
+  AdminFlag,
+  DEFAULT_PERMISSIONS,
   PermissionSnapshotInput,
   PermissionSnapshotOutput,
   PermissionSnapshotSchema,
   SignedSignerPermissionsPayload,
+  SignedSignerPermissionsPayloadV1,
   SignerPermissionRequest,
+  SignerPermissionRequestV1,
   SignerPermissions,
   SignerPermissionsInput,
   SignerPermissionsOutput,
   SignerPermissionsSchema,
   SignerWithPermissions,
 } from "../../types";
+import { AddressZero } from "../../constants/addresses/AddressZero";
 
 export class AccountPermissions implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_PERMISSIONS.name;
@@ -35,7 +41,7 @@ export class AccountPermissions implements DetectableFeature {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /*********************************
@@ -85,50 +91,49 @@ export class AccountPermissions implements DetectableFeature {
   private async sendSignerPermissionRequest(
     signerAddress: string,
     permissions: SignerPermissionsOutput,
+    adminFlag: AdminFlag,
   ): Promise<Transaction> {
+    if (
+      detectContractFeature<IAccountPermissions_V1>(
+        this.contractWrapper,
+        "AccountPermissionsV1",
+      )
+    ) {
+      // legacy account permissions contract
+      // admin is set only via EOA
+      // signer permissions are set via EOA or admin but no wildcard
+      if (
+        adminFlag === AdminFlag.AddAdmin ||
+        adminFlag === AdminFlag.RemoveAdmin
+      ) {
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "setAdmin",
+          args: [signerAddress, adminFlag === AdminFlag.AddAdmin],
+        });
+      } else {
+        const { payload, signature } = await this.generateLegacyPayload(
+          signerAddress,
+          permissions,
+        );
+        return Transaction.fromContractWrapper({
+          contractWrapper: this.contractWrapper,
+          method: "setPermissionsForSigner",
+          args: [payload, signature],
+        });
+      }
+    }
+
     const { payload, signature } = await this.generatePayload(
       signerAddress,
       permissions,
+      adminFlag,
     );
-
-    const [success] = await this.contractWrapper.read(
-      "verifySignerPermissionRequest",
-      [payload, signature],
-    );
-
-    if (!success) {
-      throw new Error(`Invalid signature.`);
-    }
-
     return Transaction.fromContractWrapper({
       contractWrapper: this.contractWrapper,
       method: "setPermissionsForSigner",
       args: [payload, signature],
     });
-  }
-
-  private async buildSignerPermissionRequest(
-    signerAddress: string,
-    permissions: SignerPermissionsOutput,
-  ): Promise<string> {
-    const { payload, signature } = await this.generatePayload(
-      signerAddress,
-      permissions,
-    );
-
-    const isValidSigner =
-      await this.contractWrapper.readContract.verifySignerPermissionRequest(
-        payload,
-        signature,
-      );
-    if (!isValidSigner) {
-      throw new Error(`Invalid signature.`);
-    }
-
-    return this.contractWrapper.writeContract.interface.encodeFunctionData(
-      "setPermissionsForSigner",
-      [payload, signature],
-    );
   }
 
   /**
@@ -142,11 +147,16 @@ export class AccountPermissions implements DetectableFeature {
   private async generatePayload(
     signerAddress: string,
     permissions: SignerPermissionsOutput,
+    isAdmin: AdminFlag,
   ): Promise<SignedSignerPermissionsPayload> {
     // Get payload struct.
     const payload: IAccountPermissions.SignerPermissionRequestStruct = {
       signer: signerAddress,
-      approvedTargets: permissions.approvedCallTargets,
+      isAdmin: isAdmin.valueOf(),
+      approvedTargets:
+        permissions.approvedCallTargets === "*"
+          ? [AddressZero]
+          : permissions.approvedCallTargets,
       nativeTokenLimitPerTransaction: utils.parseEther(
         permissions.nativeTokenLimitPerTransaction,
       ),
@@ -183,6 +193,53 @@ export class AccountPermissions implements DetectableFeature {
     return { payload, signature };
   }
 
+  private async generateLegacyPayload(
+    signerAddress: string,
+    permissions: SignerPermissionsOutput,
+  ): Promise<SignedSignerPermissionsPayloadV1> {
+    if (permissions.approvedCallTargets === "*") {
+      throw new Error(
+        "Wildcard call targets are not supported on legacy account permissions contract, please deploy an updated contract factory.",
+      );
+    }
+    // legacy account permissions contract
+    // admin is set only via EOA
+    // signer permissions are set via EOA or admin but no wildcard
+    const payload: IAccountPermissions_V1.SignerPermissionRequestStruct = {
+      signer: signerAddress,
+      approvedTargets: permissions.approvedCallTargets,
+      nativeTokenLimitPerTransaction: utils.parseEther(
+        permissions.nativeTokenLimitPerTransaction,
+      ),
+      permissionStartTimestamp: permissions.startDate,
+      permissionEndTimestamp: permissions.expirationDate,
+      reqValidityStartTimestamp: 0,
+      // Req validity ends 10 years from now.
+      reqValidityEndTimestamp: BigNumber.from(
+        Math.floor(
+          new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10).getTime() /
+            1000,
+        ),
+      ),
+      uid: resolveOrGenerateId(undefined),
+    };
+    const chainId = await this.contractWrapper.getChainID();
+    const connectedSigner = this.contractWrapper.getSigner();
+    invariant(connectedSigner, "No signer available");
+    const signature = await this.contractWrapper.signTypedData(
+      connectedSigner,
+      {
+        name: "Account",
+        version: "1",
+        chainId,
+        verifyingContract: this.getAddress(),
+      },
+      { SignerPermissionRequest: SignerPermissionRequestV1 },
+      payload,
+    );
+    return { payload, signature };
+  }
+
   /*********************************
    * READ FUNCTIONS
    ********************************/
@@ -201,9 +258,7 @@ export class AccountPermissions implements DetectableFeature {
    */
   public async isAdmin(signerAddress: AddressOrEns): Promise<boolean> {
     const resolvedSignerAddress = await resolveAddress(signerAddress);
-    return await this.contractWrapper.readContract.isAdmin(
-      resolvedSignerAddress,
-    );
+    return await this.contractWrapper.read("isAdmin", [resolvedSignerAddress]);
   }
 
   /**
@@ -220,9 +275,9 @@ export class AccountPermissions implements DetectableFeature {
    */
   public async isSigner(signerAddress: AddressOrEns): Promise<boolean> {
     const resolvedSignerAddress = await resolveAddress(signerAddress);
-    return await this.contractWrapper.readContract.isActiveSigner(
+    return await this.contractWrapper.read("isActiveSigner", [
       resolvedSignerAddress,
-    );
+    ]);
   }
 
   /**
@@ -238,7 +293,7 @@ export class AccountPermissions implements DetectableFeature {
    * @twfeature AccountPermissions
    */
   public async getAllAdmins(): Promise<string[]> {
-    return await this.contractWrapper.readContract.getAllAdmins();
+    return await this.contractWrapper.read("getAllAdmins", []);
   }
 
   /**
@@ -255,7 +310,7 @@ export class AccountPermissions implements DetectableFeature {
    */
   public async getAllSigners(): Promise<SignerWithPermissions[]> {
     const activeSignersWithPerms: IAccountPermissions.SignerPermissionsStruct[] =
-      await this.contractWrapper.readContract.getAllActiveSigners();
+      await this.contractWrapper.read("getAllActiveSigners", []);
 
     return await Promise.all(
       activeSignersWithPerms.map(async (signerWithPermissions) => {
@@ -323,11 +378,11 @@ export class AccountPermissions implements DetectableFeature {
   grantAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "setAdmin",
-        args: [resolvedSignerAddress, true],
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        DEFAULT_PERMISSIONS,
+        AdminFlag.AddAdmin,
+      );
     },
   );
 
@@ -349,11 +404,11 @@ export class AccountPermissions implements DetectableFeature {
   revokeAdminPermissions = /* @__PURE__ */ buildTransactionFunction(
     async (signerAddress: AddressOrEns): Promise<Transaction> => {
       const resolvedSignerAddress = await resolveAddress(signerAddress);
-      return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper,
-        method: "setAdmin",
-        args: [resolvedSignerAddress, false],
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        DEFAULT_PERMISSIONS,
+        AdminFlag.RemoveAdmin,
+      );
     },
   );
 
@@ -398,6 +453,7 @@ export class AccountPermissions implements DetectableFeature {
       return await this.sendSignerPermissionRequest(
         resolvedSignerAddress,
         resolvedPermissions,
+        AdminFlag.None,
       );
     },
   );
@@ -412,7 +468,7 @@ export class AccountPermissions implements DetectableFeature {
    *
    * @example
    * ```javascript
-   * const tx = await contract.account.updateAccess(signer, restrictions);
+   * const tx = await contract.account.updatePermissions(signer, permissions);
    * const receipt = tx.receipt();
    * ```
    *
@@ -443,6 +499,7 @@ export class AccountPermissions implements DetectableFeature {
       return await this.sendSignerPermissionRequest(
         resolvedSignerAddress,
         resolvedPermissions,
+        AdminFlag.None,
       );
     },
   );
@@ -478,12 +535,16 @@ export class AccountPermissions implements DetectableFeature {
         );
       }
 
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(0),
-        expirationDate: BigNumber.from(0),
-        approvedCallTargets: [],
-        nativeTokenLimitPerTransaction: "0",
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        {
+          startDate: BigNumber.from(0),
+          expirationDate: BigNumber.from(0),
+          approvedCallTargets: [],
+          nativeTokenLimitPerTransaction: "0",
+        },
+        AdminFlag.None,
+      );
     },
   );
 
@@ -524,9 +585,9 @@ export class AccountPermissions implements DetectableFeature {
       }
 
       const permissions: IAccountPermissions.SignerPermissionsStruct =
-        await this.contractWrapper.readContract.getPermissionsForSigner(
+        await this.contractWrapper.read("getPermissionsForSigner", [
           resolvedSignerAddress,
-        );
+        ]);
 
       if (permissions.approvedTargets.includes(target)) {
         throw new Error("Target is already approved");
@@ -534,13 +595,17 @@ export class AccountPermissions implements DetectableFeature {
 
       const newTargets = [...permissions.approvedTargets, resolvedTarget];
 
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(permissions.startTimestamp),
-        expirationDate: BigNumber.from(permissions.endTimestamp),
-        approvedCallTargets: newTargets,
-        nativeTokenLimitPerTransaction:
-          permissions.nativeTokenLimitPerTransaction.toString(),
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        {
+          startDate: BigNumber.from(permissions.startTimestamp),
+          expirationDate: BigNumber.from(permissions.endTimestamp),
+          approvedCallTargets: newTargets,
+          nativeTokenLimitPerTransaction:
+            permissions.nativeTokenLimitPerTransaction.toString(),
+        },
+        AdminFlag.None,
+      );
     },
   );
 
@@ -581,9 +646,9 @@ export class AccountPermissions implements DetectableFeature {
       }
 
       const permissions: IAccountPermissions.SignerPermissionsStruct =
-        await this.contractWrapper.readContract.getPermissionsForSigner(
+        await this.contractWrapper.read("getPermissionsForSigner", [
           resolvedSignerAddress,
-        );
+        ]);
 
       if (!permissions.approvedTargets.includes(resolvedTarget)) {
         throw new Error("Target is currently not approved");
@@ -594,13 +659,17 @@ export class AccountPermissions implements DetectableFeature {
           utils.getAddress(approvedTarget) !== utils.getAddress(resolvedTarget),
       );
 
-      return await this.sendSignerPermissionRequest(resolvedSignerAddress, {
-        startDate: BigNumber.from(permissions.startTimestamp),
-        expirationDate: BigNumber.from(permissions.endTimestamp),
-        approvedCallTargets: newTargets,
-        nativeTokenLimitPerTransaction:
-          permissions.nativeTokenLimitPerTransaction.toString(),
-      });
+      return await this.sendSignerPermissionRequest(
+        resolvedSignerAddress,
+        {
+          startDate: BigNumber.from(permissions.startTimestamp),
+          expirationDate: BigNumber.from(permissions.endTimestamp),
+          approvedCallTargets: newTargets,
+          nativeTokenLimitPerTransaction:
+            permissions.nativeTokenLimitPerTransaction.toString(),
+        },
+        AdminFlag.None,
+      );
     },
   );
 
@@ -654,14 +723,16 @@ export class AccountPermissions implements DetectableFeature {
       const allToMakeAdmin = resolvedSnapshot
         .filter((item) => item.makeAdmin)
         .map((item) => item.signer);
-      allAdmins.forEach((admin) => {
+      allAdmins.forEach(async (admin) => {
         if (!allToMakeAdmin.includes(admin)) {
-          removeAdminData.push(
-            this.contractWrapper.writeContract.interface.encodeFunctionData(
-              "setAdmin",
-              [admin, false],
-            ),
-          );
+          const data = (
+            await this.sendSignerPermissionRequest(
+              admin,
+              DEFAULT_PERMISSIONS,
+              AdminFlag.RemoveAdmin,
+            )
+          ).encode();
+          removeAdminData.push(data);
         }
       });
 
@@ -675,13 +746,13 @@ export class AccountPermissions implements DetectableFeature {
       await Promise.all(
         allSigners.map(async (item) => {
           if (!allToMakeSigners.includes(item.signer)) {
-            const data = await this.buildSignerPermissionRequest(item.signer, {
-              startDate: BigNumber.from(0),
-              expirationDate: BigNumber.from(0),
-              approvedCallTargets: [],
-              nativeTokenLimitPerTransaction: "0",
-            });
-
+            const data = (
+              await this.sendSignerPermissionRequest(
+                item.signer,
+                DEFAULT_PERMISSIONS,
+                AdminFlag.None,
+              )
+            ).encode();
             removeSignerData.push(data);
           }
         }),
@@ -690,18 +761,23 @@ export class AccountPermissions implements DetectableFeature {
       for (const member of resolvedSnapshot) {
         // Add new admin
         if (member.makeAdmin) {
-          addAdminData.push(
-            this.contractWrapper.writeContract.interface.encodeFunctionData(
-              "setAdmin",
-              [member.signer, true],
-            ),
-          );
+          const data = (
+            await this.sendSignerPermissionRequest(
+              member.signer,
+              DEFAULT_PERMISSIONS,
+              AdminFlag.AddAdmin,
+            )
+          ).encode();
+          addAdminData.push(data);
         } else {
           // Add new scoped
-          const data = await this.buildSignerPermissionRequest(
-            member.signer,
-            member.permissions,
-          );
+          const data = (
+            await this.sendSignerPermissionRequest(
+              member.signer,
+              member.permissions,
+              AdminFlag.None,
+            )
+          ).encode();
           addOrUpdateSignerData.push(data);
         }
       }

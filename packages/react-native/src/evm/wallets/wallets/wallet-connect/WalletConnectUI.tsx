@@ -19,9 +19,9 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "./WalletConnect";
-import { useAppTheme } from "../../../styles/hooks";
-import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { WalletConnectButton } from "./WalletConnectButton";
+import { ModalHeaderTextClose } from "../../../components/base";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 type WCWallet = {
   iconURL: string;
@@ -36,12 +36,12 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
 export function WalletConnectUI({
-  close,
+  connected,
   walletConfig,
   goBack,
   projectId,
 }: ConnectUIProps<WalletConnect> & { projectId: string }) {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [wallets, setWallets] = useState<WCWallet[]>([]);
   const [error, setError] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -140,13 +140,13 @@ export function WalletConnectUI({
         console.error(`Error connecting with WalletConnect: ${e}`);
       })
       .finally(() => {
-        close();
+        connected();
       });
   };
 
   const onClosePress = () => {
     setConnectionStatus("disconnected");
-    close();
+    connected();
   };
 
   return (
@@ -158,10 +158,11 @@ export function WalletConnectUI({
       <View
         style={[styles.modal, { backgroundColor: theme.colors.background }]}
       >
-        <ConnectWalletHeader
-          subHeaderText={""}
+        <ModalHeaderTextClose
           onBackPress={goBack}
+          headerText="WalletConnect"
           onClose={onClosePress}
+          paddingHorizontal="md"
         />
         <View style={styles.explorerContainer}>
           {loading ? (
@@ -175,27 +176,27 @@ export function WalletConnectUI({
               fadingEdgeLength={20}
               stickyHeaderIndices={[0]}
               ListHeaderComponent={
-                <Box
-                  borderColor="border"
-                  borderWidth={0.5}
-                  backgroundColor="background"
-                  flex={1}
-                  flexDirection="row"
-                  borderRadius="md"
-                  alignItems="center"
-                  mb="sm"
-                  padding="xs"
-                  width={"100%"}
-                >
-                  <TextInput
-                    onChangeText={onChangeText}
-                    placeholder="Search Wallets"
-                    placeholderTextColor={theme.colors.textSecondary}
-                    style={{
-                      ...styles.textInput,
-                      color: theme.colors.textSecondary,
-                    }}
-                  />
+                <Box backgroundColor="background" mb="sm">
+                  <Box
+                    borderColor="border"
+                    borderWidth={0.5}
+                    flex={1}
+                    flexDirection="row"
+                    borderRadius="md"
+                    alignItems="center"
+                    marginHorizontal="md"
+                    padding="xs"
+                  >
+                    <TextInput
+                      onChangeText={onChangeText}
+                      placeholder="Search Wallets"
+                      placeholderTextColor={theme.colors.textSecondary}
+                      style={{
+                        ...styles.textInput,
+                        color: theme.colors.textSecondary,
+                      }}
+                    />
+                  </Box>
                 </Box>
               }
               ListEmptyComponent={
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   listContentContainer: {
-    paddingBottom: 12,
+    paddingBottom: 10,
     flexGrow: 1,
   },
   emptyContainer: {

@@ -1,43 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Fantom Opera",
   "chain": "FTM",
-  "rpc": [
-    "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://fantom.publicnode.com",
-    "https://rpc.ftm.tools"
+  "chainId": 250,
+  "explorers": [
+    {
+      "name": "ftmscan",
+      "url": "https://ftmscan.com",
+      "standard": "EIP3091"
+    }
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/fantom/512.png",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://fantom.foundation",
+  "name": "Fantom Opera",
   "nativeCurrency": {
     "name": "Fantom",
     "symbol": "FTM",
     "decimals": 18
   },
-  "infoURL": "https://fantom.foundation",
-  "shortName": "ftm",
-  "chainId": 250,
-  "networkId": 250,
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/fantom/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png"
-  },
-  "explorers": [
-    {
-      "name": "ftmscan",
-      "url": "https://ftmscan.com",
-      "icon": {
-        "url": "ipfs://QmRqbK449Fo9sJ3xMpkPbg6uV1weQj4yVV1xNMP9cdPmjf",
-        "width": 73,
-        "height": 73,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "wss://fantom.publicnode.com",
+    "https://fantom.publicnode.com",
+    "https://rpc.ftm.tools"
   ],
-  "testnet": false,
-  "slug": "fantom"
+  "shortName": "ftm",
+  "slug": "fantom",
+  "testnet": false
 } as const satisfies Chain;

@@ -4,7 +4,7 @@ import {
   CreateLocalWallet_Password,
 } from "./CreateLocalWallet";
 import { ReconnectLocalWallet } from "./ReconnectLocalWallet";
-import { Flex } from "../../../components/basic";
+import { Container } from "../../../components/basic";
 import { ConnectUIProps } from "@thirdweb-dev/react-core";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWallet } from "@thirdweb-dev/wallets";
@@ -20,31 +20,32 @@ export const LocalWalletConnectUI = (
         persist={props.persist}
         localWallet={props.walletConfig}
         goBack={props.goBack}
-        onConnect={props.close}
+        onConnect={props.connected}
       />
     );
   }
 
   if (walletData === "loading") {
     return (
-      <Flex
-        justifyContent="center"
-        alignItems="center"
+      <Container
+        flex="row"
+        center="both"
         style={{
           height: "300px",
         }}
       >
-        <Spinner size="lg" color="primary" />
-      </Flex>
+        <Spinner size="xl" color="accentText" />
+      </Container>
     );
   }
 
   if (walletData) {
     return (
       <ReconnectLocalWallet
+        modalSize={props.modalSize}
         renderBackButton={props.supportedWallets.length > 1}
         supportedWallets={props.supportedWallets}
-        onConnect={props.close}
+        onConnect={props.connected}
         goBack={props.goBack}
         localWallet={props.walletConfig}
         persist={props.persist}
@@ -56,7 +57,7 @@ export const LocalWalletConnectUI = (
     <CreateLocalWallet_Password
       goBack={props.goBack}
       localWalletConf={props.walletConfig}
-      onConnect={props.close}
+      onConnect={props.connected}
       renderBackButton={props.supportedWallets.length > 1}
       persist={props.persist}
     />

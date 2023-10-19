@@ -1,6 +1,11 @@
+import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
+import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
+import invariant from "tiny-invariant";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError } from "../../common/error";
 import { isNativeToken } from "../../common/currency/isNativeToken";
+import { ListingNotFoundError } from "../../common/error";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -29,11 +34,6 @@ import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
-import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
-import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import invariant from "tiny-invariant";
 import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -198,7 +198,7 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -221,7 +221,7 @@ export class Marketplace implements UpdateableNetwork {
   public async getListing(
     listingId: BigNumberish,
   ): Promise<AuctionListing | DirectListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
+    const listing = await this.contractWrapper.read("listings", [listingId]);
     if (listing.assetContract === constants.AddressZero) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
     }
@@ -295,17 +295,17 @@ export class Marketplace implements UpdateableNetwork {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalListings();
+    return await this.contractWrapper.read("totalListings", []);
   }
 
   /**
    * Get whether listing is restricted only to addresses with the Lister role
    */
   public async isRestrictedToListerRoleOnly(): Promise<boolean> {
-    const anyoneCanList = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanList = await this.contractWrapper.read("hasRole", [
       getRoleHash("lister"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanList;
   }
 
@@ -313,14 +313,14 @@ export class Marketplace implements UpdateableNetwork {
    * Get the buffer in basis points between offers
    */
   public async getBidBufferBps(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.bidBufferBps();
+    return this.contractWrapper.read("bidBufferBps", []);
   }
 
   /**
    * get the buffer time in seconds between offers
    */
   public async getTimeBufferInSeconds(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.timeBuffer();
+    return this.contractWrapper.read("timeBuffer", []);
   }
 
   /**
@@ -348,8 +348,8 @@ export class Marketplace implements UpdateableNetwork {
     );
     // derive the offers from the events
     return await Promise.all(
-      listingEvents.map(async (e): Promise<Offer> => {
-        return await mapOffer(
+      listingEvents.map((e): Promise<Offer> => {
+        return mapOffer(
           this.contractWrapper.getProvider(),
           BigNumber.from(listingId),
           {
@@ -391,9 +391,7 @@ export class Marketplace implements UpdateableNetwork {
       quantityDesired?: BigNumberish,
       receiver?: AddressOrEns,
     ) => {
-      const listing = await this.contractWrapper.readContract.listings(
-        listingId,
-      );
+      const listing = await this.contractWrapper.read("listings", [listingId]);
       if (listing.listingId.toString() !== listingId.toString()) {
         throw new ListingNotFoundError(this.getAddress(), listingId.toString());
       }
@@ -445,9 +443,7 @@ export class Marketplace implements UpdateableNetwork {
       pricePerToken: Price,
       quantity?: BigNumberish,
     ) => {
-      const listing = await this.contractWrapper.readContract.listings(
-        listingId,
-      );
+      const listing = await this.contractWrapper.read("listings", [listingId]);
       if (listing.listingId.toString() !== listingId.toString()) {
         throw new ListingNotFoundError(this.getAddress(), listingId.toString());
       }
@@ -601,7 +597,7 @@ export class Marketplace implements UpdateableNetwork {
     const listings = await Promise.all(
       Array.from(
         Array(
-          (await this.contractWrapper.readContract.totalListings()).toNumber(),
+          (await this.contractWrapper.read("totalListings", [])).toNumber(),
         ).keys(),
       ).map(async (i) => {
         let listing;

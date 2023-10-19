@@ -12,6 +12,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
+import Box from "../base/Box";
 
 type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
   onConnected?: (wallet: WalletInstance) => void;
@@ -19,7 +20,7 @@ type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
 
 export function LocalWalletFlow({
   goBack,
-  close,
+  connected,
   walletConfig,
   onConnected,
 }: LocalWalletFlowUIProps) {
@@ -60,7 +61,7 @@ export function LocalWalletFlow({
         headerText="Guest Wallet"
         alignHeader="flex-start"
         subHeaderText={""}
-        onClose={close}
+        onClose={connected}
       />
       <View style={styles.connectingContainer}>
         <BaseButton
@@ -78,9 +79,19 @@ export function LocalWalletFlow({
             </Text>
           )}
         </BaseButton>
-        <Text variant="subHeader" mt="lg">
-          -------- OR --------
-        </Text>
+        <Box
+          mt="lg"
+          marginHorizontal="xl"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box height={1} flex={1} backgroundColor="border" />
+          <Text variant="subHeader" textAlign="center">
+            OR
+          </Text>
+          <Box height={1} flex={1} backgroundColor="border" />
+        </Box>
         <ModalFooter footer={"Import a wallet"} onPress={onImportPress} />
       </View>
 

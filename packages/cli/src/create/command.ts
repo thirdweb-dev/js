@@ -43,6 +43,51 @@ export async function twCreate(
     projectType = "extension";
   }
 
+  // case where users use `npx thirdweb create --option` directly
+  if (!projectType && Object.keys(options).length > 0) {
+    if (options.react) {
+      projectType = "app";
+      language = "typescript";
+      framework = "cra";
+    }
+
+    if (options.next) {
+      projectType = "app";
+      language = "typescript";
+      framework = "next";
+    }
+
+    if (options.vite) {
+      projectType = "app";
+      language = "typescript";
+      framework = "vite";
+    }
+
+    if (options.node) {
+      projectType = "app";
+      language = "typescript";
+      framework = "node";
+    }
+
+    if (options.express) {
+      projectType = "app";
+      language = "typescript";
+      framework = "express";
+    }
+
+    if (options.pwaVite) {
+      projectType = "app";
+      language = "typescript";
+      framework = "pwa-vite";
+    }
+
+    if (options.reactNative) {
+      projectType = "app";
+      language = "typescript";
+      framework = "react-native";
+    }
+  }
+
   if (projectType === "app") {
     if (options.typescript) {
       language = "typescript";
@@ -54,7 +99,7 @@ export async function twCreate(
     if (options.next) {
       framework = "next";
     }
-    if (options.cra) {
+    if (options.react) {
       framework = "cra";
     }
     if (options.vite) {
@@ -73,9 +118,6 @@ export async function twCreate(
       framework = "pwa-vite";
     }
 
-    if (options.solana) {
-      chain = "solana";
-    }
     if (options.evm) {
       chain = "evm";
     }
@@ -206,21 +248,7 @@ export async function twCreate(
 
     if (!options.template) {
       if (projectType === "app" && !chain) {
-        const res = await prompts({
-          type: "select",
-          name: "chain",
-          message: CREATE_MESSAGES.chain,
-          choices: [
-            { title: "EVM", value: "evm" },
-            { title: "Solana", value: "solana" },
-          ],
-        });
-
-        if (res.chain === "solana") {
-          chain = "solana";
-        } else {
-          chain = "evm";
-        }
+        chain = "evm";
       }
 
       if (projectType === "app" && !framework) {
@@ -228,25 +256,15 @@ export async function twCreate(
           type: "select",
           name: "framework",
           message: CREATE_MESSAGES.framework,
-          choices:
-            chain === "solana"
-              ? [
-                  { title: "Next.js", value: "next" },
-                  { title: "Create React App", value: "cra" },
-                  { title: "Node.js", value: "node" },
-                  { title: "Express", value: "express" },
-                  // Solana doesn't support Vite just yet:
-                  // { title: "Vite", value: "vite" },
-                ]
-              : [
-                  { title: "Next.js", value: "next" },
-                  { title: "Create React App", value: "cra" },
-                  { title: "Vite", value: "vite" },
-                  { title: "PWA Vite", value: "pwa-vite" },
-                  { title: "React Native", value: "react-native" },
-                  { title: "Node.js", value: "node" },
-                  { title: "Express", value: "express" },
-                ],
+          choices: [
+            { title: "Next.js", value: "next" },
+            { title: "Create React App", value: "cra" },
+            { title: "Vite", value: "vite" },
+            { title: "PWA Vite", value: "pwa-vite" },
+            { title: "React Native", value: "react-native" },
+            { title: "Node.js", value: "node" },
+            { title: "Express", value: "express" },
+          ],
         });
 
         if (typeof res.framework === "string") {
@@ -467,7 +485,6 @@ export async function twCreate(
         framework,
         language,
         template,
-        chain,
       });
     } else {
       await createContractProject({

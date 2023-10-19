@@ -1,6 +1,7 @@
 import { Spacer } from "./Spacer";
 import { InputButton } from "./buttons";
-import { ErrorMessage, Input, InputContainer, Label } from "./formElements";
+import { Input, InputContainer, Label } from "./formElements";
+import { Text } from "./text";
 
 export const FormFieldWithIconButton: React.FC<{
   name: string;
@@ -19,7 +20,22 @@ export const FormFieldWithIconButton: React.FC<{
   noSave?: boolean;
   dataTest?: string;
   placeholder?: string;
+  noErrorShift?: boolean;
 }> = (props) => {
+  const errorEl = (
+    <div
+      style={{
+        opacity: props.error ? 1 : 0,
+        transition: "opacity 0.2s ease",
+      }}
+    >
+      <Spacer y="sm" />
+      <Text color="danger" size="sm">
+        {props.error} &nbsp;
+      </Text>
+    </div>
+  );
+
   return (
     <div>
       <Label htmlFor={props.id}>{props.label}</Label>
@@ -51,12 +67,8 @@ export const FormFieldWithIconButton: React.FC<{
         </InputButton>
       </InputContainer>
 
-      {props.error && (
-        <>
-          <Spacer y="sm" />
-          <ErrorMessage> {props.error} </ErrorMessage>
-        </>
-      )}
+      {props.error && !props.noErrorShift && errorEl}
+      {props.noErrorShift && errorEl}
     </div>
   );
 };
@@ -96,7 +108,9 @@ export const FormField: React.FC<{
       {props.errorMessage && (
         <>
           <Spacer y="xs" />
-          <ErrorMessage>{props.errorMessage}</ErrorMessage>
+          <Text color="danger" size="sm">
+            {props.errorMessage}
+          </Text>
         </>
       )}
     </div>

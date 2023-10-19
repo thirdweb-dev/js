@@ -1,6 +1,6 @@
 import { ConnectUIProps, useConnect } from "@thirdweb-dev/react-core";
 import { ZerionWallet } from "@thirdweb-dev/wallets";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
@@ -11,11 +11,22 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
-  const { walletConfig, close } = props;
+  const { walletConfig, connected } = props;
   const connect = useConnect();
   const hideBackButton = props.supportedWallets.length === 1;
+  const [errorConnecting, setErrorConnecting] = useState(false);
 
-  const { goBack } = props;
+  const connectToExtension = useCallback(async () => {
+    try {
+      setErrorConnecting(false);
+      connectPrompted.current = true;
+      setScreen("connecting");
+      await connect(walletConfig);
+      connected();
+    } catch (e) {
+      setErrorConnecting(true);
+    }
+  }, [connect, connected, walletConfig]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -30,14 +41,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
     // if loading
     (async () => {
       if (isInstalled) {
-        try {
-          connectPrompted.current = true;
-          setScreen("connecting");
-          await connect(walletConfig);
-          close();
-        } catch (e) {
-          goBack();
-        }
+        connectToExtension();
       }
 
       // if zerion is not injected
@@ -51,16 +55,18 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
         }
       }
     })();
-  }, [walletConfig, close, connect, goBack]);
+  }, [connectToExtension, walletConfig]);
 
   if (screen === "connecting") {
     return (
       <ConnectingScreen
         hideBackButton={hideBackButton}
+        onGetStarted={() => setScreen("get-started")}
+        onRetry={connectToExtension}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
         walletIconURL={walletConfig.meta.iconURL}
-        supportLink="https://help.zerion.io/en/"
+        errorConnecting={errorConnecting}
       />
     );
   }
@@ -68,16 +74,20 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        onRetry={() => {
+          // NO OP
+        }}
+        onGetStarted={() => setScreen("get-started")}
+        errorConnecting={errorConnecting}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         walletConfig={walletConfig}
         appUriPrefix={{
           ios: "zerion://",
           android: "https://link.zerion.io/pt3gdRP0njb/",
           other: "https://link.zerion.io/pt3gdRP0njb/",
         }}
-        supportLink="https://help.zerion.io/en/"
       />
     );
   }
@@ -90,9 +100,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
         chromeExtensionLink={walletConfig.meta.urls?.chrome}
         googlePlayStoreLink={walletConfig.meta.urls?.android}
         appleStoreLink={walletConfig.meta.urls?.ios}
-        onBack={() => {
-          setScreen("scanning");
-        }}
+        onBack={props.goBack}
       />
     );
   }
@@ -102,7 +110,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
       <ZerionScan
         hideBackButton={hideBackButton}
         onBack={props.goBack}
-        onConnected={close}
+        onConnected={props.connected}
         onGetStarted={() => {
           setScreen("get-started");
         }}

@@ -1,18 +1,9 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KLYNTAR",
   "chain": "KLY",
-  "rpc": [
-    "https://klyntar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.klyntar.org/kly_evm_rpc",
-    "https://evm.klyntarscan.org/kly_evm_rpc"
-  ],
+  "chainId": 7331,
+  "explorers": [],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "KLYNTAR",
-    "symbol": "KLY",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -21,18 +12,27 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://klyntar.org",
-  "shortName": "kly",
-  "chainId": 7331,
-  "networkId": 7331,
   "icon": {
     "url": "ipfs://QmaDr9R6dKnZLsogRxojjq4dwXuXcudR8UeTZ8Nq553K4u",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "explorers": [],
+  "infoURL": "https://klyntar.org",
+  "name": "KLYNTAR",
+  "nativeCurrency": {
+    "name": "KLYNTAR",
+    "symbol": "KLY",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://klyntar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.klyntar.org/kly_evm_rpc",
+    "https://evm.klyntarscan.org/kly_evm_rpc"
+  ],
+  "shortName": "kly",
+  "slug": "klyntar",
   "status": "incubating",
-  "testnet": false,
-  "slug": "klyntar"
+  "testnet": false
 } as const satisfies Chain;

@@ -1,21 +1,17 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DRAC Network",
   "chain": "DRAC",
-  "rpc": [
-    "https://drac-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://www.dracscan.com/rpc"
+  "chainId": 3912,
+  "explorers": [
+    {
+      "name": "DRAC_Network Scan",
+      "url": "https://www.dracscan.io",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://www.dracscan.io/faucet"
   ],
-  "nativeCurrency": {
-    "name": "DRAC",
-    "symbol": "DRAC",
-    "decimals": 18
-  },
-  "infoURL": "https://drac.io/",
-  "shortName": "drac",
   "features": [
     {
       "name": "EIP155"
@@ -24,21 +20,25 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "chainId": 3912,
-  "networkId": 3912,
   "icon": {
     "url": "ipfs://QmXbsQe7QsVFZJZdBmbZVvS6LgX9ZFoaTMBs9MiQXUzJTw",
     "width": 256,
     "height": 256,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "DRAC_Network Scan",
-      "url": "https://www.dracscan.io",
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://drac.io/",
+  "name": "DRAC Network",
+  "nativeCurrency": {
+    "name": "DRAC",
+    "symbol": "DRAC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://drac-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://www.dracscan.com/rpc"
   ],
-  "testnet": false,
-  "slug": "drac-network"
+  "shortName": "drac",
+  "slug": "drac-network",
+  "testnet": false
 } as const satisfies Chain;

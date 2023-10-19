@@ -1,12 +1,10 @@
-import { buildTransactionFunction } from "../../common/transactions";
-import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
-import type { DetectableFeature } from "../interfaces/DetectableFeature";
-import type { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { utils, BigNumber } from "ethers";
+import type { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { BigNumber, utils } from "ethers";
+import invariant from "tiny-invariant";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 import type { TokenInitializer } from "../../contracts";
 import {
   FilledSignaturePayload20,
@@ -17,9 +15,11 @@ import {
   Signature20PayloadOutput,
   SignedPayload20,
 } from "../../schema/contracts/common/signature";
+import type { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractRoles } from "./contract-roles";
-import type { ITokenERC20 } from "@thirdweb-dev/contracts-js";
-import invariant from "tiny-invariant";
+import type { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -105,11 +105,13 @@ export class Erc20SignatureMintable implements DetectableFeature {
           };
         }),
       );
+
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
-        return this.contractWrapper.readContract.interface.encodeFunctionData(
-          "mintWithSignature",
-          [p.message, p.signature],
-        );
+        return contractEncoder.encode("mintWithSignature", [
+          p.message,
+          p.signature,
+        ]);
       });
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -146,8 +148,10 @@ export class Erc20SignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
-    const verification: [boolean, string] =
-      await this.contractWrapper.readContract.verify(message, signature);
+    const verification: [boolean, string] = await this.contractWrapper.read(
+      "verify",
+      [message, signature],
+    );
     return verification[0];
   }
 
@@ -209,7 +213,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
     invariant(signer, "No signer available");
 
     // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
-    const name = await this.contractWrapper.readContract.name();
+    const name = await this.contractWrapper.read("name", []);
 
     return await Promise.all(
       parsedRequests.map(async (m) => {
@@ -220,7 +224,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
             name,
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest20 },
           await this.mapPayloadToContractStruct(finalPayload),
@@ -254,7 +258,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
     );
     const amountWithDecimals = utils.parseUnits(
       mintRequest.quantity,
-      await this.contractWrapper.readContract.decimals(),
+      await this.contractWrapper.read("decimals", []),
     );
     return {
       to: mintRequest.to,

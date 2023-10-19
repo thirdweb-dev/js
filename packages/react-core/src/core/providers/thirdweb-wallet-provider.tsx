@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   ConnectParams,
   CreateAsyncStorage,
+  SignerWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
@@ -84,12 +85,13 @@ type ThirdwebWalletContextData = {
   setConnectedWallet: (
     wallet: WalletInstance,
     params?: ConnectParams<Record<string, any>>,
-  ) => void;
+  ) => Promise<void>;
   /**
    * Get wallet config object from wallet instance
    */
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
   activeChainSetExplicitly: boolean;
+  clientId?: string;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -108,6 +110,7 @@ export function ThirdwebWalletProvider(
     autoConnectTimeout?: number;
     clientId?: string;
     activeChainSetExplicitly: boolean;
+    signerWallet?: WalletConfig<SignerWallet>;
   }>,
 ) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
@@ -264,6 +267,11 @@ export function ThirdwebWalletProvider(
 
   // Auto Connect
   useEffect(() => {
+    // do not auto connect if signerWallet is given
+    if (props.signerWallet) {
+      return;
+    }
+
     if (autoConnectTriggered.current) {
       return;
     }
@@ -374,6 +382,7 @@ export function ThirdwebWalletProvider(
     activeWallet,
     connectionStatus,
     autoConnectTimeout,
+    props.signerWallet,
   ]);
 
   const connectWallet = useCallback(
@@ -461,6 +470,33 @@ export function ThirdwebWalletProvider(
     };
   }, [activeWallet, onWalletDisconnect]);
 
+  // connect signerWallet immediately if it's passed
+  // and disconnect it if it's not passed
+  const signerConnected = useRef<typeof props.signerWallet>();
+  useEffect(() => {
+    if (!props.signerWallet) {
+      if (signerConnected.current) {
+        disconnectWallet();
+        signerConnected.current = undefined;
+      }
+      return;
+    }
+
+    if (signerConnected.current === props.signerWallet) {
+      return;
+    }
+
+    const wallet = createWalletInstance(props.signerWallet);
+    setConnectedWallet(wallet);
+    signerConnected.current = props.signerWallet;
+  }, [
+    createWalletInstance,
+    props.supportedWallets,
+    setConnectedWallet,
+    props.signerWallet,
+    disconnectWallet,
+  ]);
+
   return (
     <ThirdwebWalletContext.Provider
       value={{
@@ -483,6 +519,7 @@ export function ThirdwebWalletProvider(
           return walletInstanceToConfig.get(walletInstance);
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
+        clientId: props.clientId,
       }}
     >
       {props.children}

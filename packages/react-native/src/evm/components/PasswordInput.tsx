@@ -3,14 +3,14 @@ import Box from "./base/Box";
 import { useState } from "react";
 import EyeClosed from "../assets/eye-closed";
 import EyeOpened from "../assets/eye-opened";
-import { useAppTheme } from "../styles/hooks";
+import { useGlobalTheme } from "../providers/ui-context-provider";
 
 export const PasswordInput = ({
   onChangeText,
 }: {
   onChangeText: TextInput["props"]["onChangeText"];
 }) => {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [showPassword, setShowPassword] = useState(false);
 
   const onPressEyeIcon = () => {
@@ -25,12 +25,15 @@ export const PasswordInput = ({
       borderWidth={1}
       borderRadius="md"
       pr="xs"
+      pl="xxs"
     >
       <TextInput
         style={{ ...styles.textInput, color: theme.colors.textPrimary }}
         secureTextEntry={!showPassword}
         textContentType="none"
         returnKeyType={"done"}
+        placeholder="Password"
+        placeholderTextColor={theme.colors.textSecondary}
         clearTextOnFocus={false}
         autoCapitalize="none"
         autoCorrect={false}
@@ -60,6 +63,5 @@ const styles = StyleSheet.create({
     textAlign: "left",
     flex: 1,
     height: 40,
-    paddingLeft: 5,
   },
 });

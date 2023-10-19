@@ -1,37 +1,32 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "JuncaGlobal Chain Testnet",
-  "chain": "JuncaGlobal Test Chain",
-  "rpc": [
-    "https://juncaglobal-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.juncachain.com",
-    "wss://ws-testnet.juncachain.com"
+  "chain": "JuncaChain testnet",
+  "chainId": 669,
+  "explorers": [
+    {
+      "name": "JuncaScan",
+      "url": "https://scan-testnet.juncachain.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [
     "https://faucet-testnet.juncachain.com"
   ],
+  "features": [],
+  "infoURL": "https://junca-cash.world",
+  "name": "JuncaChain testnet",
   "nativeCurrency": {
-    "name": "JuncaGlobal Chain Testnet Native Token",
+    "name": "JuncaChain Testnet Native Token",
     "symbol": "JGCT",
     "decimals": 18
   },
-  "infoURL": "https://junca-cash.world",
-  "shortName": "junca",
-  "chainId": 669,
-  "networkId": 669,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://scan-testnet.juncachain.com",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://juncachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.juncachain.com",
+    "wss://ws-testnet.juncachain.com"
   ],
-  "testnet": true,
-  "slug": "juncaglobal-chain-testnet"
+  "shortName": "juncat",
+  "slug": "juncachain-testnet",
+  "testnet": true
 } as const satisfies Chain;

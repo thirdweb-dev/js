@@ -1,19 +1,34 @@
-import { AuctionHasNotEndedError } from "../../common/error";
+import type {
+  EnglishAuctionsLogic,
+  IEnglishAuctions,
+  IMulticall,
+  MarketplaceV3,
+} from "@thirdweb-dev/contracts-js";
+import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/EnglishAuctionsLogic";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, constants, utils, type BigNumberish } from "ethers";
+import invariant from "tiny-invariant";
+import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { AuctionHasNotEndedError } from "../../common/error";
 import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
 } from "../../schema/marketplacev3/english-auctions";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CurrencyValue, Price } from "../../types/currency";
-import { EnglishAuction, Bid } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
+import { Bid, EnglishAuction } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
@@ -22,21 +37,6 @@ import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
-import type {
-  IEnglishAuctions,
-  EnglishAuctionsLogic,
-  IMulticall,
-  MarketplaceV3,
-} from "@thirdweb-dev/contracts-js";
-import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, type BigNumberish, utils, constants } from "ethers";
-import invariant from "tiny-invariant";
-import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
-import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
-import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
-import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 
 /**
  * Handles auctions
@@ -69,7 +69,7 @@ export class MarketplaceV3EnglishAuctions<
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -89,7 +89,7 @@ export class MarketplaceV3EnglishAuctions<
    * @twfeature EnglishAuctions
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalAuctions();
+    return await this.contractWrapper.read("totalAuctions", []);
   }
 
   /**
@@ -117,10 +117,8 @@ export class MarketplaceV3EnglishAuctions<
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllAuctions,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllAuctions", [startId, endId]),
     );
     rawAuctions = batches.flat();
 
@@ -156,10 +154,8 @@ export class MarketplaceV3EnglishAuctions<
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    const batches = await getAllInBatches(
-      start,
-      end,
-      this.contractWrapper.readContract.getAllValidAuctions,
+    const batches = await getAllInBatches(start, end, (startId, endId) =>
+      this.contractWrapper.read("getAllValidAuctions", [startId, endId]),
     );
     rawAuctions = batches.flat();
 
@@ -184,9 +180,7 @@ export class MarketplaceV3EnglishAuctions<
    * @twfeature EnglishAuctions
    */
   public async getAuction(auctionId: BigNumberish): Promise<EnglishAuction> {
-    const auction = await this.contractWrapper.readContract.getAuction(
-      auctionId,
-    );
+    const auction = await this.contractWrapper.read("getAuction", [auctionId]);
 
     return await this.mapAuction(auction);
   }
@@ -209,9 +203,7 @@ export class MarketplaceV3EnglishAuctions<
     auctionId: BigNumberish,
   ): Promise<Bid | undefined> {
     await this.validateAuction(BigNumber.from(auctionId));
-    const bid = await this.contractWrapper.readContract.getWinningBid(
-      auctionId,
-    );
+    const bid = await this.contractWrapper.read("getWinningBid", [auctionId]);
     if (bid._bidder === constants.AddressZero) {
       return undefined;
     }
@@ -242,10 +234,10 @@ export class MarketplaceV3EnglishAuctions<
     auctionId: BigNumberish,
     bidAmount: BigNumberish,
   ): Promise<boolean> {
-    return await this.contractWrapper.readContract.isNewWinningBid(
+    return await this.contractWrapper.read("isNewWinningBid", [
       auctionId,
       bidAmount,
-    );
+    ]);
   }
 
   /**
@@ -265,9 +257,7 @@ export class MarketplaceV3EnglishAuctions<
    */
   public async getWinner(auctionId: BigNumberish): Promise<Address> {
     const auction = await this.validateAuction(BigNumber.from(auctionId));
-    const bid = await this.contractWrapper.readContract.getWinningBid(
-      auctionId,
-    );
+    const bid = await this.contractWrapper.read("getWinningBid", [auctionId]);
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const endTime = BigNumber.from(auction.endTimeInSeconds);
 
@@ -278,18 +268,17 @@ export class MarketplaceV3EnglishAuctions<
     // otherwise fall back to query filter things
 
     // TODO this should be via indexer or direct contract call
-    const closedAuctions = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.AuctionClosed(),
-    );
+    const contractEvent = new ContractEvents(this.contractWrapper);
+    const closedAuctions = await contractEvent.getEvents("AuctionClosed");
     const closed = closedAuctions.find((a) =>
-      a.args.auctionId.eq(BigNumber.from(auctionId)),
+      a.data.auctionId.eq(BigNumber.from(auctionId)),
     );
     if (!closed) {
       throw new Error(
         `Could not find auction with ID ${auctionId} in closed auctions`,
       );
     }
-    return closed.args.winningBidder;
+    return closed.data.winningBidder;
   }
 
   /** ******************************
@@ -415,12 +404,11 @@ export class MarketplaceV3EnglishAuctions<
     async (
       listings: EnglishAuctionInputParams[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createAuction.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createAuction.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this

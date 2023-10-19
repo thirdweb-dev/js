@@ -1,5 +1,186 @@
 # @thirdweb-dev/sdk
 
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`137f46a5`](https://github.com/thirdweb-dev/js/commit/137f46a5470d2b5f9d7f9eda9b2d839a53ddeb64)]:
+  - @thirdweb-dev/chains@0.1.55
+
+## 4.0.5
+
+### Patch Changes
+
+- [#1781](https://github.com/thirdweb-dev/js/pull/1781) [`07544252`](https://github.com/thirdweb-dev/js/commit/07544252b49163e1ae84ba2cc76b99597a1c4553) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose utility functions for fetching ABI / sources
+
+## 4.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`6c30b7ef`](https://github.com/thirdweb-dev/js/commit/6c30b7efc708e1244f3be3e10eac8f3b8b14a8c3)]:
+  - @thirdweb-dev/contracts-js@1.3.16
+
+## 4.0.3
+
+### Patch Changes
+
+- [#1756](https://github.com/thirdweb-dev/js/pull/1756) [`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable adding smart wallet admins via bundler for new account contracts
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/contracts-js@1.3.15
+
+## 4.0.2
+
+### Patch Changes
+
+- [#1764](https://github.com/thirdweb-dev/js/pull/1764) [`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for marketplace methods
+
+- [#1763](https://github.com/thirdweb-dev/js/pull/1763) [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve fetchPublishedContractFromPolygon
+
+- [#1765](https://github.com/thirdweb-dev/js/pull/1765) [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for getting deployment info
+
+- [#1762](https://github.com/thirdweb-dev/js/pull/1762) [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for drop-claim-condition
+
+## 4.0.1
+
+### Patch Changes
+
+- [#1747](https://github.com/thirdweb-dev/js/pull/1747) [`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle upgradeable proxies and optimize proxy resolution
+
+- [#1695](https://github.com/thirdweb-dev/js/pull/1695) [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add optional pagination to getOwned NFTs
+
+- [#1746](https://github.com/thirdweb-dev/js/pull/1746) [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606) Thanks [@farhanW3](https://github.com/farhanW3)! - Fix for RPC Override Implementation to get user provided Url and not default RPC Url for the chain
+
+- [#1757](https://github.com/thirdweb-dev/js/pull/1757) [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update deployment and tests for MarketplaceV3 latest
+
+- Updated dependencies [[`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/contracts-js@1.3.14
+
+## 4.0.0
+
+### Major Changes
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Solana**:
+
+  - We've decided to drop support for Solana across our SDKs.
+  - Starting with this version of our SDKs all previous solana related functionality will be removed.
+  - Previous versions of our SDKs will continue to work with Solana. However, we will not be providing any further updates or bug fixes for Solana.
+  - You can read a detailed explanation of our decision [on our blog](https://blog.thirdweb.com/discontinuing-solana-support/).
+
+- [#1630](https://github.com/thirdweb-dev/js/pull/1630) [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8) Thanks [@jnsdls](https://github.com/jnsdls)! - **Dropped Support for Node 16**:
+
+  - As part of our commitment to maintain up-to-date with the evolving ecosystem and provide the best support for our users, we have made the decision to cease support for Node 16. Starting with this version, our SDKs will no longer be tested against or guaranteed to work with Node.js version 16.
+  - We encourage users to upgrade to a more recent version of Node.js to continue to benefit from the latest features, improvements, and security updates.
+  - If you are unable to upgrade to a more recent version of Node.js, you can continue to use the previous version of our SDKs. However, we will not be providing any further updates or bug fixes for Node 16.
+  - For more information on EOL status of Node 16, see [Node.js Release Cycle](https://nodejs.dev/en/about/releases/).
+
+### Patch Changes
+
+- Updated dependencies [[`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8), [`ce4608bf`](https://github.com/thirdweb-dev/js/commit/ce4608bff4783caf164ad6e21b42a827b89badf8)]:
+  - @thirdweb-dev/storage@2.0.0
+
+## 3.10.67
+
+### Patch Changes
+
+- [#1731](https://github.com/thirdweb-dev/js/pull/1731) [`ec36b13a`](https://github.com/thirdweb-dev/js/commit/ec36b13a30e0071548df0b7a6eb5299e2e65e4f9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve add/removeContract methods
+
+- [#1727](https://github.com/thirdweb-dev/js/pull/1727) [`6abb8459`](https://github.com/thirdweb-dev/js/commit/6abb8459712e387b6d8b2edf7eb16fb906c05dae) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Improve concurrent requests on NFT-related code
+
+- [#1728](https://github.com/thirdweb-dev/js/pull/1728) [`a6c36724`](https://github.com/thirdweb-dev/js/commit/a6c36724eb930ee0abbce876bb7847c859c6fb48) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Improve transfer function for user wallet
+
+## 3.10.66
+
+### Patch Changes
+
+- [#1308](https://github.com/thirdweb-dev/js/pull/1308) [`f35fbec1`](https://github.com/thirdweb-dev/js/commit/f35fbec1be14332d06e73b5f44f66975ef311d6c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Base Router for dynamic contracts
+
+## 3.10.65
+
+### Patch Changes
+
+- [#1701](https://github.com/thirdweb-dev/js/pull/1701) [`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Detect webGL platform
+
+- [#1686](https://github.com/thirdweb-dev/js/pull/1686) [`15fe4779`](https://github.com/thirdweb-dev/js/commit/15fe4779f4b99e51afe214ac3ebb31f611089787) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update & add unit test for ERC1155 Enumerable
+
+- Updated dependencies [[`04f2f7b8`](https://github.com/thirdweb-dev/js/commit/04f2f7b8ff5f19345d868fc515a24ccd6ffd0ab9)]:
+  - @thirdweb-dev/storage@1.2.11
+
+## 3.10.64
+
+### Patch Changes
+
+- Updated dependencies [[`f64b7236`](https://github.com/thirdweb-dev/js/commit/f64b7236bbcc5b15fea582db22f120d71d9e126f)]:
+  - @thirdweb-dev/chains@0.1.54
+
+## 3.10.63
+
+### Patch Changes
+
+- [#1670](https://github.com/thirdweb-dev/js/pull/1670) [`a9b4b0c5`](https://github.com/thirdweb-dev/js/commit/a9b4b0c5d875dec660694466e5e322cc574bb21b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose proxy resolver helper function
+
+- [#1681](https://github.com/thirdweb-dev/js/pull/1681) [`c7e7ec95`](https://github.com/thirdweb-dev/js/commit/c7e7ec9502b46312d36cad5177c4f4a50c34f1a3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix error handling when wallets have no funds
+
+- [#1667](https://github.com/thirdweb-dev/js/pull/1667) [`96e832cc`](https://github.com/thirdweb-dev/js/commit/96e832cc80692da38279c53f1289265b3728cb19) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve data fetching for erc20 interfaces
+
+- [#1674](https://github.com/thirdweb-dev/js/pull/1674) [`b16c09df`](https://github.com/thirdweb-dev/js/commit/b16c09df75c7193a91b832db7d9c92612ae09357) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix error on waiting for receipt after gasless tx for certain chains
+
+- [#1678](https://github.com/thirdweb-dev/js/pull/1678) [`6897ad65`](https://github.com/thirdweb-dev/js/commit/6897ad6502d585d55a8c7b2312b4af30663336c3) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Performance improvement to various function for ERC721
+
+- [#1672](https://github.com/thirdweb-dev/js/pull/1672) [`ee028e12`](https://github.com/thirdweb-dev/js/commit/ee028e12092fd306f076f6ea1d49a2295802dd6b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve data fetching for gas & transaction methods
+
+- [#1666](https://github.com/thirdweb-dev/js/pull/1666) [`d28b1c0f`](https://github.com/thirdweb-dev/js/commit/d28b1c0f1e1e53eedc8f331be555e22b64fb920d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve data fetching for some ERC721 modules
+
+- [#1679](https://github.com/thirdweb-dev/js/pull/1679) [`de05c2da`](https://github.com/thirdweb-dev/js/commit/de05c2da174a69315f2d34dd32a811bbd9a0b604) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add unit test for getting all owners of ERC721 collection
+
+- [#1668](https://github.com/thirdweb-dev/js/pull/1668) [`bdb2ccc7`](https://github.com/thirdweb-dev/js/commit/bdb2ccc7a66c33ec5dc331b6fa792e6361769e88) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Slight improvement for getContract() and getContractFromAbi()
+
+## 3.10.62
+
+### Patch Changes
+
+- [#1660](https://github.com/thirdweb-dev/js/pull/1660) [`c29042b7`](https://github.com/thirdweb-dev/js/commit/c29042b71e266cb11d70d67f0fe2ffcc0fc1f5fa) Thanks [@kien-ngo](https://github.com/kien-ngo)! - improve performance of gas estimation
+
+- [#1643](https://github.com/thirdweb-dev/js/pull/1643) [`b5b7e524`](https://github.com/thirdweb-dev/js/commit/b5b7e5243df83e3ab60d0917c099fb6967b63439) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for prepare to account extension
+
+- [#1661](https://github.com/thirdweb-dev/js/pull/1661) [`b6df6b89`](https://github.com/thirdweb-dev/js/commit/b6df6b895723947427c515411a7a833edaa324c6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix not resolving custom currencies for balance calls
+
+- [#1624](https://github.com/thirdweb-dev/js/pull/1624) [`48906a9d`](https://github.com/thirdweb-dev/js/commit/48906a9d8ef2cfdd9ac489822a72d50cbd825628) Thanks [@adam-maj](https://github.com/adam-maj)! - fromSigner should respect network if possible
+
+- Updated dependencies [[`dd3d1a87`](https://github.com/thirdweb-dev/js/commit/dd3d1a87c2dadbadecc9ac3722941a8992bc8131), [`d5fafdde`](https://github.com/thirdweb-dev/js/commit/d5fafddea58bc307c9b514a1c9578cafd18b5861)]:
+  - @thirdweb-dev/chains@0.1.53
+
+## 3.10.61
+
+### Patch Changes
+
+- [#1617](https://github.com/thirdweb-dev/js/pull/1617) [`3fd39cea`](https://github.com/thirdweb-dev/js/commit/3fd39cea0df71f80255106329db62660f2fd6e3a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update addresses
+
+- [#1534](https://github.com/thirdweb-dev/js/pull/1534) [`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - internal(sdk): centralize access of the ethers contract within the js SDK.
+
+- Updated dependencies [[`48295c06`](https://github.com/thirdweb-dev/js/commit/48295c060499371035980d08e362d9858d0fc18b)]:
+  - @thirdweb-dev/chains@0.1.52
+
+## 3.10.60
+
+### Patch Changes
+
+- [#1594](https://github.com/thirdweb-dev/js/pull/1594) [`c0070c2c`](https://github.com/thirdweb-dev/js/commit/c0070c2cc08f23ffe50991d9d3090fcdcd1e720c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle default gas values for `sdk.wallet.sendRawTransaction()`, expose `sdk.wallet.executeRawTransasction()` and expose `fromAddress` in `contract.erc1155.airdrop()`
+
+- [#1600](https://github.com/thirdweb-dev/js/pull/1600) [`f55fd291`](https://github.com/thirdweb-dev/js/commit/f55fd291bf751c44608dd9ef6b3a29fb36c2de93) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update addresses
+
+- [#1591](https://github.com/thirdweb-dev/js/pull/1591) [`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update airdrop function names on contracts and sdk to resolve abi conflict
+
+- [#1609](https://github.com/thirdweb-dev/js/pull/1609) [`6df24a2e`](https://github.com/thirdweb-dev/js/commit/6df24a2eb9b922a31bdcb0ccb260d99bdcbb1f17) Thanks [@arcoraven](https://github.com/arcoraven)! - Fixes maxFeePerGas value set incorrectly
+
+- [#1607](https://github.com/thirdweb-dev/js/pull/1607) [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0) Thanks [@nkrishang](https://github.com/nkrishang)! - Use IAccountFactoryCore
+
+- [#1589](https://github.com/thirdweb-dev/js/pull/1589) [`7e564163`](https://github.com/thirdweb-dev/js/commit/7e564163cef43f9196250156373de9bf9fdbf334) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom gasprice for bittorrent mainnet create2 factory deployment
+
+- Updated dependencies [[`d50863f4`](https://github.com/thirdweb-dev/js/commit/d50863f455ffbfd433924da8fe94394c42408bdc), [`8b73abfd`](https://github.com/thirdweb-dev/js/commit/8b73abfd83c7a8235f5d65f07dc3ad1296b40ae0), [`3056c34c`](https://github.com/thirdweb-dev/js/commit/3056c34c646e1a8c80f1323899c163e0fa867fd1)]:
+  - @thirdweb-dev/contracts-js@1.3.13
+  - @thirdweb-dev/chains@0.1.51
+
 ## 3.10.59
 
 ### Patch Changes

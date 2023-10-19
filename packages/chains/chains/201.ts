@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MOAC testnet",
   "chain": "MOAC",
-  "rpc": [
-    "https://moac-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://gateway.moac.io/testnet"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "MOAC",
-    "symbol": "mc",
-    "decimals": 18
-  },
-  "infoURL": "https://moac.io",
-  "shortName": "moactest",
   "chainId": 201,
-  "networkId": 201,
   "explorers": [
     {
       "name": "moac testnet explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "moac-testnet"
+  "faucets": [],
+  "features": [],
+  "infoURL": "https://moac.io",
+  "name": "MOAC testnet",
+  "nativeCurrency": {
+    "name": "MOAC",
+    "symbol": "mc",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://moac-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gateway.moac.io/testnet"
+  ],
+  "shortName": "moactest",
+  "slug": "moac-testnet",
+  "testnet": true
 } as const satisfies Chain;

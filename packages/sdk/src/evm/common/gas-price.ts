@@ -1,5 +1,4 @@
 import { ChainId } from "../constants/chains/ChainId";
-import fetch from "cross-fetch";
 import { BigNumber, utils, providers } from "ethers";
 import { Mumbai, Polygon } from "@thirdweb-dev/chains";
 import { isBrowser } from "./utils";
@@ -25,7 +24,7 @@ export async function getDefaultGasOverrides(provider: providers.Provider) {
   );
   if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
     return {
-      maxFeePerGas: feeData.maxPriorityFeePerGas,
+      maxFeePerGas: feeData.maxFeePerGas,
       maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
     };
   } else {
@@ -41,10 +40,10 @@ export async function getDynamicFeeData(
   let maxFeePerGas: null | BigNumber = null;
   let maxPriorityFeePerGas: null | BigNumber = null;
 
-  const [chainId, block, eth_maxPriorityFeePerGas] = await Promise.all([
-    (await provider.getNetwork()).chainId,
-    await provider.getBlock("latest"),
-    await provider.send("eth_maxPriorityFeePerGas", []).catch(() => null),
+  const [{ chainId }, block, eth_maxPriorityFeePerGas] = await Promise.all([
+    provider.getNetwork(),
+    provider.getBlock("latest"),
+    provider.send("eth_maxPriorityFeePerGas", []).catch(() => null),
   ]);
 
   const baseBlockFee =
@@ -55,10 +54,6 @@ export async function getDynamicFeeData(
   if (chainId === Mumbai.chainId || chainId === Polygon.chainId) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
-    console.log(
-      "DYNAMIC: polygon fee",
-      utils.formatUnits(maxPriorityFeePerGas, "gwei"),
-    );
   } else if (eth_maxPriorityFeePerGas) {
     // prioritize fee from eth_maxPriorityFeePerGas
     maxPriorityFeePerGas = BigNumber.from(eth_maxPriorityFeePerGas);
@@ -116,9 +111,11 @@ function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
   }
 }
 
-const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ utils.parseUnits("31", "gwei");
+const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ (() =>
+  utils.parseUnits("31", "gwei"))();
 
-const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ utils.parseUnits("1", "gwei");
+const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ (() =>
+  utils.parseUnits("1", "gwei"))();
 
 /**
  * @internal

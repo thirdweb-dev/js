@@ -1,15 +1,3 @@
-import { QueryAllParams } from "../../../core/schema/QueryParams";
-import { NFT } from "../../../core/schema/nft";
-import { resolveAddress } from "../../common/ens/resolveAddress";
-import { buildTransactionFunction } from "../../common/transactions";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
-import { BaseERC721 } from "../../types/eips";
-import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkInput } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { Erc721 } from "./erc-721";
-import { Transaction } from "./transactions";
 import type {
   DropERC721,
   SignatureDrop,
@@ -17,6 +5,18 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
+import { QueryAllParams } from "../../../core/schema/QueryParams";
+import { NFT } from "../../../core/schema/nft";
+import { resolveAddress } from "../../common/ens/resolveAddress";
+import { buildTransactionFunction } from "../../common/transactions";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { BaseERC721 } from "../../types/eips";
+import { UpdateableNetwork } from "../interfaces/contract";
+import { NetworkInput } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Erc721 } from "./erc-721";
+import { Transaction } from "./transactions";
 
 /**
  * Standard ERC721 NFT functions
@@ -60,7 +60,7 @@ export class StandardErc721<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /**
@@ -95,13 +95,17 @@ export class StandardErc721<
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
-    return this.erc721.getOwned(walletAddress);
+    return this.erc721.getOwned(walletAddress, queryParams);
   }
 
   /**

@@ -1,31 +1,30 @@
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { providers } from "ethers";
 import {
   THIRDWEB_DEPLOYER,
   fetchPublishedContractFromPolygon,
 } from "../common/any-evm-utils/fetchPublishedContractFromPolygon";
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
+import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { ALL_ROLES } from "../common/role";
-import type { NetworkInput } from "../core/types";
 import { getSignerAndProvider } from "../constants/urls";
+import type { NetworkInput } from "../core/types";
+import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
+import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
+import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
+import { PackContractSchema } from "../schema/contracts/packs";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
-import { Address } from "../schema/shared/Address";
-import { PackContractSchema } from "../schema/contracts/packs";
-import { SDKOptions } from "../schema/sdk-options";
 import { VoteContractSchema } from "../schema/contracts/vote";
-import { Abi, AbiSchema } from "../schema/contracts/custom";
-import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
-import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { providers } from "ethers";
-import type { SmartContract as SmartContractType } from "./smart-contract";
-import { getCompositeABIfromRelease } from "../common/plugin/getCompositeABIfromRelease";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { SDKOptions } from "../schema/sdk-options";
+import { Address } from "../schema/shared/Address";
 import {
   ADMIN_ROLE,
   MARKETPLACE_CONTRACT_ROLES,
@@ -34,6 +33,7 @@ import {
   PACK_CONTRACT_ROLES,
   TOKEN_DROP_CONTRACT_ROLES,
 } from "./contractRoles";
+import type { SmartContract as SmartContractType } from "./smart-contract";
 
 const prebuiltContractTypes = {
   vote: "vote",
@@ -239,14 +239,14 @@ export const MarketplaceV3Initializer = {
 
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
-      return await getCompositePluginABI(address, abi, provider, {}, storage);
+      return await getCompositeABI(address, abi, provider, {}, storage);
     }
 
     // Deprecated - only needed for backwards compatibility with non-published contracts - should remove in v4
     const localAbi = (
       await import("@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.json")
     ).default;
-    return await getCompositePluginABI(
+    return await getCompositeABI(
       address,
       AbiSchema.parse(localAbi || []),
       provider,
