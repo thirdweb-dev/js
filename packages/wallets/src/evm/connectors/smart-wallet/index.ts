@@ -24,7 +24,6 @@ import {
   Transaction,
   TransactionResult,
 } from "@thirdweb-dev/sdk";
-import { Transaction as RawTransaction } from "ethers";
 import { AccountAPI } from "./lib/account";
 import { AddressZero } from "@account-abstraction/utils";
 
