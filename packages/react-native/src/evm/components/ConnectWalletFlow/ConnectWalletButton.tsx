@@ -95,6 +95,8 @@ export const ConnectWalletButton = ({
     <ThemeProvider theme={theme ? theme : appTheme}>
       <BaseButton
         backgroundColor="buttonBackgroundColor"
+        borderColor="buttonBorderColor"
+        borderWidth={1}
         onPress={onConnectWalletPress}
         style={styles.connectWalletButton}
       >
