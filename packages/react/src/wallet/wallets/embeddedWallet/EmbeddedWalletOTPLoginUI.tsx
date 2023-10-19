@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { EmbeddedWallet, RecoveryShareManagement } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
@@ -19,7 +19,7 @@ type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 type SentEmailInfo = {
   isNewDevice: boolean;
   isNewUser: boolean;
-  recoveryShareManagement: "USER_MANAGED" | "AWS_MANAGED";
+  recoveryShareManagement: RecoveryShareManagement;
 };
 
 type VerificationStatus = "verifying" | "invalid" | "valid" | "idle";

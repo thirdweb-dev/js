@@ -1,11 +1,16 @@
 import {
   AuthProvider,
   AuthStoredTokenWithCookieReturnType,
-  RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import type { CognitoUser } from "amazon-cognito-identity-js";
 import { Auth } from "aws-amplify";
 
+import {
+  RecoveryShareManagement,
+  SendEmailOtpReturnType,
+} from "@thirdweb-dev/wallets";
+import { InAppBrowser } from "react-native-inappbrowser-reborn";
+import { OauthOption } from "../types";
 import {
   generateAuthTokenFromCognitoEmailOtp,
   getEmbeddedWalletUserDetail,
@@ -16,12 +21,9 @@ import {
   cognitoEmailSignUp,
 } from "./helpers/auth/cognitoAuth";
 import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
+import { ROUTE_HEADLESS_GOOGLE_LOGIN } from "./helpers/constants";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
-import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
-import { OauthOption } from "../types";
-import { ROUTE_HEADLESS_GOOGLE_LOGIN } from "./helpers/constants";
 
 export async function sendEmailOTP(
   email: string,
@@ -60,7 +62,7 @@ export async function sendEmailOTP(
     ? {
         isNewUser: result.isNewUser,
         isNewDevice: true,
-        recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
+        recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
       }
     : {
         isNewUser: result.isNewUser,
@@ -68,7 +70,7 @@ export async function sendEmailOTP(
           clientId,
           result.walletUserId ?? "",
         )),
-        recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
+        recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
       };
 }
 
