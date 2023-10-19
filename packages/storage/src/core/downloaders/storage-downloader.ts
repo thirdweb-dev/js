@@ -6,7 +6,6 @@ import {
   IpfsDownloaderOptions,
   SingleDownloadOptions,
 } from "../../types";
-import fetch, { Response } from "cross-fetch";
 import pkg from "../../../package.json";
 
 /**

@@ -5,11 +5,11 @@ import { ReactNode, useState } from "react";
 import Box from "../../base/Box";
 import Text from "../../base/Text";
 import ThirdwebLogo from "../../../assets/thirdweb-logo";
-import { useAppTheme } from "../../../styles/hooks";
 import { ChooseWalletContent } from "./ChooseWalletContent";
 import { BaseButton, ImageSvgUri, WalletButton } from "../../base";
 import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
@@ -34,7 +34,7 @@ export function ChooseWallet({
   termsOfServiceUrl,
   privacyPolicyUrl,
 }: ChooseWalletProps) {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const themeLightDark = useTheme();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnectAWalletEnabled, setIsConnectAWalletEnabled] = useState(false);
@@ -122,13 +122,7 @@ export function ChooseWallet({
                   color={theme.colors.backgroundInverted}
                 />
               )}
-              <Text
-                variant="header"
-                ml="xxs"
-                fontWeight="700"
-                fontSize={20}
-                lineHeight={24}
-              >
+              <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
                 Connect
               </Text>
             </Box>
@@ -180,7 +174,6 @@ export function ChooseWallet({
       !isConnectAWalletEnabled &&
       (guestWallet || connectionWallets.length > 0) ? (
         <Box
-          mb="md"
           mt="md"
           marginHorizontal="xl"
           flexDirection="row"
@@ -202,7 +195,7 @@ export function ChooseWallet({
             marginHorizontal="xl"
             paddingHorizontal="none"
             paddingVertical="none"
-            mb="md"
+            mt="md"
             walletIconUrl={connectionWallets[0].meta.iconURL}
             name={connectionWallets[0].meta.name}
             onPress={onSingleWalletPress}
@@ -212,6 +205,7 @@ export function ChooseWallet({
             marginHorizontal="xl"
             justifyContent="center"
             borderRadius="lg"
+            mt="md"
             paddingVertical="md"
             borderColor="border"
             flexDirection="row"
@@ -230,9 +224,7 @@ export function ChooseWallet({
                 </Box>
               );
             })}
-            <Text variant="bodySmall" fontWeight="700">
-              Connect a wallet
-            </Text>
+            <Text variant="bodySmallBold">Connect a wallet</Text>
           </BaseButton>
         )
       ) : null}
@@ -253,17 +245,13 @@ export function ChooseWallet({
               color={theme.colors.textPrimary}
             />
           ) : (
-            <Text variant="bodySmall" fontWeight="700">
-              Continue as guest
-            </Text>
+            <Text variant="bodySmallBold">Continue as guest</Text>
           )}
         </BaseButton>
       ) : null}
       {showToSPrivacyPolicy ? (
         <Box
-          mt="md"
-          pt="md"
-          height={50}
+          mt="sm"
           marginHorizontal={!isConnectAWalletEnabled ? "xl" : "none"}
           alignItems="center"
         >

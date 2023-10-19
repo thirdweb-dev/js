@@ -114,8 +114,10 @@ export async function fetchTokenMetadataForContract(
     ERC165MetadataAbi,
     provider,
   ) as IERC165;
-  const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-  const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+  const [isERC721, isERC1155] = await Promise.all([
+    erc165.supportsInterface(InterfaceId_IERC721),
+    erc165.supportsInterface(InterfaceId_IERC1155),
+  ]);
   if (isERC721) {
     const erc721 = new Contract(
       contractAddress,

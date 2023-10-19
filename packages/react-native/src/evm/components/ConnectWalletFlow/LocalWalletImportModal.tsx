@@ -16,7 +16,7 @@ import * as FileSystem from "expo-file-system";
 import { TWModal } from "../base/modal/TWModal";
 import { localWallet } from "../../wallets/wallets/local-wallet";
 import { TextInput } from "../base";
-import { useAppTheme } from "../../styles/hooks";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
@@ -37,7 +37,7 @@ export const LocalWalletImportModal = ({
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const createLocalWalletFromJsonFile = async () => {
     if (!jsonFile || !password) {
@@ -210,6 +210,10 @@ export const LocalWalletImportModal = ({
               placeholder: "Private key / Mnemonic",
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: onPrivateKeyEntered,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+              },
             }}
             containerProps={{ pl: "xxs" }}
           />

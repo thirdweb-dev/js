@@ -1,5 +1,5 @@
 import { resolveAddress } from "../common/ens/resolveAddress";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { SmartContract } from "../contracts/smart-contract";
 import { NetworkInput } from "../core/types";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
@@ -44,7 +44,7 @@ export async function getContractFromAbi(
   const contract = new SmartContract(
     signer || provider,
     resolvedAddress,
-    await getCompositePluginABI(
+    await getCompositeABI(
       resolvedAddress,
       AbiSchema.parse(parsedAbi),
       provider,

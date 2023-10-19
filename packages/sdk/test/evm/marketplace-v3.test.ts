@@ -16,8 +16,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect, assert } from "chai";
 import { BigNumber, ethers } from "ethers";
 
-global.fetch = require("cross-fetch");
-
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
 
 /**
@@ -48,11 +46,11 @@ describe("Marketplace V3", async () => {
         MarketplaceV3Initializer.contractType,
         {
           name: "Test Marketplace",
+          platform_fee_recipient: adminWallet.address,
         },
       ),
       "marketplace-v3",
     );
-
     dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(
         NFTCollectionInitializer.contractType,

@@ -4,8 +4,6 @@ import { ethers } from "ethers";
 import { Split, SplitInitializer, TokenInitializer } from "../../src/evm";
 import { sdk, signers } from "./before-setup";
 
-global.fetch = require("cross-fetch");
-
 describe("Splits Contract", async () => {
   let splitsContract: Split;
   let adminWallet: SignerWithAddress,

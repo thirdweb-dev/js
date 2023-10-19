@@ -10,7 +10,6 @@ export const changes = [
     exports: {
       ".": "./src/index.ts",
       "./evm": "./src/evm/index.ts",
-      "./solana": "./src/solana/index.ts",
     },
   },
   // react-core
@@ -20,7 +19,6 @@ export const changes = [
     exports: {
       ".": "./src/index.ts",
       "./evm": "./src/evm/index.ts",
-      "./solana": "./src/solana/index.ts",
     },
   },
   // wallets
@@ -30,21 +28,16 @@ export const changes = [
     exports: {
       ".": "./src/index.ts",
       "./evm": "./src/evm/index.ts",
-      "./solana": "./src/solana/index.ts",
       "./evm/wallets/base": "./src/evm/wallets/base.ts",
       "./evm/wallets/ethers": "./src/evm/wallets/ethers.ts",
       "./evm/wallets/aws-kms": "./src/evm/wallets/awa-kms.ts",
-      "./solana/wallets/base": "./src/solana/wallets/base.ts",
       "./evm/wallets/abstract": "./src/evm/wallets/abstract.ts",
       "./evm/wallets/injected": "./src/evm/wallets/injected.ts",
       "./evm/wallets/metamask": "./src/evm/wallets/metamask.ts",
-      "./solana/wallets/signer": "./src/solana/wallets/signer.ts",
-      "./solana/wallets/keypair": "./src/solana/wallets/keypair.ts",
       "./evm/wallets/private-key": "./src/evm/wallets/private-key.ts",
       "./evm/wallets/local-wallet": "./src/evm/wallets/local-wallet.ts",
       "./evm/wallets/wallet-connect":
         "./src/evm/connectors/wallet-connect/index.ts",
-      "./solana/wallets/private-key": "./src/solana/wallets/private-key.ts",
       "./evm/wallets/coinbase-wallet": "./src/evm/wallets/coinbase-wallet.ts",
       "./evm/connectors/injected": "./src/evm/connectors/injected/index.ts",
       "./evm/connectors/metamask": "./src/evm/connectors/metamask/index.ts",

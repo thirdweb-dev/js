@@ -285,12 +285,11 @@ export class MarketplaceAuction {
     async (
       listings: NewAuctionListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createListing.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createListing.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -576,7 +575,7 @@ export class MarketplaceAuction {
     const [currentBidBufferBps, winningBid, listing] = await Promise.all([
       this.getBidBufferBps(),
       this.getWinningBid(listingId),
-      await this.validateListing(BigNumber.from(listingId)),
+      this.validateListing(BigNumber.from(listingId)),
     ]);
 
     const currentBidOrReservePrice = winningBid

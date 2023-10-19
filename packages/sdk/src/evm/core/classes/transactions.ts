@@ -42,7 +42,6 @@ import {
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
-import fetch from "cross-fetch";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";

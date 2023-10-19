@@ -23,8 +23,6 @@ import {
   Forwarder__factory,
 } from "@thirdweb-dev/contracts-js";
 
-global.fetch = require("cross-fetch");
-
 /**
  * Throughout these tests, the admin wallet will be performing the airdrops.
  *

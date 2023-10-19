@@ -30,7 +30,6 @@ export default {
   "rpc": [
     "https://kava-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.testnet.kava.io",
-    "https://kava-evm-testnet.rpc.thirdweb.com",
     "wss://wevm.testnet.kava.io"
   ],
   "shortName": "tkava",

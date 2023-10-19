@@ -270,7 +270,6 @@ const main = async () => {
       "Explicitly tell the CLI to bootstrap the app using pnpm",
     )
     .option("--framework [name]", "The preferred framework.")
-    .option("--solana", "Initialize as a Solana project.")
     .option("--evm", "Initialize as an Ethereum project.")
     .option(
       "-t, --template [name]",

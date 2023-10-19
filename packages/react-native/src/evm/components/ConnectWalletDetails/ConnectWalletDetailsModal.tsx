@@ -142,6 +142,8 @@ export const ConnectWalletDetailsModal = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             justifyContent="space-between"
             style={styles.exportWallet}
@@ -159,6 +161,8 @@ export const ConnectWalletDetailsModal = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             justifyContent="space-between"
             style={styles.exportWallet}
@@ -238,7 +242,8 @@ export const ConnectWalletDetailsModal = ({
                 ) : null}
               </BaseButton>
             ) : null}
-            {activeWallet?.walletId === EmbeddedWallet.id ? (
+            {activeWallet?.walletId === EmbeddedWallet.id &&
+            (activeWallet as EmbeddedWallet).getEmail() ? (
               <Box flexDirection="row" alignItems="center" mt="md">
                 <ActiveDot width={10} height={10} />
                 <Text variant="bodySmallSecondary" ml="xxs">
@@ -246,7 +251,11 @@ export const ConnectWalletDetailsModal = ({
                 </Text>
               </Box>
             ) : null}
-            <Box flexDirection="row" justifyContent="space-evenly" mt="md">
+            <Box
+              flexDirection="row"
+              justifyContent="space-evenly"
+              marginVertical="md"
+            >
               <SendButton supportedTokens={supportedTokens} />
               <ReceiveButton />
             </Box>
@@ -318,8 +327,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 12,
-    borderWidth: 0.5,
     paddingHorizontal: 10,
     paddingVertical: 12,
     minWidth: 200,
@@ -330,7 +337,7 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    marginTop: 24,
     marginBottom: 8,
+    marginTop: 12,
   },
 });

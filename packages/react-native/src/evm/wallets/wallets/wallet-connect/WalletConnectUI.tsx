@@ -19,9 +19,9 @@ import {
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
 import { WalletConnect } from "./WalletConnect";
-import { useAppTheme } from "../../../styles/hooks";
 import { WalletConnectButton } from "./WalletConnectButton";
 import { ModalHeaderTextClose } from "../../../components/base";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 type WCWallet = {
   iconURL: string;
@@ -36,12 +36,12 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.5;
 
 export function WalletConnectUI({
-  close,
+  connected,
   walletConfig,
   goBack,
   projectId,
 }: ConnectUIProps<WalletConnect> & { projectId: string }) {
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
   const [wallets, setWallets] = useState<WCWallet[]>([]);
   const [error, setError] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -140,13 +140,13 @@ export function WalletConnectUI({
         console.error(`Error connecting with WalletConnect: ${e}`);
       })
       .finally(() => {
-        close();
+        connected();
       });
   };
 
   const onClosePress = () => {
     setConnectionStatus("disconnected");
-    close();
+    connected();
   };
 
   return (
@@ -194,6 +194,7 @@ export function WalletConnectUI({
                       style={{
                         ...styles.textInput,
                         color: theme.colors.textSecondary,
+                        fontFamily: theme.textVariants.defaults.fontFamily,
                       }}
                     />
                   </Box>

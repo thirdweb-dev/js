@@ -4,14 +4,14 @@ export default {
   "chainId": 11115,
   "explorers": [
     {
-      "name": "Astra PingPub Explorer",
-      "url": "https://ping.astranaut.dev/astra",
-      "standard": "none"
-    },
-    {
       "name": "Astra EVM Explorer",
       "url": "https://explorer.astranaut.dev",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Astra PingPub Explorer",
+      "url": "https://ping.astranaut.dev/astra",
+      "standard": "none"
     }
   ],
   "faucets": [

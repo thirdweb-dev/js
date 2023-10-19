@@ -30,7 +30,6 @@ export default {
     "https://evm.kava.io",
     "https://evm2.kava.io",
     "https://kava-rpc.gateway.pokt.network",
-    "https://kava-evm.rpc.thirdweb.com",
     "wss://wevm.kava.io",
     "wss://wevm2.kava.io",
     "https://kava-evm.publicnode.com",
