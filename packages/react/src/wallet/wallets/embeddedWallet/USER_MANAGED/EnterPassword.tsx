@@ -107,7 +107,7 @@ export function EnterPasswordOrRecovery(props: {
 
           <Spacer y="md" />
 
-          <Button fullWidth variant="accent" type="submit">
+          <Button fullWidth variant="accent" type="submit" disabled={loading}>
             {loading ? (
               <>
                 <Spinner size="md" color="accentButtonText" />
@@ -218,7 +218,7 @@ function EnterRecovery(props: {
 
           <Spacer y="md" />
 
-          <Button fullWidth variant="accent" type="submit">
+          <Button fullWidth variant="accent" type="submit" disabled={loading}>
             {loading ? (
               <>
                 <Spinner size="md" color="accentButtonText" />

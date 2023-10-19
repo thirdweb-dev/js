@@ -100,6 +100,7 @@ export function CreatePassword(props: {
           <Spacer y="md" />
 
           <Button
+            disabled={loading}
             variant="accent"
             fullWidth
             style={{
