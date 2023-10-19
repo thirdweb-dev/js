@@ -79,6 +79,10 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       return;
     }
 
+    console.log({
+      emailStatus,
+    });
+
     const isUserManaged =
       emailStatus.recoveryShareManagement === "USER_MANAGED";
 
@@ -89,7 +93,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       // USER_MANAGED
       if (isUserManaged) {
         if (emailStatus.isNewUser) {
-          // check if OTP is valid
           try {
             await wallet.connect({
               loginType: "headless_email_otp_verification",
@@ -117,14 +120,14 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               throw e;
             }
           }
-        }
-        else {
-            await wallet.connect({
-              loginType: "headless_email_otp_verification",
-              email,
-              otp,
-            });
-        
+        } else {
+          await wallet.connect({
+            loginType: "headless_email_otp_verification",
+            email,
+            otp,
+          });
+          setConnectedWallet(wallet);
+          props.connected();
         }
       }
 
