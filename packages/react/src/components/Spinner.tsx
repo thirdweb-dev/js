@@ -10,8 +10,8 @@ export const Spinner: React.FC<{
   return (
     <Svg
       style={{
-        width: iconSize[props.size],
-        height: iconSize[props.size],
+        width: iconSize[props.size] + "px",
+        height: iconSize[props.size] + "px",
       }}
       viewBox="0 0 50 50"
     >

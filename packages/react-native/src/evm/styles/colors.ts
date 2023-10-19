@@ -1,6 +1,7 @@
 export type Palette = {
   buttonBackgroundColor: string;
   buttonTextColor: string;
+  buttonBorderColor: string;
 
   accentButtonColor: string;
   accentButtonTextColor: string;
@@ -41,6 +42,7 @@ export const paletteBase = {
 
 export const paletteLight: Palette = {
   buttonBackgroundColor: "black",
+  buttonBorderColor: "black",
   buttonTextColor: "white",
 
   accentButtonColor: "#3385FF",
@@ -67,6 +69,7 @@ export const paletteLight: Palette = {
 
 export const paletteDark: Palette = {
   buttonBackgroundColor: "white",
+  buttonBorderColor: "white",
   buttonTextColor: "black",
 
   accentButtonColor: "#3385FF",
