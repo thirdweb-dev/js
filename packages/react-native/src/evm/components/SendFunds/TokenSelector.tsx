@@ -1,6 +1,9 @@
-import { useBalance, useChain, useChainId } from "@thirdweb-dev/react-core";
-
-import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  useBalance,
+  useChain,
+  useChainId,
+} from "@thirdweb-dev/react-core";
 import React, { useState } from "react";
 import { TokenInfo, SupportedTokens } from "./defaultTokens";
 import { utils } from "ethers";

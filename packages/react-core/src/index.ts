@@ -2,4 +2,4 @@
 export * from "./evm";
 
 // export types from thirdweb-dev/sdk
-export type * from "@thirdweb-dev/sdk";
+export * from "@thirdweb-dev/sdk";
