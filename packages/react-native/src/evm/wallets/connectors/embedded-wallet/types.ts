@@ -6,6 +6,11 @@ import type {
   AuthProvider,
 } from "@paperxyz/embedded-wallet-service-sdk";
 
+export type CustomAuth = {
+  jwtToken: string;
+  encryptionKey: string;
+};
+
 export type OauthOptions = {
   providers: AuthProvider[];
   redirectUrl: string;

@@ -15,7 +15,11 @@ import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
 } from "./helpers/auth/cognitoAuth";
-import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
+import {
+  postPaperAuth,
+  postPaperAuthUserManaged,
+  prePaperAuth,
+} from "./helpers/auth/middleware";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
@@ -201,7 +205,7 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 }
 
 export async function customJwt(authOptions: AuthOptions, clientId: string) {
-  const { jwtToken } = authOptions;
+  const { jwtToken, encryptionKey } = authOptions;
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
@@ -233,7 +237,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await postPaperAuth(toStoreToken, clientId);
+    await postPaperAuthUserManaged(toStoreToken, clientId, encryptionKey);
 
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
