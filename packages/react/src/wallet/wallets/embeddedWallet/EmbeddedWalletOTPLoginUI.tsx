@@ -118,6 +118,14 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             }
           }
         }
+        else {
+            await wallet.connect({
+              loginType: "headless_email_otp_verification",
+              email,
+              otp,
+            });
+        
+        }
       }
 
       // AWS_MANAGED
