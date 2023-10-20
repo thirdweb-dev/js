@@ -130,6 +130,10 @@ const ConnectAppField = () => {
               placeholder: "wc://...",
               placeholderTextColor: theme.colors.textSecondary,
               numberOfLines: 1,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+              },
             }}
             containerProps={{
               flex: 1,

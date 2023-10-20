@@ -19,7 +19,10 @@ import BaseButton from "../../../components/base/BaseButton";
 import * as Clipboard from "expo-clipboard";
 import { StyleSheet } from "react-native";
 import { EmbeddedSocialConnection } from "./EmbeddedSocialConnection";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 const OTP_LENGTH = 6;
 
@@ -30,6 +33,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   onLocallyConnected,
   ...props
 }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const [values, setValues] = useState<string[]>(
@@ -180,7 +184,9 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   return (
     <Box marginHorizontal="xl">
       <ConnectWalletHeader
-        middleContent={<Text variant="header">Sign In</Text>}
+        middleContent={
+          <Text variant="header">{l.embedded_wallet.sign_in}</Text>
+        }
         subHeaderText={"Please enter the code sent to"}
         onBackPress={goBack}
         onClose={connected}
@@ -256,7 +262,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
             />
           ) : (
             <Text variant="bodySmallSecondary" color="linkPrimary">
-              Request new code
+              {l.embedded_wallet.request_new_code}
             </Text>
           )}
         </BaseButton>

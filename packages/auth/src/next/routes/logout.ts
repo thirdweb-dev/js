@@ -37,7 +37,7 @@ export default async function handler(
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(Date.now() + 5 * 1000),
       httpOnly: true,
-      secure: true,
+      secure: ctx.cookieOptions?.secure || true,
     }),
   );
 
