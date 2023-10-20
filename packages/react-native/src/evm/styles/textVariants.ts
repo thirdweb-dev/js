@@ -38,6 +38,13 @@ export const textVariants = {
     fontSize: 16,
     lineHeight: 24,
   },
+  bodyLargeBold: {
+    color: "textPrimary",
+    textAlign: "center",
+    fontWeight: "700",
+    fontSize: 16,
+    lineHeight: 24,
+  },
   bodySmall: {
     color: "textPrimary",
     textAlign: "center",
