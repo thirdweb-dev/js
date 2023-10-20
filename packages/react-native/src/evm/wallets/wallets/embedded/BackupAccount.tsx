@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text, Toast } from "../../../components/base";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 import CopyIcon from "../../../assets/copy";
 import CheckBox from "@react-native-community/checkbox";
 import * as Clipboard from "expo-clipboard";
@@ -12,6 +15,7 @@ export type EnterPasswordProps = {
 };
 
 export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [errorMessage] = useState<string>();
@@ -41,7 +45,9 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
   return (
     <Box marginHorizontal="xl">
       <ConnectWalletHeader
-        middleContent={<Text variant="header">Backup your account</Text>}
+        middleContent={
+          <Text variant="header">{l.embedded_wallet.backup_your_account}</Text>
+        }
         subHeaderText={
           "Copy or download these codes and keep them safe. You will need these to recover access to your account if you forget your password. These have also been sent to the email address associated with your account"
         }
@@ -85,7 +91,7 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
             onValueChange={(newValue) => setToggleCheckBox(newValue)}
           />
           <Text variant="bodySmallSecondary" color="linkPrimary">
-            Learn More
+            {l.common.learn_more}
           </Text>
         </BaseButton>
         <BaseButton
@@ -96,7 +102,7 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
           onPress={onNextPress}
         >
           <Text variant="bodySmallSecondary" color="linkPrimary">
-            Next
+            {l.common.next}
           </Text>
         </BaseButton>
       </Box>

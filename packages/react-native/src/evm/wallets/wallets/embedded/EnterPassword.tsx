@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text } from "../../../components/base";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 import { PasswordInput } from "../../../components/PasswordInput";
 
 export type EnterPasswordProps = {
@@ -18,6 +21,7 @@ export const EnterPassword = ({
   email,
   type,
 }: EnterPasswordProps) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [checkingPass, setCheckingPass] = useState<boolean>(false);
@@ -67,7 +71,7 @@ export const EnterPassword = ({
             onPress={onForgotPress}
           >
             <Text variant="bodySmallSecondary" color="linkPrimary">
-              Forgot password
+              {l.embedded_wallet.forgot_password}
             </Text>
           </BaseButton>
         )}
@@ -83,7 +87,7 @@ export const EnterPassword = ({
         {isCreatePassword ? (
           <BaseButton onPress={onLearnMorePress}>
             <Text variant="bodySmallSecondary" color="linkPrimary">
-              Learn More
+              {l.common.learn_more}
             </Text>
           </BaseButton>
         ) : null}
@@ -101,7 +105,7 @@ export const EnterPassword = ({
             />
           ) : (
             <Text variant="bodySmallSecondary" color="linkPrimary">
-              Next
+              {l.common.next}
             </Text>
           )}
         </BaseButton>

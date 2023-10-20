@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text, TextInput } from "../../../components/base";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 export type EnterPasswordProps = {
   goBack: () => void;
@@ -10,6 +13,7 @@ export type EnterPasswordProps = {
 };
 
 export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [checkingRecoveryCode, setCheckingRecoveryCode] =
@@ -26,7 +30,9 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
     <Box marginHorizontal="xl">
       <ConnectWalletHeader
         middleContent={
-          <Text variant="header">Enter account recovery code</Text>
+          <Text variant="header">
+            {l.embedded_wallet.enter_account_recovery_code}
+          </Text>
         }
         subHeaderText={
           "You should have a copy of this in the email address associated with your account"
@@ -76,7 +82,7 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
           <ActivityIndicator size={"small"} color={theme.colors.linkPrimary} />
         ) : (
           <Text variant="bodySmallSecondary" color="linkPrimary">
-            Next
+            {l.common.next}
           </Text>
         )}
       </BaseButton>
