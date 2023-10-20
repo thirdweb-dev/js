@@ -12,8 +12,8 @@ export class Modal {
   protected spinner: HTMLDivElement;
 
   protected style: HTMLStyleElement;
- // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
- styles = getDefaultModalStyles();
+  // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
+  styles = getDefaultModalStyles();
   body: HTMLDivElement;
 
   constructor(container?: HTMLElement, styles?: Partial<ModalStyles>) {

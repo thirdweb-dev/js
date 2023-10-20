@@ -14,7 +14,9 @@ export const openCenteredPopup = ({
   width?: number;
   height?: number;
 }): Window | null => {
-  if (!window?.top){ return null;}
+  if (!window?.top) {
+    return null;
+  }
 
   const y = window.top.outerHeight / 2 + window.top.screenY - height / 2;
   const x = window.top.outerWidth / 2 + window.top.screenX - width / 2;

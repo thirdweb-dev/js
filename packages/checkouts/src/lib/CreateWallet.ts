@@ -68,7 +68,9 @@ function createWalletMessageHandler({
   onError?: (error: PaperSDKError) => void;
 }) {
   return (event: MessageEvent) => {
-    if (event.origin !== PAPER_APP_URL){ return;}
+    if (event.origin !== PAPER_APP_URL) {
+      return;
+    }
 
     const data = event.data;
     switch (data.eventType) {
@@ -153,7 +155,7 @@ export async function createWallet({
     CREATE_WALLET_IFRAME_ID,
   ) as HTMLIFrameElement | null;
 
-if (!iframe) {
+  if (!iframe) {
     throw new Error(
       'Error: You likely forgot to call "initialiseCreateWallet" on your component mount before calling "createWallet"',
     );
