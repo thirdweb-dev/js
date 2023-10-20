@@ -31,7 +31,7 @@ export const PasswordInput = ({
         style={{
           ...styles.textInput,
           color: theme.colors.textPrimary,
-          // fontFamily: theme.textVariants.defaults.fontFamily,
+          fontFamily: theme.textVariants.defaults.fontFamily,
         }}
         secureTextEntry={!showPassword}
         textContentType="none"
