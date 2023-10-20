@@ -143,7 +143,7 @@ export const EmailSelectionUI: React.FC<
               style: {
                 fontSize: 14,
                 color: theme.colors.textPrimary,
-                // fontFamily: theme.textVariants.defaults.fontFamily,
+                fontFamily: theme.textVariants.defaults.fontFamily,
                 lineHeight: 16,
                 padding: 0,
                 flex: 1,

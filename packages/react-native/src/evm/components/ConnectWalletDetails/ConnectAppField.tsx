@@ -134,7 +134,7 @@ const ConnectAppField = () => {
               numberOfLines: 1,
               style: {
                 color: theme.colors.textPrimary,
-                // fontFamily: theme.textVariants.defaults.fontFamily,
+                fontFamily: theme.textVariants.defaults.fontFamily,
               },
             }}
             containerProps={{
