@@ -60,7 +60,7 @@ export function LocalWalletFlow({
     <>
       <ConnectWalletHeader
         onBackPress={goBack}
-        headerText="Guest Wallet"
+        headerText={l.local_wallet.guest_wallet}
         alignHeader="flex-start"
         subHeaderText={""}
         onClose={connected}

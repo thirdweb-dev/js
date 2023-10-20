@@ -17,6 +17,7 @@ import QRCode from "react-native-qrcode-svg";
 import { useGlobalTheme, useLocale } from "../providers/ui-context-provider";
 
 export const ReceiveButton = () => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -33,7 +34,7 @@ export const ReceiveButton = () => {
       <IconTextButton
         flex={1}
         ml="xs"
-        text="Receive"
+        text={l.common.receive}
         justifyContent="center"
         icon={
           <DownloadIcon

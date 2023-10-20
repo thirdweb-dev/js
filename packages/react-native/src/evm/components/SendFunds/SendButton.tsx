@@ -36,6 +36,7 @@ export const SendButton = ({
 }: {
   supportedTokens: SupportedTokens;
 }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -51,7 +52,7 @@ export const SendButton = ({
     <>
       <IconTextButton
         flex={1}
-        text="Send"
+        text={l.common.send}
         justifyContent="center"
         icon={
           <SendIcon height={16} width={16} color={theme.colors.textPrimary} />
@@ -220,7 +221,10 @@ const SendFundsForm = ({
       borderRadius="md"
       p="lg"
     >
-      <ModalHeaderTextClose onClose={onCloseInternal} headerText="Send Funds" />
+      <ModalHeaderTextClose
+        onClose={onCloseInternal}
+        headerText={l.connect_wallet_details.send_funds}
+      />
       <Text mt="lg" variant="bodySmallSecondary">
         {l.connect_wallet_details.select_token}
       </Text>
@@ -252,7 +256,7 @@ const SendFundsForm = ({
             <Text variant="bodySmall">{tokenName}</Text>
             {!balanceQuery.data ? (
               <LoadingTextAnimation
-                text="Fetching..."
+                text={l.common.fetching}
                 textVariant={"bodySmallSecondary"}
               />
             ) : (

@@ -147,7 +147,7 @@ export function TokenSelector(props: {
               height: 40,
               paddingHorizontal: 16,
             }}
-            placeholder="Search or paste token address"
+            placeholder={l.connect_wallet_details.search_or_paste_token}
             placeholderTextColor={theme.colors.textSecondary}
             autoCapitalize="none"
             autoCorrect={false}

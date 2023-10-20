@@ -153,7 +153,7 @@ export const ExportLocalWalletModal = ({
         >
           <ModalHeaderTextClose
             onClose={onCloseInternal}
-            headerText="Backup your Wallet"
+            headerText={l.local_wallet.backup_your_wallet}
           />
           <Text variant="subHeader" mt="md" textAlign="left">
             {l.local_wallet.this_will_download_json}

@@ -86,7 +86,9 @@ export const NetworkButton = ({
         <Box flexDirection="row" alignItems="center">
           <ChainIcon chainIconUrl={chain?.icon?.url} size={28} />
           <Box ml="md" alignItems="flex-start" justifyContent="center">
-            <Text variant="bodyLarge">{chain?.name || "Unknown Network"}</Text>
+            <Text variant="bodyLarge">
+              {chain?.name || l.common.unknown_network}
+            </Text>
             {isSwitching ? (
               <Box flexDirection="row" alignItems="center">
                 <Text
