@@ -1,6 +1,8 @@
+import { Platform } from "react-native";
+
 export const textVariants = {
   defaults: {
-    fontFamily: "none",
+    fontFamily: Platform.OS === "ios" ? "san Francisco" : "Roboto",
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
@@ -35,6 +37,13 @@ export const textVariants = {
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "600",
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  bodyLargeBold: {
+    color: "textPrimary",
+    textAlign: "center",
+    fontWeight: "700",
     fontSize: 16,
     lineHeight: 24,
   },

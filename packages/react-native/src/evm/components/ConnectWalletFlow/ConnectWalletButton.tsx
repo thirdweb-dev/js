@@ -102,7 +102,7 @@ export const ConnectWalletButton = ({
         onPress={onConnectWalletPress}
         style={styles.connectWalletButton}
       >
-        <Text variant="bodyLarge" color="buttonTextColor">
+        <Text variant="bodyLargeBold" color="buttonTextColor">
           {showButtonSpinner ? (
             <ActivityIndicator size="small" color="buttonTextColor" />
           ) : buttonTitle ? (
