@@ -7,9 +7,10 @@ import {
   CLOSE_MODAL_STATE,
   WalletConnectSessionProposalModal,
 } from "../../utils/modalTypes";
-import { useModalState } from "../../providers/ui-context-provider";
+import { useLocale, useModalState } from "../../providers/ui-context-provider";
 
 export const SessionProposalModal = () => {
+  const l = useLocale();
   const { modalState, setModalState } = useModalState();
   const { data: proposalData } =
     modalState as WalletConnectSessionProposalModal;
@@ -27,7 +28,7 @@ export const SessionProposalModal = () => {
       borderRadius="md"
       p="lg"
     >
-      <Text variant="bodyLarge">Connect to App</Text>
+      <Text variant="bodyLarge">{l.connect_wallet_details.connect_to_app}</Text>
       <Text variant="bodyLarge">{proposalData.proposer.metadata.name}</Text>
       <Box flexDirection="row" justifyContent="space-evenly" mt="lg">
         <BaseButton
@@ -44,7 +45,7 @@ export const SessionProposalModal = () => {
             onClose();
           }}
         >
-          <Text variant="bodySmall">Reject</Text>
+          <Text variant="bodySmall">{l.common.reject}</Text>
         </BaseButton>
         <BaseButton
           alignContent="center"
@@ -67,7 +68,7 @@ export const SessionProposalModal = () => {
           }}
         >
           <Text variant="bodySmall" color="black">
-            Approve
+            {l.common.approve}
           </Text>
         </BaseButton>
       </Box>

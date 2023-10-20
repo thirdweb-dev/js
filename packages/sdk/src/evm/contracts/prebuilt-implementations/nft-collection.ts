@@ -184,10 +184,10 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   /**
    * Mint a unique NFT
    *
-   * @remarks Mint a unique NFT to a specified wallet.
+   * @remarks Mint a unique NFT to a  specified wallet.
    *
    * @example
-   * ```javascript*
+   * ```typescript
    * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
    * const metadata = {
    *   name: "Cool NFT",
@@ -262,7 +262,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @remarks Mint many unique NFTs at once to the connected wallet
    *
    * @example
-   * ```javascript*
+   * ```typescript
    * // Custom metadata of the NFTs you want to mint.
    * const metadatas = [{
    *   name: "Cool NFT #1",
@@ -294,7 +294,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @remarks Mint many unique NFTs at once to a specified wallet.
    *
    * @example
-   * ```javascript
+   * ```typescript
    * // Address of the wallet you want to mint the NFT to
    * const walletAddress = "{{wallet_address}}";
    *

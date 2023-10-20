@@ -67,7 +67,8 @@
     "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
-    "push": "yalc push"
+    "push": "yalc push",
+    "typedoc": "rimraf typedoc && node typedoc.js"
   },
   "sideEffects:": false,
   "devDependencies": {
@@ -102,7 +103,9 @@
     "prettier": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^3.0.2",
     "stream": "npm:stream-browserify@^3.0.0",
+    "typedoc": "^0.25.2",
     "typescript": "^5.1.6"
   },
   "dependencies": {

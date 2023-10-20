@@ -11,6 +11,7 @@ import { TextBalance } from "../base/TextBalance";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { SMART_WALLET_ICON } from "../../assets/svgs";
 import { ImageSvgUri } from "../base";
+import { useLocale } from "../../providers/ui-context-provider";
 
 export type ConnectWalletDetailsProps = {
   address?: string;
@@ -45,6 +46,7 @@ export const WalletDetailsButton = ({
   supportedTokens,
   displayBalanceToken,
 }: ConnectWalletDetailsProps) => {
+  const l = useLocale();
   const activeWallet = useWallet();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const ensQuery = useENS();
@@ -100,7 +102,7 @@ export const WalletDetailsButton = ({
             <Box ml="md" justifyContent="center" alignItems="flex-start">
               {activeWallet?.walletId === LocalWallet.id ? (
                 <Text variant="bodySmall" color="red">
-                  Guest
+                  {l.connect_wallet_details.guest}
                 </Text>
               ) : ens ? (
                 <Text variant="bodySmall">{ens}</Text>

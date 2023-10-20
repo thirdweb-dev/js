@@ -2,11 +2,13 @@ import { useBalance, useChain } from "@thirdweb-dev/react-core";
 import { TokenInfo } from "./defaultTokens";
 import { BaseButton, Box, ChainIcon, ImageSvgUri, Text } from "../base";
 import LoadingTextAnimation from "../base/LoadingTextAnimation";
+import { useLocale } from "../../providers/ui-context-provider";
 
 export function SelectTokenButton(props: {
   token?: TokenInfo;
   onPress: () => void;
 }) {
+  const l = useLocale();
   const balanceQuery = useBalance(props.token?.address);
   const chain = useChain();
   const tokenName = props.token?.name || balanceQuery.data?.name;
@@ -27,7 +29,7 @@ export function SelectTokenButton(props: {
         <Text variant="bodyLarge">{tokenName}</Text>
         {!balanceQuery.data ? (
           <LoadingTextAnimation
-            text="Fetching..."
+            text={l.common.fetching}
             textVariant={"bodySmallSecondary"}
           />
         ) : (
