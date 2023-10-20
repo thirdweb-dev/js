@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQyJt28h4wN3QHPXUQJQYQqGiFUD77han3zibZPzHbitk",
     "width": 1000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5555,
   "rpc": [
     "https://chain-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chainverse.info"
   ],
   "shortName": "cverse",

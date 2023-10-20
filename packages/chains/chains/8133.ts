@@ -4,7 +4,6 @@ export default {
   "chainId": 8133,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
@@ -18,7 +17,7 @@ export default {
     "symbol": "MEER-P",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8133,
   "rpc": [],
   "shortName": "meerpriv",
   "slug": "qitmeer-network-privnet",

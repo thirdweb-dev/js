@@ -26,9 +26,11 @@ export default {
     "symbol": "$BNI",
     "decimals": 18
   },
+  "networkId": 4096,
   "redFlags": [],
   "rpc": [
     "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4096.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bitindi.org",
     "https://testnet-rpc.bitindi.org"
   ],

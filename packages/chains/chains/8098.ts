@@ -4,7 +4,6 @@ export default {
   "chainId": 8098,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.streamux.cloud",
   "name": "StreamuX Blockchain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "SmuX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8098,
   "rpc": [
     "https://streamux-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8098.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://u0ma6t6heb:KDNwOsRDGcyM2Oeui1p431Bteb4rvcWkuPgQNHwB4FM@u0xy4x6x82-u0e2mg517m-rpc.us0-aws.kaleido.io/"
   ],
   "shortName": "StreamuX",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://dev-wallet.zilliqa.com/faucet?network=isolated_server"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTREXNgGtUhSoxFsrkhTe5LUnDBTKL5byaX8kpET6UuKp",
     "width": 2048,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ZIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 32990,
   "rpc": [
     "https://zilliqa-evm-isolated-server.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://32990.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zilliqa-isolated-server.zilliqa.com/"
   ],
   "shortName": "zil-isolated-server",

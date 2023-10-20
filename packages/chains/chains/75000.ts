@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTBszPzBeWPhjozf4TxpL2ws1NkG9yJvisx9h6MFii1zb",
     "width": 460,
@@ -21,10 +20,10 @@ export default {
   "name": "ResinCoin Mainnet",
   "nativeCurrency": {
     "name": "Ether",
-    "symbol": "ETH",
+    "symbol": "RESIN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 75000,
   "rpc": [],
   "shortName": "resin",
   "slug": "resincoin",

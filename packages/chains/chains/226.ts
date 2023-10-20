@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQxGA6rhuCQDXUueVcNvFRhMEWisyTmnF57TqL7h6k6cZ",
     "width": 1280,
@@ -24,9 +23,10 @@ export default {
     "symbol": "TLA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 226,
   "rpc": [
     "https://lachain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://226.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.lachain.io"
   ],
   "shortName": "TLA",

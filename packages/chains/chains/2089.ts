@@ -19,9 +19,8 @@ export default {
     "symbol": "ALGL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2089,
   "rpc": [
-    "https://algol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fullnode.algol.cntrfg.com"
   ],
   "shortName": "algl",

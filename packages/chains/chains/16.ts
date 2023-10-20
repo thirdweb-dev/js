@@ -13,7 +13,6 @@ export default {
     "https://faucet.towolabs.com",
     "https://fauceth.komputing.org?chain=16&address=${ADDRESS}"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmW7Ljv2eLQ1poRrhJBaVWJBF1TyfZ8QYxDeELRo6sssrj",
     "width": 382,
@@ -27,9 +26,10 @@ export default {
     "symbol": "CFLR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16,
   "rpc": [
     "https://flare-testnet-coston.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coston-api.flare.network/ext/bc/C/rpc"
   ],
   "shortName": "cflr",

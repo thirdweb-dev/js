@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmbi6cqsQyDjkQSoxbNTTUy8WGyVEFqCtATX2aF4KLmCcZ",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "WBT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1875,
   "rpc": [
     "https://whitebit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1875.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.whitebit.network"
   ],
   "shortName": "wbt",

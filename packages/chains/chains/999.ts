@@ -14,15 +14,19 @@ export default {
   "name": "Zora Testnet",
   "nativeCurrency": {
     "name": "Ether",
-    "symbol": "ETH",
+    "symbol": "GETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 999,
+  "redFlags": [
+    "reusedChainId"
+  ],
   "rpc": [
     "https://zora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.zora.co/"
   ],
-  "shortName": "Zora",
+  "shortName": "zora-testnet",
   "slug": "zora-testnet",
   "testnet": true
 } as const satisfies Chain;

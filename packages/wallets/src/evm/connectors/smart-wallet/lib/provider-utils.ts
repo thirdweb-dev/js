@@ -15,13 +15,13 @@ export async function create4337Provider(
   config: ProviderConfig,
   accountApi: AccountAPI,
   originalProvider: providers.BaseProvider,
+  chainId: number,
 ): Promise<ERC4337EthersProvider> {
   const entryPoint = EntryPoint__factory.connect(
     config.entryPointAddress,
     originalProvider,
   );
 
-  const chainId = (await originalProvider.getNetwork()).chainId;
   const httpRpcClient = new HttpRpcClient(
     config.bundlerUrl,
     config.entryPointAddress,

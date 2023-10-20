@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.sardisnetwork.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdR9QJjQEh1mBnf2WbJfehverxiP5RDPWMtEECbDP2rc3",
     "width": 512,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SRDX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11612,
   "rpc": [
     "https://sardis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11612.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.sardisnetwork.com"
   ],
   "shortName": "SRDXt",

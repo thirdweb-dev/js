@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.btxtestchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmf2iSjcrZwUDKhCVY9ZzfbSV2He2HSssbcG2yMz1mDerm",
     "width": 32,
@@ -26,9 +25,10 @@ export default {
     "symbol": "BTC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3637,
   "rpc": [
     "https://botanix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3637.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.btxtestchain.com"
   ],
   "shortName": "BTCm",

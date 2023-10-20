@@ -4,7 +4,6 @@ export default {
   "chainId": 529,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYjuztyURb3Fc6ZTLgCbwQa64CcVoigF5j9cafzuSbqgf",
     "width": 512,
@@ -18,9 +17,10 @@ export default {
     "symbol": "FIRE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 529,
   "rpc": [
     "https://firechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://529.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.rpc1.thefirechain.com"
   ],
   "shortName": "fire",

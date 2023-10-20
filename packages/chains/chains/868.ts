@@ -10,17 +10,17 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
-  "infoURL": "https://fantasia.technology/",
+  "infoURL": "https://fantasiachain.com/",
   "name": "Fantasia Chain Mainnet",
   "nativeCurrency": {
     "name": "FST",
     "symbol": "FST",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 868,
   "rpc": [
     "https://fantasia-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://868.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-data1.fantasiachain.com/",
     "https://mainnet-data2.fantasiachain.com/",
     "https://mainnet-data3.fantasiachain.com/"

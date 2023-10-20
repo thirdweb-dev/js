@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaR5TsgnWSjLys6wGaciKUbc5qYL3Es4jtgQcosVqDWR3",
     "width": 2048,
@@ -24,9 +23,10 @@ export default {
     "symbol": "TLC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5177,
   "rpc": [
     "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5177.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.tlxscan.com/"
   ],
   "shortName": "tlc",

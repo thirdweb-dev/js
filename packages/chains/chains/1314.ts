@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
     "width": 2481,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ALYX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1314,
   "rpc": [
     "https://alyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1314.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alyxchain.com"
   ],
   "shortName": "alyx",

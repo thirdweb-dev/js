@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://velaverse.io",
   "name": "Vela1 Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "CLASS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 555,
   "rpc": [
     "https://vela1-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.velaverse.io"
   ],
   "shortName": "CLASS",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://coston2-faucet.towolabs.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZhAYyazEBZSHWNQb9uCkNPq2MNTLoW3mjwiD3955hUjw",
     "width": 382,
@@ -26,9 +25,10 @@ export default {
     "symbol": "C2FLR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 114,
   "rpc": [
     "https://flare-testnet-coston2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://114.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coston2-api.flare.network/ext/bc/C/rpc"
   ],
   "shortName": "c2flr",

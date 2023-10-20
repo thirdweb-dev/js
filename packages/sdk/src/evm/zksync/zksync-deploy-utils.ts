@@ -9,7 +9,7 @@ import { extractConstructorParamsFromAbi } from "../common/feature-detection/ext
 import { extractFunctionParamsFromAbi } from "../common/feature-detection/extractFunctionParamsFromAbi";
 import { type BytesLike, Contract, type Signer, utils, Wallet } from "ethers";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { DeployOptions } from "../types/deploy";
+import type { DeployOptions } from "../types/deploy/deploy-options";
 import { ThirdwebSDK } from "../core/sdk";
 import { getImplementation } from "./constants/addresses";
 import { DeploymentTransaction } from "../types/any-evm/deploy-data";

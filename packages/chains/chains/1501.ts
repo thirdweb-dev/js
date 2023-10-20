@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://chainx.org",
   "name": "BEVM",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1501,
   "rpc": [
     "https://bevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.bevm.io/",
     "https://rpc-2.bevm.io/"
   ],

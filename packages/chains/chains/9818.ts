@@ -6,13 +6,18 @@ export default {
     {
       "name": "IMPERIUM TESTNET Explorer",
       "url": "https://network.impscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
     "width": 200,
@@ -26,9 +31,10 @@ export default {
     "symbol": "tIMP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9818,
   "rpc": [
     "https://imperium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9818.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-aws-testnet.imperiumchain.com",
     "https://data-aws2-testnet.imperiumchain.com"
   ],

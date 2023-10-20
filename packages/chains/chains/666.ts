@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://chain.pixie.xyz/faucet"
   ],
-  "features": [],
   "infoURL": "https://scan-testnet.chain.pixie.xyz",
   "name": "Pixie Chain Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "PCTT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 666,
   "rpc": [
     "https://pixie-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.chain.pixie.xyz",
     "wss://ws-testnet.chain.pixie.xyz"
   ],

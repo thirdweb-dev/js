@@ -1,7 +1,7 @@
 import { BigNumber, type PopulatedTransaction, type Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import type { DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { isContractDeployed } from "./isContractDeployed";
 
 /**

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNXiCXJxEeBd7ZYGYjPSMTSdbDd2nfodLC677gUfk9ku5",
     "width": 924,
@@ -24,9 +23,10 @@ export default {
     "symbol": "VLX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 106,
   "rpc": [
     "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://106.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmexplorer.velas.com/rpc",
     "https://explorer.velas.com/rpc"
   ],

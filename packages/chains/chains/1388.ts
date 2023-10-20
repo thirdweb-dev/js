@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmd4TMQdnYxaUZqnVddh5S37NGH72g2kkK38ccCEgdZz1C",
     "width": 599,
@@ -24,9 +23,10 @@ export default {
     "symbol": "SINSO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1388,
   "rpc": [
     "https://amstar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1388.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.amstarscan.com"
   ],
   "shortName": "ASAR",

@@ -4,7 +4,6 @@ export default {
   "chainId": 803,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.haichain.io/",
   "name": "Haic",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "HAIC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 803,
   "rpc": [
     "https://haic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://803.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://orig.haichain.io/"
   ],
   "shortName": "haic",

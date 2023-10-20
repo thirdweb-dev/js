@@ -4,7 +4,6 @@ export default {
   "chainId": 7762959,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://musicoin.tw",
   "name": "Musicoin",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "MUSIC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7762959,
   "rpc": [
     "https://musicoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7762959.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mewapi.musicoin.tw"
   ],
   "shortName": "music",
+  "slip44": 184,
   "slug": "musicoin",
   "testnet": false
 } as const satisfies Chain;
