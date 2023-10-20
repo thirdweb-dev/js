@@ -137,7 +137,6 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
     if (!this.user) {
       throw new Error("Error connecting User");
     }
-    this.options.onAuth(this.user);
 
     if (options?.chainId) {
       this.switchChain(options.chainId);
