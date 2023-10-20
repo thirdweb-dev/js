@@ -23,6 +23,7 @@ import {
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
+import { providers, utils } from "ethers";
 
 // export types and utils for convenience
 export * from "../connectors/smart-wallet/types";
@@ -106,7 +107,17 @@ export class SmartWallet
   }
 
   /**
-   * Execute a single transaction
+   * Send a single transaction without waiting for confirmations
+   * @param transactions
+   * @returns the transaction result
+   */
+  async send(transaction: Transaction): Promise<providers.TransactionResponse> {
+    const connector = await this.getConnector();
+    return connector.send(transaction);
+  }
+
+  /**
+   * Execute a single transaction and wait for confirmations
    * @param transactions
    * @returns the transaction receipt
    */
@@ -116,7 +127,19 @@ export class SmartWallet
   }
 
   /**
-   * Execute multiple transactions in a single batch
+   * Send a multiple transaction in a batch without waiting for confirmations
+   * @param transactions
+   * @returns the transaction result
+   */
+  async sendBatch(
+    transactions: Transaction[],
+  ): Promise<providers.TransactionResponse> {
+    const connector = await this.getConnector();
+    return connector.sendBatch(transactions);
+  }
+
+  /**
+   * Execute multiple transactions in a single batch and wait for confirmations
    * @param transactions
    * @returns the transaction receipt
    */
@@ -125,6 +148,54 @@ export class SmartWallet
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeBatch(transactions);
+  }
+
+  /**
+   * Send a single raw transaction without waiting for confirmations
+   * @param transaction
+   * @returns the transaction result
+   */
+  async sendRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+  ): Promise<providers.TransactionResponse> {
+    const connector = await this.getConnector();
+    return connector.sendRaw(transaction);
+  }
+
+  /**
+   * Execute a single raw transaction and wait for confirmations
+   * @param transaction
+   * @returns the transaction receipt
+   */
+  async executeRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+  ): Promise<TransactionResult> {
+    const connector = await this.getConnector();
+    return connector.executeRaw(transaction);
+  }
+
+  /**
+   * Send multiple raw transaction in a batch without waiting for confirmations
+   * @param transaction
+   * @returns the transaction result
+   */
+  async sendBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ): Promise<providers.TransactionResponse> {
+    const connector = await this.getConnector();
+    return connector.sendBatchRaw(transactions);
+  }
+
+  /**
+   * Execute multiple raw transactions in a single batch and wait for confirmations
+   * @param transaction
+   * @returns the transaction receipt
+   */
+  async executeBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ): Promise<TransactionResult> {
+    const connector = await this.getConnector();
+    return connector.executeBatchRaw(transactions);
   }
 
   /**

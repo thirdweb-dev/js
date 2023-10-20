@@ -14,7 +14,7 @@ import { ConnectWalletButton } from "./ConnectWalletFlow/ConnectWalletButton";
 import { ConnectWalletButtonProps } from "./ConnectWalletFlow/ConnectWalletButton";
 import BaseButton from "./base/BaseButton";
 import Text from "./base/Text";
-import { useUIContext } from "../providers/ui-context-provider";
+import { useLocale, useUIContext } from "../providers/ui-context-provider";
 import { ThemeProvider } from "../styles/ThemeProvider";
 import { SupportedTokens, defaultTokens } from "./SendFunds/defaultTokens";
 
@@ -81,6 +81,7 @@ export const ConnectWallet = ({
   privacyPolicyUrl,
   supportedTokens,
 }: ConnectWalletProps) => {
+  const l = useLocale();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const address = useAddress();
   const isNetworkMismatch = useNetworkMismatch();
@@ -142,7 +143,7 @@ export const ConnectWallet = ({
                 <ActivityIndicator size="small" color="buttonTextColor" />
               ) : (
                 <Text variant="bodyLarge" color="buttonTextColor">
-                  Switch Network
+                  {l.common.switch_network}
                 </Text>
               )}
             </BaseButton>

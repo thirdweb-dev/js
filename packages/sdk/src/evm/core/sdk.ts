@@ -1,6 +1,6 @@
 import { getAllDetectedExtensionNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
@@ -842,7 +842,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
-      await getCompositePluginABI(
+      await getCompositeABI(
         resolvedAddress,
         AbiSchema.parse(parsedABI),
         provider,

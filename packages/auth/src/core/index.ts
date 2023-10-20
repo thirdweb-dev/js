@@ -3,6 +3,7 @@ export { ThirdwebAuth } from "./auth";
 
 // Export individual auth functions
 export {
+  buildJWT,
   generateJWT,
   parseJWT,
   refreshJWT,
