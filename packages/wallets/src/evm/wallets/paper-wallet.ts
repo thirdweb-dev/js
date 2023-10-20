@@ -32,7 +32,7 @@ export class PaperWallet extends AbstractClientWallet<
 
   paperClientId: string;
   chain: PaperWalletAdditionalOptions_["chain"];
-  onAuthSuccess: PaperWalletAdditionalOptions_["onAuth"];
+  onAuthSuccess: PaperWalletAdditionalOptions_["onAuthSuccess"];
 
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
