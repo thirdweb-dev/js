@@ -267,7 +267,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,
   ): Promise<ITokenERC20.MintRequestStructOutput> {
-    const [normalizedPrice, _decimals] = await Promise.all([
+    const [normalizedPrice, decimals] = await Promise.all([
       normalizePriceValue(
         this.contractWrapper.getProvider(),
         mintRequest.price,
@@ -275,10 +275,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
       ),
       this.contractWrapper.read("decimals", []),
     ]);
-    const amountWithDecimals = utils.parseUnits(
-      mintRequest.quantity,
-      _decimals,
-    );
+    const amountWithDecimals = utils.parseUnits(mintRequest.quantity, decimals);
     return {
       to: mintRequest.to,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
