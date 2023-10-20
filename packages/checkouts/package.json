@@ -24,9 +24,7 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "files": [
-    "dist/",
-    "evm/",
-    "solana/"
+    "dist/"
   ],
   "preconstruct": {
     "entrypoints": [
