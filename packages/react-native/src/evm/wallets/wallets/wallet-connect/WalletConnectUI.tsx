@@ -193,7 +193,7 @@ export function WalletConnectUI({
                   >
                     <TextInput
                       onChangeText={onChangeText}
-                      placeholder="Search Wallets"
+                      placeholder={l.wallet_connect.search_wallets}
                       placeholderTextColor={theme.colors.textSecondary}
                       style={{
                         ...styles.textInput,

@@ -22,6 +22,7 @@ export const _en = {
     view_transaction_history: "View Transaction History",
     get_started: "Get started",
     receive_funds: "Receive Funds",
+    search_or_paste_token: "Search or paste token address",
     connect_a_wallet: "Connect a wallet",
     continue_as_guest: "Continue as guest",
     tos: "Terms of Service",
@@ -35,6 +36,7 @@ export const _en = {
     qr_code: "QR Code",
     select_token: "Select Token",
     send_to: "Send to",
+    send_funds: "Send Funds",
     no_tokens_found: "No Tokens found",
     confirm_in_wallet: "Confirm in your wallet",
     select_network: "Select Network",
@@ -52,6 +54,8 @@ export const _en = {
       "Login and connect your app through the wallet pop-up",
   },
   local_wallet: {
+    guest_wallet: "Guest Wallet",
+    backup_your_wallet: "Backup your wallet",
     create_new_wallet: "Create new wallet",
     private_key_mnemonic: "Or Private key or Mnemonic",
     private_key_mnemonic_placeholder: "Private key / Mnemonic",
@@ -72,11 +76,15 @@ export const _en = {
   embedded_wallet: {
     request_new_code: "Request new code",
     sign_in: "Sign In",
+    sign_in_google: "Sign in with Google",
   },
   wallet_connect: {
     no_results_found: "No results found",
+    search_wallets: "Search Wallets",
   },
   common: {
+    unknown_network: "Unknown Network",
+    fetching: "Fetching...",
     password: "Password",
     reject: "Reject",
     approve: "Approve",
@@ -85,6 +93,7 @@ export const _en = {
     username: "Username",
     amount: "Amount",
     send: "Send",
+    receive: "Receive",
     continue: "Continue",
     error_switching_network: "Error switching network",
     or: "OR",

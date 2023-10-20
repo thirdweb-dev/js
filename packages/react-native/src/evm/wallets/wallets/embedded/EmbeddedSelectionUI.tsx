@@ -102,7 +102,7 @@ export const EmailSelectionUI: React.FC<
             backgroundColor="buttonBackgroundColor"
             nameColor="buttonTextColor"
             justifyContent="center"
-            name="Sign in with Google"
+            name={l.embedded_wallet.sign_in_google}
             walletIconUrl={GOOGLE_ICON}
             onPress={onGoogleSignInPress}
           />
