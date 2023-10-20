@@ -45,7 +45,14 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/auth#build": {
-      "outputs": ["dist/**", "evm/**", "express/**", "next/**", "next-auth/**"],
+      "outputs": [
+        "dist/**",
+        "evm/**",
+        "express/**",
+        "next/**",
+        "fastify/**",
+        "next-auth/**"
+      ],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/contracts-js#build": {
