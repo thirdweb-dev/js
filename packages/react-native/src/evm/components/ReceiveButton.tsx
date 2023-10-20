@@ -14,9 +14,10 @@ import {
 import DownloadIcon from "../assets/download";
 import CopyIcon from "../assets/copy";
 import QRCode from "react-native-qrcode-svg";
-import { useGlobalTheme } from "../providers/ui-context-provider";
+import { useGlobalTheme, useLocale } from "../providers/ui-context-provider";
 
 export const ReceiveButton = () => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -33,7 +34,7 @@ export const ReceiveButton = () => {
       <IconTextButton
         flex={1}
         ml="xs"
-        text="Receive"
+        text={l.common.receive}
         justifyContent="center"
         icon={
           <DownloadIcon
@@ -60,6 +61,7 @@ export const ReceiveFundsModal = ({
   isVisible,
   onClose,
 }: ReceiveFundsModalProps) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const address = useAddress();
   const [addressCopied, setAddressCopied] = useState(false);
@@ -94,7 +96,7 @@ export const ReceiveFundsModal = ({
         >
           <ModalHeaderTextClose
             onClose={onCloseInternal}
-            headerText="Receive Funds"
+            headerText={l.connect_wallet_details.receive_funds}
           />
           <Text
             variant="bodySmallSecondary"
@@ -102,11 +104,10 @@ export const ReceiveFundsModal = ({
             mt="md"
             marginHorizontal="xmd"
           >
-            Copy the wallet address or scan the QR code to send funds to this
-            wallet.
+            {l.connect_wallet_details.copy_address_or_scan}
           </Text>
           <Text mt="lg" variant="bodySmallSecondary">
-            Your address
+            {l.connect_wallet_details.your_address}
           </Text>
           <BaseButton
             mt="xs"
@@ -127,7 +128,7 @@ export const ReceiveFundsModal = ({
             <CopyIcon width={14} height={14} color={theme.colors.iconPrimary} />
           </BaseButton>
           <Text mt="lg" variant="bodySmallSecondary">
-            QR Code
+            {l.connect_wallet_details.qr_code}
           </Text>
           <Box
             mt="xs"
@@ -144,7 +145,7 @@ export const ReceiveFundsModal = ({
           </Box>
 
           {addressCopied === true ? (
-            <Toast text={"Address copied to clipboard"} />
+            <Toast text={l.connect_wallet_details.address_copied_clipboard} />
           ) : null}
         </Box>
       </KeyboardAvoidingView>
