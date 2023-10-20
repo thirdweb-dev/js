@@ -63,8 +63,10 @@ export class Erc20SignatureMintable implements DetectableFeature {
     async (signedPayload: SignedPayload20) => {
       const mintRequest = signedPayload.payload;
       const signature = signedPayload.signature;
-      const message = await this.mapPayloadToContractStruct(mintRequest);
-      const overrides = await this.contractWrapper.getCallOverrides();
+      const [message, overrides] = await Promise.all([
+        this.mapPayloadToContractStruct(mintRequest),
+        this.contractWrapper.getCallOverrides(),
+      ]);
       // TODO: Transaction Sequence Pattern
       await setErc20Allowance(
         this.contractWrapper,
@@ -89,22 +91,23 @@ export class Erc20SignatureMintable implements DetectableFeature {
    */
   mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (signedPayloads: SignedPayload20[]) => {
-      const contractPayloads = await Promise.all(
-        signedPayloads.map(async (s) => {
-          const message = await this.mapPayloadToContractStruct(s.payload);
-          const signature = s.signature;
-          const price = s.payload.price;
-          if (BigNumber.from(price).gt(0)) {
-            throw new Error(
-              "Can only batch free mints. For mints with a price, use regular mint()",
-            );
-          }
-          return {
-            message,
-            signature,
-          };
-        }),
+      const messages = await Promise.all(
+        signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
       );
+      const contractPayloads = signedPayloads.map((s, index) => {
+        const message = messages[index];
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      });
 
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
