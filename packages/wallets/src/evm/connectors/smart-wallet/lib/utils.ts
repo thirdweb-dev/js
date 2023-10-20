@@ -1,4 +1,4 @@
-import { BigNumber, ethers, utils } from "ethers";
+import { ethers, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export function toJSON(op: Partial<UserOperationStruct>): Promise<any> {
