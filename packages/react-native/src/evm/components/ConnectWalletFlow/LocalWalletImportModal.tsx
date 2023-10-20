@@ -211,7 +211,7 @@ export const LocalWalletImportModal = ({
               onChangeText: onPrivateKeyEntered,
               style: {
                 color: theme.colors.textPrimary,
-                // fontFamily: theme.textVariants.defaults.fontFamily,
+                fontFamily: theme.textVariants.defaults.fontFamily,
               },
             }}
             containerProps={{ pl: "xxs" }}
