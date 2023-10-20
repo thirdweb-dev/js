@@ -9,6 +9,7 @@ import type { PaperUser } from "../interfaces/PaperUser";
 import { LinksManager } from "../utils/LinksManager";
 import { postMessageToIframe } from "../utils/postMessageToIframe";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires, better-tree-shaking/no-top-level-side-effects
 const packageJson = require("../../package.json");
 
 const showMagicIframe = () => {
@@ -20,8 +21,8 @@ const showMagicIframe = () => {
     iframe.setAttribute(
       "style",
       `
-    position: fixed; 
-    left: calc(50% - ${size / 2}px); 
+    position: fixed;
+    left: calc(50% - ${size / 2}px);
     top: calc(50% - ${size / 2}px);
     width: ${size}px;
     height: ${size}px;
@@ -67,7 +68,7 @@ function createWalletMessageHandler({
   onError?: (error: PaperSDKError) => void;
 }) {
   return (event: MessageEvent) => {
-    if (event.origin !== PAPER_APP_URL) return;
+    if (event.origin !== PAPER_APP_URL){ return;}
 
     const data = event.data;
     switch (data.eventType) {
@@ -152,7 +153,7 @@ export async function createWallet({
     CREATE_WALLET_IFRAME_ID,
   ) as HTMLIFrameElement | null;
 
-  if (!iframe) {
+if (!iframe) {
     throw new Error(
       'Error: You likely forgot to call "initialiseCreateWallet" on your component mount before calling "createWallet"',
     );

@@ -3,6 +3,7 @@ import type { ModalStyles } from "../../interfaces/Modal";
 import { getDefaultModalStyles, modalKeyframeAnimations } from "./styles";
 
 export const MODAL_ID = "paper-js-sdk-modal";
+
 export class Modal {
   protected container: HTMLElement;
   protected main: HTMLDivElement;
@@ -11,7 +12,8 @@ export class Modal {
   protected spinner: HTMLDivElement;
 
   protected style: HTMLStyleElement;
-  styles = getDefaultModalStyles();
+ // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
+ styles = getDefaultModalStyles();
   body: HTMLDivElement;
 
   constructor(container?: HTMLElement, styles?: Partial<ModalStyles>) {

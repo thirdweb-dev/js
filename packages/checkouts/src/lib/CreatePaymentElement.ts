@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires, better-tree-shaking/no-top-level-side-effects
 const packageJson = require("../../package.json");
 
 export interface PaperPaymentElementConstructorArgs {

@@ -16,7 +16,8 @@ export class Drawer {
   protected onCloseCallback: (() => void) | undefined;
 
   protected closeTimeout: number | undefined;
-  styles = getDefaultModalStyles();
+ // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
+ styles = getDefaultModalStyles();
   body: HTMLDivElement;
 
   constructor(container?: HTMLElement, styles?: Partial<ModalStyles>) {
