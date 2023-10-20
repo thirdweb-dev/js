@@ -40,92 +40,21 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@account-abstraction/contracts": "^0.5.0",
-    "@account-abstraction/sdk": "^0.5.0",
-    "@account-abstraction/utils": "^0.5.0",
-    "@blocto/sdk": "^0.5.4",
-    "@coinbase/wallet-sdk": "^3.7.1",
-    "@magic-ext/connect": "^6.7.2",
-    "@magic-ext/oauth": "^7.6.2",
-    "@magic-sdk/provider": "^13.6.2",
-    "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",
-    "@paperxyz/sdk-common-utilities": "^0.1.0",
-    "@safe-global/safe-core-sdk": "^3.3.4",
-    "@safe-global/safe-ethers-adapters": "0.1.0-alpha.17",
-    "@safe-global/safe-ethers-lib": "^1.9.4",
-    "@thirdweb-dev/chains": "workspace:*",
-    "@thirdweb-dev/contracts-js": "workspace:*",
-    "@thirdweb-dev/sdk": "workspace:*",
-    "@walletconnect/core": "^2.9.1",
-    "@walletconnect/ethereum-provider": "^2.9.1",
-    "@walletconnect/jsonrpc-utils": "^1.0.8",
-    "@walletconnect/modal": "^2.6.1",
-    "@walletconnect/types": "^2.9.1",
-    "@walletconnect/utils": "^2.9.1",
-    "@walletconnect/web3wallet": "^1.8.7",
-    "buffer": "^6.0.3",
-    "cross-fetch": "^3.1.8",
-    "crypto-js": "^4.1.1",
-    "eth-provider": "^0.13.6",
-    "eventemitter3": "^5.0.1",
-    "magic-sdk": "^13.6.2",
-    "web3-core": "1.5.2"
+    "@paperxyz/sdk-common-utilities": "*",
+    "ethers": "^5.7.2"
   },
   "peerDependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.256.0",
-    "@noble/ed25519": "^1.7.1",
-    "@solana/web3.js": "^1.73.0",
-    "bs58": "^5.0.0",
-    "ethers": "^5.7.2",
-    "ethers-aws-kms-signer": "^1.3.2",
-    "ethers-gcp-kms-signer": "^1.1.6",
-    "tweetnacl": "^1.0.3"
+    "ethers": "^5.7.2"
   },
   "peerDependenciesMeta": {
-    "tweetnacl": {
-      "optional": true
-    },
-    "@aws-sdk/client-secrets-manager": {
-      "optional": true
-    },
-    "ethers-aws-kms-signer": {
-      "optional": true
-    },
-    "@noble/ed25519": {
-      "optional": true
-    },
-    "@solana/web3.js": {
-      "optional": true
-    },
-    "bs58": {
-      "optional": true
-    },
     "ethers": {
       "optional": true
     }
   },
   "devDependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.378.0",
-    "@babel/plugin-proposal-class-properties": "7.18.6",
-    "@babel/plugin-transform-flow-strip-types": "^7.22.5",
-    "@babel/plugin-transform-private-methods": "7.22.5",
-    "@noble/ed25519": "^1.7.1",
-    "@preconstruct/cli": "2.7.0",
-    "@solana/web3.js": "^1.62.0",
-    "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/crypto-js": "^4.1.1",
-    "abitype": "^0.2.5",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.4",
-    "bs58": "^5.0.0",
-    "cross-env": "^7.0.3",
-    "eslint-config-thirdweb": "workspace:*",
-    "eslint-plugin-better-tree-shaking": "0.0.3",
-    "ethereum-provider": "^0.7.7",
-    "ethers": "^5.7.2",
-    "ethers-aws-kms-signer": "^1.3.2",
-    "ethers-gcp-kms-signer": "^1.1.6",
-    "tweetnacl": "^1.0.3",
-    "typescript": "^5.1.6"
+    "@paperxyz/tsconfig": "*",
+    "eslint-config-paperxyz": "*",
+    "typescript": "^4.7.4"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
