@@ -31,7 +31,10 @@ export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
 export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
 export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
 
-export { ConnectWallet } from "./components/ConnectWallet";
+export {
+  ConnectWallet,
+  type ConnectWalletProps,
+} from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";
 
 // utilities
@@ -41,6 +44,8 @@ export { createSyncStorage as createLocalStorage } from "../core/AsyncStorage";
 export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 export { ThirdwebStorage } from "../core/storage/storage";
+
+export * from "./i18n/strings";
 
 // ui components
 export * from "./components/base";
