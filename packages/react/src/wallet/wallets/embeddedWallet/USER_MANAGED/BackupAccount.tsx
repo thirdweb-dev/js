@@ -19,9 +19,9 @@ export function BackupAccount(props: {
   const [showCodes, setShowCodes] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const copyContent = `${props.email}\n\nRecovery Codes:\n\n${
-    props.recoveryCodes?.join("\n") || ""
-  }`;
+  const copyContent = `${props.email}\n\n${
+    window.location.origin
+  }\n\nRecovery Codes:\n\n${props.recoveryCodes?.join("\n") || ""}`;
 
   const { hasCopied, onCopy } = useClipboard(copyContent);
 

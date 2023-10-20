@@ -79,10 +79,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       return;
     }
 
-    console.log({
-      emailStatus,
-    });
-
     const isUserManaged =
       emailStatus.recoveryShareManagement === "USER_MANAGED";
 
