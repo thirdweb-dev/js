@@ -83,6 +83,7 @@ export const _en = {
     search_wallets: "Search Wallets",
   },
   common: {
+    connect_app: "Connect app",
     unknown_network: "Unknown Network",
     fetching: "Fetching...",
     password: "Password",
