@@ -72,6 +72,8 @@ export const _en = {
   smart_wallet: {
     switch_to_smart: "Switch to Smart Wallet",
     switch_to_personal: "Switch to Personal Wallet",
+    network_mistmach: "Network Mismatch",
+    connecting: "Connecting",
   },
   embedded_wallet: {
     request_new_code: "Request new code",
