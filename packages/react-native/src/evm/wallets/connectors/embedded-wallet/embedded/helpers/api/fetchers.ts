@@ -93,7 +93,6 @@ export async function getEmbeddedWalletUserDetail(args: {
   const result = (await resp.json()) as
     | {
         isNewUser: true;
-        recoveryShareManagement: RecoveryShareManagement;
       }
     | {
         isNewUser: false;

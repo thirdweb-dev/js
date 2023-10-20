@@ -41,9 +41,19 @@ export async function sendEmailOTP(
     email,
   });
 
-  let userDetails: Awaited<ReturnType<typeof getEmbeddedWalletUserDetail>>;
+  // AWS Auth flow
+  let cognitoUser: CognitoUser;
   try {
-    userDetails = await getEmbeddedWalletUserDetail({
+    cognitoUser = await cognitoEmailSignIn(email, clientId);
+  } catch (e) {
+    await cognitoEmailSignUp(email, clientId);
+    cognitoUser = await cognitoEmailSignIn(email, clientId);
+  }
+  setCognitoUser(cognitoUser);
+
+  let result: Awaited<ReturnType<typeof getEmbeddedWalletUserDetail>>;
+  try {
+    result = await getEmbeddedWalletUserDetail({
       email,
       clientId,
     });
@@ -53,34 +63,19 @@ export async function sendEmailOTP(
     );
   }
 
-  if (
-    userDetails.recoveryShareManagement === RecoveryShareManagement.AWS_MANAGED
-  ) {
-    // AWS Auth flow
-    let cognitoUser: CognitoUser;
-    try {
-      cognitoUser = await cognitoEmailSignIn(email, clientId);
-    } catch (e) {
-      await cognitoEmailSignUp(email, clientId);
-      cognitoUser = await cognitoEmailSignIn(email, clientId);
-    }
-    setCognitoUser(cognitoUser);
-  } else {
-  }
-
-  return userDetails.isNewUser
+  return result.isNewUser
     ? {
-        isNewUser: userDetails.isNewUser,
+        isNewUser: result.isNewUser,
         isNewDevice: true,
-        recoveryShareManagement: userDetails.recoveryShareManagement,
+        recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
       }
     : {
-        isNewUser: userDetails.isNewUser,
+        isNewUser: result.isNewUser,
         isNewDevice: !(await isDeviceSharePresentForUser(
           clientId,
-          userDetails.walletUserId ?? "",
+          result.walletUserId ?? "",
         )),
-        recoveryShareManagement: userDetails.recoveryShareManagement,
+        recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
       };
 }
 
