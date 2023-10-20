@@ -207,21 +207,30 @@ export class Erc20SignatureMintable implements DetectableFeature {
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload20[] = await Promise.all(
-      payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
-    );
+    const [chainId, name, parsedRequests]: [
+      number,
+      string,
+      FilledSignaturePayload20[],
+    ] = await Promise.all([
+      this.contractWrapper.getChainID(),
+      this.contractWrapper.read("name", []), // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
+      Promise.all(
+        payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
+      ),
+    ]);
 
-    const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
-    const name = await this.contractWrapper.read("name", []);
-
-    return await Promise.all(
-      parsedRequests.map(async (m) => {
-        const finalPayload = await Signature20PayloadOutput.parseAsync(m);
-        const signature = await this.contractWrapper.signTypedData(
+    const finalPayloads = await Promise.all(
+      parsedRequests.map((m) => Signature20PayloadOutput.parseAsync(m)),
+    );
+    const contractStructs = await Promise.all(
+      finalPayloads.map((payload) => this.mapPayloadToContractStruct(payload)),
+    );
+    const signatures = await Promise.all(
+      contractStructs.map((struct) =>
+        this.contractWrapper.signTypedData(
           signer,
           {
             name,
@@ -230,14 +239,18 @@ export class Erc20SignatureMintable implements DetectableFeature {
             verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest20 },
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
+          struct,
+        ),
+      ),
     );
+    return parsedRequests.map((m, index) => {
+      const finalPayload = finalPayloads[index];
+      const signature = signatures[index];
+      return {
+        payload: finalPayload,
+        signature: signature.toString(),
+      };
+    });
   }
 
   /** ******************************
