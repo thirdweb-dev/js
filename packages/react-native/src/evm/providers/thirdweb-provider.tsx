@@ -75,7 +75,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * ```
    *
    */
-  locale: Locale;
+  locale?: Locale;
 }
 
 /**
