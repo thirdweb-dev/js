@@ -126,7 +126,7 @@ export const EmailSelectionUI: React.FC<
                 textAlign="center"
                 marginHorizontal="xxs"
               >
-                OR
+                {l.common.or}
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
@@ -137,13 +137,13 @@ export const EmailSelectionUI: React.FC<
         <>
           <TextInput
             textInputProps={{
-              placeholder: "Enter your email address",
+              placeholder: l.embedded_wallet.enter_your_email,
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: setEmailInput,
               style: {
                 fontSize: 14,
                 color: theme.colors.textPrimary,
-                fontFamily: theme.textVariants.defaults.fontFamily,
+                // fontFamily: theme.textVariants.defaults.fontFamily,
                 lineHeight: 16,
                 padding: 0,
                 flex: 1,

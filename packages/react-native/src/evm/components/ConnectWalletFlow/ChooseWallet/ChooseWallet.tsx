@@ -190,7 +190,7 @@ export function ChooseWallet({
         >
           <Box height={1} flex={1} backgroundColor="border" />
           <Text variant="subHeader" textAlign="center" marginHorizontal="xxs">
-            OR
+            {l.common.or}
           </Text>
           <Box height={1} flex={1} backgroundColor="border" />
         </Box>
