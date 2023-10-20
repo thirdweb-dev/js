@@ -141,7 +141,7 @@ export function TokenSelector(props: {
             onChangeText={setInput}
             style={{
               color: theme.colors.textPrimary,
-              fontFamily: theme.textVariants.defaults.fontFamily,
+              // fontFamily: theme.textVariants.defaults.fontFamily,
               textAlign: "left",
               flex: 1,
               height: 40,

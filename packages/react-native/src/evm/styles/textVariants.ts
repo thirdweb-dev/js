@@ -1,11 +1,11 @@
 export const textVariants = {
-  defaults: {
-    fontFamily: "none",
-    fontSize: 24,
-    fontWeight: "700",
-    lineHeight: 32,
-    color: "textPrimary",
-  },
+  // defaults: {
+  //   fontFamily: "ShopifySans", //Platform.OS === "ios" ? "San Francisco" : "Roboto",
+  //   fontSize: 24,
+  //   fontWeight: "700",
+  //   lineHeight: 32,
+  //   color: "textPrimary",
+  // },
   header: {
     fontSize: 24,
     fontWeight: "600",
@@ -35,6 +35,13 @@ export const textVariants = {
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "600",
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  bodyLargeBold: {
+    color: "textPrimary",
+    textAlign: "center",
+    fontWeight: "700",
     fontSize: 16,
     lineHeight: 24,
   },

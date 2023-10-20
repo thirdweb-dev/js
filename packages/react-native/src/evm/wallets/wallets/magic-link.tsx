@@ -69,7 +69,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
     <Box paddingHorizontal="xl" mt="lg">
       <TextInput
         textInputProps={{
-          placeholder: "Enter your email address",
+          placeholder: l.embedded_wallet.enter_your_email,
           placeholderTextColor: theme.colors.textSecondary,
           onChangeText: (text: string) => {
             setEmail(text);
@@ -77,7 +77,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
           style: {
             fontSize: 14,
             color: theme.colors.textPrimary,
-            fontFamily: theme.textVariants.defaults.fontFamily,
+            // fontFamily: theme.textVariants.defaults.fontFamily,
             lineHeight: 16,
             padding: 0,
           },
