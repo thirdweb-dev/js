@@ -198,7 +198,7 @@ export function WalletConnectUI({
                       style={{
                         ...styles.textInput,
                         color: theme.colors.textSecondary,
-                        fontFamily: theme.textVariants.defaults.fontFamily,
+                        // fontFamily: theme.textVariants.defaults.fontFamily,
                       }}
                     />
                   </Box>

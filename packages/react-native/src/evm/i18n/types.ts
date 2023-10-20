@@ -77,12 +77,14 @@ export const _en = {
     request_new_code: "Request new code",
     sign_in: "Sign In",
     sign_in_google: "Sign in with Google",
+    enter_your_email: "Enter your email address",
   },
   wallet_connect: {
     no_results_found: "No results found",
     search_wallets: "Search Wallets",
   },
   common: {
+    connect_app: "Connect app",
     unknown_network: "Unknown Network",
     fetching: "Fetching...",
     password: "Password",
