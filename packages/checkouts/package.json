@@ -15,27 +15,6 @@
       },
       "default": "./dist/thirdweb-dev-checkouts.cjs.js"
     },
-    "./lib/CheckoutWithCard": {
-      "module": {
-        "browser": "./lib/CheckoutWithCard.esm.js",
-        "default": "./lib/CheckoutWithCard.esm.js"
-      },
-      "default": "./lib/CheckoutWithCard.cjs.js"
-    },
-    "./lib/CheckoutWithEth": {
-      "module": {
-        "browser": "./lib/CheckoutWithEth.esm.js",
-        "default": "./lib/CheckoutWithEth.esm.js"
-      },
-      "default": "./lib/CheckoutWithEth.cjs.js"
-    },
-    "./lib/renderPaperCheckoutLink": {
-      "module": {
-        "browser": "./lib/renderPaperCheckoutLink.esm.js",
-        "default": "./lib/renderPaperCheckoutLink.esm.js"
-      },
-      "default": "./lib/CheckoutWithEth.cjs.js"
-    },
     "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/checkouts",
