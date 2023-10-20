@@ -51,7 +51,7 @@ export const WalletButton = ({
           height={iconHeight}
         />
         <Box ml="sm" alignItems="flex-start">
-          <Text variant="bodyLarge" color={nameColor}>
+          <Text variant="bodyLargeBold" color={nameColor}>
             {name}
           </Text>
           {recommended ? (
