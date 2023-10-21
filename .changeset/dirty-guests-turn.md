@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/wallets": minor
+"@thirdweb-dev/wallets": patch
 ---
 
-feat(wallets): add onAuthSuccess callback for paperWallet
+add onAuthSuccess callback for paperWallet

@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react": minor
+"@thirdweb-dev/react": patch
 ---
 
-feat(react): Add onAuthSuccess for paperWallet
+Add onAuthSuccess for paperWallet
