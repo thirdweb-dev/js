@@ -21,7 +21,7 @@ export function useImportContract() {
         network: chain,
       });
       const res = await fetch(
-        `https://contract-importer-qj32.zeet-nftlabs.zeet.app/import`,
+        `https://contract.thirdweb.com/import`,
         {
           method: "POST",
           headers: {
