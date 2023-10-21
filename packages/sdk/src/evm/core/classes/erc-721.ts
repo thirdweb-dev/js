@@ -25,6 +25,7 @@ import type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
+  NFTWithoutMetadata,
 } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
@@ -167,16 +168,34 @@ export class Erc721<
    * @returns The NFT metadata
    * @twfeature ERC721
    */
-  public async get(tokenId: BigNumberish): Promise<NFT> {
-    const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => constants.AddressZero),
-      this.getTokenMetadata(tokenId).catch(() => ({
-        id: tokenId.toString(),
-        uri: "",
-        ...FALLBACK_METADATA,
-      })),
-    ]);
-    return { owner, metadata, type: "ERC721", supply: "1" };
+  public async get<T extends boolean | undefined = undefined>(
+    tokenId: BigNumberish,
+    loadMetadata?: T,
+  ): Promise<T extends true | undefined ? NFT : NFTWithoutMetadata> {
+    if (loadMetadata === false) {
+      const owner = await this.ownerOf(tokenId).catch(
+        () => constants.AddressZero,
+      );
+      const nft: NFTWithoutMetadata = {
+        owner,
+        metadata: {
+          id: tokenId.toString(),
+        },
+        type: "ERC721",
+        supply: "1",
+      };
+      return nft as T extends true | undefined ? NFT : NFTWithoutMetadata;
+    } else {
+      const [owner, metadata] = await Promise.all([
+        this.ownerOf(tokenId).catch(() => constants.AddressZero),
+        this.getTokenMetadata(tokenId).catch(() => ({
+          id: tokenId.toString(),
+          uri: "",
+          ...FALLBACK_METADATA,
+        })),
+      ]);
+      return { owner, metadata, type: "ERC721", supply: "1" };
+    }
   }
 
   /**
@@ -425,11 +444,10 @@ export class Erc721<
   public async getOwned(
     walletAddress?: AddressOrEns,
     queryParams?: QueryAllParams,
-  ) {
+  ): Promise<NFT[] | NFTWithoutMetadata[]> {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
-
     if (this.query?.owned) {
       return this.query.owned.all(walletAddress, queryParams);
     } else {
@@ -445,8 +463,11 @@ export class Erc721<
         const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
         ownedTokens = ownedTokens.slice(start, start + count);
       }
+      const loadMetadata = queryParams
+        ? queryParams.loadMetadata !== false
+        : true;
       return await Promise.all(
-        ownedTokens.map(async (i) => this.get(i.tokenId)),
+        ownedTokens.map(async (i) => this.get(i.tokenId, loadMetadata)),
       );
     }
   }

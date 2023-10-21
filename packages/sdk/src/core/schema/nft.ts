@@ -76,3 +76,13 @@ export type NFT = {
   supply: string;
   quantityOwned?: string;
 };
+/**
+ * @public
+ */
+export type NFTWithoutMetadata = {
+  metadata: Pick<NFTMetadata, "id">;
+  owner: string;
+  type: "ERC1155" | "ERC721" | "metaplex";
+  supply: string;
+  quantityOwned?: string;
+};

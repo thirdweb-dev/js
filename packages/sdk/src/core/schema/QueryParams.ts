@@ -10,10 +10,12 @@ export const QueryAllParamsSchema = /* @__PURE__ */ (() =>
     .object({
       start: z.number().default(0),
       count: z.number().default(DEFAULT_QUERY_ALL_COUNT),
+      loadMetadata: z.boolean().default(true),
     })
     .default({
       start: 0,
       count: DEFAULT_QUERY_ALL_COUNT,
+      loadMetadata: true,
     }))();
 
 /**
