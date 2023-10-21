@@ -138,12 +138,11 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     async (
       signedPayloads: SignedPayload1155[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const contractPayloads = (
-        await Promise.all(
-          signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
-        )
-      ).map((message, index) => {
-        const s = signedPayloads[index];
+      const contractStructs = await Promise.all(
+        signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
+      );
+      const contractPayloads = signedPayloads.map((s, index) => {
+        const message = contractStructs[index];
         const signature = s.signature;
         const price = s.payload.price;
         if (BigNumber.from(price).gt(0)) {
@@ -280,7 +279,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   }
 
   /**
-   * Generate a signature that can be used to mint additionaly supply to an existing NFT.
+   * Generate a signature that can be used to mint additionally supply to an existing NFT.
    *
    * @remarks Takes in a payload with the token ID of an existing NFT, and signs it with your private key. The generated signature can then be used to mint additional supply to the NFT using the exact payload and signature generated.
    *
@@ -295,7 +294,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * const startTime = new Date();
    * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const payload = {
-   *   tokenId: 0, // Instead of metadata, we specificy the token ID of the NFT to mint supply to
+   *   tokenId: 0, // Instead of metadata, we specify the token ID of the NFT to mint supply to
    *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
    *   quantity: 2, // the quantity of NFTs to mint
    *   price: 0.5, // the price per NFT
@@ -341,7 +340,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   }
 
   /**
-   * Genrate a batch of signatures that can be used to mint new NFTs or additionaly supply to existing NFTs dynamically.
+   * Generate a batch of signatures that can be used to mint new NFTs or additionally supply to existing NFTs dynamically.
    *
    * @remarks See {@link Erc1155SignatureMintable.generateFromTokenId}
    *
@@ -352,10 +351,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   public async generateBatchFromTokenIds(
     payloadsToSign: PayloadToSign1155WithTokenId[],
   ): Promise<SignedPayload1155[]> {
-    await this.roles?.verify(
-      ["minter"],
-      await this.contractWrapper.getSignerAddress(),
-    );
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "No signer available");
+
+    await this.roles?.verify(["minter"], await signer.getAddress());
 
     const parsedRequests: FilledSignaturePayload1155WithTokenId[] =
       await Promise.all(
@@ -365,6 +364,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
       );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
+
     const [uris, chainId, contractInfo] = await Promise.all([
       uploadOrExtractURIs(metadatas, this.storage),
       this.contractWrapper.getChainID(),
@@ -374,11 +374,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
       ),
     ]);
 
-    const signer = this.contractWrapper.getSigner();
-    invariant(signer, "No signer available");
-
-    const isLegacyContract = contractInfo?.type === "TokenERC1155";
-    const _finalPayloads = await Promise.all(
+    const finalPayloads = await Promise.all(
       parsedRequests.map((m, i) =>
         Signature1155PayloadOutput.parseAsync({
           ...m,
@@ -386,8 +382,15 @@ export class Erc1155SignatureMintable implements DetectableFeature {
         }),
       ),
     );
-    const _signatures = await Promise.all(
-      _finalPayloads.map((payload) =>
+    const contractStructs = await Promise.all(
+      finalPayloads.map((finalPayload) =>
+        this.mapPayloadToContractStruct(finalPayload),
+      ),
+    );
+
+    const isLegacyContract = contractInfo?.type === "TokenERC1155";
+    const signatures = await Promise.all(
+      contractStructs.map((contractStruct) =>
         this.contractWrapper.signTypedData(
           signer,
           {
@@ -397,13 +400,13 @@ export class Erc1155SignatureMintable implements DetectableFeature {
             verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest1155 }, // TYPEHASH
-          payload,
+          contractStruct,
         ),
       ),
     );
-    return parsedRequests.map((_, index) => ({
-      payload: _finalPayloads[index],
-      signature: _signatures[index] as string,
+    return signatures.map((signature, index) => ({
+      payload: finalPayloads[index],
+      signature: signature.toString(),
     }));
   }
 

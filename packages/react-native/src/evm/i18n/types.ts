@@ -72,17 +72,21 @@ export const _en = {
   smart_wallet: {
     switch_to_smart: "Switch to Smart Wallet",
     switch_to_personal: "Switch to Personal Wallet",
+    network_mistmach: "Network Mismatch",
+    connecting: "Connecting",
   },
   embedded_wallet: {
     request_new_code: "Request new code",
     sign_in: "Sign In",
     sign_in_google: "Sign in with Google",
+    enter_your_email: "Enter your email address",
   },
   wallet_connect: {
     no_results_found: "No results found",
     search_wallets: "Search Wallets",
   },
   common: {
+    connect_app: "Connect app",
     unknown_network: "Unknown Network",
     fetching: "Fetching...",
     password: "Password",
