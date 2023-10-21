@@ -12,22 +12,29 @@ import {
   TextInput,
   TextInputKeyPressEventData,
 } from "react-native";
-import { useAppTheme } from "../../../styles/hooks";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import Box from "../../../components/base/Box";
 import Text from "../../../components/base/Text";
 import BaseButton from "../../../components/base/BaseButton";
 import * as Clipboard from "expo-clipboard";
+import { StyleSheet } from "react-native";
+import { EmbeddedSocialConnection } from "./EmbeddedSocialConnection";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 const OTP_LENGTH = 6;
 
 export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
-  close,
+  connected,
   goBack,
   selectionData,
   onLocallyConnected,
+  ...props
 }) => {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const [values, setValues] = useState<string[]>(
     new Array(OTP_LENGTH).fill(""),
@@ -44,9 +51,9 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   useEffect(() => {
     if (address) {
       setCheckingOtp(false);
-      close();
+      connected();
     }
-  }, [address, close]);
+  }, [address, connected]);
 
   useEffect(() => {
     if (
@@ -87,7 +94,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       }, 0);
     }
   }, [
-    close,
     onLocallyConnected,
     selectionData,
     setConnectedWallet,
@@ -105,6 +111,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           inputRefs.current[i]?.setNativeProps({ text: newValues[i] });
         }
         setValues(newValues);
+        Clipboard.setStringAsync("");
         return;
       }
     }
@@ -158,13 +165,27 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       });
   };
 
+  if (selectionData?.oauthOptions) {
+    return (
+      <EmbeddedSocialConnection
+        connected={() => {}}
+        goBack={goBack}
+        onLocallyConnected={onLocallyConnected}
+        selectionData={selectionData}
+        {...props}
+      />
+    );
+  }
+
   return (
     <Box marginHorizontal="xl">
       <ConnectWalletHeader
-        middleContent={<Text variant="header">Sign In</Text>}
+        middleContent={
+          <Text variant="header">{l.embedded_wallet.sign_in}</Text>
+        }
         subHeaderText={"Please enter the code sent to"}
         onBackPress={goBack}
-        onClose={close}
+        onClose={connected}
       />
       <Text
         variant="subHeader"
@@ -199,10 +220,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
             <TextInput
               ref={(ref) => (inputRefs.current[index] = ref)}
               style={{
-                fontSize: 20,
+                ...styles.textInput,
                 color: theme.colors.textPrimary,
-                textAlign: "center",
-                height: 50,
               }}
               keyboardType="number-pad"
               editable={!checkingOtp}
@@ -239,7 +258,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
             />
           ) : (
             <Text variant="bodySmallSecondary" color="linkPrimary">
-              Request new code
+              {l.embedded_wallet.request_new_code}
             </Text>
           )}
         </BaseButton>
@@ -247,3 +266,11 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     </Box>
   );
 };
+
+const styles = StyleSheet.create({
+  textInput: {
+    fontSize: 20,
+    textAlign: "center",
+    height: 50,
+  },
+});

@@ -5,16 +5,20 @@ import { WalletConfig, useConnect, useWallets } from "@thirdweb-dev/react-core";
 import { useCallback, useEffect, useState } from "react";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
-import { useModalState } from "../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+  useModalState,
+} from "../../providers/ui-context-provider";
 import {
   CLOSE_MODAL_STATE,
   ConnectWalletFlowModal,
 } from "../../utils/modalTypes";
 import Box from "../base/Box";
 import { ThemeProvider } from "../../styles/ThemeProvider";
-import { useAppTheme } from "../../styles/hooks";
 
 export const ConnectWalletFlow = () => {
+  const l = useLocale();
   const { modalState, setModalState } = useModalState();
   const {
     modalTitle,
@@ -23,14 +27,13 @@ export const ConnectWalletFlow = () => {
     termsOfServiceUrl,
     walletConfig,
   } = (modalState as ConnectWalletFlowModal).data;
-
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
   const [selectionData, setSelectionData] = useState<any>();
   const supportedWallets = useWallets();
   const theme = useColorScheme();
-  const appTheme = useAppTheme();
+  const appTheme = useGlobalTheme();
   const connect = useConnect();
 
   const onClose = useCallback(
@@ -60,8 +63,8 @@ export const ConnectWalletFlow = () => {
 
   const onChooseWallet = useCallback(
     (wallet: WalletConfig, data?: any) => {
-      setActiveWallet(wallet);
       setSelectionData(data);
+      setActiveWallet(wallet);
 
       // If the wallet has no custom connect UI, then connect it
       if (!wallet.connectUI) {
@@ -74,13 +77,19 @@ export const ConnectWalletFlow = () => {
   useEffect(() => {
     // case when only one wallet is passed in supportedWallets
     if (walletConfig) {
-      if (walletConfig.connectUI) {
-        // if there's a connection UI, then show it
-        setActiveWallet(walletConfig);
-      } else {
-        // if there's no connection UI, then connect the wallet
-        onChooseWallet(walletConfig);
+      // if there's a selection UI, then continue with the flow
+      if (walletConfig.selectUI) {
+        return;
       }
+
+      if (walletConfig.connectUI) {
+        // if there's a connection UI and no selection UI, then show it
+        setActiveWallet(walletConfig);
+        return;
+      }
+
+      // if there's no connection UI or selectionUI, then automatically select it
+      onChooseWallet(walletConfig);
     }
   }, [onChooseWallet, walletConfig]);
 
@@ -108,9 +117,10 @@ export const ConnectWalletFlow = () => {
           modalSize="compact"
           theme={theme || "dark"}
           goBack={onBackPress}
-          close={handleClose}
+          connected={handleClose}
           isOpen={modalVisible}
-          open={onOpenModal}
+          show={onOpenModal}
+          hide={() => {}}
           walletConfig={activeWallet}
           supportedWallets={supportedWallets}
           selectionData={selectionData}
@@ -138,7 +148,7 @@ export const ConnectWalletFlow = () => {
               content={
                 activeWallet.id === walletIds.localWallet ? (
                   <Text variant="bodySmallSecondary" mt="md" textAlign="center">
-                    Creating, encrypting and securing your device wallet.
+                    {l.connecting_wallet.creating_encrypting}
                   </Text>
                 ) : undefined
               }

@@ -1,3 +1,4 @@
+import { useLocale } from "../../../providers/ui-context-provider";
 import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/WalletLoadingThumbnail";
 import { Box, ImageSvgUri } from "../../base";
 import Text from "../../base/Text";
@@ -23,6 +24,7 @@ export function ConnectingWallet({
   onClose,
   onBackPress,
 }: ConnectingWalletProps) {
+  const l = useLocale();
   return (
     <Box paddingHorizontal="xl">
       <ConnectWalletHeader
@@ -30,7 +32,7 @@ export function ConnectingWallet({
         subHeaderText={subHeaderText}
         onClose={onClose}
       />
-      <WalletLoadingThumbnail imageSize={100}>
+      <WalletLoadingThumbnail imageSize={85}>
         <ImageSvgUri height={80} width={80} imageUrl={wallet.meta.iconURL} />
       </WalletLoadingThumbnail>
       <View style={styles.connectingContainer}>
@@ -39,10 +41,10 @@ export function ConnectingWallet({
         ) : (
           <>
             <Text variant="header" mt="lg">
-              Connecting your wallet
+              {l.connecting_wallet.connecting_your_wallet}
             </Text>
             <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-              {`Login and connect your wallet through the ${wallet.meta.name} pop-up`}
+              {l.connecting_wallet.connecting_through_pop_up}
             </Text>
           </>
         )}

@@ -1,26 +1,28 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "CENNZnet Rata",
   "chain": "CENNZnet",
-  "rpc": [],
+  "chainId": 3000,
+  "explorers": [],
   "faucets": [
     "https://app-faucet.centrality.me"
   ],
-  "nativeCurrency": {
-    "name": "CPAY",
-    "symbol": "CPAY",
-    "decimals": 18
-  },
-  "infoURL": "https://cennz.net",
-  "shortName": "cennz-r",
-  "chainId": 3000,
-  "networkId": 3000,
+  "features": [],
   "icon": {
     "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
     "width": 112,
     "height": 112,
     "format": "svg"
   },
-  "testnet": false,
-  "slug": "cennznet-rata"
+  "infoURL": "https://cennz.net",
+  "name": "CENNZnet Rata",
+  "nativeCurrency": {
+    "name": "CPAY",
+    "symbol": "CPAY",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [],
+  "shortName": "cennz-r",
+  "slug": "cennznet-rata",
+  "testnet": false
 } as const satisfies Chain;

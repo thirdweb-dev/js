@@ -1,41 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ShimmerEVM Mainnet",
-  "title": "ShimmerEVM Mainnet",
   "chain": "ShimmerEVM",
-  "rpc": [
-    "https://shimmerevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://json-rpc.evm.shimmer.network"
+  "chainId": 148,
+  "explorers": [
+    {
+      "name": "explorer",
+      "url": "https://explorer.evm.shimmer.network",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "SMR",
-    "symbol": "SMR",
-    "decimals": 18
-  },
-  "infoURL": "https://shimmer.network",
-  "shortName": "shimmerevm-mainnet",
-  "chainId": 148,
-  "networkId": 148,
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
     "width": 720,
     "height": 720,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "explorer",
-      "url": "https://explorer.evm.shimmer.network",
-      "icon": {
-        "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
-        "width": 720,
-        "height": 720,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://shimmer.network",
+  "name": "ShimmerEVM Mainnet",
+  "nativeCurrency": {
+    "name": "SMR",
+    "symbol": "SMR",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://shimmerevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://json-rpc.evm.shimmer.network"
   ],
-  "testnet": false,
-  "slug": "shimmerevm"
+  "shortName": "shimmerevm-mainnet",
+  "slug": "shimmerevm",
+  "testnet": false
 } as const satisfies Chain;

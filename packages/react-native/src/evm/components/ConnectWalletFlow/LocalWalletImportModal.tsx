@@ -16,7 +16,7 @@ import * as FileSystem from "expo-file-system";
 import { TWModal } from "../base/modal/TWModal";
 import { localWallet } from "../../wallets/wallets/local-wallet";
 import { TextInput } from "../base";
-import { useAppTheme } from "../../styles/hooks";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export type LocalWalletImportModalProps = {
   isVisible: boolean;
@@ -29,6 +29,7 @@ export const LocalWalletImportModal = ({
   onClose,
   onWalletImported,
 }: LocalWalletImportModalProps) => {
+  const l = useLocale();
   const [password, setPassword] = useState<string | undefined>();
   const [privateKeyOrMnemonic, setPrivateKeyOrMnemonic] = useState<
     string | undefined
@@ -37,7 +38,7 @@ export const LocalWalletImportModal = ({
   const [error, setError] = useState<string | undefined>();
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const createWalletInstance = useCreateWalletInstance();
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const createLocalWalletFromJsonFile = async () => {
     if (!jsonFile || !password) {
@@ -107,7 +108,7 @@ export const LocalWalletImportModal = ({
       }
 
       if (!localWalletInstance) {
-        setError("Please, double check your password or private key.");
+        setError(l.local_wallet.double_check_password);
         setIsImporting(false);
         return;
       }
@@ -147,7 +148,7 @@ export const LocalWalletImportModal = ({
       setJsonFile(result.uri);
       setError(undefined);
     } else {
-      setError("Error accessing the file. Please try again.");
+      setError(l.local_wallet.error_accessing_file);
     }
   };
 
@@ -169,9 +170,7 @@ export const LocalWalletImportModal = ({
             onClose={onCloseInternal}
           />
           <Text variant="subHeader" mt="md" textAlign="center">
-            {
-              "The application can authorize any transactions on behalf of the wallet without any approvals. We recommend only connecting to trusted applications."
-            }
+            {l.local_wallet.application_can_authorize_transactions}
           </Text>
           <BaseButton
             backgroundColor="background"
@@ -186,7 +185,7 @@ export const LocalWalletImportModal = ({
             </Text>
           </BaseButton>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-            Password
+            {l.common.password}
           </Text>
           <PasswordInput onChangeText={onChangeText} />
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
@@ -200,16 +199,20 @@ export const LocalWalletImportModal = ({
           >
             <Box height={1} flex={1} backgroundColor="border" />
             <Text variant="bodySmall" textAlign="center" marginHorizontal="xxs">
-              Or Private key or Mnemonic
+              {l.local_wallet.private_key_mnemonic}
             </Text>
             <Box height={1} flex={1} backgroundColor="border" />
           </Box>
           <TextInput
             textInputProps={{
               secureTextEntry: true,
-              placeholder: "Private key / Mnemonic",
+              placeholder: l.local_wallet.private_key_mnemonic_placeholder,
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: onPrivateKeyEntered,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+              },
             }}
             containerProps={{ pl: "xxs" }}
           />
@@ -228,7 +231,7 @@ export const LocalWalletImportModal = ({
                 <ActivityIndicator size="small" color="buttonTextColor" />
               ) : (
                 <Text variant="bodySmall" color="black">
-                  Import
+                  {l.common.import}
                 </Text>
               )}
             </BaseButton>

@@ -34,7 +34,9 @@ export const ConnectModalInline = (
     | "hideTestnetFaucet"
     | "switchToActiveChain"
     | "supportedTokens"
-  >,
+  > & {
+    onModalHide?: () => void;
+  },
 ) => {
   const { screen, setScreen, initialScreen } = useScreen();
   const walletConfigs = useWallets();
@@ -47,6 +49,11 @@ export const ConnectModalInline = (
         initialScreen={initialScreen}
         screen={screen}
         setScreen={setScreen}
+        setHideModal={() => {
+          if (props.onModalHide) {
+            props.onModalHide();
+          }
+        }}
       />
 
       {/* close icon */}

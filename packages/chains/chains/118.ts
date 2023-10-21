@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arcology Testnet",
   "chain": "Arcology",
-  "icon": {
-    "url": "ipfs://QmRD7itMvaZutfBjyA7V9xkMGDtsZiJSagPwd3ijqka8kE",
-    "width": 288,
-    "height": 288,
-    "format": "png"
-  },
-  "rpc": [
-    "https://arcology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.arcology.network/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Arcology Coin",
-    "symbol": "Acol",
-    "decimals": 18
-  },
-  "infoURL": "https://arcology.network/",
-  "shortName": "arcology",
   "chainId": 118,
-  "networkId": 118,
   "explorers": [
     {
       "name": "arcology",
@@ -29,6 +9,27 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "arcology-testnet"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmRD7itMvaZutfBjyA7V9xkMGDtsZiJSagPwd3ijqka8kE",
+    "width": 288,
+    "height": 288,
+    "format": "png"
+  },
+  "infoURL": "https://arcology.network/",
+  "name": "Arcology Testnet",
+  "nativeCurrency": {
+    "name": "Arcology Coin",
+    "symbol": "Acol",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://arcology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.arcology.network/rpc"
+  ],
+  "shortName": "arcology",
+  "slug": "arcology-testnet",
+  "testnet": true
 } as const satisfies Chain;

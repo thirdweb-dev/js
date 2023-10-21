@@ -35,16 +35,16 @@ export const WalletConnectScan: React.FC<{
     }
     scanStarted.current = true;
 
-    const rainbow = createInstance(walletConfig);
+    const walletInstance = createInstance(walletConfig);
 
     setConnectionStatus("connecting");
-    rainbow.connectWithQrCode({
+    walletInstance.connectWithQrCode({
       chainId: chainToConnect?.chainId,
       onQrCodeUri(uri) {
         setQrCodeUri(uri);
       },
       onConnected() {
-        setConnectedWallet(rainbow);
+        setConnectedWallet(walletInstance);
         onConnected();
       },
     });
@@ -58,23 +58,15 @@ export const WalletConnectScan: React.FC<{
   ]);
 
   return (
-    <Container
-      fullHeight
-      animate="fadein"
-      flex="column"
-      style={{
-        minHeight: "450px",
-      }}
-    >
+    <Container fullHeight animate="fadein" flex="column">
       <Container p="lg">
         <ModalHeader onBack={onBack} title="WalletConnect" />
       </Container>
 
-      <Spacer y="md" />
+      <Spacer y="sm" />
 
-      <Container flex="column" center={"x"} px="lg" expand>
+      <Container flex="column" center={"both"} px="lg" expand>
         <QRCode
-          size={310}
           qrCodeUri={qrCodeUri}
           QRIcon={
             <Img
@@ -86,7 +78,7 @@ export const WalletConnectScan: React.FC<{
         />
       </Container>
 
-      <Spacer y="sm" />
+      <Spacer y="lg" />
 
       {/* <Spacer y="xl" /> */}
 

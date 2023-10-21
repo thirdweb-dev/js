@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HAPchain Testnet",
   "chain": "HAPchain",
-  "rpc": [
-    "https://hapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jsonrpc-test.hap.land"
+  "chainId": 373737,
+  "explorers": [
+    {
+      "name": "HAP EVM Explorer (Blockscout)",
+      "url": "https://blockscout-test.hap.land",
+      "standard": "none"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "HAP",
-    "symbol": "HAP",
-    "decimals": 18
-  },
-  "infoURL": "https://hap.land",
-  "shortName": "hap-testnet",
-  "chainId": 373737,
-  "networkId": 373737,
+  "features": [],
   "icon": {
     "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "HAP EVM Explorer (Blockscout)",
-      "url": "https://blockscout-test.hap.land",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      }
-    }
+  "infoURL": "https://hap.land",
+  "name": "HAPchain Testnet",
+  "nativeCurrency": {
+    "name": "HAP",
+    "symbol": "HAP",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://hapchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://jsonrpc-test.hap.land"
   ],
-  "testnet": true,
-  "slug": "hapchain-testnet"
+  "shortName": "hap-testnet",
+  "slug": "hapchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

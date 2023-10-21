@@ -43,7 +43,7 @@ export function generatePluginFunctions(
 }
 
 export function generateExtensionFunctions(
-  extensionAbi: any,
+  extensionAbi: Abi,
 ): ExtensionFunction[] {
   const extensionInterface = new utils.Interface(extensionAbi);
   const extensionFunctions: ExtensionFunction[] = [];

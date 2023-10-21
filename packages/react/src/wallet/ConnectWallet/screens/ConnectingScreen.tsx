@@ -1,12 +1,13 @@
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader, Line } from "../../../components/basic";
-import { fontSize } from "../../../design-system";
+import { iconSize, spacing } from "../../../design-system";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { WalletLogoSpinner } from "./WalletLogoSpinner";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -20,22 +21,34 @@ export const ConnectingScreen: React.FC<{
   const modalConfig = useContext(ModalConfigCtx);
   return (
     <Container animate="fadein" fullHeight flex="column">
-      <Container p="lg">
+      <Container
+        p="lg"
+        style={{
+          paddingBottom: 0,
+        }}
+      >
         <ModalHeader
           title={props.walletName}
           onBack={props.hideBackButton ? undefined : props.onBack}
         />
       </Container>
 
-      <Spacer y="lg" />
-
-      <Container flex="column" center="both" expand p="lg" relative>
-        <WalletLogoSpinner
-          onRetry={props.onRetry}
-          error={props.errorConnecting}
-          iconUrl={props.walletIconURL}
-        />
-        <Spacer y="xxl" />
+      <Container
+        flex="column"
+        center="y"
+        expand
+        px={modalConfig.modalSize === "compact" ? "lg" : "xxl"}
+        relative
+        style={{
+          paddingTop: 0,
+        }}
+      >
+        <Container py="3xl">
+          <WalletLogoSpinner
+            error={props.errorConnecting}
+            iconUrl={props.walletIconURL}
+          />
+        </Container>
 
         <Container
           animate="fadein"
@@ -44,10 +57,12 @@ export const ConnectingScreen: React.FC<{
           }}
         >
           <Text center color="primaryText" size="lg" weight={600}>
-            {props.errorConnecting ? "Connection Failed" : "Connecting"}
+            {props.errorConnecting
+              ? "Connection Failed"
+              : "Awaiting Confirmation"}
           </Text>
 
-          <Spacer y="lg" />
+          <Spacer y="md" />
 
           {!props.errorConnecting ? (
             <Text
@@ -61,29 +76,28 @@ export const ConnectingScreen: React.FC<{
               {isMobile() ? "application" : "pop-up"}
             </Text>
           ) : (
-            <Text
-              style={{
-                textAlign: "center",
-              }}
-            >
-              click on button above to try again
-            </Text>
+            <Container flex="row" center="x" animate="fadein">
+              <Button
+                fullWidth
+                variant="accent"
+                onClick={props.onRetry}
+                style={{
+                  gap: spacing.sm,
+                  alignItems: "center",
+                }}
+              >
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Try Agin{" "}
+              </Button>
+            </Container>
           )}
         </Container>
       </Container>
 
-      <Spacer y="lg" />
-      {modalConfig.modalSize === "compact" && <Line />}
+      <Spacer y="xl" />
+      <Line />
 
       <Container flex="row" center="x" p="lg">
-        <Button
-          variant="link"
-          onClick={props.onGetStarted}
-          style={{
-            textAlign: "center",
-            fontSize: fontSize.sm,
-          }}
-        >
+        <Button variant="link" onClick={props.onGetStarted}>
           Don{`'`}t have {props.walletName}?
         </Button>
       </Container>

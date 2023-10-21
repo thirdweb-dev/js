@@ -1,20 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arevia",
   "chain": "Arevia",
-  "rpc": [],
+  "chainId": 2309,
+  "explorers": [],
   "faucets": [],
+  "features": [],
+  "name": "Arevia",
   "nativeCurrency": {
     "name": "Arev",
     "symbol": "ARÉV",
     "decimals": 18
   },
-  "infoURL": "",
+  "redFlags": [],
+  "rpc": [],
   "shortName": "arevia",
-  "chainId": 2309,
-  "networkId": 2309,
-  "explorers": [],
+  "slug": "arevia",
   "status": "incubating",
-  "testnet": false,
-  "slug": "arevia"
+  "testnet": false
 } as const satisfies Chain;

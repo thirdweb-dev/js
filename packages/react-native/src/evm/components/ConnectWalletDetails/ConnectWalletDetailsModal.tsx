@@ -29,6 +29,7 @@ import { SendButton } from "../SendFunds/SendButton";
 import { SupportedTokens } from "../SendFunds/defaultTokens";
 import { ActiveDot } from "../base";
 import { EmbeddedWallet } from "../../wallets/wallets/embedded/EmbeddedWallet";
+import { useLocale } from "../../providers/ui-context-provider";
 
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -50,6 +51,7 @@ export const ConnectWalletDetailsModal = ({
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
 }) => {
+  const l = useLocale();
   const [isExportModalVisible, setIsExportModalVisible] = useState(false);
   const activeWallet = useWallet();
   const chain = useChain();
@@ -137,11 +139,15 @@ export const ConnectWalletDetailsModal = ({
       return (
         <>
           <View style={styles.currentNetwork}>
-            <Text variant="bodySmallSecondary">Additional Actions</Text>
+            <Text variant="bodySmallSecondary">
+              {l.connect_wallet_details.additional_actions}
+            </Text>
           </View>
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             justifyContent="space-between"
             style={styles.exportWallet}
@@ -150,7 +156,9 @@ export const ConnectWalletDetailsModal = ({
             <>
               <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">Backup wallet</Text>
+                <Text variant="bodySmall">
+                  {l.connect_wallet_details.backup_wallet}
+                </Text>
               </View>
             </>
             <RightArrowIcon height={10} width={10} />
@@ -159,6 +167,8 @@ export const ConnectWalletDetailsModal = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
             justifyContent="space-between"
             style={styles.exportWallet}
@@ -167,7 +177,9 @@ export const ConnectWalletDetailsModal = ({
             <>
               <PocketWalletIcon width={16} height={16} />
               <View style={styles.exportWalletInfo}>
-                <Text variant="bodySmall">Import wallet</Text>
+                <Text variant="bodySmall">
+                  {l.connect_wallet_details.import_wallet}
+                </Text>
               </View>
             </>
             <RightArrowIcon height={10} width={10} />
@@ -181,9 +193,7 @@ export const ConnectWalletDetailsModal = ({
 
           {activeWallet?.walletId === LocalWallet.id ? (
             <Text variant="error" textAlign="left" mb="sm">
-              {
-                "This is a temporary guest wallet. Download a backup if you don't want to lose access to it."
-              }
+              {l.local_wallet.this_is_a_temporary_wallet}
             </Text>
           ) : null}
         </>
@@ -197,6 +207,7 @@ export const ConnectWalletDetailsModal = ({
     onExportLocalWalletPress,
     onWalletImported,
     smartWallet,
+    l,
   ]);
 
   return (
@@ -230,7 +241,7 @@ export const ConnectWalletDetailsModal = ({
                 <Box flexDirection="row" alignItems="center">
                   <ActiveDot width={10} height={10} />
                   <Text variant="bodySmallSecondary" ml="xxs">
-                    Connected to a Smart Wallet
+                    {l.connect_wallet_details.connected_to_smart_wallet}
                   </Text>
                 </Box>
                 {isSmartWalletDeployed ? (
@@ -238,7 +249,8 @@ export const ConnectWalletDetailsModal = ({
                 ) : null}
               </BaseButton>
             ) : null}
-            {activeWallet?.walletId === EmbeddedWallet.id ? (
+            {activeWallet?.walletId === EmbeddedWallet.id &&
+            (activeWallet as EmbeddedWallet).getEmail() ? (
               <Box flexDirection="row" alignItems="center" mt="md">
                 <ActiveDot width={10} height={10} />
                 <Text variant="bodySmallSecondary" ml="xxs">
@@ -246,18 +258,24 @@ export const ConnectWalletDetailsModal = ({
                 </Text>
               </Box>
             ) : null}
-            <Box flexDirection="row" justifyContent="space-evenly" mt="md">
+            <Box
+              flexDirection="row"
+              justifyContent="space-evenly"
+              marginVertical="md"
+            >
               <SendButton supportedTokens={supportedTokens} />
               <ReceiveButton />
             </Box>
             <View style={styles.currentNetwork}>
-              <Text variant="bodySmallSecondary">Current Network</Text>
+              <Text variant="bodySmallSecondary">
+                {l.connect_wallet_details.current_network}
+              </Text>
             </View>
             <NetworkButton chain={chain} enableSwitchModal={true} />
             {!hideTestnetFaucet && chain?.testnet && chain?.faucets?.length ? (
               <IconTextButton
                 mt="xs"
-                text="Request Testnet Funds"
+                text={l.connect_wallet_details.request_testnet_funds}
                 icon={<MoneyIcon height={16} width={16} />}
                 onPress={() => {
                   if (chain?.faucets?.[0]) {
@@ -269,7 +287,7 @@ export const ConnectWalletDetailsModal = ({
             {chain?.explorers && chain?.explorers?.[0] && (
               <IconTextButton
                 mt="xs"
-                text="View Transaction History"
+                text={l.connect_wallet_details.view_transaction_history}
                 icon={<TransactionIcon height={16} width={16} />}
                 onPress={() => {
                   Linking.openURL(
@@ -318,8 +336,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 12,
-    borderWidth: 0.5,
     paddingHorizontal: 10,
     paddingVertical: 12,
     minWidth: 200,
@@ -330,7 +346,7 @@ const styles = StyleSheet.create({
     alignContent: "flex-start",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    marginTop: 24,
     marginBottom: 8,
+    marginTop: 12,
   },
 });

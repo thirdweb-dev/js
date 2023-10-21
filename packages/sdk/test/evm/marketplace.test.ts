@@ -31,8 +31,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
-global.fetch = require("cross-fetch");
-
 let tokenAddress = NATIVE_TOKEN_ADDRESS;
 
 /**
@@ -257,9 +255,8 @@ describe("Marketplace Contract", async () => {
         });
       }
 
-      const receipts = await marketplaceContract.direct.createListingsBatch(
-        listings,
-      );
+      const receipts =
+        await marketplaceContract.direct.createListingsBatch(listings);
       assert.equal(receipts.length, 5);
       for (const receipt of receipts) {
         assert.isDefined(receipt.id);
@@ -283,9 +280,8 @@ describe("Marketplace Contract", async () => {
         });
       }
 
-      const receipts = await marketplaceContract.auction.createListingsBatch(
-        listings,
-      );
+      const receipts =
+        await marketplaceContract.auction.createListingsBatch(listings);
       assert.equal(receipts.length, 5);
       for (const receipt of receipts) {
         assert.isDefined(receipt.id);
@@ -439,17 +435,15 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should return a direct listing using getDirectListing", async () => {
-      const listing = await marketplaceContract.direct.getListing(
-        directListingId,
-      );
+      const listing =
+        await marketplaceContract.direct.getListing(directListingId);
       assert.equal(listing.type.toString(), ListingType.Direct.toString());
       assert.equal(listing.tokenId.toString(), "0");
     });
 
     it("should return a direct listing using getAuctionListing", async () => {
-      const listing = await marketplaceContract.auction.getListing(
-        auctionListingId,
-      );
+      const listing =
+        await marketplaceContract.auction.getListing(auctionListingId);
       assert.equal(listing.type.toString(), ListingType.Auction.toString());
       assert.equal(listing.tokenId.toString(), "1");
     });
@@ -662,9 +656,8 @@ describe("Marketplace Contract", async () => {
 
       // fetch all offers for the listing
       sdk.updateSignerOrProvider(adminWallet);
-      const offers: Offer[] = await marketplaceContract.getOffers(
-        directListingId,
-      );
+      const offers: Offer[] =
+        await marketplaceContract.getOffers(directListingId);
 
       // check that the offers are returned
       assert.equal(offers.length, 2);
@@ -901,9 +894,8 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should correctly close a direct listing", async () => {
-      const listing = await marketplaceContract.direct.getListing(
-        directListingId,
-      );
+      const listing =
+        await marketplaceContract.direct.getListing(directListingId);
       assert.equal(listing.quantity.toString(), "1");
       await marketplaceContract.direct.cancelListing(directListingId);
       try {
@@ -1023,9 +1015,8 @@ describe("Marketplace Contract", async () => {
     it("should allow you to update a direct listing", async () => {
       const buyoutPrice = ethers.utils.parseUnits("0.1");
 
-      const directListing = await marketplaceContract.direct.getListing(
-        directListingId,
-      );
+      const directListing =
+        await marketplaceContract.direct.getListing(directListingId);
       assert.equal(
         directListing.buyoutPrice.toString(),
         buyoutPrice.toString(),
@@ -1037,9 +1028,8 @@ describe("Marketplace Contract", async () => {
 
       await marketplaceContract.direct.updateListing(directListing);
 
-      const updatedListing = await marketplaceContract.direct.getListing(
-        directListingId,
-      );
+      const updatedListing =
+        await marketplaceContract.direct.getListing(directListingId);
       assert.equal(
         updatedListing.buyoutPrice.toString(),
         ethers.utils.parseUnits("20").toString(),

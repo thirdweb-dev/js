@@ -5,12 +5,15 @@ import { Theme, _darkTheme, _lightTheme } from "../styles/theme";
 import { useAppTheme } from "../styles/hooks";
 import { useTheme } from "@shopify/restyle";
 import { PropsWithChildren } from "react";
+import { Locale } from "../i18n/types";
+import { setLocale } from "../i18n/strings";
 
 type UIContextType = {
   modalState: ModalState;
   setModalState: (modalState: ModalState) => void;
   theme: ThemeProviderProps["theme"];
   setTheme: (theme: ThemeProviderProps["theme"]) => void;
+  locale: Locale;
 };
 
 const UIContext = createContext<UIContextType>({
@@ -24,9 +27,12 @@ const UIContext = createContext<UIContextType>({
   setModalState: () => undefined,
   theme: "light",
   setTheme: () => undefined,
+  locale: "en",
 });
 
-export const UIContextProvider = (props: PropsWithChildren) => {
+export const UIContextProvider = (
+  props: { locale: Locale } & PropsWithChildren,
+) => {
   const [modalState, setModalState] = useState<ModalState>({
     view: "Closed",
     data: {},
@@ -41,7 +47,15 @@ export const UIContextProvider = (props: PropsWithChildren) => {
     useState<ThemeProviderProps["theme"]>(providerTheme);
 
   return (
-    <UIContext.Provider value={{ modalState, setModalState, theme, setTheme }}>
+    <UIContext.Provider
+      value={{
+        modalState,
+        setModalState,
+        theme,
+        setTheme,
+        locale: props.locale,
+      }}
+    >
       {props.children}
     </UIContext.Provider>
   );
@@ -63,6 +77,12 @@ export const useModalState = (): {
   };
 };
 
+export const useLocale = () => {
+  const context = useContext(UIContext);
+
+  return setLocale(context.locale);
+};
+
 const getThemeObj = (theme?: ThemeProviderProps["theme"]) => {
   if (theme === "dark" || !theme) {
     return _darkTheme;
@@ -78,7 +98,7 @@ export const useGlobalTheme = (theme?: ThemeProviderProps["theme"]): Theme => {
   const appTheme = useTheme();
 
   const resultTheme = useMemo(() => {
-    const resp = getThemeObj(theme) || getThemeObj(context.theme) || appTheme;
+    const resp = getThemeObj(context.theme) || getThemeObj(theme) || appTheme;
     return resp;
   }, [theme, context, appTheme]);
 

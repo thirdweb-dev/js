@@ -15,16 +15,20 @@ import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/Wall
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Box from "../../base/Box";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
-import { useAppTheme } from "../../../styles/hooks";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 export const SmartWalletFlow = ({
-  close,
+  connected,
   goBack,
   walletConfig,
   personalWalletConfig,
   ...props
 }: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
-  const theme = useAppTheme();
+  const l = useLocale();
+  const theme = useGlobalTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
   const [personalWalletChainId, setPersonalWalletChaindId] = useState<
@@ -49,12 +53,12 @@ export const SmartWalletFlow = ({
         await connect(walletConfig, {
           personalWallet: personalWallet,
         });
-        close();
+        connected();
       } else {
         setPersonalWalletChaindId(eoaWalletChainId);
       }
     },
-    [close, connect, targetChain.chainId, walletConfig],
+    [connected, connect, targetChain.chainId, walletConfig],
   );
 
   const connectPersonalWallet = useCallback(
@@ -82,7 +86,7 @@ export const SmartWalletFlow = ({
   const onConnectingClosePress = () => {
     connectedPersonalWallet?.disconnect();
     reset();
-    close();
+    connected();
   };
 
   const onConnectingBackPress = () => {
@@ -119,7 +123,7 @@ export const SmartWalletFlow = ({
       {PersonalWalletConfigUI && !connectedPersonalWallet ? (
         <PersonalWalletConfigUI
           {...props}
-          close={close}
+          connected={connected}
           goBack={goBack}
           walletConfig={personalWalletConfig}
           onLocallyConnected={onPersonalWalletConnected}
@@ -131,7 +135,7 @@ export const SmartWalletFlow = ({
             onBackPress={onConnectingBackPress}
             onClose={onConnectingClosePress}
           />
-          <WalletLoadingThumbnail imageSize={100}>
+          <WalletLoadingThumbnail imageSize={85}>
             <ImageSvgUri
               height={80}
               width={80}
@@ -141,13 +145,13 @@ export const SmartWalletFlow = ({
           <View style={styles.connectingContainer}>
             <>
               <Text variant="header" mt="lg" textAlign="center">
-                {mismatch ? "Network Mismatch" : "Connecting..."}
+                {mismatch
+                  ? l.smart_wallet.network_mistmach
+                  : `${l.smart_wallet.connecting} ...`}
               </Text>
               {mismatch ? (
                 <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-                  {
-                    "There's a network mismatch between your contract and your wallet"
-                  }
+                  {l.connect_wallet_details.network_mismatch}
                 </Text>
               ) : null}
             </>
@@ -173,7 +177,7 @@ export const SmartWalletFlow = ({
             <ActivityIndicator size="small" color={theme.colors.textPrimary} />
           ) : (
             <Text variant="bodyLarge" textAlign="center">
-              Switch Network
+              {l.common.switch_network}
             </Text>
           )}
         </BaseButton>

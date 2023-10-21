@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-auth-solana.cjs.js",
-  "module": "dist/thirdweb-dev-auth-solana.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-auth-solana.esm.js": "./dist/thirdweb-dev-auth-solana.browser.esm.js"
-  }
-}

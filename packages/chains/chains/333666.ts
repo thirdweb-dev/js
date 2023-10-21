@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oone Chain Testnet",
   "chain": "OONE Testnet",
-  "rpc": [
-    "https://oone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.oonechain.com"
-  ],
-  "faucets": [
-    "https://apps-test.adigium.com/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "tOONE",
-    "symbol": "tOONE",
-    "decimals": 18
-  },
-  "infoURL": "https://oonechain.com",
-  "shortName": "oonetest",
   "chainId": 333666,
-  "networkId": 333666,
   "explorers": [
     {
       "name": "blockscout",
@@ -25,6 +9,23 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "oone-chain-testnet"
+  "faucets": [
+    "https://apps-test.adigium.com/faucet"
+  ],
+  "features": [],
+  "infoURL": "https://oonechain.com",
+  "name": "Oone Chain Testnet",
+  "nativeCurrency": {
+    "name": "tOONE",
+    "symbol": "tOONE",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://oone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.oonechain.com"
+  ],
+  "shortName": "oonetest",
+  "slug": "oone-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

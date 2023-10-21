@@ -9,20 +9,20 @@ import {
 } from "./common";
 import { MerkleSchema } from "./common/snapshots";
 
-export const DropErc721ContractInput =
-  /* @__PURE__ */ CommonContractSchema.merge(CommonRoyaltySchema)
+export const DropErc721ContractInput = /* @__PURE__ */ (() =>
+  CommonContractSchema.merge(CommonRoyaltySchema)
     .merge(MerkleSchema)
-    .merge(CommonSymbolSchema);
+    .merge(CommonSymbolSchema))();
 
-export const DropErc721ContractOutput =
-  /* @__PURE__ */ CommonContractOutputSchema.merge(CommonRoyaltySchema)
+export const DropErc721ContractOutput = /* @__PURE__ */ (() =>
+  CommonContractOutputSchema.merge(CommonRoyaltySchema)
     .merge(MerkleSchema)
-    .merge(CommonSymbolSchema);
+    .merge(CommonSymbolSchema))();
 
-export const DropErc721ContractDeploy =
-  /* @__PURE__ */ DropErc721ContractInput.merge(CommonPlatformFeeSchema)
+export const DropErc721ContractDeploy = /* @__PURE__ */ (() =>
+  DropErc721ContractInput.merge(CommonPlatformFeeSchema)
     .merge(CommonPrimarySaleSchema)
-    .merge(CommonTrustedForwarderSchema);
+    .merge(CommonTrustedForwarderSchema))();
 
 export const DropErc721ContractSchema = {
   deploy: DropErc721ContractDeploy,

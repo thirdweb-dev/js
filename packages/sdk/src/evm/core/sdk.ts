@@ -1,6 +1,6 @@
 import { getAllDetectedExtensionNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
@@ -842,7 +842,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
-      await getCompositePluginABI(
+      await getCompositeABI(
         resolvedAddress,
         AbiSchema.parse(parsedABI),
         provider,
@@ -890,7 +890,7 @@ function addChainToSupportedChains(
     options = {
       ...options,
       // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
-      supportedChains: [...(options?.supportedChains || []), network],
+      supportedChains: [network, ...(options?.supportedChains || [])],
     };
   }
   return options;
@@ -1103,7 +1103,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata.seller_fee_basis_points,
       ];
 
-      return await this.deployReleasedContract.prepare(
+      return await this.deployPublishedContract.prepare(
         THIRDWEB_DEPLOYER,
         "OpenEditionERC721",
         deployArgs,

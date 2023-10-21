@@ -4,10 +4,12 @@ import { Container } from "../../components/basic";
 import { Spinner } from "../../components/Spinner";
 
 export const HeadlessConnectUI = ({
-  close,
+  connected,
   walletConfig,
-  open,
+  hide,
+  show,
   supportedWallets,
+  goBack,
 }: ConnectUIProps<any>) => {
   const connect = useConnect();
   const prompted = useRef(false);
@@ -20,17 +22,19 @@ export const HeadlessConnectUI = ({
     prompted.current = true;
 
     (async () => {
-      close();
+      hide();
       try {
         await connect(walletConfig);
+        connected();
       } catch (e) {
         if (!singleWallet) {
-          open();
+          goBack();
+          show();
         }
         console.error(e);
       }
     })();
-  }, [walletConfig, connect, close, open, singleWallet]);
+  }, [walletConfig, connect, singleWallet, connected, hide, show, goBack]);
 
   return (
     <Container
@@ -39,8 +43,9 @@ export const HeadlessConnectUI = ({
       style={{
         minHeight: "250px",
       }}
+      p="lg"
     >
-      <Spinner size="md" color="accentText" />
+      <Spinner size="lg" color="accentText" />
     </Container>
   );
 };

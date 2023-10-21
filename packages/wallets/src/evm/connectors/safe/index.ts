@@ -69,9 +69,9 @@ const SIGN_MESSAGE_LIB_ABI = [
 const __IS_SERVER__ = typeof window === "undefined";
 
 export class SafeConnector extends Connector<SafeConnectionArgs> {
-  static supportedChains = /* @__PURE__ */ Object.keys(
-    CHAIN_ID_TO_GNOSIS_SERVER_URL,
-  );
+  static supportedChains = /* @__PURE__ */ (() =>
+    Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL))();
+
   public supportedChains = SafeConnector.supportedChains;
   readonly id = "safe-wallet";
   ready = !__IS_SERVER__;
@@ -259,7 +259,9 @@ export class SafeConnector extends Connector<SafeConnectionArgs> {
     if (accounts.length === 0) {
       this.emit("disconnect");
     } else {
-      this.emit("change", { account: ethers.utils.getAddress(accounts[0]) });
+      if (accounts[0]) {
+        this.emit("change", { account: ethers.utils.getAddress(accounts[0]) });
+      }
     }
   }
 

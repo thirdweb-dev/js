@@ -1,35 +1,30 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nebula Mainnet",
   "chain": "green-giddy-denebola",
-  "rpc": [
-    "https://nebula.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.skalenodes.com/v1/green-giddy-denebola",
-    "wss://mainnet-proxy.skalenodes.com/v1/ws/green-giddy-denebola"
+  "chainId": 1482601649,
+  "explorers": [
+    {
+      "name": "nebula",
+      "url": "https://green-giddy-denebola.explorer.mainnet.skalenodes.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
+  "features": [],
+  "infoURL": "https://nebulachain.io/",
+  "name": "Nebula Mainnet",
   "nativeCurrency": {
     "name": "sFUEL",
     "symbol": "sFUEL",
     "decimals": 18
   },
-  "infoURL": "https://nebulachain.io/",
-  "shortName": "nebula-mainnet",
-  "chainId": 1482601649,
-  "networkId": 1482601649,
-  "explorers": [
-    {
-      "name": "nebula",
-      "url": "https://green-giddy-denebola.explorer.mainnet.skalenodes.com",
-      "icon": {
-        "url": "ipfs://QmfQkfmQuoUUUKwF1yCcrPEzFcWLaqNyiSv5YMcSj6zs74",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://nebula.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.skalenodes.com/v1/green-giddy-denebola",
+    "wss://mainnet-proxy.skalenodes.com/v1/ws/green-giddy-denebola"
   ],
-  "testnet": false,
-  "slug": "nebula"
+  "shortName": "nebula-mainnet",
+  "slug": "nebula",
+  "testnet": false
 } as const satisfies Chain;

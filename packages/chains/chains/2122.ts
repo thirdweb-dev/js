@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Metaplayerone Mainnet",
   "chain": "METAD",
+  "chainId": 2122,
+  "explorers": [
+    {
+      "name": "Metad Scan",
+      "url": "https://scan.metaplayer.one",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
     "width": 1280,
     "height": 1280,
     "format": "png"
   },
-  "rpc": [
-    "https://metaplayerone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.metaplayer.one/"
-  ],
-  "faucets": [],
+  "infoURL": "https://docs.metaplayer.one/",
+  "name": "Metaplayerone Mainnet",
   "nativeCurrency": {
     "name": "METAD",
     "symbol": "METAD",
     "decimals": 18
   },
-  "infoURL": "https://docs.metaplayer.one/",
-  "shortName": "Metad",
-  "chainId": 2122,
-  "networkId": 2122,
-  "explorers": [
-    {
-      "name": "Metad Scan",
-      "url": "https://scan.metaplayer.one",
-      "icon": {
-        "url": "ipfs://QmZyxS9BfRGYWWDtvrV6qtthCYV4TwdjLoH2sF6MkiTYFf",
-        "width": 1280,
-        "height": 1280,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "redFlags": [],
+  "rpc": [
+    "https://metaplayerone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.metaplayer.one/"
   ],
-  "testnet": false,
-  "slug": "metaplayerone"
+  "shortName": "Metad",
+  "slug": "metaplayerone",
+  "testnet": false
 } as const satisfies Chain;

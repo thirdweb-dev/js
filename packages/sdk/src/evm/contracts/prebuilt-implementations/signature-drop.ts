@@ -249,8 +249,10 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * Get the total count NFTs in this drop contract, both claimed and unclaimed
    */
   override async totalSupply() {
-    const claimed = await this.totalClaimedSupply();
-    const unclaimed = await this.totalUnclaimedSupply();
+    const [claimed, unclaimed] = await Promise.all([
+      this.totalClaimedSupply(),
+      this.totalUnclaimedSupply(),
+    ]);
     return claimed.add(unclaimed);
   }
 

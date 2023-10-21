@@ -1,6 +1,9 @@
 import { Signer } from "ethers";
 import { AbstractWallet } from "./abstract";
-import { GcpKmsSigner, GcpKmsSignerCredentials } from "ethers-gcp-kms-signer";
+import {
+  GcpKmsSigner,
+  GcpKmsSignerCredentials,
+} from "../connectors/gcp-kms/signer";
 
 export class GcpKmsWallet extends AbstractWallet {
   #options: GcpKmsSignerCredentials;

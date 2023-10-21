@@ -53,9 +53,9 @@ from {
   }
 `;
 
-const PopoverContent = /* @__PURE__ */ styled(
-  /* @__PURE__ */ RXPopover.Content,
-)<{ theme?: Theme }>`
+const PopoverContent = /* @__PURE__ */ (() => styled(RXPopover.Content)<{
+  theme?: Theme;
+}>`
   border-radius: ${radius.sm};
   padding: ${spacing.sm} ${spacing.md};
   background-color: ${(p) => p.theme.colors.tooltipBg};
@@ -64,10 +64,10 @@ const PopoverContent = /* @__PURE__ */ styled(
   animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   color: ${(p) => p.theme.colors.tooltipText};
   font-size: ${fontSize.md};
-`;
+`)();
 
-const PopoverArrow = /* @__PURE__ */ styled(/* @__PURE__ */ RXPopover.Arrow)<{
+const PopoverArrow = /* @__PURE__ */ (() => styled(RXPopover.Arrow)<{
   theme?: Theme;
 }>`
   fill: ${(p) => p.theme.colors.tooltipBg};
-`;
+`)();

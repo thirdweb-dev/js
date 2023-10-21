@@ -32,6 +32,7 @@ export * from "./wallets/ethers";
 export * from "./wallets/frame";
 export * from "./wallets/injected";
 export * from "./wallets/local-wallet";
+export * from "./wallets/signer";
 export * from "./wallets/magic";
 export * from "./wallets/metamask";
 export * from "./wallets/phantom";
@@ -52,6 +53,7 @@ export { getInjectedPhantomProvider } from "./connectors/phantom/getInjectedPhan
 export { getInjectedRainbowProvider } from "./connectors/rainbow/getInjectedRainbowProvider";
 export { getInjectedCoinbaseProvider } from "./connectors/coinbase-wallet/getInjectedCoinbaseProvider";
 export { assertWindowEthereum } from "./utils/assertWindowEthereum";
+export * from "./utils/setWalletAnaltyicsEnabled";
 
 // ThirdwebEmbeddedWalletSdk
 export * from "./connectors/embedded-wallet/implementations";

@@ -77,6 +77,7 @@ interface TWBridge {
     password?: string,
     email?: string,
     personalWallet?: PossibleWallet,
+    useGoogle?: string,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: string) => Promise<void>;
@@ -275,6 +276,7 @@ class ThirdwebBridge implements TWBridge {
     password?: string,
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
+    useGoogle?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -296,14 +298,30 @@ class ThirdwebBridge implements TWBridge {
         await magicLinkWallet.connect({ chainId: chainIdNumber, email: email });
       } else if (walletInstance.walletId === walletIds.embeddedWallet) {
         const embeddedWallet = walletInstance as EmbeddedWallet;
-        if (!email) {
-          throw new Error("Email is required for EmbeddedWallet");
+
+        if (useGoogle?.toLowerCase() === "true") {
+          const googleWindow = this.openGoogleSignInWindow();
+          if (!googleWindow) {
+            throw new Error("Failed to open google login window");
+          }
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            loginType: "headless_google_oauth",
+            openedWindow: googleWindow,
+            closeOpenedWindow: (openedWindow) => {
+              openedWindow.close();
+            },
+          });
+        } else {
+          if (!email) {
+            throw new Error("Email is required for EmbeddedWallet");
+          }
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            email: email,
+            loginType: "ui_email_otp",
+          });
         }
-        await embeddedWallet.connect({
-          chainId: chainIdNumber,
-          email: email,
-          loginType: "ui_email_otp",
-        });
       } else if (walletInstance.walletId === walletIds.paper) {
         const paperWallet = walletInstance as PaperWallet;
         if (!email) {
@@ -622,6 +640,72 @@ class ThirdwebBridge implements TWBridge {
       password,
     });
     return localWallet;
+  }
+
+  public openGoogleSignInWindow() {
+    const win = window.open("", undefined, "width=350, height=500");
+    if (win) {
+      win.document.title = "Sign In - Google Accounts";
+      win.document.body.innerHTML = `
+      <svg class="loader" viewBox="0 0 50 50">
+        <circle
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="#000"
+          stroke-width="4"
+        />
+      </svg>
+      
+      <style>
+        body,
+        html {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+      
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      
+        .loader {
+          width: 15vw;
+          height: 15vw;
+          animation: spin 2s linear infinite;
+        }
+      
+        .loader circle {
+          animation: loading 1.5s linear infinite;
+        }
+      
+        @keyframes loading {
+          0% {
+            stroke-dasharray: 1, 150;
+            stroke-dashoffset: 0;
+          }
+          50% {
+            stroke-dasharray: 90, 150;
+            stroke-dashoffset: -35;
+          }
+          100% {
+            stroke-dasharray: 90, 150;
+            stroke-dashoffset: -124;
+          }
+        }
+      
+        @keyframes spin {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
+      `;
+    }
+    return win;
   }
 }
 

@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "TLChain Network Mainnet",
   "chain": "TLC",
-  "icon": {
-    "url": "ipfs://QmaR5TsgnWSjLys6wGaciKUbc5qYL3Es4jtgQcosVqDWR3",
-    "width": 2048,
-    "height": 2048,
-    "format": "png"
-  },
-  "rpc": [
-    "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.tlxscan.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "TLChain Network",
-    "symbol": "TLC",
-    "decimals": 18
-  },
-  "infoURL": "https://tlchain.network/",
-  "shortName": "tlc",
   "chainId": 5177,
-  "networkId": 5177,
   "explorers": [
     {
       "name": "TLChain Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "tlchain-network"
+  "faucets": [],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmaR5TsgnWSjLys6wGaciKUbc5qYL3Es4jtgQcosVqDWR3",
+    "width": 2048,
+    "height": 2048,
+    "format": "png"
+  },
+  "infoURL": "https://tlchain.network/",
+  "name": "TLChain Network Mainnet",
+  "nativeCurrency": {
+    "name": "TLChain Network",
+    "symbol": "TLC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://tlchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.tlxscan.com/"
+  ],
+  "shortName": "tlc",
+  "slug": "tlchain-network",
+  "testnet": false
 } as const satisfies Chain;

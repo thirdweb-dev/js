@@ -1,30 +1,31 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "KardiaChain Mainnet",
   "chain": "KAI",
+  "chainId": 24,
+  "explorers": [],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmXoHaZXJevc59GuzEgBhwRSH6kio1agMRvL8bD93pARRV",
-    "format": "png",
     "width": 297,
-    "height": 297
+    "height": 297,
+    "format": "png"
   },
-  "rpc": [
-    "https://kardiachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.kardiachain.io"
-  ],
-  "faucets": [],
+  "infoURL": "https://kardiachain.io",
+  "name": "KardiaChain Mainnet",
   "nativeCurrency": {
     "name": "KardiaChain",
     "symbol": "KAI",
     "decimals": 18
   },
-  "infoURL": "https://kardiachain.io",
-  "shortName": "kardiachain",
-  "chainId": 24,
-  "networkId": 0,
   "redFlags": [
     "reusedChainId"
   ],
-  "testnet": false,
-  "slug": "kardiachain"
+  "rpc": [
+    "https://kardiachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.kardiachain.io"
+  ],
+  "shortName": "kardiachain",
+  "slug": "kardiachain",
+  "testnet": false
 } as const satisfies Chain;

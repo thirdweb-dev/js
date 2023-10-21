@@ -18,6 +18,7 @@ import type { WalletData } from "@thirdweb-dev/wallets/evm/wallets/local-wallet"
 import { Spinner } from "../../../components/Spinner";
 import {
   Container,
+  Line,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../../components/basic";
@@ -29,7 +30,7 @@ import {
 import type { LocalWalletConfig } from "./types";
 
 export const ExportLocalWallet: React.FC<{
-  onBack: () => void;
+  onBack?: () => void;
   onExport: () => void;
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
@@ -122,6 +123,7 @@ export const ExportLocalWallet: React.FC<{
   if (!savedAddress) {
     return (
       <Container
+        animate="fadein"
         flex="row"
         center="both"
         style={{
@@ -136,7 +138,7 @@ export const ExportLocalWallet: React.FC<{
   const exportDisabled = isWrongPassword;
 
   return (
-    <Container fullHeight>
+    <Container fullHeight animate="fadein">
       <form
         style={{
           height: "100%",
@@ -148,18 +150,19 @@ export const ExportLocalWallet: React.FC<{
           exportFromLocalStorage();
         }}
       >
-        <Container expand p="lg">
+        <Container p="lg">
           <ModalHeader onBack={props.onBack} title="Backup Wallet" />
-          <Spacer y="xl" />
-
-          <ModalDescription sm>
+        </Container>
+        <Line />
+        <Container expand p="lg">
+          <ModalDescription>
             This will download a JSON file containing the wallet information
             onto your device encrypted with the password
           </ModalDescription>
 
           <Spacer y="sm" />
 
-          <ModalDescription sm>
+          <ModalDescription>
             You can use this JSON file to import the account in MetaMask using
             the same password
           </ModalDescription>

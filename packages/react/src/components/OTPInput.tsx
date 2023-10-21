@@ -36,15 +36,17 @@ export function OTPInput(props: {
             data-error={props.isInvalid}
             ref={(e) => (boxEls.current[i] = e)}
             key={i}
-            value={otp[i] === undefined ? "" : otp[i]}
+            value={otp[i] ?? ""}
             type="number"
+            pattern="[0-9]*"
             variant="outline"
+            inputMode="numeric"
             onPaste={(e) => {
               const pastedData = e.clipboardData.getData("text/plain");
               const newOTP = pastedData
                 .slice(0, props.digits)
                 .split("")
-                .filter((n) => /[0-9]/.test(n))
+                .filter((n) => /\d/.test(n))
                 .map(Number);
 
               setOTP(newOTP);
@@ -94,10 +96,13 @@ export function OTPInput(props: {
               let value = e.target.value;
 
               if (value.length > 1) {
-                value = value[value.length - 1];
+                const lastValue = value[value.length - 1];
+                if (lastValue) {
+                  value = lastValue;
+                }
               }
 
-              if (!/[0-9]/.test(value) && value !== "") {
+              if (!/\d/.test(value) && value !== "") {
                 e.preventDefault();
                 return;
               }

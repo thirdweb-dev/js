@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "SUR Blockchain Network",
   "chain": "SUR",
-  "rpc": [
-    "https://sur-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sur.nilin.org"
+  "chainId": 262,
+  "explorers": [
+    {
+      "name": "Surnet Explorer",
+      "url": "https://explorer.surnet.org",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Suren",
-    "symbol": "SRN",
-    "decimals": 18
-  },
-  "infoURL": "https://surnet.org",
-  "shortName": "SUR",
-  "chainId": 262,
-  "networkId": 1,
+  "features": [],
   "icon": {
     "url": "ipfs://QmbUcDQHCvheYQrWk9WFJRMW5fTJQmtZqkoGUed4bhCM7T",
     "width": 3000,
     "height": 3000,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Surnet Explorer",
-      "url": "https://explorer.surnet.org",
-      "icon": {
-        "url": "ipfs://QmbUcDQHCvheYQrWk9WFJRMW5fTJQmtZqkoGUed4bhCM7T",
-        "width": 3000,
-        "height": 3000,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://surnet.org",
+  "name": "SUR Blockchain Network",
+  "nativeCurrency": {
+    "name": "Suren",
+    "symbol": "SRN",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://sur-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sur.nilin.org"
   ],
-  "testnet": false,
-  "slug": "sur-blockchain-network"
+  "shortName": "SUR",
+  "slug": "sur-blockchain-network",
+  "testnet": false
 } as const satisfies Chain;

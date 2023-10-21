@@ -7,19 +7,18 @@ import {
   CommonTrustedForwarderSchema,
 } from "./common";
 
-export const PackContractInput =
-  /* @__PURE__ */ CommonContractSchema.merge(CommonRoyaltySchema).merge(
-    CommonSymbolSchema,
-  );
+export const PackContractInput = /* @__PURE__ */ (() =>
+  CommonContractSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema))();
 
-export const PackContractOutput =
-  /* @__PURE__ */ CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
+export const PackContractOutput = /* @__PURE__ */ (() =>
+  CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
     CommonSymbolSchema,
-  );
+  ))();
 
-export const PackContractDeploy = /* @__PURE__ */ PackContractInput.merge(
-  CommonPlatformFeeSchema,
-).merge(CommonTrustedForwarderSchema);
+export const PackContractDeploy = /* @__PURE__ */ (() =>
+  PackContractInput.merge(CommonPlatformFeeSchema).merge(
+    CommonTrustedForwarderSchema,
+  ))();
 
 export const PackContractSchema = {
   deploy: PackContractDeploy,

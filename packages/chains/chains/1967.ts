@@ -1,25 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eleanor",
-  "title": "Metatime Testnet Eleanor",
   "chain": "MTC",
-  "rpc": [
-    "https://eleanor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.metatime.com/eleanor",
-    "wss://ws.metatime.com/eleanor"
-  ],
-  "faucets": [
-    "https://faucet.metatime.com/eleanor"
-  ],
-  "nativeCurrency": {
-    "name": "Eleanor Metacoin",
-    "symbol": "MTC",
-    "decimals": 18
-  },
-  "infoURL": "https://eleanor.metatime.com",
-  "shortName": "mtc",
   "chainId": 1967,
-  "networkId": 1967,
   "explorers": [
     {
       "name": "metaexplorer-eleanor",
@@ -27,6 +9,24 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "eleanor"
+  "faucets": [
+    "https://faucet.metatime.com/eleanor"
+  ],
+  "features": [],
+  "infoURL": "https://eleanor.metatime.com",
+  "name": "Eleanor",
+  "nativeCurrency": {
+    "name": "Eleanor Metacoin",
+    "symbol": "MTC",
+    "decimals": 18
+  },
+  "redFlags": [],
+  "rpc": [
+    "https://eleanor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.metatime.com/eleanor",
+    "wss://ws.metatime.com/eleanor"
+  ],
+  "shortName": "mtc",
+  "slug": "eleanor",
+  "testnet": true
 } as const satisfies Chain;
