@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
 ## 2.0.0
 
 ### Major Changes
