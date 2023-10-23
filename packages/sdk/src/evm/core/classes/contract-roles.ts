@@ -68,9 +68,10 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
     const roles = {} as Record<TRole, string[]>;
-    for (const role of this.roles) {
-      roles[role] = await this.get(role);
-    }
+    const entries = Object.entries(this.roles);
+    (await Promise.all(entries.map(([, role]) => this.get(role)))).forEach(
+      (item, index) => (roles[entries[index][1]] = item),
+    );
     return roles;
   }
 

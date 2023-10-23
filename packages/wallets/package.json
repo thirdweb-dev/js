@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -21,6 +21,13 @@
         "default": "./evm/dist/thirdweb-dev-wallets-evm.esm.js"
       },
       "default": "./evm/dist/thirdweb-dev-wallets-evm.cjs.js"
+    },
+    "./evm/wallets/okx": {
+      "module": {
+        "browser": "./evm/wallets/okx/dist/thirdweb-dev-wallets-evm-wallets-okx.browser.esm.js",
+        "default": "./evm/wallets/okx/dist/thirdweb-dev-wallets-evm-wallets-okx.esm.js"
+      },
+      "default": "./evm/wallets/okx/dist/thirdweb-dev-wallets-evm-wallets-okx.cjs.js"
     },
     "./evm/wallets/base": {
       "module": {
@@ -140,6 +147,13 @@
         "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js"
       },
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
+    },
+    "./evm/connectors/okx": {
+      "module": {
+        "browser": "./evm/connectors/okx/dist/thirdweb-dev-wallets-evm-connectors-okx.browser.esm.js",
+        "default": "./evm/connectors/okx/dist/thirdweb-dev-wallets-evm-connectors-okx.esm.js"
+      },
+      "default": "./evm/connectors/okx/dist/thirdweb-dev-wallets-evm-connectors-okx.cjs.js"
     },
     "./evm/wallets/local-wallet": {
       "module": {
