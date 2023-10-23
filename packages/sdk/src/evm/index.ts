@@ -28,11 +28,9 @@ export type {
   SDKOptionsSchema,
   SDKOptionsOutput,
 } from "./schema/sdk-options";
-export type { FeatureWithEnabled } from "./constants/contract-features";
 
 export * from "./types";
 export * from "./enums";
-export * from "./constants";
 export * from "./contracts";
 
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
@@ -205,4 +203,25 @@ export { getCachedAbiForContract } from "./common/abi";
 export * from "./common/ens/resolveEns";
 export * from "./common/ens/resolveAddress";
 //#endregion @r/packages/sdk/src/evm/common/*
+
+//#region @r/packages/sdk/src/evm/constants/*
+export * from "./constants/addresses/LOCAL_NODE_PKEY";
+export * from "./constants/addresses/CONTRACT_ADDRESSES";
+export * from "./constants/addresses/APPROVED_IMPLEMENTATIONS";
+export * from "./constants/addresses/getApprovedImplementation";
+export * from "./constants/addresses/getContractAddressByChainId";
+export * from "./constants/addresses/getContractPublisherAddress";
+export * from "./constants/addresses/getMultichainRegistryAddress";
+export * from "./constants/addresses/getDefaultTrustedForwarders";
+export * from "./constants/chains/ChainId";
+export * from "./constants/chains/SUPPORTED_CHAIN_ID";
+export * from "./constants/chains/SUPPORTED_CHAIN_IDS";
+export * from "./constants/chains/supportedChains";
+export * from "./constants/contract";
+export * from "./constants/currency";
+export * from "./constants/events";
+export * from "./constants/urls";
+export * from "./constants/contract-features";
+//#endregion @r/packages/sdk/src/evm/constants/*
+
 

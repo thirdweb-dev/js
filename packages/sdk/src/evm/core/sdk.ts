@@ -112,7 +112,6 @@ import {
 } from "../types/any-evm/deploy-data";
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
-import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
 import { DropErc721ContractSchema } from "../schema";
@@ -121,6 +120,7 @@ import {
   directDeployDeterministicPublished,
   predictAddressDeterministicPublished,
 } from "../common/any-evm-utils/deployDirectDeterministic";
+import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
 
 /**
  * The main entry point for the thirdweb SDK

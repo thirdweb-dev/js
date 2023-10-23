@@ -8,8 +8,8 @@ import { resolveAddress } from "../ens/resolveAddress";
 import invariant from "tiny-invariant";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
-import { getSupportedChains } from "../../constants";
 import { Polygon } from "@thirdweb-dev/chains";
+import { getSupportedChains } from "../../constants/chains/supportedChains";
 
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
