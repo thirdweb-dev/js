@@ -62,6 +62,11 @@ export const CUSTOM_GAS_FOR_CHAIN: Record<number, CustomChain> = {
     gasPrice: 2500 * 10 ** 9,
     gasLimit: 200_000,
   },
+  [88888]: {
+    name: "Chiliz Chain",
+    gasPrice: 2500 * 10 ** 9,
+    gasLimit: 200_000,
+  },
 };
 /* eslint-enable no-useless-computed-key */
 
