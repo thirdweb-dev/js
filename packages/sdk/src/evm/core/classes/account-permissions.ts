@@ -10,7 +10,6 @@ import type {
   IAccountPermissions_V1,
 } from "@thirdweb-dev/contracts-js";
 import invariant from "tiny-invariant";
-import { detectContractFeature, resolveAddress } from "../../common";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { buildTransactionFunction } from "../../common/transactions";
 import { AddressOrEns } from "../../schema";
@@ -31,6 +30,8 @@ import {
   SignerWithPermissions,
 } from "../../types";
 import { AddressZero } from "../../constants/addresses/AddressZero";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 
 export class AccountPermissions implements DetectableFeature {
   featureName = FEATURE_ACCOUNT_PERMISSIONS.name;

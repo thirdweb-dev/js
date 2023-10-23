@@ -15,14 +15,6 @@ import { generateExtensionFunctions } from "../../common/plugin/generatePluginFu
 import { Abi, AbiSchema, CommonContractSchema } from "../../schema";
 import { utils } from "ethers";
 import invariant from "tiny-invariant";
-import {
-  THIRDWEB_DEPLOYER,
-  deployContractDeterministic,
-  deployWithThrowawayDeployer,
-  fetchContractMetadataFromAddress,
-  fetchPublishedContractFromPolygon,
-  getDeploymentInfo,
-} from "../../common";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { DynamicContractExtensionMetadataOrUri } from "../../types";
@@ -31,6 +23,14 @@ import {
   ExtensionRemovedEvent,
   ExtensionReplacedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/BaseRouter";
+import { fetchContractMetadataFromAddress } from "../../common/metadata-resolver";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "../../common/any-evm-utils/fetchPublishedContractFromPolygon";
+import { getDeploymentInfo } from "../../common/any-evm-utils/getDeploymentInfo";
+import { deployWithThrowawayDeployer } from "../../common/any-evm-utils/deployWithThrowawayDeployer";
+import { deployContractDeterministic } from "../../common/any-evm-utils/deployContractDeterministic";
 
 export class ExtensionManager implements DetectableFeature {
   featureName = FEATURE_DYNAMIC_CONTRACT.name;

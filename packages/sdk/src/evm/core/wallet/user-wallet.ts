@@ -13,7 +13,6 @@ import {
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
-import { getDefaultGasOverrides } from "../../common";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
@@ -30,6 +29,7 @@ import type { Amount, CurrencyValue } from "../../types/currency";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkInput, TransactionResult } from "../types";
+import { getDefaultGasOverrides } from "../../common/gas-price";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.

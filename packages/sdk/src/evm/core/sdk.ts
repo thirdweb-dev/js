@@ -120,7 +120,7 @@ import { AirdropContractDeploy } from "../schema/contracts/airdrop";
 import {
   directDeployDeterministicPublished,
   predictAddressDeterministicPublished,
-} from "../common";
+} from "../common/any-evm-utils/deployDirectDeterministic";
 
 /**
  * The main entry point for the thirdweb SDK
