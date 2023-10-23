@@ -4,6 +4,7 @@ import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
+  AuthProvider,
   DAppMetaData,
   SmartWalletConfig,
   walletIds,
@@ -269,23 +270,17 @@ class ThirdwebBridge implements TWBridge {
         const embeddedWallet = walletInstance as EmbeddedWallet;
         const authOptionsParsed = JSON.parse(authOptions || "{}");
         if (authOptionsParsed.authProvider === 0) {
-          // Default
-          if (!email) {
-            throw new Error("Email is required for Embedded Wallet");
-          }
-          // TODO: Implement user managed flow
-          throw new Error("User Managed not implemented yet");
-        } else if (authOptionsParsed.authProvider === 1) {
           // DefaultManaged
           if (!email) {
             throw new Error("Email is required for EmbeddedWallet");
           }
+          // TODO: Implement UserManaged
           await embeddedWallet.connect({
             chainId: chainIdNumber,
             email: email,
             loginType: "ui_email_otp",
           });
-        } else if (authOptionsParsed.authProvider === 2) {
+        } else if (authOptionsParsed.authProvider === 1) {
           // GoogleManaged
           const googleWindow = this.openGoogleSignInWindow();
           if (!googleWindow) {
@@ -299,10 +294,15 @@ class ThirdwebBridge implements TWBridge {
               openedWindow.close();
             },
           });
-        } else if (authOptionsParsed.authProvider === 3) {
+        } else if (authOptionsParsed.authProvider === 2) {
           // CustomAuth
-          // TODO: Implement custom auth
-          throw new Error("Custom Auth not implemented yet");
+          // await embeddedWallet.loginWithJwtAuth({
+          //   chainId: chainIdNumber,
+          //   token: "<idToken JWT from your auth callback>",
+          //   authProvider: AuthProvider.CUSTOM_JWT,
+          //   encryptionKey: "Required if user is an existing user",
+          // });
+          throw new Error("CustomAuth not implemented yet");
         } else {
           throw new Error(
             "Invalid auth provider: " + authOptionsParsed.authProvider,
