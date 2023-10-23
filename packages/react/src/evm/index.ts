@@ -44,8 +44,14 @@ export {
   useWalletConnectV1,
 } from "./hooks/wallets/useWalletConnect";
 
+export {
+  defaultTokens,
+  type SupportedTokens,
+} from "../wallet/ConnectWallet/defaultTokens";
+
 // react-core
 export * from "@thirdweb-dev/react-core";
+
 // wallets
 export {
   LocalWallet,

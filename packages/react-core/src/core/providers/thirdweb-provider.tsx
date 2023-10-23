@@ -75,6 +75,9 @@ export interface ThirdwebProviderCoreProps<TChains extends Chain[]>
   signerWallet?: WalletConfig<SignerWallet>;
 }
 
+/**
+ * @internal
+ */
 export const ThirdwebProviderCore = <TChains extends Chain[]>({
   createWalletStorage = createAsyncLocalStorage,
   ...props
