@@ -410,7 +410,7 @@
     "@walletconnect/modal": "^2.6.1",
     "@walletconnect/types": "^2.9.1",
     "@walletconnect/utils": "^2.10.2",
-    "@walletconnect/web3wallet": "^1.8.7",
+    "@walletconnect/web3wallet": "^1.9.2",
     "asn1.js": "5.4.1",
     "bn.js": "5.2.0",
     "buffer": "^6.0.3",
