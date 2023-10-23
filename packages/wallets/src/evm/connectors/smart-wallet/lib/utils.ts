@@ -85,11 +85,11 @@ const generateRandomUint192 = (): bigint => {
   const rand5 = BigInt(Math.floor(Math.random() * 0x100000000));
   const rand6 = BigInt(Math.floor(Math.random() * 0x100000000));
   return (
-    (rand1 << 160n) |
-    (rand2 << 128n) |
-    (rand3 << 96n) |
-    (rand4 << 64n) |
-    (rand5 << 32n) |
+    (rand1 << BigInt(160)) |
+    (rand2 << BigInt(128)) |
+    (rand3 << BigInt(96)) |
+    (rand4 << BigInt(64)) |
+    (rand5 << BigInt(32)) |
     rand6
   );
 };
