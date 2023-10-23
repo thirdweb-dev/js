@@ -8,11 +8,9 @@ Enables passing a custom JWT to the embeddedWallet:
 
 ```javascript
 import {
-  EmbeddedWallet,
   embeddedWallet,
   ThirdwebProvider,
-  useCreateWalletInstance,
-  useSetConnectedWallet,
+  useConnect,
 } from "@thirdweb-dev/react-native";
 import { Button } from "react-native";
 import React from "react";
