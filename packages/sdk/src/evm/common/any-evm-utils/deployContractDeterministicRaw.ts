@@ -5,7 +5,7 @@ import {
   type Signer,
 } from "ethers";
 import invariant from "tiny-invariant";
-import type { DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 

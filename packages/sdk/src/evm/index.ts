@@ -29,7 +29,6 @@ export type {
   SDKOptionsOutput,
 } from "./schema/sdk-options";
 
-export * from "./types";
 export * from "./contracts";
 
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
@@ -230,3 +229,32 @@ export * from "./enums/vote/ProposalState";
 export * from "./enums/vote/Vote";
 export * from "./enums/ClaimEligibility";
 //#endregion @r/packages/sdk/src/evm/enums
+
+//#region @r/packages/sdk/src/evm/types
+export * from "./types/claim-conditions/claim-conditions";
+export * from "./types/airdrop/airdrop";
+export * from "./types/marketplace/NewDirectListing";
+export * from "./types/marketplace/DirectListing";
+export * from "./types/marketplace/MarketPlaceFilter";
+export * from "./types/marketplace/NewAuctionListing";
+export * from "./types/marketplace/AuctionListing";
+export * from "./types/marketplace/Offer";
+export * from "./types/marketplace/UnmappedOffer";
+export * from "./types/marketplacev3/DirectListingV3";
+export * from "./types/marketplacev3/EnglishAuction";
+export * from "./types/marketplacev3/Bid";
+export * from "./types/marketplacev3/OfferV3";
+export * from "./types/currency";
+export * from "./types/delayed-reveal";
+export * from "./types/vote";
+export * from "./types/SplitRecipient";
+export * from "./types/deploy/deploy-metadata";
+export * from "./types/deploy/deploy-events";
+export * from "./types/deploy/deploy-options";
+export * from "./types/events";
+export * from "./types/multiwrap";
+export * from "./types/registry";
+export * from "./types/transactions";
+export * from "./types/contract";
+export * from "./types/account";
+//#endregion

@@ -38,8 +38,8 @@ import {
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
-import type { DirectListingV3 } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import type { DirectListingV3 } from "../../types/marketplacev3/DirectListingV3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";

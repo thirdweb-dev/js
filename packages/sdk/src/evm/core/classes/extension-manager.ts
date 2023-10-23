@@ -17,7 +17,7 @@ import { utils } from "ethers";
 import invariant from "tiny-invariant";
 import { joinABIs } from "../../common/plugin/joinABIs";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
-import { DynamicContractExtensionMetadataOrUri } from "../../types";
+import { DynamicContractExtensionMetadataOrUri } from "../../types/deploy/deploy-metadata";
 import {
   ExtensionAddedEvent,
   ExtensionRemovedEvent,

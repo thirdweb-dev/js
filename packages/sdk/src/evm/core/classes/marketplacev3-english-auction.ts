@@ -27,8 +27,9 @@ import {
 import { Address } from "../../schema/shared/Address";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { CurrencyValue, Price } from "../../types/currency";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
-import { Bid, EnglishAuction } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import { EnglishAuction } from "../../types/marketplacev3/EnglishAuction";
+import { Bid } from "../../types/marketplacev3/Bid";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";

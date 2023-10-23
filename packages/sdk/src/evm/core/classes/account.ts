@@ -11,7 +11,7 @@ import {
   PermissionSnapshotInput,
   SignerPermissionsInput,
   SignerWithPermissions,
-} from "../../types";
+} from "../../types/account";
 import { buildTransactionFunction } from "../../common/transactions";
 import { AccountPermissions } from "./account-permissions";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";

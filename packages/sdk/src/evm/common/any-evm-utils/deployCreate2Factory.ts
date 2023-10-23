@@ -1,7 +1,7 @@
 import { BigNumber, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { toWei } from "../currency/toWei";
-import type { DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { CUSTOM_GAS_FOR_CHAIN } from "../any-evm-constants";
 import { COMMON_FACTORY } from "./constants";
 import { isContractDeployed } from "./isContractDeployed";

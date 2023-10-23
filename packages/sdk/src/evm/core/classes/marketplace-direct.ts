@@ -43,14 +43,12 @@ import {
 import { ListingType } from "../../enums/marketplace/ListingType";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
-import {
-  DirectListing,
-  NewDirectListing,
-  Offer,
-} from "../../types/marketplace";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { DirectListing } from "../../types/marketplace/DirectListing";
+import { Offer } from "../../types/marketplace/Offer";
+import { NewDirectListing } from "../../types/marketplace/NewDirectListing";
 
 /**
  * Handles direct listings
