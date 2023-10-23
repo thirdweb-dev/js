@@ -18,6 +18,7 @@ import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletA
 import { shortenWalletAddress } from "../../utils/addresses";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import { TWModal } from "../base/modal/TWModal";
+import { useLocale } from "../../providers/ui-context-provider";
 
 export type ExportLocalWalletModalProps = {
   isVisible: boolean;
@@ -28,6 +29,7 @@ export const ExportLocalWalletModal = ({
   isVisible,
   onClose,
 }: ExportLocalWalletModalProps) => {
+  const l = useLocale();
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isExporting, setIsExporting] = useState<boolean>(false);
@@ -151,15 +153,13 @@ export const ExportLocalWalletModal = ({
         >
           <ModalHeaderTextClose
             onClose={onCloseInternal}
-            headerText="Backup your Wallet"
+            headerText={l.local_wallet.backup_your_wallet}
           />
           <Text variant="subHeader" mt="md" textAlign="left">
-            {
-              "This will download a JSON file containing your wallet information onto your device encrypted with the password."
-            }
+            {l.local_wallet.this_will_download_json}
           </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-            Wallet Address
+            {l.local_wallet.wallet_address}
           </Text>
           <Text variant="bodySmallSecondary">
             {shortenWalletAddress(
@@ -167,7 +167,7 @@ export const ExportLocalWalletModal = ({
             )}
           </Text>
           <Text variant="bodySmall" textAlign="left" mt="lg" mb="xxs">
-            Password
+            {l.common.password}
           </Text>
           <PasswordInput onChangeText={onChangeText} />
           <Text variant="bodySmall" color="red" mt="xs" textAlign="left">
@@ -183,7 +183,7 @@ export const ExportLocalWalletModal = ({
                 <ActivityIndicator size="small" color="buttonTextColor" />
               ) : (
                 <Text variant="bodySmall" color="black">
-                  Backup
+                  {l.connect_wallet_details.backup}
                 </Text>
               )}
             </BaseButton>

@@ -19,7 +19,7 @@ import { useMagicLink } from "../../providers/context-provider";
 import BaseButton from "../../components/base/BaseButton";
 import React from "react";
 import { ConnectingWallet } from "../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWallet";
-import { useGlobalTheme } from "../../providers/ui-context-provider";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const magicLink = (
   magicLinkOptions: MagicLinkOptions & { recommended?: boolean },
@@ -54,6 +54,7 @@ export const magicLink = (
 };
 
 const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [email, setEmail] = React.useState("");
 
@@ -68,7 +69,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
     <Box paddingHorizontal="xl" mt="lg">
       <TextInput
         textInputProps={{
-          placeholder: "Enter your email address",
+          placeholder: l.embedded_wallet.enter_your_email,
           placeholderTextColor: theme.colors.textSecondary,
           onChangeText: (text: string) => {
             setEmail(text);
@@ -76,6 +77,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
           style: {
             fontSize: 14,
             color: theme.colors.textPrimary,
+            fontFamily: theme.textVariants.defaults.fontFamily,
             lineHeight: 16,
             padding: 0,
           },
@@ -99,7 +101,7 @@ const MagicSelectionUI: React.FC<SelectUIProps<MagicLink>> = (props) => {
           color="accentButtonTextColor"
           fontWeight="700"
         >
-          Continue
+          {l.common.continue}
         </Text>
       </BaseButton>
     </Box>

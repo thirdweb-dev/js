@@ -9,7 +9,7 @@ import { getInjectedMetamaskProvider } from "../connectors/metamask/getInjectedM
 
 type MetamaskAdditionalOptions = {
   /**
-   * Whether to open the default Wallet Connect QR code Modal for connecting to Zerion Wallet on mobile if Zerion is not injected when calling connect().
+   * Whether to open the default Wallet Connect QR code Modal for connecting to MetaMask Wallet on mobile if MetaMask is not injected when calling connect().
    */
   qrcode?: boolean;
 
@@ -148,8 +148,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     });
 
     // trigger connect flow
-    this.connect({ chainId: options.chainId })
-      .then(options.onConnected)
+    this.connect({ chainId: options.chainId }).then(options.onConnected);
   }
 
   async switchAccount() {

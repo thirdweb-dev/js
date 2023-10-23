@@ -9,7 +9,10 @@ import { ChooseWalletContent } from "./ChooseWalletContent";
 import { BaseButton, ImageSvgUri, WalletButton } from "../../base";
 import { ActivityIndicator, Linking } from "react-native";
 import { useTheme } from "@shopify/restyle";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 export type ChooseWalletProps = {
   headerText?: ReactNode | string;
@@ -34,6 +37,7 @@ export function ChooseWallet({
   termsOfServiceUrl,
   privacyPolicyUrl,
 }: ChooseWalletProps) {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const themeLightDark = useTheme();
   const [isConnecting, setIsConnecting] = useState(false);
@@ -123,7 +127,7 @@ export function ChooseWallet({
                 />
               )}
               <Text variant="headerBold" ml="xxs" fontSize={20} lineHeight={24}>
-                Connect
+                {l.connect_wallet_details.connect}
               </Text>
             </Box>
           )
@@ -153,9 +157,11 @@ export function ChooseWallet({
             justifyContent="space-between"
             alignItems="center"
           >
-            <Text variant="bodySmall">New to wallets?</Text>
+            <Text variant="bodySmall">
+              {l.connect_wallet_details.new_to_wallets}
+            </Text>
             <BaseButton onPress={onGetStartedPress}>
-              <Text variant="link">Get started</Text>
+              <Text variant="link">{l.connect_wallet_details.get_started}</Text>
             </BaseButton>
           </Box>
         </>
@@ -182,7 +188,7 @@ export function ChooseWallet({
         >
           <Box height={1} flex={1} backgroundColor="border" />
           <Text variant="subHeader" textAlign="center" marginHorizontal="xxs">
-            OR
+            {l.common.or}
           </Text>
           <Box height={1} flex={1} backgroundColor="border" />
         </Box>
@@ -224,7 +230,9 @@ export function ChooseWallet({
                 </Box>
               );
             })}
-            <Text variant="bodySmallBold">Connect a wallet</Text>
+            <Text variant="bodySmallBold">
+              {l.connect_wallet_details.connect_a_wallet}
+            </Text>
           </BaseButton>
         )
       ) : null}
@@ -245,7 +253,9 @@ export function ChooseWallet({
               color={theme.colors.textPrimary}
             />
           ) : (
-            <Text variant="bodySmallBold">Continue as guest</Text>
+            <Text variant="bodySmallBold">
+              {l.connect_wallet_details.continue_as_guest}
+            </Text>
           )}
         </BaseButton>
       ) : null}
@@ -256,7 +266,7 @@ export function ChooseWallet({
           alignItems="center"
         >
           <Text variant="bodySmallSecondary" fontSize={10} lineHeight={14}>
-            By connecting, you agree to the
+            {l.connect_wallet_details.by_connecting_you_agree}
           </Text>
           <Box flexDirection="row" alignItems="center" justifyContent="center">
             {termsOfServiceUrl ? (
@@ -271,7 +281,7 @@ export function ChooseWallet({
                   padding="none"
                   lineHeight={14}
                 >
-                  Terms of Service
+                  {l.connect_wallet_details.tos}
                 </Text>
               </BaseButton>
             ) : null}
@@ -297,7 +307,7 @@ export function ChooseWallet({
                   padding="none"
                   lineHeight={14}
                 >
-                  Privacy Policy
+                  {l.connect_wallet_details.privacy_policy}
                 </Text>
               </BaseButton>
             ) : null}

@@ -149,7 +149,7 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
       hash: userOpHash,
       confirmations: 0,
       from: userOp.sender,
-      nonce: BigNumber.from(userOp.nonce).toNumber(),
+      nonce: 0, // not the real nonce, but good enough for this purpose
       gasLimit: BigNumber.from(userOp.callGasLimit), // ??
       value: BigNumber.from(0),
       data: utils.hexValue(userOp.callData), // should extract the actual called method from this "execFromEntryPoint()" call
