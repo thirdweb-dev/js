@@ -13,10 +13,10 @@ import {
   CommonRoyaltySchema,
   CommonSymbolSchema,
   CommonTrustedForwarderSchema,
-  MerkleSchema,
 } from "./common";
 import { BigNumberish } from "ethers";
 import { z } from "zod";
+import { MerkleSchema } from "./common/snapshots";
 
 /**
  * @internal

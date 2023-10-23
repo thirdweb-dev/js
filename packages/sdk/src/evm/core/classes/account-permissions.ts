@@ -14,7 +14,7 @@ import { detectContractFeature } from "../../common/feature-detection/detectCont
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { resolveOrGenerateId } from "../../common/signature-minting";
 import { buildTransactionFunction } from "../../common/transactions";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   AdminFlag,
   DEFAULT_PERMISSIONS,

@@ -99,7 +99,7 @@ import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
-import { DropErc721ContractSchema } from "../schema";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { AirdropContractDeploy } from "../schema/contracts/airdrop";
 import {
   directDeployDeterministicPublished,

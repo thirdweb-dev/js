@@ -8,7 +8,7 @@ import { NFT } from "../../../core/schema/nft";
 import { toWei } from "../../common/currency/toWei";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_ZORA } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";

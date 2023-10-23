@@ -12,7 +12,6 @@ import {
 import { FEATURE_DYNAMIC_CONTRACT } from "../../constants/thirdweb-features";
 import { ContractInterface } from "ethers";
 import { generateExtensionFunctions } from "../../common/plugin/generatePluginFunctions";
-import { Abi, AbiSchema, CommonContractSchema } from "../../schema";
 import { utils } from "ethers";
 import invariant from "tiny-invariant";
 import { joinABIs } from "../../common/plugin/joinABIs";
@@ -31,6 +30,8 @@ import {
 import { getDeploymentInfo } from "../../common/any-evm-utils/getDeploymentInfo";
 import { deployWithThrowawayDeployer } from "../../common/any-evm-utils/deployWithThrowawayDeployer";
 import { deployContractDeterministic } from "../../common/any-evm-utils/deployContractDeterministic";
+import { Abi, AbiSchema } from "../../schema/contracts/custom";
+import { CommonContractSchema } from "../../schema/contracts/common";
 
 export class ExtensionManager implements DetectableFeature {
   featureName = FEATURE_DYNAMIC_CONTRACT.name;

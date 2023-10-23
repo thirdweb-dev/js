@@ -5,7 +5,7 @@ import type {
 import { AirdropFailedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/AirdropERC1155";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_AIRDROP_ERC1155 } from "../../constants/thirdweb-features";
-import { Address } from "../../schema";
+import { Address } from "../../schema/shared/Address";
 import {
   Airdrop1155Content,
   Airdrop1155Output,

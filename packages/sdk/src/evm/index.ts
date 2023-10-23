@@ -6,29 +6,6 @@ export type { ContractType } from "./contracts";
 
 export type { Role } from "./common/role";
 
-export * from "./schema/contracts/custom";
-export * from "./schema/contracts/common/claim-conditions";
-export * from "./schema/tokens/common/properties";
-export * from "./schema/tokens/token";
-export * from "./schema/tokens/edition";
-export * from "./schema/contracts/common";
-
-// shared
-export * from "./schema/shared/BigNumberSchema";
-export * from "./schema/shared/AddressSchema";
-export * from "./schema/shared/AddressOrEnsSchema";
-export * from "./schema/shared/RawDateSchema";
-export * from "./schema/shared/CallOverrideSchema";
-export * from "./schema/shared/ChainInfo";
-export * from "./schema/shared/Ens";
-export * from "./schema/shared/Address";
-
-export type {
-  SDKOptions,
-  SDKOptionsSchema,
-  SDKOptionsOutput,
-} from "./schema/sdk-options";
-
 export * from "./contracts";
 
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
@@ -54,10 +31,6 @@ export type { SmartContract } from "./contracts/smart-contract";
 
 // re-export from functions entry point
 export * from "./functions";
-
-// marketplace v3 types
-export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
-export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
 
 //#region @r/packages/sdk/src/evm/core
 export * from "./core/types";
@@ -258,3 +231,37 @@ export * from "./types/transactions";
 export * from "./types/contract";
 export * from "./types/account";
 //#endregion
+
+//#region @r/packages/sdk/src/evm/schema
+export * from "./schema/shared/BigNumberSchema";
+export * from "./schema/shared/AddressSchema";
+export * from "./schema/shared/AddressOrEnsSchema";
+export * from "./schema/shared/RawDateSchema";
+export * from "./schema/shared/CallOverrideSchema";
+export * from "./schema/shared/ChainInfo";
+export * from "./schema/shared/Ens";
+export * from "./schema/shared/Address";
+export * from "./schema/sdk-options";
+export * from "./schema/contracts/custom";
+export * from "./schema/contracts/common/index";
+export * from "./schema/contracts/common/claim-conditions";
+export * from "./schema/contracts/common/currency";
+export * from "./schema/contracts/common/signature";
+export * from "./schema/contracts/common/snapshots";
+export * from "./schema/contracts/drop-erc721";
+export * from "./schema/contracts/drop-erc1155";
+export * from "./schema/contracts/marketplace";
+export * from "./schema/contracts/packs";
+export * from "./schema/contracts/splits";
+export * from "./schema/contracts/token-erc20";
+export * from "./schema/contracts/token-erc721";
+export * from "./schema/contracts/token-erc1155";
+export * from "./schema/contracts/vote";
+export * from "./schema/tokens/common/properties";
+export * from "./schema/tokens/common/wrap";
+export * from "./schema/tokens/edition";
+export * from "./schema/tokens/token";
+export * from "./schema/tokens/pack";
+export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
+export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
+//#endregion @r/packages/sdk/src/evm/schema

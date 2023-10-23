@@ -6,7 +6,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 
 import type { IAccountCore } from "@thirdweb-dev/contracts-js";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   PermissionSnapshotInput,
   SignerPermissionsInput,
