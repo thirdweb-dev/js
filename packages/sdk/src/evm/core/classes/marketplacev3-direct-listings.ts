@@ -33,7 +33,6 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
@@ -49,6 +48,7 @@ import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
+import { Status } from "../../enums/marketplace/Status";
 
 /**
  * Handles direct listings

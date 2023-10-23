@@ -26,7 +26,6 @@ import {
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ListingType } from "../../enums";
 import { CurrencyValue, Price } from "../../types/currency";
 import {
   AuctionListing,
@@ -38,6 +37,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { ListingType } from "../../enums/marketplace/ListingType";
 
 /**
  * Handles auction listings

@@ -19,7 +19,7 @@ import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
+import { Status } from "../../enums/marketplace/Status";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,

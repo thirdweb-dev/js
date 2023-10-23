@@ -30,7 +30,6 @@ export type {
 } from "./schema/sdk-options";
 
 export * from "./types";
-export * from "./enums";
 export * from "./contracts";
 
 export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
@@ -224,4 +223,10 @@ export * from "./constants/urls";
 export * from "./constants/contract-features";
 //#endregion @r/packages/sdk/src/evm/constants/*
 
-
+//#region @r/packages/sdk/src/evm/enums
+export * from "./enums/marketplace/ListingType";
+export * from "./enums/marketplace/Status";
+export * from "./enums/vote/ProposalState";
+export * from "./enums/vote/Vote";
+export * from "./enums/ClaimEligibility";
+//#endregion @r/packages/sdk/src/evm/enums

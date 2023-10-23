@@ -40,7 +40,7 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../../constants/contract";
-import { ListingType } from "../../enums";
+import { ListingType } from "../../enums/marketplace/ListingType";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
 import {
