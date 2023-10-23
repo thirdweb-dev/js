@@ -1,4 +1,8 @@
-import { Account, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  Account,
+  useAccount,
+  useConfirmPaperEmail,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { useEffect, useState } from "react";
 import { OnboardingModal } from "./Modal";
 import { OnboardingGeneral } from "./General";
@@ -7,12 +11,23 @@ import { useRouter } from "next/router";
 import { OnboardingBilling } from "./Billing";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { useWallet } from "@thirdweb-dev/react";
+import { GLOBAL_PAPER_AUTH_TOKEN_KEY } from "constants/app";
+
+const skipBilling = (account: Account) => {
+  return (
+    ["validPayment", "paymentVerification"].includes(account.status) ||
+    account.onboardSkipped
+  );
+};
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
   const router = useRouter();
   const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
+  const wallet = useWallet();
+  const paperConfirmMutation = useConfirmPaperEmail();
 
   const [state, setState] = useState<
     "onboarding" | "confirming" | "billing" | "skipped" | undefined
@@ -45,11 +60,7 @@ export const Onboarding: React.FC = () => {
         },
       });
     } else if (state === "confirming") {
-      const newState =
-        ["validPayment", "paymentVerification"].includes(account.status) ||
-        account.onboardSkipped
-          ? "skipped"
-          : "billing";
+      const newState = skipBilling(account) ? "skipped" : "billing";
       setState(newState);
 
       trackEvent({
@@ -72,28 +83,47 @@ export const Onboarding: React.FC = () => {
     }
   };
 
+  const handlePaperWallet = () => {
+    const paperJwt = (window as any)[GLOBAL_PAPER_AUTH_TOKEN_KEY];
+
+    if (paperJwt) {
+      paperConfirmMutation.mutate(
+        { paperJwt },
+        {
+          onSuccess: (data) => {
+            if (!skipBilling(data as Account)) {
+              setState("billing");
+            }
+            (window as any)[GLOBAL_PAPER_AUTH_TOKEN_KEY] = undefined;
+          },
+        },
+      );
+    }
+  };
+
   useEffect(() => {
-    if (!isLoggedIn || !account || state) {
+    if (!isLoggedIn || !account || state || !wallet) {
       return;
     }
-
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
-      setState("onboarding");
+      // if its a paper email wallet, try to confirm it
+      if (wallet.walletId === "paper") {
+        handlePaperWallet();
+      } else {
+        setState("onboarding");
+      }
     }
     // user has changed email and needs to confirm
     else if (account.unconfirmedEmail) {
       setState("confirming");
     }
     // user hasn't skipped onboarding, has valid email and no valid payment yet
-    else if (
-      account.email &&
-      !account.onboardSkipped &&
-      !["validPayment", "paymentVerification"].includes(account.status)
-    ) {
+    else if (!skipBilling(account)) {
       setState("billing");
     }
-  }, [isLoggedIn, account, router, state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, account, router, state, wallet]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
     return null;
