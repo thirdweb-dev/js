@@ -13,7 +13,10 @@ import { GOOGLE_ICON } from "../../../assets/svgs";
 import { WalletButton } from "../../../components/base/WalletButton";
 import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
 import { OauthOptions } from "../../connectors/embedded-wallet/types";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen
@@ -24,6 +27,7 @@ export const EmailSelectionUI: React.FC<
     email?: boolean;
   }
 > = ({ onSelect, walletConfig, oauthOptions, email }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [emailInput, setEmailInput] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -98,7 +102,7 @@ export const EmailSelectionUI: React.FC<
             backgroundColor="buttonBackgroundColor"
             nameColor="buttonTextColor"
             justifyContent="center"
-            name="Sign in with Google"
+            name={l.embedded_wallet.sign_in_google}
             walletIconUrl={GOOGLE_ICON}
             onPress={onGoogleSignInPress}
           />
@@ -116,7 +120,7 @@ export const EmailSelectionUI: React.FC<
                 textAlign="center"
                 marginHorizontal="xxs"
               >
-                OR
+                {l.common.or}
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
@@ -127,12 +131,13 @@ export const EmailSelectionUI: React.FC<
         <>
           <TextInput
             textInputProps={{
-              placeholder: "Enter your email address",
+              placeholder: l.embedded_wallet.enter_your_email,
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: setEmailInput,
               style: {
                 fontSize: 14,
                 color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
                 lineHeight: 16,
                 padding: 0,
                 flex: 1,
@@ -166,12 +171,8 @@ export const EmailSelectionUI: React.FC<
                 color={theme.colors.accentButtonTextColor}
               />
             ) : (
-              <Text
-                variant="bodySmall"
-                color="accentButtonTextColor"
-                fontWeight="700"
-              >
-                Continue
+              <Text variant="bodySmallBold" color="accentButtonTextColor">
+                {l.common.continue}
               </Text>
             )}
           </BaseButton>

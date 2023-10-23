@@ -15,7 +15,10 @@ import WalletLoadingThumbnail from "../../../wallets/wallets/wallet-connect/Wall
 import ImageSvgUri from "../../base/ImageSvgUri";
 import Box from "../../base/Box";
 import { ConnectWalletHeader } from "../ConnectingWallet/ConnectingWalletHeader";
-import { useGlobalTheme } from "../../../providers/ui-context-provider";
+import {
+  useGlobalTheme,
+  useLocale,
+} from "../../../providers/ui-context-provider";
 
 export const SmartWalletFlow = ({
   connected,
@@ -24,6 +27,7 @@ export const SmartWalletFlow = ({
   personalWalletConfig,
   ...props
 }: ConnectUIProps<SmartWallet> & { personalWalletConfig: WalletConfig }) => {
+  const l = useLocale();
   const theme = useGlobalTheme();
   const [connectedPersonalWallet, setConnectedPersonalWallet] =
     useState<WalletInstance>();
@@ -141,13 +145,13 @@ export const SmartWalletFlow = ({
           <View style={styles.connectingContainer}>
             <>
               <Text variant="header" mt="lg" textAlign="center">
-                {mismatch ? "Network Mismatch" : "Connecting..."}
+                {mismatch
+                  ? l.smart_wallet.network_mistmach
+                  : `${l.smart_wallet.connecting} ...`}
               </Text>
               {mismatch ? (
                 <Text variant="bodySmallSecondary" mt="lg" textAlign="center">
-                  {
-                    "There's a network mismatch between your contract and your wallet"
-                  }
+                  {l.connect_wallet_details.network_mismatch}
                 </Text>
               ) : null}
             </>
@@ -173,7 +177,7 @@ export const SmartWalletFlow = ({
             <ActivityIndicator size="small" color={theme.colors.textPrimary} />
           ) : (
             <Text variant="bodyLarge" textAlign="center">
-              Switch Network
+              {l.common.switch_network}
             </Text>
           )}
         </BaseButton>

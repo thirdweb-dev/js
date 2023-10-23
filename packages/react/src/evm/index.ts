@@ -6,7 +6,10 @@ export {
 export { useSafe } from "./connectors/gnosis";
 export { useMagic } from "./connectors/magic";
 
-export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
+export {
+  ConnectWallet,
+  type ConnectWalletProps,
+} from "../wallet/ConnectWallet/ConnectWallet";
 export { ConnectModalInline } from "../wallet/ConnectWallet/Modal/ConnectModalInline";
 
 export { NetworkSelector } from "../wallet/ConnectWallet/NetworkSelector";
@@ -53,6 +56,7 @@ export {
   PhantomWallet,
   RainbowWallet,
   MetaMaskWallet,
+  OKXWallet,
   TrustWallet,
   CoinbaseWallet,
   BloctoWallet,

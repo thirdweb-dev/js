@@ -28,7 +28,11 @@ export const PasswordInput = ({
       pl="xxs"
     >
       <TextInput
-        style={{ ...styles.textInput, color: theme.colors.textPrimary }}
+        style={{
+          ...styles.textInput,
+          color: theme.colors.textPrimary,
+          fontFamily: theme.textVariants.defaults.fontFamily,
+        }}
         secureTextEntry={!showPassword}
         textContentType="none"
         returnKeyType={"done"}

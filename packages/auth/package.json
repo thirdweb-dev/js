@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.0.7",
+  "version": "4.1.0",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -35,6 +35,13 @@
       },
       "default": "./express/dist/thirdweb-dev-auth-express.cjs.js"
     },
+    "./fastify": {
+      "module": {
+        "browser": "./fastify/dist/thirdweb-dev-auth-fastify.browser.esm.js",
+        "default": "./fastify/dist/thirdweb-dev-auth-fastify.esm.js"
+      },
+      "default": "./fastify/dist/thirdweb-dev-auth-fastify.cjs.js"
+    },
     "./next-auth": {
       "module": {
         "browser": "./next-auth/dist/thirdweb-dev-auth-next-auth.browser.esm.js",
@@ -63,6 +70,7 @@
       "express/index.ts",
       "next/index.ts",
       "next-auth/index.ts",
+      "fastify/index.ts",
       "evm/index.ts"
     ],
     "exports": {
@@ -101,6 +109,7 @@
     "eslint-plugin-tsdoc": "^0.2.16",
     "ethers": "^5.7.2",
     "express": "^4.18.1",
+    "fastify": "^4.24.2",
     "mocha": "^10.2.0",
     "next": "^12.3.4",
     "next-auth": "^4.22.3",
@@ -111,6 +120,7 @@
     "cookie-parser": "^1.4.6",
     "ethers": "^5",
     "express": "^4",
+    "fastify": "^4.24.2",
     "next": "^12 || ^13",
     "next-auth": "^4"
   },
@@ -124,6 +134,9 @@
     "express": {
       "optional": true
     },
+    "fastify": {
+      "optional": true
+    },
     "next": {
       "optional": true
     },
@@ -132,8 +145,10 @@
     }
   },
   "dependencies": {
+    "@fastify/cookie": "^9.1.0",
     "@thirdweb-dev/wallets": "workspace:*",
     "cookie": "^0.5.0",
+    "fastify-type-provider-zod": "^1.1.9",
     "uuid": "^9.0.1",
     "zod": "^3.22.3"
   }
