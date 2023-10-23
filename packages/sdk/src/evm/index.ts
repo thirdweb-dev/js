@@ -30,7 +30,40 @@ export type {
 } from "./schema/sdk-options";
 export type { FeatureWithEnabled } from "./constants/contract-features";
 
-// ./packages/sdk/src/evm/core
+export * from "./types";
+export * from "./enums";
+export * from "./constants";
+export * from "./contracts";
+
+export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
+
+// export integration things
+export * from "./integrations/thirdweb-checkout";
+
+// explicitly export the *TYPES* of prebuilt contracts
+export type { Edition } from "./contracts/prebuilt-implementations/edition";
+export type { EditionDrop } from "./contracts/prebuilt-implementations/edition-drop";
+export type { Marketplace } from "./contracts/prebuilt-implementations/marketplace";
+export type { MarketplaceV3 } from "./contracts/prebuilt-implementations/marketplacev3";
+export type { Multiwrap } from "./contracts/prebuilt-implementations/multiwrap";
+export type { NFTCollection } from "./contracts/prebuilt-implementations/nft-collection";
+export type { NFTDrop } from "./contracts/prebuilt-implementations/nft-drop";
+export type { Pack } from "./contracts/prebuilt-implementations/pack";
+export type { SignatureDrop } from "./contracts/prebuilt-implementations/signature-drop";
+export type { Split } from "./contracts/prebuilt-implementations/split";
+export type { Token } from "./contracts/prebuilt-implementations/token";
+export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop";
+export type { Vote } from "./contracts/prebuilt-implementations/vote";
+export type { SmartContract } from "./contracts/smart-contract";
+
+// re-export from functions entry point
+export * from "./functions";
+
+// marketplace v3 types
+export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
+export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
+
+//#region @r/packages/sdk/src/evm/core
 export * from "./core/types";
 export * from "./core/classes/contract-encoder";
 export * from "./core/classes/contract-metadata";
@@ -88,37 +121,88 @@ export * from "./core/classes/account";
 export * from "./core/classes/account-factory";
 export * from "./core/wallet/user-wallet";
 export * from "./core/sdk";
+//#endregion @r/packages/sdk/src/evm/core
 
-export * from "./types";
-export * from "./enums";
-export * from "./common";
-export * from "./constants";
-export * from "./contracts";
+//#region @r/packages/sdk/src/evm/common/*
+export * from "./common/error";
+export * from "./common/snapshots";
+export * from "./common/role";
+export * from "./common/metadata-resolver";
+export * from "./common/gas-price";
+export * from "./common/fetchContractMetadata";
+export * from "./common/feature-detection/matchesPrebuiltAbi";
+export * from "./common/feature-detection/hasMatchingAbi";
+export * from "./common/feature-detection/extractConstructorParams";
+export * from "./common/feature-detection/extractFunctions";
+export * from "./common/feature-detection/extractCommentFromMetadata";
+export * from "./common/feature-detection/extractConstructorParamsFromAbi";
+export * from "./common/feature-detection/extractFunctionParamsFromAbi";
+export * from "./common/feature-detection/extractFunctionsFromAbi";
+export * from "./common/feature-detection/extractEventsFromAbi";
+export * from "./common/feature-detection/extractMinimalProxyImplementationAddress";
+export * from "./common/feature-detection/resolveContractUriFromAddress";
+export * from "./common/feature-detection/extractIPFSHashFromBytecode";
+export * from "./common/feature-detection/fetchRawPredeployMetadata";
+export * from "./common/feature-detection/fetchPreDeployMetadata";
+export * from "./common/feature-detection/fetchExtendedReleaseMetadata";
+export * from "./common/feature-detection/detectFeatures";
+export * from "./common/feature-detection/getAllDetectedFeatures";
+export * from "./common/feature-detection/getAllDetectedFeatureNames";
+export * from "./common/feature-detection/isFeatureEnabled";
+export * from "./common/feature-detection/assertEnabled";
+export * from "./common/feature-detection/detectContractFeature";
+export * from "./common/feature-detection/hasFunction";
+export * from "./common/plugin/joinABIs";
+export * from "./common/plugin/getCompositePluginABI";
+export * from "./common/version-checker";
+export * from "./common/fetchSourceFilesFromMetadata";
+export { isNativeToken } from "./common/currency/isNativeToken";
+export { cleanCurrencyAddress } from "./common/currency/cleanCurrencyAddress";
+export { normalizePriceValue } from "./common/currency/normalizePriceValue";
+export { fetchCurrencyMetadata } from "./common/currency/fetchCurrencyMetadata";
+export { fetchCurrencyValue } from "./common/currency/fetchCurrencyValue";
+export { setErc20Allowance } from "./common/currency/setErc20Allowance";
+export { approveErc20Allowance } from "./common/currency/approveErc20Allowance";
+export { hasERC20Allowance } from "./common/currency/hasERC20Allowance";
+export { normalizeAmount } from "./common/currency/normalizeAmount";
+export { toEther } from "./common/currency/toEther";
+export { toWei } from "./common/currency/toWei";
+export { toUnits } from "./common/currency/toUnits";
+export { toDisplayValue } from "./common/currency/toDisplayValue";
+export * from "./common/verification";
+export * from "./common/any-evm-utils/constants";
+export * from "./common/any-evm-utils/isContractDeployed";
+export * from "./common/any-evm-utils/isEIP155Enforced";
+export * from "./common/any-evm-utils/getCreate2FactoryAddress";
+export * from "./common/any-evm-utils/getSaltHash";
+export * from "./common/any-evm-utils/getInitBytecodeWithSalt";
+export * from "./common/any-evm-utils/computeDeploymentAddress";
+export * from "./common/any-evm-utils/computeEOAForwarderAddress";
+export * from "./common/any-evm-utils/computeForwarderAddress";
+export * from "./common/any-evm-utils/computeCloneFactoryAddress";
+export * from "./common/any-evm-utils/computeNativeTokenAddress";
+export * from "./common/any-evm-utils/getThirdwebContractAddress";
+export * from "./common/any-evm-utils/predictThirdwebContractAddress";
+export * from "./common/any-evm-utils/getEncodedConstructorParamsForThirdwebContract";
+export * from "./common/any-evm-utils/getKeylessTxn";
+export * from "./common/any-evm-utils/deployCreate2Factory";
+export * from "./common/any-evm-utils/deployDirectDeterministic";
+export * from "./common/any-evm-utils/deployContractDeterministicRaw";
+export * from "./common/any-evm-utils/deployContractDeterministic";
+export * from "./common/any-evm-utils/getDeploymentInfo";
+export * from "./common/any-evm-utils/deployWithThrowawayDeployer";
+export * from "./common/any-evm-utils/computeDeploymentInfo";
+export * from "./common/any-evm-utils/convertParamValues";
+export * from "./common/any-evm-utils/getCreate2FactoryDeploymentInfo";
+export * from "./common/any-evm-utils/fetchPublishedContractFromPolygon";
+export * from "./common/any-evm-utils/fetchAndCacheDeployMetadata";
+export * from "./common/any-evm-utils/estimateGasForDeploy";
+export * from "./common/any-evm-utils/createTransactionBatches";
+export * from "./common/deploy";
+export { convertToReadableQuantity } from "./common/claim-conditions/convertToReadableQuantity";
+export { fetchSnapshotEntryForAddress } from "./common/claim-conditions/fetchSnapshotEntryForAddress";
+export { getCachedAbiForContract } from "./common/abi";
+export * from "./common/ens/resolveEns";
+export * from "./common/ens/resolveAddress";
+//#endregion @r/packages/sdk/src/evm/common/*
 
-export { StaticJsonRpcBatchProvider } from "./lib/static-batch-rpc";
-
-// export integration things
-export * from "./integrations/thirdweb-checkout";
-
-// explicitly export the *TYPES* of prebuilt contracts
-export type { Edition } from "./contracts/prebuilt-implementations/edition";
-export type { EditionDrop } from "./contracts/prebuilt-implementations/edition-drop";
-export type { Marketplace } from "./contracts/prebuilt-implementations/marketplace";
-export type { MarketplaceV3 } from "./contracts/prebuilt-implementations/marketplacev3";
-export type { Multiwrap } from "./contracts/prebuilt-implementations/multiwrap";
-export type { NFTCollection } from "./contracts/prebuilt-implementations/nft-collection";
-export type { NFTDrop } from "./contracts/prebuilt-implementations/nft-drop";
-export type { Pack } from "./contracts/prebuilt-implementations/pack";
-export type { SignatureDrop } from "./contracts/prebuilt-implementations/signature-drop";
-export type { Split } from "./contracts/prebuilt-implementations/split";
-export type { Token } from "./contracts/prebuilt-implementations/token";
-export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop";
-export type { Vote } from "./contracts/prebuilt-implementations/vote";
-export type { SmartContract } from "./contracts/smart-contract";
-
-// re-export from functions entry point
-export * from "./functions";
-
-// marketplace v3 types
-export type { DirectListingInputParams } from "./schema/marketplacev3/direct-listings";
-export type { EnglishAuctionInputParams } from "./schema/marketplacev3/english-auctions";
