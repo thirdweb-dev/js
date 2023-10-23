@@ -45,7 +45,9 @@ export function ChooseWallet({
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
   const emailWallet = wallets.find(
-    (w) => w.id === walletIds.magicLink || w.id === walletIds.embeddedWallet,
+    (w) =>
+      w.id === walletIds.magicLink ||
+      (w.id === walletIds.embeddedWallet && w.selectUI),
   );
   const connectionWallets = wallets
     .filter(
