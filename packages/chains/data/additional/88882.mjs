@@ -19,7 +19,7 @@ export default {
   explorers: [
     {
       name: "Spicy Explorer",
-      url: "http://spicy-explorer.chiliz.com/",
+      url: "https://spicy-explorer.chiliz.com/",
       standard: "none",
     },
   ],

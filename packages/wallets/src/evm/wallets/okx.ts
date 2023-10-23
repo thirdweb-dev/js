@@ -2,19 +2,19 @@ import type { WalletConnectConnector as WalletConnectConnectorType } from "../co
 import type { QRModalOptions } from "../connectors/wallet-connect/qrModalOptions";
 import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import type { RainbowConnector as RainbowConnectorType } from "../connectors/rainbow";
+import type { OKXConnector as OKXConnectorType } from "../connectors/okx";
 import { walletIds } from "../constants/walletIds";
 import { TW_WC_PROJECT_ID } from "../constants/wc";
-import { getInjectedRainbowProvider } from "../connectors/rainbow/getInjectedRainbowProvider";
+import { getInjectedOKXProvider } from "../connectors/okx/getInjectedOKXProvider";
 
-type RainbowAdditionalOptions = {
+type OKXAdditionalOptions = {
   /**
-   * Whether to open the default Wallet Connect QR code Modal for connecting to Rainbow Wallet on mobile if Rainbow is not injected when calling connect().
+   * Whether to open the default Wallet Connect QR code Modal for connecting to OKX Wallet on mobile if OKX is not injected when calling connect().
    */
   qrcode?: boolean;
 
   /**
-   * When connecting Rainbow using the QR Code - Wallet Connect connector is used which requires a project id.
+   * When connecting OKX using the QR Code - Wallet Connect connector is used which requires a project id.
    * This project id is Your project’s unique identifier for wallet connect that can be obtained at cloud.walletconnect.com.
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#projectid-required
@@ -29,7 +29,7 @@ type RainbowAdditionalOptions = {
   qrModalOptions?: QRModalOptions;
 };
 
-export type RainbowWalletOptions = WalletOptions<RainbowAdditionalOptions>;
+export type OKXWalletOptions = WalletOptions<OKXAdditionalOptions>;
 
 type ConnectWithQrCodeArgs = {
   chainId?: number;
@@ -37,44 +37,32 @@ type ConnectWithQrCodeArgs = {
   onConnected: (accountAddress: string) => void;
 };
 
-export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions> {
+export class OKXWallet extends AbstractClientWallet<OKXAdditionalOptions> {
   connector?: Connector;
   walletConnectConnector?: WalletConnectConnectorType;
-  rainbowConnector?: RainbowConnectorType;
+  OKXConnector?: OKXConnectorType;
   isInjected: boolean;
 
-  static meta = {
-    name: "Rainbow Wallet",
-    iconURL:
-      "ipfs://QmSZn47p4DVVBfzvg9BAX2EqwnPxkT1YAE7rUnrtd9CybQ/rainbow-logo.png",
-    urls: {
-      chrome:
-        "https://chrome.google.com/webstore/detail/rainbow/opfgelmcmbiajamepnmloijbpoleiama",
-      android: "https://rnbwapp.com/e/Va41HWS6Oxb",
-      ios: "https://rnbwapp.com/e/OeMdmkJ6Oxb",
-    },
-  };
-
-  static id = walletIds.rainbow as string;
+  static id = walletIds.okx as string;
 
   public get walletName() {
-    return "Rainbow Wallet" as const;
+    return "OKX" as const;
   }
 
-  constructor(options: RainbowWalletOptions) {
-    super(RainbowWallet.id, options);
-    this.isInjected = !!getInjectedRainbowProvider();
+  constructor(options: OKXWalletOptions) {
+    super(OKXWallet.id, options);
+    this.isInjected = !!getInjectedOKXProvider();
   }
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
-      // if rainbow is injected, use the injected connector
-      // otherwise, use the wallet connect connector for using the rainbow app on mobile via QR code scan
+      // if OKX is injected, use the injected connector
+      // otherwise, use the wallet connect connector for using the OKX app on mobile via QR code scan
 
       if (this.isInjected) {
         // import the connector dynamically
-        const { RainbowConnector } = await import("../connectors/rainbow");
-        const rainbowConnector = new RainbowConnector({
+        const { OKXConnector } = await import("../connectors/okx");
+        this.OKXConnector = new OKXConnector({
           chains: this.chains,
           connectorStorage: this.walletStorage,
           options: {
@@ -82,9 +70,7 @@ export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions
           },
         });
 
-        this.rainbowConnector = rainbowConnector;
-
-        this.connector = new WagmiAdapter(rainbowConnector);
+        this.connector = new WagmiAdapter(this.OKXConnector);
       } else {
         const { WalletConnectConnector } = await import(
           "../connectors/wallet-connect"
@@ -121,7 +107,7 @@ export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions
    *
    * @example
    * ```typescript
-   * rainbow.connectWithQrCode({
+   * wallet.connectWithQrCode({
    *  chainId: 1,
    *  onQrCodeUri(qrCodeUri) {
    *    // render the QR code with `qrCodeUri`
@@ -149,5 +135,13 @@ export class RainbowWallet extends AbstractClientWallet<RainbowAdditionalOptions
 
     // trigger connect flow
     this.connect({ chainId: options.chainId }).then(options.onConnected);
+  }
+
+  async switchAccount() {
+    if (!this.OKXConnector) {
+      throw new Error("Can not switch Account");
+    }
+
+    await this.OKXConnector.switchAccount();
   }
 }

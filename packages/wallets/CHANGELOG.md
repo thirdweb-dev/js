@@ -1,5 +1,40 @@
 # @thirdweb-dev/wallets
 
+## 2.0.8
+
+### Patch Changes
+
+- [#1815](https://github.com/thirdweb-dev/js/pull/1815) [`5ffbcfc3`](https://github.com/thirdweb-dev/js/commit/5ffbcfc302f74167768b196d93a328f979344036) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add onAuthSuccess callback for paperWallet
+
+- [#1821](https://github.com/thirdweb-dev/js/pull/1821) [`d27a3dee`](https://github.com/thirdweb-dev/js/commit/d27a3dee8398d5707d2d1343c428abf8e03f67e3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Multidimensional nonces for smart wallets
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
+- [#1790](https://github.com/thirdweb-dev/js/pull/1790) [`aa9f48d1`](https://github.com/thirdweb-dev/js/commit/aa9f48d1361194fc81146da530c95a3409bd0799) Thanks [@adam-maj](https://github.com/adam-maj)! - Add AsyncWallet
+
+- [#1800](https://github.com/thirdweb-dev/js/pull/1800) [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose new Smart Wallet transaction functions
+
+  Snding raw transactions:
+
+  ```
+  smartWallet.sendRaw(tx);
+  smartWallet.executeRaw(tx); // waits for confirmations
+  ```
+
+  Sending raw batched transactions
+
+  ```
+  smartWallet.sendBatchRaw(tx);
+  smartWallet.executeBatchRaw(tx); // waits for confirmations
+  ```
+
+- [#1826](https://github.com/thirdweb-dev/js/pull/1826) [`2307f11a`](https://github.com/thirdweb-dev/js/commit/2307f11ab311aa4a775edd23e777d10f8015ce86) Thanks [@MananTank](https://github.com/MananTank)! - Add OKX wallet
+
+- [#1789](https://github.com/thirdweb-dev/js/pull/1789) [`64138642`](https://github.com/thirdweb-dev/js/commit/64138642e84d8b56b254762eca613d443cca292b) Thanks [@adam-maj](https://github.com/adam-maj)! - Switch GCP KMS to use signer in package
+
+- Updated dependencies [[`42ba15f2`](https://github.com/thirdweb-dev/js/commit/42ba15f2c0e77e23e62650119dfaaa5c0dbe4481), [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522), [`d8d48a95`](https://github.com/thirdweb-dev/js/commit/d8d48a9516fc8fdd173fbb91a858fe7ec0725ddd), [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53), [`6d1eabe9`](https://github.com/thirdweb-dev/js/commit/6d1eabe9f9818ee2a79ce5bf6aa74417dbfd0558)]:
+  - @thirdweb-dev/sdk@4.0.7
+
 ## 2.0.7
 
 ### Patch Changes

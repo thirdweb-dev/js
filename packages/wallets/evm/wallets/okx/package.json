@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-okx.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-okx.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-wallets-evm-wallets-okx.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-okx.browser.esm.js"
+  }
+}
