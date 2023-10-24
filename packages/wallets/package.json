@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -21,6 +21,13 @@
         "default": "./evm/dist/thirdweb-dev-wallets-evm.esm.js"
       },
       "default": "./evm/dist/thirdweb-dev-wallets-evm.cjs.js"
+    },
+    "./evm/wallets/okx": {
+      "module": {
+        "browser": "./evm/wallets/okx/dist/thirdweb-dev-wallets-evm-wallets-okx.browser.esm.js",
+        "default": "./evm/wallets/okx/dist/thirdweb-dev-wallets-evm-wallets-okx.esm.js"
+      },
+      "default": "./evm/wallets/okx/dist/thirdweb-dev-wallets-evm-wallets-okx.cjs.js"
     },
     "./evm/wallets/base": {
       "module": {
@@ -140,6 +147,13 @@
         "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js"
       },
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
+    },
+    "./evm/connectors/okx": {
+      "module": {
+        "browser": "./evm/connectors/okx/dist/thirdweb-dev-wallets-evm-connectors-okx.browser.esm.js",
+        "default": "./evm/connectors/okx/dist/thirdweb-dev-wallets-evm-connectors-okx.esm.js"
+      },
+      "default": "./evm/connectors/okx/dist/thirdweb-dev-wallets-evm-connectors-okx.cjs.js"
     },
     "./evm/wallets/local-wallet": {
       "module": {
@@ -330,12 +344,26 @@
       },
       "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.cjs.js"
     },
+    "./evm/wallets/token-bound-smart-wallet": {
+      "module": {
+        "browser": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.browser.esm.js",
+        "default": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.esm.js"
+      },
+      "default": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.cjs.js"
+    },
     "./evm/connectors/wallet-connect-v1": {
       "module": {
         "browser": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.browser.esm.js",
         "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.esm.js"
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
+    },
+    "./evm/connectors/token-bound-smart-wallet": {
+      "module": {
+        "browser": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.browser.esm.js",
+        "default": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.esm.js"
+      },
+      "default": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.cjs.js"
     },
     "./evm/connectors/embedded-wallet/implementations": {
       "module": {
@@ -382,7 +410,7 @@
     "@magic-ext/oauth": "^7.6.2",
     "@magic-sdk/provider": "^13.6.2",
     "@metamask/eth-sig-util": "^4.0.0",
-    "@paperxyz/embedded-wallet-service-sdk": "^1.2.4",
+    "@paperxyz/embedded-wallet-service-sdk": "^1.2.5",
     "@paperxyz/sdk-common-utilities": "^0.1.0",
     "@safe-global/safe-core-sdk": "^3.3.4",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.17",
@@ -455,7 +483,9 @@
     "ethereum-provider": "^0.7.7",
     "ethers": "^5.7.2",
     "ethers-aws-kms-signer": "^1.3.2",
+    "rimraf": "^3.0.2",
     "tweetnacl": "^1.0.3",
+    "typedoc": "^0.25.2",
     "typescript": "^5.1.6"
   },
   "scripts": {
@@ -465,6 +495,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc && cross-env THIRDWEB_EWS_SDK_VERSION=$npm_package_version preconstruct build",
     "preconstruct:fix": "preconstruct fix",
-    "push": "yalc push"
+    "push": "yalc push",
+    "typedoc": "rimraf typedoc && node typedoc.js"
   }
 }

@@ -13,9 +13,11 @@ import { WalletIcon } from "../base/WalletIcon";
 import WalletConnectIcon from "../../assets/wallet-connect";
 import QrCodeIcon from "../../assets/qr-code";
 import { QRCodeScan } from "./QRCodeScan";
+import { useLocale } from "../../providers/ui-context-provider";
 
 const ConnectAppField = () => {
   const theme = useTheme();
+  const l = useLocale();
   const [showWCInput, setShowWCInput] = useState(false);
   const [wcUri, setWCUri] = useState<string | undefined>();
   const [appMeta, setAppMeta] = useState<{ name: string; iconUrl: string }>();
@@ -130,6 +132,10 @@ const ConnectAppField = () => {
               placeholder: "wc://...",
               placeholderTextColor: theme.colors.textSecondary,
               numberOfLines: 1,
+              style: {
+                color: theme.colors.textPrimary,
+                fontFamily: theme.textVariants.defaults.fontFamily,
+              },
             }}
             containerProps={{
               flex: 1,
@@ -177,7 +183,7 @@ const ConnectAppField = () => {
             )}
             <View style={styles.exportWalletInfo}>
               <Text variant="bodySmall" numberOfLines={1}>
-                {appMeta ? appMeta.name : "Connect app"}
+                {appMeta ? appMeta.name : l.common.connect_app}
               </Text>
             </View>
           </>

@@ -5,6 +5,7 @@ import { ClientConfig } from "@account-abstraction/sdk";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
 import { HttpRpcClient } from "./http-rpc-client";
+import { randomNonce } from "./utils";
 
 export class ERC4337EthersSigner extends Signer {
   config: ClientConfig;
@@ -40,12 +41,14 @@ export class ERC4337EthersSigner extends Signer {
     const tx = await ethers.utils.resolveProperties(transaction);
     await this.verifyAllNecessaryFields(tx);
 
+    const multidimensionalNonce = randomNonce();
     const userOperation = await this.smartAccountAPI.createSignedUserOp(
       {
         target: tx.to || "",
         data: tx.data?.toString() || "0x",
         value: tx.value,
         gasLimit: tx.gasLimit,
+        nonce: multidimensionalNonce,
       },
       batched,
     );

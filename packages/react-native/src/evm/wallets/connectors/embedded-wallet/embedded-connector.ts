@@ -1,4 +1,5 @@
 import {
+  AuthOptions,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
   OauthOption,
@@ -7,7 +8,12 @@ import type { Chain } from "@thirdweb-dev/chains";
 import { Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
-import { sendEmailOTP, socialLogin, validateEmailOTP } from "./embedded/auth";
+import {
+  customJwt,
+  sendEmailOTP,
+  socialLogin,
+  validateEmailOTP,
+} from "./embedded/auth";
 import { getEthersSigner } from "./embedded/signer";
 import { logoutUser } from "./embedded/helpers/auth/logout";
 import {
@@ -15,6 +21,7 @@ import {
   getConnectedEmail,
   saveConnectedEmail,
 } from "./embedded/helpers/storage/local";
+import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   private options: EmbeddedWalletConnectorOptions;
@@ -30,11 +37,38 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.email = getConnectedEmail();
   }
 
-  async connect(options?: { email?: string; chainId?: number }) {
+  async connect(options?: { chainId?: number } & EmbeddedWalletConnectionArgs) {
     const connected = await this.isConnected();
 
-    if (!connected) {
-      throw new Error("Not connected");
+    if (connected) {
+      return this.getAddress();
+    }
+
+    switch (options?.loginType) {
+      case "headless_google_oauth":
+        {
+          await socialLogin(
+            {
+              provider: AuthProvider.GOOGLE,
+              redirectUrl: options.redirectUrl,
+            },
+            this.options.clientId,
+          );
+        }
+        break;
+      case "headless_email_otp_verification": {
+        await this.validateEmailOtp({ otp: options.otp });
+        break;
+      }
+      case "jwt": {
+        await this.customJwt({
+          jwt: options.jwt,
+          password: options.password,
+        });
+        break;
+      }
+      default:
+        throw new Error("Invalid login type");
     }
 
     if (options?.chainId) {
@@ -45,7 +79,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.getAddress();
   }
 
-  async validateEmailOtp(otp: string) {
+  async validateEmailOtp(options: { otp: string }) {
     if (!this.email) {
       throw new Error("Email is required to connect");
     }
@@ -53,7 +87,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     try {
       await validateEmailOTP({
         clientId: this.options.clientId,
-        otp,
+        otp: options.otp,
       });
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
@@ -78,10 +112,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return { success: true };
   }
 
-  async sendEmailOtp(email: string) {
-    this.email = email;
-    saveConnectedEmail(email);
-    return sendEmailOTP(email, this.options.clientId);
+  async sendEmailOtp(options: { email: string }) {
+    this.email = options.email;
+    saveConnectedEmail(options.email);
+    return sendEmailOTP({
+      email: options.email,
+      clientId: this.options.clientId,
+    });
   }
 
   async socialLogin(oauthOption: OauthOption) {
@@ -98,6 +135,30 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       } else {
         return { error: "An unknown error occurred" };
       }
+    }
+
+    try {
+      await this.getSigner();
+      this.emit("connected");
+    } catch (error) {
+      if (error instanceof Error) {
+        return { error: error.message };
+      } else {
+        return { error: "Error getting the signer" };
+      }
+    }
+
+    return { success: true };
+  }
+
+  async customJwt(authOptions: AuthOptions) {
+    try {
+      const resp = await customJwt(authOptions, this.options.clientId);
+      this.email = resp.email;
+    } catch (error) {
+      console.error(`Error while verifying auth: ${error}`);
+      this.disconnect();
+      throw error;
     }
 
     try {
@@ -148,12 +209,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       return this.signer;
     }
 
-    let signer;
-    try {
-      signer = await getEthersSigner(this.options.clientId);
-    } catch (error) {
-      console.error(`Error while getting the signer: ${error}`);
-    }
+    const signer = await getEthersSigner(this.options.clientId);
 
     if (!signer) {
       throw new Error("Error fetching the signer");

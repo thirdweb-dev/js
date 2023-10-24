@@ -14,7 +14,6 @@ export type EmbeddedWalletConfig = {
   // @default true - set false to disable
   email?: boolean;
 
-  // @default { providers: ['google'] } - set false to disable
   oauthOptions?:
     | {
         providers: OAuthProvider[];

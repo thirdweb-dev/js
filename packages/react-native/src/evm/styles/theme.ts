@@ -1,4 +1,4 @@
-import { DeepPartial } from "../types/deepPartial";
+import { DeepPartial, deepMerge } from "../types/deepPartial";
 import { paletteDark, paletteLight } from "./colors";
 import { textVariants } from "./textVariants";
 import { createTheme } from "@shopify/restyle";
@@ -45,40 +45,43 @@ export type Theme = typeof _darkTheme;
 export type ButtonTheme = {
   buttonBackgroundColor?: string;
   buttonTextColor?: string;
+  buttonBorderColor?: string;
 };
 
 export const darkTheme = ({
   buttonBackgroundColor = paletteDark.buttonBackgroundColor,
   buttonTextColor = paletteDark.buttonTextColor,
+  buttonBorderColor = paletteLight.buttonBorderColor,
   colors,
   ...props
 }: ButtonTheme & DeepPartial<Theme> = _darkTheme): Theme => {
-  return {
-    ..._darkTheme,
+  return deepMerge(_darkTheme, {
     colors: {
       ..._darkTheme.colors,
       ...colors,
       buttonBackgroundColor,
       buttonTextColor,
+      buttonBorderColor,
     },
     ...props,
-  } as Theme;
+  });
 };
 
 export const lightTheme = ({
   buttonBackgroundColor = paletteLight.buttonBackgroundColor,
   buttonTextColor = paletteLight.buttonTextColor,
+  buttonBorderColor = paletteLight.buttonBorderColor,
   colors,
   ...props
 }: ButtonTheme & DeepPartial<Theme> = _lightTheme): Theme => {
-  return {
-    ..._lightTheme,
+  return deepMerge(_lightTheme, {
     colors: {
       ..._lightTheme.colors,
       ...colors,
       buttonBackgroundColor,
       buttonTextColor,
+      buttonBorderColor,
     },
     ...props,
-  } as Theme;
+  });
 };

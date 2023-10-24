@@ -57,11 +57,11 @@ export class EmbeddedWallet extends AbstractClientWallet<
   }
 
   async validateEmailOTP(otp: string) {
-    return this.connector?.validateEmailOtp(otp);
+    return this.connector?.validateEmailOtp({ otp });
   }
 
   async sendEmailOTP(email: string) {
-    return this.connector?.sendEmailOtp(email);
+    return this.connector?.sendEmailOtp({ email });
   }
 
   async socialLogin(oauthOption: OauthOption) {
