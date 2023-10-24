@@ -1,10 +1,4 @@
-import {
-  Base,
-  BaseGoerli,
-  Chain,
-  Sepolia,
-  allChains,
-} from "@thirdweb-dev/chains";
+import { Base, BaseGoerli, Chain, Sepolia } from "@thirdweb-dev/chains";
 import {
   ChainId,
   fetchContractMetadataFromAddress,
@@ -15,6 +9,7 @@ import { apiKeyMap, apiMap } from "lib/maps";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
+import { fetchAllChains } from "utils/fetchChain";
 
 interface VerifyPayload {
   contractAddress: string;
@@ -70,13 +65,6 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
     url: "https://goerli.basescan.org/",
   },
 };
-const chainIdToChain: Record<number, Chain> = allChains.reduce(
-  (acc, chain) => {
-    acc[chain.chainId] = chain;
-    return acc;
-  },
-  {} as Record<number, Chain>,
-);
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
@@ -93,6 +81,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         `ChainId ${chainId} is not supported for etherscan verification`,
       );
     }
+    const allChains = await fetchAllChains();
+    const chainIdToChain: Record<number, Chain> = allChains.reduce(
+      (acc, chain) => {
+        acc[chain.chainId] = chain;
+        return acc;
+      },
+      {} as Record<number, Chain>,
+    );
 
     const chain = chainIdToChain[chainId];
     if (!chain) {

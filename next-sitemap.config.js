@@ -1,7 +1,45 @@
 // @ts-check
+/**
+ *
+ * @returns {Promise<import("@thirdweb-dev/chains").Chain[]>}
+ */
+async function fetchChainsFromApi() {
+  const res = await fetch(`https://api.thirdweb.com/v1/chains`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await res.json();
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { allChains, getChainByChainId } = require("@thirdweb-dev/chains");
+  if (json.error) {
+    throw new Error(json.message);
+  }
+
+  return json.data;
+}
+
+/**
+ *
+ * @param {number|string} chainIdOrSlug
+ * @returns {Promise<import("@thirdweb-dev/chains").Chain>}
+ */
+async function getSingleChain(chainIdOrSlug) {
+  const res = await fetch(
+    `https://api.thirdweb.com/v1/chains/${chainIdOrSlug}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const json = await res.json();
+
+  if (json.error) {
+    throw new Error(json.message);
+  }
+
+  return json.data;
+}
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
@@ -39,7 +77,7 @@ module.exports = {
     };
   },
   additionalPaths: async (config) => {
-    // TODO - update this to instead use the chainList api
+    const allChains = await fetchChainsFromApi();
     return [
       ...allChains.map((chain) => {
         return {
@@ -69,23 +107,19 @@ async function createSearchRecordSitemaps(config) {
     },
   );
   const data = await response.text();
-  return data
-    .split("\n")
-    .map((l) => {
-      try {
-        const parsedLine = JSON.parse(l);
-        const parsedLineChain = getChainByChainId(
-          parseInt(parsedLine.chain_id),
-        );
-        return {
+  const parsedLines = data.split("\n").map((l) => JSON.parse(l));
+  const chainsForLines = await Promise.all(
+    parsedLines.map((parsedLine) => {
+      return getSingleChain(parsedLine.chain_id)
+        .then((parsedLineChain) => ({
           loc: `/${parsedLineChain.slug}/${parsedLine.contract_address}`,
           changefreq: config.changefreq,
           priority: config.priority,
           lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
-        };
-      } catch (e) {
-        return null;
-      }
-    })
-    .filter(Boolean);
+        }))
+        .catch(() => null);
+    }),
+  );
+  // filter out any failed requests
+  return chainsForLines.filter(Boolean);
 }

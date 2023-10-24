@@ -53,7 +53,7 @@ import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Button } from "tw-components";
-import { getAllChainRecords } from "utils/allChainsRecords";
+import { fetchChain } from "utils/fetchChain";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -524,7 +524,6 @@ EVMContractPage.fallback = (
 
 // server side ---------------------------------------------------------------
 
-const { slugToChain } = getAllChainRecords();
 export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   const [chainSlug, contractAddress] = ctx.params?.paths as string[];
 
@@ -546,7 +545,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       notFound: true,
     };
   }
-  const chain = chainSlug in slugToChain ? slugToChain[chainSlug] : null;
+  const chain = await fetchChain(chainSlug);
 
   let contractMetadata;
 

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
-import { getAllChainRecords } from "utils/allChainsRecords";
+import { fetchChain } from "utils/fetchChain";
 
 // Make sure the font exists in the specified path:
 export const config = {
@@ -66,9 +66,6 @@ const TWLogo: React.FC = () => (
     </defs>
   </svg>
 );
-
-const { chainIdToChain } = getAllChainRecords();
-
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
   ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
   : "https://ipfs.io/ipfs/";
@@ -94,11 +91,7 @@ export default async function handler(req: NextRequest) {
   if (!chainId) {
     return new Response("ChainId not found", { status: 400 });
   }
-
-  const chain =
-    chainId in chainIdToChain
-      ? chainIdToChain[parseInt(chainId) as keyof typeof chainIdToChain]
-      : null;
+  const chain = await fetchChain(chainId);
   if (!chain) {
     return new Response("Chain not found", { status: 400 });
   }

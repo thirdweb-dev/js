@@ -3,9 +3,9 @@ import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { apiKeys, accountKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import invariant from "tiny-invariant";
 import { useLoggedInUser } from "./useLoggedInUser";
+import type { Chain } from "@thirdweb-dev/chains";
 
 export type AuthorizedWallet = {
   id: string;
@@ -829,4 +829,30 @@ export async function fetchApiKeyAvailability(name: string) {
   }
 
   return !!json.data.available;
+}
+
+/**
+ *
+ */
+export async function fetchChainsFromApi() {
+  const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await res.json();
+
+  if (json.error) {
+    throw new Error(json.message);
+  }
+
+  return json.data as Chain[];
+}
+
+export function useApiChains() {
+  return useQuery(["all-chains"], async () => {
+    return fetchChainsFromApi();
+  });
 }
