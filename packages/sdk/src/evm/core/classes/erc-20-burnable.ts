@@ -62,10 +62,10 @@ export class Erc20Burnable implements DetectableFeature {
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "burnFrom",
-        args: [
-          await resolveAddress(holder),
-          await this.erc20.normalizeAmount(amount),
-        ],
+        args: await Promise.all([
+          resolveAddress(holder),
+          this.erc20.normalizeAmount(amount),
+        ]),
       });
     },
   );
