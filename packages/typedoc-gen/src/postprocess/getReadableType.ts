@@ -141,9 +141,20 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       throw new Error("Failed to get readable type of type 'predicate' ");
     }
 
+    // foo: Foo
+    case "namedTupleMember": {
+      return `${typeObj.name}: ${getReadableType(typeObj.element)}`;
+    }
+
+    case "optional": {
+      return `${getReadableType(typeObj.elementType)}?`;
+    }
+
     default:
       throw new Error(
-        `Failed to create a readable type for type "${typeObj.type}" }`,
+        `Failed to create a readable type for type "${
+          (typeObj as any).type
+        }" }`,
       );
   }
 }

@@ -33,8 +33,5 @@ export async function typedoc(options: {
   );
   const fileData = JSON.parse(fileContent);
 
-  await writeFile(
-    outFile,
-    JSON.stringify(await postprocess(fileData), null, 2),
-  );
+  await writeFile(outFile, JSON.stringify(postprocess(fileData), null, 2));
 }

@@ -5,6 +5,7 @@ import { isComponentType } from "./isComponentType";
 import { getInterfaceDoc } from "./processInterface";
 import { getEnumDoc } from "./processEnum";
 import { getVariableDoc } from "./processVariable";
+import { getClassDoc } from "./processClass";
 
 const groupNameMap = {
   Interfaces: "interfaces",
@@ -16,18 +17,14 @@ const groupNameMap = {
 } as const;
 
 export function postprocess(inputData: JSONOutput.ProjectReflection) {
-  const output: ProcessedDoc = {
-    groups: {
-      functions: [],
-      hooks: [],
-      variables: [],
-      types: [],
-      interfaces: [],
-      components: [],
-      enums: [],
-      classes: [],
-    },
-  };
+  const functions: ProcessedDoc["functions"] = [];
+  const hooks: ProcessedDoc["hooks"] = [];
+  const components: ProcessedDoc["components"] = [];
+  const types: ProcessedDoc["types"] = [];
+  const interfaces: ProcessedDoc["interfaces"] = [];
+  const variables: ProcessedDoc["variables"] = [];
+  const enums: ProcessedDoc["enums"] = [];
+  const classes: ProcessedDoc["classes"] = [];
 
   // create a mapping from child id to data for lookup
   const childrenMap: Record<string, JSONOutput.DeclarationReflection> = {};
@@ -50,37 +47,52 @@ export function postprocess(inputData: JSONOutput.ProjectReflection) {
         switch (mappedTitle) {
           case "functions": {
             if (childData.name.startsWith("use")) {
-              output.groups.hooks!.push(getFunctionDoc(childData));
+              hooks!.push(getFunctionDoc(childData));
             } else if (isComponentType(childData)) {
-              output.groups.components!.push(getFunctionDoc(childData));
+              components!.push(getFunctionDoc(childData));
             } else {
-              output.groups[mappedTitle]!.push(getFunctionDoc(childData));
+              functions.push(getFunctionDoc(childData));
             }
             break;
           }
+
           case "interfaces":
+            interfaces.push(getInterfaceDoc(childData));
+            break;
+
           case "types": {
-            output.groups[mappedTitle]?.push(getInterfaceDoc(childData));
+            types.push(getInterfaceDoc(childData));
             break;
           }
 
           case "variables": {
-            output.groups.variables.push(getVariableDoc(childData));
+            variables.push(getVariableDoc(childData));
             break;
           }
 
           case "classes": {
-            // TODO
+            classes.push(getClassDoc(childData));
             break;
           }
 
           case "enums": {
-            output.groups.enums.push(getEnumDoc(childData));
+            enums.push(getEnumDoc(childData));
           }
         }
       });
     }
   });
+
+  const output: ProcessedDoc = {
+    functions: functions.length > 0 ? functions : undefined,
+    hooks: hooks.length > 0 ? hooks : undefined,
+    variables: variables.length > 0 ? variables : undefined,
+    types: types.length > 0 ? types : undefined,
+    interfaces: interfaces.length > 0 ? interfaces : undefined,
+    components: components.length > 0 ? components : undefined,
+    enums: enums.length > 0 ? enums : undefined,
+    classes: classes.length > 0 ? classes : undefined,
+  };
 
   return output;
 }

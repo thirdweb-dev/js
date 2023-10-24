@@ -1,22 +1,31 @@
 import { JSONOutput } from "typedoc";
 
 export type ProcessedDoc = {
-  groups: {
-    functions: FunctionDoc[];
-    hooks: FunctionDoc[];
-    components: FunctionDoc[];
-    types: InterfaceDoc[];
-    interfaces: InterfaceDoc[];
-    variables: VariableDoc[];
-    enums: EnumDoc[];
-    classes: any[]; // TODO
-  };
+  functions?: FunctionDoc[];
+  hooks?: FunctionDoc[];
+  components?: FunctionDoc[];
+  types?: InterfaceDoc[];
+  interfaces?: InterfaceDoc[];
+  variables?: VariableDoc[];
+  enums?: EnumDoc[];
+  classes?: ClassDoc[];
 };
 
 export type FunctionDoc = {
   name: string;
   source?: string;
   signatures?: FunctionSignature[];
+};
+
+export type AccessorDoc = {
+  name: string;
+  source?: string;
+  summary?: JSONOutput.CommentDisplayPart[];
+  blockTags?: JSONOutput.CommentTag[];
+  returns?: {
+    type?: string;
+    summary?: JSONOutput.CommentDisplayPart[];
+  };
 };
 
 export type FunctionSignature = {
@@ -70,4 +79,13 @@ export type EnumDoc = {
     value: string;
     summary?: JSONOutput.CommentDisplayPart[];
   }>;
+};
+
+export type ClassDoc = {
+  name: string;
+  source?: string;
+  constructor: FunctionDoc;
+  properties?: VariableDoc[];
+  methods?: FunctionDoc[];
+  accessors?: AccessorDoc[];
 };
