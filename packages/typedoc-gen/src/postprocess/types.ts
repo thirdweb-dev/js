@@ -2,12 +2,14 @@ import { JSONOutput } from "typedoc";
 
 export type ProcessedDoc = {
   groups: {
-    functions?: FunctionDoc[];
-    hooks?: FunctionDoc[];
-    components?: FunctionDoc[];
-    variables?: any[]; // TODO
-    types?: InterfaceDoc[];
-    interfaces?: InterfaceDoc[];
+    functions: FunctionDoc[];
+    hooks: FunctionDoc[];
+    components: FunctionDoc[];
+    types: InterfaceDoc[];
+    interfaces: InterfaceDoc[];
+    variables: VariableDoc[];
+    enums: EnumDoc[];
+    classes: any[]; // TODO
   };
 };
 
@@ -43,8 +45,29 @@ export type InterfaceDoc = {
   typeDeclaration?: TypeDeclarationDoc[];
 };
 
+export type VariableDoc = {
+  name: string;
+  source?: string;
+  summary?: JSONOutput.CommentDisplayPart[];
+  type?: string;
+  typeDeclaration?: VariableTypeDeclaration[];
+};
+
+export type VariableTypeDeclaration = TypeDeclarationDoc | FunctionDoc;
+
 export type TypeDeclarationDoc = {
   name: string;
   type: string;
   summary?: JSONOutput.CommentDisplayPart[];
+};
+
+export type EnumDoc = {
+  name: string;
+  source?: string;
+  summary?: JSONOutput.CommentDisplayPart[];
+  members: Array<{
+    name: string;
+    value: string;
+    summary?: JSONOutput.CommentDisplayPart[];
+  }>;
 };

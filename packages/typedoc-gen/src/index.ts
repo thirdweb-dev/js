@@ -24,7 +24,7 @@ export async function typedoc(options: {
     throw new Error("Failed to create project");
   }
 
-  // await app.generateDocs(project, "typedoc/docs");
+  await app.generateDocs(project, "typedoc/docs");
   await app.generateJson(project, outFile.replace(".json", "-full.json"));
 
   const fileContent = await readFile(

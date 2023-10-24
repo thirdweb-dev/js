@@ -25,7 +25,9 @@ function getFunctionSignatureDoc(signature: JSONOutput.SignatureReflection) {
       };
       return arg;
     }),
-    blockTags: signature.comment?.blockTags,
+    blockTags: signature.comment?.blockTags?.filter(
+      (w) => w.tag !== "@returns",
+    ),
     returns: {
       type: signature.type ? getReadableType(signature.type) : undefined,
       summary: signature.comment?.blockTags?.find(

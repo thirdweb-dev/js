@@ -1,4 +1,4 @@
-import { JSONOutput } from "typedoc";
+import { JSONOutput, ReflectionKind } from "typedoc";
 
 export function getReadableType(typeObj: JSONOutput.SomeType): string {
   switch (typeObj.type) {
@@ -7,7 +7,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       return typeObj.name;
     }
 
-    // { key: value }
+    // { key: value } or { key: () => Bar  }
     case "reflection": {
       if (typeObj.declaration.children) {
         return `{ ${typeObj.declaration.children
@@ -18,6 +18,10 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
             return "";
           })
           .join(", \n")} }`;
+      } else if (typeObj.declaration.signatures) {
+        return typeObj.declaration.signatures
+          .map(readableFunctionSignature)
+          .join(" | ");
       }
       return `{}`;
     }
@@ -29,6 +33,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
           .map(getReadableType)
           .join(", ")}>`;
       }
+
       return typeObj.name;
     }
 
@@ -37,7 +42,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       return typeObj.types.map(getReadableType).join(" | ");
     }
 
-    // null, undefined, literal string, literal number, etc
+    // null, undefined, "hello", 12 etc
     case "literal": {
       if (typeof typeObj.value === "string") {
         return `"${typeObj.value}"`;
@@ -46,7 +51,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       return typeObj.value + "";
     }
 
-    // T[]
+    // Foo[]
     case "array": {
       const type = getReadableType(typeObj.elementType);
 
@@ -57,6 +62,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       return `${type}[]`;
     }
 
+    // Foo extends Bar ? Baz : Qux
     case "conditional": {
       return `${getReadableType(typeObj.checkType)} extends ${getReadableType(
         typeObj.extendsType,
@@ -65,12 +71,14 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       )}`;
     }
 
+    // Foo[Bar]
     case "indexedAccess": {
       return `${getReadableType(typeObj.objectType)}[${getReadableType(
         typeObj.indexType,
       )}]`;
     }
 
+    // T & U & V ...
     case "intersection": {
       return typeObj.types.map(getReadableType).join(" & ");
     }
@@ -82,6 +90,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       )}] : ${getReadableType(typeObj.templateType)}}`;
     }
 
+    // [A, B, C, ..]
     case "tuple": {
       if (typeObj.elements) {
         return `[${typeObj.elements.map(getReadableType).join(", ")}]`;
@@ -89,8 +98,47 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       return `[]`;
     }
 
+    // typeof Foo
     case "query": {
       return `typeof ${getReadableType(typeObj.queryType)}`;
+    }
+
+    // (keyof" | "unique" | "readonly") Foo
+    case "typeOperator": {
+      return `${typeObj.operator} ${getReadableType(typeObj.target)}`;
+    }
+
+    // `xxx${Foo}yyy`
+    case "templateLiteral": {
+      return (
+        "`" +
+        typeObj.head +
+        typeObj.tail
+          .map((t) => `\${${getReadableType(t[0])}}` + t[1])
+          .join("") +
+        "`"
+      );
+    }
+
+    // infer Foo
+    case "inferred": {
+      return `infer ${typeObj.name}`;
+    }
+
+    // ...(Foo)
+    case "rest": {
+      return `...(${getReadableType(typeObj.elementType)})`;
+    }
+
+    case "unknown": {
+      return typeObj.name;
+    }
+
+    case "predicate": {
+      if (typeObj.targetType) {
+        return `${typeObj.name} is ${getReadableType(typeObj.targetType)}`;
+      }
+      throw new Error("Failed to get readable type of type 'predicate' ");
     }
 
     default:
@@ -98,4 +146,20 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
         `Failed to create a readable type for type "${typeObj.type}" }`,
       );
   }
+}
+
+// ( (arg1: type1, arg2: type2 ) => ReturnType )
+function readableFunctionSignature(
+  signature: JSONOutput.SignatureReflection,
+): string {
+  const args =
+    signature.parameters
+      ?.map((p) => (p.type ? `${p.name} : ${getReadableType(p.type)}` : p.name))
+      .join(", ") || "";
+
+  const returnType = signature.type
+    ? ` => ${getReadableType(signature.type)}`
+    : "";
+
+  return `((${args})${returnType})`;
 }
