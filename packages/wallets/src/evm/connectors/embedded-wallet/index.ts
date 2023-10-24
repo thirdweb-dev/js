@@ -80,6 +80,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         });
         break;
       }
+      case "custom_jwt_auth": {
+        authResult = await thirdwebSDK.auth.loginWithCustomJwt({
+          jwt: options.jwt,
+          encryptionKey: options.encryptionKey,
+        });
+        break;
+      }
       default: {
         authResult = await thirdwebSDK.auth.loginWithModal();
         break;

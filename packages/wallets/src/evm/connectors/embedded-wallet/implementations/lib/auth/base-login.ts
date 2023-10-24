@@ -161,13 +161,13 @@ export class BaseLogin extends AbstractLogin<
     });
   }
 
-  override async loginWithJwtToken({
-    recoveryCode,
-    token,
-  }: LoginQuerierTypes["loginWithJwtAuthCallback"]): Promise<AuthLoginReturnType> {
+  override async loginWithCustomJwt({
+    encryptionKey,
+    jwt,
+  }: LoginQuerierTypes["loginWithCustomJwt"]): Promise<AuthLoginReturnType> {
     const result = await this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithJwtAuthCallback",
-      params: { recoveryCode, token },
+      procedureName: "loginWithCustomJwt",
+      params: { encryptionKey, jwt },
     });
     return this.postLogin(result);
   }
