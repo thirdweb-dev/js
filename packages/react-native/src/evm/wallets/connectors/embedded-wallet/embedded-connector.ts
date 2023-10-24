@@ -60,7 +60,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         await this.validateEmailOtp({ otp: options.otp });
         break;
       }
-      case "custom_jwt_auth": {
+      case "jwt": {
         await this.customJwt({
           jwt: options.jwt,
           password: options.password,

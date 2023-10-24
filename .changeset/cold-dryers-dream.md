@@ -16,8 +16,8 @@ const AppInner = () => {
 
   const triggerConnect = async () => {
     connect(embeddedWallet(), {
-      loginType: "custom_jwt_auth",
-      password: "strong-encryption-key",
+      loginType: "jwt",
+      password: "strong-password",
       jwt: "your-jwt",
     });
   };
