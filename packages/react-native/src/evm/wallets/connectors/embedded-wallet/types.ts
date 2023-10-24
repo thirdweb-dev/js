@@ -53,8 +53,8 @@ export interface EmbeddedWalletConnectorOptions {
 }
 
 export interface AuthOptions {
-  jwtToken: string;
-  encryptionKey: string;
+  jwt: string;
+  password: string;
 }
 
 export type EmbeddedWalletConnectionArgs = {
@@ -71,7 +71,7 @@ export type EmbeddedWalletConnectionArgs = {
     }
   | {
       loginType: "custom_jwt_auth";
-      jwtToken: string;
-      encryptionKey: string;
+      jwt: string;
+      password: string;
     }
 );
