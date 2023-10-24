@@ -10,9 +10,10 @@ export class TokenBoundSmartWalletConnector extends SmartWalletConnector {
   constructor(input: TokenBoundSmartWalletConfig) {
     super({
       ...input,
-      factoryAddress: ERC6551_REGISTRY,
+      factoryAddress: input.registryAddress || ERC6551_REGISTRY,
     });
     this.tbaConfig = input;
+    // TODO default account implementation address
   }
 
   protected defaultFactoryInfo(): FactoryContractInfo {

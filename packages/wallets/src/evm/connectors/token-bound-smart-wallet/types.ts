@@ -4,7 +4,7 @@ import { SmartWalletConfig } from "../smart-wallet/types";
 export type TokenBoundSmartWalletConfig = {
   tokenContract: string;
   tokenId: BigNumberish;
-  accountImplementation?: string;
+  accountImplementation: string;
   registryAddress?: string;
   salt?: BigNumberish;
 } & Omit<SmartWalletConfig, "factoryAddress">;
