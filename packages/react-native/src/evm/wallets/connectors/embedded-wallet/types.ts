@@ -6,6 +6,11 @@ import type {
   AuthProvider,
 } from "@paperxyz/embedded-wallet-service-sdk";
 
+export type CustomAuth = {
+  jwtToken: string;
+  encryptionKey: string;
+};
+
 export type OauthOptions = {
   providers: AuthProvider[];
   redirectUrl: string;
@@ -47,6 +52,26 @@ export interface EmbeddedWalletConnectorOptions {
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 
-export interface EmbeddedWalletConnectionArgs {
-  email?: string;
+export interface AuthOptions {
+  jwtToken: string;
+  encryptionKey: string;
 }
+
+export type EmbeddedWalletConnectionArgs = {
+  chainId?: number;
+} & (
+  | {
+      loginType: "headless_google_oauth";
+      redirectUrl: string;
+    }
+  | {
+      loginType: "headless_email_otp_verification";
+      email: string;
+      otp: string;
+    }
+  | {
+      loginType: "custom_jwt_auth";
+      jwtToken: string;
+      encryptionKey: string;
+    }
+);

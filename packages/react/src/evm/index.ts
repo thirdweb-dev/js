@@ -56,6 +56,7 @@ export {
   PhantomWallet,
   RainbowWallet,
   MetaMaskWallet,
+  OKXWallet,
   TrustWallet,
   CoinbaseWallet,
   BloctoWallet,
