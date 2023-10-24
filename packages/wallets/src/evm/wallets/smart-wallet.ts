@@ -37,7 +37,7 @@ export class SmartWallet
   connector?: SmartWalletConnectorType;
 
   public enableConnectApp: boolean = false;
-  #wcWallet: WalletConnectHandler;
+  protected wcWallet: WalletConnectHandler;
 
   static meta = {
     name: "Smart Wallet",
@@ -47,7 +47,7 @@ export class SmartWallet
 
   static id = walletIds.smartWallet as string;
   public get walletName() {
-    return "Smart Wallet" as const;
+    return "Smart Wallet";
   }
 
   constructor(options: WalletOptions<SmartWalletConfig>) {
@@ -65,7 +65,7 @@ export class SmartWallet
     });
 
     this.enableConnectApp = options?.enableConnectApp || false;
-    this.#wcWallet = this.enableConnectApp
+    this.wcWallet = this.enableConnectApp
       ? new WalletConnectV2Handler({
           walletConnectWalletMetadata: options?.walletConnectWalletMetadata,
           walletConnectV2ProjectId: options?.walletConnectV2ProjectId,
@@ -77,9 +77,9 @@ export class SmartWallet
   async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
       if (this.enableConnectApp) {
-        await this.#wcWallet.init();
+        await this.wcWallet.init();
 
-        this.#setupWalletConnectEventsListeners();
+        this.setupWalletConnectEventsListeners();
       }
 
       const { SmartWalletConnector } = await import(
@@ -303,64 +303,64 @@ export class SmartWallet
       throw new Error("enableConnectApp is set to false in this wallet config");
     }
 
-    this.#wcWallet?.connectApp(uri);
+    this.wcWallet?.connectApp(uri);
   }
 
   async approveSession(): Promise<void> {
-    await this.#wcWallet.approveSession(this);
+    await this.wcWallet.approveSession(this);
 
     this.emit("message", { type: "session_approved" });
   }
 
   rejectSession() {
-    return this.#wcWallet.rejectSession();
+    return this.wcWallet.rejectSession();
   }
 
   approveRequest() {
-    return this.#wcWallet.approveEIP155Request(this);
+    return this.wcWallet.approveEIP155Request(this);
   }
 
   rejectRequest() {
-    return this.#wcWallet.rejectEIP155Request();
+    return this.wcWallet.rejectEIP155Request();
   }
 
   getActiveSessions(): WCSession[] {
-    if (!this.#wcWallet) {
+    if (!this.wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    return this.#wcWallet.getActiveSessions();
+    return this.wcWallet.getActiveSessions();
   }
 
   disconnectSession(): Promise<void> {
-    return this.#wcWallet?.disconnectSession();
+    return this.wcWallet?.disconnectSession();
   }
 
   isWCReceiverEnabled() {
     return this.enableConnectApp;
   }
 
-  #setupWalletConnectEventsListeners() {
-    if (!this.#wcWallet) {
+  setupWalletConnectEventsListeners() {
+    if (!this.wcWallet) {
       throw new Error(
         "Please, init the wallet before making session requests.",
       );
     }
 
-    this.#wcWallet.on("session_proposal", (proposal: WCProposal) => {
+    this.wcWallet.on("session_proposal", (proposal: WCProposal) => {
       this.emit("message", {
         type: "session_proposal",
         data: proposal,
       });
     });
 
-    this.#wcWallet.on("session_delete", () => {
+    this.wcWallet.on("session_delete", () => {
       this.emit("message", { type: "session_delete" });
     });
 
-    this.#wcWallet.on("switch_chain", (request: WCRequest) => {
+    this.wcWallet.on("switch_chain", (request: WCRequest) => {
       const chainId = request.params[0].chainId;
 
       this.emit("message", {
@@ -368,10 +368,10 @@ export class SmartWallet
         data: { chainId },
       });
 
-      this.#wcWallet.disconnectSession();
+      this.wcWallet.disconnectSession();
     });
 
-    this.#wcWallet.on("session_request", (request: WCRequest) => {
+    this.wcWallet.on("session_request", (request: WCRequest) => {
       this.emit("message", {
         type: "session_request",
         data: request,
