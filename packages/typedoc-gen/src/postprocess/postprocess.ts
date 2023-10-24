@@ -1,7 +1,8 @@
-import { ProcessedDoc } from "./Doc";
+import { ProcessedDoc } from "./types";
 import { JSONOutput, ReflectionKind } from "typedoc";
 import { getFunctionDoc } from "./processFunction";
 import { isComponentType } from "./isComponentType";
+import { getInterfaceDoc } from "./processInterface";
 
 const groupNameMap = {
   Interfaces: "interfaces",
@@ -48,6 +49,8 @@ export function postprocess(inputData: JSONOutput.ProjectReflection) {
           } else {
             output.groups[mappedTitle]!.push(getFunctionDoc(childData));
           }
+        } else if (mappedTitle === "interfaces" || mappedTitle === "types") {
+          output.groups[mappedTitle]?.push(getInterfaceDoc(childData));
         } else {
           // @ts-ignore
           // output.groups[mappedTitle]?.push(childData);

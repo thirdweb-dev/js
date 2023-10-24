@@ -89,6 +89,10 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
       return `[]`;
     }
 
+    case "query": {
+      return `typeof ${getReadableType(typeObj.queryType)}`;
+    }
+
     default:
       throw new Error(
         `Failed to create a readable type for type "${typeObj.type}" }`,

@@ -6,8 +6,8 @@ export type ProcessedDoc = {
     hooks?: FunctionDoc[];
     components?: FunctionDoc[];
     variables?: any[]; // TODO
-    types?: any[]; // TODO
-    interfaces?: any[]; // TODO
+    types?: InterfaceDoc[];
+    interfaces?: InterfaceDoc[];
   };
 };
 
@@ -33,4 +33,18 @@ export type FunctionSignatureArg = {
   summary?: JSONOutput.CommentDisplayPart[];
   isOptional?: boolean;
   isRest?: boolean;
+};
+
+export type InterfaceDoc = {
+  name: string;
+  source?: string;
+  summary?: JSONOutput.CommentDisplayPart[];
+  type?: string;
+  typeDeclaration?: TypeDeclarationDoc[];
+};
+
+export type TypeDeclarationDoc = {
+  name: string;
+  type: string;
+  summary?: JSONOutput.CommentDisplayPart[];
 };

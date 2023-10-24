@@ -1,5 +1,5 @@
 import { JSONOutput, SomeType, Reflection } from "typedoc";
-import { FunctionDoc, FunctionSignature, FunctionSignatureArg } from "./Doc";
+import { FunctionDoc, FunctionSignature, FunctionSignatureArg } from "./types";
 import { getReadableType } from "./getReadableType";
 
 export function getFunctionDoc(
