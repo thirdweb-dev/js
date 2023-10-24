@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreidmvcd5i7touug55hj45mf2pgabxamy5fziva7mtx5n664s3yap6m",
     "width": 205,
@@ -29,9 +28,10 @@ export default {
     "symbol": "L99",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 998,
   "rpc": [
     "https://lucky-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://998.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.luckynetwork.org",
     "wss://ws.lnscan.org",
     "https://rpc.lnscan.org"

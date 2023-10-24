@@ -35,7 +35,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
     "width": 1000,
@@ -49,15 +48,17 @@ export default {
     "symbol": "FIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 314,
   "rpc": [
     "https://filecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://314.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.node.glif.io/",
     "https://rpc.ankr.com/filecoin",
     "https://filecoin-mainnet.chainstacklabs.com/rpc/v1",
     "https://filfox.info/rpc/v1"
   ],
   "shortName": "filecoin",
+  "slip44": 461,
   "slug": "filecoin",
   "testnet": false
 } as const satisfies Chain;

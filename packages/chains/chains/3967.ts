@@ -12,17 +12,17 @@ export default {
   "faucets": [
     "https://faucet.dynoscan.io"
   ],
-  "features": [],
   "infoURL": "https://dynoprotocol.com",
   "name": "DYNO Testnet",
   "nativeCurrency": {
     "name": "DYNO Token",
-    "symbol": "DYNO",
+    "symbol": "tDYNO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3967,
   "rpc": [
     "https://dyno-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3967.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tapi.dynoprotocol.com"
   ],
   "shortName": "tdyno",

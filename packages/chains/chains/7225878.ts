@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmduEdtFobPpZWSc45MU6RKxZfTEzLux2z8ikHFhT8usqv",
     "width": 1024,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7225878,
   "rpc": [
     "https://saakuru.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7225878.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.saakuru.network"
   ],
   "shortName": "saakuru",

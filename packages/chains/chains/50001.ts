@@ -4,16 +4,16 @@ export default {
   "chainId": 50001,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "name": "Liveplex OracleEVM",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 50001,
   "rpc": [
     "https://liveplex-oracleevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://50001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oracle.liveplex.io"
   ],
   "shortName": "LOE",

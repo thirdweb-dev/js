@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://riseofthewarbots.com/",
   "name": "Rise of the Warbots Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "NMAC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7777,
   "rpc": [
     "https://rise-of-the-warbots-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet1.riseofthewarbots.com",
     "https://testnet2.riseofthewarbots.com",
     "https://testnet3.riseofthewarbots.com",

@@ -4,7 +4,6 @@ export default {
   "chainId": 234666,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://haymoswap.web.app/",
   "name": "Haymo Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "HYM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 234666,
   "rpc": [
     "https://haymo-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://234666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet1.haymo.network"
   ],
   "shortName": "hym",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ethoprotocol.com",
   "name": "Etho Protocol",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "ETHO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1313114,
   "rpc": [
     "https://etho-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1313114.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ethoprotocol.com"
   ],
   "shortName": "etho",
+  "slip44": 1313114,
   "slug": "etho-protocol",
   "testnet": false
 } as const satisfies Chain;

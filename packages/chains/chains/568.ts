@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.dogechain.dog"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNS6B6L8FfgGSMTEi2SxD3bK5cdmKPNtQKcYaJeRWrkHs",
     "width": 732,
@@ -26,9 +25,10 @@ export default {
     "symbol": "DOGE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 568,
   "rpc": [
     "https://dogechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://568.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.dogechain.dog"
   ],
   "shortName": "dct",

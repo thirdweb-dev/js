@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://jnsdao.com",
   "name": "Jouleverse Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "J",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3666,
   "rpc": [
     "https://jouleverse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jnsdao.com:8503"
   ],
   "shortName": "jouleverse",

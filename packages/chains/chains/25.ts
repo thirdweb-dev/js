@@ -22,9 +22,10 @@ export default {
     "symbol": "CRO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 25,
   "rpc": [
     "https://cronos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://25.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cronos.org",
     "https://cronos-evm.publicnode.com",
     "wss://cronos-evm.publicnode.com"

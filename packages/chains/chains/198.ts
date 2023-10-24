@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.bitchain.biz/",
   "name": "Bitchain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 198,
   "rpc": [
     "https://bitchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://198.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitchain.biz/"
   ],
   "shortName": "bit",

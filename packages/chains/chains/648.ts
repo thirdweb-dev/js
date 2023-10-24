@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ace.fusionist.io/",
   "name": "Endurance Smart Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ACE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 648,
   "rpc": [
     "https://endurance-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://648.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-endurance.fusionist.io/"
   ],
   "shortName": "ace",

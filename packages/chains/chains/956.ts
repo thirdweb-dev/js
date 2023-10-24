@@ -4,7 +4,6 @@ export default {
   "chainId": 956,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://munode.dev/",
   "name": "muNode Testnet",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 956,
   "rpc": [],
   "shortName": "munode",
   "slug": "munode-testnet",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.alyxchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreifd43fcvh77mdcwjrpzpnlhthounc6b4u645kukqpqhduaveatf6i",
     "width": 2481,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ALYX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 135,
   "rpc": [
     "https://alyx-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://135.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.alyxchain.com"
   ],
   "shortName": "AlyxTestnet",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://brochain.org",
   "name": "BROChain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BRO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 108801,
   "rpc": [
     "https://brochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://108801.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.brochain.org",
     "http://rpc.brochain.org",
     "https://rpc.brochain.org/mainnet",

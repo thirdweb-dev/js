@@ -25,9 +25,10 @@ export default {
     "symbol": "HBAR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 298,
   "rpc": [],
   "shortName": "hedera-localnet",
+  "slip44": 3030,
   "slug": "hedera-localnet",
   "testnet": false
 } as const satisfies Chain;

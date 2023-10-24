@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://scan-testnet.acuteangle.com/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRUrz4dULaoaMpnqd8qXT7ehwz3aaqnYKY4ePsy7isGaF",
     "width": 512,
@@ -26,9 +25,10 @@ export default {
     "symbol": "AAC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 513,
   "rpc": [
     "https://double-a-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://513.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.acuteangle.com"
   ],
   "shortName": "aact",

@@ -6,11 +6,16 @@ export default {
     {
       "name": "meerscan",
       "url": "https://qng.meerscan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "MEER",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 813,
   "rpc": [
     "https://qitmeer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://813.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-dataseed1.meerscan.io",
     "https://evm-dataseed2.meerscan.io",
     "https://evm-dataseed3.meerscan.io",
@@ -39,6 +45,7 @@ export default {
     "https://rpc.woowow.io"
   ],
   "shortName": "meer",
+  "slip44": 813,
   "slug": "qitmeer",
   "testnet": false
 } as const satisfies Chain;

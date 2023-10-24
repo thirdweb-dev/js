@@ -6,11 +6,16 @@ export default {
     {
       "name": "Dragonfly Blockscout",
       "url": "https://blockscout.dragonfly.hexapod.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPXhdPGufjcPzZ9Y6nY6QyW8MgA6793L88iPMRh1Q3gjJ",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "DFLY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 78281,
   "rpc": [
     "https://dragonfly-hexapod.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://78281.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dragonfly-rpc.switch.ch",
     "https://dragonfly-rpc.kore-technologies.ch",
     "https://dragonfly-rpc.phoenix-systems.io",

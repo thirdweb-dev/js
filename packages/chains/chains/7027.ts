@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVkAhSaHhH3wKoLT56Aq8dNyEH4RySPEpqPcLwsptGBDm",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ELLA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7027,
   "rpc": [
     "https://ella-the-heart.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7027.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ella.network"
   ],
   "shortName": "ELLA",

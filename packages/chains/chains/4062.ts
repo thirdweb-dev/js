@@ -6,11 +6,16 @@ export default {
     {
       "name": "Nahmii 3 Testnet Explorer",
       "url": "https://explorer.testnet.n3.nahmii.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
+        "width": 384,
+        "height": 384,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
@@ -24,9 +29,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4062,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-3",
+    "bridges": [
+      {
+        "url": "https://bridge.testnet.n3.nahmii.io"
+      }
+    ]
+  },
   "rpc": [
     "https://nahmii-3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4062.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ngeth.testnet.n3.nahmii.io"
   ],
   "shortName": "Nahmii3Testnet",

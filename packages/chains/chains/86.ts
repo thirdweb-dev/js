@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://www.gatescan.org/faucet"
   ],
-  "features": [],
   "infoURL": "https://www.gatechain.io",
   "name": "GateChain Mainnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "GT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 86,
   "rpc": [
     "https://gatechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://86.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.gatenode.cc"
   ],
   "shortName": "gt",

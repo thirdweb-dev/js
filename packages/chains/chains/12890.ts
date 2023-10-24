@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibwywok67uewqbtqdzgr7nlk3lvvg7hxmbgwtn7kdwxe34useucvm",
     "width": 1024,
@@ -24,9 +23,10 @@ export default {
     "symbol": "tQNET",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12890,
   "rpc": [
     "https://quantum-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12890.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.quantumscan.org"
   ],
   "shortName": "tqnet",

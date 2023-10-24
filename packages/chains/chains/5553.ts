@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.testnet.nahmii.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
+        "width": 384,
+        "height": 384,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
@@ -24,9 +29,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5553,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-3",
+    "bridges": [
+      {
+        "url": "https://bridge.nahmii.io"
+      }
+    ]
+  },
   "rpc": [
     "https://nahmii-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5553.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2.testnet.nahmii.io"
   ],
   "shortName": "NahmiiTestnet",

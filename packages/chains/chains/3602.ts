@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNduBtT5BNGDw7DjRwDvaZBb6gjxf46WD7BYhn4gauGc9",
     "width": 1000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "PTX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3602,
   "rpc": [
     "https://pandoproject-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3602.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.ethrpc.pandoproject.org/rpc"
   ],
   "shortName": "pando-testnet",

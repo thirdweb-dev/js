@@ -4,7 +4,6 @@ export default {
   "chainId": 258,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://setheum.xyz",
   "name": "Setheum",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "SETM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 258,
   "rpc": [],
   "shortName": "setm",
   "slug": "setheum",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://obscu.ro",
   "name": "Obscuro Testnet",
   "nativeCurrency": {
@@ -18,12 +17,23 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 443,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://bridge.obscu.ro"
+      }
+    ]
+  },
   "rpc": [
     "https://obscuro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.obscu.ro"
   ],
   "shortName": "obs-testnet",
   "slug": "obscuro-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Obscuro Sepolia Rollup Testnet"
 } as const satisfies Chain;

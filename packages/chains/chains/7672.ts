@@ -10,17 +10,17 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.futureverse.com/technology/root",
   "name": "The Root Network - Porcini Testnet",
   "nativeCurrency": {
     "name": "XRP",
     "symbol": "XRP",
-    "decimals": 18
+    "decimals": 6
   },
-  "redFlags": [],
+  "networkId": 7672,
   "rpc": [
     "https://the-root-network-porcini-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7672.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://porcini.rootnet.app/archive",
     "wss://porcini.rootnet.app/archive/ws"
   ],

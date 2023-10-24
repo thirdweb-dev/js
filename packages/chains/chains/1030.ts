@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreifj7n24u2dslfijfihwqvpdeigt5aj3k3sxv6s35lv75sxsfr3ojy",
     "width": 460,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CFX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1030,
   "rpc": [
     "https://conflux-espace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1030.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.confluxrpc.com"
   ],
   "shortName": "cfx",

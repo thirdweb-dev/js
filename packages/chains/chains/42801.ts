@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmb7oJY9zd9sTzxNNQNTVZQz2hkd1aA94mWm4cvXfJ9QxV",
     "width": 1280,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 42801,
   "rpc": [
     "https://gesoten-verse-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://42801.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.verse.gesoten.com/"
   ],
   "shortName": "GST",

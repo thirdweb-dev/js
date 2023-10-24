@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSEsi71AdA5HYH6VNC5QUQezFg1C7BiVQJdx1VVfGz3g3",
     "width": 713,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CLD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 31223,
   "rpc": [
     "https://cloudtx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://31223.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.cloudtx.finance"
   ],
   "shortName": "CLDTX",

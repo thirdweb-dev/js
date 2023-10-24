@@ -6,7 +6,13 @@ export default {
     {
       "name": "explorer",
       "url": "https://subnets-test.avax.network/meld",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRhB4AbjDrhvwfSAQi2JvKirFiDWxzJvKEvG8S8AdDdED",
+        "width": 4000,
+        "height": 4000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -24,12 +30,14 @@ export default {
     "symbol": "gMELD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 222000222,
   "rpc": [
     "https://kanazawa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://222000222.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/meld/testnet/rpc"
   ],
   "shortName": "kanazawa",
   "slug": "kanazawa",
-  "testnet": true
+  "testnet": true,
+  "title": "Meld Testnet Kanazawa"
 } as const satisfies Chain;

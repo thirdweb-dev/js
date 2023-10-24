@@ -4,7 +4,6 @@ export default {
   "chainId": 67,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "http://test.dbmbp.com",
   "name": "DBChain Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "DBM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 67,
   "rpc": [
     "https://dbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://67.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://test-rpc.dbmbp.com"
   ],
   "shortName": "dbm",

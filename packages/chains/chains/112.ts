@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://coinbit-explorer.chain.sbcrypto.app",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdaQRUbAXJGfHeJ8jaB8WVh8CCmHExq8VjvAfXpLWWQEo",
     "width": 760,
@@ -24,9 +29,10 @@ export default {
     "symbol": "GIDR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 112,
   "rpc": [
     "https://coinbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://112.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://coinbit-rpc-mainnet.chain.sbcrypto.app"
   ],
   "shortName": "coinbit",

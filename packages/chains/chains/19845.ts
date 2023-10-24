@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bitcolojix.org",
   "name": "BTCIX Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTCIX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 19845,
   "rpc": [
     "https://btcix-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://19845.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.btcix.org/rpc"
   ],
   "shortName": "btcix",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
     "width": 160,
@@ -24,9 +23,10 @@ export default {
     "symbol": "AIA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1319,
   "rpc": [
     "https://aia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1319.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://aia-dataseed1.aiachain.org",
     "https://aia-dataseed2.aiachain.org",
     "https://aia-dataseed3.aiachain.org",

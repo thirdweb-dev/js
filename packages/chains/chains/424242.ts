@@ -25,12 +25,14 @@ export default {
     "symbol": "FTN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 424242,
   "rpc": [
     "https://fastex-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://424242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.fastexchain.com"
   ],
   "shortName": "fastexTestnet",
   "slug": "fastex-chain-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Fastex Chain testnet"
 } as const satisfies Chain;

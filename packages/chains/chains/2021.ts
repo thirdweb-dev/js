@@ -11,7 +11,13 @@ export default {
     {
       "name": "Subscan",
       "url": "https://edgeware.subscan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -36,9 +42,10 @@ export default {
     "symbol": "EDG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2021,
   "rpc": [
     "https://edgeware-edgeevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2021.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgeware-evm.jelliedowl.net",
     "https://mainnet2.edgewa.re/evm",
     "https://mainnet3.edgewa.re/evm",
@@ -51,6 +58,7 @@ export default {
     "wss://mainnet5.edgewa.re"
   ],
   "shortName": "edg",
+  "slip44": 523,
   "slug": "edgeware-edgeevm",
   "testnet": false
 } as const satisfies Chain;

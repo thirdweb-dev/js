@@ -2,6 +2,9 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "t4PLS",
   "chainId": 943,
+  "ens": {
+    "registry": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+  },
   "explorers": [
     {
       "name": "blockscout",
@@ -33,9 +36,10 @@ export default {
     "symbol": "tPLS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 943,
   "rpc": [
     "https://pulsechain-testnet-v4.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://943.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.v4.testnet.pulsechain.com",
     "wss://rpc.v4.testnet.pulsechain.com",
     "https://pulsechain-testnet.publicnode.com",
@@ -44,6 +48,7 @@ export default {
     "wss://rpc-testnet-pulsechain.g4mm4.io"
   ],
   "shortName": "t4pls",
+  "slip44": 60,
   "slug": "pulsechain-testnet-v4",
   "status": "active",
   "testnet": true

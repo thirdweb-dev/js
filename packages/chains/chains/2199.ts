@@ -6,13 +6,18 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.moonsama.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://multiverse.moonsama.com/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaQxfwpXYTomUd24PMx5tKjosupXcm99z1jL1XLq9LWBS",
     "width": 468,
@@ -26,13 +31,15 @@ export default {
     "symbol": "SAMA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2199,
   "rpc": [
     "https://moonsama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2199.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.moonsama.com",
     "wss://rpc.moonsama.com/ws"
   ],
   "shortName": "msn",
+  "slip44": 2199,
   "slug": "moonsama-network",
   "testnet": false
 } as const satisfies Chain;

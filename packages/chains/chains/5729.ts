@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmW44FPm3CMM2JDs8BQxLNvUtykkUtrGkQkQsUDJSi3Gmp",
     "width": 350,
@@ -24,12 +23,14 @@ export default {
     "symbol": "HIK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5729,
   "rpc": [
     "https://hika-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5729.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.hika.network/"
   ],
   "shortName": "hik",
   "slug": "hika-network-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Hika Network Testnet"
 } as const satisfies Chain;
