@@ -16,6 +16,7 @@
     "typedoc-json-parser": "^9.0.1"
   },
   "devDependencies": {
+    "prettier": "^3.0.0",
     "tsup": "^6.7.0"
   }
 }

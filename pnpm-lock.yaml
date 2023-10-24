@@ -1309,6 +1309,9 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
     devDependencies:
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.0
       tsup:
         specifier: ^6.7.0
         version: 6.7.0(typescript@5.2.2)
