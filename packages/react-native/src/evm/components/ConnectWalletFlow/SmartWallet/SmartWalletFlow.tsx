@@ -146,7 +146,7 @@ export const SmartWalletFlow = ({
             <>
               <Text variant="header" mt="lg" textAlign="center">
                 {mismatch
-                  ? l.smart_wallet.network_mistmach
+                  ? l.smart_wallet.network_mismatch
                   : `${l.smart_wallet.connecting} ...`}
               </Text>
               {mismatch ? (

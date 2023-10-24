@@ -15,13 +15,20 @@ import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
 } from "./helpers/auth/cognitoAuth";
-import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
+import {
+  postPaperAuth,
+  postPaperAuthUserManaged,
+  prePaperAuth,
+} from "./helpers/auth/middleware";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
-import { OauthOption } from "../types";
-import { ROUTE_HEADLESS_GOOGLE_LOGIN } from "./helpers/constants";
+import { AuthOptions, OauthOption } from "../types";
+import {
+  ROUTE_AUTH_JWT_CALLBACK,
+  ROUTE_HEADLESS_GOOGLE_LOGIN,
+} from "./helpers/constants";
 
 export async function sendEmailOTP(
   email: string,
@@ -190,6 +197,49 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     await postPaperAuth(toStoreToken, clientId);
 
     return { storedToken, email: storedToken.authDetails.email };
+  } catch (e) {
+    throw new Error(
+      `Malformed response from post authentication: ${JSON.stringify(e)}`,
+    );
+  }
+}
+
+export async function customJwt(authOptions: AuthOptions, clientId: string) {
+  const { jwtToken, encryptionKey } = authOptions;
+
+  const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jwtToken,
+      authProvider: AuthProvider.CUSTOM_JWT,
+      developerClientId: clientId,
+    }),
+  });
+  if (!resp.ok) {
+    const { error } = await resp.json();
+    throw new Error(`JWT authentication error: ${error} `);
+  }
+
+  try {
+    const { verifiedToken, verifiedTokenJwtString } = await resp.json();
+
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: verifiedToken.rawToken,
+      authProvider: verifiedToken.authProvider,
+      authDetails: {
+        ...verifiedToken.authDetails,
+        email: verifiedToken.authDetails.email,
+      },
+      developerClientId: verifiedToken.developerClientId,
+      cookieString: verifiedTokenJwtString,
+      shouldStoreCookieString: false,
+      isNewUser: verifiedToken.isNewUser,
+    };
+
+    await postPaperAuthUserManaged(toStoreToken, clientId, encryptionKey);
+
+    return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
     throw new Error(
       `Malformed response from post authentication: ${JSON.stringify(e)}`,

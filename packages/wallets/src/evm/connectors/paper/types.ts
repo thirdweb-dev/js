@@ -1,4 +1,5 @@
 import type {
+  AuthAndWalletRpcReturnType,
   PaperConstructorType,
   RecoveryShareManagement,
 } from "@paperxyz/embedded-wallet-service-sdk";
@@ -14,6 +15,7 @@ export type PaperWalletAdditionalOptions = {
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
   paperClientId?: string;
   clientId?: string;
+  onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
 };
 
 export interface PaperWalletConnectorOptions {
@@ -22,6 +24,7 @@ export interface PaperWalletConnectorOptions {
   chains: Chain[];
   advancedOptions?: PaperAdvanceOptions;
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
+  onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
 }
 
 export interface PaperWalletConnectionArgs {
