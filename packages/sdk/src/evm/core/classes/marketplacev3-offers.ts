@@ -14,13 +14,13 @@ import { buildTransactionFunction } from "../../common/transactions";
 import { SUPPORTED_CHAIN_ID } from "../../constants/chains/SUPPORTED_CHAIN_ID";
 import { NATIVE_TOKENS } from "../../constants/currency";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
+import { Status } from "../../enums/marketplace/Status";
 import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
-import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace";
-import { OfferV3 } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutSeller } from "../../types/marketplace/MarketPlaceFilter";
+import { OfferV3 } from "../../types/marketplacev3/OfferV3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
