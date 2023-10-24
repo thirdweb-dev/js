@@ -29,6 +29,7 @@ export const ROUTE_INIT_RECOVERY_CODE_FREE_WALLET = `${ROUTE_2022_08_12_API_BASE
 export const ROUTE_STORE_USER_SHARES = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/store-shares`;
 export const ROUTE_GET_USER_SHARES = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/get-shares`;
 export const ROUTE_VERIFY_THIRDWEB_CLIENT_ID = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/verify-thirdweb-client-id`;
+export const ROUTE_AUTH_JWT_CALLBACK = `${ROUTE_2022_08_12_API_BASE_PATH}/embedded-wallet/jwt-callback`;
 
 export const ROUTE_HEADLESS_GOOGLE_LOGIN = `${BASE_URL}/api/2022-08-12/embedded-wallet/headless-login-link`;
 

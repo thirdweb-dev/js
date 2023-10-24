@@ -28,11 +28,11 @@ export async function getCreate2FactoryAddress(
   const networkId = (await provider.getNetwork()).chainId;
   const chainId = enforceEip155 ? networkId : 0;
   const deploymentInfo = CUSTOM_GAS_FOR_CHAIN[networkId]
-    ? getCreate2FactoryDeploymentInfo(
-        chainId,
-        CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
-      )
-    : getCreate2FactoryDeploymentInfo(chainId);
+    ? getCreate2FactoryDeploymentInfo(chainId, {
+        gasPrice: CUSTOM_GAS_FOR_CHAIN[networkId].gasPrice,
+        gasLimit: CUSTOM_GAS_FOR_CHAIN[networkId].gasLimit,
+      })
+    : getCreate2FactoryDeploymentInfo(chainId, {});
 
   return deploymentInfo.deployment;
 }
