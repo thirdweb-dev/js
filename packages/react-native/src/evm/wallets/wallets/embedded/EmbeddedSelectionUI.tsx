@@ -25,8 +25,9 @@ export const EmailSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
     oauthOptions?: OauthOptions;
     email?: boolean;
+    custom_auth?: boolean;
   }
-> = ({ onSelect, walletConfig, oauthOptions, email }) => {
+> = ({ onSelect, walletConfig, oauthOptions, email, custom_auth }) => {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [emailInput, setEmailInput] = useState<string>("");
@@ -44,6 +45,11 @@ export const EmailSelectionUI: React.FC<
 
     setEmailWallet(emailWalletInstance);
   }, [createWalletInstance, walletConfig]);
+
+  if (custom_auth) {
+    // No UI for custom auth
+    return null;
+  }
 
   const validateEmail = (emailToValidate: string) => {
     const pattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -120,7 +126,7 @@ export const EmailSelectionUI: React.FC<
                 textAlign="center"
                 marginHorizontal="xxs"
               >
-                OR
+                {l.common.or}
               </Text>
               <Box height={1} flex={1} backgroundColor="border" />
             </Box>
@@ -131,7 +137,7 @@ export const EmailSelectionUI: React.FC<
         <>
           <TextInput
             textInputProps={{
-              placeholder: "Enter your email address",
+              placeholder: l.embedded_wallet.enter_your_email,
               placeholderTextColor: theme.colors.textSecondary,
               onChangeText: setEmailInput,
               style: {

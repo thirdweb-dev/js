@@ -1,32 +1,36 @@
-import { Platform } from "react-native";
+// import { Platform } from "react-native";
 
 export const textVariants = {
   defaults: {
-    fontFamily: Platform.OS === "ios" ? "san Francisco" : "Roboto",
+    fontFamily: undefined as string | undefined,
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
     color: "textPrimary",
   },
   header: {
+    fontFamily: undefined as string | undefined,
     fontSize: 24,
     fontWeight: "600",
     lineHeight: 32,
     color: "textPrimary",
   },
   headerBold: {
+    fontFamily: undefined as string | undefined,
     fontSize: 24,
     fontWeight: "700",
     lineHeight: 32,
     color: "textPrimary",
   },
   subHeader: {
+    fontFamily: undefined as string | undefined,
     fontSize: 16,
     fontWeight: "500",
     lineHeight: 24,
     color: "textSecondary",
   },
   link: {
+    fontFamily: undefined as string | undefined,
     fontWeight: "500",
     fontSize: 14,
     lineHeight: 24,
@@ -34,6 +38,7 @@ export const textVariants = {
     letterSpacing: -0.02,
   },
   bodyLarge: {
+    fontFamily: undefined as string | undefined,
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "600",
@@ -41,6 +46,7 @@ export const textVariants = {
     lineHeight: 24,
   },
   bodyLargeBold: {
+    fontFamily: undefined as string | undefined,
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "700",
@@ -48,6 +54,7 @@ export const textVariants = {
     lineHeight: 24,
   },
   bodySmall: {
+    fontFamily: undefined as string | undefined,
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "600",
@@ -55,6 +62,7 @@ export const textVariants = {
     lineHeight: 16,
   },
   bodySmallBold: {
+    fontFamily: undefined as string | undefined,
     color: "textPrimary",
     textAlign: "center",
     fontWeight: "700",
@@ -62,6 +70,7 @@ export const textVariants = {
     lineHeight: 16,
   },
   bodySmallSecondary: {
+    fontFamily: undefined as string | undefined,
     color: "textSecondary",
     textAlign: "left",
     fontWeight: "600",
@@ -69,6 +78,7 @@ export const textVariants = {
     lineHeight: 16,
   },
   error: {
+    fontFamily: undefined as string | undefined,
     color: "error",
     fontWeight: "500",
     fontSize: 12,

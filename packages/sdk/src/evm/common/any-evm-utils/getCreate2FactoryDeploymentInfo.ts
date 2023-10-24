@@ -11,13 +11,13 @@ import { getKeylessTxn } from "./getKeylessTxn";
  */
 export function getCreate2FactoryDeploymentInfo(
   chainId: number,
-  gasPrice?: number,
+  gasOptions: { gasPrice?: number; gasLimit?: number },
 ): KeylessDeploymentInfo {
   const signature = utils.joinSignature(SIGNATURE);
   const deploymentTransaction = getKeylessTxn(
     {
-      gasPrice: gasPrice ? gasPrice : 100 * 10 ** 9,
-      gasLimit: 100000,
+      gasPrice: gasOptions.gasPrice ? gasOptions.gasPrice : 100 * 10 ** 9,
+      gasLimit: gasOptions.gasLimit ? gasOptions.gasLimit : 100000,
       nonce: 0,
       data: CREATE2_FACTORY_BYTECODE,
       chainId: chainId,

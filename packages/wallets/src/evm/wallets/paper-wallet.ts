@@ -32,6 +32,7 @@ export class PaperWallet extends AbstractClientWallet<
 
   paperClientId: string;
   chain: PaperWalletAdditionalOptions_["chain"];
+  onAuthSuccess: PaperWalletAdditionalOptions_["onAuthSuccess"];
 
   constructor(options: PaperWalletOptions) {
     super(PaperWallet.id, {
@@ -84,6 +85,7 @@ export class PaperWallet extends AbstractClientWallet<
 
     // cast is okay because we assert that either clientId or paperClientId is defined above
     this.paperClientId = (options.paperClientId ?? options.clientId) as string;
+    this.onAuthSuccess = options.onAuthSuccess;
   }
   private isClientIdLegacyPaper(clientId: string): boolean {
     return clientId.indexOf("-") > 0 && clientId.length === 36;
@@ -96,6 +98,7 @@ export class PaperWallet extends AbstractClientWallet<
         clientId: this.paperClientId,
         chain: this.chain,
         chains: this.chains,
+        onAuthSuccess: this.onAuthSuccess,
         advancedOptions: {
           recoveryShareManagement:
             this.options?.advancedOptions?.recoveryShareManagement,

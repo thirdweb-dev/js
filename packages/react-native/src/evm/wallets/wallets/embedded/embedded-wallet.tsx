@@ -14,13 +14,14 @@ export type EmbeddedWalletConfig = {
   // @default true - set false to disable
   email?: boolean;
 
-  // @default { providers: ['google'] } - set false to disable
   oauthOptions?:
     | {
         providers: OAuthProvider[];
         redirectUrl: string;
       }
     | false;
+
+  custom_auth?: boolean;
 };
 
 export const embeddedWallet = (
@@ -37,6 +38,7 @@ export const embeddedWallet = (
             }
           : undefined
       }
+      custom_auth={config?.custom_auth}
       // you cannot disable both email and oauth
       email={!config?.oauthOptions && !config?.email ? true : config?.email}
     />
@@ -51,7 +53,7 @@ export const embeddedWallet = (
         clientId: options.clientId || "",
       });
     },
-    selectUI: selectUI,
+    selectUI: config?.custom_auth ? undefined : selectUI,
     connectUI: EmbeddedConnectionUI,
   };
 };

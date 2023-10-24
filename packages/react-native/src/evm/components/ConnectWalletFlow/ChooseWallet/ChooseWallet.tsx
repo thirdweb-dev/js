@@ -45,7 +45,9 @@ export function ChooseWallet({
 
   const guestWallet = wallets.find((w) => w.id === walletIds.localWallet);
   const emailWallet = wallets.find(
-    (w) => w.id === walletIds.magicLink || w.id === walletIds.embeddedWallet,
+    (w) =>
+      w.id === walletIds.magicLink ||
+      (w.id === walletIds.embeddedWallet && w.selectUI),
   );
   const connectionWallets = wallets
     .filter(
@@ -188,7 +190,7 @@ export function ChooseWallet({
         >
           <Box height={1} flex={1} backgroundColor="border" />
           <Text variant="subHeader" textAlign="center" marginHorizontal="xxs">
-            OR
+            {l.common.or}
           </Text>
           <Box height={1} flex={1} backgroundColor="border" />
         </Box>
