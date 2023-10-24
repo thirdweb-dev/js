@@ -1,6 +1,6 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 
-import { typedoc } from "@thirdweb-dev/typedoc";
+import { typedoc } from "typedoc-gen";
 
 typedoc({
   entryPoints: ["src/index.ts"],

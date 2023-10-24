@@ -85,7 +85,7 @@
     "prettier": "^3.0.0",
     "react": "^18.2.0",
     "typescript": "^5.1.6",
-    "@thirdweb-dev/typedoc": "workspace:*"
+    "typedoc-gen": "workspace:*"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.33.0",
