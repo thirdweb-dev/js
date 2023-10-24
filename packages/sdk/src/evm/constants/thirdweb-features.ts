@@ -16,6 +16,7 @@ import IAirdropERC721 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC721.
 import IAirdropERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IAirdropERC1155.json";
 import IAccountFactoryCore from "@thirdweb-dev/contracts-js/dist/abis/IAccountFactoryCore.json";
 import IAccountPermissions from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions.json";
+import IAccountPermissionsV1 from "@thirdweb-dev/contracts-js/dist/abis/IAccountPermissions_V1.json";
 import IAccount from "@thirdweb-dev/contracts-js/dist/abis/IAccount.json";
 
 export const getAllPluginsAbi = [
@@ -295,6 +296,18 @@ export const FEATURE_ACCOUNT_FACTORY = {
   features: {},
 } as const;
 
+export const FEATURE_ACCOUNT_PERMISSIONS_V1 = {
+  name: "AccountPermissionsV1",
+  namespace: "accountPermissions",
+  docLinks: {
+    // TODO
+    sdk: "sdk.account",
+    contracts: "IAccountPermissions",
+  },
+  abis: [IAccountPermissionsV1],
+  features: {},
+} as const;
+
 export const FEATURE_ACCOUNT_PERMISSIONS = {
   name: "AccountPermissions",
   namespace: "accountPermissions",
@@ -316,7 +329,10 @@ export const FEATURE_ACCOUNT = {
     contracts: "IAccount",
   },
   abis: [IAccount],
-  features: { [FEATURE_ACCOUNT_PERMISSIONS.name]: FEATURE_ACCOUNT_PERMISSIONS },
+  features: {
+    [FEATURE_ACCOUNT_PERMISSIONS.name]: FEATURE_ACCOUNT_PERMISSIONS,
+    [FEATURE_ACCOUNT_PERMISSIONS_V1.name]: FEATURE_ACCOUNT_PERMISSIONS_V1,
+  },
 } as const;
 
 export const FEATURE_AIRDROP_ERC20 = {

@@ -15,5 +15,6 @@ export const walletIds = {
   walletConnectV1: "walletConnectV1",
   walletConnect: "walletConnect",
   phantom: "phantom",
+  okx: "okx",
   // add new ids sorted alphabetically
 } as const;

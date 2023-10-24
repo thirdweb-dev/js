@@ -46,8 +46,10 @@ export async function isTokenApprovedForTransfer(
 ): Promise<boolean> {
   try {
     const erc165 = new Contract(assetContract, ERC165Abi, provider) as IERC165;
-    const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-    const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+    const [isERC721, isERC1155] = await Promise.all([
+      erc165.supportsInterface(InterfaceId_IERC721),
+      erc165.supportsInterface(InterfaceId_IERC1155),
+    ]);
     if (isERC721) {
       const asset = new Contract(assetContract, ERC721Abi, provider) as IERC721;
 
@@ -108,11 +110,9 @@ export async function handleTokenApproval(
     contractWrapper.options,
     contractWrapper.storage,
   );
-  const isERC721 = await erc165.read("supportsInterface", [
-    InterfaceId_IERC721,
-  ]);
-  const isERC1155 = await erc165.read("supportsInterface", [
-    InterfaceId_IERC1155,
+  const [isERC721, isERC1155] = await Promise.all([
+    erc165.read("supportsInterface", [InterfaceId_IERC721]),
+    erc165.read("supportsInterface", [InterfaceId_IERC1155]),
   ]);
   // check for token approval
   if (isERC721) {

@@ -4,13 +4,13 @@ export default {
   "chainId": 59140,
   "explorers": [
     {
-      "name": "Blockscout",
-      "url": "https://explorer.goerli.linea.build",
+      "name": "Etherscan",
+      "url": "https://goerli.lineascan.build",
       "standard": "EIP3091"
     },
     {
-      "name": "Etherscan",
-      "url": "https://goerli.lineascan.build",
+      "name": "Blockscout",
+      "url": "https://explorer.goerli.linea.build",
       "standard": "EIP3091"
     }
   ],

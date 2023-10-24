@@ -13,6 +13,7 @@ import {
 import { LocalWalletImportModal } from "./LocalWalletImportModal";
 import { LocalWallet } from "../../wallets/wallets/LocalWallet";
 import Box from "../base/Box";
+import { useLocale } from "../../providers/ui-context-provider";
 
 type LocalWalletFlowUIProps = ConnectUIProps<LocalWallet> & {
   onConnected?: (wallet: WalletInstance) => void;
@@ -24,6 +25,7 @@ export function LocalWalletFlow({
   walletConfig,
   onConnected,
 }: LocalWalletFlowUIProps) {
+  const l = useLocale();
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
   const { setConnectedWallet } = useWalletContext();
@@ -58,7 +60,7 @@ export function LocalWalletFlow({
     <>
       <ConnectWalletHeader
         onBackPress={goBack}
-        headerText="Guest Wallet"
+        headerText={l.local_wallet.guest_wallet}
         alignHeader="flex-start"
         subHeaderText={""}
         onClose={connected}
@@ -75,7 +77,7 @@ export function LocalWalletFlow({
             <ActivityIndicator size="small" color="buttonTextColor" />
           ) : (
             <Text variant="bodyLarge" color="black">
-              Create new wallet
+              {l.local_wallet.create_new_wallet}
             </Text>
           )}
         </BaseButton>
@@ -88,7 +90,7 @@ export function LocalWalletFlow({
         >
           <Box height={1} flex={1} backgroundColor="border" />
           <Text variant="subHeader" textAlign="center">
-            OR
+            {l.common.or}
           </Text>
           <Box height={1} flex={1} backgroundColor="border" />
         </Box>

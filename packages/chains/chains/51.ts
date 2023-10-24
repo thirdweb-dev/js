@@ -4,13 +4,13 @@ export default {
   "chainId": 51,
   "explorers": [
     {
-      "name": "blocksscan",
-      "url": "https://apothem.blocksscan.io",
+      "name": "xdcscan",
+      "url": "https://apothem.xinfinscan.com",
       "standard": "EIP3091"
     },
     {
-      "name": "xdcscan",
-      "url": "https://apothem.xinfinscan.com",
+      "name": "blocksscan",
+      "url": "https://apothem.blocksscan.io",
       "standard": "EIP3091"
     }
   ],

@@ -4,14 +4,14 @@ export default {
   "chainId": 8453,
   "explorers": [
     {
-      "name": "basescan",
-      "url": "https://basescan.org",
-      "standard": "none"
-    },
-    {
       "name": "basescout",
       "url": "https://base.blockscout.com",
       "standard": "EIP3091"
+    },
+    {
+      "name": "basescan",
+      "url": "https://basescan.org",
+      "standard": "none"
     }
   ],
   "faucets": [],

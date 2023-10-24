@@ -4,13 +4,13 @@ export default {
   "chainId": 2023,
   "explorers": [
     {
-      "name": "Taycan Cosmos Explorer",
-      "url": "https://cosmoscan-test.hupayx.io",
+      "name": "Taycan Explorer(Blockscout)",
+      "url": "https://evmscan-test.hupayx.io",
       "standard": "none"
     },
     {
-      "name": "Taycan Explorer(Blockscout)",
-      "url": "https://evmscan-test.hupayx.io",
+      "name": "Taycan Cosmos Explorer",
+      "url": "https://cosmoscan-test.hupayx.io",
       "standard": "none"
     }
   ],

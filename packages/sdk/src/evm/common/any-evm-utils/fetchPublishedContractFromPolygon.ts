@@ -50,18 +50,18 @@ export async function fetchPublishedContractFromPolygon(
     });
 
     // get the metadata for each version
-    const versionMetadata = await Promise.all(
-      allVersions.map(async (c) => {
-        return {
-          name: c.id,
-          publishedTimestamp: c.timestamp,
-          publishedMetadata: await fetchAndCacheDeployMetadata(
-            c.metadataUri,
-            storage,
-          ),
-        };
-      }),
-    );
+    const versionMetadata = (
+      await Promise.all(
+        allVersions.map((c) =>
+          fetchAndCacheDeployMetadata(c.metadataUri, storage),
+        ),
+      )
+    ).map((item, index) => ({
+      name: allVersions[index].id,
+      publishedTimestamp: allVersions[index].timestamp,
+      publishedMetadata: item,
+    }));
+
     // find the version that matches the version string
     const versionMatch = versionMetadata.find(
       (metadata) =>

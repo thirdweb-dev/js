@@ -13,7 +13,7 @@ import {
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
-import { BigNumber, ethers, providers } from "ethers";
+import { BigNumber, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
   SignerPermissionsInput,
@@ -24,6 +24,7 @@ import {
   TransactionResult,
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
+import { AddressZero } from "@account-abstraction/utils";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -165,21 +166,55 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   }
 
   /**
-   * Execute a single transaction
+   * Send a single transaction without waiting for confirmations
    * @param transactions
-   * @returns the transaction receipt
+   * @returns the awaitable transaction
    */
-  async execute(transaction: Transaction): Promise<TransactionResult> {
+  async send(transaction: Transaction): Promise<providers.TransactionResponse> {
     const signer = await this.getSigner();
-    const tx = await signer.sendTransaction({
+    return signer.sendTransaction({
       to: transaction.getTarget(),
       data: transaction.encode(),
       value: await transaction.getValue(),
     });
+  }
+
+  /**
+   * Execute a single transaction (waiting for confirmations)
+   * @param transactions
+   * @returns the transaction receipt
+   */
+  async execute(transaction: Transaction): Promise<TransactionResult> {
+    const tx = await this.send(transaction);
     const receipt = await tx.wait();
     return {
       receipt,
     };
+  }
+
+  async sendBatch(
+    transactions: Transaction<any>[],
+  ): Promise<providers.TransactionResponse> {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const signer = await this.getSigner();
+    const targets = transactions.map((tx) => tx.getTarget());
+    const data = transactions.map((tx) => tx.encode());
+    const values = await Promise.all(transactions.map((tx) => tx.getValue()));
+    const callData = await this.accountApi.encodeExecuteBatch(
+      targets,
+      values,
+      data,
+    );
+    return await signer.sendTransaction(
+      {
+        to: await signer.getAddress(),
+        data: callData,
+        value: 0,
+      },
+      true, // batched tx flag
+    );
   }
 
   /**
@@ -190,19 +225,54 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   async executeBatch(
     transactions: Transaction<any>[],
   ): Promise<TransactionResult> {
+    const tx = await this.sendBatch(transactions);
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
+  async sendRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+  ): Promise<providers.TransactionResponse> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    const targets = transactions.map((tx) => tx.getTarget());
-    const data = transactions.map((tx) => tx.encode());
-    const values = transactions.map(() => BigNumber.from(0)); // TODO check if we can handle multiple values
+    return signer.sendTransaction(transaction);
+  }
+
+  async executeRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+  ) {
+    const tx = await this.sendRaw(transaction);
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
+  async sendBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const signer = await this.getSigner();
+    const resolvedTxs = await Promise.all(
+      transactions.map((transaction) =>
+        ethers.utils.resolveProperties(transaction),
+      ),
+    );
+    const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
+    const data = resolvedTxs.map((tx) => tx.data || "0x");
+    const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
     const callData = await this.accountApi.encodeExecuteBatch(
       targets,
       values,
       data,
     );
-    const tx = await signer.sendTransaction(
+    return signer.sendTransaction(
       {
         to: await signer.getAddress(),
         data: callData,
@@ -210,6 +280,12 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       },
       true, // batched tx flag
     );
+  }
+
+  async executeBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ) {
+    const tx = await this.sendBatchRaw(transactions);
     const receipt = await tx.wait();
     return {
       receipt,

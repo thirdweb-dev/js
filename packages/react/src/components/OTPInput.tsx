@@ -38,7 +38,9 @@ export function OTPInput(props: {
             key={i}
             value={otp[i] ?? ""}
             type="number"
+            pattern="[0-9]*"
             variant="outline"
+            inputMode="numeric"
             onPaste={(e) => {
               const pastedData = e.clipboardData.getData("text/plain");
               const newOTP = pastedData

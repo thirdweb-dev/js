@@ -6,7 +6,7 @@ const BASE_URI = (process.env.BASE_URI as string) || "https://api.thirdweb.com";
 
 async function getAllPaginatedChains(
   chains: any[] = [],
-  pathname = "/v1/chains",
+  pathname = "/v1/chains?limit=100",
 ) {
   const url = new URL(BASE_URI);
   url.pathname = pathname;
@@ -33,31 +33,37 @@ async function sync() {
 
   const results = await Promise.all(
     allChainsInDB.map(async (chain) => {
+      let chainId = chain.chainId;
+      // try to convert to number for legacy reasons
+      try {
+        chainId = Number(chainId);
+      } catch {
+        // if we fail here then we cannot use this chain in the chains package for now, so we skip it
+        return null;
+      }
+
       const pkgChain: Chain = {
         ...chain,
-        chainId: Number(chain.chainId),
+        // assing back the chainId
+        chainId,
+        // map the features to the legacy format
         features: chain.features?.map((feature) => ({ name: feature })),
       };
       // remove all null values
       Object.keys(pkgChain).forEach((key) => {
-        // @ts-ignore
         if (pkgChain[key] === null || pkgChain[key] === undefined) {
-          // @ts-ignore
           delete pkgChain[key];
         }
       });
 
       // sort top level keys alphabetically
-      // @ts-ignore
-      const sortedChain: Chain = {};
+      const sortedChain = {} as Chain;
       Object.keys(pkgChain)
         .sort()
         .forEach((key) => {
-          // @ts-ignore
           sortedChain[key] = pkgChain[key];
         });
 
-      // @ts-ignore
       await fs.writeFile(
         `${chainsDir}/${sortedChain.chainId}.ts`,
         `import type { Chain } from "../src/types";
@@ -78,16 +84,7 @@ export default ${JSON.stringify(
         exportName = `_${exportName}`;
       }
 
-      // imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
-
-      // exports.push(
-      //   `export { default as ${exportName} } from "../chains/${chain.chainId}"`,
-      // );
-
       const key = `c${sortedChain.chainId}`;
-
-      // exportNames.push(key);
-      // exportNameToChain[key] = chain;
 
       return {
         imp: `import c${sortedChain.chainId} from "../chains/${sortedChain.chainId}";`,
@@ -101,20 +98,21 @@ export default ${JSON.stringify(
 
   const { imports, exports, exportNames, exportNameToChain } = results.reduce(
     (acc, result) => {
-      // @ts-ignore
+      // if it's a null result skip it (can happen when we skip chains above because their chainID is out of bounds)
+      if (result === null) {
+        return acc;
+      }
       acc.imports.push(result.imp);
-      // @ts-ignore
       acc.exports.push(result.exp);
-      // @ts-ignore
       acc.exportNames.push(result.key);
       acc.exportNameToChain[result.key] = result.chain;
       return acc;
     },
     {
-      imports: [],
-      exports: [],
-      exportNames: [],
-      exportNameToChain: {},
+      imports: [] as string[],
+      exports: [] as string[],
+      exportNames: [] as string[],
+      exportNameToChain: {} as Record<string, Chain>,
     },
   );
 

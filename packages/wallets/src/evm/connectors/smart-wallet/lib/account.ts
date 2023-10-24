@@ -1,5 +1,5 @@
 import { LOCAL_NODE_PKEY, SmartContract, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { BigNumberish, BigNumber, ethers, utils } from "ethers";
+import { BigNumberish, BigNumber, ethers, utils, BytesLike } from "ethers";
 import { AccountApiParams } from "../types";
 import { BaseAccountAPI } from "./base-api";
 import { ACCOUNT_CORE_ABI } from "./constants";
@@ -121,10 +121,10 @@ export class AccountAPI extends BaseAccountAPI {
   async encodeExecuteBatch(
     targets: string[],
     values: BigNumberish[],
-    datas: string[],
+    datas: BytesLike[],
   ): Promise<string> {
     const accountContract = await this.getAccountContract();
-    const tx = await accountContract.prepare("executeBatch", [
+    const tx = accountContract.prepare("executeBatch", [
       targets,
       values,
       datas,

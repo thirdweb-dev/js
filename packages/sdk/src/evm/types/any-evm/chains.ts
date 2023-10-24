@@ -1,4 +1,5 @@
 export type CustomChain = {
   name: string;
-  gasPrice: number;
+  gasPrice?: number;
+  gasLimit?: number;
 };
