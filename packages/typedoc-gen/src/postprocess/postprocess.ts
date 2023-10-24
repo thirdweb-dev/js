@@ -8,7 +8,7 @@ import { getVariableDoc } from "./processVariable";
 import { getClassDoc } from "./processClass";
 
 const groupNameMap = {
-  Interfaces: "interfaces",
+  Interfaces: "types",
   "Type Aliases": "types",
   Variables: "variables",
   Functions: "functions",
@@ -55,10 +55,6 @@ export function postprocess(inputData: JSONOutput.ProjectReflection) {
             }
             break;
           }
-
-          case "interfaces":
-            interfaces.push(getInterfaceDoc(childData));
-            break;
 
           case "types": {
             types.push(getInterfaceDoc(childData));

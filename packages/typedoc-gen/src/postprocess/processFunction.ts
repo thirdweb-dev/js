@@ -1,10 +1,15 @@
 import { JSONOutput, SomeType, Reflection } from "typedoc";
 import { FunctionDoc, FunctionSignature, FunctionSignatureArg } from "./types";
 import { getReadableType } from "./getReadableType";
+import { warningLog } from "./logs";
 
 export function getFunctionDoc(
   data: JSONOutput.DeclarationReflection,
 ): FunctionDoc {
+  if (data.signatures) {
+    showSignatureWarnings(data.signatures, data.name);
+  }
+
   return {
     name: data.name,
     signatures: data.signatures?.map(getFunctionSignatureDoc),
@@ -37,4 +42,23 @@ function getFunctionSignatureDoc(signature: JSONOutput.SignatureReflection) {
   };
 
   return output;
+}
+
+function showSignatureWarnings(
+  signatures: JSONOutput.SignatureReflection[],
+  name: string,
+) {
+  if (name === "__type") {
+    return;
+  }
+
+  if (signatures) {
+    const summaryMissing = signatures.find((signature) => {
+      return !signature.comment?.summary;
+    });
+
+    if (summaryMissing) {
+      warningLog(`${name}: No Summary found on function signature`);
+    }
+  }
 }
