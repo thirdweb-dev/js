@@ -6,11 +6,13 @@ import { OKXScan } from "./OKXScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import type { OKXWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
+  const locale = useTWLocale().wallets.okxWallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -65,6 +67,13 @@ export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connecting.instruction,
+          tryAgain: locale.connecting.tryAgain,
+          inProgress: locale.connecting.inProgress,
+          failed: locale.connecting.failed,
+        }}
         errorConnecting={errorConnecting}
         onGetStarted={() => {
           setScreen("get-started");
@@ -81,6 +90,10 @@ export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          getStarted: locale.getStarted.subtitle,
+          scanToDownload: locale.getStarted.scanToDownload,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

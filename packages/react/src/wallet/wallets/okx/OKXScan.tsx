@@ -6,6 +6,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { OKXWallet } from "@thirdweb-dev/wallets";
 import type { WalletConfig } from "@thirdweb-dev/react-core";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const OKXScan: React.FC<{
   onBack: () => void;
@@ -14,6 +15,7 @@ export const OKXScan: React.FC<{
   walletConfig: WalletConfig<OKXWallet>;
   hideBackButton: boolean;
 }> = ({ onBack, onConnected, onGetStarted, walletConfig, hideBackButton }) => {
+  const locale = useTWLocale().wallets.okxWallet;
   const createInstance = useCreateWalletInstance();
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -50,12 +52,14 @@ export const OKXScan: React.FC<{
 
   return (
     <ScanScreen
+      qrScanInstruction={locale.scan.instruction}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}
       walletName={walletConfig.meta.name}
       walletIconURL={walletConfig.meta.iconURL}
       hideBackButton={hideBackButton}
+      getStartedLink={locale.getStartedLink}
     />
   );
 };

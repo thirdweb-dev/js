@@ -151,6 +151,7 @@ export function enDefault() {
       },
       coinbaseWallet: extensionAndQRScan("Coinbase"),
       metamaskWallet: extensionAndQRScan("MetaMask"),
+      okxWallet: extensionAndQRScan("OKX"),
       phantomWallet: extensionAndQRScan("Phantom"),
       rainbowWallet: extensionAndQRScan("Rainbow"),
       trustWallet: extensionAndQRScan("Trust"),
