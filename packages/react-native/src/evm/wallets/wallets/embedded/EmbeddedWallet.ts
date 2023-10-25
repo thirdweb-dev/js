@@ -5,7 +5,10 @@ import {
   walletIds,
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
-import { EmbeddedWalletConnectionArgs } from "../../connectors/embedded-wallet/types";
+import {
+  EmbeddedWalletConnectionArgs,
+  OauthOption,
+} from "../../connectors/embedded-wallet/types";
 import { EmbeddedWalletConnector } from "../../connectors/embedded-wallet/embedded-connector";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 
@@ -43,8 +46,6 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return this.connector;
   }
 
-  // my methods
-
   initializeConnector() {
     this.connector = new EmbeddedWalletConnector({
       ...this.options,
@@ -61,6 +62,10 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   async sendEmailOTP(email: string) {
     return this.connector?.sendEmailOtp(email);
+  }
+
+  async socialLogin(oauthOption: OauthOption) {
+    return this.connector?.socialLogin(oauthOption);
   }
 
   onConnected = () => {

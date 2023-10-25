@@ -380,8 +380,8 @@ importers:
   packages/contracts-js:
     dependencies:
       '@thirdweb-dev/contracts':
-        specifier: 3.10.2-3
-        version: 3.10.2-3(ethers@5.7.2)
+        specifier: 3.10.3-1
+        version: 3.10.3-1(ethers@5.7.2)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -827,6 +827,9 @@ importers:
       react-native-device-info:
         specifier: 10.6.0
         version: 10.6.0(react-native@0.71.11)
+      react-native-inappbrowser-reborn:
+        specifier: ^3.7.0
+        version: 3.7.0(react-native@0.71.11)
       react-native-quick-base64:
         specifier: ^2.0.7
         version: 2.0.7(react-native@0.71.11)(react@18.2.0)
@@ -12340,8 +12343,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@thirdweb-dev/contracts@3.10.2-3(ethers@5.7.2):
-    resolution: {integrity: sha512-QWO9HT4k3s86oMyE/SbDWhgm/Na9FnxOkVjhyuOigmrwq5NlNp7NCcmecQgILxvUiLXO9if9OeFlYCFGsJinng==}
+  /@thirdweb-dev/contracts@3.10.3-1(ethers@5.7.2):
+    resolution: {integrity: sha512-eiGS1Q2+Ge48yEO+kBw0DqR6eTN6ip4vrY0eBoaUrpcFAudd+aW+qszxCFBUuKSHIxvRs3Ul2b64pdYFEXzMIA==}
+    engines: {node: '>=20.0.0'}
     dependencies:
       '@chainlink/contracts': 0.6.1(ethers@5.7.2)
       '@openzeppelin/contracts': 4.9.3
@@ -24616,6 +24620,13 @@ packages:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
+  /opencollective-postinstall@2.0.3:
+    resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
+    hasBin: true
+    requiresBuild: true
+    dev: false
+    optional: true
+
   /openid-client@5.4.0:
     resolution: {integrity: sha512-hgJa2aQKcM2hn3eyVtN12tEA45ECjTJPXCgUh5YzTzy9qwapCvmDTVPWOcWVL0d34zeQoQ/hbG9lJhl3AYxJlQ==}
     dependencies:
@@ -26590,6 +26601,18 @@ packages:
 
   /react-native-gradle-plugin@0.71.19:
     resolution: {integrity: sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==}
+
+  /react-native-inappbrowser-reborn@3.7.0(react-native@0.71.11):
+    resolution: {integrity: sha512-Ia53jYNtFcbNaX5W3QfOmN25I7bcvuDiQmSY5zABXjy4+WI20bPc9ua09li55F8yDCjv3C99jX6vKms68mBV7g==}
+    requiresBuild: true
+    peerDependencies:
+      react-native: '>=0.56'
+    dependencies:
+      invariant: 2.2.4
+      opencollective-postinstall: 2.0.3
+      react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
+    dev: false
+    optional: true
 
   /react-native-mmkv@2.4.3(react-native@0.71.11)(react@18.2.0):
     resolution: {integrity: sha512-0hYNOTbsjJ5j5cpX+qjwReGIxuYE9MWRsyPQ72fTOvzmEjYXCF4Wr2VQoqx8R6W1/Uinekvln7dGvJ4RExmHhQ==}

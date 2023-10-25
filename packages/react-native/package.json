@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native",
-  "version": "0.3.6",
+  "version": "0.3.9",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-native",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -89,7 +89,8 @@
     "amazon-cognito-identity-js": "^6.3.3",
     "react-native-quick-base64": "^2.0.7",
     "react-native-quick-crypto": "^0.6.1",
-    "react-native-aes-gcm-crypto": "^0.2.2"
+    "react-native-aes-gcm-crypto": "^0.2.2",
+    "react-native-inappbrowser-reborn": "^3.7.0"
   },
   "peerDependencies": {
     "ethers": ">=5.5.1 <6",

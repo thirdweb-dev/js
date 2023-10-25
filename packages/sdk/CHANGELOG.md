@@ -1,5 +1,41 @@
 # @thirdweb-dev/sdk
 
+## 4.0.3
+
+### Patch Changes
+
+- [#1756](https://github.com/thirdweb-dev/js/pull/1756) [`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable adding smart wallet admins via bundler for new account contracts
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/contracts-js@1.3.15
+
+## 4.0.2
+
+### Patch Changes
+
+- [#1764](https://github.com/thirdweb-dev/js/pull/1764) [`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for marketplace methods
+
+- [#1763](https://github.com/thirdweb-dev/js/pull/1763) [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve fetchPublishedContractFromPolygon
+
+- [#1765](https://github.com/thirdweb-dev/js/pull/1765) [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for getting deployment info
+
+- [#1762](https://github.com/thirdweb-dev/js/pull/1762) [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Perf improvement for drop-claim-condition
+
+## 4.0.1
+
+### Patch Changes
+
+- [#1747](https://github.com/thirdweb-dev/js/pull/1747) [`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle upgradeable proxies and optimize proxy resolution
+
+- [#1695](https://github.com/thirdweb-dev/js/pull/1695) [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add optional pagination to getOwned NFTs
+
+- [#1746](https://github.com/thirdweb-dev/js/pull/1746) [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606) Thanks [@farhanW3](https://github.com/farhanW3)! - Fix for RPC Override Implementation to get user provided Url and not default RPC Url for the chain
+
+- [#1757](https://github.com/thirdweb-dev/js/pull/1757) [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update deployment and tests for MarketplaceV3 latest
+
+- Updated dependencies [[`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/contracts-js@1.3.14
+
 ## 4.0.0
 
 ### Major Changes

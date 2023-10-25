@@ -216,8 +216,11 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    return this.erc1155.getOwned(walletAddress);
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    return this.erc1155.getOwned(walletAddress, queryParams);
   }
 
   /**

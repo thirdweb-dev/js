@@ -1,12 +1,13 @@
 import {
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
+  OauthOption,
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
 import { Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
-import { sendEmailOTP, validateEmailOTP } from "./embedded/auth";
+import { sendEmailOTP, socialLogin, validateEmailOTP } from "./embedded/auth";
 import { getEthersSigner } from "./embedded/signer";
 import { logoutUser } from "./embedded/helpers/auth/logout";
 import {
@@ -81,6 +82,36 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.email = email;
     saveConnectedEmail(email);
     return sendEmailOTP(email, this.options.clientId);
+  }
+
+  async socialLogin(oauthOption: OauthOption) {
+    try {
+      const { email } = await socialLogin(oauthOption, this.options.clientId);
+      this.email = email;
+      saveConnectedEmail(email);
+    } catch (error) {
+      console.error(
+        `Error while signing in with: ${oauthOption.provider}. ${error}`,
+      );
+      if (error instanceof Error) {
+        return { error: error.message };
+      } else {
+        return { error: "An unknown error occurred" };
+      }
+    }
+
+    try {
+      await this.getSigner();
+      this.emit("connected");
+    } catch (error) {
+      if (error instanceof Error) {
+        return { error: error.message };
+      } else {
+        return { error: "Error getting the signer" };
+      }
+    }
+
+    return { success: true };
   }
 
   async disconnect(): Promise<void> {

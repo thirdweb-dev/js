@@ -1,5 +1,40 @@
 # @thirdweb-dev/react
 
+## 4.0.4
+
+### Patch Changes
+
+- [#1769](https://github.com/thirdweb-dev/js/pull/1769) [`010955ff`](https://github.com/thirdweb-dev/js/commit/010955ff5cc35a975b54c25992b8e65b40e033a1) Thanks [@MananTank](https://github.com/MananTank)! - Fix OTP input not working well with Japanese keyboard
+
+- Updated dependencies [[`956b5645`](https://github.com/thirdweb-dev/js/commit/956b5645e4266cba536abd27ee250dab5aa9a177)]:
+  - @thirdweb-dev/sdk@4.0.3
+  - @thirdweb-dev/wallets@2.0.4
+  - @thirdweb-dev/react-core@4.0.4
+
+## 4.0.3
+
+### Patch Changes
+
+- [#1766](https://github.com/thirdweb-dev/js/pull/1766) [`dd7d0fca`](https://github.com/thirdweb-dev/js/commit/dd7d0fca2d14a529343396a31939d49b1a074d3e) Thanks [@MananTank](https://github.com/MananTank)! - Fix Continue as Guest button missing when Social + Guest login is setup in ConnectWallet Modal
+
+- [#1692](https://github.com/thirdweb-dev/js/pull/1692) [`fb0f12ae`](https://github.com/thirdweb-dev/js/commit/fb0f12ae2835f4eba60ba4a74b453151cab0d393) Thanks [@etnlbck](https://github.com/etnlbck)! - Refactored OTPInput component to be simpler to read
+
+- Updated dependencies [[`526176c4`](https://github.com/thirdweb-dev/js/commit/526176c47108c91d83bcfc5f0ca556274e6462d6), [`d1f8e951`](https://github.com/thirdweb-dev/js/commit/d1f8e951623f1691fdfe3d1e8645970d0a52eb06), [`09120c92`](https://github.com/thirdweb-dev/js/commit/09120c923cca804b9d4f5f779e5a53c97ecc8223), [`08e9cd20`](https://github.com/thirdweb-dev/js/commit/08e9cd206bcc37cf1e84a878dc78bc4f38e5092c), [`6573556d`](https://github.com/thirdweb-dev/js/commit/6573556d0e03efa0d6a157fccb0a1c08dd22d7cd)]:
+  - @thirdweb-dev/sdk@4.0.2
+  - @thirdweb-dev/react-core@4.0.3
+  - @thirdweb-dev/wallets@2.0.3
+
+## 4.0.2
+
+### Patch Changes
+
+- [#1750](https://github.com/thirdweb-dev/js/pull/1750) [`bb1666b9`](https://github.com/thirdweb-dev/js/commit/bb1666b92b5e151d78ea7dae6831297fb947d954) Thanks [@MananTank](https://github.com/MananTank)! - ConnectWallet UI tweaks/fixes
+
+- Updated dependencies [[`1f3c64d3`](https://github.com/thirdweb-dev/js/commit/1f3c64d3618903b9008cc7b633ea890b508e7800), [`74941603`](https://github.com/thirdweb-dev/js/commit/74941603a96456da46a47147f67c98235ac55022), [`4b98e487`](https://github.com/thirdweb-dev/js/commit/4b98e487d4b47225d7095e5444dc5e7608db48a3), [`693f349d`](https://github.com/thirdweb-dev/js/commit/693f349db2478e1cd0fc82a9ef9882f46832b125), [`dcdb0dcb`](https://github.com/thirdweb-dev/js/commit/dcdb0dcb838168a22c8335738852316dfb6e6fc9), [`0f12d1f9`](https://github.com/thirdweb-dev/js/commit/0f12d1f90320923309f085c372d3a5ed01dd4606), [`b3b9edca`](https://github.com/thirdweb-dev/js/commit/b3b9edca29e7d4053b14270a61caa89c34fecf9e), [`63ad0050`](https://github.com/thirdweb-dev/js/commit/63ad0050f0a24ec15b90933b5664d697618cf2d0)]:
+  - @thirdweb-dev/sdk@4.0.1
+  - @thirdweb-dev/wallets@2.0.2
+  - @thirdweb-dev/react-core@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes

@@ -255,18 +255,19 @@ export const WalletSelector: React.FC<{
 
         // only social login - no eoa wallets
         if (eoaWallets.length === 0) {
-          bottomSection = tos ? (
-            <>
-              <Spacer y="md" />
-              <Line />
-              {continueAsGuest && (
-                <Container p="lg"> {continueAsGuest}</Container>
-              )}
-              {tos && <Container p="md"> {tos} </Container>}
-            </>
-          ) : (
-            <Spacer y="sm" />
-          );
+          bottomSection =
+            tos || continueAsGuest ? (
+              <>
+                <Spacer y="md" />
+                <Line />
+                {continueAsGuest && (
+                  <Container p="lg"> {continueAsGuest}</Container>
+                )}
+                {tos && <Container p="md"> {tos} </Container>}
+              </>
+            ) : (
+              <Spacer y="sm" />
+            );
         }
 
         // social login + eoa wallets
