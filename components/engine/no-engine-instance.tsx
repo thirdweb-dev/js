@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FormEventHandler, useRef } from "react";
-import { Card, Link, Text, Button } from "tw-components";
+import { Card, Link, Text, Button, FormHelperText } from "tw-components";
 
 function simplifyURL(url: string): string {
   const parsedURL = new URL(url);
@@ -51,6 +51,17 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
                 placeholder="Enter your Engine URL"
                 autoFocus
               />
+              <FormHelperText>
+                Only https:// URLs are accepted.{" "}
+                <Link
+                  href="https://portal.thirdweb.com/engine/get-started"
+                  color="primary.500"
+                  isExternal
+                >
+                  Learn more
+                </Link>
+                .
+              </FormHelperText>
             </FormControl>
           </ModalBody>
 
@@ -65,18 +76,6 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
         </ModalContent>
       </Modal>
       <Flex flexDir="column" gap={4}>
-        <Text>
-          Engine provides a server-side interface for contracts & wallets,
-          without the complexities of wallet and transaction management.{" "}
-          <Link
-            color="blue.500"
-            href="https://portal.thirdweb.com/engine"
-            isExternal
-          >
-            Learn more
-          </Link>
-          .
-        </Text>
         <Card py={12}>
           <Flex flexDir="column" gap={2}>
             <Text textAlign="center">

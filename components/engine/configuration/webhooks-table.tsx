@@ -71,7 +71,9 @@ const columns = [
   columnHelper.accessor("secret", {
     header: "Secret",
     cell: (cell) => {
-      return <AddressCopyButton address={cell.getValue() || ""} />;
+      return (
+        <AddressCopyButton address={cell.getValue() || ""} title="secret" />
+      );
     },
   }),
   columnHelper.accessor("url", {

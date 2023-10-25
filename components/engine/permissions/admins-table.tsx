@@ -1,5 +1,5 @@
 import {
-  PermissionsItem,
+  EngineAdmin,
   useEngineRevokePermissions,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -22,14 +22,14 @@ import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-interface PermissionsTableProps {
+interface AdminsTableProps {
   instance: string;
-  permissionsItems: PermissionsItem[];
+  admins: EngineAdmin[];
   isLoading: boolean;
   isFetched: boolean;
 }
 
-const columnHelper = createColumnHelper<PermissionsItem>();
+const columnHelper = createColumnHelper<EngineAdmin>();
 
 const columns = [
   columnHelper.accessor("walletAddress", {
@@ -49,9 +49,9 @@ const columns = [
   }),
 ];
 
-export const PermissionsTable: React.FC<PermissionsTableProps> = ({
+export const AdminsTable: React.FC<AdminsTableProps> = ({
   instance,
-  permissionsItems,
+  admins,
   isLoading,
   isFetched,
 }) => {
@@ -64,7 +64,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
     "Failed to revoked admin",
   );
 
-  const onDelete = (wallet: PermissionsItem) => {
+  const onDelete = (wallet: EngineAdmin) => {
     setAdminToRevoke(wallet.walletAddress);
     onOpen();
   };
@@ -133,8 +133,8 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
         </ModalContent>
       </Modal>
       <TWTable
-        title="wallets"
-        data={permissionsItems}
+        title="admins"
+        data={admins}
         columns={columns}
         isLoading={isLoading}
         isFetched={isFetched}

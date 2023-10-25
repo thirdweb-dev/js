@@ -1,6 +1,6 @@
 import { useEngineWebhooks } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
-import { Heading } from "tw-components";
+import { Heading, Link, Text } from "tw-components";
 import { WebhooksTable } from "./webhooks-table";
 import { AddWebhookButton } from "./add-webhook-button";
 
@@ -13,7 +13,22 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({ instance }) => {
 
   return (
     <Flex flexDir="column" gap={4}>
-      <Heading size="title.md">Webhooks</Heading>
+      <Flex flexDir="column" gap={2}>
+        <Heading size="title.md">Webhooks</Heading>
+        <Text>
+          Notify your backend of wallet and transaction events by setting up
+          webhooks.{" "}
+          <Link
+            href="https://portal.thirdweb.com/engine/webhooks"
+            color="primary.500"
+            isExternal
+          >
+            {" "}
+            Learn more
+          </Link>
+          .
+        </Text>
+      </Flex>
       <WebhooksTable
         instance={instance}
         webhooks={webhooks.data || []}

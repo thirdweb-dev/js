@@ -1,5 +1,5 @@
 import {
-  PermissionsItem,
+  EngineAdmin,
   useEngineGrantPermissions,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -30,7 +30,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({ instance }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: grantPermissions } = useEngineGrantPermissions(instance);
   const trackEvent = useTrack();
-  const form = useForm<PermissionsItem>({
+  const form = useForm<EngineAdmin>({
     defaultValues: {
       permissions: "ADMIN",
     },

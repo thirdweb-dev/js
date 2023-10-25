@@ -170,7 +170,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   <AddressCopyButton
                     size="xs"
                     address={nft.metadata.id}
-                    tokenId
+                    title="Token ID"
                   />
                 </GridItem>
 

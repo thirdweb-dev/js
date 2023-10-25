@@ -1,6 +1,6 @@
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { Heading, Card, Button } from "tw-components";
+import { Heading, Card, Button, Text, Link } from "tw-components";
 import { KmsGcpConfig } from "./kms-gcp-config";
 import { KmsAwsConfig } from "./kms-aws-config";
 import { LocalConfig } from "./local-config.tsx";
@@ -20,7 +20,21 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
 
   return (
     <Flex flexDir="column" gap={4}>
-      <Heading size="title.md">Wallet Configuration</Heading>
+      <Flex flexDir="column" gap={2}>
+        <Heading size="title.md">Backend Wallets</Heading>
+        <Text>
+          Select the type of backend wallets to use.{" "}
+          <Link
+            href="https://portal.thirdweb.com/engine/backend-wallets"
+            color="primary.500"
+            isExternal
+          >
+            {" "}
+            Learn more
+          </Link>
+          .
+        </Text>
+      </Flex>
       <Card>
         <Flex flexDir="column" gap={{ base: 0, md: 4 }} mb={6}>
           <Box

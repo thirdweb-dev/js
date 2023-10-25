@@ -1,6 +1,6 @@
 import { useEngineAccessTokens } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
-import { Heading } from "tw-components";
+import { Heading, Link, Text } from "tw-components";
 import { AddAccessTokenButton } from "./add-access-token-button";
 import { AccessTokensTable } from "./access-tokens-table";
 
@@ -15,7 +15,21 @@ export const PermissionsAccessTokens: React.FC<
 
   return (
     <Flex flexDir="column" gap={4}>
-      <Heading size="title.md">Access Tokens</Heading>
+      <Flex flexDir="column" gap={2}>
+        <Heading size="title.md">Access Tokens</Heading>
+        <Text>
+          Access tokens allow API access to your Engine instance.{" "}
+          <Link
+            href="https://portal.thirdweb.com/engine/authentication"
+            color="primary.500"
+            isExternal
+          >
+            {" "}
+            Learn more
+          </Link>
+          .
+        </Text>
+      </Flex>
       <AccessTokensTable
         instance={instance}
         accessTokens={accessTokens.data || []}

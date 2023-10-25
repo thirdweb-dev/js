@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import invariant from "tiny-invariant";
+import { useApiAuthToken } from "./useApi";
 
 // GET Requests
 export type BackendWallet = {
@@ -17,6 +18,8 @@ export type BackendWallet = {
 };
 
 export function useEngineBackendWallets(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.backendWallets(instance),
     async () => {
@@ -24,7 +27,7 @@ export function useEngineBackendWallets(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -32,7 +35,7 @@ export function useEngineBackendWallets(instance: string) {
 
       return (json.result as BackendWallet[]) || [];
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
@@ -88,6 +91,8 @@ export type TransactionResponse = {
 };
 
 export function useEngineTransactions(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.transactions(instance),
     async () => {
@@ -95,7 +100,7 @@ export function useEngineTransactions(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -103,7 +108,7 @@ export function useEngineTransactions(instance: string) {
 
       return (json.result as TransactionResponse) || {};
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
@@ -127,6 +132,8 @@ export type WalletConfig =
     };
 
 export function useEngineWalletConfig(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.walletConfig(instance),
     async () => {
@@ -134,7 +141,7 @@ export function useEngineWalletConfig(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -142,7 +149,7 @@ export function useEngineWalletConfig(instance: string) {
 
       return (json.result as WalletConfig) || {};
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
@@ -159,6 +166,8 @@ export function useEngineBackendWalletBalance(
   address: string,
   chainId: number,
 ) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.backendWalletBalance(address, chainId),
     async () => {
@@ -170,7 +179,7 @@ export function useEngineBackendWalletBalance(
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -179,16 +188,18 @@ export function useEngineBackendWalletBalance(
 
       return (json.result as CurrencyValue) || {};
     },
-    { enabled: !!instance && !!address && !!chainId },
+    { enabled: !!instance && !!address && !!chainId && !!token },
   );
 }
 
-export type PermissionsItem = {
+export type EngineAdmin = {
   walletAddress: string;
   permissions: "OWNER" | "ADMIN";
 };
 
 export function useEnginePermissions(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.permissions(instance),
     async () => {
@@ -196,15 +207,15 @@ export function useEnginePermissions(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
       const json = await res.json();
 
-      return (json.result as PermissionsItem[]) || [];
+      return (json.result as EngineAdmin[]) || [];
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
@@ -217,6 +228,8 @@ export type AccessToken = {
 };
 
 export function useEngineAccessTokens(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.accessTokens(instance),
     async () => {
@@ -224,7 +237,7 @@ export function useEngineAccessTokens(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -232,7 +245,7 @@ export function useEngineAccessTokens(instance: string) {
 
       return (json.result as AccessToken[]) || [];
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
@@ -247,6 +260,8 @@ export type Webhook = {
 };
 
 export function useEngineWebhooks(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.webhooks(instance),
     async () => {
@@ -254,7 +269,7 @@ export function useEngineWebhooks(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -262,11 +277,13 @@ export function useEngineWebhooks(instance: string) {
 
       return (json.result as Webhook[]) || [];
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
 export function useEngineWebhooksEventTypes(instance: string) {
+  const { token } = useApiAuthToken();
+
   return useQuery(
     engineKeys.webhookEventTypes(instance),
     async () => {
@@ -274,7 +291,7 @@ export function useEngineWebhooksEventTypes(instance: string) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -282,7 +299,7 @@ export function useEngineWebhooksEventTypes(instance: string) {
 
       return (json.result as string[]) || [];
     },
-    { enabled: !!instance },
+    { enabled: !!instance && !!token },
   );
 }
 
@@ -307,6 +324,7 @@ export type SetWalletConfigInput =
     };
 
 export function useEngineSetWalletConfig(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -317,7 +335,7 @@ export function useEngineSetWalletConfig(instance: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });
@@ -338,6 +356,7 @@ export function useEngineSetWalletConfig(instance: string) {
 }
 
 export function useEngineCreateBackendWallet(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -347,7 +366,7 @@ export function useEngineCreateBackendWallet(instance: string) {
       const res = await fetch(`${instance}backend-wallet/create`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const json = await res.json();
@@ -389,6 +408,7 @@ export type ImportBackendWalletInput =
     };
 
 export function useEngineImportBackendWallet(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -399,7 +419,7 @@ export function useEngineImportBackendWallet(instance: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });
@@ -422,17 +442,18 @@ export function useEngineImportBackendWallet(instance: string) {
 }
 
 export function useEngineGrantPermissions(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
-    async (input: PermissionsItem) => {
+    async (input: EngineAdmin) => {
       invariant(instance, "instance is required");
 
       const res = await fetch(`${instance}auth/permissions/grant`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });
@@ -457,6 +478,7 @@ type RevokePermissionsInput = {
 };
 
 export function useEngineRevokePermissions(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -467,7 +489,7 @@ export function useEngineRevokePermissions(instance: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });
@@ -492,6 +514,7 @@ export type CreateAccessTokenResponse = AccessToken & {
 };
 
 export function useEngineCreateAccessToken(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -501,7 +524,7 @@ export function useEngineCreateAccessToken(instance: string) {
       const res = await fetch(`${instance}auth/access-tokens/create`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       const json = await res.json();
@@ -525,6 +548,7 @@ type RevokeAccessTokenInput = {
 };
 
 export function useEngineRevokeAccessToken(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -535,7 +559,7 @@ export function useEngineRevokeAccessToken(instance: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });
@@ -562,6 +586,7 @@ export type CreateWebhookInput = {
 };
 
 export function useEngineCreateWebhook(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -572,7 +597,7 @@ export function useEngineCreateWebhook(instance: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });
@@ -597,6 +622,7 @@ type RevokeWebhookInput = {
 };
 
 export function useEngineRevokeWebhook(instance: string) {
+  const { token } = useApiAuthToken();
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -607,7 +633,7 @@ export function useEngineRevokeWebhook(instance: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("engine-auth")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(input),
       });

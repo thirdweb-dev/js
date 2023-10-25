@@ -79,11 +79,14 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           </Flex>
           <Flex direction="column" gap={2}>
             <Heading size="label.md">From</Heading>
-            <AddressCopyButton address={currentError?.info?.from} />
+            <AddressCopyButton
+              title="error"
+              address={currentError?.info?.from}
+            />
           </Flex>
           <Flex direction="column" gap={2}>
             <Heading size="label.md">To</Heading>
-            <AddressCopyButton address={currentError?.info?.to} />
+            <AddressCopyButton title="error" address={currentError?.info?.to} />
           </Flex>
           <Flex direction="column" gap={2}>
             <Heading size="label.md">Chain / Chain ID</Heading>

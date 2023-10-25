@@ -69,8 +69,8 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   const { mutate: revokePermissions } = useEngineRevokeAccessToken(instance);
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
-    "Successfully revoked admin",
-    "Failed to revoked admin",
+    "Successfully revoked access token",
+    "Failed to revoked access token",
   );
 
   const onDelete = (accessToken: AccessToken) => {

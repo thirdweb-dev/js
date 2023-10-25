@@ -2,6 +2,7 @@ import { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { Badge, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { toDateTimeLocal } from "utils/date-utils";
 
 interface TransactionsTableProps {
@@ -16,18 +17,19 @@ const columns = [
   columnHelper.accessor("chainId", {
     header: "Chain ID",
     cell: (cell) => {
-      return cell.getValue();
+      return <Text>{cell.getValue()}</Text>;
     },
   }),
-  columnHelper.accessor("minedAt", {
-    header: "Mined At",
+  columnHelper.accessor("extension", {
+    header: "Extension",
     cell: (cell) => {
-      const value = cell.getValue();
-
-      if (!value) {
-        return;
-      }
-      return <Text>{toDateTimeLocal(value)}</Text>;
+      return <Text textTransform="uppercase">{cell.getValue()}</Text>;
+    },
+  }),
+  columnHelper.accessor("functionName", {
+    header: "Function Name",
+    cell: (cell) => {
+      return <Text>{cell.getValue()}</Text>;
     },
   }),
   columnHelper.accessor("status", {
@@ -63,22 +65,26 @@ const columns = [
       );
     },
   }),
-  columnHelper.accessor("transactionType", {
-    header: "Type",
-    cell: (cell) => {
-      return cell.getValue();
-    },
-  }),
-  columnHelper.accessor("queueId", {
-    header: "Queue ID",
-    cell: (cell) => {
-      return cell.getValue();
-    },
-  }),
   columnHelper.accessor("transactionHash", {
     header: "Transaction Hash",
     cell: (cell) => {
-      return cell.getValue();
+      return (
+        <AddressCopyButton
+          address={cell.getValue() || ""}
+          title="transaction hash"
+        />
+      );
+    },
+  }),
+  columnHelper.accessor("minedAt", {
+    header: "Mined At",
+    cell: (cell) => {
+      const value = cell.getValue();
+
+      if (!value) {
+        return;
+      }
+      return <Text>{toDateTimeLocal(value)}</Text>;
     },
   }),
 ];

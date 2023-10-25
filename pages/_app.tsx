@@ -14,6 +14,7 @@ import posthog from "posthog-js";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
+/* import "../css/swagger-ui.css"; */
 
 // eslint-disable-next-line new-cap
 const inter = Inter({

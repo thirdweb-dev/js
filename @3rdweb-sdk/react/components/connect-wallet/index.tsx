@@ -27,15 +27,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({ auth }) => {
 
   return (
     <ConnectWallet
-      auth={{
-        onLogin(token) {
-          localStorage.setItem("engine-auth", token);
-        },
-        onLogout() {
-          localStorage.removeItem("engine-auth");
-        },
-        ...auth,
-      }}
+      auth={auth}
       theme={colorMode}
       welcomeScreen={() => {
         return <ConnectWalletWelcomeScreen theme={colorMode} />;

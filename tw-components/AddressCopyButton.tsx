@@ -15,7 +15,7 @@ interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
   address?: string;
   noIcon?: boolean;
   size?: PossibleButtonSize;
-  tokenId?: boolean;
+  title?: string;
   shortenAddress?: boolean;
 }
 
@@ -41,8 +41,8 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   size = "sm",
   borderRadius = "md",
   variant = "outline",
-  tokenId,
   shortenAddress = true,
+  title = "address",
   ...restButtonProps
 }) => {
   const { onCopy, setValue } = useClipboard(address || "");
@@ -63,9 +63,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
       boxShadow="none"
       label={
         <Card py={2} px={4} bgColor="backgroundHighlight">
-          <Text size="label.sm">
-            Copy {tokenId ? "Token ID" : "address"} to clipboard
-          </Text>
+          <Text size="label.sm">Copy {title} to clipboard</Text>
         </Card>
       }
     >
@@ -82,12 +80,12 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
           toast({
             variant: "solid",
             position: "bottom",
-            title: `${tokenId ? "Token ID" : "Address"} copied.`,
+            title: `${title.charAt(0).toUpperCase() + title.slice(1)} copied.`,
             status: "success",
             duration: 5000,
             isClosable: true,
           });
-          if (tokenId) {
+          if (title === "Token ID") {
             trackEvent({
               category: "tokenid_button",
               action: "copy",
