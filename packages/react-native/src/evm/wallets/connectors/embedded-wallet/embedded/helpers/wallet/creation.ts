@@ -1,10 +1,7 @@
 import { SetUpWalletRpcReturnType } from "@paperxyz/embedded-wallet-service-sdk";
 import { Wallet, utils } from "ethers";
 import * as secrets from "secrets.js-34r7h";
-import {
-  initWalletWithoutRecoveryCode,
-  storeUserShares,
-} from "../api/fetchers";
+import { storeUserShares } from "../api/fetchers";
 
 import { logoutUser } from "../auth/logout";
 import {
@@ -21,11 +18,6 @@ export async function setUpNewUserWallet(
   clientId: string,
 ) {
   try {
-    // We are using a recovery code override, we mark the wallet as initialized so we don't generate another one the next time
-    const { success } = await initWalletWithoutRecoveryCode({ clientId });
-    if (!success) {
-      throw new Error("Error initializing wallet without recovery code");
-    }
     return await createEmbeddedWallet({
       clientId,
       recoveryCode: recoveryCode,
@@ -52,6 +44,7 @@ async function createEmbeddedWallet({
   } & SetUpWalletRpcReturnType
 > {
   const walletDetails = createWalletShares();
+
   const maybeDeviceShare = await storeShares({
     clientId,
     walletAddress: walletDetails.publicAddress,
