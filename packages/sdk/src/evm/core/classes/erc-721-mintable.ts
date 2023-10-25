@@ -13,8 +13,8 @@ import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { uploadOrExtractURI } from "../../common/nft";
 import type { IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC721";
-import type { Erc721 } from "./erc-721";
 import { Erc721BatchMintable } from "./erc-721-batch-mintable";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * Mint ERC721 NFTs
@@ -31,16 +31,12 @@ export class Erc721Mintable implements DetectableFeature {
   featureName = FEATURE_NFT_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721>;
   private storage: ThirdwebStorage;
-  private erc721: Erc721;
-
   public batch: Erc721BatchMintable | undefined;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<IMintableERC721>,
     storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.batch = this.detectErc721BatchMintable();
@@ -94,7 +90,7 @@ export class Erc721Mintable implements DetectableFeature {
           return {
             id,
             receipt,
-            data: () => this.erc721.get(id),
+            data: () => getErc721Token(id, this.contractWrapper, this.storage),
           };
         },
       });
@@ -118,11 +114,7 @@ export class Erc721Mintable implements DetectableFeature {
         "ERC721BatchMintable",
       )
     ) {
-      return new Erc721BatchMintable(
-        this.erc721,
-        this.contractWrapper,
-        this.storage,
-      );
+      return new Erc721BatchMintable(this.contractWrapper, this.storage);
     }
     return undefined;
   }

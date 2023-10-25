@@ -78,6 +78,7 @@ import { Erc721Supply } from "./erc-721-supply";
 import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 import { Transaction } from "./transactions";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * Standard ERC721 NFT functions
@@ -168,15 +169,11 @@ export class Erc721<
    * @twfeature ERC721
    */
   public async get(tokenId: BigNumberish): Promise<NFT> {
-    const [owner, metadata] = await Promise.all([
-      this.ownerOf(tokenId).catch(() => constants.AddressZero),
-      this.getTokenMetadata(tokenId).catch(() => ({
-        id: tokenId.toString(),
-        uri: "",
-        ...FALLBACK_METADATA,
-      })),
-    ]);
-    return { owner, metadata, type: "ERC721", supply: "1" };
+    return await getErc721Token(
+      tokenId.toString(),
+      this.contractWrapper,
+      this.storage,
+    );
   }
 
   /**
@@ -1113,7 +1110,7 @@ export class Erc721<
       ) ||
       hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)
     ) {
-      return new Erc721Supply(this, this.contractWrapper);
+      return new Erc721Supply(this.contractWrapper, this.storage);
     }
     return undefined;
   }
@@ -1125,7 +1122,7 @@ export class Erc721<
         "ERC721Mintable",
       )
     ) {
-      return new Erc721Mintable(this, this.contractWrapper, this.storage);
+      return new Erc721Mintable(this.contractWrapper, this.storage);
     }
     return undefined;
   }
@@ -1149,7 +1146,7 @@ export class Erc721<
         "ERC721LazyMintable",
       )
     ) {
-      return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
+      return new Erc721LazyMintable(this.contractWrapper, this.storage);
     }
     return undefined;
   }
@@ -1161,7 +1158,7 @@ export class Erc721<
         "ERC721TieredDrop",
       )
     ) {
-      return new Erc721TieredDrop(this, this.contractWrapper, this.storage);
+      return new Erc721TieredDrop(this.contractWrapper, this.storage);
     }
     return undefined;
   }
@@ -1209,7 +1206,6 @@ export class Erc721<
       )
     ) {
       return new Erc721ClaimableWithConditions(
-        this,
         this.contractWrapper,
         this.storage,
       );
@@ -1224,7 +1220,7 @@ export class Erc721<
         "ERC721ClaimCustom",
       )
     ) {
-      return new Erc721Claimable(this, this.contractWrapper);
+      return new Erc721Claimable(this.contractWrapper, this.storage);
     }
     return undefined;
   }
@@ -1236,7 +1232,7 @@ export class Erc721<
         "ERC721ClaimZora",
       )
     ) {
-      return new Erc721ClaimableZora(this, this.contractWrapper);
+      return new Erc721ClaimableZora(this.contractWrapper, this.storage);
     }
     return undefined;
   }

@@ -17,7 +17,10 @@ import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import type { BaseDelayedRevealERC721 } from "../../types/eips";
 import { DelayedReveal } from "./delayed-reveal";
 import type { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
-import type { Erc721 } from "./erc-721";
+import {
+  nextTokenIdToMint,
+  getTokenMetadata,
+} from "../../contracts/erc721Methods";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -66,17 +69,13 @@ export class Erc721LazyMintable implements DetectableFeature {
   public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 
   private contractWrapper: ContractWrapper<BaseDropERC721>;
-  private erc721: Erc721;
   private storage: ThirdwebStorage;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<BaseDropERC721>,
     storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
-
     this.storage = storage;
     this.revealer = this.detectErc721Revealable();
   }
@@ -114,7 +113,7 @@ export class Erc721LazyMintable implements DetectableFeature {
         onProgress: (event: UploadProgressEvent) => void;
       },
     ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
-      const startFileNumber = await this.erc721.nextTokenIdToMint();
+      const startFileNumber = await nextTokenIdToMint(this.contractWrapper);
       const batch = await uploadOrExtractURIs(
         metadatas,
         this.storage,
@@ -144,7 +143,8 @@ export class Erc721LazyMintable implements DetectableFeature {
             results.push({
               id,
               receipt,
-              data: () => this.erc721.getTokenMetadata(id),
+              data: () =>
+                getTokenMetadata(id, this.contractWrapper, this.storage),
             });
           }
           return results;
@@ -169,7 +169,7 @@ export class Erc721LazyMintable implements DetectableFeature {
         this.contractWrapper,
         this.storage,
         FEATURE_NFT_REVEALABLE.name,
-        () => this.erc721.nextTokenIdToMint(),
+        () => nextTokenIdToMint(this.contractWrapper),
       );
     }
     return undefined;

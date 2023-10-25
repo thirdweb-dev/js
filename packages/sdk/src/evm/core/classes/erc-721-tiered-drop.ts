@@ -26,22 +26,23 @@ import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { TransactionResultWithId } from "../types";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { Erc721 } from "./erc-721";
 import { Transaction } from "./transactions";
+import {
+  getErc721Token,
+  nextTokenIdToMint,
+  getTokenMetadata,
+} from "../../contracts/erc721Methods";
 
 export class Erc721TieredDrop implements DetectableFeature {
   featureName = FEATURE_NFT_TIERED_DROP.name;
 
   private contractWrapper: ContractWrapper<TieredDrop>;
-  private erc721: Erc721;
   private storage: ThirdwebStorage;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<TieredDrop>,
     storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -102,7 +103,9 @@ export class Erc721TieredDrop implements DetectableFeature {
             i < range.endIdNonInclusive.toNumber();
             i++
           ) {
-            nftsInRange.push(this.erc721.get(i));
+            nftsInRange.push(
+              getErc721Token(i, this.contractWrapper, this.storage),
+            );
           }
           return nftsInRange;
         })
@@ -121,7 +124,7 @@ export class Erc721TieredDrop implements DetectableFeature {
       },
     ): Promise<Transaction<TransactionResultWithId<NFTMetadata>[]>> => {
       // TODO: Change this to on extension
-      const startFileNumber = await this.erc721.nextTokenIdToMint();
+      const startFileNumber = await nextTokenIdToMint(this.contractWrapper);
       const batch = await uploadOrExtractURIs(
         metadatas,
         this.storage,
@@ -152,7 +155,8 @@ export class Erc721TieredDrop implements DetectableFeature {
             results.push({
               id,
               receipt,
-              data: () => this.erc721.getTokenMetadata(id),
+              data: () =>
+                getTokenMetadata(id, this.contractWrapper, this.storage),
             });
           }
           return results;
@@ -184,7 +188,7 @@ export class Erc721TieredDrop implements DetectableFeature {
         },
       );
       const placeholderUri = getBaseUriFromBatch(placeholderUris);
-      const startFileNumber = await this.erc721.nextTokenIdToMint();
+      const startFileNumber = await nextTokenIdToMint(this.contractWrapper);
       const uris = await this.storage.uploadBatch(
         metadatas.map((m) => CommonNFTInput.parse(m)),
         {
@@ -238,7 +242,8 @@ export class Erc721TieredDrop implements DetectableFeature {
             results.push({
               id,
               receipt,
-              data: () => this.erc721.getTokenMetadata(id),
+              data: () =>
+                getTokenMetadata(id, this.contractWrapper, this.storage),
             });
           }
 
@@ -368,7 +373,7 @@ export class Erc721TieredDrop implements DetectableFeature {
       results.push({
         id,
         receipt,
-        data: () => this.erc721.get(id),
+        data: () => getErc721Token(id, this.contractWrapper, this.storage),
       });
     }
 

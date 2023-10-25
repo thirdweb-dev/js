@@ -14,9 +14,15 @@ import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 import { Erc721AQueryable } from "./erc-721a-queryable";
+import { type ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  getErc721Token,
+  nextTokenIdToMint,
+  ownerOfErc721,
+  totalClaimedSupply,
+} from "../../contracts/erc721Methods";
 
 /**
  * List ERC721 NFTs
@@ -32,16 +38,15 @@ import { Erc721AQueryable } from "./erc-721a-queryable";
 export class Erc721Supply implements DetectableFeature {
   featureName = FEATURE_NFT_SUPPLY.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>;
-  private erc721: Erc721;
-
+  private storage: ThirdwebStorage;
   public owned: Erc721Enumerable | Erc721AQueryable | undefined;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<BaseERC721 & IERC721Supply>,
+    storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
+    this.storage = storage;
     this.owned = this.detectErc721Owned();
   }
 
@@ -71,14 +76,18 @@ export class Erc721Supply implements DetectableFeature {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
 
-    const maxSupply = await this.erc721.nextTokenIdToMint();
+    const maxSupply = await nextTokenIdToMint(this.contractWrapper);
     const maxId = Math.min(
       maxSupply.add(startTokenId).toNumber(),
       start + count,
     );
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
-        this.erc721.get((start + i).toString()),
+        getErc721Token(
+          (start + i).toString(),
+          this.contractWrapper,
+          this.storage,
+        ),
       ),
     );
   }
@@ -94,7 +103,7 @@ export class Erc721Supply implements DetectableFeature {
       startTokenId = await this.contractWrapper.read("startTokenId", []);
     }
     try {
-      totalCount = await this.erc721.totalClaimedSupply();
+      totalCount = await totalClaimedSupply(this.contractWrapper);
     } catch (e) {
       totalCount = await this.totalCount();
     }
@@ -105,7 +114,7 @@ export class Erc721Supply implements DetectableFeature {
     // TODO can't call toNumber() here, this can be a very large number
     const arr = [...new Array(totalCount.toNumber()).keys()];
     const owners = await Promise.all(
-      arr.map((i) => this.erc721.ownerOf(i).catch(() => constants.AddressZero)),
+      arr.map((i) => ownerOfErc721(i, this.contractWrapper)),
     );
     return arr
       .map((i) => ({
@@ -123,7 +132,7 @@ export class Erc721Supply implements DetectableFeature {
    * @public
    */
   public async totalCount(): Promise<BigNumber> {
-    return await this.erc721.nextTokenIdToMint();
+    return await nextTokenIdToMint(this.contractWrapper);
   }
 
   /**
@@ -142,14 +151,14 @@ export class Erc721Supply implements DetectableFeature {
         "ERC721Enumerable",
       )
     ) {
-      return new Erc721Enumerable(this.erc721, this.contractWrapper);
+      return new Erc721Enumerable(this.contractWrapper, this.storage);
     } else if (
       detectContractFeature<BaseERC721 & IERC721AQueryableUpgradeable>(
         this.contractWrapper,
         "ERC721AQueryable",
       )
     ) {
-      return new Erc721AQueryable(this.erc721, this.contractWrapper);
+      return new Erc721AQueryable(this.contractWrapper, this.storage);
     }
     return undefined;
   }

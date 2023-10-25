@@ -14,7 +14,7 @@ import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ContractMetadata } from "./contract-metadata";
 import { DropClaimConditions } from "./drop-claim-conditions";
-import type { Erc721 } from "./erc-721";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * Configure and claim ERC721 NFTs
@@ -54,15 +54,12 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    */
   public conditions: DropClaimConditions<BaseClaimConditionERC721>;
   private contractWrapper: ContractWrapper<BaseClaimConditionERC721>;
-  private erc721: Erc721;
   private storage: ThirdwebStorage;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<BaseClaimConditionERC721>,
     storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
@@ -123,7 +120,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
           results.push({
             id,
             receipt,
-            data: () => this.erc721.get(id),
+            data: () => getErc721Token(id, this.contractWrapper, this.storage),
           });
         }
         return results;

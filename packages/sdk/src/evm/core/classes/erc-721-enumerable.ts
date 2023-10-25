@@ -7,11 +7,12 @@ import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { Erc721 } from "./erc-721";
 import {
   DEFAULT_QUERY_ALL_COUNT,
   QueryAllParams,
 } from "../../../core/schema/QueryParams";
+import { type ThirdwebStorage } from "@thirdweb-dev/storage";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * List owned ERC721 NFTs
@@ -28,14 +29,13 @@ import {
 export class Erc721Enumerable implements DetectableFeature {
   featureName = FEATURE_NFT_ENUMERABLE.name;
   private contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>;
-  private erc721: Erc721;
-
+  private storage: ThirdwebStorage;
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<BaseERC721 & IERC721Enumerable>,
+    storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
+    this.storage = storage;
   }
 
   /**
@@ -64,7 +64,9 @@ export class Erc721Enumerable implements DetectableFeature {
       tokenIds = tokenIds.slice(start, start + count);
     }
     return await Promise.all(
-      tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
+      tokenIds.map((tokenId) =>
+        getErc721Token(tokenId.toString(), this.contractWrapper, this.storage),
+      ),
     );
   }
 

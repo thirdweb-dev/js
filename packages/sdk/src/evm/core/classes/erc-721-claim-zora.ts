@@ -13,8 +13,9 @@ import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import type { Erc721 } from "./erc-721";
 import { Transaction } from "./transactions";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * Claim ERC721 NFTs from a Zora Drop
@@ -28,14 +29,14 @@ import { Transaction } from "./transactions";
 export class Erc721ClaimableZora implements DetectableFeature {
   featureName = FEATURE_NFT_CLAIM_ZORA.name;
 
-  private erc721: Erc721;
   private contractWrapper: ContractWrapper<Zora_IERC721Drop>;
+  protected storage: ThirdwebStorage;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<Zora_IERC721Drop>,
+    storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
+    this.storage = storage;
     this.contractWrapper = contractWrapper;
   }
 
@@ -107,7 +108,7 @@ export class Erc721ClaimableZora implements DetectableFeature {
           results.push({
             id,
             receipt,
-            data: () => this.erc721.get(id),
+            data: () => getErc721Token(id, this.contractWrapper, this.storage),
           });
         }
         return results;

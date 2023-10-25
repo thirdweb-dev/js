@@ -11,7 +11,8 @@ import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BigNumberish, CallOverrides } from "ethers";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
 import { calculateClaimCost } from "../../common/claim-conditions/calculateClaimCost";
-import type { Erc721 } from "./erc-721";
+import { type ThirdwebStorage } from "@thirdweb-dev/storage";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * Configure and claim ERC721 NFTs
@@ -26,15 +27,15 @@ import type { Erc721 } from "./erc-721";
 export class Erc721Claimable implements DetectableFeature {
   featureName = FEATURE_NFT_CLAIM_CUSTOM.name;
 
-  private erc721: Erc721;
   private contractWrapper: ContractWrapper<IClaimableERC721>;
+  protected storage: ThirdwebStorage;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<IClaimableERC721>,
+    storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
+    this.storage = storage;
   }
 
   /**
@@ -115,7 +116,7 @@ export class Erc721Claimable implements DetectableFeature {
           results.push({
             id,
             receipt,
-            data: () => this.erc721.get(id),
+            data: () => getErc721Token(id, this.contractWrapper, this.storage),
           });
         }
         return results;

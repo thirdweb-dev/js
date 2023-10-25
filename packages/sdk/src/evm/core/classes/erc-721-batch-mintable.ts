@@ -11,8 +11,8 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { Erc721 } from "./erc-721";
 import { Transaction } from "./transactions";
+import { getErc721Token } from "../../contracts/erc721Methods";
 
 /**
  * Mint Many ERC721 NFTs at once
@@ -29,14 +29,11 @@ export class Erc721BatchMintable implements DetectableFeature {
   featureName = FEATURE_NFT_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>;
   private storage: ThirdwebStorage;
-  private erc721: Erc721;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>,
     storage: ThirdwebStorage,
   ) {
-    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -99,7 +96,8 @@ export class Erc721BatchMintable implements DetectableFeature {
             return {
               id,
               receipt,
-              data: () => this.erc721.get(id),
+              data: () =>
+                getErc721Token(id, this.contractWrapper, this.storage),
             };
           });
         },
