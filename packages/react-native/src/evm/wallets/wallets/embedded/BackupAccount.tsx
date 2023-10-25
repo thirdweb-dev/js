@@ -34,8 +34,6 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
   const onNextPress = async () => {};
 
   const onCodeCopyPress = async (code: string) => {
-    console.log("code", code);
-
     await Clipboard.setStringAsync(code);
     setCodeCopied(true);
   };
