@@ -78,15 +78,17 @@ export class BaseLogin extends AbstractLogin<
       throw new Error("Something went wrong opening pop-up");
     }
     // logout the user
+    console.time("prelogin");
+    await this.preLogin();
+    console.timeEnd("prelogin");
     // fetch the url to open the login window from iframe
-    const [{ loginLink }] = await Promise.all([
-      this.getGoogleLoginUrl(),
-      this.preLogin(),
-    ]);
-
+    console.time("googleUrl");
+    const { loginLink } = await this.getGoogleLoginUrl();
+    console.timeEnd("googleUrl");
     win.location.href = loginLink;
 
     // listen to result from the login window
+    console.time("bigLoad");
     const result = await new Promise<AuthAndWalletRpcReturnType>(
       (resolve, reject) => {
         // detect when the user closes the login window
@@ -156,11 +158,16 @@ export class BaseLogin extends AbstractLogin<
         window.addEventListener("message", messageListener);
       },
     );
+    console.timeEnd("bigLoad");
 
-    return this.postLogin({
+    console.time("postLogin");
+    const e = this.postLogin({
       storedToken: { ...result.storedToken, shouldStoreCookieString: true },
       walletDetails: { ...result.walletDetails, isIframeStorageEnabled: false },
     });
+    console.timeEnd("postLogin");
+
+    return e;
   }
 
   override async loginWithCustomJwt({

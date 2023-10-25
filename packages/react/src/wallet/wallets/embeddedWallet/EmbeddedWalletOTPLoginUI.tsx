@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
-import { EmbeddedWallet, AuthResult } from "@thirdweb-dev/wallets";
+import {
+  EmbeddedWallet,
+  AuthResult,
+  SendEmailOtpReturnType,
+} from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
@@ -17,7 +21,7 @@ import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
 type VerificationStatus = "verifying" | "invalid" | "valid" | "idle";
-type EmailStatus = "sending" | AuthResult | "error";
+type EmailStatus = "sending" | SendEmailOtpReturnType | "error";
 type ScreenToShow =
   | "base"
   | "create-password"
@@ -49,7 +53,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
     try {
       const _wallet = createWalletInstance(props.walletConfig);
       setWallet(_wallet);
-      const status = await _wallet.authenticate({ strategy: "email", email });
+      const status = await _wallet.sendEmailOTP({ email });
       setEmailStatus(status);
     } catch (e) {
       console.error(e);
@@ -78,12 +82,12 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       setConnectionStatus("connecting");
 
       // USER_MANAGED
-      if (emailStatus.needsRecoveryCode) {
+      if (emailStatus.recoveryShareManagement === "USER_MANAGED") {
         if (emailStatus.isNewUser) {
           try {
             // verifies otp for UI feedback
             // TODO tweak the UI flow to avoid verifying otp twice
-            await emailStatus.verifyOTP?.(otp);
+            await wallet.authenticate({ strategy: "email_otp", email, otp });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("create-password");
@@ -94,7 +98,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
         } else {
           try {
             // verifies otp for UI feedback
-            await emailStatus.verifyOTP?.(otp);
+            await wallet.authenticate({ strategy: "email_otp", email, otp });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("enter-password-or-recovery-code");
@@ -107,7 +111,11 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
       // AWS_MANAGED
       else {
-        const authResult = await emailStatus.verifyOTP?.(otp);
+        const authResult = await wallet.authenticate({
+          strategy: "email_otp",
+          email,
+          otp,
+        });
         if (!authResult) {
           throw new Error("Failed to verify OTP");
         }
@@ -144,7 +152,12 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
           if (!wallet || typeof emailStatus !== "object") {
             return;
           }
-          const authResult = await emailStatus.verifyOTP?.(otpInput, password);
+          const authResult = await wallet.authenticate({
+            strategy: "email_otp",
+            email,
+            otp: otpInput,
+            recoveryCode: password,
+          });
           if (!authResult) {
             throw new Error("Failed to verify recovery code");
           }
@@ -187,10 +200,12 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
           if (!wallet || typeof emailStatus !== "object") {
             return;
           }
-          const authResult = await emailStatus.verifyOTP?.(
-            otpInput,
-            passwordOrRecoveryCode,
-          );
+          const authResult = await wallet.authenticate({
+            strategy: "email_otp",
+            email,
+            otp: otpInput,
+            recoveryCode: passwordOrRecoveryCode,
+          });
           if (!authResult) {
             throw new Error("Failed to verify recovery code");
           }

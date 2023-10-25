@@ -2,6 +2,7 @@ import type { Chain } from "@thirdweb-dev/chains";
 import {
   EmbeddedWalletConstructorType,
   InitializedUser,
+  SendEmailOtpReturnType,
 } from "./implementations";
 
 export type EmbeddedWalletAdditionalOptions = {
@@ -22,9 +23,11 @@ export type EmbeddedWalletConnectionArgs = {
   authResult: AuthResult;
 };
 
-type EmailAuthParams = {
-  strategy: "email";
+type EmailOtpAuthParams = {
+  strategy: "email_otp";
   email: string;
+  otp: string;
+  recoveryCode?: string;
 };
 
 type GoogleAuthParams = {
@@ -51,7 +54,7 @@ type IframeAuthParams = {
 
 // this is the input to 'authenticate'
 export type AuthParams =
-  | EmailAuthParams
+  | EmailOtpAuthParams
   | GoogleAuthParams
   | JwtAuthParams
   | IframeOtpAuthParams

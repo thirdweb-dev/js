@@ -45,15 +45,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
-  async sendEmailOtp({
-    email,
-  }: {
-    email: string;
-  }): Promise<SendEmailOtpReturnType> {
-    const ewSDK = this.getEmbeddedWalletSDK();
-    return ewSDK.auth.sendEmailLoginOtp({ email });
-  }
-
   async connect(args?: EmbeddedWalletConnectionArgs): Promise<string> {
     // backwards compatibility - options should really be required here
     if (!args) {
@@ -221,31 +212,25 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.user.authDetails;
   }
 
+  async sendEmailOtp({
+    email,
+  }: {
+    email: string;
+  }): Promise<SendEmailOtpReturnType> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    return ewSDK.auth.sendEmailLoginOtp({ email });
+  }
+
   async authenticate(params: AuthParams): Promise<AuthResult> {
     const ewSDK = this.getEmbeddedWalletSDK();
     const strategy = params.strategy;
     switch (strategy) {
-      case "email": {
-        const result = await ewSDK.auth.sendEmailLoginOtp({
+      case "email_otp": {
+        return await ewSDK.auth.verifyEmailLoginOtp({
           email: params.email,
+          otp: params.otp,
+          recoveryCode: params.recoveryCode,
         });
-        return {
-          user: undefined, // not logged in yet, needs OTP
-          isNewUser: result.isNewUser,
-          needsRecoveryCode:
-            result.recoveryShareManagement === "USER_MANAGED" &&
-            (result.isNewDevice || result.isNewUser),
-          verifyOTP: async (otp: string, recoveryCode?: string) => {
-            const authResult = await ewSDK.auth.verifyEmailLoginOtp({
-              email: params.email,
-              otp,
-              recoveryCode,
-            });
-            return {
-              user: authResult.user,
-            };
-          },
-        };
       }
       case "google": {
         return ewSDK.auth.loginWithGoogle({

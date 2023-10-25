@@ -23,6 +23,7 @@ export async function fetchSnapshotEntryForAddress(
   const snapshotUri = merkleMetadata[merkleRoot];
   if (snapshotUri) {
     const raw = await storage.downloadJSON(snapshotUri);
+    console.log("raw", raw);
     if (raw.isShardedMerkleTree && raw.merkleRoot === merkleRoot) {
       const merkleTree = await ShardedMerkleTree.fromShardedMerkleTreeInfo(
         raw,
