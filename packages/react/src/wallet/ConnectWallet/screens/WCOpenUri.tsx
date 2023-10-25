@@ -23,6 +23,16 @@ export const WCOpenURI: React.FC<{
   onRetry: () => void;
   hideBackButton: boolean;
   onGetStarted: () => void;
+  locale: {
+    getStartedLink: string;
+    tryAgain: string;
+    instruction: {
+      desktop: string;
+      mobile: string;
+    };
+    failed: string;
+    inProgress: string;
+  };
 }> = ({
   onBack,
   onConnected,
@@ -32,6 +42,7 @@ export const WCOpenURI: React.FC<{
   errorConnecting,
   hideBackButton,
   onGetStarted,
+  locale,
 }) => {
   const createInstance = useCreateWalletInstance();
   const { setConnectedWallet, chainToConnect, setConnectionStatus } =
@@ -77,6 +88,7 @@ export const WCOpenURI: React.FC<{
 
   return (
     <ConnectingScreen
+      locale={locale}
       hideBackButton={hideBackButton}
       onBack={onBack}
       walletName={walletConfig.meta.name}
@@ -84,7 +96,6 @@ export const WCOpenURI: React.FC<{
       errorConnecting={errorConnecting}
       onRetry={onRetry}
       onGetStarted={onGetStarted}
-      // supportLink={supportLink}
     />
   );
 };

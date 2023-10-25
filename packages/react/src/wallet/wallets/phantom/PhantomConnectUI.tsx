@@ -4,11 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { PhantomWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   const [screen, setScreen] = useState<"connecting" | "get-started">(
     "connecting",
   );
+  const locale = useTWLocale().wallets.phantomWallet;
   const { walletConfig, connected } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
   const connect = useConnect();
@@ -55,6 +57,13 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connecting.instruction,
+          tryAgain: locale.connecting.tryAgain,
+          inProgress: locale.connecting.inProgress,
+          failed: locale.connecting.failed,
+        }}
         hideBackButton={hideBackButton}
         onBack={props.goBack}
         walletName={walletConfig.meta.name}
@@ -73,6 +82,10 @@ export const PhantomConnectUI = (props: ConnectUIProps<PhantomWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          getStarted: locale.getStarted.subtitle,
+          scanToDownload: locale.getStarted.scanToDownload,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

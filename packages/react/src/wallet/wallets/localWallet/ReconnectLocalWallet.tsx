@@ -15,6 +15,7 @@ import { ExportLocalWallet } from "./ExportLocalWallet";
 import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import type { LocalWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 type ReconnectLocalWalletProps = {
   onConnect: () => void;
@@ -32,6 +33,7 @@ type ReconnectLocalWalletProps = {
 export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   props,
 ) => {
+  const locale = useTWLocale().wallets.localWallet.connectToSavedWallet;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -134,12 +136,12 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Container p="lg" expand>
         <Text multiline size="lg" color="primaryText">
-          Connect to saved wallet
+          {locale.title}
         </Text>
 
         <Spacer y="xl" />
 
-        <Label>Saved Wallet</Label>
+        <Label>{locale.savedWallet}</Label>
         <Spacer y="sm" />
 
         <Text>
@@ -198,7 +200,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
               gap: spacing.sm,
             }}
           >
-            Continue
+            {locale.continue}
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
@@ -217,7 +219,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
             setShowBackupConfirmation(true);
           }}
         >
-          Create a new wallet
+          {locale.createNewWallet}
         </Button>
       </Container>
     </Container>

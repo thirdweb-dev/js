@@ -16,12 +16,14 @@ import { PaperLoginType } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const PaperFormUI = (props: {
   onSelect: (loginType: PaperLoginType) => void;
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
 }) => {
+  const locale = useTWLocale().wallets.paperWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
@@ -64,7 +66,7 @@ export const PaperFormUI = (props: {
             }}
           >
             <GoogleIcon size={iconSize.md} />
-            Sign in with Google
+            {locale.signInWithGoogle}
           </SocialButton>
 
           <TextDivider text="OR" py="lg" />
@@ -85,6 +87,7 @@ export const PaperFormUI = (props: {
           }
         }}
         emptyErrorMessage="email address is required"
+        submitButtonText={locale.submitEmail}
       />
     </div>
   );

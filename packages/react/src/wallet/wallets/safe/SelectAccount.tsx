@@ -27,6 +27,7 @@ import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { safeSlugToChainId } from "./safeChainSlug";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const SelectAccount: React.FC<{
   onBack: () => void;
@@ -34,6 +35,7 @@ export const SelectAccount: React.FC<{
   safeWalletConfig: SafeWalletConfig;
   renderBackButton?: boolean;
 }> = (props) => {
+  const locale = useTWLocale().wallets.safeWallet.accountDetailsScreen;
   const activeWallet = useWallet();
   const connect = useConnect();
   const activeChain = useChain();
@@ -126,12 +128,12 @@ export const SelectAccount: React.FC<{
           <Spacer y="xl" />
 
           <Text color="primaryText" size="lg" weight={500}>
-            Enter your safe details
+            {locale.title}
           </Text>
           <Spacer y="sm" />
 
           <ModalDescription>
-            You can find your safe address in{" "}
+            {locale.findSafeAddressIn}{" "}
             <Link
               inline
               target="_blank"
@@ -141,7 +143,7 @@ export const SelectAccount: React.FC<{
                 whiteSpace: "nowrap",
               }}
             >
-              Safe Dashboard
+              {locale.dashboardLink}
             </Link>
           </ModalDescription>
 
@@ -184,7 +186,7 @@ export const SelectAccount: React.FC<{
           <Spacer y="lg" />
 
           {/* Select Safe Netowrk */}
-          <Label htmlFor="safeNetwork">Safe Network</Label>
+          <Label htmlFor="safeNetwork">{locale.network}</Label>
           <Spacer y="sm" />
           <div
             style={{
@@ -207,7 +209,7 @@ export const SelectAccount: React.FC<{
             >
               {!disableNetworkSelection && (
                 <option value="" hidden>
-                  Network your safe is deployed to
+                  {locale.selectNetworkPlaceholder}
                 </option>
               )}
 
@@ -265,7 +267,7 @@ export const SelectAccount: React.FC<{
             <>
               <Text color="danger" multiline size="xs">
                 {" "}
-                Can not use Safe: No Safe supported chains are configured in App
+                {locale.invalidChainConfig}
               </Text>
               <Spacer y="sm" />
             </>
@@ -286,10 +288,7 @@ export const SelectAccount: React.FC<{
                 width={iconSize.sm}
                 height={iconSize.sm}
               />
-              <span>
-                Could not connect to Safe. <br />
-                Make sure safe address and network are correct.
-              </span>
+              <span>{locale.failedToConnect}</span>
             </Text>
           )}
 
@@ -300,7 +299,7 @@ export const SelectAccount: React.FC<{
                   width={iconSize.sm}
                   height={iconSize.sm}
                 />
-                Failed to switch network
+                {locale.failedToSwitch}
               </Container>
             </Text>
           )}
@@ -341,7 +340,9 @@ export const SelectAccount: React.FC<{
               }}
             >
               {" "}
-              {switchingNetwork ? "Switching" : "Switch Network"}
+              {switchingNetwork
+                ? locale.switchingNetwork
+                : locale.switchNetwork}
               {switchingNetwork && (
                 <Spinner size="sm" color="primaryButtonText" />
               )}
@@ -359,8 +360,8 @@ export const SelectAccount: React.FC<{
               }}
             >
               {connectionStatus === "connecting"
-                ? "Connecting"
-                : "Connect to Safe"}
+                ? locale.connecting
+                : locale.connectToSafe}
               {connectionStatus === "connecting" && (
                 <Spinner size="sm" color="accentButtonText" />
               )}

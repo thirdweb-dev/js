@@ -7,15 +7,25 @@ import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { TrustScan } from "./TrustScan";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
 import { trustWalletUris } from "./trustWalletUris";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
+  const locale = useTWLocale().wallets.trustWallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const hideBackButton = props.supportedWallets.length === 1;
   const [errorConnecting, setErrorConnecting] = useState(false);
+
+  const connectingLocale = {
+    getStartedLink: locale.getStartedLink,
+    instruction: locale.connecting.instruction,
+    tryAgain: locale.connecting.tryAgain,
+    inProgress: locale.connecting.inProgress,
+    failed: locale.connecting.failed,
+  };
 
   const connectToExtension = useCallback(async () => {
     try {
@@ -66,6 +76,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={connectingLocale}
         onRetry={connectToExtension}
         errorConnecting={errorConnecting}
         onGetStarted={handleGetStarted}
@@ -81,6 +92,7 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        locale={connectingLocale}
         onRetry={() => {
           // NOOP - TODO make onRetry optional
         }}
@@ -99,6 +111,10 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          getStarted: locale.getStarted.subtitle,
+          scanToDownload: locale.getStarted.scanToDownload,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

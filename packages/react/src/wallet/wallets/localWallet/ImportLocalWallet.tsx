@@ -13,6 +13,7 @@ import { useLocalWalletInfo } from "./useLocalWalletInfo";
 import { LocalWallet } from "@thirdweb-dev/wallets";
 import type { LocalWalletConfig } from "./types";
 import { Container, Line, ModalHeader } from "../../../components/basic";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const ImportLocalWallet: React.FC<{
   onConnect: () => void;
@@ -20,6 +21,7 @@ export const ImportLocalWallet: React.FC<{
   localWalletConf: LocalWalletConfig;
   persist: boolean;
 }> = (props) => {
+  const locale = useTWLocale().wallets.localWallet.importWallet;
   const [jsonString, setJsonString] = useState<string | undefined>();
   const { setLocalWallet } = useLocalWalletInfo(
     props.localWalletConf,
@@ -73,20 +75,19 @@ export const ImportLocalWallet: React.FC<{
       <Line />
 
       <Container p="lg">
-        <ModalDescription>
-          The application can authorize any transactions on behalf of the wallet
-          without any approvals
-        </ModalDescription>
+        <ModalDescription>{locale.description1}</ModalDescription>
 
         <Spacer y="xs" />
 
-        <ModalDescription>
-          We recommend only connecting to trusted applications
-        </ModalDescription>
+        <ModalDescription>{locale.description2}</ModalDescription>
 
         <Spacer y="lg" />
 
         <DragNDrop
+          locale={{
+            uploadedSuccessfully: locale.uploadedSuccessfully,
+            wrongFileError: locale.uploadJSON,
+          }}
           extension="JSON"
           accept="application/json"
           onUpload={(file) => {
@@ -159,7 +160,7 @@ export const ImportLocalWallet: React.FC<{
                 opacity: jsonString ? 1 : 0.5,
               }}
             >
-              Import
+              {locale.import}
             </Button>
           </Container>
         </form>

@@ -1,11 +1,13 @@
 import { Container } from "../../../components/basic";
 import { Link, Text } from "../../../components/text";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export function TOS(props: {
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
 }) {
   const { termsOfServiceUrl, privacyPolicyUrl } = props;
+  const locale = useTWLocale().connectWallet.agreement;
 
   if (!termsOfServiceUrl && !privacyPolicyUrl) {
     return null;
@@ -25,7 +27,7 @@ export function TOS(props: {
           maxWidth: "250px",
         }}
       >
-        By connecting, you agree to the{" "}
+        {locale.prefix}{" "}
         {termsOfServiceUrl && (
           <Link
             inline
@@ -37,13 +39,13 @@ export function TOS(props: {
             }}
           >
             {" "}
-            Terms of Service{" "}
+            {locale.termsOfService}{" "}
           </Link>
         )}
         {bothGiven && "& "}
         {privacyPolicyUrl && (
           <Link inline size="xs" href={privacyPolicyUrl} target="_blank">
-            Privacy Policy
+            {locale.privacyPolicy}
           </Link>
         )}
       </Text>

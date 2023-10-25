@@ -6,11 +6,13 @@ import { MetamaskScan } from "./MetamaskScan";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started"
   >("connecting");
+  const locale = useTWLocale().wallets.metamaskWallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -65,6 +67,13 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connecting.instruction,
+          tryAgain: locale.connecting.tryAgain,
+          inProgress: locale.connecting.inProgress,
+          failed: locale.connecting.failed,
+        }}
         errorConnecting={errorConnecting}
         onGetStarted={() => {
           setScreen("get-started");
@@ -81,6 +90,10 @@ export const MetamaskConnectUI = (props: ConnectUIProps<MetaMaskWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          getStarted: locale.getStarted.subtitle,
+          scanToDownload: locale.getStarted.scanToDownload,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

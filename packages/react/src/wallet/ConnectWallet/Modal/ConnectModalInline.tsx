@@ -12,7 +12,6 @@ import {
   widemodalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  defaultModalTitle,
   defaultTheme,
 } from "../constants";
 import { ConnectModalContent } from "./ConnectModal";
@@ -23,6 +22,7 @@ import { DynamicHeight } from "../../../components/DynamicHeight";
 import { CustomThemeProvider } from "../../../design-system/CustomThemeProvider";
 import { ComponentProps, useContext, useEffect } from "react";
 import { ConnectWalletProps } from "../ConnectWallet";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const ConnectModalInline = (
   props: Omit<
@@ -110,12 +110,13 @@ function SyncedWalletUIStates(
   props: ComponentProps<typeof WalletUIStatesProvider>,
 ) {
   const setModalConfig = useContext(SetModalConfigCtx);
+  const locale = useTWLocale();
 
   // update modalConfig on props change
   useEffect(() => {
     setModalConfig((c) => ({
       ...c,
-      title: props.title || defaultModalTitle,
+      title: props.title || locale.connectWallet.defaultModalTitle,
       theme: props.theme || "dark",
       modalSize: (isMobile() ? "compact" : props.modalSize) || "wide",
       termsOfServiceUrl: props.termsOfServiceUrl,
@@ -132,6 +133,7 @@ function SyncedWalletUIStates(
     props.welcomeScreen,
     props.titleIconUrl,
     setModalConfig,
+    locale.connectWallet.defaultModalTitle,
   ]);
 
   return <WalletUIStatesProvider {...props} />;

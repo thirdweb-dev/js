@@ -17,6 +17,7 @@ import { ChromeIcon } from "../icons/ChromeIcon";
 import { PlayStoreIcon } from "../icons/PlayStoreIcon";
 import { Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const GetStartedScreen: React.FC<{
   onBack?: () => void;
@@ -28,6 +29,10 @@ export const GetStartedScreen: React.FC<{
   header?: React.ReactNode;
   footer?: React.ReactNode;
   showBack?: boolean;
+  locale: {
+    getStarted: string;
+    scanToDownload: string;
+  };
 }> = ({
   walletName,
   walletIconURL,
@@ -37,10 +42,13 @@ export const GetStartedScreen: React.FC<{
   header,
   footer,
   onBack,
+  locale: localeProp,
 }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
+
+  const locale = useTWLocale().connectWallet.download;
 
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
@@ -67,6 +75,9 @@ export const GetStartedScreen: React.FC<{
             walletName={walletName}
             walletIconURL={walletIconURL}
             onBack={handleBack}
+            locale={{
+              scanToDownload: localeProp.scanToDownload,
+            }}
           />
         )}
 
@@ -78,6 +89,9 @@ export const GetStartedScreen: React.FC<{
             walletName={walletName}
             walletIconURL={walletIconURL}
             onBack={handleBack}
+            locale={{
+              scanToDownload: localeProp.scanToDownload,
+            }}
           />
         )}
 
@@ -104,7 +118,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <ChromeIcon size={iconSize.lg} />
-                    <span>Download Chrome Extension</span>
+                    <span>{locale.chrome}</span>
                   </ButtonLink>
                 )}
 
@@ -121,7 +135,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <PlayStoreIcon size={iconSize.lg} />
-                    <span>Download on Google Play</span>
+                    <span>{locale.android}</span>
                   </ButtonLink>
                 )}
 
@@ -138,7 +152,7 @@ export const GetStartedScreen: React.FC<{
                     }}
                   >
                     <AppleIcon size={iconSize.lg} />
-                    <span>Download on App Store</span>
+                    <span>{locale.iOS}</span>
                   </ButtonLink>
                 )}
               </Container>
@@ -162,7 +176,7 @@ export const GetStartedScreen: React.FC<{
             }
           >
             <Text size="sm" center>
-              Get started with {walletName}
+              {localeProp.getStarted}
             </Text>
           </ScreenBottomContainer>
         </>
@@ -178,6 +192,9 @@ const InstallScanScreen: React.FC<{
   platformIcon: React.ReactNode;
   walletIconURL: string;
   onBack?: () => void;
+  locale: {
+    scanToDownload: string;
+  };
 }> = (props) => {
   return (
     <Container animate="fadein" expand>
@@ -205,9 +222,8 @@ const InstallScanScreen: React.FC<{
 
         <Spacer y="xl" />
 
-        <Text multiline center>
-          Scan with your phone to download <br /> {props.walletName} from{" "}
-          {props.platform}
+        <Text multiline center balance>
+          {props.locale.scanToDownload}
         </Text>
 
         <Spacer y="xs" />

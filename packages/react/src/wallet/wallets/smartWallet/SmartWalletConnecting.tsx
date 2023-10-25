@@ -18,15 +18,7 @@ import { Container, ModalHeader } from "../../../components/basic";
 import { SmartWalletConfig } from "./types";
 import { Text } from "../../../components/text";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
-
-export const gnosisAddressPrefixToChainId = {
-  eth: 1,
-  matic: 137,
-  avax: 43114,
-  bnb: 56,
-  oeth: 10,
-  gor: 5,
-} as const;
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const SmartWalletConnecting: React.FC<{
   onBack: () => void;
@@ -34,6 +26,7 @@ export const SmartWalletConnecting: React.FC<{
   smartWallet: SmartWalletConfig;
   personalWallet: WalletConfig;
 }> = (props) => {
+  const locale = useTWLocale().wallets.smartWallet;
   const activeWallet = useWallet(); // personal wallet
 
   const connect = useConnect();
@@ -105,7 +98,7 @@ export const SmartWalletConnecting: React.FC<{
           minHeight: "300px",
         }}
       >
-        <Text color="danger">Failed to connect to Smart Wallet</Text>
+        <Text color="danger">{locale.failedToConnect}</Text>
       </Container>
     );
   }
@@ -131,13 +124,13 @@ export const SmartWalletConnecting: React.FC<{
           <Spacer y="md" />
 
           <Text size="lg" color="primaryText" center weight={500}>
-            Wrong Network
+            {locale.wrongNetwork.title}
           </Text>
 
           <Spacer y="lg" />
 
           <Text multiline center>
-            Your wallet is not connected to the required network
+            {locale.wrongNetwork.subtitle}
           </Text>
 
           <Spacer y="xl" />
@@ -191,7 +184,7 @@ export const SmartWalletConnecting: React.FC<{
                 width={iconSize.sm}
                 height={iconSize.sm}
               />
-              <span>Failed to switch network</span>
+              <span>{locale.wrongNetwork.failedToSwitch}</span>
             </Container>
           </Container>
         </Container>

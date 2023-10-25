@@ -17,26 +17,24 @@ import {
 import { Img } from "../../../components/Img";
 import { iconSize } from "../../../design-system";
 import { openWindow } from "../../utils/openWindow";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 const FrameFailedConnect: React.FC<{
   onBack: () => void;
   walletIconURL: string;
   supportLink: string;
 }> = (props) => {
+  const locale = useTWLocale().wallets.frameWallet.failedToConnect;
+
   return (
     <Container p="lg">
       <ModalHeader onBack={() => props.onBack()} title="Frame" />
       <Spacer y="xl" />
       {
         <>
-          <ModalTitle>Failed to connect to Frame </ModalTitle>
+          <ModalTitle> {locale.title} </ModalTitle>
           <Spacer y="sm" />
-
-          <ModalDescription sm>
-            Make sure the desktop app is installed and running. You can download
-            Frame from the link below. Make sure to refresh this page once Frame
-            is running.
-          </ModalDescription>
+          <ModalDescription>{locale.description}</ModalDescription>
         </>
       }
       <Spacer y="lg" />
@@ -50,11 +48,11 @@ const FrameFailedConnect: React.FC<{
           height={iconSize.lg}
           src={props.walletIconURL}
         />
-        <span>Download Frame</span>
+        <span>{locale.downloadFrame}</span>
       </ButtonLink>
       <Spacer y="lg" />
       <HelperLink target="_blank" href={props.supportLink}>
-        Still having troubles connecting?
+        {locale.supportLink}
       </HelperLink>
     </Container>
   );
@@ -64,6 +62,8 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "connect-failed" | "get-started"
   >("connecting");
+  const locale = useTWLocale().wallets.frameWallet;
+
   const connect = useConnect();
   const connectPrompted = useRef(false);
   const { walletConfig, connected, goBack } = props;
@@ -100,6 +100,13 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={{
+          getStartedLink: locale.getStartedLink,
+          instruction: locale.connecting.instruction,
+          tryAgain: locale.connecting.tryAgain,
+          inProgress: locale.connecting.inProgress,
+          failed: locale.connecting.failed,
+        }}
         errorConnecting={false}
         onRetry={() => {
           // NOOP
@@ -128,6 +135,10 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          getStarted: locale.getStarted.subtitle,
+          scanToDownload: locale.getStarted.scanToDownload,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

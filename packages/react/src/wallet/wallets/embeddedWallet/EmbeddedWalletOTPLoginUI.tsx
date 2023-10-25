@@ -10,12 +10,14 @@ import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
 import { Button } from "../../../components/buttons";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 
 export const EmbeddedWalletOTPLoginUI: React.FC<
   EmbeddedWalletOTPLoginUIProps
 > = (props) => {
+  const locale = useTWLocale().wallets.embeddedWallet.emailLogin;
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const { createWalletInstance, setConnectedWallet, setConnectionStatus } =
@@ -99,7 +101,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Sign in" onBack={props.goBack} />
+        <ModalHeader title={locale.title} onBack={props.goBack} />
       </Container>
 
       <Container expand flex="column" center="y">
@@ -114,7 +116,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             }}
           >
             {!isWideModal && <Spacer y="xl" />}
-            <Text>Enter the verification code sent to</Text>
+            <Text>{locale.enterCodeSendTo}</Text>
             <Spacer y="sm" />
             <Text color="primaryText">{email}</Text>
             <Spacer y="xl" />
@@ -138,7 +140,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             <FadeIn>
               <Spacer y="md" />
               <Text size="sm" color="danger" center>
-                Invalid verification code
+                {locale.invalidCode}
               </Text>
             </FadeIn>
           )}
@@ -162,7 +164,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                     width: "100%",
                   }}
                 >
-                  Verify
+                  {locale.verify}
                 </Button>
               </Container>
             )}
@@ -176,7 +178,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             {sendEmailOtpStatus === "error" && (
               <>
                 <Text size="sm" center color="danger">
-                  Failed to send verification code
+                  {locale.failedToSendCode}
                 </Text>
               </>
             )}
@@ -190,14 +192,14 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
                   textAlign: "center",
                 }}
               >
-                <Text size="sm">Sending verification code</Text>
+                <Text size="sm">{locale.sendingCode}</Text>
                 <Spinner size="xs" color="secondaryText" />
               </Container>
             )}
 
             {sendEmailOtpStatus === "sent" && (
               <LinkButton onClick={sendEmail} type="button">
-                Resend verification code
+                {locale.resendCode}
               </LinkButton>
             )}
           </Container>

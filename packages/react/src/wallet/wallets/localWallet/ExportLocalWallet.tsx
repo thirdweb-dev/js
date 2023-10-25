@@ -28,6 +28,7 @@ import {
   useWallet,
 } from "@thirdweb-dev/react-core";
 import type { LocalWalletConfig } from "./types";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const ExportLocalWallet: React.FC<{
   onBack?: () => void;
@@ -35,6 +36,7 @@ export const ExportLocalWallet: React.FC<{
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
 }> = (props) => {
+  const locale = useTWLocale().wallets.localWallet.exportWallet;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -155,21 +157,15 @@ export const ExportLocalWallet: React.FC<{
         </Container>
         <Line />
         <Container expand p="lg">
-          <ModalDescription>
-            This will download a JSON file containing the wallet information
-            onto your device encrypted with the password
-          </ModalDescription>
+          <ModalDescription>{locale.description1}</ModalDescription>
 
           <Spacer y="sm" />
 
-          <ModalDescription>
-            You can use this JSON file to import the account in MetaMask using
-            the same password
-          </ModalDescription>
+          <ModalDescription>{locale.description2}</ModalDescription>
 
           <Spacer y="xl" />
 
-          <Label>Wallet Address</Label>
+          <Label>{locale.walletAddress}</Label>
           <Spacer y="sm" />
 
           <SavedWalletAddress>
@@ -232,7 +228,7 @@ export const ExportLocalWallet: React.FC<{
             type="submit"
           >
             <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
-            Download
+            {locale.download}
           </Button>
         </ScreenBottomContainer>
       </form>

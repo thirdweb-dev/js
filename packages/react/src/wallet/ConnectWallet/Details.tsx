@@ -60,6 +60,7 @@ import { SendFunds } from "./SendFunds";
 import { SupportedTokens } from "./defaultTokens";
 import { ReceiveFunds } from "./ReceiveFunds";
 import { smartWalletIcon } from "./icons/dataUris";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 export type DropDownPosition = {
   side: "top" | "bottom" | "left" | "right";
@@ -83,6 +84,7 @@ export const ConnectedWalletDetails: React.FC<{
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
 }> = (props) => {
+  const locale = useTWLocale().connectWallet;
   const chain = useChain();
   const walletChainId = useChainId();
 
@@ -174,7 +176,7 @@ export const ConnectedWalletDetails: React.FC<{
               minWidth: "70px",
             }}
           >
-            Guest
+            {locale.guest}
           </Text>
         ) : addressOrENS ? (
           <Text
@@ -355,7 +357,7 @@ export const ConnectedWalletDetails: React.FC<{
               transform: "translateY(-10%) rotate(-45deg) ",
             }}
           />
-          Send
+          {locale.send}
         </Button>
 
         <Button
@@ -372,7 +374,8 @@ export const ConnectedWalletDetails: React.FC<{
             setIsDropdownOpen(false);
           }}
         >
-          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} /> Receive{" "}
+          <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+          {locale.receive}{" "}
         </Button>
       </Container>
 
@@ -380,7 +383,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       {/* Network Switcher */}
       <div>
-        <DropdownLabel>Current Network</DropdownLabel>
+        <DropdownLabel>{locale.currentNetwork}</DropdownLabel>
         <Spacer y="xs" />
         {networkSwitcherButton}
       </div>
@@ -433,7 +436,7 @@ export const ConnectedWalletDetails: React.FC<{
               <Container color="secondaryText">
                 <ShuffleIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
-              Switch Account
+              {locale.switchAccount}
             </MenuButton>
           )}
 
@@ -462,7 +465,7 @@ export const ConnectedWalletDetails: React.FC<{
               <Container flex="row" center="both" color="secondaryText">
                 <FundsIcon size={iconSize.sm} />
               </Container>
-              Request Testnet Funds
+              {locale.requestTestnetFunds}
             </MenuLink>
           )}
 
@@ -481,7 +484,7 @@ export const ConnectedWalletDetails: React.FC<{
             <Container flex="row" center="both" color="secondaryText">
               <TextAlignLeftIcon width={iconSize.sm} height={iconSize.sm} />
             </Container>
-            Transaction History
+            {locale.transactionHistory}
           </MenuLink>
         )}
 
@@ -500,13 +503,11 @@ export const ConnectedWalletDetails: React.FC<{
               <Container flex="row" center="both" color="secondaryText">
                 <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
               </Container>
-              Backup wallet{" "}
+              {locale.backupWallet}{" "}
             </MenuButton>
             <Spacer y="sm" />
-            <Text size="xs" center multiline color="danger">
-              This is a temporary guest wallet <br />
-              Backup if you {`don't `}
-              want to lose access to it
+            <Text size="xs" center multiline color="danger" balance>
+              {locale.guestWalletWarning}
             </Text>
           </div>
         )}
@@ -727,6 +728,7 @@ function WalletSwitcher({
   name: string;
 }) {
   const walletContext = useWalletContext();
+  const locale = useTWLocale().connectWallet;
 
   return (
     <MenuButton
@@ -742,7 +744,7 @@ function WalletSwitcher({
       <Container color="secondaryText">
         <EnterIcon width={iconSize.sm} height={iconSize.sm} />
       </Container>
-      Switch to {name}
+      {locale.switchTo} {name}
     </MenuButton>
   );
 }
@@ -758,6 +760,7 @@ function ConnectedToSmartWallet() {
   const activeWallet = useWallet();
   const chain = useChain();
   const address = useAddress();
+  const locale = useTWLocale().connectWallet;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -784,7 +787,7 @@ function ConnectedToSmartWallet() {
     >
       <Container flex="row" gap="xs" center="y">
         <ActiveDot />
-        Connected to Smart Wallet
+        {locale.connectedToSmartWallet}
       </Container>
       {isSmartWalletDeployed && (
         <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />

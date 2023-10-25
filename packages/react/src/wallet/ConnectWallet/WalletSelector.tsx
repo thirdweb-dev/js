@@ -26,6 +26,7 @@ import { Link, Text } from "../../components/text";
 import { Spacer } from "../../components/Spacer";
 import { TextDivider } from "../../components/TextDivider";
 import { TOS } from "./Modal/TOS";
+import { useTWLocale } from "../../evm/providers/locale-provider";
 
 export const WalletSelector: React.FC<{
   walletConfigs: WalletConfig[];
@@ -39,6 +40,7 @@ export const WalletSelector: React.FC<{
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
   const disconnect = useDisconnect();
   const connectionStatus = useConnectionStatus();
+  const locale = useTWLocale().connectWallet;
 
   const localWalletConfig = props.walletConfigs.find(
     (w) => w.id === walletIds.localWallet,
@@ -73,7 +75,7 @@ export const WalletSelector: React.FC<{
       }}
       data-test="continue-as-guest-button"
     >
-      Continue as Guest
+      {locale.continueAsGuest}
     </Button>
   );
 
@@ -148,7 +150,7 @@ export const WalletSelector: React.FC<{
           />
         ))}
       </Container>
-      Connect a wallet
+      {locale.connectAWallet}
     </Button>
   );
 
@@ -160,7 +162,7 @@ export const WalletSelector: React.FC<{
       }}
     >
       <Text color="secondaryText" size="sm" weight={500}>
-        New to wallets?
+        {locale.newToWallets}
       </Text>
       <Link
         weight={500}
@@ -168,7 +170,7 @@ export const WalletSelector: React.FC<{
         target="_blank"
         href="https://blog.thirdweb.com/web3-wallet/"
       >
-        Get started
+        {locale.getStarted}
       </Link>
     </Container>
   );
@@ -420,6 +422,7 @@ export function WalletEntryButton(props: {
 }) {
   const { walletConfig, selectWallet } = props;
   const isRecommended = walletConfig.recommended;
+  const locale = useTWLocale().connectWallet;
   return (
     <WalletButton
       type="button"
@@ -439,11 +442,13 @@ export function WalletEntryButton(props: {
           {walletConfig.meta.name}
         </Text>
 
-        {isRecommended && <Text size="sm">Recommended</Text>}
+        {isRecommended && <Text size="sm">{locale.recommended}</Text>}
 
         {!isRecommended &&
           walletConfig.isInstalled &&
-          walletConfig.isInstalled() && <Text size="sm">Installed</Text>}
+          walletConfig.isInstalled() && (
+            <Text size="sm">{locale.installed}</Text>
+          )}
       </Container>
     </WalletButton>
   );

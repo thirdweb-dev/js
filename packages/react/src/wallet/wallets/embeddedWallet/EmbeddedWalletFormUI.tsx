@@ -16,11 +16,13 @@ import type { EmbeddedWalletLoginType } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
 }) => {
+  const locale = useTWLocale().wallets.embeddedWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
@@ -62,10 +64,11 @@ export const EmbeddedWalletFormUI = (props: {
         }}
       >
         <GoogleIcon size={iconSize.md} />
-        Sign in with Google
+        {locale.signInWithGoogle}
       </SocialButton>
       <TextDivider text="OR" py="lg" />
       <InputSelectionUI
+        submitButtonText={locale.submitEmail}
         onSelect={(email) => props.onSelect({ email })}
         placeholder="Enter your email address"
         name="email"

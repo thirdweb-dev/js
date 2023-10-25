@@ -12,6 +12,7 @@ import { Spinner } from "../../../components/Spinner";
 import { spacing } from "../../../design-system";
 import type { LocalWalletConfig } from "./types";
 import { wait } from "../../../utils/wait";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const CreateLocalWallet_Password: React.FC<{
   onConnect: () => void;
@@ -20,6 +21,7 @@ export const CreateLocalWallet_Password: React.FC<{
   renderBackButton: boolean;
   persist: boolean;
 }> = (props) => {
+  const locale = useTWLocale().wallets.localWallet.createWallet;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -90,10 +92,7 @@ export const CreateLocalWallet_Password: React.FC<{
 
       <Line />
       <Container expand p="lg">
-        <ModalDescription>
-          Choose a password for your wallet <br /> You{`'`}ll be able to access
-          and export this wallet with the same password
-        </ModalDescription>
+        <ModalDescription>{locale.createPassword}</ModalDescription>
 
         <Spacer y="lg" />
 
@@ -189,7 +188,7 @@ export const CreateLocalWallet_Password: React.FC<{
             alignItems: "center",
           }}
         >
-          Import wallet
+          {locale.importWallet}
         </Button>
       </Container>
     </Container>

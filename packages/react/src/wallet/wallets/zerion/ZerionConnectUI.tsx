@@ -6,15 +6,25 @@ import { ConnectingScreen } from "../../ConnectWallet/screens/ConnectingScreen";
 import { GetStartedScreen } from "../../ConnectWallet/screens/GetStartedScreen";
 import { ZerionScan } from "./ZerionScan";
 import { WCOpenURI } from "../../ConnectWallet/screens/WCOpenUri";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   const [screen, setScreen] = useState<
     "connecting" | "scanning" | "get-started" | "open-wc-uri"
   >("connecting");
+  const locale = useTWLocale().wallets.zerionWallet;
   const { walletConfig, connected } = props;
   const connect = useConnect();
   const hideBackButton = props.supportedWallets.length === 1;
   const [errorConnecting, setErrorConnecting] = useState(false);
+
+  const connectingLocale = {
+    getStartedLink: locale.getStartedLink,
+    instruction: locale.connecting.instruction,
+    tryAgain: locale.connecting.tryAgain,
+    inProgress: locale.connecting.inProgress,
+    failed: locale.connecting.failed,
+  };
 
   const connectToExtension = useCallback(async () => {
     try {
@@ -60,6 +70,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   if (screen === "connecting") {
     return (
       <ConnectingScreen
+        locale={connectingLocale}
         hideBackButton={hideBackButton}
         onGetStarted={() => setScreen("get-started")}
         onRetry={connectToExtension}
@@ -74,6 +85,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   if (screen === "open-wc-uri") {
     return (
       <WCOpenURI
+        locale={connectingLocale}
         onRetry={() => {
           // NO OP
         }}
@@ -95,6 +107,10 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
+        locale={{
+          getStarted: locale.getStarted.subtitle,
+          scanToDownload: locale.getStarted.scanToDownload,
+        }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}
         chromeExtensionLink={walletConfig.meta.urls?.chrome}

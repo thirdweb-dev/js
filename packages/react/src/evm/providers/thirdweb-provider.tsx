@@ -12,6 +12,8 @@ import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { signerWallet } from "../../wallet/wallets/signerWallet";
 import { Signer } from "ethers";
+import { ThirdwebLocale, en } from "../locales/en";
+import { ThirdwebLocaleContext } from "./locale-provider";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -40,6 +42,8 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
   theme?: ThemeObjectOrType;
 
   signer?: Signer;
+
+  locale?: ThirdwebLocale;
 }
 
 /**
@@ -81,18 +85,20 @@ export const ThirdwebProvider = <
   );
 
   return (
-    <WalletUIStatesProvider theme={theme}>
-      <CustomThemeProvider theme={theme}>
-        <ThirdwebProviderCore
-          {...restProps}
-          theme={typeof theme === "string" ? theme : theme.type}
-          supportedWallets={wallets}
-          signerWallet={signerWalletConfig}
-        >
-          {children}
-          <ConnectModal />
-        </ThirdwebProviderCore>
-      </CustomThemeProvider>
-    </WalletUIStatesProvider>
+    <ThirdwebLocaleContext.Provider value={restProps.locale || en()}>
+      <WalletUIStatesProvider theme={theme}>
+        <CustomThemeProvider theme={theme}>
+          <ThirdwebProviderCore
+            {...restProps}
+            theme={typeof theme === "string" ? theme : theme.type}
+            supportedWallets={wallets}
+            signerWallet={signerWalletConfig}
+          >
+            {children}
+            <ConnectModal />
+          </ThirdwebProviderCore>
+        </CustomThemeProvider>
+      </WalletUIStatesProvider>
+    </ThirdwebLocaleContext.Provider>
   );
 };

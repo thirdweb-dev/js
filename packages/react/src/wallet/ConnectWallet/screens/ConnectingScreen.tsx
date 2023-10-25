@@ -1,13 +1,13 @@
 import { Spacer } from "../../../components/Spacer";
 import { Container, ModalHeader, Line } from "../../../components/basic";
 import { iconSize, spacing } from "../../../design-system";
-import { isMobile } from "../../../evm/utils/isMobile";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { WalletLogoSpinner } from "./WalletLogoSpinner";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { isMobile } from "../../../evm/utils/isMobile";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -17,7 +17,18 @@ export const ConnectingScreen: React.FC<{
   hideBackButton: boolean;
   errorConnecting: boolean;
   onRetry: () => void;
+  locale: {
+    getStartedLink: string;
+    tryAgain: string;
+    instruction: {
+      desktop: string;
+      mobile: string;
+    };
+    failed: string;
+    inProgress: string;
+  };
 }> = (props) => {
+  const { locale } = props;
   const modalConfig = useContext(ModalConfigCtx);
   return (
     <Container animate="fadein" fullHeight flex="column">
@@ -57,23 +68,16 @@ export const ConnectingScreen: React.FC<{
           }}
         >
           <Text center color="primaryText" size="lg" weight={600}>
-            {props.errorConnecting
-              ? "Connection Failed"
-              : "Awaiting Confirmation"}
+            {props.errorConnecting ? locale.failed : locale.inProgress}
           </Text>
 
           <Spacer y="md" />
 
           {!props.errorConnecting ? (
-            <Text
-              multiline
-              style={{
-                textAlign: "center",
-              }}
-            >
-              Login and connect your wallet
-              <br /> through the {props.walletName}{" "}
-              {isMobile() ? "application" : "pop-up"}
+            <Text balance center multiline>
+              {isMobile()
+                ? locale.instruction.mobile
+                : locale.instruction.desktop}
             </Text>
           ) : (
             <Container flex="row" center="x" animate="fadein">
@@ -86,7 +90,8 @@ export const ConnectingScreen: React.FC<{
                   alignItems: "center",
                 }}
               >
-                <ReloadIcon width={iconSize.sm} height={iconSize.sm} /> Try Agin{" "}
+                <ReloadIcon width={iconSize.sm} height={iconSize.sm} />{" "}
+                {locale.tryAgain}
               </Button>
             </Container>
           )}
@@ -98,7 +103,7 @@ export const ConnectingScreen: React.FC<{
 
       <Container flex="row" center="x" p="lg">
         <Button variant="link" onClick={props.onGetStarted}>
-          Don{`'`}t have {props.walletName}?
+          {locale.getStartedLink}
         </Button>
       </Container>
     </Container>
