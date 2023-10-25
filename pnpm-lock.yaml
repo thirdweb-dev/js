@@ -1306,11 +1306,8 @@ importers:
         specifier: ^0.25.2
         version: 0.25.2(typescript@5.2.2)
       typedoc-better-json:
-        specifier: ^0.1.0
-        version: 0.1.0(typescript@5.2.2)
-      typedoc-json-parser:
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^0.2.0
+        version: 0.2.0(typescript@5.2.2)
     devDependencies:
       prettier:
         specifier: ^3.0.0
@@ -7859,13 +7856,6 @@ packages:
     dependencies:
       fast-json-stringify: 5.8.0
 
-  /@favware/colorette-spinner@1.0.1:
-    resolution: {integrity: sha512-PPYtcLzhSafdylp8NBOxMCYIcLqTUMNiQc7ciBoAIvxNG2egM+P7e2nNPui5+Svyk89Q+Tnbrp139ZRIIBw3IA==}
-    engines: {node: '>=v16'}
-    dependencies:
-      colorette: 2.0.20
-    dev: false
-
   /@floating-ui/core@1.3.1:
     resolution: {integrity: sha512-Bu+AMaXNjrpjh41znzHqaz3r2Nr8hHuHZT6V2LBKMhyMl0FgKA62PNYbqnfgmzOhoWZj70Zecisbo4H1rotP5g==}
     dev: false
@@ -10874,11 +10864,6 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
-    dev: false
-
-  /@sapphire/node-utilities@1.0.0:
-    resolution: {integrity: sha512-xFC4UyzSKs6juyFtsUV4VNybg0KIpwaThED2TH3TGtNT5b0VFpILTXQtqXpPf+Rfmj+O/mLCm319xy4ohsQqxQ==}
-    engines: {node: '>=v16.0.0', npm: '>=7.0.0'}
     dev: false
 
   /@scure/base@1.1.1:
@@ -15616,10 +15601,6 @@ packages:
   /colorette@2.0.19:
     resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
 
-  /colorette@2.0.20:
-    resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
-    dev: false
-
   /colors@1.2.5:
     resolution: {integrity: sha512-erNRLao/Y3Fv54qUa0LBB+//Uf3YwMUmdJinN20yMXm9zdKKqH9wt7R9IIVZ+K7ShzfpLV/Zg8+VyrBJYB4lpg==}
     engines: {node: '>=0.1.90'}
@@ -15653,11 +15634,6 @@ packages:
       table-layout: 1.0.2
       typical: 5.2.0
     dev: true
-
-  /commander@11.1.0:
-    resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
-    engines: {node: '>=16'}
-    dev: false
 
   /commander@2.13.0:
     resolution: {integrity: sha512-MVuS359B+YzaWqjCL/c+22gfryv+mCBPHAv3zyVI2GN8EY6IRP8VwtasXn8jyyhvvq84R4ImN1OKRtcbIasjYA==}
@@ -28905,27 +28881,12 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typedoc-better-json@0.1.0(typescript@5.2.2):
-    resolution: {integrity: sha512-fjFtKlGfDDg0ciHfBDMWKDGMp7L1fscedi+F9jiunUfyad+/RSIMBfdrH+hbM/CJCwJknvHymyKKq0GrnOETjQ==}
+  /typedoc-better-json@0.2.0(typescript@5.2.2):
+    resolution: {integrity: sha512-c+QNylwn6zR2A6cyIlQYyvQyZSeaeC9knjMwx0M/GWi3P2WH5Epg/8p9sR1KgKe1r6/WkOx3d9Qw206UZfrkhQ==}
     dependencies:
       typedoc: 0.25.2(typescript@5.2.2)
     transitivePeerDependencies:
       - typescript
-    dev: false
-
-  /typedoc-json-parser@9.0.1:
-    resolution: {integrity: sha512-hvoISd8CMLn4iDXVebaUq32urRjoVtXMsZ1X2bmW1kaQolvVYZRw6NKXOdB1cLKzAxVWN9eHlg6HRduCCsfP7g==}
-    engines: {node: '>=18.17.0', npm: '>=6'}
-    hasBin: true
-    dependencies:
-      '@favware/colorette-spinner': 1.0.1
-      '@sapphire/node-utilities': 1.0.0
-      colorette: 2.0.20
-      commander: 11.1.0
-      js-yaml: 4.1.0
-      tslib: 2.6.2
-      typedoc: 0.25.2(typescript@5.2.2)
-      typescript: 5.2.2
     dev: false
 
   /typedoc@0.25.2(typescript@5.2.2):
