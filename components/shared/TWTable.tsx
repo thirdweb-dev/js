@@ -4,6 +4,7 @@ import {
   Divider,
   Flex,
   Icon,
+  IconButton,
   Spinner,
   Table,
   Tbody,
@@ -22,7 +23,7 @@ import {
 } from "@tanstack/react-table";
 import pluralize from "pluralize";
 import { SetStateAction, useMemo, useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiTrash } from "react-icons/fi";
 import { Button, TableContainer, Text } from "tw-components";
 
 type TWTableProps<TRowData> = {
@@ -31,6 +32,7 @@ type TWTableProps<TRowData> = {
   isLoading: boolean;
   isFetched: boolean;
   onRowClick?: (row: TRowData) => void;
+  onDelete?: (row: TRowData) => void;
   pagination?: {
     pageSize: number;
   };
@@ -131,6 +133,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
               ))}
               {/* if the row is clickable we want an arrow to show */}
               {tableProps.onRowClick && <Th border="none" />}
+              {tableProps.onDelete && <Th border="none" />}
             </Tr>
           ))}
         </Thead>
@@ -180,6 +183,20 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     borderBottomColor="accent.100"
                   >
                     <Icon as={FiArrowRight} />
+                  </Td>
+                )}
+                {tableProps.onDelete && (
+                  <Td
+                    isNumeric
+                    borderBottomWidth="inherit"
+                    borderBottomColor="accent.100"
+                  >
+                    <IconButton
+                      variant="outline"
+                      onClick={() => tableProps.onDelete?.(row.original)}
+                      icon={<Icon as={FiTrash} boxSize={4} />}
+                      aria-label="Remove"
+                    />
                   </Td>
                 )}
               </Tr>
