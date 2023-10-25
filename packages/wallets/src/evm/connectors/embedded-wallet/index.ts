@@ -9,9 +9,12 @@ import {
   AuthLoginReturnType,
   EmbeddedWalletSdk,
   InitializedUser,
+  SendEmailOtpReturnType,
   UserWalletStatus,
 } from "./implementations";
 import {
+  AuthData,
+  AuthParams,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
 } from "./types";
@@ -43,54 +46,71 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
-  async sendEmailOtp({ email }: { email: string }) {
-    const thirdwebSDK = await this.getEmbeddedWalletSDK();
-    if (!thirdwebSDK) {
-      throw new Error("EmbeddedWallet SDK not initialized");
-    }
-    return thirdwebSDK.auth.sendEmailLoginOtp({ email });
+  async sendEmailOtp({
+    email,
+  }: {
+    email: string;
+  }): Promise<SendEmailOtpReturnType> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    return ewSDK.auth.sendEmailLoginOtp({ email });
   }
 
   async connect(options?: EmbeddedWalletConnectionArgs): Promise<string> {
-    const thirdwebSDK = await this.getEmbeddedWalletSDK();
-    if (!thirdwebSDK) {
-      throw new Error("EmbeddedWallet SDK not initialized");
-    }
+    const ewSDK = this.getEmbeddedWalletSDK();
     let authResult: AuthLoginReturnType;
 
-    switch (options?.loginType) {
-      case "headless_google_oauth": {
-        authResult = await thirdwebSDK.auth.loginWithGoogle({
-          closeOpenedWindow: options.closeOpenedWindow,
-          openedWindow: options.openedWindow,
+    const strategy = options?.authData.strategy;
+    switch (strategy) {
+      case "email": {
+        if (!options?.extraArgs?.otp) {
+          throw new Error("No OTP provided");
+        }
+        authResult = await ewSDK.auth.verifyEmailLoginOtp({
+          email: options.authData.email,
+          otp: options.extraArgs.otp,
+          recoveryCode: options.extraArgs?.password,
         });
         break;
       }
-      case "headless_email_otp_verification": {
-        authResult = await thirdwebSDK.auth.verifyEmailLoginOtp({
-          email: options.email,
-          otp: options.otp,
-          recoveryCode: options.encryptionKey,
+      case "google": {
+        authResult = await ewSDK.auth.loginWithGoogle({
+          closeOpenedWindow: options?.extraArgs?.closeOpenedWindow,
+          openedWindow: options?.extraArgs?.openedWindow,
         });
         break;
       }
-      case "ui_email_otp": {
-        authResult = await thirdwebSDK.auth.loginWithEmailOtp({
-          email: options.email,
+      case "jwt": {
+        if (!options?.authData?.jwt) {
+          throw new Error("No JWT provided");
+        }
+        const sub = extractSubFromJwt(options.authData.jwt);
+        if (!sub) {
+          throw new Error(
+            "No sub found in JWT - make sure the format is correct",
+          );
+        }
+        authResult = await ewSDK.auth.loginWithCustomJwt({
+          jwt: options?.authData?.jwt,
+          encryptionKey: sub,
         });
         break;
       }
-      case "custom_jwt_auth": {
-        authResult = await thirdwebSDK.auth.loginWithCustomJwt({
-          jwt: options.jwt,
-          encryptionKey: options.encryptionKey,
+      case "iframe_otp": {
+        if (!options) {
+          throw new Error("No options provided");
+        }
+        authResult = await ewSDK.auth.loginWithEmailOtp({
+          email: options?.authData.email,
         });
         break;
       }
-      default: {
-        authResult = await thirdwebSDK.auth.loginWithModal();
+      case "iframe":
+      case undefined: {
+        authResult = await ewSDK.auth.loginWithModal();
         break;
       }
+      default:
+        assertUnreachable(strategy);
     }
     this.user = authResult.user;
 
@@ -107,7 +127,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async disconnect(): Promise<void> {
-    const paper = await this.#embeddedWalletSdk;
+    const paper = this.#embeddedWalletSdk;
     await paper?.auth.logout();
     this.#signer = undefined;
     this.#embeddedWalletSdk = undefined;
@@ -141,18 +161,8 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       return this.#signer;
     }
 
-    if (!this.user) {
-      const embeddedWalletSdk = await this.getEmbeddedWalletSDK();
-      const user = await embeddedWalletSdk.getUser();
-      switch (user.status) {
-        case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
-          this.user = user;
-          break;
-        }
-      }
-    }
-
-    const signer = await this.user?.wallet.getEthersJsSigner({
+    const user = await this.getUser();
+    const signer = await user?.wallet.getEthersJsSigner({
       rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
@@ -220,6 +230,20 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.emit("disconnect");
   };
 
+  async getUser(): Promise<InitializedUser | null> {
+    if (!this.user) {
+      const embeddedWalletSdk = this.getEmbeddedWalletSDK();
+      const user = await embeddedWalletSdk.getUser();
+      switch (user.status) {
+        case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
+          this.user = user;
+          break;
+        }
+      }
+    }
+    return this.user;
+  }
+
   async getEmail() {
     // implicit call to set the user
     await this.getSigner();
@@ -237,4 +261,53 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
     return this.user.authDetails;
   }
+
+  // TODO extract as standalone function
+  async authenticate(params: AuthParams): Promise<AuthData> {
+    switch (params.strategy) {
+      case "email": {
+        const result = await this.sendEmailOtp({ email: params.email });
+        return {
+          ...params,
+          result,
+        };
+      }
+      case "google":
+      case "jwt":
+      case "iframe":
+      case "iframe_otp": {
+        return params;
+      }
+      default:
+        assertUnreachable(params);
+    }
+  }
+}
+
+function assertUnreachable(x: never): never {
+  throw new Error("Invalid param: " + x);
+}
+
+function extractSubFromJwt(jwtToken: string): string | null {
+  const parts = jwtToken.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid JWT format.");
+  }
+
+  const encodedPayload = parts[1];
+  if (!encodedPayload) {
+    throw new Error("Invalid JWT format.");
+  }
+  const decodedPayload = Buffer.from(encodedPayload, "base64").toString("utf8");
+
+  try {
+    const payloadObject = JSON.parse(decodedPayload);
+    if (payloadObject && payloadObject.sub) {
+      return payloadObject.sub;
+    }
+  } catch (error) {
+    throw new Error("Error parsing JWT payload as JSON.");
+  }
+
+  return null;
 }

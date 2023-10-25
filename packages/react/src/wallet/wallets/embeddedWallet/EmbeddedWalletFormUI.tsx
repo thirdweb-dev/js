@@ -39,11 +39,16 @@ export const EmbeddedWalletFormUI = (props: {
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
+      const authData = await embeddedWallet.authenticate({
+        strategy: "google",
+      });
       await embeddedWallet.connect({
-        loginType: "headless_google_oauth",
-        openedWindow: googleWindow,
-        closeOpenedWindow: (openedWindow) => {
-          openedWindow.close();
+        authData,
+        extraArgs: {
+          openedWindow: googleWindow,
+          closeOpenedWindow: (openedWindow) => {
+            openedWindow.close();
+          },
         },
       });
 

@@ -1,6 +1,7 @@
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
-import { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
+import type { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
 import {
+  AuthParams,
   EmbeddedWalletAdditionalOptions,
   EmbeddedWalletConnectionArgs,
 } from "../connectors/embedded-wallet/types";
@@ -50,6 +51,10 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   protected async getConnector(): Promise<Connector> {
     if (!this.connector) {
+      // import the connector dynamically
+      const { EmbeddedWalletConnector } = await import(
+        "../connectors/embedded-wallet"
+      );
       this.connector = new EmbeddedWalletConnector({
         clientId: this.options?.clientId ?? "",
         chain: this.chain,
@@ -68,19 +73,14 @@ export class EmbeddedWallet extends AbstractClientWallet<
     }
 
     // do not return non-serializable params to make auto-connect work
-    if (connectParams.loginType === "headless_google_oauth") {
+    if (connectParams.authData.strategy === "google") {
       return {
-        loginType: connectParams.loginType,
+        authData: connectParams.authData,
         chainId: connectParams.chainId,
       };
     }
 
     return connectParams;
-  }
-
-  async sendEmailOtp({ email }: { email: string }) {
-    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
-    return connector.sendEmailOtp({ email });
   }
 
   async getEmail() {
@@ -93,8 +93,14 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return connector.getEmbeddedWalletSDK();
   }
 
+  // TODO move to connect callback
   async getRecoveryInformation() {
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.getRecoveryInformation();
+  }
+
+  async authenticate(params: AuthParams) {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.authenticate(params);
   }
 }

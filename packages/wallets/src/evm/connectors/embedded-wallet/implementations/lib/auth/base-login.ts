@@ -68,7 +68,6 @@ export class BaseLogin extends AbstractLogin<
     openedWindow?: Window | null;
     closeOpenedWindow?: (openedWindow: Window) => void;
   }): Promise<AuthLoginReturnType> {
-    await this.preLogin();
     let win = args?.openedWindow;
     let isWindowOpenedByFn = false;
     if (!win) {
@@ -78,9 +77,12 @@ export class BaseLogin extends AbstractLogin<
     if (!win) {
       throw new Error("Something went wrong opening pop-up");
     }
-    await this.preLogin();
+    // logout the user
     // fetch the url to open the login window from iframe
-    const { loginLink } = await this.getGoogleLoginUrl();
+    const [{ loginLink }] = await Promise.all([
+      this.getGoogleLoginUrl(),
+      this.preLogin(),
+    ]);
 
     win.location.href = loginLink;
 

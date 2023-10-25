@@ -304,22 +304,30 @@ class ThirdwebBridge implements TWBridge {
           if (!googleWindow) {
             throw new Error("Failed to open google login window");
           }
+          const authData = await embeddedWallet.authenticate({
+            strategy: "google",
+          });
           await embeddedWallet.connect({
             chainId: chainIdNumber,
-            loginType: "headless_google_oauth",
-            openedWindow: googleWindow,
-            closeOpenedWindow: (openedWindow) => {
-              openedWindow.close();
+            authData,
+            extraArgs: {
+              openedWindow: googleWindow,
+              closeOpenedWindow: (openedWindow) => {
+                openedWindow.close();
+              },
             },
           });
         } else {
           if (!email) {
             throw new Error("Email is required for EmbeddedWallet");
           }
+          const authData = await embeddedWallet.authenticate({
+            strategy: "iframe_otp",
+            email,
+          });
           await embeddedWallet.connect({
             chainId: chainIdNumber,
-            email: email,
-            loginType: "ui_email_otp",
+            authData,
           });
         }
       } else if (walletInstance.walletId === walletIds.paper) {
