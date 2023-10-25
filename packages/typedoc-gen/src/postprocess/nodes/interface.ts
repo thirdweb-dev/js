@@ -1,6 +1,6 @@
 import { JSONOutput } from "typedoc";
-import { InterfaceDoc, TypeDeclarationDoc } from "./types";
-import { getReadableType } from "./getReadableType";
+import { InterfaceDoc, TypeDeclarationDoc } from "../types";
+import { getReadableType } from "../utils/getReadableType";
 
 export function getInterfaceDoc(
   data: JSONOutput.DeclarationReflection,

@@ -1,9 +1,9 @@
 import { JSONOutput, SomeType, Reflection } from "typedoc";
-import { ClassDoc } from "./types";
-import { getFunctionDoc } from "./processFunction";
-import { getVariableDoc } from "./processVariable";
-import { getAccessorDoc } from "./processAccessor";
-import { getReadableType } from "./getReadableType";
+import { ClassDoc } from "../types";
+import { getFunctionDoc } from "./function";
+import { getVariableDoc } from "./variable";
+import { getAccessorDoc } from "./accessor";
+import { getReadableType } from "../utils/getReadableType";
 
 const groupMappings = {
   Constructors: "constructors",

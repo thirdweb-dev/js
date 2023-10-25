@@ -3,9 +3,9 @@ import {
   TypeDeclarationDoc,
   VariableDoc,
   VariableTypeDeclaration,
-} from "./types";
-import { getReadableType } from "./getReadableType";
-import { getFunctionDoc } from "./processFunction";
+} from "../types";
+import { getReadableType } from "../utils/getReadableType";
+import { getFunctionDoc } from "./function";
 
 export function getVariableDoc(
   data: JSONOutput.DeclarationReflection,

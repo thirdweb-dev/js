@@ -4,8 +4,8 @@ import {
   FunctionDoc,
   FunctionSignature,
   FunctionSignatureArg,
-} from "./types";
-import { getReadableType } from "./getReadableType";
+} from "../types";
+import { getReadableType } from "../utils/getReadableType";
 
 export function getAccessorDoc(
   data: JSONOutput.DeclarationReflection,

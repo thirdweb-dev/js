@@ -4,9 +4,9 @@ import {
   FunctionSignature,
   FunctionSignatureArg,
   TypeParameter,
-} from "./types";
-import { getReadableType } from "./getReadableType";
-import { warningLog } from "./logs";
+} from "../types";
+import { getReadableType } from "../utils/getReadableType";
+import { warningLog } from "../utils/logs";
 
 export function getFunctionDoc(
   data: JSONOutput.DeclarationReflection,

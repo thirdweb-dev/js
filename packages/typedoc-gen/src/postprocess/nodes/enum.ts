@@ -1,6 +1,6 @@
 import { JSONOutput } from "typedoc";
-import { EnumDoc, InterfaceDoc, TypeDeclarationDoc } from "./types";
-import { getReadableType } from "./getReadableType";
+import { EnumDoc, InterfaceDoc, TypeDeclarationDoc } from "../types";
+import { getReadableType } from "../utils/getReadableType";
 
 export function getEnumDoc(data: JSONOutput.DeclarationReflection): EnumDoc {
   return {

@@ -1,11 +1,11 @@
 import { ProcessedDoc } from "./types";
 import { JSONOutput, ReflectionKind } from "typedoc";
-import { getFunctionDoc } from "./processFunction";
-import { isComponentType } from "./isComponentType";
-import { getInterfaceDoc } from "./processInterface";
-import { getEnumDoc } from "./processEnum";
-import { getVariableDoc } from "./processVariable";
-import { getClassDoc } from "./processClass";
+import { getFunctionDoc } from "./nodes/function";
+import { isComponentType } from "./utils/isComponentType";
+import { getInterfaceDoc } from "./nodes/interface";
+import { getEnumDoc } from "./nodes/enum";
+import { getVariableDoc } from "./nodes/variable";
+import { getClassDoc } from "./nodes/class";
 
 const groupNameMap = {
   Interfaces: "types",
