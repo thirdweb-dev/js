@@ -136,7 +136,7 @@ export function getReadableType(typeObj: JSONOutput.SomeType): string {
 
     case "predicate": {
       if (typeObj.targetType) {
-        return `${typeObj.name} is ${getReadableType(typeObj.targetType)}`;
+        return `${typeObj.name} is (${getReadableType(typeObj.targetType)})`;
       }
       throw new Error("Failed to get readable type of type 'predicate' ");
     }

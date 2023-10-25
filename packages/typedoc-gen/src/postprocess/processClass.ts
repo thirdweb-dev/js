@@ -3,6 +3,7 @@ import { ClassDoc } from "./types";
 import { getFunctionDoc } from "./processFunction";
 import { getVariableDoc } from "./processVariable";
 import { getAccessorDoc } from "./processAccessor";
+import { getReadableType } from "./getReadableType";
 
 const groupMappings = {
   Constructors: "constructors",
@@ -63,10 +64,16 @@ export function getClassDoc(data: JSONOutput.DeclarationReflection): ClassDoc {
   const output: ClassDoc = {
     name: data.name,
     source: data.sources?.[0]?.url,
+
+    summary: data.comment?.summary,
+    blockTags: data.comment?.blockTags,
+
     constructor: constructors[0]!,
     methods: methods.length > 0 ? methods : undefined,
     properties: properties.length > 0 ? properties : undefined,
     accessors: accessors.length > 0 ? accessors : undefined,
+
+    implements: data.implementedTypes?.map((t) => getReadableType(t)),
   };
 
   return output;

@@ -94,4 +94,7 @@ export type ClassDoc = {
   properties?: VariableDoc[];
   methods?: FunctionDoc[];
   accessors?: AccessorDoc[];
+  summary?: JSONOutput.CommentDisplayPart[];
+  blockTags?: JSONOutput.CommentTag[];
+  implements?: string[];
 };
