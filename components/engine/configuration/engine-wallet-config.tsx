@@ -1,10 +1,11 @@
-import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
+import { Box, ButtonGroup, Flex, Icon } from "@chakra-ui/react";
 import { useState } from "react";
 import { Heading, Card, Button, Text, Link } from "tw-components";
 import { KmsGcpConfig } from "./kms-gcp-config";
 import { KmsAwsConfig } from "./kms-aws-config";
 import { LocalConfig } from "./local-config.tsx";
 import { useEngineWalletConfig } from "@3rdweb-sdk/react/hooks/useEngine";
+import { MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
 
 interface EngineWalletConfigProps {
   instance: string;
@@ -42,26 +43,39 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
             overflow={{ base: "auto", md: "hidden" }}
             pb={{ base: 4, md: 0 }}
           >
-            <ButtonGroup size="sm" variant="ghost" spacing={2}>
+            <ButtonGroup size="sm" variant="outline" spacing={2}>
               <Button
                 type="button"
-                isActive={selected === "local"}
-                _active={{
-                  bg: "bgBlack",
-                  color: "bgWhite",
-                }}
+                leftIcon={
+                  <Icon
+                    as={
+                      selected === "local"
+                        ? MdRadioButtonChecked
+                        : MdRadioButtonUnchecked
+                    }
+                    boxSize={6}
+                  />
+                }
+                borderColor={selected === "local" ? "unset" : undefined}
+                colorScheme={selected === "local" ? "blue" : undefined}
+                py={6}
                 rounded="lg"
                 onClick={() => setSelected("local")}
               >
-                Local
+                Local Wallet
               </Button>
               <Button
                 type="button"
-                isActive={selected === "aws-kms"}
-                _active={{
-                  bg: "bgBlack",
-                  color: "bgWhite",
-                }}
+                leftIcon={
+                  selected === "aws-kms" ? (
+                    <MdRadioButtonChecked />
+                  ) : (
+                    <MdRadioButtonUnchecked />
+                  )
+                }
+                borderColor={selected === "aws-kms" ? "unset" : undefined}
+                colorScheme={selected === "aws-kms" ? "blue" : undefined}
+                py={6}
                 rounded="lg"
                 onClick={() => setSelected("aws-kms")}
               >
@@ -69,11 +83,16 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
               </Button>
               <Button
                 type="button"
-                isActive={selected === "gcp-kms"}
-                _active={{
-                  bg: "bgBlack",
-                  color: "bgWhite",
-                }}
+                leftIcon={
+                  selected === "gcp-kms" ? (
+                    <MdRadioButtonChecked />
+                  ) : (
+                    <MdRadioButtonUnchecked />
+                  )
+                }
+                borderColor={selected === "gcp-kms" ? "unset" : undefined}
+                colorScheme={selected === "gcp-kms" ? "blue" : undefined}
+                py={6}
                 rounded="lg"
                 onClick={() => setSelected("gcp-kms")}
               >
