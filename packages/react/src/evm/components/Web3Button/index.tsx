@@ -188,7 +188,7 @@ export const Web3Button = <TAction extends ActionFn>(
         {confirmStatus === "waiting" ? (
           <Spinner size="sm" color={"primaryButtonText"} />
         ) : (
-          "Switch Network"
+          locale.connectWallet.switchNetwork
         )}
       </Button>
     );

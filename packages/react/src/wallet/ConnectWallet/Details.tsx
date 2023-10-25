@@ -208,43 +208,43 @@ export const ConnectedWalletDetails: React.FC<{
     </WalletInfoButton>
   );
 
-  const networkSwitcherButton = (
-    <ToolTip
-      tip={
-        disableSwitchChain ? "Network Switching is disabled" : "Switch Network"
-      }
+  let networkSwitcherButton = (
+    <MenuButton
+      type="button"
+      disabled={disableSwitchChain}
+      onClick={() => {
+        setIsDropdownOpen(false);
+        setShowNetworkSelector(true);
+      }}
     >
-      <MenuButton
-        type="button"
-        disabled={disableSwitchChain}
-        onClick={() => {
-          setIsDropdownOpen(false);
-          setShowNetworkSelector(true);
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <ChainIcon chain={chain} size={iconSize.md} active />
-        </div>
-        <Text size="sm" color="primaryText" multiline>
-          {chain?.name || `Unknown chain #${walletChainId}`}
-        </Text>
-        <StyledChevronRightIcon
-          width={iconSize.sm}
-          height={iconSize.sm}
-          style={{
-            flexShrink: 0,
-            marginLeft: "auto",
-          }}
-        />
-      </MenuButton>
-    </ToolTip>
+        <ChainIcon chain={chain} size={iconSize.md} active />
+      </div>
+      <Text size="sm" color="primaryText" multiline>
+        {chain?.name || `Unknown chain #${walletChainId}`}
+      </Text>
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
+        }}
+      />
+    </MenuButton>
   );
+
+  if (!disableSwitchChain) {
+    networkSwitcherButton = (
+      <ToolTip tip={locale.switchNetwork}>{networkSwitcherButton}</ToolTip>
+    );
+  }
 
   const content = (
     <div>
@@ -287,14 +287,14 @@ export const ConnectedWalletDetails: React.FC<{
               >
                 <CopyIcon
                   text={address || ""}
-                  tip="Copy Address"
+                  tip={locale.copyAddress}
                   side="bottom"
                 />
               </IconButton>
             </div>
 
             <ToolTip
-              tip="Disconnect Wallet"
+              tip={locale.disconnectWallet}
               side="bottom"
               align={"end"}
               sideOffset={10}
@@ -395,7 +395,7 @@ export const ConnectedWalletDetails: React.FC<{
         {personalWallet && personalWalletConfig && (
           <WalletSwitcher
             wallet={personalWallet}
-            name="Personal Wallet"
+            name={locale.personalWallet}
             onSwitch={() => {
               setWrapperWallet(activeWallet);
             }}
@@ -407,7 +407,7 @@ export const ConnectedWalletDetails: React.FC<{
           <WalletSwitcher
             name={
               wrapperWallet.walletId === walletIds.smartWallet
-                ? "Smart Wallet"
+                ? locale.smartWallet
                 : wrapperWalletConfig.meta.name
             }
             wallet={wrapperWallet}

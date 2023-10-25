@@ -9,7 +9,7 @@ import {
   WalletUIStatesProvider,
 } from "../../../evm/providers/wallet-ui-states-provider";
 import {
-  widemodalMaxHeight,
+  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
   defaultTheme,
@@ -87,7 +87,7 @@ export const ConnectModalInline = (
         <ConnectModalInlineContainer
           className={props.className}
           style={{
-            height: modalSize === "compact" ? "auto" : widemodalMaxHeight,
+            height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
             maxWidth:
               modalSize === "compact"
                 ? modalMaxWidthCompact

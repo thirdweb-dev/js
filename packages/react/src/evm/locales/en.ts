@@ -1,12 +1,12 @@
 import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
 
 // wallets that connect via extension and QR scan
-function extensionAndQRScan(walletName: string) {
+function extensionAndQRScanScreens(walletName: string) {
   return {
     connectionScreen: {
       inProgress: "Awaiting Confirmation",
       failed: "Connection failed",
-      instruction: `Accept connection request in ${walletName} wallet`,
+      instruction: `Accept the connection request in ${walletName} wallet`,
       retry: "Try Again",
     },
     getStartedScreen: {
@@ -47,10 +47,18 @@ export function enDefault() {
       switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
       connectedToSmartWallet: "Connected To Smart Wallet",
       confirmInWallet: "Confirm in wallet",
+      disconnectWallet: "Disconnect Wallet",
+      copyAddress: "Copy Address",
+      personalWallet: "Personal Wallet",
+      smartWallet: "Smart Wallet",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
         iOS: "Download on App Store",
+      },
+      welcomeScreen: {
+        defaultTitle: "Your gateway to the decentralized world",
+        defaultSubtitle: "Connect a wallet to get started",
       },
       agreement: {
         prefix: "By connecting, you agree to the",
@@ -124,7 +132,7 @@ export function enDefault() {
       safeWallet: {
         connectWalletScreen: {
           title: "Link personal wallet",
-          subtitle: "Connect your wallet to use Safe.",
+          subtitle: "Connect your personal wallet to use Safe.",
           learnMoreLink: "Learn more",
         },
         accountDetailsScreen: {
@@ -144,13 +152,13 @@ export function enDefault() {
           connecting: "Connecting",
         },
       },
-      coinbaseWallet: extensionAndQRScan("Coinbase"),
-      metamaskWallet: extensionAndQRScan("MetaMask"),
-      okxWallet: extensionAndQRScan("OKX"),
-      phantomWallet: extensionAndQRScan("Phantom"),
-      rainbowWallet: extensionAndQRScan("Rainbow"),
-      trustWallet: extensionAndQRScan("Trust"),
-      zerionWallet: extensionAndQRScan("Zerion"),
+      coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
+      metamaskWallet: extensionAndQRScanScreens("MetaMask"),
+      okxWallet: extensionAndQRScanScreens("OKX"),
+      phantomWallet: extensionAndQRScanScreens("Phantom"),
+      rainbowWallet: extensionAndQRScanScreens("Rainbow"),
+      trustWallet: extensionAndQRScanScreens("Trust"),
+      zerionWallet: extensionAndQRScanScreens("Zerion"),
       paperWallet: {
         signInWithGoogle: "Sign in with Google",
         submitEmail: "Continue",
@@ -238,7 +246,7 @@ export function enDefault() {
         },
       },
       frameWallet: {
-        ...extensionAndQRScan("Frame"),
+        ...extensionAndQRScanScreens("Frame"),
         connectionFailedScreen: {
           title: "Failed to connect to Frame",
           description:

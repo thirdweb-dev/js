@@ -27,11 +27,11 @@ export function StartScreen() {
 
   const title =
     (typeof WelcomeScreen === "object" ? WelcomeScreen?.title : undefined) ||
-    "Your gateway to the decentralized world";
+    locale.welcomeScreen.defaultTitle;
 
   const subtitle =
     (typeof WelcomeScreen === "object" ? WelcomeScreen?.subtitle : undefined) ||
-    "Connect a wallet to get started";
+    locale.welcomeScreen.defaultSubtitle;
 
   const img =
     typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;

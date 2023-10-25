@@ -7,10 +7,10 @@ import {
   iconSize,
 } from "../design-system";
 import {
-  widemodalMaxHeight,
+  wideModalMaxHeight,
   modalMaxWidthCompact,
   modalMaxWidthWide,
-  compactmodalMaxHeight,
+  compactModalMaxHeight,
   modalCloseFadeOutDuration,
 } from "../wallet/ConnectWallet/constants";
 import { Overlay } from "./Overlay";
@@ -88,7 +88,7 @@ export const Modal: React.FC<{
                 ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
                 : {
                     height:
-                      props.size === "compact" ? "auto" : widemodalMaxHeight,
+                      props.size === "compact" ? "auto" : wideModalMaxHeight,
                     maxWidth:
                       props.size === "compact"
                         ? modalMaxWidthCompact
@@ -97,7 +97,7 @@ export const Modal: React.FC<{
             }
           >
             {props.size === "compact" ? (
-              <DynamicHeight maxHeight={compactmodalMaxHeight}>
+              <DynamicHeight maxHeight={compactModalMaxHeight}>
                 {props.children}{" "}
               </DynamicHeight>
             ) : (
