@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-[SDK] Various small improvements
+Remove barrel files

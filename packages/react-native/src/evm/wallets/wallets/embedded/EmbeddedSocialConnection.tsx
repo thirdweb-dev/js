@@ -23,9 +23,12 @@ export const EmbeddedSocialConnection: React.FC<
 
     setTimeout(() => {
       (selectionData.emailWallet as EmbeddedWallet)
-        .socialLogin(selectionData?.oauthOptions)
+        .connect({
+          loginType: "headless_google_oauth",
+          redirectUrl: selectionData.oauthOptions?.redirectUrl,
+        })
         .then(async (response) => {
-          if (response?.success) {
+          if (response) {
             if (onLocallyConnected) {
               onLocallyConnected(selectionData.emailWallet);
             } else {
@@ -34,7 +37,7 @@ export const EmbeddedSocialConnection: React.FC<
             }
           } else {
             setErrorMessage(
-              response?.error || "Error login in. Please try again later.",
+              response || "Error login in. Please try again later.",
             );
           }
         })

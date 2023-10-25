@@ -31,7 +31,6 @@ export const _en = {
     copy_address_or_scan:
       "Copy the wallet address or scan the QR code to send funds to this wallet.",
     request_testnet_funds: "Request Testnet Funds",
-    view_transatcion_history: "View Transaction History",
     your_address: "Your address",
     qr_code: "QR Code",
     select_token: "Select Token",
@@ -72,17 +71,24 @@ export const _en = {
   smart_wallet: {
     switch_to_smart: "Switch to Smart Wallet",
     switch_to_personal: "Switch to Personal Wallet",
+    network_mismatch: "Network Mismatch",
+    connecting: "Connecting",
   },
   embedded_wallet: {
     request_new_code: "Request new code",
     sign_in: "Sign In",
     sign_in_google: "Sign in with Google",
+    enter_your_email: "Enter your email address",
+    forgot_password: "Forgot password",
+    enter_account_recovery_code: "Enter account recovery code",
+    backup_your_account: "Backup your account",
   },
   wallet_connect: {
     no_results_found: "No results found",
     search_wallets: "Search Wallets",
   },
   common: {
+    connect_app: "Connect app",
     unknown_network: "Unknown Network",
     fetching: "Fetching...",
     password: "Password",
@@ -99,5 +105,7 @@ export const _en = {
     or: "OR",
     from: "from",
     to: "from",
+    next: "Next",
+    learn_more: "Learn More",
   },
 };
