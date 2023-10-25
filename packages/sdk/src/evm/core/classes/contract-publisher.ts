@@ -7,11 +7,6 @@ import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarat
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
-import {
-  fetchAndCacheDeployMetadata,
-  fetchPublishedContractFromPolygon,
-  isFeatureEnabled,
-} from "../../common";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { extractConstructorParams } from "../../common/feature-detection/extractConstructorParams";
 import { extractFunctions } from "../../common/feature-detection/extractFunctions";
@@ -50,6 +45,9 @@ import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { Transaction } from "./transactions";
+import { fetchAndCacheDeployMetadata } from "../../common/any-evm-utils/fetchAndCacheDeployMetadata";
+import { fetchPublishedContractFromPolygon } from "../../common/any-evm-utils/fetchPublishedContractFromPolygon";
+import { isFeatureEnabled } from "../../common/feature-detection/isFeatureEnabled";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)

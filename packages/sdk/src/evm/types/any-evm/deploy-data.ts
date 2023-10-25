@@ -1,6 +1,6 @@
 import { BytesLike } from "ethers";
 import { PreDeployMetadataFetched } from "../../schema/contracts/custom";
-import { AddressOrEns } from "../../schema";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 
 export type PrecomputedDeploymentTransaction = {
   predictedAddress: string;
