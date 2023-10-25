@@ -113,7 +113,6 @@ export const RainbowConnectUI = (props: ConnectUIProps<RainbowWallet>) => {
     return (
       <GetStartedScreen
         locale={{
-          getStarted: locale.getStarted.subtitle,
           scanToDownload: locale.getStarted.scanToDownload,
         }}
         walletIconURL={walletConfig.meta.iconURL}

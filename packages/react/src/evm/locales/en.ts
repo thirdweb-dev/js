@@ -6,18 +6,14 @@ function extensionAndQRScan(walletName: string) {
     connecting: {
       inProgress: "Awaiting Confirmation",
       failed: "Connection failed",
-      instruction: {
-        desktop: `Login and connect your wallet through the ${walletName} extension`,
-        mobile: `Login and connect your wallet through the ${walletName} app`,
-      },
-      tryAgain: "Try again",
+      instruction: `Accept connection request in ${walletName} wallet`,
+      tryAgain: "Try Again",
     },
     getStarted: {
-      subtitle: `Get started with ${walletName} wallet`,
-      scanToDownload: `Scan with your phone to download ${walletName} app`,
+      scanToDownload: `Scan the QR code to download ${walletName} app`,
     },
     scan: {
-      instruction: `Scan with ${walletName} app to connect wallet`,
+      instruction: `Scan the QR code with ${walletName} wallet app to connect`,
     },
     getStartedLink: `Don't have ${walletName} wallet?`,
   };
@@ -243,21 +239,7 @@ export function enDefault() {
         },
       },
       frameWallet: {
-        getStartedLink: "Don't have Frame wallet?",
-        getStarted: {
-          subtitle: "Get started with Frame wallet",
-          scanToDownload: "Scan with your phone to download Frame wallet app",
-        },
-        connecting: {
-          inProgress: "Awaiting Confirmation",
-          failed: "Connection failed",
-          instruction: {
-            desktop:
-              "Login and connect your wallet through the MetaMask extension",
-            mobile: "Login and connect your wallet through the MetaMask app",
-          },
-          tryAgain: "Try again",
-        },
+        ...extensionAndQRScan("Frame"),
         failedToConnect: {
           title: "Failed to connect to Frame",
           description:

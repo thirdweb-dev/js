@@ -95,7 +95,6 @@ export const CoinbaseConnectUI = ({
     return (
       <GetStartedScreen
         locale={{
-          getStarted: locale.getStarted.subtitle,
           scanToDownload: locale.getStarted.scanToDownload,
         }}
         walletIconURL={meta.iconURL}

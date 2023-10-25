@@ -7,7 +7,6 @@ import { useContext } from "react";
 import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { WalletLogoSpinner } from "./WalletLogoSpinner";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { isMobile } from "../../../evm/utils/isMobile";
 
 export const ConnectingScreen: React.FC<{
   onBack: () => void;
@@ -20,10 +19,7 @@ export const ConnectingScreen: React.FC<{
   locale: {
     getStartedLink: string;
     tryAgain: string;
-    instruction: {
-      desktop: string;
-      mobile: string;
-    };
+    instruction: string;
     failed: string;
     inProgress: string;
   };
@@ -75,9 +71,7 @@ export const ConnectingScreen: React.FC<{
 
           {!props.errorConnecting ? (
             <Text balance center multiline>
-              {isMobile()
-                ? locale.instruction.mobile
-                : locale.instruction.desktop}
+              {locale.instruction}
             </Text>
           ) : (
             <Container flex="row" center="x" animate="fadein">
@@ -86,7 +80,7 @@ export const ConnectingScreen: React.FC<{
                 variant="accent"
                 onClick={props.onRetry}
                 style={{
-                  gap: spacing.sm,
+                  gap: spacing.xs,
                   alignItems: "center",
                 }}
               >

@@ -1,22 +1,17 @@
 import { Img } from "../../../components/Img";
 import { QRCode } from "../../../components/QRCode";
 import { Spacer } from "../../../components/Spacer";
-import {
-  Container,
-  ModalHeader,
-  ScreenBottomContainer,
-} from "../../../components/basic";
+import { Container, ModalHeader } from "../../../components/basic";
 import { iconSize, radius, spacing } from "../../../design-system";
 import type { Theme } from "../../../design-system/index";
 import { isMobile } from "../../../evm/utils/isMobile";
 import { openWindow } from "../../utils/openWindow";
 import styled from "@emotion/styled";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { AppleIcon } from "../icons/AppleIcon";
 import { ChromeIcon } from "../icons/ChromeIcon";
 import { PlayStoreIcon } from "../icons/PlayStoreIcon";
 import { Text } from "../../../components/text";
-import { ModalConfigCtx } from "../../../evm/providers/wallet-ui-states-provider";
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const GetStartedScreen: React.FC<{
@@ -30,7 +25,6 @@ export const GetStartedScreen: React.FC<{
   footer?: React.ReactNode;
   showBack?: boolean;
   locale: {
-    getStarted: string;
     scanToDownload: string;
   };
 }> = ({
@@ -52,7 +46,6 @@ export const GetStartedScreen: React.FC<{
 
   const isScanScreen =
     showScreen === "android-scan" || showScreen === "ios-scan";
-  const isCompact = useContext(ModalConfigCtx).modalSize === "compact";
 
   const handleBack = onBack
     ? () => {
@@ -162,25 +155,6 @@ export const GetStartedScreen: React.FC<{
 
         {!isScanScreen && footer}
       </Container>
-
-      {showScreen === "base" && (
-        <>
-          {isCompact && <Spacer y="xs" />}
-          <ScreenBottomContainer
-            style={
-              isCompact
-                ? undefined
-                : {
-                    borderTop: "none",
-                  }
-            }
-          >
-            <Text size="sm" center>
-              {localeProp.getStarted}
-            </Text>
-          </ScreenBottomContainer>
-        </>
-      )}
     </Container>
   );
 };

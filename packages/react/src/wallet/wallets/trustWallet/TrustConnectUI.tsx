@@ -112,7 +112,6 @@ export const TrustConnectUI = (props: ConnectUIProps<TrustWallet>) => {
     return (
       <GetStartedScreen
         locale={{
-          getStarted: locale.getStarted.subtitle,
           scanToDownload: locale.getStarted.scanToDownload,
         }}
         walletIconURL={walletConfig.meta.iconURL}

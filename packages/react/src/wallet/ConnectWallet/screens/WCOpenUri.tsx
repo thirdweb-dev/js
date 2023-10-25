@@ -26,10 +26,7 @@ export const WCOpenURI: React.FC<{
   locale: {
     getStartedLink: string;
     tryAgain: string;
-    instruction: {
-      desktop: string;
-      mobile: string;
-    };
+    instruction: string;
     failed: string;
     inProgress: string;
   };
