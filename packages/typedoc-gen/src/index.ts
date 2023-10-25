@@ -1,4 +1,4 @@
-import TypeDoc from "typedoc";
+import TypeDoc, { JSONOutput } from "typedoc";
 import { writeFile, readFile } from "node:fs/promises";
 import { postprocess } from "./postprocess/postprocess";
 
@@ -31,7 +31,7 @@ export async function typedoc(options: {
     outFile.replace(".json", "-full.json"),
     "utf8",
   );
-  const fileData = JSON.parse(fileContent);
 
+  const fileData = JSON.parse(fileContent) as JSONOutput.ProjectReflection;
   await writeFile(outFile, JSON.stringify(postprocess(fileData), null, 2));
 }

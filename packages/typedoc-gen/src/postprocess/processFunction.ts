@@ -1,5 +1,10 @@
 import { JSONOutput, SomeType, Reflection } from "typedoc";
-import { FunctionDoc, FunctionSignature, FunctionSignatureArg } from "./types";
+import {
+  FunctionDoc,
+  FunctionSignature,
+  FunctionSignatureArg,
+  TypeParameter,
+} from "./types";
 import { getReadableType } from "./getReadableType";
 import { warningLog } from "./logs";
 
@@ -29,6 +34,13 @@ function getFunctionSignatureDoc(signature: JSONOutput.SignatureReflection) {
         isRest: param.flags.isRest || undefined,
       };
       return arg;
+    }),
+    typeParameters: signature.typeParameter?.map((param) => {
+      const typeParam: TypeParameter = {
+        name: param.name,
+        extendsType: param.type ? getReadableType(param.type) : undefined,
+      };
+      return typeParam;
     }),
     blockTags: signature.comment?.blockTags?.filter(
       (w) => w.tag !== "@returns",

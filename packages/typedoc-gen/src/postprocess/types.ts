@@ -31,11 +31,17 @@ export type AccessorDoc = {
 export type FunctionSignature = {
   summary?: JSONOutput.CommentDisplayPart[];
   args?: FunctionSignatureArg[];
+  typeParameters?: TypeParameter[];
   returns?: {
     type?: string;
     summary?: JSONOutput.CommentDisplayPart[];
   };
   blockTags?: JSONOutput.CommentTag[];
+};
+
+export type TypeParameter = {
+  name: string;
+  extendsType?: string;
 };
 
 export type FunctionSignatureArg = {
