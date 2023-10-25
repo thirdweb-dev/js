@@ -167,16 +167,16 @@ const MagicUI: React.FC<{
   const isEmailEnabled = props.emailLogin !== false;
   const isSMSEnabled = props.smsLogin !== false;
 
-  let placeholder = "Login with email or phone number";
+  let placeholder = locale.loginWithEmailOrPhone;
   let type = "text";
-  let emptyErrorMessage = "email or phone number is required";
+  let emptyErrorMessage = locale.emailOrPhoneRequired;
   if (isEmailEnabled && !isSMSEnabled) {
     placeholder = "Login with email address";
     emptyErrorMessage = "email address is required";
     type = "email";
   } else if (!isEmailEnabled && isSMSEnabled) {
-    placeholder = "Login with phone number";
-    emptyErrorMessage = "phone number is required";
+    placeholder = locale.loginWithPhone;
+    emptyErrorMessage = locale.phoneRequired;
     type = "tel";
   }
 
@@ -277,21 +277,21 @@ const MagicUI: React.FC<{
                   /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
                 const isValidEmail = emailRegex.test(input.replace(/\+/g, ""));
                 if (!isValidEmail) {
-                  return "Invalid email address";
+                  return locale.invalidEmail;
                 }
               } else if (isPhone && isSMSEnabled) {
                 if (!input.startsWith("+")) {
-                  return "Phone number must start with a country code";
+                  return locale.countryCodeMissing;
                 }
               } else {
                 if (isEmailEnabled && isSMSEnabled) {
-                  return "Invalid email address or phone number";
+                  return locale.invalidEmailOrPhone;
                 }
                 if (isEmailEnabled) {
-                  return "Invalid email address";
+                  return locale.invalidEmail;
                 }
                 if (isSMSEnabled) {
-                  return "Invalid phone number";
+                  return locale.invalidPhone;
                 }
               }
             }}

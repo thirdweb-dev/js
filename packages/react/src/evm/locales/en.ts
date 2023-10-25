@@ -214,6 +214,14 @@ export function enDefault() {
       magicLink: {
         loginWith: "Login with",
         submitEmail: "Continue",
+        loginWithEmailOrPhone: "Login with email or phone number",
+        emailOrPhoneRequired: "email or phone number is required",
+        loginWithPhone: "Login with phone number",
+        phoneRequired: "phone number is required",
+        invalidEmail: "Invalid email address",
+        invalidPhone: "Invalid phone number",
+        invalidEmailOrPhone: "Invalid email address or phone number",
+        countryCodeMissing: "Phone number must start with a country code",
       },
       localWallet: {
         passwordLabel: "Password",
