@@ -71,7 +71,8 @@ export default {
     "https://mainnet.gateway.tenderly.co",
     "wss://mainnet.gateway.tenderly.co",
     "https://rpc.blocknative.com/boost",
-    "https://rpc.flashbots.net/fast"
+    "https://rpc.flashbots.net/fast",
+    "https://rpc.mevblocker.io/fullprivacy"
   ],
   "shortName": "eth",
   "slip44": 60,
