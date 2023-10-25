@@ -65,7 +65,7 @@ export async function postPaperAuth(
 export async function postPaperAuthUserManaged(
   storedToken: AuthStoredTokenWithCookieReturnType["storedToken"],
   clientId: string,
-  encryptionKey: string,
+  password: string,
 ) {
   if (storedToken.shouldStoreCookieString) {
     await setAuthTokenClient(storedToken.cookieString, clientId);
@@ -79,7 +79,7 @@ export async function postPaperAuthUserManaged(
 
   if (storedToken.isNewUser) {
     console.log("========== New User ==========");
-    await setUpNewUserWallet(encryptionKey, clientId);
+    await setUpNewUserWallet(password, clientId);
   } else {
     try {
       // existing device share
@@ -92,7 +92,7 @@ export async function postPaperAuthUserManaged(
       try {
         await setUpShareForNewDevice({
           clientId,
-          recoveryCode: encryptionKey,
+          recoveryCode: password,
         });
       } catch (error) {
         console.error("Error setting up wallet on device", error);

@@ -9,7 +9,7 @@ import { getMultichainRegistryAddress } from "../constants/addresses/getMulticha
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
-import { SDKOptions } from "../schema";
+import { SDKOptions } from "../schema/sdk-options";
 import { Polygon } from "@thirdweb-dev/chains";
 
 // Internal static cache

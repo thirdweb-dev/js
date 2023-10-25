@@ -6,11 +6,6 @@ import type {
   AuthProvider,
 } from "@paperxyz/embedded-wallet-service-sdk";
 
-export type CustomAuth = {
-  jwtToken: string;
-  encryptionKey: string;
-};
-
 export type OauthOptions = {
   providers: AuthProvider[];
   redirectUrl: string;
@@ -53,8 +48,8 @@ export interface EmbeddedWalletConnectorOptions {
 }
 
 export interface AuthOptions {
-  jwtToken: string;
-  encryptionKey: string;
+  jwt: string;
+  password: string;
 }
 
 export type EmbeddedWalletConnectionArgs = {
@@ -70,8 +65,8 @@ export type EmbeddedWalletConnectionArgs = {
       otp: string;
     }
   | {
-      loginType: "custom_jwt_auth";
-      jwtToken: string;
-      encryptionKey: string;
+      loginType: "jwt";
+      jwt: string;
+      password: string;
     }
 );

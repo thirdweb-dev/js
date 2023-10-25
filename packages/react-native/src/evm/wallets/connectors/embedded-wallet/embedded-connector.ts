@@ -57,13 +57,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         }
         break;
       case "headless_email_otp_verification": {
-        await this.validateEmailOtp(options.otp);
+        await this.validateEmailOtp({ otp: options.otp });
         break;
       }
-      case "custom_jwt_auth": {
+      case "jwt": {
         await this.customJwt({
-          jwtToken: options.jwtToken,
-          encryptionKey: options.encryptionKey,
+          jwt: options.jwt,
+          password: options.password,
         });
         break;
       }
@@ -79,7 +79,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.getAddress();
   }
 
-  async validateEmailOtp(otp: string) {
+  async validateEmailOtp(options: { otp: string }) {
     if (!this.email) {
       throw new Error("Email is required to connect");
     }
@@ -87,7 +87,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     try {
       await validateEmailOTP({
         clientId: this.options.clientId,
-        otp,
+        otp: options.otp,
       });
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
@@ -112,10 +112,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return { success: true };
   }
 
-  async sendEmailOtp(email: string) {
-    this.email = email;
-    saveConnectedEmail(email);
-    return sendEmailOTP(email, this.options.clientId);
+  async sendEmailOtp(options: { email: string }) {
+    this.email = options.email;
+    saveConnectedEmail(options.email);
+    return sendEmailOTP({
+      email: options.email,
+      clientId: this.options.clientId,
+    });
   }
 
   async socialLogin(oauthOption: OauthOption) {

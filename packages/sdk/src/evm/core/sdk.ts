@@ -77,21 +77,6 @@ import {
 } from "../contracts";
 import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
-import type {
-  DeployEvents,
-  NFTContractDeployMetadata,
-  MultiwrapContractDeployMetadata,
-  TokenContractDeployMetadata,
-  MarketplaceContractDeployMetadata,
-  MarketplaceV3ContractDeployMetadata,
-  SplitContractDeployMetadata,
-  VoteContractDeployMetadata,
-  DeployOptions,
-  DeployMetadata,
-  DeployEvent,
-  OpenEditionContractDeployMetadata,
-  AirdropContractDeployMetadata,
-} from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
 import { ContractFactory } from "./classes/factory";
@@ -112,15 +97,28 @@ import {
 } from "../types/any-evm/deploy-data";
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
-import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
-import { DropErc721ContractSchema } from "../schema";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { AirdropContractDeploy } from "../schema/contracts/airdrop";
 import {
   directDeployDeterministicPublished,
   predictAddressDeterministicPublished,
-} from "../common";
+} from "../common/any-evm-utils/deployDirectDeterministic";
+import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
+import { DeployEvent, DeployEvents } from "../types/deploy/deploy-events";
+import {
+  AirdropContractDeployMetadata,
+  MarketplaceContractDeployMetadata,
+  MarketplaceV3ContractDeployMetadata,
+  MultiwrapContractDeployMetadata,
+  NFTContractDeployMetadata,
+  OpenEditionContractDeployMetadata,
+  SplitContractDeployMetadata,
+  TokenContractDeployMetadata,
+  VoteContractDeployMetadata,
+} from "../types/deploy/deploy-metadata";
+import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 
 /**
  * The main entry point for the thirdweb SDK

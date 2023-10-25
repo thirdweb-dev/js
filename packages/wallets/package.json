@@ -344,12 +344,26 @@
       },
       "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.cjs.js"
     },
+    "./evm/wallets/token-bound-smart-wallet": {
+      "module": {
+        "browser": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.browser.esm.js",
+        "default": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.esm.js"
+      },
+      "default": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.cjs.js"
+    },
     "./evm/connectors/wallet-connect-v1": {
       "module": {
         "browser": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.browser.esm.js",
         "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.esm.js"
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
+    },
+    "./evm/connectors/token-bound-smart-wallet": {
+      "module": {
+        "browser": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.browser.esm.js",
+        "default": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.esm.js"
+      },
+      "default": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.cjs.js"
     },
     "./evm/connectors/embedded-wallet/implementations": {
       "module": {
