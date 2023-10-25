@@ -211,9 +211,13 @@ const ChainPage: ThirdwebNextPage = ({
                       gradientColors ? gradientColors[0] : "#fff"
                     }`}
                     borderRadius="full"
-                    p={3}
+                    p={2.5}
                   >
-                    <ChainIcon ipfsSrc={chain.icon?.url} size={128} />
+                    <ChainIcon
+                      ipfsSrc={chain.icon?.url}
+                      size="100%"
+                      borderRadius="50%"
+                    />
                   </Center>
                 )}
                 <Flex

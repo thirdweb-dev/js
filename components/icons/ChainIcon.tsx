@@ -1,4 +1,4 @@
-import { Image, forwardRef } from "@chakra-ui/react";
+import { Image, type ImageProps, forwardRef } from "@chakra-ui/react";
 import { replaceIpfsUrl } from "lib/sdk";
 
 const fallbackIcon = replaceIpfsUrl(
@@ -7,18 +7,20 @@ const fallbackIcon = replaceIpfsUrl(
 
 type ChainIconProps = {
   ipfsSrc?: string;
-  size: number;
+  size: ImageProps["width"];
 };
 
 export const ChainIcon = forwardRef<ChainIconProps, typeof Image>(
-  (props, ref) => {
-    const src = props.ipfsSrc ? replaceIpfsUrl(props.ipfsSrc) : fallbackIcon;
-    const size = `${props.size}px`;
+  ({ ipfsSrc, size, ...restProps }, ref) => {
+    const src = ipfsSrc ? replaceIpfsUrl(ipfsSrc) : fallbackIcon;
+    // treat size of number as "px"
+    size = typeof size === "number" ? `${size}px` : size;
 
     // TODO - use sizes to create srcset
 
     return (
       <Image
+        {...restProps}
         ref={ref}
         // render different image element if src changes to avoid showing old image while loading new one
         key={src}
