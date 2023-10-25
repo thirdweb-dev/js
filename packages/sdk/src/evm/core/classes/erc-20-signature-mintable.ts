@@ -63,8 +63,10 @@ export class Erc20SignatureMintable implements DetectableFeature {
     async (signedPayload: SignedPayload20) => {
       const mintRequest = signedPayload.payload;
       const signature = signedPayload.signature;
-      const message = await this.mapPayloadToContractStruct(mintRequest);
-      const overrides = await this.contractWrapper.getCallOverrides();
+      const [message, overrides] = await Promise.all([
+        this.mapPayloadToContractStruct(mintRequest),
+        this.contractWrapper.getCallOverrides(),
+      ]);
       // TODO: Transaction Sequence Pattern
       await setErc20Allowance(
         this.contractWrapper,
@@ -89,22 +91,23 @@ export class Erc20SignatureMintable implements DetectableFeature {
    */
   mintBatch = /* @__PURE__ */ buildTransactionFunction(
     async (signedPayloads: SignedPayload20[]) => {
-      const contractPayloads = await Promise.all(
-        signedPayloads.map(async (s) => {
-          const message = await this.mapPayloadToContractStruct(s.payload);
-          const signature = s.signature;
-          const price = s.payload.price;
-          if (BigNumber.from(price).gt(0)) {
-            throw new Error(
-              "Can only batch free mints. For mints with a price, use regular mint()",
-            );
-          }
-          return {
-            message,
-            signature,
-          };
-        }),
+      const messages = await Promise.all(
+        signedPayloads.map((s) => this.mapPayloadToContractStruct(s.payload)),
       );
+      const contractPayloads = signedPayloads.map((s, index) => {
+        const message = messages[index];
+        const signature = s.signature;
+        const price = s.payload.price;
+        if (BigNumber.from(price).gt(0)) {
+          throw new Error(
+            "Can only batch free mints. For mints with a price, use regular mint()",
+          );
+        }
+        return {
+          message,
+          signature,
+        };
+      });
 
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
@@ -204,21 +207,30 @@ export class Erc20SignatureMintable implements DetectableFeature {
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload20[] = await Promise.all(
-      payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
-    );
+    const [chainId, name, parsedRequests]: [
+      number,
+      string,
+      FilledSignaturePayload20[],
+    ] = await Promise.all([
+      this.contractWrapper.getChainID(),
+      this.contractWrapper.read("name", []), // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155. 
+      Promise.all(
+        payloadsToSign.map((m) => Signature20PayloadInput.parseAsync(m)),
+      ),
+    ]);
 
-    const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    // ERC20Permit (EIP-712) spec differs from signature mint 721, 1155.
-    const name = await this.contractWrapper.read("name", []);
-
-    return await Promise.all(
-      parsedRequests.map(async (m) => {
-        const finalPayload = await Signature20PayloadOutput.parseAsync(m);
-        const signature = await this.contractWrapper.signTypedData(
+    const finalPayloads = await Promise.all(
+      parsedRequests.map((m) => Signature20PayloadOutput.parseAsync(m)),
+    );
+    const contractStructs = await Promise.all(
+      finalPayloads.map((payload) => this.mapPayloadToContractStruct(payload)),
+    );
+    const signatures = await Promise.all(
+      contractStructs.map((struct) =>
+        this.contractWrapper.signTypedData(
           signer,
           {
             name,
@@ -227,14 +239,18 @@ export class Erc20SignatureMintable implements DetectableFeature {
             verifyingContract: this.contractWrapper.address,
           },
           { MintRequest: MintRequest20 },
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
+          struct,
+        ),
+      ),
     );
+    return parsedRequests.map((m, index) => {
+      const finalPayload = finalPayloads[index];
+      const signature = signatures[index];
+      return {
+        payload: finalPayload,
+        signature: signature.toString(),
+      };
+    });
   }
 
   /** ******************************
@@ -251,15 +267,15 @@ export class Erc20SignatureMintable implements DetectableFeature {
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,
   ): Promise<ITokenERC20.MintRequestStructOutput> {
-    const normalizedPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      mintRequest.price,
-      mintRequest.currencyAddress,
-    );
-    const amountWithDecimals = utils.parseUnits(
-      mintRequest.quantity,
-      await this.contractWrapper.read("decimals", []),
-    );
+    const [normalizedPrice, decimals] = await Promise.all([
+      normalizePriceValue(
+        this.contractWrapper.getProvider(),
+        mintRequest.price,
+        mintRequest.currencyAddress,
+      ),
+      this.contractWrapper.read("decimals", []),
+    ]);
+    const amountWithDecimals = utils.parseUnits(mintRequest.quantity, decimals);
     return {
       to: mintRequest.to,
       primarySaleRecipient: mintRequest.primarySaleRecipient,

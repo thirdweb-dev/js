@@ -33,14 +33,13 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
-import { Status } from "../../enums";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace";
-import type { DirectListingV3 } from "../../types/marketplacev3";
+import type { MarketplaceFilterWithoutOfferor } from "../../types/marketplace/MarketPlaceFilter";
+import type { DirectListingV3 } from "../../types/marketplacev3/DirectListingV3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
@@ -49,6 +48,7 @@ import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { Transaction } from "./transactions";
+import { Status } from "../../enums/marketplace/Status";
 
 /**
  * Handles direct listings
