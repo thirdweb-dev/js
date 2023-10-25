@@ -21,7 +21,7 @@ export const ImportLocalWallet: React.FC<{
   localWalletConf: LocalWalletConfig;
   persist: boolean;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.importWallet;
+  const locale = useTWLocale().wallets.localWallet.importScreen;
   const [jsonString, setJsonString] = useState<string | undefined>();
   const { setLocalWallet } = useLocalWalletInfo(
     props.localWalletConf,

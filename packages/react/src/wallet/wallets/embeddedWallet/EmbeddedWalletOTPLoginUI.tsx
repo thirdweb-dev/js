@@ -17,7 +17,7 @@ type EmbeddedWalletOTPLoginUIProps = ConnectUIProps<EmbeddedWallet>;
 export const EmbeddedWalletOTPLoginUI: React.FC<
   EmbeddedWalletOTPLoginUIProps
 > = (props) => {
-  const locale = useTWLocale().wallets.embeddedWallet.emailLogin;
+  const locale = useTWLocale().wallets.embeddedWallet.emailLoginScreen;
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const { createWalletInstance, setConnectedWallet, setConnectionStatus } =

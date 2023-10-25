@@ -33,7 +33,7 @@ type ReconnectLocalWalletProps = {
 export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   props,
 ) => {
-  const locale = useTWLocale().wallets.localWallet.connectToSavedWallet;
+  const locale = useTWLocale().wallets.localWallet.reconnectScreen;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);

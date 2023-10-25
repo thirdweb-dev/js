@@ -20,10 +20,10 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
 
   const connectingLocale = {
     getStartedLink: locale.getStartedLink,
-    instruction: locale.connecting.instruction,
-    tryAgain: locale.connecting.tryAgain,
-    inProgress: locale.connecting.inProgress,
-    failed: locale.connecting.failed,
+    instruction: locale.connectionScreen.instruction,
+    tryAgain: locale.connectionScreen.retry,
+    inProgress: locale.connectionScreen.inProgress,
+    failed: locale.connectionScreen.failed,
   };
 
   const connectToExtension = useCallback(async () => {
@@ -108,7 +108,7 @@ export const ZerionConnectUI = (props: ConnectUIProps<ZerionWallet>) => {
     return (
       <GetStartedScreen
         locale={{
-          scanToDownload: locale.getStarted.scanToDownload,
+          scanToDownload: locale.getStartedScreen.instruction,
         }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}

@@ -52,7 +52,7 @@ export const ZerionScan: React.FC<{
 
   return (
     <ScanScreen
-      qrScanInstruction={locale.scan.instruction}
+      qrScanInstruction={locale.scanScreen.instruction}
       hideBackButton={hideBackButton}
       onBack={onBack}
       onGetStarted={onGetStarted}

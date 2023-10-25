@@ -3,16 +3,16 @@ import { DeepPartial, immutableOverride } from "../utils/applyOverrides";
 // wallets that connect via extension and QR scan
 function extensionAndQRScan(walletName: string) {
   return {
-    connecting: {
+    connectionScreen: {
       inProgress: "Awaiting Confirmation",
       failed: "Connection failed",
       instruction: `Accept connection request in ${walletName} wallet`,
-      tryAgain: "Try Again",
+      retry: "Try Again",
     },
-    getStarted: {
-      scanToDownload: `Scan the QR code to download ${walletName} app`,
+    getStartedScreen: {
+      instruction: `Scan the QR code to download ${walletName} app`,
     },
-    scan: {
+    scanScreen: {
       instruction: `Scan the QR code with ${walletName} wallet app to connect`,
     },
     getStartedLink: `Don't have ${walletName} wallet?`,
@@ -23,7 +23,7 @@ export function enDefault() {
   return {
     connectWallet: {
       signIn: "Sign in",
-      defaultBtnTitle: "Connect Wallet",
+      defaultButtonTitle: "Connect Wallet",
       connecting: "Connecting",
       switchNetwork: "Switch Network",
       switchingNetwork: "Switching Network",
@@ -38,15 +38,15 @@ export function enDefault() {
       send: "Send",
       receive: "Receive",
       currentNetwork: "Current network",
-      switchAccount: "Switch account",
+      switchAccount: "Switch Account",
       requestTestnetFunds: "Request Testnet Funds",
       transactionHistory: "Transaction History",
       backupWallet: "Backup Wallet",
       guestWalletWarning:
         "This is a temporary guest wallet. Backup if you don't want to lose access to it",
-      switchTo: "Switch to",
-      connectedToSmartWallet: "Connected to smart wallet",
-      confirmInWallet: "Confirm in Wallet",
+      switchTo: "Switch to", // Used in "Switch to <Wallet-Name>"
+      connectedToSmartWallet: "Connected To Smart Wallet",
+      confirmInWallet: "Confirm in wallet",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",
@@ -73,11 +73,11 @@ export function enDefault() {
         loading: "Loading",
         failedToSwitch: "Failed to switch network",
       },
-      receiveFunds: {
+      receiveFundsScreen: {
         title: "Receive Funds",
         instruction: "Copy the wallet address to send funds to this wallet",
       },
-      sendFunds: {
+      sendFundsScreen: {
         title: "Send Funds",
         submitButton: "Send",
         token: "Token",
@@ -85,14 +85,14 @@ export function enDefault() {
         amount: "Amount",
         successMessage: "Transaction Successful",
         invalidAddress: "Invalid Address",
-        noTokensFound: "No tokens found",
-        searchToken: "Search or paste token address",
+        noTokensFound: "No Tokens Found",
+        searchToken: "Search or Paste token address",
         transactionFailed: "Transaction Failed",
         transactionRejected: "Transaction Rejected",
         insufficientFunds: "Insufficient Funds",
       },
       signatureScreen: {
-        initialScreen: {
+        instructionScreen: {
           title: "Sign in",
           instruction:
             "Please sign the message request in your wallet to continue",
@@ -109,14 +109,13 @@ export function enDefault() {
         },
       },
     },
-    web3Button: {},
     wallets: {
       walletConnect: {
-        scanInstruction: "Scan this with your wallet or camera app to connect",
+        scanInstruction: "Scan this with your wallet app to connect",
       },
       smartWallet: {
         failedToConnect: "Failed to connect to Smart Wallet",
-        wrongNetwork: {
+        wrongNetworkScreen: {
           title: "Wrong Network",
           subtitle: "Your wallet is not connected to the required network",
           failedToSwitch: "Failed to switch network",
@@ -125,13 +124,13 @@ export function enDefault() {
       safeWallet: {
         connectWalletScreen: {
           title: "Link personal wallet",
-          subtitle: "Connect your personal wallet to use Safe.",
-          learnMore: "Learn more",
+          subtitle: "Connect your wallet to use Safe.",
+          learnMoreLink: "Learn more",
         },
         accountDetailsScreen: {
           title: "Enter your safe details",
-          findSafeAddressIn: "You can find your safe address in",
-          dashboardLink: "Safe Dashboard",
+          findSafeAddressIn: "You can find your safe address in", // You can find your safe address in + <dashboardLink>
+          dashboardLink: "Safe Dashboard", // <dashboardLink>
           network: "Safe Network",
           selectNetworkPlaceholder: "Network your safe is deployed to",
           invalidChainConfig:
@@ -155,15 +154,15 @@ export function enDefault() {
       paperWallet: {
         signInWithGoogle: "Sign in with Google",
         submitEmail: "Continue",
-        googleLogin: {
+        googleLoginScreen: {
           title: "Sign in",
           instruction: "Select your Google account in the pop-up",
           failed: "Failed to sign in",
           retry: "Retry",
         },
-        emailLogin: {
+        emailLoginScreen: {
           title: "Sign in",
-          enterCodeSendTo: "Enter the verification code sent to",
+          enterCodeSendTo: "Enter the verification code sent to", // Enter the verification code sent to + <email>
           newDeviceDetected: "New device detected",
           enterRecoveryCode:
             "Enter the recovery code emailed to you when you first signed up",
@@ -179,13 +178,13 @@ export function enDefault() {
       embeddedWallet: {
         signInWithGoogle: "Sign in with Google",
         submitEmail: "Continue",
-        googleLogin: {
+        googleLoginScreen: {
           title: "Sign in",
           instruction: "Select your Google account in the pop-up",
           failed: "Failed to sign in",
           retry: "Retry",
         },
-        emailLogin: {
+        emailLoginScreen: {
           title: "Sign in",
           enterCodeSendTo: "Enter the verification code sent to",
           newDeviceDetected: "New device detected",
@@ -205,23 +204,23 @@ export function enDefault() {
         submitEmail: "Continue",
       },
       localWallet: {
-        overrideConfirmation: {
+        warningScreen: {
           warning:
             "Your current wallet will be deleted if you create a new wallet. Backup wallet to your device before creating a new wallet",
           backupWallet: "Backup Wallet",
         },
-        connectToSavedWallet: {
+        reconnectScreen: {
           title: "Connect to saved wallet",
           savedWallet: "Saved Wallet",
           continue: "Continue",
           createNewWallet: "Create a new wallet",
         },
-        createWallet: {
+        createScreen: {
           createPassword:
-            "Choose a password for your wallet.  You'll be able to access and export this wallet with the same password",
+            "Choose a password for your wallet. You'll be able to access and export this wallet with the same password",
           importWallet: "Import Wallet",
         },
-        exportWallet: {
+        exportScreen: {
           description1:
             "This will download a JSON file containing the wallet information onto your device encrypted with the password",
           description2:
@@ -229,7 +228,7 @@ export function enDefault() {
           walletAddress: "Wallet Address",
           download: "Download",
         },
-        importWallet: {
+        importScreen: {
           description1:
             "The application can authorize any transactions on behalf of the wallet without any approvals",
           description2: "We recommend only connecting to trusted applications",
@@ -240,7 +239,7 @@ export function enDefault() {
       },
       frameWallet: {
         ...extensionAndQRScan("Frame"),
-        failedToConnect: {
+        connectionFailedScreen: {
           title: "Failed to connect to Frame",
           description:
             "Make sure the desktop app is installed and running. You can download Frame from the link below. Make sure to refresh this page once Frame is running.",

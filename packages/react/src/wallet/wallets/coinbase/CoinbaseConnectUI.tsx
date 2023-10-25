@@ -75,10 +75,10 @@ export const CoinbaseConnectUI = ({
       <ConnectingScreen
         locale={{
           getStartedLink: locale.getStartedLink,
-          instruction: locale.connecting.instruction,
-          tryAgain: locale.connecting.tryAgain,
-          inProgress: locale.connecting.inProgress,
-          failed: locale.connecting.failed,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
         }}
         errorConnecting={errorConnecting}
         onGetStarted={() => setScreen("get-started")}
@@ -95,7 +95,7 @@ export const CoinbaseConnectUI = ({
     return (
       <GetStartedScreen
         locale={{
-          scanToDownload: locale.getStarted.scanToDownload,
+          scanToDownload: locale.getStartedScreen.instruction,
         }}
         walletIconURL={meta.iconURL}
         walletName={meta.name}

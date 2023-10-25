@@ -14,7 +14,7 @@ export const OverrideConfirmation: React.FC<{
   onBack: () => void;
   meta: WalletConfig["meta"];
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.overrideConfirmation;
+  const locale = useTWLocale().wallets.localWallet.warningScreen;
   const isCompact = useContext(ModalConfigCtx).modalSize === "compact";
   return (
     <Container fullHeight flex="column" animate="fadein">

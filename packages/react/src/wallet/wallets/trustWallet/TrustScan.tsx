@@ -52,7 +52,7 @@ export const TrustScan: React.FC<{
 
   return (
     <ScanScreen
-      qrScanInstruction={locale.scan.instruction}
+      qrScanInstruction={locale.scanScreen.instruction}
       onBack={onBack}
       onGetStarted={onGetStarted}
       qrCodeUri={qrCodeUri}

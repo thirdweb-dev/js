@@ -22,7 +22,7 @@ import { useTWLocale } from "../../../evm/providers/locale-provider";
 export const EmbeddedWalletGoogleLogin = (
   props: ConnectUIProps<EmbeddedWallet>,
 ) => {
-  const locale = useTWLocale().wallets.embeddedWallet.googleLogin;
+  const locale = useTWLocale().wallets.embeddedWallet.googleLoginScreen;
   const { goBack, modalSize } = props;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();

@@ -24,7 +24,7 @@ const FrameFailedConnect: React.FC<{
   walletIconURL: string;
   supportLink: string;
 }> = (props) => {
-  const locale = useTWLocale().wallets.frameWallet.failedToConnect;
+  const locale = useTWLocale().wallets.frameWallet.connectionFailedScreen;
 
   return (
     <Container p="lg">
@@ -102,10 +102,10 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
       <ConnectingScreen
         locale={{
           getStartedLink: locale.getStartedLink,
-          instruction: locale.connecting.instruction,
-          tryAgain: locale.connecting.tryAgain,
-          inProgress: locale.connecting.inProgress,
-          failed: locale.connecting.failed,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
         }}
         errorConnecting={false}
         onRetry={() => {
@@ -136,7 +136,7 @@ export const FrameConnectUI = (props: ConnectUIProps<FrameWallet>) => {
     return (
       <GetStartedScreen
         locale={{
-          scanToDownload: locale.getStarted.scanToDownload,
+          scanToDownload: locale.getStartedScreen.instruction,
         }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}

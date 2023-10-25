@@ -69,10 +69,10 @@ export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
       <ConnectingScreen
         locale={{
           getStartedLink: locale.getStartedLink,
-          instruction: locale.connecting.instruction,
-          tryAgain: locale.connecting.tryAgain,
-          inProgress: locale.connecting.inProgress,
-          failed: locale.connecting.failed,
+          instruction: locale.connectionScreen.instruction,
+          tryAgain: locale.connectionScreen.retry,
+          inProgress: locale.connectionScreen.inProgress,
+          failed: locale.connectionScreen.failed,
         }}
         errorConnecting={errorConnecting}
         onGetStarted={() => {
@@ -91,7 +91,7 @@ export const OKXConnectUI = (props: ConnectUIProps<OKXWallet>) => {
     return (
       <GetStartedScreen
         locale={{
-          scanToDownload: locale.getStarted.scanToDownload,
+          scanToDownload: locale.getStartedScreen.instruction,
         }}
         walletIconURL={walletConfig.meta.iconURL}
         walletName={walletConfig.meta.name}

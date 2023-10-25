@@ -21,7 +21,7 @@ export const CreateLocalWallet_Password: React.FC<{
   renderBackButton: boolean;
   persist: boolean;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.createWallet;
+  const locale = useTWLocale().wallets.localWallet.createScreen;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

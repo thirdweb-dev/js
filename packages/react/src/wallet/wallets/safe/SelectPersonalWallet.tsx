@@ -79,7 +79,7 @@ export const SelectpersonalWallet: React.FC<{
               whiteSpace: "nowrap",
             }}
           >
-            {locale.connectWalletScreen.learnMore}
+            {locale.connectWalletScreen.learnMoreLink}
           </Link>{" "}
         </Text>
       </Container>

@@ -91,7 +91,7 @@ export function SendFundsForm(props: {
   amount: string;
   setAmount: (value: string) => void;
 }) {
-  const locale = useTWLocale().connectWallet.sendFunds;
+  const locale = useTWLocale().connectWallet.sendFundsScreen;
   const tokenAddress = props.token?.address;
   const balanceQuery = useBalance(tokenAddress);
 
@@ -396,7 +396,7 @@ export function TokenSelector(props: {
   const chainId = useChainId();
   const nativeTokenInfo = useNativeToken();
   const { data: foundToken, isLoading: findingToken } = useToken(input);
-  const locale = useTWLocale().connectWallet.sendFunds;
+  const locale = useTWLocale().connectWallet.sendFundsScreen;
 
   let tokenList = (chainId ? props.supportedTokens[chainId] : undefined) || [];
 

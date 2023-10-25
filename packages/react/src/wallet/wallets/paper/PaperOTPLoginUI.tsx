@@ -24,7 +24,7 @@ type SentEmailInfo = {
 };
 
 export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
-  const locale = useTWLocale().wallets.paperWallet.emailLogin;
+  const locale = useTWLocale().wallets.paperWallet.emailLoginScreen;
   const email = props.selectionData;
   const [otpInput, setOtpInput] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");

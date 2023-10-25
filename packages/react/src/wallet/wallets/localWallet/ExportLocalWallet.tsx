@@ -36,7 +36,7 @@ export const ExportLocalWallet: React.FC<{
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.exportWallet;
+  const locale = useTWLocale().wallets.localWallet.exportScreen;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);

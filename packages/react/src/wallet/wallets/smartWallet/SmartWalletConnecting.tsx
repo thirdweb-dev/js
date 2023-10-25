@@ -124,13 +124,13 @@ export const SmartWalletConnecting: React.FC<{
           <Spacer y="md" />
 
           <Text size="lg" color="primaryText" center weight={500}>
-            {locale.wrongNetwork.title}
+            {locale.wrongNetworkScreen.title}
           </Text>
 
           <Spacer y="lg" />
 
           <Text multiline center>
-            {locale.wrongNetwork.subtitle}
+            {locale.wrongNetworkScreen.subtitle}
           </Text>
 
           <Spacer y="xl" />
@@ -184,7 +184,7 @@ export const SmartWalletConnecting: React.FC<{
                 width={iconSize.sm}
                 height={iconSize.sm}
               />
-              <span>{locale.wrongNetwork.failedToSwitch}</span>
+              <span>{locale.wrongNetworkScreen.failedToSwitch}</span>
             </Container>
           </Container>
         </Container>

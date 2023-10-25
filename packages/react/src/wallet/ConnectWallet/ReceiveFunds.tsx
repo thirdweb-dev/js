@@ -14,7 +14,7 @@ import { useTWLocale } from "../../evm/providers/locale-provider";
 export function ReceiveFunds(props: { iconUrl: string }) {
   const address = useAddress();
   const { hasCopied, onCopy } = useClipboard(address || "");
-  const locale = useTWLocale().connectWallet.receiveFunds;
+  const locale = useTWLocale().connectWallet.receiveFundsScreen;
 
   return (
     <Container p="lg">

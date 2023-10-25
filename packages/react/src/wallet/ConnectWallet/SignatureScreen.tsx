@@ -101,7 +101,7 @@ export const SignatureScreen: React.FC<{
           paddingBottom: 0,
         }}
       >
-        <ModalHeader title={locale.initialScreen.title} />
+        <ModalHeader title={locale.instructionScreen.title} />
       </Container>
 
       <Container
@@ -129,7 +129,7 @@ export const SignatureScreen: React.FC<{
             )}
 
             <Text center multiline balance>
-              {locale.initialScreen.instruction}
+              {locale.instructionScreen.instruction}
             </Text>
             <Spacer y="md" />
             <Button
@@ -142,7 +142,7 @@ export const SignatureScreen: React.FC<{
                 padding: spacing.md,
               }}
             >
-              {locale.initialScreen.signInButton}
+              {locale.instructionScreen.signInButton}
             </Button>
           </>
         ) : (

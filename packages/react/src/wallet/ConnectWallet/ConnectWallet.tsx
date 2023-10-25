@@ -155,7 +155,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const isLoading =
     connectionStatus === "connecting" || connectionStatus === "unknown";
 
-  const btnTitle = props.btnTitle || locale.connectWallet.defaultBtnTitle;
+  const btnTitle = props.btnTitle || locale.connectWallet.defaultButtonTitle;
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
 
   const setModalConfig = useContext(SetModalConfigCtx);
