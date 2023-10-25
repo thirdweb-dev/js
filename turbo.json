@@ -5,6 +5,10 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "typedoc": {
+      "outputs": ["typedoc/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/chains#build": {
       "outputs": ["dist/**", "chains/**"],
       "dependsOn": ["^build"],
