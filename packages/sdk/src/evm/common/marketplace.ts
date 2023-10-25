@@ -17,13 +17,11 @@ import {
   InterfaceId_IERC721,
 } from "../constants/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  NewAuctionListing,
-  NewDirectListing,
-  Offer,
-  UnmappedOffer,
-} from "../types/marketplace";
 import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
+import { NewDirectListing } from "../types/marketplace/NewDirectListing";
+import { NewAuctionListing } from "../types/marketplace/NewAuctionListing";
+import { UnmappedOffer } from "../types/marketplace/UnmappedOffer";
+import { Offer } from "../types/marketplace/Offer";
 
 /**
  * This method checks if the given token is approved for the transferrerContractAddress contract.

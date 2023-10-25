@@ -35,7 +35,6 @@ import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
-import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -57,6 +56,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for NFT Drop contracts

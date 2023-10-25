@@ -12,7 +12,7 @@ import type {
   ContractFactory,
 } from "ethers";
 import EventEmitter from "eventemitter3";
-import { DeployEvents } from "./deploy";
+import { DeployEvents } from "./deploy/deploy-events";
 
 export type ParseTransactionReceipt<TResult = TransactionResult> =
   | ((receipt: providers.TransactionReceipt) => TResult)

@@ -7,7 +7,7 @@ import type {
   Signer,
   providers,
 } from "ethers";
-import { ChainInfo } from "../schema";
+import { ChainInfo } from "../schema/shared/ChainInfo";
 
 // --- utility types extracted from from ts-toolbelt --- //
 

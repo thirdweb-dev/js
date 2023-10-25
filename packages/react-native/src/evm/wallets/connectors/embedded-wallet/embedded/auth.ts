@@ -32,32 +32,32 @@ import {
   ROUTE_HEADLESS_GOOGLE_LOGIN,
 } from "./helpers/constants";
 
-export async function sendEmailOTP(
-  email: string,
-  clientId: string,
-): Promise<SendEmailOtpReturnType> {
-  await verifyClientId(clientId);
+export async function sendEmailOTP(options: {
+  email: string;
+  clientId: string;
+}): Promise<SendEmailOtpReturnType> {
+  await verifyClientId(options.clientId);
 
   await prePaperAuth({
     authenticationMethod: AuthProvider.COGNITO,
-    email,
+    email: options.email,
   });
 
   // AWS Auth flow
   let cognitoUser: CognitoUser;
   try {
-    cognitoUser = await cognitoEmailSignIn(email, clientId);
+    cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
   } catch (e) {
-    await cognitoEmailSignUp(email, clientId);
-    cognitoUser = await cognitoEmailSignIn(email, clientId);
+    await cognitoEmailSignUp(options.email, options.clientId);
+    cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
   }
   setCognitoUser(cognitoUser);
 
   let result: Awaited<ReturnType<typeof getEmbeddedWalletUserDetail>>;
   try {
     result = await getEmbeddedWalletUserDetail({
-      email,
-      clientId,
+      email: options.email,
+      clientId: options.clientId,
     });
   } catch (e) {
     throw new Error(
@@ -74,7 +74,7 @@ export async function sendEmailOTP(
     : {
         isNewUser: result.isNewUser,
         isNewDevice: !(await isDeviceSharePresentForUser(
-          clientId,
+          options.clientId,
           result.walletUserId ?? "",
         )),
         recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
@@ -207,13 +207,13 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 }
 
 export async function customJwt(authOptions: AuthOptions, clientId: string) {
-  const { jwtToken, encryptionKey } = authOptions;
+  const { jwt, password } = authOptions;
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      jwtToken,
+      jwtToken: jwt,
       authProvider: AuthProvider.CUSTOM_JWT,
       developerClientId: clientId,
     }),
@@ -239,7 +239,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await postPaperAuthUserManaged(toStoreToken, clientId, encryptionKey);
+    await postPaperAuthUserManaged(toStoreToken, clientId, password);
 
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
