@@ -90,7 +90,7 @@ export type TransactionResponse = {
   totalCount: number;
 };
 
-export function useEngineTransactions(instance: string) {
+export function useEngineTransactions(instance: string, autoUpdate: boolean) {
   const { token } = useApiAuthToken();
 
   return useQuery(
@@ -108,7 +108,10 @@ export function useEngineTransactions(instance: string) {
 
       return (json.result as TransactionResponse) || {};
     },
-    { enabled: !!instance && !!token },
+    {
+      enabled: !!instance && !!token,
+      refetchInterval: autoUpdate ? 2_000 : false,
+    },
   );
 }
 

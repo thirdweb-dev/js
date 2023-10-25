@@ -3,10 +3,10 @@ import {
   useEngineTransactions,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, Tooltip } from "@chakra-ui/react";
+import { Flex, FormControl, Switch, Tooltip } from "@chakra-ui/react";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { TransactionsTable } from "./transactions-table";
-import { Badge, Card, Heading, Link, Text } from "tw-components";
+import { Badge, Card, FormLabel, Heading, Link, Text } from "tw-components";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
@@ -20,7 +20,8 @@ interface EngineOverviewProps {
 export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
   const backendWallets = useEngineBackendWallets(instance);
   const { data: walletConfig } = useEngineWalletConfig(instance);
-  const transactionsQuery = useEngineTransactions(instance);
+  const [autoUpdate, setAutoUpdate] = useState<boolean>(false);
+  const transactionsQuery = useEngineTransactions(instance, autoUpdate);
   const chainId = useChainId();
   const [selectedChainId, setSelectedChainId] = useState(chainId || 1);
 
@@ -108,9 +109,26 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
         />
       </Flex>
       <Flex flexDir="column" gap={4}>
-        <Flex flexDir="column" gap={2}>
-          <Heading size="title.sm">Transactions (24hrs)</Heading>
-          <Text>View recent transactions sent from your backend wallets.</Text>
+        <Flex flexDir="row" gap={2} justify="space-between">
+          <Flex flexDir="column" gap={2}>
+            <Heading size="title.sm">Transactions (24hrs)</Heading>
+            <Text>
+              View recent transactions sent from your backend wallets.
+            </Text>
+          </Flex>
+
+          <Flex>
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="auto-update" mb="0">
+                Auto-Update
+              </FormLabel>
+              <Switch
+                isChecked={autoUpdate}
+                onChange={() => setAutoUpdate((val) => !val)}
+                id="auto-update"
+              />
+            </FormControl>
+          </Flex>
         </Flex>
         <TransactionsTable
           transactions={transactionsQuery.data?.transactions ?? []}
