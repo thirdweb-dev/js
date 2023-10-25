@@ -1,5 +1,3 @@
-/* eslint-disable better-tree-shaking/no-top-level-side-effects */
-
 // @ts-check
 import { typedoc } from "typedoc-gen";
 
@@ -11,5 +9,5 @@ typedoc({
     "**/packages/react-core/**",
     "**/packages/chains/**",
   ],
-  output: "json",
+  output: "both",
 });

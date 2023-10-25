@@ -1,6 +1,6 @@
 import TypeDoc, { JSONOutput } from "typedoc";
 import { writeFile, readFile } from "node:fs/promises";
-import { postprocess } from "./postprocess/postprocess";
+import { transform } from "typedoc-better-json";
 
 /**
  *
@@ -9,9 +9,9 @@ import { postprocess } from "./postprocess/postprocess";
 export async function typedoc(options: {
   entryPoints: string[];
   exclude: string[];
-  outFile: string;
+  output: "json" | "html" | "both";
 }) {
-  const { outFile } = options;
+  const outFile = "typedoc/documentation.json";
 
   const app = await TypeDoc.Application.bootstrapWithPlugins({
     entryPoints: options.entryPoints,
@@ -24,14 +24,19 @@ export async function typedoc(options: {
     throw new Error("Failed to create project");
   }
 
-  await app.generateDocs(project, "typedoc/docs");
-  await app.generateJson(project, outFile.replace(".json", "-full.json"));
+  if (options.output === "html" || options.output === "both") {
+    await app.generateDocs(project, "typedoc/docs");
+  }
 
-  const fileContent = await readFile(
-    outFile.replace(".json", "-full.json"),
-    "utf8",
-  );
+  if (options.output === "json" || options.output === "both") {
+    // -full file is the typedoc official output, we further process it to make it easy to generate docs
+    await app.generateJson(project, outFile.replace(".json", "-full.json"));
+    const fileContent = await readFile(
+      outFile.replace(".json", "-full.json"),
+      "utf8",
+    );
 
-  const fileData = JSON.parse(fileContent) as JSONOutput.ProjectReflection;
-  await writeFile(outFile, JSON.stringify(postprocess(fileData), null, 2));
+    const fileData = JSON.parse(fileContent) as JSONOutput.ProjectReflection;
+    await writeFile(outFile, JSON.stringify(transform(fileData), null, 2));
+  }
 }

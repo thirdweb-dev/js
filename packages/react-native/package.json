@@ -17,7 +17,7 @@
     "clean": "rm -rf dist/",
     "build": "tsc",
     "push": "yalc push",
-    "typedoc": "rimraf typedoc && node ./scripts/typedoc.js"
+    "typedoc": "node scripts/typedoc.mjs"
   },
   "keywords": [
     "react-native",
@@ -83,7 +83,7 @@
     "react-native-safe-area-context": "4.5.3",
     "react-native-webview": "12.1.0",
     "rimraf": "^3.0.2",
-    "typedoc": "^0.25.2",
+    "typedoc-gen": "workspace:*",
     "typescript": "^5.1.6"
   },
   "optionalDependencies": {

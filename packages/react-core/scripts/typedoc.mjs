@@ -1,3 +1,4 @@
+// @ts-check
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 
 import { typedoc } from "typedoc-gen";
@@ -9,5 +10,5 @@ typedoc({
     "**/packages/wallets/**",
     "**/packages/chains/**",
   ],
-  outFile: "typedoc/documentation.json",
+  output: "json",
 });
