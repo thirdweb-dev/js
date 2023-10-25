@@ -165,6 +165,8 @@ export function enDefault() {
         signInWithGoogle: "Sign in with Google",
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
+        invalidEmail: "Invalid email address",
+        emailRequired: "Email address is required",
         googleLoginScreen: {
           title: "Sign in",
           instruction: "Select your Google account in the pop-up",
@@ -184,6 +186,7 @@ export function enDefault() {
           failedToSendCode: "Failed to send verification code",
           sendingCode: "Sending verification code",
           resendCode: "Resend verification code",
+          encoreRecoveryCode: "Enter your recovery code",
         },
       },
       embeddedWallet: {

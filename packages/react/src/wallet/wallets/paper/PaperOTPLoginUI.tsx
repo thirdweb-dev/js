@@ -193,7 +193,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
                 }}
                 value={recoveryCode}
                 onChange={(e) => setRecoveryCode(e.target.value)}
-                placeholder="Enter your recovery code"
+                placeholder={locale.enterRecoveryCode}
               />
             </Container>
           )}
