@@ -1,21 +1,21 @@
-import {InvokeCommand, LambdaClient} from '@aws-sdk/client-lambda';
-import {fromCognitoIdentityPool} from '@aws-sdk/credential-providers';
+import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 
-import {authFetchEmbeddedWalletUser} from '../api/fetchers';
+import { authFetchEmbeddedWalletUser } from "../api/fetchers";
 import {
   AWS_REGION,
   COGNITO_IDENTITY_POOL_ID,
   GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION,
   ROUTE_AUTH_COGNITO_ID_TOKEN,
   ROUTE_COGNITO_IDENTITY_POOL_URL,
-} from '../constants';
+} from "../constants";
 
 export async function getCognitoRecoveryPassword(clientId: string) {
   const idTokenResponse = await authFetchEmbeddedWalletUser(
-    {clientId},
+    { clientId },
     ROUTE_AUTH_COGNITO_ID_TOKEN,
     {
-      method: 'GET',
+      method: "GET",
     },
   );
   if (!idTokenResponse.ok) {
@@ -28,9 +28,7 @@ export async function getCognitoRecoveryPassword(clientId: string) {
     );
   }
   const idTokenResult = await idTokenResponse.json();
-  const {
-    data: {id_token: idToken, access_token: accessToken},
-  } = idTokenResult;
+  const { idToken, accessToken } = idTokenResult;
 
   const cognitoIdentity = fromCognitoIdentityPool({
     clientConfig: {
@@ -62,9 +60,9 @@ export async function getCognitoRecoveryPassword(clientId: string) {
   };
   const data = await lambdaClient.send(new InvokeCommand(params));
   if (!data.Payload) {
-    throw new Error('No payload');
+    throw new Error("No payload");
   }
-  const encKeyResult = JSON.parse(Buffer.from(data.Payload).toString('utf-8'));
+  const encKeyResult = JSON.parse(Buffer.from(data.Payload).toString("utf-8"));
 
   const result = JSON.parse(encKeyResult.body).recoveryShareEncKey as string;
 

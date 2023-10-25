@@ -37,7 +37,8 @@ import {
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Address } from "../../schema/shared/Address";
-import type { DeployEvents, DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
+import type { DeployEvents } from "../../types/deploy/deploy-events";
 import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";

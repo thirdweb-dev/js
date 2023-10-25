@@ -29,7 +29,7 @@ import {
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import EventEmitter from "eventemitter3";
-import type { DeployEvents } from "../../types/deploy";
+import type { DeployEvents } from "../../types/deploy/deploy-events";
 import { ForwardRequestMessage, PermitRequestMessage } from "../types";
 import { computeEOAForwarderAddress } from "../../common/any-evm-utils/computeEOAForwarderAddress";
 import { computeForwarderAddress } from "../../common/any-evm-utils/computeForwarderAddress";

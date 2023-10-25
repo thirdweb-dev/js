@@ -26,18 +26,16 @@ import {
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ListingType } from "../../enums";
 import { CurrencyValue, Price } from "../../types/currency";
-import {
-  AuctionListing,
-  NewAuctionListing,
-  Offer,
-} from "../../types/marketplace";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { ListingType } from "../../enums/marketplace/ListingType";
+import { AuctionListing } from "../../types/marketplace/AuctionListing";
+import { Offer } from "../../types/marketplace/Offer";
+import { NewAuctionListing } from "../../types/marketplace/NewAuctionListing";
 
 /**
  * Handles auction listings
