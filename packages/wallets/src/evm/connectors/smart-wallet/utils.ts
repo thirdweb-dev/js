@@ -86,6 +86,7 @@ export async function isSmartWalletDeployed(
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
     personalWalletAddress,
+    "0x",
   ]);
   const isDeployed = await isContractDeployed(
     accountAddress,

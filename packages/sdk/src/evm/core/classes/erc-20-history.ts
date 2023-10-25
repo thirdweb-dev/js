@@ -55,15 +55,20 @@ export class TokenERC20History {
         balances[to] = balances[to].add(amount);
       }
     });
-    return Promise.all(
-      Object.keys(balances).map(async (addr) => ({
-        holder: addr,
-        balance: await fetchCurrencyValue(
+
+    const entries = Object.entries(balances);
+    const results = await Promise.all(
+      entries.map(([, value]) =>
+        fetchCurrencyValue(
           this.contractWrapper.getProvider(),
           this.contractWrapper.address,
-          balances[addr],
+          value,
         ),
-      })),
+      ),
     );
+    return entries.map(([addr], index) => ({
+      holder: addr,
+      balance: results[index],
+    }));
   }
 }

@@ -11,7 +11,7 @@ import {
   PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
-import { fetchSourceFilesFromMetadata } from "../../common";
+import { fetchSourceFilesFromMetadata } from "../../common/fetchSourceFilesFromMetadata";
 
 /**
  * Handles publish metadata for a contract

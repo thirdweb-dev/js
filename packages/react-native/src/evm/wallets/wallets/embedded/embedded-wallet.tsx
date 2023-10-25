@@ -20,8 +20,6 @@ export type EmbeddedWalletConfig = {
         redirectUrl: string;
       }
     | false;
-
-  custom_auth?: boolean;
 };
 
 export const embeddedWallet = (
@@ -38,7 +36,6 @@ export const embeddedWallet = (
             }
           : undefined
       }
-      custom_auth={config?.custom_auth}
       // you cannot disable both email and oauth
       email={!config?.oauthOptions && !config?.email ? true : config?.email}
     />
@@ -53,7 +50,7 @@ export const embeddedWallet = (
         clientId: options.clientId || "",
       });
     },
-    selectUI: config?.custom_auth ? undefined : selectUI,
+    selectUI: selectUI,
     connectUI: EmbeddedConnectionUI,
   };
 };
