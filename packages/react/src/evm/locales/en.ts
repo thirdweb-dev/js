@@ -152,6 +152,7 @@ export function enDefault() {
           connecting: "Connecting",
           mainnets: "Mainnets",
           testnets: "Testnets",
+          safeAddress: "Safe Address",
         },
       },
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
@@ -162,6 +163,7 @@ export function enDefault() {
       trustWallet: extensionAndQRScanScreens("Trust"),
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       paperWallet: {
+        signIn: "Sign in",
         signInWithGoogle: "Sign in with Google",
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
@@ -193,6 +195,7 @@ export function enDefault() {
         signInWithGoogle: "Sign in with Google",
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
+        signIn: "Sign in",
         googleLoginScreen: {
           title: "Sign in",
           instruction: "Select your Google account in the pop-up",
@@ -215,6 +218,7 @@ export function enDefault() {
         },
       },
       magicLink: {
+        signIn: "Sign in",
         loginWith: "Login with",
         submitEmail: "Continue",
         loginWithEmailOrPhone: "Login with email or phone number",

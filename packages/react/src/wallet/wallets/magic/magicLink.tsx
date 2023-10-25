@@ -434,6 +434,7 @@ const MagicConnectionUIScreen: React.FC<
     oauthProviders?: OauthProvider[];
   }
 > = (props) => {
+  const locale = useTWLocale().wallets.magicLink;
   const connectMagic = useConnectMagic();
 
   return (
@@ -445,7 +446,7 @@ const MagicConnectionUIScreen: React.FC<
         minHeight: "300px",
       }}
     >
-      <ModalHeader onBack={props.goBack} title="Sign in" />
+      <ModalHeader onBack={props.goBack} title={locale.signIn} />
       <Spacer y="xl" />
       <Container
         expand

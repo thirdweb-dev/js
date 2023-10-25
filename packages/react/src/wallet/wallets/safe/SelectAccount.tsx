@@ -176,7 +176,7 @@ export const SelectAccount: React.FC<{
                 setSafeAddress(value);
               }
             }}
-            label="Safe Address"
+            label={locale.safeAddress}
             type="text"
             value={safeAddress}
             required
@@ -185,7 +185,7 @@ export const SelectAccount: React.FC<{
 
           <Spacer y="lg" />
 
-          {/* Select Safe Netowrk */}
+          {/* Select Safe Network */}
           <Label htmlFor="safeNetwork">{locale.network}</Label>
           <Spacer y="sm" />
           <div

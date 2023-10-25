@@ -101,6 +101,7 @@ export const PaperFormUIScreen: React.FC<{
   walletConfig: WalletConfig<PaperWallet>;
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
+  const locale = useTWLocale().wallets.paperWallet;
   return (
     <Container
       fullHeight
@@ -111,7 +112,7 @@ export const PaperFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.signIn} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container

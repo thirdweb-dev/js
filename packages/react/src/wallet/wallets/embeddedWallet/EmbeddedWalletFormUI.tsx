@@ -94,6 +94,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   walletConfig: WalletConfig<EmbeddedWallet>;
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
+  const locale = useTWLocale().wallets.embeddedWallet;
   return (
     <Container
       fullHeight
@@ -104,7 +105,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
         minHeight: "250px",
       }}
     >
-      <ModalHeader onBack={props.onBack} title="Sign in" />
+      <ModalHeader onBack={props.onBack} title={locale.signIn} />
       {isCompact ? <Spacer y="xl" /> : null}
 
       <Container
