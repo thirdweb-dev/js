@@ -25,5 +25,6 @@ export function getAccessorDoc(
         }
       : undefined,
     blockTags: data.comment?.blockTags?.filter((w) => w.tag !== "@returns"),
+    flags: Object.keys(data.flags).length > 0 ? data.flags : undefined,
   };
 }

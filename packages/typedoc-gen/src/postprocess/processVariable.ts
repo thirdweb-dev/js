@@ -16,6 +16,7 @@ export function getVariableDoc(
     source: data.sources?.[0]?.url,
     type: data.type ? getReadableType(data.type) : undefined,
     typeDeclaration: data.type ? getDeclaration(data.type) : undefined,
+    flags: Object.keys(data.flags).length > 0 ? data.flags : undefined,
   };
 }
 

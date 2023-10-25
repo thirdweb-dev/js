@@ -26,6 +26,7 @@ export type AccessorDoc = {
     type?: string;
     summary?: JSONOutput.CommentDisplayPart[];
   };
+  flags?: JSONOutput.ReflectionFlags;
 };
 
 export type FunctionSignature = {
@@ -48,8 +49,7 @@ export type FunctionSignatureArg = {
   name: string;
   type?: string;
   summary?: JSONOutput.CommentDisplayPart[];
-  isOptional?: boolean;
-  isRest?: boolean;
+  flags?: JSONOutput.ReflectionFlags;
 };
 
 export type InterfaceDoc = {
@@ -66,6 +66,7 @@ export type VariableDoc = {
   summary?: JSONOutput.CommentDisplayPart[];
   type?: string;
   typeDeclaration?: VariableTypeDeclaration[];
+  flags?: JSONOutput.ReflectionFlags;
 };
 
 export type VariableTypeDeclaration = TypeDeclarationDoc | FunctionDoc;

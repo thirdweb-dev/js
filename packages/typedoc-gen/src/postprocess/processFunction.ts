@@ -30,8 +30,7 @@ function getFunctionSignatureDoc(signature: JSONOutput.SignatureReflection) {
         name: param.name,
         type: param.type ? getReadableType(param.type) : undefined,
         summary: param.comment?.summary,
-        isOptional: param.flags.isOptional || undefined,
-        isRest: param.flags.isRest || undefined,
+        flags: Object.keys(param.flags).length > 0 ? param.flags : undefined,
       };
       return arg;
     }),
