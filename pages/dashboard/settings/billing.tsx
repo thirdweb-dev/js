@@ -13,10 +13,12 @@ import { StepsCard } from "components/dashboard/StepsCard";
 import { useEffect, useMemo, useState } from "react";
 import { FiCheckCircle, FiAlertCircle, FiInfo } from "react-icons/fi";
 import { BillingPlan } from "components/settings/Account/BillingPlan";
+import { useRouter } from "next/router";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const address = useAddress();
   const meQuery = useAccount();
+  const router = useRouter();
   const { data: account } = meQuery;
   const validPayment = account?.status === "validPayment";
   const paymentVerification = account?.status === "paymentVerification";
@@ -111,6 +113,13 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
       });
     }
   }, [account, stepsCompleted, validPayment, paymentVerification]);
+
+  useEffect(() => {
+    const { payment_intent, source_redirect_slug } = router.query;
+    if (payment_intent || source_redirect_slug) {
+      router.replace("/dashboard/settings/billing");
+    }
+  }, [router]);
 
   if (!address) {
     return <ConnectWalletPrompt />;

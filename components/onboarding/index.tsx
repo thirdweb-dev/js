@@ -42,7 +42,7 @@ export const Onboarding: React.FC = () => {
       action: "onboardingStep",
       label: "next",
       data: {
-        currentStep: "onboarding",
+        email: account.unconfirmedEmail || email || updatedEmail,
       },
     };
 
@@ -56,6 +56,7 @@ export const Onboarding: React.FC = () => {
         ...tracking,
         data: {
           ...tracking.data,
+          currentStep: "onboarding",
           nextStep: "confirming",
         },
       });
@@ -67,6 +68,7 @@ export const Onboarding: React.FC = () => {
         ...tracking,
         data: {
           ...tracking.data,
+          currentStep: "confirming",
           nextStep: newState,
         },
       });
@@ -77,6 +79,7 @@ export const Onboarding: React.FC = () => {
         ...tracking,
         data: {
           ...tracking.data,
+          currentStep: "billing",
           nextStep: "skipped",
         },
       });
