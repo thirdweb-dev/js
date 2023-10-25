@@ -1,7 +1,7 @@
 import type { Chain } from "@thirdweb-dev/chains";
 import {
   EmbeddedWalletConstructorType,
-  SendEmailOtpReturnType,
+  InitializedUser,
 } from "./implementations";
 
 export type EmbeddedWalletAdditionalOptions = {
@@ -19,8 +19,7 @@ export interface EmbeddedWalletConnectorOptions {
 
 export type EmbeddedWalletConnectionArgs = {
   chainId?: number;
-  authData: AuthData;
-  extraArgs?: ExtraArgs;
+  authResult: AuthResult;
 };
 
 type EmailAuthParams = {
@@ -30,6 +29,8 @@ type EmailAuthParams = {
 
 type GoogleAuthParams = {
   strategy: "google";
+  openedWindow?: Window;
+  closeOpenedWindow?: (window: Window) => void;
 };
 
 type JwtAuthParams = {
@@ -56,20 +57,10 @@ export type AuthParams =
   | IframeOtpAuthParams
   | IframeAuthParams;
 
-// this is the output of 'authenticate', decorates the AuthParams with extra data when needed
-export type AuthData =
-  | (EmailAuthParams & {
-      result: SendEmailOtpReturnType;
-    })
-  | GoogleAuthParams
-  | JwtAuthParams
-  | IframeOtpAuthParams
-  | IframeAuthParams;
-
-// TODO typed based off AuthData["strategy"]
-export type ExtraArgs = {
-  openedWindow?: Window;
-  closeOpenedWindow?: (window: Window) => void;
-  password?: string;
-  otp?: string;
+// TODO typed based off AuthParams["strategy"]
+export type AuthResult = {
+  user?: InitializedUser;
+  isNewUser?: boolean;
+  needsRecoveryCode?: boolean;
+  verifyOTP?: (otp: string, recoveryCode?: string) => Promise<AuthResult>;
 };

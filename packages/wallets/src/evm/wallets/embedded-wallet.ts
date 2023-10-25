@@ -12,7 +12,12 @@ import { AbstractClientWallet, WalletOptions } from "./base";
 export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
 
-export type { EmbeddedWalletAdditionalOptions } from "../connectors/embedded-wallet/types";
+export type {
+  EmbeddedWalletAdditionalOptions,
+  AuthParams,
+  AuthResult,
+  EmbeddedWalletConnectionArgs,
+} from "../connectors/embedded-wallet/types";
 
 export class EmbeddedWallet extends AbstractClientWallet<
   EmbeddedWalletAdditionalOptions,
@@ -72,15 +77,13 @@ export class EmbeddedWallet extends AbstractClientWallet<
       return undefined;
     }
 
-    // do not return non-serializable params to make auto-connect work
-    if (connectParams.authData.strategy === "google") {
-      return {
-        authData: connectParams.authData,
-        chainId: connectParams.chainId,
-      };
-    }
-
-    return connectParams;
+    // omit non serializable/autoconnect-able
+    return {
+      chainId: connectParams.chainId,
+      authResult: {
+        user: connectParams.authResult.user,
+      },
+    };
   }
 
   async getEmail() {
@@ -93,7 +96,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return connector.getEmbeddedWalletSDK();
   }
 
-  // TODO move to connect callback
+  // TODO move to connect/auth callback
   async getRecoveryInformation() {
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.getRecoveryInformation();

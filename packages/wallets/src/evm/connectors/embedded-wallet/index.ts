@@ -6,15 +6,14 @@ import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 
 import {
-  AuthLoginReturnType,
   EmbeddedWalletSdk,
   InitializedUser,
   SendEmailOtpReturnType,
   UserWalletStatus,
 } from "./implementations";
 import {
-  AuthData,
   AuthParams,
+  AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
 } from "./types";
@@ -55,71 +54,31 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return ewSDK.auth.sendEmailLoginOtp({ email });
   }
 
-  async connect(options?: EmbeddedWalletConnectionArgs): Promise<string> {
-    const ewSDK = this.getEmbeddedWalletSDK();
-    let authResult: AuthLoginReturnType;
-
-    const strategy = options?.authData.strategy;
-    switch (strategy) {
-      case "email": {
-        if (!options?.extraArgs?.otp) {
-          throw new Error("No OTP provided");
-        }
-        authResult = await ewSDK.auth.verifyEmailLoginOtp({
-          email: options.authData.email,
-          otp: options.extraArgs.otp,
-          recoveryCode: options.extraArgs?.password,
-        });
-        break;
+  async connect(args?: EmbeddedWalletConnectionArgs): Promise<string> {
+    // backwards compatibility - options should really be required here
+    if (!args) {
+      // default to iframe flow
+      const result = await this.authenticate({ strategy: "iframe" });
+      if (!result.user) {
+        throw new Error("Error connecting User");
       }
-      case "google": {
-        authResult = await ewSDK.auth.loginWithGoogle({
-          closeOpenedWindow: options?.extraArgs?.closeOpenedWindow,
-          openedWindow: options?.extraArgs?.openedWindow,
-        });
-        break;
+      this.user = result.user;
+    } else {
+      if (!args.authResult) {
+        throw new Error(
+          "Missing authData - call authenticate() first with your authentication strategy",
+        );
       }
-      case "jwt": {
-        if (!options?.authData?.jwt) {
-          throw new Error("No JWT provided");
-        }
-        const sub = extractSubFromJwt(options.authData.jwt);
-        if (!sub) {
-          throw new Error(
-            "No sub found in JWT - make sure the format is correct",
-          );
-        }
-        authResult = await ewSDK.auth.loginWithCustomJwt({
-          jwt: options?.authData?.jwt,
-          encryptionKey: sub,
-        });
-        break;
+      if (!args.authResult.user) {
+        throw new Error(
+          "Missing authData.user - call authenticate() first with your authentication strategy",
+        );
       }
-      case "iframe_otp": {
-        if (!options) {
-          throw new Error("No options provided");
-        }
-        authResult = await ewSDK.auth.loginWithEmailOtp({
-          email: options?.authData.email,
-        });
-        break;
-      }
-      case "iframe":
-      case undefined: {
-        authResult = await ewSDK.auth.loginWithModal();
-        break;
-      }
-      default:
-        assertUnreachable(strategy);
-    }
-    this.user = authResult.user;
-
-    if (!this.user) {
-      throw new Error("Error connecting User");
+      this.user = args.authResult.user;
     }
 
-    if (options?.chainId) {
-      this.switchChain(options.chainId);
+    if (args?.chainId) {
+      this.switchChain(args.chainId);
     }
 
     this.setupListeners();
@@ -262,24 +221,61 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.user.authDetails;
   }
 
-  // TODO extract as standalone function
-  async authenticate(params: AuthParams): Promise<AuthData> {
-    switch (params.strategy) {
+  async authenticate(params: AuthParams): Promise<AuthResult> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    const strategy = params.strategy;
+    switch (strategy) {
       case "email": {
-        const result = await this.sendEmailOtp({ email: params.email });
+        const result = await ewSDK.auth.sendEmailLoginOtp({
+          email: params.email,
+        });
         return {
-          ...params,
-          result,
+          user: undefined, // not logged in yet, needs OTP
+          isNewUser: result.isNewUser,
+          needsRecoveryCode:
+            result.recoveryShareManagement === "USER_MANAGED" &&
+            (result.isNewDevice || result.isNewUser),
+          verifyOTP: async (otp: string, recoveryCode?: string) => {
+            const authResult = await ewSDK.auth.verifyEmailLoginOtp({
+              email: params.email,
+              otp,
+              recoveryCode,
+            });
+            return {
+              user: authResult.user,
+            };
+          },
         };
       }
-      case "google":
-      case "jwt":
-      case "iframe":
+      case "google": {
+        return ewSDK.auth.loginWithGoogle({
+          closeOpenedWindow: params.closeOpenedWindow,
+          openedWindow: params.openedWindow,
+        });
+      }
+      case "jwt": {
+        const sub = extractSubFromJwt(params.jwt);
+        if (!sub) {
+          throw new Error(
+            "No sub found in JWT - make sure the format is correct",
+          );
+        }
+        return ewSDK.auth.loginWithCustomJwt({
+          jwt: params.jwt,
+          encryptionKey: sub,
+        });
+      }
       case "iframe_otp": {
-        return params;
+        return ewSDK.auth.loginWithEmailOtp({
+          email: params.email,
+        });
+      }
+      case "iframe":
+      case undefined: {
+        return ewSDK.auth.loginWithModal();
       }
       default:
-        assertUnreachable(params);
+        assertUnreachable(strategy);
     }
   }
 }
