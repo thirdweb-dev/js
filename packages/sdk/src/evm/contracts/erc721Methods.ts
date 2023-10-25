@@ -83,19 +83,19 @@ export async function nextTokenIdToMint(
   >,
 ): Promise<BigNumber> {
   if (hasFunction<TokenERC721>("nextTokenIdToMint", contractWrapper)) {
-    let nextTokenIdToMint = await (
+    let _nextTokenIdToMint = await (
       contractWrapper as ContractWrapper<TokenERC721>
     ).read("nextTokenIdToMint", []);
     // handle open editions and contracts with startTokenId
     if (hasFunction<OpenEditionERC721>("startTokenId", contractWrapper)) {
-      nextTokenIdToMint = nextTokenIdToMint.sub(
+      _nextTokenIdToMint = _nextTokenIdToMint.sub(
         await (contractWrapper as ContractWrapper<OpenEditionERC721>).read(
           "startTokenId",
           [],
         ),
       );
     }
-    return nextTokenIdToMint;
+    return _nextTokenIdToMint;
   } else if (hasFunction<TokenERC721>("totalSupply", contractWrapper)) {
     return await (contractWrapper as ContractWrapper<TokenERC721>).read(
       "totalSupply",

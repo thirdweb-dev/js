@@ -16,7 +16,7 @@ import type {
   Zora_IERC721Drop,
 } from "@thirdweb-dev/contracts-js";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import {
   DEFAULT_QUERY_ALL_COUNT,
   type QueryAllParams,
@@ -34,7 +34,7 @@ import {
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
 import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
+import { fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_NFT,
