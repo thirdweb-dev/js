@@ -70,7 +70,7 @@ export const EmbeddedWalletFormUI = (props: {
       <InputSelectionUI
         submitButtonText={locale.submitEmail}
         onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
+        placeholder={locale.emailPlaceholder}
         name="email"
         type="email"
         errorMessage={(_input) => {

@@ -19,7 +19,7 @@ export const OverrideConfirmation: React.FC<{
   return (
     <Container fullHeight flex="column" animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title="Warning" />
+        <ModalHeader onBack={props.onBack} title={locale.title} />
       </Container>
 
       <Container p={isCompact ? "lg" : "xxl"} expand center="y" flex="column">

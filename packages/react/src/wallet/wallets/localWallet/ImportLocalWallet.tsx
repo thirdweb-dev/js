@@ -21,7 +21,7 @@ export const ImportLocalWallet: React.FC<{
   localWalletConf: LocalWalletConfig;
   persist: boolean;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.importScreen;
+  const locale = useTWLocale().wallets.localWallet;
   const [jsonString, setJsonString] = useState<string | undefined>();
   const { setLocalWallet } = useLocalWalletInfo(
     props.localWalletConf,
@@ -70,23 +70,23 @@ export const ImportLocalWallet: React.FC<{
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader onBack={props.goBack} title="Import Wallet" />
+        <ModalHeader onBack={props.goBack} title={locale.importScreen.title} />
       </Container>
       <Line />
 
       <Container p="lg">
-        <ModalDescription>{locale.description1}</ModalDescription>
+        <ModalDescription>{locale.importScreen.description1}</ModalDescription>
 
         <Spacer y="xs" />
 
-        <ModalDescription>{locale.description2}</ModalDescription>
+        <ModalDescription>{locale.importScreen.description2}</ModalDescription>
 
         <Spacer y="lg" />
 
         <DragNDrop
           locale={{
-            uploadedSuccessfully: locale.uploadedSuccessfully,
-            wrongFileError: locale.uploadJSON,
+            uploadedSuccessfully: locale.importScreen.uploadedSuccessfully,
+            wrongFileError: locale.importScreen.uploadJSON,
           }}
           extension="JSON"
           accept="application/json"
@@ -136,7 +136,7 @@ export const ImportLocalWallet: React.FC<{
                   onClick: () => setShowPassword(!showPassword),
                   icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
                 }}
-                label="Password"
+                label={locale.passwordLabel}
                 type={showPassword ? "text" : "password"}
                 value={password}
                 error={isWrongPassword ? "Wrong Password" : ""}
@@ -160,7 +160,7 @@ export const ImportLocalWallet: React.FC<{
                 opacity: jsonString ? 1 : 0.5,
               }}
             >
-              {locale.import}
+              {locale.importScreen.import}
             </Button>
           </Container>
         </form>

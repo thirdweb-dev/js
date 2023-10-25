@@ -75,7 +75,7 @@ export const PaperFormUI = (props: {
 
       <InputSelectionUI
         onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
+        placeholder={locale.emailPlaceholder}
         name="email"
         type="email"
         errorMessage={(_input) => {

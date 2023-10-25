@@ -33,7 +33,7 @@ type ReconnectLocalWalletProps = {
 export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
   props,
 ) => {
-  const locale = useTWLocale().wallets.localWallet.reconnectScreen;
+  const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -136,12 +136,12 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
 
       <Container p="lg" expand>
         <Text multiline size="lg" color="primaryText">
-          {locale.title}
+          {locale.reconnectScreen.title}
         </Text>
 
         <Spacer y="xl" />
 
-        <Label>{locale.savedWallet}</Label>
+        <Label>{locale.reconnectScreen.savedWallet}</Label>
         <Spacer y="sm" />
 
         <Text>
@@ -180,12 +180,12 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
               onClick: () => setShowPassword(!showPassword),
               icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
             }}
-            label="Password"
+            label={locale.passwordLabel}
             type={showPassword ? "text" : "password"}
             value={password}
             error={isWrongPassword ? "Wrong Password" : ""}
             dataTest="current-password"
-            placeholder="Enter your password"
+            placeholder={locale.enterYourPassword}
           />
 
           <Spacer y="md" />
@@ -200,7 +200,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
               gap: spacing.sm,
             }}
           >
-            {locale.continue}
+            {locale.reconnectScreen.continue}
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
@@ -219,7 +219,7 @@ export const ReconnectLocalWallet: React.FC<ReconnectLocalWalletProps> = (
             setShowBackupConfirmation(true);
           }}
         >
-          {locale.createNewWallet}
+          {locale.reconnectScreen.createNewWallet}
         </Button>
       </Container>
     </Container>

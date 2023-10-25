@@ -36,7 +36,7 @@ export const ExportLocalWallet: React.FC<{
   localWalletConfig: LocalWalletConfig;
   modalSize: "wide" | "compact";
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.exportScreen;
+  const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isWrongPassword, setIsWrongPassword] = useState(false);
@@ -153,19 +153,26 @@ export const ExportLocalWallet: React.FC<{
         }}
       >
         <Container p="lg">
-          <ModalHeader onBack={props.onBack} title="Backup Wallet" />
+          <ModalHeader
+            onBack={props.onBack}
+            title={locale.exportScreen.title}
+          />
         </Container>
         <Line />
         <Container expand p="lg">
-          <ModalDescription>{locale.description1}</ModalDescription>
+          <ModalDescription>
+            {locale.exportScreen.description1}
+          </ModalDescription>
 
           <Spacer y="sm" />
 
-          <ModalDescription>{locale.description2}</ModalDescription>
+          <ModalDescription>
+            {locale.exportScreen.description2}
+          </ModalDescription>
 
           <Spacer y="xl" />
 
-          <Label>{locale.walletAddress}</Label>
+          <Label>{locale.exportScreen.walletAddress}</Label>
           <Spacer y="sm" />
 
           <SavedWalletAddress>
@@ -200,7 +207,7 @@ export const ExportLocalWallet: React.FC<{
                   onClick: () => setShowPassword(!showPassword),
                   icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
                 }}
-                label="Password"
+                label={locale.passwordLabel}
                 type={showPassword ? "text" : "password"}
                 value={password}
                 error={isWrongPassword ? "Wrong Password" : ""}
@@ -228,7 +235,7 @@ export const ExportLocalWallet: React.FC<{
             type="submit"
           >
             <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
-            {locale.download}
+            {locale.exportScreen.download}
           </Button>
         </ScreenBottomContainer>
       </form>

@@ -150,6 +150,8 @@ export function enDefault() {
           switchingNetwork: "Switching Network",
           connectToSafe: "Connect to Safe",
           connecting: "Connecting",
+          mainnets: "Mainnets",
+          testnets: "Testnets",
         },
       },
       coinbaseWallet: extensionAndQRScanScreens("Coinbase"),
@@ -161,6 +163,7 @@ export function enDefault() {
       zerionWallet: extensionAndQRScanScreens("Zerion"),
       paperWallet: {
         signInWithGoogle: "Sign in with Google",
+        emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
         googleLoginScreen: {
           title: "Sign in",
@@ -185,6 +188,7 @@ export function enDefault() {
       },
       embeddedWallet: {
         signInWithGoogle: "Sign in with Google",
+        emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
         googleLoginScreen: {
           title: "Sign in",
@@ -212,7 +216,11 @@ export function enDefault() {
         submitEmail: "Continue",
       },
       localWallet: {
+        passwordLabel: "Password",
+        confirmPasswordLabel: "Confirm Password",
+        enterYourPassword: "Enter your password",
         warningScreen: {
+          title: "Warning",
           warning:
             "Your current wallet will be deleted if you create a new wallet. Backup wallet to your device before creating a new wallet",
           backupWallet: "Backup Wallet",
@@ -224,9 +232,11 @@ export function enDefault() {
           createNewWallet: "Create a new wallet",
         },
         createScreen: {
-          createPassword:
+          instruction:
             "Choose a password for your wallet. You'll be able to access and export this wallet with the same password",
           importWallet: "Import Wallet",
+          createNewWallet: "Create new wallet",
+          connecting: "Connecting",
         },
         exportScreen: {
           description1:
@@ -235,8 +245,10 @@ export function enDefault() {
             "You can use this JSON file to import the account in MetaMask using the same password",
           walletAddress: "Wallet Address",
           download: "Download",
+          title: "Backup Wallet",
         },
         importScreen: {
+          title: "Import Wallet",
           description1:
             "The application can authorize any transactions on behalf of the wallet without any approvals",
           description2: "We recommend only connecting to trusted applications",

@@ -21,7 +21,7 @@ export const CreateLocalWallet_Password: React.FC<{
   renderBackButton: boolean;
   persist: boolean;
 }> = (props) => {
-  const locale = useTWLocale().wallets.localWallet.createScreen;
+  const locale = useTWLocale().wallets.localWallet;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -92,7 +92,7 @@ export const CreateLocalWallet_Password: React.FC<{
 
       <Line />
       <Container expand p="lg">
-        <ModalDescription>{locale.createPassword}</ModalDescription>
+        <ModalDescription>{locale.createScreen.instruction}</ModalDescription>
 
         <Spacer y="lg" />
 
@@ -123,7 +123,7 @@ export const CreateLocalWallet_Password: React.FC<{
               icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
               onClick: () => setShowPassword(!showPassword),
             }}
-            label="Password"
+            label={locale.passwordLabel}
             type={showPassword ? "text" : "password"}
             value={password}
             dataTest="new-password"
@@ -142,7 +142,7 @@ export const CreateLocalWallet_Password: React.FC<{
               icon: showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />,
               onClick: () => setShowPassword(!showPassword),
             }}
-            label="Confirm Password"
+            label={locale.confirmPasswordLabel}
             type={showPassword ? "text" : "password"}
             value={confirmPassword}
             error={passwordMismatch ? "Passwords don't match" : ""}
@@ -166,7 +166,9 @@ export const CreateLocalWallet_Password: React.FC<{
             }}
             data-test="create-new-wallet-button"
           >
-            {isConnecting ? "Connecting" : "Create new wallet"}
+            {isConnecting
+              ? locale.createScreen.connecting
+              : locale.createScreen.createNewWallet}
             {isConnecting && <Spinner size="sm" color="accentButtonText" />}
           </Button>
         </form>
@@ -188,7 +190,7 @@ export const CreateLocalWallet_Password: React.FC<{
             alignItems: "center",
           }}
         >
-          {locale.importWallet}
+          {locale.createScreen.importWallet}
         </Button>
       </Container>
     </Container>

@@ -200,7 +200,7 @@ export const SelectAccount: React.FC<{
               id="safeNetwork"
               value={safeChainId}
               disabled={disableNetworkSelection}
-              placeholder="Network your safe is deployed to"
+              placeholder={locale.selectNetworkPlaceholder}
               onChange={(e) => {
                 setSafeConnectError(false);
                 setSwitchError(false);
@@ -215,7 +215,7 @@ export const SelectAccount: React.FC<{
 
               {useOptGroup ? (
                 <>
-                  <optgroup label="Mainnets">
+                  <optgroup label={locale.mainnets}>
                     {mainnets.map((chain) => {
                       return (
                         <option value={chain.chainId} key={chain.chainId}>
@@ -225,7 +225,7 @@ export const SelectAccount: React.FC<{
                     })}
                   </optgroup>
 
-                  <optgroup label="Testnets">
+                  <optgroup label={locale.testnets}>
                     {testnets.map((chain) => {
                       return (
                         <option value={chain.chainId} key={chain.chainId}>
