@@ -383,8 +383,10 @@ export function useEngineCreateBackendWallet(instance: string) {
       const res = await fetch(`${instance}backend-wallet/create`, {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({}),
       });
       const json = await res.json();
 
@@ -541,8 +543,10 @@ export function useEngineCreateAccessToken(instance: string) {
       const res = await fetch(`${instance}auth/access-tokens/create`, {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({}),
       });
       const json = await res.json();
 
