@@ -6,11 +6,16 @@ export default {
     {
       "name": "eCredits MainNet Explorer",
       "url": "https://explorer.ecredits.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
+        "width": 32,
+        "height": 32,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
     "width": 32,
@@ -24,9 +29,10 @@ export default {
     "symbol": "ECS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 63000,
   "rpc": [
     "https://ecredits.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://63000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ecredits.com"
   ],
   "shortName": "ecs",

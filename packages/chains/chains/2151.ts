@@ -6,11 +6,16 @@ export default {
     {
       "name": "BOASCAN",
       "url": "https://boascan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
+        "width": 256,
+        "height": 257,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmW3CT4SHmso5dRJdsjR8GL1qmt79HkdAebCn2uNaWXFYh",
     "width": 256,
@@ -24,9 +29,10 @@ export default {
     "symbol": "BOA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2151,
   "rpc": [
     "https://bosagora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2151.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bosagora.org",
     "https://rpc.bosagora.org"
   ],

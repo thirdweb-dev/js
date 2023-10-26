@@ -6,11 +6,16 @@ export default {
     {
       "name": "testnetexplorer",
       "url": "http://explore-testnet.satosh.ie",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
+        "width": 1024,
+        "height": 1024,
+        "format": "jpg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRHT4o9ihiY6nVkkRdwZjdugbEAQiXrrov3GS9a3GTuL7",
     "width": 1024,
@@ -24,9 +29,10 @@ export default {
     "symbol": "TUSHY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1986,
   "rpc": [
     "https://satoshie-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1986.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.satosh.ie"
   ],
   "shortName": "satoshie_testnet",

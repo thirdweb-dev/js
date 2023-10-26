@@ -4,7 +4,6 @@ export default {
   "chainId": 1666900000,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.harmony.one/",
   "name": "Harmony Devnet Shard 0",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "ONE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1666900000,
   "rpc": [
     "https://harmony-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1666900000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s0.ps.hmny.io"
   ],
   "shortName": "hmy-ps-s0",

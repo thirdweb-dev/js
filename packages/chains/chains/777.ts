@@ -4,7 +4,6 @@ export default {
   "chainId": 777,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://cheapeth.org/",
   "name": "cheapETH",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "cTH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 777,
   "rpc": [
     "https://cheapeth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.cheapeth.org/rpc"
   ],
   "shortName": "cth",

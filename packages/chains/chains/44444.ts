@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://frenscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQk41bYX6WpYyUAdRgomZekxP5mbvZXhfxLEEqtatyJv4",
     "width": 128,
@@ -24,9 +29,10 @@ export default {
     "symbol": "FREN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 44444,
   "rpc": [
     "https://frenchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://44444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-02.frenscan.io"
   ],
   "shortName": "FREN",

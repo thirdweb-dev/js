@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPtiJGaApbW3ATZhPW3pKJpw3iGVrRGsZLWhrDKF9ZK18",
     "width": 1024,
@@ -23,9 +22,10 @@ export default {
     "symbol": "GT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10024,
   "rpc": [
     "https://gon-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.gaiaopen.network",
     "https://node1.mainnet.gon.network",
     "https://node2.mainnet.gon.network",

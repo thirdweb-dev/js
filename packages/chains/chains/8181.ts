@@ -6,13 +6,18 @@ export default {
     {
       "name": "Testnet BeOne Chain",
       "url": "https://testnet.beonescan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://testnet.beonescan.com/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
     "width": 500,
@@ -26,9 +31,10 @@ export default {
     "symbol": "tBOC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8181,
   "rpc": [
     "https://testnet-beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8181.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pre-boc1.beonechain.com"
   ],
   "shortName": "tBOC",

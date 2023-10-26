@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet-explorer.kekchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
+        "width": 401,
+        "height": 401,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
     "width": 401,
@@ -24,9 +29,10 @@ export default {
     "symbol": "tKEK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://kekchain-kektest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://420666.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.kekchain.com"
   ],
   "shortName": "tKEK",

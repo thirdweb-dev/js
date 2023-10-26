@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeiehps5cqdhqottu2efo4jeehwpkz5rbux3cjxd75rm6rjm4sgs2wi",
     "width": 250,
@@ -24,9 +23,10 @@ export default {
     "symbol": "IORA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1197,
   "rpc": [
     "https://iora-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1197.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.iorachain.com"
   ],
   "shortName": "iora",

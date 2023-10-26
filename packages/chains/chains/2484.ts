@@ -6,13 +6,18 @@ export default {
     {
       "name": "U2U Explorer",
       "url": "https://testnet.u2uscan.xyz",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmcW64RgqQVHnNbVFyfaMNKt7dJvFqEbfEHZmeyeK8dpEa",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.uniultra.xyz"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcW64RgqQVHnNbVFyfaMNKt7dJvFqEbfEHZmeyeK8dpEa",
     "width": 512,
@@ -26,9 +31,10 @@ export default {
     "symbol": "U2U",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2484,
   "rpc": [
     "https://unicorn-ultra-nebulas-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2484.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-nebulas-testnet.uniultra.xyz"
   ],
   "shortName": "u2u_nebulas",

@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.latam-blockchain.com"
   ],
-  "features": [],
   "infoURL": "https://latam-blockchain.com",
   "name": "Latam-Blockchain Resil Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "usd",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 172,
   "rpc": [
     "https://latam-blockchain-resil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://172.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.latam-blockchain.com",
     "wss://ws.latam-blockchain.com"
   ],

@@ -25,12 +25,14 @@ export default {
     "symbol": "METC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7,
   "rpc": [
     "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://63.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mordor.etccooperative.org"
   ],
   "shortName": "metc",
+  "slip44": 63,
   "slug": "ethereum-classic-testnet-mordor",
   "testnet": true
 } as const satisfies Chain;

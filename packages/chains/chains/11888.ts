@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPLMg5mYD8XRknvYbDkD2x7FXxYan7MPTeUWZC2CihwDM",
     "width": 2048,
@@ -24,9 +23,19 @@ export default {
     "symbol": "nSAN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11888,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://sanr.app"
+      }
+    ]
+  },
   "rpc": [
     "https://sanr-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sanrchain-node.santiment.net"
   ],
   "shortName": "SAN",

@@ -4,7 +4,6 @@ export default {
   "chainId": 1313161556,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://aurora.dev",
   "name": "Aurora Betanet",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1313161556,
   "rpc": [],
   "shortName": "aurora-betanet",
   "slug": "aurora-betanet",

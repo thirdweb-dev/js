@@ -25,9 +25,10 @@ export default {
     "symbol": "KLY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7331,
   "rpc": [
     "https://klyntar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7331.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.klyntar.org/kly_evm_rpc",
     "https://evm.klyntarscan.org/kly_evm_rpc"
   ],

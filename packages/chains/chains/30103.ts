@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXHSbtVNCJVfe2CvRH7njdyf2SrX5u5bNTfvhqjLeFN2A",
     "width": 938,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CAU",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 30103,
   "rpc": [
     "https://cerium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://30103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cerium-rpc.canxium.net"
   ],
   "shortName": "ceri",

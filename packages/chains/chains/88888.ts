@@ -24,11 +24,13 @@ export default {
     "symbol": "CHZ",
     "decimals": 18
   },
+  "networkId": 88888,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://chiliz-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://88888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ankr.com/chiliz",
     "https://rpc.chiliz.com"
   ],

@@ -6,11 +6,16 @@ export default {
     {
       "name": "MEVerse Chain Explorer",
       "url": "https://www.meversescan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
     "width": 800,
@@ -24,9 +29,10 @@ export default {
     "symbol": "MEV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7518,
   "rpc": [
     "https://meverse-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7518.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.meversemainnet.io"
   ],
   "shortName": "MEV",

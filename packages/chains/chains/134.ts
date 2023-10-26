@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.bellecour.iex.ec",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUYKpVmZL4aS3TEZLG5wbrRJ6exxLiwm1rejfGYYNicfb",
     "width": 155,
@@ -24,9 +29,10 @@ export default {
     "symbol": "xRLC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 134,
   "rpc": [
     "https://iexec-sidechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://134.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bellecour.iex.ec"
   ],
   "shortName": "rlc",

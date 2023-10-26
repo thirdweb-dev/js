@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbM4weV8Bk6c9yNhosYntkVw39SNZtCHYGgWyXTxkevZ8",
     "width": 1600,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OZO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 401,
   "rpc": [
     "https://ozone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://401.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.ozonechain.io"
   ],
   "shortName": "ozo_tst",

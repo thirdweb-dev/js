@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://elysiumscan.vulcanforged.com",
   "name": "Elysium Mainnet",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "LAVA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1339,
   "rpc": [
     "https://elysium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1339.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.elysiumchain.tech/"
   ],
   "shortName": "ELSM",
   "slug": "elysium",
-  "testnet": false
+  "testnet": false,
+  "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged"
 } as const satisfies Chain;

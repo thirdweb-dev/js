@@ -6,13 +6,18 @@ export default {
     {
       "name": "Nautscan",
       "url": "https://proteus.nautscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://proteusfaucet.nautchain.xyz"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
     "width": 500,
@@ -26,9 +31,10 @@ export default {
     "symbol": "tZBC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 88002,
   "rpc": [
     "https://nautilus-proteus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://88002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.proteus.nautchain.xyz/solana"
   ],
   "shortName": "NAUTTest",

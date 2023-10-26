@@ -4,7 +4,6 @@ export default {
   "chainId": 1201,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://evanesco.org/",
   "name": "Evanesco Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "AVIS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1201,
   "rpc": [
     "https://evanesco-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed5.evanesco.org:8547"
   ],
   "shortName": "avis",

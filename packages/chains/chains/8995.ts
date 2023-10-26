@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.bloxberg.org/"
   ],
-  "features": [],
   "infoURL": "https://bloxberg.org",
   "name": "bloxberg",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "U+25B3",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8995,
   "rpc": [
     "https://bloxberg.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8995.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.bloxberg.org"
   ],
   "shortName": "berg",

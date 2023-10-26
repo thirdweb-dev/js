@@ -6,13 +6,18 @@ export default {
     {
       "name": "IMPERIUM Explorer",
       "url": "https://impscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.imperiumchain.com/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcNGLzKyc7Gu2dgpBFF6t3KJwFuKC79D56DW8GTc5DWRw",
     "width": 200,
@@ -26,9 +31,10 @@ export default {
     "symbol": "IMP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9819,
   "rpc": [
     "https://imperium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9819.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-aws-mainnet.imperiumchain.com",
     "https://data-aws2-mainnet.imperiumchain.com"
   ],

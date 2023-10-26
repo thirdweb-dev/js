@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUmJVof2m5e4HUXb3GmijWUFsLUNhrQiwwQG3CqcXEtHt",
     "width": 91,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BTY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2999,
   "rpc": [
     "https://bityuan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bityuan.com/eth"
   ],
   "shortName": "bty",

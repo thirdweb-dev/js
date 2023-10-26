@@ -6,11 +6,16 @@ export default {
     {
       "name": "CybEthExplorer",
       "url": "http://cybeth1.cyberdeck.eu:8000",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
+        "width": 193,
+        "height": 214,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
     "width": 193,
@@ -24,9 +29,10 @@ export default {
     "symbol": "CYB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1146703430,
   "rpc": [
     "https://cyberdecknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1146703430.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://cybeth1.cyberdeck.eu:8545"
   ],
   "shortName": "cyb",

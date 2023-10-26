@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreigmvn6spvbiirtutowpq6jmetevbxoof5plzixjoerbeswy4htfb4",
     "width": 400,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ONG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 58,
   "rpc": [
     "https://ontology.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://58.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://dappnode1.ont.io:20339",
     "http://dappnode2.ont.io:20339",
     "http://dappnode3.ont.io:20339",

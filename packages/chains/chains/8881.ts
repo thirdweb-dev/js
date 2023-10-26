@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaGPdccULQEFcCGxzstnmE8THfac2kSiGwvWRAiaRq4dp",
     "width": 48,
@@ -24,9 +23,10 @@ export default {
     "symbol": "QTZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8881,
   "rpc": [
     "https://quartz-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-quartz.unique.network",
     "https://quartz.api.onfinality.io/public-ws",
     "https://eu-rpc-quartz.unique.network",

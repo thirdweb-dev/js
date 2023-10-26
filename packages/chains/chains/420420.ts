@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://mainnet-explorer.kekchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
+        "width": 401,
+        "height": 401,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
     "width": 401,
@@ -24,9 +29,10 @@ export default {
     "symbol": "KEK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 103090,
   "rpc": [
     "https://kekchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://420420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.kekchain.com"
   ],
   "shortName": "KEK",

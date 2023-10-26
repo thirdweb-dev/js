@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreihifvvbq6xzviygveivayogqiotdtpjvilu27bgqobduqemzeq7o4",
     "width": 72,
@@ -24,9 +23,10 @@ export default {
     "symbol": "PALM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11297108099,
   "rpc": [
     "https://palm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11297108099.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palm-testnet.infura.io/v3/${INFURA_API_KEY}"
   ],
   "shortName": "tpalm",

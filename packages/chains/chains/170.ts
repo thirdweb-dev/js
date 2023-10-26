@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet-testnet.hscscan.com/"
   ],
-  "features": [],
   "infoURL": "https://www.hoosmartchain.com",
   "name": "HOO Smart Chain Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "HOO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 170,
   "rpc": [
     "https://hoo-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://170.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.hoosmartchain.com"
   ],
   "shortName": "hoosmartchain",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdoUtvHDybu5ppYBZT8BMRp6AqByVSoQs8nFwKbaS55jd",
     "width": 367,
@@ -24,9 +23,10 @@ export default {
     "symbol": "mTAlgo",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 200202,
   "rpc": [
     "https://milkomeda-a1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://200202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-devnet-algorand-rollup.a1.milkomeda.com"
   ],
   "shortName": "milkTAlgo",

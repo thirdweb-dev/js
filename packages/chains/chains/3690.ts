@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bittexscan.com",
   "name": "Bittex Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3690,
   "rpc": [
     "https://bittex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3690.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bittexscan.info",
     "https://rpc2.bittexscan.info"
   ],

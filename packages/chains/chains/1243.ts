@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeiady63oqduls2pm4aaykzjhahblagokhnpsc5qeq5dmkxqelh7i2i",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ARC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1243,
   "rpc": [
     "https://arc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1243.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-main-1.archiechain.io"
   ],
   "shortName": "ARC",

@@ -25,9 +25,10 @@ export default {
     "symbol": "HEART",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4139,
   "rpc": [
     "https://humans-ai-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4139.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.testnet.humans.zone"
   ],
   "shortName": "humans_testnet",

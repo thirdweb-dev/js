@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "http://kururu.finance/faucet?chainId=55555"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNy5d5knHVjJJS9g4kLsh9i73RTjckpKL6KZvRk6ptbhf",
     "width": 591,
@@ -26,9 +25,10 @@ export default {
     "symbol": "REI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 55555,
   "rpc": [
     "https://rei-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://55555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rei-rpc.moonrhythm.io"
   ],
   "shortName": "reichain",

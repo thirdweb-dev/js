@@ -4,7 +4,6 @@ export default {
   "chainId": 208,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://structx.io",
   "name": "Structx Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "utx",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 208,
   "rpc": [
     "https://structx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://208.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.structx.io"
   ],
   "shortName": "utx",

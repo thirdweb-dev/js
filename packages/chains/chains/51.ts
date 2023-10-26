@@ -6,18 +6,29 @@ export default {
     {
       "name": "xdcscan",
       "url": "https://apothem.xinfinscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     },
     {
       "name": "blocksscan",
       "url": "https://apothem.blocksscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.apothem.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeRq7pabiJE2n1xU3Y5Mb4TZSX9kQ74x7a3P2Z4PqcMRX",
     "width": 1450,
@@ -28,12 +39,13 @@ export default {
   "name": "XDC Apothem Network",
   "nativeCurrency": {
     "name": "XinFin",
-    "symbol": "XDC",
+    "symbol": "TXDC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 51,
   "rpc": [
     "https://xdc-apothem-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://51.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.apothem.network",
     "https://erpc.apothem.network"
   ],

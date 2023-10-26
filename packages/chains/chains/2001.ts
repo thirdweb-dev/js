@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdoUtvHDybu5ppYBZT8BMRp6AqByVSoQs8nFwKbaS55jd",
     "width": 367,
@@ -24,9 +23,10 @@ export default {
     "symbol": "mADA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2001,
   "rpc": [
     "https://milkomeda-c1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet-cardano-evm.c1.milkomeda.com",
     "wss://rpc-mainnet-cardano-evm.c1.milkomeda.com"
   ],

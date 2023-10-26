@@ -12,7 +12,7 @@ export default {
     "symbol": "OKB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 196,
   "rpc": [],
   "shortName": "okb",
   "slug": "okbchain",

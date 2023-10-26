@@ -6,11 +6,16 @@ export default {
     {
       "name": "Furya EVM Explorer",
       "url": "https://explorer.furya.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreiby27m6esbsjthmknckq5ktsaaj2z6hylzljbsmvx4fgezdra3q4m",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreiby27m6esbsjthmknckq5ktsaaj2z6hylzljbsmvx4fgezdra3q4m",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "FURY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 710,
   "rpc": [
     "https://highbury.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://710.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://highbury.furya.io",
     "https://rest.furya.io"
   ],

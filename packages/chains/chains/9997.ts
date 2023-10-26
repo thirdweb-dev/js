@@ -6,7 +6,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet-rollup-explorer.altlayer.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9997,
   "rpc": [
     "https://altlayer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9997.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rollup-api.altlayer.io"
   ],
   "shortName": "alt-testnet",

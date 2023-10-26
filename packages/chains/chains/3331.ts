@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.zcore.cash"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQnXu13ym8W1VA3QxocaNVXGAuEPmamSCkS7bBscVk1f4",
     "width": 1050,
@@ -20,9 +19,10 @@ export default {
     "symbol": "ZCR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3331,
   "rpc": [
     "https://zcore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3331.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.zcore.cash"
   ],
   "shortName": "zcrbeach",

@@ -6,7 +6,13 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.sepolia.publicgoods.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 58008,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://pgn-bridge.vercel.app/bridge"
+      }
+    ]
+  },
   "rpc": [
     "https://sepolia-pgn-public-goods-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://58008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia.publicgoods.network"
   ],
   "shortName": "sepPGN",

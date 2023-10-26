@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://smartmesh.io",
   "name": "SmartMesh Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "SMT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://smartmesh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20180430.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonapi1.smartmesh.cn"
   ],
   "shortName": "spectrum",

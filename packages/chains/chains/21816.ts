@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQtEHaejiDbmiCvbBYw9jNQv3DLK5XHCQwLRfnLNpdN5j",
     "width": 256,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OMC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 21816,
   "rpc": [
     "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://21816.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.omchain.io"
   ],
   "shortName": "omc",

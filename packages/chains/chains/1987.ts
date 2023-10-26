@@ -4,7 +4,6 @@ export default {
   "chainId": 1987,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://egem.io",
   "name": "EtherGem",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "EGEM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1987,
   "rpc": [
     "https://ethergem.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1987.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.egem.io/custom"
   ],
   "shortName": "egem",
+  "slip44": 1987,
   "slug": "ethergem",
   "testnet": false
 } as const satisfies Chain;

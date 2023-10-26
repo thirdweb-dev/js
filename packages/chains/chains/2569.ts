@@ -6,11 +6,16 @@ export default {
     {
       "name": "tpcscan",
       "url": "https://tpcscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQyTyJUnhD1dca35Vyj96pm3v3Xyw8xbG9m8HXHw3k2zR",
+        "width": 578,
+        "height": 701,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQyTyJUnhD1dca35Vyj96pm3v3Xyw8xbG9m8HXHw3k2zR",
     "width": 578,
@@ -24,9 +29,10 @@ export default {
     "symbol": "TPC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2569,
   "rpc": [
     "https://techpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2569.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.techpay.io/"
   ],
   "shortName": "tpc",
