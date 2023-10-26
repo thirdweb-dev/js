@@ -52,4 +52,4 @@ export type Chain =
   | "Sepolia"
   | "AvalancheFuji";
 
-export type SupportedChainName = Chain | "Rinkeby" | "Solana" | "SolanaDevnet";
+export type SupportedChainName = Chain | "Rinkeby";
