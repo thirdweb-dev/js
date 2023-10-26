@@ -3,7 +3,7 @@ import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import invariant from "tiny-invariant";
 import { useApiAuthToken } from "./useApi";
-import { useChainId } from "@thirdweb-dev/react";
+import { useAddress, useChainId } from "@thirdweb-dev/react";
 
 // GET Requests
 export type BackendWallet = {
@@ -210,6 +210,7 @@ export type EngineAdmin = {
 
 export function useEnginePermissions(instance: string) {
   const { token } = useApiAuthToken();
+  const address = useAddress();
 
   return useQuery(
     engineKeys.permissions(instance),
@@ -231,7 +232,7 @@ export function useEnginePermissions(instance: string) {
       return (json.result as EngineAdmin[]) || [];
     },
     {
-      enabled: !!instance && !!token,
+      enabled: !!instance && !!token && !!address,
     },
   );
 }
