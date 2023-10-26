@@ -162,7 +162,8 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
           await wallet.connect({
             authResult,
           });
-          setConnectedWallet(wallet);
+          setConnectedWallet(wallet, { authResult });
+          props.connected();
         }}
       />
     );
