@@ -14,10 +14,8 @@ import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
-import { MagicLink } from "@thirdweb-dev/wallets/evm/wallets/magic";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
-import { PaperWallet } from "@thirdweb-dev/wallets/evm/wallets/paper-wallet";
 import { EmbeddedWallet } from "@thirdweb-dev/wallets/evm/wallets/embedded-wallet";
 import { BigNumber } from "ethers";
 import {
@@ -55,10 +53,8 @@ const WALLETS = [
   MetaMaskWallet,
   InjectedWallet,
   WalletConnect,
-  PaperWallet,
   CoinbaseWallet,
   LocalWallet,
-  MagicLink,
   SmartWallet,
   EmbeddedWallet,
 ] as const;
@@ -77,7 +73,7 @@ interface TWBridge {
     password?: string,
     email?: string,
     personalWallet?: PossibleWallet,
-    useGoogle?: string,
+    authOptions?: string,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: string) => Promise<void>;
@@ -211,27 +207,6 @@ class ThirdwebBridge implements TWBridge {
             clientId: sdkOptions.clientId,
           });
           break;
-        case walletIds.magicLink:
-          walletInstance = new MagicLink({
-            dappMetadata,
-            apiKey: sdkOptions.wallet?.magicLinkApiKey,
-            emailLogin: true,
-            chains: supportedChains,
-            clientId: sdkOptions.clientId,
-          });
-          break;
-        case walletIds.paper:
-          walletInstance = new PaperWallet({
-            paperClientId: sdkOptions.wallet?.paperClientId ?? "uninitialized",
-            chain: Ethereum,
-            dappMetadata,
-            chains: supportedChains,
-            clientId: sdkOptions.clientId,
-            advancedOptions: {
-              recoveryShareManagement: "USER_MANAGED",
-            },
-          });
-          break;
         case walletIds.smartWallet:
           const config: SmartWalletConfig = {
             chain: chain,
@@ -276,7 +251,7 @@ class ThirdwebBridge implements TWBridge {
     password?: string,
     email?: string,
     personalWallet: PossibleWallet = "localWallet",
-    useGoogle?: string,
+    authOptions?: string,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -290,28 +265,11 @@ class ThirdwebBridge implements TWBridge {
         walletInstance.connect({ chainId: chainIdNumber });
       }
 
-      if (walletInstance.walletId === walletIds.magicLink) {
-        const magicLinkWallet = walletInstance as MagicLink;
-        if (!email) {
-          throw new Error("Email is required for Magic Link Wallet");
-        }
-        await magicLinkWallet.connect({ chainId: chainIdNumber, email: email });
-      } else if (walletInstance.walletId === walletIds.embeddedWallet) {
+      if (walletInstance.walletId === walletIds.embeddedWallet) {
         const embeddedWallet = walletInstance as EmbeddedWallet;
-
-        if (useGoogle?.toLowerCase() === "true") {
-          const googleWindow = this.openGoogleSignInWindow();
-          if (!googleWindow) {
-            throw new Error("Failed to open google login window");
-          }
-          const authResult = await embeddedWallet.authenticate({
-            strategy: "google",
-          });
-          await embeddedWallet.connect({
-            chainId: chainIdNumber,
-            authResult,
-          });
-        } else {
+        const authOptionsParsed = JSON.parse(authOptions || "{}");
+        if (authOptionsParsed.authProvider === 0) {
+          // DefaultManaged
           if (!email) {
             throw new Error("Email is required for EmbeddedWallet");
           }
@@ -323,13 +281,39 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
+        } else if (authOptionsParsed.authProvider === 1) {
+          // GoogleManaged
+          const googleWindow = this.openGoogleSignInWindow();
+          if (!googleWindow) {
+            throw new Error("Failed to open google login window");
+          }
+          const authResult = await embeddedWallet.authenticate({
+            strategy: "google",
+            openedWindow: googleWindow,
+            closeOpenedWindow: (openedWindow) => {
+              openedWindow.close();
+            },
+          });
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            authResult,
+          });
+        } else if (authOptionsParsed.authProvider === 2) {
+          // CustomAuth
+          const authResult = await embeddedWallet.authenticate({
+            strategy: "jwt",
+            jwt: authOptionsParsed.authToken,
+          });
+          await embeddedWallet.connect({
+            chainId: chainIdNumber,
+            authResult,
+          });
+          throw new Error("CustomAuth not implemented yet");
+        } else {
+          throw new Error(
+            "Invalid auth provider: " + authOptionsParsed.authProvider,
+          );
         }
-      } else if (walletInstance.walletId === walletIds.paper) {
-        const paperWallet = walletInstance as PaperWallet;
-        if (!email) {
-          throw new Error("Email is required for Paper Wallet");
-        }
-        await paperWallet.connect({ chainId: chainIdNumber, email: email });
       } else if (walletInstance.walletId === walletIds.smartWallet) {
         const smartWallet = walletInstance as SmartWallet;
         const eoaWallet = this.walletMap.get(personalWallet);
