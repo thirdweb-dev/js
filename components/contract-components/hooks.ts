@@ -351,7 +351,17 @@ export function usePublishedContractFunctions(contract: PublishedContract) {
     contract.metadataUri,
   );
 
-  if (compositeAbi) {
+  const dynamicContractType =
+    publishedContractInfo.data?.publishedMetadata.routerType;
+  if (
+    compositeAbi &&
+    (dynamicContractType === "plugin" ||
+      dynamicContractType === "dynamic" ||
+      !publishedContractInfo.data?.publishedMetadata.deployType ||
+      publishedContractInfo.data?.publishedMetadata.name.includes(
+        "MarketplaceV3",
+      ))
+  ) {
     return extractFunctionsFromAbi(compositeAbi);
   }
 
@@ -368,7 +378,17 @@ export function usePublishedContractEvents(contract: PublishedContract) {
     contract.metadataUri,
   );
 
-  if (compositeAbi) {
+  const dynamicContractType =
+    publishedContractInfo.data?.publishedMetadata.routerType;
+  if (
+    compositeAbi &&
+    (dynamicContractType === "plugin" ||
+      dynamicContractType === "dynamic" ||
+      !publishedContractInfo.data?.publishedMetadata.deployType ||
+      publishedContractInfo.data?.publishedMetadata.name.includes(
+        "MarketplaceV3",
+      ))
+  ) {
     return extractEventsFromAbi(compositeAbi);
   }
 
