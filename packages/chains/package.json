@@ -57,5 +57,8 @@
     "add-chain": "plop add-chain",
     "override-chain": "plop override-chain",
     "test": "jest"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   }
 }
