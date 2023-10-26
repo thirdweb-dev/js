@@ -26,8 +26,15 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 
 // export types and utils for convenience
-export * from "../connectors/smart-wallet/types";
-export * from "../connectors/smart-wallet/utils";
+export type * from "../connectors/smart-wallet/types";
+export {
+  type AccessibleSmartWallets,
+  getAllSigners,
+  getAllSmartWallets,
+  getSmartWalletAddress,
+  isSmartWalletDeployed,
+} from "../connectors/smart-wallet/utils";
+
 export type { PaymasterAPI } from "@account-abstraction/sdk";
 
 export class SmartWallet
