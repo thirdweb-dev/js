@@ -1,4 +1,5 @@
 import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Alert,
   AlertIcon,
@@ -7,7 +8,6 @@ import {
   Flex,
   IconButton,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useRouter } from "next/router";
@@ -27,19 +27,20 @@ type DismissedStorage = {
   [T in DismissedStorageType]?: number;
 };
 export const BillingAlert = () => {
-  const trackEvent = useTrack();
+  const { isLoggedIn } = useLoggedInUser();
+  const usageQuery = useAccountUsage();
+  const meQuery = useAccount();
+
   const [dismissedAlert, setDismissedAlert] = useLocalStorage<
     DismissedStorage | undefined
-  >("dismissed-billing-alert", undefined, {
+  >(`dismissed-billing-alert-${meQuery?.data?.id}`, undefined, {
     [DismissedStorageType.Usage_50]: 0,
     [DismissedStorageType.Usage_100]: 0,
     [DismissedStorageType.RateRpc]: 0,
     [DismissedStorageType.RateStorage]: 0,
   });
 
-  const address = useAddress();
-  const usageQuery = useAccountUsage();
-  const meQuery = useAccount();
+  const trackEvent = useTrack();
 
   const exceededUsage_50 = useMemo(() => {
     if (!usageQuery?.data) {
@@ -118,7 +119,7 @@ export const BillingAlert = () => {
   };
 
   if (
-    !address ||
+    !isLoggedIn ||
     meQuery.isLoading ||
     !meQuery.data ||
     usageQuery.isLoading ||

@@ -1,12 +1,20 @@
-import { LinkBox, Flex, LinkOverlay, useColorMode } from "@chakra-ui/react";
+import {
+  LinkBox,
+  Flex,
+  LinkOverlay,
+  useColorMode,
+  Box,
+} from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { BsArrowRight } from "react-icons/bs";
-import { TrackedLink, Heading, Card, Text } from "tw-components";
+import { TrackedLink, Heading, Card, Text, Badge } from "tw-components";
 
 interface NavigationCardProps {
   title: string;
   description: string;
+  badge?: string;
+  badgeColor?: string;
   lightImage?: StaticImport;
   image: StaticImport;
   href: string;
@@ -16,6 +24,8 @@ interface NavigationCardProps {
 export const NavigationCard: React.FC<NavigationCardProps> = ({
   title,
   description,
+  badge,
+  badgeColor,
   lightImage,
   image,
   href,
@@ -28,7 +38,6 @@ export const NavigationCard: React.FC<NavigationCardProps> = ({
       <Card
         p={0}
         overflow="hidden"
-        bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
         _groupHover={{
           borderColor: "blue.500",
         }}
@@ -45,33 +54,56 @@ export const NavigationCard: React.FC<NavigationCardProps> = ({
                             33vw"
           src={colorMode === "light" && lightImage ? lightImage : image}
           alt=""
+          position="relative"
         />
         <Flex
           flexDir="column"
-          gap={6}
-          p={7}
-          justifyContent="space-between"
+          gap={4}
+          p={6}
           h="full"
+          position="absolute"
+          zIndex={10}
+          top={0}
+          right={0}
+          bottom={0}
+          left={0}
         >
-          <LinkOverlay
-            as={TrackedLink}
-            category={TRACKING_CATEGORY}
-            label={title}
-            href={href}
-            _hover={{ textDecor: "none" }}
-          >
-            <Heading
-              size="title.md"
-              _groupHover={{ color: "blue.500" }}
-              transitionDuration="200ms"
-              display="flex"
-              alignItems="center"
-              gap="0.5em"
+          {badge && badgeColor && (
+            <Box>
+              <Badge
+                borderRadius="md"
+                bgColor={badgeColor}
+                px={2}
+                textTransform="none"
+                color="white"
+                py={1}
+              >
+                {badge}
+              </Badge>
+            </Box>
+          )}
+          <Flex flexDir="column" gap={2}>
+            <LinkOverlay
+              as={TrackedLink}
+              category={TRACKING_CATEGORY}
+              label={title}
+              href={href}
+              isExternal={!href.startsWith("/")}
+              _hover={{ textDecor: "none" }}
             >
-              {title} <BsArrowRight />
-            </Heading>
-          </LinkOverlay>
-          <Text>{description}</Text>
+              <Heading
+                size="title.sm"
+                _groupHover={{ color: "blue.500" }}
+                transitionDuration="200ms"
+                display="flex"
+                alignItems="center"
+                gap="0.5em"
+              >
+                {title} <BsArrowRight />
+              </Heading>
+            </LinkOverlay>
+            <Text size="body.md">{description}</Text>
+          </Flex>
         </Flex>
       </Card>
     </LinkBox>
