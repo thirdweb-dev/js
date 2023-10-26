@@ -26,11 +26,7 @@ export const AnnouncementBanner = () => {
         px={4}
       >
         <Box display={{ base: "none", md: "block" }} />
-        <TrackedLink
-          href="/connect"
-          category="announcement"
-          label="connect-wallet-v3"
-        >
+        <TrackedLink href="/engine" category="announcement" label="engine">
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
               cursor="pointer"
@@ -46,8 +42,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Introducing: The complete toolkit to build powerful web3 wallet
-                experiences. Start building with Connect
+                Introducing Engine: The open-source HTTP server for scaling web3
+                apps. Start building
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
