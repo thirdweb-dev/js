@@ -9,6 +9,8 @@ import {
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   ROUTE_VERIFY_COGNITO_OTP,
+  ROUTE_USER_MANAGED_OTP,
+  ROUTE_VALIDATE_USER_MANAGED_OTP,
 } from "../constants";
 import { getAuthTokenClient } from "../storage/local";
 import * as Application from "expo-application";
@@ -146,29 +148,53 @@ export async function generateAuthTokenFromCognitoEmailOtp(
   };
 }
 
-export async function initWalletWithoutRecoveryCode({
-  clientId,
-}: {
-  clientId: string;
-}) {
-  const resp = await authFetchEmbeddedWalletUser(
-    { clientId },
-    ROUTE_INIT_RECOVERY_CODE_FREE_WALLET,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        clientId,
-      }),
+export async function sendUserManagedEmailOtp(email: string, clientId: string) {
+  const resp = await fetch(ROUTE_USER_MANAGED_OTP, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
     },
-  );
+    body: JSON.stringify({
+      email,
+      clientId,
+    }),
+  });
   if (!resp.ok) {
-    const { error } = await resp.json();
-    console.error(`Error initializing wallet: ${error} `);
-    return { success: false };
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
+    );
   }
+  const respJ = await resp.json();
+  return respJ;
+}
 
-  return { success: true };
+export async function validateUserManagedEmailOtp(
+  email: string,
+  otp: string,
+  clientId: string,
+) {
+  const resp = await fetch(ROUTE_VALIDATE_USER_MANAGED_OTP, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+    },
+    body: JSON.stringify({
+      email,
+      otp,
+      clientId,
+    }),
+  });
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
+    );
+  }
+  const respJ = await resp.json();
+  return respJ;
 }
 
 export async function storeUserShares({

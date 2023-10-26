@@ -44,9 +44,12 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const setConnectedWallet = useSetConnectedWallet();
   const setConnectionStatus = useSetConnectionStatus();
+  const [oneTimePasscode, setOneTimePasscode] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | undefined>();
 
   const address = useAddress();
+
+  console.log("selectionData", selectionData);
 
   useEffect(() => {
     if (address) {
@@ -67,34 +70,47 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       const otp = values.join("");
 
       setTimeout(() => {
-        (selectionData.emailWallet as EmbeddedWallet)
-          .connect({
-            loginType: "headless_email_otp_verification",
-            otp,
-            email: selectionData.email,
-          })
-          .then(async (response) => {
-            if (response) {
-              if (onLocallyConnected) {
-                onLocallyConnected(selectionData.emailWallet);
+        const emailWallet = selectionData.emailWallet as EmbeddedWallet;
+        if (selectionData.recoveryShareManagement?.USER_MANAGED) {
+          emailWallet
+            .authenticate({
+              strategy: "email_verification",
+              verificationCode: otp,
+              oneTimePasscode,
+            })
+            .then(async (response) => {
+              // auth response, do postAuth flow when calling connect
+            });
+        } else {
+          emailWallet
+            .connect({
+              loginType: "headless_email_otp_verification",
+              otp,
+              email: selectionData.email,
+            })
+            .then(async (response) => {
+              if (response) {
+                if (onLocallyConnected) {
+                  onLocallyConnected(selectionData.emailWallet);
+                } else {
+                  await setConnectedWallet(selectionData.emailWallet);
+                  setConnectionStatus("connected");
+                }
               } else {
-                await setConnectedWallet(selectionData.emailWallet);
-                setConnectionStatus("connected");
+                clearCode();
+                setErrorMessage(response || "Error validating the code");
+                setCheckingOtp(false);
+                setFocusedIndex(undefined);
               }
-            } else {
+            })
+            .catch((error) => {
               clearCode();
-              setErrorMessage(response || "Error validating the code");
+              console.error("Error validating otp: ", error);
+              setErrorMessage("Error validating the code");
               setCheckingOtp(false);
               setFocusedIndex(undefined);
-            }
-          })
-          .catch((error) => {
-            clearCode();
-            console.error("Error validating otp: ", error);
-            setErrorMessage("Error validating the code");
-            setCheckingOtp(false);
-            setFocusedIndex(undefined);
-          });
+            });
+        }
       }, 0);
     }
   }, [
@@ -109,7 +125,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     if (value !== "") {
       const copiedContent = await Clipboard.getStringAsync();
 
-      if (copiedContent.length === 6 && /^\d+$/.test(copiedContent)) {
+      if (copiedContent.length === 6) {
         const newValues = [...copiedContent];
         for (let i = 0; i < 6; i++) {
           inputRefs.current[i]?.setNativeProps({ text: newValues[i] });
@@ -127,7 +143,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
 
     if (value === "" && index > 0) {
       inputRefs.current[index - 1]?.focus();
-    } else if (value.length === 1 && /^[0-9]$/.test(value)) {
+    } else if (value.length === 1) {
       if (index < 5) {
         inputRefs.current[index + 1]?.focus();
       }
@@ -227,7 +243,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
                 ...styles.textInput,
                 color: theme.colors.textPrimary,
               }}
-              keyboardType="number-pad"
               editable={!checkingOtp}
               selectTextOnFocus={true}
               onFocus={() => setFocusedIndex(index)}
@@ -239,6 +254,32 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           </Box>
         ))}
       </Box>
+      {selectionData.isNewUser === false ? (
+        <Box
+          flexDirection="row"
+          alignItems="center"
+          borderColor="border"
+          borderWidth={1}
+          borderRadius="md"
+          pr="xs"
+          pl="xxs"
+        >
+          <TextInput
+            style={{
+              color: theme.colors.textPrimary,
+              fontFamily: theme.textVariants.defaults.fontFamily,
+            }}
+            textContentType="none"
+            returnKeyType={"done"}
+            placeholder="Passcode"
+            placeholderTextColor={theme.colors.textSecondary}
+            clearTextOnFocus={false}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={setOneTimePasscode}
+          />
+        </Box>
+      ) : null}
       {errorMessage ? (
         <Text variant="error" numberOfLines={1}>
           {errorMessage}

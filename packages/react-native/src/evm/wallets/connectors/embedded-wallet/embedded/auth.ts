@@ -1,17 +1,12 @@
 import {
   AuthProvider,
-  AuthStoredTokenWithCookieReturnType,
 } from "@paperxyz/embedded-wallet-service-sdk";
 import type { CognitoUser } from "amazon-cognito-identity-js";
-import { Auth } from "aws-amplify";
 
 import {
-  RecoveryShareManagement,
   SendEmailOtpReturnType,
 } from "@thirdweb-dev/wallets";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import {
-  generateAuthTokenFromCognitoEmailOtp,
   getEmbeddedWalletUserDetail,
   verifyClientId,
 } from "./helpers/api/fetchers";
@@ -20,17 +15,9 @@ import {
   cognitoEmailSignUp,
 } from "./helpers/auth/cognitoAuth";
 import {
-  postPaperAuth,
-  postPaperAuthUserManaged,
   prePaperAuth,
 } from "./helpers/auth/middleware";
-import { isDeviceSharePresentForUser } from "./helpers/storage/local";
-import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
-import { AuthOptions, OauthOption } from "../types";
-import {
-  ROUTE_AUTH_JWT_CALLBACK,
-  ROUTE_HEADLESS_GOOGLE_LOGIN,
-} from "./helpers/constants";
+import { setCognitoUser } from "./helpers/storage/state";
 
 export async function sendEmailOTP(options: {
   email: string;
@@ -65,11 +52,35 @@ export async function sendEmailOTP(options: {
     );
   }
 
+<<<<<<< Updated upstream
+=======
+  console.log("result", result);
+
+  if (result.recoveryShareManagement === RecoveryShareManagement.AWS_MANAGED) {
+    // AWS Auth flow
+    let cognitoUser: CognitoUser;
+    try {
+      cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
+    } catch (e) {
+      await cognitoEmailSignUp(options.email, options.clientId);
+      cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
+    }
+    setCognitoUser(cognitoUser);
+  } else if (
+    result.recoveryShareManagement === RecoveryShareManagement.USER_MANAGED
+  ) {
+    try {
+      await sendUserManagedEmailOtp(options.email, options.clientId);
+    } catch (error) {
+      throw new Error(`Error sending user managed email otp: ${error}`);
+    }
+  }
+
   return result.isNewUser
     ? {
         isNewUser: result.isNewUser,
         isNewDevice: true,
-        recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
+        recoveryShareManagement: result.recoveryShareManagement,
       }
     : {
         isNewUser: result.isNewUser,
@@ -77,7 +88,7 @@ export async function sendEmailOTP(options: {
           options.clientId,
           result.walletUserId ?? "",
         )),
-        recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
+        recoveryShareManagement: result.recoveryShareManagement,
       };
 }
 
@@ -87,6 +98,7 @@ export async function validateEmailOTP({
 }: {
   otp: string;
   clientId: string;
+  password?: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   let verifiedToken: Awaited<
     ReturnType<typeof generateAuthTokenFromCognitoEmailOtp>
