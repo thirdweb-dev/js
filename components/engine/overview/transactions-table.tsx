@@ -1,13 +1,32 @@
+import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, Tag, TagLabel, Tooltip } from "@chakra-ui/react";
+import {
+  Flex,
+  FormControl,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Tag,
+  TagLabel,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { FiInfo } from "react-icons/fi";
-import { Card, LinkButton, Text } from "tw-components";
+import { useLocalStorage } from "hooks/useLocalStorage";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useRef } from "react";
+import { FiInfo, FiTrash } from "react-icons/fi";
+import { Card, Button, FormLabel, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { fetchChain } from "utils/fetchChain";
 
@@ -108,40 +127,53 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     columnHelper.accessor("status", {
       header: "Status",
       cell: (cell) => {
-        const { status, errorMessage, minedAt } = cell.row.original;
+        const transaction = cell.row.original;
+        const { status, errorMessage, minedAt } = transaction;
         if (!status) {
           return null;
         }
 
+        const showCancelTransactionButton = [
+          "processed",
+          "queued",
+          "sent",
+        ].includes(status);
+
         return (
-          <Tooltip
-            borderRadius="md"
-            bg="transparent"
-            boxShadow="none"
-            p={4}
-            minW={{ md: "450px" }}
-            label={
-              <Card bgColor="backgroundHighlight">
-                <Text>
-                  {status === "errored"
-                    ? errorMessage
-                    : status === "mined" && minedAt
-                    ? `Completed ${format(new Date(minedAt), "PP pp")}`
-                    : undefined}
-                </Text>
-              </Card>
-            }
-          >
-            <Tag
-              size="sm"
-              variant="subtle"
-              colorScheme={statusDetails[status].colorScheme}
-              gap={2}
+          <Flex align="center" gap={1}>
+            <Tooltip
+              borderRadius="md"
+              bg="transparent"
+              boxShadow="none"
+              p={4}
+              maxW={{ md: "450px" }}
+              label={
+                <Card bgColor="backgroundHighlight">
+                  <Text>
+                    {status === "errored"
+                      ? errorMessage
+                      : status === "mined" && minedAt
+                      ? `Completed ${format(new Date(minedAt), "PP pp")}`
+                      : undefined}
+                  </Text>
+                </Card>
+              }
             >
-              <TagLabel>{statusDetails[status].name}</TagLabel>
-              {statusDetails[status].showTooltipIcon && <FiInfo />}
-            </Tag>
-          </Tooltip>
+              <Tag
+                size="sm"
+                variant="subtle"
+                colorScheme={statusDetails[status].colorScheme}
+                gap={2}
+              >
+                <TagLabel>{statusDetails[status].name}</TagLabel>
+                {statusDetails[status].showTooltipIcon && <FiInfo />}
+              </Tag>
+            </Tooltip>
+
+            {showCancelTransactionButton && (
+              <CancelTransactionButton transaction={transaction} />
+            )}
+          </Flex>
         );
       },
     }),
@@ -223,7 +255,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             bg="transparent"
             boxShadow="none"
             p={4}
-            minW={{ md: "450px" }}
             label={
               <Card bgColor="backgroundHighlight">
                 <Text>{format(date, "PP pp z")}</Text>
@@ -246,5 +277,125 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       isLoading={isLoading}
       isFetched={isFetched}
     />
+  );
+};
+
+const CancelTransactionButton = ({
+  transaction,
+}: {
+  transaction: Transaction;
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const auth = useApiAuthToken();
+  const [instanceUrl] = useLocalStorage("engine-instance", "");
+  const { onSuccess, onError } = useTxNotifications(
+    "Successfully sent a request to cancel transaction",
+    "Failed to cancel transaction",
+  );
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const onClickContinue = async () => {
+    try {
+      const resp = await fetch(`${instanceUrl}transaction/cancel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+          "x-backend-wallet-address": transaction.fromAddress ?? "",
+        },
+        body: JSON.stringify({ queueId: transaction.queueId }),
+      });
+      if (!resp.ok) {
+        const json = await resp.json();
+        throw json.error?.message;
+      }
+      onSuccess();
+    } catch (e) {
+      console.error("Cancelling transaction:", e);
+      onError(e);
+    }
+
+    onClose();
+  };
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+        initialFocusRef={closeButtonRef}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Cancel Transaction</ModalHeader>
+          <ModalBody>
+            <Stack gap={4}>
+              <Text>Are you sure you want to cancel this transaction?</Text>
+              <FormControl>
+                <FormLabel>Queue ID</FormLabel>
+                <Text fontFamily="mono">{transaction.queueId}</Text>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Submitted at</FormLabel>
+                <Text>
+                  {format(new Date(transaction.queuedAt ?? ""), "PP pp z")}
+                </Text>
+              </FormControl>
+              <FormControl>
+                <FormLabel>From</FormLabel>
+                <AddressCopyButton
+                  address={transaction.fromAddress ?? ""}
+                  size="xs"
+                  shortenAddress={false}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>To</FormLabel>
+                <AddressCopyButton
+                  address={transaction.toAddress ?? ""}
+                  size="xs"
+                  shortenAddress={false}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Function</FormLabel>
+                <Text fontFamily="mono">{transaction.functionName}</Text>
+              </FormControl>
+
+              <Text>
+                If this transaction is already submitted, it may complete before
+                the cancellation is submitted.
+              </Text>
+            </Stack>
+          </ModalBody>
+
+          <ModalFooter as={Flex} gap={3}>
+            <Button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              variant="ghost"
+            >
+              Close
+            </Button>
+            <Button type="submit" colorScheme="red" onClick={onClickContinue}>
+              Cancel transaction
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Tooltip label="Cancel transaction">
+        <IconButton
+          aria-label="Cancel transaction"
+          icon={<FiTrash />}
+          colorScheme="red"
+          variant="ghost"
+          size="xs"
+          onClick={onOpen}
+        />
+      </Tooltip>
+    </>
   );
 };

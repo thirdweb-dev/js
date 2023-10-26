@@ -7,7 +7,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
   ModalBody,
   ModalFooter,
   Flex,
@@ -20,7 +19,6 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
 import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { shortenIfAddress } from "utils/usedapp-external";
 
 interface AdminsTableProps {
   instance: string;
@@ -113,14 +111,10 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Revoke Admin</ModalHeader>
-          <ModalCloseButton />
           <ModalBody>
             <Text>
-              Are you sure you want to revoke permissions from{" "}
-              <Text fontFamily="mono" display="inline-flex">
-                {shortenIfAddress(adminToRevoke)}
-              </Text>
-              ?
+              Are you sure you want to revoke permissions for this admin?
+              <Text fontFamily="mono">{adminToRevoke}</Text>
             </Text>
           </ModalBody>
 
