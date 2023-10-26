@@ -125,7 +125,7 @@ export async function validateEmailOTP({
 
   try {
     const storedToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-      jwtToken: verifiedToken.rawToken,
+      jwtToken: verifiedToken.jwtToken,
       authDetails: verifiedToken.authDetails,
       authProvider: verifiedToken.authProvider,
       developerClientId: verifiedToken.developerClientId,
@@ -149,15 +149,16 @@ export async function validateEmailOTP({
 
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_GOOGLE_LOGIN}?authProvider=${encodeURIComponent(
-    "google",
+    oauthOptions.provider,
   )}&baseUrl=${encodeURIComponent(
-    "https://ews.thirdweb.com",
+    "https://embedded-wallet.thirdweb.com",
   )}&platform=${encodeURIComponent("mobile")}`;
 
   const resp = await fetch(headlessLoginLinkWithParams);
 
   if (!resp.ok) {
-    throw new Error("Error getting headless login link");
+    const error = await resp.json();
+    throw new Error(`Error getting headless login link: ${error.message}`);
   }
 
   const json = await resp.json();
@@ -225,21 +226,20 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      jwtToken: jwt,
-      authProvider: AuthProvider.CUSTOM_JWT,
+      jwt: jwt,
       developerClientId: clientId,
     }),
   });
   if (!resp.ok) {
-    const { error } = await resp.json();
-    throw new Error(`JWT authentication error: ${error} `);
+    const error = await resp.json();
+    throw new Error(`JWT authentication error: ${error.message} `);
   }
 
   try {
     const { verifiedToken, verifiedTokenJwtString } = await resp.json();
 
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-      jwtToken: verifiedToken.rawToken,
+      jwtToken: verifiedToken.jwtToken,
       authProvider: verifiedToken.authProvider,
       authDetails: {
         ...verifiedToken.authDetails,
@@ -247,7 +247,7 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
       },
       developerClientId: verifiedToken.developerClientId,
       cookieString: verifiedTokenJwtString,
-      shouldStoreCookieString: false,
+      shouldStoreCookieString: true,
       isNewUser: verifiedToken.isNewUser,
     };
 
