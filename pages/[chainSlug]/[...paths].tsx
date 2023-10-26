@@ -163,7 +163,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
 
   const router = useRouter();
 
-  const activeTab = router.query?.paths?.[2] || "overview";
+  const activeTab = router.query?.paths?.[1] || "overview";
   const contractQuery = useContract(contractAddress);
   const contractMetadataQuery = useContractMetadata(contractQuery.contract);
   const compilerMetadataQuery = useCompilerMetadata(contractAddress);
@@ -451,7 +451,6 @@ EVMContractPage.getLayout = (page, props: EVMContractProps) => {
     .replace("Mainnet", "")
     .replace("Testnet", "")
     .trim();
-
   const url = `https://thirdweb.com/${props.contractInfo?.chainSlug}/${props.contractInfo?.contractAddress}/`;
   const SEOTitle = `${displayName} | ${
     cleanedChainName ? `${cleanedChainName} ` : ""
@@ -525,7 +524,8 @@ EVMContractPage.fallback = (
 // server side ---------------------------------------------------------------
 
 export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
-  const [chainSlug, contractAddress] = ctx.params?.paths as string[];
+  const chainSlug = ctx.params?.chainSlug as string;
+  const [contractAddress] = ctx.params?.paths as string[];
 
   let address: string | null = null;
   const queryClient = new QueryClient();

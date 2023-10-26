@@ -240,6 +240,7 @@ export async function fetchAllVersions(
   invariant(publisherAddress, "address is not defined");
   invariant(contractName, "contract name is not defined");
   invariant(sdk, "sdk not provided");
+
   const allVersions = await sdk
     .getPublisher()
     .getAllVersions(publisherAddress, contractName);

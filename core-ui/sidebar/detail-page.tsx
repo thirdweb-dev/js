@@ -112,7 +112,6 @@ const NavLinkSection: React.FC<NavLinkSectionProps> = ({
   if (filteredLinks.length === 0) {
     return null;
   }
-
   return (
     <Flex direction="column" mb={4}>
       <Flex mb={2} gap={2} align="center">
@@ -154,11 +153,15 @@ const DetailNavLink: ComponentWithChildren<DetailNavLinkProps> = ({
   const { query } = useRouter();
   const [computedBasePath, tabHref] = useMemo(() => {
     const [network, address, tab = ""] = [
-      ...new Set(((query.paths as string[]) || []).filter((c) => c !== "evm")),
+      ...new Set(
+        ([query.chainSlug, ...(query.paths as string[])] || []).filter(
+          (c) => c !== "evm",
+        ),
+      ),
     ];
 
     return [`/${network}/${address}`, tab] as const;
-  }, [query.paths]);
+  }, [query.chainSlug, query.paths]);
 
   if (extensionDetectedState === "disabled") {
     return null;

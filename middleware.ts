@@ -1,6 +1,4 @@
 // middleware.ts
-import type { Chain } from "@thirdweb-dev/chains";
-import { THIRDWEB_API_HOST } from "constants/urls";
 import { NextRequest, NextResponse } from "next/server";
 
 // ignore assets, api - only intercept page routes
@@ -18,75 +16,36 @@ export const config = {
   ],
 };
 
-async function getChainFromNetworkPath(network: string) {
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains/${network}`);
-  if (res.ok) {
-    try {
-      return (await res.json()).data as Chain;
-    } catch (err) {
-      return null;
-    }
-  }
-  return null;
-}
-
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");
-  // we're in chain mode, rewrite to `/chain/<slug>`
-  if (paths.length === 1 && paths[0] !== "") {
-    const chain = await getChainFromNetworkPath(paths[0]);
-    // if we found a chain we can do more logic
-    if (chain) {
-      if (chain.slug !== paths[0]) {
-        // redirect to the slug
-        return redirect(request, `/${chain.slug}`);
-      }
-      // otherwise we're at the correct slug
-      return rewrite(request, `/chain/${chain.slug}`);
+
+  // DIFFERENT DYNAMIC ROUTING CASES
+
+  // /<address>/... case
+  if (isPossibleEVMAddress(paths[0])) {
+    // special case for "deployer.thirdweb.eth"
+    // we want to always redirect this to "thirdweb.eth/..."
+    if (paths[0] === "deployer.thirdweb.eth") {
+      return redirect(
+        request,
+        `/thirdweb.eth/${paths.slice(1).join("/")}`,
+        true,
+      );
+    }
+    // if we have exactly 1 path part, we're in the <address> case -> profile page
+    if (paths.length === 1) {
+      return rewrite(request, `/profile${pathname}`);
+    }
+    // if we have more than 1 path part, we're in the <address>/<slug> case -> publish page
+    if (paths.length > 1) {
+      return rewrite(request, `/publish${pathname}`);
     }
   }
-  // end chain mode
-
-  // ignore paths that don't have at least 2 parts
-  if (paths.length < 2) {
-    return;
-  }
-
-  const [networkOrAddress, ...catchAll] = paths;
-
-  // legacy
-  const legacyRedirect = handleLegacyRedirects(
-    request,
-    networkOrAddress,
-    catchAll,
-  );
-  if (legacyRedirect) {
-    return legacyRedirect;
-  }
-
-  // evm contract page
-  // /<network>/... or /<chainId>/...
-  if (isPossibleEVMAddress(catchAll[0])) {
-    // /<chainId>/... => /evm/<network>/...
-
-    // if networkOrAddress is a Number then it's likely a chainId and we should redirect to the slug instead
-    if (!isNaN(Number(networkOrAddress))) {
-      const chain = await getChainFromNetworkPath(networkOrAddress);
-      if (chain) {
-        return redirect(request, `/${chain.slug}/${catchAll.join("/")}`);
-      }
-    }
-
-    // /<network>/...  => /evm/<network>/...
-    return rewrite(request, `/evm${pathname}`);
-  }
-
-  if (isPossibleEVMAddress(networkOrAddress)) {
-    return rewrite(request, `/publish${pathname}`);
-  }
+  // END /<address>/... case
+  // all other cases are handled by the file system router so we just fall through
 }
 
 function isPossibleEVMAddress(address: string) {
@@ -109,15 +68,4 @@ function redirect(
   const url = request.nextUrl.clone();
   url.pathname = relativePath;
   return NextResponse.redirect(url, permanent ? 308 : undefined);
-}
-
-function handleLegacyRedirects(
-  request: NextRequest,
-  networkOrAddress: string,
-  catchAll: string[],
-) {
-  // handle deployer.thirdweb.eth urls
-  if (networkOrAddress === "deployer.thirdweb.eth") {
-    return redirect(request, `/thirdweb.eth/${catchAll.join("/")}`, true);
-  }
 }
