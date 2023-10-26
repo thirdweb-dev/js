@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://cloudwalk.io",
   "name": "CloudWalk Mainnet",
   "nativeCurrency": {
@@ -18,7 +17,7 @@ export default {
     "symbol": "CWN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2009,
   "rpc": [],
   "shortName": "cloudwalk_mainnet",
   "slug": "cloudwalk",

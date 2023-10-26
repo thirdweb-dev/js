@@ -6,13 +6,18 @@ export default {
     {
       "name": "SOMA Explorer Mainnet",
       "url": "https://somascan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://airdrop.somanetwork.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmadSU2tcyvuzssDYGJ4rVLag43QLnKwcBerZR2zKLVU2N",
     "width": 500,
@@ -26,9 +31,10 @@ export default {
     "symbol": "SMA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2332,
   "rpc": [
     "https://soma-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2332.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://data-mainnet-v1.somanetwork.io/",
     "https://id-mainnet.somanetwork.io",
     "https://hk-mainnet.somanetwork.io",

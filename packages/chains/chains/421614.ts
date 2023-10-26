@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://arbitrum.io",
   "name": "Arbitrum Sepolia",
   "nativeCurrency": {
@@ -18,12 +17,23 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 421614,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://bridge.arbitrum.io"
+      }
+    ]
+  },
   "rpc": [
     "https://arbitrum-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://421614.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sepolia-rollup.arbitrum.io/rpc"
   ],
   "shortName": "arb-sep",
   "slug": "arbitrum-sepolia",
-  "testnet": true
+  "testnet": true,
+  "title": "Arbitrum Sepolia Rollup Testnet"
 } as const satisfies Chain;

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibwywok67uewqbtqdzgr7nlk3lvvg7hxmbgwtn7kdwxe34useucvm",
     "width": 1024,
@@ -21,12 +20,13 @@ export default {
   "name": "Quantum Chain Mainnet",
   "nativeCurrency": {
     "name": "Quantum Chain",
-    "symbol": "tQNET",
+    "symbol": "QNET",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 81720,
   "rpc": [
     "https://quantum-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://81720.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.quantumscan.org"
   ],
   "shortName": "qnet",

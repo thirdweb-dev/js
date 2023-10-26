@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreig47k53aipns6nu3u5fxpysp7mogzk6zyvatgpbam7yut3yvtuefa",
     "width": 160,
@@ -24,9 +23,10 @@ export default {
     "symbol": "MARO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8848,
   "rpc": [
     "https://maro-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8848.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.ma.ro"
   ],
   "shortName": "maro",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWb1gthhbzkiLdgcP8ccZprGbJVjFcW8Rn4uJjrw4jd3B",
     "width": 200,
@@ -24,9 +23,10 @@ export default {
     "symbol": "MTV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 62621,
   "rpc": [
     "https://multivac.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://62621.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mtv.ac",
     "https://rpc-eu.mtv.ac"
   ],

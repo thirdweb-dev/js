@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.empirenetwork.io/",
   "name": "Empire Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "EMPIRE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3693,
   "rpc": [
     "https://empire-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3693.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.empirenetwork.io"
   ],
   "shortName": "empire",

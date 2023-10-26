@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeJerrsURFNt2LL7DE7TxeunjrQXiuezdfHyqmsbwX3MZ",
     "width": 128,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ETHW",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 20001,
   "rpc": [
     "https://camelark.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-http-rpc.camelark.com"
   ],
   "shortName": "Camelark",

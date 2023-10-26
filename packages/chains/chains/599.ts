@@ -26,12 +26,23 @@ export default {
     "symbol": "METIS",
     "decimals": 18
   },
+  "networkId": 599,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-4",
+    "bridges": [
+      {
+        "url": "https://testnet-bridge.metis.io"
+      }
+    ]
+  },
   "redFlags": [],
   "rpc": [
     "https://metis-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://599.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.gateway.metisdevops.link"
   ],
   "shortName": "metis-goerli",
   "slug": "metis-goerli-testnet",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

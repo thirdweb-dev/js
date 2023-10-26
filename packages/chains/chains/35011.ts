@@ -6,7 +6,13 @@ export default {
     {
       "name": "J2O Taro Explorer",
       "url": "https://exp.j2o.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmdUYi8fjnvdM9iFQ7dwE2YvmhDtavSB3bKhCD2GhPxPks",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -25,9 +31,10 @@ export default {
     "symbol": "taro",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 35011,
   "rpc": [
     "https://j2o-taro.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://35011.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.j2o.io"
   ],
   "shortName": "j2o",

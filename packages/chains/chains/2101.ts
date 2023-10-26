@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ecoball.org",
   "name": "Ecoball Testnet Espuma",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ECO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2101,
   "rpc": [
     "https://ecoball-testnet-espuma.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ecoball.org/espuma/"
   ],
   "shortName": "esp",

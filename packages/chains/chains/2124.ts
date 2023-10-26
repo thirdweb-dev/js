@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://docs.metaplayer.one/",
   "name": "Metaplayerone Dubai Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "MEU",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2124,
   "rpc": [
     "https://metaplayerone-dubai-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2124.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-dubai.mp1network.com/"
   ],
   "shortName": "MEU",

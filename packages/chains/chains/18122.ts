@@ -6,11 +6,16 @@ export default {
     {
       "name": "stnscan",
       "url": "https://stnscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRgZVpjik4cH3Sb6wLRpdnfv9kiMEZ8fugfkzTgk3bpRW",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRgZVpjik4cH3Sb6wLRpdnfv9kiMEZ8fugfkzTgk3bpRW",
     "width": 500,
@@ -24,9 +29,10 @@ export default {
     "symbol": "STN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 18122,
   "rpc": [
     "https://smart-trade-networks.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://18122.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beefledgerwallet.com:8544"
   ],
   "shortName": "STN",

@@ -4,7 +4,6 @@ export default {
   "chainId": 18289463,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://iolite.io",
   "name": "IOLite",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "ILT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 18289463,
   "rpc": [
     "https://iolite.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://18289463.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://net.iolite.io"
   ],
   "shortName": "ilt",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://sherpax.io/",
   "name": "Sherpax Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "KSX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1507,
   "rpc": [
     "https://sherpax-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sherpax-testnet.chainx.org/rpc"
   ],
   "shortName": "SherpaxTestnet",

@@ -6,13 +6,18 @@ export default {
     {
       "name": "QL1 Testnet Explorer",
       "url": "https://testnet.qom.one",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRc1kJ7AgcDL1BSoMYudatWHTrz27K6WNTwGifQb5V17D",
+        "width": 518,
+        "height": 518,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.qom.one"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRc1kJ7AgcDL1BSoMYudatWHTrz27K6WNTwGifQb5V17D",
     "width": 518,
@@ -26,9 +31,10 @@ export default {
     "symbol": "QOM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7668378,
   "rpc": [
     "https://ql1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7668378.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.qom.one"
   ],
   "shortName": "tqom",

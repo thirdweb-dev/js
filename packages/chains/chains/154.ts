@@ -4,7 +4,6 @@ export default {
   "chainId": 154,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://redbelly.network",
   "name": "Redbelly Network TGE",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "RBNT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 154,
   "rpc": [],
   "shortName": "rbn-tge",
   "slug": "redbelly-network-tge",

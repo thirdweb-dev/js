@@ -4,7 +4,6 @@ export default {
   "chainId": 38,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://valorbit.com",
   "name": "Valorbit",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "VAL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 38,
   "rpc": [
     "https://valorbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://38.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.valorbit.com/v2"
   ],
   "shortName": "val",
+  "slip44": 538,
   "slug": "valorbit",
   "testnet": false
 } as const satisfies Chain;

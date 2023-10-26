@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://candlelabs.org/",
   "name": "Candle",
   "nativeCurrency": {
@@ -18,13 +17,15 @@ export default {
     "symbol": "CNDL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 534,
   "rpc": [
     "https://candle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://534.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://candle-rpc.com/",
     "https://rpc.cndlchain.com"
   ],
   "shortName": "CNDL",
+  "slip44": 674,
   "slug": "candle",
   "testnet": false
 } as const satisfies Chain;

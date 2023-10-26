@@ -21,9 +21,10 @@ export default {
     "symbol": "SHRAP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2037,
   "rpc": [
     "https://kiwi-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2037.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/kiwi/testnet/rpc"
   ],
   "shortName": "kiwi",

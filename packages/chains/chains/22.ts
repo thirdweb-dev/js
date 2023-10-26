@@ -4,7 +4,6 @@ export default {
   "chainId": 22,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.elastos.org/",
   "name": "ELA-DID-Sidechain Mainnet",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "ELA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 22,
   "rpc": [],
   "shortName": "eladid",
   "slug": "ela-did-sidechain",

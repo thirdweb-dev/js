@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUc57w3UTHiWapNW9oQb1dP57ymtdemTTbpvGkjVHBRCo",
     "width": 192,
@@ -24,9 +23,10 @@ export default {
     "symbol": "W3G",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 105,
   "rpc": [
     "https://web3games-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://105.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.web3games.org/evm"
   ],
   "shortName": "dw3g",

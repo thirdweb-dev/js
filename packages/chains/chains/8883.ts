@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmd1PGt4cDRjFbh4ihP5QKEd4XQVwN1MkebYKdF56V74pf",
     "width": 48,
@@ -24,9 +23,10 @@ export default {
     "symbol": "QTZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8883,
   "rpc": [
     "https://sapphire-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8883.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-sapphire.unique.network",
     "https://us-rpc-sapphire.unique.network",
     "https://eu-rpc-sapphire.unique.network",

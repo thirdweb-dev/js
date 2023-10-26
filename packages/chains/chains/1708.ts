@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.blockchain.or.th"
   ],
-  "features": [],
   "infoURL": "https://blockchain.or.th",
   "name": "TBSI Testnet",
   "nativeCurrency": {
@@ -20,12 +19,14 @@ export default {
     "symbol": "JINDA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1708,
   "rpc": [
     "https://tbsi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1708.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.blockchain.or.th"
   ],
   "shortName": "tTBSI",
   "slug": "tbsi-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Thai Blockchain Service Infrastructure Testnet"
 } as const satisfies Chain;

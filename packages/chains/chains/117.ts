@@ -6,11 +6,16 @@ export default {
     {
       "name": "Uptick Explorer",
       "url": "https://evm-explorer.uptick.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
     "width": 400,
@@ -24,9 +29,10 @@ export default {
     "symbol": "UPTICK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 117,
   "rpc": [
     "https://uptick.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://117.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.uptick.network"
   ],
   "shortName": "auptick",

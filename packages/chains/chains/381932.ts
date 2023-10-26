@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.metalblockchain.org/",
   "name": "Metal Tahoe C-Chain",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "METAL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 381932,
   "rpc": [
     "https://metal-tahoe-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://381932.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tahoe.metalblockchain.org/ext/bc/C/rpc"
   ],
   "shortName": "Tahoe",
+  "slip44": 9005,
   "slug": "metal-tahoe-c-chain",
   "testnet": false
 } as const satisfies Chain;

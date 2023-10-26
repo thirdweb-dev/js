@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRUrz4dULaoaMpnqd8qXT7ehwz3aaqnYKY4ePsy7isGaF",
     "width": 512,
@@ -24,12 +23,14 @@ export default {
     "symbol": "AAC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 512,
   "rpc": [
     "https://double-a-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://512.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.acuteangle.com"
   ],
   "shortName": "aac",
+  "slip44": 1512,
   "slug": "double-a-chain",
   "testnet": false
 } as const satisfies Chain;

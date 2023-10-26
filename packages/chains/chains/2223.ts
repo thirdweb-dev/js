@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bo.vcex.xyz/",
   "name": "VChain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "VNDT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2223,
   "rpc": [
     "https://vchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2223.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bc.vcex.xyz"
   ],
   "shortName": "VChain",

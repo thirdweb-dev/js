@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://vechain.org",
   "name": "VeChain",
   "nativeCurrency": {
@@ -23,7 +22,7 @@ export default {
     "symbol": "VET",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 100009,
   "rpc": [],
   "shortName": "vechain",
   "slug": "vechain",

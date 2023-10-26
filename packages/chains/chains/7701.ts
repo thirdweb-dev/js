@@ -7,10 +7,20 @@ export default {
       "name": "Canto Testnet EVM Explorer (Blockscout)",
       "url": "https://testnet.tuber.build",
       "standard": "none"
+    },
+    {
+      "name": "dexguru",
+      "url": "https://canto-test.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://canto.io",
   "name": "Canto Tesnet",
   "nativeCurrency": {
@@ -18,9 +28,10 @@ export default {
     "symbol": "CANTO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7701,
   "rpc": [
     "https://canto-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7701.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-archive.plexnode.wtf"
   ],
   "shortName": "TestnetCanto",

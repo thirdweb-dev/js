@@ -4,7 +4,6 @@ export default {
   "chainId": 110,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://protonchain.com",
   "name": "Proton Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "XPR",
     "decimals": 4
   },
-  "redFlags": [],
+  "networkId": 110,
   "rpc": [
     "https://proton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://protontestnet.greymass.com/"
   ],
   "shortName": "xpr",

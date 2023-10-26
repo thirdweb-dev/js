@@ -5,12 +5,11 @@ export default {
   "explorers": [
     {
       "name": "Bitrock Explorer",
-      "url": "https://scan.bit-rock.io",
+      "url": "https://explorer.bit-rock.io",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfXZCAh3HWS2bJroUStN9TieL4QA9QArMotie3X4pwBfj",
     "width": 72,
@@ -24,10 +23,12 @@ export default {
     "symbol": "BROCK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7171,
   "rpc": [
     "https://bitrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.bit-rock.io"
+    "https://7171.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://connect.bit-rock.io",
+    "https://brockrpc.io"
   ],
   "shortName": "bitrock",
   "slug": "bitrock",

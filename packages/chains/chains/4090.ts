@@ -33,12 +33,14 @@ export default {
     "symbol": "FTN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4090,
   "rpc": [
     "https://fastex-chain-bahamut-oasis-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4090.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.oasis.bahamutchain.com"
   ],
   "shortName": "Oasis",
   "slug": "fastex-chain-bahamut-oasis-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Bahamut testnet Oasis"
 } as const satisfies Chain;

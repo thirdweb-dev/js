@@ -6,11 +6,16 @@ export default {
     {
       "name": "GuapcoinX Explorer",
       "url": "http://explorer.guapcoinx.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmcDTR7982VQKDDz2Mh4fZbnE9hn67MuFPWQv1MimCqPvB",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcDTR7982VQKDDz2Mh4fZbnE9hn67MuFPWQv1MimCqPvB",
     "width": 800,
@@ -24,9 +29,10 @@ export default {
     "symbol": "GuapX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 71111,
   "rpc": [
     "https://guapcoinx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://71111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.guapcoinx.com/",
     "https://rpc-mainnet-1.guapcoinx.com/",
     "https://rpc-mainnet-2.guapcoinx.com/"

@@ -10,17 +10,21 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://plian.org/",
   "name": "Plian Testnet Subchain 1",
   "nativeCurrency": {
     "name": "Plian Token",
-    "symbol": "PI",
+    "symbol": "TPI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10067275,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-16658437"
+  },
   "rpc": [
     "https://plian-testnet-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10067275.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/child_test"
   ],
   "shortName": "plian-testnet-l2",

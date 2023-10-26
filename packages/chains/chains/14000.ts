@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ssquad.games/",
   "name": "SPS Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ECG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 14000,
   "rpc": [
     "https://sps-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://14000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.3sps.net"
   ],
   "shortName": "SPS-Test",

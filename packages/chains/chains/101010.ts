@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.soverun.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTYazUzgY9Nn2mCjWwFUSLy3dG6i2PvALpwCNQvx1zXyi",
     "width": 1154,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SVRN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 101010,
   "rpc": [
     "https://soverun-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://101010.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.soverun.com"
   ],
   "shortName": "SVRNt",

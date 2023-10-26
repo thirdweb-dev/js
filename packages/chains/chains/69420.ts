@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.condrieu.ethdevops.io"
   ],
-  "features": [],
   "infoURL": "https://condrieu.ethdevops.io",
   "name": "Condrieu",
   "nativeCurrency": {
@@ -20,12 +19,14 @@ export default {
     "symbol": "CTE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 69420,
   "rpc": [
     "https://condrieu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://69420.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.condrieu.ethdevops.io:8545"
   ],
   "shortName": "cndr",
   "slug": "condrieu",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum Verkle Testnet Condrieu"
 } as const satisfies Chain;

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUwqGWGjjQweTprn5LBirAwRjYnteTiFLCVpSNHrfMmSL",
     "width": 150,
@@ -24,9 +23,10 @@ export default {
     "symbol": "AZO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 456,
   "rpc": [
     "https://arzio-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain-rpc.arzio.co"
   ],
   "shortName": "arzio",

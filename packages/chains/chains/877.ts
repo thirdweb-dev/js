@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.dexit.network"
   ],
-  "features": [],
   "infoURL": "https://dexit.network",
   "name": "Dexit Network",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "DXT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 877,
   "rpc": [
     "https://dexit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://877.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dxt.dexit.network"
   ],
   "shortName": "DXT",
