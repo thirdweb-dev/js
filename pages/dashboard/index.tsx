@@ -1,4 +1,4 @@
-import { Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
+import { DarkMode, Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
@@ -77,29 +77,31 @@ const Dashboard: ThirdwebNextPage = (
               ) : (
                 <VStack gap={10}>
                   <OnboardingSteps />
-                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
-                    {GET_STARTED_SECTIONS.map(
-                      ({
-                        title,
-                        description,
-                        badge,
-                        badgeColor,
-                        image,
-                        href,
-                      }) => (
-                        <NavigationCard
-                          key={title}
-                          title={title}
-                          description={description}
-                          badge={badge}
-                          badgeColor={badgeColor}
-                          image={image}
-                          href={href}
-                          TRACKING_CATEGORY={TRACKING_CATEGORY}
-                        />
-                      ),
-                    )}
-                  </SimpleGrid>
+                  <DarkMode>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+                      {GET_STARTED_SECTIONS.map(
+                        ({
+                          title,
+                          description,
+                          badge,
+                          badgeColor,
+                          image,
+                          href,
+                        }) => (
+                          <NavigationCard
+                            key={title}
+                            title={title}
+                            description={description}
+                            badge={badge}
+                            badgeColor={badgeColor}
+                            image={image}
+                            href={href}
+                            TRACKING_CATEGORY={TRACKING_CATEGORY}
+                          />
+                        ),
+                      )}
+                    </SimpleGrid>
+                  </DarkMode>
                 </VStack>
               )}
             </ClientOnly>
