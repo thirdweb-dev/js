@@ -51,6 +51,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
         const existingService = (services || []).find(
           (s) => s.name === srv.name,
         );
+
         return {
           name: srv.name,
           targetAddresses: existingService
@@ -58,6 +59,12 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
             : "",
           enabled: !!existingService,
           actions: existingService?.actions || [],
+          recoveryShareManagement: existingService?.recoveryShareManagement,
+          customAuthentication: existingService?.customAuthentication
+            ? {
+                ...existingService.customAuthentication,
+              }
+            : undefined,
         };
       }),
     },
@@ -176,6 +183,7 @@ export const ApiKeyDrawer: React.FC<ApiKeyDrawerProps> = ({
       ) : (
         <ApiKeyForm
           form={form}
+          apiKey={apiKey}
           onClose={onClose}
           onSubmit={handleSubmit}
           selectedSection={selectedSection}

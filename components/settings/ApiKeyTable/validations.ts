@@ -3,6 +3,11 @@ import { RE_BUNDLE_ID, RE_DOMAIN } from "utils/regex";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
 
+const customAuthenticationSchema = z.object({
+  jwksUri: z.string(),
+  aud: z.string(),
+});
+
 export const apiKeyValidationSchema = z.object({
   name: z
     .string()
@@ -44,7 +49,16 @@ export const apiKeyValidationSchema = z.object({
             .refine((str) => validStrList(str, isAddress), {
               message: "Some of the addresses are invalid",
             }),
+          recoveryShareManagement: z
+            // This should be the same as @paperxyz/embedded-wallet-service-sdk RecoveryShareManagement enum
+            // Aso needs to be kept in sync with the type in `useApi.ts`
+            .enum(["AWS_MANAGED", "USER_MANAGED"])
+            .optional(),
           actions: z.array(z.string()),
+          customAuthentication: z.union([
+            z.undefined(),
+            customAuthenticationSchema,
+          ]),
         }),
       )
       .optional(),

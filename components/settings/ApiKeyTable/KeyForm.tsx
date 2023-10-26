@@ -338,56 +338,137 @@ export const ApiKeyForm: React.FC<ApiKeyFormProps> = ({
                   />
                 </HStack>
 
-                {service.name === "embeddedWallets" && srv.enabled && (
-                  <VStack spacing={4}>
-                    <FormControl
-                      isInvalid={
-                        !!form.getFieldState(`redirectUrls`, form.formState)
-                          .error
-                      }
-                    >
-                      <HStack
-                        alignItems="center"
-                        justifyContent="space-between"
-                        pb={2}
-                      >
-                        <FormLabel size="label.sm" mb={0}>
-                          Allowed redirect URIs
-                        </FormLabel>
-                      </HStack>
-
-                      <Textarea
-                        disabled={!srv.enabled}
-                        placeholder="thirdweb://"
-                        {...form.register(`redirectUrls`)}
-                      />
-                      {!form.getFieldState(`redirectUrls`, form.formState)
-                        .error ? (
-                        <FormHelperText>
-                          Enter redirect URIs separated by commas or new lines.
-                          This is often your application&apos;s deep link.
-                          Currently only used in Unity and React Native platform
-                          when users authenticate through social logins.
-                        </FormHelperText>
-                      ) : (
-                        <FormErrorMessage>
-                          {
-                            form.getFieldState(`redirectUrls`, form.formState)
-                              .error?.message
+                {service.name === "embeddedWallets" &&
+                  srv.enabled &&
+                  tabbed && (
+                    <VStack spacing={6}>
+                      (
+                      <VStack w="full">
+                        <FormControl
+                          isInvalid={
+                            !!form.getFieldState(
+                              `services.${idx}.customAuthentication`,
+                              form.formState,
+                            ).error
                           }
-                        </FormErrorMessage>
-                      )}
-                    </FormControl>
+                        >
+                          <FormLabel>Custom JSON Web Token</FormLabel>
+                          <FormHelperText>
+                            Optionally allow users to authenticate with a custom
+                            JWT
+                          </FormHelperText>
+                        </FormControl>
+                        <FormControl
+                          isInvalid={
+                            !!form.getFieldState(
+                              `services.${idx}.customAuthentication.jwksUri`,
+                              form.formState,
+                            ).error
+                          }
+                        >
+                          <FormLabel>JWKS URI</FormLabel>
+                          <Input
+                            placeholder="https://example.com/.well-known/jwks.json"
+                            type="text"
+                            {...form.register(
+                              `services.${idx}.customAuthentication.jwksUri`,
+                            )}
+                          />
+                          {!form.getFieldState(
+                            `services.${idx}.customAuthentication.jwksUri`,
+                            form.formState,
+                          ).error ? (
+                            <FormHelperText>
+                              Enter the URI of the JWKS
+                            </FormHelperText>
+                          ) : (
+                            <FormErrorMessage>
+                              {
+                                form.getFieldState(
+                                  `services.${idx}.customAuthentication.jwksUri`,
+                                  form.formState,
+                                ).error?.message
+                              }
+                            </FormErrorMessage>
+                          )}
+                        </FormControl>
+                        <FormControl
+                          isInvalid={
+                            !!form.getFieldState(
+                              `services.${idx}.customAuthentication.aud`,
+                              form.formState,
+                            ).error
+                          }
+                        >
+                          <FormLabel>AUD Value</FormLabel>
+                          <Input
+                            placeholder="AUD"
+                            type="text"
+                            {...form.register(
+                              `services.${idx}.customAuthentication.aud`,
+                            )}
+                          />
+                          {!form.getFieldState(
+                            `services.${idx}.customAuthentication.aud`,
+                            form.formState,
+                          ).error ? (
+                            <FormHelperText>
+                              Enter the audience claim for the JWT
+                            </FormHelperText>
+                          ) : (
+                            <FormErrorMessage>
+                              {
+                                form.getFieldState(
+                                  `services.${idx}.customAuthentication.aud`,
+                                  form.formState,
+                                ).error?.message
+                              }
+                            </FormErrorMessage>
+                          )}
+                        </FormControl>
+                      </VStack>
+                      )
+                      <FormControl
+                        isInvalid={
+                          !!form.getFieldState(`redirectUrls`, form.formState)
+                            .error
+                        }
+                      >
+                        <HStack
+                          alignItems="center"
+                          justifyContent="space-between"
+                          pb={2}
+                        >
+                          <FormLabel size="label.sm" mb={0}>
+                            Allowed redirect URIs
+                          </FormLabel>
+                        </HStack>
 
-                    {/* TODO maybe add warning for empty redirect urls? */}
-                    {/* {!form.watch(`redirectUrls`) && (
-                      <NoTargetAddressesAlert
-                        serviceName={service.title}
-                        serviceDesc={service.description}
-                      />
-                    )} */}
-                  </VStack>
-                )}
+                        <Textarea
+                          disabled={!srv.enabled}
+                          placeholder="thirdweb://"
+                          {...form.register(`redirectUrls`)}
+                        />
+                        {!form.getFieldState(`redirectUrls`, form.formState)
+                          .error ? (
+                          <FormHelperText>
+                            Enter redirect URIs separated by commas or new
+                            lines. This is often your application&apos;s deep
+                            link. Currently only used in Unity and React Native
+                            platform when users authenticate through social
+                            logins.
+                          </FormHelperText>
+                        ) : (
+                          <FormErrorMessage>
+                            {
+                              form.getFieldState(`redirectUrls`, form.formState)
+                                .error?.message
+                            }
+                          </FormErrorMessage>
+                        )}
+                      </FormControl>
+                    </VStack>
+                  )}
 
                 {service.name === "bundler" && srv.enabled && (
                   <VStack spacing={4}>

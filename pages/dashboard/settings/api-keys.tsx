@@ -11,6 +11,7 @@ import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+import { SERVICES } from "@thirdweb-dev/service-utils";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
   const address = useAddress();
@@ -48,7 +49,9 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           <Heading size="title.lg" as="h1">
             API Keys
           </Heading>
-          <CreateApiKeyButton />
+          <CreateApiKeyButton
+            enabledServices={SERVICES.map((srv) => srv.name)}
+          />
         </Flex>
 
         <Text>
