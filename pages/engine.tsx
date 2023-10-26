@@ -240,7 +240,7 @@ const EngineLanding: ThirdwebNextPage = () => {
               py={6}
               category={TRACKING_CATEGORY}
               label="coinbase-case-study"
-              href="https://blog.thirdweb.com/case-study/coinbase-brings-onchain-experiences-to-life"
+              href="https://blog.thirdweb.com/case-studies/coinbase-brings-onchain-experiences-to-life"
               maxW="fit-content"
             >
               See the case study
