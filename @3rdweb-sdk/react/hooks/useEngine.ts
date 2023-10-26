@@ -90,6 +90,13 @@ export type TransactionResponse = {
   totalCount: number;
 };
 
+/**
+ * Gets transactions for an Engine instance.
+ *
+ * @param instance
+ * @param autoUpdate - If true, refetches every 4 seconds.
+ * @returns
+ */
 export function useEngineTransactions(instance: string, autoUpdate: boolean) {
   const { token } = useApiAuthToken();
 
@@ -110,7 +117,7 @@ export function useEngineTransactions(instance: string, autoUpdate: boolean) {
     },
     {
       enabled: !!instance && !!token,
-      refetchInterval: autoUpdate ? 2_000 : false,
+      refetchInterval: autoUpdate ? 4_000 : false,
     },
   );
 }

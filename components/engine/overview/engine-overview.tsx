@@ -20,7 +20,7 @@ interface EngineOverviewProps {
 export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
   const backendWallets = useEngineBackendWallets(instance);
   const { data: walletConfig } = useEngineWalletConfig(instance);
-  const [autoUpdate, setAutoUpdate] = useState<boolean>(false);
+  const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
   const transactionsQuery = useEngineTransactions(instance, autoUpdate);
   const chainId = useChainId();
   const [selectedChainId, setSelectedChainId] = useState(chainId || 1);
@@ -111,9 +111,10 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
       <Flex flexDir="column" gap={4}>
         <Flex flexDir="row" gap={2} justify="space-between">
           <Flex flexDir="column" gap={2}>
-            <Heading size="title.sm">Transactions (24hrs)</Heading>
+            <Heading size="title.sm">Transactions</Heading>
             <Text>
-              View recent transactions sent from your backend wallets.
+              View transactions sent from your backend wallets in the past 24
+              hours.
             </Text>
           </Flex>
 
