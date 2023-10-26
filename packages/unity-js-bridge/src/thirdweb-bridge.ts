@@ -308,7 +308,6 @@ class ThirdwebBridge implements TWBridge {
             chainId: chainIdNumber,
             authResult,
           });
-          throw new Error("CustomAuth not implemented yet");
         } else {
           throw new Error(
             "Invalid auth provider: " + authOptionsParsed.authProvider,
