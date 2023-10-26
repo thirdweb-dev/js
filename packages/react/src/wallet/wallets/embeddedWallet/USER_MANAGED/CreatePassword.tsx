@@ -68,7 +68,8 @@ export function CreatePassword(props: {
           }}
         >
           <Text center multiline>
-            Set a password for your account
+            Set a password for your account. You will need this password when
+            connecting from a new device. <b>Make sure to save it.</b>
           </Text>
           <Spacer y="xs" />
           <Text center color="primaryText">
@@ -98,6 +99,8 @@ export function CreatePassword(props: {
           </InputContainer>
 
           <Spacer y="md" />
+
+          {/* TODO (joaquim) add confirmation checkbox to ensure the user has saved their password */}
 
           <Button
             disabled={loading}

@@ -1,10 +1,6 @@
 import styled from "@emotion/styled";
 import { ConnectUIProps, useWalletContext } from "@thirdweb-dev/react-core";
-import {
-  EmbeddedWallet,
-  AuthResult,
-  SendEmailOtpReturnType,
-} from "@thirdweb-dev/wallets";
+import { EmbeddedWallet, SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FadeIn } from "../../../components/FadeIn";
 import { OTPInput } from "../../../components/OTPInput";
@@ -14,7 +10,6 @@ import { Container, Line, ModalHeader } from "../../../components/basic";
 import { Button } from "../../../components/buttons";
 import { Text } from "../../../components/text";
 import { Theme, fontSize } from "../../../design-system";
-import { BackupAccount } from "./USER_MANAGED/BackupAccount";
 import { CreatePassword } from "./USER_MANAGED/CreatePassword";
 import { EnterPasswordOrRecovery } from "./USER_MANAGED/EnterPassword";
 
@@ -25,7 +20,6 @@ type EmailStatus = "sending" | SendEmailOtpReturnType | "error";
 type ScreenToShow =
   | "base"
   | "create-password"
-  | "backup-account"
   | "enter-password-or-recovery-code";
 
 export const EmbeddedWalletOTPLoginUI: React.FC<
@@ -43,7 +37,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   const [emailStatus, setEmailStatus] = useState<EmailStatus>("sending");
 
   const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
-  const [recoveryCodes, setRecoveryCodes] = useState<string[] | undefined>();
 
   const sendEmail = useCallback(async () => {
     setOtpInput("");
@@ -81,12 +74,16 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       setVerifyStatus("verifying");
       setConnectionStatus("connecting");
 
+      const needsRecoveryCode =
+        emailStatus.recoveryShareManagement === "USER_MANAGED" &&
+        (emailStatus.isNewUser || emailStatus.isNewDevice);
+
       // USER_MANAGED
-      if (emailStatus.recoveryShareManagement === "USER_MANAGED") {
+      if (needsRecoveryCode) {
         if (emailStatus.isNewUser) {
           try {
             // verifies otp for UI feedback
-            // TODO tweak the UI flow to avoid verifying otp twice
+            // TODO (joaquim) tweak the UI flow to avoid verifying otp twice - needs new endpoint or new UI
             await wallet.authenticate({ strategy: "email_otp", email, otp });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
@@ -144,6 +141,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   if (screen === "create-password") {
     return (
+      // TODO (joaquim) this UI needs the checkbox to confirm "i have saved my password"
       <CreatePassword
         modalSize={props.modalSize}
         email={email}
@@ -164,29 +162,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
           await wallet.connect({
             authResult,
           });
-          // TODO (joaquim) as connect callback
-          const info = await wallet.getRecoveryInformation();
-          setRecoveryCodes(info.backupRecoveryCodes);
-          setScreen("backup-account");
-        }}
-      />
-    );
-  }
-
-  if (screen === "backup-account") {
-    // TODO (joaquim) change this to single recovery code
-    return (
-      <BackupAccount
-        modalSize={props.modalSize}
-        goBack={props.goBack}
-        recoveryCodes={recoveryCodes}
-        email={email}
-        onNext={() => {
-          if (wallet) {
-            // TODO (joaquim) this needs the wallet auth params
-            setConnectedWallet(wallet);
-            props.connected();
-          }
+          setConnectedWallet(wallet);
         }}
       />
     );

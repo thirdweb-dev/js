@@ -2,7 +2,6 @@ import type { Chain } from "@thirdweb-dev/chains";
 import {
   EmbeddedWalletConstructorType,
   InitializedUser,
-  SendEmailOtpReturnType,
 } from "./implementations";
 
 export type EmbeddedWalletAdditionalOptions = {
