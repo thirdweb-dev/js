@@ -51,7 +51,7 @@ export const EmbeddedWalletFormUI = (props: {
       await embeddedWallet.connect({
         authResult,
       });
-      setConnectedWallet(embeddedWallet);
+      setConnectedWallet(embeddedWallet, { authResult });
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error(e);

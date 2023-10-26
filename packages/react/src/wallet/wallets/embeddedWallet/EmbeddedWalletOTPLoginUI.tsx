@@ -122,7 +122,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
         await wallet.connect({
           authResult,
         });
-        setConnectedWallet(wallet);
+        setConnectedWallet(wallet, { authResult });
         props.connected();
       }
 
@@ -174,6 +174,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
   }
 
   if (screen === "backup-account") {
+    // TODO (joaquim) change this to single recovery code
     return (
       <BackupAccount
         modalSize={props.modalSize}
@@ -182,6 +183,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
         email={email}
         onNext={() => {
           if (wallet) {
+            // TODO (joaquim) this needs the wallet auth params
             setConnectedWallet(wallet);
             props.connected();
           }
@@ -213,7 +215,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             authResult,
           });
 
-          setConnectedWallet(wallet);
+          setConnectedWallet(wallet, { authResult });
           props.connected();
         }}
       />

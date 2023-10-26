@@ -72,7 +72,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.switchChain(args.chainId);
     }
 
-    this.setupListeners();
     return this.getAddress();
   }
 
@@ -85,8 +84,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async getAddress(): Promise<string> {
-    const signer = await this.getSigner();
-    return signer.getAddress();
+    if (!this.user) {
+      throw new Error("Embedded Wallet is not connected");
+    }
+    return this.user.walletAddress;
   }
 
   async isConnected(): Promise<boolean> {
@@ -147,12 +148,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async setupListeners() {
-    const provider = await this.getProvider();
-    if (provider.on) {
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
-    }
+    return Promise.resolve();
   }
 
   updateChains(chains: Chain[]) {
@@ -181,7 +177,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   };
 
   async getUser(): Promise<InitializedUser | null> {
-    if (!this.user) {
+    if (
+      !this.user ||
+      !this.user.wallet ||
+      !this.user.wallet.getEthersJsSigner
+    ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
       switch (user.status) {

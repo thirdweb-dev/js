@@ -48,7 +48,7 @@ export const EmbeddedWalletGoogleLogin = (
       await embeddedWallet.connect({
         authResult,
       });
-      setConnectedWallet(embeddedWallet);
+      setConnectedWallet(embeddedWallet, { authResult });
       props.connected();
     } catch (e) {
       setConnectionStatus("disconnected");
