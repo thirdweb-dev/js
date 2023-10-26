@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "typedoc": "^0.25.2",
-    "typedoc-better-json": "^0.2.0"
+    "typedoc-better-json": "^0.2.2"
   },
   "devDependencies": {
     "prettier": "^3.0.0",

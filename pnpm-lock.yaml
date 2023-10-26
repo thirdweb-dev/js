@@ -1306,8 +1306,8 @@ importers:
         specifier: ^0.25.2
         version: 0.25.2(typescript@5.2.2)
       typedoc-better-json:
-        specifier: ^0.2.0
-        version: 0.2.0(typescript@5.2.2)
+        specifier: ^0.2.2
+        version: 0.2.2(typescript@5.2.2)
     devDependencies:
       prettier:
         specifier: ^3.0.0
@@ -28881,8 +28881,8 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typedoc-better-json@0.2.0(typescript@5.2.2):
-    resolution: {integrity: sha512-c+QNylwn6zR2A6cyIlQYyvQyZSeaeC9knjMwx0M/GWi3P2WH5Epg/8p9sR1KgKe1r6/WkOx3d9Qw206UZfrkhQ==}
+  /typedoc-better-json@0.2.2(typescript@5.2.2):
+    resolution: {integrity: sha512-P1uhkTqTKnGnNbUIuTHco+Zkp6e123j1lbL0dwpS0cpPSTUzdiY7ph47RIA8IBHCE/M/D/0W53+xYUd7MtJckQ==}
     dependencies:
       typedoc: 0.25.2(typescript@5.2.2)
     transitivePeerDependencies:
