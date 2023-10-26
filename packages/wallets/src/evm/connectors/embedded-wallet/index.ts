@@ -239,15 +239,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         });
       }
       case "jwt": {
-        const sub = extractSubFromJwt(params.jwt);
-        if (!sub) {
-          throw new Error(
-            "No sub found in JWT - make sure the format is correct",
-          );
-        }
         return ewSDK.auth.loginWithCustomJwt({
           jwt: params.jwt,
-          encryptionKey: sub,
+          encryptionKey: params.encryptionKey,
         });
       }
       case "iframe_otp": {
@@ -267,28 +261,4 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
 function assertUnreachable(x: never): never {
   throw new Error("Invalid param: " + x);
-}
-
-function extractSubFromJwt(jwtToken: string): string | null {
-  const parts = jwtToken.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Invalid JWT format.");
-  }
-
-  const encodedPayload = parts[1];
-  if (!encodedPayload) {
-    throw new Error("Invalid JWT format.");
-  }
-  const decodedPayload = Buffer.from(encodedPayload, "base64").toString("utf8");
-
-  try {
-    const payloadObject = JSON.parse(decodedPayload);
-    if (payloadObject && payloadObject.sub) {
-      return payloadObject.sub;
-    }
-  } catch (error) {
-    throw new Error("Error parsing JWT payload as JSON.");
-  }
-
-  return null;
 }

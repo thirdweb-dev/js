@@ -38,6 +38,7 @@ type GoogleAuthParams = {
 type JwtAuthParams = {
   strategy: "jwt";
   jwt: string;
+  encryptionKey?: string;
 };
 
 // open iFrame to send and input the OTP

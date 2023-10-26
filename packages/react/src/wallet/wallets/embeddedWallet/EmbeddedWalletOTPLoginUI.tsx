@@ -141,7 +141,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
 
   if (screen === "create-password") {
     return (
-      // TODO (joaquim) this UI needs the checkbox to confirm "i have saved my password"
       <CreatePassword
         modalSize={props.modalSize}
         email={email}

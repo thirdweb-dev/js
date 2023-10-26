@@ -9,7 +9,7 @@ import type {
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 export type LoginQuerierTypes = {
-  loginWithCustomJwt: { jwt: string; encryptionKey: string };
+  loginWithCustomJwt: { jwt: string; encryptionKey?: string };
   loginWithThirdwebModal: undefined | { email: string };
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
