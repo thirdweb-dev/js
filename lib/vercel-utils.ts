@@ -19,6 +19,11 @@ export function getAbsoluteUrl(): string {
     return "https://thirdweb.com";
   }
   const env = getVercelEnv();
+  // if we're in development we can just use the localhost
+  if (env === "development") {
+    // TODO - this should be a config
+    return "http://localhost:3000";
+  }
 
   if (env === "production") {
     return "https://thirdweb.com";
@@ -30,8 +35,5 @@ export function getAbsoluteUrl(): string {
     return `https://${vercelUrl}`;
   }
 
-  if (isBrowser()) {
-    return window.location.origin;
-  }
   return "https://thirdweb.com";
 }

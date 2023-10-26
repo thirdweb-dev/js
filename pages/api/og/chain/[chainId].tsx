@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { NextRequest } from "next/server";
 import { fetchChain } from "utils/fetchChain";
 
@@ -100,6 +101,12 @@ export default async function handler(req: NextRequest) {
     ? replaceAnyIpfsUrlWithGateway(chain.icon.url)
     : undefined;
 
+  const optimizedIconUrl = iconUrl
+    ? `${getAbsoluteUrl()}/_next/image?url=${encodeURIComponent(
+        iconUrl,
+      )}&w=256&q=75`
+    : undefined;
+
   const [inter400, inter500, inter700, imageData] = await Promise.all([
     inter400_,
     inter500_,
@@ -127,10 +134,10 @@ export default async function handler(req: NextRequest) {
         />
         {/* the actual component starts here */}
 
-        {iconUrl && (
+        {optimizedIconUrl && (
           <img
             alt=""
-            src={iconUrl}
+            src={optimizedIconUrl}
             tw="absolute rounded-full"
             // eslint-disable-next-line react/forbid-dom-props
             style={{

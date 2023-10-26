@@ -621,7 +621,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       notFound: true,
     };
   }
-  let gradientColors = null;
+  let gradientColors: [string, string] | null = null;
   try {
     gradientColors = await getGradientColorStops(chain);
   } catch (e) {
@@ -667,7 +667,11 @@ async function getGradientColorStops(
     return null;
   }
   const chainIconUrl = StorageSingleton.resolveScheme(chain.icon.url);
-  const data = await fetch(chainIconUrl);
+  const optimizedIconUrl = `${getAbsoluteUrl()}/_next/image?url=${encodeURIComponent(
+    chainIconUrl,
+  )}&w=256&q=75`;
+  const data = await fetch(optimizedIconUrl);
+
   const arrayBuffer = await data.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 

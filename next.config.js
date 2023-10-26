@@ -38,6 +38,42 @@ const securityHeaders = [
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const redirects = require("./redirects");
 
+/**
+ * @returns {import('next').RemotePattern[]}
+ */
+function determineIpfsGateways() {
+  // add the clientId ipfs gateways
+  const remotePatterns = [];
+  if (process.env.API_ROUTES_CLIENT_ID) {
+    remotePatterns.push({
+      protocol: "https",
+      hostname: `${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io`,
+    });
+    remotePatterns.push({
+      protocol: "https",
+      hostname: `${process.env.API_ROUTES_CLIENT_ID}.thirdwebstorage-staging.com`,
+    });
+  } else {
+    // this should only happen in development
+    remotePatterns.push({
+      protocol: "https",
+      hostname: "ipfs.io",
+    });
+  }
+  // also add the dashboard clientId ipfs gateway if it is set
+  if (process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID) {
+    remotePatterns.push({
+      protocol: "https",
+      hostname: `${process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID}.ipfscdn.io`,
+    });
+    remotePatterns.push({
+      protocol: "https",
+      hostname: `${process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID}.thirdwebstorage-staging.com`,
+    });
+  }
+  return remotePatterns;
+}
+
 /** @type {import('next').NextConfig} */
 const moduleExports = {
   async headers() {
@@ -72,6 +108,7 @@ const moduleExports = {
         protocol: "https",
         hostname: "**.thirdweb.com",
       },
+      ...determineIpfsGateways(),
     ],
   },
   reactStrictMode: true,
