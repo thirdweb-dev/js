@@ -50,9 +50,9 @@
     }
   },
   "devDependencies": {
-    "@paperxyz/tsconfig": "*",
-    "eslint-config-paperxyz": "*",
-    "typescript": "^4.7.4"
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.1.6"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
