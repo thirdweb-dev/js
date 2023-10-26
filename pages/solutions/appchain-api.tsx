@@ -16,20 +16,20 @@ const SELECTOR_ITEMS = [
   {
     title: "For Chains-as-a-service Providers",
     description:
-      "Allow your appchain developers to programmatically add their subnets to thirdweb global chainlist to get instant access to thirdweb dev tools.",
+      "Programmatically install appchains to thirdweb global chainlist on behalf of your appchain developers so that they can get access to thirdweb dev tools.",
     steps: [
-      "Contact us to get all your subnet developers whitelisted (so that you can programmatically add their subnet to thirdweb global chainlist).",
-      "Once added, a shareable dynamic After subnet developers create their subnet on your chains-as-a-service platform, a dynamic landing page is generated with SDKs, contract deployment and infrastructure for their subnet.",
-      "Developers access landing page to deploy contracts to your chain and get access to SDKs to integrate contracts into their apps.",
+      "Contact us to get all your appchain developers allowlisted (so that you can programmatically add their appchain to thirdweb global chainlist).",
+      "After appchain developers create their appchain on your chains-as-a-service platform, a dynamic landing page is generated with SDKs, contract deployment and infrastructure for their appchain.",
+      "Appchain developers can easily deploy contracts to their appchain in just a few clicks and access SDKs to integrate contracts into their apps.",
     ],
     products: ["explore", "interact"],
   },
   {
     title: "For Appchain Developers",
     description:
-      "Start building production-ready web3 apps and games on top of your subnet with our dev tools across: contracts, wallets, payments, and infrastructure.",
+      "Start building production-ready web3 apps and games on top of your appchain with our dev tools across: contracts, wallets, payments, and infrastructure.",
     steps: [
-      "After appchain developers create their subnet on an approved chains-as-a-service platform, a dynamic landing page is generated with SDKs, contract deployment and infrastructure for their subnet.",
+      "After appchain developers create their appchain on an approved chains-as-a-service platform, a dynamic landing page is generated with SDKs, contract deployment and infrastructure for their appchain.",
       "Appchain developer deploys contract specific to their appchain.",
       "Appchain developer build web3 apps using thirdweb product suite: contracts, wallets, payments, infrastructure products.",
     ],
@@ -38,6 +38,8 @@ const SELECTOR_ITEMS = [
 ];
 
 const SolutionsAppChainApi: ThirdwebNextPage = () => {
+  const contactUsLink =
+    "https://docs.google.com/forms/d/e/1FAIpQLSfzwj6mr7mZjntv5C8HD9CfMXkIupuOqBSWa-XIWepJnnCEKg/viewform";
   return (
     <LandingLayout
       bgColor="#0F0F0F"
@@ -72,6 +74,7 @@ const SolutionsAppChainApi: ThirdwebNextPage = () => {
           image={require("public/assets/product-pages/hero/desktop-hero-appchain-api.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-appchain-api.png")}
           noCta
+          contactUsLink={contactUsLink}
         />
 
         <LandingGridSection>
@@ -104,7 +107,7 @@ const SolutionsAppChainApi: ThirdwebNextPage = () => {
             <LandingIconSectionItem
               icon={require("public/assets/solutions-pages/icons/icon-ship.svg")}
               title="Deploy"
-              description="Offer your Deploy contracts directly to your appchain."
+              description="Deploy contracts directly to your appchain."
             />
           </Card>
           <Card p={8}>
