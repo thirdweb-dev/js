@@ -111,6 +111,7 @@ export async function getSmartWalletAddress(
   const factoryContract = await readOnlySDK.getContract(factoryAddress);
   const accountAddress = await factoryContract.call("getAddress", [
     personalWalletAddress,
+    "0x",
   ]);
   return accountAddress;
 }
