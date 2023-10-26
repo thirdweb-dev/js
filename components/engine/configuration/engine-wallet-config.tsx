@@ -1,6 +1,6 @@
-import { Box, ButtonGroup, Flex, Icon } from "@chakra-ui/react";
+import { ButtonGroup, Flex, Icon } from "@chakra-ui/react";
 import { useState } from "react";
-import { Heading, Card, Button, Text, Link } from "tw-components";
+import { Heading, Button, Text, Link } from "tw-components";
 import { KmsGcpConfig } from "./kms-gcp-config";
 import { KmsAwsConfig } from "./kms-aws-config";
 import { LocalConfig } from "./local-config.tsx";
@@ -36,75 +36,68 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
           .
         </Text>
       </Flex>
-      <Card>
-        <Flex flexDir="column" gap={{ base: 0, md: 4 }} mb={6}>
-          <Box
-            w="full"
-            overflow={{ base: "auto", md: "hidden" }}
-            pb={{ base: 4, md: 0 }}
+      <Flex flexDir="column" gap={4}>
+        <ButtonGroup size="sm" variant="outline" spacing={2}>
+          <Button
+            type="button"
+            leftIcon={
+              <Icon
+                as={
+                  selected === "local"
+                    ? MdRadioButtonChecked
+                    : MdRadioButtonUnchecked
+                }
+                boxSize={6}
+              />
+            }
+            borderColor={selected === "local" ? "unset" : undefined}
+            colorScheme={selected === "local" ? "blue" : undefined}
+            py={6}
+            rounded="lg"
+            onClick={() => setSelected("local")}
           >
-            <ButtonGroup size="sm" variant="outline" spacing={2}>
-              <Button
-                type="button"
-                leftIcon={
-                  <Icon
-                    as={
-                      selected === "local"
-                        ? MdRadioButtonChecked
-                        : MdRadioButtonUnchecked
-                    }
-                    boxSize={6}
-                  />
-                }
-                borderColor={selected === "local" ? "unset" : undefined}
-                colorScheme={selected === "local" ? "blue" : undefined}
-                py={6}
-                rounded="lg"
-                onClick={() => setSelected("local")}
-              >
-                Local Wallet
-              </Button>
-              <Button
-                type="button"
-                leftIcon={
-                  selected === "aws-kms" ? (
-                    <MdRadioButtonChecked />
-                  ) : (
-                    <MdRadioButtonUnchecked />
-                  )
-                }
-                borderColor={selected === "aws-kms" ? "unset" : undefined}
-                colorScheme={selected === "aws-kms" ? "blue" : undefined}
-                py={6}
-                rounded="lg"
-                onClick={() => setSelected("aws-kms")}
-              >
-                AWS KMS
-              </Button>
-              <Button
-                type="button"
-                leftIcon={
-                  selected === "gcp-kms" ? (
-                    <MdRadioButtonChecked />
-                  ) : (
-                    <MdRadioButtonUnchecked />
-                  )
-                }
-                borderColor={selected === "gcp-kms" ? "unset" : undefined}
-                colorScheme={selected === "gcp-kms" ? "blue" : undefined}
-                py={6}
-                rounded="lg"
-                onClick={() => setSelected("gcp-kms")}
-              >
-                Google KMS
-              </Button>
-            </ButtonGroup>
-          </Box>
-        </Flex>
+            Local Wallet
+          </Button>
+          <Button
+            type="button"
+            leftIcon={
+              selected === "aws-kms" ? (
+                <MdRadioButtonChecked />
+              ) : (
+                <MdRadioButtonUnchecked />
+              )
+            }
+            borderColor={selected === "aws-kms" ? "unset" : undefined}
+            colorScheme={selected === "aws-kms" ? "blue" : undefined}
+            py={6}
+            rounded="lg"
+            onClick={() => setSelected("aws-kms")}
+          >
+            AWS KMS
+          </Button>
+          <Button
+            type="button"
+            leftIcon={
+              selected === "gcp-kms" ? (
+                <MdRadioButtonChecked />
+              ) : (
+                <MdRadioButtonUnchecked />
+              )
+            }
+            borderColor={selected === "gcp-kms" ? "unset" : undefined}
+            colorScheme={selected === "gcp-kms" ? "blue" : undefined}
+            py={6}
+            rounded="lg"
+            onClick={() => setSelected("gcp-kms")}
+          >
+            Google KMS
+          </Button>
+        </ButtonGroup>
+
         {selected === "local" && <LocalConfig instance={instance} />}
         {selected === "aws-kms" && <KmsAwsConfig instance={instance} />}
         {selected === "gcp-kms" && <KmsGcpConfig instance={instance} />}
-      </Card>
+      </Flex>
     </Flex>
   );
 };

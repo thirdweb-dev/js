@@ -115,6 +115,9 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
                   type="url"
                   {...form.register("url", { required: true })}
                 />
+                <FormHelperText>
+                  Only https:// URLs are accepted.
+                </FormHelperText>
               </FormControl>
             </Flex>
           </ModalBody>

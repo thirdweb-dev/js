@@ -9,9 +9,8 @@ import { TransactionsTable } from "./transactions-table";
 import { Badge, Card, FormLabel, Heading, Link, Text } from "tw-components";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
-import { useChainId } from "@thirdweb-dev/react";
 import { useState } from "react";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 
 interface EngineOverviewProps {
   instance: string;
@@ -22,8 +21,6 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
   const { data: walletConfig } = useEngineWalletConfig(instance);
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
   const transactionsQuery = useEngineTransactions(instance, autoUpdate);
-  const chainId = useChainId();
-  const [selectedChainId, setSelectedChainId] = useState(chainId || 1);
 
   return (
     <Flex flexDir="column" gap={12}>
@@ -91,17 +88,12 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({ instance }) => {
             <Flex alignItems="center" gap={2}>
               <Text>Showing Balance for: </Text>
               <Flex>
-                <NetworkDropdown
-                  size="sm"
-                  value={selectedChainId}
-                  onSingleChange={(val) => setSelectedChainId(val)}
-                />
+                <NetworkSelectorButton />
               </Flex>
             </Flex>
           </Flex>
         </Flex>
         <BackendWalletsTable
-          chainId={selectedChainId}
           instance={instance}
           wallets={backendWallets.data ?? []}
           isLoading={backendWallets.isLoading}

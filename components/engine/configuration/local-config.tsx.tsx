@@ -1,6 +1,9 @@
-import { useEngineSetWalletConfig } from "@3rdweb-sdk/react/hooks/useEngine";
+import {
+  useEngineSetWalletConfig,
+  useEngineWalletConfig,
+} from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
-import { Button, Text } from "tw-components";
+import { Button, Card, Text } from "tw-components";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useTrack } from "hooks/analytics/useTrack";
 
@@ -9,6 +12,7 @@ interface LocalConfigProps {
 }
 
 export const LocalConfig: React.FC<LocalConfigProps> = ({ instance }) => {
+  const { data: walletConfig } = useEngineWalletConfig(instance);
   const { mutate: setLocalConfig, isLoading } =
     useEngineSetWalletConfig(instance);
 
@@ -20,16 +24,20 @@ export const LocalConfig: React.FC<LocalConfigProps> = ({ instance }) => {
 
   return (
     <Flex as="form" flexDir="column" gap={4}>
-      <Text>
-        Engine supports local wallets for signing & sending transactions over
-        any EVM chain.
-      </Text>
-      <Flex justifyContent="end" gap={4} alignItems="center">
-        <Text fontStyle="italic">
-          Setting this config will make it the default and remove any other
-          configurations.
+      <Card>
+        <Text>
+          Engine supports local wallets for signing & sending transactions over
+          any EVM chain.
         </Text>
+      </Card>
+      <Flex justifyContent="end" gap={4} alignItems="center">
+        {walletConfig?.type && walletConfig?.type !== "local" && (
+          <Text color="red.500">
+            This will reset your other backend wallet configurations
+          </Text>
+        )}
         <Button
+          isDisabled={walletConfig?.type && walletConfig.type === "local"}
           w={{ base: "full", md: "inherit" }}
           colorScheme="primary"
           px={12}
@@ -66,7 +74,7 @@ export const LocalConfig: React.FC<LocalConfigProps> = ({ instance }) => {
             );
           }}
         >
-          {isLoading ? "Setting..." : "Set Local Config"}
+          {isLoading ? "Saving..." : "Save Changes"}
         </Button>
       </Flex>
     </Flex>

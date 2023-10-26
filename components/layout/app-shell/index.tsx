@@ -253,7 +253,7 @@ const AppHeader: React.FC = () => {
           >
             Infrastructure
           </LinkButton>
-          {/*           <LinkButton
+          <LinkButton
             href="/dashboard/engine"
             isActive={pathname.startsWith("/dashboard/engine")}
             _active={{
@@ -263,7 +263,7 @@ const AppHeader: React.FC = () => {
             rounded="lg"
           >
             Engine
-          </LinkButton> */}
+          </LinkButton>
           <LinkButton
             href="/dashboard/settings"
             isActive={pathname.startsWith("/dashboard/settings")}

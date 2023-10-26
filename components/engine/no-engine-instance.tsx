@@ -9,9 +9,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
+  UseDisclosureReturn,
 } from "@chakra-ui/react";
-import { FormEventHandler, useRef } from "react";
+import { useAddress } from "@thirdweb-dev/react";
+import { useForm } from "react-hook-form";
 import { Card, Link, Text, Button, FormHelperText } from "tw-components";
 
 function simplifyURL(url: string): string {
@@ -20,41 +21,48 @@ function simplifyURL(url: string): string {
 }
 
 interface NoEngineInstanceProps {
+  instance: string;
   setInstanceUrl: (value: string) => void;
+  disclosure: UseDisclosureReturn;
 }
 
 export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
+  instance,
   setInstanceUrl,
+  disclosure,
 }) => {
-  const instanceUrlRef = useRef<HTMLInputElement>(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const onSubmit: FormEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    const url = instanceUrlRef.current?.value ?? "";
-    setInstanceUrl(simplifyURL(url));
-  };
+  const address = useAddress();
+  const form = useForm({
+    defaultValues: {
+      url: instance,
+    },
+  });
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
         <ModalOverlay />
-        <ModalContent as="form" onSubmit={onSubmit}>
+        <ModalContent
+          as="form"
+          onSubmit={form.handleSubmit((data) => {
+            setInstanceUrl(simplifyURL(data.url));
+            disclosure.onClose();
+          })}
+        >
           <ModalHeader>Set Engine Instance</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl isRequired>
               <Input
-                ref={instanceUrlRef}
                 type="url"
-                id="url"
                 placeholder="Enter your Engine URL"
                 autoFocus
+                {...form.register("url")}
               />
               <FormHelperText>
                 Only https:// URLs are accepted.{" "}
                 <Link
-                  href="https://portal.thirdweb.com/engine/get-started"
+                  href="https://portal.thirdweb.com/engine/getting-started"
                   color="primary.500"
                   isExternal
                 >
@@ -66,7 +74,7 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
-            <Button onClick={onClose} variant="ghost">
+            <Button onClick={disclosure.onClose} variant="ghost">
               Cancel
             </Button>
             <Button colorScheme="primary" type="submit">
@@ -75,23 +83,25 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Flex flexDir="column" gap={4}>
-        <Card py={12}>
-          <Flex flexDir="column" gap={2}>
-            <Text textAlign="center">
-              It looks like you&apos;re not managing any Engine instances yet.
-            </Text>
-            <Text
-              textAlign="center"
-              color="primary.500"
-              cursor="pointer"
-              onClick={onOpen}
-            >
-              Set Engine instance URL to get started.
-            </Text>
-          </Flex>
-        </Card>
-      </Flex>
+      {!instance && address && (
+        <Flex flexDir="column" gap={4}>
+          <Card py={12}>
+            <Flex flexDir="column" gap={2}>
+              <Text textAlign="center">
+                It looks like you&apos;re not managing any Engine instances yet.
+              </Text>
+              <Text
+                textAlign="center"
+                color="primary.500"
+                cursor="pointer"
+                onClick={disclosure.onOpen}
+              >
+                Set Engine instance URL to get started.
+              </Text>
+            </Flex>
+          </Card>
+        </Flex>
+      )}
     </>
   );
 };

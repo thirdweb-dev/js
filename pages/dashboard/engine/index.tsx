@@ -1,51 +1,24 @@
-import { Box, ButtonGroup, Divider, Flex, Tooltip } from "@chakra-ui/react";
+import { Center, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { EngineSidebar } from "core-ui/sidebar/engine";
 import { PageId } from "page-id";
-import { useState } from "react";
-import { Button, Card, Heading, Link, Text } from "tw-components";
+import { Button, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-import { EngineOverview } from "components/engine/overview/engine-overview";
-import { EngineExplorer } from "components/engine/explorer/engine-explorer";
-import { EngineConfiguration } from "components/engine/configuration/engine-configuration";
 import { NoEngineInstance } from "components/engine/no-engine-instance";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { EnginePermissions } from "components/engine/permissions/engine-permissions";
 import { useAddress } from "@thirdweb-dev/react";
 import { NoConnectedWallet } from "components/engine/no-connected-wallet";
+import { useEnginePermissions } from "@3rdweb-sdk/react/hooks/useEngine";
+import { EngineNavigation } from "components/engine/engine-navigation";
+import { NoAuthorizedWallet } from "components/engine/no-authorized-wallet";
+import { NoServerConnection } from "components/engine/no-server-connection";
 
 const EngineManage: ThirdwebNextPage = () => {
   const [instanceUrl, setInstanceUrl] = useLocalStorage("engine-instance", "");
-  const tabs = [
-    {
-      title: "Overview",
-      isDisabled: false,
-      disabledText: "",
-      children: <EngineOverview instance={instanceUrl} />,
-    },
-    {
-      title: "Explorer",
-      isDisabled: false,
-      disabledText: "",
-      children: <EngineExplorer instance={instanceUrl} />,
-    },
-    {
-      title: "Configuration",
-      isDisabled: false,
-      disabledText: "",
-      children: <EngineConfiguration instance={instanceUrl} />,
-    },
-    {
-      title: "Permissions",
-      isDisabled: false,
-      disabledText: "",
-      children: <EnginePermissions instance={instanceUrl} />,
-    },
-  ];
-
-  const [tab, setTab] = useState(tabs[0].title);
-
+  const setInstanceDisclosure = useDisclosure();
   const address = useAddress();
+
+  const enginePermissions = useEnginePermissions(instanceUrl);
 
   return (
     <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
@@ -67,14 +40,13 @@ const EngineManage: ThirdwebNextPage = () => {
             .
           </Text>
         </Flex>
-
         {instanceUrl && (
           <Text>
             Engine URL: <em>{instanceUrl}</em>{" "}
             <Button
               size="sm"
               variant="link"
-              onClick={() => setInstanceUrl("")}
+              onClick={setInstanceDisclosure.onOpen}
               color="blue.500"
             >
               Edit
@@ -82,65 +54,34 @@ const EngineManage: ThirdwebNextPage = () => {
           </Text>
         )}
 
-        {!instanceUrl ? (
-          <NoEngineInstance setInstanceUrl={setInstanceUrl} />
-        ) : !address ? (
-          <NoConnectedWallet />
-        ) : (
-          <Flex flexDir="column" gap={4}>
-            <Flex flexDir="column" gap={{ base: 0, md: 4 }} mb={4} mt={4}>
-              <Box
-                w="full"
-                overflow={{ base: "auto", md: "hidden" }}
-                pb={{ base: 4, md: 0 }}
-              >
-                <ButtonGroup
-                  size="sm"
-                  variant="ghost"
-                  spacing={2}
-                  w={(tabs.length + 1) * 95}
-                >
-                  {tabs.map((tb) => (
-                    <Tooltip
-                      key={tb.title}
-                      p={0}
-                      bg="transparent"
-                      boxShadow={"none"}
-                      label={
-                        tb.isDisabled ? (
-                          <Card py={2} px={4} bgColor="backgroundHighlight">
-                            <Text size="label.sm">
-                              {tb?.disabledText || "Coming Soon"}
-                            </Text>
-                          </Card>
-                        ) : (
-                          ""
-                        )
-                      }
-                    >
-                      <Button
-                        isDisabled={tb.isDisabled}
-                        type="button"
-                        isActive={tab === tb.title}
-                        _active={{
-                          bg: "bgBlack",
-                          color: "bgWhite",
-                        }}
-                        rounded="lg"
-                        onClick={() => setTab(tb.title)}
-                      >
-                        {tb.title}
-                      </Button>
-                    </Tooltip>
-                  ))}
-                </ButtonGroup>
-              </Box>
-              <Divider />
-            </Flex>
+        <NoEngineInstance
+          instance={instanceUrl}
+          setInstanceUrl={setInstanceUrl}
+          disclosure={setInstanceDisclosure}
+        />
 
-            {tabs.find((t) => t.title === tab)?.children}
-          </Flex>
-        )}
+        {!address ? (
+          <NoConnectedWallet />
+        ) : instanceUrl ? (
+          enginePermissions.isLoading ? (
+            <Center>
+              <Flex py={4} direction="row" gap={4} align="center">
+                <Spinner size="sm" />
+                <Text>Loading Instance</Text>
+              </Flex>
+            </Center>
+          ) : enginePermissions.isError &&
+            (enginePermissions?.error as { message: string }).message ===
+              "401" ? (
+            <NoAuthorizedWallet />
+          ) : enginePermissions.isError &&
+            (enginePermissions?.error as { message: string }).message ===
+              "Failed to fetch" ? (
+            <NoServerConnection />
+          ) : (
+            <EngineNavigation instance={instanceUrl} />
+          )
+        ) : null}
       </Flex>
     </Flex>
   );

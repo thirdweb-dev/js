@@ -4,13 +4,12 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { Badge, Text } from "tw-components";
+import { Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
   instance: string;
-  chainId: number;
   isLoading: boolean;
   isFetched: boolean;
 }
@@ -21,7 +20,7 @@ interface BackendWalletDashboard extends BackendWallet {
 
 const columnHelper = createColumnHelper<BackendWalletDashboard>();
 
-const setColumns = (instance: string, chainId: number) => [
+const setColumns = (instance: string) => [
   columnHelper.accessor("address", {
     header: "Address",
     cell: (cell) => {
@@ -41,13 +40,7 @@ const setColumns = (instance: string, chainId: number) => [
     header: "Balance",
     cell: (cell) => {
       const address = cell.getValue();
-      return (
-        <BackendWalletBalanceCell
-          instance={instance}
-          address={address}
-          chainId={chainId}
-        />
-      );
+      return <BackendWalletBalanceCell instance={instance} address={address} />;
     },
     id: "balance",
   }),
@@ -56,18 +49,15 @@ const setColumns = (instance: string, chainId: number) => [
 interface BackendWalletBalanceCellProps {
   instance: string;
   address: string;
-  chainId: number;
 }
 
 const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
   instance,
   address,
-  chainId,
 }) => {
   const { data: backendWalletBalance } = useEngineBackendWalletBalance(
     instance,
     address,
-    chainId,
   );
 
   return (
@@ -81,11 +71,10 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
 export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   wallets,
   instance,
-  chainId,
   isLoading,
   isFetched,
 }) => {
-  const columns = setColumns(instance, chainId);
+  const columns = setColumns(instance);
 
   return (
     <TWTable
