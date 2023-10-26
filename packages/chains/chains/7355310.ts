@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeknNzGCZXQK7egwfwyxQan7Lw8bLnqYsyoEgEbDNCzJX",
     "width": 600,
@@ -24,9 +23,10 @@ export default {
     "symbol": "VETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7355310,
   "rpc": [
     "https://openvessel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7355310.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-external.openvessel.io"
   ],
   "shortName": "vsl",

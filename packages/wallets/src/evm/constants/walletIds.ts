@@ -8,6 +8,7 @@ export const walletIds = {
   paper: "paper",
   rainbow: "rainbowWallet",
   smartWallet: "smartWallet",
+  tokenBoundSmartWallet: "tokenBoundSmartWallet",
   safe: "safe",
   trust: "trust",
   embeddedWallet: "embeddedWallet",

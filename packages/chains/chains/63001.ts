@@ -6,13 +6,18 @@ export default {
     {
       "name": "eCredits TestNet Explorer",
       "url": "https://explorer.tst.ecredits.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
+        "width": 32,
+        "height": 32,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.tst.ecredits.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmU9H9JE1KtLh2Fxrd8EWTMjKGJBpgRWKUeEx7u6ic4kBY",
     "width": 32,
@@ -26,9 +31,10 @@ export default {
     "symbol": "ECS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 63001,
   "rpc": [
     "https://ecredits-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://63001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tst.ecredits.com"
   ],
   "shortName": "ecs-testnet",

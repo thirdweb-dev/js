@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYikaM849eZrL8pGNeVhEHVTKWpxdGMvCY5oFBfZ2ndhd",
     "width": 800,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 0,
   "rpc": [
     "https://top-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://980.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethapi.topnetwork.org"
   ],
   "shortName": "top_evm",

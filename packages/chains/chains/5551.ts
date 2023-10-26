@@ -6,11 +6,16 @@ export default {
     {
       "name": "Nahmii mainnet explorer",
       "url": "https://explorer.nahmii.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
+        "width": 384,
+        "height": 384,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
@@ -24,9 +29,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5551,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://bridge.nahmii.io"
+      }
+    ]
+  },
   "rpc": [
     "https://nahmii.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5551.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2.nahmii.io"
   ],
   "shortName": "Nahmii",

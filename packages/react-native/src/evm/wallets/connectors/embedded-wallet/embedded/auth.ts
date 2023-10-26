@@ -32,32 +32,32 @@ import {
   ROUTE_HEADLESS_GOOGLE_LOGIN,
 } from "./helpers/constants";
 
-export async function sendEmailOTP(
-  email: string,
-  clientId: string,
-): Promise<SendEmailOtpReturnType> {
-  await verifyClientId(clientId);
+export async function sendEmailOTP(options: {
+  email: string;
+  clientId: string;
+}): Promise<SendEmailOtpReturnType> {
+  await verifyClientId(options.clientId);
 
   await prePaperAuth({
     authenticationMethod: AuthProvider.COGNITO,
-    email,
+    email: options.email,
   });
 
   // AWS Auth flow
   let cognitoUser: CognitoUser;
   try {
-    cognitoUser = await cognitoEmailSignIn(email, clientId);
+    cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
   } catch (e) {
-    await cognitoEmailSignUp(email, clientId);
-    cognitoUser = await cognitoEmailSignIn(email, clientId);
+    await cognitoEmailSignUp(options.email, options.clientId);
+    cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
   }
   setCognitoUser(cognitoUser);
 
   let result: Awaited<ReturnType<typeof getEmbeddedWalletUserDetail>>;
   try {
     result = await getEmbeddedWalletUserDetail({
-      email,
-      clientId,
+      email: options.email,
+      clientId: options.clientId,
     });
   } catch (e) {
     throw new Error(
@@ -74,7 +74,7 @@ export async function sendEmailOTP(
     : {
         isNewUser: result.isNewUser,
         isNewDevice: !(await isDeviceSharePresentForUser(
-          clientId,
+          options.clientId,
           result.walletUserId ?? "",
         )),
         recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
@@ -113,7 +113,7 @@ export async function validateEmailOTP({
 
   try {
     const storedToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-      jwtToken: verifiedToken.rawToken,
+      jwtToken: verifiedToken.jwtToken,
       authDetails: verifiedToken.authDetails,
       authProvider: verifiedToken.authProvider,
       developerClientId: verifiedToken.developerClientId,
@@ -137,15 +137,16 @@ export async function validateEmailOTP({
 
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_GOOGLE_LOGIN}?authProvider=${encodeURIComponent(
-    "google",
+    oauthOptions.provider,
   )}&baseUrl=${encodeURIComponent(
-    "https://ews.thirdweb.com",
+    "https://embedded-wallet.thirdweb.com",
   )}&platform=${encodeURIComponent("mobile")}`;
 
   const resp = await fetch(headlessLoginLinkWithParams);
 
   if (!resp.ok) {
-    throw new Error("Error getting headless login link");
+    const error = await resp.json();
+    throw new Error(`Error getting headless login link: ${error.message}`);
   }
 
   const json = await resp.json();
@@ -207,27 +208,26 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
 }
 
 export async function customJwt(authOptions: AuthOptions, clientId: string) {
-  const { jwtToken, encryptionKey } = authOptions;
+  const { jwt, password } = authOptions;
 
   const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      jwtToken,
-      authProvider: AuthProvider.CUSTOM_JWT,
+      jwt: jwt,
       developerClientId: clientId,
     }),
   });
   if (!resp.ok) {
-    const { error } = await resp.json();
-    throw new Error(`JWT authentication error: ${error} `);
+    const error = await resp.json();
+    throw new Error(`JWT authentication error: ${error.message} `);
   }
 
   try {
     const { verifiedToken, verifiedTokenJwtString } = await resp.json();
 
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-      jwtToken: verifiedToken.rawToken,
+      jwtToken: verifiedToken.jwtToken,
       authProvider: verifiedToken.authProvider,
       authDetails: {
         ...verifiedToken.authDetails,
@@ -235,11 +235,11 @@ export async function customJwt(authOptions: AuthOptions, clientId: string) {
       },
       developerClientId: verifiedToken.developerClientId,
       cookieString: verifiedTokenJwtString,
-      shouldStoreCookieString: false,
+      shouldStoreCookieString: true,
       isNewUser: verifiedToken.isNewUser,
     };
 
-    await postPaperAuthUserManaged(toStoreToken, clientId, encryptionKey);
+    await postPaperAuthUserManaged(toStoreToken, clientId, password);
 
     return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {

@@ -6,11 +6,16 @@ export default {
     {
       "name": "Ultron Explorer",
       "url": "https://ulxscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "ULX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1231,
   "rpc": [
     "https://ultron.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1231.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ultron-rpc.net"
   ],
   "shortName": "UtronMainnet",

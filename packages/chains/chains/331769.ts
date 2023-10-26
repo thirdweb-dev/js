@@ -23,9 +23,11 @@ export default {
     "symbol": "POP",
     "decimals": 18
   },
+  "networkId": 331769,
   "redFlags": [],
   "rpc": [
     "https://proofofpepe-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://331769.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet01.proofofpepe.tech"
   ],
   "shortName": "POPTestnet",

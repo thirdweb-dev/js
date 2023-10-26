@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://scan.crystaleum.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
+        "width": 150,
+        "height": 150,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
     "width": 150,
@@ -24,9 +29,10 @@ export default {
     "symbol": "◈",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://crystaleum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://103090.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cryptocurrencydevs.org",
     "https://rpc.crystaleum.org"
   ],

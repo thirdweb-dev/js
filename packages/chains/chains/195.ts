@@ -20,9 +20,10 @@ export default {
     "symbol": "OKB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 195,
   "rpc": [
     "https://okbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://195.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://okbtestrpc.okbchain.org"
   ],
   "shortName": "tokb",

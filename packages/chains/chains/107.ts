@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.novanetwork.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeFaJtQqTKKuXQR7ysS53bLFPasFBcZw445cvYJ2HGeTo",
     "width": 512,
@@ -26,9 +25,10 @@ export default {
     "symbol": "NBX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 107,
   "rpc": [
     "https://nebula-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://107.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.novanetwork.io"
   ],
   "shortName": "ntn",

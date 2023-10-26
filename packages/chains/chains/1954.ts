@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUBveetVibvSEWQrjyxySgUphLuoMGSVLGmYnobt5FgEZ",
     "width": 512,
@@ -24,9 +23,19 @@ export default {
     "symbol": "DXZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1954,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://bridge.dexilla.com"
+      }
+    ]
+  },
   "rpc": [
     "https://dexilla-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1954.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dexilla.com"
   ],
   "shortName": "Dexilla",

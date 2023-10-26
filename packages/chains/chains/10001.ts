@@ -4,7 +4,6 @@ export default {
   "chainId": 10001,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "http://smartbch.org/",
   "name": "Smart Bitcoin Cash Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "BCHT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10001,
   "rpc": [
     "https://smart-bitcoin-cash-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.smartbch.org",
     "https://smartbch.devops.cash/testnet"
   ],

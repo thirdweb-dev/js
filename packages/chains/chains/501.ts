@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSEoUonisawfCvT3osysuZzbqUEHugtgNraePKWL8PKYa",
     "width": 768,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CAM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1001,
   "rpc": [
     "https://columbus-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://501.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://columbus.camino.network/ext/bc/C/rpc"
   ],
   "shortName": "Columbus",

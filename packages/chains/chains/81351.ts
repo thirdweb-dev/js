@@ -4,7 +4,6 @@ export default {
   "chainId": 81351,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
@@ -18,7 +17,7 @@ export default {
     "symbol": "MEER-T",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 81351,
   "rpc": [],
   "shortName": "flanatest",
   "slug": "flana-testnet",

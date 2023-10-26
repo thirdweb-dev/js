@@ -4,7 +4,6 @@ export default {
   "chainId": 2,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://expanse.tech",
   "name": "Expanse Network",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "EXP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://expanse-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.expanse.tech"
   ],
   "shortName": "exp",
+  "slip44": 40,
   "slug": "expanse-network",
   "testnet": false
 } as const satisfies Chain;

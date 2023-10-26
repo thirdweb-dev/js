@@ -6,11 +6,16 @@ export default {
     {
       "name": "Neon Blockchain Explorer",
       "url": "https://scan.neonlink.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmX3hBv8WyvVfYjh1gmgDfJCpJBvKk4TYG9wFX9sC8WAjz",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmX3hBv8WyvVfYjh1gmgDfJCpJBvKk4TYG9wFX9sC8WAjz",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "NEON",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 259,
   "rpc": [
     "https://neonlink.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://259.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.neonlink.io"
   ],
   "shortName": "neon",

@@ -4,7 +4,6 @@ export default {
   "chainId": 431140,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVMBTZVPawyLBD2B5VbG68dfWLfZ1CnB8V59xduBe2kwh",
     "width": 84,
@@ -18,9 +17,10 @@ export default {
     "symbol": "AVAX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 431140,
   "rpc": [
     "https://markr-go.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://431140.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.markr.io/ext/"
   ],
   "shortName": "markr-go",

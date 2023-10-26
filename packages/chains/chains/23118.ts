@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.opside.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeCyZeibUoHNoYGzy1GkzH2uhxyRHKvH51PdaUMer4VTo",
     "width": 591,
@@ -26,9 +25,10 @@ export default {
     "symbol": "IDE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 23118,
   "rpc": [
     "https://opside-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://23118.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.opside.network"
   ],
   "shortName": "opside",

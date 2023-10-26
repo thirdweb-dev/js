@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.toronto.sx.technology"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSXLXqyr2H6Ja5XrmznXbWTEvF2gFaL8RXNXgyLmDHjAF",
     "width": 896,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 647,
   "rpc": [
     "https://sx-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://647.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.toronto.sx.technology"
   ],
   "shortName": "SX-Testnet",

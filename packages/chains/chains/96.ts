@@ -6,11 +6,16 @@ export default {
     {
       "name": "Bitkub Chain Explorer",
       "url": "https://bkcscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmYFYwyquipwc9gURQGcEd4iAq7pq15chQrJ3zJJe9HuFT",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYFYwyquipwc9gURQGcEd4iAq7pq15chQrJ3zJJe9HuFT",
     "width": 1000,
@@ -24,11 +29,13 @@ export default {
     "symbol": "KUB",
     "decimals": 18
   },
+  "networkId": 96,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://bitkub-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://96.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitkubchain.io",
     "wss://wss.bitkubchain.io"
   ],

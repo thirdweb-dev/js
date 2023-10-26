@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://testnet.scschain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmW4C4QHLMhLeH5MsdVbauMc2Skb4ehzLKU3egLKKoux4D",
     "width": 130,
@@ -26,9 +25,10 @@ export default {
     "symbol": "TSCS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1969,
   "rpc": [
     "https://super-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1969.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnetrpc.scschain.com"
   ],
   "shortName": "tscs",

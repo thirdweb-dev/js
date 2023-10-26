@@ -6,13 +6,18 @@ export default {
     {
       "name": "blockscout",
       "url": "https://testnet.hyperonchain.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
+        "width": 540,
+        "height": 541,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.hyperonchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWxhyxXTEsWH98v7M3ck4ZL1qQoUaHG4HgtgxzD2KJQ5m",
     "width": 540,
@@ -26,9 +31,10 @@ export default {
     "symbol": "HPN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 400,
   "rpc": [
     "https://hyperonchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.hyperonchain.com"
   ],
   "shortName": "hpn",

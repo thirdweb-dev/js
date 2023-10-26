@@ -23,7 +23,6 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { VoteType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -36,6 +35,7 @@ import {
   ProposalVote,
   VoteSettings,
 } from "../../types/vote";
+import { VoteType } from "../../enums/vote/Vote";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.

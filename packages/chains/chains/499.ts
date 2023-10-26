@@ -4,7 +4,6 @@ export default {
   "chainId": 499,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.rupx.io",
   "name": "Rupaya",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "RUPX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 499,
   "rpc": [],
   "shortName": "rupx",
+  "slip44": 499,
   "slug": "rupaya",
   "testnet": false
 } as const satisfies Chain;

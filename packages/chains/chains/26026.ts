@@ -27,9 +27,10 @@ export default {
     "symbol": "tFRM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 26026,
   "rpc": [
     "https://ferrum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://26026.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.dev.svcs.ferrumnetwork.io:9933"
   ],
   "shortName": "frm",

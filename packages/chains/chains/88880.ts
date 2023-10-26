@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://scoville-faucet.chiliz.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYV5xUVZhHRzLy7ie9D8qZeygJHvNZZAxwnB9GXYy6EED",
     "width": 400,
@@ -26,9 +25,10 @@ export default {
     "symbol": "CHZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 88880,
   "rpc": [
     "https://chiliz-scoville-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://88880.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://scoville-rpc.chiliz.com"
   ],
   "shortName": "chz",

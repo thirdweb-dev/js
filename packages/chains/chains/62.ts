@@ -4,7 +4,6 @@ export default {
   "chainId": 62,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ethereumclassic.org",
   "name": "Ethereum Classic Testnet Morden",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "TETC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2,
   "rpc": [],
   "shortName": "tetc",
   "slug": "ethereum-classic-testnet-morden",

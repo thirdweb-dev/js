@@ -4,7 +4,6 @@ export default {
   "chainId": 2043,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://parachain.origintrail.io",
   "name": "OriginTrail Parachain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "OTP",
     "decimals": 12
   },
-  "redFlags": [],
+  "networkId": 2043,
   "rpc": [
     "https://origintrail-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2043.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://astrosat.origintrail.network",
     "wss://parachain-rpc.origin-trail.network"
   ],

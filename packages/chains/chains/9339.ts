@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.dogcoin.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZCadkExKThak3msvszZjo6UnAbUJKE61dAcg4TixuMC3",
     "width": 160,
@@ -26,9 +25,10 @@ export default {
     "symbol": "DOGS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9339,
   "rpc": [
     "https://dogcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9339.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.dogcoin.me"
   ],
   "shortName": "DOGSt",

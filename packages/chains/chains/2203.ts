@@ -6,11 +6,16 @@ export default {
     {
       "name": "Explorer",
       "url": "https://explorer.bitcoinevm.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreic4aq265oaf6yze7ba5okefqh6vnqudyrz6ovukvbnrlhet36itle",
     "width": 200,
@@ -24,9 +29,10 @@ export default {
     "symbol": "BTC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2203,
   "rpc": [
     "https://bitcoin-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2203.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.bitcoinevm.com"
   ],
   "shortName": "BTC",

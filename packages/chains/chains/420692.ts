@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreid3v7ow4c4t3ljya6aouiwvqbtssb2lzmkwt2eghryk234g7yynrq",
     "width": 756,
@@ -24,9 +23,19 @@ export default {
     "symbol": "AltETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 420692,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://testnet-bridge.alteriumprotocol.org"
+      }
+    ]
+  },
   "rpc": [
     "https://alterium-l2-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://420692.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2-testnet-rpc.altscan.org"
   ],
   "shortName": "alterium",

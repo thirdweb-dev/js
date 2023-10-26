@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.alaya.network/faucet/?id=f93426c0887f11eb83b900163e06151c"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
     "width": 1140,
@@ -26,9 +25,10 @@ export default {
     "symbol": "atp",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://alaya-dev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://201030.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnetopenapi.alaya.network/rpc",
     "wss://devnetopenapi.alaya.network/ws"
   ],

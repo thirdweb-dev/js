@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.butterfly.fildev.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
     "width": 1000,
@@ -20,9 +19,10 @@ export default {
     "symbol": "tFIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3141592,
   "rpc": [],
   "shortName": "filecoin-butterfly",
+  "slip44": 1,
   "slug": "filecoin-butterfly-testnet",
   "status": "incubating",
   "testnet": true

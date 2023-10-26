@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://galileo.web3q.io/home.w3q/",
   "name": "Web3Q Galileo",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "W3Q",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3334,
   "rpc": [
     "https://web3q-galileo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3334.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galileo.web3q.io:8545"
   ],
   "shortName": "w3q-g",

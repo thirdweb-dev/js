@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.blgchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUN5j2cre8GHKv52JE8ag88aAnRmuHMGFxePPvKMogisC",
     "width": 512,
@@ -20,9 +19,10 @@ export default {
     "symbol": "BLG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12321,
   "rpc": [
     "https://blg-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12321.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blgchain.com"
   ],
   "shortName": "blgchain",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "http://fauceth.komputing.org?chain=69&address=${ADDRESS}"
   ],
-  "features": [],
   "infoURL": "https://optimism.io",
   "name": "Optimism Kovan",
   "nativeCurrency": {
@@ -20,12 +19,14 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 69,
   "rpc": [
     "https://optimism-kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://69.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://kovan.optimism.io/"
   ],
   "shortName": "okov",
   "slug": "optimism-kovan",
-  "testnet": true
+  "testnet": true,
+  "title": "Optimism Testnet Kovan"
 } as const satisfies Chain;

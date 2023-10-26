@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bmc.bytom.io/",
   "name": "BMC Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 188,
   "rpc": [
     "https://bmc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://188.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bmcchain.com/"
   ],
   "shortName": "BMC",

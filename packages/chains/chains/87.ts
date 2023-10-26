@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTTamJ55YGQwMboq4aqf3JjTEy5WDtjo4GBRQ5VdsWA6U",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "SNT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 87,
   "rpc": [
     "https://nova-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://87.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.novanetwork.io",
     "https://0x57.redjackstudio.com",
     "https://rpc.novanetwork.io:9070"

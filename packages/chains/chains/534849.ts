@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.shinarium.org"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeiadbavrwcial76vs5ovhyykyaobteltuhliqcthdairbja4klwzhu",
     "width": 1000,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SHI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 534849,
   "rpc": [
     "https://shinarium-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://534849.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shinarium.org"
   ],
   "shortName": "shi",

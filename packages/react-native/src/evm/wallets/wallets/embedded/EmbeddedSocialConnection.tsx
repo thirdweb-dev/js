@@ -42,7 +42,7 @@ export const EmbeddedSocialConnection: React.FC<
           }
         })
         .catch((error) => {
-          console.error("Error validating otp: ", error);
+          console.error("Error logging in with google: ", error);
           setErrorMessage("Error login in. Please try again later.");
         });
     }, 0);

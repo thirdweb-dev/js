@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYZNTfK3byhgLsTjXP8vPubVHRz2CWsBrTJxZrQmKq6JZ",
     "width": 3509,
@@ -24,9 +23,10 @@ export default {
     "symbol": "WL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10395,
   "rpc": [
     "https://worldland-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10395.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gwangju.worldland.foundation"
   ],
   "shortName": "TWLC",

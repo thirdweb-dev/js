@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVyAuAnKKNnGEpqeYMLPRfMdysLgPBTZeEXihXbRytGhp",
     "width": 1024,
@@ -24,9 +23,10 @@ export default {
     "symbol": "COF",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9223,
   "rpc": [
     "https://codefin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9223.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain-rpc.codefin.pro"
   ],
   "shortName": "COF",

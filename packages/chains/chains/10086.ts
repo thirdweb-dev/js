@@ -4,7 +4,6 @@ export default {
   "chainId": 10086,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://sjis.me",
   "name": "SJATSH",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10086,
   "rpc": [
     "https://sjatsh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10086.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://geth.free.idcfengye.com"
   ],
   "shortName": "SJ",

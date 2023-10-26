@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.weelink.gw002.oneitfarm.com"
   ],
-  "features": [],
   "infoURL": "https://weelink.cloud",
   "name": "Weelink Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "tWLK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 444900,
   "rpc": [
     "https://weelink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://444900.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://weelinknode1c.gw002.oneitfarm.com"
   ],
   "shortName": "wlkt",

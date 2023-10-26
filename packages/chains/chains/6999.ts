@@ -4,7 +4,6 @@ export default {
   "chainId": 6999,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.polysmartchain.com/",
   "name": "PolySmartChain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "PSC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6999,
   "rpc": [
     "https://polysmartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed0.polysmartchain.com/",
     "https://seed1.polysmartchain.com/",
     "https://seed2.polysmartchain.com/"

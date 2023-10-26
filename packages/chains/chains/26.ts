@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.genesisl1.com",
   "name": "Genesis L1 testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "L1test",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 26,
   "rpc": [
     "https://genesis-l1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://26.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.genesisl1.org"
   ],
   "shortName": "L1test",

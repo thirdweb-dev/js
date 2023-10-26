@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://wemix.com",
   "name": "WEMIX3.0 Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "WEMIX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1111,
   "rpc": [
     "https://wemix3-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.wemix.com",
     "wss://ws.wemix.com"
   ],

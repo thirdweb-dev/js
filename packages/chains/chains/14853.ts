@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://t.me/HumanodeTestnet5FaucetBot"
   ],
-  "features": [],
   "infoURL": "https://humanode.io",
   "name": "Humanode Testnet 5 Israfel",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "eHMND",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 14853,
   "rpc": [
     "https://humanode-testnet-5-israfel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://14853.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://explorer-rpc-http.testnet5.stages.humanode.io"
   ],
   "shortName": "hmnd-t5",

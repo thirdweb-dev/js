@@ -6,7 +6,13 @@ export default {
     {
       "name": "Gobi Testnet Block Explorer",
       "url": "https://gobi-explorer.horizen.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmSFMBk3rMyu45Sy9KQHjgArFj4HdywANNYrSosLMUdcti",
+        "width": 1213,
+        "height": 1213,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -33,13 +39,15 @@ export default {
     "symbol": "tZEN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1663,
   "rpc": [
     "https://horizen-gobi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1663.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gobi-rpc.horizenlabs.io/ethv1",
     "https://rpc.ankr.com/horizen_gobi_testnet"
   ],
   "shortName": "Gobi",
+  "slip44": 121,
   "slug": "horizen-gobi-testnet",
   "testnet": true
 } as const satisfies Chain;

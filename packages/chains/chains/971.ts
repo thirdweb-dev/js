@@ -4,7 +4,6 @@ export default {
   "chainId": 971,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZ1jbxFZcuotj3eZ6iKFrg9ZXnaV8AK6sGRa7ELrceWyD",
     "width": 1043,
@@ -18,7 +17,7 @@ export default {
     "symbol": "CCN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 971,
   "rpc": [],
   "shortName": "Huygens",
   "slug": "oort-huygens",

@@ -6,7 +6,13 @@ export default {
     {
       "name": "IRISHub Testnet Cosmos Explorer (IOBScan)",
       "url": "https://nyancat.iobscan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRaSx7AX1VDgcqjwLgSDP4WZmKBHPdHhbjkcEEXPA2Fnc",
+        "width": 1062,
+        "height": 822,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "ERIS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16688,
   "rpc": [
     "https://irishub-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmrpc.nyancat.irisnet.org"
   ],
   "shortName": "nyancat",

@@ -6,11 +6,16 @@ export default {
     {
       "name": "Brise Scan",
       "url": "https://brisescan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "Brise",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 32520,
   "rpc": [
     "https://bitgert.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://32520.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.icecreamswap.com",
     "https://mainnet-rpc.brisescan.com",
     "https://chainrpc.com",

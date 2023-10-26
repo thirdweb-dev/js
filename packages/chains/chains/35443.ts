@@ -6,11 +6,16 @@ export default {
     {
       "name": "Q explorer",
       "url": "https://explorer.qtestnet.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
+        "width": 585,
+        "height": 603,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
     "width": 585,
@@ -24,9 +29,10 @@ export default {
     "symbol": "Q",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 35443,
   "rpc": [
     "https://q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://35443.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qtestnet.org"
   ],
   "shortName": "q-testnet",

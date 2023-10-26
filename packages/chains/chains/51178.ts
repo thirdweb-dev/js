@@ -4,9 +4,15 @@ export default {
   "chainId": 51178,
   "explorers": [
     {
-      "name": "OpsideTestnetInfo",
-      "url": "https://pre-alpha.opside.info",
-      "standard": "EIP3091"
+      "name": "LumozTestnetInfo",
+      "url": "https://lumoz.info",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
+        "width": 401,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -24,20 +30,21 @@ export default {
     "height": 400,
     "format": "png"
   },
-  "infoURL": "https://opsi.de/",
-  "name": "Opside Testnet Pre-Alpha",
+  "infoURL": "https://lumoz.org",
+  "name": "Lumoz Testnet Alpha",
   "nativeCurrency": {
-    "name": "IDE Test Token",
-    "symbol": "IDE",
+    "name": "Lumoz Test Token",
+    "symbol": "MOZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 51178,
   "rpc": [
-    "https://opside-testnet-pre-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://pre-alpha-us-http-geth.opside.network",
-    "https://pre-alpha-hk-http-geth.opside.network"
+    "https://lumoz-testnet-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://51178.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://alpha-us-http-geth.lumoz.org",
+    "https://alpha-hk-http-geth.lumoz.org"
   ],
-  "shortName": "Opside-Testnet",
-  "slug": "opside-testnet-pre-alpha",
+  "shortName": "Lumoz-Testnet",
+  "slug": "lumoz-testnet-alpha",
   "testnet": true
 } as const satisfies Chain;
