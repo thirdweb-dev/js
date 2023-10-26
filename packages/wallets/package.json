@@ -497,5 +497,8 @@
     "preconstruct:fix": "preconstruct fix",
     "push": "yalc push",
     "typedoc": "rimraf typedoc && node typedoc.js"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   }
 }

@@ -154,5 +154,8 @@
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "author": "thirdweb eng <eng@thirdweb.com>"
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "engines": {
+    "node": ">=18.17.0"
+  }
 }
