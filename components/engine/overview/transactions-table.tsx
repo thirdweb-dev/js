@@ -7,7 +7,7 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { FiInfo } from "react-icons/fi";
-import { LinkButton, Text } from "tw-components";
+import { Card, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { fetchChain } from "utils/fetchChain";
 
@@ -113,15 +113,25 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return null;
         }
 
-        const tooltip =
-          status === "errored"
-            ? errorMessage
-            : status === "mined" && minedAt
-            ? `Completed ${format(new Date(minedAt), "PP pp")}`
-            : undefined;
-
         return (
-          <Tooltip label={tooltip}>
+          <Tooltip
+            borderRadius="md"
+            bg="transparent"
+            boxShadow="none"
+            p={4}
+            minW={{ md: "450px" }}
+            label={
+              <Card bgColor="backgroundHighlight">
+                <Text>
+                  {status === "errored"
+                    ? errorMessage
+                    : status === "mined" && minedAt
+                    ? `Completed ${format(new Date(minedAt), "PP pp")}`
+                    : undefined}
+                </Text>
+              </Card>
+            }
+          >
             <Tag
               size="sm"
               variant="subtle"
@@ -208,7 +218,19 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
 
         const date = new Date(value);
         return (
-          <Tooltip label={format(date, "PP pp z")} shouldWrapChildren>
+          <Tooltip
+            borderRadius="md"
+            bg="transparent"
+            boxShadow="none"
+            p={4}
+            minW={{ md: "450px" }}
+            label={
+              <Card bgColor="backgroundHighlight">
+                <Text>{format(date, "PP pp z")}</Text>
+              </Card>
+            }
+            shouldWrapChildren
+          >
             <Text>{formatDistanceToNowStrict(date, { addSuffix: true })}</Text>
           </Tooltip>
         );

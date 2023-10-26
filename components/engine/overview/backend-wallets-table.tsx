@@ -4,7 +4,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { Text } from "tw-components";
+import { Badge, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface BackendWalletsTableProps {
@@ -33,7 +33,18 @@ const setColumns = (instance: string) => [
   columnHelper.accessor("type", {
     header: "Type",
     cell: (cell) => {
-      return <Text>{cell.getValue()}</Text>;
+      return (
+        <Badge
+          borderRadius="full"
+          size="label.sm"
+          variant="subtle"
+          px={3}
+          py={1.5}
+          colorScheme="black"
+        >
+          {cell.getValue()}
+        </Badge>
+      );
     },
   }),
   columnHelper.accessor("address", {

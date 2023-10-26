@@ -36,7 +36,9 @@ const columns = [
     header: "Address",
     cell: (cell) => {
       const address = cell.getValue();
-      return <AddressCopyButton address={address} />;
+      return (
+        <AddressCopyButton address={address} shortenAddress={false} size="xs" />
+      );
     },
   }),
   columnHelper.accessor("permissions", {
