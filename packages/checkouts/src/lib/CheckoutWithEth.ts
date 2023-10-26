@@ -2,16 +2,13 @@ import type { ethers } from "ethers";
 import {
   CHECKOUT_WITH_ETH_IFRAME_URL,
   PAPER_APP_URL,
+  getPaperOriginUrl,
 } from "../constants/settings";
-
 import type {
   ICustomizationOptions,
   Locale,
-} from "@paperxyz/sdk-common-utilities";
-import {
   DEFAULT_BRAND_OPTIONS,
-  getPaperOriginUrl,
-} from "@paperxyz/sdk-common-utilities";
+} from "../constants/style";
 import type { PaperSDKError } from "../interfaces/PaperSDKError";
 import { PayWithCryptoErrorCode } from "../interfaces/PaperSDKError";
 import type { PriceSummary } from "../interfaces/PriceSummary";

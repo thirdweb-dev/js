@@ -1,7 +1,7 @@
 import type {
   ICustomizationOptions,
   Locale,
-} from "@paperxyz/sdk-common-utilities";
+} from "../constants/style";
 
 export class LinksManager {
   private link: URL;

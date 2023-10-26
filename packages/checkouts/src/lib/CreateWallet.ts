@@ -1,7 +1,9 @@
 import type {
-  Locale,
   SupportedChainName,
-} from "@paperxyz/sdk-common-utilities";
+} from "../constants/blockchain";
+import type {
+  Locale
+} from "../constants/style";
 import { CREATE_WALLET_IFRAME_URL, PAPER_APP_URL } from "../constants/settings";
 import type { PaperSDKError } from "../interfaces/PaperSDKError";
 import { PaperSDKErrorCode } from "../interfaces/PaperSDKError";
@@ -126,8 +128,8 @@ export async function initialiseCreateWallet({
     iframe.setAttribute("style", idleIframeStyle);
     iframe.setAttribute("id", CREATE_WALLET_IFRAME_ID);
     iframe.setAttribute(
-      "data-paper-sdk-version",
-      `@paperxyz/js-client-sdk@${packageJson.version}`,
+      "data-thirdweb-sdk-version",
+      `${packageJson.name}@${packageJson.version}`,
     );
     document.body.appendChild(iframe);
 

@@ -1,11 +1,11 @@
 import type {
   ICustomizationOptions,
   Locale,
-} from "@paperxyz/sdk-common-utilities";
+  DEFAULT_BRAND_OPTIONS
+} from "../constants/style";
 import {
-  DEFAULT_BRAND_OPTIONS,
   getPaperOriginUrl,
-} from "@paperxyz/sdk-common-utilities";
+} from "../constants/settings";
 import {
   CHECKOUT_WITH_CARD_IFRAME_URL,
   PAPER_APP_URL,

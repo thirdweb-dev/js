@@ -1,4 +1,4 @@
-import type { StyleObject } from "@paperxyz/sdk-common-utilities";
+import type { StyleObject } from "../../constants/style";
 import type { ModalStyles } from "../../interfaces/Modal";
 import { getDefaultModalStyles, modalKeyframeAnimations } from "./styles";
 

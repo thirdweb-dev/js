@@ -39,8 +39,8 @@ export class PaperPaymentElement {
       }
     };
     iframe.setAttribute(
-      "data-paper-sdk-version",
-      `@paperxyz/js-client-sdk@${packageJson.version}`,
+      "data-thirdweb-sdk-version",
+      `${packageJson.name}@${packageJson.version}`,
     );
 
     if (!this.elementOrId) {
