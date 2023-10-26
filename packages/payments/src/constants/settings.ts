@@ -19,7 +19,7 @@ export const getPaperOriginUrl = (): string => {
     return window.location.origin;
   }
 
-  return "https://ews.thirdweb.com";
+  return "https://payments.thirdweb.com";
 };
 
 // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
