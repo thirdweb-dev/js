@@ -18,8 +18,8 @@ const SELECTOR_ITEMS = [
     description:
       "Allow your users to list, buy, and sell items, e.g. digital assets or loyalty memberships.",
     steps: [
-      "Deploy Marketplace contract from Explore to any EVM chain (900+ supported)",
-      "Create an ecosystem for collectors to Configure Marketplace contract, e.g. % platform fee collected on any sale",
+      "Deploy Marketplace contract from Explore to any EVM chain (900+ supported).",
+      "Create an ecosystem for collectors to Configure Marketplace contract, e.g. % platform fee collected on any sale.",
       "Integrate Marketplace contract into your apps and games using SDK in multiple languages.",
     ],
     products: ["explore", "interact"],
