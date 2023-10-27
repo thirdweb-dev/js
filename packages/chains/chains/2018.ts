@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "PublicMint Devnet",
-  "title": "Public Mint Devnet",
   "chain": "PublicMint",
-  "rpc": [
-    "https://publicmint-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.dev.publicmint.io:8545"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "USD",
-    "symbol": "USD",
-    "decimals": 18
-  },
-  "infoURL": "https://publicmint.com",
-  "shortName": "pmint_dev",
   "chainId": 2018,
-  "networkId": 2018,
-  "slip44": 60,
   "explorers": [
     {
       "name": "PublicMint Explorer",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://publicmint.com",
+  "name": "PublicMint Devnet",
+  "nativeCurrency": {
+    "name": "USD",
+    "symbol": "USD",
+    "decimals": 18
+  },
+  "networkId": 2018,
+  "rpc": [
+    "https://publicmint-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2018.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.dev.publicmint.io:8545"
+  ],
+  "shortName": "pmint_dev",
+  "slip44": 60,
+  "slug": "publicmint-devnet",
   "testnet": false,
-  "slug": "publicmint-devnet"
+  "title": "Public Mint Devnet"
 } as const satisfies Chain;

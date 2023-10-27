@@ -1,40 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nahmii Mainnet",
   "chain": "Nahmii",
-  "rpc": [
-    "https://nahmii.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://l2.nahmii.io"
+  "chainId": 5551,
+  "explorers": [
+    {
+      "name": "Nahmii mainnet explorer",
+      "url": "https://explorer.nahmii.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
+        "width": 384,
+        "height": 384,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://nahmii.io",
-  "shortName": "Nahmii",
-  "chainId": 5551,
-  "networkId": 5551,
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
     "height": 384,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Nahmii mainnet explorer",
-      "url": "https://explorer.nahmii.io",
-      "icon": {
-        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
-        "width": 384,
-        "height": 384,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
-  ],
+  "infoURL": "https://nahmii.io",
+  "name": "Nahmii Mainnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 5551,
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
@@ -44,6 +39,12 @@ export default {
       }
     ]
   },
-  "testnet": false,
-  "slug": "nahmii"
+  "rpc": [
+    "https://nahmii.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5551.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://l2.nahmii.io"
+  ],
+  "shortName": "Nahmii",
+  "slug": "nahmii",
+  "testnet": false
 } as const satisfies Chain;

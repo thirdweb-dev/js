@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ThunderCore Mainnet",
   "chain": "TT",
-  "rpc": [
-    "https://thundercore.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet-rpc.thundercore.com",
-    "https://mainnet-rpc.thundertoken.net",
-    "https://mainnet-rpc.thundercore.io"
-  ],
-  "faucets": [
-    "https://faucet.thundercore.com"
-  ],
-  "nativeCurrency": {
-    "name": "ThunderCore Token",
-    "symbol": "TT",
-    "decimals": 18
-  },
-  "infoURL": "https://thundercore.com",
-  "shortName": "TT",
   "chainId": 108,
-  "networkId": 108,
-  "slip44": 1001,
   "explorers": [
     {
       "name": "thundercore-viewblock",
@@ -28,6 +9,24 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "thundercore"
+  "faucets": [],
+  "infoURL": "https://thundercore.com",
+  "name": "ThunderCore Mainnet",
+  "nativeCurrency": {
+    "name": "ThunderCore Token",
+    "symbol": "TT",
+    "decimals": 18
+  },
+  "networkId": 108,
+  "rpc": [
+    "https://thundercore.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://108.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.thundercore.com",
+    "https://mainnet-rpc.thundertoken.net",
+    "https://mainnet-rpc.thundercore.io"
+  ],
+  "shortName": "TT",
+  "slip44": 1001,
+  "slug": "thundercore",
+  "testnet": false
 } as const satisfies Chain;

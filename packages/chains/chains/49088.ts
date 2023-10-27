@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bifrost Testnet",
-  "title": "The Bifrost Testnet network",
   "chain": "BFC",
-  "rpc": [
-    "https://bifrost-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://public-01.testnet.thebifrost.io/rpc",
-    "https://public-02.testnet.thebifrost.io/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Bifrost",
-    "symbol": "BFC",
-    "decimals": 18
-  },
-  "infoURL": "https://thebifrost.io",
-  "shortName": "tbfc",
   "chainId": 49088,
-  "networkId": 49088,
-  "icon": {
-    "url": "ipfs://QmcHvn2Wq91ULyEH5s3uHjosX285hUgyJHwggFJUd3L5uh",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "explorer-thebifrost",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYxniqbiFD7nXBNjN8boUhoXYEAW23YquArD2Rnkq8WHS",
+    "width": 480,
+    "height": 480,
+    "format": "png"
+  },
+  "infoURL": "https://thebifrost.io",
+  "name": "Bifrost Testnet",
+  "nativeCurrency": {
+    "name": "Bifrost",
+    "symbol": "BFC",
+    "decimals": 18
+  },
+  "networkId": 49088,
+  "rpc": [
+    "https://bifrost-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://49088.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://public-01.testnet.thebifrost.io/rpc",
+    "https://public-02.testnet.thebifrost.io/rpc"
+  ],
+  "shortName": "tbfc",
+  "slug": "bifrost-testnet",
   "testnet": true,
-  "slug": "bifrost-testnet"
+  "title": "Bifrost Network Testnet"
 } as const satisfies Chain;

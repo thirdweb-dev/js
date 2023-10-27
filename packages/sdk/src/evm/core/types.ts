@@ -7,6 +7,7 @@ import type {
   Signer,
   providers,
 } from "ethers";
+import { ChainInfo } from "../schema/shared/ChainInfo";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -30,7 +31,7 @@ export type ChainOrRpc = ChainSlug | (string & {});
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ChainIdOrNumber = ChainId | (number & {});
 export type ChainIdOrName = ChainIdOrNumber | ChainOrRpc;
-export type ChainOrRpcUrl = ChainIdOrName | Chain;
+export type ChainOrRpcUrl = ChainIdOrName | Chain | ChainInfo;
 export type NetworkInput = ChainOrRpcUrl | Signer | providers.Provider;
 
 export type ValueOf<T> = T[keyof T];

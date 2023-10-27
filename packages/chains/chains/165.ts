@@ -1,33 +1,34 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Omni Testnet 1",
   "chain": "Omni",
-  "rpc": [
-    "https://omni-testnet-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-1.omni.network"
+  "chainId": 165,
+  "explorers": [
+    {
+      "name": "Omni Explorer",
+      "url": "https://testnet.explorer.omni.network",
+      "standard": "EIP3091"
+    }
   ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
     }
   ],
-  "faucets": [],
+  "infoURL": "https://docs.omni.network/",
+  "name": "Omni Testnet",
   "nativeCurrency": {
     "name": "Omni",
     "symbol": "OMNI",
     "decimals": 18
   },
-  "infoURL": "https://docs.omni.network/",
-  "shortName": "omni_testnet",
-  "chainId": 165,
   "networkId": 165,
-  "explorers": [
-    {
-      "name": "Omni Explorer",
-      "url": "https://testnet-1.explorer.omni.network",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://omni-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.omni.network"
   ],
-  "testnet": true,
-  "slug": "omni-testnet-1"
+  "shortName": "omni_testnet",
+  "slug": "omni-testnet",
+  "testnet": true
 } as const satisfies Chain;

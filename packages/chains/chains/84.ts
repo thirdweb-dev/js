@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Linqto Devnet",
   "chain": "LNQ",
-  "rpc": [
-    "https://linqto-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://linqto-dev.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "XRP",
-    "symbol": "XRP",
-    "decimals": 18
-  },
-  "infoURL": "https://linqto.com",
-  "shortName": "linqto-devnet",
   "chainId": 84,
-  "networkId": 84,
   "explorers": [
     {
       "name": "Linqto Devnet Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "linqto-devnet"
+  "faucets": [],
+  "infoURL": "https://linqto.com",
+  "name": "Linqto Devnet",
+  "nativeCurrency": {
+    "name": "XRP",
+    "symbol": "XRP",
+    "decimals": 18
+  },
+  "networkId": 84,
+  "rpc": [
+    "https://linqto-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://84.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://linqto-dev.com"
+  ],
+  "shortName": "linqto-devnet",
+  "slug": "linqto-devnet",
+  "testnet": false
 } as const satisfies Chain;

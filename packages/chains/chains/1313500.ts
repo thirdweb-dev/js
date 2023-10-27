@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Xerom",
   "chain": "XERO",
-  "rpc": [
-    "https://xerom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.xerom.org"
-  ],
+  "chainId": 1313500,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://xerom.org",
+  "name": "Xerom",
   "nativeCurrency": {
     "name": "Xerom Ether",
     "symbol": "XERO",
     "decimals": 18
   },
-  "infoURL": "https://xerom.org",
-  "shortName": "xero",
-  "chainId": 1313500,
   "networkId": 1313500,
-  "testnet": false,
-  "slug": "xerom"
+  "rpc": [
+    "https://xerom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1313500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.xerom.org"
+  ],
+  "shortName": "xero",
+  "slug": "xerom",
+  "testnet": false
 } as const satisfies Chain;

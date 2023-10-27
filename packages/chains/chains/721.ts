@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lycan Chain",
   "chain": "LYC",
-  "rpc": [
-    "https://lycan-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.lycanchain.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Lycan",
-    "symbol": "LYC",
-    "decimals": 18
-  },
-  "infoURL": "https://lycanchain.com",
-  "shortName": "LYC",
   "chainId": 721,
-  "networkId": 721,
-  "icon": {
-    "url": "ipfs://Qmc8hsCbUUjnJDnXrDhFh4V1xk1gJwZbUyNJ39p72javji",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "lycan-chain"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmc8hsCbUUjnJDnXrDhFh4V1xk1gJwZbUyNJ39p72javji",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "infoURL": "https://lycanchain.com",
+  "name": "Lycan Chain",
+  "nativeCurrency": {
+    "name": "Lycan",
+    "symbol": "LYC",
+    "decimals": 18
+  },
+  "networkId": 721,
+  "rpc": [
+    "https://lycan-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://721.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.lycanchain.com/"
+  ],
+  "shortName": "LYC",
+  "slug": "lycan-chain",
+  "testnet": false
 } as const satisfies Chain;

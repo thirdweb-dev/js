@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Opulent-X BETA",
-  "chainId": 41500,
-  "shortName": "ox-beta",
   "chain": "Opulent-X",
-  "networkId": 41500,
-  "nativeCurrency": {
-    "name": "Oxyn Gas",
-    "symbol": "OXYN",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://opulent-x-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://connect.opulent-x.com"
-  ],
-  "faucets": [],
-  "infoURL": "https://beta.opulent-x.com",
+  "chainId": 41500,
   "explorers": [
     {
       "name": "Opulent-X BETA Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "opulent-x-beta"
+  "faucets": [],
+  "infoURL": "https://beta.opulent-x.com",
+  "name": "Opulent-X BETA",
+  "nativeCurrency": {
+    "name": "Oxyn Gas",
+    "symbol": "OXYN",
+    "decimals": 18
+  },
+  "networkId": 41500,
+  "rpc": [
+    "https://opulent-x-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://41500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://connect.opulent-x.com"
+  ],
+  "shortName": "ox-beta",
+  "slug": "opulent-x-beta",
+  "testnet": false
 } as const satisfies Chain;

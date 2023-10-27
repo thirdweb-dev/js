@@ -1,25 +1,26 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Oort MainnetDev",
-  "title": "Oort MainnetDev",
   "chain": "MainnetDev",
-  "rpc": [],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Oort",
-    "symbol": "CCN",
-    "decimals": 18
-  },
-  "infoURL": "https://oortech.com",
-  "shortName": "MainnetDev",
   "chainId": 9700,
-  "networkId": 9700,
+  "explorers": [],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmZ1jbxFZcuotj3eZ6iKFrg9ZXnaV8AK6sGRa7ELrceWyD",
     "width": 1043,
     "height": 1079,
     "format": "png"
   },
+  "infoURL": "https://oortech.com",
+  "name": "Oort MainnetDev",
+  "nativeCurrency": {
+    "name": "Oort",
+    "symbol": "CCN",
+    "decimals": 18
+  },
+  "networkId": 9700,
+  "rpc": [],
+  "shortName": "MainnetDev",
+  "slug": "oort-dev",
   "testnet": false,
-  "slug": "oort-dev"
+  "title": "Oort MainnetDev"
 } as const satisfies Chain;

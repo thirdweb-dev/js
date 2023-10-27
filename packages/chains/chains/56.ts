@@ -1,50 +1,63 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BNB Smart Chain Mainnet",
   "chain": "BSC",
-  "rpc": [
-    "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "wss://bsc-ws-node.nariox.org",
-    "https://bsc.publicnode.com",
-    "https://bsc-dataseed4.ninicoin.io",
-    "https://bsc-dataseed3.ninicoin.io",
-    "https://bsc-dataseed2.ninicoin.io",
-    "https://bsc-dataseed1.ninicoin.io",
-    "https://bsc-dataseed4.defibit.io",
-    "https://bsc-dataseed3.defibit.io",
-    "https://bsc-dataseed2.defibit.io",
-    "https://bsc-dataseed1.defibit.io",
-    "https://bsc-dataseed4.bnbchain.org",
-    "https://bsc-dataseed3.bnbchain.org",
-    "https://bsc-dataseed2.bnbchain.org",
-    "https://bsc-dataseed1.bnbchain.org"
-  ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/"
-  ],
-  "nativeCurrency": {
-    "name": "BNB Chain Native Token",
-    "symbol": "BNB",
-    "decimals": 18
-  },
-  "infoURL": "https://www.bnbchain.org/en",
-  "shortName": "bnb",
   "chainId": 56,
-  "networkId": 56,
-  "slip44": 714,
   "explorers": [
     {
       "name": "bscscan",
       "url": "https://bscscan.com",
       "standard": "EIP3091"
+    },
+    {
+      "name": "dexguru",
+      "url": "https://bnb.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
+  "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
-    "height": 512,
     "width": 512,
+    "height": 512,
     "format": "png"
   },
-  "testnet": false,
-  "slug": "binance"
+  "infoURL": "https://www.bnbchain.org/en",
+  "name": "BNB Smart Chain Mainnet",
+  "nativeCurrency": {
+    "name": "BNB Chain Native Token",
+    "symbol": "BNB",
+    "decimals": 18
+  },
+  "networkId": 56,
+  "redFlags": [],
+  "rpc": [
+    "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://56.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bsc-dataseed1.bnbchain.org",
+    "https://bsc-dataseed2.bnbchain.org",
+    "https://bsc-dataseed3.bnbchain.org",
+    "https://bsc-dataseed4.bnbchain.org",
+    "https://bsc-dataseed1.defibit.io",
+    "https://bsc-dataseed2.defibit.io",
+    "https://bsc-dataseed3.defibit.io",
+    "https://bsc-dataseed4.defibit.io",
+    "https://bsc-dataseed1.ninicoin.io",
+    "https://bsc-dataseed2.ninicoin.io",
+    "https://bsc-dataseed3.ninicoin.io",
+    "https://bsc-dataseed4.ninicoin.io",
+    "https://bsc.publicnode.com",
+    "wss://bsc.publicnode.com",
+    "wss://bsc-ws-node.nariox.org"
+  ],
+  "shortName": "bnb",
+  "slip44": 714,
+  "slug": "binance",
+  "testnet": false
 } as const satisfies Chain;

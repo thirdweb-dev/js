@@ -1,42 +1,44 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tenet",
-  "title": "Tenet Mainnet",
   "chain": "TENET",
+  "chainId": 1559,
+  "explorers": [
+    {
+      "name": "TenetScan Mainnet",
+      "url": "https://tenetscan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
+        "width": 640,
+        "height": 640,
+        "format": "svg"
+      }
+    }
+  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
     "width": 640,
     "height": 640,
     "format": "svg"
   },
-  "rpc": [
-    "https://tenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.tenet.org",
-    "https://tenet-evm.publicnode.com"
-  ],
-  "faucets": [],
+  "infoURL": "https://tenet.org/",
+  "name": "Tenet",
   "nativeCurrency": {
     "name": "TENET",
     "symbol": "TENET",
     "decimals": 18
   },
-  "infoURL": "https://tenet.org/",
-  "shortName": "tenet",
-  "chainId": 1559,
   "networkId": 1559,
-  "explorers": [
-    {
-      "name": "TenetScan Mainnet",
-      "url": "https://tenetscan.io",
-      "icon": {
-        "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
-        "width": 640,
-        "height": 640,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://tenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.tenet.org",
+    "https://tenet-evm.publicnode.com",
+    "wss://tenet-evm.publicnode.com"
   ],
+  "shortName": "tenet",
+  "slug": "tenet",
   "testnet": false,
-  "slug": "tenet"
+  "title": "Tenet Mainnet"
 } as const satisfies Chain;

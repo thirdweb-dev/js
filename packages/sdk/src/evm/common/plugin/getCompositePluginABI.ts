@@ -5,7 +5,7 @@ import {
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { Abi, AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { isFeatureEnabled } from "../feature-detection/isFeatureEnabled";
+import { isExtensionEnabled } from "../feature-detection/isFeatureEnabled";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { providers } from "ethers";
 import { joinABIs } from "./joinABIs";
@@ -14,7 +14,7 @@ import { getPluginABI } from "./getPluginABI";
 /**
  * @internal
  */
-export async function getCompositePluginABI(
+export async function getCompositeABI(
   address: string,
   abi: Abi,
   provider: providers.Provider,
@@ -25,15 +25,15 @@ export async function getCompositePluginABI(
 
   try {
     // check if contract is plugin-pattern
-    const isPluginRouter: boolean = isFeatureEnabled(
+    const isPluginRouter: boolean = isExtensionEnabled(
       AbiSchema.parse(abi),
       "PluginRouter",
     );
-    const isExtensionRouter: boolean = isFeatureEnabled(
+    const isbaseRouter: boolean = isExtensionEnabled(
       AbiSchema.parse(abi),
-      "ExtensionRouter",
+      "DynamicContract",
     );
-    if (isExtensionRouter) {
+    if (isbaseRouter) {
       const contract = new ContractWrapper(
         provider,
         address,

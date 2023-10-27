@@ -1,15 +1,23 @@
+import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
 import {
-  ListingNotFoundError,
-  WrongListingTypeError,
-  AuctionAlreadyStartedError,
-  AuctionHasNotEndedError,
-} from "../../common/error";
+  ListingAddedEvent,
+  Marketplace as MarketplaceContract,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants, utils } from "ethers";
+import invariant from "tiny-invariant";
 import { cleanCurrencyAddress } from "../../common/currency/cleanCurrencyAddress";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { setErc20Allowance } from "../../common/currency/setErc20Allowance";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import {
+  AuctionAlreadyStartedError,
+  AuctionHasNotEndedError,
+  ListingNotFoundError,
+  WrongListingTypeError,
+} from "../../common/error";
 import {
   handleTokenApproval,
   isWinningBid,
@@ -18,25 +26,16 @@ import {
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
-import { ListingType } from "../../enums";
 import { CurrencyValue, Price } from "../../types/currency";
-import {
-  AuctionListing,
-  NewAuctionListing,
-  Offer,
-} from "../../types/marketplace";
 import { TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
-import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
-import {
-  ListingAddedEvent,
-  Marketplace as MarketplaceContract,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, utils, constants } from "ethers";
-import invariant from "tiny-invariant";
+import { ListingType } from "../../enums/marketplace/ListingType";
+import { AuctionListing } from "../../types/marketplace/AuctionListing";
+import { Offer } from "../../types/marketplace/Offer";
+import { NewAuctionListing } from "../../types/marketplace/NewAuctionListing";
 
 /**
  * Handles auction listings
@@ -57,7 +56,7 @@ export class MarketplaceAuction {
   }
 
   getAddress(): string {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -71,7 +70,7 @@ export class MarketplaceAuction {
    * @returns the Auction listing object
    */
   public async getListing(listingId: BigNumberish): Promise<AuctionListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
+    const listing = await this.contractWrapper.read("listings", [listingId]);
 
     if (listing.listingId.toString() !== listingId.toString()) {
       throw new ListingNotFoundError(this.getAddress(), listingId.toString());
@@ -108,9 +107,7 @@ export class MarketplaceAuction {
     listingId: BigNumberish,
   ): Promise<Offer | undefined> {
     await this.validateListing(BigNumber.from(listingId));
-    const offers = await this.contractWrapper.readContract.winningBid(
-      listingId,
-    );
+    const offers = await this.contractWrapper.read("winningBid", [listingId]);
     if (offers.offeror === constants.AddressZero) {
       return undefined;
     }
@@ -139,9 +136,7 @@ export class MarketplaceAuction {
    */
   public async getWinner(listingId: BigNumberish): Promise<string> {
     const listing = await this.validateListing(BigNumber.from(listingId));
-    const offers = await this.contractWrapper.readContract.winningBid(
-      listingId,
-    );
+    const offers = await this.contractWrapper.read("winningBid", [listingId]);
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
 
@@ -152,18 +147,17 @@ export class MarketplaceAuction {
     // otherwise fall back to query filter things
 
     // TODO this should be via indexer or direct contract call
-    const closedAuctions = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.AuctionClosed(),
-    );
+    const contractEvents = new ContractEvents(this.contractWrapper);
+    const closedAuctions = await contractEvents.getEvents("AuctionClosed");
     const auction = closedAuctions.find((a) =>
-      a.args.listingId.eq(BigNumber.from(listingId)),
+      a.data.listingId.eq(BigNumber.from(listingId)),
     );
     if (!auction) {
       throw new Error(
         `Could not find auction with listingId ${listingId} in closed auctions`,
       );
     }
-    return auction.args.winningBidder;
+    return auction.data.winningBidder;
   }
 
   /** ******************************
@@ -289,12 +283,11 @@ export class MarketplaceAuction {
     async (
       listings: NewAuctionListing[],
     ): Promise<Transaction<TransactionResultWithId[]>> => {
-      const data = await Promise.all(
-        listings.map(async (listing) => {
-          const tx = await this.createListing.prepare(listing);
-          return tx.encode();
-        }),
-      );
+      const data = (
+        await Promise.all(
+          listings.map((listing) => this.createListing.prepare(listing)),
+        )
+      ).map((tx) => tx.encode());
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -371,7 +364,7 @@ export class MarketplaceAuction {
       if (normalizedPrice.eq(BigNumber.from(0))) {
         throw new Error("Cannot make a bid with 0 value");
       }
-      const bidBuffer = await this.contractWrapper.readContract.bidBufferBps();
+      const bidBuffer = await this.contractWrapper.read("bidBufferBps", []);
       const winningBid = await this.getWinningBid(listingId);
       if (winningBid) {
         const isWinner = isWinningBid(
@@ -438,9 +431,7 @@ export class MarketplaceAuction {
       const now = BigNumber.from(Math.floor(Date.now() / 1000));
       const startTime = BigNumber.from(listing.startTimeInEpochSeconds);
 
-      const offers = await this.contractWrapper.readContract.winningBid(
-        listingId,
-      );
+      const offers = await this.contractWrapper.read("winningBid", [listingId]);
       if (now.gt(startTime) && offers.offeror !== constants.AddressZero) {
         throw new AuctionAlreadyStartedError(listingId.toString());
       }
@@ -568,7 +559,7 @@ export class MarketplaceAuction {
    * Get the buffer in basis points between offers
    */
   public async getBidBufferBps(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.bidBufferBps();
+    return this.contractWrapper.read("bidBufferBps", []);
   }
 
   /**
@@ -582,7 +573,7 @@ export class MarketplaceAuction {
     const [currentBidBufferBps, winningBid, listing] = await Promise.all([
       this.getBidBufferBps(),
       this.getWinningBid(listingId),
-      await this.validateListing(BigNumber.from(listingId)),
+      this.validateListing(BigNumber.from(listingId)),
     ]);
 
     const currentBidOrReservePrice = winningBid

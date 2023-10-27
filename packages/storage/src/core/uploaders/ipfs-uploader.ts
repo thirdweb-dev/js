@@ -11,7 +11,6 @@ import {
   IpfsUploaderOptions,
   IStorageUploader,
 } from "../../types";
-import fetch from "cross-fetch";
 import FormData from "form-data";
 import pkg from "../../../package.json";
 
@@ -261,11 +260,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           (xhr.readyState !== 0 && xhr.readyState !== 4) ||
           xhr.status === 0
         ) {
-          return reject(
-            new Error(
-              "This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.",
-            ),
-          );
+          return reject(new Error("Upload failed due to a network error."));
         }
 
         return reject(new Error("Unknown upload error occured"));
@@ -291,10 +286,16 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       xhr.setRequestHeader("x-sdk-name", pkg.name);
       xhr.setRequestHeader(
         "x-sdk-platform",
-        bundleId ? "react-native" : isBrowser() ? "browser" : "node",
+        bundleId
+          ? "react-native"
+          : isBrowser()
+          ? (window as any).bridge !== undefined
+            ? "webGL"
+            : "browser"
+          : "node",
       );
 
-      // if we have a authorization token on global context then add that to the headers
+      // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
       if (
         typeof globalThis !== "undefined" &&
         "TW_AUTH_TOKEN" in globalThis &&
@@ -304,6 +305,19 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           "authorization",
           `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string}`,
         );
+      }
+
+      // CLI auth token
+      if (
+        typeof globalThis !== "undefined" &&
+        "TW_CLI_AUTH_TOKEN" in globalThis &&
+        typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+      ) {
+        xhr.setRequestHeader(
+          "authorization",
+          `Bearer ${(globalThis as any).TW_CLI_AUTH_TOKEN as string}`,
+        );
+        xhr.setRequestHeader("x-authorize-wallet", `true`);
       }
 
       xhr.send(form as any);
@@ -320,6 +334,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     }
 
     const headers: HeadersInit = {};
+
     if (this.secretKey) {
       headers["x-secret-key"] = this.secretKey;
     } else if (this.clientId) {
@@ -331,7 +346,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers["x-bundle-id"] = (globalThis as any).APP_BUNDLE_ID as string;
     }
 
-    // if we have a authorization token on global context then add that to the headers
+    // if we have a authorization token on global context then add that to the headers, this is for the dashboard.
     if (
       typeof globalThis !== "undefined" &&
       "TW_AUTH_TOKEN" in globalThis &&
@@ -342,6 +357,18 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }`;
     }
 
+    // CLI auth token
+    if (
+      typeof globalThis !== "undefined" &&
+      "TW_CLI_AUTH_TOKEN" in globalThis &&
+      typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
+    ) {
+      headers["authorization"] = `Bearer ${
+        (globalThis as any).TW_CLI_AUTH_TOKEN as string
+      }`;
+      headers["x-authorize-wallet"] = "true";
+    }
+
     const res = await fetch(`${this.uploadServerUrl}/ipfs/upload`, {
       method: "POST",
       headers: {
@@ -350,15 +377,25 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       },
       body: form.getBuffer(),
     });
-    const body = await res.json();
+
     if (!res.ok) {
-      console.warn(body);
-      throw new Error("Failed to upload files to IPFS");
+      if (res.status === 401) {
+        throw new Error(
+          "Unauthorized - You don't have permission to use this service.",
+        );
+      }
+      throw new Error(
+        `Failed to upload files to IPFS - ${res.status} - ${
+          res.statusText
+        } - ${await res.text()}`,
+      );
     }
+
+    const body = await res.json();
 
     const cid = body.IpfsHash;
     if (!cid) {
-      throw new Error("Failed to upload files to IPFS");
+      throw new Error("Failed to upload files to IPFS - Bad CID");
     }
 
     if (options?.uploadWithoutDirectory) {

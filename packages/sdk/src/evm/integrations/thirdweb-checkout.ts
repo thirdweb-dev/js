@@ -1,9 +1,8 @@
+import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ChainId } from "../constants/chains/ChainId";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
 import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
-import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
-// import fetch from "cross-fetch";
 import invariant from "tiny-invariant";
 
 const PAPER_API_BASE = `https://paper.xyz/api` as const;
@@ -213,7 +212,7 @@ export class PaperCheckout<
 
   private async getCheckoutId(): Promise<string> {
     return fetchRegisteredCheckoutId(
-      this.contractWrapper.readContract.address,
+      this.contractWrapper.address,
       await this.contractWrapper.getChainID(),
     );
   }

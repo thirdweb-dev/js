@@ -1,10 +1,35 @@
+import type {
+  AirdropERC1155,
+  AirdropERC20,
+  AirdropERC721,
+  DirectListingsLogic,
+  EnglishAuctionsLogic,
+  IAccountCore,
+  IAccountFactory,
+  IAppURI,
+  IContractMetadata,
+  IPermissions,
+  IPlatformFee,
+  IPrimarySale,
+  IRoyalty,
+  OffersLogic,
+  Ownable,
+  BaseRouter,
+} from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BaseContract, CallOverrides } from "ethers";
 import { assertEnabled } from "../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../common/feature-detection/detectContractFeature";
 import { ALL_ROLES } from "../common/role";
+import { FEATURE_EDITION } from "../constants/erc1155-features";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
-import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_ACCOUNT,
+  FEATURE_ACCOUNT_FACTORY,
+  FEATURE_AIRDROP_ERC1155,
+  FEATURE_AIRDROP_ERC20,
+  FEATURE_AIRDROP_ERC721,
   FEATURE_APPURI,
   FEATURE_DIRECT_LISTINGS,
   FEATURE_ENGLISH_AUCTIONS,
@@ -14,26 +39,35 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
-  FEATURE_ACCOUNT_FACTORY,
-  FEATURE_ACCOUNT,
+  FEATURE_DYNAMIC_CONTRACT,
 } from "../constants/thirdweb-features";
-import { Transaction } from "../core/classes/transactions";
+import { Account } from "../core/classes/account";
+import { AccountFactory } from "../core/classes/account-factory";
+import { Airdrop1155 } from "../core/classes/airdrop-erc1155";
+import { Airdrop20 } from "../core/classes/airdrop-erc20";
+import { Airdrop721 } from "../core/classes/airdrop-erc721";
 import { ContractAppURI } from "../core/classes/contract-appuri";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractOwner } from "../core/classes/contract-owner";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc1155 } from "../core/classes/erc-1155";
 import { Erc20 } from "../core/classes/erc-20";
 import { Erc721 } from "../core/classes/erc-721";
-import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
+import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
+import { Transaction } from "../core/classes/transactions";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { Address } from "../schema/shared/Address";
+import { NetworkInput } from "../core/types";
 import {
   Abi,
   AbiInput,
@@ -41,33 +75,10 @@ import {
   CustomContractSchema,
 } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
-import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import type {
-  IPermissions,
-  IPlatformFee,
-  IPrimarySale,
-  IRoyalty,
-  Ownable,
-  IAppURI,
-  IContractMetadata,
-  DirectListingsLogic,
-  EnglishAuctionsLogic,
-  OffersLogic,
-  IAccountFactory,
-  IAccountCore,
-} from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, CallOverrides } from "ethers";
+import { Address } from "../schema/shared/Address";
 import { BaseContractInterface } from "../types/contract";
-
-import { NetworkInput } from "../core/types";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractOwner } from "../core/classes/contract-owner";
-import { MarketplaceV3DirectListings } from "../core/classes/marketplacev3-direct-listings";
-import { MarketplaceV3EnglishAuctions } from "../core/classes/marketplacev3-english-auction";
-import { MarketplaceV3Offers } from "../core/classes/marketplacev3-offers";
-import { AccountFactory } from "../core/classes/account-factory";
-import { Account } from "../core/classes/account";
+import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
+import { ExtensionManager } from "../core/classes/extension-manager";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -108,8 +119,11 @@ export class SmartContract<
   public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  public abi: Abi;
   public metadata: ContractMetadata<BaseContract, typeof CustomContractSchema>;
+
+  get abi(): Abi {
+    return AbiSchema.parse(this.contractWrapper.abi || []);
+  }
 
   /**
    * Handle royalties
@@ -128,7 +142,7 @@ export class SmartContract<
   /**
    * Handle primary sales
    */
-  get sales(): ContractPrimarySale<IPrimarySale> {
+  get sales(): ContractPrimarySale {
     return assertEnabled(this.detectPrimarySales(), FEATURE_PRIMARY_SALE);
   }
 
@@ -298,6 +312,18 @@ export class SmartContract<
     return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
   }
 
+  get airdrop20(): Airdrop20<AirdropERC20> {
+    return assertEnabled(this.detectAirdrop20(), FEATURE_AIRDROP_ERC20);
+  }
+
+  get airdrop721(): Airdrop721<AirdropERC721> {
+    return assertEnabled(this.detectAirdrop721(), FEATURE_AIRDROP_ERC721);
+  }
+
+  get airdrop1155(): Airdrop1155<AirdropERC1155> {
+    return assertEnabled(this.detectAirdrop1155(), FEATURE_AIRDROP_ERC1155);
+  }
+
   /**
    * Account Factory
    *
@@ -335,6 +361,10 @@ export class SmartContract<
     return assertEnabled(this.detectAccount(), FEATURE_ACCOUNT);
   }
 
+  get extensions(): ExtensionManager {
+    return assertEnabled(this.detectBaseRouter(), FEATURE_DYNAMIC_CONTRACT);
+  }
+
   private _chainId: number;
   get chainId() {
     return this._chainId;
@@ -358,7 +388,6 @@ export class SmartContract<
     this._chainId = chainId;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.abi = AbiSchema.parse(abi || []);
 
     this.events = new ContractEvents(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -381,7 +410,7 @@ export class SmartContract<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /**
@@ -559,6 +588,51 @@ export class SmartContract<
   private detectOffers() {
     if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
       return new MarketplaceV3Offers(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectBaseRouter() {
+    if (
+      detectContractFeature<BaseRouter>(
+        this.contractWrapper,
+        FEATURE_DYNAMIC_CONTRACT.name,
+      )
+    ) {
+      return new ExtensionManager(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop20() {
+    if (
+      detectContractFeature<AirdropERC20>(this.contractWrapper, "AirdropERC20")
+    ) {
+      return new Airdrop20(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop721() {
+    if (
+      detectContractFeature<AirdropERC721>(
+        this.contractWrapper,
+        "AirdropERC721",
+      )
+    ) {
+      return new Airdrop721(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectAirdrop1155() {
+    if (
+      detectContractFeature<AirdropERC1155>(
+        this.contractWrapper,
+        "AirdropERC1155",
+      )
+    ) {
+      return new Airdrop1155(this.contractWrapper);
     }
     return undefined;
   }

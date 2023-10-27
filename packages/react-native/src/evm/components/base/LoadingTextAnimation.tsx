@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { View, Animated, Easing, StyleSheet } from "react-native";
 import { baseTheme } from "../../styles/theme";
+<<<<<<< HEAD
 import { useAppTheme } from "../../styles/hooks";
+=======
+import { useGlobalTheme } from "../../providers/ui-context-provider";
+>>>>>>> main
 
 type LoadingTextAnimationProps = {
   text: string;
@@ -13,7 +17,11 @@ const LoadingTextAnimation = ({
   textVariant,
 }: LoadingTextAnimationProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
+<<<<<<< HEAD
   const theme = useAppTheme();
+=======
+  const theme = useGlobalTheme();
+>>>>>>> main
 
   const fadeInOut = useCallback(() => {
     Animated.loop(

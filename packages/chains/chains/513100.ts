@@ -1,20 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ethereum Fair",
-  "chainId": 513100,
-  "networkId": 513100,
-  "shortName": "ethf",
   "chain": "ETHF",
-  "nativeCurrency": {
-    "name": "EthereumFair",
-    "symbol": "ETHF",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://ethereum-fair.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.etherfair.org"
-  ],
-  "faucets": [],
+  "chainId": 513100,
   "explorers": [
     {
       "name": "etherfair",
@@ -22,7 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
   "infoURL": "https://etherfair.org",
-  "testnet": false,
-  "slug": "ethereum-fair"
+  "name": "ethereum Fair",
+  "nativeCurrency": {
+    "name": "EthereumFair",
+    "symbol": "ETHF",
+    "decimals": 18
+  },
+  "networkId": 513100,
+  "rpc": [
+    "https://ethereum-fair.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://513100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.etherfair.org"
+  ],
+  "shortName": "ethf",
+  "slug": "ethereum-fair",
+  "testnet": false
 } as const satisfies Chain;

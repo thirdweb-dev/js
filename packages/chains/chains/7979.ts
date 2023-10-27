@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DOS Chain",
   "chain": "DOS",
-  "rpc": [
-    "https://dos-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://main.doschain.com"
+  "chainId": 7979,
+  "explorers": [
+    {
+      "name": "DOScan",
+      "url": "https://doscan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "DOS",
-    "symbol": "DOS",
-    "decimals": 18
-  },
-  "infoURL": "https://doschain.io",
-  "shortName": "dos",
-  "chainId": 7979,
-  "networkId": 7979,
   "icon": {
     "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "DOScan",
-      "url": "https://doscan.io",
-      "icon": {
-        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://doschain.io",
+  "name": "DOS Chain",
+  "nativeCurrency": {
+    "name": "DOS",
+    "symbol": "DOS",
+    "decimals": 18
+  },
+  "networkId": 7979,
+  "rpc": [
+    "https://dos-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7979.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://main.doschain.com"
   ],
-  "testnet": false,
-  "slug": "dos-chain"
+  "shortName": "dos",
+  "slug": "dos-chain",
+  "testnet": false
 } as const satisfies Chain;

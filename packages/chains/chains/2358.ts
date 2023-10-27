@@ -1,41 +1,35 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kroma Sepolia",
-  "title": "Kroma Testnet Sepolia",
-  "chainId": 2358,
-  "shortName": "kroma-sepolia",
   "chain": "ETH",
-  "networkId": 2358,
-  "nativeCurrency": {
-    "name": "Sepolia Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://kroma-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.sepolia.kroma.network"
+  "chainId": 2358,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://blockscout.sepolia.kroma.network",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
+        "width": 320,
+        "height": 320,
+        "format": "svg"
+      }
+    }
   ],
   "faucets": [],
-  "infoURL": "https://kroma.network",
   "icon": {
     "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
     "width": 320,
     "height": 320,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://blockscout.sepolia.kroma.network",
-      "icon": {
-        "url": "ipfs://QmVpV2WET6ZrqnvvPfE9hCwoE2y5ygbPuniuugpaRoxrho",
-        "width": 320,
-        "height": 320,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    }
-  ],
+  "infoURL": "https://kroma.network",
+  "name": "Kroma Sepolia",
+  "nativeCurrency": {
+    "name": "Sepolia Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 2358,
   "parent": {
     "type": "L2",
     "chain": "eip155-11155111",
@@ -45,6 +39,13 @@ export default {
       }
     ]
   },
+  "rpc": [
+    "https://kroma-sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2358.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.sepolia.kroma.network"
+  ],
+  "shortName": "kroma-sepolia",
+  "slug": "kroma-sepolia",
   "testnet": true,
-  "slug": "kroma-sepolia"
+  "title": "Kroma Testnet Sepolia"
 } as const satisfies Chain;

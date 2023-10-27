@@ -4,21 +4,33 @@ import ImageSvgUri from "./ImageSvgUri";
 import { Label } from "./Label";
 import Text from "./Text";
 import Box from "./Box";
+import { Palette } from "../../styles/colors";
+import { useLocale } from "../../providers/ui-context-provider";
 
 type WalletButtonProps = {
-  onPress: () => void;
+  onPress?: () => void;
   walletIconUrl: string;
   name: string;
+  nameColor?: keyof Palette;
   labelText?: string;
-} & (typeof BaseButton)["arguments"];
+  recommended?: boolean;
+  iconWidth?: number;
+  iconHeight?: number;
+} & React.ComponentProps<typeof BaseButton>;
 
 export const WalletButton = ({
+  iconWidth = 48,
+  iconHeight = 48,
   mb,
   onPress,
   walletIconUrl,
   name,
+  nameColor = "textPrimary",
   labelText,
+  recommended,
+  ...props
 }: WalletButtonProps) => {
+  const l = useLocale();
   return (
     <BaseButton
       mb={mb}
@@ -28,14 +40,24 @@ export const WalletButton = ({
       paddingHorizontal="md"
       paddingVertical="sm"
       borderRadius="sm"
-      backgroundColor="backgroundHighlight"
+      backgroundColor="background"
       onPress={onPress}
+      {...props}
     >
       <Box flexDirection="row" justifyContent="flex-start" alignItems="center">
-        <ImageSvgUri imageUrl={walletIconUrl} width={32} height={32} />
-        <Text ml="md" variant="bodyLarge">
-          {name}
-        </Text>
+        <ImageSvgUri
+          imageUrl={walletIconUrl}
+          width={iconWidth}
+          height={iconHeight}
+        />
+        <Box ml="sm" alignItems="flex-start">
+          <Text variant="bodyLargeBold" color={nameColor}>
+            {name}
+          </Text>
+          {recommended ? (
+            <Text variant="link">{l.connect_wallet_details.recommended}</Text>
+          ) : null}
+        </Box>
       </Box>
       {labelText ? <Label text={labelText} /> : <View />}
     </BaseButton>

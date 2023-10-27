@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Animated, Easing, StyleSheet, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
-import { useAppTheme } from "../../../styles/hooks";
+import { useGlobalTheme } from "../../../providers/ui-context-provider";
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
+
+const PADDING = 10;
+const INTERNAL_PADDING = 6;
 
 interface Props {
   children?: React.ReactNode;
@@ -11,8 +14,12 @@ interface Props {
   showError?: boolean;
 }
 
-function WalletLoadingThumbnail({ children, showError }: Props) {
-  const Theme = useAppTheme();
+function WalletLoadingThumbnail({
+  children,
+  showError,
+  imageSize = 50,
+}: Props) {
+  const Theme = useGlobalTheme();
   const spinValue = useRef(new Animated.Value(0));
 
   useEffect(() => {
@@ -38,12 +45,17 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
 
   return (
     <View style={styles.container}>
-      <Svg width={60} height={60} viewBox="0 0 60 60" style={styles.loader}>
+      <Svg
+        width={imageSize + PADDING}
+        height={imageSize + PADDING}
+        viewBox={`0 0 ${imageSize + PADDING} ${imageSize + PADDING}`}
+        style={styles.loader}
+      >
         <AnimatedRect
           x="2"
           y="2"
-          width={56}
-          height={56}
+          width={imageSize + INTERNAL_PADDING}
+          height={imageSize + INTERNAL_PADDING}
           rx={15}
           stroke={showError ? "transparent" : Theme.colors.linkPrimary}
           strokeWidth={2}
@@ -55,8 +67,12 @@ function WalletLoadingThumbnail({ children, showError }: Props) {
       {showError && (
         <View
           style={[
-            styles.error,
             {
+              position: "absolute",
+              borderWidth: 2,
+              height: imageSize + INTERNAL_PADDING,
+              width: imageSize + INTERNAL_PADDING,
+              borderRadius: 30 / 3.5,
               borderColor: Theme.colors.border,
             },
           ]}
@@ -74,13 +90,6 @@ const styles = StyleSheet.create({
   },
   loader: {
     position: "absolute",
-  },
-  error: {
-    position: "absolute",
-    borderWidth: 2,
-    height: 56,
-    width: 56,
-    borderRadius: 30 / 3.5,
   },
 });
 

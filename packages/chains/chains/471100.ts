@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Patex Sepolia Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://patex-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test-rpc.patex.io/"
-  ],
+  "chainId": 471100,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://patex.io/",
+  "name": "Patex Sepolia Testnet",
   "nativeCurrency": {
     "name": "Sepolia Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://patex.io/",
-  "shortName": "psep",
-  "chainId": 471100,
   "networkId": 471100,
-  "testnet": true,
-  "slug": "patex-sepolia-testnet"
+  "rpc": [
+    "https://patex-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://471100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test-rpc.patex.io/"
+  ],
+  "shortName": "psep",
+  "slug": "patex-sepolia-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -24,7 +24,7 @@ export function useWalletConnect() {
       qrModalOptions?: WC2_QRModalOptions;
     }) => {
       const { walletConnect } = await import(
-        "../../../wallet/wallets/walletConnect"
+        "../../../wallet/wallets/walletConnect/walletConnect"
       );
       return connect(walletConnect(options), options);
     },

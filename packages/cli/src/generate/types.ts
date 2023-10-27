@@ -1,5 +1,10 @@
 import { DeployedContract } from "@thirdweb-dev/sdk";
 
+export type AuthConfig = {
+  secretKey?: string;
+  authToken?: string;
+}
+
 export type ThirdwebConfig = {
   chainIds: number[];
   contracts: DeployedContract[];

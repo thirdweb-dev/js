@@ -1,34 +1,33 @@
 import { StyleSheet, View } from "react-native";
 import PocketWalletIcon from "../../assets/wallet";
 import BaseButton from "../base/BaseButton";
-import { WalletIcon } from "../base/WalletIcon";
 import {
   AbstractClientWallet,
   SmartWallet,
   walletIds,
 } from "@thirdweb-dev/wallets";
-import { AddressDisplay } from "../base/AddressDisplay";
 import Text from "../base/Text";
-import { usePersonalWalletAddress } from "../../wallets/hooks/usePersonalWalletAddress";
 import { useWalletContext, useWallet } from "@thirdweb-dev/react-core";
 import { useEffect, useState } from "react";
 import { useSmartWallet } from "../../providers/context-provider";
 import RightArrowIcon from "../../assets/right-arrow";
 import ConnectAppField from "./ConnectAppField";
-import { useAppTheme } from "../../styles/hooks";
+import DisconnectIcon from "../../assets/disconnect";
+import { IconTextButton } from "../base/IconTextButton";
+import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 export const SmartWalletAdditionalActions = ({
   onExportPress,
 }: {
   onExportPress: () => void;
 }) => {
-  const personalWalletAddress = usePersonalWalletAddress();
+  const l = useLocale();
   const { setConnectedWallet } = useWalletContext();
   const [smartWallet, setSmartWallet] = useSmartWallet();
   const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
   const [showSmartWallet, setShowSmartWallet] = useState(false);
   const activeWallet = useWallet();
-  const theme = useAppTheme();
+  const theme = useGlobalTheme();
 
   const wallet = showSmartWallet
     ? smartWallet
@@ -62,38 +61,22 @@ export const SmartWalletAdditionalActions = ({
 
   return (
     <>
-      <View style={styles.currentNetwork}>
-        <Text variant="bodySmallSecondary">
-          {showSmartWallet ? "Smart Wallet" : "Personal Wallet"}
-        </Text>
-      </View>
-      <BaseButton
-        backgroundColor="background"
-        borderColor="border"
-        justifyContent="space-between"
-        mb="md"
-        style={styles.walletDetails}
+      <IconTextButton
+        mt="xs"
+        text={
+          showSmartWallet
+            ? l.smart_wallet.switch_to_smart
+            : l.smart_wallet.switch_to_personal
+        }
+        icon={
+          <DisconnectIcon
+            width={14}
+            height={14}
+            color={theme.colors.iconPrimary}
+          />
+        }
         onPress={onWalletPress}
-      >
-        <>
-          {wallet?.getMeta().iconURL ? (
-            <WalletIcon size={32} iconUri={wallet?.getMeta().iconURL || ""} />
-          ) : null}
-          <View style={styles.walletInfo}>
-            <AddressDisplay
-              variant="bodyLarge"
-              address={
-                showSmartWallet ? smartWalletAddress : personalWalletAddress
-              }
-            />
-          </View>
-        </>
-        <RightArrowIcon
-          height={10}
-          width={10}
-          color={theme.colors.iconPrimary}
-        />
-      </BaseButton>
+      />
       {!showSmartWallet && smartWallet?.enableConnectApp ? (
         <ConnectAppField />
       ) : null}
@@ -103,7 +86,10 @@ export const SmartWalletAdditionalActions = ({
           <BaseButton
             backgroundColor="background"
             borderColor="border"
+            borderRadius="lg"
+            borderWidth={0.5}
             mb="sm"
+            mt="xs"
             justifyContent="space-between"
             style={styles.exportWallet}
             onPress={onExportPress}
@@ -113,8 +99,8 @@ export const SmartWalletAdditionalActions = ({
               <View style={styles.exportWalletInfo}>
                 <Text variant="bodySmall">
                   {wallet?.walletId === walletIds.localWallet
-                    ? "Backup personal wallet"
-                    : "Backup wallet"}
+                    ? l.connect_wallet_details.backup_personal_wallet
+                    : l.connect_wallet_details.backup_wallet}
                 </Text>
               </View>
             </>
@@ -124,10 +110,8 @@ export const SmartWalletAdditionalActions = ({
               color={theme.colors.iconPrimary}
             />
           </BaseButton>
-          <Text variant="error" textAlign="left">
-            {
-              "This is a temporary guest wallet. Download a backup if you don't want to loose access to it."
-            }
+          <Text variant="error" textAlign="left" mb="sm">
+            {l.local_wallet.this_is_a_temporary_wallet}
           </Text>
         </>
       ) : null}
@@ -158,8 +142,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 12,
-    borderWidth: 0.5,
     paddingHorizontal: 10,
     paddingVertical: 12,
     minWidth: 200,

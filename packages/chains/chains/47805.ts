@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "REI Network",
   "chain": "REI",
-  "rpc": [
-    "https://rei-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.rei.network",
-    "wss://rpc.rei.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "REI",
-    "symbol": "REI",
-    "decimals": 18
-  },
-  "infoURL": "https://rei.network/",
-  "shortName": "REI",
   "chainId": 47805,
-  "networkId": 47805,
   "explorers": [
     {
       "name": "rei-scan",
@@ -24,6 +9,22 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "rei-network"
+  "faucets": [],
+  "infoURL": "https://rei.network/",
+  "name": "REI Network",
+  "nativeCurrency": {
+    "name": "REI",
+    "symbol": "REI",
+    "decimals": 18
+  },
+  "networkId": 47805,
+  "rpc": [
+    "https://rei-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://47805.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.rei.network",
+    "wss://rpc.rei.network"
+  ],
+  "shortName": "REI",
+  "slug": "rei-network",
+  "testnet": false
 } as const satisfies Chain;

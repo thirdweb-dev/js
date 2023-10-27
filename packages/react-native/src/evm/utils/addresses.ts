@@ -7,7 +7,7 @@ import { utils } from "ethers";
  * @param extraShort If true, show the first 4 and last 3 characters
  * @returns The shortened address
  */
-export function shortenWalletAddress(str?: string, extraShort?: true) {
+export function shortenWalletAddress(str?: string, extraShort = true) {
   if (!str) {
     return str;
   }
@@ -17,6 +17,17 @@ export function shortenWalletAddress(str?: string, extraShort?: true) {
   )}`;
 }
 
+/**
+ * This function shortens an address if it is a valid EVM address.
+ *
+ * @param address The address to shorten
+ * @param extraShort If true, show the first 4 and last 3 characters
+ * @returns The shortened address
+ * @example
+ * ```ts
+ * const address = shortenIfAddress("0x1234567890123456789012345678901234567890", true); // result will be "0x1234...890"
+ * ```
+ */
 export function shortenIfAddress(address?: string, extraShort?: true): string {
   if (!address) {
     return "";

@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Q Mainnet",
   "chain": "Q",
-  "rpc": [
-    "https://q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.q.org"
+  "chainId": 35441,
+  "explorers": [
+    {
+      "name": "Q explorer",
+      "url": "https://explorer.q.org",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
+        "width": 585,
+        "height": 603,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Q token",
-    "symbol": "Q",
-    "decimals": 18
-  },
-  "infoURL": "https://q.org",
-  "shortName": "q",
-  "chainId": 35441,
-  "networkId": 35441,
   "icon": {
     "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
     "width": 585,
     "height": 603,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Q explorer",
-      "url": "https://explorer.q.org",
-      "icon": {
-        "url": "ipfs://QmQUQKe8VEtSthhgXnJ3EmEz94YhpVCpUDZAiU9KYyNLya",
-        "width": 585,
-        "height": 603,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://q.org",
+  "name": "Q Mainnet",
+  "nativeCurrency": {
+    "name": "Q token",
+    "symbol": "Q",
+    "decimals": 18
+  },
+  "networkId": 35441,
+  "rpc": [
+    "https://q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://35441.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.q.org"
   ],
-  "testnet": false,
-  "slug": "q"
+  "shortName": "q",
+  "slug": "q",
+  "testnet": false
 } as const satisfies Chain;

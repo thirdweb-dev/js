@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Harmony Testnet Shard 0",
   "chain": "Harmony",
-  "rpc": [
-    "https://harmony-testnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://api.s0.b.hmny.io"
-  ],
-  "faucets": [
-    "https://faucet.pops.one"
-  ],
-  "nativeCurrency": {
-    "name": "ONE",
-    "symbol": "ONE",
-    "decimals": 18
-  },
-  "infoURL": "https://www.harmony.one/",
-  "shortName": "hmy-b-s0",
   "chainId": 1666700000,
-  "networkId": 1666700000,
   "explorers": [
     {
       "name": "Harmony Testnet Block Explorer",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "harmony-testnet-shard-0"
+  "faucets": [
+    "https://faucet.pops.one"
+  ],
+  "infoURL": "https://www.harmony.one/",
+  "name": "Harmony Testnet Shard 0",
+  "nativeCurrency": {
+    "name": "ONE",
+    "symbol": "ONE",
+    "decimals": 18
+  },
+  "networkId": 1666700000,
+  "rpc": [
+    "https://harmony-testnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1666700000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://api.s0.b.hmny.io"
+  ],
+  "shortName": "hmy-b-s0",
+  "slug": "harmony-testnet-shard-0",
+  "testnet": true
 } as const satisfies Chain;

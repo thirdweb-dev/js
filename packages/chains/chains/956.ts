@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "muNode Testnet",
   "chain": "munode",
-  "rpc": [],
+  "chainId": 956,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://munode.dev/",
+  "name": "muNode Testnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://munode.dev/",
-  "shortName": "munode",
-  "chainId": 956,
   "networkId": 956,
-  "testnet": true,
-  "slug": "munode-testnet"
+  "rpc": [],
+  "shortName": "munode",
+  "slug": "munode-testnet",
+  "testnet": true
 } as const satisfies Chain;

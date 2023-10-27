@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aurora Betanet",
   "chain": "NEAR",
-  "rpc": [],
+  "chainId": 1313161556,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://aurora.dev",
+  "name": "Aurora Betanet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://aurora.dev",
-  "shortName": "aurora-betanet",
-  "chainId": 1313161556,
   "networkId": 1313161556,
-  "testnet": false,
-  "slug": "aurora-betanet"
+  "rpc": [],
+  "shortName": "aurora-betanet",
+  "slug": "aurora-betanet",
+  "testnet": false
 } as const satisfies Chain;

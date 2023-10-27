@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Network",
   "chain": "ETH",
-  "rpc": [
-    "https://boba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.boba.network",
-    "https://replica.boba.network",
-    "http://boba-ethereum.gateway.tenderly.co",
-    "http://gateway.tenderly.co/public/boba-ethereum",
-    "wss://boba-ethereum.gateway.tenderly.co/",
-    "wss://gateway.tenderly.co/public/boba-ethereum"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://boba.network",
-  "shortName": "Boba",
   "chainId": 288,
-  "networkId": 288,
   "explorers": [
     {
       "name": "Bobascan",
@@ -33,6 +14,15 @@ export default {
       "standard": "none"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Boba Network",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 288,
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
@@ -42,6 +32,17 @@ export default {
       }
     ]
   },
-  "testnet": false,
-  "slug": "boba-network"
+  "rpc": [
+    "https://boba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.boba.network",
+    "https://replica.boba.network",
+    "https://boba-ethereum.gateway.tenderly.co",
+    "https://gateway.tenderly.co/public/boba-ethereum",
+    "wss://boba-ethereum.gateway.tenderly.co/",
+    "wss://gateway.tenderly.co/public/boba-ethereum"
+  ],
+  "shortName": "Boba",
+  "slug": "boba-network",
+  "testnet": false
 } as const satisfies Chain;

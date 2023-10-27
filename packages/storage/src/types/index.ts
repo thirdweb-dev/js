@@ -1,4 +1,8 @@
-import { GatewayUrls, IStorageDownloader } from "./download";
+import {
+  GatewayUrls,
+  IStorageDownloader,
+  SingleDownloadOptions,
+} from "./download";
 import { IStorageUploader, UploadOptions } from "./upload";
 
 export type ThirdwebStorageOptions<T extends UploadOptions> = {
@@ -12,7 +16,7 @@ export type ThirdwebStorageOptions<T extends UploadOptions> = {
 
 export interface IThirdwebStorage {
   resolveScheme(url: string): string;
-  download(url: string): Promise<Response>;
+  download(url: string, options?: SingleDownloadOptions): Promise<Response>;
   downloadJSON<TJSON = any>(url: string): Promise<TJSON>;
   upload(data: any, options?: { [key: string]: any }): Promise<string>;
   uploadBatch(data: any[], options?: { [key: string]: any }): Promise<string[]>;

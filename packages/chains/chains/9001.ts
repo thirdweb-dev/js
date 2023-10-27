@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Evmos",
   "chain": "Evmos",
-  "rpc": [
-    "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evmos-evm.publicnode.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Evmos",
-    "symbol": "EVMOS",
-    "decimals": 18
-  },
-  "infoURL": "https://evmos.org",
-  "shortName": "evmos",
   "chainId": 9001,
-  "networkId": 9001,
-  "icon": {
-    "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Evmos Explorer (Escan)",
@@ -35,6 +15,30 @@ export default {
       }
     }
   ],
-  "testnet": false,
-  "slug": "evmos"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "infoURL": "https://evmos.org",
+  "name": "Evmos",
+  "nativeCurrency": {
+    "name": "Evmos",
+    "symbol": "EVMOS",
+    "decimals": 18
+  },
+  "networkId": 9001,
+  "rpc": [
+    "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evmos.lava.build",
+    "wss://evmos.lava.build/websocket",
+    "https://evmos-evm.publicnode.com",
+    "wss://evmos-evm.publicnode.com"
+  ],
+  "shortName": "evmos",
+  "slug": "evmos",
+  "testnet": false
 } as const satisfies Chain;

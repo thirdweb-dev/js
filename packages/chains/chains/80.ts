@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GeneChain",
   "chain": "GeneChain",
-  "rpc": [
-    "https://genechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.genechain.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "RNA",
-    "symbol": "RNA",
-    "decimals": 18
-  },
-  "infoURL": "https://scan.genechain.io/",
-  "shortName": "GeneChain",
   "chainId": 80,
-  "networkId": 80,
   "explorers": [
     {
       "name": "GeneChain Scan",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "genechain"
+  "faucets": [],
+  "infoURL": "https://scan.genechain.io/",
+  "name": "GeneChain",
+  "nativeCurrency": {
+    "name": "RNA",
+    "symbol": "RNA",
+    "decimals": 18
+  },
+  "networkId": 80,
+  "rpc": [
+    "https://genechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://80.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.genechain.io"
+  ],
+  "shortName": "GeneChain",
+  "slug": "genechain",
+  "testnet": false
 } as const satisfies Chain;

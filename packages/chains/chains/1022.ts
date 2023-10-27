@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Sakura",
   "chain": "Sakura",
-  "rpc": [],
+  "chainId": 1022,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://clover.finance/sakura",
+  "name": "Sakura",
   "nativeCurrency": {
     "name": "Sakura",
     "symbol": "SKU",
     "decimals": 18
   },
-  "infoURL": "https://clover.finance/sakura",
-  "shortName": "sku",
-  "chainId": 1022,
   "networkId": 1022,
-  "testnet": false,
-  "slug": "sakura"
+  "rpc": [],
+  "shortName": "sku",
+  "slug": "sakura",
+  "testnet": false
 } as const satisfies Chain;

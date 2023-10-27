@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Network Goerli Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://goerli.boba.network/",
-    "wss://wss.goerli.boba.network/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Goerli Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://boba.network",
-  "shortName": "BobaGoerli",
   "chainId": 2888,
-  "networkId": 2888,
   "explorers": [
     {
       "name": "Blockscout",
@@ -24,6 +9,15 @@ export default {
       "standard": "none"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Boba Network Goerli Testnet",
+  "nativeCurrency": {
+    "name": "Goerli Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 2888,
   "parent": {
     "type": "L2",
     "chain": "eip155-5",
@@ -33,6 +27,13 @@ export default {
       }
     ]
   },
-  "testnet": true,
-  "slug": "boba-network-goerli-testnet"
+  "rpc": [
+    "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://goerli.boba.network/",
+    "wss://wss.goerli.boba.network/"
+  ],
+  "shortName": "BobaGoerli",
+  "slug": "boba-network-goerli-testnet",
+  "testnet": true
 } as const satisfies Chain;

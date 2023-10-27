@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lucid Blockchain",
   "chain": "Lucid",
-  "icon": {
-    "url": "ipfs://bafybeigxiyyxll4vst5cjjh732mr6zhsnligxubaldyiul2xdvvi6ibktu",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
-  "rpc": [
-    "https://lucid-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.lucidcoin.io"
-  ],
-  "faucets": [
-    "https://faucet.lucidcoin.io"
-  ],
-  "nativeCurrency": {
-    "name": "LUCID",
-    "symbol": "LUCID",
-    "decimals": 18
-  },
-  "infoURL": "https://lucidcoin.io",
-  "shortName": "LUCID",
   "chainId": 800,
-  "networkId": 800,
   "explorers": [
     {
       "name": "Lucid Explorer",
@@ -31,6 +9,29 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "lucid-blockchain"
+  "faucets": [
+    "https://faucet.lucidcoin.io"
+  ],
+  "icon": {
+    "url": "ipfs://bafybeigxiyyxll4vst5cjjh732mr6zhsnligxubaldyiul2xdvvi6ibktu",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
+  "infoURL": "https://lucidcoin.io",
+  "name": "Lucid Blockchain",
+  "nativeCurrency": {
+    "name": "LUCID",
+    "symbol": "LUCID",
+    "decimals": 18
+  },
+  "networkId": 800,
+  "rpc": [
+    "https://lucid-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://800.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.lucidcoin.io"
+  ],
+  "shortName": "LUCID",
+  "slug": "lucid-blockchain",
+  "testnet": false
 } as const satisfies Chain;

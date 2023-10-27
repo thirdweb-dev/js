@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Opside Testnet",
   "chain": "Opside",
-  "rpc": [
-    "https://opside-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testrpc.opside.network"
-  ],
-  "faucets": [
-    "https://faucet.opside.network"
-  ],
-  "nativeCurrency": {
-    "name": "IDE",
-    "symbol": "IDE",
-    "decimals": 18
-  },
-  "infoURL": "https://opside.network",
-  "shortName": "opside",
   "chainId": 23118,
-  "networkId": 23118,
-  "icon": {
-    "url": "ipfs://QmeCyZeibUoHNoYGzy1GkzH2uhxyRHKvH51PdaUMer4VTo",
-    "width": 591,
-    "height": 591,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "opsideInfo",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "opside-testnet"
+  "faucets": [
+    "https://faucet.opside.network"
+  ],
+  "icon": {
+    "url": "ipfs://QmeCyZeibUoHNoYGzy1GkzH2uhxyRHKvH51PdaUMer4VTo",
+    "width": 591,
+    "height": 591,
+    "format": "png"
+  },
+  "infoURL": "https://opside.network",
+  "name": "Opside Testnet",
+  "nativeCurrency": {
+    "name": "IDE",
+    "symbol": "IDE",
+    "decimals": 18
+  },
+  "networkId": 23118,
+  "rpc": [
+    "https://opside-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://23118.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testrpc.opside.network"
+  ],
+  "shortName": "opside",
+  "slug": "opside-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,5 +1,5 @@
 import { resolveAddress } from "../common/ens/resolveAddress";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { SmartContract } from "../contracts/smart-contract";
 import { NetworkInput } from "../core/types";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
@@ -26,13 +26,14 @@ export type GetContractFromAbiParams = {
 export async function getContractFromAbi(
   params: GetContractFromAbiParams,
 ): Promise<SmartContract> {
-  const resolvedAddress = await resolveAddress(params.address);
-
   const [signer, provider] = getSignerAndProvider(
     params.network,
     params.sdkOptions,
   );
-  const chainId = (await provider.getNetwork()).chainId;
+  const [resolvedAddress, { chainId }] = await Promise.all([
+    resolveAddress(params.address),
+    provider.getNetwork(),
+  ]);
 
   if (inContractCache(resolvedAddress, chainId)) {
     return getCachedContract(resolvedAddress, chainId) as SmartContract;
@@ -43,7 +44,7 @@ export async function getContractFromAbi(
   const contract = new SmartContract(
     signer || provider,
     resolvedAddress,
-    await getCompositePluginABI(
+    await getCompositeABI(
       resolvedAddress,
       AbiSchema.parse(parsedAbi),
       provider,

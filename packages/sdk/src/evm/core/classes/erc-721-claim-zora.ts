@@ -1,20 +1,20 @@
 import type { Zora_IERC721Drop } from "@thirdweb-dev/contracts-js";
-import { BigNumberish, BigNumber } from "ethers";
+import {
+  IERC721Drop,
+  SaleEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Zora_IERC721Drop";
+import { BigNumber, BigNumberish } from "ethers";
 import { NFT } from "../../../core/schema/nft";
+import { toWei } from "../../common/currency/toWei";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_NFT_CLAIM_ZORA } from "../../constants/erc721-features";
-import { AddressOrEns } from "../../schema";
-import type { ClaimOptions } from "../../types";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { Erc721 } from "./erc-721";
 import { Transaction } from "./transactions";
-import {
-  IERC721Drop,
-  SaleEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/Zora_IERC721Drop";
-import { toWei } from "../../common/currency/toWei";
 
 /**
  * Claim ERC721 NFTs from a Zora Drop
@@ -117,6 +117,6 @@ export class Erc721ClaimableZora implements DetectableFeature {
   );
 
   public async getSaleDetails(): Promise<IERC721Drop.SaleDetailsStructOutput> {
-    return this.contractWrapper.readContract.saleDetails();
+    return this.contractWrapper.read("saleDetails", []);
   }
 }

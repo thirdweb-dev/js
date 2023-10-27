@@ -1,7 +1,7 @@
 import { useStorage } from "@thirdweb-dev/react-core";
 import { useState } from "react";
 import { Image } from "react-native";
-import { SvgUri } from "react-native-svg";
+import { SvgUri, SvgXml } from "react-native-svg";
 import { isAppBundleIdPresentInGlobal } from "../../utils/global";
 import Box from "./Box";
 
@@ -17,6 +17,12 @@ const ImageSvgUri = ({
   imageAlt?: string;
 }) => {
   const storage = useStorage();
+  const [error, setError] = useState(false);
+
+  if (imageUrl.startsWith("<svg")) {
+    return <SvgXml width={width} height={height} xml={imageUrl} />;
+  }
+
   const resolvedImageUrl = storage
     ? storage.resolveScheme(imageUrl) +
       (isAppBundleIdPresentInGlobal()
@@ -24,23 +30,14 @@ const ImageSvgUri = ({
         : "")
     : imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
 
-  const [error, setError] = useState(false);
-
   if (!resolvedImageUrl || resolvedImageUrl === "") {
     return null;
   }
 
   return (
-    <Box style={{ width: width, height: height }}>
+    <Box width={width} height={height}>
       {error ? (
-        <SvgUri
-          width={width}
-          height={height}
-          uri={resolvedImageUrl}
-          onError={(err) => {
-            console.warn("Error loading an svg image: ", err);
-          }}
-        />
+        <SvgUri width={width} height={height} uri={resolvedImageUrl} />
       ) : (
         // always try to render Image first, if error then try to render svg
         // Image from RN handles onError better than SvgUri

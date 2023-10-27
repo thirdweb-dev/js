@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bobabase Testnet",
   "chain": "Bobabase Testnet",
-  "rpc": [
-    "https://bobabase-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bobabase.boba.network",
-    "wss://wss.bobabase.boba.network",
-    "https://replica.bobabase.boba.network",
-    "wss://replica-wss.bobabase.boba.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Boba Token",
-    "symbol": "BOBA",
-    "decimals": 18
-  },
-  "infoURL": "https://boba.network",
-  "shortName": "Bobabase",
   "chainId": 1297,
-  "networkId": 1297,
   "explorers": [
     {
       "name": "Bobabase block explorer",
@@ -26,6 +9,24 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "bobabase-testnet"
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Bobabase Testnet",
+  "nativeCurrency": {
+    "name": "Boba Token",
+    "symbol": "BOBA",
+    "decimals": 18
+  },
+  "networkId": 1297,
+  "rpc": [
+    "https://bobabase-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1297.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bobabase.boba.network",
+    "wss://wss.bobabase.boba.network",
+    "https://replica.bobabase.boba.network",
+    "wss://replica-wss.bobabase.boba.network"
+  ],
+  "shortName": "Bobabase",
+  "slug": "bobabase-testnet",
+  "testnet": true
 } as const satisfies Chain;

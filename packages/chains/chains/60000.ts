@@ -1,23 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Thinkium Testnet Chain 0",
   "chain": "Thinkium",
-  "rpc": [
-    "https://thinkium-testnet-chain-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test.thinkiumrpc.net/"
-  ],
-  "faucets": [
-    "https://www.thinkiumdev.net/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "TKM",
-    "symbol": "TKM",
-    "decimals": 18
-  },
-  "infoURL": "https://thinkium.net/",
-  "shortName": "TKM-test0",
   "chainId": 60000,
-  "networkId": 60000,
   "explorers": [
     {
       "name": "thinkiumscan",
@@ -25,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "thinkium-testnet-chain-0"
+  "faucets": [
+    "https://www.thinkiumdev.net/faucet"
+  ],
+  "infoURL": "https://thinkium.net/",
+  "name": "Thinkium Testnet Chain 0",
+  "nativeCurrency": {
+    "name": "TKM",
+    "symbol": "TKM",
+    "decimals": 18
+  },
+  "networkId": 60000,
+  "rpc": [
+    "https://thinkium-testnet-chain-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://60000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test.thinkiumrpc.net/"
+  ],
+  "shortName": "TKM-test0",
+  "slug": "thinkium-testnet-chain-0",
+  "testnet": true
 } as const satisfies Chain;

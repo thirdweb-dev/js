@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arbitrum Rinkeby",
-  "title": "Arbitrum Testnet Rinkeby",
-  "chainId": 421611,
-  "shortName": "arb-rinkeby",
   "chain": "ETH",
-  "networkId": 421611,
-  "nativeCurrency": {
-    "name": "Arbitrum Rinkeby Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://arbitrum-rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rinkeby.arbitrum.io/rpc"
-  ],
-  "faucets": [
-    "http://fauceth.komputing.org?chain=421611&address=${ADDRESS}"
-  ],
-  "infoURL": "https://arbitrum.io",
+  "chainId": 421611,
   "explorers": [
     {
       "name": "arbiscan-testnet",
@@ -31,6 +14,17 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "http://fauceth.komputing.org?chain=421611&address=${ADDRESS}"
+  ],
+  "infoURL": "https://arbitrum.io",
+  "name": "Arbitrum Rinkeby",
+  "nativeCurrency": {
+    "name": "Arbitrum Rinkeby Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 421611,
   "parent": {
     "type": "L2",
     "chain": "eip155-4",
@@ -40,6 +34,13 @@ export default {
       }
     ]
   },
+  "rpc": [
+    "https://arbitrum-rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://421611.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rinkeby.arbitrum.io/rpc"
+  ],
+  "shortName": "arb-rinkeby",
+  "slug": "arbitrum-rinkeby",
   "testnet": true,
-  "slug": "arbitrum-rinkeby"
+  "title": "Arbitrum Testnet Rinkeby"
 } as const satisfies Chain;

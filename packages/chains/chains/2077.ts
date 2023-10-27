@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Quokkacoin Mainnet",
   "chain": "Qkacoin",
-  "rpc": [
-    "https://quokkacoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.qkacoin.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Qkacoin",
-    "symbol": "QKA",
-    "decimals": 18
-  },
-  "infoURL": "https://qkacoin.org",
-  "shortName": "QKA",
   "chainId": 2077,
-  "networkId": 2077,
   "explorers": [
     {
       "name": "blockscout",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "quokkacoin"
+  "faucets": [],
+  "infoURL": "https://qkacoin.org",
+  "name": "Quokkacoin Mainnet",
+  "nativeCurrency": {
+    "name": "Qkacoin",
+    "symbol": "QKA",
+    "decimals": 18
+  },
+  "networkId": 2077,
+  "rpc": [
+    "https://quokkacoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2077.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.qkacoin.org"
+  ],
+  "shortName": "QKA",
+  "slug": "quokkacoin",
+  "testnet": false
 } as const satisfies Chain;

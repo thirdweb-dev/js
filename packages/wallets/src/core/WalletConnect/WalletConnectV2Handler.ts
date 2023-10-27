@@ -44,7 +44,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     };
 
     this.#core = new Core({
-      projectId: options?.walletConenctV2ProjectId || TW_WC_PROJECT_ID,
+      projectId: options?.walletConnectV2ProjectId || TW_WC_PROJECT_ID,
       relayUrl: options?.walletConnectV2RelayUrl || WC_RELAY_URL,
     });
   }
@@ -57,7 +57,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
     const sessions = this.#wcWallet.getActiveSessions();
     const keys = Object.keys(sessions);
-    if (keys.length > 0) {
+    if (keys[0]) {
       this.#session = sessions[keys[0]];
     }
 
@@ -90,19 +90,22 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
     const namespaces: SessionTypes.Namespaces = {};
     Object.keys(requiredNamespaces).forEach((key) => {
       const accounts: string[] = [];
-      requiredNamespaces[key].chains?.map((chain: string) => {
-        accounts.push(`${chain}:${account}`);
-      });
-      namespaces[key] = {
-        accounts,
-        methods: requiredNamespaces[key].methods,
-        events: requiredNamespaces[key].events,
-      };
+      const namespace = requiredNamespaces[key];
+      if (namespace) {
+        namespace.chains?.map((chain: string) => {
+          accounts.push(`${chain}:${account}`);
+        });
+        namespaces[key] = {
+          accounts,
+          methods: namespace.methods,
+          events: namespace.events,
+        };
+      }
     });
 
     this.#session = await this.#wcWallet.approveSession({
       id,
-      relayProtocol: relays[0].protocol,
+      relayProtocol: relays[0]?.protocol,
       namespaces,
     });
 
@@ -142,7 +145,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = this.#getSignParamsMessage(request.params);
-        const signedMessage = await wallet.signMessage(message);
+        const signedMessage = await wallet.signMessage(message || ""); // TODO: handle empty message
 
         response = formatJsonRpcResult(id, signedMessage);
         break;
@@ -174,6 +177,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
         const signature = await signerSign.signTransaction(signTransaction);
         response = formatJsonRpcResult(id, signature);
+        break;
       default:
         const error = {
           id,
@@ -224,15 +228,19 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
 
     const thisSessions = [];
     for (const sessionKey of sessionKeys) {
-      const topic = sessions[sessionKey].topic;
-      const peerMeta = sessions[sessionKey].peer.metadata;
+      const session = sessions[sessionKey];
 
-      thisSessions.push({
-        topic,
-        peer: {
-          metadata: peerMeta,
-        },
-      });
+      if (session) {
+        const topic = session.topic;
+        const peerMeta = session.peer.metadata;
+
+        thisSessions.push({
+          topic,
+          peer: {
+            metadata: peerMeta,
+          },
+        });
+      }
     }
 
     return thisSessions;
@@ -346,7 +354,7 @@ export class WalletConnectV2Handler extends WalletConnectHandler {
    * If it is a hex string, it gets converted to utf8 string
    */
   #getSignParamsMessage(params: string[]) {
-    const message = params.filter((p) => !utils.isAddress(p))[0];
+    const message = params.filter((p) => !utils.isAddress(p))[0] || ""; // TODO: handle empty message
 
     if (utils.isHexString(message)) {
       return utils.toUtf8String(message);

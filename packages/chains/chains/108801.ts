@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BROChain Mainnet",
   "chain": "BRO",
-  "rpc": [
-    "https://brochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.brochain.org",
-    "http://rpc.brochain.org",
-    "https://rpc.brochain.org/mainnet",
-    "http://rpc.brochain.org/mainnet"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Brother",
-    "symbol": "BRO",
-    "decimals": 18
-  },
-  "infoURL": "https://brochain.org",
-  "shortName": "bro",
   "chainId": 108801,
-  "networkId": 108801,
   "explorers": [
     {
       "name": "BROChain Explorer",
@@ -26,6 +9,24 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "brochain"
+  "faucets": [],
+  "infoURL": "https://brochain.org",
+  "name": "BROChain Mainnet",
+  "nativeCurrency": {
+    "name": "Brother",
+    "symbol": "BRO",
+    "decimals": 18
+  },
+  "networkId": 108801,
+  "rpc": [
+    "https://brochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://108801.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.brochain.org",
+    "http://rpc.brochain.org",
+    "https://rpc.brochain.org/mainnet",
+    "http://rpc.brochain.org/mainnet"
+  ],
+  "shortName": "bro",
+  "slug": "brochain",
+  "testnet": false
 } as const satisfies Chain;

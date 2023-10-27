@@ -63,7 +63,7 @@ export function useAccounts(
  * ```
  *
  * @param contract - an instance of a account factory contract
- * @returns a response object that includes an array of all accounts associated with the adress
+ * @returns a response object that includes an array of all accounts associated with the address
  * @twfeature AccountFactory
  * @see {@link https://portal.thirdweb.com/react/react.useaccountsforaddress?utm_source=sdk | Documentation}
  * @beta

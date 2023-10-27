@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba BNB Mainnet",
   "chain": "Boba BNB Mainnet",
-  "rpc": [
-    "https://boba-bnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bnb.boba.network",
-    "http://boba-bnb.gateway.tenderly.co/",
-    "http://gateway.tenderly.co/public/boba-bnb",
-    "https://replica.bnb.boba.network",
-    "wss://boba-bnb.gateway.tenderly.co/",
-    "wss://gateway.tenderly.co/public/boba-bnb"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Boba Token",
-    "symbol": "BOBA",
-    "decimals": 18
-  },
-  "infoURL": "https://boba.network",
-  "shortName": "BobaBnb",
   "chainId": 56288,
-  "networkId": 56288,
   "explorers": [
     {
       "name": "Boba BNB block explorer",
@@ -28,6 +9,15 @@ export default {
       "standard": "none"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Boba BNB Mainnet",
+  "nativeCurrency": {
+    "name": "Boba Token",
+    "symbol": "BOBA",
+    "decimals": 18
+  },
+  "networkId": 56288,
   "parent": {
     "type": "L2",
     "chain": "eip155-5",
@@ -37,6 +27,17 @@ export default {
       }
     ]
   },
-  "testnet": false,
-  "slug": "boba-bnb"
+  "rpc": [
+    "https://boba-bnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://56288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bnb.boba.network",
+    "https://boba-bnb.gateway.tenderly.co/",
+    "https://gateway.tenderly.co/public/boba-bnb",
+    "https://replica.bnb.boba.network",
+    "wss://boba-bnb.gateway.tenderly.co/",
+    "wss://gateway.tenderly.co/public/boba-bnb"
+  ],
+  "shortName": "BobaBnb",
+  "slug": "boba-bnb",
+  "testnet": false
 } as const satisfies Chain;

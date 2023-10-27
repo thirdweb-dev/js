@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "BON Network",
   "chain": "BON",
-  "rpc": [
-    "https://bon-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://rpc.boyanet.org:8545",
-    "ws://rpc.boyanet.org:8546"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "BOYACoin",
-    "symbol": "BOY",
-    "decimals": 18
-  },
-  "infoURL": "https://boyanet.org",
-  "shortName": "boya",
   "chainId": 1898,
-  "networkId": 1,
   "explorers": [
     {
       "name": "explorer",
@@ -24,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bon-network"
+  "faucets": [],
+  "infoURL": "https://boyanet.org",
+  "name": "BON Network",
+  "nativeCurrency": {
+    "name": "BOYACoin",
+    "symbol": "BOY",
+    "decimals": 18
+  },
+  "networkId": 1,
+  "rpc": [
+    "https://bon-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1898.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://rpc.boyanet.org:8545",
+    "ws://rpc.boyanet.org:8546"
+  ],
+  "shortName": "boya",
+  "slug": "bon-network",
+  "testnet": false
 } as const satisfies Chain;

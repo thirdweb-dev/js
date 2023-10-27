@@ -1,19 +1,20 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rupaya",
   "chain": "RUPX",
-  "rpc": [],
+  "chainId": 499,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://www.rupx.io",
+  "name": "Rupaya",
   "nativeCurrency": {
     "name": "Rupaya",
     "symbol": "RUPX",
     "decimals": 18
   },
-  "infoURL": "https://www.rupx.io",
-  "shortName": "rupx",
-  "chainId": 499,
   "networkId": 499,
+  "rpc": [],
+  "shortName": "rupx",
   "slip44": 499,
-  "testnet": false,
-  "slug": "rupaya"
+  "slug": "rupaya",
+  "testnet": false
 } as const satisfies Chain;

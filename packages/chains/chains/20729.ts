@@ -1,23 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Callisto Testnet",
   "chain": "CLO",
-  "rpc": [
-    "https://callisto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.callisto.network/"
-  ],
+  "chainId": 20729,
+  "explorers": [],
   "faucets": [
     "https://faucet.callisto.network/"
   ],
+  "infoURL": "https://callisto.network",
+  "name": "Callisto Testnet",
   "nativeCurrency": {
     "name": "Callisto",
     "symbol": "CLO",
     "decimals": 18
   },
-  "infoURL": "https://callisto.network",
-  "shortName": "CLOTestnet",
-  "chainId": 20729,
   "networkId": 79,
-  "testnet": true,
-  "slug": "callisto-testnet"
+  "rpc": [
+    "https://callisto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20729.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rpc.callisto.network/"
+  ],
+  "shortName": "CLOTestnet",
+  "slug": "callisto-testnet",
+  "testnet": true
 } as const satisfies Chain;

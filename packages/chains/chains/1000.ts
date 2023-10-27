@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "GTON Mainnet",
   "chain": "GTON",
-  "rpc": [
-    "https://gton.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.gton.network/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "GCD",
-    "symbol": "GCD",
-    "decimals": 18
-  },
-  "infoURL": "https://gton.capital",
-  "shortName": "gton",
   "chainId": 1000,
-  "networkId": 1000,
   "explorers": [
     {
       "name": "GTON Network Explorer",
@@ -23,10 +9,25 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://gton.capital",
+  "name": "GTON Mainnet",
+  "nativeCurrency": {
+    "name": "GCD",
+    "symbol": "GCD",
+    "decimals": 18
+  },
+  "networkId": 1000,
   "parent": {
     "type": "L2",
     "chain": "eip155-1"
   },
-  "testnet": false,
-  "slug": "gton"
+  "rpc": [
+    "https://gton.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.gton.network/"
+  ],
+  "shortName": "gton",
+  "slug": "gton",
+  "testnet": false
 } as const satisfies Chain;

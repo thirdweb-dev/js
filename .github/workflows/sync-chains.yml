@@ -1,0 +1,42 @@
+name: Sync chains every hour
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour
+  workflow_dispatch: # Allows you to manually run the workflow from the Actions tab
+
+jobs:
+  sync-chains:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Run chains sync
+        run: bun run db:sync
+        working-directory: ./packages/chains
+
+      - name: Check for Changes
+        id: git-check
+        run: |
+          git diff --exit-code || echo "step.git-check.outputs.changes=true" >> $GITHUB_ENV
+
+      - name: Commit Changes
+        if: env.step.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "chore(chains): sync from db"
+
+      - name: Create or Update Pull Request
+        if: env.step.git-check.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "chore(chains): update chains"
+          branch: "sync-chains" # You can specify a different branch name if you wish
+          body: "This PR was automatically created by a GitHub Action. It updates the chains package with the latest changes from the database."
+          commit-message: "chore(chains): sync from db"

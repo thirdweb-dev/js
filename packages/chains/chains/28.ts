@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Network Rinkeby Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://boba-network-rinkeby-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rinkeby.boba.network/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://boba.network",
-  "shortName": "BobaRinkeby",
   "chainId": 28,
-  "networkId": 28,
   "explorers": [
     {
       "name": "Blockscout",
@@ -23,6 +9,15 @@ export default {
       "standard": "none"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Boba Network Rinkeby Testnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 28,
   "parent": {
     "type": "L2",
     "chain": "eip155-4",
@@ -32,6 +27,12 @@ export default {
       }
     ]
   },
-  "testnet": true,
-  "slug": "boba-network-rinkeby-testnet"
+  "rpc": [
+    "https://boba-network-rinkeby-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://28.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rinkeby.boba.network/"
+  ],
+  "shortName": "BobaRinkeby",
+  "slug": "boba-network-rinkeby-testnet",
+  "testnet": true
 } as const satisfies Chain;

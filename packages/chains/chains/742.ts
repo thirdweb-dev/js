@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Script Testnet",
   "chain": "SPAY",
-  "rpc": [
-    "https://script-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testeth-rpc-api.script.tv/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Script",
-    "symbol": "SPAY",
-    "decimals": 18
-  },
-  "infoURL": "https://token.script.tv",
-  "shortName": "SPAY",
   "chainId": 742,
-  "networkId": 742,
   "explorers": [
     {
       "name": "Script Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "script-testnet"
+  "faucets": [],
+  "infoURL": "https://token.script.tv",
+  "name": "Script Testnet",
+  "nativeCurrency": {
+    "name": "Script",
+    "symbol": "SPAY",
+    "decimals": 18
+  },
+  "networkId": 742,
+  "rpc": [
+    "https://script-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://742.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testeth-rpc-api.script.tv/rpc"
+  ],
+  "shortName": "SPAY",
+  "slug": "script-testnet",
+  "testnet": true
 } as const satisfies Chain;

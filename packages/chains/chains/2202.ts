@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Antofy Mainnet",
   "chain": "ABN",
-  "icon": {
-    "url": "ipfs://QmdTfku81ohnG9ECU1Xswmeumt678cBhwHWuFYZ7i1Qsto",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
-  "rpc": [
-    "https://antofy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.antofy.io"
-  ],
-  "faucets": [
-    "https://faucet.antofy.io"
-  ],
-  "nativeCurrency": {
-    "name": "Antofy",
-    "symbol": "ABN",
-    "decimals": 18
-  },
-  "infoURL": "https://antofy.io",
-  "shortName": "ABNm",
   "chainId": 2202,
-  "networkId": 2202,
   "explorers": [
     {
       "name": "Antofy Mainnet",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "antofy"
+  "faucets": [
+    "https://faucet.antofy.io"
+  ],
+  "icon": {
+    "url": "ipfs://QmdTfku81ohnG9ECU1Xswmeumt678cBhwHWuFYZ7i1Qsto",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "infoURL": "https://antofy.io",
+  "name": "Antofy Mainnet",
+  "nativeCurrency": {
+    "name": "Antofy",
+    "symbol": "ABN",
+    "decimals": 18
+  },
+  "networkId": 2202,
+  "rpc": [
+    "https://antofy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2202.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.antofy.io"
+  ],
+  "shortName": "ABNm",
+  "slug": "antofy",
+  "testnet": false
 } as const satisfies Chain;

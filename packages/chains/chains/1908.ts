@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitcichain Testnet",
   "chain": "TBITCI",
-  "icon": {
-    "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
-    "width": 64,
-    "height": 64,
-    "format": "svg"
-  },
-  "rpc": [
-    "https://bitcichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.bitcichain.com"
-  ],
-  "faucets": [
-    "https://faucet.bitcichain.com"
-  ],
-  "nativeCurrency": {
-    "name": "Test Bitci",
-    "symbol": "TBITCI",
-    "decimals": 18
-  },
-  "infoURL": "https://www.bitcichain.com",
-  "shortName": "tbitci",
   "chainId": 1908,
-  "networkId": 1908,
   "explorers": [
     {
       "name": "Bitci Explorer Testnet",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bitcichain-testnet"
+  "faucets": [
+    "https://faucet.bitcichain.com"
+  ],
+  "icon": {
+    "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
+    "width": 64,
+    "height": 64,
+    "format": "svg"
+  },
+  "infoURL": "https://www.bitcichain.com",
+  "name": "Bitcichain Testnet",
+  "nativeCurrency": {
+    "name": "Test Bitci",
+    "symbol": "TBITCI",
+    "decimals": 18
+  },
+  "networkId": 1908,
+  "rpc": [
+    "https://bitcichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1908.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.bitcichain.com"
+  ],
+  "shortName": "tbitci",
+  "slug": "bitcichain-testnet",
+  "testnet": true
 } as const satisfies Chain;

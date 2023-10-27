@@ -16,11 +16,13 @@ import { ThemeProvider } from "../styles/ThemeProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
+import { useColorScheme } from "react-native";
+import type { Locale } from "../i18n/types";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "supportedWallets" | "secretKey"
+    "supportedWallets" | "secretKey" | "signer"
   > {
   /**
    * Wallets that will be supported by the dApp
@@ -28,7 +30,7 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    *
    * @example
    * ```jsx
-   * import { MetaMaskWallet, CoinbaseWallet } from "@thirdweb-dev/react";
+   * import { MetaMaskWallet, CoinbaseWallet } from "@thirdweb-dev/react-native";
    *
    * <ThirdwebProvider
    *  supportedWallets={[MetaMaskWallet, CoinbaseWallet]}
@@ -36,6 +38,44 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * ```
    */
   supportedWallets?: WalletConfig<any>[];
+
+  /**
+   * Locale that the app will be displayed in
+   * @defaultValue en()
+   *
+   * @example
+   * ```jsx
+   * import { en } from "@thirdweb-dev/react-native";
+   *
+   * <ThirdwebProvider
+   *  locale={en()}
+   * />
+   * ```
+   *
+   * * ```jsx
+   * import { en } from "@thirdweb-dev/react-native";
+   *
+   * <ThirdwebProvider
+   *  locale={'en'}
+   * />
+   * ```
+   *
+   * Note that you can override the locales by passing in a custom locale object of type `Locale`
+   * ```jsx
+   * import { en } from "@thirdweb-dev/react-native";
+   *
+   * const customLocale = {
+   *  ...en(),
+   * "connect_wallet": "Connect Wallet"
+   * }
+   *
+   * <ThirdwebProvider
+   * locale={customLocale}
+   * />
+   * ```
+   *
+   */
+  locale?: Locale;
 }
 
 /**
@@ -68,10 +108,19 @@ export const ThirdwebProvider = <
   storageInterface,
   clientId,
   sdkOptions,
+  locale = "en",
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
+  const colorScheme = useColorScheme();
+
+  const coinbaseWalletObj = supportedWallets.find(
+    (w) => w.id === walletIds.coinbase,
+  );
   useCoinbaseWalletListener(
-    !!supportedWallets.find((w) => w.id === walletIds.coinbase),
+    !!coinbaseWalletObj,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    coinbaseWalletObj?.config?.callbackURL,
   );
 
   const hasMagicConfig = useMemo(
@@ -102,8 +151,10 @@ export const ThirdwebProvider = <
       {...sdkOptions}
       {...restProps}
     >
-      <ThemeProvider theme={theme}>
-        <UIContextProvider>
+      <ThemeProvider
+        theme={theme ? theme : colorScheme === "dark" ? "dark" : "light"}
+      >
+        <UIContextProvider locale={locale}>
           {hasMagicConfig ? (
             <SafeAreaProvider>
               <DappContextProvider>

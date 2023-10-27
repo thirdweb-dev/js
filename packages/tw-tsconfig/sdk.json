@@ -4,7 +4,7 @@
   "extends": "./base.json",
   "compilerOptions": {
     "module": "ESNext",
-    "target": "ES2020",
+    "target": "ES2021",
     "resolveJsonModule": true
   }
 }

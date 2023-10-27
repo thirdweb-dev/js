@@ -2,7 +2,7 @@ import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
-import { GenerateOptions } from "../../core";
+import { GenerateOptionsWithOptionalDomain } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -41,7 +41,7 @@ export default async function handler(
     ? new Date(Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds)
     : undefined;
 
-  const generateOptions: GenerateOptions = {
+  const generateOptions: GenerateOptionsWithOptionalDomain = {
     verifyOptions: {
       statement: ctx.authOptions?.statement,
       uri: ctx.authOptions?.uri,
@@ -68,6 +68,10 @@ export default async function handler(
     }
   }
 
+  if (ctx.callbacks?.onToken) {
+    await ctx.callbacks.onToken(token, req);
+  }
+
   const {
     payload: { exp },
   } = ctx.auth.parseToken(token);
@@ -84,7 +88,7 @@ export default async function handler(
         sameSite: ctx.cookieOptions?.sameSite || "none",
         expires: new Date(exp * 1000),
         httpOnly: true,
-        secure: true,
+        secure: ctx.cookieOptions?.secure || true,
       },
     ),
     serialize(THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE, payload.payload.address, {
@@ -93,7 +97,7 @@ export default async function handler(
       sameSite: ctx.cookieOptions?.sameSite || "none",
       expires: new Date(exp * 1000),
       httpOnly: true,
-      secure: true,
+      secure: ctx.cookieOptions?.secure || true,
     }),
   ]);
 

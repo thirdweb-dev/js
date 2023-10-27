@@ -58,9 +58,8 @@ export const BigNumberSchema = /* @__PURE__ */ (() =>
       return BigNumber.from(str);
     }))();
 
-export const BigNumberishSchema = /* @__PURE__ */ BigNumberSchema.transform(
-  (arg) => arg.toString(),
-);
+export const BigNumberishSchema = /* @__PURE__ */ (() =>
+  BigNumberSchema.transform((arg) => arg.toString()))();
 
 export const BigNumberTransformSchema = /* @__PURE__ */ (() =>
   z
@@ -80,15 +79,11 @@ export const BigNumberTransformSchema = /* @__PURE__ */ (() =>
       return BigNumber.from(arg).toString();
     }))();
 
-export const BasisPointsSchema = /* @__PURE__ */ z
-  .number()
-  .max(MAX_BPS, "Cannot exceed 100%")
-  .min(0, "Cannot be below 0%");
+export const BasisPointsSchema = /* @__PURE__ */ (() =>
+  z.number().max(MAX_BPS, "Cannot exceed 100%").min(0, "Cannot be below 0%"))();
 
-export const PercentSchema = /* @__PURE__ */ z
-  .number()
-  .max(100, "Cannot exceed 100%")
-  .min(0, "Cannot be below 0%");
+export const PercentSchema = /* @__PURE__ */ (() =>
+  z.number().max(100, "Cannot exceed 100%").min(0, "Cannot be below 0%"))();
 
 export const HexColor = /* @__PURE__ */ (() =>
   z.union([
@@ -121,9 +116,10 @@ export const QuantitySchema = /* @__PURE__ */ (() =>
 
 export type Quantity = z.output<typeof QuantitySchema>;
 
-export const RawDateSchema = /* @__PURE__ */ z.date().transform((i) => {
-  return BigNumber.from(Math.floor(i.getTime() / 1000));
-});
+export const RawDateSchema = /* @__PURE__ */ (() =>
+  z.date().transform((i) => {
+    return BigNumber.from(Math.floor(i.getTime() / 1000));
+  }))();
 
 /**
  * Default to now

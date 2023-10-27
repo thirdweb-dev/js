@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "omChain Mainnet",
   "chain": "OML",
-  "icon": {
-    "url": "ipfs://QmQtEHaejiDbmiCvbBYw9jNQv3DLK5XHCQwLRfnLNpdN5j",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
-  "rpc": [
-    "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://seed.omchain.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "omChain",
-    "symbol": "OMC",
-    "decimals": 18
-  },
-  "infoURL": "https://omchain.io",
-  "shortName": "omc",
   "chainId": 21816,
-  "networkId": 21816,
   "explorers": [
     {
       "name": "omChain Explorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "omchain"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQtEHaejiDbmiCvbBYw9jNQv3DLK5XHCQwLRfnLNpdN5j",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
+  "infoURL": "https://omchain.io",
+  "name": "omChain Mainnet",
+  "nativeCurrency": {
+    "name": "omChain",
+    "symbol": "OMC",
+    "decimals": 18
+  },
+  "networkId": 21816,
+  "rpc": [
+    "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://21816.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://seed.omchain.io"
+  ],
+  "shortName": "omc",
+  "slug": "omchain",
+  "testnet": false
 } as const satisfies Chain;

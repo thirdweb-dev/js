@@ -14,6 +14,7 @@ import {
   IStorageUploader,
   IThirdwebStorage,
   IpfsUploadBatchOptions,
+  SingleDownloadOptions,
   ThirdwebStorageOptions,
   UploadOptions,
 } from "../types";
@@ -118,8 +119,11 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * const data = await storage.download(uri);
    * ```
    */
-  async download(url: string): Promise<Response> {
-    return this.downloader.download(url, this.gatewayUrls);
+  async download(
+    url: string,
+    options?: SingleDownloadOptions,
+  ): Promise<Response> {
+    return this.downloader.download(url, this.gatewayUrls, options);
   }
 
   /**
@@ -135,8 +139,11 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    * const json = await storage.downloadJSON(uri);
    * ```
    */
-  async downloadJSON<TJSON = any>(url: string): Promise<TJSON> {
-    const res = await this.download(url);
+  async downloadJSON<TJSON = any>(
+    url: string,
+    options?: SingleDownloadOptions,
+  ): Promise<TJSON> {
+    const res = await this.download(url, options);
 
     // If we get a JSON object, recursively replace any schemes with gatewayUrls
     const json = await res.json();

@@ -1,22 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Auxilium Network Mainnet",
   "chain": "AUX",
-  "rpc": [
-    "https://auxilium-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.auxilium.global"
-  ],
+  "chainId": 28945486,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://auxilium.global",
+  "name": "Auxilium Network Mainnet",
   "nativeCurrency": {
     "name": "Auxilium coin",
     "symbol": "AUX",
     "decimals": 18
   },
-  "infoURL": "https://auxilium.global",
-  "shortName": "auxi",
-  "chainId": 28945486,
   "networkId": 28945486,
+  "rpc": [
+    "https://auxilium-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://28945486.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.auxilium.global"
+  ],
+  "shortName": "auxi",
   "slip44": 344,
-  "testnet": false,
-  "slug": "auxilium-network"
+  "slug": "auxilium-network",
+  "testnet": false
 } as const satisfies Chain;

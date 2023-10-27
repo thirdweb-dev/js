@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taycan Testnet",
   "chain": "Taycan",
-  "rpc": [
-    "https://taycan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test-taycan.hupayx.io"
-  ],
-  "faucets": [
-    "https://ttaycan-faucet.hupayx.io/"
-  ],
-  "nativeCurrency": {
-    "name": "test-Shuffle",
-    "symbol": "tSFL",
-    "decimals": 18
-  },
-  "infoURL": "https://hupayx.io",
-  "shortName": "taycan-testnet",
   "chainId": 2023,
-  "networkId": 2023,
-  "icon": {
-    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-    "width": 1000,
-    "height": 1206,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Taycan Explorer(Blockscout)",
@@ -48,6 +26,29 @@ export default {
       }
     }
   ],
-  "testnet": true,
-  "slug": "taycan-testnet"
+  "faucets": [
+    "https://ttaycan-faucet.hupayx.io/"
+  ],
+  "icon": {
+    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+    "width": 1000,
+    "height": 1206,
+    "format": "png"
+  },
+  "infoURL": "https://hupayx.io",
+  "name": "Taycan Testnet",
+  "nativeCurrency": {
+    "name": "test-Shuffle",
+    "symbol": "tSFL",
+    "decimals": 18
+  },
+  "networkId": 2023,
+  "rpc": [
+    "https://taycan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://test-taycan.hupayx.io"
+  ],
+  "shortName": "taycan-testnet",
+  "slug": "taycan-testnet",
+  "testnet": true
 } as const satisfies Chain;

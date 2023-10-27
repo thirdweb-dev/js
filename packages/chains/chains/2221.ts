@@ -1,34 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Kava EVM Testnet",
   "chain": "KAVA",
-  "rpc": [
-    "https://kava-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evm.testnet.kava.io",
-    "wss://wevm.testnet.kava.io"
-  ],
-  "faucets": [
-    "https://faucet.kava.io"
-  ],
-  "nativeCurrency": {
-    "name": "TKava",
-    "symbol": "TKAVA",
-    "decimals": 18
-  },
-  "infoURL": "https://www.kava.io",
-  "shortName": "tkava",
   "chainId": 2221,
-  "networkId": 2221,
-  "icon": {
-    "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
-    "width": 1186,
-    "height": 360,
-    "format": "svg"
-  },
   "explorers": [
     {
       "name": "Kava Testnet Explorer",
-      "url": "https://explorer.testnet.kava.io",
+      "url": "http://testnet.kavascan.com",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
@@ -38,6 +15,30 @@ export default {
       }
     }
   ],
-  "testnet": true,
-  "slug": "kava-evm-testnet"
+  "faucets": [
+    "https://faucet.kava.io"
+  ],
+  "icon": {
+    "url": "ipfs://QmdpRTk6oL1HRW9xC6cAc4Rnf9gs6zgdAcr4Z3HcLztusm",
+    "width": 1186,
+    "height": 360,
+    "format": "svg"
+  },
+  "infoURL": "https://www.kava.io",
+  "name": "Kava Testnet",
+  "nativeCurrency": {
+    "name": "TKava",
+    "symbol": "TKAVA",
+    "decimals": 18
+  },
+  "networkId": 2221,
+  "rpc": [
+    "https://kava-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2221.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evm.testnet.kava.io",
+    "wss://wevm.testnet.kava.io"
+  ],
+  "shortName": "tkava",
+  "slug": "kava-testnet",
+  "testnet": true
 } as const satisfies Chain;

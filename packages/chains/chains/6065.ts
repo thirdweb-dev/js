@@ -1,42 +1,43 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Tres Testnet",
   "chain": "TresLeches",
-  "rpc": [
-    "https://tres-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-test.tresleches.finance/"
+  "chainId": 6065,
+  "explorers": [
+    {
+      "name": "treslechesexplorer",
+      "url": "https://explorer-test.tresleches.finance",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [
     "http://faucet.tresleches.finance:8080"
   ],
-  "nativeCurrency": {
-    "name": "TRES",
-    "symbol": "TRES",
-    "decimals": 18
-  },
-  "infoURL": "https://treschain.com",
-  "shortName": "TRESTEST",
-  "chainId": 6065,
-  "networkId": 6065,
   "icon": {
     "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "treslechesexplorer",
-      "url": "https://explorer-test.tresleches.finance",
-      "icon": {
-        "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://treschain.com",
+  "name": "Tres Testnet",
+  "nativeCurrency": {
+    "name": "TRES",
+    "symbol": "TRES",
+    "decimals": 18
+  },
+  "networkId": 6065,
+  "rpc": [
+    "https://tres-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6065.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-test.tresleches.finance/"
   ],
-  "testnet": true,
-  "slug": "tres-testnet"
+  "shortName": "TRESTEST",
+  "slug": "tres-testnet",
+  "testnet": true
 } as const satisfies Chain;

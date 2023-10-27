@@ -1,6 +1,6 @@
-import { getAllDetectedFeatureNames } from "../common/feature-detection/getAllDetectedFeatureNames";
+import { getAllDetectedExtensionNames } from "../common/feature-detection/getAllDetectedFeatureNames";
 import { resolveAddress } from "../common/ens/resolveAddress";
-import { getCompositePluginABI } from "../common/plugin/getCompositePluginABI";
+import { getCompositeABI } from "../common/plugin/getCompositePluginABI";
 import { createStorage } from "../common/storage";
 import { getChainProvider, isChainConfig } from "../constants/urls";
 import { setSupportedChains } from "../constants/chains/supportedChains";
@@ -77,20 +77,6 @@ import {
 } from "../contracts";
 import { Address } from "../schema/shared/Address";
 import type { CurrencyValue } from "../types/currency";
-import type {
-  DeployEvents,
-  NFTContractDeployMetadata,
-  MultiwrapContractDeployMetadata,
-  TokenContractDeployMetadata,
-  MarketplaceContractDeployMetadata,
-  MarketplaceV3ContractDeployMetadata,
-  SplitContractDeployMetadata,
-  VoteContractDeployMetadata,
-  DeployOptions,
-  DeployMetadata,
-  DeployEvent,
-  OpenEditionContractDeployMetadata,
-} from "../types/deploy";
 import type { ContractWithMetadata } from "../types/registry";
 import { DeploySchemaForPrebuiltContractType } from "../contracts";
 import { ContractFactory } from "./classes/factory";
@@ -102,7 +88,7 @@ import {
   utils,
   ContractFactory as ethersContractFactory,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import {
@@ -111,10 +97,28 @@ import {
 } from "../types/any-evm/deploy-data";
 import { fetchContractMetadataFromAddress } from "../common/metadata-resolver";
 import { LoyaltyCardContractDeploy } from "../schema/contracts/loyalty-card";
-import { getDefaultTrustedForwarders } from "../constants";
 import { checkClientIdOrSecretKey } from "../../core/utils/apiKey";
 import { getProcessEnv } from "../../core/utils/process";
-import { DropErc721ContractSchema } from "../schema";
+import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
+import { AirdropContractDeploy } from "../schema/contracts/airdrop";
+import {
+  directDeployDeterministicPublished,
+  predictAddressDeterministicPublished,
+} from "../common/any-evm-utils/deployDirectDeterministic";
+import { getDefaultTrustedForwarders } from "../constants/addresses/getDefaultTrustedForwarders";
+import { DeployEvent, DeployEvents } from "../types/deploy/deploy-events";
+import {
+  AirdropContractDeployMetadata,
+  MarketplaceContractDeployMetadata,
+  MarketplaceV3ContractDeployMetadata,
+  MultiwrapContractDeployMetadata,
+  NFTContractDeployMetadata,
+  OpenEditionContractDeployMetadata,
+  SplitContractDeployMetadata,
+  TokenContractDeployMetadata,
+  VoteContractDeployMetadata,
+} from "../types/deploy/deploy-metadata";
+import { DeployMetadata, DeployOptions } from "../types/deploy/deploy-options";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -179,14 +183,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     storage?: ThirdwebStorage,
   ): ThirdwebSDK {
     let signerWithProvider = signer;
-    if (network && !signer.provider) {
-      const provider = getChainProvider(network, options);
-      signerWithProvider = signer.connect(provider);
+    if (network) {
+      try {
+        const provider = getChainProvider(network, options);
+        signerWithProvider = signer.connect(provider);
+      } catch {
+        // We have to catch here because browser wallets throw when trying to override provider
+      }
     }
 
     const sdk = new ThirdwebSDK(
       network || signerWithProvider,
-      options,
+      network ? addChainToSupportedChains(network, options) : options,
       storage,
     );
     sdk.updateSignerOrProvider(signerWithProvider);
@@ -221,7 +229,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new EthersWallet(privateKey, provider);
-    return new ThirdwebSDK(signer, options, storage);
+    return new ThirdwebSDK(
+      signer,
+      addChainToSupportedChains(network, options),
+      storage,
+    );
   }
 
   /**
@@ -275,14 +287,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
     checkClientIdOrSecretKey(warnMessage, options.clientId, options.secretKey);
 
-    if (isChainConfig(network)) {
-      options = {
-        ...options,
-        // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
-        supportedChains: [network, ...(options.supportedChains || [])],
-      };
-    }
-
+    options = addChainToSupportedChains(network, options);
     super(network, options);
     setSupportedChains(options?.supportedChains);
 
@@ -587,20 +592,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata.abi,
         );
       } catch (e) {
+        // fallback to
         // try resolving the contract type (legacy contracts)
-        const resolvedContractType = await this.resolveContractType(address);
+        const resolvedContractType = await this.resolveContractType(
+          resolvedAddress,
+        );
         if (resolvedContractType && resolvedContractType !== "custom") {
           // otherwise if it's a prebuilt contract we can just use the contract type
           const contractAbi = await PREBUILT_CONTRACTS_MAP[
             resolvedContractType
-          ].getAbi(address, this.getProvider(), this.storage);
-          newContract = await this.getContractFromAbi(address, contractAbi);
-        } else {
-          // we cant fetch the ABI, and we don't know the contract type, throw an error
-          const chainId = (await this.getProvider().getNetwork()).chainId;
-          throw new Error(
-            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${resolvedAddress}`,
+          ].getAbi(resolvedAddress, this.getProvider(), this.storage);
+          newContract = await this.getContractFromAbi(
+            resolvedAddress,
+            contractAbi,
           );
+        } else {
+          // we cant fetch the ABI, and we don't know the contract type, throw the original error
+          throw e;
         }
       }
     }
@@ -698,7 +706,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await this.getContract(address)).metadata.get(),
           extensions: async () =>
-            getAllDetectedFeatureNames(
+            getAllDetectedExtensionNames(
               (await this.getContract(address)).abi as Abi,
             ),
         };
@@ -738,13 +746,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       try {
         let chainSDK = sdkMap[chainId];
         if (!chainSDK) {
-          chainSDK = new ThirdwebSDK(chainId, {
-            ...this.options,
-            // need to disable readonly settings for this to work
-            readonlySettings: undefined,
-            // @ts-expect-error - zod doesn't like this
-            supportedChains: chains,
-          });
+          chainSDK = new ThirdwebSDK(
+            chainId,
+            {
+              ...this.options,
+              // need to disable readonly settings for this to work
+              readonlySettings: undefined,
+              // @ts-expect-error - zod doesn't like this
+              supportedChains: chains,
+            },
+            this.storage,
+          );
           sdkMap[chainId] = chainSDK;
         }
 
@@ -755,7 +767,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await chainSDK.getContract(address)).metadata.get(),
           extensions: async () =>
-            getAllDetectedFeatureNames(
+            getAllDetectedExtensionNames(
               (await chainSDK.getContract(address)).abi as Abi,
             ),
         };
@@ -828,7 +840,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
-      await getCompositePluginABI(
+      await getCompositeABI(
         resolvedAddress,
         AbiSchema.parse(parsedABI),
         provider,
@@ -866,6 +878,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public getPublisher(): ContractPublisher {
     return this._publisher;
   }
+}
+
+function addChainToSupportedChains(
+  network: NetworkInput,
+  options: SDKOptions | undefined,
+) {
+  if (isChainConfig(network)) {
+    options = {
+      ...options,
+      // @ts-expect-error - we know that the network is assignable despite the readonly mismatch
+      supportedChains: [network, ...(options?.supportedChains || [])],
+    };
+  }
+  return options;
 }
 
 const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
@@ -1075,7 +1101,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         parsedMetadata.seller_fee_basis_points,
       ];
 
-      return await this.deployReleasedContract.prepare(
+      return await this.deployPublishedContract.prepare(
         THIRDWEB_DEPLOYER,
         "OpenEditionERC721",
         deployArgs,
@@ -1414,6 +1440,99 @@ export class ContractDeployer extends RPCConnectionHandler {
     },
   );
 
+  deployAirdropERC20 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC20",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC721 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC721",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
+  deployAirdropERC1155 = /* @__PURE__ */ buildDeployTransactionFunction(
+    async (
+      metadata: AirdropContractDeployMetadata,
+      options?: DeployOptions,
+    ): Promise<DeployTransaction> => {
+      const parsedMetadata = await AirdropContractDeploy.parseAsync(metadata);
+      const contractURI = await this.storage.upload(parsedMetadata);
+
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      const trustedForwarders = getDefaultTrustedForwarders(chainId);
+      // add default forwarders to any custom forwarders passed in
+      if (
+        metadata.trusted_forwarders &&
+        metadata.trusted_forwarders.length > 0
+      ) {
+        trustedForwarders.push(...metadata.trusted_forwarders);
+      }
+
+      const signerAddress = await this.getSigner()?.getAddress();
+
+      const deployArgs = [signerAddress, contractURI, trustedForwarders];
+
+      return await this.deployReleasedContract.prepare(
+        THIRDWEB_DEPLOYER,
+        "AirdropERC1155",
+        deployArgs,
+        options,
+      );
+    },
+  );
+
   /**
    * Deploys a new contract
    *
@@ -1555,6 +1674,68 @@ export class ContractDeployer extends RPCConnectionHandler {
   deployPublishedContract = this.deployReleasedContract;
 
   /**
+   * Deploy any published contract by its name
+   * @param contractName the name of the contract to deploy
+   * @param constructorParams the constructor params to pass to the contract
+   * @param publisherAddress the address of the publisher
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   */
+  async deployPublishedContractDeterministic(
+    contractName: string,
+    constructorParams: any[],
+    publisherAddress: string = THIRDWEB_DEPLOYER,
+    contractVersion: string = "latest",
+    saltForCreate2?: string,
+  ): Promise<string> {
+    const signer = this.getSigner();
+    invariant(signer, "Signer is required");
+
+    return directDeployDeterministicPublished(
+      contractName,
+      publisherAddress,
+      contractVersion,
+      constructorParams,
+      signer,
+      this.storage,
+      this.options.clientId,
+      this.options.secretKey,
+      saltForCreate2,
+    );
+  }
+
+  /**
+   * Predict Create2 address of a contract
+   * @param contractName the name of the contract
+   * @param constructorParams the constructor params to pass to the contract
+   * @param publisherAddress the address of the publisher
+   * @param version Optional: the version of the contract to deploy or "latest"
+   * @param saltForCreate2 Optional: salt for create2 deployment, will determine deployment address
+   */
+  async predictAddressDeterministic(
+    contractName: string,
+    constructorParams: any[],
+    publisherAddress: string = THIRDWEB_DEPLOYER,
+    contractVersion: string = "latest",
+    saltForCreate2?: string,
+  ): Promise<string> {
+    const provider = this.getProvider();
+    invariant(provider, "Provider is required");
+
+    return predictAddressDeterministicPublished(
+      contractName,
+      publisherAddress,
+      contractVersion,
+      constructorParams,
+      provider,
+      this.storage,
+      this.options.clientId,
+      this.options.secretKey,
+      saltForCreate2,
+    );
+  }
+
+  /**
    * Deploy a proxy contract of a given implementation via the given factory
    * @param factoryAddress
    * @param implementationAddress
@@ -1658,6 +1839,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.storage,
         this.getProvider(),
         create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
       );
 
       const implementationAddress = deploymentInfo.find(
@@ -1689,11 +1872,17 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // send each transaction directly to Create2 factory
-      await Promise.all(
-        transactionsforDirectDeploy.map((tx) => {
-          return deployContractDeterministic(signer, tx, options);
-        }),
-      );
+      // process txns one at a time
+      for (const tx of transactionsforDirectDeploy) {
+        try {
+          await deployContractDeterministic(signer, tx, options);
+        } catch (e) {
+          console.debug(
+            `Error deploying contract at ${tx.predictedAddress}`,
+            (e as any)?.message,
+          );
+        }
+      }
 
       const resolvedImplementationAddress = await resolveAddress(
         implementationAddress,
@@ -1704,6 +1893,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.getProvider(),
         this.storage,
         create2Factory,
+        this.options.clientId,
+        this.options.secretKey,
       );
 
       options?.notifier?.("deploying", "proxy");
@@ -1756,6 +1947,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         resolvedCustomFactoryAddress,
         this.getProvider(),
         this.storage,
+        this.options,
       );
 
       const factoryFunctionParamTypes = extractFunctionParamsFromAbi(
@@ -2098,6 +2290,8 @@ export class ContractDeployer extends RPCConnectionHandler {
           this.storage,
           this.getProvider(),
           create2FactoryAddress,
+          this.options.clientId,
+          this.options.secretKey,
         );
 
         const transactionsToSend = deploymentInfo.filter(
@@ -2198,10 +2392,16 @@ export class ContractDeployer extends RPCConnectionHandler {
     version: string,
   ) {
     const address = await resolveAddress(publisherAddress);
-    const publishedContract = await new ThirdwebSDK("polygon", {
-      clientId: this.options.clientId,
-      secretKey: this.options.secretKey,
-    })
+    // TODO don't create a new sdk instance here, instead read from contract directly with provider
+    // this will allow moving deployer out of this file and help with tree shaking
+    const publishedContract = await new ThirdwebSDK(
+      "polygon",
+      {
+        clientId: this.options.clientId,
+        secretKey: this.options.secretKey,
+      },
+      this.storage,
+    )
       .getPublisher()
       .getVersion(address, contractName, version);
     if (!publishedContract) {

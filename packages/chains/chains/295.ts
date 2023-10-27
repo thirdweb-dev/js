@@ -1,36 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Hedera Mainnet",
   "chain": "Hedera",
-  "icon": {
-    "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
-    "width": 1500,
-    "height": 1500,
-    "format": "png"
-  },
-  "rpc": [
-    "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.hashio.io/api"
-  ],
-  "features": [
-    {
-      "name": "EIP155"
-    },
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "hbar",
-    "symbol": "HBAR",
-    "decimals": 18
-  },
-  "infoURL": "https://hedera.com",
-  "shortName": "hedera-mainnet",
   "chainId": 295,
-  "networkId": 295,
-  "slip44": 3030,
   "explorers": [
     {
       "name": "HashScan",
@@ -58,6 +29,36 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "hedera"
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "icon": {
+    "url": "ipfs://QmQikzhvZKyMmbZJd7BVLZb2YTBDMgNDnaMCAErsVjsfuz",
+    "width": 1500,
+    "height": 1500,
+    "format": "png"
+  },
+  "infoURL": "https://hedera.com",
+  "name": "Hedera Mainnet",
+  "nativeCurrency": {
+    "name": "hbar",
+    "symbol": "HBAR",
+    "decimals": 18
+  },
+  "networkId": 295,
+  "rpc": [
+    "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet.hashio.io/api"
+  ],
+  "shortName": "hedera-mainnet",
+  "slip44": 3030,
+  "slug": "hedera",
+  "testnet": false
 } as const satisfies Chain;
