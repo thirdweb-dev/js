@@ -28,9 +28,6 @@ type NetworkMetadata = {
 };
 
 /**
- *
- * @deprecated - use `useChain`, `useSwitchChain`, `useChainId` instead
- *
  * Hook for getting metadata about the network the current wallet is connected to and switching networks
  *
  * @example
@@ -53,6 +50,8 @@ type NetworkMetadata = {
  * For those situations, you can typically switch networks in the wallet app this hook will still work.
  *
  * @public
+ *
+ * @deprecated use `useChain`, `useSwitchChain`, `useChainId` instead
  */
 export function useNetwork(): [NetworkMetadata, SwitchNetwork | undefined] {
   const chain = useChain();
