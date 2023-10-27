@@ -19,9 +19,8 @@ import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
-import { Badge, Button, Text } from "tw-components";
+import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { toDateTimeLocal } from "utils/date-utils";
 
 export function beautifyString(str: string): string {
   return str
