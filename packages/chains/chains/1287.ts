@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://docs.moonbeam.network/networks/testnet/",
   "name": "Moonbase Alpha",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "DEV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1287,
   "rpc": [
     "https://moonbase-alpha.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1287.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbase.moonbeam.network",
     "wss://wss.api.moonbase.moonbeam.network"
   ],

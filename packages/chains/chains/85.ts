@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://www.gatescan.org/testnet/faucet"
   ],
-  "features": [],
   "infoURL": "https://www.gatechain.io",
   "name": "GateChain Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "GT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 85,
   "rpc": [
     "https://gatechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://85.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gatenode.cc"
   ],
   "shortName": "gttest",

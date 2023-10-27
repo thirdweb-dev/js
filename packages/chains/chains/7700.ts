@@ -17,10 +17,20 @@ export default {
       "name": "Canto EVM Explorer (Blockscout)",
       "url": "https://tuber.build",
       "standard": "none"
+    },
+    {
+      "name": "dexguru",
+      "url": "https://canto.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://canto.io",
   "name": "Canto",
   "nativeCurrency": {
@@ -28,9 +38,10 @@ export default {
     "symbol": "CANTO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7700,
   "rpc": [
     "https://canto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://canto.slingshot.finance",
     "https://canto.neobase.one",
     "https://mainnode.plexnode.org:8545",

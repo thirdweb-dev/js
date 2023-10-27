@@ -4,7 +4,6 @@ export default {
   "chainId": 67588,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://cosmicchain.site",
   "name": "Cosmic Chain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "COSMIC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3344,
   "rpc": [
     "https://cosmic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://67588.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://testnet.cosmicchain.site:3344"
   ],
   "shortName": "Cosmic",

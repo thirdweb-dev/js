@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://qkacoin.org",
   "name": "Quokkacoin Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "QKA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2077,
   "rpc": [
     "https://quokkacoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2077.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qkacoin.org"
   ],
   "shortName": "QKA",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeDXUAYgQxwaSJLsqWgTqnrJVwicgEyNf9199xAMyRkqA",
     "width": 243,
@@ -24,9 +23,10 @@ export default {
     "symbol": "GANG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1452,
   "rpc": [
     "https://gil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1452.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.giltestnet.com"
   ],
   "shortName": "gil",

@@ -17,7 +17,6 @@ export default {
   "faucets": [
     "http://fauceth.komputing.org?chain=11155111&address=${ADDRESS}"
   ],
-  "features": [],
   "infoURL": "https://sepolia.otterscan.io",
   "name": "Sepolia",
   "nativeCurrency": {
@@ -25,15 +24,16 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11155111,
   "rpc": [
     "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.infura.io/v3/${INFURA_API_KEY}",
-    "wss://sepolia.infura.io/v3/${INFURA_API_KEY}",
+    "https://11155111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia.org",
     "https://rpc2.sepolia.org",
     "https://rpc-sepolia.rockx.com",
     "https://rpc.sepolia.ethpandaops.io",
+    "https://sepolia.infura.io/v3/${INFURA_API_KEY}",
+    "wss://sepolia.infura.io/v3/${INFURA_API_KEY}",
     "https://sepolia.gateway.tenderly.co",
     "wss://sepolia.gateway.tenderly.co",
     "https://ethereum-sepolia.publicnode.com",
@@ -41,5 +41,6 @@ export default {
   ],
   "shortName": "sep",
   "slug": "sepolia",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum Testnet Sepolia"
 } as const satisfies Chain;

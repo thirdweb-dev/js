@@ -4,7 +4,6 @@ export default {
   "chainId": 1130,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdR3YL9F95ajwVwfxAGoEzYwm9w7JNsPSfUPjSaQogVjK",
     "width": 512,
@@ -18,9 +17,10 @@ export default {
     "symbol": "DFI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1130,
   "rpc": [],
   "shortName": "DFI",
+  "slip44": 1130,
   "slug": "defichain-evm-network",
   "status": "incubating",
   "testnet": false

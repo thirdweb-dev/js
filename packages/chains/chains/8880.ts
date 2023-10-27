@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbJ7CGZ2GxWMp7s6jy71UGzRsMe4w3KANKXDAExYWdaFR",
     "width": 48,
@@ -24,9 +23,10 @@ export default {
     "symbol": "UNQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8880,
   "rpc": [
     "https://unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8880.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.unique.network",
     "https://eu-rpc.unique.network",
     "https://asia-rpc.unique.network",

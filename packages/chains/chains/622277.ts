@@ -6,7 +6,13 @@ export default {
     {
       "name": "rethereum",
       "url": "https://explorer.rethereum.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "RTH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 622277,
   "rpc": [
     "https://rethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://622277.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rethereum.org",
     "https://rethereum.rpc.restratagem.com",
     "https://rpc.rthcentral.org"

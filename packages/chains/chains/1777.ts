@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeDXUAYgQxwaSJLsqWgTqnrJVwicgEyNf9199xAMyRkqA",
     "width": 243,
@@ -24,9 +23,10 @@ export default {
     "symbol": "GANG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1777,
   "rpc": [
     "https://gauss.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gaussgang.com"
   ],
   "shortName": "gauss",

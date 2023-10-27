@@ -415,7 +415,7 @@ export function useEnglishAuctionsCount(
  *
  * @example
  * ```javascript
- * const { data: listings, isLoading, error } = useActiveListings(contract, { seller: "{{wallet_adress}}", tokenContract: "0x...", tokenId: 1, start: 0, count: 100 });
+ * const { data: listings, isLoading, error } = useActiveListings(contract, { seller: "{{wallet_address}}", tokenContract: "0x...", tokenId: 1, start: 0, count: 100 });
  * ```
  *
  * @param contract - an instance of a marketplace contract

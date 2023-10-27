@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
     "width": 1500,
@@ -24,9 +23,10 @@ export default {
     "symbol": "NUM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10507,
   "rpc": [
     "https://numbers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnetrpc.num.network"
   ],
   "shortName": "Jade",

@@ -6,7 +6,13 @@ export default {
     {
       "name": "avescan",
       "url": "https://avescan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+        "width": 232,
+        "height": 232,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "AVS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 33333,
   "rpc": [
     "https://aves.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://33333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.avescoin.io"
   ],
   "shortName": "avs",

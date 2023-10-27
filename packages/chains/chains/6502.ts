@@ -4,7 +4,6 @@ export default {
   "chainId": 6502,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://peerpay.su.gy",
   "name": "Peerpay",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "P2P",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6502,
   "rpc": [
     "https://peerpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6502.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://peerpay.su.gy/p2p"
   ],
   "shortName": "Peerpay",

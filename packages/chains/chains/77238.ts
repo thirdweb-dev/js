@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.foundryscan.org"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreifx4vef7ubqz4iiaxckcvkdwjrp2hbliljwjlwu2vytlngg3r4pg4",
     "width": 192,
@@ -26,9 +25,10 @@ export default {
     "symbol": "tFNC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 77238,
   "rpc": [
     "https://foundry-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://77238.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.foundryscan.org/"
   ],
   "shortName": "fnc",

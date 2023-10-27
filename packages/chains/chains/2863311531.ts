@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmSX8sHToRzyFupT8BvPQjVsegRWFYz2mdnLkVnqBFKohY",
     "width": 901,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2863311531,
   "rpc": [
     "https://ancient8-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2863311531.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.ancient8.gg"
   ],
   "shortName": "a8",

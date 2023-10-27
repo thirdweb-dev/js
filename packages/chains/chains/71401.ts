@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://testnet.bridge.godwoken.io"
   ],
-  "features": [],
   "infoURL": "https://www.nervos.org",
   "name": "Godwoken Testnet v1",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "pCKB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 71401,
   "rpc": [
     "https://godwoken-testnet-v1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://71401.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-v1.ckbapp.dev",
     "https://v1.testnet.godwoken.io/rpc"
   ],

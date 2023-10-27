@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.beagle.chat/"
   ],
-  "features": [],
   "infoURL": "https://beagle.chat/",
   "name": "Beagle Messaging Chain",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "BG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1515,
   "rpc": [
     "https://beagle-messaging-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1515.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beagle.chat/eth"
   ],
   "shortName": "beagle",

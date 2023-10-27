@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://boba.network",
   "name": "Boba Network",
   "nativeCurrency": {
@@ -23,9 +22,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 288,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "rpc": [
     "https://boba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.boba.network",
     "https://replica.boba.network",
     "https://boba-ethereum.gateway.tenderly.co",

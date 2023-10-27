@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://devnet2faucet.platon.network/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
     "width": 180,
@@ -26,9 +25,10 @@ export default {
     "symbol": "lat",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://platon-dev-testnet2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2206132.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet2openapi.platon.network/rpc",
     "wss://devnet2openapi.platon.network/ws"
   ],

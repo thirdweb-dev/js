@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://omplatform.com/",
   "name": "OM Platform Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "OM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1246,
   "rpc": [
     "https://om-platform.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1246.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-cnx.omplatform.com/"
   ],
   "shortName": "om",

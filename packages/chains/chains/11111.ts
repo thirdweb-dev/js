@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.avax.network/?subnet=wagmi"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNoyUXxnak8B3xgFxErkVfyVEPJUMHBzq7qJcYzkUrPR4",
     "width": 1920,
@@ -26,9 +25,10 @@ export default {
     "symbol": "WGM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11111,
   "rpc": [
     "https://wagmi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/wagmi/wagmi-chain-testnet/rpc"
   ],
   "shortName": "WAGMI",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.testnet.oasis.dev/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreiespupb52akiwrexxg7g72mh7m7h7lum5hmqijmpdh3kmuunzclha",
     "width": 2000,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ROSE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 42261,
   "rpc": [
     "https://oasis-emerald-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://42261.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.emerald.oasis.dev/",
     "wss://testnet.emerald.oasis.dev/ws"
   ],

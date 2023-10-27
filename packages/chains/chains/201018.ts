@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmci6vPcWAwmq19j98yuQxjV6UPzHtThMdCAUDbKeb8oYu",
     "width": 1140,
@@ -24,9 +23,10 @@ export default {
     "symbol": "atp",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://alaya.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://201018.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi.alaya.network/rpc",
     "wss://openapi.alaya.network/ws"
   ],

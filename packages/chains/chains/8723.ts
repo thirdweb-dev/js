@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ibdt.io",
   "name": "TOOL Global Mainnet",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "OLO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8723,
   "rpc": [
     "https://tool-global.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8723.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-web3.wolot.io"
   ],
   "shortName": "olo",
+  "slip44": 479,
   "slug": "tool-global",
   "testnet": false
 } as const satisfies Chain;

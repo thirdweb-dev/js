@@ -6,7 +6,13 @@ export default {
     {
       "name": "phoenix",
       "url": "https://phoenix.lightlink.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmXMDj6iAFn2ducQcUU1M87PMMdT2jfyL3Tp3Lz5uUD5Lv",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -28,9 +34,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1890,
   "rpc": [
     "https://lightlink-phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1890.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://replicator-01.phoenix.lightlink.io/rpc/v1",
     "https://replicator-02.phoenix.lightlink.io/rpc/v1"
   ],

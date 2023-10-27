@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://findora.org/",
   "name": "Findora Forge",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "FRA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2154,
   "rpc": [
     "https://findora-forge.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2154.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-forge.prod.findora.org:8545/"
   ],
   "shortName": "findora-forge",

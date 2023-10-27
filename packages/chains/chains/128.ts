@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.hecochain.com",
   "name": "Huobi ECO Chain Mainnet",
   "nativeCurrency": {
@@ -18,13 +17,15 @@ export default {
     "symbol": "HT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 128,
   "rpc": [
     "https://huobi-eco-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://128.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.hecochain.com",
     "wss://ws-mainnet.hecochain.com"
   ],
   "shortName": "heco",
+  "slip44": 1010,
   "slug": "huobi-eco-chain",
   "testnet": false
 } as const satisfies Chain;

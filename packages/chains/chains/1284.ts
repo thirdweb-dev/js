@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://moonbeam.network/networks/moonbeam/",
   "name": "Moonbeam",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "GLMR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1284,
   "rpc": [
     "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1284.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbeam.network",
     "wss://wss.api.moonbeam.network",
     "https://moonbeam.publicnode.com",

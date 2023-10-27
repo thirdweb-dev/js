@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ubiqsmart.com",
   "name": "Ubiq",
   "nativeCurrency": {
@@ -18,13 +17,15 @@ export default {
     "symbol": "UBQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8,
   "rpc": [
     "https://ubiq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octano.dev",
     "https://pyrus2.ubiqscan.io"
   ],
   "shortName": "ubq",
+  "slip44": 108,
   "slug": "ubiq",
   "testnet": false
 } as const satisfies Chain;

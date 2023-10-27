@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfJ1Qxpzi6CSLeFeWY1Bwe435CpT5za5WfrLUE7vNzZfy",
     "width": 512,
@@ -24,12 +23,14 @@ export default {
     "symbol": "RIK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1433,
   "rpc": [
     "https://rikeza-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1433.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rikscan.com"
   ],
   "shortName": "RIK",
   "slug": "rikeza-network",
-  "testnet": false
+  "testnet": false,
+  "title": "Rikeza Network Mainnet"
 } as const satisfies Chain;

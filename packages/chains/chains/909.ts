@@ -4,7 +4,6 @@ export default {
   "chainId": 909,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeMa6aw3ebUKJdGgbzDgcVtggzp7cQdfSrmzMYmnt5ywc",
     "width": 200,
@@ -18,7 +17,7 @@ export default {
     "symbol": "PFT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 909,
   "rpc": [],
   "shortName": "PF",
   "slug": "portal-fantasy-chain",

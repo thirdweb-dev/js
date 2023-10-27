@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWGNfwJ9o2vmKD3E6fjrxpbFP8W5q45zmYzHHoXwqqAoj",
     "width": 512,
@@ -24,11 +23,13 @@ export default {
     "symbol": "XETA",
     "decimals": 18
   },
+  "networkId": 8888,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://xanachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xana.net/rpc"
   ],
   "shortName": "XANAChain",

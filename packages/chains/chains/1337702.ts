@@ -13,7 +13,6 @@ export default {
     "http://fauceth.komputing.org?chain=1337702&address=${ADDRESS}",
     "https://faucet.kintsugi.themerge.dev"
   ],
-  "features": [],
   "infoURL": "https://kintsugi.themerge.dev/",
   "name": "Kintsugi",
   "nativeCurrency": {
@@ -21,12 +20,14 @@ export default {
     "symbol": "kiETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1337702,
   "rpc": [
     "https://kintsugi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1337702.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kintsugi.themerge.dev"
   ],
   "shortName": "kintsugi",
   "slug": "kintsugi",
-  "testnet": true
+  "testnet": true,
+  "title": "Kintsugi merge testnet"
 } as const satisfies Chain;

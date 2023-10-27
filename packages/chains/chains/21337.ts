@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
     "width": 112,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CPAY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 21337,
   "rpc": [
     "https://cennznet-azalea.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://21337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cennznet.unfrastructure.io/public"
   ],
   "shortName": "cennz-a",

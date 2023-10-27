@@ -18,9 +18,11 @@ export default {
     "symbol": "FUSE",
     "decimals": 18
   },
+  "networkId": 122,
   "redFlags": [],
   "rpc": [
     "https://fuse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://122.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fuse.io"
   ],
   "shortName": "fuse",

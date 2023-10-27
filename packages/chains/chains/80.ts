@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://scan.genechain.io/",
   "name": "GeneChain",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "RNA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 80,
   "rpc": [
     "https://genechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://80.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.genechain.io"
   ],
   "shortName": "GeneChain",

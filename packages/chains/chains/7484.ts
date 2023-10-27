@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmatP9qMHEYoXqRDyHMTyjYRQa6j6Gk7pmv1QLxQkvpGRP",
     "width": 787,
@@ -24,9 +23,10 @@ export default {
     "symbol": "RABA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 7484,
   "rpc": [
     "https://raba-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7484.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.x.raba.app/",
     "wss://rpc.x.raba.app/ws/"
   ],

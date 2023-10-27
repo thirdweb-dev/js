@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://docs.boba.network/for-developers/network-avalanche",
   "name": "Boba Avax",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BOBA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 43288,
   "rpc": [
     "https://boba-avax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://43288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avax.boba.network",
     "wss://wss.avax.boba.network",
     "https://replica.avax.boba.network",

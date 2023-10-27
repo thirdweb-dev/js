@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "http://faucet.oasischain.io"
   ],
-  "features": [],
   "infoURL": "https://scan.oasischain.io",
   "name": "OasisChain Mainnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "OAC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 26863,
   "rpc": [
     "https://oasischain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://26863.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.oasischain.io",
     "https://rpc2.oasischain.io",
     "https://rpc3.oasischain.io"

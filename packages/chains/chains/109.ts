@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYNVkoZgRjDBQzJz6kog9mA2yPzQFW2oSKvhnkwuBhLQE",
     "width": 2000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BONE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 109,
   "rpc": [
     "https://shibarium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.shibrpc.com"
   ],
   "shortName": "shibariumecosystem",

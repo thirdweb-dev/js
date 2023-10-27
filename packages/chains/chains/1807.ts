@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://analogfaucet.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdfbjjF3ZzN2jTkH9REgrA8jDS6A6c21n7rbWSVbSnvQc",
     "width": 310,
@@ -26,9 +25,10 @@ export default {
     "symbol": "rAna",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1807,
   "rpc": [
     "https://rabbit-analog-testnet-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1807.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rabbit.analog-rpc.com"
   ],
   "shortName": "rAna",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.tipboxcoin.net"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbiaHnR3fVVofZ7Xq2GYZxwHkLEy3Fh5qDtqnqXD6ACAh",
     "width": 192,
@@ -26,9 +25,10 @@ export default {
     "symbol": "TPBX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4141,
   "rpc": [
     "https://tipboxcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4141.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.tipboxcoin.net"
   ],
   "shortName": "TPBXt",

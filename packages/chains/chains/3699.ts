@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.senjepowersscan.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcpyTj4hUyHJZ2VmSdkXFpPpRcNKRP1VxMs7Cp1anymNy",
     "width": 504,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SPC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3699,
   "rpc": [
     "https://senjepowers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3699.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.senjepowersscan.com"
   ],
   "shortName": "SPCm",

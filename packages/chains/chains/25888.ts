@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.hammerchain.io",
   "name": "Hammer Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "GOLDT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 25888,
   "rpc": [
     "https://hammer-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://25888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.hammerchain.io/rpc"
   ],
   "shortName": "GOLDT",

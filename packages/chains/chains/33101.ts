@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://dev-wallet.zilliqa.com/faucet?network=testnet"
   ],
-  "features": [],
   "infoURL": "https://www.zilliqa.com/",
   "name": "Zilliqa EVM Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "ZIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 33101,
   "rpc": [
     "https://zilliqa-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://33101.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-api.zilliqa.com"
   ],
   "shortName": "zil-testnet",
