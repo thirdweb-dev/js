@@ -2009,10 +2009,14 @@ export class ContractDeployer extends RPCConnectionHandler {
         if (!registryAddress) {
           return undefined;
         }
+        const TWRegistryABI = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json")
+        ).default;
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
           this.storage,
+          TWRegistryABI,
           this.options,
         );
       }));
