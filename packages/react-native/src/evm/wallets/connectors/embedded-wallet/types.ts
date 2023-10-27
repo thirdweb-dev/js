@@ -29,13 +29,7 @@ export type EmbeddedWalletOptions = Omit<
 >;
 
 type EmbeddedAdvanceOptions = {
-  recoveryShareManagement?: "USER_MANAGED" | "CLOUD_MANAGED";
-};
-
-export type EmbeddedWalletAdditionalOptions = {
-  emailClientId: string;
-  chain: Pick<Chain, "chainId" | "rpc">;
-  advancedOptions?: EmbeddedAdvanceOptions;
+  recoveryShareManagement?: RecoveryShareManagement;
 };
 
 export interface EmbeddedWalletConnectorOptions {

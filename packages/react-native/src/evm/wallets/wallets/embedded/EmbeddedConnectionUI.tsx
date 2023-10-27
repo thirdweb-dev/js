@@ -25,6 +25,7 @@ import {
 } from "../../../providers/ui-context-provider";
 import { EnterPassword } from "./EnterPassword";
 import { PasswordInput } from "../../../components/PasswordInput";
+import { RecoveryShareManagement } from "@thirdweb-dev/wallets";
 
 const OTP_LENGTH = 6;
 type ScreenToShow =
@@ -134,8 +135,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       values.length === OTP_LENGTH &&
       values.every((v) => v.length === 1) &&
       selectionData &&
-      screen === "base" &&
-      password
+      screen === "base"
     ) {
       setCheckingOtp(true);
       setErrorMessage("");
@@ -195,77 +195,32 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     }
   }, [connect, onError, password, postConnect, screen, selectionData, values]);
 
-  // useEffect(() => {
-  //   if (
-  //     values.length === OTP_LENGTH &&
-  //     values.every((v) => v.length === 1) &&
-  //     selectionData &&
-  //     screen === "base" &&
-  //     password
-  //   ) {
-  //     setCheckingOtp(true);
-  //     setErrorMessage("");
-  //     setFocusedIndex(undefined);
-  //     const otp = values.join("");
-
-  //     setTimeout(async () => {
-  //       const emailWallet = selectionData.emailWallet as EmbeddedWallet;
-
-  //       const needsRecoveryCode =
-  //         selectionData.recoveryShareManagement === "USER_MANAGED" &&
-  //         (selectionData.isNewUser || selectionData.isNewDevice);
-
-  //       if (needsRecoveryCode) {
-  //         if (selectionData.isNewUser) {
-  //           try {
-  //             await emailWallet.authenticate({
-  //               strategy: "email_otp",
-  //               otp,
-  //               email: selectionData.email,
-  //               recoveryCode: password,
-  //             });
-  //           } catch (e: any) {
-  //             console.log("error validating otp new user", e);
-  //             if (e instanceof Error && e.message.includes("encryption key")) {
-  //               setScreen("create-password");
-  //             } else {
-  //               onError(e);
-  //             }
-  //           }
-  //         } else {
-  //           try {
-  //             await emailWallet.authenticate({
-  //               strategy: "email_otp",
-  //               otp,
-  //               email: selectionData.email,
-  //             });
-  //           } catch (e: any) {
-  //             console.log("error validating otp existing user", e);
-  //             if (e instanceof Error && e.message.includes("encryption key")) {
-  //               setScreen("enter-password-or-recovery-code");
-  //             } else {
-  //               onError(e);
-  //             }
-  //           }
-  //         }
-  //       } else {
-  //         // AWS_MANAGED
-  //         connect();
-  //       }
-  //     }, 0);
-  //   }
-  // }, [
-  //   connect,
-  //   onError,
-  //   onLocallyConnected,
-  //   password,
-  //   postConnect,
-  //   screen,
-  //   selectionData,
-  //   setConnectedWallet,
-  //   setConnectionStatus,
-  //   values,
-  // ]);
+  useEffect(() => {
+    console.log("selectionData", selectionData);
+    console.log("values", values);
+    if (
+      values.length === OTP_LENGTH &&
+      values.every((v) => v.length === 1) &&
+      selectionData &&
+      screen === "base" &&
+      selectionData.recoveryShareManagement ===
+        RecoveryShareManagement.CLOUD_MANAGED
+    ) {
+      onContinuePress();
+    }
+  }, [
+    connect,
+    onContinuePress,
+    onError,
+    onLocallyConnected,
+    password,
+    postConnect,
+    screen,
+    selectionData,
+    setConnectedWallet,
+    setConnectionStatus,
+    values,
+  ]);
 
   const handleInputChange = async (value: string, index: number) => {
     if (value !== "") {
