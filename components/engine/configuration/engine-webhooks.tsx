@@ -16,8 +16,8 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({ instance }) => {
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Webhooks</Heading>
         <Text>
-          Notify your backend of wallet and transaction events by setting up
-          webhooks.{" "}
+          Notify your app backend when transaction and backend wallet events
+          occur.
           <Link
             href="https://portal.thirdweb.com/engine/webhooks"
             color="primary.500"

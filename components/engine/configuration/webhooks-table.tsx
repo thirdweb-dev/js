@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
+import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
@@ -51,23 +52,6 @@ const columns = [
       return <Text>{beautifyString(cell.getValue())}</Text>;
     },
   }),
-  columnHelper.accessor("active", {
-    header: "Status",
-    cell: (cell) => {
-      return (
-        <Badge
-          borderRadius="full"
-          size="label.sm"
-          variant="subtle"
-          px={3}
-          py={1.5}
-          colorScheme={cell.getValue() ? "green" : "red"}
-        >
-          {cell.getValue() ? "Active" : "Inactive"}
-        </Badge>
-      );
-    },
-  }),
   columnHelper.accessor("secret", {
     header: "Secret",
     cell: (cell) => {
@@ -86,11 +70,10 @@ const columns = [
     header: "Created At",
     cell: (cell) => {
       const value = cell.getValue();
-
       if (!value) {
         return;
       }
-      return <Text>{toDateTimeLocal(value)}</Text>;
+      return <Text>{format(new Date(value), "PP p")}</Text>;
     },
   }),
 ];
@@ -106,8 +89,8 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   const { mutate: revokeWebhook } = useEngineRevokeWebhook(instance);
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
-    "Successfully revoked webhook",
-    "Failed to revoked webhook",
+    "Successfully removed webhook",
+    "Failed to remove webhook",
   );
 
   const onDelete = (webhook: Webhook) => {
@@ -154,16 +137,18 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
     );
   };
 
+  const activeWebhooks = webhooks.filter((webhook) => webhook.active);
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Revoke Webhook</ModalHeader>
+          <ModalHeader>Remove Webhook</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text>
-              Are you sure you want to revoke webook with name{" "}
+              Are you sure you want to remove webook with name{" "}
               {webhookToRevoke?.name}?
             </Text>
           </ModalBody>
@@ -173,14 +158,15 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
               Cancel
             </Button>
             <Button type="submit" colorScheme="red" onClick={onRevoke}>
-              Revoke
+              Remove
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+
       <TWTable
         title="webhooks"
-        data={webhooks}
+        data={activeWebhooks}
         columns={columns}
         isLoading={isLoading}
         isFetched={isFetched}
