@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConnectWalletHeader } from "../../../components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 import { Box, BaseButton, Text } from "../../../components/base";
@@ -31,6 +31,12 @@ export const EnterPassword = ({
   const [password, setPassword] = useState<string>("");
 
   const isCreatePassword = type === "create_password";
+
+  useEffect(() => {
+    if (error) {
+      setCheckingPass(false);
+    }
+  }, [error]);
 
   const onNextPress = async () => {
     setCheckingPass(true);
