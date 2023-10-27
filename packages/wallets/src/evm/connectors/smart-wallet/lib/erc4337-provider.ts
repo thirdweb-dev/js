@@ -62,15 +62,12 @@ export class ERC4337EthersProvider extends providers.BaseProvider {
     if (method === "estimateGas") {
       // hijack this to estimate gas from the entrypoint instead
       const { callGasLimit } =
-        await this.smartAccountAPI.encodeUserOpCallDataAndGasLimit(
-          {
-            target: params.transaction.to,
-            data: params.transaction.data,
-            value: params.transaction.value,
-            gasLimit: params.transaction.gasLimit,
-          },
-          false, // TODO check this
-        );
+        await this.smartAccountAPI.encodeUserOpCallDataAndGasLimit({
+          target: params.transaction.to,
+          data: params.transaction.data,
+          value: params.transaction.value,
+          gasLimit: params.transaction.gasLimit,
+        });
       return callGasLimit;
     }
     return await this.originalProvider.perform(method, params);
