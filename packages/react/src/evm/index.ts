@@ -25,6 +25,7 @@ export type { MediaRendererProps } from "./components/types";
 
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
+export { useEmbeddedWalletConnect } from "../wallet/hooks/useEmbeddedWalletConnect";
 
 // wallet connection hooks
 export { useRainbowWallet } from "./hooks/wallets/useRainbowWallet";
