@@ -132,6 +132,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         otp: options.otp,
         recoveryCode: options.recoveryCode,
       });
+      console.log("return storedToken in connector", storedToken);
       return {
         user: {
           status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,

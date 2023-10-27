@@ -7,6 +7,7 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 import { PasswordInput } from "../../../components/PasswordInput";
+import Checkbox from "../../../components/base/CheckBox";
 
 export type EnterPasswordProps = {
   goBack: () => void;
@@ -29,6 +30,7 @@ export const EnterPassword = ({
   const theme = useGlobalTheme();
   const [checkingPass, setCheckingPass] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  const [toggleCheckBox, setToggleCheckBox] = useState<boolean>(false);
 
   const isCreatePassword = type === "create_password";
 
@@ -39,6 +41,10 @@ export const EnterPassword = ({
   }, [error]);
 
   const onNextPress = async () => {
+    if (!toggleCheckBox) {
+      return;
+    }
+
     setCheckingPass(true);
     if (isCreatePassword) {
       // Call create password
@@ -53,26 +59,37 @@ export const EnterPassword = ({
     // console.log("[TODO] Implement", setErrorMessage);
   };
 
-  const onLearnMorePress = () => {};
-
   return (
-    <Box marginHorizontal="xl" mb="lg">
+    <Box marginHorizontal="xl" mb="sm">
       <ConnectWalletHeader
         middleContent={
           <Text variant="header">
-            {isCreatePassword ? "Create password" : "Enter password"}
+            {isCreatePassword
+              ? l.embedded_wallet.create_password
+              : l.embedded_wallet.enter_password}
           </Text>
         }
         subHeaderText={
           isCreatePassword
-            ? "Set a password for your account"
-            : `Enter the password for email: ${email}`
+            ? l.embedded_wallet.set_password_message
+            : `${l.embedded_wallet.enter_password_for_email}: ${email}`
         }
         onBackPress={goBack}
         onClose={close}
       />
-      <Box mt="sm" flexDirection="column" marginTop="xl" mb="md">
+      <Text variant="bodySmallBold" mt="xs">
+        {l.embedded_wallet.make_sure_you_save_it}
+      </Text>
+      <Box mt="sm" flexDirection="column" marginTop="xl">
         <PasswordInput onChangeText={setPassword} />
+
+        <BaseButton mt="md">
+          <Checkbox
+            label="I have saved my password"
+            color={theme.colors.linkPrimary}
+            onToggle={setToggleCheckBox}
+          />
+        </BaseButton>
 
         {isCreatePassword ? null : (
           <BaseButton
@@ -88,38 +105,37 @@ export const EnterPassword = ({
         )}
       </Box>
       {error ? (
-        <Text variant="error" numberOfLines={1}>
+        <Text variant="error" numberOfLines={1} mt="md">
           {error}
         </Text>
-      ) : (
-        <Box height={20} />
-      )}
-      <Box flex={1} flexDirection="row" justifyContent="flex-end">
-        {isCreatePassword ? (
+      ) : null}
+      {/* {isCreatePassword ? (
           <BaseButton onPress={onLearnMorePress}>
             <Text variant="bodySmallSecondary" color="linkPrimary">
               {l.common.learn_more}
             </Text>
           </BaseButton>
-        ) : null}
-        <BaseButton
-          flexDirection="row"
-          alignItems="center"
-          height={theme.textVariants.bodySmallSecondary.fontSize}
-          onPress={onNextPress}
-        >
-          {checkingPass ? (
-            <ActivityIndicator
-              size={"small"}
-              color={theme.colors.linkPrimary}
-            />
-          ) : (
-            <Text variant="bodySmallSecondary" color="linkPrimary">
-              {l.common.next}
-            </Text>
-          )}
-        </BaseButton>
-      </Box>
+        ) : null} */}
+      <BaseButton
+        mt="md"
+        paddingVertical="md"
+        borderRadius="lg"
+        borderWidth={1}
+        borderColor="border"
+        backgroundColor="accentButtonColor"
+        onPress={onNextPress}
+      >
+        {checkingPass ? (
+          <ActivityIndicator
+            size={"small"}
+            color={theme.colors.accentButtonTextColor}
+          />
+        ) : (
+          <Text variant="bodySmallBold" color="accentButtonTextColor">
+            {l.common.next}
+          </Text>
+        )}
+      </BaseButton>
     </Box>
   );
 };

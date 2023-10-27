@@ -6,7 +6,6 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 import CopyIcon from "../../../assets/copy";
-import CheckBox from "@react-native-community/checkbox";
 import * as Clipboard from "expo-clipboard";
 
 export type EnterPasswordProps = {
@@ -17,7 +16,7 @@ export type EnterPasswordProps = {
 export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
   const l = useLocale();
   const theme = useGlobalTheme();
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  // const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [errorMessage] = useState<string>();
   const [codeCopied, setCodeCopied] = useState(false);
 
@@ -83,11 +82,11 @@ export const AccountRecovery = ({ close, goBack }: EnterPasswordProps) => {
       )}
       <Box flex={1} flexDirection="row" justifyContent="flex-end">
         <BaseButton>
-          <CheckBox
+          {/* <CheckBox
             disabled={false}
             value={toggleCheckBox}
             onValueChange={(newValue) => setToggleCheckBox(newValue)}
-          />
+          /> */}
           <Text variant="bodySmallSecondary" color="linkPrimary">
             {l.common.learn_more}
           </Text>

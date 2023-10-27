@@ -24,6 +24,7 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 import { EnterPassword } from "./EnterPassword";
+import { PasswordInput } from "../../../components/PasswordInput";
 
 const OTP_LENGTH = 6;
 type ScreenToShow =
@@ -49,13 +50,11 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const setConnectedWallet = useSetConnectedWallet();
   const setConnectionStatus = useSetConnectionStatus();
-  const [oneTimePasscode, setOneTimePasscode] = useState("");
+  const [password, setPassword] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | undefined>();
   const [screen, setScreen] = useState<ScreenToShow>("base"); // TODO change
 
   const address = useAddress();
-
-  console.log("oneTimePasscode", oneTimePasscode);
 
   const onError = useCallback((error: any) => {
     clearCode();
@@ -90,7 +89,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   );
 
   const connect = useCallback(
-    async (password?: string) => {
+    async (_password?: string) => {
       try {
         const emailWallet = selectionData.emailWallet as EmbeddedWallet;
         const otp = values.join("");
@@ -99,8 +98,10 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           strategy: "email_otp",
           otp,
           email: selectionData.email,
-          recoveryCode: password,
+          recoveryCode: _password,
         });
+
+        console.log("authResult", authResult);
         if (!authResult) {
           onError(new Error("Failed to verify OTP"));
         }
@@ -128,12 +129,13 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     }
   }, [address, connected]);
 
-  useEffect(() => {
+  const onContinuePress = useCallback(() => {
     if (
       values.length === OTP_LENGTH &&
       values.every((v) => v.length === 1) &&
       selectionData &&
-      screen === "base"
+      screen === "base" &&
+      password
     ) {
       setCheckingOtp(true);
       setErrorMessage("");
@@ -150,18 +152,24 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         if (needsRecoveryCode) {
           if (selectionData.isNewUser) {
             try {
-              await emailWallet.authenticate({
+              const authResult = await emailWallet.authenticate({
                 strategy: "email_otp",
                 otp,
                 email: selectionData.email,
+                recoveryCode: password,
               });
+
+              const response = await emailWallet.connect({
+                authResult,
+              });
+              postConnect(response);
             } catch (e: any) {
               console.log("error validating otp new user", e);
-              if (e instanceof Error && e.message.includes("encryption key")) {
-                setScreen("create-password");
-              } else {
-                onError(e);
-              }
+              // if (e instanceof Error && e.message.includes("encryption key")) {
+              //   setScreen("create-password");
+              // } else {
+              onError(e);
+              // }
             }
           } else {
             try {
@@ -185,17 +193,79 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         }
       }, 0);
     }
-  }, [
-    connect,
-    onError,
-    onLocallyConnected,
-    postConnect,
-    screen,
-    selectionData,
-    setConnectedWallet,
-    setConnectionStatus,
-    values,
-  ]);
+  }, [connect, onError, password, postConnect, screen, selectionData, values]);
+
+  // useEffect(() => {
+  //   if (
+  //     values.length === OTP_LENGTH &&
+  //     values.every((v) => v.length === 1) &&
+  //     selectionData &&
+  //     screen === "base" &&
+  //     password
+  //   ) {
+  //     setCheckingOtp(true);
+  //     setErrorMessage("");
+  //     setFocusedIndex(undefined);
+  //     const otp = values.join("");
+
+  //     setTimeout(async () => {
+  //       const emailWallet = selectionData.emailWallet as EmbeddedWallet;
+
+  //       const needsRecoveryCode =
+  //         selectionData.recoveryShareManagement === "USER_MANAGED" &&
+  //         (selectionData.isNewUser || selectionData.isNewDevice);
+
+  //       if (needsRecoveryCode) {
+  //         if (selectionData.isNewUser) {
+  //           try {
+  //             await emailWallet.authenticate({
+  //               strategy: "email_otp",
+  //               otp,
+  //               email: selectionData.email,
+  //               recoveryCode: password,
+  //             });
+  //           } catch (e: any) {
+  //             console.log("error validating otp new user", e);
+  //             if (e instanceof Error && e.message.includes("encryption key")) {
+  //               setScreen("create-password");
+  //             } else {
+  //               onError(e);
+  //             }
+  //           }
+  //         } else {
+  //           try {
+  //             await emailWallet.authenticate({
+  //               strategy: "email_otp",
+  //               otp,
+  //               email: selectionData.email,
+  //             });
+  //           } catch (e: any) {
+  //             console.log("error validating otp existing user", e);
+  //             if (e instanceof Error && e.message.includes("encryption key")) {
+  //               setScreen("enter-password-or-recovery-code");
+  //             } else {
+  //               onError(e);
+  //             }
+  //           }
+  //         }
+  //       } else {
+  //         // AWS_MANAGED
+  //         connect();
+  //       }
+  //     }, 0);
+  //   }
+  // }, [
+  //   connect,
+  //   onError,
+  //   onLocallyConnected,
+  //   password,
+  //   postConnect,
+  //   screen,
+  //   selectionData,
+  //   setConnectedWallet,
+  //   setConnectionStatus,
+  //   values,
+  // ]);
 
   const handleInputChange = async (value: string, index: number) => {
     if (value !== "") {
@@ -360,30 +430,29 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           </Box>
         ))}
       </Box>
-      {selectionData.isNewUser === false ? (
-        <Box
-          flexDirection="row"
-          alignItems="center"
-          borderColor="border"
-          borderWidth={1}
-          borderRadius="md"
-          pr="xs"
-          pl="xxs"
-        >
-          <TextInput
-            style={{
-              color: theme.colors.textPrimary,
-              fontFamily: theme.textVariants.defaults.fontFamily,
-            }}
-            textContentType="none"
-            returnKeyType={"done"}
-            placeholder="Passcode"
-            placeholderTextColor={theme.colors.textSecondary}
-            clearTextOnFocus={false}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={setOneTimePasscode}
-          />
+      {selectionData.recoveryShareManagement === "USER_MANAGED" ? (
+        <Box>
+          <PasswordInput onChangeText={setPassword} />
+          <BaseButton
+            mt="md"
+            paddingVertical="md"
+            borderRadius="lg"
+            borderWidth={1}
+            borderColor="border"
+            backgroundColor="accentButtonColor"
+            onPress={onContinuePress}
+          >
+            {checkingOtp ? (
+              <ActivityIndicator
+                size={"small"}
+                color={theme.colors.accentButtonTextColor}
+              />
+            ) : (
+              <Text variant="bodySmallBold" color="accentButtonTextColor">
+                {l.common.continue}
+              </Text>
+            )}
+          </BaseButton>
         </Box>
       ) : null}
       {errorMessage ? (

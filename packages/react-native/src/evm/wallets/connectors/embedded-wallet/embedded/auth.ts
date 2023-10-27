@@ -180,6 +180,8 @@ export async function validateEmailOTP(options: {
       recoveryCode: options.recoveryCode,
     });
 
+    console.log("return storedToken", storedToken);
+
     return { storedToken };
   } catch (e) {
     throw new Error(

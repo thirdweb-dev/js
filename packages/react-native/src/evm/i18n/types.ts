@@ -82,6 +82,12 @@ export const _en = {
     forgot_password: "Forgot password",
     enter_account_recovery_code: "Enter account recovery code",
     backup_your_account: "Backup your account",
+    enter_password: "Enter password",
+    create_password: "Create password",
+    set_password_message:
+      "Set a password for your account. You will need this password when connecting from a new device.",
+    enter_password_for_email: "Enter the password for email",
+    make_sure_you_save_it: "Make sure you save it",
   },
   wallet_connect: {
     no_results_found: "No results found",
