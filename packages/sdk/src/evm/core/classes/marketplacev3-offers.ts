@@ -1,5 +1,4 @@
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
@@ -426,6 +425,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       : offer.currencyContractAddress;
 
     const provider = this.contractWrapper.getProvider();
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new ContractWrapper<IERC20>(
       provider,
       currency,

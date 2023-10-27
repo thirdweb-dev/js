@@ -3,7 +3,7 @@ import type {
   ContractPublisher as OnChainContractPublisher,
 } from "@thirdweb-dev/contracts-js";
 import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
-import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
+import type { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
