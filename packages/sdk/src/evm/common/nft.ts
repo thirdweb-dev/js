@@ -77,6 +77,7 @@ export async function fetchTokenMetadata(
     try {
       jsonMetadata = await storage.downloadJSON(unparsedTokenIdUri);
     } catch (e: any) {
+      console.error("DAREWISE-DEBUG | Error Fetching NFT metadata", e);
       console.warn(
         `failed to get token metadata: ${JSON.stringify({
           tokenId: tokenId.toString(),
