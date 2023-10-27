@@ -38,7 +38,6 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@paperxyz/sdk-common-utilities": "*",
     "ethers": "^5.7.2"
   },
   "peerDependencies": {
