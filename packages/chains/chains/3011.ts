@@ -6,7 +6,13 @@ export default {
     {
       "name": "PLAYA3ULL GAMES Explorer",
       "url": "https://3011.routescan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreib62bv2d65d7nidojgpkgatrt7smee2l4ov6i6ozqhpfaqsonxku4",
+        "width": 512,
+        "height": 443,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -28,9 +34,10 @@ export default {
     "symbol": "3ULL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3011,
   "rpc": [
     "https://playa3ull-games.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3011.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.mainnet.playa3ull.games"
   ],
   "shortName": "3ULL",

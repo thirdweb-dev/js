@@ -4,7 +4,6 @@ export default {
   "chainId": 127,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.factory127.com",
   "name": "Factory 127 Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "FETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 127,
   "rpc": [],
   "shortName": "feth",
+  "slip44": 127,
   "slug": "factory-127",
   "testnet": false
 } as const satisfies Chain;

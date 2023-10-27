@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://amechain.io/",
   "name": "AME Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "AME",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 180,
   "rpc": [
     "https://ame-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://180.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.amechain.io/"
   ],
   "shortName": "ame",

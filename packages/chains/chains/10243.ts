@@ -6,13 +6,18 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer-test.arthera.net",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.arthera.net"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYQp3e52KjkT4bYdAvB6ACEEpXs2D8DozsDitaADRY2Ak",
     "width": 1024,
@@ -26,9 +31,10 @@ export default {
     "symbol": "AA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10243,
   "rpc": [
     "https://arthera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10243.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test.arthera.net"
   ],
   "shortName": "aa",

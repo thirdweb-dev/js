@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
     "width": 180,
@@ -24,9 +23,10 @@ export default {
     "symbol": "lat",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1,
   "rpc": [
     "https://platon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://210425.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi2.platon.network/rpc",
     "wss://openapi2.platon.network/ws"
   ],

@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://app-faucet.centrality.me"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWhNm7tTi6SYbiumULDRk956hxgqaZSX77vcxBNn8fvnw",
     "width": 112,
@@ -20,7 +19,7 @@ export default {
     "symbol": "CPAY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3000,
   "rpc": [],
   "shortName": "cennz-r",
   "slug": "cennznet-rata",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.meter.io"
   ],
-  "features": [],
   "infoURL": "https://www.meter.io",
   "name": "Meter Mainnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "MTR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 82,
   "rpc": [
     "https://meter.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://82.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.meter.io"
   ],
   "shortName": "Meter",

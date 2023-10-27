@@ -22,9 +22,10 @@ export default {
     "symbol": "OMNI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 165,
   "rpc": [
     "https://omni-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://165.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.omni.network"
   ],
   "shortName": "omni_testnet",

@@ -2,11 +2,16 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "KLAY",
   "chainId": 1001,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "klaytnscope",
+      "url": "https://scope.klaytn.com",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [
     "https://baobab.wallet.klaytn.com/access?next=faucet"
   ],
-  "features": [],
   "infoURL": "https://www.klaytn.com/",
   "name": "Klaytn Testnet Baobab",
   "nativeCurrency": {
@@ -14,9 +19,10 @@ export default {
     "symbol": "KLAY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1001,
   "rpc": [
     "https://klaytn-testnet-baobab.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.baobab.klaytn.net:8651"
   ],
   "shortName": "Baobab",

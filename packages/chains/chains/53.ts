@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.coinex.org/",
   "name": "CoinEx Smart Chain Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "cett",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 53,
   "rpc": [
     "https://coinex-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://53.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.coinex.net/"
   ],
   "shortName": "tcet",

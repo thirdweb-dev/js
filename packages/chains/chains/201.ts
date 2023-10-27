@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://moac.io",
   "name": "MOAC testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "mc",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 201,
   "rpc": [
     "https://moac-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gateway.moac.io/testnet"
   ],
   "shortName": "moactest",

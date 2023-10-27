@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.aerochain.id/"
   ],
-  "features": [],
   "infoURL": "https://aerochaincoin.org/",
   "name": "Aerochain Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "TAero",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 788,
   "rpc": [
     "https://aerochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://788.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.aerochain.id/"
   ],
   "shortName": "taero",

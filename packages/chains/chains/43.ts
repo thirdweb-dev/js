@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://docs.darwinia.network/pangolin-testnet-1e9ac8b09e874e8abd6a7f18c096ca6a"
   ],
-  "features": [],
   "infoURL": "https://darwinia.network/",
   "name": "Darwinia Pangolin Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "PRING",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 43,
   "rpc": [
     "https://darwinia-pangolin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://43.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangolin-rpc.darwinia.network"
   ],
   "shortName": "pangolin",

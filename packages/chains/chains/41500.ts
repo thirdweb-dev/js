@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://beta.opulent-x.com",
   "name": "Opulent-X BETA",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "OXYN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 41500,
   "rpc": [
     "https://opulent-x-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://41500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.opulent-x.com"
   ],
   "shortName": "ox-beta",

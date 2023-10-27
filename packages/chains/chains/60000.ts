@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://www.thinkiumdev.net/faucet"
   ],
-  "features": [],
   "infoURL": "https://thinkium.net/",
   "name": "Thinkium Testnet Chain 0",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "TKM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 60000,
   "rpc": [
     "https://thinkium-testnet-chain-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://60000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.thinkiumrpc.net/"
   ],
   "shortName": "TKM-test0",

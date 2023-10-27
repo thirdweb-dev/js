@@ -26,8 +26,15 @@ import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 
 // export types and utils for convenience
-export * from "../connectors/smart-wallet/types";
-export * from "../connectors/smart-wallet/utils";
+export type * from "../connectors/smart-wallet/types";
+export {
+  type AccessibleSmartWallets,
+  getAllSigners,
+  getAllSmartWallets,
+  getSmartWalletAddress,
+  isSmartWalletDeployed,
+} from "../connectors/smart-wallet/utils";
+
 export type { PaymasterAPI } from "@account-abstraction/sdk";
 
 export class SmartWallet
@@ -172,6 +179,50 @@ export class SmartWallet
   ): Promise<TransactionResult> {
     const connector = await this.getConnector();
     return connector.executeRaw(transaction);
+  }
+
+  /**
+   * Estimate the gas cost of a single transaction
+   * @param transaction
+   * @returns
+   */
+  async estimate(transaction: Transaction<any>) {
+    const connector = await this.getConnector();
+    return connector.estimate(transaction);
+  }
+
+  /**
+   * Estimate the gas cost of a batch of transactions
+   * @param transaction
+   * @returns
+   */
+  async estimateBatch(transactions: Transaction<any>[]) {
+    const connector = await this.getConnector();
+    return connector.estimateBatch(transactions);
+  }
+
+  /**
+   * Estimate the gas cost of a single raw transaction
+   * @param transaction
+   * @returns
+   */
+  async estimateRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>,
+  ) {
+    const connector = await this.getConnector();
+    return connector.estimateRaw(transactions);
+  }
+
+  /**
+   * Estimate the gas cost of a batch of raw transactions
+   * @param transaction
+   * @returns
+   */
+  async estimateBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ) {
+    const connector = await this.getConnector();
+    return connector.estimateBatchRaw(transactions);
   }
 
   /**

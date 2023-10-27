@@ -6,13 +6,18 @@ export default {
     {
       "name": "mmtscan",
       "url": "https://mmtscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmaF5gi2CbDKsJ2UchNkjBqmWjv8JEDP3vePBmxeUHiaK4",
+        "width": 250,
+        "height": 250,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.mmtscan.io/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaF5gi2CbDKsJ2UchNkjBqmWjv8JEDP3vePBmxeUHiaK4",
     "width": 250,
@@ -26,14 +31,16 @@ export default {
     "symbol": "MMT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8898,
   "rpc": [
     "https://mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8898.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.mmtscan.io",
     "https://dataseed1.mmtscan.io",
     "https://dataseed2.mmtscan.io"
   ],
   "shortName": "mmt",
   "slug": "mammoth",
-  "testnet": false
+  "testnet": false,
+  "title": "Mammoth Chain"
 } as const satisfies Chain;

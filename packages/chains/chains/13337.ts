@@ -28,9 +28,10 @@ export default {
     "symbol": "MC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 13337,
   "rpc": [
     "https://beam-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/beam/testnet/rpc"
   ],
   "shortName": "beam-testnet",

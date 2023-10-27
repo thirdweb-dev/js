@@ -4,7 +4,6 @@ export default {
   "chainId": 471100,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://patex.io/",
   "name": "Patex Sepolia Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 471100,
   "rpc": [
     "https://patex-sepolia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://471100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-rpc.patex.io/"
   ],
   "shortName": "psep",

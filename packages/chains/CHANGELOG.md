@@ -1,5 +1,15 @@
 # @thirdweb-dev/chains
 
+## 0.1.56
+
+### Patch Changes
+
+- [#1843](https://github.com/thirdweb-dev/js/pull/1843) [`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93) Thanks [@jnsdls](https://github.com/jnsdls)! - sync chains
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- [#1805](https://github.com/thirdweb-dev/js/pull/1805) [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Spicy Chain deployments
+
 ## 0.1.55
 
 ### Patch Changes

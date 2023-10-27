@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://boba.network",
   "name": "Bobaopera Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BOBA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4051,
   "rpc": [
     "https://bobaopera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4051.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bobaopera.boba.network",
     "wss://wss.testnet.bobaopera.boba.network",
     "https://replica.testnet.bobaopera.boba.network",

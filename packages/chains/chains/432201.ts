@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.avax.network/?subnet=dexalot"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfVxdrWjtUKiGzqFDzAxHH2FqwP2aRuZTGcYWdWg519Xy",
     "width": 256,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ALOT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 432201,
   "rpc": [
     "https://dexalot-subnet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://432201.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/dexalot/testnet/rpc"
   ],
   "shortName": "dexalot-testnet",

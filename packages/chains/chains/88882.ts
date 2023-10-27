@@ -26,9 +26,11 @@ export default {
     "symbol": "CHZ",
     "decimals": 18
   },
+  "networkId": 88882,
   "redFlags": [],
   "rpc": [
     "https://spicy-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://88882.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://spicy-rpc.chiliz.com/"
   ],
   "shortName": "Spicy",

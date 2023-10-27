@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.bcsdev.io"
   ],
-  "features": [],
   "infoURL": "https://blockchainstation.io",
   "name": "BlockChain Station Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "tBCS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 708,
   "rpc": [
     "https://blockchain-station-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://708.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bcsdev.io",
     "wss://rpc-ws-testnet.bcsdev.io"
   ],

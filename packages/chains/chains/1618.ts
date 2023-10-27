@@ -4,7 +4,6 @@ export default {
   "chainId": 1618,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://catechain.com",
   "name": "Catecoin Chain Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "CATE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1618,
   "rpc": [
     "https://catecoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1618.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://send.catechain.com"
   ],
   "shortName": "cate",

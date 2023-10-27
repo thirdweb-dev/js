@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.arabianchain.org/"
   ],
-  "features": [],
   "infoURL": "https://arabianchain.org",
   "name": "Dubxcoin testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "TDUBX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3270,
   "rpc": [
     "https://dubxcoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3270.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctestnet.arabianchain.org"
   ],
   "shortName": "testdubx",

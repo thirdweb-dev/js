@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdbFGqrpiLQGtAeUAyeS2NBvACfgrchEF466ni5q36fuZ",
     "width": 401,
@@ -24,9 +23,10 @@ export default {
     "symbol": "YDK",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 927,
   "rpc": [
     "https://yidark-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://927.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.yidark.io"
   ],
   "shortName": "ydk",

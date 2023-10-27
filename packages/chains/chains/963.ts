@@ -31,9 +31,10 @@ export default {
     "symbol": "BTCC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 963,
   "rpc": [
     "https://btc20-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://963.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bitcoincode.technology/"
   ],
   "shortName": "btc20",

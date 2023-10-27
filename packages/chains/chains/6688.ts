@@ -6,7 +6,13 @@ export default {
     {
       "name": "IRISHub Cosmos Explorer (IOBScan)",
       "url": "https://irishub.iobscan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmTKgKs7kJiWDhdjbELE4Y2HVZ36KS4bYkNCbXdsXk66sW",
+        "width": 1062,
+        "height": 1062,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "ERIS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6688,
   "rpc": [
     "https://irishub.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmrpc.irishub-1.irisnet.org",
     "https://iris-evm.publicnode.com",
     "wss://iris-evm.publicnode.com"

@@ -4,7 +4,6 @@ export default {
   "chainId": 11,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://metadium.com",
   "name": "Metadium Mainnet",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "META",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11,
   "rpc": [
     "https://metadium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metadium.com/prod"
   ],
   "shortName": "meta",
+  "slip44": 916,
   "slug": "metadium",
   "testnet": false
 } as const satisfies Chain;

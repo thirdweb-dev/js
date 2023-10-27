@@ -4,7 +4,6 @@ export default {
   "chainId": 1022,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://clover.finance/sakura",
   "name": "Sakura",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "SKU",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1022,
   "rpc": [],
   "shortName": "sku",
   "slug": "sakura",

@@ -10,17 +10,17 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.futureverse.com/technology/root",
   "name": "The Root Network - Mainnet",
   "nativeCurrency": {
     "name": "XRP",
     "symbol": "XRP",
-    "decimals": 18
+    "decimals": 6
   },
-  "redFlags": [],
+  "networkId": 7668,
   "rpc": [
     "https://the-root-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7668.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://root.rootnet.live/archive",
     "wss://root.rootnet.live/archive/ws"
   ],

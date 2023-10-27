@@ -4,7 +4,6 @@ export default {
   "chainId": 2044,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.shrapnel.com/",
   "name": "Shrapnel Subnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "SHRAPG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2044,
   "rpc": [
     "https://shrapnel-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2044.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/shrapnel/mainnet/rpc"
   ],
   "shortName": "Shrapnel",

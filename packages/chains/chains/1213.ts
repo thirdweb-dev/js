@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://popcateum.org",
   "name": "Popcateum Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "POP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1213,
   "rpc": [
     "https://popcateum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1213.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.popcateum.org"
   ],
   "shortName": "popcat",

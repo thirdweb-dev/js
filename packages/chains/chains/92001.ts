@@ -6,13 +6,18 @@ export default {
     {
       "name": "Lambda EVM Explorer",
       "url": "https://explorer.lambda.top",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.lambda.top"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWsoME6LCghQTpGYf7EnUojaDdYo7kfkWVjE6VvNtkjwy",
     "width": 500,
@@ -26,9 +31,10 @@ export default {
     "symbol": "LAMB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 92001,
   "rpc": [
     "https://lambda-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://92001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.lambda.top/"
   ],
   "shortName": "lambda-testnet",

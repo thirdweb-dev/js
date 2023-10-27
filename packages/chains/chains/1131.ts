@@ -4,7 +4,6 @@ export default {
   "chainId": 1131,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmdR3YL9F95ajwVwfxAGoEzYwm9w7JNsPSfUPjSaQogVjK",
     "width": 512,
@@ -18,7 +17,7 @@ export default {
     "symbol": "DFI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1131,
   "rpc": [],
   "shortName": "DFI-T",
   "slug": "defichain-evm-network-testnet",

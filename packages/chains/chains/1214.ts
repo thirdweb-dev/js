@@ -6,11 +6,16 @@ export default {
     {
       "name": "Enter Explorer - Expenter",
       "url": "https://explorer.entercoin.net",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
+        "width": 64,
+        "height": 64,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
     "width": 64,
@@ -24,9 +29,10 @@ export default {
     "symbol": "ENTER",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1214,
   "rpc": [
     "https://enterchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1214.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tapi.entercoin.net/"
   ],
   "shortName": "enter",

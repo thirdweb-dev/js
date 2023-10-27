@@ -4,7 +4,6 @@ export default {
   "chainId": 1313500,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://xerom.org",
   "name": "Xerom",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "XERO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1313500,
   "rpc": [
     "https://xerom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1313500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.xerom.org"
   ],
   "shortName": "xero",

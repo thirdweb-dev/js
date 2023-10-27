@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXyvnrZY8FUxSULfnKKA99sAEkjAHtvhRx5WeHixgaEdu",
     "width": 382,
@@ -24,9 +23,10 @@ export default {
     "symbol": "SGB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 19,
   "rpc": [
     "https://songbird-canary-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://19.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://songbird-api.flare.network/ext/C/rpc",
     "https://sgb.ftso.com.au/ext/bc/C/rpc",
     "https://sgb.lightft.so/rpc",

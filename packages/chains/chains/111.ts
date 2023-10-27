@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://etherlite.org/faucets"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbNAai1KnBnw4SPQKgrf6vBddifPCQTg2PePry1bmmZYy",
     "width": 88,
@@ -20,9 +19,10 @@ export default {
     "symbol": "ETL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 111,
   "rpc": [
     "https://etherlite-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://111.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etherlite.org"
   ],
   "shortName": "ETL",

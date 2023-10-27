@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "http://tc04.mydefichain.com/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTFyaJFmkDQf35rVRzEf78nGThKAyUCW4BoRaKDi4nnV5",
     "width": 720,
@@ -26,9 +25,10 @@ export default {
     "symbol": "DFI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1133,
   "rpc": [
     "https://defimetachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1133.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-dmc.mydefichain.com:20551"
   ],
   "shortName": "changi",

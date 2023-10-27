@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeHNYUx6n8CjUFSLWNT17oAtDYrUq6r8buyvGCUBXCJw6",
     "width": 500,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ADIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 123456,
   "rpc": [
     "https://adil-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://123456.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.adilchain-rpc.io"
   ],
   "shortName": "dadil",

@@ -4,7 +4,6 @@ export default {
   "chainId": 266256,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://token.gearzero.ca/testnet",
   "name": "Gear Zero Network Testnet",
   "nativeCurrency": {
@@ -12,12 +11,14 @@ export default {
     "symbol": "GZN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 266256,
   "rpc": [
     "https://gear-zero-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://266256.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gzn-test.linksme.info"
   ],
   "shortName": "gz-testnet",
+  "slip44": 266256,
   "slug": "gear-zero-network-testnet",
   "testnet": true
 } as const satisfies Chain;

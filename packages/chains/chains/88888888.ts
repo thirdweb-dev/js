@@ -31,9 +31,10 @@ export default {
     "symbol": "$TEAM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 88888888,
   "rpc": [
     "https://t-e-a-m-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://88888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.teamblockchain.team"
   ],
   "shortName": "team",

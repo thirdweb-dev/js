@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.polis.tech"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmagWrtyApex28H2QeXcs3jJ2F7p2K7eESz3cDbHdQ3pjG",
     "width": 1050,
@@ -20,9 +19,10 @@ export default {
     "symbol": "POLIS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 333999,
   "rpc": [
     "https://polis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://333999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.polis.tech"
   ],
   "shortName": "olympus",

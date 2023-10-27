@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVTahJkdSH3HPYsJMK2GmqfWZjLyxE7cXy1aHEnHU3vp2",
     "width": 250,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BELLY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 141,
   "rpc": [
     "https://openpiece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://141.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.openpiece.io"
   ],
   "shortName": "OPtest",

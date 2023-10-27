@@ -4,15 +4,14 @@ export default {
   "chainId": 23,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://elaeth.io/",
   "name": "ELA-DID-Sidechain Testnet",
   "nativeCurrency": {
     "name": "Elastos",
-    "symbol": "ELA",
+    "symbol": "tELA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 23,
   "rpc": [],
   "shortName": "eladidt",
   "slug": "ela-did-sidechain-testnet",

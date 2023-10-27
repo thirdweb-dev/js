@@ -6,11 +6,16 @@ export default {
     {
       "name": "MEVerse Chain Testnet Explorer",
       "url": "https://testnet.meversescan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPuQ6gaCfUtNdRuaEDbdhot2m2KCy2ZHCJUvZXJAtdeyJ",
     "width": 800,
@@ -24,9 +29,10 @@ export default {
     "symbol": "MEV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4759,
   "rpc": [
     "https://meverse-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4759.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.meversetestnet.io"
   ],
   "shortName": "TESTMEV",

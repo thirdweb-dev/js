@@ -6,11 +6,16 @@ export default {
     {
       "name": "autobahn explorer",
       "url": "https://explorer.autobahn.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
+        "width": 489,
+        "height": 489,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZP19pbqTco4vaP9siduLWP8pdYArFK3onfR55tvjr12s",
     "width": 489,
@@ -24,9 +29,10 @@ export default {
     "symbol": "TXL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 45000,
   "rpc": [
     "https://autobahn-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://45000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.autobahn.network"
   ],
   "shortName": "AutobahnNetwork",

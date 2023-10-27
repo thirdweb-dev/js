@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://testnet.web3q.io/home.w3q/",
   "name": "Web3Q Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "W3Q",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3333,
   "rpc": [
     "https://web3q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.web3q.io:8545"
   ],
   "shortName": "w3q-t",

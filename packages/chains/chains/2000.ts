@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNS6B6L8FfgGSMTEi2SxD3bK5cdmKPNtQKcYaJeRWrkHs",
     "width": 732,
@@ -24,9 +23,10 @@ export default {
     "symbol": "DOGE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2000,
   "rpc": [
     "https://dogechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dogechain.dog",
     "https://rpc01-sg.dogechain.dog",
     "https://rpc.ankr.com/dogechain"

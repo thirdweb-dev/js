@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreiexfqfe2x4impvwhra3xxa5eb25gv25zi3kkaoatdnld7wbxdzf2a",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "MAAL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 786,
   "rpc": [
     "https://maal-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://786.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1-mainnet.maalscan.io/",
     "https://node2-mainnet.maalscan.io/",
     "https://node3-mainnet.maalscan.io/"

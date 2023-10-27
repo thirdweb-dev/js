@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfTeudwVJcu7jzySBcpD9H5ZVK66nPJKRnicxend1bxfq",
     "width": 500,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ALT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 111222333444,
   "rpc": [
     "https://alphabet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://111222333444.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://londonpublic.alphabetnetwork.org",
     "wss://londonpublic.alphabetnetwork.org/ws/",
     "https://main-rpc.com",

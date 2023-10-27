@@ -6,7 +6,13 @@ export default {
     {
       "name": "avescan",
       "url": "https://testnet.avescoin.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+        "width": 232,
+        "height": 232,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "AVST",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 333331,
   "rpc": [
     "https://aves-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://333331.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.rpc.avescoin.io"
   ],
   "shortName": "avst",

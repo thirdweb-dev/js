@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYikaM849eZrL8pGNeVhEHVTKWpxdGMvCY5oFBfZ2ndhd",
     "width": 800,
@@ -24,7 +23,7 @@ export default {
     "symbol": "TOP",
     "decimals": 6
   },
-  "redFlags": [],
+  "networkId": 0,
   "rpc": [],
   "shortName": "top",
   "slug": "top",

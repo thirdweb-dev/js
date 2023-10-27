@@ -18,9 +18,11 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 47279324479,
   "redFlags": [],
   "rpc": [
     "https://xai-goerli-orbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://47279324479.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.xai-chain.net/rpc"
   ],
   "shortName": "xai-goerli",
