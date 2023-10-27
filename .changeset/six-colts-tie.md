@@ -9,4 +9,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-require minimum node version: `>=18.7.0`
+require minimum node version: `>=18`
