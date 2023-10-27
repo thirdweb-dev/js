@@ -12,6 +12,7 @@ import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading, TrackedLink, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+import connectLottie from "../public/assets/product-pages/connect/connect-lottie.json";
 
 const TRACKING_CATEGORY = "connect-wallet-landing";
 
@@ -70,7 +71,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           ctaLink="/dashboard/wallets/connect"
           contactUsTitle="Book Demo"
           gradient="linear(to-r, #3385FF, #7BB0FF)"
-          video={"/assets/connect/connect-wallet-hero.mp4"}
+          lottie={connectLottie}
           image={require("public/assets/product-pages/hero/desktop-hero-connect-wallet.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-connect-wallet.png")}
         />

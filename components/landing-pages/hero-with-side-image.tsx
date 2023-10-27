@@ -17,7 +17,7 @@ interface LandingHeroWithSideImageProps {
   gradient: string;
   image?: StaticImageData;
   mobileImage?: StaticImageData;
-  video?: string;
+  lottie?: {};
 }
 
 export const LandingHeroWithSideImage: React.FC<
@@ -35,7 +35,7 @@ export const LandingHeroWithSideImage: React.FC<
   gradient,
   image,
   mobileImage,
-  video,
+  lottie,
 }) => {
   return (
     <SimpleGrid
@@ -71,7 +71,7 @@ export const LandingHeroWithSideImage: React.FC<
       </Flex>
       <Flex maxH="500px">
         <LandingDesktopMobileImage
-          video={video}
+          lottie={lottie}
           image={image}
           mobileImage={mobileImage}
         />
