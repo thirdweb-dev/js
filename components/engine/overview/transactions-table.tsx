@@ -139,6 +139,9 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           "sent",
         ].includes(status);
 
+        const shouldShowTooltip =
+          status === "errored" || (status === "mined" && minedAt);
+
         return (
           <Flex align="center" gap={1}>
             <Tooltip
@@ -148,15 +151,17 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
               p={4}
               maxW={{ md: "450px" }}
               label={
-                <Card bgColor="backgroundHighlight">
-                  <Text>
-                    {status === "errored"
-                      ? errorMessage
-                      : status === "mined" && minedAt
-                      ? `Completed ${format(new Date(minedAt), "PP pp")}`
-                      : undefined}
-                  </Text>
-                </Card>
+                shouldShowTooltip ? (
+                  <Card bgColor="backgroundHighlight">
+                    <Text>
+                      {status === "errored"
+                        ? errorMessage
+                        : status === "mined" && minedAt
+                        ? `Completed ${format(new Date(minedAt), "PP pp")}`
+                        : undefined}
+                    </Text>
+                  </Card>
+                ) : null
               }
             >
               <Tag
@@ -169,7 +174,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 {statusDetails[status].showTooltipIcon && <FiInfo />}
               </Tag>
             </Tooltip>
-
             {showCancelTransactionButton && (
               <CancelTransactionButton transaction={transaction} />
             )}
@@ -241,7 +245,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       },
     }),
     columnHelper.accessor("queuedAt", {
-      header: "Queued At",
+      header: "Queued",
       cell: (cell) => {
         const value = cell.getValue();
         if (!value) {
@@ -386,7 +390,17 @@ const CancelTransactionButton = ({
         </ModalContent>
       </Modal>
 
-      <Tooltip label="Cancel transaction">
+      <Tooltip
+        borderRadius="md"
+        bg="transparent"
+        boxShadow="none"
+        p={4}
+        label={
+          <Card bgColor="backgroundHighlight">
+            <Text>Cancel transaction</Text>
+          </Card>
+        }
+      >
         <IconButton
           aria-label="Cancel transaction"
           icon={<FiTrash />}
