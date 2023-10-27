@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.vention.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcNepHmbmHW1BZYM3MFqJW4awwhmDqhUPRXXmRnXwg1U4",
     "width": 250,
@@ -26,9 +25,10 @@ export default {
     "symbol": "VNT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 741,
   "rpc": [
     "https://vention-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://741.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node-testnet.vention.network"
   ],
   "shortName": "vsct",

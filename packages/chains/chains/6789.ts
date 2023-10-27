@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.goldsmartchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPNuymyaKLJhCaXnyrsL8358FeTxabZFsaxMmWNU4Tzt3",
     "width": 396,
@@ -26,9 +25,10 @@ export default {
     "symbol": "STAND",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6789,
   "rpc": [
     "https://gold-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6789.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.goldsmartchain.com"
   ],
   "shortName": "STANDm",

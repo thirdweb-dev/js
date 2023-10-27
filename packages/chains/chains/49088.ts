@@ -10,11 +10,10 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
-    "url": "ipfs://QmcHvn2Wq91ULyEH5s3uHjosX285hUgyJHwggFJUd3L5uh",
-    "width": 128,
-    "height": 128,
+    "url": "ipfs://QmYxniqbiFD7nXBNjN8boUhoXYEAW23YquArD2Rnkq8WHS",
+    "width": 480,
+    "height": 480,
     "format": "png"
   },
   "infoURL": "https://thebifrost.io",
@@ -24,13 +23,15 @@ export default {
     "symbol": "BFC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 49088,
   "rpc": [
     "https://bifrost-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://49088.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-01.testnet.thebifrost.io/rpc",
     "https://public-02.testnet.thebifrost.io/rpc"
   ],
   "shortName": "tbfc",
   "slug": "bifrost-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "Bifrost Network Testnet"
 } as const satisfies Chain;

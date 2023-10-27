@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://kcc.io",
   "name": "KCC Mainnet",
   "nativeCurrency": {
@@ -18,14 +17,16 @@ export default {
     "symbol": "KCS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 321,
   "rpc": [
     "https://kcc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://321.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.kcc.network",
     "https://kcc.mytokenpocket.vip",
     "https://public-rpc.blockpi.io/http/kcc"
   ],
   "shortName": "kcs",
+  "slip44": 641,
   "slug": "kcc",
   "testnet": false
 } as const satisfies Chain;

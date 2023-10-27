@@ -6,11 +6,16 @@ export default {
     {
       "name": "Core Scan",
       "url": "https://scan.coredao.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
+        "width": 200,
+        "height": 217,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
     "width": 200,
@@ -24,9 +29,10 @@ export default {
     "symbol": "CORE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1116,
   "rpc": [
     "https://core-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1116.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.coredao.org/",
     "https://rpc-core.icecreamswap.com"
   ],

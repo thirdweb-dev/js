@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "http://theloopnetwork.org/",
   "name": "LoopNetwork Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "LOOP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 15551,
   "rpc": [
     "https://loopnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://15551.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.mainnetloop.com"
   ],
   "shortName": "loop",

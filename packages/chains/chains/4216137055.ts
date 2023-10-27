@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://frankenstein-faucet.oneledger.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmRhqq4Gp8G9w27ND3LeFW49o5PxcxrbJsqHbpBFtzEMfC",
     "width": 225,
@@ -26,9 +25,10 @@ export default {
     "symbol": "OLT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4216137055,
   "rpc": [
     "https://oneledger-testnet-frankenstein.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4216137055.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://frankenstein-rpc.oneledger.network"
   ],
   "shortName": "frankenstein",

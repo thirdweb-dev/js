@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bittorrentchain.io/",
   "name": "BitTorrent Chain Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1028,
   "rpc": [
     "https://bittorrent-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1028.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.bittorrentchain.io/"
   ],
   "shortName": "tbtt",

@@ -4,7 +4,6 @@ export default {
   "chainId": 5197,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmV1wZ1RVXeD7216aiVBpLkbBBHWNuoTvcSzpVQsqi2uaH",
     "width": 200,
@@ -18,9 +17,10 @@ export default {
     "symbol": "ES",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5197,
   "rpc": [
     "https://eraswap.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5197.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.eraswap.network",
     "https://rpc-mumbai.mainnet.eraswap.network"
   ],

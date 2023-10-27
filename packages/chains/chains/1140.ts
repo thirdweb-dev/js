@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://scan.boka.network/#/Galois/faucet"
   ],
-  "features": [],
   "infoURL": "https://mathchain.org",
   "name": "MathChain Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "MATH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1140,
   "rpc": [
     "https://mathchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1140.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galois-hk.maiziqianbao.net/rpc"
   ],
   "shortName": "tMATH",

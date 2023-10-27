@@ -6,11 +6,16 @@ export default {
     {
       "name": "DOScan-Test",
       "url": "https://test.doscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmV2Nowzo81F6pi2qFcHePA4MwmmdMKBMUzBJUrxcymxx4",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "DOS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3939,
   "rpc": [
     "https://dos-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3939.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.doschain.com"
   ],
   "shortName": "dost",

@@ -4,18 +4,29 @@ export default {
   "chainId": 336,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://shiden.subscan.io",
-      "standard": "none"
-    },
-    {
       "name": "blockscout",
       "url": "https://blockscout.com/shiden",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    },
+    {
+      "name": "subscan",
+      "url": "https://shiden.subscan.io",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://Qma2GfW5nQHuA7nGqdEfwaXPL63G9oTwRTQKaGTfjNtM2W",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQySjAoWHgk3ou1yvBi2TrTcgH6KhfGiU7GcrLzrAeRkE",
     "width": 250,
@@ -29,9 +40,10 @@ export default {
     "symbol": "SDN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 336,
   "rpc": [
     "https://shiden.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://336.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://shiden.api.onfinality.io/public",
     "https://shiden-rpc.dwellir.com",
     "https://shiden.public.blastapi.io",

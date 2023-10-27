@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.crossbell.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS8zEetTb6pwdNpVjv5bz55BXiSMGP9BjTJmNcjcUT91t",
     "width": 408,
@@ -26,9 +25,10 @@ export default {
     "symbol": "CSB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3737,
   "rpc": [
     "https://crossbell.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3737.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.crossbell.io"
   ],
   "shortName": "csb",

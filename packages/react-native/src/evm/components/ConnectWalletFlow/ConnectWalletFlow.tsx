@@ -7,6 +7,7 @@ import { walletIds } from "@thirdweb-dev/wallets";
 import { useColorScheme } from "react-native";
 import {
   useGlobalTheme,
+  useLocale,
   useModalState,
 } from "../../providers/ui-context-provider";
 import {
@@ -17,6 +18,7 @@ import Box from "../base/Box";
 import { ThemeProvider } from "../../styles/ThemeProvider";
 
 export const ConnectWalletFlow = () => {
+  const l = useLocale();
   const { modalState, setModalState } = useModalState();
   const {
     modalTitle,
@@ -25,7 +27,6 @@ export const ConnectWalletFlow = () => {
     termsOfServiceUrl,
     walletConfig,
   } = (modalState as ConnectWalletFlowModal).data;
-
   const [modalVisible, setModalVisible] = useState(false);
   const [activeWallet, setActiveWallet] = useState<WalletConfig | undefined>();
   const [isConnecting, setIsConnecting] = useState(false);
@@ -147,7 +148,7 @@ export const ConnectWalletFlow = () => {
               content={
                 activeWallet.id === walletIds.localWallet ? (
                   <Text variant="bodySmallSecondary" mt="md" textAlign="center">
-                    Creating, encrypting and securing your device wallet.
+                    {l.connecting_wallet.creating_encrypting}
                   </Text>
                 ) : undefined
               }

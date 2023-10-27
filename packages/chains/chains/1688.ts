@@ -4,7 +4,6 @@ export default {
   "chainId": 1688,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreigzeanzqgxrzzep45t776ovbwi242poqxbryuu2go5eedeuwwcsay",
     "width": 512,
@@ -18,9 +17,10 @@ export default {
     "symbol": "LUDAN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1688,
   "rpc": [
     "https://ludan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1688.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ludan.org/"
   ],
   "shortName": "LUDAN",

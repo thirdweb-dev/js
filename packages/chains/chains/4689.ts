@@ -24,9 +24,11 @@ export default {
     "symbol": "IOTX",
     "decimals": 18
   },
+  "networkId": 4689,
   "redFlags": [],
   "rpc": [
     "https://iotex-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4689.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://babel-api.mainnet.iotex.io"
   ],
   "shortName": "iotex-mainnet",

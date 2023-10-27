@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmfQ1yae6uvXgBSwnwJM4Mtp8ctH66tM6mB1Hsgu4XvsC9",
     "width": 2000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "tCNT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 371,
   "rpc": [
     "https://consta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://371.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.theconsta.com"
   ],
   "shortName": "tCNT",

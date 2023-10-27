@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbENgHTymTUUArX5MZ2XXH69WGenirU3oamkRD448hYdz",
     "width": 282,
@@ -24,9 +23,10 @@ export default {
     "symbol": "CUBE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1818,
   "rpc": [
     "https://cube-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1818.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.cube.network",
     "wss://ws-mainnet.cube.network",
     "https://http-mainnet-sg.cube.network",
@@ -35,6 +35,7 @@ export default {
     "wss://ws-mainnet-us.cube.network"
   ],
   "shortName": "cube",
+  "slip44": 1818,
   "slug": "cube-chain",
   "testnet": false
 } as const satisfies Chain;

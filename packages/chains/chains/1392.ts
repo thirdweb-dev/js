@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQjwcNRCLXU8JBtSkPLUnbWVrpoqbnZVffpJ9Bu8rG34e",
     "width": 148,
@@ -24,9 +23,10 @@ export default {
     "symbol": "JSM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1392,
   "rpc": [
     "https://joseon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1392.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.modchain.net/blockchain.joseon.com/rpc"
   ],
   "shortName": "mun",

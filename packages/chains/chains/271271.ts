@@ -5,31 +5,31 @@ export default {
   "explorers": [
     {
       "name": "EgonCoin Testnet",
-      "url": "https://testnet.egcscan.com",
+      "url": "https://testnet.egonscan.com",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://faucet.egcscan.com"
+    "https://faucet.egonscan.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNZiMmzMQYjyGtNSghtzLg4UooYhDgMQsa677DAP5KsBg",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "infoURL": "https://egcscan.com",
+  "infoURL": "https://egonscan.com",
   "name": "EgonCoin Testnet",
   "nativeCurrency": {
     "name": "EgonCoin",
     "symbol": "EGON",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 271271,
   "rpc": [
     "https://egoncoin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpctest.egcscan.com"
+    "https://271271.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpctest.egonscan.com"
   ],
   "shortName": "EGONt",
   "slug": "egoncoin-testnet",

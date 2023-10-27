@@ -10,8 +10,8 @@ export default {
     }
   ],
   "faucets": [
-    "https://faucet.avax.network/",
-    "https://faucet.avax-test.network/"
+    "https://faucet.avax-test.network/",
+    "https://faucet.avax.network/"
   ],
   "features": [],
   "icon": {
@@ -27,9 +27,11 @@ export default {
     "symbol": "AVAX",
     "decimals": 18
   },
+  "networkId": 43113,
   "redFlags": [],
   "rpc": [
     "https://avalanche-fuji.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://43113.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avalanche-fuji.infura.io/v3/${INFURA_API_KEY}",
     "https://api.avax-test.network/ext/bc/C/rpc",
     "https://avalanche-fuji-c-chain.publicnode.com",
@@ -37,5 +39,5 @@ export default {
   ],
   "shortName": "Fuji",
   "slug": "avalanche-fuji",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

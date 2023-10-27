@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYiLMeKDXMSNuQmtxNdxm53xR588pcRXMf7zuiZLjQnc6",
     "width": 1501,
@@ -24,9 +23,10 @@ export default {
     "symbol": "PHX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 13381,
   "rpc": [
     "https://phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13381.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.phoenixplorer.com/"
   ],
   "shortName": "Phoenix",

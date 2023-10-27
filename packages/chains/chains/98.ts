@@ -6,11 +6,16 @@ export default {
     {
       "name": "SIX Scan",
       "url": "https://sixscan.io/sixnet",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmP93z696v8Hetu13peY2oEHDXq8Bj5CqaDRwpVkpnM15A",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmP93z696v8Hetu13peY2oEHDXq8Bj5CqaDRwpVkpnM15A",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "SIX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 98,
   "rpc": [
     "https://six-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://98.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sixnet-rpc-evm.sixprotocol.net"
   ],
   "shortName": "six",

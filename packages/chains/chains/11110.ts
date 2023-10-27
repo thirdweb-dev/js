@@ -4,18 +4,29 @@ export default {
   "chainId": 11110,
   "explorers": [
     {
-      "name": "Astra PingPub Explorer",
-      "url": "https://ping.astranaut.io/astra",
-      "standard": "none"
-    },
-    {
       "name": "Astra EVM Explorer (Blockscout)",
       "url": "https://explorer.astranaut.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+        "width": 104,
+        "height": 80,
+        "format": "png"
+      }
+    },
+    {
+      "name": "Astra PingPub Explorer",
+      "url": "https://ping.astranaut.io/astra",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
+        "width": 104,
+        "height": 80,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmaBtaukPNNUNjdJSUAwuFFQMLbZX1Pc3fvXKTKQcds7Kf",
     "width": 104,
@@ -29,9 +40,10 @@ export default {
     "symbol": "ASA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11110,
   "rpc": [
     "https://astra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11110.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.io",
     "https://rpc1.astranaut.io"
   ],

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbVLQnaMDu86bPyKgCvTGhFBeYwjr15hQnrCcsp1EkAGL",
     "width": 500,
@@ -24,9 +23,10 @@ export default {
     "symbol": "BOC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 818,
   "rpc": [
     "https://beone-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://818.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed1.beonechain.com",
     "https://dataseed2.beonechain.com",
     "https://dataseed-us1.beonechain.com",
@@ -35,6 +35,7 @@ export default {
     "https://dataseed-uk2.beonechain.com"
   ],
   "shortName": "BOC",
+  "slip44": 8181,
   "slug": "beone-chain",
   "testnet": false
 } as const satisfies Chain;

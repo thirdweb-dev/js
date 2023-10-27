@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.brcchain.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmX8qGX7xoZqYUpHxA85uZwQX2fgbTHvmddE1NfseDyBED",
     "width": 512,
@@ -26,9 +25,10 @@ export default {
     "symbol": "BRC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12123,
   "rpc": [
     "https://brc-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.brcchain.io"
   ],
   "shortName": "BRC",

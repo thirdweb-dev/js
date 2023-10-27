@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.callisto.network/"
   ],
-  "features": [],
   "infoURL": "https://callisto.network",
   "name": "Callisto Testnet",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "CLO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 79,
   "rpc": [
     "https://callisto-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20729.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.callisto.network/"
   ],
   "shortName": "CLOTestnet",

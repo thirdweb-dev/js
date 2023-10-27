@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https:/bt.io",
   "name": "BitTorrent Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BTT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 199,
   "rpc": [
     "https://bittorrent-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://199.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bittorrentchain.io/"
   ],
   "shortName": "BTT",

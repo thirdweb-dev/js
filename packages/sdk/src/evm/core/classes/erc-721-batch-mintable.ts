@@ -47,7 +47,7 @@ export class Erc721BatchMintable implements DetectableFeature {
    * @remarks Mint many unique NFTs at once to a specified wallet.
    *
    * @example
-   * ```javascript
+   * ```typescript
    * // Address of the wallet you want to mint the NFT to
    * const walletAddress = "{{wallet_address}}";
    *

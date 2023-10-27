@@ -4,18 +4,29 @@ export default {
   "chainId": 50,
   "explorers": [
     {
-      "name": "blocksscan",
-      "url": "https://xdc.blocksscan.io",
-      "standard": "EIP3091"
-    },
-    {
       "name": "xdcscan",
       "url": "https://xdcscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
+    },
+    {
+      "name": "blocksscan",
+      "url": "https://xdc.blocksscan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmPzVFs16GwaD8LAcGFLCNXzEK8BHFKNXeM3nmBpnq9xy3",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeRq7pabiJE2n1xU3Y5Mb4TZSX9kQ74x7a3P2Z4PqcMRX",
     "width": 1450,
@@ -29,9 +40,10 @@ export default {
     "symbol": "XDC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 50,
   "rpc": [
     "https://xinfin-xdc-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://50.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://erpc.xinfin.network",
     "https://rpc.xinfin.network",
     "https://rpc1.xinfin.network",

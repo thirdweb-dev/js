@@ -6,7 +6,13 @@ export default {
     {
       "name": "Blockscout",
       "url": "https://explorer.gather.network",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmTYR8CeFiNbJ1zJHnE3DK2wEN18r2y2vqSKUcLweUT2Gz",
+        "width": 1080,
+        "height": 1080,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
@@ -24,9 +30,11 @@ export default {
     "symbol": "GTH",
     "decimals": 18
   },
+  "networkId": 192837465,
   "redFlags": [],
   "rpc": [
     "https://gather-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://192837465.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.gather.network"
   ],
   "shortName": "GTH",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.thetatoken.org/",
   "name": "Theta Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "TFUEL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 365,
   "rpc": [
     "https://theta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://365.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api-testnet.thetatoken.org/rpc"
   ],
   "shortName": "theta-testnet",

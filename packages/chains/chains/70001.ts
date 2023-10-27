@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://thinkium.net/",
   "name": "Thinkium Mainnet Chain 1",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "TKM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 70001,
   "rpc": [
     "https://thinkium-chain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://70001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://proxy1.thinkiumrpc.net/"
   ],
   "shortName": "TKM1",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://token.script.tv",
   "name": "Script Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "SPAY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 742,
   "rpc": [
     "https://script-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://742.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testeth-rpc-api.script.tv/rpc"
   ],
   "shortName": "SPAY",

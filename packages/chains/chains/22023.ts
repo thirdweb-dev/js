@@ -4,18 +4,29 @@ export default {
   "chainId": 22023,
   "explorers": [
     {
-      "name": "Taycan Cosmos Explorer(BigDipper)",
-      "url": "https://taycan-cosmoscan.hupayx.io",
-      "standard": "none"
-    },
-    {
       "name": "Taycan Explorer(Blockscout)",
       "url": "https://taycan-evmscan.hupayx.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+        "width": 1000,
+        "height": 1206,
+        "format": "png"
+      }
+    },
+    {
+      "name": "Taycan Cosmos Explorer(BigDipper)",
+      "url": "https://taycan-cosmoscan.hupayx.io",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+        "width": 1000,
+        "height": 1206,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
     "width": 1000,
@@ -29,9 +40,10 @@ export default {
     "symbol": "SFL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 22023,
   "rpc": [
     "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://22023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://taycan-rpc.hupayx.io:8545"
   ],
   "shortName": "SFL",

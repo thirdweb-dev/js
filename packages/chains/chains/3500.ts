@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.paribuscan.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVgc77jYo2zrxQjhYwT4KzvSrSZ1DBJraJVX57xAvP8MD",
     "width": 2362,
@@ -26,9 +25,10 @@ export default {
     "symbol": "PRB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3500,
   "rpc": [
     "https://paribu-net-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3500.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.paribuscan.com"
   ],
   "shortName": "prbtestnet",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://graphlinq.io",
   "name": "Graphlinq Blockchain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "GLQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 614,
   "rpc": [
     "https://graphlinq-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://614.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://glq-dataseed.graphlinq.io"
   ],
   "shortName": "glq",

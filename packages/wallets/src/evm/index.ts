@@ -45,6 +45,10 @@ export * from "./wallets/trust";
 export * from "./wallets/wallet-connect";
 export * from "./wallets/wallet-connect-v1";
 export * from "./wallets/zerion";
+export * from "./wallets/token-bound-smart-wallet";
+
+export { OKXWallet, type OKXWalletOptions } from "./wallets/okx";
+export { getInjectedOKXProvider } from "./connectors/okx/getInjectedOKXProvider";
 
 export type { Chain } from "@thirdweb-dev/chains";
 

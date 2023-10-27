@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmc8hsCbUUjnJDnXrDhFh4V1xk1gJwZbUyNJ39p72javji",
     "width": 400,
@@ -24,9 +23,10 @@ export default {
     "symbol": "LYC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 721,
   "rpc": [
     "https://lycan-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://721.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.lycanchain.com/"
   ],
   "shortName": "LYC",

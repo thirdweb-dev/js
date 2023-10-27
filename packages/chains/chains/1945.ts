@@ -6,11 +6,16 @@ export default {
     {
       "name": "Onus explorer testnet",
       "url": "https://explorer-testnet.onuschain.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreiec34ik3glrm5jrzafdytvu4kxdsrxhqmagbe27fytdcuzkhoooay",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://onuschain.io",
   "name": "ONUS Chain Testnet",
   "nativeCurrency": {
@@ -18,12 +23,14 @@ export default {
     "symbol": "ONUS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1945,
   "rpc": [
     "https://onus-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1945.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.onuschain.io"
   ],
   "shortName": "onus-testnet",
   "slug": "onus-chain-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "ONUS Chain Testnet"
 } as const satisfies Chain;

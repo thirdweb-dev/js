@@ -4,7 +4,6 @@ export default {
   "chainId": 31415926,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS9r9XQkMHVomWcSBNDkKkz9n87h9bH9ssabeiKZtANoU",
     "width": 1000,
@@ -18,9 +17,10 @@ export default {
     "symbol": "tFIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 31415926,
   "rpc": [],
   "shortName": "filecoin-local",
+  "slip44": 1,
   "slug": "filecoin-local-testnet",
   "status": "incubating",
   "testnet": true

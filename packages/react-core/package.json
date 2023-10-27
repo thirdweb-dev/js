@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "4.0.4",
+  "version": "4.0.8",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -99,5 +99,8 @@
   "peerDependencies": {
     "ethers": ">=5.5.1",
     "react": ">=18.0.0"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   }
 }

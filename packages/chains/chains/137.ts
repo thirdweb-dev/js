@@ -7,6 +7,17 @@ export default {
       "name": "polygonscan",
       "url": "https://polygonscan.com",
       "standard": "EIP3091"
+    },
+    {
+      "name": "dexguru",
+      "url": "https://polygon.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
@@ -24,9 +35,11 @@ export default {
     "symbol": "MATIC",
     "decimals": 18
   },
+  "networkId": 137,
   "redFlags": [],
   "rpc": [
     "https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://137.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}",
     "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://polygon-rpc.com/",
@@ -41,6 +54,7 @@ export default {
     "wss://polygon.gateway.tenderly.co"
   ],
   "shortName": "matic",
+  "slip44": 966,
   "slug": "polygon",
   "testnet": false
 } as const satisfies Chain;

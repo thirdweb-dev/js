@@ -6,7 +6,7 @@ import {
   EIP155_SIGNING_METHODS,
   IWalletConnectReceiver,
 } from "@thirdweb-dev/wallets";
-import { useModalState } from "../../providers/ui-context-provider";
+import { useLocale, useModalState } from "../../providers/ui-context-provider";
 import {
   CLOSE_MODAL_STATE,
   WalletConnectSessionRequestModal,
@@ -30,6 +30,7 @@ const getTitle = (method: string) => {
 const MODAL_HEIGHT = Dimensions.get("window").height * 0.7;
 
 export const SessionRequestModal = () => {
+  const l = useLocale();
   const { modalState, setModalState } = useModalState();
   const { data: requestData } = modalState as WalletConnectSessionRequestModal;
   const [approvingRequest, setApprovingRequest] = useState(false);
@@ -60,7 +61,7 @@ export const SessionRequestModal = () => {
       case EIP155_SIGNING_METHODS.SWITCH_CHAIN:
         return (
           <Text variant="bodySmall" textAlign="left">
-            {`Switch to ${
+            {`${l.connect_wallet_details.switch_to} ${
               requestData.params[0].chainId === chain?.chainId
                 ? chain?.slug
                 : requestData.params[0].chainId
@@ -85,17 +86,17 @@ export const SessionRequestModal = () => {
         return (
           <Box>
             <Text variant="bodySmall" textAlign="left">
-              {`from: ${shortenWalletAddress(from)}`}
+              {`${l.common.from}: ${shortenWalletAddress(from)}`}
             </Text>
             <Text variant="bodySmall" textAlign="left" mt="sm">
-              {`to: ${shortenWalletAddress(to)}`}
+              {`${l.common.to}: ${shortenWalletAddress(to)}`}
             </Text>
           </Box>
         );
       default:
         throw new Error(`Method not implemented: ${requestData.method}`);
     }
-  }, [chain?.chainId, chain?.slug, requestData]);
+  }, [chain?.chainId, chain?.slug, requestData, l]);
 
   return (
     <Box
@@ -129,7 +130,7 @@ export const SessionRequestModal = () => {
             onClose();
           }}
         >
-          <Text variant="bodySmall">Reject</Text>
+          <Text variant="bodySmall">{l.common.reject}</Text>
         </BaseButton>
         <BaseButton
           alignContent="center"
@@ -148,7 +149,7 @@ export const SessionRequestModal = () => {
             <ActivityIndicator size="small" />
           ) : (
             <Text variant="bodySmall" color="black">
-              Approve
+              {l.common.approve}
             </Text>
           )}
         </BaseButton>

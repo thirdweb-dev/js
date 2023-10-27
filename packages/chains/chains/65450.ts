@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVES1eqDXhP8SdeCpM85wvjmhrQDXGRquQebDrSdvJqpt",
     "width": 792,
@@ -24,9 +23,10 @@ export default {
     "symbol": "SCOL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 65450,
   "rpc": [
     "https://scolcoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://65450.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.scolcoin.com"
   ],
   "shortName": "SRC",

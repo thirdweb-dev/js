@@ -6,11 +6,16 @@ export default {
     {
       "name": "CICscan",
       "url": "https://cicscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
+        "width": 1024,
+        "height": 768,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNekc5gpyrQkeDQcmfJLBrP5fa6GMarB13iy6aHVdQJDU",
     "width": 1024,
@@ -21,12 +26,13 @@ export default {
   "name": "CIC Chain Mainnet",
   "nativeCurrency": {
     "name": "Crazy Internet Coin",
-    "symbol": "CICT",
+    "symbol": "CIC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1353,
   "rpc": [
     "https://cic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1353.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xapi.cicscan.com"
   ],
   "shortName": "CIC",
