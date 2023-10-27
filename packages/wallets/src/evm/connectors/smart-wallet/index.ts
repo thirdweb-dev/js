@@ -27,6 +27,7 @@ import {
 import { AccountAPI } from "./lib/account";
 import { AddressZero } from "@account-abstraction/utils";
 import { TransactionDetailsForUserOp } from "./lib/transaction-details";
+import { BatchData } from "./lib/base-api";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -203,14 +204,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    const batchData = await this.prepareBatchTx(transactions);
+    const { tx, batchData } = await this.prepareBatchTx(transactions);
     return await signer.sendTransaction(
       {
         to: await signer.getAddress(),
-        data: batchData.encode(),
+        data: tx.encode(),
         value: 0,
       },
-      true, // batched tx flag
+      batchData,
     );
   }
 
@@ -258,14 +259,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    const batchData = await this.prepareBatchRaw(transactions);
+    const batch = await this.prepareBatchRaw(transactions);
     return signer.sendTransaction(
       {
         to: await signer.getAddress(),
-        data: batchData.encode(),
+        data: batch.tx.encode(),
         value: 0,
       },
-      true, // batched tx flag
+      batch.batchData, // batched tx flag
     );
   }
 
@@ -285,15 +286,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    console.log("single", transaction.getTarget(), transaction.encode().length);
-    return this.estimateTx(
-      {
-        target: transaction.getTarget(),
-        data: transaction.encode(),
-        value: await transaction.getValue(),
-      },
-      false,
-    );
+    return this.estimateTx({
+      target: transaction.getTarget(),
+      data: transaction.encode(),
+      value: await transaction.getValue(),
+    });
   }
 
   async estimateRaw(
@@ -303,29 +300,25 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     const tx = await ethers.utils.resolveProperties(transaction);
-    return this.estimateTx(
-      {
-        target: tx.to || AddressZero,
-        data: tx.data?.toString() || "",
-        value: tx.value || BigNumber.from(0),
-      },
-      false,
-    );
+    return this.estimateTx({
+      target: tx.to || AddressZero,
+      data: tx.data?.toString() || "",
+      value: tx.value || BigNumber.from(0),
+    });
   }
 
   async estimateBatch(transactions: Transaction<any>[]) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    const batch = await this.prepareBatchTx(transactions);
-    console.log("batch", batch.getTarget(), batch.encode().length);
+    const { tx, batchData } = await this.prepareBatchTx(transactions);
     return this.estimateTx(
       {
-        target: batch.getTarget(),
-        data: batch.encode(),
-        value: await batch.getValue(),
+        target: tx.getTarget(),
+        data: tx.encode(),
+        value: await tx.getValue(),
       },
-      true,
+      batchData,
     );
   }
 
@@ -335,14 +328,14 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    const batch = await this.prepareBatchRaw(transactions);
+    const { tx, batchData } = await this.prepareBatchRaw(transactions);
     return this.estimateTx(
       {
-        target: batch.getTarget(),
-        data: batch.encode(),
-        value: await batch.getValue(),
+        target: tx.getTarget(),
+        data: tx.encode(),
+        value: await tx.getValue(),
       },
-      true,
+      batchData,
     );
   }
 
@@ -357,16 +350,16 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
-    if (await this.accountApi.isAcountDeployed()) {
-      throw new Error("Smart wallet already deployed");
-    }
     const signer = await this.getSigner();
     const tx = await signer.sendTransaction(
       {
         to: await signer.getAddress(),
         data: "0x",
       },
-      true, // batched tx flag to avoid hitting the Router fallback method
+      {
+        targets: [],
+        data: [],
+      }, // batched tx flag to avoid hitting the Router fallback method
     );
     const receipt = await tx.wait();
     return { receipt };
@@ -533,7 +526,10 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
 
   /// PRIVATE METHODS
 
-  private async estimateTx(tx: TransactionDetailsForUserOp, batched: boolean) {
+  private async estimateTx(
+    tx: TransactionDetailsForUserOp,
+    batchData?: BatchData,
+  ) {
     if (!this.accountApi) {
       throw new Error("Personal wallet not connected");
     }
@@ -547,7 +543,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     }
     const [{ callGasLimit: transactionGasLimit }, gasPrice] = await Promise.all(
       [
-        await this.accountApi.encodeUserOpCallDataAndGasLimit(tx, batched),
+        this.accountApi.encodeUserOpCallDataAndGasLimit(tx, batchData),
         getGasPrice(provider),
       ],
     );
@@ -595,7 +591,13 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
     const data = resolvedTxs.map((tx) => tx.data || "0x");
     const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
-    return this.accountApi.prepareExecuteBatch(targets, values, data);
+    return {
+      tx: await this.accountApi.prepareExecuteBatch(targets, values, data),
+      batchData: {
+        targets,
+        data,
+      },
+    };
   }
 
   private async prepareBatchTx(transactions: Transaction<any>[]) {
@@ -605,6 +607,12 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     const targets = transactions.map((tx) => tx.getTarget());
     const data = transactions.map((tx) => tx.encode());
     const values = await Promise.all(transactions.map((tx) => tx.getValue()));
-    return this.accountApi.prepareExecuteBatch(targets, values, data);
+    return {
+      tx: await this.accountApi.prepareExecuteBatch(targets, values, data),
+      batchData: {
+        targets,
+        data,
+      },
+    };
   }
 }
