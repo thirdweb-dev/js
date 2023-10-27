@@ -16,6 +16,7 @@ import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, ethers, providers, utils } from "ethers";
 import {
   getChainProvider,
+  getGasPrice,
   SignerPermissionsInput,
   SignerWithPermissions,
   SmartContract,
@@ -25,6 +26,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { AccountAPI } from "./lib/account";
 import { AddressZero } from "@account-abstraction/utils";
+import { TransactionDetailsForUserOp } from "./lib/transaction-details";
 
 export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -165,6 +167,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
     return restrictions.approvedCallTargets.includes(transaction.getTarget());
   }
 
+  /// PREPARED TRANSACTIONS
+
   /**
    * Send a single transaction without waiting for confirmations
    * @param transactions
@@ -199,18 +203,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    const targets = transactions.map((tx) => tx.getTarget());
-    const data = transactions.map((tx) => tx.encode());
-    const values = await Promise.all(transactions.map((tx) => tx.getValue()));
-    const callData = await this.accountApi.encodeExecuteBatch(
-      targets,
-      values,
-      data,
-    );
+    const batchData = await this.prepareBatchTx(transactions);
     return await signer.sendTransaction(
       {
         to: await signer.getAddress(),
-        data: callData,
+        data: batchData.encode(),
         value: 0,
       },
       true, // batched tx flag
@@ -231,6 +228,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       receipt,
     };
   }
+
+  /// RAW TRANSACTIONS
 
   async sendRaw(
     transaction: utils.Deferrable<providers.TransactionRequest>,
@@ -259,23 +258,11 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       throw new Error("Personal wallet not connected");
     }
     const signer = await this.getSigner();
-    const resolvedTxs = await Promise.all(
-      transactions.map((transaction) =>
-        ethers.utils.resolveProperties(transaction),
-      ),
-    );
-    const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
-    const data = resolvedTxs.map((tx) => tx.data || "0x");
-    const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
-    const callData = await this.accountApi.encodeExecuteBatch(
-      targets,
-      values,
-      data,
-    );
+    const batchData = await this.prepareBatchRaw(transactions);
     return signer.sendTransaction(
       {
         to: await signer.getAddress(),
-        data: callData,
+        data: batchData.encode(),
         value: 0,
       },
       true, // batched tx flag
@@ -291,6 +278,75 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       receipt,
     };
   }
+
+  /// ESTIMATION
+
+  async estimate(transaction: Transaction) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    console.log("single", transaction.getTarget(), transaction.encode().length);
+    return this.estimateTx(
+      {
+        target: transaction.getTarget(),
+        data: transaction.encode(),
+        value: await transaction.getValue(),
+      },
+      false,
+    );
+  }
+
+  async estimateRaw(
+    transaction: utils.Deferrable<providers.TransactionRequest>,
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const tx = await ethers.utils.resolveProperties(transaction);
+    return this.estimateTx(
+      {
+        target: tx.to || AddressZero,
+        data: tx.data?.toString() || "",
+        value: tx.value || BigNumber.from(0),
+      },
+      false,
+    );
+  }
+
+  async estimateBatch(transactions: Transaction<any>[]) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const batch = await this.prepareBatchTx(transactions);
+    console.log("batch", batch.getTarget(), batch.encode().length);
+    return this.estimateTx(
+      {
+        target: batch.getTarget(),
+        data: batch.encode(),
+        value: await batch.getValue(),
+      },
+      true,
+    );
+  }
+
+  async estimateBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const batch = await this.prepareBatchRaw(transactions);
+    return this.estimateTx(
+      {
+        target: batch.getTarget(),
+        data: batch.encode(),
+        value: await batch.getValue(),
+      },
+      true,
+    );
+  }
+
+  //// DEPLOYMENT
 
   /**
    * Manually deploy the smart wallet contract. If already deployed this will throw an error.
@@ -333,6 +389,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
       await this.deploy();
     }
   }
+
+  //// PERMISSIONS
 
   async grantPermissions(
     target: string,
@@ -471,5 +529,82 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
         return account.call("getNonce", []);
       },
     };
+  }
+
+  /// PRIVATE METHODS
+
+  private async estimateTx(tx: TransactionDetailsForUserOp, batched: boolean) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    let deployGasLimit = BigNumber.from(0);
+    const [provider, isDeployed] = await Promise.all([
+      this.getProvider(),
+      this.isDeployed(),
+    ]);
+    if (!isDeployed) {
+      deployGasLimit = await this.estimateDeploymentGasLimit();
+    }
+    const [{ callGasLimit: transactionGasLimit }, gasPrice] = await Promise.all(
+      [
+        await this.accountApi.encodeUserOpCallDataAndGasLimit(tx, batched),
+        getGasPrice(provider),
+      ],
+    );
+    const transactionCost = transactionGasLimit.mul(gasPrice);
+    const deployCost = deployGasLimit.mul(gasPrice);
+    const totalCost = deployCost.add(transactionCost);
+
+    return {
+      ether: utils.formatEther(totalCost),
+      wei: totalCost,
+      details: {
+        deployGasLimit,
+        transactionGasLimit,
+        gasPrice,
+        transactionCost,
+        deployCost,
+        totalCost,
+      },
+    };
+  }
+
+  private async estimateDeploymentGasLimit() {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const initCode = await this.accountApi.getInitCode();
+    const [initGas, verificationGasLimit] = await Promise.all([
+      this.accountApi.estimateCreationGas(initCode),
+      this.accountApi.getVerificationGasLimit(),
+    ]);
+    return BigNumber.from(verificationGasLimit).add(initGas);
+  }
+
+  private async prepareBatchRaw(
+    transactions: ethers.utils.Deferrable<ethers.providers.TransactionRequest>[],
+  ) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const resolvedTxs = await Promise.all(
+      transactions.map((transaction) =>
+        ethers.utils.resolveProperties(transaction),
+      ),
+    );
+    const targets = resolvedTxs.map((tx) => tx.to || AddressZero);
+    const data = resolvedTxs.map((tx) => tx.data || "0x");
+    const values = resolvedTxs.map((tx) => tx.value || BigNumber.from(0));
+    return this.accountApi.prepareExecuteBatch(targets, values, data);
+  }
+
+  private async prepareBatchTx(transactions: Transaction<any>[]) {
+    if (!this.accountApi) {
+      throw new Error("Personal wallet not connected");
+    }
+    const targets = transactions.map((tx) => tx.getTarget());
+    const data = transactions.map((tx) => tx.encode());
+    const values = await Promise.all(transactions.map((tx) => tx.getValue()));
+    return this.accountApi.prepareExecuteBatch(targets, values, data);
   }
 }

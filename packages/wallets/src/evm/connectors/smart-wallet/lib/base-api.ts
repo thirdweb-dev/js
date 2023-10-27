@@ -19,7 +19,7 @@ import {
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
-import { getDynamicFeeData } from "@thirdweb-dev/sdk";
+import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -103,11 +103,11 @@ export abstract class BaseAccountAPI {
    * @param value
    * @param data
    */
-  abstract encodeExecute(
+  abstract prepareExecute(
     target: string,
     value: BigNumberish,
     data: string,
-  ): Promise<string>;
+  ): Promise<Transaction<any>>;
 
   /**
    * sign a userOp's hash (userOpHash).
@@ -188,21 +188,14 @@ export abstract class BaseAccountAPI {
     detailsForUserOp: TransactionDetailsForUserOp,
     batched: boolean,
   ): Promise<{ callData: string; callGasLimit: BigNumber }> {
-    function parseNumber(a: any): BigNumber | null {
-      if (!a || a === "") {
-        return null;
-      }
-      return BigNumber.from(a.toString());
-    }
-
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
     const callData = batched
       ? detailsForUserOp.data
-      : await this.encodeExecute(
+      : await this.prepareExecute(
           detailsForUserOp.target,
           value,
           detailsForUserOp.data,
-        );
+        ).then((tx) => tx.encode());
 
     let callGasLimit;
     const isPhantom = await this.checkAccountPhantom();
@@ -213,6 +206,7 @@ export abstract class BaseAccountAPI {
         to: detailsForUserOp.target,
         data: detailsForUserOp.data,
       });
+      console.log("estimated gas limit", callGasLimit.toString());
       // add 20% overhead for entrypoint checks
       callGasLimit = callGasLimit.mul(120).div(100);
       // if the estimation is too low, we use a fixed value of 500k
@@ -428,4 +422,11 @@ export abstract class BaseAccountAPI {
     }
     return null;
   }
+}
+
+function parseNumber(a: any): BigNumber | null {
+  if (!a || a === "") {
+    return null;
+  }
+  return BigNumber.from(a.toString());
 }

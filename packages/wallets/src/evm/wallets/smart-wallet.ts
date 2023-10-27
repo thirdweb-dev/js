@@ -181,6 +181,30 @@ export class SmartWallet
     return connector.executeRaw(transaction);
   }
 
+  async estimate(transaction: Transaction<any>) {
+    const connector = await this.getConnector();
+    return connector.estimate(transaction);
+  }
+
+  async estimateBatch(transactions: Transaction<any>[]) {
+    const connector = await this.getConnector();
+    return connector.estimateBatch(transactions);
+  }
+
+  async estimateRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>,
+  ) {
+    const connector = await this.getConnector();
+    return connector.estimateRaw(transactions);
+  }
+
+  async estimateBatchRaw(
+    transactions: utils.Deferrable<providers.TransactionRequest>[],
+  ) {
+    const connector = await this.getConnector();
+    return connector.estimateBatchRaw(transactions);
+  }
+
   /**
    * Send multiple raw transaction in a batch without waiting for confirmations
    * @param transaction
