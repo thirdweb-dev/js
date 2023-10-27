@@ -156,6 +156,6 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=18"
   }
 }
