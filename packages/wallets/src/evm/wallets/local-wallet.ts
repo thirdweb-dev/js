@@ -476,13 +476,44 @@ type ExportOptions =
     };
 
 async function defaultEncrypt(message: string, password: string) {
-  const cryptoJS = (await import("crypto-js")).default;
-  return cryptoJS.AES.encrypt(message, password).toString();
+  // encrypt the message with the password using the browser's native crypto api
+  const encoder = new TextEncoder();
+  const data = encoder.encode(message);
+  const passwordData = encoder.encode(password);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const alg = { name: "AES-GCM", iv: iv };
+  const key = await crypto.subtle.importKey("raw", passwordData, alg, false, [
+    "encrypt",
+  ]);
+  const encryptedData = await crypto.subtle.encrypt(alg, key, data);
+  const buffer = new Uint8Array(encryptedData);
+  const result = new Uint8Array(iv.length + buffer.length);
+  result.set(iv);
+  result.set(buffer, iv.length);
+  return btoa(String.fromCharCode(...result));
 }
 
 async function defaultDecrypt(message: string, password: string) {
-  const cryptoJS = (await import("crypto-js")).default;
-  return cryptoJS.AES.decrypt(message, password).toString(cryptoJS.enc.Utf8);
+  // decrypt the message with the password using the browser's native crypto api
+  const decoder = new TextDecoder();
+  const encoder = new TextEncoder();
+  const data = atob(message);
+  const iv = data.slice(0, 12);
+  const buffer = data.slice(12);
+  const alg = {
+    name: "AES-GCM",
+    iv: Uint8Array.from(iv, (c) => c.charCodeAt(0)),
+  };
+  const passwordData = encoder.encode(password);
+  const key = await crypto.subtle.importKey("raw", passwordData, alg, false, [
+    "decrypt",
+  ]);
+  const decryptedData = await crypto.subtle.decrypt(
+    alg,
+    key,
+    Uint8Array.from(buffer, (c) => c.charCodeAt(0)),
+  );
+  return decoder.decode(decryptedData);
 }
 
 /**
