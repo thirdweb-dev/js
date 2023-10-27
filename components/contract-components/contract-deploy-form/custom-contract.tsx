@@ -220,6 +220,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "_token" in formDeployParams;
 
   const shouldHide = (paramKey: string) => {
+    if (isAccountFactory) {
+      return false;
+    }
     if (
       (hasContractURI &&
         (paramKey === "_contractURI" ||
