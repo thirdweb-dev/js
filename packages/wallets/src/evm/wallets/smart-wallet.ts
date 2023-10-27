@@ -181,16 +181,31 @@ export class SmartWallet
     return connector.executeRaw(transaction);
   }
 
+  /**
+   * Estimate the gas cost of a single transaction
+   * @param transaction
+   * @returns
+   */
   async estimate(transaction: Transaction<any>) {
     const connector = await this.getConnector();
     return connector.estimate(transaction);
   }
 
+  /**
+   * Estimate the gas cost of a batch of transactions
+   * @param transaction
+   * @returns
+   */
   async estimateBatch(transactions: Transaction<any>[]) {
     const connector = await this.getConnector();
     return connector.estimateBatch(transactions);
   }
 
+  /**
+   * Estimate the gas cost of a single raw transaction
+   * @param transaction
+   * @returns
+   */
   async estimateRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>,
   ) {
@@ -198,6 +213,11 @@ export class SmartWallet
     return connector.estimateRaw(transactions);
   }
 
+  /**
+   * Estimate the gas cost of a batch of raw transactions
+   * @param transaction
+   * @returns
+   */
   async estimateBatchRaw(
     transactions: utils.Deferrable<providers.TransactionRequest>[],
   ) {
