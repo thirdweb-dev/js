@@ -490,19 +490,19 @@ async function defaultEncrypt(message: string, password: string) {
   const result = new Uint8Array(iv.length + buffer.length);
   result.set(iv);
   result.set(buffer, iv.length);
-  return btoa(String.fromCharCode(...result));
+  return Buffer.from(String.fromCharCode(...result)).toString("base64");
 }
 
 async function defaultDecrypt(message: string, password: string) {
   // decrypt the message with the password using the browser's native crypto api
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
-  const data = atob(message);
-  const iv = data.slice(0, 12);
-  const buffer = data.slice(12);
+  const data = Buffer.from(message, "base64");
+  const iv = data.subarray(0, 12);
+  const buffer = data.subarray(12);
   const alg = {
     name: "AES-GCM",
-    iv: Uint8Array.from(iv, (c) => c.charCodeAt(0)),
+    iv: Uint8Array.from(iv),
   };
   const passwordData = encoder.encode(password);
   const key = await crypto.subtle.importKey("raw", passwordData, alg, false, [
@@ -511,7 +511,7 @@ async function defaultDecrypt(message: string, password: string) {
   const decryptedData = await crypto.subtle.decrypt(
     alg,
     key,
-    Uint8Array.from(buffer, (c) => c.charCodeAt(0)),
+    Uint8Array.from(buffer),
   );
   return decoder.decode(decryptedData);
 }
