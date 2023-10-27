@@ -6,6 +6,7 @@ import {
 } from "@thirdweb-dev/wallets";
 import type { EmbeddedWalletConnector as EmbeddedConnectorType } from "../../connectors/embedded-wallet/embedded-connector";
 import {
+  AuthParams,
   EmbeddedWalletConnectionArgs,
   OauthOption,
 } from "../../connectors/embedded-wallet/types";
@@ -57,7 +58,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
   }
 
   async validateEmailOTP(otp: string) {
-    return this.connector?.validateEmailOtp({ otp });
+    return this.connector?.validateEmailOTP({ otp });
   }
 
   async sendEmailOTP(email: string) {
@@ -66,6 +67,11 @@ export class EmbeddedWallet extends AbstractClientWallet<
 
   async socialLogin(oauthOption: OauthOption) {
     return this.connector?.socialLogin(oauthOption);
+  }
+
+  async authenticate(params: AuthParams) {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.authenticate(params);
   }
 
   onConnected = () => {

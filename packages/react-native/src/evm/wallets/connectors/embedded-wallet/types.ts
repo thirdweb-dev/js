@@ -1,10 +1,10 @@
 import { Chain } from "@thirdweb-dev/chains";
-import { WalletOptions } from "@thirdweb-dev/wallets";
-import type {
-  RecoveryShareManagement,
-  PaperConstructorType,
+import {
   AuthProvider,
-} from "@paperxyz/embedded-wallet-service-sdk";
+  RecoveryShareManagement,
+  UserWalletStatus,
+  WalletOptions,
+} from "@thirdweb-dev/wallets";
 
 export type OauthOptions = {
   providers: AuthProvider[];
@@ -29,14 +29,13 @@ export type EmbeddedWalletOptions = Omit<
 >;
 
 type EmbeddedAdvanceOptions = {
-  recoveryShareManagement?: "USER_MANAGED" | "AWS_MANAGED";
+  recoveryShareManagement?: "USER_MANAGED" | "CLOUD_MANAGED";
 };
 
 export type EmbeddedWalletAdditionalOptions = {
   emailClientId: string;
   chain: Pick<Chain, "chainId" | "rpc">;
   advancedOptions?: EmbeddedAdvanceOptions;
-  styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 };
 
 export interface EmbeddedWalletConnectorOptions {
@@ -44,7 +43,6 @@ export interface EmbeddedWalletConnectorOptions {
   chain: Pick<Chain, "chainId" | "rpc">;
   chains: Chain[];
   advancedOptions?: EmbeddedAdvanceOptions;
-  styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 
 export interface AuthOptions {
@@ -52,21 +50,63 @@ export interface AuthOptions {
   password: string;
 }
 
+export type SendEmailOtpReturnType = {
+  isNewUser: boolean;
+  isNewDevice: boolean;
+  recoveryShareManagement: RecoveryShareManagement;
+};
+
 export type EmbeddedWalletConnectionArgs = {
   chainId?: number;
-} & (
-  | {
-      loginType: "headless_google_oauth";
-      redirectUrl: string;
-    }
-  | {
-      loginType: "headless_email_otp_verification";
-      email: string;
-      otp: string;
-    }
-  | {
-      loginType: "jwt";
-      jwt: string;
-      password: string;
-    }
-);
+  authResult: AuthResult;
+};
+
+type EmailOtpAuthParams = {
+  strategy: "email_otp";
+  email: string;
+  otp: string;
+  recoveryCode?: string;
+};
+
+type GoogleAuthParams = {
+  strategy: "google";
+  redirectUrl: string;
+};
+
+type JwtAuthParams = {
+  strategy: "jwt";
+  jwt: string;
+  encryptionKey?: string;
+};
+
+// this is the input to 'authenticate'
+export type AuthParams = EmailOtpAuthParams | GoogleAuthParams | JwtAuthParams;
+
+// TODO typed based off AuthParams["strategy"]
+export type AuthResult = {
+  user?: InitializedUser;
+  isNewUser?: boolean;
+  needsRecoveryCode?: boolean;
+};
+
+export type InitializedUser = {
+  status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED;
+  recoveryShareManagement: RecoveryShareManagement;
+};
+
+export type VerifiedTokenResponse = {
+  verifiedToken: {
+    jwtToken: string;
+    authProvider: AuthProvider;
+    developerClientId: string;
+    authDetails: {
+      email?: string;
+      userWalletId: string;
+      recoveryCode?: string;
+      cookieString?: string;
+      recoveryShareManagement: RecoveryShareManagement;
+    };
+    isNewUser: boolean;
+  };
+  verifiedTokenJwtString: string;
+};

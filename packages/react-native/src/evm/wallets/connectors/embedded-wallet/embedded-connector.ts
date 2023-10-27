@@ -1,11 +1,13 @@
 import {
   AuthOptions,
+  AuthParams,
+  AuthResult,
   EmbeddedWalletConnectionArgs,
   EmbeddedWalletConnectorOptions,
   OauthOption,
+  SendEmailOtpReturnType,
 } from "./types";
 import type { Chain } from "@thirdweb-dev/chains";
-import { Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import {
@@ -21,7 +23,13 @@ import {
   getConnectedEmail,
   saveConnectedEmail,
 } from "./embedded/helpers/storage/local";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
+import {
+  AuthProvider,
+  Connector,
+  RecoveryShareManagement,
+  UserWalletStatus,
+  normalizeChainId,
+} from "@thirdweb-dev/wallets";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   private options: EmbeddedWalletConnectorOptions;
@@ -37,39 +45,43 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     this.email = getConnectedEmail();
   }
 
-  async connect(options?: { chainId?: number } & EmbeddedWalletConnectionArgs) {
+  async connect(options?: EmbeddedWalletConnectionArgs) {
     const connected = await this.isConnected();
 
     if (connected) {
+      if (options?.chainId) {
+        this.switchChain(options.chainId);
+      }
+
       return this.getAddress();
     }
 
-    switch (options?.loginType) {
-      case "headless_google_oauth":
-        {
-          await socialLogin(
-            {
-              provider: AuthProvider.GOOGLE,
-              redirectUrl: options.redirectUrl,
-            },
-            this.options.clientId,
-          );
-        }
-        break;
-      case "headless_email_otp_verification": {
-        await this.validateEmailOtp({ otp: options.otp });
-        break;
-      }
-      case "jwt": {
-        await this.customJwt({
-          jwt: options.jwt,
-          password: options.password,
-        });
-        break;
-      }
-      default:
-        throw new Error("Invalid login type");
-    }
+    // switch (options?.loginType) {
+    //   case "headless_google_oauth":
+    //     {
+    //       await socialLogin(
+    //         {
+    //           provider: AuthProvider.GOOGLE,
+    //           redirectUrl: options.redirectUrl,
+    //         },
+    //         this.options.clientId,
+    //       );
+    //     }
+    //     break;
+    //   case "headless_email_otp_verification": {
+    //     await this.validateEmailOTP({ otp: options.otp });
+    //     break;
+    //   }
+    //   case "jwt": {
+    //     await this.customJwt({
+    //       jwt: options.jwt,
+    //       password: options.password,
+    //     });
+    //     break;
+    //   }
+    //   default:
+    //     throw new Error("Invalid login type");
+    // }
 
     if (options?.chainId) {
       this.switchChain(options.chainId);
@@ -79,40 +91,71 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.getAddress();
   }
 
-  async validateEmailOtp(options: { otp: string }) {
+  async authenticate(params: AuthParams): Promise<AuthResult> {
+    const strategy = params.strategy;
+    switch (strategy) {
+      case "email_otp": {
+        return await this.validateEmailOTP({
+          otp: params.otp,
+          recoveryCode: params.recoveryCode,
+        });
+      }
+      case "google": {
+        return this.socialLogin({
+          provider: AuthProvider.GOOGLE,
+          redirectUrl: params.redirectUrl,
+        });
+      }
+      case "jwt": {
+        return this.customJwt({
+          jwt: params.jwt,
+          password: params.encryptionKey || "",
+        });
+      }
+      default:
+        assertUnreachable(strategy);
+    }
+  }
+
+  async validateEmailOTP(options: {
+    otp: string;
+    recoveryCode?: string;
+  }): Promise<AuthResult> {
     if (!this.email) {
       throw new Error("Email is required to connect");
     }
 
     try {
-      await validateEmailOTP({
+      const { storedToken } = await validateEmailOTP({
+        email: this.email,
         clientId: this.options.clientId,
         otp: options.otp,
+        recoveryCode: options.recoveryCode,
       });
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            storedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: storedToken.isNewUser,
+        needsRecoveryCode:
+          storedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
     } catch (error) {
       console.error(`Error while validating otp: ${error}`);
       if (error instanceof Error) {
-        return { error: error.message };
+        throw new Error(`Error while validating otp: ${error.message}`);
       } else {
-        return { error: "An unknown error occurred" };
+        throw new Error("An unknown error occurred while validating otp");
       }
     }
-
-    try {
-      await this.getSigner();
-      this.emit("connected");
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      } else {
-        return { error: "Error getting the signer" };
-      }
-    }
-
-    return { success: true };
   }
 
-  async sendEmailOtp(options: { email: string }) {
+  async sendEmailOtp(options: {
+    email: string;
+  }): Promise<SendEmailOtpReturnType> {
     this.email = options.email;
     saveConnectedEmail(options.email);
     return sendEmailOTP({
@@ -121,58 +164,65 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     });
   }
 
-  async socialLogin(oauthOption: OauthOption) {
+  async socialLogin(oauthOption: OauthOption): Promise<AuthResult> {
     try {
-      const { email } = await socialLogin(oauthOption, this.options.clientId);
+      const { storedToken, email } = await socialLogin(
+        oauthOption,
+        this.options.clientId,
+      );
       this.email = email;
       saveConnectedEmail(email);
+
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            storedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: storedToken.isNewUser,
+        needsRecoveryCode:
+          storedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
     } catch (error) {
       console.error(
         `Error while signing in with: ${oauthOption.provider}. ${error}`,
       );
       if (error instanceof Error) {
-        return { error: error.message };
+        throw new Error(
+          `Error logging in with ${oauthOption.provider}: ${error.message}`,
+        );
       } else {
-        return { error: "An unknown error occurred" };
+        throw new Error(
+          `An unknown error occurred logging in with ${oauthOption.provider}`,
+        );
       }
     }
-
-    try {
-      await this.getSigner();
-      this.emit("connected");
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      } else {
-        return { error: "Error getting the signer" };
-      }
-    }
-
-    return { success: true };
   }
 
-  async customJwt(authOptions: AuthOptions) {
+  async customJwt(authOptions: AuthOptions): Promise<AuthResult> {
     try {
-      const resp = await customJwt(authOptions, this.options.clientId);
-      this.email = resp.email;
+      const { verifiedToken, email } = await customJwt(
+        authOptions,
+        this.options.clientId,
+      );
+      this.email = email;
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          recoveryShareManagement:
+            verifiedToken.authDetails.recoveryShareManagement,
+        },
+        isNewUser: verifiedToken.isNewUser,
+        needsRecoveryCode:
+          verifiedToken.authDetails.recoveryShareManagement ===
+          RecoveryShareManagement.USER_MANAGED,
+      };
     } catch (error) {
       console.error(`Error while verifying auth: ${error}`);
       this.disconnect();
       throw error;
     }
-
-    try {
-      await this.getSigner();
-      this.emit("connected");
-    } catch (error) {
-      if (error instanceof Error) {
-        return { error: error.message };
-      } else {
-        return { error: "Error getting the signer" };
-      }
-    }
-
-    return { success: true };
   }
 
   async disconnect(): Promise<void> {
@@ -296,4 +346,30 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   getEmail() {
     return this.email;
   }
+}
+
+export function extractSubFromJwt(jwtToken: string): string | undefined {
+  const parts = jwtToken.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid JWT format.");
+  }
+
+  const encodedPayload = parts[1];
+  if (!encodedPayload) {
+    throw new Error("Invalid JWT format.");
+  }
+  const decodedPayload = Buffer.from(encodedPayload, "base64").toString("utf8");
+
+  try {
+    const payloadObject = JSON.parse(decodedPayload);
+    if (payloadObject && payloadObject.sub) {
+      return payloadObject.sub;
+    }
+  } catch (error) {
+    throw new Error("Error parsing JWT payload as JSON.");
+  }
+}
+
+function assertUnreachable(x: never): never {
+  throw new Error("Invalid param: " + x);
 }

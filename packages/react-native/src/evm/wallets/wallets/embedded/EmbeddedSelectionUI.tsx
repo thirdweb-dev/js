@@ -11,12 +11,12 @@ import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
 import { GOOGLE_ICON } from "../../../assets/svgs";
 import { WalletButton } from "../../../components/base/WalletButton";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
 import { OauthOptions } from "../../connectors/embedded-wallet/types";
 import {
   useGlobalTheme,
   useLocale,
 } from "../../../providers/ui-context-provider";
+import { AuthProvider } from "@thirdweb-dev/wallets";
 
 /**
  * UI for selecting wallet - this UI is rendered in the wallet selection screen

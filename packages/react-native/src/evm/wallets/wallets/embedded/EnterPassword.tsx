@@ -13,6 +13,8 @@ export type EnterPasswordProps = {
   close: () => void;
   email: string;
   type: "create_password" | "enter_password";
+  onPassword: (password: string) => void;
+  error: string;
 };
 
 export const EnterPassword = ({
@@ -20,10 +22,11 @@ export const EnterPassword = ({
   goBack,
   email,
   type,
+  onPassword,
+  error,
 }: EnterPasswordProps) => {
   const l = useLocale();
   const theme = useGlobalTheme();
-  const [errorMessage, setErrorMessage] = useState<string>();
   const [checkingPass, setCheckingPass] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
 
@@ -33,19 +36,21 @@ export const EnterPassword = ({
     setCheckingPass(true);
     if (isCreatePassword) {
       // Call create password
-      console.log("[TODO] Implement", password);
+      onPassword(password);
     } else {
       // Call enter password
-      setErrorMessage("test");
+      onPassword(password);
     }
   };
 
-  const onForgotPress = () => {};
+  const onForgotPress = () => {
+    // console.log("[TODO] Implement", setErrorMessage);
+  };
 
   const onLearnMorePress = () => {};
 
   return (
-    <Box marginHorizontal="xl">
+    <Box marginHorizontal="xl" mb="lg">
       <ConnectWalletHeader
         middleContent={
           <Text variant="header">
@@ -76,9 +81,9 @@ export const EnterPassword = ({
           </BaseButton>
         )}
       </Box>
-      {errorMessage ? (
+      {error ? (
         <Text variant="error" numberOfLines={1}>
-          {errorMessage}
+          {error}
         </Text>
       ) : (
         <Box height={20} />
@@ -92,7 +97,6 @@ export const EnterPassword = ({
           </BaseButton>
         ) : null}
         <BaseButton
-          mt="sm"
           flexDirection="row"
           alignItems="center"
           height={theme.textVariants.bodySmallSecondary.fontSize}

@@ -7,7 +7,6 @@ import type {
 export enum RecoveryShareManagement {
   USER_MANAGED = "USER_MANAGED",
   CLOUD_MANAGED = "CLOUD_MANAGED",
-  CUSTOM_JWT = "CUSTOM_JWT",
 }
 
 export enum AuthProvider {

@@ -6,7 +6,7 @@ import {
 } from "@thirdweb-dev/react-core";
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
-import { AuthProvider } from "@paperxyz/embedded-wallet-service-sdk";
+import { AuthProvider } from "@thirdweb-dev/wallets";
 
 type OAuthProvider = "google"; // currently we only have one
 
