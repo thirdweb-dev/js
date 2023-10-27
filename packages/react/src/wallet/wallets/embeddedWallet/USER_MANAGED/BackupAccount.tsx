@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 import { useClipboard } from "../../../../evm/components/hooks/useCopyClipboard";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 
+// TODO (joaquim) - this is unused right now, no backup codes are generated
 export function BackupAccount(props: {
   recoveryCodes: string[] | undefined;
   goBack: () => void;

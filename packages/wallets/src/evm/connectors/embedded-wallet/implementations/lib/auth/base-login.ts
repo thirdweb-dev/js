@@ -30,6 +30,7 @@ export class BaseLogin extends AbstractLogin<
     });
     return this.postLogin(result);
   }
+
   override async loginWithEmailOtp({
     email,
   }: {
@@ -83,7 +84,6 @@ export class BaseLogin extends AbstractLogin<
       this.getGoogleLoginUrl(),
       this.preLogin(),
     ]);
-
     win.location.href = loginLink;
 
     // listen to result from the login window

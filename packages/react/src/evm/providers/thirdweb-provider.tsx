@@ -6,12 +6,13 @@ import {
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
 import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
 import { ThemeObjectOrType } from "../../design-system";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { signerWallet } from "../../wallet/wallets/signerWallet";
 import { Signer } from "ethers";
+import { EmbeddedWalletSdk } from "@thirdweb-dev/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -79,6 +80,22 @@ export const ThirdwebProvider = <
     () => (signer ? (signerWallet(signer) as WalletConfig<any>) : undefined),
     [signer],
   );
+
+  // preload the embeddedWallet SDK if present in supportedWallets
+  const ewsRef = useRef(false);
+  useEffect(() => {
+    if (ewsRef.current) {
+      return;
+    }
+    ewsRef.current = true;
+    const hasEmbeddedWallet = wallets.find((w) => w.id === "embeddedWallet");
+    if (hasEmbeddedWallet && restProps.clientId) {
+      new EmbeddedWalletSdk({
+        clientId: restProps.clientId,
+        chain: "Ethereum",
+      });
+    }
+  }, [restProps.clientId, wallets]);
 
   return (
     <WalletUIStatesProvider theme={theme}>

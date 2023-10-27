@@ -22,9 +22,11 @@ export type EmbeddedWalletConnectionArgs = {
   authResult: AuthResult;
 };
 
-type EmailAuthParams = {
-  strategy: "email";
+type EmailOtpAuthParams = {
+  strategy: "email_otp";
   email: string;
+  otp: string;
+  recoveryCode?: string;
 };
 
 type GoogleAuthParams = {
@@ -36,6 +38,7 @@ type GoogleAuthParams = {
 type JwtAuthParams = {
   strategy: "jwt";
   jwt: string;
+  encryptionKey?: string;
 };
 
 // open iFrame to send and input the OTP
@@ -51,7 +54,7 @@ type IframeAuthParams = {
 
 // this is the input to 'authenticate'
 export type AuthParams =
-  | EmailAuthParams
+  | EmailOtpAuthParams
   | GoogleAuthParams
   | JwtAuthParams
   | IframeOtpAuthParams

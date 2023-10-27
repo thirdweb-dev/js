@@ -39,6 +39,7 @@ export const EmbeddedWalletFormUI = (props: {
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
+      console.time("authGoogle1");
       const authResult = await embeddedWallet.authenticate({
         strategy: "google",
         openedWindow: googleWindow,
@@ -46,10 +47,11 @@ export const EmbeddedWalletFormUI = (props: {
           openedWindow.close();
         },
       });
+      console.timeEnd("authGoogle1");
       await embeddedWallet.connect({
         authResult,
       });
-      setConnectedWallet(embeddedWallet);
+      setConnectedWallet(embeddedWallet, { authResult });
     } catch (e) {
       setConnectionStatus("disconnected");
       console.error(e);

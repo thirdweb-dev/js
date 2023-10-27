@@ -5,14 +5,19 @@ import {
 } from "@radix-ui/react-icons";
 import { Spacer } from "../../../../components/Spacer";
 import { Container, ModalHeader, Line } from "../../../../components/basic";
-import { Button, InputButton } from "../../../../components/buttons";
+import {
+  Button,
+  IconButton,
+  InputButton,
+} from "../../../../components/buttons";
 import { Input, InputContainer } from "../../../../components/formElements";
-import { iconSize } from "../../../../design-system";
+import { Theme, iconSize } from "../../../../design-system";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Text } from "../../../../components/text";
 import { useState } from "react";
 import { Spinner } from "../../../../components/Spinner";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 export function CreatePassword(props: {
   goBack: () => void;
@@ -24,6 +29,7 @@ export function CreatePassword(props: {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   return (
     <Container fullHeight flex="column" animate="fadein">
@@ -48,7 +54,7 @@ export function CreatePassword(props: {
             <LockOpen1Icon width={iconSize.xxl} height={iconSize.xxl} />
           </BounceContainer>
         </Container>
-        <Spacer y="xxl" />
+        <Spacer y="xl" />
 
         <form
           onSubmit={async (e) => {
@@ -68,11 +74,12 @@ export function CreatePassword(props: {
           }}
         >
           <Text center multiline>
-            Set a password for your account
+            Set a password for your account. You will need this password when
+            connecting from a new device.
           </Text>
           <Spacer y="xs" />
           <Text center color="primaryText">
-            {props.email}
+            Make sure to save it.
           </Text>
           <Spacer y="xl" />
 
@@ -97,10 +104,45 @@ export function CreatePassword(props: {
             </InputButton>
           </InputContainer>
 
+          <Spacer y="lg" />
+
+          <Container flex="row" gap="sm" center="y">
+            <CheckboxButton
+              aria-checked={saved}
+              type="button"
+              id="save-checkbox"
+              onClick={() => {
+                setSaved(!saved);
+              }}
+            >
+              <CheckIcon
+                width={20}
+                height={20}
+                style={{
+                  opacity: saved ? 1 : 0,
+                  transform: saved ? "scale(1)" : "scale(0)",
+                  transition: "opacity 200ms ease, transform 200ms ease",
+                }}
+              />
+            </CheckboxButton>
+
+            <label
+              htmlFor="save-checkbox"
+              style={{
+                cursor: "pointer",
+                userSelect: "none",
+              }}
+            >
+              <Text size="sm" color="primaryText">
+                I have saved my password
+              </Text>
+            </label>
+          </Container>
+
           <Spacer y="md" />
 
           <Button
-            disabled={loading}
+            disabled={loading || !saved}
             variant="accent"
             fullWidth
             style={{
@@ -129,6 +171,17 @@ export function CreatePassword(props: {
     </Container>
   );
 }
+
+const CheckboxButton = /* @__PURE__ */ styled(IconButton)<{ theme?: Theme }>`
+  border: 2px solid ${(p) => p.theme.colors.accentText};
+  color: ${(p) => p.theme.colors.accentText} !important;
+  padding: 0;
+
+  &[aria-checked="true"] {
+    background: ${(p) => p.theme.colors.accentText};
+    color: ${(p) => p.theme.colors.modalBg} !important;
+  }
+`;
 
 const bounceAnimation = keyframes`
 from {

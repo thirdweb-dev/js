@@ -45,15 +45,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.#embeddedWalletSdk;
   }
 
-  async sendEmailOtp({
-    email,
-  }: {
-    email: string;
-  }): Promise<SendEmailOtpReturnType> {
-    const ewSDK = this.getEmbeddedWalletSDK();
-    return ewSDK.auth.sendEmailLoginOtp({ email });
-  }
-
   async connect(args?: EmbeddedWalletConnectionArgs): Promise<string> {
     // backwards compatibility - options should really be required here
     if (!args) {
@@ -81,7 +72,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.switchChain(args.chainId);
     }
 
-    this.setupListeners();
     return this.getAddress();
   }
 
@@ -94,8 +84,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async getAddress(): Promise<string> {
-    const signer = await this.getSigner();
-    return signer.getAddress();
+    if (!this.user) {
+      throw new Error("Embedded Wallet is not connected");
+    }
+    return this.user.walletAddress;
   }
 
   async isConnected(): Promise<boolean> {
@@ -156,12 +148,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async setupListeners() {
-    const provider = await this.getProvider();
-    if (provider.on) {
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
-    }
+    return Promise.resolve();
   }
 
   updateChains(chains: Chain[]) {
@@ -190,7 +177,11 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   };
 
   async getUser(): Promise<InitializedUser | null> {
-    if (!this.user) {
+    if (
+      !this.user ||
+      !this.user.wallet ||
+      !this.user.wallet.getEthersJsSigner
+    ) {
       const embeddedWalletSdk = this.getEmbeddedWalletSDK();
       const user = await embeddedWalletSdk.getUser();
       switch (user.status) {
@@ -221,31 +212,25 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.user.authDetails;
   }
 
+  async sendEmailOtp({
+    email,
+  }: {
+    email: string;
+  }): Promise<SendEmailOtpReturnType> {
+    const ewSDK = this.getEmbeddedWalletSDK();
+    return ewSDK.auth.sendEmailLoginOtp({ email });
+  }
+
   async authenticate(params: AuthParams): Promise<AuthResult> {
     const ewSDK = this.getEmbeddedWalletSDK();
     const strategy = params.strategy;
     switch (strategy) {
-      case "email": {
-        const result = await ewSDK.auth.sendEmailLoginOtp({
+      case "email_otp": {
+        return await ewSDK.auth.verifyEmailLoginOtp({
           email: params.email,
+          otp: params.otp,
+          recoveryCode: params.recoveryCode,
         });
-        return {
-          user: undefined, // not logged in yet, needs OTP
-          isNewUser: result.isNewUser,
-          needsRecoveryCode:
-            result.recoveryShareManagement === "USER_MANAGED" &&
-            (result.isNewDevice || result.isNewUser),
-          verifyOTP: async (otp: string, recoveryCode?: string) => {
-            const authResult = await ewSDK.auth.verifyEmailLoginOtp({
-              email: params.email,
-              otp,
-              recoveryCode,
-            });
-            return {
-              user: authResult.user,
-            };
-          },
-        };
       }
       case "google": {
         return ewSDK.auth.loginWithGoogle({
@@ -254,15 +239,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         });
       }
       case "jwt": {
-        const sub = extractSubFromJwt(params.jwt);
-        if (!sub) {
-          throw new Error(
-            "No sub found in JWT - make sure the format is correct",
-          );
-        }
         return ewSDK.auth.loginWithCustomJwt({
           jwt: params.jwt,
-          encryptionKey: sub,
+          encryptionKey: params.encryptionKey,
         });
       }
       case "iframe_otp": {
@@ -282,28 +261,4 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
 function assertUnreachable(x: never): never {
   throw new Error("Invalid param: " + x);
-}
-
-function extractSubFromJwt(jwtToken: string): string | null {
-  const parts = jwtToken.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Invalid JWT format.");
-  }
-
-  const encodedPayload = parts[1];
-  if (!encodedPayload) {
-    throw new Error("Invalid JWT format.");
-  }
-  const decodedPayload = Buffer.from(encodedPayload, "base64").toString("utf8");
-
-  try {
-    const payloadObject = JSON.parse(decodedPayload);
-    if (payloadObject && payloadObject.sub) {
-      return payloadObject.sub;
-    }
-  } catch (error) {
-    throw new Error("Error parsing JWT payload as JSON.");
-  }
-
-  return null;
 }

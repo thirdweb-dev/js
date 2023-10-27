@@ -70,6 +70,17 @@ export class EmbeddedWallet extends AbstractClientWallet<
     return this.connector;
   }
 
+  override autoConnect(
+    connectOptions?: ConnectParams<EmbeddedWalletConnectionArgs> | undefined,
+  ): Promise<string> {
+    if (!connectOptions) {
+      throw new Error("Can't autoconnect embedded wallet");
+    }
+    // override autoconnect logic for embedded wallet
+    // can just call connect since we should have the authResult persisted already
+    return this.connect(connectOptions);
+  }
+
   getConnectParams(): ConnectParams<EmbeddedWalletConnectionArgs> | undefined {
     const connectParams = super.getConnectParams();
 
@@ -100,6 +111,11 @@ export class EmbeddedWallet extends AbstractClientWallet<
   async getRecoveryInformation() {
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.getRecoveryInformation();
+  }
+
+  async sendEmailOTP({ email }: { email: string }) {
+    const connector = (await this.getConnector()) as EmbeddedWalletConnector;
+    return connector.sendEmailOtp({ email });
   }
 
   async authenticate(params: AuthParams) {

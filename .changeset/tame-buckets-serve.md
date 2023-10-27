@@ -2,33 +2,70 @@
 "@thirdweb-dev/wallets": minor
 ---
 
-feat (wallets): Add support for user managed encryption key login flows for embedded wallets in all flows except Google Login
+# New Embedded Wallet API:
 
-feat (wallets): Expose `EmbeddedWallet.sendEmailOtp({ email })` to allow for the initiation of the headless email flow.
+### Headless Email authentication
 
-Finish the flow by calling the following on the cloud hosted encryption key
+```ts
+// send verification email
+await embeddedWallet.sendVerificationEmail({
+  email,
+});
 
-```
-EmbeddedWallet.connect({
-    loginType: "headless_email_otp_verification",
-    email,
-    otp
-})
-```
+// verify email
+const authResult = embeddedWallet.authenticate({
+  strategy: "email_verification",
+  verificationCode: code,
+});
 
-On the user managed encryption key flow
-
-```
-EmbeddedWallet.connect({
-    loginType: "headless_email_otp_verification",
-    email,
-    otp,
-    encryptionKey
-})
+// connect
+const walletAddress = embeddedWallet.connect({
+  authResult,
+});
 ```
 
-The `encryptionKey` field is needed if `isNewUser` is `true` or `isNewDevice` is `true` for users on the `recoveryShareManagement === USER_MANAGED`.
+### Google sign in authentication
 
-To verify the OTP first without supplying the encryption key, you can call `.connect` with all the field without the encryption key. If you see an error message containing `Your OTP code is invalid or expired` then the OTP was invalid. Otherwise, you'd see `Missing encryption key for user`. In which case you can proceed to call the same function with all the same params but this time after prompting the user for the `encryptionKey`.
+```ts
+// prompt google sign in
+const authResult = embeddedWallet.authenticate({
+  strategy: "google",
+});
 
-feat (react): Add support for user managed encryption code flows for embedded wallets in thirdweb connect.
+// connect
+const walletAddress = embeddedWallet.connect({
+  authResult,
+});
+```
+
+### iframe based authentication
+
+```ts
+// open iframe to sign in
+const authResult = embeddedWallet.authenticate({
+  strategy: "iframe",
+});
+
+// connect
+const walletAddress = embeddedWallet.connect({
+  authResult,
+});
+```
+
+### Custom Auth (JWT)
+
+```ts
+// authenticate with any JWT system
+const jwt = await yourLogin();
+
+// verify JWT
+const authResult = embeddedWallet.authenticate({
+  strategy: "jwt",
+  jwt,
+});
+
+// connect
+const walletAddress = embeddedWallet.connect({
+  authResult,
+});
+```
