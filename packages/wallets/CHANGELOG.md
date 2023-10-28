@@ -1,5 +1,15 @@
 # @thirdweb-dev/wallets
 
+## 2.0.10
+
+### Patch Changes
+
+- [#1867](https://github.com/thirdweb-dev/js/pull/1867) [`3faa9f21`](https://github.com/thirdweb-dev/js/commit/3faa9f21efb1ae29a57747d6f0b8fb1151930ab4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose data param for smart wallet util functions
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618)]:
+  - @thirdweb-dev/chains@0.1.57
+  - @thirdweb-dev/sdk@4.0.9
+
 ## 2.0.9
 
 ### Patch Changes
