@@ -34,7 +34,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://xinfin.org",
-  "name": "XinFin XDC Network",
+  "name": "XDC Network",
   "nativeCurrency": {
     "name": "XinFin",
     "symbol": "XDC",
@@ -42,7 +42,7 @@ export default {
   },
   "networkId": 50,
   "rpc": [
-    "https://xinfin-xdc-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://xdc-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://50.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://erpc.xinfin.network",
     "https://rpc.xinfin.network",
@@ -50,6 +50,6 @@ export default {
     "https://rpc-xdc.icecreamswap.com"
   ],
   "shortName": "xdc",
-  "slug": "xinfin-xdc-network",
+  "slug": "xdc-network",
   "testnet": false
 } as const satisfies Chain;
