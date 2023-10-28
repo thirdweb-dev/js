@@ -9,6 +9,7 @@ import {
   updateChainRPCs,
 } from "@thirdweb-dev/chains";
 import { Wallet, utils } from "ethers";
+import { Buffer } from "buffer";
 
 export type LocalWalletOptions = {
   chain?: Chain;
@@ -475,45 +476,105 @@ type ExportOptions =
       encryption: EncryptOptions;
     };
 
-async function defaultEncrypt(message: string, password: string) {
-  // encrypt the message with the password using the browser's native crypto api
-  const encoder = new TextEncoder();
-  const data = encoder.encode(message);
-  const passwordData = encoder.encode(password);
+/**
+ * Encrypts plaintext using AES-GCM with supplied password, for decryption with defaultDecrypt().
+ *
+ * @param plaintext - Plaintext to be encrypted.
+ * @param password - Password to use to encrypt plaintext.
+ * @returns Encrypted ciphertext.
+ *
+ * @example
+ *   const ciphertext = await defaultEncrypt('my secret text', 'pw');
+ */
+async function defaultEncrypt(
+  plaintext: string,
+  password: string,
+): Promise<string> {
+  // encode password as UTF-8
+  const pwUtf8 = new TextEncoder().encode(password);
+  // hash the password
+  const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
+
+  // get 96-bit random iv
   const iv = crypto.getRandomValues(new Uint8Array(12));
+  // iv as utf-8 string
+  const ivStr = Array.from(iv)
+    .map((b) => String.fromCharCode(b))
+    .join("");
+
+  // specify algorithm to use
   const alg = { name: "AES-GCM", iv: iv };
-  const key = await crypto.subtle.importKey("raw", passwordData, alg, false, [
+
+  // generate key from pw
+  const key = await crypto.subtle.importKey("raw", pwHash, alg, false, [
     "encrypt",
   ]);
-  const encryptedData = await crypto.subtle.encrypt(alg, key, data);
-  const buffer = new Uint8Array(encryptedData);
-  const result = new Uint8Array(iv.length + buffer.length);
-  result.set(iv);
-  result.set(buffer, iv.length);
-  return Buffer.from(String.fromCharCode(...result)).toString("base64");
+
+  // encode plaintext as UTF-8
+  const ptUint8 = new TextEncoder().encode(plaintext);
+  // encrypt plaintext using key
+  const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
+
+  // ciphertext as byte array
+  const ctArray = Array.from(new Uint8Array(ctBuffer));
+  // ciphertext as string
+  const ctStr = ctArray.map((byte) => String.fromCharCode(byte)).join("");
+
+  // iv+ciphertext base64-encoded
+  return Buffer.from(ivStr + ctStr).toString("base64");
 }
 
-async function defaultDecrypt(message: string, password: string) {
-  // decrypt the message with the password using the browser's native crypto api
-  const decoder = new TextDecoder();
-  const encoder = new TextEncoder();
-  const data = Buffer.from(message, "base64");
-  const iv = data.subarray(0, 12);
-  const buffer = data.subarray(12);
-  const alg = {
-    name: "AES-GCM",
-    iv: Uint8Array.from(iv),
-  };
-  const passwordData = encoder.encode(password);
-  const key = await crypto.subtle.importKey("raw", passwordData, alg, false, [
+/**
+ * Decrypts ciphertext encrypted with defaultEncrypt() using supplied password.
+ *
+ * @param    ciphertext - Ciphertext to be decrypted.
+ * @param    password - Password to use to decrypt ciphertext.
+ * @returns  Decrypted plaintext.
+ *
+ * @example
+ *   const plaintext = await defaultDecrypt(ciphertext, 'pw');
+ */
+async function defaultDecrypt(
+  ciphertext: string,
+  password: string,
+): Promise<string> {
+  // encode password as UTF-8
+  const pwUtf8 = new TextEncoder().encode(password);
+  // hash the password
+  const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
+
+  // decode base64 iv
+  const ivStr = Buffer.from(ciphertext, "base64")
+    .toString("binary")
+    .slice(0, 12);
+  // iv as Uint8Array
+  const iv = new Uint8Array(Array.from(ivStr).map((ch) => ch.charCodeAt(0)));
+
+  // specify algorithm to use
+  const alg = { name: "AES-GCM", iv: iv };
+
+  // generate key from pw
+  const key = await crypto.subtle.importKey("raw", pwHash, alg, false, [
     "decrypt",
   ]);
-  const decryptedData = await crypto.subtle.decrypt(
-    alg,
-    key,
-    Uint8Array.from(buffer),
+
+  // decode base64 ciphertext
+  const ctStr = Buffer.from(ciphertext, "base64").toString("binary").slice(12);
+  // ciphertext as Uint8Array
+  const ctUint8 = new Uint8Array(
+    Array.from(ctStr).map((ch) => ch.charCodeAt(0)),
   );
-  return decoder.decode(decryptedData);
+
+  try {
+    // decrypt ciphertext using key
+    const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
+    // plaintext from ArrayBuffer
+    const plaintext = new TextDecoder().decode(plainBuffer);
+    // return the plaintext
+    return plaintext;
+  } catch (e) {
+    throw new Error("Decrypt failed");
+  }
 }
 
 /**
