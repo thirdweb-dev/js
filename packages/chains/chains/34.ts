@@ -13,9 +13,9 @@ export default {
     "https://faucet.securechain.ai"
   ],
   "icon": {
-    "url": "ipfs://QmVNLDQ7edirox9gAehyen9gLHq64Z5532EXsLvSaVfjWh",
-    "width": 65,
-    "height": 65,
+    "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
+    "width": 150,
+    "height": 150,
     "format": "png"
   },
   "infoURL": "https://securechain.ai",
