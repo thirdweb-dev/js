@@ -49,6 +49,6 @@ export default {
   ],
   "shortName": "sep",
   "slug": "sepolia",
-  "testnet": false,
+  "testnet": true,
   "title": "Ethereum Testnet Sepolia"
 } as const satisfies Chain;
