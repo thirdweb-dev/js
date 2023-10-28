@@ -1,4 +1,4 @@
-import { parseGatewayUrls, prepareGatewayUrls } from "../common";
+import { parseGatewayUrls, prepareGatewayUrls } from "../common/urls";
 import {
   extractObjectFiles,
   isFileOrBuffer,
@@ -7,17 +7,18 @@ import {
   replaceObjectSchemesWithGatewayUrls,
   replaceSchemeWithGatewayUrl,
 } from "../common/utils";
+import { IThirdwebStorage, ThirdwebStorageOptions } from "../types";
+import { FileOrBufferOrString } from "../types/data";
 import {
-  FileOrBufferOrString,
   GatewayUrls,
   IStorageDownloader,
-  IStorageUploader,
-  IThirdwebStorage,
-  IpfsUploadBatchOptions,
   SingleDownloadOptions,
-  ThirdwebStorageOptions,
+} from "../types/download";
+import {
+  IStorageUploader,
+  IpfsUploadBatchOptions,
   UploadOptions,
-} from "../types";
+} from "../types/upload";
 import { StorageDownloader } from "./downloaders/storage-downloader";
 import { IpfsUploader } from "./uploaders/ipfs-uploader";
 

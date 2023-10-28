@@ -22,7 +22,3 @@ export interface IThirdwebStorage {
   uploadBatch(data: any[], options?: { [key: string]: any }): Promise<string[]>;
   getGatewayUrls(): GatewayUrls;
 }
-
-export * from "./download";
-export * from "./upload";
-export * from "./data";

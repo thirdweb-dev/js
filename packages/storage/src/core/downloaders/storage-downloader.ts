@@ -1,12 +1,12 @@
 import { isTwGatewayUrl } from "../../common/urls";
 import { isBrowser, replaceSchemeWithGatewayUrl } from "../../common/utils";
+import pkg from "../../../package.json";
 import {
   GatewayUrls,
   IStorageDownloader,
   IpfsDownloaderOptions,
   SingleDownloadOptions,
-} from "../../types";
-import pkg from "../../../package.json";
+} from "../../types/download";
 
 /**
  * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.

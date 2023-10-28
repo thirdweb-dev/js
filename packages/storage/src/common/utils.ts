@@ -1,4 +1,5 @@
-import { BufferOrStringWithName, FileOrBuffer, GatewayUrls } from "../types";
+import { BufferOrStringWithName, FileOrBuffer } from "../types/data";
+import { GatewayUrls } from "../types/download";
 import { getGatewayUrlForCid } from "./urls";
 
 /**

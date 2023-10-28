@@ -5,14 +5,14 @@ import {
   isFileBufferOrStringEqual,
   isFileInstance,
 } from "../../common/utils";
-import {
-  FileOrBufferOrString,
-  IpfsUploadBatchOptions,
-  IpfsUploaderOptions,
-  IStorageUploader,
-} from "../../types";
 import FormData from "form-data";
 import pkg from "../../../package.json";
+import {
+  IStorageUploader,
+  IpfsUploadBatchOptions,
+  IpfsUploaderOptions,
+} from "../../types/upload";
+import { FileOrBufferOrString } from "../../types/data";
 
 /**
  * Default uploader used - handles uploading arbitrary data to IPFS
