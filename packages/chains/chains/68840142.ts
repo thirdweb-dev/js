@@ -25,7 +25,7 @@ export default {
   "rpc": [
     "https://frame-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://68840142.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.testnet.frame.xyz"
+    "https://rpc.testnet.frame.xyz/http"
   ],
   "shortName": "frame-test",
   "slug": "frame-testnet",
