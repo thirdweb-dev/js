@@ -1,6 +1,7 @@
 import { SetUpWalletRpcReturnType } from "@paperxyz/embedded-wallet-service-sdk";
 import { ethers } from "ethers";
 import * as secrets from "secrets.js-34r7h";
+import { hexToUint8Array, uint8ArrayToString } from "uint8array-extras";
 import { getUserShares } from "../api/fetchers";
 import {
   DEVICE_SHARE_ID,
@@ -13,7 +14,7 @@ import { decryptShareWeb } from "./encryption";
 
 function getWalletPrivateKeyFromShares(shares: string[]) {
   const privateKeyHex = secrets.combine(shares);
-  const prefixPrivateKey = Buffer.from(privateKeyHex, "hex").toString("utf-8");
+  const prefixPrivateKey = uint8ArrayToString(hexToUint8Array(privateKeyHex));
   if (!prefixPrivateKey.startsWith("thirdweb_")) {
     throw new Error("Invalid private key reconstructed from shares");
   }

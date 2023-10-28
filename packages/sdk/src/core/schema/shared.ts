@@ -13,7 +13,7 @@ export const FileOrBufferUnionSchema = /* @__PURE__ */ (() =>
   isBrowser()
     ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
     : // @fixme, this is a hack to make browser happy for now
-      (z.instanceof(Buffer) as z.ZodTypeAny))();
+      (z.instanceof(Uint8Array) as z.ZodTypeAny))();
 
 /**
  * @internal

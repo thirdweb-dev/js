@@ -14,25 +14,15 @@ import {
 import { GenerateOptionsSchema } from "../schema/generate";
 import { RefreshOptionsSchema } from "../schema/refresh";
 import { verifyLoginPayload } from "./login";
-
-function isBrowser() {
-  return typeof window !== "undefined";
-}
+import { stringToBase64, base64ToString } from "uint8array-extras";
 
 function base64encode(data: string): string {
-  if (isBrowser()) {
-    return window.btoa(data);
-  }
-
-  return Buffer.from(data).toString("base64").replace(/=/g, "");
+  // TODO: do we need to do the replace here still?
+  return stringToBase64(data).replace(/=/g, "");
 }
 
 function base64decode(data: string): string {
-  if (isBrowser()) {
-    return window.atob(data);
-  }
-
-  return Buffer.from(data, "base64").toString();
+  return base64ToString(data);
 }
 
 /**

@@ -50,7 +50,8 @@
     "react-native-qrcode-svg": "6.2.0",
     "react-native-svg": "^13.9.0",
     "secrets.js-34r7h": "^2.0.2",
-    "tiny-invariant": "^1.2.0"
+    "tiny-invariant": "^1.2.0",
+    "uint8array-extras": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",

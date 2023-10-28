@@ -365,7 +365,7 @@ export abstract class BaseAccountAPI {
         maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
         // A dummy value here is required in order to calculate a correct preVerificationGas value.
         paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
-        signature: ethers.utils.hexlify(Buffer.alloc(SIG_SIZE, 1)),
+        signature: ethers.utils.hexlify(new Uint8Array(SIG_SIZE).fill(1)),
       };
       userOp = await ethers.utils.resolveProperties(pmOp);
       const preVerificationGas = calcPreVerificationGas(userOp);

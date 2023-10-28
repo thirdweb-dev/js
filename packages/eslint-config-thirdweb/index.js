@@ -36,6 +36,25 @@ module.exports = {
     "no-unused-expressions": "error",
     "no-useless-computed-key": "error",
 
+    "no-restricted-globals": [
+      "warn",
+      {
+        name: "Buffer",
+        message: "Use Uint8Array instead.",
+      },
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        name: "buffer",
+        message: "Use Uint8Array instead.",
+      },
+      {
+        name: "node:buffer",
+        message: "Use Uint8Array instead.",
+      },
+    ],
+
     // no restricted imports
     "@typescript-eslint/no-restricted-imports": [
       "error",
@@ -48,6 +67,17 @@ module.exports = {
             allowTypeImports: true,
           },
         ],
+      },
+    ],
+    "@typescript-eslint/ban-types": [
+      "warn",
+      {
+        types: {
+          Buffer: {
+            message: "Use Uint8Array instead.",
+            suggest: ["Uint8Array"],
+          },
+        },
       },
     ],
   },

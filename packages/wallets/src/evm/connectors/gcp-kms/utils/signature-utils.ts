@@ -6,12 +6,8 @@ import {
   typedSignatureHash,
   TypedDataUtils,
 } from "@metamask/eth-sig-util";
-import {
-  bufferToHex,
-  publicToAddress,
-  fromRpcSig,
-  ecrecover,
-} from "ethereumjs-util";
+import { publicToAddress, fromRpcSig, ecrecover } from "@ethereumjs/util";
+import { stringToUint8Array, uint8ArrayToHex } from "uint8array-extras";
 
 /**
  * Recover the public key from the given signature and message hash.
@@ -20,9 +16,12 @@ import {
  * @param signature - The signature.
  * @returns The public key of the signer.
  */
-export function recoverPublicKey(messageHash: Buffer, signature: string) {
+export function recoverPublicKey(messageHash: Uint8Array, signature: string) {
   const sigParams = fromRpcSig(signature);
-  return ecrecover(messageHash, sigParams.v, sigParams.r, sigParams.s);
+  // TODO: replace this method with something that accepts Uint8Arrays
+  // eslint-disable-next-line no-restricted-globals
+  const buffer = Buffer.from(messageHash);
+  return ecrecover(buffer, sigParams.v, sigParams.r, sigParams.s);
 }
 
 /**
@@ -78,9 +77,9 @@ export function recoverTypedSignature<
     throw new Error("Missing signature parameter");
   }
 
-  let messageHash: Buffer;
+  let messageHash: Uint8Array;
   if (version === SignTypedDataVersion.V1) {
-    messageHash = Buffer.from(typedSignatureHash(data as TypedDataV1));
+    messageHash = stringToUint8Array(typedSignatureHash(data as TypedDataV1));
   } else {
     messageHash = TypedDataUtils.eip712Hash(
       data as TypedMessage<T>,
@@ -90,5 +89,5 @@ export function recoverTypedSignature<
 
   const publicKey = recoverPublicKey(messageHash, signature);
   const sender = publicToAddress(publicKey);
-  return bufferToHex(sender);
+  return uint8ArrayToHex(sender);
 }

@@ -4,13 +4,18 @@ import * as asn1 from "asn1.js";
 import BN from "bn.js";
 import KeyEncoder from "key-encoder";
 import type { GcpKmsSignerCredentials } from "../signer";
+import {
+  uint8ArrayToHex,
+  stringToUint8Array,
+  hexToUint8Array,
+} from "uint8array-extras";
 
 const keyEncoder = new KeyEncoder("secp256k1");
 
 /* this asn1.js library has some funky things going on */
 /* eslint-disable func-names */
 const EcdsaSigAsnParse: {
-  decode: (asnStringBuffer: Buffer, format: "der") => { r: BN; s: BN };
+  decode: (asnStringBuffer: Uint8Array, format: "der") => { r: BN; s: BN };
   // eslint-disable-next-line better-tree-shaking/no-top-level-side-effects
 } = asn1.define("EcdsaSig", function (this: any) {
   // parsing this according to https://tools.ietf.org/html/rfc3279#section-2.2.3
@@ -59,7 +64,7 @@ function getClientCredentials(kmsCredentials: GcpKmsSignerCredentials) {
 }
 
 export async function sign(
-  digest: Buffer,
+  digest: Uint8Array,
   kmsCredentials: GcpKmsSignerCredentials,
 ) {
   const kms = new KeyManagementServiceClient(
@@ -102,16 +107,16 @@ export const getPublicKey = async (kmsCredentials: GcpKmsSignerCredentials) => {
   // GCP KMS returns the public key in pem format,
   // so we need to encode it to der format, and return the hex buffer.
   const der = keyEncoder.encodePublic(publicKey.pem, "pem", "der");
-  return Buffer.from(der, "hex");
+  return hexToUint8Array(der);
 };
 
-export function getEthereumAddress(publicKey: Buffer): string {
+export function getEthereumAddress(publicKey: Uint8Array): string {
   // The public key here is a hex der ASN1 encoded in a format according to
   // https://tools.ietf.org/html/rfc5480#section-2
   // I used https://lapo.it/asn1js to figure out how to parse this
   // and defined the schema in the EcdsaPubKey object.
   const res = EcdsaPubKey.decode(publicKey, "der");
-  const pubKeyBuffer: Buffer = res.pubKey.data;
+  const pubKeyBuffer: Uint8Array = res.pubKey.data;
 
   // The raw format public key starts with a `04` prefix that needs to be removed
   // more info: https://www.oreilly.com/library/view/mastering-ethereum/9781491971932/ch04.html
@@ -125,7 +130,7 @@ export function getEthereumAddress(publicKey: Buffer): string {
   return EthAddr;
 }
 
-export function findEthereumSig(signature: Buffer) {
+export function findEthereumSig(signature: Uint8Array) {
   const decoded = EcdsaSigAsnParse.decode(signature, "der");
   const { r, s } = decoded;
 
@@ -142,18 +147,21 @@ export function findEthereumSig(signature: Buffer) {
 }
 
 export async function requestKmsSignature(
-  plaintext: Buffer,
+  plaintext: Uint8Array,
   kmsCredentials: GcpKmsSignerCredentials,
 ) {
   const response = await sign(plaintext, kmsCredentials);
   if (!response || !response.signature) {
     throw new Error(`GCP KMS call failed`);
   }
-  return findEthereumSig(response.signature as Buffer);
+  if (typeof response.signature === "string") {
+    return findEthereumSig(stringToUint8Array(response.signature));
+  }
+  return findEthereumSig(response.signature);
 }
 
-function recoverPubKeyFromSig(msg: Buffer, r: BN, s: BN, v: number) {
-  return ethers.utils.recoverAddress(`0x${msg.toString("hex")}`, {
+function recoverPubKeyFromSig(msg: Uint8Array, r: BN, s: BN, v: number) {
+  return ethers.utils.recoverAddress(`0x${uint8ArrayToHex(msg)}`, {
     r: `0x${r.toString("hex")}`,
     s: `0x${s.toString("hex")}`,
     v,
@@ -161,7 +169,7 @@ function recoverPubKeyFromSig(msg: Buffer, r: BN, s: BN, v: number) {
 }
 
 export function determineCorrectV(
-  msg: Buffer,
+  msg: Uint8Array,
   r: BN,
   s: BN,
   expectedEthAddr: string,

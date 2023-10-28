@@ -1,5 +1,6 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { stringToUint8Array, uint8ArrayToString } from "uint8array-extras";
 
 import { authFetchEmbeddedWalletUser } from "../api/fetchers";
 import {
@@ -51,7 +52,7 @@ export async function getCognitoRecoveryPassword(clientId: string) {
 
   const params = {
     FunctionName: functionName,
-    Payload: Buffer.from(
+    Payload: stringToUint8Array(
       JSON.stringify({
         accessToken,
         idToken,
@@ -62,7 +63,7 @@ export async function getCognitoRecoveryPassword(clientId: string) {
   if (!data.Payload) {
     throw new Error("No payload");
   }
-  const encKeyResult = JSON.parse(Buffer.from(data.Payload).toString("utf-8"));
+  const encKeyResult = JSON.parse(uint8ArrayToString(data.Payload));
 
   const result = JSON.parse(encKeyResult.body).recoveryShareEncKey as string;
 

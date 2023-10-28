@@ -14,9 +14,10 @@ import {
   typedSignatureHash,
   TypedDataUtils,
 } from "@metamask/eth-sig-util";
+import { uint8ArrayToHex } from "uint8array-extras";
 
 import { ethers, UnsignedTransaction } from "ethers";
-import { bufferToHex } from "ethereumjs-util";
+
 import {
   getPublicKey,
   getEthereumAddress,
@@ -62,7 +63,7 @@ export class GcpKmsSigner extends ethers.Signer {
   }
 
   async _signDigest(digestString: string): Promise<string> {
-    const digestBuffer = Buffer.from(ethers.utils.arrayify(digestString));
+    const digestBuffer = ethers.utils.arrayify(digestString);
     const sig = await requestKmsSignature(digestBuffer, this.kmsCredentials);
     const ethAddr = await this.getAddress();
     const { v } = determineCorrectV(digestBuffer, sig.r, sig.s, ethAddr);
@@ -118,11 +119,11 @@ export class GcpKmsSigner extends ethers.Signer {
         typedSignatureHash(data as TypedDataV1),
       );
     } else {
-      const eip712Hash: Buffer = TypedDataUtils.eip712Hash(
+      const eip712Hash: Uint8Array = TypedDataUtils.eip712Hash(
         data as TypedMessage<T>,
         version as SignTypedDataVersion.V3 | SignTypedDataVersion.V4,
       );
-      messageSignature = this._signDigest(bufferToHex(eip712Hash));
+      messageSignature = this._signDigest(uint8ArrayToHex(eip712Hash));
     }
     return messageSignature;
   }

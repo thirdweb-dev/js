@@ -1,6 +1,13 @@
 import AesGcmCrypto from "react-native-aes-gcm-crypto";
 import QuickCrypto from "react-native-quick-crypto";
 import { getRandomValues } from "../getRandomValues";
+import {
+  uint8ArrayToBase64,
+  uint8ArrayToHex,
+  base64ToUint8Array,
+  hexToUint8Array,
+  concatUint8Arrays,
+} from "uint8array-extras";
 
 const ENCRYPTION_SEPARATOR = ":";
 const DEPRECATED_KEY_ITERATION_COUNT = 5000000;
@@ -12,7 +19,8 @@ export async function getEncryptionKey(
   salt: ArrayBuffer,
   iterationCounts: number,
 ): Promise<string> {
-  const key = QuickCrypto.pbkdf2Sync(
+  // a buffer *is* a uint8 array and we would like to operate on uint8 arrays
+  const key: Uint8Array = QuickCrypto.pbkdf2Sync(
     pwd,
     salt,
     iterationCounts,
@@ -22,19 +30,20 @@ export async function getEncryptionKey(
 
   // this produces a 256 bits length key
   // but node by default produces a 32 byte length key
-  const key32 = key.slice(0, 32);
+  // subarray does what buffer.slice() always did but explicitly
+  const key32 = key.subarray(0, 32);
 
-  const base64key = key32.toString("base64");
+  const base64key = uint8ArrayToBase64(key32);
 
   return base64key;
 }
 
 function bufferToBase64(arrayBuffer: ArrayBuffer): string {
-  return Buffer.from(arrayBuffer).toString("base64");
+  return uint8ArrayToBase64(new Uint8Array(arrayBuffer));
 }
 
-function base64ToBuffer(base64String: string): ArrayBuffer {
-  return Buffer.from(base64String, "base64");
+function base64ToBuffer(base64String: string): Uint8Array {
+  return base64ToUint8Array(base64String);
 }
 
 export async function encryptShareWeb(
@@ -55,15 +64,15 @@ export async function encryptShareWeb(
 
   // Ref: https://github.com/craftzdog/react-native-aes-gcm-crypto/blob/master/android/src/main/java/com/reactnativeaesgcmcrypto/AesGcmCryptoModule.kt#L111
   // Cipher text is a base64 string
-  const cipherTextBase64Buffer = Buffer.from(encryptedValue.content, "base64");
+  const cipherTextBase64Buffer = base64ToUint8Array(encryptedValue.content);
   // Tag is a hex string
-  const tagHexBuffer = Buffer.from(encryptedValue.tag, "hex");
-  const cipherTextWithTag = Buffer.concat([
+  const tagHexBuffer = hexToUint8Array(encryptedValue.tag);
+  const cipherTextWithTag = concatUint8Arrays([
     cipherTextBase64Buffer,
     tagHexBuffer,
   ]);
   // iv is a hex string
-  const ivBase64 = Buffer.from(encryptedValue.iv, "hex").toString("base64");
+  const ivBase64 = uint8ArrayToBase64(hexToUint8Array(encryptedValue.iv));
 
   const returnValue = `${bufferToBase64(
     cipherTextWithTag,
@@ -98,9 +107,8 @@ export async function decryptShareWeb(
     iterationCount,
   );
 
-  const encryptedShareWithTagBuffer = Buffer.from(
+  const encryptedShareWithTagBuffer = base64ToUint8Array(
     encryptedShareWithTagBase64,
-    "base64",
   );
 
   // The tag is a 16 bytes long hex string
@@ -109,21 +117,23 @@ export async function decryptShareWeb(
     encryptedShareWithTagBuffer.length - tagBytesLength;
 
   // Get cipherText and tag from encryptedShareWithTagBuffer
-  const cipherTextBuffer = Buffer.from(
-    encryptedShareWithTagBuffer.subarray(0, cipherTextBufferLength),
-  );
-  const tagBuffer = Buffer.from(
-    encryptedShareWithTagBuffer.subarray(cipherTextBufferLength),
+  const cipherTextBuffer = encryptedShareWithTagBuffer.subarray(
+    0,
+    cipherTextBufferLength,
   );
 
-  const originalBase64CipherText = cipherTextBuffer.toString("base64");
+  const tagBuffer = encryptedShareWithTagBuffer.subarray(
+    cipherTextBufferLength,
+  );
+
+  const originalBase64CipherText = uint8ArrayToBase64(cipherTextBuffer);
   // converting to hex since the decrypt function expects a hex string
   // Ref: https://github.com/craftzdog/react-native-aes-gcm-crypto/blob/master/android/src/main/java/com/reactnativeaesgcmcrypto/AesGcmCryptoModule.kt#L111
-  const hexStringTag = tagBuffer.toString("hex");
+  const hexStringTag = uint8ArrayToHex(tagBuffer);
 
   // converting to hex since the decrypt function expects a hex string
   // Ref: https://github.com/craftzdog/react-native-aes-gcm-crypto/blob/master/android/src/main/java/com/reactnativeaesgcmcrypto/AesGcmCryptoModule.kt#L111
-  const ivBufferHex = Buffer.from(ivBase64, "base64").toString("hex");
+  const ivBufferHex = uint8ArrayToHex(base64ToUint8Array(ivBase64));
 
   const normalizedShare = await AesGcmCrypto.decrypt(
     originalBase64CipherText,

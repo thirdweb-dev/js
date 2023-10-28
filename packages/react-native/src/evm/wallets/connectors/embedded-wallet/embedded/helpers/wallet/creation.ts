@@ -2,7 +2,6 @@ import { SetUpWalletRpcReturnType } from "@paperxyz/embedded-wallet-service-sdk"
 import { Wallet, utils } from "ethers";
 import * as secrets from "secrets.js-34r7h";
 import { storeUserShares } from "../api/fetchers";
-
 import { logoutUser } from "../auth/logout";
 import {
   AUTH_SHARE_INDEX,
@@ -12,6 +11,7 @@ import {
 } from "../constants";
 import { setDeviceShare } from "../storage/local";
 import { encryptShareWeb } from "./encryption";
+import { stringToUint8Array, uint8ArrayToHex } from "uint8array-extras";
 
 export async function setUpNewUserWallet(
   recoveryCode: string,
@@ -76,8 +76,8 @@ function createWalletShares(): {
   // const wallet = ethers.Wallet.createRandom();
   const seed = utils.randomBytes(32);
   const wallet = new Wallet(seed);
-  const privateKeyHex = Buffer.from(`thirdweb_${wallet.privateKey}`).toString(
-    "hex",
+  const privateKeyHex = uint8ArrayToHex(
+    stringToUint8Array(`thirdweb_${wallet.privateKey}`),
   );
   // Potential source of share corruption through tampering
   // https://hackerone.com/reports/1884071

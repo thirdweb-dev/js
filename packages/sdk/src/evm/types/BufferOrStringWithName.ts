@@ -1,4 +1,4 @@
 export type BufferOrStringWithName = {
-  data: Buffer | string;
+  data: Uint8Array | string;
   name?: string;
 };

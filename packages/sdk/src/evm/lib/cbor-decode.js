@@ -1,3 +1,5 @@
+import { concatUint8Arrays } from "uint8array-extras";
+
 /* eslint-disable eqeqeq */
 /* eslint-disable better-tree-shaking/no-top-level-side-effects  */
 let decoder;
@@ -251,7 +253,7 @@ function read() {
               ? array
               : majorType == 3
               ? array.join("")
-              : Buffer.concat(array);
+              : concatUint8Arrays(array);
           case 5: // map
             let key;
             if (currentDecoder.mapsAsObjects) {

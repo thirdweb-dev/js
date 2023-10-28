@@ -28,6 +28,7 @@ import {
   utils,
   type providers,
 } from "ethers";
+import { base64ToString } from "uint8array-extras";
 
 export const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
@@ -49,12 +50,10 @@ export async function fetchTokenMetadata(
   // check for base64 encoded JSON
   if (
     tokenUri.startsWith("data:application/json;base64") &&
-    typeof Buffer !== "undefined"
+    typeof Uint8Array !== "undefined"
   ) {
     const base64 = tokenUri.split(",")[1];
-    const jsonMetadata = JSON.parse(
-      Buffer.from(base64, "base64").toString("utf-8"),
-    );
+    const jsonMetadata = JSON.parse(base64ToString(base64));
     return CommonNFTOutput.parse({
       ...jsonMetadata,
       id: BigNumber.from(tokenId).toString(),

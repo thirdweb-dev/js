@@ -69,6 +69,7 @@
   "dependencies": {
     "cid-tool": "^3.0.0",
     "form-data": "^4.0.0",
+    "uint8array-extras": "^0.4.0",
     "uuid": "^9.0.1"
   },
   "engines": {

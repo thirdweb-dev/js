@@ -1,13 +1,13 @@
 /**
  * @internal
  */
-export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
+export type FileOrBuffer = File | Uint8Array | BufferOrStringWithName;
 
 /**
  * @internal
  */
 export type BufferOrStringWithName = {
-  data: Buffer | string;
+  data: Uint8Array | string;
   name: string;
 };
 

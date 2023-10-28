@@ -124,7 +124,6 @@
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/react-core": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
-    "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.2",
     "detect-browser": "^5.3.0",
     "fuse.js": "^6.6.2",

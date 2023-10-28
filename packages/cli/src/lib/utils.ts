@@ -25,7 +25,7 @@ export function convertDependenciesToStringFormat(dependenciesObject: object) {
 }
 
 export const parsePackageJson = (
-  packageJson: Buffer,
+  packageJson: Uint8Array,
 ): {
   dependencies: {
     [key: string]: string;
@@ -44,7 +44,7 @@ export const parsePackageJson = (
   return { dependencies, devDependencies, peerDependencies };
 };
 
-export const parseRequirementsTxt = (requirementsTxt: Buffer) => {
+export const parseRequirementsTxt = (requirementsTxt: Uint8Array) => {
   const requirementsTxtContent = requirementsTxt.toString();
   const dependencies = requirementsTxtContent.split("\n");
   return { dependencies };

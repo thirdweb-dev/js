@@ -1,5 +1,6 @@
 import { BufferOrStringWithName, FileOrBuffer, GatewayUrls } from "../types";
 import { getGatewayUrlForCid } from "./urls";
+import { areUint8ArraysEqual } from "uint8array-extras";
 
 /**
  * @internal
@@ -18,8 +19,8 @@ export function isFileInstance(data: any): data is File {
 /**
  * @internal
  */
-export function isBufferInstance(data: any): data is Buffer {
-  return global.Buffer && data instanceof Buffer;
+export function isBufferInstance(data: any): data is Uint8Array {
+  return global.Buffer && data instanceof Uint8Array;
 }
 
 /**
@@ -39,7 +40,7 @@ export function isBufferOrStringWithName(
 
 export function isFileOrBuffer(
   data: any,
-): data is File | Buffer | BufferOrStringWithName {
+): data is File | Uint8Array | BufferOrStringWithName {
   return (
     isFileInstance(data) ||
     isBufferInstance(data) ||
@@ -61,9 +62,7 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
       return true;
     }
   } else if (isBufferInstance(input1) && isBufferInstance(input2)) {
-    // buffer gives us an easy way to compare the contents!
-
-    return input1.equals(input2);
+    return areUint8ArraysEqual(input1, input2);
   } else if (
     isBufferOrStringWithName(input1) &&
     isBufferOrStringWithName(input2)
@@ -77,8 +76,8 @@ export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
         isBufferInstance(input1.data) &&
         isBufferInstance(input2.data)
       ) {
-        // otherwise we know it's buffers, so compare the buffers
-        return input1.data.equals(input2.data);
+        // otherwise we know it's UInt8Arrays, so compare them
+        return areUint8ArraysEqual(input1.data, input2.data);
       }
     }
   }
