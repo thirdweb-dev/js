@@ -1,17 +1,12 @@
 import {
-  WalletConfig,
   useCreateWalletInstance,
   useSetConnectedWallet,
   useSetConnectionStatus,
 } from "@thirdweb-dev/react-core";
-import { AuthParams, EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { AuthParams } from "@thirdweb-dev/wallets";
 import { useCallback } from "react";
 
-/**
- *
- * @returns `true` if the wallet does not have a UI and can sign transactions without user interaction.
- */
-export function useEmbeddedWalletConnect(config: WalletConfig<EmbeddedWallet>) {
+export function useEmbeddedWallet() {
   const create = useCreateWalletInstance();
   const setStatus = useSetConnectionStatus();
   const setWallet = useSetConnectedWallet();
@@ -19,7 +14,10 @@ export function useEmbeddedWalletConnect(config: WalletConfig<EmbeddedWallet>) {
   return useCallback(
     async (authParams: AuthParams) => {
       setStatus("connecting");
-      const wallet = create(config);
+      const { embeddedWallet } = await import(
+        "../../../wallet/wallets/embeddedWallet/embeddedWallet"
+      );
+      const wallet = create(embeddedWallet());
       try {
         const authResult = await wallet.authenticate(authParams);
         await wallet.connect({ authResult });
@@ -31,6 +29,6 @@ export function useEmbeddedWalletConnect(config: WalletConfig<EmbeddedWallet>) {
       setStatus("connected");
       return await wallet.getAddress();
     },
-    [config, create, setWallet, setStatus],
+    [create, setWallet, setStatus],
   );
 }

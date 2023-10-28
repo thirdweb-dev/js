@@ -25,7 +25,6 @@ export type { MediaRendererProps } from "./components/types";
 
 // wallet/hooks
 export { useInstalledWallets } from "../wallet/hooks/useInstalledWallets";
-export { useEmbeddedWalletConnect } from "../wallet/hooks/useEmbeddedWalletConnect";
 
 // wallet connection hooks
 export { useRainbowWallet } from "./hooks/wallets/useRainbowWallet";
@@ -34,6 +33,7 @@ export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
 export { useFrameWallet } from "./hooks/wallets/useFrame";
 export { useBloctoWallet } from "./hooks/wallets/useBloctoWallet";
+export { useEmbeddedWallet } from "./hooks/wallets/useEmbeddedWallet";
 
 export {
   usePaperWalletUserEmail,
