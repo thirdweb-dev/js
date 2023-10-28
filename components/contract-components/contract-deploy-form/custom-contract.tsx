@@ -111,15 +111,13 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     fullPublishMetadata.data?.deployType === "autoFactory" ||
     fullPublishMetadata.data?.deployType === "customFactory";
 
-  const isAccountFactory =
-    (fullPublishMetadata.data?.publisher === "deployer.thirdweb.eth" ||
-      fullPublishMetadata.data?.publisher ===
-        "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024") &&
-    fullPublishMetadata.data?.name.includes("AccountFactory");
-
   const deployParams = isFactoryDeployment
     ? initializerParams
     : constructorParams;
+
+  const isAccountFactory =
+    !isFactoryDeployment &&
+    (fullPublishMetadata.data?.name.includes("AccountFactory") || false);
 
   const parseDeployParams = {
     ...deployParams.reduce(
