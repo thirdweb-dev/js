@@ -10,7 +10,6 @@
     },
     "./package.json": "./package.json"
   },
-  "type": "module",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/utils",
   "license": "Apache-2.0",
   "bugs": {
