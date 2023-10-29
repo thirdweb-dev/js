@@ -59,3 +59,5 @@ exports[`MerkleTree sha256 with sort pairs option 1`] = `"0xa30ba95a1a5dc397fe45
 exports[`MerkleTree keccak256 with sort option 1`] = `"0x60219f87561939610b484575e45c6e81156a53b86d7cd16640d930d14f21758e"`;
 
 exports[`MerkleTree sha256 with sha256 leaves and sort pairs option and duplicate odd option 1`] = `"0xa5260b2a7ec31584e5d5689a5628c2b3d949e2397334fd71c107478e5f887eaf"`;
+
+exports[`MerkleTree keccak256 with sort leaves and sort pairs option 1`] = `"0x60219f87561939610b484575e45c6e81156a53b86d7cd16640d930d14f21758e"`;

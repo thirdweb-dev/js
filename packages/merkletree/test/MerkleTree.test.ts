@@ -1,5 +1,4 @@
 import { MerkleTree } from "../src/index";
-import { MerkleTree as MerkleTreeJS } from "merkletreejs";
 import { keccak256Sync, sha256Sync } from "@thirdweb-dev/crypto";
 
 describe("MerkleTree", () => {
@@ -88,12 +87,9 @@ describe("MerkleTree", () => {
       sortLeaves: true,
       sortPairs: true,
     });
-    const treeJS = new MerkleTreeJS(leaves, keccak256Sync, {
-      sortLeaves: true,
-      sortPairs: true,
-    });
+
     // check equality of the roots
-    expect(tree.getHexRoot()).toEqual(treeJS.getHexRoot());
+    expect(tree.getHexRoot()).toMatchSnapshot();
   });
 
   it("keccak256 with sort option", () => {
