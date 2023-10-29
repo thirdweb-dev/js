@@ -54,7 +54,8 @@
     "benchmark:aes-encrypt": "bun benchmark/aes-encrypt.ts",
     "benchmark:aes-decrypt": "bun benchmark/aes-decrypt.ts",
     "benchmark:sha256": "bun benchmark/sha256.ts",
-    "benchmark": "bun run benchmark:aes-encrypt && bun run benchmark:aes-decrypt && bun run benchmark:sha256"
+    "benchmark:keccak256": "bun benchmark/keccak256.ts",
+    "benchmark": "bun run benchmark:aes-encrypt && bun run benchmark:aes-decrypt && bun run benchmark:sha256 && bun run benchmark:keccak256"
   },
   "engines": {
     "node": ">=18"
