@@ -187,6 +187,20 @@ export function useSwitchChain() {
 
 /**
  *
+ * @returns a method to connect the wallet to network/chain with given chainId and also change the activeChain in the <ThirdwebProvider/>
+ *
+ */
+export function useSwitchActiveChainForProvider() {
+  const context = useWalletContext();
+  invariant(
+    context,
+    "useSwitchActiveChainForProvider() must be used within a <ThirdwebProvider/>",
+  );
+  return context.switchActiveChainForProvider;
+}
+
+/**
+ *
  * @returns a method to set a connected wallet instance
  */
 export function useSetConnectedWallet() {

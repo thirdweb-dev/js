@@ -92,6 +92,7 @@ type ThirdwebWalletContextData = {
   getWalletConfig: (walletInstance: WalletInstance) => WalletConfig | undefined;
   activeChainSetExplicitly: boolean;
   clientId?: string;
+  switchActiveChainForProvider: (chain: number) => Promise<void>;
 };
 
 const ThirdwebWalletContext = /* @__PURE__ */ createContext<
@@ -116,6 +117,8 @@ export function ThirdwebWalletProvider(
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("unknown");
+
+  const [activeChain, setActiveChain] = useState<Chain>(props.activeChain);
 
   const autoConnectTimeout = props.autoConnectTimeout || 15000;
 
@@ -261,6 +264,14 @@ export function ThirdwebWalletProvider(
       setSigner(_signer);
     },
     [activeWallet, storeLastActiveChainId],
+  );
+
+  const switchActiveChainForProvider = useCallback(
+    async (chainId: number) => {
+      await switchChain(chainId);
+      setActiveChain(chainId);
+    },
+    [switchChain],
   );
 
   const autoConnectTriggered = useRef(false);
@@ -513,13 +524,14 @@ export function ThirdwebWalletProvider(
         createWalletStorage: props.createWalletStorage,
         switchChain,
         setConnectedWallet: setConnectedWallet,
-        activeChain: props.activeChain,
+        activeChain: activeChain,
         chainToConnect,
         getWalletConfig: (walletInstance: WalletInstance) => {
           return walletInstanceToConfig.get(walletInstance);
         },
         activeChainSetExplicitly: props.activeChainSetExplicitly,
         clientId: props.clientId,
+        switchActiveChainForProvider,
       }}
     >
       {props.children}
