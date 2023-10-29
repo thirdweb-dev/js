@@ -10,7 +10,7 @@ export async function sha256(
 }
 
 export async function sha256Hex(value: string | BufferSource): Promise<string> {
-  return uint8ArrayToHex(await sha256(value));
+  return "0x" + uint8ArrayToHex(await sha256(value));
 }
 
 export function sha256Sync(value: string | Uint8Array): Uint8Array {
@@ -18,5 +18,5 @@ export function sha256Sync(value: string | Uint8Array): Uint8Array {
 }
 
 export function sha256HexSync(value: string | Uint8Array): string {
-  return uint8ArrayToHex(sha256Sync(value));
+  return "0x" + uint8ArrayToHex(sha256Sync(value));
 }

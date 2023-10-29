@@ -12,7 +12,7 @@ import { fetchCurrencyMetadata } from "./currency/fetchCurrencyMetadata";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils, type providers } from "ethers";
 import { parseSnapshotInputs } from "./parseSnapshotInputs";
-import MerkleTree from "../lib/merkletree/MerkleTree";
+import { MerkleTree } from "@thirdweb-dev/merkletree";
 
 // shard using the first 2 hex character of the address
 // this splits the merkle tree into 256 shards

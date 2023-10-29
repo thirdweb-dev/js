@@ -1482,9 +1482,3 @@ export class MerkleTree extends Base {
     return tree[tree.length - 1][0][1];
   }
 }
-
-if (typeof window !== "undefined") {
-  (window as any).MerkleTree = MerkleTree;
-}
-
-export default MerkleTree;

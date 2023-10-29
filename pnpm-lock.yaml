@@ -425,6 +425,9 @@ importers:
       '@noble/hashes':
         specifier: ^1.3.2
         version: 1.3.2
+      js-sha3:
+        specifier: ^0.9.2
+        version: 0.9.2
       uint8array-extras:
         specifier: ^0.4.0
         version: 0.4.0
@@ -441,9 +444,6 @@ importers:
       '@types/crypto-js':
         specifier: ^4.1.3
         version: 4.1.3
-      '@types/js-md5':
-        specifier: ^0.7.1
-        version: 0.7.1
       benchmark:
         specifier: ^2.1.4
         version: 2.1.4
@@ -453,6 +453,9 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -479,6 +482,43 @@ importers:
         version: 7.33.0(eslint@8.45.0)
 
   packages/generated-abis: {}
+
+  packages/merkletree:
+    dependencies:
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      buffer-reverse:
+        specifier: ^1.0.1
+        version: 1.0.1
+      treeify:
+        specifier: ^1.1.0
+        version: 1.1.0
+      uint8array-extras:
+        specifier: ^0.4.0
+        version: 0.4.0
+    devDependencies:
+      '@preconstruct/cli':
+        specifier: 2.7.0
+        version: 2.7.0
+      '@thirdweb-dev/tsconfig':
+        specifier: workspace:*
+        version: link:../tw-tsconfig
+      '@types/benchmark':
+        specifier: ^2.1.4
+        version: 2.1.4
+      '@types/treeify':
+        specifier: ^1.0.2
+        version: 1.0.2
+      benchmark:
+        specifier: ^2.1.4
+        version: 2.1.4
+      eslint-config-thirdweb:
+        specifier: workspace:*
+        version: link:../eslint-config-thirdweb
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
 
   packages/pay:
     dependencies:
@@ -1037,6 +1077,9 @@ importers:
       '@thirdweb-dev/generated-abis':
         specifier: workspace:*
         version: link:../generated-abis
+      '@thirdweb-dev/merkletree':
+        specifier: workspace:*
+        version: link:../merkletree
       '@thirdweb-dev/storage':
         specifier: workspace:*
         version: link:../storage
@@ -9145,11 +9188,11 @@ packages:
 
   /@noble/hashes@1.2.0:
     resolution: {integrity: sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==}
+    dev: true
 
   /@noble/hashes@1.3.2:
     resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
     engines: {node: '>= 16'}
-    dev: false
 
   /@noble/secp256k1@1.7.1:
     resolution: {integrity: sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==}
@@ -11409,7 +11452,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.6
       '@noble/ed25519': 1.7.3
-      '@noble/hashes': 1.2.0
+      '@noble/hashes': 1.3.2
       '@noble/secp256k1': 1.7.1
       '@solana/buffer-layout': 4.0.1
       agentkeepalive: 4.3.0
@@ -12230,10 +12273,6 @@ packages:
 
   /@types/js-cookie@3.0.3:
     resolution: {integrity: sha512-Xe7IImK09HP1sv2M/aI+48a20VX+TdRJucfq4vfRVy6nWN8PYPOEnlMRSgxJAgYQIXJVL8dZ4/ilAM7dWNaOww==}
-    dev: true
-
-  /@types/js-md5@0.7.1:
-    resolution: {integrity: sha512-kP/Qsdg0OkasMDjFcN7w0FkPy/dTDex5jYisytIax4u9Cj2pO5IyQSM8NYB3g6s8dmy05sjny2+VOXobzQO7Ng==}
     dev: true
 
   /@types/js-yaml@4.0.5:
@@ -17419,7 +17458,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 7.5.3
+      semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -21661,6 +21700,10 @@ packages:
 
   /js-sha3@0.8.0:
     resolution: {integrity: sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==}
+
+  /js-sha3@0.9.2:
+    resolution: {integrity: sha512-8kgvwd03wNGQG1GRvl3yy1Yt40sICAcIMsDU2ZLgoL0Z6z9rkRmf9Vd+bi/gYSzgAqMUGl/jiDKu0J8AWFd+BQ==}
+    dev: false
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
