@@ -1,0 +1,53 @@
+{
+  "name": "@thirdweb-dev/crypto",
+  "version": "0.1.0",
+  "main": "dist/thirdweb-dev-crypto.cjs.js",
+  "module": "dist/thirdweb-dev-crypto.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-crypto.esm.js",
+      "default": "./dist/thirdweb-dev-crypto.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/utils",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": [
+    "dist/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "exports": true
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "uint8array-extras": "^0.4.0"
+  },
+  "devDependencies": {
+    "@preconstruct/cli": "2.7.0",
+    "@thirdweb-dev/tsconfig": "workspace:*",
+    "@types/crypto-js": "^4.1.3",
+    "@types/js-md5": "^0.7.1",
+    "crypto-js": "^4.2.0",
+    "eslint-config-thirdweb": "workspace:*",
+    "typescript": "^5.1.6"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push",
+    "test": "bun test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

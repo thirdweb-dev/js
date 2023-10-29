@@ -216,9 +216,6 @@ importers:
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
-      '@types/jest':
-        specifier: ^29.5.3
-        version: 29.5.3
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -228,9 +225,6 @@ importers:
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
-      jest:
-        specifier: ^29.6.2
-        version: 29.6.2(@types/node@18.17.1)(ts-node@10.9.1)
       plop:
         specifier: ^3.1.2
         version: 3.1.2
@@ -422,6 +416,34 @@ importers:
       typechain:
         specifier: ^8.3.1
         version: 8.3.1(typescript@5.1.6)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+
+  packages/crypto:
+    dependencies:
+      uint8array-extras:
+        specifier: ^0.4.0
+        version: 0.4.0
+    devDependencies:
+      '@preconstruct/cli':
+        specifier: 2.7.0
+        version: 2.7.0
+      '@thirdweb-dev/tsconfig':
+        specifier: workspace:*
+        version: link:../tw-tsconfig
+      '@types/crypto-js':
+        specifier: ^4.1.3
+        version: 4.1.3
+      '@types/js-md5':
+        specifier: ^0.7.1
+        version: 0.7.1
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
+      eslint-config-thirdweb:
+        specifier: workspace:*
+        version: link:../eslint-config-thirdweb
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -1399,6 +1421,9 @@ importers:
       '@thirdweb-dev/contracts-js':
         specifier: workspace:*
         version: link:../contracts-js
+      '@thirdweb-dev/crypto':
+        specifier: workspace:*
+        version: link:../crypto
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -6226,6 +6251,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
+    dev: false
 
   /@babel/runtime@7.22.5:
     resolution: {integrity: sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==}
@@ -7702,7 +7728,7 @@ packages:
     resolution: {integrity: sha512-tOZfTiIFA5KmMpdW9KF7bc6CFiGjb0xnbieJhTGlHrLL+ps2G0OkqmuZ3pFEXBOMnJYUVpnSy++52LFxvpa5ZQ==}
     dependencies:
       '@babel/code-frame': 7.10.4
-      json5: 1.0.2
+      json5: 2.2.3
       write-file-atomic: 2.4.3
 
   /@expo/json-file@8.2.37:
@@ -11367,7 +11393,7 @@ packages:
   /@solana/web3.js@1.73.3:
     resolution: {integrity: sha512-vHRMo589XEIpoujpE2sZZ1aMZvfA1ImKfNxobzEFyMb+H5j6mRRUXfdgWD0qJ0sm11e5BcBC7HPeRXJB+7f3Lg==}
     dependencies:
-      '@babel/runtime': 7.21.0
+      '@babel/runtime': 7.22.6
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.2.0
       '@noble/secp256k1': 1.7.1
@@ -12059,6 +12085,10 @@ packages:
       '@types/node': 18.17.1
     dev: true
 
+  /@types/crypto-js@4.1.3:
+    resolution: {integrity: sha512-YP1sYYayLe7Eg5oXyLLvOLfxBfZ5Fgpz6sVWkpB18wDMywCLPWmqzRz+9gyuOoLF0fzDTTFwlyNbx7koONUwqA==}
+    dev: true
+
   /@types/debug@4.1.7:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
@@ -12182,6 +12212,10 @@ packages:
 
   /@types/js-cookie@3.0.3:
     resolution: {integrity: sha512-Xe7IImK09HP1sv2M/aI+48a20VX+TdRJucfq4vfRVy6nWN8PYPOEnlMRSgxJAgYQIXJVL8dZ4/ilAM7dWNaOww==}
+    dev: true
+
+  /@types/js-md5@0.7.1:
+    resolution: {integrity: sha512-kP/Qsdg0OkasMDjFcN7w0FkPy/dTDex5jYisytIax4u9Cj2pO5IyQSM8NYB3g6s8dmy05sjny2+VOXobzQO7Ng==}
     dev: true
 
   /@types/js-yaml@4.0.5:
@@ -15463,7 +15497,7 @@ packages:
       - supports-color
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
   /config-chain@1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
@@ -15724,6 +15758,10 @@ packages:
   /crypto-hash@1.3.0:
     resolution: {integrity: sha512-lyAZ0EMyjDkVvz8WOeVnuCPvKVBXcMv1l5SVqO1yC7PzTwrD/pPje/BIRbWhMoPe436U+Y2nD7f5bFx0kt+Sbg==}
     engines: {node: '>=8'}
+    dev: true
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: true
 
   /crypto-random-string@1.0.0:
@@ -17356,7 +17394,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 7.5.3
+      semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -20774,16 +20812,6 @@ packages:
       pretty-format: 27.5.1
     dev: false
 
-  /jest-diff@29.5.0:
-    resolution: {integrity: sha512-LtxijLLZBduXnHSniy0WMdaHjmQnt3g5sa16W4p0HqukYTTsyTW3GD1q41TyGl5YFXj/5B2U6dlh5FM1LIMgxw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      chalk: 4.1.2
-      diff-sequences: 29.4.3
-      jest-get-type: 29.4.3
-      pretty-format: 29.6.2
-    dev: true
-
   /jest-diff@29.6.2:
     resolution: {integrity: sha512-t+ST7CB9GX5F2xKwhwCf0TAR17uNDiaPTZnVymP9lw0lssa9vG+AFyDZoeIHStU3WowFFwT+ky+er0WVl2yGhA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -20980,7 +21008,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       chalk: 4.1.2
-      jest-diff: 29.5.0
+      jest-diff: 29.6.2
       jest-get-type: 29.4.3
       pretty-format: 29.6.2
     dev: true
@@ -28594,6 +28622,11 @@ packages:
     engines: {node: '>=0.8.0'}
     hasBin: true
     requiresBuild: true
+
+  /uint8array-extras@0.4.0:
+    resolution: {integrity: sha512-N1KIHm9pkTFK+nGrJcUy59B4mOuM9MrpCIgyd33Pz7SyDkV7hPanF7miepz4NST+r8li5aaf8LNol8k+SDBhDA==}
+    engines: {node: '>=18'}
+    dev: false
 
   /uint8arrays@2.1.10:
     resolution: {integrity: sha512-Q9/hhJa2836nQfEJSZTmr+pg9+cDJS9XEAp7N2Vg5MzL3bK/mkMVfjscRGYruP9jNda6MAdf4QD/y78gSzkp6A==}

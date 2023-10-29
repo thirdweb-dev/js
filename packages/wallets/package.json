@@ -416,6 +416,7 @@
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.17",
     "@safe-global/safe-ethers-lib": "^1.9.4",
     "@thirdweb-dev/chains": "workspace:*",
+    "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
     "@walletconnect/core": "^2.9.1",
