@@ -476,6 +476,11 @@ type ExportOptions =
       encryption: EncryptOptions;
     };
 
+// used in getDecryptor and getEncryptor below
+async function noop(msg: string) {
+  return msg;
+}
+
 /**
  * if encryption object is provided
  *  - return the encryption.decrypt function if given, else return the default decrypt function
@@ -484,7 +489,6 @@ type ExportOptions =
  * @returns
  */
 function getDecryptor(encryption: DecryptOptions | undefined) {
-  const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
         // we're using aesDecryptCompat here because we want to support legacy crypto-js ciphertext for the moment
@@ -500,7 +504,6 @@ function getDecryptor(encryption: DecryptOptions | undefined) {
  * @returns
  */
 function getEncryptor(encryption: EncryptOptions | undefined) {
-  const noop = async (msg: string) => msg;
   return encryption
     ? (msg: string) =>
         (encryption.encrypt || aesEncrypt)(msg, encryption.password)
