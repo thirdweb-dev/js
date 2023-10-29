@@ -1,6 +1,10 @@
 import { arrayBuffer } from "../lib/md5";
 import { base64ToUint8Array, concatUint8Arrays } from "uint8array-extras";
 
+/**
+ * This is an implementation of the CryptoJS AES decryption scheme, without actually relying on crypto-js.
+ */
+
 const HEAD_SIZE_DWORD = 2;
 const SALT_SIZE_DWORD = 2;
 
