@@ -11,7 +11,6 @@ const SALT_SIZE_DWORD = 2;
 export async function decryptCryptoJSCipherBase64(
   salt: Uint8Array,
   ciphertext: Uint8Array,
-
   password: string,
   { keySizeDWORD = 256 / 32, ivSizeDWORD = 128 / 32, iterations = 1 } = {},
 ) {
