@@ -7,7 +7,7 @@ import {
 import { sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
-import MerkleTree from "../../src/evm/lib/merkletree/MerkleTree";
+import { MerkleTree } from "@thirdweb-dev/merkletree";
 
 const chai = require("chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
