@@ -47,16 +47,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async connect(options?: EmbeddedWalletConnectionArgs) {
-    const connected = await this.isConnected();
-
-    if (connected) {
-      if (options?.chainId) {
-        this.switchChain(options.chainId);
-      }
-
-      return this.getAddress();
-    }
-
     if (options?.chainId) {
       this.switchChain(options.chainId);
     }
