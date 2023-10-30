@@ -1,7 +1,7 @@
 import { DeepPartial, deepMerge } from "../types/deepPartial";
 import { _en } from "./en";
 import { _es } from "./es";
-import { _jp } from "./jp";
+import { _ja } from "./ja";
 import { Locale, LocaleType } from "./types";
 
 export const setLocale = (locale: Locale): LocaleType => {
@@ -11,8 +11,8 @@ export const setLocale = (locale: Locale): LocaleType => {
         return _en;
       case "es":
         return _es;
-      case "jp":
-        return _jp;
+      case "ja":
+        return _ja;
       default:
         throw new Error(`Locale ${locale} not supported`);
     }
@@ -27,11 +27,11 @@ export const en = (locale?: DeepPartial<LocaleType>): LocaleType => {
   return deepMerge(_en, locale);
 };
 
-export const jp = (locale?: DeepPartial<LocaleType>): LocaleType => {
+export const ja = (locale?: DeepPartial<LocaleType>): LocaleType => {
   if (!locale) {
-    return _jp;
+    return _ja;
   }
-  return deepMerge(_jp, locale);
+  return deepMerge(_ja, locale);
 };
 
 export const es = (locale?: DeepPartial<LocaleType>): LocaleType => {

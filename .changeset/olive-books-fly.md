@@ -4,12 +4,12 @@
 
 Adds support for Japanese and Spanish
 
-You can now pass 'jp' or 'es' to our ThirdwebProvider:
+You can now pass 'ja' or 'es' to our ThirdwebProvider:
 
 ```
 import { ThirdwebProvider } from '@thirdweb-dev/react-native';
 
-<ThirdwebProvider locale={'jp'}>
+<ThirdwebProvider locale={'ja'}>
   <App />
 </ ThirdwebProvider>
 ```

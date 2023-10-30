@@ -1,4 +1,4 @@
-export const _jp = {
+export const _ja = {
   connect_wallet: {
     label: "ウォレットを接続",
   },
