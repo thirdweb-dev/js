@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-wallets-cometh-connect.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-wallets-cometh-connect.esm.js"
+}
