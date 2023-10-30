@@ -51,7 +51,8 @@
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "@preconstruct/cli": "2.7.0"
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",

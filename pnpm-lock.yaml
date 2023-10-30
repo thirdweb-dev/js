@@ -474,6 +474,9 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
     devDependencies:
+      '@preconstruct/cli':
+        specifier: 2.7.0
+        version: 2.7.0
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../tw-tsconfig
@@ -7716,7 +7719,7 @@ packages:
     resolution: {integrity: sha512-tOZfTiIFA5KmMpdW9KF7bc6CFiGjb0xnbieJhTGlHrLL+ps2G0OkqmuZ3pFEXBOMnJYUVpnSy++52LFxvpa5ZQ==}
     dependencies:
       '@babel/code-frame': 7.10.4
-      json5: 1.0.2
+      json5: 2.2.3
       write-file-atomic: 2.4.3
 
   /@expo/json-file@8.2.37:
@@ -17349,7 +17352,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.1
-      semver: 7.5.3
+      semver: 7.5.4
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
