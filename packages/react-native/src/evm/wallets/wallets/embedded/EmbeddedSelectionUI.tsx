@@ -23,9 +23,9 @@ import { AuthProvider } from "@thirdweb-dev/wallets";
  */
 export const EmailSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
-    authOptions?: EmbeddedWalletConfig["authOptions"];
+    auth?: EmbeddedWalletConfig["auth"];
   }
-> = ({ onSelect, walletConfig, authOptions }) => {
+> = ({ onSelect, walletConfig, auth }) => {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [emailInput, setEmailInput] = useState<string>("");
@@ -34,8 +34,8 @@ export const EmailSelectionUI: React.FC<
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
 
-  const isEmailEnabled = authOptions?.providers.includes("email");
-  const isGoogleEnabled = authOptions?.providers.includes("google");
+  const isEmailEnabled = auth?.options.includes("email");
+  const isGoogleEnabled = auth?.options.includes("google");
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -84,7 +84,7 @@ export const EmailSelectionUI: React.FC<
       emailWallet,
       oauthOptions: {
         provider: AuthProvider.GOOGLE,
-        redirectUrl: authOptions?.redirectUrl,
+        redirectUrl: auth?.redirectUrl,
       },
     });
   };

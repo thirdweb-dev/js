@@ -7,11 +7,11 @@ import {
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
 
-type AuthProvider = "google" | "email";
+type AuthOption = "google" | "email";
 
 export type EmbeddedWalletConfig = {
-  authOptions?: {
-    providers: AuthProvider[];
+  auth?: {
+    options: AuthOption[];
     redirectUrl: string;
   };
 };
@@ -22,10 +22,10 @@ export const embeddedWallet = (
   const selectUI = (props: SelectUIProps<EmbeddedWallet>) => (
     <EmailSelectionUI
       {...props}
-      authOptions={
-        config?.authOptions || {
-          providers: ["email", "google"],
-          redirectUrl: config?.authOptions?.redirectUrl || "", // TODO (ews): is this valid? might need to default to email only?
+      auth={
+        config?.auth || {
+          options: ["email", "google"],
+          redirectUrl: config?.auth?.redirectUrl || "", // TODO (ews): is this valid? might need to default to email only?
         }
       }
     />
