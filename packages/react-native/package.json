@@ -68,7 +68,7 @@
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-i18next": "^6.0.3",
-    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^5.0.0",
     "ethers": "^5.7.2",
