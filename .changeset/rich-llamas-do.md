@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react": patch
+"@thirdweb-dev/react": minor
 ---
 
 New API to configure authentication options on `embeddedWallet`
@@ -10,22 +10,22 @@ embeddedWallet();
 
 // this is same as
 embeddedWallet({
-  authOptions: {
-    providers: ["email", "google"],
+  auth: {
+    options: ["email", "google"],
   },
 });
 
 // only email
 embeddedWallet({
-  authOptions: {
-    providers: ["email"],
+  auth: {
+    options: ["email"],
   },
 });
 
 // only google sign in
 embeddedWallet({
-  authOptions: {
-    providers: ["google"],
+  auth: {
+    options: ["google"],
   },
 });
 ```
