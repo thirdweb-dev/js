@@ -39,7 +39,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       this.#embeddedWalletSdk = new EmbeddedWalletSdk({
         clientId: this.options.clientId,
         chain: "Ethereum",
-        styles: this.options.styles,
+        onAuthSuccess: this.options.onAuthSuccess,
       });
     }
     return this.#embeddedWalletSdk;

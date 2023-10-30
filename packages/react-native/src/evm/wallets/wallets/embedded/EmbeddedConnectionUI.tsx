@@ -26,7 +26,6 @@ import {
 import { EnterPassword } from "./EnterPassword";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { RecoveryShareManagement } from "@thirdweb-dev/wallets";
-import { AuthResult } from "evm/wallets/connectors/embedded-wallet/types";
 
 const OTP_LENGTH = 6;
 type ScreenToShow =
@@ -67,13 +66,12 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   }, []);
 
   const postConnect = useCallback(
-    async (response: string, authResult: AuthResult) => {
+    async (response: string) => {
       if (response) {
         if (onLocallyConnected) {
-          onLocallyConnected(selectionData.emailWallet); // TODO (ews) no connect params here?
+          onLocallyConnected(selectionData.emailWallet);
         } else {
-          // TODO (ews) do we need connect params here?
-          await setConnectedWallet(selectionData.emailWallet, { authResult });
+          await setConnectedWallet(selectionData.emailWallet);
           setConnectionStatus("connected");
         }
       } else {
@@ -110,7 +108,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         const response = await emailWallet.connect({
           authResult,
         });
-        postConnect(response, authResult);
+        postConnect(response);
       } catch (error) {
         onError(error);
       }
@@ -163,7 +161,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
               const response = await emailWallet.connect({
                 authResult,
               });
-              postConnect(response, authResult);
+              postConnect(response);
             } catch (e: any) {
               // if (e instanceof Error && e.message.includes("encryption key")) {
               //   setScreen("create-password");
