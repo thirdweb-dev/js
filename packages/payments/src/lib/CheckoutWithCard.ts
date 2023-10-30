@@ -1,6 +1,8 @@
 import type {
   ICustomizationOptions,
-  Locale,
+  Locale
+} from "../constants/style";
+import {
   DEFAULT_BRAND_OPTIONS
 } from "../constants/style";
 import {

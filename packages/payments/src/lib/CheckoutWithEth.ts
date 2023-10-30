@@ -6,8 +6,10 @@ import {
 } from "../constants/settings";
 import type {
   ICustomizationOptions,
-  Locale,
-  DEFAULT_BRAND_OPTIONS,
+  Locale
+} from "../constants/style";
+import {
+  DEFAULT_BRAND_OPTIONS
 } from "../constants/style";
 import type { PaperSDKError } from "../interfaces/PaperSDKError";
 import { PayWithCryptoErrorCode } from "../interfaces/PaperSDKError";
