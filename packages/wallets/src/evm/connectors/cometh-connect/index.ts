@@ -51,6 +51,7 @@ export class ComethConnector extends Connector {
       throw new Error("Error connecting User");
     }
 
+    // eslint-disable-next-line no-unused-expressions
     this.options?.walletAddress
       ? await this.instance.connect(this.options.walletAddress)
       : await this.instance.connect();
