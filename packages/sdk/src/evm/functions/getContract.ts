@@ -1,7 +1,6 @@
 import { resolveAddress } from "../common/ens/resolveAddress";
 import { PREBUILT_CONTRACTS_MAP } from "../contracts";
 import type { SmartContract } from "../contracts/smart-contract";
-import { ContractPublisher } from "../core/classes/contract-publisher";
 import { NetworkInput } from "../core/types";
 import {
   ContractForPrebuiltContractType,
@@ -59,6 +58,9 @@ export async function getContract<TContractType extends PrebuiltContractType>(
       provider,
     });
     if (contractType === "custom") {
+      const { ContractPublisher } = await import(
+        "../core/classes/contract-publisher"
+      );
       const publisher = new ContractPublisher(
         params.network,
         params.sdkOptions,
