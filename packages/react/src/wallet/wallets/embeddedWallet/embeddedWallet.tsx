@@ -17,14 +17,16 @@ import {
 } from "./EmbeddedWalletFormUI";
 import { EmbeddedWalletGoogleLogin } from "./EmbeddedWalletGoogleLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
-import { EmbeddedWalletConfig, AuthProvider } from "./types";
+import { EmbeddedWalletConfig, AuthOption } from "./types";
+
+const DEFAULT_AUTH_OPTIONS: AuthOption[] = ["email", "google"];
 
 export const embeddedWallet = (
   _config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
   const defaultConfig: EmbeddedWalletConfig = {
-    authOptions: {
-      providers: ["email", "google"],
+    auth: {
+      options: DEFAULT_AUTH_OPTIONS,
     },
   };
 
@@ -32,7 +34,7 @@ export const embeddedWallet = (
     ? { ...defaultConfig, ..._config }
     : defaultConfig;
 
-  const { authOptions: oauthOptions } = config;
+  const { auth } = config;
 
   return {
     category: "socialLogin",
@@ -55,7 +57,7 @@ export const embeddedWallet = (
       return (
         <EmbeddedWalletSelectionUI
           {...props}
-          providers={oauthOptions ? oauthOptions?.providers : undefined}
+          authOptions={auth ? auth?.options : DEFAULT_AUTH_OPTIONS}
         />
       );
     },
@@ -63,7 +65,7 @@ export const embeddedWallet = (
       return (
         <EmbeddedWalletConnectUI
           {...props}
-          providers={oauthOptions ? oauthOptions?.providers : undefined}
+          authOptions={auth ? auth?.options : DEFAULT_AUTH_OPTIONS}
         />
       );
     },
@@ -72,7 +74,7 @@ export const embeddedWallet = (
 
 const EmbeddedWalletSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
-    providers?: AuthProvider[];
+    authOptions: AuthOption[];
   }
 > = (props) => {
   const screen = useScreenContext();
@@ -99,7 +101,7 @@ const EmbeddedWalletSelectionUI: React.FC<
       <EmbeddedWalletFormUI
         onSelect={props.onSelect}
         walletConfig={props.walletConfig}
-        providers={props.providers}
+        authOptions={props.authOptions}
       />
     </div>
   );
@@ -107,7 +109,7 @@ const EmbeddedWalletSelectionUI: React.FC<
 
 const EmbeddedWalletConnectUI = (
   props: ConnectUIProps<EmbeddedWallet> & {
-    providers?: AuthProvider[];
+    authOptions: AuthOption[];
   },
 ) => {
   const [loginType, setLoginType] = useState<PaperLoginType | undefined>(
@@ -138,7 +140,7 @@ const EmbeddedWalletConnectUI = (
     }
 
     // google
-    else if (props.providers?.includes("google")) {
+    else if (props.authOptions?.includes("google")) {
       return <EmbeddedWalletGoogleLogin {...props} goBack={handleBack} />;
     }
 
@@ -153,7 +155,7 @@ const EmbeddedWalletConnectUI = (
       }}
       walletConfig={props.walletConfig}
       onBack={props.goBack}
-      providers={props.providers}
+      authOptions={props.authOptions}
     />
   );
 };

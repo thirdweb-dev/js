@@ -1,6 +1,6 @@
 import type { EmbeddedWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
-export type AuthProvider = "google" | "email";
+export type AuthOption = "google" | "email";
 
 export type EmbeddedWalletConfig = Omit<
   EmbeddedWalletAdditionalOptions,
@@ -15,8 +15,8 @@ export type EmbeddedWalletConfig = Omit<
    * Choose which auth providers to show in the wallet connection UI
    * @default { providers: ["email", "google"] }
    */
-  authOptions?: {
-    providers: AuthProvider[];
+  auth?: {
+    options: AuthOption[];
   };
 };
 
