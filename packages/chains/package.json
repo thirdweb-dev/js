@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.55",
+  "version": "0.1.57",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "browser": {
@@ -59,6 +59,6 @@
     "test": "jest"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=18"
   }
 }

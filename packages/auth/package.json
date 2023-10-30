@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.0",
+  "version": "4.1.2",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -153,6 +153,6 @@
     "zod": "^3.22.3"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=18"
   }
 }

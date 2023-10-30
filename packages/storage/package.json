@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "browser": {
@@ -72,6 +72,6 @@
     "uuid": "^9.0.1"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=18"
   }
 }
