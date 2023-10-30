@@ -36,6 +36,7 @@ export const EmbeddedSocialConnection: React.FC<
           if (onLocallyConnected) {
             onLocallyConnected(selectionData.emailWallet);
           } else {
+            // TODO (ews) do we need to pass the connect params here for serialization?
             await setConnectedWallet(selectionData.emailWallet, { authResult });
             setConnectionStatus("connected");
           }

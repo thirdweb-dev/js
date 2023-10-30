@@ -105,7 +105,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
         otp: options.otp,
         recoveryCode: options.recoveryCode,
       });
-      console.log("return storedToken in connector", storedToken);
       return {
         user: {
           status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
@@ -319,28 +318,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
 
   getEmail() {
     return this.email;
-  }
-}
-
-export function extractSubFromJwt(jwtToken: string): string | undefined {
-  const parts = jwtToken.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Invalid JWT format.");
-  }
-
-  const encodedPayload = parts[1];
-  if (!encodedPayload) {
-    throw new Error("Invalid JWT format.");
-  }
-  const decodedPayload = Buffer.from(encodedPayload, "base64").toString("utf8");
-
-  try {
-    const payloadObject = JSON.parse(decodedPayload);
-    if (payloadObject && payloadObject.sub) {
-      return payloadObject.sub;
-    }
-  } catch (error) {
-    throw new Error("Error parsing JWT payload as JSON.");
   }
 }
 

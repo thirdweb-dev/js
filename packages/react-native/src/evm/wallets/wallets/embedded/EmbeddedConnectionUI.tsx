@@ -72,6 +72,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         if (onLocallyConnected) {
           onLocallyConnected(selectionData.emailWallet); // TODO (ews) no connect params here?
         } else {
+          // TODO (ews) do we need connect params here?
           await setConnectedWallet(selectionData.emailWallet, { authResult });
           setConnectionStatus("connected");
         }
@@ -103,7 +104,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           recoveryCode: _password,
         });
 
-        console.log("authResult", authResult);
         if (!authResult) {
           onError(new Error("Failed to verify OTP"));
         }

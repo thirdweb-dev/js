@@ -107,22 +107,6 @@ export async function validateEmailOTP(options: {
       `Malformed response from the send email OTP API: ${JSON.stringify(e)}`,
     );
   }
-
-  console.log("validateEmailOTP.userDetails", result);
-
-  // if (
-  //   result.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED ||
-  //   (result.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED &&
-  //     !(await isDeviceSharePresentForUser(result.walletUserId || "")))
-  // ) {
-  //   if (!result.storedToken) {
-  //     throw new Error("Missing auth token");
-  //   }
-  //   return {
-  //     ...result.storedToken,
-  //     shouldStoreCookieString: !isCookiesEnabled(),
-  //   };
-  // }
   let verifiedTokenResponse: VerifiedTokenResponse;
 
   if (result.recoveryShareManagement === "USER_MANAGED") {
@@ -172,15 +156,11 @@ export async function validateEmailOTP(options: {
       isNewUser: verifiedTokenResponse.verifiedToken.isNewUser,
     };
 
-    console.log("storedToken", storedToken);
-
     await postPaperAuth({
       storedToken,
       clientId: options.clientId,
       recoveryCode: options.recoveryCode,
     });
-
-    console.log("return storedToken", storedToken);
 
     return { storedToken };
   } catch (e) {

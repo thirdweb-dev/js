@@ -41,38 +41,28 @@ export async function postPaperAuth({
   });
 
   if (storedToken.isNewUser) {
-    console.log("========== New User ==========");
-    console.log("recoveryCode before get", recoveryCode);
     const _recoveryCode = await getRecoveryCode(
       storedToken,
       clientId,
       recoveryCode,
     );
-    console.log("recoveryCode", _recoveryCode);
     if (!_recoveryCode) {
       throw new Error(ErrorMessages.missingRecoveryCode);
     }
-    console.log("call setup new user wallet");
     await setUpNewUserWallet(_recoveryCode, clientId);
-    console.log("finished setup new user wallet");
   } else {
     try {
       // existing device share
       await getDeviceShare(clientId);
-      console.log("========== Existing user with device share ==========");
     } catch (e) {
-      console.log("recoveryCode before get for existing", recoveryCode);
       const _recoveryCode = await getRecoveryCode(
         storedToken,
         clientId,
         recoveryCode,
       );
-      console.log("recoveryCode", _recoveryCode);
       if (!_recoveryCode) {
         throw new Error(ErrorMessages.missingRecoveryCode);
       }
-      console.log("========== Existing user on new device ==========");
-
       try {
         await setUpShareForNewDevice({
           clientId,
@@ -104,17 +94,13 @@ export async function postPaperAuthUserManaged(
   });
 
   if (storedToken.isNewUser) {
-    console.log("========== New User ==========");
     await setUpNewUserWallet(password, clientId);
   } else {
     try {
       // existing device share
       await getDeviceShare(clientId);
-      console.log("========== Existing user with device share ==========");
     } catch (e) {
       // trying to recreate device share from recovery code to derive wallet
-      console.log("========== Existing user on new device ==========");
-
       try {
         await setUpShareForNewDevice({
           clientId,
