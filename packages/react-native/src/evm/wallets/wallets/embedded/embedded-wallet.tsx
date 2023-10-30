@@ -7,12 +7,12 @@ import {
 import { EmbeddedConnectionUI } from "./EmbeddedConnectionUI";
 import { EmailSelectionUI } from "./EmbeddedSelectionUI";
 
-type AuthOption = "google" | "email";
+type AuthOption = "email" | "google";
 
 export type EmbeddedWalletConfig = {
   auth?: {
     options: AuthOption[];
-    redirectUrl: string;
+    redirectUrl?: string;
   };
 };
 
@@ -24,8 +24,7 @@ export const embeddedWallet = (
       {...props}
       auth={
         config?.auth || {
-          options: ["email", "google"],
-          redirectUrl: config?.auth?.redirectUrl || "", // TODO (ews): is this valid? might need to default to email only?
+          options: ["email"],
         }
       }
     />

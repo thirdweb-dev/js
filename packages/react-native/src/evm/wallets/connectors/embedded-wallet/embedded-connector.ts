@@ -30,6 +30,7 @@ import {
   UserWalletStatus,
   normalizeChainId,
 } from "@thirdweb-dev/wallets";
+import { isValidUserManagedEmailOtp } from "./embedded/helpers/api/fetchers";
 
 export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionArgs> {
   private options: EmbeddedWalletConnectorOptions;
@@ -123,6 +124,24 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       } else {
         throw new Error("An unknown error occurred while validating otp");
       }
+    }
+  }
+
+  async isValidUserManagedEmailOTP(options: { otp: string }) {
+    try {
+      const result = await isValidUserManagedEmailOtp({
+        clientId: this.options.clientId,
+        email: this.email || "",
+        otp: options.otp,
+      });
+
+      if (result.isValid) {
+        return result;
+      } else {
+        throw new Error("Invalid otp, please try again.");
+      }
+    } catch (error) {
+      throw new Error(`Error validating otp: ${error}`);
     }
   }
 

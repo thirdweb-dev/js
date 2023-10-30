@@ -83,6 +83,8 @@ export async function postPaperAuthUserManaged(
   clientId: string,
   password: string,
 ) {
+  const _password = await getRecoveryCode(storedToken, clientId, password);
+
   if (storedToken.shouldStoreCookieString) {
     await setAuthTokenClient(storedToken.cookieString, clientId);
   }
@@ -94,7 +96,7 @@ export async function postPaperAuthUserManaged(
   });
 
   if (storedToken.isNewUser) {
-    await setUpNewUserWallet(password, clientId);
+    await setUpNewUserWallet(_password, clientId);
   } else {
     try {
       // existing device share
@@ -104,7 +106,7 @@ export async function postPaperAuthUserManaged(
       try {
         await setUpShareForNewDevice({
           clientId,
-          recoveryCode: password,
+          recoveryCode: _password,
         });
       } catch (error) {
         console.error("Error setting up wallet on device", error);
@@ -129,7 +131,9 @@ async function getRecoveryCode(
       // derive sub here
       const code = extractSubFromJwt(storedToken.jwtToken);
       if (!code) {
-        throw new Error(ErrorMessages.missingRecoveryCode);
+        throw new Error(
+          `GetRecoveryCode error: ${ErrorMessages.missingRecoveryCode}`,
+        );
       }
       return code;
     } else {

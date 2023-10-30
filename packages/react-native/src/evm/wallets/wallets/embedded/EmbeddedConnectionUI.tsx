@@ -165,7 +165,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
               });
               postConnect(response, authResult);
             } catch (e: any) {
-              console.log("error validating otp new user", e);
               // if (e instanceof Error && e.message.includes("encryption key")) {
               //   setScreen("create-password");
               // } else {
@@ -180,7 +179,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
                 email: selectionData.email,
               });
             } catch (e: any) {
-              console.log("error validating otp existing user", e);
               if (e instanceof Error && e.message.includes("encryption key")) {
                 setScreen("enter-password-or-recovery-code");
               } else {

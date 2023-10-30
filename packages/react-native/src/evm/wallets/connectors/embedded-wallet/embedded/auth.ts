@@ -54,8 +54,6 @@ export async function sendEmailOTP(options: {
     );
   }
 
-  console.log("result", result);
-
   if (result.recoveryShareManagement === "USER_MANAGED") {
     try {
       await sendUserManagedEmailOtp(options.email, options.clientId);

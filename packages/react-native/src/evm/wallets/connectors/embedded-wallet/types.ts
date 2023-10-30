@@ -107,3 +107,7 @@ export type VerifiedTokenResponse = {
   };
   verifiedTokenJwtString: string;
 };
+
+export type IsValidUserManagedEmailOTPResponse = {
+  isValid: { type: "boolean" };
+};

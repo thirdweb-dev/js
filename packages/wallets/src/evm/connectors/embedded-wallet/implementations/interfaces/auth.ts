@@ -13,7 +13,7 @@ export enum AuthProvider {
   COGNITO = "Cognito",
   GOOGLE = "Google",
   EMAIL_OTP = "EmailOtp",
-  CUSTOM_JWT = "CustomJwt",
+  CUSTOM_JWT = "CustomJWT",
 }
 
 export type GetHeadlessLoginLinkReturnType = {

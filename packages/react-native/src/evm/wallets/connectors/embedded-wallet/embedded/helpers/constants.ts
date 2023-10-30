@@ -33,6 +33,7 @@ export const ROUTE_AUTH_JWT_CALLBACK = `${ROUTE_2023_10_20_API_BASE_PATH}/embedd
 
 export const ROUTE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/send-user-managed-email-otp`;
 export const ROUTE_VALIDATE_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-thirdweb-email-otp`;
+export const ROUTE_IS_VALID_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/is-thirdweb-email-otp-valid`;
 
 export const ROUTE_HEADLESS_GOOGLE_LOGIN = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/headless-oauth-login-link`;
 
