@@ -39,7 +39,7 @@ export const MobileMenu: React.FC<FlexProps> = (props) => {
         onClick={disclosure.onOpen}
       />
       <Drawer
-        drawerBodyProps={{ bg: "#111315" }}
+        drawerBodyProps={{ bg: "#111315", maxHeight: "100vh" }}
         isOpen={disclosure.isOpen}
         onClose={disclosure.onClose}
       >
