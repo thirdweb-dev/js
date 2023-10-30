@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://halo.land/#/",
   "name": "HALO Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "HO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1280,
   "rpc": [
     "https://halo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1280.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodes.halo.land"
   ],
   "shortName": "HO",

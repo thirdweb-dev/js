@@ -6,7 +6,13 @@ export default {
     {
       "name": "explorer.guru",
       "url": "https://humans.explorers.guru",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmU83haX3TNifDDjBx6RP6ByqES1Kg9VqeJC87X9ipKyCS",
+        "width": 386,
+        "height": 397,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "HEART",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1089,
   "rpc": [
     "https://humans-ai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1089.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.humans.nodestake.top",
     "https://humans-mainnet-evm.itrocket.net:443",
     "https://humans-evm-rpc.staketab.org:443",

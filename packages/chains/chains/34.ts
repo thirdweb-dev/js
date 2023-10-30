@@ -1,31 +1,40 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "DTH",
+  "chain": "SCAI",
   "chainId": 34,
-  "explorers": [],
-  "faucets": [
-    "https://faucet.dithereum.org"
+  "explorers": [
+    {
+      "name": "SecureChain Mainnet",
+      "url": "https://explorer.securechain.ai",
+      "standard": "EIP3091"
+    }
   ],
-  "features": [],
+  "faucets": [
+    "https://faucet.securechain.ai"
+  ],
   "icon": {
-    "url": "ipfs://QmSHN5GtRGpMMpszSn1hF47ZSLRLqrLxWsQ48YYdJPyjLf",
-    "width": 500,
-    "height": 500,
+    "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
+    "width": 150,
+    "height": 150,
     "format": "png"
   },
-  "infoURL": "https://dithereum.org",
-  "name": "Dithereum Testnet",
+  "infoURL": "https://securechain.ai",
+  "name": "SecureChain Mainnet",
   "nativeCurrency": {
-    "name": "Dither",
-    "symbol": "DTH",
+    "name": "SecureChain",
+    "symbol": "SCAI",
     "decimals": 18
   },
-  "redFlags": [],
-  "rpc": [
-    "https://dithereum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node-testnet.dithereum.io"
+  "networkId": 34,
+  "redFlags": [
+    "reusedChainId"
   ],
-  "shortName": "dth",
-  "slug": "dithereum-testnet",
-  "testnet": true
+  "rpc": [
+    "https://securechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://34.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://mainnet-rpc.scai.network"
+  ],
+  "shortName": "scai",
+  "slug": "securechain",
+  "testnet": false
 } as const satisfies Chain;

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://piecenetwork.com/faucet"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWAU39z1kcYshAqkENRH8qUjfR5CJehCxA4GiC33p3HpH",
     "width": 800,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ECE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 30067,
   "rpc": [
     "https://piece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://30067.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc0.piecenetwork.com"
   ],
   "shortName": "Piece",

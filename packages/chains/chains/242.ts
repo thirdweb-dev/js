@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeibpvlod5nyev6wyuvp6pbestmgvru3ovbadsul32odpno26xwld6y",
     "width": 1039,
@@ -24,9 +23,10 @@ export default {
     "symbol": "PLINGA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 242,
   "rpc": [
     "https://plinga.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcurl.mainnet.plgchain.com",
     "https://rpcurl.plgchain.blockchain.evmnode.online",
     "https://rpcurl.mainnet.plgchain.plinga.technology"

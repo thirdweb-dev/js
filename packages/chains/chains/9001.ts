@@ -6,11 +6,16 @@ export default {
     {
       "name": "Evmos Explorer (Escan)",
       "url": "https://escan.live",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeZW6VKUFTbz7PPW8PmDR3ZHa6osYPLBFPnW8T5LSU49c",
     "width": 400,
@@ -24,9 +29,12 @@ export default {
     "symbol": "EVMOS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9001,
   "rpc": [
     "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evmos.lava.build",
+    "wss://evmos.lava.build/websocket",
     "https://evmos-evm.publicnode.com",
     "wss://evmos-evm.publicnode.com"
   ],

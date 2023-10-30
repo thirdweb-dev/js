@@ -4,7 +4,6 @@ export default {
   "chainId": 163,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://explorer.lightstreams.io",
   "name": "Lightstreams Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "PHT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 163,
   "rpc": [
     "https://lightstreams.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://163.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.mainnet.lightstreams.io"
   ],
   "shortName": "pht",

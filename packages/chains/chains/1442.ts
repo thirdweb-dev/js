@@ -24,12 +24,15 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 1442,
   "redFlags": [],
   "rpc": [
     "https://polygon-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1442.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.public.zkevm-test.net"
   ],
   "shortName": "testnet-zkEVM-mango",
   "slug": "polygon-zkevm-testnet",
-  "testnet": true
+  "testnet": false,
+  "title": "Polygon zkEVM Testnet"
 } as const satisfies Chain;

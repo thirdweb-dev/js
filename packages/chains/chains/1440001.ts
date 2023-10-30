@@ -23,9 +23,11 @@ export default {
     "symbol": "XRP",
     "decimals": 18
   },
+  "networkId": 1440001,
   "redFlags": [],
   "rpc": [
     "https://xrp-ledger-evm-devnet-sidechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1440001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm-sidechain.xrpl.org"
   ],
   "shortName": "XRPL-EVM-Devnet-Sidechain",

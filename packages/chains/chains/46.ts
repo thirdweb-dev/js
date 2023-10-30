@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://darwinia.network/",
   "name": "Darwinia Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "RING",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 46,
   "rpc": [
     "https://darwinia-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://46.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.darwinia.network",
     "https://darwinia-rpc.darwiniacommunitydao.xyz",
     "https://darwinia2.api.onfinality.io/public-ws",

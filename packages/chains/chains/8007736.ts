@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://plian.org",
   "name": "Plian Mainnet Subchain 1",
   "nativeCurrency": {
@@ -18,9 +17,14 @@ export default {
     "symbol": "PI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8007736,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-2099156"
+  },
   "rpc": [
     "https://plian-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8007736.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/child_0"
   ],
   "shortName": "plian-mainnet-l2",

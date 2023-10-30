@@ -4,7 +4,6 @@ export default {
   "chainId": 24734,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.mintme.com",
   "name": "MintMe.com Coin",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "MINTME",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 37480,
   "rpc": [
     "https://mintme-com-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://24734.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.mintme.com"
   ],
   "shortName": "mintme",

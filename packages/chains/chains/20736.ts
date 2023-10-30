@@ -31,9 +31,10 @@ export default {
     "symbol": "hP2",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 20736,
   "rpc": [
     "https://p12-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20736.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-chain.p12.games"
   ],
   "shortName": "p12",

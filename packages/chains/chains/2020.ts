@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://publicmint.com",
   "name": "PublicMint Mainnet",
   "nativeCurrency": {
@@ -18,12 +17,15 @@ export default {
     "symbol": "USD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2020,
   "rpc": [
     "https://publicmint.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2020.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.publicmint.io:8545"
   ],
   "shortName": "pmint",
+  "slip44": 60,
   "slug": "publicmint",
-  "testnet": false
+  "testnet": false,
+  "title": "Public Mint Mainnet"
 } as const satisfies Chain;

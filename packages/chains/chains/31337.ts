@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://gochain.io",
   "name": "GoChain Testnet",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "GO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 31337,
   "rpc": [
     "https://gochain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://31337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.gochain.io"
   ],
   "shortName": "got",
+  "slip44": 6060,
   "slug": "gochain-testnet",
   "testnet": true
 } as const satisfies Chain;

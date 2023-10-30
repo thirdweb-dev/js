@@ -24,9 +24,11 @@ export default {
     "symbol": "TLOS",
     "decimals": 18
   },
+  "networkId": 40,
   "redFlags": [],
   "rpc": [
     "https://telos-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://40.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.telos.net/evm"
   ],
   "shortName": "TelosEVM",

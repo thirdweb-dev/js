@@ -4,7 +4,6 @@ export default {
   "chainId": 42069,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://teampeggle.com",
   "name": "pegglecoin",
   "nativeCurrency": {
@@ -12,7 +11,7 @@ export default {
     "symbol": "peggle",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 42069,
   "rpc": [],
   "shortName": "PC",
   "slug": "pegglecoin",

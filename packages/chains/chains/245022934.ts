@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
     "width": 512,
@@ -29,7 +28,7 @@ export default {
     "symbol": "NEON",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 245022934,
   "rpc": [],
   "shortName": "neonevm-mainnet",
   "slug": "neon-evm",

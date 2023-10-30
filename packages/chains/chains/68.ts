@@ -4,7 +4,6 @@ export default {
   "chainId": 68,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.soterone.com",
   "name": "SoterOne Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "SOTER",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 68,
   "rpc": [
     "https://soterone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://68.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.soter.one"
   ],
   "shortName": "SO1",

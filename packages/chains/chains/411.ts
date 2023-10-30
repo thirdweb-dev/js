@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibjsc3gww3moti27za2hpyq552aevux3yv5y2ntdklksyr4v4uavy",
     "width": 512,
@@ -24,9 +23,10 @@ export default {
     "symbol": "PEPE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 411,
   "rpc": [
     "https://pepe-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://411.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.pepe-chain.vip"
   ],
   "shortName": "pepe",

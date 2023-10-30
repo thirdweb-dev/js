@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://boba.network",
   "name": "Bobabeam",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "BOBA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1294,
   "rpc": [
     "https://bobabeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1294.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabeam.boba.network",
     "wss://wss.bobabeam.boba.network",
     "https://replica.bobabeam.boba.network",

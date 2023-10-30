@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://nft.singularity.gold"
   ],
-  "features": [],
   "infoURL": "https://www.singularity.gold",
   "name": "Singularity ZERO Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "tZERO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12051,
   "rpc": [
     "https://singularity-zero-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12051.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://betaenv.singularity.gold:18545"
   ],
   "shortName": "tZERO",

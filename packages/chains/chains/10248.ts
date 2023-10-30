@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.0xtrade.finance/",
   "name": "0XTade",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "0XT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10248,
   "rpc": [
     "https://0xtade.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10248.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.0xtchain.com"
   ],
   "shortName": "0xt",

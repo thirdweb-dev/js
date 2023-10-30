@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.bitcichain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmbxmfWw5sVMASz5EbR1DCgLfk8PnqpSJGQKpYuEUpoxqn",
     "width": 64,
@@ -26,9 +25,10 @@ export default {
     "symbol": "TBITCI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1908,
   "rpc": [
     "https://bitcichain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1908.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bitcichain.com"
   ],
   "shortName": "tbitci",

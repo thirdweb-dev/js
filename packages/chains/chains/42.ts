@@ -31,11 +31,13 @@ export default {
     "symbol": "LYX",
     "decimals": 18
   },
+  "networkId": 42,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://lukso.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://42.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.lukso.network",
     "wss://ws-rpc.mainnet.lukso.network"
   ],

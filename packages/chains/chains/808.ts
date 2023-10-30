@@ -4,7 +4,6 @@ export default {
   "chainId": 808,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmeMa6aw3ebUKJdGgbzDgcVtggzp7cQdfSrmzMYmnt5ywc",
     "width": 200,
@@ -18,9 +17,10 @@ export default {
     "symbol": "PFT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 808,
   "rpc": [
     "https://portal-fantasy-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://808.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/portal-fantasy/testnet/rpc"
   ],
   "shortName": "PFTEST",

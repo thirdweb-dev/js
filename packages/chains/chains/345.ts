@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWvfA2usnYp1ktzLcqFS8eTLgdp4ifrxjiify46KyG9NZ",
     "width": 512,
@@ -24,9 +23,14 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 345,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-248"
+  },
   "rpc": [
     "https://yooldo-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://345.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.yooldo-verse.xyz/"
   ],
   "shortName": "YVM",

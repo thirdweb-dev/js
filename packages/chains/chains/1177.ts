@@ -6,7 +6,13 @@ export default {
     {
       "name": "Smart Host Teknoloji TESTNET Explorer",
       "url": "https://s2.tl.web.tr:4000",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmTrLGHyQ1Le25Q7EgNSF5Qq8D2SocKvroDkLqurdBuSQQ",
+        "width": 1655,
+        "height": 1029,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "tSHT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1177,
   "rpc": [
     "https://smart-host-teknoloji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1177.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s2.tl.web.tr:4041"
   ],
   "shortName": "sht",

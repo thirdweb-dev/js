@@ -33,7 +33,7 @@ export const EnterPassword = ({
     setCheckingPass(true);
     if (isCreatePassword) {
       // Call create password
-      console.log("password", password);
+      console.log("[TODO] Implement", password);
     } else {
       // Call enter password
       setErrorMessage("test");

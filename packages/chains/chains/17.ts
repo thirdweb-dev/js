@@ -4,7 +4,6 @@ export default {
   "chainId": 17,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://exp.thaifi.com",
   "name": "ThaiChain 2.0 ThaiFi",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "TFI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 17,
   "rpc": [
     "https://thaichain-2-0-thaifi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://17.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.thaifi.com"
   ],
   "shortName": "tfi",

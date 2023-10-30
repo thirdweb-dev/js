@@ -6,7 +6,13 @@ export default {
     {
       "name": "patexscan",
       "url": "https://patexscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmTNTSNn3t5WpSEzQmUYbkxYkBKaH6QahyVdVrRKyPHChr",
+        "width": 800,
+        "height": 800,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -31,9 +37,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 789,
   "rpc": [
     "https://patex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://789.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.patex.io/"
   ],
   "shortName": "peth",

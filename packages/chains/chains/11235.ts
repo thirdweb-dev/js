@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://islamiccoin.net",
   "name": "Haqq Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ISLM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11235,
   "rpc": [
     "https://haqq-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11235.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.haqq.network",
     "https://haqq-evm.publicnode.com",
     "wss://haqq-evm.publicnode.com"

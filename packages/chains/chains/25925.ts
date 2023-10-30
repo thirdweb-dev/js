@@ -6,13 +6,18 @@ export default {
     {
       "name": "bkcscan-testnet",
       "url": "https://testnet.bkcscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmYFYwyquipwc9gURQGcEd4iAq7pq15chQrJ3zJJe9HuFT",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.bitkubchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYFYwyquipwc9gURQGcEd4iAq7pq15chQrJ3zJJe9HuFT",
     "width": 1000,
@@ -23,12 +28,13 @@ export default {
   "name": "Bitkub Chain Testnet",
   "nativeCurrency": {
     "name": "Bitkub Coin",
-    "symbol": "KUB",
+    "symbol": "tKUB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 25925,
   "rpc": [
     "https://bitkub-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://25925.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bitkubchain.io",
     "wss://wss-testnet.bitkubchain.io"
   ],

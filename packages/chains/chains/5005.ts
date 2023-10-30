@@ -6,7 +6,13 @@ export default {
     {
       "name": "Treasurenet EVM BlockExplorer",
       "url": "https://evmexplorer.testnet.treasurenet.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmTcNX8ukHkXiVfVah1W8Sed3vtGN95Sq2QSimfLuHva6B",
+        "width": 1844,
+        "height": 1920,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -28,9 +34,10 @@ export default {
     "symbol": "UNIT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5005,
   "rpc": [
     "https://treasurenet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node0.testnet.treasurenet.io",
     "https://node1.testnet.treasurenet.io",
     "https://node2.testnet.treasurenet.io",

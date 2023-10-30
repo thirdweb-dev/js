@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://t.me/vexfaucetbot"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcZiEAGFYEEax1uxYnDUh8X5YBvZqMi9K92yZoq4o2zeM",
     "width": 451,
@@ -26,9 +25,10 @@ export default {
     "symbol": "VEX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5522,
   "rpc": [
     "https://vex-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5522.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.vexascan.com/evmapi"
   ],
   "shortName": "VEX",

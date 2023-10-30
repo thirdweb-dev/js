@@ -4,7 +4,6 @@ export default {
   "chainId": 35,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://tbwg.io",
   "name": "TBWG Chain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "TBG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 35,
   "rpc": [
     "https://tbwg-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://35.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tbwg.io"
   ],
   "shortName": "tbwg",

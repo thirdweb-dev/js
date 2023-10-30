@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.testnet-dev.trust.one/"
   ],
-  "features": [],
   "infoURL": "https://www.trust.one/",
   "name": "Trust EVM Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "EVM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 15555,
   "rpc": [
     "https://trust-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://15555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.testnet-dev.trust.one"
   ],
   "shortName": "TrustTestnet",

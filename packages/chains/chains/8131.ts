@@ -6,13 +6,18 @@ export default {
     {
       "name": "meerscan testnet",
       "url": "https://qng-testnet.meerscan.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.qitmeer.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
     "width": 512,
@@ -26,9 +31,10 @@ export default {
     "symbol": "MEER-T",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8131,
   "rpc": [
     "https://qitmeer-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8131.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-qng.rpc.qitmeer.io",
     "https://testnet.meerlabs.com",
     "https://meer.testnet.meerfans.club"

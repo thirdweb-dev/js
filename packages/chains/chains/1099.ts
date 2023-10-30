@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://moac.io",
   "name": "MOAC mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "mc",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1099,
   "rpc": [],
   "shortName": "moac",
+  "slip44": 314,
   "slug": "moac",
   "testnet": false
 } as const satisfies Chain;

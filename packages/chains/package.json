@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.55",
+  "version": "0.1.57",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "browser": {
@@ -57,5 +57,8 @@
     "add-chain": "plop add-chain",
     "override-chain": "plop override-chain",
     "test": "jest"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

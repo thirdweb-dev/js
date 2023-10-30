@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVf1afskRHuZjFSLCZH8397KrVNAoYgyAePX9VMBrPVtx",
     "width": 246,
@@ -24,9 +23,10 @@ export default {
     "symbol": "PG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 20201022,
   "rpc": [
     "https://pego-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://20201022.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pegorpc.com",
     "https://node1.pegorpc.com",
     "https://node2.pegorpc.com",

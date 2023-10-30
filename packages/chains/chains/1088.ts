@@ -24,9 +24,20 @@ export default {
     "symbol": "METIS",
     "decimals": 18
   },
+  "networkId": 1088,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://bridge.metis.io"
+      }
+    ]
+  },
   "redFlags": [],
   "rpc": [
     "https://metis-andromeda.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1088.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://andromeda.metis.io/?owner=1088"
   ],
   "shortName": "metis-andromeda",
