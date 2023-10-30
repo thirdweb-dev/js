@@ -36,7 +36,7 @@
     "@coinbase/cbpay-js": "^1.7.0"
   },
   "devDependencies": {
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.1",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint-config-thirdweb": "workspace:*",
     "typescript": "^5.1.6"

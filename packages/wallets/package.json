@@ -470,7 +470,7 @@
     "@babel/plugin-transform-flow-strip-types": "^7.22.5",
     "@babel/plugin-transform-private-methods": "7.22.5",
     "@noble/ed25519": "^1.7.1",
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.1",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.1",
     "@types/crypto-js": "^4.1.1",

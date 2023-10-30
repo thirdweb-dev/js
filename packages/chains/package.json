@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.22.5",
     "@babel/runtime": "^7.22.6",
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.1",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/jest": "^29.5.3",
     "axios": "^1.4.0",
