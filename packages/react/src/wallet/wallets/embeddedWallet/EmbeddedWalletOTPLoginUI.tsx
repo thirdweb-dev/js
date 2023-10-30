@@ -83,7 +83,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
         if (emailStatus.isNewUser) {
           try {
             // verifies otp for UI feedback
-            // TODO (joaquim) tweak the UI flow to avoid verifying otp twice - needs new endpoint or new UI
+            // TODO (ews) tweak the UI flow to avoid verifying otp twice - needs new endpoint or new UI
             await wallet.authenticate({
               strategy: "email_verification",
               email,

@@ -26,6 +26,7 @@ import {
 import { EnterPassword } from "./EnterPassword";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { RecoveryShareManagement } from "@thirdweb-dev/wallets";
+import { AuthResult } from "evm/wallets/connectors/embedded-wallet/types";
 
 const OTP_LENGTH = 6;
 type ScreenToShow =
@@ -66,12 +67,12 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   }, []);
 
   const postConnect = useCallback(
-    async (response: any) => {
+    async (response: string, authResult: AuthResult) => {
       if (response) {
         if (onLocallyConnected) {
-          onLocallyConnected(selectionData.emailWallet);
+          onLocallyConnected(selectionData.emailWallet); // TODO (ews) no connect params here?
         } else {
-          await setConnectedWallet(selectionData.emailWallet);
+          await setConnectedWallet(selectionData.emailWallet, { authResult });
           setConnectionStatus("connected");
         }
       } else {
@@ -109,7 +110,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         const response = await emailWallet.connect({
           authResult,
         });
-        postConnect(response);
+        postConnect(response, authResult);
       } catch (error) {
         onError(error);
       }
@@ -162,7 +163,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
               const response = await emailWallet.connect({
                 authResult,
               });
-              postConnect(response);
+              postConnect(response, authResult);
             } catch (e: any) {
               console.log("error validating otp new user", e);
               // if (e instanceof Error && e.message.includes("encryption key")) {
@@ -196,8 +197,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
   }, [connect, onError, password, postConnect, screen, selectionData, values]);
 
   useEffect(() => {
-    console.log("selectionData", selectionData);
-    console.log("values", values);
     if (
       values.length === OTP_LENGTH &&
       values.every((v) => v.length === 1) &&
@@ -316,6 +315,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     );
   }
 
+  // TODO (ews) - check actual auth options
   if (selectionData?.oauthOptions) {
     return (
       <EmbeddedSocialConnection

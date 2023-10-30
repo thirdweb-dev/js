@@ -11,11 +11,11 @@ import BaseButton from "../../../components/base/BaseButton";
 import { TextInput } from "../../../components/base/TextInput";
 import { GOOGLE_ICON } from "../../../assets/svgs";
 import { WalletButton } from "../../../components/base/WalletButton";
-import { OauthOptions } from "../../connectors/embedded-wallet/types";
 import {
   useGlobalTheme,
   useLocale,
 } from "../../../providers/ui-context-provider";
+import { EmbeddedWalletConfig } from "./embedded-wallet";
 import { AuthProvider } from "@thirdweb-dev/wallets";
 
 /**
@@ -23,10 +23,9 @@ import { AuthProvider } from "@thirdweb-dev/wallets";
  */
 export const EmailSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
-    oauthOptions?: OauthOptions;
-    email?: boolean;
+    authOptions?: EmbeddedWalletConfig["authOptions"];
   }
-> = ({ onSelect, walletConfig, oauthOptions, email }) => {
+> = ({ onSelect, walletConfig, authOptions }) => {
   const l = useLocale();
   const theme = useGlobalTheme();
   const [emailInput, setEmailInput] = useState<string>("");
@@ -35,7 +34,8 @@ export const EmailSelectionUI: React.FC<
   const createWalletInstance = useCreateWalletInstance();
   const [emailWallet, setEmailWallet] = useState<EmbeddedWallet | null>(null);
 
-  const isEmailEnabled = email === false ? false : true;
+  const isEmailEnabled = authOptions?.providers.includes("email");
+  const isGoogleEnabled = authOptions?.providers.includes("google");
 
   useEffect(() => {
     const emailWalletInstance = createWalletInstance(
@@ -62,7 +62,7 @@ export const EmailSelectionUI: React.FC<
             ...response,
             email: emailInput,
             emailWallet,
-            oauthOptions: undefined,
+            oauthOptions: undefined, // TODO (ews) clean up types
           });
         })
         .catch((error) => {
@@ -83,15 +83,15 @@ export const EmailSelectionUI: React.FC<
       email: emailInput,
       emailWallet,
       oauthOptions: {
-        provider: oauthOptions?.providers[0],
-        redirectUrl: oauthOptions?.redirectUrl,
+        provider: AuthProvider.GOOGLE,
+        redirectUrl: authOptions?.redirectUrl,
       },
     });
   };
 
   return (
     <Box paddingHorizontal="xl" mt="lg">
-      {oauthOptions?.providers.includes(AuthProvider.GOOGLE) ? (
+      {isGoogleEnabled ? (
         <Box justifyContent="center">
           <WalletButton
             iconHeight={28}

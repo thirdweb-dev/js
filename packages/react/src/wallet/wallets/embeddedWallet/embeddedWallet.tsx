@@ -17,14 +17,14 @@ import {
 } from "./EmbeddedWalletFormUI";
 import { EmbeddedWalletGoogleLogin } from "./EmbeddedWalletGoogleLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
-import { EmbeddedWalletConfig, OAuthProvider } from "./types";
+import { EmbeddedWalletConfig, AuthProvider } from "./types";
 
 export const embeddedWallet = (
   _config?: EmbeddedWalletConfig,
 ): WalletConfig<EmbeddedWallet> => {
   const defaultConfig: EmbeddedWalletConfig = {
-    oauthOptions: {
-      providers: ["google"],
+    authOptions: {
+      providers: ["email", "google"],
     },
   };
 
@@ -32,7 +32,7 @@ export const embeddedWallet = (
     ? { ...defaultConfig, ..._config }
     : defaultConfig;
 
-  const { oauthOptions } = config;
+  const { authOptions: oauthOptions } = config;
 
   return {
     category: "socialLogin",
@@ -72,7 +72,7 @@ export const embeddedWallet = (
 
 const EmbeddedWalletSelectionUI: React.FC<
   SelectUIProps<EmbeddedWallet> & {
-    providers?: OAuthProvider[];
+    providers?: AuthProvider[];
   }
 > = (props) => {
   const screen = useScreenContext();
@@ -107,7 +107,7 @@ const EmbeddedWalletSelectionUI: React.FC<
 
 const EmbeddedWalletConnectUI = (
   props: ConnectUIProps<EmbeddedWallet> & {
-    providers?: OAuthProvider[];
+    providers?: AuthProvider[];
   },
 ) => {
   const [loginType, setLoginType] = useState<PaperLoginType | undefined>(

@@ -1,6 +1,6 @@
 import type { EmbeddedWalletAdditionalOptions } from "@thirdweb-dev/wallets";
 
-export type OAuthProvider = "google";
+export type AuthProvider = "google" | "email";
 
 export type EmbeddedWalletConfig = Omit<
   EmbeddedWalletAdditionalOptions,
@@ -12,14 +12,12 @@ export type EmbeddedWalletConfig = Omit<
   recommended?: boolean;
 
   /**
-   * Enable or Disable OAuth logins and specify which providers to use for OAuth
-   * @default { providers: ["google"] }
+   * Choose which auth providers to show in the wallet connection UI
+   * @default { providers: ["email", "google"] }
    */
-  oauthOptions?:
-    | {
-        providers: OAuthProvider[];
-      }
-    | false;
+  authOptions?: {
+    providers: AuthProvider[];
+  };
 };
 
 export type EmbeddedWalletLoginType = { email: string } | { google: true };

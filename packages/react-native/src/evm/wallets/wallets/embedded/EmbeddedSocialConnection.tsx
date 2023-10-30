@@ -36,7 +36,7 @@ export const EmbeddedSocialConnection: React.FC<
           if (onLocallyConnected) {
             onLocallyConnected(selectionData.emailWallet);
           } else {
-            await setConnectedWallet(selectionData.emailWallet);
+            await setConnectedWallet(selectionData.emailWallet, { authResult });
             setConnectionStatus("connected");
           }
         } else {

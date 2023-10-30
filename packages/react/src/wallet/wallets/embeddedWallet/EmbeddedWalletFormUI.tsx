@@ -12,7 +12,7 @@ import { Button } from "../../../components/buttons";
 import { Theme, iconSize, spacing } from "../../../design-system";
 import { GoogleIcon } from "../../ConnectWallet/icons/GoogleIcon";
 import { InputSelectionUI } from "../InputSelectionUI";
-import type { EmbeddedWalletLoginType, OAuthProvider } from "./types";
+import type { EmbeddedWalletLoginType, AuthProvider } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
@@ -20,7 +20,7 @@ import { useTheme } from "@emotion/react";
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
-  providers?: OAuthProvider[];
+  providers?: AuthProvider[];
 }) => {
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -28,6 +28,7 @@ export const EmbeddedWalletFormUI = (props: {
   const themeObj = useTheme() as Theme;
 
   const enableGoogleLogin = props.providers?.includes("google");
+  const enableEmailLogin = props.providers?.includes("email");
 
   // Need to trigger google login on button click to avoid popup from being blocked
   const googleLogin = async () => {
@@ -39,7 +40,6 @@ export const EmbeddedWalletFormUI = (props: {
       if (!googleWindow) {
         throw new Error("Failed to open google login window");
       }
-      console.time("authGoogle1");
       const authResult = await embeddedWallet.authenticate({
         strategy: "google",
         openedWindow: googleWindow,
@@ -47,7 +47,6 @@ export const EmbeddedWalletFormUI = (props: {
           openedWindow.close();
         },
       });
-      console.timeEnd("authGoogle1");
       await embeddedWallet.connect({
         authResult,
       });
@@ -73,25 +72,29 @@ export const EmbeddedWalletFormUI = (props: {
             <GoogleIcon size={iconSize.md} />
             Sign in with Google
           </SocialButton>
-          <TextDivider text="OR" py="lg" />
         </>
       )}
-
-      <InputSelectionUI
-        onSelect={(email) => props.onSelect({ email })}
-        placeholder="Enter your email address"
-        name="email"
-        type="email"
-        errorMessage={(_input) => {
-          const input = _input.replace(/\+/g, "");
-          const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
-          const isValidEmail = emailRegex.test(input);
-          if (!isValidEmail) {
-            return "Invalid email address";
-          }
-        }}
-        emptyErrorMessage="email address is required"
-      />
+      {enableGoogleLogin && enableEmailLogin && (
+        <TextDivider text="OR" py="lg" />
+      )}
+      {enableEmailLogin && (
+        <InputSelectionUI
+          onSelect={(email) => props.onSelect({ email })}
+          placeholder="Enter your email address"
+          name="email"
+          type="email"
+          errorMessage={(_input) => {
+            const input = _input.replace(/\+/g, "");
+            const emailRegex =
+              /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
+            const isValidEmail = emailRegex.test(input);
+            if (!isValidEmail) {
+              return "Invalid email address";
+            }
+          }}
+          emptyErrorMessage="email address is required"
+        />
+      )}
     </div>
   );
 };
@@ -101,7 +104,7 @@ export const EmbeddedWalletFormUIScreen: React.FC<{
   onBack: () => void;
   modalSize: "compact" | "wide";
   walletConfig: WalletConfig<EmbeddedWallet>;
-  providers?: OAuthProvider[];
+  providers?: AuthProvider[];
 }> = (props) => {
   const isCompact = props.modalSize === "compact";
   return (
