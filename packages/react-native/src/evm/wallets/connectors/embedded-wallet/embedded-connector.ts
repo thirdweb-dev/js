@@ -56,33 +56,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       return this.getAddress();
     }
 
-    // switch (options?.loginType) {
-    //   case "headless_google_oauth":
-    //     {
-    //       await socialLogin(
-    //         {
-    //           provider: AuthProvider.GOOGLE,
-    //           redirectUrl: options.redirectUrl,
-    //         },
-    //         this.options.clientId,
-    //       );
-    //     }
-    //     break;
-    //   case "headless_email_otp_verification": {
-    //     await this.validateEmailOTP({ otp: options.otp });
-    //     break;
-    //   }
-    //   case "jwt": {
-    //     await this.customJwt({
-    //       jwt: options.jwt,
-    //       password: options.password,
-    //     });
-    //     break;
-    //   }
-    //   default:
-    //     throw new Error("Invalid login type");
-    // }
-
     if (options?.chainId) {
       this.switchChain(options.chainId);
     }
@@ -94,9 +67,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   async authenticate(params: AuthParams): Promise<AuthResult> {
     const strategy = params.strategy;
     switch (strategy) {
-      case "email_otp": {
+      case "email_verification": {
         return await this.validateEmailOTP({
-          otp: params.otp,
+          otp: params.verificationCode,
           recoveryCode: params.recoveryCode,
         });
       }
@@ -117,7 +90,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
   }
 
-  async validateEmailOTP(options: {
+  private async validateEmailOTP(options: {
     otp: string;
     recoveryCode?: string;
   }): Promise<AuthResult> {
@@ -154,7 +127,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
   }
 
-  async sendEmailOtp(options: {
+  async sendVerificationEmail(options: {
     email: string;
   }): Promise<SendEmailOtpReturnType> {
     this.email = options.email;
@@ -165,7 +138,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     });
   }
 
-  async socialLogin(oauthOption: OauthOption): Promise<AuthResult> {
+  private async socialLogin(oauthOption: OauthOption): Promise<AuthResult> {
     try {
       const { storedToken, email } = await socialLogin(
         oauthOption,
@@ -201,7 +174,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     }
   }
 
-  async customJwt(authOptions: AuthOptions): Promise<AuthResult> {
+  private async customJwt(authOptions: AuthOptions): Promise<AuthResult> {
     try {
       const { verifiedToken, email } = await customJwt(
         authOptions,

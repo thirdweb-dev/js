@@ -55,10 +55,10 @@ export type EmbeddedWalletConnectionArgs = {
   authResult: AuthResult;
 };
 
-type EmailOtpAuthParams = {
-  strategy: "email_otp";
+type EmailVerificationAuthParams = {
+  strategy: "email_verification";
   email: string;
-  otp: string;
+  verificationCode: string;
   recoveryCode?: string;
 };
 
@@ -74,7 +74,10 @@ type JwtAuthParams = {
 };
 
 // this is the input to 'authenticate'
-export type AuthParams = EmailOtpAuthParams | GoogleAuthParams | JwtAuthParams;
+export type AuthParams =
+  | EmailVerificationAuthParams
+  | GoogleAuthParams
+  | JwtAuthParams;
 
 // TODO typed based off AuthParams["strategy"]
 export type AuthResult = {

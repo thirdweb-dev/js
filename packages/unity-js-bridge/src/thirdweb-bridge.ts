@@ -274,7 +274,7 @@ class ThirdwebBridge implements TWBridge {
             throw new Error("Email is required for EmbeddedWallet");
           }
           const authResult = await embeddedWallet.authenticate({
-            strategy: "iframe_otp",
+            strategy: "iframe_email_verification",
             email,
           });
           await embeddedWallet.connect({

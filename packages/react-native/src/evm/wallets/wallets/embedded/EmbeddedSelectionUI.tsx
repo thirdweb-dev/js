@@ -56,7 +56,7 @@ export const EmailSelectionUI: React.FC<
       setIsFetching(true);
 
       emailWallet
-        ?.sendEmailOTP(emailInput)
+        ?.sendVerificationEmail(emailInput)
         .then((response) => {
           onSelect({
             ...response,

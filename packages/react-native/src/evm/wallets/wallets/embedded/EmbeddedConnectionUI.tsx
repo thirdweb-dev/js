@@ -96,8 +96,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         const otp = values.join("");
 
         const authResult = await emailWallet.authenticate({
-          strategy: "email_otp",
-          otp,
+          strategy: "email_verification",
+          verificationCode: otp,
           email: selectionData.email,
           recoveryCode: _password,
         });
@@ -153,8 +153,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           if (selectionData.isNewUser) {
             try {
               const authResult = await emailWallet.authenticate({
-                strategy: "email_otp",
-                otp,
+                strategy: "email_verification",
+                verificationCode: otp,
                 email: selectionData.email,
                 recoveryCode: password,
               });
@@ -174,8 +174,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           } else {
             try {
               await emailWallet.authenticate({
-                strategy: "email_otp",
-                otp,
+                strategy: "email_verification",
+                verificationCode: otp,
                 email: selectionData.email,
               });
             } catch (e: any) {
@@ -274,7 +274,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
     setFocusedIndex(undefined);
     setRequestingNewOtp(true);
     (selectionData.emailWallet as EmbeddedWallet)
-      .sendEmailOTP(selectionData.email)
+      .sendVerificationEmail(selectionData.email)
       .then(() => {})
       .catch((error) => {
         clearCode();

@@ -46,7 +46,7 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
     try {
       const _wallet = createWalletInstance(props.walletConfig);
       setWallet(_wallet);
-      const status = await _wallet.sendEmailOTP({ email });
+      const status = await _wallet.sendVerificationEmail({ email });
       setEmailStatus(status);
     } catch (e) {
       console.error(e);
@@ -84,7 +84,11 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
           try {
             // verifies otp for UI feedback
             // TODO (joaquim) tweak the UI flow to avoid verifying otp twice - needs new endpoint or new UI
-            await wallet.authenticate({ strategy: "email_otp", email, otp });
+            await wallet.authenticate({
+              strategy: "email_verification",
+              email,
+              verificationCode: otp,
+            });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("create-password");
@@ -95,7 +99,11 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
         } else {
           try {
             // verifies otp for UI feedback
-            await wallet.authenticate({ strategy: "email_otp", email, otp });
+            await wallet.authenticate({
+              strategy: "email_verification",
+              email,
+              verificationCode: otp,
+            });
           } catch (e: any) {
             if (e instanceof Error && e.message.includes("encryption key")) {
               setScreen("enter-password-or-recovery-code");
@@ -109,9 +117,9 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
       // AWS_MANAGED
       else {
         const authResult = await wallet.authenticate({
-          strategy: "email_otp",
+          strategy: "email_verification",
           email,
-          otp,
+          verificationCode: otp,
         });
         if (!authResult) {
           throw new Error("Failed to verify OTP");
@@ -150,9 +158,9 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             return;
           }
           const authResult = await wallet.authenticate({
-            strategy: "email_otp",
+            strategy: "email_verification",
             email,
-            otp: otpInput,
+            verificationCode: otpInput,
             recoveryCode: password,
           });
           if (!authResult) {
@@ -179,9 +187,9 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
             return;
           }
           const authResult = await wallet.authenticate({
-            strategy: "email_otp",
+            strategy: "email_verification",
             email,
-            otp: otpInput,
+            verificationCode: otpInput,
             recoveryCode: passwordOrRecoveryCode,
           });
           if (!authResult) {

@@ -212,7 +212,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     return this.user.authDetails;
   }
 
-  async sendEmailOtp({
+  async sendVerificationEmail({
     email,
   }: {
     email: string;
@@ -225,10 +225,10 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     const ewSDK = this.getEmbeddedWalletSDK();
     const strategy = params.strategy;
     switch (strategy) {
-      case "email_otp": {
+      case "email_verification": {
         return await ewSDK.auth.verifyEmailLoginOtp({
           email: params.email,
-          otp: params.otp,
+          otp: params.verificationCode,
           recoveryCode: params.recoveryCode,
         });
       }
@@ -244,7 +244,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
           encryptionKey: params.encryptionKey,
         });
       }
-      case "iframe_otp": {
+      case "iframe_email_verification": {
         return ewSDK.auth.loginWithEmailOtp({
           email: params.email,
         });
