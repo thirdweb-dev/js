@@ -22,6 +22,10 @@ export type {
 } from "./wallets/abstract";
 
 export * from "./wallets/paper-wallet";
+export {
+  ComethConnect,
+  type ComethAdditionalOptions,
+} from "./wallets/cometh-connect";
 // just the types
 export { AbstractClientWallet } from "./wallets/base";
 export type { WalletOptions } from "./wallets/base";
