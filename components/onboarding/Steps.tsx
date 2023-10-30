@@ -9,9 +9,8 @@ import { Button, Card, Heading, Text } from "tw-components";
 
 enum Step {
   Keys = "keys",
-  Payment = "payment",
-  Explore = "explore",
   Docs = "docs",
+  Payment = "payment",
 }
 
 const STEPS = [
@@ -31,14 +30,6 @@ const STEPS = [
       "Add your payment method to ensure no disruption to thirdweb services when you exceed free monthly limits.",
     cta: "Add payment",
     href: "/dashboard/settings/billing",
-    external: false,
-  },
-  {
-    key: Step.Explore,
-    title: "Explore Templates",
-    description: "Learn what you can build with ready-to-ship contracts.",
-    cta: "Explore",
-    href: "/explore",
     external: false,
   },
   {
@@ -67,9 +58,8 @@ export const OnboardingSteps: React.FC = () => {
     CompletedStep | undefined
   >(`onboarding-step-${meQuery?.data?.id}`, undefined, {
     [Step.Keys]: false,
-    [Step.Payment]: false,
-    [Step.Explore]: false,
     [Step.Docs]: false,
+    [Step.Payment]: false,
   });
 
   const [currentStep, setCurrentStep] = useState<Step | null>(null);
@@ -89,15 +79,13 @@ export const OnboardingSteps: React.FC = () => {
 
     if (!(Step.Keys in savedStep) && apiKeysQuery.data?.length === 0) {
       setCurrentStep(Step.Keys);
+    } else if (!(Step.Docs in savedStep)) {
+      setCurrentStep(Step.Docs);
     } else if (
       !(Step.Payment in savedStep) &&
       meQuery?.data?.status !== "validPayment"
     ) {
       setCurrentStep(Step.Payment);
-    } else if (!(Step.Explore in savedStep)) {
-      setCurrentStep(Step.Explore);
-    } else if (!(Step.Docs in savedStep)) {
-      setCurrentStep(Step.Docs);
     } else {
       setCurrentStep(null);
     }
