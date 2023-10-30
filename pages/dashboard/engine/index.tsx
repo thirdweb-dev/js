@@ -40,6 +40,7 @@ const EngineManage: ThirdwebNextPage = () => {
             .
           </Text>
         </Flex>
+
         {instanceUrl && (
           <Text>
             Engine URL: <em>{instanceUrl}</em>{" "}
@@ -61,7 +62,7 @@ const EngineManage: ThirdwebNextPage = () => {
         />
 
         {!address ? (
-          <NoConnectedWallet />
+          <NoConnectedWallet instance={instanceUrl} />
         ) : instanceUrl ? (
           enginePermissions.isLoading ? (
             <Center>
@@ -73,11 +74,11 @@ const EngineManage: ThirdwebNextPage = () => {
           ) : enginePermissions.isError &&
             (enginePermissions?.error as { message: string }).message ===
               "401" ? (
-            <NoAuthorizedWallet />
+            <NoAuthorizedWallet instance={instanceUrl} />
           ) : enginePermissions.isError &&
             (enginePermissions?.error as { message: string }).message ===
               "Failed to fetch" ? (
-            <NoServerConnection />
+            <NoServerConnection instance={instanceUrl} />
           ) : (
             <EngineNavigation instance={instanceUrl} />
           )
