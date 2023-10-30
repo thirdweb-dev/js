@@ -33,7 +33,12 @@ export class EmbeddedWalletSdk {
    * @param {Chain} initParams.chain sets the default chain that the EmbeddedWallet will live on.
    * @param {CustomizationOptionsType} initParams.styles sets the default style override for any modal that pops up asking for user's details when creating wallet or logging in.
    */
-  constructor({ clientId, chain, styles }: EmbeddedWalletConstructorType) {
+  constructor({
+    clientId,
+    chain,
+    styles,
+    onAuthSuccess,
+  }: EmbeddedWalletConstructorType) {
     if (this.isClientIdLegacyPaper(clientId)) {
       throw new Error(
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
@@ -54,6 +59,7 @@ export class EmbeddedWalletSdk {
       clientId,
       querier: this.querier,
       onAuthSuccess: async (authResult) => {
+        onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({
           ...authResult.walletDetails,
           walletUserId: authResult.storedToken.authDetails.userWalletId,

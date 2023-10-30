@@ -64,7 +64,7 @@ export class EmbeddedWallet extends AbstractClientWallet<
         clientId: this.options?.clientId ?? "",
         chain: this.chain,
         chains: this.chains,
-        styles: this.options?.styles,
+        onAuthSuccess: this.options?.onAuthSuccess,
       });
     }
     return this.connector;
