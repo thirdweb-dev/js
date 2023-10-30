@@ -1,4 +1,3 @@
-import { getDefaultProvider } from "ethers";
 import { getExistingUserEtherJsWallet } from "./helpers/wallet/retrieval";
 
 export async function getEthersSigner(clientId: string) {
