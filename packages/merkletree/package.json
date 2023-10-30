@@ -28,6 +28,7 @@
   "sideEffects": false,
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",
+    "buffer": "^6.0.3",
     "buffer-reverse": "^1.0.1",
     "treeify": "^1.1.0",
     "uint8array-extras": "^0.4.0"

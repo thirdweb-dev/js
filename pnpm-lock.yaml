@@ -488,6 +488,9 @@ importers:
       '@thirdweb-dev/crypto':
         specifier: workspace:*
         version: link:../crypto
+      buffer:
+        specifier: ^6.0.3
+        version: 6.0.3
       buffer-reverse:
         specifier: ^1.0.1
         version: 1.0.1
