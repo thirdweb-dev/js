@@ -1,5 +1,4 @@
 import { Contract } from "ethers";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import { getChainProvider } from "../../constants/urls";
@@ -25,6 +24,9 @@ export async function fetchPublishedContractFromPolygon(
   const polygonChain = getSupportedChains().find((c) => c.chainId === 137);
   const chain = polygonChain || Polygon;
   const publisher = await resolveAddress(publisherAddress);
+  const ContractPublisherAbi = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json")
+  ).default;
   const contract = new Contract(
     getContractPublisherAddress(),
     ContractPublisherAbi,
