@@ -1,12 +1,11 @@
 import { css } from "@emotion/css";
-import type { SupportedChainName } from "@paperxyz/sdk-common-utilities";
-import type { PaperSDKError } from "@thirdweb-dev/payments";
+import type { PaperSDKError, SupportedChainName } from "@thirdweb-dev/payments";
 import { PAPER_APP_URL, PaperSDKErrorCode } from "@thirdweb-dev/payments";
 import React, { useEffect } from "react";
 import { usePaperSDKContext } from "../Provider";
 import { openCenteredPopup } from "../lib/utils/popup";
 import { Button } from "./common/Button";
-const packageJson = require("../../package.json");
+const packageJson = require("../package.json");
 
 interface VerifyOwnershipWithPaperProps {
   onSuccess?: (code: string) => void;
