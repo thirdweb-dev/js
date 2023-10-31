@@ -14,7 +14,7 @@ export const _es = {
     connect_to_app: "Conectar a la Aplicación",
     guest: "Invitado",
     connect: "Conectar",
-    new_to_wallets: "¿Nuevo en billeteras?",
+    new_to_wallets: "¿Nuevo en carteras?",
     view_transaction_history: "Ver Historial de Transacciones",
     get_started: "Comenzar",
     receive_funds: "Recibir Fondos",
@@ -87,7 +87,7 @@ export const _es = {
   },
   wallet_connect: {
     no_results_found: "No se encontraron resultados",
-    search_wallets: "Buscar Billeteras",
+    search_wallets: "Buscar Carteras",
   },
   common: {
     connect_app: "Conectar aplicación",

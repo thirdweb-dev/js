@@ -8,12 +8,14 @@ import type {
 } from "../../interfaces/embedded-wallets/embedded-wallets";
 import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
-type LoginQuerierTypes = {
+export type LoginQuerierTypes = {
+  loginWithCustomJwt: { jwt: string; encryptionKey?: string };
   loginWithThirdwebModal: undefined | { email: string };
   sendThirdwebEmailLoginOtp: { email: string };
   verifyThirdwebEmailLoginOtp: {
     email: string;
     otp: string;
+    recoveryCode?: string;
   };
   injectDeveloperClientId: void;
   getHeadlessGoogleLoginLink: void;
@@ -26,6 +28,7 @@ export abstract class AbstractLogin<
   EMAIL_VERIFICATION extends { email: string; otp: string } = {
     email: string;
     otp: string;
+    recoveryCode?: string;
   },
 > {
   protected LoginQuerier: EmbeddedWalletIframeCommunicator<LoginQuerierTypes>;
@@ -56,6 +59,10 @@ export abstract class AbstractLogin<
     this.clientId = clientId;
   }
 
+  abstract loginWithCustomJwt(args: {
+    jwt: string;
+    encryptionKey: string;
+  }): Promise<AuthLoginReturnType>;
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
   abstract loginWithEmailOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
   abstract loginWithGoogle(args?: {

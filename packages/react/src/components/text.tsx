@@ -19,6 +19,9 @@ export const Text = styled.span<{
   line-height: ${(p) => (p.multiline ? 1.5 : 1)};
   ${(p) => (p.center ? `text-align: center;` : "")};
   text-wrap: ${(p) => (p.balance ? "balance" : "inherit")};
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const Link = styled.a<{

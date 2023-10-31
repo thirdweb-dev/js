@@ -1,5 +1,3 @@
-// import { Platform } from "react-native";
-
 export const textVariants = {
   defaults: {
     fontFamily: undefined as string | undefined,

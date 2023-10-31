@@ -768,9 +768,6 @@ importers:
       '@paperxyz/embedded-wallet-service-sdk':
         specifier: ^1.2.4
         version: 1.2.4
-      '@react-native-community/checkbox':
-        specifier: ^0.5.16
-        version: 0.5.16(react-native@0.71.11)(react@18.2.0)
       '@shopify/restyle':
         specifier: ^2.4.2
         version: 2.4.2(react-native@0.71.11)(react@18.2.0)
@@ -10375,20 +10372,6 @@ packages:
     dependencies:
       merge-options: 3.0.4
       react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
-
-  /@react-native-community/checkbox@0.5.16(react-native@0.71.11)(react@18.2.0):
-    resolution: {integrity: sha512-j4fmWe77EAayGnKJ52BljlN8apLT3xjxG/pJOA6HZ4ew63FiXmnY7VtxTzmvDKgSPrETdQc2lmx5mdXTAufJnw==}
-    peerDependencies:
-      react: '*'
-      react-native: '>= 0.62'
-      react-native-windows: '>=0.62'
-    peerDependenciesMeta:
-      react-native-windows:
-        optional: true
-    dependencies:
-      react: 18.2.0
-      react-native: 0.71.11(@babel/core@7.22.9)(@babel/preset-env@7.22.9)(react@18.2.0)
-    dev: false
 
   /@react-native-community/cli-clean@10.1.1:
     resolution: {integrity: sha512-iNsrjzjIRv9yb5y309SWJ8NDHdwYtnCpmxZouQDyOljUdC9MwdZ4ChbtA4rwQyAwgOVfS9F/j56ML3Cslmvrxg==}
