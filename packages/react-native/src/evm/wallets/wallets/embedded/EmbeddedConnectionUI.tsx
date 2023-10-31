@@ -8,6 +8,7 @@ import { EmbeddedWallet } from "./EmbeddedWallet";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import {
   ActivityIndicator,
+  Keyboard,
   NativeSyntheticEvent,
   TextInput,
   TextInputKeyPressEventData,
@@ -24,7 +25,6 @@ import {
   useLocale,
 } from "../../../providers/ui-context-provider";
 import { EnterPassword } from "./EnterPassword";
-import { PasswordInput } from "../../../components/PasswordInput";
 import { RecoveryShareManagement } from "@thirdweb-dev/wallets";
 
 const OTP_LENGTH = 6;
@@ -140,6 +140,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
       setErrorMessage("");
       setFocusedIndex(undefined);
       const otp = values.join("");
+      Keyboard.dismiss();
 
       setTimeout(async () => {
         const emailWallet = selectionData.emailWallet as EmbeddedWallet;
@@ -371,17 +372,21 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
                 color: theme.colors.textPrimary,
               }}
               editable={!checkingOtp}
+              keyboardType="default"
               selectTextOnFocus={true}
               onFocus={() => setFocusedIndex(index)}
               maxLength={1}
               returnKeyType={index === 5 ? "done" : "next"}
+              onSubmitEditing={
+                index === 5 ? () => onContinuePress() : undefined
+              }
               onChangeText={(value) => handleInputChange(value, index)}
               onKeyPress={(e) => handleKeyPress(e, index)}
             />
           </Box>
         ))}
       </Box>
-      {selectionData.recoveryShareManagement === "USER_MANAGED" ? (
+      {/* {selectionData.recoveryShareManagement === "USER_MANAGED" ? (
         <Box>
           <PasswordInput onChangeText={setPassword} />
           <BaseButton
@@ -405,7 +410,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
             )}
           </BaseButton>
         </Box>
-      ) : null}
+      ) : null} */}
       {errorMessage ? (
         <Text variant="error" numberOfLines={1}>
           {errorMessage}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EmbeddedWallet } from "./EmbeddedWallet";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Keyboard } from "react-native";
 import {
   SelectUIProps,
   useCreateWalletInstance,
@@ -54,6 +54,7 @@ export const EmailSelectionUI: React.FC<
     if (validateEmail(emailInput)) {
       setErrorMessage("");
       setIsFetching(true);
+      Keyboard.dismiss();
 
       emailWallet
         ?.sendVerificationEmail(emailInput)
@@ -142,6 +143,7 @@ export const EmailSelectionUI: React.FC<
                 padding: 0,
                 flex: 1,
               },
+              onSubmitEditing: handleNetworkCall,
               value: emailInput,
               keyboardType: "email-address",
               returnKeyType: "done",
