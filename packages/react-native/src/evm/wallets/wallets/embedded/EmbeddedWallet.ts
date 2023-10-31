@@ -11,9 +11,6 @@ import {
 } from "../../connectors/embedded-wallet/types";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 
-// export standalone sendVerificationEmail
-export { sendVerificationEmail } from "../../connectors/embedded-wallet/embedded/auth";
-
 export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
 
@@ -23,6 +20,16 @@ export class EmbeddedWallet extends AbstractClientWallet<
 > {
   connector?: EmbeddedWalletConnector;
   options: EmbeddedWalletOptions;
+
+  static async sendVerificationEmail(options: {
+    email: string;
+    clientId: string;
+  }) {
+    const { sendVerificationEmail } = await import(
+      "../../connectors/embedded-wallet/embedded/auth"
+    );
+    return sendVerificationEmail(options);
+  }
 
   static meta = {
     name: "Embedded Wallet",

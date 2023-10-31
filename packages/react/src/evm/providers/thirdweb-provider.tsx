@@ -12,7 +12,6 @@ import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { signerWallet } from "../../wallet/wallets/signerWallet";
 import { Signer } from "ethers";
-import { EmbeddedWalletSdk } from "@thirdweb-dev/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -88,13 +87,17 @@ export const ThirdwebProvider = <
       return;
     }
     ewsRef.current = true;
-    const hasEmbeddedWallet = wallets.find((w) => w.id === "embeddedWallet");
-    if (hasEmbeddedWallet && restProps.clientId) {
-      new EmbeddedWalletSdk({
-        clientId: restProps.clientId,
-        chain: "Ethereum",
-      });
-    }
+    const preloadEmbeddedWallet = async () => {
+      const hasEmbeddedWallet = wallets.find((w) => w.id === "embeddedWallet");
+      if (hasEmbeddedWallet && restProps.clientId) {
+        const { EmbeddedWalletSdk } = await import("@thirdweb-dev/wallets");
+        new EmbeddedWalletSdk({
+          clientId: restProps.clientId,
+          chain: "Ethereum",
+        });
+      }
+    };
+    preloadEmbeddedWallet();
   }, [restProps.clientId, wallets]);
 
   return (

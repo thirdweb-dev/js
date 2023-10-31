@@ -33,6 +33,31 @@ export class EmbeddedWallet extends AbstractClientWallet<
       "ipfs://QmNx2evQa6tcQs9VTd3YaDm31ckfStvgRGKFGELahUmrbV/emailIcon.svg",
   };
 
+  /**
+   * Sends a verification email to the provided email address.
+   *
+   * @param email - The email address to which the verification email will be sent.
+   * @param clientId - Your thirdweb client ID
+   * @returns Information on the user's status and whether they are a new user.
+   *
+   * @example
+   * ```typescript
+   * sendVerificationEmail({ email: 'test@example.com', clientId: 'yourClientId' })
+   *   .then(() => console.log('Verification email sent successfully.'))
+   *   .catch(error => console.error('Failed to send verification email:', error));
+   * ```
+   */
+  static async sendVerificationEmail(options: {
+    email: string;
+    clientId: string;
+  }) {
+    const wallet = new EmbeddedWallet({
+      chain: Ethereum,
+      clientId: options.clientId,
+    });
+    return wallet.sendVerificationEmail({ email: options.email });
+  }
+
   public get walletName() {
     return "Embedded Wallet" as const;
   }
@@ -122,29 +147,4 @@ export class EmbeddedWallet extends AbstractClientWallet<
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.authenticate(params);
   }
-}
-
-/**
- * Sends a verification email to the provided email address.
- *
- * @param email - The email address to which the verification email will be sent.
- * @param clientId - Your thirdweb client ID
- * @returns Information on the user's status and whether they are a new user.
- *
- * @example
- * ```typescript
- * sendVerificationEmail({ email: 'test@example.com', clientId: 'yourClientId' })
- *   .then(() => console.log('Verification email sent successfully.'))
- *   .catch(error => console.error('Failed to send verification email:', error));
- * ```
- */
-export async function sendVerificationEmail(options: {
-  email: string;
-  clientId: string;
-}) {
-  const wallet = new EmbeddedWallet({
-    chain: Ethereum,
-    clientId: options.clientId,
-  });
-  return wallet.sendVerificationEmail({ email: options.email });
 }
