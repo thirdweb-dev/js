@@ -41,7 +41,6 @@ import {
 } from "../../common/forwarder";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
-import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import { BytesLike } from "ethers";
 import { CONTRACT_ADDRESSES } from "../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../constants/addresses/getContractAddressByChainId";
@@ -975,7 +974,9 @@ async function defenderPrepareRequest(
           transaction.chainId as keyof typeof CONTRACT_ADDRESSES
         ].openzeppelinForwarder ||
         (await computeForwarderAddress(provider, storage)));
-
+  const ForwarderABI = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+  ).default;
   const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
   const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
     transaction.from,
