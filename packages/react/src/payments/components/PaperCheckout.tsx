@@ -1,5 +1,4 @@
-import { DEFAULT_BRAND_OPTIONS } from "@paperxyz/sdk-common-utilities";
-import { PAPER_APP_URL } from "@thirdweb-dev/payments";
+import { PAPER_APP_URL, DEFAULT_BRAND_OPTIONS } from "@thirdweb-dev/payments";
 import React, { useEffect, useState } from "react";
 import type {
   ContractType,

@@ -1,20 +1,17 @@
 import type {
-  ICustomizationOptions,
-  Locale,
-} from "@paperxyz/sdk-common-utilities";
-import { DEFAULT_BRAND_OPTIONS } from "@paperxyz/sdk-common-utilities";
-import type {
   ICheckoutWithCardConfigs,
   PaperSDKError,
   PriceSummary,
   ReviewResult,
+  ICustomizationOptions,
+  Locale,
 } from "@thirdweb-dev/payments";
-import { createCheckoutWithCardElement } from "@thirdweb-dev/payments";
+import { createCheckoutWithCardElement, DEFAULT_BRAND_OPTIONS } from "@thirdweb-dev/payments";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePaperSDKContext } from "../Provider";
 import { iframeContainer } from "../lib/utils/styles";
 import { SpinnerWrapper } from "./common/SpinnerWrapper";
-const packageJson = require("../../package.json");
+const packageJson = require("../package.json");
 
 interface CheckoutWithCardProps {
   sdkClientSecret?: string;
@@ -100,7 +97,7 @@ export const CheckoutWithCard = ({
         className={iframeContainer}
         ref={CheckoutWithCardIframeContainerRef}
         // Label the package version.
-        data-paper-sdk-version={`@paperxyz/react-client-sdk@${packageJson.version}`}
+        data-thirdweb-sdk-version={`${packageJson.name}@${packageJson.version}`}
       >
         {isCardDetailIframeLoading && <SpinnerWrapper />}
       </div>
