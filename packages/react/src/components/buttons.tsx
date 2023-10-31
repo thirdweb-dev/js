@@ -5,6 +5,7 @@ export const Button = styled.button<{
   variant: "primary" | "secondary" | "link" | "accent" | "outline";
   theme?: Theme;
   fullWidth?: boolean;
+  gap?: keyof typeof spacing;
 }>`
   all: unset;
   cursor: pointer;
@@ -20,6 +21,7 @@ export const Button = styled.button<{
   line-height: 1;
   flex-shrink: 0;
   transition: border 200ms ease;
+  gap: ${(p) => (p.gap && spacing[p.gap]) || 0};
 
   ${(p) => p.fullWidth && `width: 100%;`};
 
