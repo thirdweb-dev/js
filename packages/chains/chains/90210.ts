@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.beverlyhills.ethdevops.io"
   ],
-  "features": [],
   "infoURL": "https://beverlyhills.ethdevops.io",
   "name": "Beverly Hills",
   "nativeCurrency": {
@@ -20,13 +19,15 @@ export default {
     "symbol": "BVE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 90210,
   "rpc": [
     "https://beverly-hills.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://90210.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.beverlyhills.ethdevops.io:8545"
   ],
   "shortName": "bvhl",
   "slug": "beverly-hills",
   "status": "incubating",
-  "testnet": true
+  "testnet": true,
+  "title": "Ethereum multi-client Verkle Testnet Beverly Hills"
 } as const satisfies Chain;

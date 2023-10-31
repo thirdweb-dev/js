@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://morphism.xyz",
   "name": "Morphism Testnet",
   "nativeCurrency": {
@@ -18,9 +17,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2710,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://bridge-testnet.morphism.xyz"
+      }
+    ]
+  },
   "rpc": [
     "https://morphism-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2710.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.morphism.xyz"
   ],
   "shortName": "tmorph",

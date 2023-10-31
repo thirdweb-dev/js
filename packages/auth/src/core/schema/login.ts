@@ -44,7 +44,7 @@ export const LoginPayloadDataSchema = z.object({
   uri: z.string().optional(),
   version: z.string().default("1"),
   chain_id: z.string().optional(),
-  nonce: z.string().default(uuidv4()),
+  nonce: z.string().default(() => uuidv4()),
   issued_at: z
     .date()
     .default(new Date())

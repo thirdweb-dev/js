@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
     "width": 288,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 167005,
   "rpc": [
     "https://taiko-grimsvotn-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://167005.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.taiko.xyz"
   ],
   "shortName": "taiko-l2",

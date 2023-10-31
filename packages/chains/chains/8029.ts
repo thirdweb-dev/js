@@ -4,7 +4,6 @@ export default {
   "chainId": 8029,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://mdgl.io",
   "name": "MDGL Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "MDGLT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8029,
   "rpc": [
     "https://mdgl-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8029.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.mdgl.io"
   ],
   "shortName": "mdgl",

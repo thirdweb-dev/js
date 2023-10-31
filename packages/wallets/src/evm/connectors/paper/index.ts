@@ -62,6 +62,7 @@ export class PaperWalletConnector extends Connector<Record<string, never>> {
               clientId: this.options.clientId,
               chain: "Ethereum",
               styles: this.options.styles,
+              onAuthSuccess: this.options.onAuthSuccess,
             }),
           );
         } catch (err) {

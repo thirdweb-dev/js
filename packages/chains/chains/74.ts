@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZVwsY6HPXScKqZCA9SWNrr4jrQAHkPhVhMWi6Fj1DsrJ",
     "width": 162,
@@ -24,9 +23,10 @@ export default {
     "symbol": "EIDI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 74,
   "rpc": [
     "https://idchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://74.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://idchain.one/rpc/",
     "wss://idchain.one/ws/"
   ],

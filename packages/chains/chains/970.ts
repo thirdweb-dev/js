@@ -4,7 +4,6 @@ export default {
   "chainId": 970,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZ1jbxFZcuotj3eZ6iKFrg9ZXnaV8AK6sGRa7ELrceWyD",
     "width": 1043,
@@ -18,9 +17,10 @@ export default {
     "symbol": "CCN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 970,
   "rpc": [
     "https://oort.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://970.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oortech.com"
   ],
   "shortName": "ccn",

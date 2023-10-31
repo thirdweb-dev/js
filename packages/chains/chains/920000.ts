@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.posichain.org/"
   ],
-  "features": [],
   "infoURL": "https://posichain.org",
   "name": "Posichain Devnet Shard 0",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "POSI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 920000,
   "rpc": [
     "https://posichain-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://920000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s0.d.posichain.org"
   ],
   "shortName": "psc-d-s0",

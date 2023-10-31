@@ -6,11 +6,16 @@ export default {
     {
       "name": "TenetScan Mainnet",
       "url": "https://tenetscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
+        "width": 640,
+        "height": 640,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmc1gqjWTzNo4pyFSGtQuCu7kRSZZBUVybtTjHn2nNEEPA",
     "width": 640,
@@ -24,14 +29,16 @@ export default {
     "symbol": "TENET",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1559,
   "rpc": [
     "https://tenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1559.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tenet.org",
     "https://tenet-evm.publicnode.com",
     "wss://tenet-evm.publicnode.com"
   ],
   "shortName": "tenet",
   "slug": "tenet",
-  "testnet": false
+  "testnet": false,
+  "title": "Tenet Mainnet"
 } as const satisfies Chain;

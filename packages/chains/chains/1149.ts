@@ -6,11 +6,16 @@ export default {
     {
       "name": "Plexchain Explorer",
       "url": "https://explorer.plexfinance.us",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmcXzfMNSQ7SZzKemNquVoXyG5ergdqCGeLWjRYETGBTUM",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcXzfMNSQ7SZzKemNquVoXyG5ergdqCGeLWjRYETGBTUM",
     "width": 256,
@@ -24,9 +29,10 @@ export default {
     "symbol": "PLEX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1149,
   "rpc": [
     "https://symplexia-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1149.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://plex-rpc.plexfinance.us"
   ],
   "shortName": "Plexchain",

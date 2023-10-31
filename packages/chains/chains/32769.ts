@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTREXNgGtUhSoxFsrkhTe5LUnDBTKL5byaX8kpET6UuKp",
     "width": 2048,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ZIL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 32769,
   "rpc": [
     "https://zilliqa-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://32769.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.zilliqa.com"
   ],
   "shortName": "zil",

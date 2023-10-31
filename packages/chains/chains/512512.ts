@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://dev.caduceus.foundation/testNetwork"
   ],
-  "features": [],
   "infoURL": "https://caduceus.foundation/",
   "name": "CMP-Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "CMP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 512512,
   "rpc": [
     "https://cmp-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://512512.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galaxy.block.caduceus.foundation",
     "wss://galaxy.block.caduceus.foundation"
   ],

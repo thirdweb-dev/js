@@ -4,7 +4,6 @@ export default {
   "chainId": 12,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://metadium.com",
   "name": "Metadium Testnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "KAL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 12,
   "rpc": [
     "https://metadium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://12.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metadium.com/dev"
   ],
   "shortName": "kal",

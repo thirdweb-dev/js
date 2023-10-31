@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://ambros.network",
   "name": "Ambros Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "AMBROS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 880,
   "rpc": [
     "https://ambros-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://880.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ambros.network"
   ],
   "shortName": "ambros",

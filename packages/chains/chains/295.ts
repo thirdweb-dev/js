@@ -51,12 +51,14 @@ export default {
     "symbol": "HBAR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 295,
   "rpc": [
     "https://hedera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://295.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.hashio.io/api"
   ],
   "shortName": "hedera-mainnet",
+  "slip44": 3030,
   "slug": "hedera",
   "testnet": false
 } as const satisfies Chain;

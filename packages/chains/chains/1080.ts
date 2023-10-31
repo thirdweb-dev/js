@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeie7jzlzlpz7c3a3oh4x5joej23dj2qf3cexmchjyc72hv3fblcaja",
     "width": 256,
@@ -24,12 +23,14 @@ export default {
     "symbol": "MNTR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1080,
   "rpc": [
     "https://mintara.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1080.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/mintara/mainnet/rpc"
   ],
   "shortName": "mintara",
   "slug": "mintara",
-  "testnet": false
+  "testnet": false,
+  "title": "Mintara Mainnet"
 } as const satisfies Chain;

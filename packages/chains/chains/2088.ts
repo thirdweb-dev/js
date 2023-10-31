@@ -19,9 +19,8 @@ export default {
     "symbol": "AIR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2088,
   "rpc": [
-    "https://altair.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://fullnode.altair.centrifuge.io"
   ],
   "shortName": "air",

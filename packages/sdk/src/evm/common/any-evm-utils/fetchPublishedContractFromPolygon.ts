@@ -1,15 +1,15 @@
 import { Contract } from "ethers";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
 import { getContractPublisherAddress } from "../../constants/addresses/getContractPublisherAddress";
 import { getChainProvider } from "../../constants/urls";
-import { AddressOrEns, PublishedContractSchema } from "../../schema";
 import { resolveAddress } from "../ens/resolveAddress";
 import invariant from "tiny-invariant";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
-import { getSupportedChains } from "../../constants";
 import { Polygon } from "@thirdweb-dev/chains";
+import { getSupportedChains } from "../../constants/chains/supportedChains";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import { PublishedContractSchema } from "../../schema/contracts/custom";
 
 export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
 
@@ -24,6 +24,9 @@ export async function fetchPublishedContractFromPolygon(
   const polygonChain = getSupportedChains().find((c) => c.chainId === 137);
   const chain = polygonChain || Polygon;
   const publisher = await resolveAddress(publisherAddress);
+  const ContractPublisherAbi = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json")
+  ).default;
   const contract = new Contract(
     getContractPublisherAddress(),
     ContractPublisherAbi,

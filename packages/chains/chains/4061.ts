@@ -4,7 +4,6 @@ export default {
   "chainId": 4061,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
@@ -18,7 +17,16 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4061,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1",
+    "bridges": [
+      {
+        "url": "https://bridge.nahmii.io"
+      }
+    ]
+  },
   "rpc": [],
   "shortName": "Nahmii3Mainnet",
   "slug": "nahmii-3",

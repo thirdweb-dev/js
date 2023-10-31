@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.autonity.org/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
     "width": 1000,
@@ -26,9 +25,10 @@ export default {
     "symbol": "ATN",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 65010000,
   "rpc": [
     "https://autonity-bakerloo-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://65010000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bakerloo.autonity.org/",
     "wss://rpc1.bakerloo.autonity.org/ws/"
   ],

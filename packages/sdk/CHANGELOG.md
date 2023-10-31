@@ -1,5 +1,49 @@
 # @thirdweb-dev/sdk
 
+## 4.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`a75e4cc8`](https://github.com/thirdweb-dev/js/commit/a75e4cc80a5a36bf6baeeb40e8ae3be485d35618)]:
+  - @thirdweb-dev/chains@0.1.57
+
+## 4.0.8
+
+### Patch Changes
+
+- [#1798](https://github.com/thirdweb-dev/js/pull/1798) [`d1743a32`](https://github.com/thirdweb-dev/js/commit/d1743a3279ddda4f408794a6bbe7bbd235a9fd36) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve performance for contract-roles methods
+
+- [#1827](https://github.com/thirdweb-dev/js/pull/1827) [`0358722c`](https://github.com/thirdweb-dev/js/commit/0358722c1aede51fb349fa132a37a80b46927c93) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Remove barrel files
+
+- [#1814](https://github.com/thirdweb-dev/js/pull/1814) [`db0bbf51`](https://github.com/thirdweb-dev/js/commit/db0bbf517306c6110d49f031202eeb7d5bfff61a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Perf inmprovement for erc-20 methods
+
+- [#1850](https://github.com/thirdweb-dev/js/pull/1850) [`80def43d`](https://github.com/thirdweb-dev/js/commit/80def43d44b7d47b5b3a49c54116d12c0974a264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix double trailing slash when downloading merkle data
+
+- [#1855](https://github.com/thirdweb-dev/js/pull/1855) [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4) Thanks [@jnsdls](https://github.com/jnsdls)! - require minimum node version: `>=18`
+
+- [#1805](https://github.com/thirdweb-dev/js/pull/1805) [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Spicy Chain deployments
+
+- Updated dependencies [[`6028a881`](https://github.com/thirdweb-dev/js/commit/6028a88111d9071155370c7aeaf22d4ee0c3ec93), [`b6f72c56`](https://github.com/thirdweb-dev/js/commit/b6f72c566c9cec5c2d0a0ebe709d6177b2af68e4), [`cc651135`](https://github.com/thirdweb-dev/js/commit/cc6511351fea568246ddf49f687a5616d484d2a4)]:
+  - @thirdweb-dev/chains@0.1.56
+  - @thirdweb-dev/storage@2.0.2
+
+## 4.0.7
+
+### Patch Changes
+
+- [#1795](https://github.com/thirdweb-dev/js/pull/1795) [`42ba15f2`](https://github.com/thirdweb-dev/js/commit/42ba15f2c0e77e23e62650119dfaaa5c0dbe4481) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Improve performance for prebuilt implementations"
+
+- [#1787](https://github.com/thirdweb-dev/js/pull/1787) [`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522) Thanks [@MananTank](https://github.com/MananTank)! - Enable typedoc for packages
+
+- [#1824](https://github.com/thirdweb-dev/js/pull/1824) [`d8d48a95`](https://github.com/thirdweb-dev/js/commit/d8d48a9516fc8fdd173fbb91a858fe7ec0725ddd) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Performance improve for erc-1155-signature-mintable
+
+- [#1800](https://github.com/thirdweb-dev/js/pull/1800) [`fd7a9f09`](https://github.com/thirdweb-dev/js/commit/fd7a9f09989e39b02a93d9dfd01cc7378e6ead53) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getCompositeABI for dynamic contracts
+
+- [#1813](https://github.com/thirdweb-dev/js/pull/1813) [`6d1eabe9`](https://github.com/thirdweb-dev/js/commit/6d1eabe9f9818ee2a79ce5bf6aa74417dbfd0558) Thanks [@kien-ngo](https://github.com/kien-ngo)! - [SDK] Various small improvements
+
+- Updated dependencies [[`ff996646`](https://github.com/thirdweb-dev/js/commit/ff996646b228d4d095eea04b05004dd26fc7e522)]:
+  - @thirdweb-dev/storage@2.0.1
+
 ## 4.0.6
 
 ### Patch Changes

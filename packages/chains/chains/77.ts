@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.com/poa/sokol",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://poa.network",
   "name": "POA Network Sokol",
   "nativeCurrency": {
@@ -18,9 +23,10 @@ export default {
     "symbol": "SPOA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 77,
   "rpc": [
     "https://poa-network-sokol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://77.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sokol.poa.network",
     "wss://sokol.poa.network/wss",
     "ws://sokol.poa.network:8546"

@@ -1,4 +1,5 @@
-import { ProposalState, VoteType } from "../enums";
+import { ProposalState } from "../enums/vote/ProposalState";
+import { VoteType } from "../enums/vote/Vote";
 import { Currency } from "./currency";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 

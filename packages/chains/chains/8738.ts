@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://alph.network",
   "name": "Alph Network",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ALPH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8738,
   "rpc": [
     "https://alph-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8738.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alph.network",
     "wss://rpc.alph.network"
   ],

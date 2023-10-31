@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeifxqd7zel2m237kq5enavnh2s6cshaavswigogyvae2wevxy5k2ti",
     "width": 512,
@@ -24,14 +23,16 @@ export default {
     "symbol": "NEXI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4242,
   "rpc": [
     "https://nexi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4242.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chain.nexi.technology/",
     "https://chain.nexilix.com",
     "https://chain.nexi.evmnode.online"
   ],
   "shortName": "nexi",
+  "slip44": 2500,
   "slug": "nexi",
   "testnet": false
 } as const satisfies Chain;

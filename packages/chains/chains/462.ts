@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreihs2nrnizpcuzjmuu2yi7wrtwd7qlqje46qnil5bnntfbfkb2roea",
     "width": 1000,
@@ -24,9 +23,10 @@ export default {
     "symbol": "TAREA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 462,
   "rpc": [
     "https://areon-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://462.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.areon.network"
   ],
   "shortName": "tarea",

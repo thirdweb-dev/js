@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmTV45o4jTe6ayscF1XWh1WXk5DPck4QohR5kQocSWjvQP",
     "width": 300,
@@ -24,9 +23,10 @@ export default {
     "symbol": "xlon",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 22052002,
   "rpc": [
     "https://excelon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://22052002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgewallet1.xlon.org/"
   ],
   "shortName": "xlon",

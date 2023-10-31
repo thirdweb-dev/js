@@ -14,9 +14,9 @@ import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { deployCreate2Factory } from "./deployCreate2Factory";
 import { convertParamValues } from "./convertParamValues";
-import { AbiInput } from "../../schema";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
+import { AbiInput } from "../../schema/contracts/custom";
 
 /**
  * Direct deploy a contract at a deterministic address, using Create2 method

@@ -4,7 +4,6 @@ export default {
   "chainId": 5777,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmc9N7V8CiLB4r7FEcG7GojqfiGGsRCZqcFWCahwMohbDW",
     "width": 267,
@@ -18,12 +17,14 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 5777,
   "rpc": [
     "https://ganache.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://5777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://127.0.0.1:7545"
   ],
   "shortName": "ggui",
   "slug": "ganache",
-  "testnet": true
+  "testnet": true,
+  "title": "Ganache GUI Ethereum Testnet"
 } as const satisfies Chain;

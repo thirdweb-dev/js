@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://elysiumscan.vulcanforged.com",
   "name": "Elysium Testnet",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "LAVA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1338,
   "rpc": [
     "https://elysium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1338.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://elysium-test-rpc.vulcanforged.com"
   ],
   "shortName": "ELST",
   "slug": "elysium-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "An L1, carbon-neutral, tree-planting, metaverse dedicated blockchain created by VulcanForged"
 } as const satisfies Chain;

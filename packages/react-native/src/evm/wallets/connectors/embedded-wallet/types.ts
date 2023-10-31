@@ -47,6 +47,26 @@ export interface EmbeddedWalletConnectorOptions {
   styles?: PaperConstructorType<RecoveryShareManagement>["styles"];
 }
 
-export interface EmbeddedWalletConnectionArgs {
-  email?: string;
+export interface AuthOptions {
+  jwt: string;
+  password: string;
 }
+
+export type EmbeddedWalletConnectionArgs = {
+  chainId?: number;
+} & (
+  | {
+      loginType: "headless_google_oauth";
+      redirectUrl: string;
+    }
+  | {
+      loginType: "headless_email_otp_verification";
+      email: string;
+      otp: string;
+    }
+  | {
+      loginType: "jwt";
+      jwt: string;
+      password: string;
+    }
+);

@@ -24,9 +24,11 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
+  "networkId": 7777777,
   "redFlags": [],
   "rpc": [
     "https://zora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7777777.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zora.energy/"
   ],
   "shortName": "zora",

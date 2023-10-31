@@ -26,12 +26,14 @@ export default {
     "symbol": "IOTX",
     "decimals": 18
   },
+  "networkId": 4690,
   "redFlags": [],
   "rpc": [
     "https://iotex-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4690.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://babel-api.testnet.iotex.io"
   ],
   "shortName": "iotex-testnet",
   "slug": "iotex-network-testnet",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

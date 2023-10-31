@@ -1,6 +1,6 @@
 import { ContractFactory, type Signer } from "ethers";
 import { PrecomputedDeploymentTransaction } from "../../types/any-evm/deploy-data";
-import type { DeployOptions } from "../../types/deploy";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
 import { DEPLOYER_ABI, DEPLOYER_BYTECODE } from "./constants";
 import { createTransactionBatches } from "./createTransactionBatches";
 

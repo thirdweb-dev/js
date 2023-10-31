@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.lucidcoin.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeigxiyyxll4vst5cjjh732mr6zhsnligxubaldyiul2xdvvi6ibktu",
     "width": 800,
@@ -26,9 +25,10 @@ export default {
     "symbol": "LUCID",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 800,
   "rpc": [
     "https://lucid-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://800.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.lucidcoin.io"
   ],
   "shortName": "LUCID",

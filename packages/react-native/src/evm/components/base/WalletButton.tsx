@@ -5,6 +5,7 @@ import { Label } from "./Label";
 import Text from "./Text";
 import Box from "./Box";
 import { Palette } from "../../styles/colors";
+import { useLocale } from "../../providers/ui-context-provider";
 
 type WalletButtonProps = {
   onPress?: () => void;
@@ -29,6 +30,7 @@ export const WalletButton = ({
   recommended,
   ...props
 }: WalletButtonProps) => {
+  const l = useLocale();
   return (
     <BaseButton
       mb={mb}
@@ -49,10 +51,12 @@ export const WalletButton = ({
           height={iconHeight}
         />
         <Box ml="sm" alignItems="flex-start">
-          <Text variant="bodyLarge" color={nameColor}>
+          <Text variant="bodyLargeBold" color={nameColor}>
             {name}
           </Text>
-          {recommended ? <Text variant="link">Recommended</Text> : null}
+          {recommended ? (
+            <Text variant="link">{l.connect_wallet_details.recommended}</Text>
+          ) : null}
         </Box>
       </Box>
       {labelText ? <Label text={labelText} /> : <View />}

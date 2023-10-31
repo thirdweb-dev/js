@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreifhetalm3vpvjrg5u5d2momkcgvkz6rhltur5co3rslltbxzpr6yq",
     "width": 2048,
@@ -24,9 +23,14 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 876,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-248"
+  },
   "rpc": [
     "https://bandai-namco-research-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://876.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.main.oasvrs.bnken.net"
   ],
   "shortName": "BNKEN",

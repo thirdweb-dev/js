@@ -31,9 +31,10 @@ export default {
     "symbol": "KLC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3888,
   "rpc": [
     "https://kalychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kalychain.io/rpc"
   ],
   "shortName": "kalymainnet",

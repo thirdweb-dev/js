@@ -8,11 +8,13 @@ import type {
   LocalWallet,
   MagicLink,
   MetaMaskWallet,
+  OKXWallet,
   PaperWallet,
   PhantomWallet,
   RainbowWallet,
   SafeWallet,
   SmartWallet,
+  TokenBoundSmartWallet,
   TrustWallet,
   WalletConnect,
   walletIds,
@@ -31,12 +33,14 @@ type WalletIdToWalletTypeMap = {
   magicLink: MagicLink;
   paper: PaperWallet;
   smartWallet: SmartWallet;
+  tokenBoundSmartWallet: TokenBoundSmartWallet;
   safe: SafeWallet;
   trust: TrustWallet;
   embeddedWallet: EmbeddedWallet;
   walletConnect: WalletConnect;
   phantom: PhantomWallet;
   walletConnectV1: WalletConnect;
+  okx: OKXWallet;
 };
 
 /**

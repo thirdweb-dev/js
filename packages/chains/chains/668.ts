@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://junca-cash.world",
   "name": "JuncaChain",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "JGC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 668,
   "rpc": [
     "https://juncachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://668.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.juncachain.com"
   ],
   "shortName": "junca",

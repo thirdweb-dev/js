@@ -4,7 +4,6 @@ export default {
   "chainId": 1288,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://docs.moonbeam.network/learn/platform/networks/overview/",
   "name": "Moonrock",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "ROC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1288,
   "rpc": [
     "https://moonrock.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonrock.moonbeam.network",
     "wss://wss.api.moonrock.moonbeam.network"
   ],

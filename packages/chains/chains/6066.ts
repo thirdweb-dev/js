@@ -6,11 +6,16 @@ export default {
     {
       "name": "treslechesexplorer",
       "url": "https://explorer.tresleches.finance",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS33ypsZ1Hx5LMMACaJaxePy9QNYMwu4D12niobExLK74",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "TRES",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6066,
   "rpc": [
     "https://tres.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6066.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tresleches.finance/",
     "https://rpc.treschain.io/"
   ],

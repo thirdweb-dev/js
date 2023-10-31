@@ -18,8 +18,9 @@ export default {
     width: 512,
     format: "svg",
   },
-  shortName: "Zora",
+  shortName: "zora-testnet",
   chainId: 999,
   networkId: 999,
   testnet: true,
+  redFlags: ["reusedChainId"],
 };

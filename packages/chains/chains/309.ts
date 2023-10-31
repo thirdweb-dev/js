@@ -6,7 +6,13 @@ export default {
     {
       "name": "wyzth",
       "url": "http://24.199.108.65:4000",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmT5UMzAftM4mHCtk4pWX4sqyJCki88APbqECywrhJp91Q",
+        "width": 324,
+        "height": 82,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
@@ -28,9 +34,10 @@ export default {
     "symbol": "WYZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 309,
   "rpc": [
     "https://wyzth-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://309.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet3.wyzthchain.org/"
   ],
   "shortName": "wyz",

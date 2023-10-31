@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreid732273ib5at7krjdl2t7lteljlepwd3tvifqge7mu7g6naxavhe",
     "width": 256,
@@ -29,9 +28,10 @@ export default {
     "symbol": "KRST",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2241,
   "rpc": [
     "https://krest-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2241.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://erpc-krest.peaq.network"
   ],
   "shortName": "KRST",

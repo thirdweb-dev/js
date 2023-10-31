@@ -12,17 +12,17 @@ export default {
   "faucets": [
     "https://testedge2.haqq.network"
   ],
-  "features": [],
   "infoURL": "https://islamiccoin.net",
   "name": "Haqq Chain Testnet",
   "nativeCurrency": {
     "name": "Islamic Coin",
-    "symbol": "ISLM",
+    "symbol": "ISLMT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 54211,
   "rpc": [
     "https://haqq-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://54211.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.testedge2.haqq.network"
   ],
   "shortName": "ISLMT",

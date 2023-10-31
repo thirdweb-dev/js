@@ -4,7 +4,6 @@ export default {
   "chainId": 9100,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://genesis-gn.com",
   "name": "Genesis Coin",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "GNC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9100,
   "rpc": [
     "https://genesis-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://genesis-gn.com",
     "wss://genesis-gn.com"
   ],

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "http://doschain.io/",
   "name": "Dos Fuji Subnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "DOS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1311,
   "rpc": [
     "https://dos-fuji-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1311.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.doschain.com/jsonrpc"
   ],
   "shortName": "TDOS",

@@ -15,40 +15,47 @@ import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
 } from "./helpers/auth/cognitoAuth";
-import { postPaperAuth, prePaperAuth } from "./helpers/auth/middleware";
+import {
+  postPaperAuth,
+  postPaperAuthUserManaged,
+  prePaperAuth,
+} from "./helpers/auth/middleware";
 import { isDeviceSharePresentForUser } from "./helpers/storage/local";
 import { getCognitoUser, setCognitoUser } from "./helpers/storage/state";
 import { SendEmailOtpReturnType } from "@thirdweb-dev/wallets";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
-import { OauthOption } from "../types";
-import { ROUTE_HEADLESS_GOOGLE_LOGIN } from "./helpers/constants";
+import { AuthOptions, OauthOption } from "../types";
+import {
+  ROUTE_AUTH_JWT_CALLBACK,
+  ROUTE_HEADLESS_GOOGLE_LOGIN,
+} from "./helpers/constants";
 
-export async function sendEmailOTP(
-  email: string,
-  clientId: string,
-): Promise<SendEmailOtpReturnType> {
-  await verifyClientId(clientId);
+export async function sendEmailOTP(options: {
+  email: string;
+  clientId: string;
+}): Promise<SendEmailOtpReturnType> {
+  await verifyClientId(options.clientId);
 
   await prePaperAuth({
     authenticationMethod: AuthProvider.COGNITO,
-    email,
+    email: options.email,
   });
 
   // AWS Auth flow
   let cognitoUser: CognitoUser;
   try {
-    cognitoUser = await cognitoEmailSignIn(email, clientId);
+    cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
   } catch (e) {
-    await cognitoEmailSignUp(email, clientId);
-    cognitoUser = await cognitoEmailSignIn(email, clientId);
+    await cognitoEmailSignUp(options.email, options.clientId);
+    cognitoUser = await cognitoEmailSignIn(options.email, options.clientId);
   }
   setCognitoUser(cognitoUser);
 
   let result: Awaited<ReturnType<typeof getEmbeddedWalletUserDetail>>;
   try {
     result = await getEmbeddedWalletUserDetail({
-      email,
-      clientId,
+      email: options.email,
+      clientId: options.clientId,
     });
   } catch (e) {
     throw new Error(
@@ -65,7 +72,7 @@ export async function sendEmailOTP(
     : {
         isNewUser: result.isNewUser,
         isNewDevice: !(await isDeviceSharePresentForUser(
-          clientId,
+          options.clientId,
           result.walletUserId ?? "",
         )),
         recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
@@ -104,7 +111,7 @@ export async function validateEmailOTP({
 
   try {
     const storedToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-      jwtToken: verifiedToken.rawToken,
+      jwtToken: verifiedToken.jwtToken,
       authDetails: verifiedToken.authDetails,
       authProvider: verifiedToken.authProvider,
       developerClientId: verifiedToken.developerClientId,
@@ -128,15 +135,16 @@ export async function validateEmailOTP({
 
 export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
   const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_GOOGLE_LOGIN}?authProvider=${encodeURIComponent(
-    "google",
+    oauthOptions.provider,
   )}&baseUrl=${encodeURIComponent(
-    "https://ews.thirdweb.com",
+    "https://embedded-wallet.thirdweb.com",
   )}&platform=${encodeURIComponent("mobile")}`;
 
   const resp = await fetch(headlessLoginLinkWithParams);
 
   if (!resp.ok) {
-    throw new Error("Error getting headless login link");
+    const error = await resp.json();
+    throw new Error(`Error getting headless login link: ${error.message}`);
   }
 
   const json = await resp.json();
@@ -190,6 +198,48 @@ export async function socialLogin(oauthOptions: OauthOption, clientId: string) {
     await postPaperAuth(toStoreToken, clientId);
 
     return { storedToken, email: storedToken.authDetails.email };
+  } catch (e) {
+    throw new Error(
+      `Malformed response from post authentication: ${JSON.stringify(e)}`,
+    );
+  }
+}
+
+export async function customJwt(authOptions: AuthOptions, clientId: string) {
+  const { jwt, password } = authOptions;
+
+  const resp = await fetch(ROUTE_AUTH_JWT_CALLBACK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jwt: jwt,
+      developerClientId: clientId,
+    }),
+  });
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(`JWT authentication error: ${error.message} `);
+  }
+
+  try {
+    const { verifiedToken, verifiedTokenJwtString } = await resp.json();
+
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: verifiedToken.jwtToken,
+      authProvider: verifiedToken.authProvider,
+      authDetails: {
+        ...verifiedToken.authDetails,
+        email: verifiedToken.authDetails.email,
+      },
+      developerClientId: verifiedToken.developerClientId,
+      cookieString: verifiedTokenJwtString,
+      shouldStoreCookieString: true,
+      isNewUser: verifiedToken.isNewUser,
+    };
+
+    await postPaperAuthUserManaged(toStoreToken, clientId, password);
+
+    return { verifiedToken, email: verifiedToken.authDetails.email };
   } catch (e) {
     throw new Error(
       `Malformed response from post authentication: ${JSON.stringify(e)}`,

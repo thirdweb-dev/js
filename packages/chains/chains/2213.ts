@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmZbmGYdfbMRrWJore3c7hyD6q7B5pXHJqTSNjbZZUK6V8",
     "width": 200,
@@ -24,9 +23,10 @@ export default {
     "symbol": "EVA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2213,
   "rpc": [
     "https://evanesco.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2213.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed4.evanesco.org:8546"
   ],
   "shortName": "evanesco",

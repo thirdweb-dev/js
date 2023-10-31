@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmT84suD2ZmTSraJBfeHhTNst2vXctQijNCztok9XiVcUR",
     "width": 3600,
@@ -24,9 +23,10 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 248,
   "rpc": [
     "https://oasys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://248.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oasys.games"
   ],
   "shortName": "OAS",

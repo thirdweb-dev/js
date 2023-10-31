@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://venidium.io",
   "name": "Venidium Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "XVM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 4918,
   "rpc": [
     "https://venidium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4918.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm-testnet.venidium.io"
   ],
   "shortName": "txvm",

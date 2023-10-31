@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://info.avastar.cc",
   "name": "Star Social Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "SNS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 700,
   "rpc": [
     "https://star-social-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://700.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avastar.cc/ext/bc/C/rpc"
   ],
   "shortName": "SNS",

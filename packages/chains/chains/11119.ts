@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://hashbit.org",
   "name": "HashBit Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "HBIT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11119,
   "rpc": [
     "https://hashbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11119.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.hashbit.org",
     "https://rpc.hashbit.org"
   ],
