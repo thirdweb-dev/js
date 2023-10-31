@@ -17,7 +17,6 @@ import type {
   TokenBoundSmartWallet,
   TrustWallet,
   WalletConnect,
-  ComethConnect,
   walletIds,
 } from "@thirdweb-dev/wallets";
 import { WalletInstance } from "../types/wallet";
@@ -41,7 +40,6 @@ type WalletIdToWalletTypeMap = {
   walletConnect: WalletConnect;
   phantom: PhantomWallet;
   walletConnectV1: WalletConnect;
-  comethConnect: ComethConnect;
   okx: OKXWallet;
 };
 
