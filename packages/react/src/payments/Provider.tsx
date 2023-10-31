@@ -1,4 +1,4 @@
-import type { SupportedChainName } from "@paperxyz/sdk-common-utilities";
+import type { SupportedChainName } from "@thirdweb-dev/payments";
 import type { Dispatch, SetStateAction } from "react";
 import React, { createContext, useContext, useMemo, useState } from "react";
 
