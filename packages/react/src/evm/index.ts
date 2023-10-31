@@ -33,7 +33,6 @@ export { useMetamask } from "./hooks/wallets/useMetamask";
 export { useCoinbaseWallet } from "./hooks/wallets/useCoinbaseWallet";
 export { useFrameWallet } from "./hooks/wallets/useFrame";
 export { useBloctoWallet } from "./hooks/wallets/useBloctoWallet";
-export { useComethConnect } from "./hooks/wallets/useComethConnect";
 
 export {
   usePaperWalletUserEmail,
@@ -67,6 +66,5 @@ export {
   MagicLink,
   SignerWallet,
   InjectedWallet,
-  ComethConnect,
   setWalletAnalyticsEnabled,
 } from "@thirdweb-dev/wallets";
