@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmUkFZC2ZmoYPTKf7AHdjwRPZoV2h1MCuHaGM4iu8SNFpi",
     "width": 400,
@@ -24,7 +23,7 @@ export default {
     "symbol": "SHYFTT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 11437,
   "rpc": [],
   "shortName": "shyftt",
   "slug": "shyft-testnet",

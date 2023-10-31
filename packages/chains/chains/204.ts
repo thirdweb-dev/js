@@ -5,12 +5,17 @@ export default {
   "explorers": [
     {
       "name": "opbnbscan",
-      "url": "http://mainnet.opbnbscan.com",
+      "url": "https://mainnet.opbnbscan.com",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "features": [],
+  "icon": {
+    "url": "ipfs://bafybeib75gwytvblyvjpfminitr3i6mpat3a624udfsqsl5nysf5vuuvie",
+    "width": 96,
+    "height": 96,
+    "format": "png"
+  },
   "infoURL": "https://opbnb.bnbchain.org/en",
   "name": "opBNB Mainnet",
   "nativeCurrency": {
@@ -18,14 +23,20 @@ export default {
     "symbol": "BNB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 204,
   "rpc": [
     "https://opbnb.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://204.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-mainnet-rpc.bnbchain.org",
+    "https://opbnb-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
+    "wss://opbnb-mainnet.nodereal.io/ws/v1/64a9df0874fb4a93b9d0a3849de012d3",
+    "https://opbnb-mainnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
+    "wss://opbnb-mainnet.nodereal.io/ws/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
     "https://opbnb.publicnode.com",
     "wss://opbnb.publicnode.com"
   ],
   "shortName": "obnb",
+  "slip44": 714,
   "slug": "opbnb",
   "testnet": false
 } as const satisfies Chain;

@@ -6,11 +6,16 @@ export default {
     {
       "name": "Block Explorer",
       "url": "https://explorer.japanopenchain.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreidhsiuqrct42bel76zhi3rx35k4lnk6aqgde27nvvxcz563ttfefy",
+        "width": 2000,
+        "height": 2000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreidhsiuqrct42bel76zhi3rx35k4lnk6aqgde27nvvxcz563ttfefy",
     "width": 2000,
@@ -24,11 +29,13 @@ export default {
     "symbol": "JOC",
     "decimals": 18
   },
+  "networkId": 81,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://japan-open-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://81.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.japanopenchain.org:8545",
     "https://rpc-2.japanopenchain.org:8545"
   ],

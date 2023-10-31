@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.japanopenchain.org/",
   "name": "Japan Open Chain Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "JOCT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10081,
   "rpc": [
     "https://japan-open-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10081.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.testnet.japanopenchain.org:8545",
     "https://rpc-2.testnet.japanopenchain.org:8545"
   ],

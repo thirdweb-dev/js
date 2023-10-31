@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://testnet-faucet.ezchain.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPKJbYCFjGmY9X2cA4b9YQjWYHQncmKnFtKyQh9rHkFTb",
     "width": 146,
@@ -26,9 +25,10 @@ export default {
     "symbol": "EZC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2613,
   "rpc": [
     "https://ezchain-c-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-api.ezchain.com/ext/bc/C/rpc"
   ],
   "shortName": "Fuji-EZChain",

@@ -4,7 +4,6 @@ export default {
   "chainId": 10000,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://smartbch.org/",
   "name": "Smart Bitcoin Cash",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "BCH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10000,
   "rpc": [
     "https://smart-bitcoin-cash.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smartbch.greyh.at",
     "https://rpc-mainnet.smartbch.org",
     "https://smartbch.fountainhead.cash/mainnet",

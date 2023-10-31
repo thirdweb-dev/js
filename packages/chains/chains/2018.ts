@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://publicmint.com",
   "name": "PublicMint Devnet",
   "nativeCurrency": {
@@ -18,12 +17,15 @@ export default {
     "symbol": "USD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2018,
   "rpc": [
     "https://publicmint-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2018.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dev.publicmint.io:8545"
   ],
   "shortName": "pmint_dev",
+  "slip44": 60,
   "slug": "publicmint-devnet",
-  "testnet": false
+  "testnet": false,
+  "title": "Public Mint Devnet"
 } as const satisfies Chain;

@@ -4,7 +4,6 @@ export default {
   "chainId": 1139,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://mathchain.org",
   "name": "MathChain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "MATH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1139,
   "rpc": [
     "https://mathchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1139.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mathchain-asia.maiziqianbao.net/rpc",
     "https://mathchain-us.maiziqianbao.net/rpc"
   ],

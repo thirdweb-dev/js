@@ -1,4 +1,3 @@
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { providers, Contract, utils } from "ethers";
 
 export async function getPrebuiltInfo(
@@ -6,6 +5,11 @@ export async function getPrebuiltInfo(
   provider: providers.Provider,
 ): Promise<{ type: string; version: number } | undefined> {
   try {
+    const IThirdwebContractABI = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json"
+      )
+    ).default;
     const contract = new Contract(address, IThirdwebContractABI, provider);
     const [_type, version] = await Promise.all([
       contract.contractType(),

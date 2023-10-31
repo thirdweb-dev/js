@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://findora.org/",
   "name": "Findora Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "FRA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2152,
   "rpc": [
     "https://findora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2152.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.findora.org"
   ],
   "shortName": "fra",

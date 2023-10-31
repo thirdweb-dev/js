@@ -6,11 +6,16 @@ export default {
     {
       "name": "Ultron Testnet Explorer",
       "url": "https://explorer.ultron-dev.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "ULX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1230,
   "rpc": [
     "https://ultron-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ultron-dev.io"
   ],
   "shortName": "UltronTestnet",

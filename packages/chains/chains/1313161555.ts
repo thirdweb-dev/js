@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://aurora.dev",
   "name": "Aurora Testnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1313161555,
   "rpc": [
     "https://aurora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1313161555.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.aurora.dev/"
   ],
   "shortName": "aurora-testnet",

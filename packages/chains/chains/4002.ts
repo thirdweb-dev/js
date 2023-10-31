@@ -6,7 +6,13 @@ export default {
     {
       "name": "ftmscan",
       "url": "https://testnet.ftmscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRqbK449Fo9sJ3xMpkPbg6uV1weQj4yVV1xNMP9cdPmjf",
+        "width": 73,
+        "height": 73,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -26,14 +32,16 @@ export default {
     "symbol": "FTM",
     "decimals": 18
   },
+  "networkId": 4002,
   "redFlags": [],
   "rpc": [
     "https://fantom-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "wss://fantom-testnet.publicnode.com",
+    "https://4002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.testnet.fantom.network",
     "https://fantom-testnet.publicnode.com",
-    "https://rpc.testnet.fantom.network"
+    "wss://fantom-testnet.publicnode.com"
   ],
   "shortName": "tftm",
   "slug": "fantom-testnet",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

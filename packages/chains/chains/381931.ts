@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.metalblockchain.org/",
   "name": "Metal C-Chain",
   "nativeCurrency": {
@@ -18,12 +17,14 @@ export default {
     "symbol": "METAL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 381931,
   "rpc": [
     "https://metal-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://381931.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metalblockchain.org/ext/bc/C/rpc"
   ],
   "shortName": "metal",
+  "slip44": 9005,
   "slug": "metal-c-chain",
   "testnet": false
 } as const satisfies Chain;

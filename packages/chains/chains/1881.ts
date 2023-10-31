@@ -31,9 +31,10 @@ export default {
     "symbol": "tGTFX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1881,
   "rpc": [
     "https://gitshock-cartenz-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1881.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.cartenz.works"
   ],
   "shortName": "gitshockchain",

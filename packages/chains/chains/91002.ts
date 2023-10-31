@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.eclipse.builders"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmNutSgM7n6aJPPDiofe9Dm1epy1RcYTMvugukLUK2vmPM",
     "width": 500,
@@ -26,12 +25,14 @@ export default {
     "symbol": "tZBC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 91002,
   "rpc": [
     "https://nautilus-trition-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://91002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://triton.api.nautchain.xyz"
   ],
   "shortName": "NAUT",
   "slug": "nautilus-trition-chain",
-  "testnet": true
+  "testnet": true,
+  "title": "Nautilus Trition Testnet"
 } as const satisfies Chain;

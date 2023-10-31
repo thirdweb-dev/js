@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.vecha.in"
   ],
-  "features": [],
   "infoURL": "https://vechain.org",
   "name": "VeChain Testnet",
   "nativeCurrency": {
@@ -20,7 +19,7 @@ export default {
     "symbol": "VET",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 100010,
   "rpc": [],
   "shortName": "vechain-testnet",
   "slug": "vechain-testnet",

@@ -4,7 +4,6 @@ export default {
   "chainId": 13371337,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://pepchain.io",
   "name": "PepChain Churchill",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "TPEP",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 13371337,
   "rpc": [
     "https://pepchain-churchill.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13371337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://churchill-rpc.pepchain.io"
   ],
   "shortName": "tpep",

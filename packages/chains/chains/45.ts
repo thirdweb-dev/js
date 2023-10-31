@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://docs.darwinia.network/pangoro-testnet-70cfec5dc9ca42759959ba3803edaec2"
   ],
-  "features": [],
   "infoURL": "https://darwinia.network/",
   "name": "Darwinia Pangoro Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "ORING",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 45,
   "rpc": [
     "https://darwinia-pangoro-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://45.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangoro-rpc.darwinia.network"
   ],
   "shortName": "pangoro",

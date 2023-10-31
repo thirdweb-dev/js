@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreigpxhu7glccsislhjqpl5fnsfmj2io4cy33blhky642uiuyojossy",
     "width": 400,
@@ -24,9 +23,10 @@ export default {
     "symbol": "TAFECO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 224168,
   "rpc": [
     "https://taf-eco-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://224168.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.tafchain.com/v1"
   ],
   "shortName": "TAFECO",

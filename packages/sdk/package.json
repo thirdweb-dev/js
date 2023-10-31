@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "4.0.7",
+  "version": "4.0.9",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -154,5 +154,8 @@
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "author": "thirdweb eng <eng@thirdweb.com>"
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "engines": {
+    "node": ">=18"
+  }
 }

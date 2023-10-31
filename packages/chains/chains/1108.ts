@@ -6,11 +6,16 @@ export default {
     {
       "name": "BLXq Explorer",
       "url": "https://explorer.blxq.org",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
+        "width": 1000,
+        "height": 1000,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmS9kDKr1rgcz5W55yCQVfFs1vRTCneaLHt1t9cBizpqpH",
     "width": 1000,
@@ -24,9 +29,10 @@ export default {
     "symbol": "BLXQ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1108,
   "rpc": [
     "https://blxq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1108.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.blxq.org"
   ],
   "shortName": "blxq",

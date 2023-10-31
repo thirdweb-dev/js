@@ -13,7 +13,6 @@ export default {
     "https://evm-toolkit.evm.testnet.shimmer.network",
     "https://evm-faucet.testnet.shimmer.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibky2sy6qhi6arktayvologkrgu5kudpgdxfkx4uosbvmstz7v4di",
     "width": 720,
@@ -25,14 +24,16 @@ export default {
   "nativeCurrency": {
     "name": "SMR",
     "symbol": "SMR",
-    "decimals": 18
+    "decimals": 6
   },
-  "redFlags": [],
+  "networkId": 1072,
   "rpc": [
     "https://shimmerevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1072.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://json-rpc.evm.testnet.shimmer.network"
   ],
   "shortName": "shimmerevm-testnet",
   "slug": "shimmerevm-testnet",
-  "testnet": true
+  "testnet": true,
+  "title": "ShimmerEVM Testnet"
 } as const satisfies Chain;

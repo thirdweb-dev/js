@@ -33,9 +33,10 @@ export default {
     "symbol": "DRAC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3912,
   "rpc": [
     "https://drac-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3912.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.dracscan.com/rpc"
   ],
   "shortName": "drac",

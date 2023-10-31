@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://gton.capital",
   "name": "GTON Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,14 @@ export default {
     "symbol": "GCD",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1000,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-1"
+  },
   "rpc": [
     "https://gton.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gton.network/"
   ],
   "shortName": "gton",

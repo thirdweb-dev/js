@@ -6,11 +6,16 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.octa.space",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmVhezQHkqSZ5Tvtsw18giA1yBjV1URSsBQ7HenUh6p6oC",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "OCTA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 800001,
   "rpc": [
     "https://octaspace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://800001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octa.space",
     "wss://rpc.octa.space"
   ],

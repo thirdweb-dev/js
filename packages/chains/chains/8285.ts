@@ -4,7 +4,6 @@ export default {
   "chainId": 8285,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.kortho.io/",
   "name": "KorthoTest",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "KTO",
     "decimals": 11
   },
-  "redFlags": [],
+  "networkId": 8285,
   "rpc": [
     "https://korthotest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8285.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.krotho-test.net"
   ],
   "shortName": "Kortho",

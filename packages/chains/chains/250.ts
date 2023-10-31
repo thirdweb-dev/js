@@ -6,7 +6,24 @@ export default {
     {
       "name": "ftmscan",
       "url": "https://ftmscan.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRqbK449Fo9sJ3xMpkPbg6uV1weQj4yVV1xNMP9cdPmjf",
+        "width": 73,
+        "height": 73,
+        "format": "png"
+      }
+    },
+    {
+      "name": "dexguru",
+      "url": "https://fantom.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
@@ -24,12 +41,14 @@ export default {
     "symbol": "FTM",
     "decimals": 18
   },
+  "networkId": 250,
   "redFlags": [],
   "rpc": [
     "https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "wss://fantom.publicnode.com",
+    "https://250.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ftm.tools",
     "https://fantom.publicnode.com",
-    "https://rpc.ftm.tools"
+    "wss://fantom.publicnode.com"
   ],
   "shortName": "ftm",
   "slug": "fantom",

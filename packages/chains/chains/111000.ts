@@ -6,11 +6,16 @@ export default {
     {
       "name": "Siberium Testnet Explorer - blockscout",
       "url": "https://explorer.test.siberium.net",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
     "width": 512,
@@ -24,9 +29,10 @@ export default {
     "symbol": "SIBR",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 111000,
   "rpc": [
     "https://siberium-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://111000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.siberium.net"
   ],
   "shortName": "testsbr",

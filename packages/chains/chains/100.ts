@@ -6,12 +6,29 @@ export default {
     {
       "name": "blockscout",
       "url": "https://gnosis.blockscout.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
     },
     {
       "name": "gnosisscan",
       "url": "https://gnosisscan.io",
       "standard": "EIP3091"
+    },
+    {
+      "name": "dexguru",
+      "url": "https://gnosis.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [
@@ -19,7 +36,6 @@ export default {
     "https://stakely.io/faucet/gnosis-chain-xdai",
     "https://faucet.prussia.dev/xdai"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeidk4swpgdyqmpz6shd5onvpaujvwiwthrhypufnwr6xh3dausz2dm",
     "width": 1800,
@@ -33,9 +49,10 @@ export default {
     "symbol": "XDAI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 100,
   "rpc": [
     "https://gnosis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://100.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gnosischain.com",
     "https://rpc.gnosis.gateway.fm",
     "https://rpc.ankr.com/gnosis",
@@ -50,6 +67,7 @@ export default {
     "wss://gnosis.publicnode.com"
   ],
   "shortName": "gno",
+  "slip44": 700,
   "slug": "gnosis",
   "testnet": false
 } as const satisfies Chain;

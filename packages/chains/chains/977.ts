@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.nepalblockchain.network"
   ],
-  "features": [],
   "infoURL": "https://nepalblockchain.network",
   "name": "Nepal Blockchain Network",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "YETI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 977,
   "rpc": [
     "https://nepal-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://977.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.nepalblockchain.dev",
     "https://api.nepalblockchain.network"
   ],

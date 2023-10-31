@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://nova-faucet.velo.org"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYqvnW2jwPEKUv8BdaV4sbL8Audcwosat6SPn4GqYtKxc",
     "width": 225,
@@ -26,9 +25,10 @@ export default {
     "symbol": "NOVA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 56789,
   "rpc": [
     "https://velo-labs.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://56789.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nova.velo.org"
   ],
   "shortName": "VELO",

@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.bearnetwork.net"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQqhH28QpUrreoRw5Gj8YShzdHxxVGMjfVrx3TqJNLSLv",
     "width": 1067,
@@ -26,9 +25,10 @@ export default {
     "symbol": "tBRNKC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 751230,
   "rpc": [
     "https://bear-network-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://751230.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://brnkc-test.bearnetwork.net"
   ],
   "shortName": "BRNKCTEST",

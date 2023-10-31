@@ -6,18 +6,29 @@ export default {
     {
       "name": "Taycan Explorer(Blockscout)",
       "url": "https://evmscan-test.hupayx.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+        "width": 1000,
+        "height": 1206,
+        "format": "png"
+      }
     },
     {
       "name": "Taycan Cosmos Explorer",
       "url": "https://cosmoscan-test.hupayx.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+        "width": 1000,
+        "height": 1206,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://ttaycan-faucet.hupayx.io/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
     "width": 1000,
@@ -31,9 +42,10 @@ export default {
     "symbol": "tSFL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2023,
   "rpc": [
     "https://taycan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-taycan.hupayx.io"
   ],
   "shortName": "taycan-testnet",

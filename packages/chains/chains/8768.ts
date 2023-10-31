@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://faucet.tmychain.org/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmcd19ksUvNMD1XQFSC55jJhDPoF2zUzzV7woteFiugwBH",
     "width": 1024,
@@ -20,9 +19,10 @@ export default {
     "symbol": "TMY",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 8768,
   "rpc": [
     "https://tmy-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8768.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.tmyblockchain.org/rpc"
   ],
   "shortName": "tmy",
