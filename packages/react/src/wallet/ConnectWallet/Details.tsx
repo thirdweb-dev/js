@@ -505,7 +505,7 @@ export const ConnectedWalletDetails: React.FC<{
               </Container>
               {locale.backupWallet}{" "}
             </MenuButton>
-            <Spacer y="sm" />
+            <Spacer y="md" />
             <Text size="xs" center multiline color="danger" balance>
               {locale.guestWalletWarning}
             </Text>
@@ -597,7 +597,7 @@ const dropdownContentFade = keyframes`
 const DropDownContent = /* @__PURE__ */ (() => styled(DropdownMenu.Content)<{
   theme?: Theme;
 }>`
-  width: 320px;
+  width: 360px;
   box-sizing: border-box;
   max-width: 100%;
   border-radius: ${radius.lg};

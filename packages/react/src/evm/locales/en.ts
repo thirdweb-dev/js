@@ -188,7 +188,6 @@ export function enDefault() {
           failedToSendCode: "Failed to send verification code",
           sendingCode: "Sending verification code",
           resendCode: "Resend verification code",
-          encoreRecoveryCode: "Enter your recovery code",
         },
       },
       embeddedWallet: {
