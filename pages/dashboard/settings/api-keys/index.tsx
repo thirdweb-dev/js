@@ -1,16 +1,15 @@
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { ApiKeyTable } from "components/settings/ApiKeyTable";
-import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
-import { CreateApiKeyButton } from "components/settings/ApiKeyTable/CreateButton";
+import { ApiKeys } from "components/settings/ApiKeys";
+import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
+import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
@@ -39,7 +38,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
   }
 
   return (
-    <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={8}>
       <Flex direction="column" gap={2}>
         <Flex
           justifyContent="space-between"
@@ -49,9 +48,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           <Heading size="title.lg" as="h1">
             API Keys
           </Heading>
-          <CreateApiKeyButton
-            enabledServices={SERVICES.map((srv) => srv.name)}
-          />
+          <CreateApiKeyButton />
         </Flex>
 
         <Text>
@@ -72,7 +69,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
         <SmartWalletsBillingAlert dismissable />
       )}
 
-      <ApiKeyTable
+      <ApiKeys
         keys={apiKeys || []}
         isLoading={keysQuery.isLoading}
         isFetched={keysQuery.isFetched}

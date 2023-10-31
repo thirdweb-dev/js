@@ -1,4 +1,11 @@
-import { DarkMode, Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
+import {
+  DarkMode,
+  Flex,
+  GridItem,
+  SimpleGrid,
+  VStack,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
@@ -56,6 +63,8 @@ const Dashboard: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const connectionStatus = useConnectionStatus();
+  const { colorMode } = useColorMode();
+
   const showFTUX =
     connectionStatus !== "connected" && connectionStatus !== "connecting";
   const isLoading = connectionStatus === "unknown";
@@ -63,13 +72,9 @@ const Dashboard: ThirdwebNextPage = (
   return (
     <Flex flexDir="column" gap={4}>
       {/* Any announcements: <AnnouncementCard /> */}
-      <SimpleGrid
-        columns={{ base: 1, lg: 4 }}
-        gap={16}
-        mt={{ base: 2, md: 10 }}
-      >
+      <SimpleGrid columns={{ base: 1, lg: 4 }} gap={16}>
         <GridItem colSpan={{ lg: 3 }}>
-          <Heading mb={8}>Get started quickly</Heading>
+          <Heading mb={10}>Get started quickly</Heading>
           {!isLoading && (
             <ClientOnly fadeInDuration={600} ssr={null}>
               {showFTUX ? (
@@ -97,6 +102,7 @@ const Dashboard: ThirdwebNextPage = (
                             image={image}
                             href={href}
                             TRACKING_CATEGORY={TRACKING_CATEGORY}
+                            colorMode={colorMode}
                           />
                         ),
                       )}

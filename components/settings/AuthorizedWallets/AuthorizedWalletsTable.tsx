@@ -149,7 +149,7 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
       )}
 
       <TWTable
-        title="Authorized Wallets"
+        title="Authorized Devices"
         columns={columns}
         data={authorizedWallets}
         isLoading={isLoading}

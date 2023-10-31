@@ -1,11 +1,13 @@
 import { Skeleton } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { Heading, Link } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 type NavLinkProps = {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
   href: string;
+  subActivePath?: boolean;
   active?: boolean | undefined;
   loading?: boolean;
 };
@@ -15,11 +17,20 @@ export const NavLink: ComponentWithChildren<NavLinkProps> = ({
   onClick,
   children,
   active,
+  subActivePath = false,
   loading = false,
 }) => {
   const router = useRouter();
 
-  const isActive = active !== undefined ? active : router.pathname === href;
+  const isActive = useMemo(() => {
+    if (active !== undefined) {
+      return active;
+    }
+
+    return !subActivePath
+      ? router.pathname === href
+      : router.pathname.includes(href);
+  }, [active, router.pathname, href, subActivePath]);
 
   return (
     <Link

@@ -132,8 +132,8 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   const showSteps = ["noCustomer", "noPayment"].includes(account.status);
 
   return (
-    <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }} maxW="3xl">
-      <Card>
+    <Flex flexDir="column" gap={8} maxW="3xl">
+      <Card p={6}>
         <BillingPlan
           account={account}
           direction="column"

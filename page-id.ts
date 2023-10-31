@@ -170,6 +170,9 @@ export enum PageId {
   // thirdweb.com/dashboard/settings/api-keys
   SettingsApiKeys = "settings-api-keys",
 
+  // thirdweb.com/dashboard/settings/api-keys/:id
+  SettingsApiKey = "settings-api-key",
+
   // thirdweb.com/dashboard/settings/devices
   SettingsDevices = "settings-devices",
 

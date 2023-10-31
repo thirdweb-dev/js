@@ -2,7 +2,10 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cSpell.words": [
+    "chakra",
+    "dismissable",
     "hookform",
+    "JWKS",
     "onboarded",
     "Posthog",
     "rdweb",

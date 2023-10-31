@@ -23,7 +23,7 @@ export const DashboardRPC: ThirdwebNextPage = () => {
   const configuredChains = useSupportedChains();
 
   return (
-    <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={8}>
       <Flex
         justifyContent="space-between"
         direction={{ base: "column", md: "row" }}

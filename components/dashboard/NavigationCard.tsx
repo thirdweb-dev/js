@@ -1,10 +1,4 @@
-import {
-  LinkBox,
-  Flex,
-  LinkOverlay,
-  useColorMode,
-  Box,
-} from "@chakra-ui/react";
+import { LinkBox, Flex, LinkOverlay, Box, ColorMode } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { BsArrowRight } from "react-icons/bs";
@@ -19,6 +13,7 @@ interface NavigationCardProps {
   image: StaticImport;
   href: string;
   TRACKING_CATEGORY: string;
+  colorMode?: ColorMode;
 }
 
 export const NavigationCard: React.FC<NavigationCardProps> = ({
@@ -30,9 +25,8 @@ export const NavigationCard: React.FC<NavigationCardProps> = ({
   image,
   href,
   TRACKING_CATEGORY,
+  colorMode,
 }) => {
-  const { colorMode } = useColorMode();
-
   return (
     <LinkBox role="group" overflow="hidden" position="relative">
       <Card
@@ -46,6 +40,7 @@ export const NavigationCard: React.FC<NavigationCardProps> = ({
         flexDir="column"
         padding={0}
         h="full"
+        borderWidth={colorMode === "light" ? 0 : 1}
       >
         <ChakraNextImage
           pointerEvents="none"

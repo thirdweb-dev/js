@@ -63,9 +63,6 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
       label: "attempt",
     });
 
-    onSave();
-    setSaving(false);
-
     mutation.mutate(values, {
       onSuccess: () => {
         onSave();

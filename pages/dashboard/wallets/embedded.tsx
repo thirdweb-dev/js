@@ -17,7 +17,7 @@ import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { EmbeddedWalletsTable } from "components/embedded-wallets";
 import { ActiveUsersCard } from "components/embedded-wallets/ActiveUsersCard";
-import { CreateApiKeyButton } from "components/settings/ApiKeyTable/CreateButton";
+import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
 import { WalletsSidebar } from "core-ui/sidebar/wallets";
 import Image from "next/image";
 import { PageId } from "page-id";
@@ -80,7 +80,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
   }, [apiKeys, selectedKey]);
 
   return (
-    <Flex flexDir="column" gap={10} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={10}>
       <Flex flexDir="column" gap={4}>
         <Heading size="title.lg" as="h1">
           Embedded Wallets

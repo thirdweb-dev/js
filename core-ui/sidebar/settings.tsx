@@ -2,11 +2,22 @@ import { SidebarNav } from "./nav";
 import { Route } from "./types";
 
 type SettingsSidebarProps = {
-  activePage: "apiKeys" | "devices" | "usage" | "billing" | "notifications";
+  activePage:
+    | "apiKeys"
+    | "apiKey"
+    | "devices"
+    | "usage"
+    | "billing"
+    | "notifications";
 };
 
 const links: Route[] = [
-  { path: "/dashboard/settings/api-keys", title: "API Keys", name: "apiKeys" },
+  {
+    path: "/dashboard/settings/api-keys",
+    subActivePath: true,
+    title: "API Keys",
+    name: "apiKeys",
+  },
   { path: "/dashboard/settings/devices", title: "Devices", name: "devices" },
   {
     path: "/dashboard/settings/billing",

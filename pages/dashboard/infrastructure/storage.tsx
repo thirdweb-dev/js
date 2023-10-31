@@ -45,7 +45,7 @@ const DashboardStorage: ThirdwebNextPage = () => {
     "Upload, pin, and host NFT metadata, images, or any type of file on IPFS—using thirdweb's IPFS pinning service. Store files on IPFS for free.";
 
   return (
-    <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8} mt={{ base: 2, md: 6 }}>
+    <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8}>
       <NextSeo
         title={title}
         description={description}

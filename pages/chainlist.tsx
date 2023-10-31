@@ -73,7 +73,7 @@ export const ChainsLanding: ThirdwebNextPage = (
     "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.";
 
   return (
-    <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={8}>
       <NextSeo
         title={title}
         description={description}

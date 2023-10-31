@@ -31,7 +31,7 @@ const SettingsDevicesPage: ThirdwebNextPage = () => {
   }
 
   return (
-    <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={8}>
       <Flex direction="column" gap={2}>
         <Flex
           justifyContent="space-between"

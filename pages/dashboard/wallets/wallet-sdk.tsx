@@ -772,7 +772,7 @@ const DashboardWalletsWalletSDK: ThirdwebNextPage = () => {
   };
 
   return (
-    <Flex flexDir="column" gap={16} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={16}>
       <Flex direction="column" gap={4}>
         <Heading size="title.lg" as="h1">
           Wallet SDK

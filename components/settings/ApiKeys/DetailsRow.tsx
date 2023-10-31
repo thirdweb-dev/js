@@ -2,14 +2,14 @@ import { HStack, Icon, Tooltip, VStack } from "@chakra-ui/react";
 import { FiHelpCircle } from "react-icons/fi";
 import { Card, Heading, Text } from "tw-components";
 
-interface ApiKeyDetailsRowProps {
+interface DetailsRowProps {
   title: string;
   content: string | JSX.Element | undefined;
   tooltip?: string;
   description?: string;
 }
 
-export const ApiKeyDetailsRow: React.FC<ApiKeyDetailsRowProps> = ({
+export const DetailsRow: React.FC<DetailsRowProps> = ({
   title,
   content,
   tooltip,
@@ -29,7 +29,7 @@ export const ApiKeyDetailsRow: React.FC<ApiKeyDetailsRowProps> = ({
   );
 
   return (
-    <VStack gap={2} alignItems="flex-start" w="full">
+    <VStack alignItems="flex-start" gap={2}>
       {tooltip ? (
         <Tooltip
           label={

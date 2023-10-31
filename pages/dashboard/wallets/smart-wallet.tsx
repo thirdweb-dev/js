@@ -12,7 +12,7 @@ import React, { useMemo } from "react";
 import { ChakraNextImage } from "components/Image";
 import invariant from "tiny-invariant";
 import { ContractCard } from "components/explore/contract-card";
-import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
+import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { FactoryContracts } from "components/contract-components/tables/factory-contracts";
 import { NextSeo } from "next-seo";
 import { getAbsoluteUrl } from "lib/vercel-utils";
@@ -90,7 +90,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
   };
 
   return (
-    <Flex flexDir="column" gap={10} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={10}>
       <NextSeo
         title={seo.title}
         description={seo.desc}

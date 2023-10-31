@@ -15,7 +15,7 @@ const TRACKING_CATEGORY = "dashboard-contract-build";
 
 const DashboardContractsBuild: ThirdwebNextPage = () => {
   return (
-    <Flex flexDir="column" gap={4} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={4}>
       <Heading as="h1" size="title.lg">
         Build
       </Heading>

@@ -229,7 +229,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
   };
 
   return (
-    <Flex flexDir="column" gap={10} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={10}>
       <Flex flexDir="column" gap={2}>
         <Heading size="title.lg" as="h1">
           Connect Analytics

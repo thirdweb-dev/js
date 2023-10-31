@@ -33,7 +33,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   const openState = useDisclosure();
 
   const activeLink = useMemo(
-    () => links.find((tab) => tab.name === activePage),
+    () =>
+      links.find((tab) =>
+        Array.isArray(tab.name)
+          ? tab.name.find((t) => t === activePage)
+          : tab.name === activePage,
+      ),
     [activePage, links],
   ) as Route;
 
@@ -61,11 +66,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             justify="space-between"
             p={3}
           >
-            {navLink || (
+            {navLink ? (
+              navLink
+            ) : activeLink ? (
               <NavLink onClick={handleMenuToggle} href={activeLink.path}>
                 {activeLink.title}
               </NavLink>
-            )}
+            ) : null}
             <IconButton
               onClick={handleMenuToggle}
               aria-label="toggle menu"
@@ -95,8 +102,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                   </Text>
                 </Flex>
                 {!navLink
-                  ? links.map(({ path, title: linkTitle }) => (
-                      <NavLink key={path} href={path}>
+                  ? links.map(({ path, subActivePath, title: linkTitle }) => (
+                      <NavLink
+                        key={path}
+                        href={path}
+                        subActivePath={subActivePath}
+                      >
                         {linkTitle}
                       </NavLink>
                     ))

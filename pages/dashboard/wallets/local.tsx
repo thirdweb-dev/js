@@ -15,7 +15,7 @@ const DashboardWalletsLocal: ThirdwebNextPage = () => {
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 
   return (
-    <Flex flexDir="column" gap={10} mt={{ base: 2, md: 6 }}>
+    <Flex flexDir="column" gap={10}>
       <Flex flexDir="column" gap={4}>
         <SimpleGrid columns={{ base: 1, lg: 2 }} gap={12}>
           <Flex flexDir="column" gap={8}>

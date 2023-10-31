@@ -1,17 +1,16 @@
 import { CopyApiKeyButton } from "./CopyButton";
-import { ApiKeyDrawer } from "./KeyDrawer";
 import { HIDDEN_SERVICES } from "./validations";
 import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { HStack, useDisclosure } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useRouter } from "next/router";
 import { Badge, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-interface ApiKeyTableProps {
+interface ApiKeysProps {
   keys: ApiKey[];
   isLoading: boolean;
   isFetched: boolean;
@@ -19,13 +18,12 @@ interface ApiKeyTableProps {
 
 const columnHelper = createColumnHelper<ApiKey>();
 
-export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
+export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
   keys,
   isLoading,
   isFetched,
 }) => {
-  const [activeKey, setActiveKey] = useState<ApiKey>();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
   const columns = [
     columnHelper.accessor("name", {
@@ -59,7 +57,7 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
         const value = cell.getValue();
 
         if (!value) {
-          return;
+          return "Never";
         }
 
         const createdDate = format(new Date(value), "MMM dd, yyyy");
@@ -76,14 +74,18 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
         }
 
         return (
-          <HStack alignItems="flex-start" w="full">
+          <Flex
+            flexDir={{ base: "column", xl: "row" }}
+            alignItems="flex-start"
+            gap={{ base: 2, xl: 1 }}
+          >
             {value.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
               return !HIDDEN_SERVICES.includes(service?.name) ? (
                 <Badge
                   key={srv.name}
                   textTransform="capitalize"
-                  colorScheme="blue"
+                  color="blue.500"
                   px={2}
                   rounded="md"
                 >
@@ -91,41 +93,20 @@ export const ApiKeyTable: ComponentWithChildren<ApiKeyTableProps> = ({
                 </Badge>
               ) : null;
             })}
-          </HStack>
+          </Flex>
         );
       },
     }),
   ];
 
-  const handleOpen = (apiKey: ApiKey) => {
-    setActiveKey(apiKey);
-    onOpen();
-  };
-
-  const handleClose = () => {
-    onClose();
-    setActiveKey(undefined);
-  };
-
   return (
-    <>
-      {activeKey && (
-        <ApiKeyDrawer
-          open={isOpen}
-          onClose={handleClose}
-          apiKey={activeKey}
-          onSubmit={setActiveKey}
-        />
-      )}
-
-      <TWTable
-        title="api key"
-        columns={columns}
-        data={keys}
-        isLoading={isLoading}
-        isFetched={isFetched}
-        onRowClick={handleOpen}
-      />
-    </>
+    <TWTable
+      title="api key"
+      columns={columns}
+      data={keys}
+      isLoading={isLoading}
+      isFetched={isFetched}
+      onRowClick={({ id }) => router.push(`/dashboard/settings/api-keys/${id}`)}
+    />
   );
 };
