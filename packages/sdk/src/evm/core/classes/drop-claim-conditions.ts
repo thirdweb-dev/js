@@ -10,7 +10,6 @@ import type {
   IERC20Metadata,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -503,6 +502,9 @@ export class DropClaimConditions<
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
+        const ERC20Abi = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+        ).default;
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
