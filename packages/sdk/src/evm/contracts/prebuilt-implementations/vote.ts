@@ -1,5 +1,4 @@
 import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
@@ -301,6 +300,9 @@ export class Vote implements UpdateableNetwork {
   public async balanceOfToken(
     tokenAddress: AddressOrEns,
   ): Promise<CurrencyValue> {
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new Contract(
       await resolveAddress(tokenAddress),
       ERC20Abi,

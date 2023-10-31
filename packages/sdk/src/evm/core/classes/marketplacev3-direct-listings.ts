@@ -6,9 +6,6 @@ import type {
   IERC721,
   MarketplaceV3,
 } from "@thirdweb-dev/contracts-js";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import {
   NewListingEvent,
   UpdatedListingEvent,
@@ -893,6 +890,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     }
 
     const provider = this.contractWrapper.getProvider();
+    const ERC165Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+    ).default;
     const erc165 = new Contract(
       listing.assetContractAddress,
       ERC165Abi,
@@ -901,6 +901,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
     const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
     if (isERC721) {
+      const ERC721Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC721.json")
+      ).default;
       const asset = new Contract(
         listing.assetContractAddress,
         ERC721Abi,
@@ -922,6 +925,9 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
           : `Seller is not the owner of Token '${listing.tokenId}' from contract '${listing.assetContractAddress} anymore'`,
       };
     } else if (isERC1155) {
+      const ERC1155Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155.json")
+      ).default;
       const asset = new Contract(
         listing.assetContractAddress,
         ERC1155Abi,

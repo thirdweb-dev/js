@@ -1,6 +1,5 @@
 import { getContractTypeForRemoteName } from "../../contracts";
 import { ContractType } from "../../contracts";
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { Contract, utils, type providers } from "ethers";
 
 type ResolveContractTypeParams = {
@@ -12,6 +11,11 @@ export async function resolveContractType(
   params: ResolveContractTypeParams,
 ): Promise<ContractType> {
   try {
+    const IThirdwebContractABI = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json"
+      )
+    ).default;
     const contract = new Contract(
       params.address,
       IThirdwebContractABI,
