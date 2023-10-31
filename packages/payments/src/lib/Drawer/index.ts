@@ -1,6 +1,7 @@
 import type { StyleObject } from "../../constants/style";
 import type { ModalStyles } from "../../interfaces/Modal";
 import { getDefaultModalStyles } from "./styles";
+const packageJson = require("../package.json");
 
 const MAIN_CLASSNAME = "paper--drawer-main";
 const OVERLAY_CLASSNAME = "paper--drawer-overlay";
@@ -45,6 +46,10 @@ export class Drawer {
 
     this.iframe = document.createElement("iframe");
     this.iframe.allow = "camera; microphone; payment";
+    this.iframe.setAttribute(
+      "data-thirdweb-sdk-version",
+      `${packageJson.name}@${packageJson.version}`,
+    );
 
     this.assignStyles(this.main, this.styles.main);
     this.assignStyles(this.overlay, this.styles.overlay);

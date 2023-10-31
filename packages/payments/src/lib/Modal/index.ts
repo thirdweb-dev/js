@@ -1,6 +1,7 @@
 import type { StyleObject } from "../../constants/style";
 import type { ModalStyles } from "../../interfaces/Modal";
 import { getDefaultModalStyles, modalKeyframeAnimations } from "./styles";
+const packageJson = require("../package.json");
 
 export const MODAL_ID = "paper-js-sdk-modal";
 
@@ -35,6 +36,10 @@ export class Modal {
     this.iframe = document.createElement("iframe");
     this.iframe.id = `${MODAL_ID}-iframe`;
     this.iframe.allow = "camera; microphone; payment";
+    this.iframe.setAttribute(
+      "data-thirdweb-sdk-version",
+      `${packageJson.name}@${packageJson.version}`,
+    );
 
     this.style = document.createElement("style");
     this.style.innerHTML = modalKeyframeAnimations;
