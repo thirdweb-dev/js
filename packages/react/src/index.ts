@@ -28,4 +28,5 @@ export * from "./evm";
 
 // locales
 export { en } from "./evm/locales/en";
-export { jp } from "./evm/locales/jp";
+export { ja } from "./evm/locales/ja";
+export { es } from "./evm/locales/es";

@@ -20,7 +20,7 @@ function extensionAndQRScanScreens(walletName: string) {
   };
 }
 
-export function jpDefault() {
+export function jaDefault() {
   return {
     connectWallet: {
       signIn: "サインイン",
@@ -293,8 +293,8 @@ export function jpDefault() {
   };
 }
 
-export function jp(overrides?: DeepPartial<ThirdwebLocale>) {
-  const defaultObj = jpDefault();
+export function ja(overrides?: DeepPartial<ThirdwebLocale>) {
+  const defaultObj = jaDefault();
   if (!overrides) {
     return defaultObj;
   }
