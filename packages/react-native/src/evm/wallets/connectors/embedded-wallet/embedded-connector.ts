@@ -47,11 +47,18 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   async connect(options?: EmbeddedWalletConnectionArgs) {
-    if (options?.chainId) {
-      this.switchChain(options.chainId);
+    try {
+      await this.getSigner();
+    } catch (error) {
+      throw new Error(`Error fetching the signer: ${error}`);
     }
 
     this.setupListeners();
+
+    if (options?.chainId) {
+      await this.switchChain(options.chainId);
+    }
+
     return this.getAddress();
   }
 
