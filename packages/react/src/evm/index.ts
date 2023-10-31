@@ -68,4 +68,5 @@ export {
   SignerWallet,
   InjectedWallet,
   setWalletAnalyticsEnabled,
+  sendVerificationEmail,
 } from "@thirdweb-dev/wallets";
