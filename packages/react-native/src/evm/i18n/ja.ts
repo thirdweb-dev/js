@@ -80,6 +80,11 @@ export const _ja = {
     forgot_password: "パスワードを忘れた",
     enter_account_recovery_code: "アカウント回復コードを入力",
     backup_your_account: "アカウントのバックアップ",
+    create_password: "パスワードを作成する",
+    enter_password: "パスワードを入力",
+    set_password_message: "アカウントの保護のためパスワードを設定してください",
+    enter_password_for_email: "メールのためのパスワードを入力",
+    make_sure_you_save_it: "必ず保存してください",
   },
   wallet_connect: {
     no_results_found: "結果が見つかりません",
