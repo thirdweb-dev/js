@@ -1,4 +1,4 @@
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
+import { Ethereum, getValidChainRPCs } from "@thirdweb-dev/chains";
 import type { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
 import {
   AuthParams,
@@ -122,4 +122,29 @@ export class EmbeddedWallet extends AbstractClientWallet<
     const connector = (await this.getConnector()) as EmbeddedWalletConnector;
     return connector.authenticate(params);
   }
+}
+
+/**
+ * Sends a verification email to the provided email address.
+ *
+ * @param email - The email address to which the verification email will be sent.
+ * @param clientId - Your thirdweb client ID
+ * @returns Information on the user's status and whether they are a new user.
+ *
+ * @example
+ * ```typescript
+ * sendVerificationEmail({ email: 'test@example.com', clientId: 'yourClientId' })
+ *   .then(() => console.log('Verification email sent successfully.'))
+ *   .catch(error => console.error('Failed to send verification email:', error));
+ * ```
+ */
+export async function sendVerificationEmail(options: {
+  email: string;
+  clientId: string;
+}) {
+  const wallet = new EmbeddedWallet({
+    chain: Ethereum,
+    clientId: options.clientId,
+  });
+  return wallet.sendVerificationEmail({ email: options.email });
 }

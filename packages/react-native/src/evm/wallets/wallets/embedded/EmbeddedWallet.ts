@@ -11,6 +11,9 @@ import {
 } from "../../connectors/embedded-wallet/types";
 import { EMAIL_WALLET_ICON } from "../../../assets/svgs";
 
+// export standalone sendVerificationEmail
+export { sendVerificationEmail } from "../../connectors/embedded-wallet/embedded/auth";
+
 export type EmbeddedWalletOptions =
   WalletOptions<EmbeddedWalletAdditionalOptions>;
 

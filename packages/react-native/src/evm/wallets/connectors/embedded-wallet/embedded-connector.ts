@@ -12,7 +12,7 @@ import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import {
   customJwt,
-  sendEmailOTP,
+  sendVerificationEmail,
   socialLogin,
   validateEmailOTP,
 } from "./embedded/auth";
@@ -147,7 +147,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }): Promise<SendEmailOtpReturnType> {
     this.email = options.email;
     saveConnectedEmail(options.email);
-    return sendEmailOTP({
+    return sendVerificationEmail({
       email: options.email,
       clientId: this.options.clientId,
     });
