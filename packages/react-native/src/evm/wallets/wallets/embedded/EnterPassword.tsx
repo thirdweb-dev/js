@@ -46,13 +46,7 @@ export const EnterPassword = ({
     }
 
     setCheckingPass(true);
-    if (isCreatePassword) {
-      // Call create password
-      onPassword(password);
-    } else {
-      // Call enter password
-      onPassword(password);
-    }
+    onPassword(password);
   };
 
   const onForgotPress = () => {

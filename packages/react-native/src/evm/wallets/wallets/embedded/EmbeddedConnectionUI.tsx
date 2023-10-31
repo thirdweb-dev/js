@@ -146,7 +146,8 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
         const emailWallet = selectionData.emailWallet as EmbeddedWallet;
 
         const needsRecoveryCode =
-          selectionData.recoveryShareManagement === "USER_MANAGED" &&
+          selectionData.recoveryShareManagement ===
+            RecoveryShareManagement.USER_MANAGED &&
           (selectionData.isNewUser || selectionData.isNewDevice);
 
         if (needsRecoveryCode) {
@@ -165,11 +166,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
               });
               postConnect(response);
             } catch (e: any) {
-              // if (e instanceof Error && e.message.includes("encryption key")) {
-              //   setScreen("create-password");
-              // } else {
               onError(e);
-              // }
             }
           } else {
             try {
@@ -187,7 +184,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
             }
           }
         } else {
-          // AWS_MANAGED
+          // CLOUD_MANAGED
           connect();
         }
       }, 0);
@@ -387,31 +384,6 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
           </Box>
         ))}
       </Box>
-      {/* {selectionData.recoveryShareManagement === "USER_MANAGED" ? (
-        <Box>
-          <PasswordInput onChangeText={setPassword} />
-          <BaseButton
-            mt="md"
-            paddingVertical="md"
-            borderRadius="lg"
-            borderWidth={1}
-            borderColor="border"
-            backgroundColor="accentButtonColor"
-            onPress={onContinuePress}
-          >
-            {checkingOtp ? (
-              <ActivityIndicator
-                size={"small"}
-                color={theme.colors.accentButtonTextColor}
-              />
-            ) : (
-              <Text variant="bodySmallBold" color="accentButtonTextColor">
-                {l.common.continue}
-              </Text>
-            )}
-          </BaseButton>
-        </Box>
-      ) : null} */}
       {errorMessage ? (
         <Text variant="error" numberOfLines={1}>
           {errorMessage}
