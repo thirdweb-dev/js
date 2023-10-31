@@ -2,7 +2,6 @@ import type {
   IERC20,
   Split as SplitContract,
 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
@@ -247,6 +246,9 @@ export class Split implements UpdateableNetwork {
       resolveAddress(tokenAddress),
       resolveAddress(walletAddress),
     ]);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
     const erc20 = new Contract(
       resolvedToken,
       ERC20Abi,

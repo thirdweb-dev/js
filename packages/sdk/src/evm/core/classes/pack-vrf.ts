@@ -1,5 +1,4 @@
 import type { ERC20Base, PackVRFDirect } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import {
   ITokenBundle,
@@ -8,7 +7,7 @@ import {
   PackOpenedEventObject,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, utils, type BigNumberish } from "ethers";
+import { BigNumber, utils, type BigNumberish, ContractInterface } from "ethers";
 import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -309,7 +308,12 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async getLinkBalance(): Promise<CurrencyValue> {
-    return this.getLinkContract().balanceOf(this.contractWrapper.address);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
+    return this.getLinkContract(ERC20Abi).balanceOf(
+      this.contractWrapper.address,
+    );
   }
 
   /**
@@ -325,10 +329,16 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
    * @twfeature PackVRF
    */
   public async transferLink(amount: Amount) {
-    await this.getLinkContract().transfer(this.contractWrapper.address, amount);
+    const ERC20Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+    ).default;
+    await this.getLinkContract(ERC20Abi).transfer(
+      this.contractWrapper.address,
+      amount,
+    );
   }
 
-  private getLinkContract(): Erc20 {
+  private getLinkContract(ERC20Abi: ContractInterface): Erc20 {
     const linkAddress = LINK_TOKEN_ADDRESS[this.chainId];
     if (!linkAddress) {
       throw new Error(
