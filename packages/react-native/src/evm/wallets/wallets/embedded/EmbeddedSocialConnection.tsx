@@ -46,7 +46,7 @@ export const EmbeddedSocialConnection: React.FC<
         }
       } catch (error) {
         console.error("Error logging in with google: ", error);
-        setErrorMessage("Error login in. Please try again later.");
+        setErrorMessage(`Error login in. ${error}`);
       }
     }, 0);
   }, [
@@ -82,9 +82,7 @@ export const EmbeddedSocialConnection: React.FC<
         {!errorMessage ? (
           <ActivityIndicator size="large" />
         ) : (
-          <Text variant="error" numberOfLines={1}>
-            {errorMessage}
-          </Text>
+          <Text variant="error">{errorMessage}</Text>
         )}
       </Box>
     </Box>

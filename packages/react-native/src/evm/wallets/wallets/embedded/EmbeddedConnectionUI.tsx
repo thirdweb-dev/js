@@ -151,6 +151,7 @@ export const EmbeddedConnectionUI: React.FC<ConnectUIProps<EmbeddedWallet>> = ({
 
         if (needsRecoveryCode) {
           if (selectionData.isNewUser) {
+            console.log("setPassword", setPassword);
             try {
               const authResult = await emailWallet.authenticate({
                 strategy: "email_verification",
