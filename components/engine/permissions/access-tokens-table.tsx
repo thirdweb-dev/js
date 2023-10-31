@@ -123,7 +123,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
           <ModalCloseButton />
           <ModalBody>
             <Text>
-              Are you sure you want to revoke access token with token mask{" "}
+              Are you sure you want to revoke the access token{" "}
               <Text fontFamily="mono" display="inline-flex">
                 {accessTokenToRevoke?.tokenMask}
               </Text>

@@ -366,8 +366,8 @@ const chakraTheme: Theme = extendTheme({
       inputBgHover: { default: "gray.100", _dark: "whiteAlpha.100" },
       inputBorder: { default: "gray.200", _dark: "#272B30" },
       inputBorderHover: { default: "gray.300", _dark: "whiteAlpha.50" },
-      // other
 
+      // other
       badgeBg: { default: "blackAlpha.50", _dark: "whiteAlpha.50" },
 
       // backgroundBody: "accent.100",

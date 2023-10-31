@@ -1,6 +1,7 @@
 import {
   Link as ChakraLink,
   LinkProps as ChakraLinkProps,
+  LinkOverlay,
   forwardRef,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -77,3 +78,21 @@ export const TrackedLink = React.forwardRef<
 });
 
 TrackedLink.displayName = "TrackedLink";
+
+/**
+ * A link component extends the `LinkOverlay` component and adds tracking.
+ */
+export const TrackedLinkOverlay = React.forwardRef<
+  HTMLAnchorElement,
+  TrackedLinkProps
+>(({ category, label, trackingProps, ...props }, ref) => {
+  const trackEvent = useTrack();
+
+  const onClick = useCallback(() => {
+    trackEvent({ category, action: "click", label, ...trackingProps });
+  }, [trackEvent, category, label, trackingProps]);
+
+  return <LinkOverlay ref={ref} onClick={onClick} {...props} />;
+});
+
+TrackedLinkOverlay.displayName = "TrackedLinkOverlay";

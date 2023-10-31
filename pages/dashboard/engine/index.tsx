@@ -60,17 +60,23 @@ const EngineManage: ThirdwebNextPage = () => {
             <Center>
               <Flex py={4} direction="row" gap={4} align="center">
                 <Spinner size="sm" />
-                <Text>Loading Instance</Text>
+                <Text>Connecting to your Engine instance</Text>
               </Flex>
             </Center>
           ) : enginePermissions.isError &&
             (enginePermissions?.error as { message: string }).message ===
               "401" ? (
-            <NoAuthorizedWallet instance={instanceUrl} />
+            <NoAuthorizedWallet
+              instance={instanceUrl}
+              disclosure={setInstanceDisclosure}
+            />
           ) : enginePermissions.isError &&
             (enginePermissions?.error as { message: string }).message ===
               "Failed to fetch" ? (
-            <NoServerConnection instance={instanceUrl} />
+            <NoServerConnection
+              instance={instanceUrl}
+              disclosure={setInstanceDisclosure}
+            />
           ) : (
             <EngineNavigation instance={instanceUrl} />
           )

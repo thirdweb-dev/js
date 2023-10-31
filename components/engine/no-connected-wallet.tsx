@@ -1,8 +1,9 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useEffect } from "react";
 import { Card, Text } from "tw-components";
+import { EngineHostingOptionsCta } from "./hosting-options-cta";
 
 interface EngineNavigationProps {
   instance: string;
@@ -25,15 +26,17 @@ export const NoConnectedWallet: React.FC<EngineNavigationProps> = ({
   }, [instance, trackEvent]);
 
   return (
-    <Card py={8}>
-      <Flex flexDir="column" gap={4}>
-        <Text textAlign="center">
-          Sign in with an admin wallet for your Engine instance.
-        </Text>
-        <Flex justifyContent="center">
-          <CustomConnectWallet />
-        </Flex>
-      </Flex>
-    </Card>
+    <>
+      <Card p={10} bgColor="backgroundHighlight" borderColor="#0000" my={6}>
+        <Stack textAlign="center" spacing={4}>
+          <Text>Sign in with an admin wallet from your Engine instance.</Text>
+          <Flex justifyContent="center">
+            <CustomConnectWallet />
+          </Flex>
+        </Stack>
+      </Card>
+
+      <EngineHostingOptionsCta />
+    </>
   );
 };

@@ -1,8 +1,11 @@
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   FormControl,
+  Icon,
+  Image,
   Input,
+  LinkBox,
+  LinkOverlay,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,18 +13,21 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { useForm } from "react-hook-form";
+import { FiArrowRight } from "react-icons/fi";
 import {
   Card,
   Link,
   Text,
   Button,
   FormHelperText,
-  TrackedLink,
+  Heading,
 } from "tw-components";
+import { EngineHostingOptionsCta } from "./hosting-options-cta";
 
 function simplifyURL(url: string): string {
   const parsedURL = new URL(url);
@@ -39,17 +45,12 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
   setInstanceUrl,
   disclosure,
 }) => {
-  const meQuery = useAccount();
   const address = useAddress();
   const form = useForm({
     defaultValues: {
       url: instance,
     },
   });
-
-  const earlyAccessRequestformUrl = `https://share.hsforms.com/1k5tu00ueS5OYMaxHK6De-gea58c?email=${
-    meQuery.data?.email || ""
-  }&thirdweb_account_id=${meQuery.data?.id || ""}`;
 
   return (
     <>
@@ -96,45 +97,42 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {!instance && address && (
-        <Flex flexDir="column" gap={4}>
-          <Card py={12}>
-            <Flex flexDir="column">
-              <Text
-                textAlign="center"
-                color="primary.500"
-                cursor="pointer"
-                onClick={disclosure.onOpen}
-              >
-                Manage your Engine instance
-              </Text>
-            </Flex>
-          </Card>
 
-          <Text textAlign="left">
-            Don&apos;t have Engine running yet?{" "}
-            <Link
-              href="https://portal.thirdweb.com/engine/getting-started"
-              isExternal
-              color="blue.500"
-              fontSize="14px"
+      {!instance && address && (
+        <>
+          <LinkBox my={6}>
+            <Card
+              p={10}
+              _hover={{
+                borderColor: "blue.500",
+              }}
+              transitionDuration="200ms"
+              bgColor="backgroundHighlight"
+              borderColor="#0000"
             >
-              Self-host for free
-            </Link>{" "}
-            or{" "}
-            <TrackedLink
-              href={earlyAccessRequestformUrl}
-              isExternal
-              category="engine"
-              label="clicked-request-early-access"
-              fontWeight="medium"
-              color="blue.500"
-            >
-              request a managed cloud-hosted instance
-            </TrackedLink>
-            .
-          </Text>
-        </Flex>
+              <Stack spacing={4}>
+                <LinkOverlay href="#" onClick={disclosure.onOpen}>
+                  <Flex align="center" gap={2}>
+                    <Image
+                      src="/assets/engine/cloud-icon.png"
+                      alt="cloud icon"
+                      w={8}
+                    />
+                    <Heading size="title.sm">Add my Engine instance</Heading>
+                    <Icon as={FiArrowRight} boxSize={6} />
+                  </Flex>
+                </LinkOverlay>
+
+                <Text>
+                  Manage Engine by providing the URL to your running Engine
+                  instance.
+                </Text>
+              </Stack>
+            </Card>
+          </LinkBox>
+
+          <EngineHostingOptionsCta />
+        </>
       )}
     </>
   );
