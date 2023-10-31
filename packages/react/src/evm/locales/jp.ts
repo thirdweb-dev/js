@@ -197,6 +197,8 @@ export function jpDefault() {
         signInWithGoogle: "Googleでサインイン",
         emailPlaceholder: "メールアドレスを入力してください",
         submitEmail: "続ける",
+        emailRequired: "メールアドレスが必要です",
+        invalidEmail: "無効なメールアドレス",
         signIn: "サインイン",
         googleLoginScreen: {
           title: "サインイン",
@@ -230,6 +232,8 @@ export function jpDefault() {
         invalidPhone: "無効な電話番号",
         invalidEmailOrPhone: "無効なメールアドレスまたは電話番号",
         countryCodeMissing: "電話番号は国コードから始める必要があります",
+        emailPlaceholder: "メールアドレスを入力してください",
+        emailRequired: "メールアドレスが必要です",
       },
       localWallet: {
         passwordLabel: "パスワード",

@@ -171,8 +171,8 @@ const MagicUI: React.FC<{
   let type = "text";
   let emptyErrorMessage = locale.emailOrPhoneRequired;
   if (isEmailEnabled && !isSMSEnabled) {
-    placeholder = "Login with email address";
-    emptyErrorMessage = "email address is required";
+    placeholder = locale.emailPlaceholder;
+    emptyErrorMessage = locale.emailRequired;
     type = "email";
   } else if (!isEmailEnabled && isSMSEnabled) {
     placeholder = locale.loginWithPhone;
@@ -214,7 +214,9 @@ const MagicUI: React.FC<{
                     }}
                   >
                     <ToolTip
-                      tip={`Login with ${upperCaseFirstLetter(provider)}`}
+                      tip={`${locale.loginWith} ${upperCaseFirstLetter(
+                        provider,
+                      )}`}
                       sideOffset={15}
                     >
                       <div>

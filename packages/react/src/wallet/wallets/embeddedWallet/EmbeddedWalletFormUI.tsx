@@ -78,10 +78,10 @@ export const EmbeddedWalletFormUI = (props: {
           const emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,})$/g;
           const isValidEmail = emailRegex.test(input);
           if (!isValidEmail) {
-            return "Invalid email address";
+            return locale.invalidEmail;
           }
         }}
-        emptyErrorMessage="email address is required"
+        emptyErrorMessage={locale.emailRequired}
       />
     </div>
   );

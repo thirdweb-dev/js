@@ -195,6 +195,8 @@ export function enDefault() {
         emailPlaceholder: "Enter your email address",
         submitEmail: "Continue",
         signIn: "Sign in",
+        emailRequired: "Email address is required",
+        invalidEmail: "Invalid email address",
         googleLoginScreen: {
           title: "Sign in",
           instruction: "Select your Google account in the pop-up",
@@ -228,6 +230,8 @@ export function enDefault() {
         invalidPhone: "Invalid phone number",
         invalidEmailOrPhone: "Invalid email address or phone number",
         countryCodeMissing: "Phone number must start with a country code",
+        emailPlaceholder: "Enter your email address",
+        emailRequired: "Email address is required",
       },
       localWallet: {
         passwordLabel: "Password",
