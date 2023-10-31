@@ -14,7 +14,6 @@ export const _ja = {
     connect_to_app: "アプリに接続",
     guest: "ゲスト",
     connect: "接続",
-    kpepe: "KPEPE",
     new_to_wallets: "ウォレットは初めてですか？",
     view_transaction_history: "取引履歴を見る",
     get_started: "開始する",
