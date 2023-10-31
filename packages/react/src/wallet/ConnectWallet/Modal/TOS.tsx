@@ -42,7 +42,7 @@ export function TOS(props: {
             {locale.termsOfService}{" "}
           </Link>
         )}
-        {bothGiven && "& "}
+        {bothGiven && locale.and + " "}
         {privacyPolicyUrl && (
           <Link inline size="xs" href={privacyPolicyUrl} target="_blank">
             {locale.privacyPolicy}
