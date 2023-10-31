@@ -23,6 +23,7 @@ export const PaperFormUI = (props: {
   googleLoginSupported: boolean;
   walletConfig: WalletConfig<PaperWallet>;
 }) => {
+  const cwLocale = useTWLocale().connectWallet;
   const locale = useTWLocale().wallets.paperWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -69,7 +70,7 @@ export const PaperFormUI = (props: {
             {locale.signInWithGoogle}
           </SocialButton>
 
-          <TextDivider text="OR" py="lg" />
+          <TextDivider text={cwLocale.or} py="lg" />
         </>
       )}
 

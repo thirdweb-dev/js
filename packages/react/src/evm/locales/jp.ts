@@ -52,6 +52,7 @@ export function jpDefault() {
       copyAddress: "アドレスをコピー",
       personalWallet: "パーソナルウォレット",
       smartWallet: "スマートウォレット",
+      or: "OR",
       download: {
         chrome: "Chrome拡張をダウンロード",
         android: "Google Playでダウンロード",

@@ -163,6 +163,7 @@ const MagicUI: React.FC<{
   oauthProviders?: OauthProvider[];
   modalSize: "compact" | "wide";
 }> = (props) => {
+  const cwLocale = useTWLocale().connectWallet;
   const locale = useTWLocale().wallets.magicLink;
   const isEmailEnabled = props.emailLogin !== false;
   const isSMSEnabled = props.smsLogin !== false;
@@ -262,7 +263,7 @@ const MagicUI: React.FC<{
 
       {showInputUI && (
         <>
-          {showSeparator && <TextDivider text="OR" />}
+          {showSeparator && <TextDivider text={cwLocale.or} />}
           <InputSelectionUI
             submitButtonText={locale.submitEmail}
             onSelect={props.onSelect}

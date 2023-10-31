@@ -51,6 +51,7 @@ export function enDefault() {
       copyAddress: "Copy Address",
       personalWallet: "Personal Wallet",
       smartWallet: "Smart Wallet",
+      or: "OR",
       download: {
         chrome: "Download Chrome Extension",
         android: "Download on Google Play",

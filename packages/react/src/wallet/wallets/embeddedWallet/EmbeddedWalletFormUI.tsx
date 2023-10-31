@@ -22,6 +22,7 @@ export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
 }) => {
+  const cwLocale = useTWLocale().connectWallet;
   const locale = useTWLocale().wallets.embeddedWallet;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
@@ -66,7 +67,7 @@ export const EmbeddedWalletFormUI = (props: {
         <GoogleIcon size={iconSize.md} />
         {locale.signInWithGoogle}
       </SocialButton>
-      <TextDivider text="OR" py="lg" />
+      <TextDivider text={cwLocale.or} py="lg" />
       <InputSelectionUI
         submitButtonText={locale.submitEmail}
         onSelect={(email) => props.onSelect({ email })}
