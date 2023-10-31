@@ -1,4 +1,3 @@
-import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
 import {
   EVMContractInfo,
   useEVMContractInfo,
@@ -8,13 +7,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   ThirdwebProvider,
   coinbaseWallet,
+  embeddedWallet,
   localWallet,
   metamaskWallet,
-  paperWallet,
+  phantomWallet,
   rainbowWallet,
   safeWallet,
   trustWallet,
-  phantomWallet,
   walletConnect,
   zerionWallet,
 } from "@thirdweb-dev/react";
@@ -32,6 +31,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
 import { useEffect, useMemo } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
+import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
 
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
@@ -51,11 +51,7 @@ const personalWallets = [
   trustWallet(),
   zerionWallet(),
   phantomWallet(),
-  paperWallet({
-    paperClientId: "9a2f6238-c441-4bf4-895f-d13c2faf2ddb",
-    advancedOptions: {
-      recoveryShareManagement: "AWS_MANAGED",
-    },
+  embeddedWallet({
     onAuthSuccess: ({ storedToken }) => {
       // expose paper auth token for onboarding screens to pick up and clear up
       (window as any)[GLOBAL_PAPER_AUTH_TOKEN_KEY] = storedToken.cookieString;
