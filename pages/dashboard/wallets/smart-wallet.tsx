@@ -4,7 +4,7 @@ import { WalletsSidebar } from "core-ui/sidebar/wallets";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
-import { ContractWithMetadata, useAddress } from "@thirdweb-dev/react";
+import { ContractWithMetadata } from "@thirdweb-dev/react";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
@@ -16,16 +16,17 @@ import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts
 import { FactoryContracts } from "components/contract-components/tables/factory-contracts";
 import { NextSeo } from "next-seo";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
 const useFactories = () => {
-  const walletAddress = useAddress();
-  const contracts = useMultiChainRegContractList(walletAddress);
+  const { user, isLoggedIn } = useLoggedInUser();
+  const contracts = useMultiChainRegContractList(user?.address);
   return useQuery(
     [
       "dashboard-registry",
-      walletAddress,
+      user?.address,
       "multichain-contract-list",
       "factories",
     ],
@@ -43,7 +44,11 @@ const useFactories = () => {
       return contractWithExtensions.filter((f) => f !== null);
     },
     {
-      enabled: !!walletAddress && !!contracts.data && contracts.data.length > 0,
+      enabled:
+        !!user?.address &&
+        isLoggedIn &&
+        !!contracts.data &&
+        contracts.data.length > 0,
     },
   );
 };
@@ -59,7 +64,7 @@ const accountFactories = [
 ];
 
 const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
-  const address = useAddress();
+  const { isLoggedIn } = useLoggedInUser();
   const factories = useFactories();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
@@ -103,7 +108,9 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         }}
       />
 
-      {address && hasSmartWalletsWithoutBilling && <SmartWalletsBillingAlert />}
+      {isLoggedIn && hasSmartWalletsWithoutBilling && (
+        <SmartWalletsBillingAlert />
+      )}
 
       <Flex flexDir="column" gap={4}>
         <Heading size="title.lg" as="h1">
@@ -116,7 +123,7 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      {!address && (
+      {!isLoggedIn && (
         <SimpleGrid columns={{ base: 1, lg: 2 }} gap={12}>
           <Flex flexDir="column" gap={8}>
             <UnorderedList spacing={2}>
@@ -153,26 +160,28 @@ const DashboardWalletsSmartWallet: ThirdwebNextPage = () => {
         </SimpleGrid>
       )}
 
-      {address && !factories.isLoading && (factories.data || []).length > 0 && (
-        <Flex flexDir={"column"} gap={4}>
-          <Heading size="title.md" as="h1">
-            Your account factories
-          </Heading>
+      {isLoggedIn &&
+        !factories.isLoading &&
+        (factories.data || []).length > 0 && (
+          <Flex flexDir={"column"} gap={4}>
+            <Heading size="title.md" as="h1">
+              Your account factories
+            </Heading>
 
-          <Text>
-            Click into a contract to manage accounts under it and to view
-            contract-specific analytics.
-          </Text>
+            <Text>
+              Click into a contract to manage accounts under it and to view
+              contract-specific analytics.
+            </Text>
 
-          <FactoryContracts
-            contracts={factories.data as ContractWithMetadata[]}
-            isLoading={factories.isLoading}
-            isFetched={factories.isFetched}
-          />
-        </Flex>
-      )}
+            <FactoryContracts
+              contracts={factories.data as ContractWithMetadata[]}
+              isLoading={factories.isLoading}
+              isFetched={factories.isFetched}
+            />
+          </Flex>
+        )}
 
-      {address && (
+      {isLoggedIn && (
         <Flex flexDir={"column"} gap={6}>
           <Heading size="title.md" as="h2">
             Deploy an Account Factory

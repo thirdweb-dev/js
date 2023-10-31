@@ -12,7 +12,6 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { CodeEnvironment } from "components/contract-tabs/code/types";
@@ -36,12 +35,13 @@ import { withinDays } from "utils/date-utils";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenString } from "utils/usedapp-external";
 import { WALLETS_SNIPPETS } from "./wallet-sdk";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const TRACKING_CATEGORY = "embedded-wallet";
 const ACTIVE_THRESHOLD_DAYS = 30;
 
 const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
-  const address = useAddress();
+  const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 
@@ -101,7 +101,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      {address && !hasApiKeys && (
+      {isLoggedIn && !hasApiKeys && (
         <Card p={6}>
           <VStack alignItems="center" justifyContent="center" gap={6}>
             <Image
@@ -128,7 +128,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
         </Card>
       )}
 
-      {address && hasApiKeys && selectedKey && (
+      {isLoggedIn && hasApiKeys && selectedKey && (
         <>
           <ActiveUsersCard count={activeWallets.length} />
 
@@ -234,7 +234,7 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
         </>
       )}
 
-      {!address && (
+      {!isLoggedIn && (
         <>
           <Flex flexDir="column" gap={4}>
             <Heading size="title.sm" as="h2">

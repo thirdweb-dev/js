@@ -1,5 +1,6 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAuthorizeWalletWithAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Alert,
   AlertIcon,
@@ -15,7 +16,7 @@ import {
   Switch,
   VStack,
 } from "@chakra-ui/react";
-import { useAddress, useAuth } from "@thirdweb-dev/react";
+import { useAuth } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
@@ -42,7 +43,7 @@ const LoginPage: ThirdwebNextPage = () => {
     return (navigator?.brave && (await navigator?.brave.isBrave())) || false;
   };
 
-  const address = useAddress();
+  const { isLoggedIn } = useLoggedInUser();
   const auth = useAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -214,7 +215,7 @@ const LoginPage: ThirdwebNextPage = () => {
     }
   };
 
-  if (!address) {
+  if (!isLoggedIn) {
     return (
       <Container maxW="lg">
         <Card p={6} as={Flex} flexDir="column" gap={2}>
@@ -343,7 +344,7 @@ const LoginPage: ThirdwebNextPage = () => {
         </FormControl>
         <Button
           variant="inverted"
-          isDisabled={!address || (isBrave && !hasRemovedShield)}
+          isDisabled={!isLoggedIn || (isBrave && !hasRemovedShield)}
           isLoading={loading}
           onClick={authorizeDevice}
         >

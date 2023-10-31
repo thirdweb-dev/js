@@ -46,8 +46,8 @@ import {
 } from "components/analytics/auto-bar-chart";
 import { FiChevronDown } from "react-icons/fi";
 import { shortenString } from "utils/usedapp-external";
-import { useAddress } from "@thirdweb-dev/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const RADIAN = Math.PI / 180;
 const TRACKING_CATEGORY = "wallet-analytics";
@@ -62,7 +62,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
 
     return BAR_COLORS_DARK;
   }, [colorMode]);
-  const address = useAddress();
+  const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
   useEffect(() => {
@@ -236,7 +236,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         </Heading>
         <Text>Visualize how users are connecting to your apps.</Text>
       </Flex>
-      {!address ? (
+      {!isLoggedIn ? (
         <Card p={6} as={Flex} flexDir="column" gap={2} maxW={"lg"}>
           <Heading as="h2" size="title.sm">
             Connect your wallet to get started

@@ -2,21 +2,21 @@ import { Center, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { EngineSidebar } from "core-ui/sidebar/engine";
 import { PageId } from "page-id";
-import { Button, Heading, Link, Text, TrackedLink } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { NoEngineInstance } from "components/engine/no-engine-instance";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { useAddress } from "@thirdweb-dev/react";
 import { NoConnectedWallet } from "components/engine/no-connected-wallet";
 import { useEnginePermissions } from "@3rdweb-sdk/react/hooks/useEngine";
 import { EngineNavigation } from "components/engine/engine-navigation";
 import { NoAuthorizedWallet } from "components/engine/no-authorized-wallet";
 import { NoServerConnection } from "components/engine/no-server-connection";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const EngineManage: ThirdwebNextPage = () => {
   const [instanceUrl, setInstanceUrl] = useLocalStorage("engine-instance", "");
   const setInstanceDisclosure = useDisclosure();
-  const address = useAddress();
+  const { isLoggedIn } = useLoggedInUser();
 
   const enginePermissions = useEnginePermissions(instanceUrl);
 
@@ -53,7 +53,7 @@ const EngineManage: ThirdwebNextPage = () => {
           disclosure={setInstanceDisclosure}
         />
 
-        {!address ? (
+        {!isLoggedIn ? (
           <NoConnectedWallet instance={instanceUrl} />
         ) : instanceUrl ? (
           enginePermissions.isLoading ? (

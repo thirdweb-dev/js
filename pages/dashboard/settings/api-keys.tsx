@@ -1,6 +1,5 @@
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeyTable } from "components/settings/ApiKeyTable";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeyTable/Alerts";
@@ -12,9 +11,10 @@ import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { SERVICES } from "@thirdweb-dev/service-utils";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
-  const address = useAddress();
+  const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
 
@@ -34,7 +34,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
     );
   }, [apiKeys, account]);
 
-  if (!address) {
+  if (!isLoggedIn) {
     return <ConnectWalletPrompt />;
   }
 
