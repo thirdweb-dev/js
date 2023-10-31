@@ -16,12 +16,14 @@ import type { EmbeddedWalletLoginType, AuthOption } from "./types";
 import { TextDivider } from "../../../components/TextDivider";
 import { openGoogleSignInWindow } from "../../utils/openGoogleSignInWindow";
 import { useTheme } from "@emotion/react";
+import { useTWLocale } from "../../../evm/providers/locale-provider";
 
 export const EmbeddedWalletFormUI = (props: {
   onSelect: (loginType: EmbeddedWalletLoginType) => void;
   walletConfig: WalletConfig<EmbeddedWallet>;
   authOptions: AuthOption[];
 }) => {
+  const locale = useTWLocale().wallets.embeddedWallet.signInWithGoogle;
   const createWalletInstance = useCreateWalletInstance();
   const setConnectionStatus = useSetConnectionStatus();
   const setConnectedWallet = useSetConnectedWallet();
@@ -70,7 +72,7 @@ export const EmbeddedWalletFormUI = (props: {
             }}
           >
             <GoogleIcon size={iconSize.md} />
-            Sign in with Google
+            {locale}
           </SocialButton>
         </>
       )}
@@ -93,6 +95,7 @@ export const EmbeddedWalletFormUI = (props: {
             }
           }}
           emptyErrorMessage="email address is required"
+          submitButtonText={""}
         />
       )}
     </div>
