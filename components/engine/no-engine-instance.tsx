@@ -1,3 +1,4 @@
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   FormControl,
@@ -13,7 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { useForm } from "react-hook-form";
-import { Card, Link, Text, Button, FormHelperText } from "tw-components";
+import {
+  Card,
+  Link,
+  Text,
+  Button,
+  FormHelperText,
+  TrackedLink,
+} from "tw-components";
 
 function simplifyURL(url: string): string {
   const parsedURL = new URL(url);
@@ -31,12 +39,17 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
   setInstanceUrl,
   disclosure,
 }) => {
+  const meQuery = useAccount();
   const address = useAddress();
   const form = useForm({
     defaultValues: {
       url: instance,
     },
   });
+
+  const earlyAccessRequestformUrl = `https://share.hsforms.com/1k5tu00ueS5OYMaxHK6De-gea58c?email=${
+    meQuery.data?.email || ""
+  }&thirdweb_account_id=${meQuery.data?.id || ""}`;
 
   return (
     <>
@@ -86,20 +99,41 @@ export const NoEngineInstance: React.FC<NoEngineInstanceProps> = ({
       {!instance && address && (
         <Flex flexDir="column" gap={4}>
           <Card py={12}>
-            <Flex flexDir="column" gap={2}>
-              <Text textAlign="center">
-                It looks like you&apos;re not managing any Engine instances yet.
-              </Text>
+            <Flex flexDir="column">
               <Text
                 textAlign="center"
                 color="primary.500"
                 cursor="pointer"
                 onClick={disclosure.onOpen}
               >
-                Set Engine instance URL to get started.
+                Manage your Engine instance
               </Text>
             </Flex>
           </Card>
+
+          <Text textAlign="left">
+            Don&apos;t have Engine running yet?{" "}
+            <Link
+              href="https://portal.thirdweb.com/engine/getting-started"
+              isExternal
+              color="blue.500"
+              fontSize="14px"
+            >
+              Self-host for free
+            </Link>{" "}
+            or{" "}
+            <TrackedLink
+              href={earlyAccessRequestformUrl}
+              isExternal
+              category="engine"
+              label="clicked-request-early-access"
+              fontWeight="medium"
+              color="blue.500"
+            >
+              request a managed cloud-hosted instance
+            </TrackedLink>
+            .
+          </Text>
         </Flex>
       )}
     </>

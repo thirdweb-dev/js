@@ -44,7 +44,7 @@ const GET_STARTED_SECTIONS = [
   {
     title: "Run Engine",
     description:
-      "Engine provides a server-side interface for contracts & wallets, without the complexities of wallet and transaction management.",
+      "Engine is a backend HTTP server that calls smart contracts with your managed backend wallets.",
     badge: "Web3 Backend",
     badgeColor: "gray.700",
     image: require("public/assets/dashboard/home-infra.png"),
