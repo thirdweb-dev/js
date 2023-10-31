@@ -1,7 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.esm.js",
-  "browser": {
-    "./dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.esm.js": "./dist/thirdweb-dev-wallets-evm-wallets-cometh-connect.browser.esm.js"
-  }
-}
