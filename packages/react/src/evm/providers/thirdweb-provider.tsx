@@ -12,6 +12,7 @@ import { defaultWallets } from "../../wallet/wallets/defaultWallets";
 import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
 import { signerWallet } from "../../wallet/wallets/signerWallet";
 import { Signer } from "ethers";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
@@ -88,8 +89,11 @@ export const ThirdwebProvider = <
     }
     ewsRef.current = true;
     const preloadEmbeddedWallet = async () => {
-      const hasEmbeddedWallet = wallets.find((w) => w.id === "embeddedWallet");
+      const hasEmbeddedWallet = wallets.find(
+        (w) => w.id === walletIds.embeddedWallet,
+      );
       if (hasEmbeddedWallet && restProps.clientId) {
+        // TODO only preload the iframe instead of creating the SDK
         const { EmbeddedWalletSdk } = await import("@thirdweb-dev/wallets");
         new EmbeddedWalletSdk({
           clientId: restProps.clientId,
