@@ -19,7 +19,10 @@ export { magicWallet } from "./wallets/wallets/magic-link";
 export { MagicWallet } from "./wallets/wallets/MagicLink";
 export { MagicLink } from "./wallets/wallets/MagicLink";
 export { magicLink } from "./wallets/wallets/magic-link";
-export { EmbeddedWallet } from "./wallets/wallets/embedded/EmbeddedWallet";
+export {
+  EmbeddedWallet,
+  sendVerificationEmail,
+} from "./wallets/wallets/embedded/EmbeddedWallet";
 export { embeddedWallet } from "./wallets/wallets/embedded/embedded-wallet";
 export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
 export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";

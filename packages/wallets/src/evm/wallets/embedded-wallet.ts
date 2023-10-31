@@ -133,15 +133,18 @@ export class EmbeddedWallet extends AbstractClientWallet<
  *
  * @example
  * ```typescript
- * sendVerificationEmail('test@example.com', 'yourClientId')
+ * sendVerificationEmail({ email: 'test@example.com', clientId: 'yourClientId' })
  *   .then(() => console.log('Verification email sent successfully.'))
  *   .catch(error => console.error('Failed to send verification email:', error));
  * ```
  */
-export async function sendVerificationEmail(email: string, clientId: string) {
+export async function sendVerificationEmail(options: {
+  email: string;
+  clientId: string;
+}) {
   const wallet = new EmbeddedWallet({
     chain: Ethereum,
-    clientId,
+    clientId: options.clientId,
   });
-  return wallet.sendVerificationEmail({ email });
+  return wallet.sendVerificationEmail({ email: options.email });
 }

@@ -31,7 +31,7 @@ import {
 import { AuthOptions, OauthOption, VerifiedTokenResponse } from "../types";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 
-export async function sendEmailOTP(options: {
+export async function sendVerificationEmail(options: {
   email: string;
   clientId: string;
 }): Promise<SendEmailOtpReturnType> {
