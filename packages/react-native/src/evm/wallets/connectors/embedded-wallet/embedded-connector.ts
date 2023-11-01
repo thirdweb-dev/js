@@ -59,6 +59,9 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
       await this.switchChain(options.chainId);
     }
 
+    if (this.email) {
+      saveConnectedEmail(this.email);
+    }
     return this.getAddress();
   }
 
@@ -144,7 +147,6 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     email: string;
   }): Promise<SendEmailOtpReturnType> {
     this.email = options.email;
-    saveConnectedEmail(options.email);
     return sendVerificationEmail({
       email: options.email,
       clientId: this.options.clientId,
