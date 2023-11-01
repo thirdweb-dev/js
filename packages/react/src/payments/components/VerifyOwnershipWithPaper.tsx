@@ -103,7 +103,7 @@ export const VerifyOwnershipWithPaper: React.FC<
         ) : children ? (
           <a
             onClick={onClick}
-            data-paper-sdk-version={`@paperxyz/react-client-sdk@${packageJson.version}`}
+            data-thirdweb-sdk-version={`${packageJson.name}@${packageJson.version}`}
           >
             {children}
           </a>
@@ -111,7 +111,7 @@ export const VerifyOwnershipWithPaper: React.FC<
           <Button
             onClick={onClick}
             className={className}
-            data-paper-sdk-version={`@paperxyz/react-client-sdk@${packageJson.version}`}
+            data-thirdweb-sdk-version={`${packageJson.name}@${packageJson.version}`}
           >
             <div
               className={css`
