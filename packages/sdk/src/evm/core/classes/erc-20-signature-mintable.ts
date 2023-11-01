@@ -108,6 +108,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
           signature,
         };
       });
+
       const contractEncoder = new ContractEncoder(this.contractWrapper);
       const encoded = contractPayloads.map((p) => {
         return contractEncoder.encode("mintWithSignature", [

@@ -69,6 +69,7 @@ export class Erc20BatchMintable implements DetectableFeature {
       const encoded = _items.map(([address, amount]) =>
         contractEncoder.encode("mintTo", [address, amount]),
       );
+
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "multicall",
