@@ -1,3 +1,5 @@
+"use client";
+
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
