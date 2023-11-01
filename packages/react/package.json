@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "4.0.10",
+  "version": "4.1.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
