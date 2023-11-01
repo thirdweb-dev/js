@@ -372,8 +372,8 @@ export class Erc721<
    * @returns an array of token ids and owners
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getAllOwners() {
-    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners();
+  public async getAllOwners(queryParams?: QueryAllParams) {
+    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners(queryParams);
   }
 
   /**
@@ -435,7 +435,7 @@ export class Erc721<
     } else {
       const [address, allOwners] = await Promise.all([
         walletAddress || this.contractWrapper.getSignerAddress(),
-        this.getAllOwners(),
+        this.getAllOwners(queryParams),
       ]);
       let ownedTokens = (allOwners || []).filter(
         (i) => address?.toLowerCase() === i.owner?.toLowerCase(),

@@ -87,7 +87,7 @@ export class Erc721Supply implements DetectableFeature {
    * Return all the owners of each token id in this contract
    * @returns
    */
-  public async allOwners() {
+  public async allOwners(queryParams?: QueryAllParams) {
     let totalCount: BigNumber;
     let startTokenId = BigNumber.from(0);
     if (hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)) {
@@ -103,7 +103,12 @@ export class Erc721Supply implements DetectableFeature {
 
     // TODO use multicall3 if available
     // TODO can't call toNumber() here, this can be a very large number
-    const arr = [...new Array(totalCount.toNumber()).keys()];
+    let arr = [...new Array(totalCount.toNumber()).keys()];
+    if (queryParams) {
+      const start = queryParams?.start || 0;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      arr = arr.slice(start, start + count);
+    }
     const owners = await Promise.all(
       arr.map((i) => this.erc721.ownerOf(i).catch(() => constants.AddressZero)),
     );
