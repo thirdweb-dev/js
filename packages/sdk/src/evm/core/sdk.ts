@@ -26,7 +26,6 @@ import type {
 import type { NetworkInput, ChainOrRpcUrl } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { ContractInterface, Signer, BaseContract } from "ethers";
@@ -662,6 +661,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     contractAddress: AddressOrEns,
   ): Promise<ContractType> {
     try {
+      const IThirdwebContractABI = (
+        await import(
+          "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json"
+        )
+      ).default;
       const contract = new EthersContract(
         await resolveAddress(contractAddress),
         IThirdwebContractABI,
@@ -2007,10 +2011,14 @@ export class ContractDeployer extends RPCConnectionHandler {
         if (!registryAddress) {
           return undefined;
         }
+        const TWRegistryABI = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json")
+        ).default;
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
           this.storage,
+          TWRegistryABI,
           this.options,
         );
       }));

@@ -2,7 +2,7 @@ import type { Chain } from "@paperxyz/sdk-common-utilities";
 import { ChainToPublicRpc } from "@paperxyz/sdk-common-utilities";
 import type {
   ClientIdWithQuerierAndChainType,
-  GetUserWalletStatusFnReturnType,
+  GetUser,
   GetUserWalletStatusRpcReturnType,
   SetUpWalletRpcReturnType,
   WalletAddressObjectType,
@@ -105,7 +105,7 @@ export class EmbeddedWallet {
    *}
    * @returns {GetUserWalletStatusFnReturnType} an object to containing various information on the user statuses
    */
-  async getUserWalletStatus(): Promise<GetUserWalletStatusFnReturnType> {
+  async getUserWalletStatus(): Promise<GetUser> {
     const userStatus =
       await this.walletManagerQuerier.call<GetUserWalletStatusRpcReturnType>({
         procedureName: "getUserStatus",
@@ -114,10 +114,25 @@ export class EmbeddedWallet {
     if (userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED) {
       return {
         status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
-        user: { ...userStatus.user, wallet: this },
+        ...userStatus.user,
+        wallet: this,
       };
+    } else if (userStatus.status === UserWalletStatus.LOGGED_IN_NEW_DEVICE) {
+      return {
+        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        ...userStatus.user,
+      };
+    } else if (
+      userStatus.status === UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED
+    ) {
+      return {
+        status: UserWalletStatus.LOGGED_IN_WALLET_UNINITIALIZED,
+        ...userStatus.user,
+      };
+    } else {
+      // Logged out
+      return { status: userStatus.status };
     }
-    return userStatus;
   }
 
   /**

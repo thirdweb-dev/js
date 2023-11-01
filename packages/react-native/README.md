@@ -12,7 +12,7 @@
 </p>
 <p><strong>Powering react-native dapps.</strong></p>
 
-The go to librarly for seamless Web3 integration in React Native apps.
+The go to library for seamless Web3 integration in React Native apps.
 
 <br />
 
