@@ -1,5 +1,3 @@
-"use client";
-
 import { useAccount, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
@@ -13,6 +11,7 @@ import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { LoggedInOnlyView } from "components/dashboard/LoggedInOnlyView";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
   const { isLoggedIn } = useLoggedInUser();
@@ -35,48 +34,46 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
     );
   }, [apiKeys, account]);
 
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt />;
-  }
-
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex direction="column" gap={2}>
-        <Flex
-          justifyContent="space-between"
-          direction={{ base: "column", md: "row" }}
-          gap={4}
-        >
-          <Heading size="title.lg" as="h1">
-            API Keys
-          </Heading>
-          <CreateApiKeyButton />
+    <LoggedInOnlyView>
+      <Flex flexDir="column" gap={8}>
+        <Flex direction="column" gap={2}>
+          <Flex
+            justifyContent="space-between"
+            direction={{ base: "column", md: "row" }}
+            gap={4}
+          >
+            <Heading size="title.lg" as="h1">
+              API Keys
+            </Heading>
+            <CreateApiKeyButton />
+          </Flex>
+
+          <Text>
+            An API key is required to use thirdweb&apos;s services through the
+            SDK and CLI. {` `}
+            <Link
+              target="_blank"
+              color="blue.500"
+              href="https://portal.thirdweb.com/api-keys"
+              isExternal
+            >
+              Learn more
+            </Link>
+          </Text>
         </Flex>
 
-        <Text>
-          An API key is required to use thirdweb&apos;s services through the SDK
-          and CLI. {` `}
-          <Link
-            target="_blank"
-            color="blue.500"
-            href="https://portal.thirdweb.com/api-keys"
-            isExternal
-          >
-            Learn more
-          </Link>
-        </Text>
+        {hasSmartWalletsWithoutBilling && (
+          <SmartWalletsBillingAlert dismissable />
+        )}
+
+        <ApiKeys
+          keys={apiKeys || []}
+          isLoading={keysQuery.isLoading}
+          isFetched={keysQuery.isFetched}
+        />
       </Flex>
-
-      {hasSmartWalletsWithoutBilling && (
-        <SmartWalletsBillingAlert dismissable />
-      )}
-
-      <ApiKeys
-        keys={apiKeys || []}
-        isLoading={keysQuery.isLoading}
-        isFetched={keysQuery.isFetched}
-      />
-    </Flex>
+    </LoggedInOnlyView>
   );
 };
 
