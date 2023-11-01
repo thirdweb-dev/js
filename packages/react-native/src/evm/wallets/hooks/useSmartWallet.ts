@@ -6,18 +6,18 @@ import {
   useSetConnectionStatus,
   useWalletContext,
 } from "@thirdweb-dev/react-core";
-import type { SmartWalletConfigOptions } from "../../../wallet/wallets/smartWallet/types";
 import {
   getSmartWalletAddress,
   type SmartWalletConnectionArgs,
 } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { useCallback } from "react";
 import type { BytesLike } from "ethers";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
+import { SmartWalletConfig } from "../types/smart-wallet";
+import { EmbeddedWallet } from "../wallets/embedded/EmbeddedWallet";
 
 export function useSmartWallet<W extends WalletInstance>(
   personalWallet: WalletConfig<W>,
-  options: SmartWalletConfigOptions,
+  options: SmartWalletConfig,
 ) {
   const create = useCreateWalletInstance();
   const setStatus = useSetConnectionStatus();
@@ -41,9 +41,7 @@ export function useSmartWallet<W extends WalletInstance>(
       connectPersonalWallet?: (wallet: W) => Promise<void>;
       connectionArgs?: Omit<SmartWalletConnectionArgs, "personalWallet">;
     }) => {
-      const { smartWallet } = await import(
-        "../../../wallet/wallets/smartWallet/smartWallet"
-      );
+      const { smartWallet } = await import("../wallets/smart-wallet");
       setStatus("connecting");
       const pw = create(personalWallet);
       const sw = create(smartWallet(personalWallet, options));

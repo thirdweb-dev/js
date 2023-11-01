@@ -67,6 +67,7 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
     switch (strategy) {
       case "email_verification": {
         return await this.validateEmailOTP({
+          email: params.email,
           otp: params.verificationCode,
           recoveryCode: params.recoveryCode,
         });
@@ -89,16 +90,13 @@ export class EmbeddedWalletConnector extends Connector<EmbeddedWalletConnectionA
   }
 
   private async validateEmailOTP(options: {
+    email: string;
     otp: string;
     recoveryCode?: string;
   }): Promise<AuthResult> {
-    if (!this.email) {
-      throw new Error("Email is required to connect");
-    }
-
     try {
       const { storedToken } = await validateEmailOTP({
-        email: this.email,
+        email: options.email,
         clientId: this.options.clientId,
         otp: options.otp,
         recoveryCode: options.recoveryCode,
