@@ -39,6 +39,12 @@ export type ConnectWalletProps = {
   theme?: "dark" | "light" | Theme;
 
   btnTitle?: string;
+
+  /**
+   * Set a custom title for the "Switch Network" button
+   */
+  switchNetworkBtnTitle?: string;
+
   /**
    * Set a custom title for the modal
    * @default "Connect"
@@ -279,6 +285,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
             <SwitchNetworkButton
               style={props.style}
               className={props.className}
+              switchNetworkBtnTitle={props.switchNetworkBtnTitle}
             />
           );
         }
@@ -339,10 +346,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 function SwitchNetworkButton(props: {
   style?: React.CSSProperties;
   className?: string;
+  switchNetworkBtnTitle?: string;
 }) {
   const { activeChain } = useWalletContext();
   const switchChain = useSwitchChain();
   const [switching, setSwitching] = useState(false);
+
+  const switchNetworkBtnTitle = props.switchNetworkBtnTitle ?? "Switch Network";
 
   return (
     <AnimatedButton
@@ -372,7 +382,7 @@ function SwitchNetworkButton(props: {
       {switching ? (
         <Spinner size="sm" color="primaryButtonText" />
       ) : (
-        "Switch Network"
+        switchNetworkBtnTitle
       )}
     </AnimatedButton>
   );
