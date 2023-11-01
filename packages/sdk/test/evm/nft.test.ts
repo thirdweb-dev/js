@@ -331,7 +331,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should respect pagination for getAllOwners", async () => {
-    const _tokenIds: number[] = Array.from({ length: 31 }, (_, index) => index); // [0, 1, ... 30]
+    const _tokenIds: number[] = Array.from({ length: 31 }, (_, index) => index);
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
     const [page1, page2] = await Promise.all([
