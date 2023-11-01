@@ -331,10 +331,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should respect pagination for getAllOwners", async () => {
-    const _tokenIds: number[] = Array.from(
-      { length: 31 },
-      (_, index) => index,
-    ); // [0, 1, ... 30]
+    const _tokenIds: number[] = Array.from({ length: 31 }, (_, index) => index); // [0, 1, ... 30]
     const metadata = _tokenIds.map((num) => ({ name: `Test${num}` }));
     await nftContract.mintBatch(metadata);
     const [page1, page2] = await Promise.all([
@@ -343,11 +340,14 @@ describe("NFT Contract", async () => {
     ]);
     expect(page1).to.be.an("array").length(10);
     expect(page1[0].tokenId).to.eq(0);
+    expect(page1[4].owner).to.eq(adminWallet);
     expect(page1[9].tokenId).to.eq(9);
 
     expect(page2).to.be.an("array").length(8);
     expect(page2[0].tokenId).to.eq(5);
+    expect(page2[0].owner).to.eq(adminWallet);
     expect(page2[7].tokenId).to.eq(12);
+    expect(page2[7].owner).to.eq(adminWallet);
   });
 
   it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
