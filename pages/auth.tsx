@@ -68,9 +68,10 @@ const AuthLanding: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://portal.thirdweb.com/auth"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r, #3385FF, #7BB0FF)"
+          gradient="linear(to-r, #4490FF, #4490FF)"
           image={require("public/assets/product-pages/hero/desktop-hero-auth.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-auth.png")}
+          miniImage={require("public/assets/product-icons/auth.png")}
         />
 
         <LandingGridSection>

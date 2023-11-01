@@ -64,9 +64,10 @@ const CheckoutLanding: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://withpaper.com/sign-up"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r,  #00A876, #75FFD6)"
+          gradient="linear(to-r,  #1DC1AE, #1DC1AE)"
           image={require("public/assets/product-pages/hero/desktop-hero-checkout.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-checkout.png")}
+          miniImage={require("public/assets/product-icons/payments.png")}
         />
 
         <LandingGridSection>

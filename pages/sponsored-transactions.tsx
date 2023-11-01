@@ -68,9 +68,10 @@ const SponsoredTransactionsLanding: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://portal.thirdweb.com/glossary/gasless-transactions"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r, #00A876, #75FFD6)"
+          gradient="linear(to-r,  #1DC1AE, #1DC1AE)"
           image={require("public/assets/product-pages/hero/desktop-hero-sponsored-transactions.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-sponsored-transactions.png")}
+          miniImage={require("public/assets/product-icons/sponsored-transactions.png")}
         />
 
         <LandingGridSection>

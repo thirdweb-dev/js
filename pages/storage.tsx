@@ -84,9 +84,10 @@ const InteractLanding: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="/dashboard/infrastructure/storage"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r, #BFA3DA, #84309C, #C735B0)"
+          gradient="linear(to-r, #9786DF, #9786DF)"
           image={require("public/assets/product-pages/hero/desktop-hero-storage.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-storage.png")}
+          miniImage={require("public/assets/product-icons/storage.png")}
         />
 
         <LandingGridSection>

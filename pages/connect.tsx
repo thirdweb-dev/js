@@ -65,12 +65,13 @@ const ConnectLanding: ThirdwebNextPage = () => {
         <LandingHeroWithSideImage
           miniTitle="Connect"
           title="Web3 onboarding,"
+          miniImage={require("public/assets/product-icons/wallet-sdk.png")}
           titleWithGradient="for everyone"
           subtitle="Onboard all of your users with a beautiful Connect Wallet modal, flexible sign-in options for web2 & web3, and powerful hooks for full customizability."
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="/dashboard/wallets/connect"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r, #3385FF, #7BB0FF)"
+          gradient="linear(to-r, #4490FF, #4490FF)"
           lottie={connectLottie}
           image={require("public/assets/product-pages/hero/desktop-hero-connect-wallet.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-connect-wallet.png")}

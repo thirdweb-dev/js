@@ -11,39 +11,29 @@ const data: { title: string; icons: Item[] }[] = [
     title: "CONTRACTS",
     icons: [
       {
-        icon: require("/public/assets/landingpage/howitworks-solidity-sdk.png"),
+        icon: require("/public/assets/product-icons/extensions.png"),
         title: "Build",
         href: "/build",
       },
       {
-        icon: require("/public/assets/landingpage/howitworks-explore.png"),
-        title: "Explore",
-        href: "/explore",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-sdk.png"),
-        title: "SDKs",
-        href: "/sdk",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-ui.png"),
-        title: "UI Components",
-        href: "/ui-components",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-deploy.png"),
+        icon: require("/public/assets/product-icons/deploy.png"),
         title: "Deploy",
         href: "/deploy",
       },
       {
-        icon: require("/public/assets/landingpage/howitworks-publish.png"),
-        title: "Publish",
-        href: "/publish",
+        icon: require("/public/assets/product-icons/interact.png"),
+        title: "Interact",
+        href: "/interact",
       },
       {
-        icon: require("/public/assets/landingpage/howitworks-dashboard.png"),
-        title: "Dashboard",
-        href: "/dashboards",
+        icon: require("/public/assets/product-icons/contracts.png"),
+        title: "Explore",
+        href: "/explore",
+      },
+      {
+        icon: require("/public/assets/product-icons/publish.png"),
+        title: "Publish",
+        href: "/publish",
       },
     ],
   },
@@ -51,17 +41,22 @@ const data: { title: string; icons: Item[] }[] = [
     title: "WALLET",
     icons: [
       {
-        icon: require("/public/assets/landingpage/howitworks-wallet.png"),
-        title: "Wallet SDK",
-        href: "/dashboard/wallets/wallet-sdk",
+        icon: require("/public/assets/product-icons/wallet-sdk.png"),
+        title: "Connect",
+        href: "/connect",
       },
       {
-        icon: require("/public/assets/product-icons/smart-wallet.svg"),
+        icon: require("/public/assets/product-icons/smart-wallet.png"),
         title: "Smart Wallet",
         href: "/account-abstraction",
       },
       {
-        icon: require("/public/assets/landingpage/howitworks-auth.png"),
+        icon: require("/public/assets/product-icons/embedded-wallet.png"),
+        title: "Embedded Wallets",
+        href: "/embedded-wallets",
+      },
+      {
+        icon: require("/public/assets/product-icons/auth.png"),
         title: "Auth",
         href: "/auth",
       },
@@ -71,12 +66,12 @@ const data: { title: string; icons: Item[] }[] = [
     title: "PAYMENTS",
     icons: [
       {
-        icon: require("/public/assets/landingpage/howitworks-fiat.png"),
+        icon: require("/public/assets/product-icons/payments.png"),
         title: "NFT Checkout",
         href: "/checkout",
       },
       {
-        icon: require("/public/assets/landingpage/howitworks-gasless.png"),
+        icon: require("/public/assets/product-icons/sponsored-transactions.png"),
         title: "Sponsored Transactions",
         href: "/sponsored-transactions",
       },
@@ -86,18 +81,19 @@ const data: { title: string; icons: Item[] }[] = [
     title: "INFRASTRUCTURE",
     icons: [
       {
-        icon: require("/public/assets/landingpage/howitworks-indexer.png"),
-        title: "Data Feeds",
-      },
-      {
-        icon: require("/public/assets/landingpage/howitworks-storage.png"),
+        icon: require("/public/assets/product-icons/storage.png"),
         title: "Decentralized Storage",
         href: "/storage",
       },
       {
-        icon: require("/public/assets/landingpage/howitworks-rpc.png"),
+        icon: require("/public/assets/product-icons/rpc-edge.png"),
         title: "RPC Edge",
         href: "/rpc-edge",
+      },
+      {
+        icon: require("/public/assets/product-icons/engine.png"),
+        title: "Engine",
+        href: "/engine",
       },
     ],
   },
@@ -247,17 +243,17 @@ export const HowItWorksSection: React.FC = () => {
           <HowItWorksSectionItem
             item={data.find(({ title }) => title === "CONTRACTS")}
           />
+          <HowItWorksSectionItem
+            item={data.find(({ title }) => title === "WALLET")}
+          />
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 12, md: 8 }}>
-            <HowItWorksSectionItem
-              item={data.find(({ title }) => title === "WALLET")}
-            />
             <HowItWorksSectionItem
               item={data.find(({ title }) => title === "PAYMENTS")}
             />
+            <HowItWorksSectionItem
+              item={data.find(({ title }) => title === "INFRASTRUCTURE")}
+            />
           </SimpleGrid>
-          <HowItWorksSectionItem
-            item={data.find(({ title }) => title === "INFRASTRUCTURE")}
-          />
         </Flex>
       </Flex>
     </KeyFeatureLayout>

@@ -68,9 +68,10 @@ const ExploreLanding: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="/explore"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r,  #F213A4, #F97CCE)"
+          gradient="linear(to-r,  #F856C8, #F856C8)"
           image={require("public/assets/product-pages/hero/desktop-hero-explore.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-explore.png")}
+          miniImage={require("public/assets/product-icons/contracts.png")}
         />
 
         <LandingGridSection>

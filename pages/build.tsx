@@ -95,9 +95,10 @@ const BuildLanding: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           ctaLink="https://portal.thirdweb.com/solidity"
           contactUsTitle="Book Demo"
-          gradient="linear(to-r,  #F213A4, #F97CCE)"
+          gradient="linear(to-r,  #F856C8, #F856C8)"
           image={require("public/assets/product-pages/hero/desktop-hero-build.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-build.png")}
+          miniImage={require("public/assets/product-icons/extensions.png")}
         />
 
         <LandingGridSection>
