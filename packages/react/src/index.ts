@@ -25,3 +25,4 @@ export type { Theme, ThemeOverrides } from "./design-system/index";
 
 // at the moment we'll re-export everything from the evm package
 export * from "./evm";
+export * from "./payments";
