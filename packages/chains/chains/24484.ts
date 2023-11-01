@@ -4,7 +4,6 @@ export default {
   "chainId": 24484,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://webchain.network",
   "name": "Webchain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "WEB",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 37129,
   "rpc": [],
   "shortName": "web",
+  "slip44": 227,
   "slug": "webchain",
   "testnet": false
 } as const satisfies Chain;

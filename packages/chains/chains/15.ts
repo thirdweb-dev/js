@@ -4,7 +4,6 @@ export default {
   "chainId": 15,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://diode.io/prenet",
   "name": "Diode Prenet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "DIODE",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 15,
   "rpc": [
     "https://diode-prenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://15.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prenet.diode.io:8443/",
     "wss://prenet.diode.io:8443/ws"
   ],

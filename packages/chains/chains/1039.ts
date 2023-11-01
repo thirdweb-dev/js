@@ -6,11 +6,16 @@ export default {
     {
       "name": "Bronos Explorer",
       "url": "https://broscan.bronos.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafybeifkgtmhnq4sxu6jn22i7ass7aih6ubodr77k6ygtu4tjbvpmkw2ga",
     "width": 500,
@@ -24,7 +29,7 @@ export default {
     "symbol": "BRO",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1039,
   "rpc": [],
   "shortName": "bronos-mainnet",
   "slug": "bronos",

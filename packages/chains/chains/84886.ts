@@ -6,11 +6,16 @@ export default {
     {
       "name": "Aerie Explorer",
       "url": "https://explorer.aerielab.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreig54jss26xllpjbclmfgwvot72m4ku7qxignhlqei6mijvwi2m4pu",
+        "width": 1062,
+        "height": 1069,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreig54jss26xllpjbclmfgwvot72m4ku7qxignhlqei6mijvwi2m4pu",
     "width": 1062,
@@ -24,9 +29,10 @@ export default {
     "symbol": "AER",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 84886,
   "rpc": [
     "https://aerie-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://84886.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.aerielab.io"
   ],
   "shortName": "Aerie",

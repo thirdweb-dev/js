@@ -21,30 +21,33 @@ export const EmbeddedSocialConnection: React.FC<
   const handleGoogleLogin = useCallback(() => {
     setErrorMessage("");
 
-    setTimeout(() => {
-      (selectionData.emailWallet as EmbeddedWallet)
-        .connect({
-          loginType: "headless_google_oauth",
+    setTimeout(async () => {
+      const emailWallet = selectionData.emailWallet as EmbeddedWallet;
+
+      try {
+        const authResult = await emailWallet.authenticate({
+          strategy: "google",
           redirectUrl: selectionData.oauthOptions?.redirectUrl,
-        })
-        .then(async (response) => {
-          if (response) {
-            if (onLocallyConnected) {
-              onLocallyConnected(selectionData.emailWallet);
-            } else {
-              await setConnectedWallet(selectionData.emailWallet);
-              setConnectionStatus("connected");
-            }
-          } else {
-            setErrorMessage(
-              response || "Error login in. Please try again later.",
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error validating otp: ", error);
-          setErrorMessage("Error login in. Please try again later.");
         });
+
+        const response = await emailWallet.connect({ authResult });
+
+        if (response) {
+          if (onLocallyConnected) {
+            onLocallyConnected(selectionData.emailWallet);
+          } else {
+            await setConnectedWallet(selectionData.emailWallet);
+            setConnectionStatus("connected");
+          }
+        } else {
+          setErrorMessage(
+            response || "Error login in. Please try again later.",
+          );
+        }
+      } catch (error) {
+        console.error("Error logging in with google: ", error);
+        setErrorMessage(`Error login in. ${error}`);
+      }
     }, 0);
   }, [
     onLocallyConnected,
@@ -79,9 +82,7 @@ export const EmbeddedSocialConnection: React.FC<
         {!errorMessage ? (
           <ActivityIndicator size="large" />
         ) : (
-          <Text variant="error" numberOfLines={1}>
-            {errorMessage}
-          </Text>
+          <Text variant="error">{errorMessage}</Text>
         )}
       </Box>
     </Box>

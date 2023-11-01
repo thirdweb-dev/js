@@ -25,16 +25,18 @@ import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
 import { Transaction } from "../../core/classes/transactions";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
-import { ListingType } from "../../enums";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Price } from "../../types/currency";
-import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 import { MARKETPLACE_CONTRACT_ROLES } from "../contractRoles";
+import { ListingType } from "../../enums/marketplace/ListingType";
+import { AuctionListing } from "../../types/marketplace/AuctionListing";
+import { DirectListing } from "../../types/marketplace/DirectListing";
+import { Offer } from "../../types/marketplace/Offer";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.

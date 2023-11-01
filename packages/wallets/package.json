@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "2.0.8",
+  "version": "2.0.10",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "types": "dist/thirdweb-dev-wallets.cjs.d.ts",
@@ -344,12 +344,26 @@
       },
       "default": "./evm/connectors/embedded-wallet/dist/thirdweb-dev-wallets-evm-connectors-embedded-wallet.cjs.js"
     },
+    "./evm/wallets/token-bound-smart-wallet": {
+      "module": {
+        "browser": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.browser.esm.js",
+        "default": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.esm.js"
+      },
+      "default": "./evm/wallets/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-wallets-token-bound-smart-wallet.cjs.js"
+    },
     "./evm/connectors/wallet-connect-v1": {
       "module": {
         "browser": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.browser.esm.js",
         "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.esm.js"
       },
       "default": "./evm/connectors/wallet-connect-v1/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect-v1.cjs.js"
+    },
+    "./evm/connectors/token-bound-smart-wallet": {
+      "module": {
+        "browser": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.browser.esm.js",
+        "default": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.esm.js"
+      },
+      "default": "./evm/connectors/token-bound-smart-wallet/dist/thirdweb-dev-wallets-evm-connectors-token-bound-smart-wallet.cjs.js"
     },
     "./evm/connectors/embedded-wallet/implementations": {
       "module": {
@@ -483,5 +497,8 @@
     "preconstruct:fix": "preconstruct fix",
     "push": "yalc push",
     "typedoc": "rimraf typedoc && node typedoc.js"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

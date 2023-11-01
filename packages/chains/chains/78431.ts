@@ -22,9 +22,10 @@ export default {
     "symbol": "BLT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 78431,
   "rpc": [
     "https://bulletin-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://78431.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/bulletin/testnet/rpc"
   ],
   "shortName": "bulletin",

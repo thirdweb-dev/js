@@ -1,20 +1,26 @@
-import {
-  AuthProvider,
-  RecoveryShareManagement,
-} from "@paperxyz/embedded-wallet-service-sdk";
 import { CognitoUserSession } from "amazon-cognito-identity-js";
 import {
   ROUTE_GET_EMBEDDED_WALLET_DETAILS,
-  ROUTE_INIT_RECOVERY_CODE_FREE_WALLET,
   ROUTE_STORE_USER_SHARES,
   ROUTE_VERIFY_THIRDWEB_CLIENT_ID,
   ROUTE_VERIFY_COGNITO_OTP,
+  ROUTE_USER_MANAGED_OTP,
+  ROUTE_VALIDATE_USER_MANAGED_OTP,
+  ROUTE_IS_VALID_USER_MANAGED_OTP,
 } from "../constants";
 import { getAuthTokenClient } from "../storage/local";
 import * as Application from "expo-application";
+import {
+  RecoveryShareManagement,
+  UserWalletStatus,
+} from "@thirdweb-dev/wallets";
+import {
+  IsValidUserManagedEmailOTPResponse,
+  VerifiedTokenResponse,
+} from "../../../types";
 
 const EMBEDDED_WALLET_TOKEN_HEADER = "embedded-wallet-token";
-const PAPER_CLIENT_ID_HEADER = "x-paper-client-id";
+const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
 const BUNDLE_ID_HEADER = "x-bundle-id";
 const APP_BUNDLE_ID = Application.applicationId || "";
 
@@ -28,9 +34,9 @@ export const verifyClientId = async (clientId: string) => {
     body: JSON.stringify({ clientId, parentDomain: "" }),
   });
   if (!resp.ok) {
-    const { error } = await resp.json();
+    const error = await resp.json();
     throw new Error(
-      `Something went wrong generating auth token from user cognito email otp. ${error}`,
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
     );
   }
   return {
@@ -66,16 +72,12 @@ export const authFetchEmbeddedWalletUser = async (
 
 export async function getEmbeddedWalletUserDetail(args: {
   email?: string;
-  userWalletId?: string;
   clientId: string;
 }) {
   const url = new URL(ROUTE_GET_EMBEDDED_WALLET_DETAILS);
   if (args) {
     if (args.email) {
       url.searchParams.append("email", args.email);
-    }
-    if (args.userWalletId) {
-      url.searchParams.append("userWalletId", args.userWalletId);
     }
     url.searchParams.append("clientId", args.clientId);
   }
@@ -87,17 +89,23 @@ export async function getEmbeddedWalletUserDetail(args: {
     },
   );
   if (!resp.ok) {
-    const { error } = await resp.json();
-    throw new Error(`Something went wrong determining wallet type. ${error}`);
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong determining wallet type. ${error.message}`,
+    );
   }
   const result = (await resp.json()) as
     | {
         isNewUser: true;
+        recoveryShareManagement: RecoveryShareManagement;
+        status: UserWalletStatus;
+        walletUserId: string;
       }
     | {
         isNewUser: false;
         walletUserId: string;
         recoveryShareManagement: RecoveryShareManagement;
+        status: UserWalletStatus;
       };
   return result;
 }
@@ -118,57 +126,91 @@ export async function generateAuthTokenFromCognitoEmailOtp(
       id_token: session.getIdToken().getJwtToken(),
       developerClientId: clientId,
       otpMethod: "email",
-      recoveryShareManagement: RecoveryShareManagement.AWS_MANAGED,
     }),
   });
   if (!resp.ok) {
-    const { error } = await resp.json();
+    const error = await resp.json();
     throw new Error(
-      `Something went wrong generating auth token from user cognito email otp. ${error}`,
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
     );
   }
   const respJ = await resp.json();
-  return respJ as {
-    verifiedToken: {
-      rawToken: string;
-      authDetails: {
-        email?: string;
-        userWalletId: string;
-        recoveryCode?: string;
-        recoveryShareManagement: RecoveryShareManagement;
-      };
-      authProvider: AuthProvider;
-      userId: string;
-      developerClientId: string;
-      isNewUser: boolean;
-    };
-    verifiedTokenJwtString: string;
-  };
+  return respJ as VerifiedTokenResponse;
 }
 
-export async function initWalletWithoutRecoveryCode({
-  clientId,
-}: {
+export async function sendUserManagedEmailOtp(email: string, clientId: string) {
+  const resp = await fetch(ROUTE_USER_MANAGED_OTP, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+    },
+    body: JSON.stringify({
+      email,
+      clientId,
+    }),
+  });
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
+    );
+  }
+  const respJ = await resp.json();
+  return respJ;
+}
+
+export async function validateUserManagedEmailOtp(options: {
+  email: string;
+  otp: string;
   clientId: string;
 }) {
-  const resp = await authFetchEmbeddedWalletUser(
-    { clientId },
-    ROUTE_INIT_RECOVERY_CODE_FREE_WALLET,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        clientId,
-      }),
+  const resp = await fetch(ROUTE_VALIDATE_USER_MANAGED_OTP, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
     },
-  );
+    body: JSON.stringify({
+      email: options.email,
+      otp: options.otp,
+      clientId: options.clientId,
+    }),
+  });
   if (!resp.ok) {
-    const { error } = await resp.json();
-    console.error(`Error initializing wallet: ${error} `);
-    return { success: false };
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
+    );
   }
-
-  return { success: true };
+  const respJ = await resp.json();
+  return respJ as VerifiedTokenResponse;
+}
+export async function isValidUserManagedEmailOtp(options: {
+  email: string;
+  otp: string;
+  clientId: string;
+}) {
+  const resp = await fetch(ROUTE_IS_VALID_USER_MANAGED_OTP, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [BUNDLE_ID_HEADER]: APP_BUNDLE_ID,
+    },
+    body: JSON.stringify({
+      email: options.email,
+      otp: options.otp,
+      clientId: options.clientId,
+    }),
+  });
+  if (!resp.ok) {
+    const error = await resp.json();
+    throw new Error(
+      `Something went wrong generating auth token from user cognito email otp. ${error.message}`,
+    );
+  }
+  const respJ = await resp.json();
+  return respJ as IsValidUserManagedEmailOTPResponse;
 }
 
 export async function storeUserShares({
@@ -198,11 +240,13 @@ export async function storeUserShares({
       }),
     },
   );
+
   if (!resp.ok) {
-    const { error } = await resp.json();
+    const error = await resp.json();
+
     throw new Error(
       `Something went wrong storing user wallet shares: ${JSON.stringify(
-        error,
+        error.message,
         null,
         2,
       )}`,
@@ -219,10 +263,10 @@ export async function getUserShares(clientId: string, getShareUrl: URL) {
     },
   );
   if (!resp.ok) {
-    const { error } = await resp.json();
+    const error = await resp.json();
     throw new Error(
       `Something went wrong getting user's wallet: ${JSON.stringify(
-        error,
+        error.message,
         null,
         2,
       )} `,

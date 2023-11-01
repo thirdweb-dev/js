@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.ctexscan.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreid5evn4qovxo6msuekizv5zn7va62tea7w2zpdx5sskconebuhqle",
     "width": 800,
@@ -26,9 +25,10 @@ export default {
     "symbol": "CTEX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 1455,
   "rpc": [
     "https://ctex-scan-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1455.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.ctexscan.com/"
   ],
   "shortName": "CTEX",

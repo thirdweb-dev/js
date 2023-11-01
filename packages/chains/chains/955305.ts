@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://eluv.io",
   "name": "Eluvio Content Fabric",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "ELV",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 955305,
   "rpc": [
     "https://eluvio-content-fabric.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://955305.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://host-76-74-28-226.contentfabric.io/eth/",
     "https://host-76-74-28-232.contentfabric.io/eth/",
     "https://host-76-74-29-2.contentfabric.io/eth/",
@@ -33,6 +33,7 @@ export default {
     "https://host-64-235-250-98.contentfabric.io/eth/"
   ],
   "shortName": "elv",
+  "slip44": 1011,
   "slug": "eluvio-content-fabric",
   "testnet": false
 } as const satisfies Chain;

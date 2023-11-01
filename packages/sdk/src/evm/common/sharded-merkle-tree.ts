@@ -159,23 +159,22 @@ export class ShardedMerkleTree {
       Object.entries(shards).map(async ([shard, entries]) => [
         shard,
         new MerkleTree(
-          (
-            await Promise.all(
-              entries.map((entry) =>
-                ShardedMerkleTree.fetchAndCacheDecimals(
+          await Promise.all(
+            entries.map(async (entry) => {
+              // cache decimals for each currency to avoid refetching for every address
+              const currencyDecimals =
+                await ShardedMerkleTree.fetchAndCacheDecimals(
                   currencyDecimalMap,
                   provider,
                   entry.currencyAddress,
-                ),
-              ),
-            )
-          ).map((currencyDecimals, index) =>
-            ShardedMerkleTree.hashEntry(
-              entries[index],
-              tokenDecimals,
-              currencyDecimals,
-              snapshotFormatVersion,
-            ),
+                );
+              return ShardedMerkleTree.hashEntry(
+                entry,
+                tokenDecimals,
+                currencyDecimals,
+                snapshotFormatVersion,
+              );
+            }),
           ),
           utils.keccak256,
           {
@@ -235,29 +234,28 @@ export class ShardedMerkleTree {
     const currencyDecimalMap: Record<string, number> = {};
     if (shard === undefined) {
       try {
+        const uri = this.baseUri.endsWith("/")
+          ? this.baseUri
+          : `${this.baseUri}/`;
         shard = this.shards[shardId] =
-          await this.storage.downloadJSON<ShardData>(
-            `${this.baseUri}/${shardId}.json`,
-          );
-        const hashedEntries = (
-          await Promise.all(
-            shard.entries.map((entry) =>
-              ShardedMerkleTree.fetchAndCacheDecimals(
+          await this.storage.downloadJSON<ShardData>(`${uri}${shardId}.json`);
+        const hashedEntries = await Promise.all(
+          shard.entries.map(async (entry) => {
+            // cache decimals for each currency to avoid refetching for every address
+            const currencyDecimals =
+              await ShardedMerkleTree.fetchAndCacheDecimals(
                 currencyDecimalMap,
                 provider,
                 entry.currencyAddress,
-              ),
-            ),
-          )
-        ).map((currencyDecimals, index) => {
-          const entry = shard.entries[index];
-          return ShardedMerkleTree.hashEntry(
-            entry,
-            this.tokenDecimals,
-            currencyDecimals,
-            snapshotFormatVersion,
-          );
-        });
+              );
+            return ShardedMerkleTree.hashEntry(
+              entry,
+              this.tokenDecimals,
+              currencyDecimals,
+              snapshotFormatVersion,
+            );
+          }),
+        );
         this.trees[shardId] = new MerkleTree(hashedEntries, utils.keccak256, {
           sort: true,
         });

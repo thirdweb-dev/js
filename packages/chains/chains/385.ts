@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "https://pipa.lisinski.online"
   ],
-  "features": [],
   "infoURL": "https://lisinski.online",
   "name": "Lisinski",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "LISINS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 385,
   "rpc": [
     "https://lisinski.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://385.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-bitfalls1.lisinski.online"
   ],
   "shortName": "lisinski",

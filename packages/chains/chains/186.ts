@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://seelen.pro/",
   "name": "Seele Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "Seele",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 186,
   "rpc": [
     "https://seele.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://186.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.seelen.pro/"
   ],
   "shortName": "Seele",

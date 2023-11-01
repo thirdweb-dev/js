@@ -5,30 +5,31 @@ export default {
   "explorers": [
     {
       "name": "XPLA Explorer",
-      "url": "https://explorer.xpla.io",
-      "standard": "none"
+      "url": "https://explorer.xpla.io/mainnet",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
-    "url": "ipfs://QmbvEAKZfgJckEziU3mpCwz6jqMeWRcLgd8TNsWA7g8sD9/xpla.png",
+    "url": "ipfs://Qmf4GoxfpeA5VGqu7KP5eyv1WKaCpNDbvMxq1MjQBwFWxq",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "infoURL": "https://xpla.io/",
+  "infoURL": "https://xpla.io",
   "name": "Xpla Mainnet",
   "nativeCurrency": {
     "name": "XPLA",
     "symbol": "XPLA",
     "decimals": 18
   },
+  "networkId": 37,
   "redFlags": [
     "reusedChainId"
   ],
   "rpc": [
     "https://xpla.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://37.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dimension-evm-rpc.xpla.dev"
   ],
   "shortName": "xpla",

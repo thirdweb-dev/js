@@ -6,11 +6,16 @@ export default {
     {
       "name": "enulsscan",
       "url": "https://evmscan.nuls.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
+        "width": 26,
+        "height": 41,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmYz8LK5WkUN8UwqKfWUjnyLuYqQZWihT7J766YXft4TSy",
     "width": 26,
@@ -24,9 +29,10 @@ export default {
     "symbol": "NULS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 119,
   "rpc": [
     "https://enuls.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://119.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmapi.nuls.io",
     "https://evmapi2.nuls.io"
   ],

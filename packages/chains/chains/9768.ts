@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.mainnetz.io"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmT5gJ5weBiLT3GoYuF5yRTRLdPLCVZ3tXznfqW7M8fxgG",
     "width": 400,
@@ -26,9 +25,10 @@ export default {
     "symbol": "NetZ",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9768,
   "rpc": [
     "https://z-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9768.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.mainnetz.io"
   ],
   "shortName": "NetZt",

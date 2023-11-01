@@ -6,7 +6,6 @@ export default {
   "faucets": [
     "http://faucet.freight.sh"
   ],
-  "features": [],
   "infoURL": "https://freighttrust.com",
   "name": "Freight Trust Network",
   "nativeCurrency": {
@@ -14,9 +13,10 @@ export default {
     "symbol": "0xF",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 0,
   "rpc": [
     "https://freight-trust-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://211.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://13.57.207.168:3435",
     "https://app.freighttrust.net/ftn/${API_KEY}"
   ],

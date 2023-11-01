@@ -1,4 +1,3 @@
-import { afterEach, beforeEach } from "node:test";
 import { Ethereum } from "../src";
 import {
   type ChainRPCOptions,
@@ -10,45 +9,45 @@ import {
   getValidChainRPCs,
 } from "../src/utils";
 
+const MAINNET_FALLBACK_HTTP_RPCS = [
+  "https://api.mycryptoapi.com/eth",
+  "https://cloudflare-eth.com",
+  "https://ethereum.publicnode.com",
+  "https://mainnet.gateway.tenderly.co",
+  "https://rpc.blocknative.com/boost",
+  "https://rpc.flashbots.net/fast",
+  "https://rpc.mevblocker.io/fullprivacy",
+];
+
+const MAINNET_FALLBACK_WS_RPCS = [
+  "wss://ethereum.publicnode.com",
+  "wss://mainnet.gateway.tenderly.co",
+];
+
 const CHAIN_RPC_TEST_CASES: [ChainRPCOptions, string[]][] = [
   [
     { thirdwebApiKey: "SAMPLE_KEY" },
     [
       "https://ethereum.rpc.thirdweb.com/SAMPLE_KEY",
-      "https://api.mycryptoapi.com/eth",
-      "https://cloudflare-eth.com",
-      "https://ethereum.publicnode.com",
-      "https://mainnet.gateway.tenderly.co",
+      "https://1.rpc.thirdweb.com/SAMPLE_KEY",
+      ...MAINNET_FALLBACK_HTTP_RPCS,
     ],
   ],
   [
     { alchemyApiKey: "SAMPLE_KEY" },
     [
       "https://eth-mainnet.g.alchemy.com/v2/SAMPLE_KEY",
-      "https://api.mycryptoapi.com/eth",
-      "https://cloudflare-eth.com",
-      "https://ethereum.publicnode.com",
-      "https://mainnet.gateway.tenderly.co",
+      ...MAINNET_FALLBACK_HTTP_RPCS,
     ],
   ],
   [
     { infuraApiKey: "SAMPLE_KEY" },
-    [
-      "https://mainnet.infura.io/v3/SAMPLE_KEY",
-      "https://api.mycryptoapi.com/eth",
-      "https://cloudflare-eth.com",
-      "https://ethereum.publicnode.com",
-      "https://mainnet.gateway.tenderly.co",
-    ],
+    ["https://mainnet.infura.io/v3/SAMPLE_KEY", ...MAINNET_FALLBACK_HTTP_RPCS],
   ],
   // infura is supported for both http and ws
   [
     { mode: "ws", infuraApiKey: "SAMPLE_KEY" },
-    [
-      "wss://mainnet.infura.io/ws/v3/SAMPLE_KEY",
-      "wss://ethereum.publicnode.com",
-      "wss://mainnet.gateway.tenderly.co",
-    ],
+    ["wss://mainnet.infura.io/ws/v3/SAMPLE_KEY", ...MAINNET_FALLBACK_WS_RPCS],
   ],
 ];
 
@@ -66,10 +65,8 @@ describe("chains/utils", () => {
       undefined,
       [
         "https://ethereum.rpc.thirdweb.com/",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
     [
@@ -77,10 +74,8 @@ describe("chains/utils", () => {
       "http",
       [
         "https://ethereum.rpc.thirdweb.com/",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
     [
@@ -88,10 +83,8 @@ describe("chains/utils", () => {
       undefined,
       [
         "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
     [
@@ -99,10 +92,8 @@ describe("chains/utils", () => {
       "http",
       [
         "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
   ])("getValidChainRPCs(Ethereum, %s, %s) = %p", (clientId, mode, expected) => {
@@ -164,10 +155,8 @@ describe("chains/utils", () => {
         ...Ethereum,
         rpc: [
           "https://ethereum.rpc.thirdweb.com/",
-          "https://api.mycryptoapi.com/eth",
-          "https://cloudflare-eth.com",
-          "https://ethereum.publicnode.com",
-          "https://mainnet.gateway.tenderly.co",
+          "https://1.rpc.thirdweb.com/",
+          ...MAINNET_FALLBACK_HTTP_RPCS,
         ],
       },
     ],
@@ -178,10 +167,8 @@ describe("chains/utils", () => {
         ...Ethereum,
         rpc: [
           "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
-          "https://api.mycryptoapi.com/eth",
-          "https://cloudflare-eth.com",
-          "https://ethereum.publicnode.com",
-          "https://mainnet.gateway.tenderly.co",
+          "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY",
+          ...MAINNET_FALLBACK_HTTP_RPCS,
         ],
       },
     ],
@@ -192,7 +179,7 @@ describe("chains/utils", () => {
 });
 
 describe("chains/utils with APP_BUNDLE_ID", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     globalThis.APP_BUNDLE_ID = "com.thirdweb.rpc";
   });
 
@@ -202,10 +189,8 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       undefined,
       [
         "https://ethereum.rpc.thirdweb.com/",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
     [
@@ -213,10 +198,8 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       "http",
       [
         "https://ethereum.rpc.thirdweb.com/",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
     [
@@ -224,10 +207,8 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       undefined,
       [
         "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
     [
@@ -235,10 +216,8 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
       "http",
       [
         "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
-        "https://api.mycryptoapi.com/eth",
-        "https://cloudflare-eth.com",
-        "https://ethereum.publicnode.com",
-        "https://mainnet.gateway.tenderly.co",
+        "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
+        ...MAINNET_FALLBACK_HTTP_RPCS,
       ],
     ],
   ])("getValidChainRPCs(Ethereum, %s, %s) = %p", (clientId, mode, expected) => {
@@ -253,10 +232,8 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
         ...Ethereum,
         rpc: [
           "https://ethereum.rpc.thirdweb.com/",
-          "https://api.mycryptoapi.com/eth",
-          "https://cloudflare-eth.com",
-          "https://ethereum.publicnode.com",
-          "https://mainnet.gateway.tenderly.co",
+          "https://1.rpc.thirdweb.com/",
+          ...MAINNET_FALLBACK_HTTP_RPCS,
         ],
       },
     ],
@@ -267,10 +244,8 @@ describe("chains/utils with APP_BUNDLE_ID", () => {
         ...Ethereum,
         rpc: [
           "https://ethereum.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
-          "https://api.mycryptoapi.com/eth",
-          "https://cloudflare-eth.com",
-          "https://ethereum.publicnode.com",
-          "https://mainnet.gateway.tenderly.co",
+          "https://1.rpc.thirdweb.com/SAMPLE_CLIENT_KEY/?bundleId=com.thirdweb.rpc",
+          ...MAINNET_FALLBACK_HTTP_RPCS,
         ],
       },
     ],

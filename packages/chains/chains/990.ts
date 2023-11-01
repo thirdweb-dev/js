@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.eliberty.ngo"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmcr8US1DZcK3ooiMtE8tEQPgep12abXzxPw1jCkgZhji9",
     "width": 150,
@@ -26,9 +25,10 @@ export default {
     "symbol": "$EL",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 990,
   "rpc": [
     "https://eliberty.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://990.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eliberty.ngo"
   ],
   "shortName": "ELm",

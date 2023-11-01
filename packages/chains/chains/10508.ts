@@ -13,7 +13,6 @@ export default {
     "https://faucet.avax.network/?subnet=num",
     "https://faucet.num.network"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreie3ba6ofosjqqiya6empkyw6u5xdrtcfzi2evvyt4u6utzeiezyhi",
     "width": 1500,
@@ -27,9 +26,10 @@ export default {
     "symbol": "NUM",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 10508,
   "rpc": [
     "https://numbers-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://10508.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnetrpc.num.network"
   ],
   "shortName": "Snow",

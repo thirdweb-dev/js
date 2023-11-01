@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://boba.network",
   "name": "Boba Network Goerli Testnet",
   "nativeCurrency": {
@@ -18,9 +17,19 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2888,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://gateway.boba.network"
+      }
+    ]
+  },
   "rpc": [
     "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.boba.network/",
     "wss://wss.goerli.boba.network/"
   ],

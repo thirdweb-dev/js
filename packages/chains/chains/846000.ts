@@ -4,7 +4,6 @@ export default {
   "chainId": 846000,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://bloqs4good.com",
   "name": "4GoodNetwork",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "APTA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 846000,
   "rpc": [
     "https://4goodnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://846000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain.deptofgood.com"
   ],
   "shortName": "bloqs4good",

@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreidg4wpewve5mdxrofneqblydkrjl3oevtgpdf3fk3z3vjqam6ocoe",
     "width": 350,
@@ -24,9 +23,14 @@ export default {
     "symbol": "OAS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 2400,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-248"
+  },
   "rpc": [
     "https://tcg-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2400.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tcgverse.xyz"
   ],
   "shortName": "TCGV",

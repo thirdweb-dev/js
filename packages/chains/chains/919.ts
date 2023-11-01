@@ -1,34 +1,46 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "ModeTest",
+  "chain": "ETH",
   "chainId": 919,
   "explorers": [
     {
-      "name": "mode-sepolia-vtnhnpim72",
-      "url": "https://sepolia.explorer.mode.network/",
-      "standard": "EIP3091"
+      "name": "modescout",
+      "url": "https://sepolia.explorer.mode.network",
+      "standard": "none"
     }
   ],
-  "faucets": [],
-  "features": [],
+  "faucets": [
+    "https://sepoliafaucet.com/"
+  ],
   "icon": {
     "url": "ipfs://bafkreidi5y7afj5z4xrz7uz5rkg2mcsv2p2n4ui4g7q4k4ecdz65i2agou",
     "width": 2160,
     "height": 2160,
     "format": "png"
   },
-  "name": "Mode Testnet ",
+  "infoURL": "https://docs.mode.network/",
+  "name": "Mode Testnet",
   "nativeCurrency": {
-    "name": "Ether",
+    "name": "Sepolia Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 919,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://bridge.mode.network/"
+      }
+    ]
+  },
   "rpc": [
     "https://mode-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.mode.network/"
+    "https://919.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sepolia.mode.network"
   ],
-  "shortName": "ModeTest",
+  "shortName": "modesep",
   "slug": "mode-testnet",
   "testnet": true
 } as const satisfies Chain;

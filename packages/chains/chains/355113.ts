@@ -6,13 +6,18 @@ export default {
     {
       "name": "Bitfinity Block Explorer",
       "url": "https://explorer.bitfinity.network",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreiczbhnoc5wpjikskmehexmg3xmqr4fchrny64db4wmk3lrygqik5e",
+        "width": 796,
+        "height": 129,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://bitfinity.network/faucet"
   ],
-  "features": [],
   "infoURL": "https://bitfinity.network",
   "name": "Bitfinity Network Testnet",
   "nativeCurrency": {
@@ -20,9 +25,10 @@ export default {
     "symbol": "BFT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 355113,
   "rpc": [
     "https://bitfinity-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://355113.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bitfinity.network"
   ],
   "shortName": "Bitfinity",

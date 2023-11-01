@@ -6,13 +6,18 @@ export default {
     {
       "name": "Omax Chain Explorer",
       "url": "https://omaxray.com",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
+        "width": 500,
+        "height": 500,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.omaxray.com/"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qmd7omPxrehSuxHHPMYd5Nr7nfrtjKdRJQEhDLfTb87w8G",
     "width": 500,
@@ -26,9 +31,10 @@ export default {
     "symbol": "OMAX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 311,
   "rpc": [
     "https://omax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://311.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainapi.omaxray.com"
   ],
   "shortName": "omax",

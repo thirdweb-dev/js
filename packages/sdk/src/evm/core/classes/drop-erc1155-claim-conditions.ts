@@ -9,7 +9,6 @@ import type {
   IERC20,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, constants, utils, type BigNumberish } from "ethers";
 import deepEqual from "fast-deep-equal";
@@ -31,7 +30,6 @@ import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { buildTransactionFunction } from "../../common/transactions";
 import { isNode } from "../../common/utils";
-import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema/contracts/common/claim-conditions";
 import { SnapshotEntryWithProof } from "../../schema/contracts/common/snapshots";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
@@ -51,6 +49,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Transaction } from "./transactions";
+import { ClaimEligibility } from "../../enums/ClaimEligibility";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -486,6 +485,9 @@ export class DropErc1155ClaimConditions<
           reasons.push(ClaimEligibility.NotEnoughTokens);
         }
       } else {
+        const IERC20ABI = (
+          await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+        ).default;
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,

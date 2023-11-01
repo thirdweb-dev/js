@@ -4,7 +4,6 @@ export default {
   "chainId": 16000,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://metadot.network",
   "name": "MetaDot Mainnet",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "MTT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16000,
   "rpc": [
     "https://metadot.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.metadot.network"
   ],
   "shortName": "mtt",

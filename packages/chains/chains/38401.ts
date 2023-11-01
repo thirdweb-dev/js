@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://robin-faucet.rangersprotocol.com"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://QmXR5e5SDABWfQn6XT9uMsVYAo5Bv7vUv4jVs8DFqatZWG",
     "width": 2000,
@@ -23,12 +22,13 @@ export default {
   "name": "ConnectorManager Robin",
   "nativeCurrency": {
     "name": "Rangers Protocol Gas",
-    "symbol": "RPG",
+    "symbol": "ttRPG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 38401,
   "rpc": [
     "https://connectormanager-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://38401.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://robin-cm.rangersprotocol.com/api/jsonrpc"
   ],
   "shortName": "ttrpg",

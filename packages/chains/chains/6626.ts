@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://chain.pixie.xyz",
   "name": "Pixie Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "PIX",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 6626,
   "rpc": [
     "https://pixie-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6626.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.chain.pixie.xyz",
     "wss://ws-mainnet.chain.pixie.xyz"
   ],

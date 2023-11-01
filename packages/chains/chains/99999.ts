@@ -4,7 +4,6 @@ export default {
   "chainId": 99999,
   "explorers": [],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.ubchain.site/",
   "name": "UB Smart Chain",
   "nativeCurrency": {
@@ -12,9 +11,10 @@ export default {
     "symbol": "UBC",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 99999,
   "rpc": [
     "https://ub-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://99999.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.uschain.network"
   ],
   "shortName": "usc",

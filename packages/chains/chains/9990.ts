@@ -15,7 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreibkqdof3ztkdhgukwvkacwgrjb27e23hgz5c6mmudzu5hipyvgisa",
     "width": 256,
@@ -29,9 +28,10 @@ export default {
     "symbol": "AGNG",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 9990,
   "rpc": [
     "https://agung-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9990.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpcpc1-qa.agung.peaq.network"
   ],
   "shortName": "AGNG",

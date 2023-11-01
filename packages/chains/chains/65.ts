@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://www.okex.com/drawdex"
   ],
-  "features": [],
   "infoURL": "https://www.okex.com/okexchain",
   "name": "OKExChain Testnet",
   "nativeCurrency": {
@@ -20,9 +19,10 @@ export default {
     "symbol": "OKT",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 65,
   "rpc": [
     "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://65.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchaintestrpc.okex.org"
   ],
   "shortName": "tokt",

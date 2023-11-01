@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
     "width": 288,
@@ -24,9 +23,10 @@ export default {
     "symbol": "ETH",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 167007,
   "rpc": [
     "https://taiko-jolnir-l2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://167007.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jolnir.taiko.xyz"
   ],
   "shortName": "tko-jolnir",

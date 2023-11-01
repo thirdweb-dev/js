@@ -4,8 +4,8 @@ export default {
   "chainId": 421613,
   "explorers": [
     {
-      "name": "Arbitrum Goerli Rollup Explorer",
-      "url": "https://goerli-rollup-explorer.arbitrum.io",
+      "name": "Arbitrum Goerli Arbiscan",
+      "url": "https://goerli.arbiscan.io",
       "standard": "EIP3091"
     }
   ],
@@ -24,9 +24,20 @@ export default {
     "symbol": "AGOR",
     "decimals": 18
   },
+  "networkId": 421613,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-5",
+    "bridges": [
+      {
+        "url": "https://bridge.arbitrum.io/"
+      }
+    ]
+  },
   "redFlags": [],
   "rpc": [
     "https://arbitrum-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://421613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://arbitrum-goerli.infura.io/v3/${INFURA_API_KEY}",
     "https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://goerli-rollup.arbitrum.io/rpc",
@@ -35,5 +46,6 @@ export default {
   ],
   "shortName": "arb-goerli",
   "slug": "arbitrum-goerli",
-  "testnet": true
+  "testnet": false,
+  "title": "Arbitrum Goerli Rollup Testnet"
 } as const satisfies Chain;

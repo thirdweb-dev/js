@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://QmQhdktNyBeXmCaVuQpi1B4yXheSUKrJA17L4wpECKzG5D",
     "width": 310,
@@ -24,9 +23,10 @@ export default {
     "symbol": "TARA",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 841,
   "rpc": [
     "https://taraxa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://841.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.taraxa.io/"
   ],
   "shortName": "tara",

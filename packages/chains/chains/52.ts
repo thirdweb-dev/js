@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "infoURL": "https://www.coinex.org/",
   "name": "CoinEx Smart Chain Mainnet",
   "nativeCurrency": {
@@ -18,9 +17,10 @@ export default {
     "symbol": "cet",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 52,
   "rpc": [
     "https://coinex-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://52.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.coinex.net"
   ],
   "shortName": "cet",

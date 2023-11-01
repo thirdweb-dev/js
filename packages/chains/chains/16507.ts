@@ -10,7 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "features": [],
   "icon": {
     "url": "ipfs://bafkreie6nai3yhykcdlsyshn5lbcbyba5y7zwsqg6owcfek2urhoucr6rm",
     "width": 800,
@@ -24,9 +23,10 @@ export default {
     "symbol": "GSYS",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 16507,
   "rpc": [
     "https://genesys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.genesys.network"
   ],
   "shortName": "Genesys",

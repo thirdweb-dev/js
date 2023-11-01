@@ -13,7 +13,6 @@ import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
 import { getContractPublisherAddress } from "../constants/addresses/getContractPublisherAddress";
 
@@ -459,14 +458,20 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
     provider,
   );
   if (compilerMetaUri) {
+    const ContractPublisherAbi = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json"
+      )
+    ).default;
     const contract = new Contract(
       getContractPublisherAddress(),
       ContractPublisherAbi,
       getChainProvider("polygon", {}),
     ) as ContractPublisher;
 
-    const publishedMetadataUri =
-      await contract.getPublishedUriFromCompilerUri(compilerMetaUri);
+    const publishedMetadataUri = await contract.getPublishedUriFromCompilerUri(
+      compilerMetaUri,
+    );
     if (publishedMetadataUri.length === 0) {
       throw Error(
         `Could not resolve published metadata URI from ${compilerMetaUri}`,

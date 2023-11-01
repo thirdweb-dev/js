@@ -12,7 +12,6 @@ export default {
   "faucets": [
     "https://faucet.securechain.ai"
   ],
-  "features": [],
   "icon": {
     "url": "ipfs://Qme2Z8VFYjhHGfLQPBnfseNpEdRfmTDy7VXqrdH4AHETJf",
     "width": 150,
@@ -26,9 +25,10 @@ export default {
     "symbol": "SCAI",
     "decimals": 18
   },
-  "redFlags": [],
+  "networkId": 3434,
   "rpc": [
     "https://securechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3434.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.securechain.ai"
   ],
   "shortName": "SCAIt",

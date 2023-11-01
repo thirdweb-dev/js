@@ -1,9 +1,9 @@
 import { BasisPointsSchema } from "../../../core/schema/shared";
 import { BigNumberSchema } from "../shared/BigNumberSchema";
 import { AddressOrEnsSchema } from "../shared/AddressOrEnsSchema";
-import { BaseSignaturePayloadInput } from "./common";
 import { constants } from "ethers";
 import { z } from "zod";
+import { BaseSignaturePayloadInput } from "./common/signature";
 
 /**
  * @internal
