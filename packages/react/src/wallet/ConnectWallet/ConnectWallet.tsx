@@ -169,12 +169,14 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const { user } = useUser();
   const disconnect = useDisconnect();
 
-  const shouldSignIn = !!authConfig?.authUrl && !!address && !user?.address;
-  const addressAndUserAddressMismatched = address !== user?.address;
+  const connectedButNotSignedIn =
+    !!authConfig?.authUrl &&
+    !!address &&
+    (!user?.address || address !== user?.address);
 
   const requiresSignIn = props.auth?.loginOptional
     ? false
-    : shouldSignIn || addressAndUserAddressMismatched;
+    : connectedButNotSignedIn;
 
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {
@@ -195,10 +197,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
 
   // if wallet gets disconnected, close the signature modal
   useEffect(() => {
-    if (!activeWallet && !addressAndUserAddressMismatched) {
+    if (!activeWallet) {
       setShowSignatureModal(false);
     }
-  }, [activeWallet, addressAndUserAddressMismatched]);
+  }, [activeWallet]);
 
   return (
     <CustomThemeProvider theme={theme}>
