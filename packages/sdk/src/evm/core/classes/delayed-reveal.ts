@@ -109,18 +109,17 @@ export class DelayedReveal<
         throw new Error("Password is required");
       }
 
-      const [placeholderUris, startFileNumber, baseUriId, legacyContract] =
-        await Promise.all([
-          this.storage.uploadBatch([CommonNFTInput.parse(placeholder)], {
-            rewriteFileNames: {
-              fileStartNumber: 0,
-            },
-          }),
-          this.nextTokenIdToMintFn(),
-          this.contractWrapper.read("getBaseURICount", []),
-          this.isLegacyContract(),
-        ]);
+      const placeholderUris = await this.storage.uploadBatch(
+        [CommonNFTInput.parse(placeholder)],
+        {
+          rewriteFileNames: {
+            fileStartNumber: 0,
+          },
+        },
+      );
       const placeholderUri = getBaseUriFromBatch(placeholderUris);
+
+      const startFileNumber = await this.nextTokenIdToMintFn();
 
       const uris = await this.storage.uploadBatch(
         metadatas.map((m) => CommonNFTInput.parse(m)),
@@ -133,6 +132,7 @@ export class DelayedReveal<
       );
 
       const baseUri = getBaseUriFromBatch(uris);
+      const baseUriId = await this.contractWrapper.read("getBaseURICount", []);
       const hashedPassword = await this.hashDelayRevealPassword(
         baseUriId,
         password,
@@ -143,6 +143,7 @@ export class DelayedReveal<
       );
 
       let data: string;
+      const legacyContract = await this.isLegacyContract();
       if (legacyContract) {
         data = encryptedBaseUri;
       } else {
