@@ -347,7 +347,7 @@ describe("NFT Contract", async () => {
 
     expect(page2).to.be.an("array").length(8);
     expect(page2[0].tokenId).to.eq(5);
-    expect(page2[9].tokenId).to.eq(12);
+    expect(page2[7].tokenId).to.eq(12);
   });
 
   it("getOwned should return all item when queryParams.count is greater than the total supply (erc-721-standard.ts)", async () => {
