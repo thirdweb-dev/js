@@ -1,4 +1,4 @@
-import { Flex, Stack, UseDisclosureReturn } from "@chakra-ui/react";
+import { Stack, UseDisclosureReturn } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useEffect } from "react";
 import { Button, Card, Heading, Text } from "tw-components";

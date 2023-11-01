@@ -1,8 +1,24 @@
-import { Center, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
+import {
+  Center,
+  Flex,
+  FormControl,
+  Image,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  UseDisclosureReturn,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { EngineSidebar } from "core-ui/sidebar/engine";
 import { PageId } from "page-id";
-import { Button, Heading, Text } from "tw-components";
+import { Button, FormHelperText, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { NoEngineInstance } from "components/engine/no-engine-instance";
 import { useLocalStorage } from "hooks/useLocalStorage";
@@ -12,11 +28,12 @@ import { EngineNavigation } from "components/engine/engine-navigation";
 import { NoAuthorizedWallet } from "components/engine/no-authorized-wallet";
 import { NoServerConnection } from "components/engine/no-server-connection";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { useForm } from "react-hook-form";
 
 const EngineManage: ThirdwebNextPage = () => {
   const [instanceUrl, setInstanceUrl] = useLocalStorage("engine-instance", "");
   const setInstanceDisclosure = useDisclosure();
-  const { isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   const enginePermissions = useEnginePermissions(instanceUrl);
 
@@ -34,8 +51,9 @@ const EngineManage: ThirdwebNextPage = () => {
         </Flex>
 
         {instanceUrl && (
-          <Text>
-            Engine URL: <em>{instanceUrl}</em>{" "}
+          <Flex align="center" gap={1}>
+            <Image src="/assets/engine/cloud-icon.png" alt="cloud icon" w={4} />
+            <Text fontWeight="bold">{instanceUrl}</Text>
             <Button
               size="sm"
               variant="link"
@@ -44,43 +62,50 @@ const EngineManage: ThirdwebNextPage = () => {
             >
               Edit
             </Button>
-          </Text>
+          </Flex>
         )}
 
-        <NoEngineInstance
+        {/* Modal to provide an Engine instance URL. */}
+        <AddEngineInstanceModal
           instance={instanceUrl}
           setInstanceUrl={setInstanceUrl}
           disclosure={setInstanceDisclosure}
         />
 
-        {!isLoggedIn ? (
+        {!user?.address ? (
+          // User not signed in.
           <NoConnectedWallet instance={instanceUrl} />
-        ) : instanceUrl ? (
-          enginePermissions.isLoading ? (
-            <Center>
-              <Flex py={4} direction="row" gap={4} align="center">
-                <Spinner size="sm" />
-                <Text>Connecting to your Engine instance</Text>
-              </Flex>
-            </Center>
-          ) : enginePermissions.isError &&
-            (enginePermissions?.error as { message: string }).message ===
-              "401" ? (
-            <NoAuthorizedWallet
-              instance={instanceUrl}
-              disclosure={setInstanceDisclosure}
-            />
-          ) : enginePermissions.isError &&
-            (enginePermissions?.error as { message: string }).message ===
-              "Failed to fetch" ? (
-            <NoServerConnection
-              instance={instanceUrl}
-              disclosure={setInstanceDisclosure}
-            />
-          ) : (
-            <EngineNavigation instance={instanceUrl} />
-          )
-        ) : null}
+        ) : !instanceUrl ? (
+          // No Engine connected.
+          <NoEngineInstance disclosure={setInstanceDisclosure} />
+        ) : enginePermissions.isLoading ? (
+          // Engine is connecting.
+          <Center>
+            <Flex py={4} direction="row" gap={4} align="center">
+              <Spinner size="sm" />
+              <Text>Connecting to your Engine...</Text>
+            </Flex>
+          </Center>
+        ) : enginePermissions.isError &&
+          (enginePermissions?.error as { message: string }).message ===
+            "401" ? (
+          // Not authorized to connect to this Engine instance.
+          <NoAuthorizedWallet
+            instance={instanceUrl}
+            disclosure={setInstanceDisclosure}
+          />
+        ) : enginePermissions.isError &&
+          (enginePermissions?.error as { message: string }).message ===
+            "Failed to fetch" ? (
+          // Error connecting to Engine.
+          <NoServerConnection
+            instance={instanceUrl}
+            disclosure={setInstanceDisclosure}
+          />
+        ) : (
+          // Connected to Engine.
+          <EngineNavigation instance={instanceUrl} />
+        )}
       </Flex>
     </Flex>
   );
@@ -96,3 +121,70 @@ EngineManage.getLayout = (page, props) => (
 EngineManage.pageId = PageId.EngineManage;
 
 export default EngineManage;
+
+const AddEngineInstanceModal = ({
+  instance,
+  setInstanceUrl,
+  disclosure,
+}: {
+  instance: string;
+  setInstanceUrl: (value: string) => void;
+  disclosure: UseDisclosureReturn;
+}) => {
+  const form = useForm({
+    defaultValues: {
+      url: instance,
+    },
+  });
+
+  const getCanonicalUrl = (url: string): string => {
+    const parsedURL = new URL(url);
+    return `${parsedURL.protocol}//${parsedURL.host}/`;
+  };
+
+  return (
+    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent
+        as="form"
+        onSubmit={form.handleSubmit((data) => {
+          setInstanceUrl(getCanonicalUrl(data.url));
+          disclosure.onClose();
+        })}
+      >
+        <ModalHeader>Set Engine Instance</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <FormControl isRequired>
+            <Input
+              type="url"
+              placeholder="Enter your Engine URL"
+              autoFocus
+              {...form.register("url")}
+            />
+            <FormHelperText>
+              Only https:// URLs are accepted.{" "}
+              <Link
+                href="https://portal.thirdweb.com/engine/getting-started"
+                color="primary.500"
+                isExternal
+              >
+                Learn more
+              </Link>
+              .
+            </FormHelperText>
+          </FormControl>
+        </ModalBody>
+
+        <ModalFooter as={Flex} gap={3}>
+          <Button onClick={disclosure.onClose} variant="ghost">
+            Cancel
+          </Button>
+          <Button colorScheme="primary" type="submit">
+            Save
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
