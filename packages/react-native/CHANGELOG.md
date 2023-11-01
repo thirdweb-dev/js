@@ -1,5 +1,23 @@
 # @thirdweb-dev/react-native
 
+## 0.3.16
+
+### Patch Changes
+
+- [#1880](https://github.com/thirdweb-dev/js/pull/1880) [`7461e2a9`](https://github.com/thirdweb-dev/js/commit/7461e2a9145549b7e08bc34d87d44be9bcff2c07) Thanks [@iketw](https://github.com/iketw)! - Fixes wallet icons borders bug
+
+- [#1878](https://github.com/thirdweb-dev/js/pull/1878) [`178609a0`](https://github.com/thirdweb-dev/js/commit/178609a0622b571560188a4266247eb342759ea1) Thanks [@iketw](https://github.com/iketw)! - Adds support for Japanese and Spanish
+
+  You can now pass 'ja' or 'es' to our ThirdwebProvider:
+
+  ```
+  import { ThirdwebProvider } from '@thirdweb-dev/react-native';
+
+  <ThirdwebProvider locale={'ja'}>
+    <App />
+  </ ThirdwebProvider>
+  ```
+
 ## 0.3.15
 
 ### Patch Changes

@@ -129,6 +129,12 @@ export class Auth {
     return this.BaseLogin.loginWithEmailOtp(args);
   }
 
+  async loginWithCustomJwt(
+    args: Parameters<BaseLogin["loginWithCustomJwt"]>[0],
+  ): Promise<AuthLoginReturnType> {
+    return this.BaseLogin.loginWithCustomJwt(args);
+  }
+
   async loginWithGoogle(
     args?: Parameters<BaseLogin["loginWithGoogle"]>[0],
   ): Promise<AuthLoginReturnType> {

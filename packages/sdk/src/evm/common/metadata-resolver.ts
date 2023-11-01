@@ -4,7 +4,6 @@ import { resolveContractUriAndBytecode } from "./feature-detection/resolveContra
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, providers } from "ethers";
 import { fetchContractMetadata } from "./fetchContractMetadata";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
 import { getMultichainRegistryAddress } from "../constants/addresses/getMultichainRegistryAddress";
 import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
@@ -113,6 +112,11 @@ async function getMetadataUriFromMultichainRegistry(
   chainId: number,
   sdkOptions: SDKOptions,
 ) {
+  const TWRegistryABI = (
+    await import(
+      "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json"
+    )
+  ).default;
   if (!multichainRegistry) {
     const polygonChain = sdkOptions?.supportedChains?.find(
       (c) => c.chainId === 137,
