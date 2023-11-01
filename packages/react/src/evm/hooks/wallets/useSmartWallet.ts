@@ -5,6 +5,7 @@ import {
   useSetConnectedWallet,
   useSetConnectionStatus,
   useWalletContext,
+  useWallets,
 } from "@thirdweb-dev/react-core";
 import type { SmartWalletConfigOptions } from "../../../wallet/wallets/smartWallet/types";
 import {
@@ -13,7 +14,6 @@ import {
 } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { useCallback } from "react";
 import type { BytesLike } from "ethers";
-import { EmbeddedWallet } from "@thirdweb-dev/wallets";
 
 export function useSmartWallet<W extends WalletInstance>(
   personalWallet: WalletConfig<W>,
@@ -23,6 +23,7 @@ export function useSmartWallet<W extends WalletInstance>(
   const setStatus = useSetConnectionStatus();
   const setWallet = useSetConnectedWallet();
   const context = useWalletContext();
+  const supportedWallets = useWallets();
 
   const predictAddress = useCallback(
     async (args: { personalWalletAddress: string; data?: BytesLike }) => {
@@ -41,6 +42,11 @@ export function useSmartWallet<W extends WalletInstance>(
       connectPersonalWallet?: (wallet: W) => Promise<void>;
       connectionArgs?: Omit<SmartWalletConnectionArgs, "personalWallet">;
     }) => {
+      if (!supportedWallets.find((w) => w.id === personalWallet.id)) {
+        console.warn(
+          "Please, add your smart wallet to the supportedWallets prop of the ThirdwebProvider to enjoy auto-connecting to the wallet.",
+        );
+      }
       const { smartWallet } = await import(
         "../../../wallet/wallets/smartWallet/smartWallet"
       );
@@ -77,25 +83,12 @@ export function useSmartWallet<W extends WalletInstance>(
       personalWallet,
       setStatus,
       setWallet,
+      supportedWallets,
     ],
-  );
-
-  const sendVerificationEmail = useCallback(
-    async (email: string) => {
-      if (!context.clientId) {
-        throw new Error("Please, provide a clientId in the ThirdwebProvider");
-      }
-      return EmbeddedWallet.sendVerificationEmail({
-        email,
-        clientId: context.clientId,
-      });
-    },
-    [context.clientId],
   );
 
   return {
     connect,
     predictAddress,
-    sendVerificationEmail,
   };
 }
