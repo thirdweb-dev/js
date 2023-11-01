@@ -31,6 +31,8 @@ export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
 export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
 export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
 export { useEmbeddedWallet } from "./wallets/hooks/useEmbeddedWallet";
+export { useSmartWallet } from "./wallets/hooks/useSmartWallet";
+export { useEmbeddedWalletSendVerificationEmail } from "./wallets/hooks/useEmbeddedWalletSendVerificationEmail";
 
 export {
   ConnectWallet,
