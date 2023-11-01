@@ -1,5 +1,82 @@
 # @thirdweb-dev/wallets
 
+## 2.1.0
+
+### Minor Changes
+
+- [#1846](https://github.com/thirdweb-dev/js/pull/1846) [`0acc530f`](https://github.com/thirdweb-dev/js/commit/0acc530f8bbee59672d9705724edc278bd853d9a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - # New Embedded Wallet API:
+
+  ### Headless Email authentication
+
+  ```ts
+  // send verification email
+  await embeddedWallet.sendVerificationEmail({
+    email,
+  });
+
+  // verify email
+  const authResult = embeddedWallet.authenticate({
+    strategy: "email_verification",
+    verificationCode: code,
+  });
+
+  // connect
+  const walletAddress = embeddedWallet.connect({
+    authResult,
+  });
+  ```
+
+  ### Google sign in authentication
+
+  ```ts
+  // prompt google sign in
+  const authResult = embeddedWallet.authenticate({
+    strategy: "google",
+  });
+
+  // connect
+  const walletAddress = embeddedWallet.connect({
+    authResult,
+  });
+  ```
+
+  ### iframe based authentication
+
+  ```ts
+  // open iframe to sign in
+  const authResult = embeddedWallet.authenticate({
+    strategy: "iframe",
+  });
+
+  // connect
+  const walletAddress = embeddedWallet.connect({
+    authResult,
+  });
+  ```
+
+  ### Custom Auth (JWT)
+
+  ```ts
+  // authenticate with any JWT system
+  const jwt = await yourLogin();
+
+  // verify JWT
+  const authResult = embeddedWallet.authenticate({
+    strategy: "jwt",
+    jwt,
+  });
+
+  // connect
+  const walletAddress = embeddedWallet.connect({
+    authResult,
+  });
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79)]:
+  - @thirdweb-dev/sdk@4.0.10
+
 ## 2.0.10
 
 ### Patch Changes

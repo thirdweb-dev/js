@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 4.0.10
+
+### Patch Changes
+
+- [#1871](https://github.com/thirdweb-dev/js/pull/1871) [`a9d32f3c`](https://github.com/thirdweb-dev/js/commit/a9d32f3c90251a459e17a19eca803bbfdeeaeb79) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Reduce bundle size by lazy loading some large modules
+
 ## 4.0.9
 
 ### Patch Changes
