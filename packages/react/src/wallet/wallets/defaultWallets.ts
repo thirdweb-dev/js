@@ -6,7 +6,6 @@ import { trustWallet } from "./trustWallet/TrustWallet";
 import { zerionWallet } from "./zerion/zerionWallet";
 import { rainbowWallet } from "./rainbow/RainbowWallet";
 import { phantomWallet } from "./phantom/phantomWallet";
-import { coreWallet } from "./coreWallet/coreWallet";
 
 export const defaultWallets: WalletConfig<any>[] = /* @__PURE__ */ (() => [
   metamaskWallet(),
