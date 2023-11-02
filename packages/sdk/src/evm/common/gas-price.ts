@@ -1,6 +1,7 @@
 import { ChainId } from "../constants/chains/ChainId";
 import { BigNumber, utils, providers } from "ethers";
-import { Mumbai, Polygon } from "@thirdweb-dev/chains";
+import Mumbai from "@thirdweb-dev/chains/chains/80001";
+import Polygon from "@thirdweb-dev/chains/chains/137";
 import { isBrowser } from "./utils";
 
 type FeeData = {

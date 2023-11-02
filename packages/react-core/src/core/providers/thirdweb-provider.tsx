@@ -8,7 +8,8 @@ import {
   ThirdwebWalletProvider,
   useWalletContext,
 } from "./thirdweb-wallet-provider";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
 import {
   createAsyncLocalStorage,
   CreateAsyncStorage,

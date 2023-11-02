@@ -5,7 +5,9 @@ import {
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { PropsWithChildren, useMemo } from "react";
-import type { Chain, defaultChains } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
+
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
 import { DEFAULT_WALLETS } from "../constants/wallets";

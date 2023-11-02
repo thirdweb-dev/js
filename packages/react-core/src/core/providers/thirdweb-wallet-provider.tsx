@@ -4,7 +4,7 @@ import type {
   WalletInstance,
   WalletOptions,
 } from "../types/wallet";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import {
   AbstractClientWallet,
   AsyncStorage,

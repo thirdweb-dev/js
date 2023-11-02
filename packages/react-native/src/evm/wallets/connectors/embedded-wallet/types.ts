@@ -1,4 +1,4 @@
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import {
   AuthProvider,
   RecoveryShareManagement,

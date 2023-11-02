@@ -1,5 +1,8 @@
 {
   "extends": "@thirdweb-dev/tsconfig/base.json",
   "include": ["src", "types"],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "resolveJsonModule": true
+  }
 }

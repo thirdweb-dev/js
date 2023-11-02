@@ -1,4 +1,5 @@
-import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
+import type { Chain } from "@thirdweb-dev/chains";
 import { WCMeta } from "../wallets/types/wc";
 
 /**

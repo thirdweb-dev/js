@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { updateChainRPCs, type Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { updateChainRPCs } from "@thirdweb-dev/chains/src/utils";
 
 export function useUpdateChainsWithClientId<
   TChains extends Chain[],

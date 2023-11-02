@@ -4,7 +4,7 @@ import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import type { SDKOptions, SDKOptionsOutput } from "../schema/sdk-options";
 import { SDKOptionsSchema } from "../schema/sdk-options";
 import type { ChainInfo } from "../schema/shared/ChainInfo";
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers } from "ethers";
 import type { Signer } from "ethers";

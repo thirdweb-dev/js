@@ -6,7 +6,7 @@ import {
   UserRejectedRequestError,
   WagmiConnector,
 } from "../../../lib/wagmi-core";
-import { type Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type WalletConnectProvider from "@walletconnect/ethereum-provider";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";

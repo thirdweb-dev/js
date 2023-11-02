@@ -1,4 +1,4 @@
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
 import type { PaperWalletConnector } from "../connectors/paper";
 import {
   PaperWalletAdditionalOptions as PaperWalletAdditionalOptions_,

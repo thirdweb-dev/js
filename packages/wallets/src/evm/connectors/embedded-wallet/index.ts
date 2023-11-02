@@ -1,4 +1,4 @@
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import type { Signer, providers } from "ethers";
 import { utils } from "ethers";
 import { normalizeChainId } from "../../../lib/wagmi-core";

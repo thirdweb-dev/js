@@ -2,12 +2,10 @@ import { AsyncStorage, createAsyncLocalStorage } from "../../core";
 import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
-import {
-  Chain,
-  defaultChains,
-  Ethereum,
-  updateChainRPCs,
-} from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { updateChainRPCs } from "@thirdweb-dev/chains/src/utils";
+import Ethereum from "@thirdweb-dev/chains/chains/1";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
 import { Wallet, utils } from "ethers";
 
 export type LocalWalletOptions = {

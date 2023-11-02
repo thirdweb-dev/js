@@ -1,4 +1,5 @@
-import { getValidChainRPCs, type Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
 
 export function isTwUrl(url: string): boolean {
   const host = new URL(url).hostname;

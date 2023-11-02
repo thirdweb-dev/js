@@ -5,7 +5,9 @@ import { ThirdwebSDKContext } from "../contexts/thirdweb-sdk";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { useUpdateChainsWithClientId } from "../hooks/chain-hooks";
 import { ThirdwebSDKProviderProps } from "./types";
-import { Chain, defaultChains, getValidChainRPCs } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
 import { SDKOptionsOutput, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { checkClientIdOrSecretKey } from "@thirdweb-dev/sdk";
 

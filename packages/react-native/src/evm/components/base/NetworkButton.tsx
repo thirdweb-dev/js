@@ -14,7 +14,7 @@ import { useSwitchChain, useSupportedChains } from "@thirdweb-dev/react-core";
 import Box from "./Box";
 import { ModalHeaderTextClose } from "./modal/ModalHeaderTextClose";
 import { TWModal } from "./modal/TWModal";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { useGlobalTheme, useLocale } from "../../providers/ui-context-provider";
 
 type NetworkButtonProps = {

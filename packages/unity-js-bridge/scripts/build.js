@@ -15,6 +15,7 @@ esbuild.build({
   target: "es2020",
   outfile: "dist/thirdweb-unity-bridge.js",
   splitting: false,
+  external: ["@thirdweb-dev/chains"],
   write: true,
   sourcemap: false,
 

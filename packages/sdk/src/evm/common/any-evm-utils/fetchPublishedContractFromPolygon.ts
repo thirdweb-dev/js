@@ -6,7 +6,7 @@ import { resolveAddress } from "../ens/resolveAddress";
 import invariant from "tiny-invariant";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
-import { Polygon } from "@thirdweb-dev/chains";
+import Polygon from "@thirdweb-dev/chains/chains/137";
 import { getSupportedChains } from "../../constants/chains/supportedChains";
 import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { PublishedContractSchema } from "../../schema/contracts/custom";

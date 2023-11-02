@@ -1,4 +1,6 @@
-import { Chain, defaultChains, updateChainRPCs } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
+import { updateChainRPCs } from "@thirdweb-dev/chains/src/utils";
 import { AsyncStorage, createAsyncLocalStorage } from "../../core/AsyncStorage";
 import type { DAppMetaData } from "../../core/types/dAppMeta";
 import { DEFAULT_DAPP_META } from "../constants/dappMeta";

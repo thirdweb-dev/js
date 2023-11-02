@@ -4,7 +4,7 @@ import {
 } from "@magic-sdk/react-native-bare";
 import { Chain, Connector, normalizeChainId } from "@thirdweb-dev/wallets";
 import { Signer, ethers, providers } from "ethers";
-import { defaultChains } from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
 import { MagicConnectorOptions } from "./types";
 
 export class MagicConnector extends Connector<MagicConnectorOptions> {

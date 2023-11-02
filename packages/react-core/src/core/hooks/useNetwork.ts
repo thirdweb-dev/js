@@ -1,4 +1,5 @@
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
+import { defaultChains } from "@thirdweb-dev/chains/src/constants";
 import { useCallback, useState } from "react";
 import { useChain, useChainId } from "../../evm/hooks/wallet";
 import { useSupportedChains } from "../../evm/hooks/useSupportedChains";
