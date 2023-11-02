@@ -1,5 +1,14 @@
 # @thirdweb-dev/react
 
+## 4.1.1
+
+### Patch Changes
+
+- [#1888](https://github.com/thirdweb-dev/js/pull/1888) [`789700cf`](https://github.com/thirdweb-dev/js/commit/789700cf60ac40d4cc2742c8aa735a225089c522) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign in connect button display logic
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@4.1.1
+
 ## 4.1.0
 
 ### Minor Changes
