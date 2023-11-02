@@ -169,9 +169,14 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
   const { user } = useUser();
   const disconnect = useDisconnect();
 
+  const connectedButNotSignedIn =
+    !!authConfig?.authUrl &&
+    !!address &&
+    (!user?.address || address !== user?.address);
+
   const requiresSignIn = props.auth?.loginOptional
     ? false
-    : !!authConfig?.authUrl && !!address && !user?.address;
+    : connectedButNotSignedIn;
 
   const supportedTokens = useMemo(() => {
     if (!props.supportedTokens) {

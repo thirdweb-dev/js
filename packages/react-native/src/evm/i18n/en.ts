@@ -78,6 +78,11 @@ export const _en = {
     forgot_password: "Forgot password",
     enter_account_recovery_code: "Enter account recovery code",
     backup_your_account: "Backup your account",
+    create_password: "Create password",
+    enter_password: "Enter password",
+    set_password_message: "Set a password to secure your account",
+    enter_password_for_email: "Enter password for",
+    make_sure_you_save_it: "Make sure you save it",
   },
   wallet_connect: {
     no_results_found: "No results found",

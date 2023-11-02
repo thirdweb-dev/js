@@ -7,17 +7,17 @@ import {
   useWalletContext,
   useWallets,
 } from "@thirdweb-dev/react-core";
-import type { SmartWalletConfigOptions } from "../../../wallet/wallets/smartWallet/types";
 import {
   getSmartWalletAddress,
   type SmartWalletConnectionArgs,
 } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { useCallback } from "react";
 import type { BytesLike } from "ethers";
+import { SmartWalletConfig } from "../types/smart-wallet";
 
 export function useSmartWallet<W extends WalletInstance>(
   personalWallet: WalletConfig<W>,
-  options: SmartWalletConfigOptions,
+  options: SmartWalletConfig,
 ) {
   const create = useCreateWalletInstance();
   const setStatus = useSetConnectionStatus();
@@ -47,9 +47,7 @@ export function useSmartWallet<W extends WalletInstance>(
           "Please, add your smart wallet to the supportedWallets prop of the ThirdwebProvider to enjoy auto-connecting to the wallet.",
         );
       }
-      const { smartWallet } = await import(
-        "../../../wallet/wallets/smartWallet/smartWallet"
-      );
+      const { smartWallet } = await import("../wallets/smart-wallet");
       setStatus("connecting");
       const pw = create(personalWallet);
       const sw = create(smartWallet(personalWallet, options));
