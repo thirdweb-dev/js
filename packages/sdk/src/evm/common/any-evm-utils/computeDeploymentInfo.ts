@@ -22,6 +22,7 @@ import { ConstructorParamMap } from "../../types/any-evm/deploy-data";
 import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 import { caches } from "./caches";
 import { getRoyaltyEngineV1ByChainId } from "../../constants/royaltyEngine";
+import { getEntrypointByChainId } from "../../constants/entrypoint";
 
 export async function computeDeploymentInfo(
   contractType: DeployedContractType,
@@ -223,6 +224,21 @@ export async function encodeConstructorParamsForImplementation(
           royaltyEngineAddress: royaltyEngineAddress,
           nativeTokenWrapper: nativeTokenWrapper,
         };
+      } else if (p.name && p.name.includes("defaultExtensions")) {
+        const extensions = constructorParamMap
+          ? constructorParamMap["_extensions"].value
+          : [];
+
+        return extensions;
+      } else if (p.name && p.name.includes("entrypoint")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        const entrypoint = getEntrypointByChainId(chainId);
+
+        if (entrypoint === constants.AddressZero) {
+          throw new Error("Entrypoint not found for this network");
+        }
+
+        return entrypoint;
       } else {
         throw new Error("Can't resolve constructor arguments");
       }
