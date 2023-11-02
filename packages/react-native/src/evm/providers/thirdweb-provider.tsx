@@ -4,7 +4,7 @@ import {
   ThirdwebProviderCoreProps,
   WalletConfig,
 } from "@thirdweb-dev/react-core";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { SecureStorage } from "../../core/SecureStorage";
 import { useCoinbaseWalletListener } from "../wallets/hooks/useCoinbaseWalletListener";
@@ -13,7 +13,6 @@ import { DappContextProvider } from "./context-provider";
 import { UIContextProvider } from "./ui-context-provider";
 import { MainModal } from "../components/MainModal";
 import { ThemeProvider } from "../styles/ThemeProvider";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { walletIds } from "@thirdweb-dev/wallets";
 import { ThirdwebStorage } from "../../core/storage/storage";
 import { useColorScheme } from "react-native";
