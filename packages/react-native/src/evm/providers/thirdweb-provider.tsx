@@ -123,11 +123,6 @@ export const ThirdwebProvider = <
     coinbaseWalletObj?.config?.callbackURL,
   );
 
-  const hasMagicConfig = useMemo(
-    () => !!supportedWallets.find((wc) => wc.id === walletIds.magicLink),
-    [supportedWallets],
-  );
-
   return (
     <ThirdwebProviderCore
       supportedWallets={supportedWallets}
@@ -155,19 +150,10 @@ export const ThirdwebProvider = <
         theme={theme ? theme : colorScheme === "dark" ? "dark" : "light"}
       >
         <UIContextProvider locale={locale}>
-          {hasMagicConfig ? (
-            <SafeAreaProvider>
-              <DappContextProvider>
-                {children}
-                <MainModal />
-              </DappContextProvider>
-            </SafeAreaProvider>
-          ) : (
-            <DappContextProvider>
-              {children}
-              <MainModal />
-            </DappContextProvider>
-          )}
+          <DappContextProvider>
+            {children}
+            <MainModal />
+          </DappContextProvider>
         </UIContextProvider>
       </ThemeProvider>
     </ThirdwebProviderCore>
