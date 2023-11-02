@@ -59,6 +59,7 @@ export class ContractVerifier extends RPCConnectionHandler {
     contractName: string,
     explorerAPIUrl: string,
     explorerAPIKey: string,
+    contractVersion: string = "latest",
     constructorArgs?: ConstructorParamMap,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
@@ -68,6 +69,7 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
+      contractVersion,
       this.options.clientId,
       this.options.secretKey,
       constructorArgs,

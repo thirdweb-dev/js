@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Scroll Alpha Testnet",
   "chain": "ETH",
-  "status": "deprecated",
-  "rpc": [
-    "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://alpha-rpc.scroll.io/l2"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://scroll.io",
-  "shortName": "scr-alpha",
   "chainId": 534353,
-  "networkId": 534353,
   "explorers": [
     {
       "name": "Scroll Alpha Testnet Block Explorer",
@@ -24,11 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "infoURL": "https://scroll.io",
+  "name": "Scroll Alpha Testnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 534353,
   "parent": {
     "type": "L2",
     "chain": "eip155-5",
     "bridges": []
   },
-  "testnet": true,
-  "slug": "scroll-alpha-testnet"
+  "rpc": [
+    "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://534353.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://alpha-rpc.scroll.io/l2"
+  ],
+  "shortName": "scr-alpha",
+  "slug": "scroll-alpha-testnet",
+  "status": "deprecated",
+  "testnet": true
 } as const satisfies Chain;

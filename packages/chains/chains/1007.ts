@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Newton Testnet",
   "chain": "NEW",
-  "rpc": [
-    "https://newton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.newchain.newtonproject.org"
-  ],
+  "chainId": 1007,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://www.newtonproject.org/",
+  "name": "Newton Testnet",
   "nativeCurrency": {
     "name": "Newton",
     "symbol": "NEW",
     "decimals": 18
   },
-  "infoURL": "https://www.newtonproject.org/",
-  "shortName": "tnew",
-  "chainId": 1007,
   "networkId": 1007,
-  "testnet": true,
-  "slug": "newton-testnet"
+  "rpc": [
+    "https://newton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1007.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.newchain.newtonproject.org"
+  ],
+  "shortName": "tnew",
+  "slug": "newton-testnet",
+  "testnet": true
 } as const satisfies Chain;

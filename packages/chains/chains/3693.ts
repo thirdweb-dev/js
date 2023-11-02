@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Empire Network",
   "chain": "EMPIRE",
-  "rpc": [
-    "https://empire-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.empirenetwork.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Empire",
-    "symbol": "EMPIRE",
-    "decimals": 18
-  },
-  "infoURL": "https://www.empirenetwork.io/",
-  "shortName": "empire",
   "chainId": 3693,
-  "networkId": 3693,
   "explorers": [
     {
       "name": "Empire Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "empire-network"
+  "faucets": [],
+  "infoURL": "https://www.empirenetwork.io/",
+  "name": "Empire Network",
+  "nativeCurrency": {
+    "name": "Empire",
+    "symbol": "EMPIRE",
+    "decimals": 18
+  },
+  "networkId": 3693,
+  "rpc": [
+    "https://empire-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3693.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.empirenetwork.io"
+  ],
+  "shortName": "empire",
+  "slug": "empire-network",
+  "testnet": false
 } as const satisfies Chain;

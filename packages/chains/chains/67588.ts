@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cosmic Chain",
   "chain": "COSMIC",
-  "rpc": [
-    "https://cosmic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://testnet.cosmicchain.site:3344"
-  ],
+  "chainId": 67588,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://cosmicchain.site",
+  "name": "Cosmic Chain",
   "nativeCurrency": {
     "name": "Cosmic Chain",
     "symbol": "COSMIC",
     "decimals": 18
   },
-  "infoURL": "https://cosmicchain.site",
-  "shortName": "Cosmic",
-  "chainId": 67588,
   "networkId": 3344,
-  "testnet": true,
-  "slug": "cosmic-chain"
+  "rpc": [
+    "https://cosmic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://67588.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://testnet.cosmicchain.site:3344"
+  ],
+  "shortName": "Cosmic",
+  "slug": "cosmic-chain",
+  "testnet": true
 } as const satisfies Chain;

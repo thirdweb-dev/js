@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HALO Mainnet",
   "chain": "HALO",
-  "rpc": [
-    "https://halo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://nodes.halo.land"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "HALO",
-    "symbol": "HO",
-    "decimals": 18
-  },
-  "infoURL": "https://halo.land/#/",
-  "shortName": "HO",
   "chainId": 1280,
-  "networkId": 1280,
   "explorers": [
     {
       "name": "HALOexplorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "halo"
+  "faucets": [],
+  "infoURL": "https://halo.land/#/",
+  "name": "HALO Mainnet",
+  "nativeCurrency": {
+    "name": "HALO",
+    "symbol": "HO",
+    "decimals": 18
+  },
+  "networkId": 1280,
+  "rpc": [
+    "https://halo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1280.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://nodes.halo.land"
+  ],
+  "shortName": "HO",
+  "slug": "halo",
+  "testnet": false
 } as const satisfies Chain;

@@ -234,10 +234,11 @@ export class ShardedMerkleTree {
     const currencyDecimalMap: Record<string, number> = {};
     if (shard === undefined) {
       try {
+        const uri = this.baseUri.endsWith("/")
+          ? this.baseUri
+          : `${this.baseUri}/`;
         shard = this.shards[shardId] =
-          await this.storage.downloadJSON<ShardData>(
-            `${this.baseUri}/${shardId}.json`,
-          );
+          await this.storage.downloadJSON<ShardData>(`${uri}${shardId}.json`);
         const hashedEntries = await Promise.all(
           shard.entries.map(async (entry) => {
             // cache decimals for each currency to avoid refetching for every address

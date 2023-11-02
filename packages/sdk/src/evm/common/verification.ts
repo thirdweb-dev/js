@@ -8,13 +8,11 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Abi } from "../schema/contracts/custom";
 import { Contract, utils, providers } from "ethers";
 import { EtherscanResult, VerificationStatus } from "../types/verification";
-import fetch from "cross-fetch";
 import { ConstructorParamMap } from "../types/any-evm/deploy-data";
 import { getChainProvider } from "../constants/urls";
 import invariant from "tiny-invariant";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import type { ContractPublisher } from "@thirdweb-dev/contracts-js";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import { fetchExtendedReleaseMetadata } from "./feature-detection/fetchExtendedReleaseMetadata";
 import { getContractPublisherAddress } from "../constants/addresses/getContractPublisherAddress";
 
@@ -61,6 +59,7 @@ export async function verifyThirdwebPrebuiltImplementation(
   explorerAPIUrl: string,
   explorerAPIKey: string,
   storage: ThirdwebStorage,
+  contractVersion: string = "latest",
   clientId?: string,
   secretKey?: string,
   constructorArgs?: ConstructorParamMap,
@@ -69,6 +68,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     contractName,
     chainId,
     storage,
+    contractVersion,
     clientId,
     secretKey,
   );
@@ -76,6 +76,7 @@ export async function verifyThirdwebPrebuiltImplementation(
     contractName,
     chainId,
     storage,
+    contractVersion,
     clientId,
     secretKey,
     constructorArgs,
@@ -455,6 +456,11 @@ async function fetchDeployBytecodeFromPublishedContractMetadata(
     provider,
   );
   if (compilerMetaUri) {
+    const ContractPublisherAbi = (
+      await import(
+        "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json"
+      )
+    ).default;
     const contract = new Contract(
       getContractPublisherAddress(),
       ContractPublisherAbi,

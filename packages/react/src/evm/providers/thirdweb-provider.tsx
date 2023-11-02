@@ -4,17 +4,20 @@ import {
   WalletConfig,
 } from "@thirdweb-dev/react-core";
 import { WalletUIStatesProvider } from "./wallet-ui-states-provider";
-import { ConnectModal } from "../../wallet/ConnectWallet/ConnectModal";
-import { ThemeProvider } from "@emotion/react";
-import { darkTheme, lightTheme } from "../../design-system";
-import { PropsWithChildren } from "react";
+import { ConnectModal } from "../../wallet/ConnectWallet/Modal/ConnectModal";
+import { ThemeObjectOrType } from "../../design-system";
+import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import type { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { defaultWallets } from "../../wallet/wallets/defaultWallets";
+import { CustomThemeProvider } from "../../design-system/CustomThemeProvider";
+import { signerWallet } from "../../wallet/wallets/signerWallet";
+import { Signer } from "ethers";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 interface ThirdwebProviderProps<TChains extends Chain[]>
   extends Omit<
     ThirdwebProviderCoreProps<TChains>,
-    "createWalletStorage" | "supportedWallets"
+    "createWalletStorage" | "supportedWallets" | "theme"
   > {
   /**
    * Wallets supported by the dApp
@@ -30,6 +33,14 @@ interface ThirdwebProviderProps<TChains extends Chain[]>
    * ```
    */
   supportedWallets?: WalletConfig<any>[];
+
+  /**
+   * theme to use for all thirdweb components
+   * @defaultValue "dark"
+   */
+  theme?: ThemeObjectOrType;
+
+  signer?: Signer;
 }
 
 /**
@@ -57,24 +68,55 @@ export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
 >({
   supportedWallets,
-  theme,
   children,
+  signer,
+  theme: _theme,
   ...restProps
 }: PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   const wallets: WalletConfig[] = supportedWallets || defaultWallets;
+  const theme = _theme || "dark";
+
+  const signerWalletConfig = useMemo(
+    () => (signer ? (signerWallet(signer) as WalletConfig<any>) : undefined),
+    [signer],
+  );
+
+  // preload the embeddedWallet SDK if present in supportedWallets
+  const ewsRef = useRef(false);
+  useEffect(() => {
+    if (ewsRef.current) {
+      return;
+    }
+    ewsRef.current = true;
+    const preloadEmbeddedWallet = async () => {
+      const hasEmbeddedWallet = wallets.find(
+        (w) => w.id === walletIds.embeddedWallet,
+      );
+      if (hasEmbeddedWallet && restProps.clientId) {
+        // TODO only preload the iframe instead of creating the SDK
+        const { EmbeddedWalletSdk } = await import("@thirdweb-dev/wallets");
+        new EmbeddedWalletSdk({
+          clientId: restProps.clientId,
+          chain: "Ethereum",
+        });
+      }
+    };
+    preloadEmbeddedWallet();
+  }, [restProps.clientId, wallets]);
 
   return (
     <WalletUIStatesProvider theme={theme}>
-      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <CustomThemeProvider theme={theme}>
         <ThirdwebProviderCore
-          theme={theme}
-          supportedWallets={wallets}
           {...restProps}
+          theme={typeof theme === "string" ? theme : theme.type}
+          supportedWallets={wallets}
+          signerWallet={signerWalletConfig}
         >
           {children}
           <ConnectModal />
         </ThirdwebProviderCore>
-      </ThemeProvider>
+      </CustomThemeProvider>
     </WalletUIStatesProvider>
   );
 };

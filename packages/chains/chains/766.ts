@@ -1,41 +1,42 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "QL1",
   "chain": "QOM",
-  "status": "incubating",
-  "rpc": [
-    "https://ql1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.qom.one"
+  "chainId": 766,
+  "explorers": [
+    {
+      "name": "QL1 Mainnet Explorer",
+      "url": "https://mainnet.qom.one",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRc1kJ7AgcDL1BSoMYudatWHTrz27K6WNTwGifQb5V17D",
+        "width": 518,
+        "height": 518,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Shiba Predator",
-    "symbol": "QOM",
-    "decimals": 18
-  },
-  "infoURL": "https://qom.one",
-  "shortName": "qom",
-  "chainId": 766,
-  "networkId": 766,
   "icon": {
     "url": "ipfs://QmRc1kJ7AgcDL1BSoMYudatWHTrz27K6WNTwGifQb5V17D",
     "width": 518,
     "height": 518,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "QL1 Mainnet Explorer",
-      "url": "https://mainnet.qom.one",
-      "icon": {
-        "url": "ipfs://QmRc1kJ7AgcDL1BSoMYudatWHTrz27K6WNTwGifQb5V17D",
-        "width": 518,
-        "height": 518,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://qom.one",
+  "name": "QL1",
+  "nativeCurrency": {
+    "name": "Shiba Predator",
+    "symbol": "QOM",
+    "decimals": 18
+  },
+  "networkId": 766,
+  "rpc": [
+    "https://ql1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://766.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.qom.one"
   ],
-  "testnet": false,
-  "slug": "ql1"
+  "shortName": "qom",
+  "slug": "ql1",
+  "status": "incubating",
+  "testnet": false
 } as const satisfies Chain;

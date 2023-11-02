@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Clover Testnet",
   "chain": "Clover",
-  "rpc": [],
+  "chainId": 1023,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://clover.finance",
+  "name": "Clover Testnet",
   "nativeCurrency": {
     "name": "Clover",
     "symbol": "CLV",
     "decimals": 18
   },
-  "infoURL": "https://clover.finance",
-  "shortName": "tclv",
-  "chainId": 1023,
   "networkId": 1023,
-  "testnet": true,
-  "slug": "clover-testnet"
+  "rpc": [],
+  "shortName": "tclv",
+  "slug": "clover-testnet",
+  "testnet": true
 } as const satisfies Chain;

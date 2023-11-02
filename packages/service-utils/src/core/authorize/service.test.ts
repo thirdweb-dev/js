@@ -1,50 +1,12 @@
-import { ApiKeyMetadata, CoreServiceConfig } from "../api";
+import {
+  validApiKeyMeta,
+  validBundlerServiceConfig,
+  validServiceConfig,
+} from "../../mocks";
+import { CoreServiceConfig } from "../api";
 import { ServiceAuthorizationPayload, authorizeService } from "./service";
 
 describe("authorizeService", () => {
-  const validApiKeyMeta: ApiKeyMetadata = {
-    id: "1",
-    key: "your-api-key",
-    creatorWalletAddress: "creator-address",
-    secretHash: "secret-hash",
-    walletAddresses: [],
-    domains: [],
-    bundleIds: [],
-    accountId: "test-account-id",
-    services: [
-      {
-        name: "storage",
-        targetAddresses: ["target1", "target2"],
-        actions: ["action1", "action2"],
-      },
-      {
-        name: "service2",
-        targetAddresses: ["target3"],
-        actions: ["action3"],
-      },
-      {
-        name: "bundler",
-        targetAddresses: ["*"],
-        actions: ["action3"],
-      },
-    ],
-  };
-
-  const validServiceConfig: CoreServiceConfig = {
-    apiUrl: "https://api.example.com",
-    serviceScope: "storage",
-    serviceApiKey: "service-api-key",
-    serviceAction: "action1",
-    enforceAuth: true,
-  };
-
-  const validBundlerServiceConfig: CoreServiceConfig = {
-    apiUrl: "https://api.example.com",
-    serviceScope: "bundler",
-    serviceApiKey: "service-api-key",
-    enforceAuth: true,
-  };
-
   it("should authorize service with valid service scope and action", () => {
     const result = authorizeService(validApiKeyMeta, validServiceConfig) as any;
     expect(result.authorized).toBe(true);

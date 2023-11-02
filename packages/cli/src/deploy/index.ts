@@ -12,7 +12,7 @@ type DeployOptions = {
   distPath?: string;
 };
 
-export async function deploy(options: DeployOptions, apiSecretKey: string) {
+export async function deploy(options: DeployOptions, secretKey: string) {
   if (options.name) {
     const url = generateDashboardUrl(options.name, options.contractVersion);
 
@@ -33,7 +33,7 @@ export async function deploy(options: DeployOptions, apiSecretKey: string) {
 
   if (options.app) {
     try {
-      const url = await deployApp(options.distPath, options.path, apiSecretKey);
+      const url = await deployApp(options.distPath, options.path, secretKey);
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {
@@ -44,7 +44,7 @@ export async function deploy(options: DeployOptions, apiSecretKey: string) {
     }
   }
 
-  const url = await processProject(options, "deploy", apiSecretKey);
+  const url = await processProject(options, "deploy", secretKey);
   info(
     `Open this link to deploy your contracts: ${chalk.blueBright(
       url.toString(),

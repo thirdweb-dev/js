@@ -1,5 +1,7 @@
-import { getRoleHash } from "../../common/role";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { CallOverrides, constants } from "ethers";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
 import { ContractAppURI } from "../../core/classes/contract-appuri";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -15,15 +17,13 @@ import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput } from "../../core/types";
-import { Address } from "../../schema/shared/Address";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
-import type { CurrencyValue, Amount } from "../../types/currency";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { Amount, CurrencyValue } from "../../types/currency";
 import { PrebuiltTokenDrop } from "../../types/eips";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CallOverrides, constants } from "ethers";
 import { TOKEN_DROP_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -54,7 +54,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   >;
   public encoder: ContractEncoder<PrebuiltTokenDrop>;
   public estimator: GasCostEstimator<PrebuiltTokenDrop>;
-  public sales: ContractPrimarySale<PrebuiltTokenDrop>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<PrebuiltTokenDrop>;
   public events: ContractEvents<PrebuiltTokenDrop>;
   /**
@@ -147,9 +147,9 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
 
   public async getVoteBalanceOf(account: AddressOrEns): Promise<CurrencyValue> {
     return await this.erc20.getValue(
-      await this.contractWrapper.readContract.getVotes(
+      await this.contractWrapper.read("getVotes", [
         await resolveAddress(account),
-      ),
+      ]),
     );
   }
 
@@ -170,19 +170,19 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
    * @returns the address of your vote delegatee
    */
   public async getDelegationOf(account: AddressOrEns): Promise<Address> {
-    return await this.contractWrapper.readContract.delegates(
+    return await this.contractWrapper.read("delegates", [
       await resolveAddress(account),
-    );
+    ]);
   }
 
   /**
    * Get whether users can transfer tokens from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 

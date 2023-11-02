@@ -1,7 +1,6 @@
-import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { BigNumber, type BigNumberish, utils } from "ethers";
+import { BigNumber, utils, type BigNumberish } from "ethers";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
 
 export async function approveErc20Allowance(
   contractToApprove: ContractWrapper<any>,
@@ -12,6 +11,9 @@ export async function approveErc20Allowance(
 ) {
   const signer = contractToApprove.getSigner();
   const provider = contractToApprove.getProvider();
+  const ERC20Abi = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/IERC20.json")
+  ).default;
   const erc20 = new ContractWrapper<IERC20>(
     signer || provider,
     currencyAddress,
@@ -20,8 +22,8 @@ export async function approveErc20Allowance(
     contractToApprove.storage,
   );
   const owner = await contractToApprove.getSignerAddress();
-  const spender = contractToApprove.readContract.address;
-  const allowance = await erc20.readContract.allowance(owner, spender);
+  const spender = contractToApprove.address;
+  const allowance = await erc20.read("allowance", [owner, spender]);
   const totalPrice = BigNumber.from(price)
     .mul(BigNumber.from(quantity))
     .div(utils.parseUnits("1", tokenDecimals));

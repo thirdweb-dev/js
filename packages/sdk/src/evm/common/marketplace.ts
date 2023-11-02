@@ -1,21 +1,4 @@
-import { DEFAULT_QUERY_ALL_COUNT } from "../../core/schema/QueryParams";
-import { MAX_BPS } from "../../core/schema/shared";
-import {
-  InterfaceId_IERC1155,
-  InterfaceId_IERC721,
-} from "../constants/contract";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  NewAuctionListing,
-  NewDirectListing,
-  Offer,
-  UnmappedOffer,
-} from "../types/marketplace";
-import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
-import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import {
   BigNumber,
   BigNumberish,
@@ -24,6 +7,18 @@ import {
   providers,
 } from "ethers";
 import invariant from "tiny-invariant";
+import { DEFAULT_QUERY_ALL_COUNT } from "../../core/schema/QueryParams";
+import { MAX_BPS } from "../../core/schema/shared";
+import {
+  InterfaceId_IERC1155,
+  InterfaceId_IERC721,
+} from "../constants/contract";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { fetchCurrencyValue } from "./currency/fetchCurrencyValue";
+import { NewDirectListing } from "../types/marketplace/NewDirectListing";
+import { NewAuctionListing } from "../types/marketplace/NewAuctionListing";
+import { UnmappedOffer } from "../types/marketplace/UnmappedOffer";
+import { Offer } from "../types/marketplace/Offer";
 
 /**
  * This method checks if the given token is approved for the transferrerContractAddress contract.
@@ -45,10 +40,18 @@ export async function isTokenApprovedForTransfer(
   owner: string,
 ): Promise<boolean> {
   try {
+    const ERC165Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+    ).default;
     const erc165 = new Contract(assetContract, ERC165Abi, provider) as IERC165;
-    const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-    const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+    const [isERC721, isERC1155] = await Promise.all([
+      erc165.supportsInterface(InterfaceId_IERC721),
+      erc165.supportsInterface(InterfaceId_IERC1155),
+    ]);
     if (isERC721) {
+      const ERC721Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC721.json")
+      ).default;
       const asset = new Contract(assetContract, ERC721Abi, provider) as IERC721;
 
       const approved = await asset.isApprovedForAll(
@@ -69,6 +72,9 @@ export async function isTokenApprovedForTransfer(
         transferrerContractAddress.toLowerCase()
       );
     } else if (isERC1155) {
+      const ERC1155Abi = (
+        await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155.json")
+      ).default;
       const asset = new Contract(
         assetContract,
         ERC1155Abi,
@@ -101,6 +107,9 @@ export async function handleTokenApproval(
   tokenId: BigNumberish,
   from: string,
 ): Promise<void> {
+  const ERC165Abi = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+  ).default;
   const erc165 = new ContractWrapper<IERC165>(
     contractWrapper.getSignerOrProvider(),
     assetContract,
@@ -108,14 +117,15 @@ export async function handleTokenApproval(
     contractWrapper.options,
     contractWrapper.storage,
   );
-  const isERC721 = await erc165.readContract.supportsInterface(
-    InterfaceId_IERC721,
-  );
-  const isERC1155 = await erc165.readContract.supportsInterface(
-    InterfaceId_IERC1155,
-  );
+  const [isERC721, isERC1155] = await Promise.all([
+    erc165.read("supportsInterface", [InterfaceId_IERC721]),
+    erc165.read("supportsInterface", [InterfaceId_IERC1155]),
+  ]);
   // check for token approval
   if (isERC721) {
+    const ERC721Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC721.json")
+    ).default;
     const asset = new ContractWrapper<IERC721>(
       contractWrapper.getSignerOrProvider(),
       assetContract,
@@ -123,13 +133,13 @@ export async function handleTokenApproval(
       contractWrapper.options,
       contractWrapper.storage,
     );
-    const approved = await asset.readContract.isApprovedForAll(
+    const approved = await asset.read("isApprovedForAll", [
       from,
       marketplaceAddress,
-    );
+    ]);
     if (!approved) {
       const isTokenApproved =
-        (await asset.readContract.getApproved(tokenId)).toLowerCase() ===
+        (await asset.read("getApproved", [tokenId])).toLowerCase() ===
         marketplaceAddress.toLowerCase();
 
       if (!isTokenApproved) {
@@ -140,6 +150,9 @@ export async function handleTokenApproval(
       }
     }
   } else if (isERC1155) {
+    const ERC1155Abi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155.json")
+    ).default;
     const asset = new ContractWrapper<IERC1155>(
       contractWrapper.getSignerOrProvider(),
       assetContract,
@@ -148,10 +161,10 @@ export async function handleTokenApproval(
       contractWrapper.storage,
     );
 
-    const approved = await asset.readContract.isApprovedForAll(
+    const approved = await asset.read("isApprovedForAll", [
       from,
       marketplaceAddress,
-    );
+    ]);
     if (!approved) {
       await asset.sendTransaction("setApprovalForAll", [
         marketplaceAddress,

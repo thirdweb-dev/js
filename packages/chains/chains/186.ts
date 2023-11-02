@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Seele Mainnet",
   "chain": "Seele",
-  "rpc": [
-    "https://seele.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.seelen.pro/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Seele",
-    "symbol": "Seele",
-    "decimals": 18
-  },
-  "infoURL": "https://seelen.pro/",
-  "shortName": "Seele",
   "chainId": 186,
-  "networkId": 186,
   "explorers": [
     {
       "name": "seeleview",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "seele"
+  "faucets": [],
+  "infoURL": "https://seelen.pro/",
+  "name": "Seele Mainnet",
+  "nativeCurrency": {
+    "name": "Seele",
+    "symbol": "Seele",
+    "decimals": 18
+  },
+  "networkId": 186,
+  "rpc": [
+    "https://seele.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://186.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.seelen.pro/"
+  ],
+  "shortName": "Seele",
+  "slug": "seele",
+  "testnet": false
 } as const satisfies Chain;

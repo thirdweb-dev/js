@@ -9,7 +9,7 @@ import { getInjectedMetamaskProvider } from "../connectors/metamask/getInjectedM
 
 type MetamaskAdditionalOptions = {
   /**
-   * Whether to open the default Wallet Connect QR code Modal for connecting to Zerion Wallet on mobile if Zerion is not injected when calling connect().
+   * Whether to open the default Wallet Connect QR code Modal for connecting to MetaMask Wallet on mobile if MetaMask is not injected when calling connect().
    */
   qrcode?: boolean;
 
@@ -55,7 +55,7 @@ export class MetaMaskWallet extends AbstractClientWallet<MetamaskAdditionalOptio
     },
   };
 
-  static id = walletIds.metamask;
+  static id = walletIds.metamask as string;
 
   public get walletName() {
     return "MetaMask" as const;

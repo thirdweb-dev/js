@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bittex Mainnet",
   "chain": "BTX",
-  "rpc": [
-    "https://bittex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.bittexscan.info",
-    "https://rpc2.bittexscan.info"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Bittex",
-    "symbol": "BTX",
-    "decimals": 18
-  },
-  "infoURL": "https://bittexscan.com",
-  "shortName": "btx",
   "chainId": 3690,
-  "networkId": 3690,
   "explorers": [
     {
       "name": "bittexscan",
@@ -24,6 +9,22 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "bittex"
+  "faucets": [],
+  "infoURL": "https://bittexscan.com",
+  "name": "Bittex Mainnet",
+  "nativeCurrency": {
+    "name": "Bittex",
+    "symbol": "BTX",
+    "decimals": 18
+  },
+  "networkId": 3690,
+  "rpc": [
+    "https://bittex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3690.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.bittexscan.info",
+    "https://rpc2.bittexscan.info"
+  ],
+  "shortName": "btx",
+  "slug": "bittex",
+  "testnet": false
 } as const satisfies Chain;

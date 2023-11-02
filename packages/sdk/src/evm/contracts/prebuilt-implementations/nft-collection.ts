@@ -1,3 +1,6 @@
+import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumberish, CallOverrides, constants } from "ethers";
 import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common/role";
 import { buildTransactionFunction } from "../../common/transactions";
@@ -17,14 +20,11 @@ import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { Transaction } from "../../core/classes/transactions";
 import type { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
-import { Address } from "../../schema/shared/Address";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
-import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, CallOverrides, constants } from "ethers";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { NFT_BASE_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -58,7 +58,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
   public events: ContractEvents<TokenERC721>;
-  public sales: ContractPrimarySale<TokenERC721>;
+  public sales: ContractPrimarySale;
   public platformFees: ContractPlatformFee<TokenERC721>;
   /**
    * Configure royalties
@@ -159,7 +159,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -170,10 +170,10 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 
@@ -184,10 +184,10 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   /**
    * Mint a unique NFT
    *
-   * @remarks Mint a unique NFT to a specified wallet.
+   * @remarks Mint a unique NFT to a  specified wallet.
    *
    * @example
-   * ```javascript*
+   * ```typescript
    * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
    * const metadata = {
    *   name: "Cool NFT",
@@ -262,7 +262,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @remarks Mint many unique NFTs at once to the connected wallet
    *
    * @example
-   * ```javascript*
+   * ```typescript
    * // Custom metadata of the NFTs you want to mint.
    * const metadatas = [{
    *   name: "Cool NFT #1",
@@ -294,7 +294,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * @remarks Mint many unique NFTs at once to a specified wallet.
    *
    * @example
-   * ```javascript
+   * ```typescript
    * // Address of the wallet you want to mint the NFT to
    * const walletAddress = "{{wallet_address}}";
    *

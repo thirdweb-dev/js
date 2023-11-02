@@ -1,13 +1,17 @@
+import type { IERC721AQueryableUpgradeable } from "@thirdweb-dev/contracts-js";
+import { BigNumber } from "ethers";
 import type { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { FEATURE_NFT_QUERYABLE } from "../../constants/erc721-features";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { IERC721AQueryableUpgradeable } from "@thirdweb-dev/contracts-js";
-import { BigNumber } from "ethers";
-import { FEATURE_NFT_QUERYABLE } from "../../constants/erc721-features";
 import type { Erc721 } from "./erc-721";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../../core/schema/QueryParams";
 
 /**
  * List owned ERC721 NFTs
@@ -50,8 +54,16 @@ export class Erc721AQueryable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async all(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    const tokenIds = await this.tokenIds(walletAddress);
+  public async all(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    let tokenIds = await this.tokenIds(walletAddress);
+    if (queryParams) {
+      const start = queryParams?.start || 0;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      tokenIds = tokenIds.slice(start, start + count);
+    }
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
     );
@@ -66,6 +78,6 @@ export class Erc721AQueryable implements DetectableFeature {
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );
 
-    return await this.contractWrapper.readContract.tokensOfOwner(address);
+    return await this.contractWrapper.read("tokensOfOwner", [address]);
   }
 }

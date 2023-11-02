@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EZChain C-Chain Testnet",
   "chain": "EZC",
-  "rpc": [
-    "https://ezchain-c-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-api.ezchain.com/ext/bc/C/rpc"
-  ],
-  "faucets": [
-    "https://testnet-faucet.ezchain.com"
-  ],
-  "nativeCurrency": {
-    "name": "EZChain",
-    "symbol": "EZC",
-    "decimals": 18
-  },
-  "infoURL": "https://ezchain.com",
-  "shortName": "Fuji-EZChain",
   "chainId": 2613,
-  "networkId": 2613,
-  "icon": {
-    "url": "ipfs://QmPKJbYCFjGmY9X2cA4b9YQjWYHQncmKnFtKyQh9rHkFTb",
-    "width": 146,
-    "height": 48,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "ezchain",
@@ -31,6 +9,29 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "ezchain-c-chain-testnet"
+  "faucets": [
+    "https://testnet-faucet.ezchain.com"
+  ],
+  "icon": {
+    "url": "ipfs://QmPKJbYCFjGmY9X2cA4b9YQjWYHQncmKnFtKyQh9rHkFTb",
+    "width": 146,
+    "height": 48,
+    "format": "png"
+  },
+  "infoURL": "https://ezchain.com",
+  "name": "EZChain C-Chain Testnet",
+  "nativeCurrency": {
+    "name": "EZChain",
+    "symbol": "EZC",
+    "decimals": 18
+  },
+  "networkId": 2613,
+  "rpc": [
+    "https://ezchain-c-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2613.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-api.ezchain.com/ext/bc/C/rpc"
+  ],
+  "shortName": "Fuji-EZChain",
+  "slug": "ezchain-c-chain-testnet",
+  "testnet": true
 } as const satisfies Chain;

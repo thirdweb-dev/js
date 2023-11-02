@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ntity Mainnet",
   "chain": "Ntity",
-  "rpc": [
-    "https://ntity.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.ntity.io"
+  "chainId": 197710212030,
+  "explorers": [
+    {
+      "name": "Ntity Blockscout",
+      "url": "https://blockscout.ntity.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
+        "width": 711,
+        "height": 715,
+        "format": "svg"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Ntity",
-    "symbol": "NTT",
-    "decimals": 18
-  },
-  "infoURL": "https://ntity.io",
-  "shortName": "ntt",
-  "chainId": 197710212030,
-  "networkId": 197710212030,
   "icon": {
     "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
     "width": 711,
     "height": 715,
     "format": "svg"
   },
-  "explorers": [
-    {
-      "name": "Ntity Blockscout",
-      "url": "https://blockscout.ntity.io",
-      "icon": {
-        "url": "ipfs://QmSW2YhCvMpnwtPGTJAuEK2QgyWfFjmnwcrapUg6kqFsPf",
-        "width": 711,
-        "height": 715,
-        "format": "svg"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://ntity.io",
+  "name": "Ntity Mainnet",
+  "nativeCurrency": {
+    "name": "Ntity",
+    "symbol": "NTT",
+    "decimals": 18
+  },
+  "networkId": 197710212030,
+  "rpc": [
+    "https://ntity.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://197710212030.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.ntity.io"
   ],
-  "testnet": false,
-  "slug": "ntity"
+  "shortName": "ntt",
+  "slug": "ntity",
+  "testnet": false
 } as const satisfies Chain;

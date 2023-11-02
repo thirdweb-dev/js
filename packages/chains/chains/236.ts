@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Deamchain Testnet",
   "chain": "Deamchain",
-  "icon": {
-    "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
-    "width": 512,
-    "height": 512,
-    "format": "svg"
-  },
-  "rpc": [
-    "https://deamchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.deamchain.com"
-  ],
-  "faucets": [
-    "https://faucet.deamchain.com"
-  ],
-  "nativeCurrency": {
-    "name": "Deamchain Native Token",
-    "symbol": "DEAM",
-    "decimals": 18
-  },
-  "infoURL": "https://deamchain.com",
-  "shortName": "deamtest",
   "chainId": 236,
-  "networkId": 236,
   "explorers": [
     {
       "name": "Deamchain Testnet Explorer",
@@ -37,6 +15,29 @@ export default {
       }
     }
   ],
-  "testnet": true,
-  "slug": "deamchain-testnet"
+  "faucets": [
+    "https://faucet.deamchain.com"
+  ],
+  "icon": {
+    "url": "ipfs://QmXvHWmjfXKdZMSz7x82NR4SjEqigKdJELVHbnzUPkj17F",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
+  "infoURL": "https://deamchain.com",
+  "name": "Deamchain Testnet",
+  "nativeCurrency": {
+    "name": "Deamchain Native Token",
+    "symbol": "DEAM",
+    "decimals": 18
+  },
+  "networkId": 236,
+  "rpc": [
+    "https://deamchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://236.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.deamchain.com"
+  ],
+  "shortName": "deamtest",
+  "slug": "deamchain-testnet",
+  "testnet": true
 } as const satisfies Chain;

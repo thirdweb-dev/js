@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Arbitrum on xDai",
   "chain": "AOX",
-  "rpc": [
-    "https://arbitrum-on-xdai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://arbitrum.xdaichain.com/"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "xDAI",
-    "symbol": "xDAI",
-    "decimals": 18
-  },
-  "infoURL": "https://xdaichain.com",
-  "shortName": "aox",
   "chainId": 200,
-  "networkId": 200,
   "explorers": [
     {
       "name": "blockscout",
@@ -23,10 +9,25 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "parent": {
-    "chain": "eip155-100",
-    "type": "L2"
+  "faucets": [],
+  "infoURL": "https://xdaichain.com",
+  "name": "Arbitrum on xDai",
+  "nativeCurrency": {
+    "name": "xDAI",
+    "symbol": "xDAI",
+    "decimals": 18
   },
-  "testnet": false,
-  "slug": "arbitrum-on-xdai"
+  "networkId": 200,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-100"
+  },
+  "rpc": [
+    "https://arbitrum-on-xdai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://200.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://arbitrum.xdaichain.com/"
+  ],
+  "shortName": "aox",
+  "slug": "arbitrum-on-xdai",
+  "testnet": false
 } as const satisfies Chain;

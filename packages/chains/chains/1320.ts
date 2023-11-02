@@ -1,36 +1,45 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aitd Testnet",
-  "chain": "AITD",
+  "chain": "AIA",
+  "chainId": 1320,
+  "explorers": [
+    {
+      "name": "AIA Chain Explorer Testnet",
+      "url": "https://testnet.aiascan.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [
+    "https://aia-faucet-testnet.aiachain.org"
+  ],
+  "features": [
+    {
+      "name": "EIP155"
+    },
+    {
+      "name": "EIP1559"
+    }
+  ],
   "icon": {
     "url": "ipfs://QmXbBMMhjTTGAGjmqMpJm3ufFrtdkfEXCFyXYgz7nnZzsy",
     "width": 160,
     "height": 160,
     "format": "png"
   },
-  "rpc": [
-    "https://aitd-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://http-testnet.aitd.io"
-  ],
-  "faucets": [
-    "https://aitd-faucet-pre.aitdcoin.com/"
-  ],
+  "infoURL": "https://aiachain.org",
+  "name": "AIA Testnet",
   "nativeCurrency": {
-    "name": "AITD Testnet",
-    "symbol": "AITD",
+    "name": "AIA Testnet",
+    "symbol": "AIA",
     "decimals": 18
   },
-  "infoURL": "https://www.aitd.io/",
-  "shortName": "aitdtestnet",
-  "chainId": 1320,
   "networkId": 1320,
-  "explorers": [
-    {
-      "name": "AITD Chain Explorer Testnet",
-      "url": "https://block-explorer-testnet.aitd.io",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://aia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1320.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://aia-dataseed1-testnet.aiachain.org"
   ],
-  "testnet": true,
-  "slug": "aitd-testnet"
+  "shortName": "aiatestnet",
+  "slug": "aia-testnet",
+  "testnet": true
 } as const satisfies Chain;

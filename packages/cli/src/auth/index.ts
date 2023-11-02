@@ -1,105 +1,293 @@
+import { LocalWallet } from "@thirdweb-dev/wallets";
+import assert from "assert";
 import chalk from "chalk";
-import prompts from "prompts";
-import Cache, { CacheEntry } from "sync-disk-cache";
-import { ApiResponse } from "../lib/types";
-import os from "os";
+import fs from "fs";
+import http from "http";
+import open from "open";
+import ora from "ora";
+import url from "url";
+import { logger, spinner } from "../core/helpers/logger";
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
+import { ICredsConfig } from "../lib/types";
+import { generateStateParameter } from "../lib/utils";
+import crypto from "node:crypto";
+
+type LoginProps = {
+  browser: boolean;
+  configPaths: ConfigPaths;
+};
+
+const defaultLoginProps = {
+  browser: true,
+  configPaths: {
+    credsConfigPath: "",
+    cliWalletPath: "",
+    tokenPath: "",
+  },
+};
+
+type ConfigPaths = {
+  credsConfigPath: string;
+  cliWalletPath: string;
+  tokenPath: string;
+}
 
 export async function loginUser(
-  cache: Cache,
+  configPaths: ConfigPaths,
   options?: { new: boolean },
   showLogs?: boolean,
 ) {
-  const keyFound = getSession(cache);
-  if (keyFound && !options?.new) {
+  const { credsConfigPath, tokenPath } = configPaths;
+  const authToken = await getSession(tokenPath, credsConfigPath);
+  if (authToken && !options?.new) {
     if (showLogs) {
       console.log(chalk.green("You are already logged in"));
     }
-    return keyFound;
+    globalThis["TW_CLI_AUTH_TOKEN"] = authToken;
+    return authToken;
   } else {
-    const apiKey = await createSession(cache);
-    return apiKey;
+    const token = await authenticateUser({ browser: true, configPaths });
+    if (!token) {
+      throw new Error("Failed to login");
+    }
+
+    globalThis["TW_CLI_AUTH_TOKEN"] = token;
+    return token;
   }
 }
 
-export async function logoutUser(cache: Cache) {
+export async function logoutUser(credsConfigPath: string, tokenPath: string, cliWalletPath: string) {
   try {
-    cache.remove("api-secret-key");
-    console.log(chalk.green("You have been logged out"));
+    ora("Logging out...").start();
+    const dirExists = fs.existsSync(credsConfigPath) && fs.existsSync(tokenPath) && fs.existsSync(cliWalletPath);
+    if (!dirExists) {
+      ora().warn(chalk.yellow("You are already logged out, did you mean to login?"));
+      return;
+    }
+    fs.unlinkSync(credsConfigPath);
+    fs.unlinkSync(tokenPath);
+    // TODO: We can consider not removing this on logout later, once we want to implement teams. For now this wallet will be ephemeral.
+    fs.unlinkSync(cliWalletPath);
+    ora().succeed(chalk.green("You have been logged out"));
   } catch (error) {
     console.log(chalk.red("Something went wrong", error));
   }
 }
 
-export function getSession(cache: Cache) {
+export async function getSession(tokenPath: string, configCredsPath: string) {
+  if (!fs.existsSync(tokenPath) || !fs.existsSync(configCredsPath)) {
+    return null;
+  }
   try {
-    const apiKey: CacheEntry = cache.get("api-secret-key");
-    return apiKey.value;
+    return fs.readFileSync(tokenPath, "utf8");
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
-export async function createSession(cache: Cache) {
-  try {
-    const isWindows = os.type() === "Windows_NT";
-    if (isWindows) {
-      console.log(chalk.yellow("Windows detected: if you are using powershell, there are some known issues with it that we are actively working on, please use git bash or the command prompt. Thank you for your understanding."));
-    }
-    const response = await prompts({
-      type: "invisible",
-      name: "apiSecretKey",
-      message: `Please enter your API secret key, you can find or create it on ${chalk.blue(
-        "https://thirdweb.com/create-api-key",
-      )}`,
+export const authenticateUser = async (
+  props: LoginProps = defaultLoginProps,
+) => {
+  const { credsConfigPath, cliWalletPath, tokenPath } = props.configPaths;
+  const waitForDashboard = spinner("Waiting for a response from the dashboard").clear();
+
+  // Get or generate a localwallet.
+  const wallet = await getOrGenerateLocalWallet(credsConfigPath, cliWalletPath);
+  const walletAddress = await wallet.getAddress();
+  const domain = "thirdweb.com";
+  const auth = new ThirdwebAuth(wallet, domain);
+
+  // Generate the login payload to pass to the dashboard.
+  const loggedIn = await auth.login({
+    domain: domain,
+    address: walletAddress,
+  });
+
+  // In this case the state is the loggedIn object.
+  const ourState = generateStateParameter(32);
+  const payload = encodeURIComponent(JSON.stringify(loggedIn));
+  const urlToOpen = `https://thirdweb.com/cli/login?payload=${payload}&#${ourState}`;
+
+  let server: http.Server;
+  let loginTimeoutHandle: NodeJS.Timeout;
+  const timerPromise = new Promise<void>((resolve, reject) => {
+    loginTimeoutHandle = setTimeout(() => {
+      logger.error("Login session timed out, server didn't receive a response in 5 minutes. Please try again.");
+      server.close();
+      clearTimeout(loginTimeoutHandle);
+      reject(new Error("Login session timed out, server didn't receive a response in 5 minutes. Please try again."));
+    }, 300000);
+  });
+
+  const loginPromise = new Promise<string>((resolve, reject) => {
+    server = http.createServer(async (req, res) => {
+      function finish(error?: Error) {
+        clearTimeout(loginTimeoutHandle);
+        server.close((closeErr?: Error) => {
+          if (error || closeErr) {
+            reject(error || closeErr);
+          }
+        });
+      }
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Origin', "https://thirdweb.com");
+      res.setHeader('Access-Control-Allow-Methods', 'POST');
+
+      if (req.method === 'OPTIONS') {
+        res.setHeader('Access-Control-Allow-Headers', 'content-type, baggage, sentry-trace');
+        res.writeHead(200);
+        res.end();
+        return;
+      }
+
+      assert(req.url, "This request doesn't have a URL");
+      const { pathname, query } = url.parse(req.url, true);
+      switch (pathname) {
+        case "/auth/callback": {
+          if (query.failed) {
+            res.writeHead(500, "Unable to authenticate with the dashboard!");
+            res.end("Unable to authenticate with the dashboard!", () => {
+              finish(new Error("Unable to authenticate with the dashboard!"));
+            })
+            reject(chalk.red("Something went wrong! Unable to authenticate with the dashboard."));
+            waitForDashboard.stop();
+          }
+          if (query.token) {
+            const token = Array.isArray(query.token) ? query.token[0] : query.token;
+            const theirState = Array.isArray(query.state)
+              ? query.state[0]
+              : query.state;
+
+            // Check if the state sent back is the same as the one we sent.
+            if (theirState !== ourState) {
+              res.writeHead(400, { "Content-Type": "text/plain" }); // send a 400 response
+              res.end("Unauthorized request, state mismatch", () => {
+                finish(new Error("Unauthorized request, state mismatch"));
+              });
+              reject(
+                new Error(chalk.red("\nUnauthorized request, state mismatch")),
+              );
+              waitForDashboard.stop();
+            } else {
+              // Save the token to the config file.
+              // eslint-disable-next-line no-unused-expressions
+              fs.writeFileSync(tokenPath, token), {
+                encoding: "utf8",
+                mode: 0o600,
+              };
+              res.end(() => {
+                waitForDashboard.clear();
+                console.log(chalk.green(`Successfully linked your account to this device`));
+                finish();
+              });
+              logger.info(chalk.green(`\nSuccessfully logged in.`));
+              resolve(token); // resolve promise with secretKey
+            }
+          } else {
+            res.writeHead(400, { "Content-Type": "text/plain" });
+            res.end("No authToken received", () => {
+              finish(new Error("No authToken received"));
+            });
+            reject(new Error(chalk.red("\nNo authToken received")));
+            waitForDashboard.stop();
+          }
+        }
+      }
     });
 
-    const keyPassed = response.apiSecretKey;
-    if (!keyPassed) {
-      console.log(chalk.red("You need to pass an API secret key"));
-      process.exit(1);
-    }
+    server.listen(8976);
+  });
+  console.log(`Automatically attempting to open a link to authenticate with our dashboard...\n`);
+  waitForDashboard.start();
+  // Adding this timeout since it feels weird for the browser to open before the spinner.
+  setTimeout(async () => {
+    await open(urlToOpen);
+  }, 2000);
 
-    if (keyPassed.length === 32) {
-      console.log(chalk.red(`This is not a valid secret key. To get your secret key
-1. Create an API key at https://thirdweb.com/create-api-key 
-2. Store and copy your Secret Key. This will be shown only once.
-3. Paste it in the CLI when prompted`));
-      process.exit(1);
-    }
+  console.log(chalk.yellow(`If the browser doesn't open, please use this link to authenticate:\n`));
+  console.log(chalk.yellow(urlToOpen + '\n'));
 
+  return Promise.race([timerPromise, loginPromise]);
+};
+
+async function getOrCreatePassword(configCredsPath: string): Promise<string> {
+  const passwordFileExists = fs.existsSync(configCredsPath);
+  if (!passwordFileExists) {
+    // Generate a random password for the CLI to be able to import / export the wallet.
+    return crypto.randomUUID();
+  } else {
+    const file = fs.readFileSync(configCredsPath, "utf8");
     try {
-      await validateKey(response.apiSecretKey);
-    } catch (error) {
-      console.log(error);
-      process.exit(1);
+      JSON.parse(file);
+    } catch (e) {
+      // If it fails to parse the password we should just delete the file and generate a new password, since this password is not shown to the user.
+      fs.unlinkSync(configCredsPath);
+      return getOrCreatePassword(configCredsPath);
     }
-    cache.set("api-secret-key", response.apiSecretKey);
-    return response.apiSecretKey;
-  } catch (error) {
-    console.log(error);
+    const { password } = JSON.parse(file) as ICredsConfig;
+    return password;
   }
 }
 
-export async function validateKey(apiSecretKey: string) {
-  const fetch = (await import("node-fetch")).default;
-  // TODO: CHANGE THIS TO PROD BEFORE MERGING!!!
-  const response = await fetch(
-    `https://api.thirdweb.com/v1/keys/use?scope=storage`,
-    {
+async function getOrGenerateLocalWallet(configCredsPath: string, cliWalletPath: string) {
+  // Get or prompt for password.
+  const password = await getOrCreatePassword(configCredsPath);
+  const wallet = new LocalWallet();
+  const foundWallet = fs.existsSync(cliWalletPath);
+
+  if (foundWallet) {
+    const walletJson = fs.readFileSync(cliWalletPath, "utf8");
+    try {
+      // See if file is valid before proceeding.
+      JSON.parse(walletJson);
+
+      await wallet.import({
+        encryptedJson: walletJson,
+        password,
+      });
+      return wallet;
+    } catch (e) {
+      // Wallet file is not valid json, create a new one.
+    }
+  }
+
+  // Otherwise, generate a new wallet.
+  wallet.generate();
+  const walletExported = await wallet.export({
+    strategy: "encryptedJson",
+    password,
+  });
+
+  // write wallet
+  fs.writeFileSync(cliWalletPath, walletExported, {
+    encoding: "utf8",
+    mode: 0o600,
+  });
+
+  // write password
+  fs.writeFileSync(configCredsPath, JSON.stringify({
+    password: password,
+  }), "utf8");
+
+  return wallet;
+}
+
+export const validateKey = async (apiSecretKey: string) => {
+  const apiUrl = "https://api.thirdweb.com/v1/keys/use";
+  try {
+    const response = await fetch(`${apiUrl}?scope=storage`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         "x-secret-key": apiSecretKey,
-      },
-    },
-  );
+      }
+    })
 
-  const apiResponse = (await response.json()) as ApiResponse;
+    if (response.status !== 200) {
+      throw new Error("Unauthorized key");
+    }
 
-  if (!response.ok) {
-    const { error } = apiResponse;
-    throw new Error(chalk.red(error.message));
-  } else {
-    return apiSecretKey;
+  } catch (error) {
+    throw new Error(chalk.red("Unauthorized key"));
   }
-}
+};

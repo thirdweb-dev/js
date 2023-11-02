@@ -1,9 +1,9 @@
+import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import { BigNumber, constants } from "ethers";
 import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import type { TokenHolderBalance } from "../../types/currency";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
-import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { BigNumber, constants } from "ethers";
 
 /**
  * Manages history for Token contracts
@@ -55,15 +55,20 @@ export class TokenERC20History {
         balances[to] = balances[to].add(amount);
       }
     });
-    return Promise.all(
-      Object.keys(balances).map(async (addr) => ({
-        holder: addr,
-        balance: await fetchCurrencyValue(
+
+    const entries = Object.entries(balances);
+    const results = await Promise.all(
+      entries.map(([, value]) =>
+        fetchCurrencyValue(
           this.contractWrapper.getProvider(),
-          this.contractWrapper.readContract.address,
-          balances[addr],
+          this.contractWrapper.address,
+          value,
         ),
-      })),
+      ),
     );
+    return entries.map(([addr], index) => ({
+      holder: addr,
+      balance: results[index],
+    }));
   }
 }

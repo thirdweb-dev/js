@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "HAPchain",
   "chain": "HAPchain",
-  "rpc": [
-    "https://hapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jsonrpc.hap.land"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "HAP",
-    "symbol": "HAP",
-    "decimals": 18
-  },
-  "infoURL": "https://hap.land",
-  "shortName": "hap",
   "chainId": 8794598,
-  "networkId": 8794598,
-  "icon": {
-    "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
-    "width": 400,
-    "height": 400,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "HAP EVM Explorer (Blockscout)",
@@ -35,6 +15,27 @@ export default {
       }
     }
   ],
-  "testnet": false,
-  "slug": "hapchain"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmQ4V9JC25yUrYk2kFJwmKguSsZBQvtGcg6q9zkDV8mkJW",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
+  "infoURL": "https://hap.land",
+  "name": "HAPchain",
+  "nativeCurrency": {
+    "name": "HAP",
+    "symbol": "HAP",
+    "decimals": 18
+  },
+  "networkId": 8794598,
+  "rpc": [
+    "https://hapchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8794598.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://jsonrpc.hap.land"
+  ],
+  "shortName": "hap",
+  "slug": "hapchain",
+  "testnet": false
 } as const satisfies Chain;

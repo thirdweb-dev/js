@@ -13,10 +13,10 @@ import {
   CommonRoyaltySchema,
   CommonSymbolSchema,
   CommonTrustedForwarderSchema,
-  MerkleSchema,
 } from "./common";
 import { BigNumberish } from "ethers";
 import { z } from "zod";
+import { MerkleSchema } from "./common/snapshots";
 
 /**
  * @internal
@@ -102,7 +102,7 @@ export const AbiObjectSchema = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
-export const AbiSchema = /* @__PURE__ */ z.array(AbiObjectSchema);
+export const AbiSchema = /* @__PURE__ */ (() => z.array(AbiObjectSchema))();
 // if we want to statically type this for external usage it has to *awlways* be the output type
 export type Abi = z.output<typeof AbiSchema>;
 
@@ -167,6 +167,12 @@ export const DeployTypeInput = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
+export const RouterTypeInput = /* @__PURE__ */ (() =>
+  z.union([z.literal("none"), z.literal("plugin"), z.literal("dynamic")]))();
+
+/**
+ * @internal
+ */
 export const DeploymentNetworkInput = /* @__PURE__ */ (() =>
   z.object({
     allNetworks: z.boolean().optional(),
@@ -206,6 +212,16 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
       isDeployableViaProxy: z.boolean().optional(),
       factoryDeploymentData: FactoryDeploymentSchema.optional(),
       deployType: DeployTypeInput.optional(),
+      routerType: RouterTypeInput.optional(),
+      defaultExtensions: z
+        .array(
+          z.object({
+            extensionName: z.string(),
+            extensionVersion: z.string().default("latest"),
+            publisherAddress: AddressOrEnsSchema,
+          }),
+        )
+        .optional(),
       networksForDeployment: DeploymentNetworkInput.optional(),
       constructorParams: z
         .record(
@@ -321,6 +337,7 @@ export const CompilerMetadataFetchedSchema = /* @__PURE__ */ (() =>
       .transform((v) => {
         return v.filter((license) => license !== undefined) as string[];
       }),
+    isPartialAbi: z.boolean().optional(),
   }))();
 
 /**

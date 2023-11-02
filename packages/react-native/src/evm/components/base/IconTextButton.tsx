@@ -1,18 +1,15 @@
 import { ReactNode } from "react";
 import { Theme } from "../../styles/theme";
 import BaseButton from "./BaseButton";
-import ImageSvgUri from "./ImageSvgUri";
 import Text from "./Text";
 import { StyleSheet } from "react-native";
 
 type IconTextProps = {
-  icon?:
-    | { iconUrl?: string; iconWidth?: number; iconHeight?: number }
-    | ReactNode;
+  icon?: ReactNode;
   text: string;
   padding?: keyof Theme["spacing"];
   onPress: () => void;
-} & (typeof BaseButton)["arguments"];
+} & React.ComponentProps<typeof BaseButton>;
 
 export const IconTextButton = ({
   icon,
@@ -25,20 +22,16 @@ export const IconTextButton = ({
     <BaseButton
       p={p || "sm"}
       backgroundColor="background"
-      style={styles.networkContainer}
+      borderRadius="md"
+      borderWidth={0.5}
+      flexDirection="row"
+      justifyContent="flex-start"
+      alignItems="center"
       onPress={onPress}
       borderColor="border"
       {...args}
     >
-      {icon && icon.iconUrl ? (
-        <ImageSvgUri
-          imageUrl={icon.iconUrl}
-          height={icon.iconHeight}
-          width={icon.iconWidth}
-        />
-      ) : (
-        icon
-      )}
+      {icon}
       <Text variant="bodySmall" style={styles.networkText}>
         {text}
       </Text>
@@ -49,14 +42,6 @@ export const IconTextButton = ({
 
 const styles = StyleSheet.create({
   networkText: {
-    marginLeft: 16,
-  },
-  networkContainer: {
-    borderRadius: 8,
-    borderWidth: 0.5,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    marginLeft: 8,
   },
 });

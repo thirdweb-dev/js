@@ -1,3 +1,4 @@
+import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { WCMeta } from "../wallets/types/wc";
 
 /**
@@ -19,4 +20,20 @@ export function formatWalletConnectDisplayUri(
         links.native.endsWith(":") ? "//" : "/"
       }wc?uri=${encodedUri}`
     : `${uri}`;
+}
+
+export function getValidPublicRPCUrl(chain: Chain) {
+  return getValidChainRPCs(chain).map((rpc) => {
+    try {
+      const url = new URL(rpc);
+      // remove client id from url
+      if (url.hostname.endsWith(".thirdweb.com")) {
+        url.pathname = "";
+        url.search = "";
+      }
+      return url.toString();
+    } catch (e) {
+      return rpc;
+    }
+  });
 }

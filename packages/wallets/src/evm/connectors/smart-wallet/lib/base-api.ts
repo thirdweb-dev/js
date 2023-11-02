@@ -1,4 +1,11 @@
-import { ethers, BigNumber, BigNumberish, providers, utils } from "ethers";
+import {
+  ethers,
+  BigNumber,
+  BigNumberish,
+  providers,
+  utils,
+  BytesLike,
+} from "ethers";
 import {
   EntryPoint,
   EntryPoint__factory,
@@ -19,6 +26,12 @@ import {
   CeloBaklavaTestnet,
   Celo,
 } from "@thirdweb-dev/chains";
+import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
+
+export type BatchData = {
+  targets: (string | undefined)[];
+  data: BytesLike[];
+};
 
 export interface BaseApiParams {
   provider: providers.Provider;
@@ -102,11 +115,11 @@ export abstract class BaseAccountAPI {
    * @param value
    * @param data
    */
-  abstract encodeExecute(
+  abstract prepareExecute(
     target: string,
     value: BigNumberish,
     data: string,
-  ): Promise<string>;
+  ): Promise<Transaction<any>>;
 
   /**
    * sign a userOp's hash (userOpHash).
@@ -185,33 +198,42 @@ export abstract class BaseAccountAPI {
 
   async encodeUserOpCallDataAndGasLimit(
     detailsForUserOp: TransactionDetailsForUserOp,
-    batched: boolean,
+    batchData?: BatchData,
   ): Promise<{ callData: string; callGasLimit: BigNumber }> {
-    function parseNumber(a: any): BigNumber | null {
-      if (!a || a === "") {
-        return null;
-      }
-      return BigNumber.from(a.toString());
-    }
-
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
-    const callData = batched
+    const callData = batchData
       ? detailsForUserOp.data
-      : await this.encodeExecute(
+      : await this.prepareExecute(
           detailsForUserOp.target,
           value,
           detailsForUserOp.data,
-        );
+        ).then((tx) => tx.encode());
 
-    let callGasLimit;
+    let callGasLimit: BigNumber;
     const isPhantom = await this.checkAccountPhantom();
     if (isPhantom) {
       // when the account is not deployed yet, we simulate the call to the target contract directly
-      callGasLimit = await this.provider.estimateGas({
-        from: this.getAccountAddress(),
-        to: detailsForUserOp.target,
-        data: detailsForUserOp.data,
-      });
+      if (batchData) {
+        const limits = await Promise.all(
+          batchData.targets.map((_, i) =>
+            this.provider.estimateGas({
+              from: this.getAccountAddress(),
+              to: batchData.targets[i],
+              data: batchData.data[i],
+            }),
+          ),
+        );
+        callGasLimit = limits.reduce((a, b) => a.add(b), BigNumber.from(0));
+      } else {
+        callGasLimit = await this.provider.estimateGas({
+          from: this.getAccountAddress(),
+          to: detailsForUserOp.target,
+          data: detailsForUserOp.data,
+        });
+      }
+
+      // add 20% overhead for entrypoint checks
+      callGasLimit = callGasLimit.mul(120).div(100);
       // if the estimation is too low, we use a fixed value of 500k
       if (callGasLimit.lt(30000)) {
         callGasLimit = BigNumber.from(500000);
@@ -277,10 +299,10 @@ export abstract class BaseAccountAPI {
    */
   async createUnsignedUserOp(
     info: TransactionDetailsForUserOp,
-    batched: boolean,
+    batchData?: BatchData,
   ): Promise<UserOperationStruct> {
     const { callData, callGasLimit } =
-      await this.encodeUserOpCallDataAndGasLimit(info, batched);
+      await this.encodeUserOpCallDataAndGasLimit(info, batchData);
     const initCode = await this.getInitCode();
 
     const initGas = await this.estimateCreationGas(initCode);
@@ -290,7 +312,12 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (!maxFeePerGas || !maxPriorityFeePerGas) {
-      const feeData = await this.provider.getFeeData();
+      const feeData = await getDynamicFeeData(
+        this.provider as providers.JsonRpcProvider,
+      );
+      if (!maxPriorityFeePerGas) {
+        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
+      }
       if (!maxFeePerGas) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
         const network = await this.provider.getNetwork();
@@ -303,9 +330,6 @@ export abstract class BaseAccountAPI {
         ) {
           maxPriorityFeePerGas = maxFeePerGas;
         }
-      }
-      if (!maxPriorityFeePerGas) {
-        maxPriorityFeePerGas = feeData.maxPriorityFeePerGas ?? undefined;
       }
     }
 
@@ -392,10 +416,10 @@ export abstract class BaseAccountAPI {
    */
   async createSignedUserOp(
     info: TransactionDetailsForUserOp,
-    batched: boolean,
+    batchData?: BatchData,
   ): Promise<UserOperationStruct> {
     return await this.signUserOp(
-      await this.createUnsignedUserOp(info, batched),
+      await this.createUnsignedUserOp(info, batchData),
     );
   }
 
@@ -416,11 +440,18 @@ export abstract class BaseAccountAPI {
       const events = await this.entryPointView.queryFilter(
         this.entryPointView.filters.UserOperationEvent(userOpHash),
       );
-      if (events.length > 0) {
+      if (events[0]) {
         return events[0].transactionHash;
       }
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
     return null;
   }
+}
+
+function parseNumber(a: any): BigNumber | null {
+  if (!a || a === "") {
+    return null;
+  }
+  return BigNumber.from(a.toString());
 }

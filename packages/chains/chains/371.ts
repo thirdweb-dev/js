@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Consta Testnet",
   "chain": "tCNT",
-  "rpc": [
-    "https://consta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.theconsta.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "tCNT",
-    "symbol": "tCNT",
-    "decimals": 18
-  },
-  "infoURL": "http://theconsta.com",
-  "shortName": "tCNT",
   "chainId": 371,
-  "networkId": 371,
-  "icon": {
-    "url": "ipfs://QmfQ1yae6uvXgBSwnwJM4Mtp8ctH66tM6mB1Hsgu4XvsC9",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "blockscout",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "consta-testnet"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfQ1yae6uvXgBSwnwJM4Mtp8ctH66tM6mB1Hsgu4XvsC9",
+    "width": 2000,
+    "height": 2000,
+    "format": "png"
+  },
+  "infoURL": "http://theconsta.com",
+  "name": "Consta Testnet",
+  "nativeCurrency": {
+    "name": "tCNT",
+    "symbol": "tCNT",
+    "decimals": 18
+  },
+  "networkId": 371,
+  "rpc": [
+    "https://consta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://371.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.theconsta.com"
+  ],
+  "shortName": "tCNT",
+  "slug": "consta-testnet",
+  "testnet": true
 } as const satisfies Chain;

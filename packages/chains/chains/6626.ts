@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Pixie Chain Mainnet",
   "chain": "PixieChain",
-  "rpc": [
-    "https://pixie-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://http-mainnet.chain.pixie.xyz",
-    "wss://ws-mainnet.chain.pixie.xyz"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Pixie Chain Native Token",
-    "symbol": "PIX",
-    "decimals": 18
-  },
-  "infoURL": "https://chain.pixie.xyz",
-  "shortName": "pixie-chain",
   "chainId": 6626,
-  "networkId": 6626,
   "explorers": [
     {
       "name": "blockscout",
@@ -24,6 +9,22 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "pixie-chain"
+  "faucets": [],
+  "infoURL": "https://chain.pixie.xyz",
+  "name": "Pixie Chain Mainnet",
+  "nativeCurrency": {
+    "name": "Pixie Chain Native Token",
+    "symbol": "PIX",
+    "decimals": 18
+  },
+  "networkId": 6626,
+  "rpc": [
+    "https://pixie-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6626.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://http-mainnet.chain.pixie.xyz",
+    "wss://ws-mainnet.chain.pixie.xyz"
+  ],
+  "shortName": "pixie-chain",
+  "slug": "pixie-chain",
+  "testnet": false
 } as const satisfies Chain;

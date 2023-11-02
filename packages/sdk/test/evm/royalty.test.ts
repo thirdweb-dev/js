@@ -3,8 +3,6 @@ import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
-global.fetch = require("cross-fetch");
-
 describe("Royalties", async () => {
   let bundleContract: Edition;
 

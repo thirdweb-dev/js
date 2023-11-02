@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Jellie",
-  "title": "Twala Testnet Jellie",
-  "shortName": "twl-jellie",
   "chain": "ETH",
   "chainId": 202624,
-  "networkId": 202624,
-  "icon": {
-    "url": "ipfs://QmTXJVhVKvVC7DQEnGKXvydvwpvVaUEBJrMHvsCr4nr1sK",
-    "width": 1326,
-    "height": 1265,
-    "format": "png"
-  },
-  "nativeCurrency": {
-    "name": "Twala Coin",
-    "symbol": "TWL",
-    "decimals": 18
-  },
-  "rpc": [
-    "https://jellie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://jellie-rpc.twala.io/",
-    "wss://jellie-rpc-wss.twala.io/"
-  ],
-  "faucets": [],
-  "infoURL": "https://twala.io/",
   "explorers": [
     {
       "name": "Jellie Blockchain Explorer",
@@ -37,6 +15,29 @@ export default {
       }
     }
   ],
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmTXJVhVKvVC7DQEnGKXvydvwpvVaUEBJrMHvsCr4nr1sK",
+    "width": 1326,
+    "height": 1265,
+    "format": "png"
+  },
+  "infoURL": "https://twala.io/",
+  "name": "Jellie",
+  "nativeCurrency": {
+    "name": "Twala Coin",
+    "symbol": "TWL",
+    "decimals": 18
+  },
+  "networkId": 202624,
+  "rpc": [
+    "https://jellie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://202624.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://jellie-rpc.twala.io/",
+    "wss://jellie-rpc-wss.twala.io/"
+  ],
+  "shortName": "twl-jellie",
+  "slug": "jellie",
   "testnet": true,
-  "slug": "jellie"
+  "title": "Twala Testnet Jellie"
 } as const satisfies Chain;

@@ -1,26 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Beam Testnet",
   "chain": "BEAM",
-  "rpc": [
-    "https://beam-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/beam/testnet/rpc"
-  ],
-  "features": [
-    {
-      "name": "EIP1559"
-    }
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Merit Circle",
-    "symbol": "MC",
-    "decimals": 18
-  },
-  "infoURL": "https://gaming.meritcircle.io",
-  "shortName": "BEAM",
   "chainId": 13337,
-  "networkId": 13337,
   "explorers": [
     {
       "name": "Beam Explorer",
@@ -28,6 +9,32 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "beam-testnet"
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ],
+  "icon": {
+    "url": "ipfs://QmQJ21NWyGGDraicVEzS1Uqq1yXahM9NCuNZgnfYvtspdt",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://www.onbeam.com",
+  "name": "Beam Testnet",
+  "nativeCurrency": {
+    "name": "Merit Circle",
+    "symbol": "MC",
+    "decimals": 18
+  },
+  "networkId": 13337,
+  "rpc": [
+    "https://beam-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://13337.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/beam/testnet/rpc"
+  ],
+  "shortName": "beam-testnet",
+  "slug": "beam-testnet",
+  "testnet": true
 } as const satisfies Chain;

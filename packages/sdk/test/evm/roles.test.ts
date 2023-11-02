@@ -4,8 +4,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 
-global.fetch = require("cross-fetch");
-
 describe("Roles Contract", async () => {
   let bundleContract: Edition;
 

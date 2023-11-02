@@ -12,8 +12,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 
-global.fetch = require("cross-fetch");
-
 describe("Edition sig minting", async () => {
   let editionContract: Edition;
   let customTokenContract: Token;
@@ -99,9 +97,8 @@ describe("Edition sig minting", async () => {
 
     it("should reject invalid vouchers", async () => {
       goodPayload.payload.price = "0";
-      const invalidModified = await editionContract.signature.verify(
-        goodPayload,
-      );
+      const invalidModified =
+        await editionContract.signature.verify(goodPayload);
       assert.isFalse(
         invalidModified,
         "This voucher should be invalid because the price was changed",

@@ -7,7 +7,10 @@ import {
   ContractOptions,
   DeploymentPreset,
 } from "../../types/any-evm/deploy-data";
-import { fetchAndCachePublishedContractURI } from "./fetchAndCachePublishedContractURI";
+import {
+  THIRDWEB_DEPLOYER,
+  fetchPublishedContractFromPolygon,
+} from "./fetchPublishedContractFromPolygon";
 import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { isContractDeployed } from "./isContractDeployed";
 import { getInitBytecodeWithSalt } from "./getInitBytecodeWithSalt";
@@ -26,8 +29,12 @@ export async function computeDeploymentInfo(
   storage: ThirdwebStorage,
   create2Factory: string,
   contractOptions?: ContractOptions,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset> {
   const contractName = contractOptions && contractOptions.contractName;
+  const version = contractOptions && contractOptions.version;
+  let publisherAddress = contractOptions && contractOptions.publisherAddress;
   let metadata = contractOptions && contractOptions.metadata;
   invariant(contractName || metadata, "Require contract name or metadata");
 
@@ -57,9 +64,20 @@ export async function computeDeploymentInfo(
 
   if (!metadata) {
     invariant(contractName, "Require contract name");
-    const uri = await fetchAndCachePublishedContractURI(contractName);
-    metadata = (await fetchAndCacheDeployMetadata(uri, storage))
-      .compilerMetadata;
+    if (!publisherAddress) {
+      publisherAddress = THIRDWEB_DEPLOYER;
+    }
+    const publishedContract = await fetchPublishedContractFromPolygon(
+      publisherAddress,
+      contractName,
+      version,
+      storage,
+      clientId,
+      secretKey,
+    );
+    metadata = (
+      await fetchAndCacheDeployMetadata(publishedContract.metadataUri, storage)
+    ).compilerMetadata;
   }
 
   const encodedArgs = await encodeConstructorParamsForImplementation(
@@ -68,6 +86,8 @@ export async function computeDeploymentInfo(
     storage,
     create2Factory,
     contractOptions?.constructorParams,
+    clientId,
+    secretKey,
   );
   const address = computeDeploymentAddress(
     metadata.bytecode,
@@ -108,12 +128,14 @@ export async function encodeConstructorParamsForImplementation(
   storage: ThirdwebStorage,
   create2Factory: string,
   constructorParamMap?: ConstructorParamMap,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<BytesLike> {
   const constructorParams = extractConstructorParamsFromAbi(
     compilerMetadata.abi,
   );
   const constructorParamTypes = constructorParams.map((p) => {
-    if (p.type === "tuple[]") {
+    if (p.type === "tuple[]" || p.type === "tuple") {
       return utils.ParamType.from(p);
     } else {
       return p.type;
@@ -134,29 +156,13 @@ export async function encodeConstructorParamsForImplementation(
         return constructorParamMap[p.name].value;
       }
       if (p.name && p.name.includes("nativeTokenWrapper")) {
-        const chainId = (await provider.getNetwork()).chainId;
-        let nativeTokenWrapperAddress =
-          getNativeTokenByChainId(chainId).wrapped.address;
-
-        if (nativeTokenWrapperAddress === constants.AddressZero) {
-          const deploymentInfo = await computeDeploymentInfo(
-            "infra",
-            provider,
-            storage,
-            create2Factory,
-            {
-              contractName: "WETH9",
-            },
-          );
-          if (!caches.deploymentPresets["WETH9"]) {
-            caches.deploymentPresets["WETH9"] = deploymentInfo;
-          }
-
-          nativeTokenWrapperAddress =
-            deploymentInfo.transaction.predictedAddress;
-        }
-
-        return nativeTokenWrapperAddress;
+        return await nativeTokenInputArg(
+          provider,
+          storage,
+          create2Factory,
+          clientId,
+          secretKey,
+        );
       } else if (p.name && p.name.includes("trustedForwarder")) {
         if (compilerMetadata.name === "Pack") {
           // EOAForwarder for Pack
@@ -168,6 +174,8 @@ export async function encodeConstructorParamsForImplementation(
             {
               contractName: "ForwarderEOAOnly",
             },
+            clientId,
+            secretKey,
           );
           if (!caches.deploymentPresets["ForwarderEOAOnly"]) {
             caches.deploymentPresets["ForwarderEOAOnly"] = deploymentInfo;
@@ -183,6 +191,8 @@ export async function encodeConstructorParamsForImplementation(
           {
             contractName: "Forwarder",
           },
+          clientId,
+          secretKey,
         );
         if (!caches.deploymentPresets["Forwarder"]) {
           caches.deploymentPresets["Forwarder"] = deploymentInfo;
@@ -192,6 +202,27 @@ export async function encodeConstructorParamsForImplementation(
       } else if (p.name && p.name.includes("royaltyEngineAddress")) {
         const chainId = (await provider.getNetwork()).chainId;
         return getRoyaltyEngineV1ByChainId(chainId);
+      } else if (p.name && p.name.includes("marketplaceV3Params")) {
+        const chainId = (await provider.getNetwork()).chainId;
+        const royaltyEngineAddress = getRoyaltyEngineV1ByChainId(chainId);
+
+        const nativeTokenWrapper = await nativeTokenInputArg(
+          provider,
+          storage,
+          create2Factory,
+          clientId,
+          secretKey,
+        );
+
+        const extensions = constructorParamMap
+          ? constructorParamMap["_extensions"].value
+          : [];
+
+        return {
+          extensions: extensions,
+          royaltyEngineAddress: royaltyEngineAddress,
+          nativeTokenWrapper: nativeTokenWrapper,
+        };
       } else {
         throw new Error("Can't resolve constructor arguments");
       }
@@ -203,4 +234,37 @@ export async function encodeConstructorParamsForImplementation(
     constructorParamValues,
   );
   return encodedArgs;
+}
+
+async function nativeTokenInputArg(
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  create2Factory: string,
+  clientId?: string,
+  secretKey?: string,
+): Promise<string> {
+  const chainId = (await provider.getNetwork()).chainId;
+  let nativeTokenWrapperAddress =
+    getNativeTokenByChainId(chainId).wrapped.address;
+
+  if (nativeTokenWrapperAddress === constants.AddressZero) {
+    const deploymentInfo = await computeDeploymentInfo(
+      "infra",
+      provider,
+      storage,
+      create2Factory,
+      {
+        contractName: "WETH9",
+      },
+      clientId,
+      secretKey,
+    );
+    if (!caches.deploymentPresets["WETH9"]) {
+      caches.deploymentPresets["WETH9"] = deploymentInfo;
+    }
+
+    nativeTokenWrapperAddress = deploymentInfo.transaction.predictedAddress;
+  }
+
+  return nativeTokenWrapperAddress;
 }

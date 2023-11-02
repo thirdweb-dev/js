@@ -1,12 +1,3 @@
-import { hasFunction } from "../../common/feature-detection/hasFunction";
-import { buildTransactionFunction } from "../../common/transactions";
-import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
-import { CommonRoyaltySchema } from "../../schema/contracts/common";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
-import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
 import type {
   ContractMetadata as ContractMetadataContract,
   IMulticall,
@@ -14,6 +5,16 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish } from "ethers";
 import { z } from "zod";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { buildTransactionFunction } from "../../common/transactions";
+import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
+import { CommonRoyaltySchema } from "../../schema/contracts/common";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
+import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * Handle contract royalties
@@ -39,7 +40,7 @@ export class ContractRoyalty<
   private metadata;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper: ContractWrapper<IRoyalty>,
     metadata: ContractMetadata<TContract, TSchema>,
   ) {
     this.contractWrapper = contractWrapper;
@@ -59,8 +60,10 @@ export class ContractRoyalty<
    * @twfeature Royalty
    */
   public async getDefaultRoyaltyInfo() {
-    const [royaltyRecipient, royaltyBps] =
-      await this.contractWrapper.readContract.getDefaultRoyaltyInfo();
+    const [royaltyRecipient, royaltyBps] = await this.contractWrapper.read(
+      "getDefaultRoyaltyInfo",
+      [],
+    );
     // parse it on the way out to make sure we default things if they are not set
     return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
@@ -81,8 +84,10 @@ export class ContractRoyalty<
    * @twfeature Royalty
    */
   public async getTokenRoyaltyInfo(tokenId: BigNumberish) {
-    const [royaltyRecipient, royaltyBps] =
-      await this.contractWrapper.readContract.getRoyaltyInfoForToken(tokenId);
+    const [royaltyRecipient, royaltyBps] = await this.contractWrapper.read(
+      "getRoyaltyInfoForToken",
+      [tokenId],
+    );
     return CommonRoyaltySchema.parseAsync({
       fee_recipient: royaltyRecipient,
       seller_fee_basis_points: royaltyBps,
@@ -130,19 +135,14 @@ export class ContractRoyalty<
           this.contractWrapper,
         )
       ) {
+        const contractEncoder = new ContractEncoder(this.contractWrapper);
         // encode both the functions we want to send
         const encoded = [
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setDefaultRoyaltyInfo",
-            [
-              mergedMetadata.fee_recipient,
-              mergedMetadata.seller_fee_basis_points,
-            ],
-          ),
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setContractURI",
-            [contractURI],
-          ),
+          contractEncoder.encode("setDefaultRoyaltyInfo", [
+            mergedMetadata.fee_recipient,
+            mergedMetadata.seller_fee_basis_points,
+          ]),
+          contractEncoder.encode("setContractURI", [contractURI]),
         ];
         // actually send the transaction and return the receipt + a way to get the new royalty info
 
@@ -186,7 +186,7 @@ export class ContractRoyalty<
     ) => {
       const parsedRoyaltyData = CommonRoyaltySchema.parse(royaltyData);
       return Transaction.fromContractWrapper({
-        contractWrapper: this.contractWrapper as ContractWrapper<IRoyalty>,
+        contractWrapper: this.contractWrapper,
         method: "setRoyaltyInfoForToken",
         args: [
           tokenId,

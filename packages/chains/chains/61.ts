@@ -1,31 +1,37 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ethereum Classic Mainnet",
   "chain": "ETC",
-  "rpc": [
-    "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://etc.rivet.link"
+  "chainId": 61,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://blockscout.com/etc/mainnet",
+      "standard": "EIP3091"
+    }
   ],
-  "faucets": [
-    "https://free-online-app.com/faucet-for-eth-evm-chains/?"
+  "faucets": [],
+  "features": [
+    {
+      "name": "EIP155"
+    }
   ],
+  "infoURL": "https://ethereumclassic.org",
+  "name": "Ethereum Classic Mainnet",
   "nativeCurrency": {
     "name": "Ethereum Classic Ether",
     "symbol": "ETC",
     "decimals": 18
   },
-  "infoURL": "https://ethereumclassic.org",
-  "shortName": "etc",
-  "chainId": 61,
   "networkId": 1,
-  "slip44": 61,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://blockscout.com/etc/mainnet",
-      "standard": "none"
-    }
+  "rpc": [
+    "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://61.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://etc.rivet.link",
+    "https://etc.etcdesktop.com",
+    "https://etc.mytokenpocket.vip"
   ],
-  "testnet": false,
-  "slug": "ethereum-classic"
+  "shortName": "etc",
+  "slip44": 61,
+  "slug": "ethereum-classic",
+  "testnet": false
 } as const satisfies Chain;

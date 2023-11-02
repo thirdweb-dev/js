@@ -14,8 +14,6 @@ import { assert, expect } from "chai";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
-global.fetch = require("cross-fetch");
-
 describe("Signature drop tests (v4)", async () => {
   let signatureDropContract: SignatureDrop;
   let customTokenContract: Token;
@@ -107,9 +105,8 @@ describe("Signature drop tests (v4)", async () => {
 
     it("should reject invalid vouchers", async () => {
       goodPayload.payload.price = "0";
-      const invalidModified = await signatureDropContract.signature.verify(
-        goodPayload,
-      );
+      const invalidModified =
+        await signatureDropContract.signature.verify(goodPayload);
       assert.isFalse(
         invalidModified,
         "This voucher should be invalid because the price was changed",

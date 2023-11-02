@@ -6,7 +6,7 @@ type LinkProps = {
   text: string;
   variant?: keyof Theme["textVariants"];
   onPress?: () => void;
-} & (typeof Text)["arguments"];
+} & React.ComponentProps<typeof Text>;
 
 export const Link = ({
   text,

@@ -1,18 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Neurochain Mainnet",
   "chain": "NCN",
-  "rpc": [
-    "https://neurochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://nc-rpc-prd1.neurochain.io",
-    "https://nc-rpc-prd2.neurochain.io"
+  "chainId": 313,
+  "explorers": [
+    {
+      "name": "neuroscan",
+      "url": "https://ncnscan.com",
+      "standard": "EIP3091"
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Neurochain",
-    "symbol": "NCN",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -22,16 +19,20 @@ export default {
     }
   ],
   "infoURL": "https://www.neurochain.ai",
-  "shortName": "ncn",
-  "chainId": 313,
+  "name": "Neurochain Mainnet",
+  "nativeCurrency": {
+    "name": "Neurochain",
+    "symbol": "NCN",
+    "decimals": 18
+  },
   "networkId": 313,
-  "explorers": [
-    {
-      "name": "neuroscan",
-      "url": "https://ncnscan.com",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://neurochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://313.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://nc-rpc-prd1.neurochain.io",
+    "https://nc-rpc-prd2.neurochain.io"
   ],
-  "testnet": false,
-  "slug": "neurochain"
+  "shortName": "ncn",
+  "slug": "neurochain",
+  "testnet": false
 } as const satisfies Chain;

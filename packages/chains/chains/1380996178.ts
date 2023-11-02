@@ -1,45 +1,46 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "RaptorChain",
   "chain": "RPTR",
-  "rpc": [
-    "https://raptorchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.raptorchain.io/web3"
+  "chainId": 1380996178,
+  "explorers": [
+    {
+      "name": "RaptorChain Explorer",
+      "url": "https://explorer.raptorchain.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmQuvmiN6vM6Rqzqe1pMzDf8iZXqTtSeqCgGe5k5AyksDU",
+        "width": 200,
+        "height": 200,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Raptor",
-    "symbol": "RPTR",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
     }
   ],
-  "infoURL": "https://raptorchain.io",
-  "shortName": "rptr",
-  "chainId": 1380996178,
-  "networkId": 1380996178,
   "icon": {
     "url": "ipfs://QmQuvmiN6vM6Rqzqe1pMzDf8iZXqTtSeqCgGe5k5AyksDU",
     "width": 200,
     "height": 200,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "RaptorChain Explorer",
-      "url": "https://explorer.raptorchain.io",
-      "icon": {
-        "url": "ipfs://QmQuvmiN6vM6Rqzqe1pMzDf8iZXqTtSeqCgGe5k5AyksDU",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://raptorchain.io",
+  "name": "RaptorChain",
+  "nativeCurrency": {
+    "name": "Raptor",
+    "symbol": "RPTR",
+    "decimals": 18
+  },
+  "networkId": 1380996178,
+  "rpc": [
+    "https://raptorchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1380996178.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.raptorchain.io/web3"
   ],
-  "testnet": false,
-  "slug": "raptorchain"
+  "shortName": "rptr",
+  "slug": "raptorchain",
+  "testnet": false
 } as const satisfies Chain;

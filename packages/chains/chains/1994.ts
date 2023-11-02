@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ekta",
   "chain": "EKTA",
-  "rpc": [
-    "https://ekta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://main.ekta.io"
+  "chainId": 1994,
+  "explorers": [
+    {
+      "name": "ektascan",
+      "url": "https://ektascan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmfMd564KUPK8eKZDwGCT71ZC2jMnUZqP6LCtLpup3rHH1",
+        "width": 2100,
+        "height": 2100,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "EKTA",
-    "symbol": "EKTA",
-    "decimals": 18
-  },
-  "infoURL": "https://www.ekta.io",
-  "shortName": "ekta",
-  "chainId": 1994,
-  "networkId": 1994,
   "icon": {
     "url": "ipfs://QmfMd564KUPK8eKZDwGCT71ZC2jMnUZqP6LCtLpup3rHH1",
     "width": 2100,
     "height": 2100,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "ektascan",
-      "url": "https://ektascan.io",
-      "icon": {
-        "url": "ipfs://QmfMd564KUPK8eKZDwGCT71ZC2jMnUZqP6LCtLpup3rHH1",
-        "width": 2100,
-        "height": 2100,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://www.ekta.io",
+  "name": "Ekta",
+  "nativeCurrency": {
+    "name": "EKTA",
+    "symbol": "EKTA",
+    "decimals": 18
+  },
+  "networkId": 1994,
+  "rpc": [
+    "https://ekta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1994.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://main.ekta.io"
   ],
-  "testnet": false,
-  "slug": "ekta"
+  "shortName": "ekta",
+  "slug": "ekta",
+  "testnet": false
 } as const satisfies Chain;

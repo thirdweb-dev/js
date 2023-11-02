@@ -1,80 +1,83 @@
-import type { QueryAllParams } from "../../../core/schema/QueryParams";
+import type {
+  DropERC721,
+  IBurnableERC721,
+  IClaimableERC721,
+  IERC721Supply,
+  ILoyaltyCard,
+  IMintableERC721,
+  INFTMetadata,
+  ISignatureMintERC721,
+  Multiwrap,
+  OpenEditionERC721,
+  SharedMetadata,
+  SignatureDrop,
+  TieredDrop,
+  TokenERC721,
+  Zora_IERC721Drop,
+} from "@thirdweb-dev/contracts-js";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  type QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
 } from "../../../core/schema/nft";
-import { assertEnabled } from "../../common/feature-detection/assertEnabled";
-import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { hasFunction } from "../../common/feature-detection/hasFunction";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import {
   ExtensionNotImplementedError,
   NotFoundError,
 } from "../../common/error";
-import { resolveAddress } from "../../common/ens/resolveAddress";
+import { assertEnabled } from "../../common/feature-detection/assertEnabled";
+import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
+import { hasFunction } from "../../common/feature-detection/hasFunction";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import { buildTransactionFunction } from "../../common/transactions";
 import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
-  FEATURE_NFT_CLAIM_CUSTOM,
   FEATURE_NFT_CLAIM_CONDITIONS_V2,
+  FEATURE_NFT_CLAIM_CUSTOM,
   FEATURE_NFT_LAZY_MINTABLE,
+  FEATURE_NFT_LOYALTY_CARD,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
+  FEATURE_NFT_SHARED_METADATA,
+  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
-  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
-  FEATURE_NFT_SHARED_METADATA,
-  FEATURE_NFT_LOYALTY_CARD,
   FEATURE_NFT_UPDATABLE_METADATA,
 } from "../../constants/erc721-features";
 import type { Address } from "../../schema/shared/Address";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
-import type { UploadProgressEvent } from "../../types/events";
 import type {
   BaseClaimConditionERC721,
   BaseDropERC721,
   BaseERC721,
 } from "../../types/eips";
+import type { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import type { NetworkInput, TransactionResultWithId } from "../types";
 import type { ContractWrapper } from "./contract-wrapper";
 import { Erc721Burnable } from "./erc-721-burnable";
-import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
-import { Transaction } from "./transactions";
-import type {
-  DropERC721,
-  IBurnableERC721,
-  IClaimableERC721,
-  IERC721Supply,
-  IMintableERC721,
-  ISignatureMintERC721,
-  Multiwrap,
-  SignatureDrop,
-  TieredDrop,
-  TokenERC721,
-  Zora_IERC721Drop,
-  SharedMetadata,
-  OpenEditionERC721,
-  ILoyaltyCard,
-  INFTMetadata,
-} from "@thirdweb-dev/contracts-js";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
-import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
-import { Erc721Mintable } from "./erc-721-mintable";
-import { Erc721Supply } from "./erc-721-supply";
-import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721ClaimableWithConditions } from "./erc-721-claim-conditions";
-import { Erc721Claimable } from "./erc-721-claimable";
-import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
 import { Erc721ClaimableZora } from "./erc-721-claim-zora";
+import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
 import { Erc721LoyaltyCard } from "./erc-721-loyalty-card";
 import { Erc721UpdatableMetadata } from "./erc-721-metadata";
+import { Erc721Mintable } from "./erc-721-mintable";
+import { Erc721SharedMetadata } from "./erc-721-shared-metadata";
+import { Erc721Supply } from "./erc-721-supply";
+import { Erc721TieredDrop } from "./erc-721-tiered-drop";
+import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
+import { Transaction } from "./transactions";
 
 /**
  * Standard ERC721 NFT functions
@@ -147,7 +150,7 @@ export class Erc721<
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   ////// Standard ERC721 Extension //////
@@ -184,7 +187,10 @@ export class Erc721<
    * @twfeature ERC721
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return await this.contractWrapper.readContract.ownerOf(tokenId);
+    return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
+      "ownerOf",
+      [tokenId],
+    );
   }
 
   /**
@@ -201,8 +207,9 @@ export class Erc721<
    * @twfeature ERC721
    */
   public async balanceOf(address: AddressOrEns): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(
-      await resolveAddress(address),
+    return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
+      "balanceOf",
+      [await resolveAddress(address)],
     );
   }
 
@@ -222,9 +229,13 @@ export class Erc721<
     address: AddressOrEns,
     operator: AddressOrEns,
   ): Promise<boolean> {
-    return await this.contractWrapper.readContract.isApprovedForAll(
-      await resolveAddress(address),
-      await resolveAddress(operator),
+    const [_address, _operator] = await Promise.all([
+      resolveAddress(address),
+      resolveAddress(operator),
+    ]);
+    return await (this.contractWrapper as ContractWrapper<BaseERC721>).read(
+      "isApprovedForAll",
+      [_address, _operator],
     );
   }
 
@@ -243,11 +254,14 @@ export class Erc721<
    */
   transfer = /* @__PURE__ */ buildTransactionFunction(
     async (to: AddressOrEns, tokenId: BigNumberish) => {
-      const from = await this.contractWrapper.getSignerAddress();
+      const [from, _to] = await Promise.all([
+        this.contractWrapper.getSignerAddress(),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
-        args: [from, await resolveAddress(to), tokenId],
+        args: [from, _to, tokenId],
       });
     },
   );
@@ -268,10 +282,14 @@ export class Erc721<
    */
   transferFrom = /* @__PURE__ */ buildTransactionFunction(
     async (from: AddressOrEns, to: AddressOrEns, tokenId: BigNumberish) => {
+      const [fromAddress, toAddress] = await Promise.all([
+        resolveAddress(from),
+        resolveAddress(to),
+      ]);
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
         method: "transferFrom(address,address,uint256)",
-        args: [await resolveAddress(from), await resolveAddress(to), tokenId],
+        args: [fromAddress, toAddress, tokenId],
       });
     },
   );
@@ -400,24 +418,35 @@ export class Erc721<
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC721Supply | ERC721Enumerable
    */
-  public async getOwned(walletAddress?: AddressOrEns) {
+  public async getOwned(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ) {
     if (walletAddress) {
       walletAddress = await resolveAddress(walletAddress);
     }
 
     if (this.query?.owned) {
-      return this.query.owned.all(walletAddress);
+      return this.query.owned.all(walletAddress, queryParams);
     } else {
-      const address =
-        walletAddress || (await this.contractWrapper.getSignerAddress());
-      const allOwners = await this.getAllOwners();
-      return Promise.all(
-        (allOwners || [])
-          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
-          .map(async (i) => await this.get(i.tokenId)),
+      const [address, allOwners] = await Promise.all([
+        walletAddress || this.contractWrapper.getSignerAddress(),
+        this.getAllOwners(),
+      ]);
+      let ownedTokens = (allOwners || []).filter(
+        (i) => address?.toLowerCase() === i.owner?.toLowerCase(),
+      );
+      if (queryParams) {
+        const start = queryParams?.start || 0;
+        const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+        ownedTokens = ownedTokens.slice(start, start + count);
+      }
+      return await Promise.all(
+        ownedTokens.map(async (i) => this.get(i.tokenId)),
       );
     }
   }
@@ -434,9 +463,10 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.tokenIds(walletAddress);
     } else {
-      const address =
-        walletAddress || (await this.contractWrapper.getSignerAddress());
-      const allOwners = await this.getAllOwners();
+      const [address, allOwners] = await Promise.all([
+        walletAddress || this.contractWrapper.getSignerAddress(),
+        this.getAllOwners(),
+      ]);
       return (allOwners || [])
         .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
         .map((i) => BigNumber.from(i.tokenId));
@@ -532,7 +562,7 @@ export class Erc721<
    * @remarks Mint many unique NFTs at once to the connected wallet
    *
    * @example
-   * ```javascript*
+   * ```typescript
    * // Custom metadata of the NFTs you want to mint.
    * const metadatas = [{
    *   name: "Cool NFT #1",
@@ -566,7 +596,7 @@ export class Erc721<
    * @remarks Mint many unique NFTs at once to a specified wallet.
    *
    * @example
-   * ```javascript
+   * ```typescript
    * // Address of the wallet you want to mint the NFT to
    * const walletAddress = "{{wallet_address}}";
    *
@@ -861,10 +891,16 @@ export class Erc721<
   public async totalClaimedSupply(): Promise<BigNumber> {
     const contract = this.contractWrapper;
     if (hasFunction<SignatureDrop>("totalMinted", contract)) {
-      return contract.readContract.totalMinted();
+      return (this.contractWrapper as ContractWrapper<SignatureDrop>).read(
+        "totalMinted",
+        [],
+      );
     }
     if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
-      return contract.readContract.nextTokenIdToClaim();
+      return (this.contractWrapper as ContractWrapper<DropERC721>).read(
+        "nextTokenIdToClaim",
+        [],
+      );
     }
     throw new Error(
       "No function found on contract to get total claimed supply",
@@ -885,9 +921,11 @@ export class Erc721<
    * @twfeature ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimPhasesV1 | ERC721ClaimConditionsV2 | ERC721ClaimConditionsV1
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.nextTokenIdToMint()).sub(
-      await this.totalClaimedSupply(),
-    );
+    const [nextTokenIdToMint, totalClaimedSupply] = await Promise.all([
+      this.nextTokenIdToMint(),
+      this.totalClaimedSupply(),
+    ]);
+    return nextTokenIdToMint.sub(totalClaimedSupply);
   }
 
   /**
@@ -939,10 +977,10 @@ export class Erc721<
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `contract.erc721.signature.generate()` documentation
-   * const signedPayload = contract.erc721.signature().generate(payload);
+   * const signedPayload = await contract.erc721.signature.generate(payload);
    *
    * // now anyone can mint the NFT
-   * const tx = contract.erc721.signature.mint(signedPayload);
+   * const tx = await contract.erc721.signature.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
@@ -1026,7 +1064,9 @@ export class Erc721<
    * @internal
    */
   async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
+    const tokenUri = await (
+      this.contractWrapper as ContractWrapper<BaseERC721>
+    ).read("tokenURI", [tokenId]);
     if (!tokenUri) {
       throw new NotFoundError();
     }
@@ -1039,19 +1079,25 @@ export class Erc721<
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
     if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      let nextTokenIdToMint =
-        await this.contractWrapper.readContract.nextTokenIdToMint();
+      let nextTokenIdToMint = await (
+        this.contractWrapper as ContractWrapper<TokenERC721>
+      ).read("nextTokenIdToMint", []);
       // handle open editions and contracts with startTokenId
       if (
         hasFunction<OpenEditionERC721>("startTokenId", this.contractWrapper)
       ) {
         nextTokenIdToMint = nextTokenIdToMint.sub(
-          await this.contractWrapper.readContract.startTokenId(),
+          await (
+            this.contractWrapper as ContractWrapper<OpenEditionERC721>
+          ).read("startTokenId", []),
         );
       }
       return nextTokenIdToMint;
     } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.totalSupply();
+      return await (this.contractWrapper as ContractWrapper<TokenERC721>).read(
+        "totalSupply",
+        [],
+      );
     } else {
       throw new Error(
         "Contract requires either `nextTokenIdToMint` or `totalSupply` function available to determine the next token ID to mint",

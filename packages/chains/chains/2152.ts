@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Findora Mainnet",
   "chain": "Findora",
-  "rpc": [
-    "https://findora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-mainnet.findora.org"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "FRA",
-    "symbol": "FRA",
-    "decimals": 18
-  },
-  "infoURL": "https://findora.org/",
-  "shortName": "fra",
   "chainId": 2152,
-  "networkId": 2152,
   "explorers": [
     {
       "name": "findorascan",
@@ -23,6 +9,21 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "findora"
+  "faucets": [],
+  "infoURL": "https://findora.org/",
+  "name": "Findora Mainnet",
+  "nativeCurrency": {
+    "name": "FRA",
+    "symbol": "FRA",
+    "decimals": 18
+  },
+  "networkId": 2152,
+  "rpc": [
+    "https://findora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://2152.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.findora.org"
+  ],
+  "shortName": "fra",
+  "slug": "findora",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,13 +1,17 @@
+import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
+import { BigNumber } from "ethers";
 import type { NFT } from "../../../core/schema/nft";
 import { resolveAddress } from "../../common/ens/resolveAddress";
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
 import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import type { ContractWrapper } from "./contract-wrapper";
-import type { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
-import { BigNumber } from "ethers";
-import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
 import type { Erc721 } from "./erc-721";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../../core/schema/QueryParams";
 
 /**
  * List owned ERC721 NFTs
@@ -46,10 +50,19 @@ export class Erc721Enumerable implements DetectableFeature {
    * const nfts = await contract.nft.query.owned.all(address);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async all(walletAddress?: AddressOrEns): Promise<NFT[]> {
-    const tokenIds = await this.tokenIds(walletAddress);
+  public async all(
+    walletAddress?: AddressOrEns,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    let tokenIds = await this.tokenIds(walletAddress);
+    if (queryParams) {
+      const start = queryParams?.start || 0;
+      const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+      tokenIds = tokenIds.slice(start, start + count);
+    }
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
     );
@@ -64,11 +77,11 @@ export class Erc721Enumerable implements DetectableFeature {
       walletAddress || (await this.contractWrapper.getSignerAddress()),
     );
 
-    const balance = await this.contractWrapper.readContract.balanceOf(address);
+    const balance = await this.contractWrapper.read("balanceOf", [address]);
     const indices = Array.from(Array(balance.toNumber()).keys());
     return await Promise.all(
       indices.map((i) =>
-        this.contractWrapper.readContract.tokenOfOwnerByIndex(address, i),
+        this.contractWrapper.read("tokenOfOwnerByIndex", [address, i]),
       ),
     );
   }

@@ -1,19 +1,17 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ferrum Testnet",
   "chain": "tFRM",
-  "rpc": [
-    "https://ferrum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "http://testnet.dev.svcs.ferrumnetwork.io:9933"
+  "chainId": 26026,
+  "explorers": [
+    {
+      "name": "polkadotjs",
+      "url": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Ftestnet.dev.svcs.ferrumnetwork.io#/explorer",
+      "standard": "none"
+    }
   ],
   "faucets": [
     "https://testnet.faucet.ferrumnetwork.io"
   ],
-  "nativeCurrency": {
-    "name": "Ferrum",
-    "symbol": "tFRM",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -23,16 +21,19 @@ export default {
     }
   ],
   "infoURL": "https://ferrum.network",
-  "shortName": "frm",
-  "chainId": 26026,
+  "name": "Ferrum Testnet",
+  "nativeCurrency": {
+    "name": "Ferrum",
+    "symbol": "tFRM",
+    "decimals": 18
+  },
   "networkId": 26026,
-  "explorers": [
-    {
-      "name": "polkadotjs",
-      "url": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Ftestnet.dev.svcs.ferrumnetwork.io#/explorer",
-      "standard": "none"
-    }
+  "rpc": [
+    "https://ferrum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://26026.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "http://testnet.dev.svcs.ferrumnetwork.io:9933"
   ],
-  "testnet": true,
-  "slug": "ferrum-testnet"
+  "shortName": "frm",
+  "slug": "ferrum-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,30 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitindi Testnet",
   "chain": "BNI",
-  "icon": {
-    "url": "ipfs://QmRAFFPiLiSgjGTs9QaZdnR9fsDgyUdTejwSxcnPXo292s",
-    "width": 60,
-    "height": 72,
-    "format": "png"
-  },
-  "rpc": [
-    "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.bitindi.org",
-    "https://testnet-rpc.bitindi.org"
-  ],
-  "faucets": [
-    "https://faucet.bitindi.org"
-  ],
-  "nativeCurrency": {
-    "name": "BNI",
-    "symbol": "$BNI",
-    "decimals": 18
-  },
-  "infoURL": "https://bitindi.org",
-  "shortName": "BNIt",
   "chainId": 4096,
-  "networkId": 4096,
   "explorers": [
     {
       "name": "Bitindi",
@@ -32,6 +9,32 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "bitindi-testnet"
+  "faucets": [
+    "https://faucet.bitindi.org"
+  ],
+  "features": [],
+  "icon": {
+    "url": "ipfs://QmRAFFPiLiSgjGTs9QaZdnR9fsDgyUdTejwSxcnPXo292s",
+    "width": 60,
+    "height": 72,
+    "format": "png"
+  },
+  "infoURL": "https://bitindi.org",
+  "name": "Bitindi Testnet",
+  "nativeCurrency": {
+    "name": "BNI",
+    "symbol": "$BNI",
+    "decimals": 18
+  },
+  "networkId": 4096,
+  "redFlags": [],
+  "rpc": [
+    "https://bitindi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4096.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-testnet.bitindi.org",
+    "https://testnet-rpc.bitindi.org"
+  ],
+  "shortName": "BNIt",
+  "slug": "bitindi-testnet",
+  "testnet": true
 } as const satisfies Chain;

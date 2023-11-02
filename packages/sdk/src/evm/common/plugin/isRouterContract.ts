@@ -6,9 +6,9 @@ export function isRouterContract(abi: Abi) {
     AbiSchema.parse(abi),
     "PluginRouter",
   );
-  const isExtensionRouter: boolean = isFeatureEnabled(
+  const isBaseRouter: boolean = isFeatureEnabled(
     AbiSchema.parse(abi),
-    "ExtensionRouter",
+    "DynamicContract",
   );
-  return isExtensionRouter || isPluginRouter;
+  return isBaseRouter || isPluginRouter;
 }

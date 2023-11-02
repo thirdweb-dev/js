@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Boba Avax",
   "chain": "Boba Avax",
-  "rpc": [
-    "https://boba-avax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://avax.boba.network",
-    "wss://wss.avax.boba.network",
-    "https://replica.avax.boba.network",
-    "wss://replica-wss.avax.boba.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Boba Token",
-    "symbol": "BOBA",
-    "decimals": 18
-  },
-  "infoURL": "https://docs.boba.network/for-developers/network-avalanche",
-  "shortName": "bobaavax",
   "chainId": 43288,
-  "networkId": 43288,
   "explorers": [
     {
       "name": "Boba Avax Explorer",
@@ -26,6 +9,24 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "boba-avax"
+  "faucets": [],
+  "infoURL": "https://docs.boba.network/for-developers/network-avalanche",
+  "name": "Boba Avax",
+  "nativeCurrency": {
+    "name": "Boba Token",
+    "symbol": "BOBA",
+    "decimals": 18
+  },
+  "networkId": 43288,
+  "rpc": [
+    "https://boba-avax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://43288.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://avax.boba.network",
+    "wss://wss.avax.boba.network",
+    "https://replica.avax.boba.network",
+    "wss://replica-wss.avax.boba.network"
+  ],
+  "shortName": "bobaavax",
+  "slug": "boba-avax",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,28 +1,30 @@
+import type {
+  AuthLoginReturnType,
+  InitializedUser,
+  PaperEmbeddedWalletSdk,
+} from "@paperxyz/embedded-wallet-service-sdk";
+import {
+  RecoveryShareManagement,
+  UserStatus,
+} from "@paperxyz/embedded-wallet-service-sdk";
+import type { Chain } from "@thirdweb-dev/chains";
+import type { Signer, providers } from "ethers";
+import { utils } from "ethers";
 import { normalizeChainId } from "../../../lib/wagmi-core";
+import { walletIds } from "../../constants/walletIds";
 import { Connector } from "../../interfaces/connector";
 import {
   PaperWalletConnectionArgs,
   PaperWalletConnectorOptions,
 } from "./types";
-import type {
-  AuthLoginReturnType,
-  InitializedUser,
-  PaperEmbeddedWalletSdk,
-  RecoveryShareManagement,
-} from "@paperxyz/embedded-wallet-service-sdk";
-import { UserStatus } from "@paperxyz/embedded-wallet-service-sdk";
-import type { Chain } from "@thirdweb-dev/chains";
-import type { providers, Signer } from "ethers";
-import { utils } from "ethers";
-import { walletIds } from "../../constants/walletIds";
 
-export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
+export class PaperWalletConnector extends Connector<Record<string, never>> {
   readonly id: string = walletIds.paper;
   readonly name: string = "Paper Wallet";
   ready = true;
 
   private user: InitializedUser | null = null;
-  #paper?: Promise<PaperEmbeddedWalletSdk>;
+  paper?: Promise<PaperEmbeddedWalletSdk>;
   private options: PaperWalletConnectorOptions;
 
   #signer?: Signer;
@@ -32,23 +34,35 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     this.options = options;
   }
 
-  private getPaperSDK(): Promise<PaperEmbeddedWalletSdk> {
-    if (!this.#paper) {
-      this.#paper = new Promise(async (resolve, reject) => {
+  getPaperSDK(): Promise<PaperEmbeddedWalletSdk> {
+    if (!this.paper) {
+      this.paper = new Promise(async (resolve, reject) => {
+        const recoveryMethod =
+          this.options.advancedOptions?.recoveryShareManagement;
+
         try {
           const { PaperEmbeddedWalletSdk } = await import(
             "@paperxyz/embedded-wallet-service-sdk"
           );
+
+          const methodToEnum = {
+            AWS_MANAGED: RecoveryShareManagement.AWS_MANAGED,
+            USER_MANAGED: RecoveryShareManagement.USER_MANAGED,
+          };
+
+          const recoveryShareManagement = recoveryMethod
+            ? methodToEnum[recoveryMethod]
+            : undefined;
+
           resolve(
             new PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED>({
               advancedOptions: {
-                // @ts-expect-error - Allow passing string instead of forcing enum
-                recoveryShareManagement:
-                  this.options.advancedOptions?.recoveryShareManagement,
+                recoveryShareManagement,
               },
               clientId: this.options.clientId,
               chain: "Ethereum",
               styles: this.options.styles,
+              onAuthSuccess: this.options.onAuthSuccess,
             }),
           );
         } catch (err) {
@@ -56,10 +70,14 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
         }
       });
     }
-    return this.#paper;
+    return this.paper;
   }
 
-  async connect(options?: { email?: string; chainId?: number }) {
+  async connect(
+    options?: {
+      chainId?: number;
+    } & PaperWalletConnectionArgs,
+  ) {
     const paperSDK = await this.getPaperSDK();
     if (!paperSDK) {
       throw new Error("Paper SDK not initialized");
@@ -69,17 +87,49 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
       case UserStatus.LOGGED_OUT: {
         let authResult: AuthLoginReturnType;
 
-        if (options?.email) {
+        // Show Google popup
+        if (options?.googleLogin) {
+          const arg = options.googleLogin;
+          authResult = await paperSDK.auth.loginWithGoogle(
+            typeof arg === "object" ? arg : undefined,
+          );
+        }
+
+        // Headless
+        else if (options?.email && options?.otp) {
+          authResult = await paperSDK.auth.verifyPaperEmailLoginOtp({
+            email: options.email,
+            otp: options.otp,
+            recoveryCode: options.recoveryCode,
+          });
+        }
+
+        // Show OTP modal
+        else if (options?.email) {
           authResult = await paperSDK.auth.loginWithPaperEmailOtp({
             email: options.email,
           });
-        } else {
+        }
+
+        // Show Full Modal
+        else {
           authResult = await paperSDK.auth.loginWithPaperModal();
         }
+
         this.user = authResult.user;
         break;
       }
       case UserStatus.LOGGED_IN_WALLET_INITIALIZED: {
+        if (typeof options?.googleLogin === "object") {
+          if (
+            options.googleLogin.closeOpenedWindow &&
+            options.googleLogin.openedWindow
+          ) {
+            options.googleLogin.closeOpenedWindow(
+              options.googleLogin.openedWindow,
+            );
+          }
+        }
         this.user = user;
         break;
       }
@@ -97,7 +147,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
   }
 
   async disconnect(): Promise<void> {
-    const paper = await this.#paper;
+    const paper = await this.paper;
     await paper?.auth.logout();
     this.#signer = undefined;
     this.user = null;
@@ -142,7 +192,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
     }
 
     const signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: this.options.chain.rpc[0],
+      rpcEndpoint: this.options.chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
     if (!signer) {
@@ -169,7 +219,7 @@ export class PaperWalletConnector extends Connector<PaperWalletConnectionArgs> {
 
     // update signer
     this.#signer = await this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: chain.rpc[0],
+      rpcEndpoint: chain.rpc[0] || "", // TODO: handle chain.rpc being empty array
     });
 
     this.emit("change", { chain: { id: chainId, unsupported: false } });

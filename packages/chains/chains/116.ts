@@ -1,8 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "DeBank Mainnet",
   "chain": "DeBank",
-  "rpc": [],
+  "chainId": 116,
+  "explorers": [],
   "faucets": [],
   "icon": {
     "url": "ipfs://QmW9pBps8WHRRWmyXhjLZrjZJUe8F48hUu7z98bu2RVsjN",
@@ -10,16 +10,17 @@ export default {
     "height": 400,
     "format": "png"
   },
+  "infoURL": "https://debank.com",
+  "name": "DeBank Mainnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "infoURL": "https://debank.com",
-  "shortName": "debank-mainnet",
-  "chainId": 116,
   "networkId": 116,
-  "explorers": [],
-  "testnet": false,
-  "slug": "debank"
+  "rpc": [],
+  "shortName": "debank-mainnet",
+  "slug": "debank",
+  "status": "deprecated",
+  "testnet": false
 } as const satisfies Chain;

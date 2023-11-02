@@ -1,12 +1,15 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Acala Mandala Testnet TC9",
   "chain": "mACA",
-  "rpc": [
-    "https://acala-mandala-testnet-tc9.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://eth-rpc-tc9.aca-staging.network",
-    "wss://eth-rpc-tc9.aca-staging.network"
+  "chainId": 595,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://blockscout.mandala.aca-staging.network",
+      "standard": "EIP3091"
+    }
   ],
+  "faucets": [],
   "features": [
     {
       "name": "EIP155"
@@ -15,24 +18,22 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "faucets": [],
+  "infoURL": "https://acala.network",
+  "name": "Acala Mandala Testnet TC9",
   "nativeCurrency": {
     "name": "Acala Mandala Token",
     "symbol": "mACA",
     "decimals": 18
   },
-  "infoURL": "https://acala.network",
-  "shortName": "maca",
-  "chainId": 595,
   "networkId": 595,
-  "slip44": 595,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://blockscout.mandala.aca-staging.network",
-      "standard": "EIP3091"
-    }
+  "rpc": [
+    "https://acala-mandala-testnet-tc9.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://595.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://eth-rpc-tc9.aca-staging.network",
+    "wss://eth-rpc-tc9.aca-staging.network"
   ],
-  "testnet": true,
-  "slug": "acala-mandala-testnet-tc9"
+  "shortName": "maca",
+  "slip44": 595,
+  "slug": "acala-mandala-testnet-tc9",
+  "testnet": true
 } as const satisfies Chain;

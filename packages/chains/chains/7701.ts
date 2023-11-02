@@ -1,28 +1,40 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Canto Tesnet",
   "chain": "Canto",
-  "rpc": [
-    "https://canto-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-archive.plexnode.wtf"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Testnet Canto",
-    "symbol": "CANTO",
-    "decimals": 18
-  },
-  "infoURL": "https://canto.io",
-  "shortName": "TestnetCanto",
   "chainId": 7701,
-  "networkId": 7701,
   "explorers": [
     {
       "name": "Canto Testnet EVM Explorer (Blockscout)",
       "url": "https://testnet.tuber.build",
       "standard": "none"
+    },
+    {
+      "name": "dexguru",
+      "url": "https://canto-test.dex.guru",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRaASKRSjQ5btoUQ2rNTJNxKtx2a2RoewgA7DMQkLVEne",
+        "width": 83,
+        "height": 82,
+        "format": "svg"
+      }
     }
   ],
-  "testnet": true,
-  "slug": "canto-tesnet"
+  "faucets": [],
+  "infoURL": "https://canto.io",
+  "name": "Canto Tesnet",
+  "nativeCurrency": {
+    "name": "Testnet Canto",
+    "symbol": "CANTO",
+    "decimals": 18
+  },
+  "networkId": 7701,
+  "rpc": [
+    "https://canto-tesnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7701.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-archive.plexnode.wtf"
+  ],
+  "shortName": "TestnetCanto",
+  "slug": "canto-tesnet",
+  "testnet": true
 } as const satisfies Chain;

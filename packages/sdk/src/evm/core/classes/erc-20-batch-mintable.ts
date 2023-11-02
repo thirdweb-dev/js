@@ -1,12 +1,13 @@
+import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 import { resolveAddress } from "../../common/ens/resolveAddress";
 import { buildTransactionFunction } from "../../common/transactions";
 import { FEATURE_TOKEN_BATCH_MINTABLE } from "../../constants/erc20-features";
 import type { TokenMintInput } from "../../schema/tokens/token";
 import type { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ContractEncoder } from "./contract-encoder";
 import type { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
-import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 import type { Erc20 } from "./erc-20";
+import { Transaction } from "./transactions";
 
 /**
  * Mint Many ERC20 Tokens at once
@@ -56,18 +57,18 @@ export class Erc20BatchMintable implements DetectableFeature {
    */
   to = /* @__PURE__ */ buildTransactionFunction(
     async (args: TokenMintInput[]) => {
-      const encoded: string[] = [];
-      for (const arg of args) {
-        encoded.push(
-          this.contractWrapper.readContract.interface.encodeFunctionData(
-            "mintTo",
-            [
-              await resolveAddress(arg.toAddress),
-              await this.erc20.normalizeAmount(arg.amount),
-            ],
-          ),
-        );
-      }
+      const contractEncoder = new ContractEncoder(this.contractWrapper);
+      const _items = await Promise.all(
+        args.map((item) =>
+          Promise.all([
+            resolveAddress(item.toAddress),
+            this.erc20.normalizeAmount(item.amount),
+          ]),
+        ),
+      );
+      const encoded = _items.map(([address, amount]) =>
+        contractEncoder.encode("mintTo", [address, amount]),
+      );
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

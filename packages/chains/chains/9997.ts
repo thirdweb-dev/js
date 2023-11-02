@@ -1,17 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "AltLayer Testnet",
   "chain": "ETH",
-  "rpc": [
-    "https://altlayer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rollup-api.altlayer.io"
+  "chainId": 9997,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://testnet-rollup-explorer.altlayer.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
+        "width": 551,
+        "height": 540,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +24,26 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://altlayer.io",
-  "shortName": "alt-testnet",
-  "chainId": 9997,
-  "networkId": 9997,
   "icon": {
     "url": "ipfs://QmcEfZJU7NMn9ycTAcEooQgGNfa2nYBToSUZHdFCFadcjb",
     "width": 1080,
     "height": 1025,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://testnet-rollup-explorer.altlayer.io",
-      "icon": {
-        "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
-        "width": 551,
-        "height": 540,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://altlayer.io",
+  "name": "AltLayer Testnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 9997,
+  "rpc": [
+    "https://altlayer-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://9997.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet-rollup-api.altlayer.io"
   ],
-  "testnet": true,
-  "slug": "altlayer-testnet"
+  "shortName": "alt-testnet",
+  "slug": "altlayer-testnet",
+  "testnet": true
 } as const satisfies Chain;

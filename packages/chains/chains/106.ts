@@ -1,28 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Velas EVM Mainnet",
   "chain": "Velas",
-  "icon": {
-    "url": "ipfs://QmNXiCXJxEeBd7ZYGYjPSMTSdbDd2nfodLC677gUfk9ku5",
-    "width": 924,
-    "height": 800,
-    "format": "png"
-  },
-  "rpc": [
-    "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://evmexplorer.velas.com/rpc",
-    "https://explorer.velas.com/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Velas",
-    "symbol": "VLX",
-    "decimals": 18
-  },
-  "infoURL": "https://velas.com",
-  "shortName": "vlx",
   "chainId": 106,
-  "networkId": 106,
   "explorers": [
     {
       "name": "Velas Explorer",
@@ -30,6 +9,28 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "velas-evm"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmNXiCXJxEeBd7ZYGYjPSMTSdbDd2nfodLC677gUfk9ku5",
+    "width": 924,
+    "height": 800,
+    "format": "png"
+  },
+  "infoURL": "https://velas.com",
+  "name": "Velas EVM Mainnet",
+  "nativeCurrency": {
+    "name": "Velas",
+    "symbol": "VLX",
+    "decimals": 18
+  },
+  "networkId": 106,
+  "rpc": [
+    "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://106.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://evmexplorer.velas.com/rpc",
+    "https://explorer.velas.com/rpc"
+  ],
+  "shortName": "vlx",
+  "slug": "velas-evm",
+  "testnet": false
 } as const satisfies Chain;

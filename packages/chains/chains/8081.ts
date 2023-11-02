@@ -1,35 +1,40 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Shardeum Sphinx DApp 1.X",
-  "shortName": "Sphinx",
   "chain": "Shardeum",
   "chainId": 8081,
-  "icon": {
-    "height": 1200,
-    "width": 1200,
-    "url": "ipfs://QmQWzHUy4kmk1eGksDREGQL3GWrssdAPBxHt4aKGAFHSfJ",
-    "format": "png"
-  },
-  "rpc": [
-    "https://shardeum-sphinx-dapp-1-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://dapps.shardeum.org/sphinx"
-  ],
-  "nativeCurrency": {
-    "name": "Shardeum",
-    "symbol": "SHM",
-    "decimals": 18
-  },
   "explorers": [
     {
       "name": "Shardeum Scan",
-      "url": "https://explorer-dapps.shardeum.org",
+      "url": "https://explorer-liberty20.shardeum.org",
       "standard": "EIP3091"
     }
   ],
   "faucets": [
-    "https://faucet-dapps.shardeum.org/"
+    "https://faucet.liberty20.shardeum.org"
   ],
+  "icon": {
+    "url": "ipfs://Qma1bfuubpepKn7DLDy4NPSKDeT3S4VPCNhu6UmdGrb6YD",
+    "width": 609,
+    "height": 533,
+    "format": "png"
+  },
   "infoURL": "https://docs.shardeum.org/",
-  "testnet": true,
-  "slug": "shardeum-sphinx-dapp-1-x"
+  "name": "Shardeum Liberty 2.X",
+  "nativeCurrency": {
+    "name": "Shardeum SHM",
+    "symbol": "SHM",
+    "decimals": 18
+  },
+  "networkId": 8081,
+  "redFlags": [
+    "reusedChainId"
+  ],
+  "rpc": [
+    "https://shardeum-liberty-2-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://8081.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://liberty20.shardeum.org/"
+  ],
+  "shortName": "Liberty20",
+  "slug": "shardeum-liberty-2-x",
+  "testnet": false
 } as const satisfies Chain;

@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Openpiece Testnet",
   "chain": "OPENPIECE",
-  "icon": {
-    "url": "ipfs://QmVTahJkdSH3HPYsJMK2GmqfWZjLyxE7cXy1aHEnHU3vp2",
-    "width": 250,
-    "height": 250,
-    "format": "png"
-  },
-  "rpc": [
-    "https://openpiece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.openpiece.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Belly",
-    "symbol": "BELLY",
-    "decimals": 18
-  },
-  "infoURL": "https://cryptopiece.online",
-  "shortName": "OPtest",
   "chainId": 141,
-  "networkId": 141,
   "explorers": [
     {
       "name": "Belly Scan",
@@ -29,6 +9,27 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "openpiece-testnet"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmVTahJkdSH3HPYsJMK2GmqfWZjLyxE7cXy1aHEnHU3vp2",
+    "width": 250,
+    "height": 250,
+    "format": "png"
+  },
+  "infoURL": "https://cryptopiece.online",
+  "name": "Openpiece Testnet",
+  "nativeCurrency": {
+    "name": "Belly",
+    "symbol": "BELLY",
+    "decimals": 18
+  },
+  "networkId": 141,
+  "rpc": [
+    "https://openpiece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://141.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.openpiece.io"
+  ],
+  "shortName": "OPtest",
+  "slug": "openpiece-testnet",
+  "testnet": true
 } as const satisfies Chain;

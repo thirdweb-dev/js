@@ -1,32 +1,37 @@
 import { Icon } from "../../assets/icon";
-import { useAppTheme } from "../../styles/hooks";
 import { AddressDisplay } from "../base/AddressDisplay";
 import BaseButton from "../base/BaseButton";
-import Text from "../base/Text";
 import { WalletIcon } from "../base/WalletIcon";
-import { useWallet, useBalance } from "@thirdweb-dev/react-core";
+import { useENS, useWallet } from "@thirdweb-dev/react-core";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Box from "../base/Box";
 import CopyIcon from "../../assets/copy";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { TextBalance } from "../base/TextBalance";
+import { walletIds } from "@thirdweb-dev/wallets";
+import { SMART_WALLET_ICON } from "../../assets/svgs";
+import Text from "../base/Text";
+import { useGlobalTheme } from "../../providers/ui-context-provider";
 
 interface WalletDetailsModalHeaderProps {
   address?: string;
   onDisconnectPress: () => void;
   onAddressCopied?: () => void;
   loading?: boolean;
+  tokenAddress?: string;
 }
 
 export const WalletDetailsModalHeader = ({
   address,
   onDisconnectPress,
   onAddressCopied,
+  tokenAddress,
 }: WalletDetailsModalHeaderProps) => {
-  const theme = useAppTheme();
-  const balanceQuery = useBalance();
+  const theme = useGlobalTheme();
   const activeWallet = useWallet();
   const [showLoading, setShowLoading] = useState(false);
+  const ensQuery = useENS();
 
   const onAddressPress = async () => {
     if (!address) {
@@ -38,13 +43,26 @@ export const WalletDetailsModalHeader = ({
 
   const onDisconnectPressInternal = () => {
     setShowLoading(true);
-    onDisconnectPress();
+    setTimeout(() => {
+      onDisconnectPress();
+    }, 0);
   };
+
+  const ens = useMemo(() => ensQuery.data?.ens, [ensQuery.data?.ens]);
+  const avatarUrl = useMemo(
+    () => ensQuery.data?.avatarUrl,
+    [ensQuery.data?.avatarUrl],
+  );
+
+  const walletIconUrl =
+    activeWallet?.walletId === walletIds.smartWallet
+      ? SMART_WALLET_ICON
+      : activeWallet?.getMeta().iconURL || "";
 
   return (
     <>
       <View style={styles.header}>
-        <WalletIcon size={40} iconUri={activeWallet?.getMeta().iconURL || ""} />
+        <WalletIcon size={40} iconUri={avatarUrl || walletIconUrl} />
         <BaseButton
           flex={1}
           justifyContent="flex-start"
@@ -58,19 +76,23 @@ export const WalletDetailsModalHeader = ({
             justifyContent="center"
             alignItems="center"
           >
-            <AddressDisplay mr="xs" address={address} />
+            {ens ? (
+              <Text mr="xs" variant="bodyLarge">
+                {ens}
+              </Text>
+            ) : (
+              <AddressDisplay mr="xs" address={address} extraShort={false} />
+            )}
             <CopyIcon
               width={14}
               height={14}
               color={theme.colors.textSecondary}
             />
           </Box>
-          <Text variant="bodySmallSecondary">
-            {balanceQuery.data
-              ? Number(balanceQuery.data.displayValue).toFixed(3)
-              : ""}{" "}
-            {balanceQuery.data?.symbol}
-          </Text>
+          <TextBalance
+            textVariant="bodySmallSecondary"
+            tokenAddress={tokenAddress}
+          />
         </BaseButton>
         {showLoading ? (
           <ActivityIndicator size="small" color={theme.colors.iconHighlight} />

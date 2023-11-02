@@ -1,25 +1,27 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aquachain",
   "chain": "AQUA",
-  "rpc": [
-    "https://aquachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://c.onical.org",
-    "https://tx.aquacha.in/api"
-  ],
+  "chainId": 61717561,
+  "explorers": [],
   "faucets": [
     "https://aquacha.in/faucet"
   ],
+  "infoURL": "https://aquachain.github.io",
+  "name": "Aquachain",
   "nativeCurrency": {
     "name": "Aquachain Ether",
     "symbol": "AQUA",
     "decimals": 18
   },
-  "infoURL": "https://aquachain.github.io",
-  "shortName": "aqua",
-  "chainId": 61717561,
   "networkId": 61717561,
+  "rpc": [
+    "https://aquachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://61717561.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://c.onical.org",
+    "https://tx.aquacha.in/api"
+  ],
+  "shortName": "aqua",
   "slip44": 61717561,
-  "testnet": false,
-  "slug": "aquachain"
+  "slug": "aquachain",
+  "testnet": false
 } as const satisfies Chain;

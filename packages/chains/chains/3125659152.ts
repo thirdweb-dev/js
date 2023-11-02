@@ -1,22 +1,24 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Pirl",
   "chain": "PIRL",
-  "rpc": [
-    "https://pirl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://wallrpc.pirl.io"
-  ],
+  "chainId": 3125659152,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://pirl.io",
+  "name": "Pirl",
   "nativeCurrency": {
     "name": "Pirl Ether",
     "symbol": "PIRL",
     "decimals": 18
   },
-  "infoURL": "https://pirl.io",
-  "shortName": "pirl",
-  "chainId": 3125659152,
   "networkId": 3125659152,
+  "rpc": [
+    "https://pirl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://3125659152.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://wallrpc.pirl.io"
+  ],
+  "shortName": "pirl",
   "slip44": 164,
-  "testnet": false,
-  "slug": "pirl"
+  "slug": "pirl",
+  "testnet": false
 } as const satisfies Chain;

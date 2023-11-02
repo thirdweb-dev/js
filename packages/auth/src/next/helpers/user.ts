@@ -2,7 +2,7 @@ import {
   THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
   THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX,
 } from "../../constants";
-import { Json } from "../../core/schema";
+import { Json } from "../../core";
 import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";

@@ -1,21 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "MintMe.com Coin",
   "chain": "MINTME",
-  "rpc": [
-    "https://mintme-com-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node1.mintme.com"
-  ],
+  "chainId": 24734,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://www.mintme.com",
+  "name": "MintMe.com Coin",
   "nativeCurrency": {
     "name": "MintMe.com Coin",
     "symbol": "MINTME",
     "decimals": 18
   },
-  "infoURL": "https://www.mintme.com",
-  "shortName": "mintme",
-  "chainId": 24734,
   "networkId": 37480,
-  "testnet": false,
-  "slug": "mintme-com-coin"
+  "rpc": [
+    "https://mintme-com-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://24734.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node1.mintme.com"
+  ],
+  "shortName": "mintme",
+  "slug": "mintme-com-coin",
+  "testnet": false
 } as const satisfies Chain;

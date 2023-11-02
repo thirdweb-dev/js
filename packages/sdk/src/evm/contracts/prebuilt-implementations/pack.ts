@@ -1,8 +1,29 @@
+import type {
+  IPackVRFDirect,
+  Pack as PackContract,
+} from "@thirdweb-dev/contracts-js";
+import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
+import {
+  ITokenBundle,
+  PackCreatedEvent,
+  PackOpenedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  BigNumber,
+  constants,
+  utils,
+  type BigNumberish,
+  type CallOverrides,
+} from "ethers";
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
+import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
+import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
+import { resolveAddress } from "../../common/ens/resolveAddress";
 import { assertEnabled } from "../../common/feature-detection/assertEnabled";
 import { detectContractFeature } from "../../common/feature-detection/detectContractFeature";
-import { resolveAddress } from "../../common/ens/resolveAddress";
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
@@ -22,11 +43,11 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { PackVRF } from "../../core/classes/pack-vrf";
 import { Transaction } from "../../core/classes/transactions";
 import { NetworkInput, TransactionResultWithId } from "../../core/types";
-import { Address } from "../../schema/shared/Address";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import { Abi, AbiInput, AbiSchema } from "../../schema/contracts/custom";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import {
   PackMetadataInput,
   PackMetadataInputSchema,
@@ -34,27 +55,6 @@ import {
   PackRewardsOutput,
   PackRewardsOutputSchema,
 } from "../../schema/tokens/pack";
-import type {
-  IPackVRFDirect,
-  Pack as PackContract,
-} from "@thirdweb-dev/contracts-js";
-import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
-import {
-  ITokenBundle,
-  PackCreatedEvent,
-  PackOpenedEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  type BigNumberish,
-  type CallOverrides,
-  constants,
-  utils,
-} from "ethers";
-import { fetchCurrencyMetadata } from "../../common/currency/fetchCurrencyMetadata";
-import { hasERC20Allowance } from "../../common/currency/hasERC20Allowance";
-import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { PACK_CONTRACT_ROLES } from "../contractRoles";
 
 /**
@@ -175,7 +175,7 @@ export class Pack extends StandardErc1155<PackContract> {
   }
 
   getAddress(): Address {
-    return this.contractWrapper.readContract.address;
+    return this.contractWrapper.address;
   }
 
   /** ******************************
@@ -249,10 +249,10 @@ export class Pack extends StandardErc1155<PackContract> {
    * Get whether users can transfer packs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
-    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+    const anyoneCanTransfer = await this.contractWrapper.read("hasRole", [
       getRoleHash("transfer"),
       constants.AddressZero,
-    );
+    ]);
     return !anyoneCanTransfer;
   }
 
@@ -275,8 +275,10 @@ export class Pack extends StandardErc1155<PackContract> {
   public async getPackContents(
     packId: BigNumberish,
   ): Promise<PackRewardsOutput> {
-    const { contents, perUnitAmounts } =
-      await this.contractWrapper.readContract.getPackContents(packId);
+    const { contents, perUnitAmounts } = await this.contractWrapper.read(
+      "getPackContents",
+      [packId],
+    );
 
     const erc20Rewards: PackRewardsOutput["erc20Rewards"] = [];
     const erc721Rewards: PackRewardsOutput["erc721Rewards"] = [];
@@ -340,8 +342,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Create Pack
-   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet.
-   * @remarks See {@link Pack.createTo}
+   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet. See {@link Pack.createTo}
    *
    * @param metadataWithRewards - the metadata and rewards to include in the pack
    * @example
@@ -394,8 +395,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   /**
    * Add Pack Contents
-   * @remarks Add contents to an existing pack.
-   * @remarks See {@link Pack.addPackContents}
+   * @remarks Add contents to an existing pack. See {@link Pack.addPackContents}
    *
    * @param packId - token Id of the pack to add contents to
    * @param packContents - the rewards to include in the pack
@@ -434,10 +434,10 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   addPackContents = /* @__PURE__ */ buildTransactionFunction(
     async (packId: BigNumberish, packContents: PackRewards) => {
-      const signerAddress = await this.contractWrapper.getSignerAddress();
-      const parsedContents = await PackRewardsOutputSchema.parseAsync(
-        packContents,
-      );
+      const [signerAddress, parsedContents] = await Promise.all([
+        this.contractWrapper.getSignerAddress(),
+        PackRewardsOutputSchema.parseAsync(packContents),
+      ]);
       const { contents, numOfRewardUnits } = await this.toPackContentArgs(
         parsedContents,
       );
@@ -519,14 +519,11 @@ export class Pack extends StandardErc1155<PackContract> {
       to: AddressOrEns,
       metadataWithRewards: PackMetadataInput,
     ): Promise<Transaction<TransactionResultWithId<NFT>>> => {
-      const uri = await uploadOrExtractURI(
-        metadataWithRewards.packMetadata,
-        this.storage,
-      );
-
-      const parsedMetadata = await PackMetadataInputSchema.parseAsync(
-        metadataWithRewards,
-      );
+      const [uri, parsedMetadata, toAddress] = await Promise.all([
+        uploadOrExtractURI(metadataWithRewards.packMetadata, this.storage),
+        PackMetadataInputSchema.parseAsync(metadataWithRewards),
+        resolveAddress(to),
+      ]);
       const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
       const rewardsData: PackRewardsOutput = {
         erc20Rewards,
@@ -546,7 +543,7 @@ export class Pack extends StandardErc1155<PackContract> {
           uri,
           parsedMetadata.openStartTime,
           parsedMetadata.rewardsPerPack,
-          await resolveAddress(to),
+          toAddress,
         ],
         parse: (receipt) => {
           const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
@@ -810,7 +807,7 @@ export class Pack extends StandardErc1155<PackContract> {
     ) {
       return new PackVRF(
         this.contractWrapper.getSignerOrProvider(),
-        this.contractWrapper.readContract.address,
+        this.contractWrapper.address,
         this.storage,
         this.contractWrapper.options,
         this.chainId,

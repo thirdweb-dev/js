@@ -1,9 +1,26 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Eluvio Content Fabric",
   "chain": "Eluvio",
+  "chainId": 955305,
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://explorer.eluv.io",
+      "standard": "EIP3091"
+    }
+  ],
+  "faucets": [],
+  "infoURL": "https://eluv.io",
+  "name": "Eluvio Content Fabric",
+  "nativeCurrency": {
+    "name": "ELV",
+    "symbol": "ELV",
+    "decimals": 18
+  },
+  "networkId": 955305,
   "rpc": [
     "https://eluvio-content-fabric.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://955305.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://host-76-74-28-226.contentfabric.io/eth/",
     "https://host-76-74-28-232.contentfabric.io/eth/",
     "https://host-76-74-29-2.contentfabric.io/eth/",
@@ -15,24 +32,8 @@ export default {
     "https://host-60-240-133-202.contentfabric.io/eth/",
     "https://host-64-235-250-98.contentfabric.io/eth/"
   ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "ELV",
-    "symbol": "ELV",
-    "decimals": 18
-  },
-  "infoURL": "https://eluv.io",
   "shortName": "elv",
-  "chainId": 955305,
-  "networkId": 955305,
   "slip44": 1011,
-  "explorers": [
-    {
-      "name": "blockscout",
-      "url": "https://explorer.eluv.io",
-      "standard": "EIP3091"
-    }
-  ],
-  "testnet": false,
-  "slug": "eluvio-content-fabric"
+  "slug": "eluvio-content-fabric",
+  "testnet": false
 } as const satisfies Chain;

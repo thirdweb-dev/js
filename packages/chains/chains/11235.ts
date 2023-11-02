@@ -1,22 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Haqq Network",
   "chain": "Haqq",
-  "rpc": [
-    "https://haqq-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.eth.haqq.network",
-    "https://haqq-evm.publicnode.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Islamic Coin",
-    "symbol": "ISLM",
-    "decimals": 18
-  },
-  "infoURL": "https://islamiccoin.net",
-  "shortName": "ISLM",
   "chainId": 11235,
-  "networkId": 11235,
   "explorers": [
     {
       "name": "Mainnet HAQQ Explorer",
@@ -24,6 +9,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "haqq-network"
+  "faucets": [],
+  "infoURL": "https://islamiccoin.net",
+  "name": "Haqq Network",
+  "nativeCurrency": {
+    "name": "Islamic Coin",
+    "symbol": "ISLM",
+    "decimals": 18
+  },
+  "networkId": 11235,
+  "rpc": [
+    "https://haqq-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://11235.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.eth.haqq.network",
+    "https://haqq-evm.publicnode.com",
+    "wss://haqq-evm.publicnode.com"
+  ],
+  "shortName": "ISLM",
+  "slug": "haqq-network",
+  "testnet": false
 } as const satisfies Chain;

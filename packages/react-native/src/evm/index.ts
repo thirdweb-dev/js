@@ -19,15 +19,25 @@ export { magicWallet } from "./wallets/wallets/magic-link";
 export { MagicWallet } from "./wallets/wallets/MagicLink";
 export { MagicLink } from "./wallets/wallets/MagicLink";
 export { magicLink } from "./wallets/wallets/magic-link";
-export * from "./wallets/wallets/WalletConnectV2";
+export { EmbeddedWallet } from "./wallets/wallets/embedded/EmbeddedWallet";
+export { embeddedWallet } from "./wallets/wallets/embedded/embedded-wallet";
+export * from "./wallets/wallets/wallet-connect/WalletConnectBase";
+export { WalletConnect } from "./wallets/wallets/wallet-connect/WalletConnect";
+export { walletConnect } from "./wallets/wallets/wallet-connect/wallet-connect";
 export type { WCMeta } from "./wallets/types/wc";
 
 export { useCoinbaseWallet } from "./wallets/hooks/useCoinbaseWallet";
 export { useMetaMaskWallet } from "./wallets/hooks/useMetaMaskWallet";
 export { useRainbowWallet } from "./wallets/hooks/useRainbowWallet";
 export { useTrustWallet } from "./wallets/hooks/useTrustWallet";
+export { useEmbeddedWallet } from "./wallets/hooks/useEmbeddedWallet";
+export { useSmartWallet } from "./wallets/hooks/useSmartWallet";
+export { useEmbeddedWalletSendVerificationEmail } from "./wallets/hooks/useEmbeddedWalletSendVerificationEmail";
 
-export { ConnectWallet } from "./components/ConnectWallet";
+export {
+  ConnectWallet,
+  type ConnectWalletProps,
+} from "./components/ConnectWallet";
 export { Web3Button } from "./components/Web3Button";
 
 // utilities
@@ -38,8 +48,11 @@ export { createAsyncLocalStorage } from "../core/AsyncStorage";
 export { createSecureStorage } from "../core/SecureStorage";
 export { ThirdwebStorage } from "../core/storage/storage";
 
+export * from "./i18n/strings";
+
 // ui components
 export * from "./components/base";
+export { ConnectWalletHeader } from "./components/ConnectWalletFlow/ConnectingWallet/ConnectingWalletHeader";
 
 // assets / icons
 export * from "./assets";

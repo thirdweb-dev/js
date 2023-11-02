@@ -1,17 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Aves Mainnet",
   "chain": "AVS",
-  "rpc": [
-    "https://aves.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.avescoin.io"
+  "chainId": 33333,
+  "explorers": [
+    {
+      "name": "avescan",
+      "url": "https://avescan.io",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
+        "width": 232,
+        "height": 232,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Aves",
-    "symbol": "AVS",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +24,26 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://avescoin.io",
-  "shortName": "avs",
-  "chainId": 33333,
-  "networkId": 33333,
   "icon": {
     "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
     "width": 232,
     "height": 232,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "avescan",
-      "url": "https://avescan.io",
-      "icon": {
-        "url": "ipfs://QmeKQVv2QneHaaggw2NfpZ7DGMdjVhPywTdse5RzCs4oGn",
-        "width": 232,
-        "height": 232,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://avescoin.io",
+  "name": "Aves Mainnet",
+  "nativeCurrency": {
+    "name": "Aves",
+    "symbol": "AVS",
+    "decimals": 18
+  },
+  "networkId": 33333,
+  "rpc": [
+    "https://aves.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://33333.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.avescoin.io"
   ],
-  "testnet": false,
-  "slug": "aves"
+  "shortName": "avs",
+  "slug": "aves",
+  "testnet": false
 } as const satisfies Chain;

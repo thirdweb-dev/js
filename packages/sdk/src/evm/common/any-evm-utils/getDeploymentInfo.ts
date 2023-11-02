@@ -9,8 +9,13 @@ import { fetchAndCacheDeployMetadata } from "./fetchAndCacheDeployMetadata";
 import { getCreate2FactoryAddress } from "./getCreate2FactoryAddress";
 import { caches } from "./caches";
 import { computeDeploymentInfo } from "./computeDeploymentInfo";
-import { generatePluginFunctions } from "../plugin/generatePluginFunctions";
-import { getMetadataForPlugins } from "../plugin/getMetadataForPlugins";
+import {
+  generateExtensionFunctions,
+  generatePluginFunctions,
+} from "../plugin/generatePluginFunctions";
+import { Extension } from "../../types/extensions";
+import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
+import invariant from "tiny-invariant";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.
@@ -28,35 +33,55 @@ export async function getDeploymentInfo(
   storage: ThirdwebStorage,
   provider: providers.Provider,
   create2Factory?: string,
+  clientId?: string,
+  secretKey?: string,
 ): Promise<DeploymentPreset[]> {
   caches.deploymentPresets = {};
-
-  const create2FactoryAddress = create2Factory
-    ? create2Factory
-    : await getCreate2FactoryAddress(provider);
-
+  const [create2FactoryAddress, { compilerMetadata, extendedMetadata }] =
+    await Promise.all([
+      create2Factory ? create2Factory : getCreate2FactoryAddress(provider),
+      fetchAndCacheDeployMetadata(metadataUri, storage),
+    ]);
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const { compilerMetadata } = await fetchAndCacheDeployMetadata(
-    metadataUri,
-    storage,
-  );
-  const pluginMetadata = await getMetadataForPlugins(metadataUri, storage);
+  const defaultExtensions = extendedMetadata?.defaultExtensions;
 
-  // if pluginMetadata is not empty, then it's a plugin-pattern router contract
-  if (pluginMetadata.length > 0) {
+  if (extendedMetadata?.routerType === "plugin" && defaultExtensions) {
+    invariant(clientId || secretKey, "Require Client Id / Secret Key");
+    const publishedExtensions = await Promise.all(
+      defaultExtensions.map((e) => {
+        return fetchPublishedContractFromPolygon(
+          e.publisherAddress,
+          e.extensionName,
+          e.extensionVersion,
+          storage,
+          clientId,
+          secretKey,
+        );
+      }),
+    );
+
+    const pluginMetadata = (
+      await Promise.all(
+        publishedExtensions.map((c) =>
+          fetchAndCacheDeployMetadata(c.metadataUri, storage),
+        ),
+      )
+    ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+
     // get deployment info for all plugins
     const pluginDeploymentInfo = await Promise.all(
-      pluginMetadata.map(async (metadata) => {
-        const info = await computeDeploymentInfo(
+      pluginMetadata.map((metadata) =>
+        computeDeploymentInfo(
           "plugin",
           provider,
           storage,
           create2FactoryAddress,
           { metadata: metadata },
-        );
-        return info;
-      }),
+          clientId,
+          secretKey,
+        ),
+      ),
     );
 
     // create constructor param input for PluginMap
@@ -79,6 +104,8 @@ export async function getDeploymentInfo(
         contractName: "PluginMap",
         constructorParams: { _pluginsToAdd: { value: mapInput } },
       },
+      clientId,
+      secretKey,
     );
 
     // address of PluginMap is input for MarketplaceV3's constructor
@@ -87,27 +114,91 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
+  } else if (extendedMetadata?.routerType === "dynamic" && defaultExtensions) {
+    invariant(clientId || secretKey, "Require Client Id / Secret Key");
+    const publishedExtensions = await Promise.all(
+      defaultExtensions.map((e) => {
+        return fetchPublishedContractFromPolygon(
+          e.publisherAddress,
+          e.extensionName,
+          e.extensionVersion,
+          storage,
+          clientId,
+          secretKey,
+        );
+      }),
+    );
+
+    const extensionMetadata = (
+      await Promise.all(
+        publishedExtensions.map(async (c) => {
+          return fetchAndCacheDeployMetadata(c.metadataUri, storage);
+        }),
+      )
+    ).map((fetchedMetadata) => fetchedMetadata.compilerMetadata);
+
+    // get deployment info for all extensions
+    const extensionDeploymentInfo = await Promise.all(
+      extensionMetadata.map((metadata) =>
+        computeDeploymentInfo(
+          "extension",
+          provider,
+          storage,
+          create2FactoryAddress,
+          { metadata: metadata },
+          clientId,
+          secretKey,
+        ),
+      ),
+    );
+
+    // create constructor param input for BaseRouter
+    const routerInput: Extension[] = [];
+    extensionMetadata.forEach((metadata, index) => {
+      const extensionFunctions = generateExtensionFunctions(metadata.abi);
+      routerInput.push({
+        metadata: {
+          name: metadata.name,
+          metadataURI: "",
+          implementation:
+            extensionDeploymentInfo[index].transaction.predictedAddress,
+        },
+        functions: extensionFunctions,
+      });
+    });
+
+    // routerInput as constructor param for BaseRouter
+    customParams["_extensions"] = {
+      value: routerInput,
+    };
+
+    finalDeploymentInfo.push(...extensionDeploymentInfo);
   }
 
-  const implementationDeployInfo = await computeDeploymentInfo(
-    "implementation",
-    provider,
-    storage,
-    create2FactoryAddress,
-    {
-      metadata: compilerMetadata,
-      constructorParams: customParams,
-    },
-  );
-
-  // get clone factory
-  const factoryInfo = await computeDeploymentInfo(
-    "infra",
-    provider,
-    storage,
-    create2FactoryAddress,
-    { contractName: "TWCloneFactory" },
-  );
+  const [implementationDeployInfo, factoryInfo] = await Promise.all([
+    computeDeploymentInfo(
+      "implementation",
+      provider,
+      storage,
+      create2FactoryAddress,
+      {
+        metadata: compilerMetadata,
+        constructorParams: customParams,
+      },
+      clientId,
+      secretKey,
+    ),
+    // get clone factory
+    computeDeploymentInfo(
+      "infra",
+      provider,
+      storage,
+      create2FactoryAddress,
+      { contractName: "TWCloneFactory" },
+      clientId,
+      secretKey,
+    ),
+  ]);
 
   finalDeploymentInfo.push(factoryInfo);
   finalDeploymentInfo.push(...Object.values(caches.deploymentPresets));

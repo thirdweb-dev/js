@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OKBChain Testnet",
   "chain": "okbchain",
-  "rpc": [
-    "https://okbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://okbtestrpc.okbchain.org"
-  ],
-  "faucets": [
-    "https://www.oklink.com/okbc-test"
-  ],
-  "nativeCurrency": {
-    "name": "OKBChain Global Utility Token in testnet",
-    "symbol": "OKB",
-    "decimals": 18
-  },
-  "features": [],
-  "infoURL": "https://www.okx.com/okbc/docs/dev/quick-start/introduction/introduction-to-okbchain",
-  "shortName": "tokb",
   "chainId": 195,
-  "networkId": 195,
   "explorers": [
     {
       "name": "OKLink",
@@ -26,7 +9,25 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "https://www.oklink.com/okbc-test"
+  ],
+  "features": [],
+  "infoURL": "https://www.okx.com/okbc/docs/dev/quick-start/introduction/introduction-to-okbchain",
+  "name": "OKBChain Testnet",
+  "nativeCurrency": {
+    "name": "OKBChain Global Utility Token in testnet",
+    "symbol": "OKB",
+    "decimals": 18
+  },
+  "networkId": 195,
+  "rpc": [
+    "https://okbchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://195.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://okbtestrpc.okbchain.org"
+  ],
+  "shortName": "tokb",
+  "slug": "okbchain-testnet",
   "status": "active",
-  "testnet": true,
-  "slug": "okbchain-testnet"
+  "testnet": true
 } as const satisfies Chain;

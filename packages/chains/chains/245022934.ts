@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Neon EVM MainNet",
   "chain": "Solana",
-  "rpc": [],
-  "faucets": [],
-  "icon": {
-    "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "nativeCurrency": {
-    "name": "Neon",
-    "symbol": "NEON",
-    "decimals": 18
-  },
-  "infoURL": "https://neonevm.org",
-  "shortName": "neonevm-mainnet",
   "chainId": 245022934,
-  "networkId": 245022934,
   "explorers": [
     {
       "name": "neonscan",
@@ -31,6 +14,23 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "neon-evm"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://neonevm.org",
+  "name": "Neon EVM MainNet",
+  "nativeCurrency": {
+    "name": "Neon",
+    "symbol": "NEON",
+    "decimals": 18
+  },
+  "networkId": 245022934,
+  "rpc": [],
+  "shortName": "neonevm-mainnet",
+  "slug": "neon-evm",
+  "testnet": false
 } as const satisfies Chain;

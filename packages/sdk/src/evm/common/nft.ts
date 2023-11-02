@@ -14,9 +14,6 @@ import type {
   IERC165,
   IERC721Metadata,
 } from "@thirdweb-dev/contracts-js";
-import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
-import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json";
-import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json";
 import type {
   ThirdwebStorage,
   UploadProgressEvent,
@@ -109,14 +106,22 @@ export async function fetchTokenMetadataForContract(
   storage: ThirdwebStorage,
 ): Promise<NFTMetadata> {
   let uri: string | undefined;
+  const ERC165MetadataAbi = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/IERC165.json")
+  ).default;
   const erc165 = new Contract(
     contractAddress,
     ERC165MetadataAbi,
     provider,
   ) as IERC165;
-  const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-  const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+  const [isERC721, isERC1155] = await Promise.all([
+    erc165.supportsInterface(InterfaceId_IERC721),
+    erc165.supportsInterface(InterfaceId_IERC1155),
+  ]);
   if (isERC721) {
+    const ERC721MetadataAbi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json")
+    ).default;
     const erc721 = new Contract(
       contractAddress,
       ERC721MetadataAbi,
@@ -124,6 +129,9 @@ export async function fetchTokenMetadataForContract(
     ) as IERC721Metadata;
     uri = await erc721.tokenURI(tokenId);
   } else if (isERC1155) {
+    const ERC1155MetadataAbi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json")
+    ).default;
     const erc1155 = new Contract(
       contractAddress,
       ERC1155MetadataAbi,

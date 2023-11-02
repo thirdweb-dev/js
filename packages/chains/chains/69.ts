@@ -1,20 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Optimism Kovan",
-  "title": "Optimism Testnet Kovan",
   "chain": "ETH",
-  "rpc": [
-    "https://optimism-kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://kovan.optimism.io/"
-  ],
-  "faucets": [
-    "http://fauceth.komputing.org?chain=69&address=${ADDRESS}"
-  ],
-  "nativeCurrency": {
-    "name": "Kovan Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
+  "chainId": 69,
   "explorers": [
     {
       "name": "etherscan",
@@ -22,10 +9,24 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [
+    "http://fauceth.komputing.org?chain=69&address=${ADDRESS}"
+  ],
   "infoURL": "https://optimism.io",
-  "shortName": "okov",
-  "chainId": 69,
+  "name": "Optimism Kovan",
+  "nativeCurrency": {
+    "name": "Kovan Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
   "networkId": 69,
+  "rpc": [
+    "https://optimism-kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://69.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://kovan.optimism.io/"
+  ],
+  "shortName": "okov",
+  "slug": "optimism-kovan",
   "testnet": true,
-  "slug": "optimism-kovan"
+  "title": "Optimism Testnet Kovan"
 } as const satisfies Chain;

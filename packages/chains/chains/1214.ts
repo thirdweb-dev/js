@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "EnterChain Mainnet",
   "chain": "ENTER",
-  "rpc": [
-    "https://enterchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://tapi.entercoin.net/"
+  "chainId": 1214,
+  "explorers": [
+    {
+      "name": "Enter Explorer - Expenter",
+      "url": "https://explorer.entercoin.net",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
+        "width": 64,
+        "height": 64,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "EnterCoin",
-    "symbol": "ENTER",
-    "decimals": 18
-  },
-  "infoURL": "https://entercoin.net",
-  "shortName": "enter",
-  "chainId": 1214,
-  "networkId": 1214,
   "icon": {
     "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
     "width": 64,
     "height": 64,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Enter Explorer - Expenter",
-      "url": "https://explorer.entercoin.net",
-      "icon": {
-        "url": "ipfs://Qmb2UYVc1MjLPi8vhszWRxqBJYoYkWQVxDJRSmtrgk6j2E",
-        "width": 64,
-        "height": 64,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://entercoin.net",
+  "name": "EnterChain Mainnet",
+  "nativeCurrency": {
+    "name": "EnterCoin",
+    "symbol": "ENTER",
+    "decimals": 18
+  },
+  "networkId": 1214,
+  "rpc": [
+    "https://enterchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1214.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://tapi.entercoin.net/"
   ],
-  "testnet": false,
-  "slug": "enterchain"
+  "shortName": "enter",
+  "slug": "enterchain",
+  "testnet": false
 } as const satisfies Chain;

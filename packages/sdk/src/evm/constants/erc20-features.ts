@@ -8,6 +8,7 @@ import IERC20PermitAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Permit.j
 import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC20.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.json";
+import IERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.json";
 
 export const FEATURE_TOKEN_CLAIM_CONDITIONS_V1 = {
   name: "ERC20ClaimConditionsV1",
@@ -117,7 +118,7 @@ export const FEATURE_TOKEN = /* @__PURE__ */ {
     sdk: "sdk.erc20",
     contracts: "erc20",
   },
-  abis: [ERC20Abi],
+  abis: [ERC20Abi, IERC20MetadataAbi],
   features: {
     [FEATURE_TOKEN_BURNABLE.name]: FEATURE_TOKEN_BURNABLE,
     [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,

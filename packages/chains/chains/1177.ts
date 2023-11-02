@@ -1,17 +1,21 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Smart Host Teknoloji TESTNET",
   "chain": "SHT",
-  "rpc": [
-    "https://smart-host-teknoloji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://s2.tl.web.tr:4041"
+  "chainId": 1177,
+  "explorers": [
+    {
+      "name": "Smart Host Teknoloji TESTNET Explorer",
+      "url": "https://s2.tl.web.tr:4000",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmTrLGHyQ1Le25Q7EgNSF5Qq8D2SocKvroDkLqurdBuSQQ",
+        "width": 1655,
+        "height": 1029,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Smart Host Teknoloji TESTNET",
-    "symbol": "tSHT",
-    "decimals": 18
-  },
   "features": [
     {
       "name": "EIP155"
@@ -20,29 +24,26 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "infoURL": "https://smart-host.com.tr",
-  "shortName": "sht",
-  "chainId": 1177,
-  "networkId": 1177,
   "icon": {
     "url": "ipfs://QmTrLGHyQ1Le25Q7EgNSF5Qq8D2SocKvroDkLqurdBuSQQ",
     "width": 1655,
     "height": 1029,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Smart Host Teknoloji TESTNET Explorer",
-      "url": "https://s2.tl.web.tr:4000",
-      "icon": {
-        "url": "ipfs://QmTrLGHyQ1Le25Q7EgNSF5Qq8D2SocKvroDkLqurdBuSQQ",
-        "width": 1655,
-        "height": 1029,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://smart-host.com.tr",
+  "name": "Smart Host Teknoloji TESTNET",
+  "nativeCurrency": {
+    "name": "Smart Host Teknoloji TESTNET",
+    "symbol": "tSHT",
+    "decimals": 18
+  },
+  "networkId": 1177,
+  "rpc": [
+    "https://smart-host-teknoloji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1177.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://s2.tl.web.tr:4041"
   ],
-  "testnet": true,
-  "slug": "smart-host-teknoloji-testnet"
+  "shortName": "sht",
+  "slug": "smart-host-teknoloji-testnet",
+  "testnet": true
 } as const satisfies Chain;

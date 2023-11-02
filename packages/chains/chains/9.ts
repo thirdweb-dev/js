@@ -1,18 +1,19 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Ubiq Network Testnet",
   "chain": "UBQ",
-  "rpc": [],
+  "chainId": 9,
+  "explorers": [],
   "faucets": [],
+  "infoURL": "https://ethersocial.org",
+  "name": "Ubiq Network Testnet",
   "nativeCurrency": {
     "name": "Ubiq Testnet Ether",
     "symbol": "TUBQ",
     "decimals": 18
   },
-  "infoURL": "https://ethersocial.org",
-  "shortName": "tubq",
-  "chainId": 9,
   "networkId": 2,
-  "testnet": true,
-  "slug": "ubiq-network-testnet"
+  "rpc": [],
+  "shortName": "tubq",
+  "slug": "ubiq-network-testnet",
+  "testnet": true
 } as const satisfies Chain;

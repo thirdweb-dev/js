@@ -1,28 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "OYchain Mainnet",
   "chain": "OYchain",
-  "icon": {
-    "url": "ipfs://QmXW5T2MaGHznXUmQEXoyJjcdmX7dhLbj5fnqvZZKqeKzA",
-    "width": 677,
-    "height": 237,
-    "format": "png"
-  },
-  "rpc": [
-    "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.mainnet.oychain.io"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "OYchain Token",
-    "symbol": "OY",
-    "decimals": 18
-  },
-  "infoURL": "https://www.oychain.io",
-  "shortName": "OYchainMainnet",
   "chainId": 126,
-  "networkId": 126,
-  "slip44": 126,
   "explorers": [
     {
       "name": "OYchain Mainnet Explorer",
@@ -30,6 +9,28 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "oychain"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXW5T2MaGHznXUmQEXoyJjcdmX7dhLbj5fnqvZZKqeKzA",
+    "width": 677,
+    "height": 237,
+    "format": "png"
+  },
+  "infoURL": "https://www.oychain.io",
+  "name": "OYchain Mainnet",
+  "nativeCurrency": {
+    "name": "OYchain Token",
+    "symbol": "OY",
+    "decimals": 18
+  },
+  "networkId": 126,
+  "rpc": [
+    "https://oychain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://126.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.mainnet.oychain.io"
+  ],
+  "shortName": "OYchainMainnet",
+  "slip44": 126,
+  "slug": "oychain",
+  "testnet": false
 } as const satisfies Chain;

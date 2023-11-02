@@ -1,29 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Cascadia Testnet",
   "chain": "Cascadia",
-  "rpc": [
-    "https://cascadia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.cascadia.foundation"
-  ],
-  "faucets": [
-    "https://www.cascadia.foundation/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "CC",
-    "symbol": "tCC",
-    "decimals": 18
-  },
-  "infoURL": "https://www.cascadia.foundation",
-  "shortName": "cascadia",
   "chainId": 6102,
-  "networkId": 6102,
-  "icon": {
-    "url": "ipfs://QmQtcwxNiJ9D1QDz4k6jZ7qacLcqMk6CeW85TTBWBvNp3z",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Cascadia EVM Explorer",
@@ -48,6 +26,29 @@ export default {
       }
     }
   ],
-  "testnet": true,
-  "slug": "cascadia-testnet"
+  "faucets": [
+    "https://www.cascadia.foundation/faucet"
+  ],
+  "icon": {
+    "url": "ipfs://QmQtcwxNiJ9D1QDz4k6jZ7qacLcqMk6CeW85TTBWBvNp3z",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
+  "infoURL": "https://www.cascadia.foundation",
+  "name": "Cascadia Testnet",
+  "nativeCurrency": {
+    "name": "CC",
+    "symbol": "tCC",
+    "decimals": 18
+  },
+  "networkId": 6102,
+  "rpc": [
+    "https://cascadia-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://6102.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.cascadia.foundation"
+  ],
+  "shortName": "cascadia",
+  "slug": "cascadia-testnet",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,23 +1,25 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Lightstreams Testnet",
   "chain": "PHT",
-  "rpc": [
-    "https://lightstreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://node.sirius.lightstreams.io"
-  ],
+  "chainId": 162,
+  "explorers": [],
   "faucets": [
     "https://discuss.lightstreams.network/t/request-test-tokens"
   ],
+  "infoURL": "https://explorer.sirius.lightstreams.io",
+  "name": "Lightstreams Testnet",
   "nativeCurrency": {
     "name": "Lightstreams PHT",
     "symbol": "PHT",
     "decimals": 18
   },
-  "infoURL": "https://explorer.sirius.lightstreams.io",
-  "shortName": "tpht",
-  "chainId": 162,
   "networkId": 162,
-  "testnet": true,
-  "slug": "lightstreams-testnet"
+  "rpc": [
+    "https://lightstreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://162.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://node.sirius.lightstreams.io"
+  ],
+  "shortName": "tpht",
+  "slug": "lightstreams-testnet",
+  "testnet": true
 } as const satisfies Chain;

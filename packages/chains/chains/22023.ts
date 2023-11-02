@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Taycan",
   "chain": "Taycan",
-  "rpc": [
-    "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://taycan-rpc.hupayx.io:8545"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "shuffle",
-    "symbol": "SFL",
-    "decimals": 18
-  },
-  "infoURL": "https://hupayx.io",
-  "shortName": "SFL",
   "chainId": 22023,
-  "networkId": 22023,
-  "icon": {
-    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
-    "width": 1000,
-    "height": 1206,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "Taycan Explorer(Blockscout)",
@@ -46,6 +26,27 @@ export default {
       }
     }
   ],
-  "testnet": false,
-  "slug": "taycan"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreidvjcc73v747lqlyrhgbnkvkdepdvepo6baj6hmjsmjtvdyhmzzmq",
+    "width": 1000,
+    "height": 1206,
+    "format": "png"
+  },
+  "infoURL": "https://hupayx.io",
+  "name": "Taycan",
+  "nativeCurrency": {
+    "name": "shuffle",
+    "symbol": "SFL",
+    "decimals": 18
+  },
+  "networkId": 22023,
+  "rpc": [
+    "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://22023.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://taycan-rpc.hupayx.io:8545"
+  ],
+  "shortName": "SFL",
+  "slug": "taycan",
+  "testnet": false
 } as const satisfies Chain;

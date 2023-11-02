@@ -1,43 +1,44 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bitgert Mainnet",
   "chain": "Brise",
-  "rpc": [
-    "https://bitgert.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.icecreamswap.com",
-    "https://mainnet-rpc.brisescan.com",
-    "https://chainrpc.com",
-    "https://serverrpc.com"
+  "chainId": 32520,
+  "explorers": [
+    {
+      "name": "Brise Scan",
+      "url": "https://brisescan.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Bitrise Token",
-    "symbol": "Brise",
-    "decimals": 18
-  },
-  "infoURL": "https://bitgert.com/",
-  "shortName": "Brise",
-  "chainId": 32520,
-  "networkId": 32520,
   "icon": {
     "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
     "width": 512,
     "height": 512,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Brise Scan",
-      "url": "https://brisescan.com",
-      "icon": {
-        "url": "ipfs://QmY3vKe1rG9AyHSGH1ouP3ER3EVUZRtRrFbFZEfEpMSd4V",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      },
-      "standard": "EIP3091"
-    }
+  "infoURL": "https://bitgert.com/",
+  "name": "Bitgert Mainnet",
+  "nativeCurrency": {
+    "name": "Bitrise Token",
+    "symbol": "Brise",
+    "decimals": 18
+  },
+  "networkId": 32520,
+  "rpc": [
+    "https://bitgert.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://32520.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.icecreamswap.com",
+    "https://mainnet-rpc.brisescan.com",
+    "https://chainrpc.com",
+    "https://serverrpc.com"
   ],
-  "testnet": false,
-  "slug": "bitgert"
+  "shortName": "Brise",
+  "slug": "bitgert",
+  "testnet": false
 } as const satisfies Chain;

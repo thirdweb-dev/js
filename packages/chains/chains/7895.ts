@@ -1,42 +1,43 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "ARDENIUM Athena",
   "chain": "ATHENA",
-  "rpc": [
-    "https://ardenium-athena.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-athena.ardescan.com/"
+  "chainId": 7895,
+  "explorers": [
+    {
+      "name": "ARDENIUM Athena Explorer",
+      "url": "https://testnet.ardscan.com",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmdwifhejRfF8QfyzYrNdFVhfhCR6iuzWMmppK4eL7kttG",
+        "width": 120,
+        "height": 120,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [
     "https://faucet-athena.ardescan.com/"
   ],
-  "nativeCurrency": {
-    "name": "ARD",
-    "symbol": "tARD",
-    "decimals": 18
-  },
-  "infoURL": "https://ardenium.org",
-  "shortName": "ard",
-  "chainId": 7895,
-  "networkId": 7895,
   "icon": {
     "url": "ipfs://QmdwifhejRfF8QfyzYrNdFVhfhCR6iuzWMmppK4eL7kttG",
     "width": 120,
     "height": 120,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "ARDENIUM Athena Explorer",
-      "icon": {
-        "url": "ipfs://QmdwifhejRfF8QfyzYrNdFVhfhCR6iuzWMmppK4eL7kttG",
-        "width": 120,
-        "height": 120,
-        "format": "png"
-      },
-      "url": "https://testnet.ardscan.com",
-      "standard": "none"
-    }
+  "infoURL": "https://ardenium.org",
+  "name": "ARDENIUM Athena",
+  "nativeCurrency": {
+    "name": "ARD",
+    "symbol": "tARD",
+    "decimals": 18
+  },
+  "networkId": 7895,
+  "rpc": [
+    "https://ardenium-athena.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://7895.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-athena.ardescan.com/"
   ],
-  "testnet": true,
-  "slug": "ardenium-athena"
+  "shortName": "ard",
+  "slug": "ardenium-athena",
+  "testnet": true
 } as const satisfies Chain;

@@ -1,27 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Genesys Mainnet",
   "chain": "Genesys",
-  "icon": {
-    "url": "ipfs://bafkreie6nai3yhykcdlsyshn5lbcbyba5y7zwsqg6owcfek2urhoucr6rm",
-    "width": 800,
-    "height": 800,
-    "format": "png"
-  },
-  "rpc": [
-    "https://genesys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.genesys.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Genesys",
-    "symbol": "GSYS",
-    "decimals": 18
-  },
-  "infoURL": "https://www.genesys.network/",
-  "shortName": "Genesys",
   "chainId": 16507,
-  "networkId": 16507,
   "explorers": [
     {
       "name": "GchainExplorer",
@@ -29,6 +9,27 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "genesys"
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreie6nai3yhykcdlsyshn5lbcbyba5y7zwsqg6owcfek2urhoucr6rm",
+    "width": 800,
+    "height": 800,
+    "format": "png"
+  },
+  "infoURL": "https://www.genesys.network/",
+  "name": "Genesys Mainnet",
+  "nativeCurrency": {
+    "name": "Genesys",
+    "symbol": "GSYS",
+    "decimals": 18
+  },
+  "networkId": 16507,
+  "rpc": [
+    "https://genesys.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://16507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.genesys.network"
+  ],
+  "shortName": "Genesys",
+  "slug": "genesys",
+  "testnet": false
 } as const satisfies Chain;

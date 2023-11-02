@@ -1,48 +1,47 @@
-import { getDeployArguments } from "../../common/deploy";
-import { buildTransactionFunction } from "../../common/transactions";
-import {
-  EditionDropInitializer,
-  EditionInitializer,
-  getContractName,
-  MarketplaceInitializer,
-  MarketplaceV3Initializer,
-  MultiwrapInitializer,
-  NFTCollectionInitializer,
-  NFTDropInitializer,
-  PackInitializer,
-  PREBUILT_CONTRACTS_MAP,
-  SignatureDropInitializer,
-  SplitInitializer,
-  TokenDropInitializer,
-  TokenInitializer,
-  VoteInitializer,
-} from "../../contracts";
-import { Address } from "../../schema/shared/Address";
-import { SDKOptions } from "../../schema/sdk-options";
-import type { DeployEvents, DeployOptions } from "../../types/deploy";
-import {
-  DeploySchemaForPrebuiltContractType,
-  PrebuiltContractType,
-} from "../../contracts";
-import { NetworkInput } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
-import { Transaction } from "./transactions";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.json";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
-  constants,
   Contract,
-  type ContractInterface,
+  constants,
   utils,
+  type ContractInterface,
 } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import { getDeployArguments } from "../../common/deploy";
+import { buildTransactionFunction } from "../../common/transactions";
 import { getApprovedImplementation } from "../../constants/addresses/getApprovedImplementation";
 import { getDefaultTrustedForwarders } from "../../constants/addresses/getDefaultTrustedForwarders";
+import {
+  DeploySchemaForPrebuiltContractType,
+  EditionDropInitializer,
+  EditionInitializer,
+  MarketplaceInitializer,
+  MarketplaceV3Initializer,
+  MultiwrapInitializer,
+  NFTCollectionInitializer,
+  NFTDropInitializer,
+  PREBUILT_CONTRACTS_MAP,
+  PackInitializer,
+  PrebuiltContractType,
+  SignatureDropInitializer,
+  SplitInitializer,
+  TokenDropInitializer,
+  TokenInitializer,
+  VoteInitializer,
+  getContractName,
+} from "../../contracts";
+import { SDKOptions } from "../../schema/sdk-options";
+import { Address } from "../../schema/shared/Address";
+import type { DeployOptions } from "../../types/deploy/deploy-options";
+import type { DeployEvents } from "../../types/deploy/deploy-events";
+import { NetworkInput } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Transaction } from "./transactions";
 
 /**
  * @internal
@@ -63,7 +62,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [VoteInitializer.contractType]: 1,
     [SplitInitializer.contractType]: 1,
     [MarketplaceInitializer.contractType]: 2,
-    [MarketplaceV3Initializer.contractType]: 1,
+    [MarketplaceV3Initializer.contractType]: 3,
     [PackInitializer.contractType]: 2,
   };
 
@@ -395,12 +394,12 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     ) {
       return approvedImplementation;
     }
-    return this.readContract.getImplementation(
+    return this.read("getImplementation", [
       encodedType,
       version !== undefined
         ? version
         : this.DEFAULT_VERSION_MAP[contract.contractType],
-    );
+    ]);
   }
 
   public async getLatestVersion(contractType: PrebuiltContractType) {
@@ -409,6 +408,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       throw new Error(`Invalid contract type ${contractType}`);
     }
     const encodedType = utils.formatBytes32String(name);
-    return this.readContract.currentVersion(encodedType);
+    return this.read("currentVersion", [encodedType]);
   }
 }

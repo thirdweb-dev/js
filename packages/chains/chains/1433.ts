@@ -1,28 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Rikeza Network Mainnet",
-  "title": "Rikeza Network Mainnet",
   "chain": "Rikeza",
-  "icon": {
-    "url": "ipfs://QmfJ1Qxpzi6CSLeFeWY1Bwe435CpT5za5WfrLUE7vNzZfy",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
-  "rpc": [
-    "https://rikeza-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.rikscan.com"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Rikeza",
-    "symbol": "RIK",
-    "decimals": 18
-  },
-  "infoURL": "https://rikeza.io",
-  "shortName": "RIK",
   "chainId": 1433,
-  "networkId": 1433,
   "explorers": [
     {
       "name": "Rikeza Blockchain explorer",
@@ -30,6 +9,28 @@ export default {
       "standard": "EIP3091"
     }
   ],
+  "faucets": [],
+  "icon": {
+    "url": "ipfs://QmfJ1Qxpzi6CSLeFeWY1Bwe435CpT5za5WfrLUE7vNzZfy",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
+  "infoURL": "https://rikeza.io",
+  "name": "Rikeza Network Mainnet",
+  "nativeCurrency": {
+    "name": "Rikeza",
+    "symbol": "RIK",
+    "decimals": 18
+  },
+  "networkId": 1433,
+  "rpc": [
+    "https://rikeza-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1433.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.rikscan.com"
+  ],
+  "shortName": "RIK",
+  "slug": "rikeza-network",
   "testnet": false,
-  "slug": "rikeza-network"
+  "title": "Rikeza Network Mainnet"
 } as const satisfies Chain;

@@ -1,24 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Bobaopera",
   "chain": "Bobaopera",
-  "rpc": [
-    "https://bobaopera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bobaopera.boba.network",
-    "wss://wss.bobaopera.boba.network",
-    "https://replica.bobaopera.boba.network",
-    "wss://replica-wss.bobaopera.boba.network"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Boba Token",
-    "symbol": "BOBA",
-    "decimals": 18
-  },
-  "infoURL": "https://boba.network",
-  "shortName": "Bobaopera",
   "chainId": 301,
-  "networkId": 301,
   "explorers": [
     {
       "name": "Bobaopera block explorer",
@@ -26,6 +9,24 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "bobaopera"
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Bobaopera",
+  "nativeCurrency": {
+    "name": "Boba Token",
+    "symbol": "BOBA",
+    "decimals": 18
+  },
+  "networkId": 301,
+  "rpc": [
+    "https://bobaopera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://301.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://bobaopera.boba.network",
+    "wss://wss.bobaopera.boba.network",
+    "https://replica.bobaopera.boba.network",
+    "wss://replica-wss.bobaopera.boba.network"
+  ],
+  "shortName": "Bobaopera",
+  "slug": "bobaopera",
+  "testnet": false
 } as const satisfies Chain;

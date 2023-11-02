@@ -1,30 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Autonity Bakerloo (Thames) Testnet",
   "chain": "AUT",
-  "rpc": [
-    "https://autonity-bakerloo-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.bakerloo.autonity.org/",
-    "wss://rpc1.bakerloo.autonity.org/ws/"
-  ],
-  "faucets": [
-    "https://faucet.autonity.org/"
-  ],
-  "nativeCurrency": {
-    "name": "Bakerloo Auton",
-    "symbol": "ATN",
-    "decimals": 18
-  },
-  "infoURL": "https://autonity.org/",
-  "shortName": "bakerloo-0",
   "chainId": 65010000,
-  "networkId": 65010000,
-  "icon": {
-    "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "explorers": [
     {
       "name": "autonity-blockscout",
@@ -32,6 +9,30 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
-  "slug": "autonity-bakerloo-thames-testnet"
+  "faucets": [
+    "https://faucet.autonity.org/"
+  ],
+  "icon": {
+    "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
+    "width": 1000,
+    "height": 1000,
+    "format": "png"
+  },
+  "infoURL": "https://autonity.org/",
+  "name": "Autonity Bakerloo (Thames) Testnet",
+  "nativeCurrency": {
+    "name": "Bakerloo Auton",
+    "symbol": "ATN",
+    "decimals": 18
+  },
+  "networkId": 65010000,
+  "rpc": [
+    "https://autonity-bakerloo-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://65010000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc1.bakerloo.autonity.org/",
+    "wss://rpc1.bakerloo.autonity.org/ws/"
+  ],
+  "shortName": "bakerloo-0",
+  "slug": "autonity-bakerloo-thames-testnet",
+  "testnet": true
 } as const satisfies Chain;

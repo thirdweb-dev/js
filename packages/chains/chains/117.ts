@@ -1,40 +1,41 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Uptick Mainnet",
   "chain": "Uptick",
-  "rpc": [
-    "https://uptick.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://json-rpc.uptick.network"
+  "chainId": 117,
+  "explorers": [
+    {
+      "name": "Uptick Explorer",
+      "url": "https://evm-explorer.uptick.network",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
+    }
   ],
   "faucets": [],
-  "nativeCurrency": {
-    "name": "Uptick",
-    "symbol": "UPTICK",
-    "decimals": 18
-  },
-  "infoURL": "https://www.uptick.network",
-  "shortName": "auptick",
-  "chainId": 117,
-  "networkId": 117,
   "icon": {
     "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
     "width": 400,
     "height": 400,
     "format": "png"
   },
-  "explorers": [
-    {
-      "name": "Uptick Explorer",
-      "url": "https://evm-explorer.uptick.network",
-      "icon": {
-        "url": "ipfs://QmRGJ6PqYHDTWuUQ6xfnK8S82NzRXiMjTnSGat9qtLuaLP",
-        "width": 400,
-        "height": 400,
-        "format": "png"
-      },
-      "standard": "none"
-    }
+  "infoURL": "https://www.uptick.network",
+  "name": "Uptick Mainnet",
+  "nativeCurrency": {
+    "name": "Uptick",
+    "symbol": "UPTICK",
+    "decimals": 18
+  },
+  "networkId": 117,
+  "rpc": [
+    "https://uptick.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://117.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://json-rpc.uptick.network"
   ],
-  "testnet": false,
-  "slug": "uptick"
+  "shortName": "auptick",
+  "slug": "uptick",
+  "testnet": false
 } as const satisfies Chain;

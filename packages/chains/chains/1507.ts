@@ -1,21 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Sherpax Testnet",
   "chain": "Sherpax Testnet",
-  "rpc": [
-    "https://sherpax-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sherpax-testnet.chainx.org/rpc"
-  ],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "KSX",
-    "symbol": "KSX",
-    "decimals": 18
-  },
-  "infoURL": "https://sherpax.io/",
-  "shortName": "SherpaxTestnet",
   "chainId": 1507,
-  "networkId": 1507,
   "explorers": [
     {
       "name": "Sherpax Testnet Explorer",
@@ -23,6 +9,21 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": true,
-  "slug": "sherpax-testnet"
+  "faucets": [],
+  "infoURL": "https://sherpax.io/",
+  "name": "Sherpax Testnet",
+  "nativeCurrency": {
+    "name": "KSX",
+    "symbol": "KSX",
+    "decimals": 18
+  },
+  "networkId": 1507,
+  "rpc": [
+    "https://sherpax-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://1507.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sherpax-testnet.chainx.org/rpc"
+  ],
+  "shortName": "SherpaxTestnet",
+  "slug": "sherpax-testnet",
+  "testnet": true
 } as const satisfies Chain;

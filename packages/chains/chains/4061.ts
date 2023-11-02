@@ -1,25 +1,23 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "Nahmii 3 Mainnet",
   "chain": "Nahmii",
-  "rpc": [],
-  "status": "incubating",
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "Ether",
-    "symbol": "ETH",
-    "decimals": 18
-  },
-  "infoURL": "https://nahmii.io",
-  "shortName": "Nahmii3Mainnet",
   "chainId": 4061,
-  "networkId": 4061,
+  "explorers": [],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
     "width": 384,
     "height": 384,
     "format": "png"
   },
+  "infoURL": "https://nahmii.io",
+  "name": "Nahmii 3 Mainnet",
+  "nativeCurrency": {
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18
+  },
+  "networkId": 4061,
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
@@ -29,6 +27,9 @@ export default {
       }
     ]
   },
-  "testnet": false,
-  "slug": "nahmii-3"
+  "rpc": [],
+  "shortName": "Nahmii3Mainnet",
+  "slug": "nahmii-3",
+  "status": "incubating",
+  "testnet": false
 } as const satisfies Chain;

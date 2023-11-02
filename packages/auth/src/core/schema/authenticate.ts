@@ -9,7 +9,7 @@ export const AuthenticationPayloadDataSchema = z.object({
   exp: RawDateSchema,
   nbf: RawDateSchema,
   iat: RawDateSchema,
-  jti: z.string().default(uuidv4()),
+  jti: z.string().default(() => uuidv4()),
   ctx: JsonSchema.optional(),
 });
 

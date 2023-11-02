@@ -1,18 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "VeChain",
   "chain": "VeChain",
-  "rpc": [],
-  "faucets": [],
-  "nativeCurrency": {
-    "name": "VeChain",
-    "symbol": "VET",
-    "decimals": 18
-  },
-  "infoURL": "https://vechain.org",
-  "shortName": "vechain",
   "chainId": 100009,
-  "networkId": 100009,
   "explorers": [
     {
       "name": "VeChain Stats",
@@ -25,6 +14,17 @@ export default {
       "standard": "none"
     }
   ],
-  "testnet": false,
-  "slug": "vechain"
+  "faucets": [],
+  "infoURL": "https://vechain.org",
+  "name": "VeChain",
+  "nativeCurrency": {
+    "name": "VeChain",
+    "symbol": "VET",
+    "decimals": 18
+  },
+  "networkId": 100009,
+  "rpc": [],
+  "shortName": "vechain",
+  "slug": "vechain",
+  "testnet": false
 } as const satisfies Chain;

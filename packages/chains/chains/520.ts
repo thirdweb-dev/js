@@ -1,31 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
-  "name": "XT Smart Chain Mainnet",
   "chain": "XSC",
-  "icon": {
-    "url": "ipfs://QmNmAFgQKkjofaBR5mhB5ygE1Gna36YBVsGkgZQxrwW85s",
-    "width": 98,
-    "height": 96,
-    "format": "png"
-  },
-  "rpc": [
-    "https://xt-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://datarpc1.xsc.pub",
-    "https://datarpc2.xsc.pub",
-    "https://datarpc3.xsc.pub"
-  ],
-  "faucets": [
-    "https://xsc.pub/faucet"
-  ],
-  "nativeCurrency": {
-    "name": "XT Smart Chain Native Token",
-    "symbol": "XT",
-    "decimals": 18
-  },
-  "infoURL": "https://xsc.pub/",
-  "shortName": "xt",
   "chainId": 520,
-  "networkId": 1024,
   "explorers": [
     {
       "name": "xscscan",
@@ -33,6 +9,31 @@ export default {
       "standard": "EIP3091"
     }
   ],
-  "testnet": false,
-  "slug": "xt-smart-chain"
+  "faucets": [
+    "https://xsc.pub/faucet"
+  ],
+  "icon": {
+    "url": "ipfs://QmNmAFgQKkjofaBR5mhB5ygE1Gna36YBVsGkgZQxrwW85s",
+    "width": 98,
+    "height": 96,
+    "format": "png"
+  },
+  "infoURL": "https://xsc.pub/",
+  "name": "XT Smart Chain Mainnet",
+  "nativeCurrency": {
+    "name": "XT Smart Chain Native Token",
+    "symbol": "XT",
+    "decimals": 18
+  },
+  "networkId": 1024,
+  "rpc": [
+    "https://xt-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://520.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://datarpc1.xsc.pub",
+    "https://datarpc2.xsc.pub",
+    "https://datarpc3.xsc.pub"
+  ],
+  "shortName": "xt",
+  "slug": "xt-smart-chain",
+  "testnet": false
 } as const satisfies Chain;
