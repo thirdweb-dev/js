@@ -9,7 +9,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
   getContractTypeForRemoteName,
 } from "../contracts";
-import { SmartContract } from "../contracts/smart-contract";
+import type { SmartContract as SmartContractType } from "../contracts/smart-contract";
 import { getSignerAndProvider } from "../constants/urls";
 import { Abi, AbiSchema } from "../schema/contracts/custom";
 import { AddressOrEns } from "../schema/shared/AddressOrEnsSchema";
@@ -519,8 +519,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: TContractAddress,
   ): Promise<
     TContractAddress extends ContractAddress
-      ? SmartContract<BaseContractForAddress<TContractAddress>>
-      : SmartContract<BaseContract>
+      ? SmartContractType<BaseContractForAddress<TContractAddress>>
+      : SmartContractType<BaseContract>
   >;
   /**
    * Get an instance of a Custom ThirdwebContract
@@ -539,7 +539,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): Promise<
     TContractType extends PrebuiltContractType
       ? ContractForPrebuiltContractType<TContractType>
-      : SmartContract
+      : SmartContractType
   >;
   /**
    * Get an instance of a Custom ThirdwebContract
@@ -555,7 +555,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getContract(
     address: AddressOrEns,
     abi: ContractInterface,
-  ): Promise<SmartContract>;
+  ): Promise<SmartContractType>;
   public async getContract(
     address: AddressOrEns,
     contractTypeOrABI?: PrebuiltContractType | ContractInterface,
@@ -829,10 +829,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: AddressOrEns,
     abi: ContractInterface,
   ) {
-    const resolvedAddress = await resolveAddress(address);
+    const [resolvedAddress, { SmartContract }] = await Promise.all([
+      resolveAddress(address),
+      import("../contracts/smart-contract"),
+    ]);
 
     if (this.contractCache.has(resolvedAddress)) {
-      return this.contractCache.get(resolvedAddress) as SmartContract;
+      return this.contractCache.get(resolvedAddress) as SmartContractType;
     }
     const [, provider] = getSignerAndProvider(
       this.getSignerOrProvider(),
@@ -840,7 +843,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
 
     const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
-    // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
