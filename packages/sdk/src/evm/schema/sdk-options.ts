@@ -51,11 +51,10 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
           }),
           z.object({
             engine: z.object({
-              engineUrl: z
+              relayerUrl: z
                 .string()
                 .url()
                 .transform((url) => url.replace(/\/$/, "")),
-              backendWalletAddress: z.string().optional(),
             }),
           }),
         ])

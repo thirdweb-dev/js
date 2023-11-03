@@ -916,23 +916,19 @@ export async function engineSendFunction(
     gaslessOptions,
   );
 
-  const chainId = (await provider.getNetwork()).chainId;
-  const res = await fetch(
-    `${gaslessOptions.engine.engineUrl}/relayer/${chainId}`,
-    request,
-  );
+  const res = await fetch(gaslessOptions.engine.relayerUrl, request);
   const data = await res.json();
 
   if (data.error) {
     throw new Error(data.error);
   }
 
+  const engineUrl = gaslessOptions.engine.relayerUrl.split("/relayer/")[0];
   const queueId = data.result.queueId as string;
+
   const startTime = Date.now();
   while (true) {
-    const txRes = await fetch(
-      `${gaslessOptions.engine.engineUrl}/transaction/${queueId}/status`,
-    );
+    const txRes = await fetch(`${engineUrl}/transaction/${queueId}/status`);
     const txData = await txRes.json();
 
     if (txData.result.transactionHash) {
