@@ -30,13 +30,11 @@ import { CreateKeys } from "./Keys";
 import Message from "../message";
 
 interface CreateAPIKeyButtonProps {
-  enabledServices?: string[];
   buttonProps?: ButtonProps;
 }
 
 export const CreateApiKeyButton: React.FC<CreateAPIKeyButtonProps> = ({
   buttonProps,
-  enabledServices = SERVICES.map((srv) => srv.name),
 }) => {
   const [step, setStep] = useState<"create" | "domainsAlert" | "keys">(
     "create",
@@ -68,18 +66,14 @@ export const CreateApiKeyButton: React.FC<CreateAPIKeyButtonProps> = ({
       name: values.name,
       domains: toArrFromList(values.domains),
       // enable all services
-      services: SERVICES.filter((srv) =>
-        enabledServices.includes(srv.name),
-      ).map((srv) => {
-        return {
-          name: srv.name,
-          targetAddresses: ["*"],
-          enabled: true,
-          actions: srv.actions.map((sa) => sa.name),
-          recoveryShareManagement: "AWS_MANAGED",
-          customAuthentication: undefined,
-        };
-      }),
+      services: SERVICES.map((srv) => ({
+        name: srv.name,
+        targetAddresses: ["*"],
+        enabled: true,
+        actions: srv.actions.map((sa) => sa.name),
+        recoveryShareManagement: "AWS_MANAGED",
+        customAuthentication: undefined,
+      })),
     };
 
     trackEvent({

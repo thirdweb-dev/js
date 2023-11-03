@@ -18,6 +18,20 @@ const domainsValidation = z.string().refine(
   },
 );
 
+const customAuthValidation = z.union([
+  z.undefined(),
+  z.object({
+    jwksUri: z.string(),
+    aud: z.string(),
+  }),
+]);
+
+const recoverManagementValidation = z
+  // This should be the same as @paperxyz/embedded-wallet-service-sdk RecoveryShareManagement enum
+  // Aso needs to be kept in sync with the type in `useApi.ts`
+  .enum(["AWS_MANAGED", "USER_MANAGED"])
+  .optional();
+
 const servicesValidation = z.optional(
   z
     .array(
@@ -30,18 +44,8 @@ const servicesValidation = z.optional(
             message: "Some of the addresses are invalid",
           }),
         actions: z.array(z.string()),
-        recoveryShareManagement: z
-          // This should be the same as @paperxyz/embedded-wallet-service-sdk RecoveryShareManagement enum
-          // Aso needs to be kept in sync with the type in `useApi.ts`
-          .enum(["AWS_MANAGED", "USER_MANAGED"])
-          .optional(),
-        customAuthentication: z.union([
-          z.undefined(),
-          z.object({
-            jwksUri: z.string(),
-            aud: z.string(),
-          }),
-        ]),
+        recoveryShareManagement: recoverManagementValidation,
+        customAuthentication: customAuthValidation,
       }),
     )
     .optional(),
@@ -75,11 +79,20 @@ export const apiKeyValidationSchema = z.object({
     }),
 });
 
+export const apiKeyEmbeddedWalletsValidationSchema = z.object({
+  recoveryShareManagement: recoverManagementValidation,
+  customAuthentication: customAuthValidation,
+});
+
 export type ApiKeyCreateValidationSchema = z.infer<
   typeof apiKeyCreateValidationSchema
 >;
 
 export type ApiKeyValidationSchema = z.infer<typeof apiKeyValidationSchema>;
+
+export type ApiKeyEmbeddedWalletsValidationSchema = z.infer<
+  typeof apiKeyEmbeddedWalletsValidationSchema
+>;
 
 // FIXME: Remove
 export const HIDDEN_SERVICES = ["relayer"];

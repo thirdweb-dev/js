@@ -1,9 +1,6 @@
 import {
   Divider,
   Flex,
-  Menu,
-  MenuButton,
-  MenuList,
   Stack,
   Stat,
   StatLabel,
@@ -15,15 +12,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { WalletsSidebar } from "core-ui/sidebar/wallets";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
-import {
-  Button,
-  Card,
-  Heading,
-  LinkButton,
-  MenuItem,
-  Text,
-  TrackedLink,
-} from "tw-components";
+import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ApiKey,
@@ -44,10 +33,9 @@ import {
   BAR_COLORS_DARK,
   BAR_COLORS_LIGHT,
 } from "components/analytics/auto-bar-chart";
-import { FiChevronDown } from "react-icons/fi";
-import { shortenString } from "utils/usedapp-external";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 
 const RADIAN = Math.PI / 180;
 const TRACKING_CATEGORY = "wallet-analytics";
@@ -141,7 +129,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         )
       : [];
   }, [statsQuery.data]);
-  const totalStasData = useMemo(() => {
+  const totalStatsData = useMemo(() => {
     return statsQuery.data
       ? statsQuery.data.timeSeries.reduce(
           (acc, curr) => {
@@ -229,7 +217,7 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
   };
 
   return (
-    <Flex flexDir="column" gap={10}>
+    <Flex flexDir="column" gap={8}>
       <Flex flexDir="column" gap={2}>
         <Heading size="title.lg" as="h1">
           Connect Analytics
@@ -249,55 +237,22 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
         </Card>
       ) : (
         <>
-          <Flex
-            justifyContent="space-between"
-            flexDir={{ base: "column", lg: "row" }}
-            gap={4}
-          >
-            {keysQuery.data && selectedKey && (
-              <Menu>
-                {({ isOpen }) => (
-                  <>
-                    <Flex
-                      w="full"
-                      alignItems={{ base: "flex-start", lg: "center" }}
-                      gap={1}
-                      flexDir={{ base: "column", lg: "row" }}
-                    >
-                      <Text minW={32}>Select a Client ID:</Text>
-                      <MenuButton
-                        isActive={isOpen}
-                        as={Button}
-                        rightIcon={<FiChevronDown />}
-                        variant="outline"
-                        minW={60}
-                      >
-                        <Flex gap={2} alignItems="center">
-                          <Heading size="label.md" isTruncated>
-                            {selectedKey.name}
-                          </Heading>
-                          <Text isTruncated>
-                            ({shortenString(selectedKey.key)})
-                          </Text>
-                        </Flex>
-                      </MenuButton>
-                    </Flex>
-                    <MenuList>
-                      {keysQuery.data.map((apiKey) => (
-                        <MenuItem
-                          key={apiKey.id}
-                          value={apiKey.key}
-                          onClick={() => setSelectedKey(apiKey)}
-                        >
-                          {apiKey.name} ({shortenString(apiKey.key)})
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </>
-                )}
-              </Menu>
-            )}
-          </Flex>
+          {keysQuery.data && selectedKey && (
+            <Flex
+              w="full"
+              alignItems={{ base: "flex-start", lg: "center" }}
+              gap={1}
+              flexDir={{ base: "column", lg: "row" }}
+            >
+              <Text minW={32}>Select a Client ID:</Text>
+
+              <ApiKeysMenu
+                apiKeys={keysQuery.data}
+                selectedKey={selectedKey}
+                onSelect={setSelectedKey}
+              />
+            </Flex>
+          )}
           <Flex flexDir="column" gap={8}>
             {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
               <>
@@ -316,11 +271,11 @@ const DashboardWalletsAnalytics: ThirdwebNextPage = () => {
                 <Flex gap={4}>
                   <WalletStatCard
                     label="Connections"
-                    value={totalStasData.totalWallets}
+                    value={totalStatsData.totalWallets}
                   />
                   <WalletStatCard
                     label="Unique Wallets"
-                    value={totalStasData.uniqueWallets}
+                    value={totalStatsData.uniqueWallets}
                   />
                 </Flex>
                 <Flex
