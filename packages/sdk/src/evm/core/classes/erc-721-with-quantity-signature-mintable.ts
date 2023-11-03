@@ -313,7 +313,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   }
 
   /**
-   * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+   * Generate a batch of signatures that can be used to mint many dynamic NFTs.
    *
    * @remarks See {@link Erc721WithQuantitySignatureMintable.generate}
    *
@@ -324,59 +324,58 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async generateBatch(
     payloadsToSign: PayloadToSign721withQuantity[],
   ): Promise<SignedPayload721WithQuantitySignature[]> {
-    const isLegacyNFTContract = await this.isLegacyNFTContract();
-
-    const parsedRequests = await Promise.all(
-      payloadsToSign.map((m) => Signature721WithQuantityInput.parseAsync(m)),
-    );
+    const [isLegacyNFTContract, parsedRequests, chainId] = await Promise.all([
+      this.isLegacyNFTContract(),
+      Promise.all(
+        payloadsToSign.map((m) => Signature721WithQuantityInput.parseAsync(m)),
+      ),
+      this.contractWrapper.getChainID(),
+    ]);
 
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
 
-    const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
-    return await Promise.all(
-      parsedRequests.map(async (m, i) => {
-        const uri = uris[i];
-        const finalPayload = await Signature721WithQuantityOutput.parseAsync({
+    const finalPayloads = await Promise.all(
+      parsedRequests.map((m, index) =>
+        Signature721WithQuantityOutput.parseAsync({
           ...m,
-          uri,
-        });
-        let signature;
-
-        if (isLegacyNFTContract) {
-          signature = await this.contractWrapper.signTypedData(
-            signer,
-            {
-              name: "TokenERC721",
-              version: "1",
-              chainId,
-              verifyingContract: this.contractWrapper.address,
-            },
-            { MintRequest: MintRequest721 },
-            await this.mapLegacyPayloadToContractStruct(finalPayload),
-          );
-        } else {
-          signature = await this.contractWrapper.signTypedData(
-            signer,
-            {
-              name: "SignatureMintERC721",
-              version: "1",
-              chainId,
-              verifyingContract: await this.contractWrapper.address,
-            },
-            { MintRequest: MintRequest721withQuantity }, // TYPEHASH
-            await this.mapPayloadToContractStruct(finalPayload),
-          );
-        }
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
+          uri: uris[index],
+        }),
+      ),
     );
+    const contractStructs = await Promise.all(
+      finalPayloads.map((finalPayload) =>
+        isLegacyNFTContract
+          ? this.mapLegacyPayloadToContractStruct(finalPayload)
+          : this.mapPayloadToContractStruct(finalPayload),
+      ),
+    );
+    const signatures = await Promise.all(
+      contractStructs.map((struct) =>
+        this.contractWrapper.signTypedData(
+          signer,
+          {
+            name: isLegacyNFTContract ? "TokenERC721" : "SignatureMintERC721",
+            version: "1",
+            chainId,
+            verifyingContract: this.contractWrapper.address,
+          },
+          {
+            MintRequest: isLegacyNFTContract
+              ? MintRequest721
+              : MintRequest721withQuantity,
+          },
+          struct,
+        ),
+      ),
+    );
+    return signatures.map((signature, index) => ({
+      payload: finalPayloads[index],
+      signature: signature.toString(),
+    }));
   }
 
   /** ******************************
