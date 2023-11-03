@@ -3,7 +3,7 @@ import { AccountForm } from "components/settings/Account/AccountForm";
 import { OnboardingTitle } from "./Title";
 import { Flex, HStack } from "@chakra-ui/react";
 import { Button, Text } from "tw-components";
-import { useLogout } from "@thirdweb-dev/react";
+import { useDisconnect, useLogout } from "@thirdweb-dev/react";
 
 type OnboardingGeneralProps = {
   account: Account;
@@ -15,6 +15,12 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   onSave,
 }) => {
   const { logout } = useLogout();
+  const disconnect = useDisconnect();
+
+  const handleLogout = async () => {
+    await logout();
+    disconnect();
+  };
 
   return (
     <>
@@ -42,7 +48,7 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
 
         <HStack justifyContent="center" w="full" gap={1}>
           <Text>Already have an account?</Text>
-          <Button variant="link" size="sm" onClick={() => logout()}>
+          <Button variant="link" size="sm" onClick={handleLogout}>
             Re-login
           </Button>
         </HStack>
