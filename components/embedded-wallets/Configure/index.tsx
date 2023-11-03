@@ -97,7 +97,9 @@ export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
     const newServices = [...services];
     newServices[serviceIdx] = {
       ...services[serviceIdx],
-      ...values,
+      // FIXME: recoveryShareManagement Not yet supported, add when it is
+      // ...values,
+      customAuthentication,
     };
 
     const formattedValues = {

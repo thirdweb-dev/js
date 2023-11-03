@@ -98,7 +98,9 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
         redirectUrls: toArrFromList(values.redirectUrls, true),
         services: (values.services || [])
           .filter((srv) => srv.enabled)
-          .map((srv) => ({
+          // FIXME: Not yet supported, add when it is
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .map(({ recoveryShareManagement, ...srv }) => ({
             ...srv,
             targetAddresses: toArrFromList(srv.targetAddresses),
           })),
