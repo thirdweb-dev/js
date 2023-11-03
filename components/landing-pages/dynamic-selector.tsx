@@ -3,6 +3,7 @@ import { LandingSectionHeadingProps } from "./types";
 import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ReactElement, useState } from "react";
+import { HeadingSizes } from "theme/typography";
 import { Text } from "tw-components";
 
 interface SelectorItem {
@@ -14,15 +15,25 @@ interface SelectorItem {
 interface LandingDynamicSelectorProps extends LandingSectionHeadingProps {
   items: SelectorItem[];
   gradient?: string;
+  titleSize?: HeadingSizes;
+  titleWithGradient?: string;
+  titleGradient?: string;
+  margin?: string;
+  lineHeight?: string;
   TRACKING_CATEGORY: string;
 }
 
 export const LandingDynamicSelector: React.FC<LandingDynamicSelectorProps> = ({
   items,
   title,
+  titleWithGradient,
   gradient = "linear(to-r, #BFA3DA, #84309C, #C735B0)",
   TRACKING_CATEGORY,
+  titleSize,
   blackToWhiteTitle,
+  titleGradient,
+  lineHeight,
+  margin = "",
 }) => {
   const [selectedItemTitle, setSelectedItemTitle] = useState(items[0].title);
   const trackEvent = useTrack();
@@ -35,6 +46,10 @@ export const LandingDynamicSelector: React.FC<LandingDynamicSelectorProps> = ({
       <LandingSectionHeading
         title={title}
         blackToWhiteTitle={blackToWhiteTitle}
+        titleWithGradient={titleWithGradient}
+        gradient={titleGradient}
+        titleSize={titleSize}
+        lineHeight={lineHeight}
       />
       <SimpleGrid
         borderRadius="xl"
@@ -42,6 +57,7 @@ export const LandingDynamicSelector: React.FC<LandingDynamicSelectorProps> = ({
         borderWidth={1}
         columns={12}
         overflow="hidden"
+        margin={margin}
       >
         <GridItem
           as={SimpleGrid}
@@ -74,12 +90,15 @@ export const LandingDynamicSelector: React.FC<LandingDynamicSelectorProps> = ({
               <Text
                 size="label.lg"
                 bgClip="text"
-                bgGradient={
-                  selectedItemTitle === item.title
-                    ? gradient
-                    : "linear(to-r, #fff, #fff)"
-                }
+                bgGradient={{
+                  base: "linear(to-r, #fff, #fff)",
+                  md:
+                    selectedItemTitle === item.title
+                      ? gradient
+                      : "linear(to-r, #fff, #fff)",
+                }}
                 pb={4}
+                lineHeight="120%"
               >
                 {item.title}
               </Text>

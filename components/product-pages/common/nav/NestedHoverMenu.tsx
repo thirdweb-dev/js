@@ -105,7 +105,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
         </Text>
       </div>
 
-      <Box position="relative" visibility={isOpen ? "visible" : "hidden"}>
+      <Box position="relative" display={isOpen ? "flex" : "none"}>
         <Fade in={isOpen}>
           <Card
             p={0}

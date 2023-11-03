@@ -26,7 +26,11 @@ export const AnnouncementBanner = () => {
         px={4}
       >
         <Box display={{ base: "none", md: "block" }} />
-        <TrackedLink href="/engine" category="announcement" label="engine">
+        <TrackedLink
+          href="/embedded-wallets"
+          category="announcement"
+          label="embedded-wallets"
+        >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
               cursor="pointer"
@@ -42,8 +46,7 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Introducing Engine: The open-source HTTP server for scaling web3
-                apps. Start building
+                {`📧 Embedded wallets — Onboard everyone to web3 with email, google and social logins.`}
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
