@@ -994,13 +994,6 @@
       },
       "default": "./chains/Zenith/dist/thirdweb-dev-chains-chains-Zenith.cjs.js"
     },
-    "./defaultChains": {
-      "module": {
-        "browser": "./defaultChains/dist/thirdweb-dev-chains-defaultChains.browser.esm.js",
-        "default": "./defaultChains/dist/thirdweb-dev-chains-defaultChains.esm.js"
-      },
-      "default": "./defaultChains/dist/thirdweb-dev-chains-defaultChains.cjs.js"
-    },
     "./chains/Atelier": {
       "module": {
         "browser": "./chains/Atelier/dist/thirdweb-dev-chains-chains-Atelier.browser.esm.js",
@@ -7908,7 +7901,6 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "defaultChains.ts",
       "utils.ts",
       "chains/**"
     ],

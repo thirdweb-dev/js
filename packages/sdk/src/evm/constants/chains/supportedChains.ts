@@ -1,5 +1,5 @@
 import type { ChainInfo } from "../../schema/shared/ChainInfo";
-import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
+import { defaultChains } from "@thirdweb-dev/chains/utils";
 
 // @ts-expect-error - readonly vs not
 let supportedChains: ChainInfo[] = defaultChains;

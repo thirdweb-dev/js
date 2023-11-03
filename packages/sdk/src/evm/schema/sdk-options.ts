@@ -1,5 +1,5 @@
 import { ChainInfoInputSchema } from "./ChainInfoInputSchema";
-import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
+import { defaultChains } from "@thirdweb-dev/chains/utils";
 import { z } from "zod";
 
 /**

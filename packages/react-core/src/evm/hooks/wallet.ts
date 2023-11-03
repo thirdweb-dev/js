@@ -8,7 +8,7 @@ import { cacheKeys } from "../utils/cache-keys";
 import { useSupportedChains } from "./useSupportedChains";
 import { useQuery } from "@tanstack/react-query";
 import type { Chain } from "@thirdweb-dev/chains";
-import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
+import { defaultChains } from "@thirdweb-dev/chains/utils";
 import { useContext, useMemo } from "react";
 
 /**

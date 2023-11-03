@@ -3,9 +3,8 @@ import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
-import { updateChainRPCs } from "@thirdweb-dev/chains/utils";
+import { defaultChains, updateChainRPCs } from "@thirdweb-dev/chains/utils";
 import Ethereum from "@thirdweb-dev/chains/chains/Ethereum";
-import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
 import { Wallet, utils } from "ethers";
 
 export type LocalWalletOptions = {

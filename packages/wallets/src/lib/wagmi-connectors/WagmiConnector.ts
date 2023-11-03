@@ -1,5 +1,5 @@
 import type { Chain } from "@thirdweb-dev/chains";
-import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
+import { defaultChains } from "@thirdweb-dev/chains/utils";
 import { default as EventEmitter } from "eventemitter3";
 
 export type WagmiConnectorData<Provider = any> = {

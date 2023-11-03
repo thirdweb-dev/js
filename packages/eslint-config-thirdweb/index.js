@@ -47,6 +47,12 @@ module.exports = {
               "Please only import types directly from @thirdweb-dev/contracts-js",
             allowTypeImports: true,
           },
+          {
+            name: "@thirdweb-dev/chains",
+            message:
+              "Do not import the entire chains package. Use named imports instead.",
+            allowTypeImports: true,
+          },
         ],
       },
     ],
