@@ -11,8 +11,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Tag,
-  TagLabel,
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -26,7 +24,14 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRef } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
-import { Card, Button, FormLabel, LinkButton, Text } from "tw-components";
+import {
+  Card,
+  Button,
+  FormLabel,
+  LinkButton,
+  Text,
+  Badge,
+} from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { fetchChain } from "utils/fetchChain";
 
@@ -148,7 +153,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
               borderRadius="md"
               bg="transparent"
               boxShadow="none"
-              p={4}
               maxW={{ md: "450px" }}
               label={
                 shouldShowTooltip ? (
@@ -164,15 +168,19 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 ) : null
               }
             >
-              <Tag
-                size="sm"
+              <Badge
+                borderRadius="full"
+                size="label.sm"
                 variant="subtle"
+                px={3}
+                py={1.5}
                 colorScheme={statusDetails[status].colorScheme}
-                gap={2}
               >
-                <TagLabel>{statusDetails[status].name}</TagLabel>
-                {statusDetails[status].showTooltipIcon && <FiInfo />}
-              </Tag>
+                <Flex gap={1} align="center">
+                  {statusDetails[status].name}
+                  {statusDetails[status].showTooltipIcon && <FiInfo />}
+                </Flex>
+              </Badge>
             </Tooltip>
             {showCancelTransactionButton && (
               <CancelTransactionButton transaction={transaction} />
@@ -191,13 +199,25 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       header: "Function",
       cell: (cell) => {
         const { functionName, extension } = cell.row.original;
+        const functionDisplay =
+          extension === "none" ? functionName : `${extension} ${functionName}`;
 
         return (
-          <Text fontFamily="mono">
-            {extension === "none"
-              ? functionName
-              : `${extension} ${functionName}`}
-          </Text>
+          <Tooltip
+            borderRadius="md"
+            bg="transparent"
+            boxShadow="none"
+            label={
+              <Card bgColor="backgroundHighlight">
+                <Text>{functionDisplay}</Text>
+              </Card>
+            }
+            shouldWrapChildren
+          >
+            <Text fontFamily="mono" isTruncated maxW={150}>
+              {functionDisplay}
+            </Text>
+          </Tooltip>
         );
       },
     }),
@@ -258,7 +278,6 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             borderRadius="md"
             bg="transparent"
             boxShadow="none"
-            p={4}
             label={
               <Card bgColor="backgroundHighlight">
                 <Text>{format(date, "PP pp z")}</Text>
@@ -394,7 +413,6 @@ const CancelTransactionButton = ({
         borderRadius="md"
         bg="transparent"
         boxShadow="none"
-        p={4}
         label={
           <Card bgColor="backgroundHighlight">
             <Text>Cancel transaction</Text>

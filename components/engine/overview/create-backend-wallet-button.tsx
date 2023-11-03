@@ -39,7 +39,7 @@ export const CreateBackendWalletButton: React.FC<
       ? "AWS KMS"
       : walletConfig?.type === "gcp-kms"
       ? "GCP KMS"
-      : "Local";
+      : "local";
 
   return (
     <>
@@ -52,7 +52,7 @@ export const CreateBackendWalletButton: React.FC<
           <ModalHeader>Create {walletType} wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Are you sure you want to create a backend wallet?
+            Are you sure you want to create a {walletType} backend wallet?
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>

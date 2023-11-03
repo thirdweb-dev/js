@@ -9,10 +9,11 @@ import {
   ModalOverlay,
   useDisclosure,
   Icon,
+  Stack,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { Button, CodeBlock, Text } from "tw-components";
+import { Button, Card, Checkbox, CodeBlock, Text } from "tw-components";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState } from "react";
 
@@ -27,6 +28,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createAccessToken } = useEngineCreateAccessToken(instance);
   const trackEvent = useTrack();
+  const [hasStoredToken, setHasStoredToken] = useState<boolean>(false);
 
   const { onSuccess, onError } = useTxNotifications(
     "Access Token created successfully.",
@@ -35,63 +37,76 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
 
   return (
     <>
-      <Flex alignItems="center" gap={2}>
-        <Icon as={AiOutlinePlusCircle} boxSize={6} color="primary.500" />
-        <Text
-          color="primary.500"
-          cursor="pointer"
-          fontWeight="bold"
-          onClick={() => {
-            trackEvent({
-              category: "engine",
-              action: "create-access-token",
-              label: "attempt",
-              instance,
-            });
-            createAccessToken(undefined, {
-              onSuccess: (response) => {
-                onSuccess();
-                trackEvent({
-                  category: "engine",
-                  action: "create-access-token",
-                  label: "success",
-                  instance,
-                });
-                setAccessToken(response.accessToken);
-                onOpen();
-              },
-              onError: (error) => {
-                onError(error);
-                trackEvent({
-                  category: "engine",
-                  action: "create-access-token",
-                  label: "error",
-                  instance,
-                  error,
-                });
-              },
-            });
-          }}
-        >
-          Create Access Token
-        </Text>
-      </Flex>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Button
+        onClick={() => {
+          trackEvent({
+            category: "engine",
+            action: "create-access-token",
+            label: "attempt",
+            instance,
+          });
+          createAccessToken(undefined, {
+            onSuccess: (response) => {
+              onSuccess();
+              trackEvent({
+                category: "engine",
+                action: "create-access-token",
+                label: "success",
+                instance,
+              });
+              setAccessToken(response.accessToken);
+              onOpen();
+            },
+            onError: (error) => {
+              onError(error);
+              trackEvent({
+                category: "engine",
+                action: "create-access-token",
+                label: "error",
+                instance,
+                error,
+              });
+            },
+          });
+        }}
+        variant="ghost"
+        size="sm"
+        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        colorScheme="primary"
+        w="fit-content"
+      >
+        Create access token
+      </Button>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        closeOnOverlayClick={false}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Access Token</ModalHeader>
+          <ModalHeader>Access token</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={4}>
-            <Text>
-              This Access Token will only be shown to you once. Please copy it
-              and store it in a safe place.
-            </Text>
-            <CodeBlock code={accessToken} />
+            <Stack spacing={4}>
+              <CodeBlock code={accessToken} />
+              <Text color="red.500">
+                This access token will not be shown again.
+              </Text>
+              <Checkbox
+                checked={hasStoredToken}
+                onChange={(e) => setHasStoredToken(e.target.checked)}
+              >
+                I have securely stored this access token.
+              </Checkbox>
+            </Stack>
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
             <Button
               type="submit"
               colorScheme="primary"
+              isDisabled={!hasStoredToken}
               onClick={() => {
                 onClose();
                 setAccessToken("");

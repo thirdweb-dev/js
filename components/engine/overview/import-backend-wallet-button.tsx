@@ -44,7 +44,7 @@ export const ImportBackendWalletButton: React.FC<
       ? "AWS KMS"
       : walletConfig?.type === "gcp-kms"
       ? "GCP KMS"
-      : "Local";
+      : "local";
 
   return (
     <>
@@ -94,9 +94,9 @@ export const ImportBackendWalletButton: React.FC<
           <ModalBody>
             {walletConfig?.type === "local" && (
               <FormControl isRequired>
-                <FormLabel>Private Key</FormLabel>
+                <FormLabel>Private key</FormLabel>
                 <Input
-                  placeholder="Your Private Key"
+                  placeholder="Your wallet private key"
                   autoComplete="off"
                   type="text"
                   {...form.register("privateKey", { required: true })}

@@ -1,10 +1,11 @@
 import { Flex, ButtonGroup, Divider, Tooltip, Box } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Button, Text } from "tw-components";
 import { EngineConfiguration } from "./configuration/engine-configuration";
 import { EngineExplorer } from "./explorer/engine-explorer";
 import { EngineOverview } from "./overview/engine-overview";
 import { EnginePermissions } from "./permissions/engine-permissions";
+import { useTrack } from "hooks/analytics/useTrack";
 
 interface EngineNavigationProps {
   instance: string;
@@ -41,6 +42,18 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
   ];
 
   const [tab, setTab] = useState(tabs[0].title);
+  const trackEvent = useTrack();
+
+  useEffect(() => {
+    if (instance) {
+      trackEvent({
+        category: "engine",
+        action: "navigate-tab",
+        label: tab.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        url: instance,
+      });
+    }
+  }, [instance, tab, trackEvent]);
 
   return (
     <Flex flexDir="column" gap={4}>

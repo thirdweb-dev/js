@@ -18,7 +18,7 @@ export const PermissionsAdmin: React.FC<PermissionsAdminProps> = ({
       <Flex flexDir="column" gap={2}>
         <Heading size="title.md">Admins</Heading>
         <Text>
-          Admins can manage your Engine instance from the dashboard.{" "}
+          Admins are allowed to manage your Engine instance from the dashboard.{" "}
           <Link
             href="https://portal.thirdweb.com/engine/authentication"
             color="primary.500"

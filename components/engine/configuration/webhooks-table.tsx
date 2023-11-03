@@ -12,6 +12,8 @@ import {
   ModalFooter,
   Flex,
   useDisclosure,
+  Stack,
+  FormControl,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
@@ -19,7 +21,7 @@ import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
-import { Button, Text } from "tw-components";
+import { Button, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 export function beautifyString(str: string): string {
@@ -55,7 +57,11 @@ const columns = [
     header: "Secret",
     cell: (cell) => {
       return (
-        <AddressCopyButton address={cell.getValue() || ""} title="secret" />
+        <AddressCopyButton
+          address={cell.getValue() || ""}
+          title="secret"
+          size="xs"
+        />
       );
     },
   }),
@@ -88,8 +94,8 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   const { mutate: revokeWebhook } = useEngineRevokeWebhook(instance);
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
-    "Successfully removed webhook",
-    "Failed to remove webhook",
+    "Successfully deleted webhook",
+    "Failed to delete webhook",
   );
 
   const onDelete = (webhook: Webhook) => {
@@ -143,13 +149,31 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Remove Webhook</ModalHeader>
+          <ModalHeader>Delete webhook</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>
-              Are you sure you want to remove webook with name{" "}
-              {webhookToRevoke?.name}?
-            </Text>
+            {webhookToRevoke && (
+              <Stack gap={4}>
+                <Text>Are you sure you want to delete this webook?</Text>
+                <FormControl>
+                  <FormLabel>Name</FormLabel>
+                  <Text>{webhookToRevoke?.name}</Text>
+                </FormControl>
+                <FormControl>
+                  <FormLabel>URL</FormLabel>
+                  <Text>{webhookToRevoke?.url}</Text>
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Created at</FormLabel>
+                  <Text>
+                    {format(
+                      new Date(webhookToRevoke?.createdAt ?? ""),
+                      "PP pp z",
+                    )}
+                  </Text>
+                </FormControl>
+              </Stack>
+            )}
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
@@ -157,7 +181,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
               Cancel
             </Button>
             <Button type="submit" colorScheme="red" onClick={onRevoke}>
-              Remove
+              Delete
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -33,16 +33,20 @@ const columnHelper = createColumnHelper<AccessToken>();
 
 const columns = [
   columnHelper.accessor("tokenMask", {
-    header: "Token Mask",
+    header: "Access Token",
     cell: (cell) => {
-      return <Text fontFamily="mono">{cell.getValue()}</Text>;
+      return (
+        <Text fontFamily="mono" fontSize="small">
+          {cell.getValue()}
+        </Text>
+      );
     },
   }),
   columnHelper.accessor("walletAddress", {
     header: "Created By",
     cell: (cell) => {
       const address = cell.getValue();
-      return <AddressCopyButton address={address} />;
+      return <AddressCopyButton address={address} size="xs" />;
     },
   }),
   columnHelper.accessor("createdAt", {

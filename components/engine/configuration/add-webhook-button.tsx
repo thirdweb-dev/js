@@ -45,12 +45,17 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
 
   return (
     <>
-      <Flex onClick={onOpen} alignItems="center" gap={2}>
-        <Icon as={AiOutlinePlusCircle} boxSize={6} color="primary.500" />
-        <Text color="primary.500" cursor="pointer" fontWeight="bold">
-          Create Webhook
-        </Text>
-      </Flex>
+      <Button
+        onClick={onOpen}
+        variant="ghost"
+        size="sm"
+        leftIcon={<Icon as={AiOutlinePlusCircle} boxSize={6} />}
+        colorScheme="primary"
+        w="fit-content"
+      >
+        Create webhook
+      </Button>
+
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
