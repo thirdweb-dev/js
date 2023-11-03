@@ -66,11 +66,12 @@ export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
 
   const handleSubmit = form.handleSubmit((values) => {
     const { customAuthentication, recoveryShareManagement } = values;
-    if (
+    const hasCustomAuth =
       recoveryShareManagement === "USER_MANAGED" &&
       (!customAuthentication?.aud.length ||
-        !customAuthentication?.jwksUri.length)
-    ) {
+        !customAuthentication?.jwksUri.length);
+
+    if (hasCustomAuth) {
       return toast({
         title: "Custom JSON Web Token configuration is invalid",
         description:
@@ -115,6 +116,9 @@ export const Configure: React.FC<ConfigureProps> = ({ apiKey }) => {
           category: "embedded-wallet",
           action: "configuration-update",
           label: "success",
+          data: {
+            hasCustomAuth,
+          },
         });
       },
       onError: (err) => {

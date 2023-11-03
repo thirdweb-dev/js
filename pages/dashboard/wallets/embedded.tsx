@@ -73,10 +73,11 @@ const DashboardWalletsEmbedded: ThirdwebNextPage = () => {
             control their users wallets. Email login, social login, and
             bring-your-own auth supported.{" "}
             <TrackedLink
-              isExternal
-              href="https://portal.thirdweb.com/embedded-wallet"
-              category={TRACKING_CATEGORY}
+              // isExternal
+              // href="https://portal.thirdweb.com/embedded-wallet"
               label="learn-more"
+              href="/dashboard/wallets/embedded"
+              category={TRACKING_CATEGORY}
               color="primary.500"
             >
               Learn more
