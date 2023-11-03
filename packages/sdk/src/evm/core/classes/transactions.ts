@@ -437,7 +437,8 @@ export class Transaction<
     if (
       this.gaslessOptions &&
       ("openzeppelin" in this.gaslessOptions ||
-        "biconomy" in this.gaslessOptions)
+        "biconomy" in this.gaslessOptions ||
+        "engine" in this.gaslessOptions)
     ) {
       return this.sendGasless();
     }
@@ -545,7 +546,8 @@ export class Transaction<
     invariant(
       this.gaslessOptions &&
         ("openzeppelin" in this.gaslessOptions ||
-          "biconomy" in this.gaslessOptions),
+          "biconomy" in this.gaslessOptions ||
+          "engine" in this.gaslessOptions),
       "No gasless options set on this transaction!",
     );
 
