@@ -48,7 +48,7 @@ export const CreateApiKeyButton: React.FC<CreateAPIKeyButtonProps> = ({
 
   const form = useForm<ApiKeyCreateValidationSchema>({
     resolver: zodResolver(apiKeyCreateValidationSchema),
-    values: {
+    defaultValues: {
       name: "",
       domains: "",
     },

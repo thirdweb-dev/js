@@ -60,7 +60,9 @@ export const CreateGeneral: React.FC<CreateGeneralProps> = ({ form }) => {
             <Checkbox
               isChecked={form.watch("domains") === "*"}
               onChange={(e) => {
-                form.setValue("domains", e.target.checked ? "*" : "");
+                form.setValue("domains", e.target.checked ? "*" : "", {
+                  shouldDirty: true,
+                });
               }}
             >
               <Text>Allow all domains</Text>

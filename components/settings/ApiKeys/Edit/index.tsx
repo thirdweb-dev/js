@@ -25,7 +25,7 @@ export const EditApiKey: React.FC<EditApiKeyProps> = ({ apiKey, onCancel }) => {
 
   const form = useForm<ApiKeyValidationSchema>({
     resolver: zodResolver(apiKeyValidationSchema),
-    values: {
+    defaultValues: {
       name,
       domains: fromArrayToList(domains),
       bundleIds: fromArrayToList(bundleIds),

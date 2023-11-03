@@ -271,6 +271,7 @@ export const EditServices: React.FC<EditServicesProps> = ({ form }) => {
                           form.setValue(
                             `services.${idx}.targetAddresses`,
                             e.target.checked ? "*" : "",
+                            { shouldDirty: true },
                           );
                         }}
                       >

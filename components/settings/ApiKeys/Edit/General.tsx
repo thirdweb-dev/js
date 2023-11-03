@@ -123,7 +123,9 @@ export const EditGeneral: React.FC<EditGeneralProps> = ({ form }) => {
                   <Checkbox
                     isChecked={form.watch("domains") === "*"}
                     onChange={(e) => {
-                      form.setValue("domains", e.target.checked ? "*" : "");
+                      form.setValue("domains", e.target.checked ? "*" : "", {
+                        shouldDirty: true,
+                      });
                     }}
                   >
                     <Text>Unrestricted access</Text>
@@ -182,7 +184,9 @@ export const EditGeneral: React.FC<EditGeneralProps> = ({ form }) => {
                   <Checkbox
                     isChecked={form.watch("bundleIds") === "*"}
                     onChange={(e) => {
-                      form.setValue("bundleIds", e.target.checked ? "*" : "");
+                      form.setValue("bundleIds", e.target.checked ? "*" : "", {
+                        shouldDirty: true,
+                      });
                     }}
                   >
                     <Text>Unrestricted access</Text>

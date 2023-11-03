@@ -69,7 +69,7 @@ export const AccountForm: React.FC<AccountFormProps> = ({
     resolver: zodResolver(
       optional ? accountValidationOptionalSchema : accountValidationSchema,
     ),
-    values: {
+    defaultValues: {
       name: account.name || "",
       email: account.unconfirmedEmail || account.email || "",
     },

@@ -41,7 +41,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
 
   const form = useForm<EmailConfirmationValidationSchema>({
     resolver: zodResolver(emailConfirmationValidationSchema),
-    values: {
+    defaultValues: {
       confirmationToken: "",
     },
   });
