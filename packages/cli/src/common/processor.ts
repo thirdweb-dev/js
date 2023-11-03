@@ -393,7 +393,7 @@ export async function processProject(
       }
 
       // Upload build output metadatas (need to be single uploads)
-      const metadataURIs = await Promise.all(
+      const zkMetadataURIs = await Promise.all(
         zkSelectedContracts.map(async (c) => {
           logger.debug(`Uploading ${c.name}...`);
 
@@ -404,16 +404,16 @@ export async function processProject(
       );
 
       // Upload batch all bytecodes
-      const bytecodes = zkSelectedContracts.map((c) => c.bytecode);
-      const bytecodeURIs = await storage.uploadBatch(bytecodes);
+      const zkBytecodes = zkSelectedContracts.map((c) => c.bytecode);
+      const zkBytecodeURIs = await storage.uploadBatch(zkBytecodes);
 
       combinedContents = combinedContents.map((c, i) => {
         return {
           ...c,
           compilers: {
             zksolc: {
-              metadataUri: metadataURIs[i],
-              bytecodeUri: bytecodeURIs[i],
+              metadataUri: zkMetadataURIs[i],
+              bytecodeUri: zkBytecodeURIs[i],
             },
           },
         };
