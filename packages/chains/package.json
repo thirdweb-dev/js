@@ -14,6 +14,20 @@
       },
       "default": "./dist/thirdweb-dev-chains.cjs.js"
     },
+    "./utils": {
+      "module": {
+        "browser": "./utils/dist/thirdweb-dev-chains-utils.browser.esm.js",
+        "default": "./utils/dist/thirdweb-dev-chains-utils.esm.js"
+      },
+      "default": "./utils/dist/thirdweb-dev-chains-utils.cjs.js"
+    },
+    "./constants": {
+      "module": {
+        "browser": "./constants/dist/thirdweb-dev-chains-constants.browser.esm.js",
+        "default": "./constants/dist/thirdweb-dev-chains-constants.esm.js"
+      },
+      "default": "./constants/dist/thirdweb-dev-chains-constants.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/chains",
@@ -39,7 +53,9 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.ts"
+      "index.ts",
+      "constants.ts",
+      "utils.ts"
     ],
     "exports": {
       "envConditions": [

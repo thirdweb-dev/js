@@ -1,6 +1,6 @@
 import type { Theme } from "../design-system";
 import styled from "@emotion/styled";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { useStorage } from "@thirdweb-dev/react-core";
 
 const defaultChainIcon =

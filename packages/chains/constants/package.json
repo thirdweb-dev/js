@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-constants.cjs.js",
+  "module": "dist/thirdweb-dev-chains-constants.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-constants.esm.js": "./dist/thirdweb-dev-chains-constants.browser.esm.js"
+  }
+}
