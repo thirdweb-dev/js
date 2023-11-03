@@ -49,6 +49,15 @@ export const SDKOptionsSchema = /* @__PURE__ */ (() =>
                 .default(3600),
             }),
           }),
+          z.object({
+            engine: z.object({
+              engineUrl: z
+                .string()
+                .url()
+                .transform((url) => url.replace(/\/$/, "")),
+              backendWalletAddress: z.string().optional(),
+            }),
+          }),
         ])
         .optional(),
       gatewayUrls: z.array(z.string()).optional(),

@@ -877,14 +877,76 @@ export async function defaultGaslessSendFunction(
 ): Promise<string> {
   if (gaslessOptions && "biconomy" in gaslessOptions) {
     return biconomySendFunction(transaction, signer, provider, gaslessOptions);
+  } else if (gaslessOptions && "openzeppelin" in gaslessOptions) {
+    return defenderSendFunction(
+      transaction,
+      signer,
+      provider,
+      storage,
+      gaslessOptions,
+    );
   }
-  return defenderSendFunction(
+
+  return engineSendFunction(
     transaction,
     signer,
     provider,
     storage,
     gaslessOptions,
   );
+}
+
+export async function engineSendFunction(
+  transaction: GaslessTransaction,
+  signer: Signer,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  gaslessOptions?: SDKOptionsOutput["gasless"],
+): Promise<string> {
+  invariant(
+    gaslessOptions && "engine" in gaslessOptions,
+    "calling engine gasless transaction without engine config in the SDK options",
+  );
+
+  const request = await defenderPrepareRequest(
+    transaction,
+    signer,
+    provider,
+    storage,
+    gaslessOptions,
+  );
+
+  const chainId = (await provider.getNetwork()).chainId;
+  const res = await fetch(
+    `${gaslessOptions.engine.engineUrl}/relayer/${chainId}`,
+    request,
+  );
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  const queueId = data.result.queueId as string;
+  const startTime = Date.now();
+  while (true) {
+    const res = await fetch(
+      `${gaslessOptions.engine.engineUrl}/transaction/${queueId}/status`,
+    );
+    const data = await res.json();
+
+    if (data.result.transactionHash) {
+      return data.result.transactionHash as string;
+    }
+
+    // Time out after 30s
+    if (Date.now() - startTime > 30 * 1000) {
+      throw new Error("timeout");
+    }
+
+    // Poll to check if the transaction was
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
 }
 
 export async function biconomySendFunction(
