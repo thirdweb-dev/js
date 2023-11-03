@@ -604,7 +604,13 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   }
 
   const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains/${chainSlug}`);
-  const chain = (await res.json()).data as Chain;
+  const chain = (await res.json()).data as Chain | null;
+
+  if (!chain) {
+    return {
+      notFound: true,
+    };
+  }
 
   // determine if the chainSlug is a chainId and not a slug
   if (chain?.slug !== chainSlug) {
@@ -616,11 +622,6 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
     };
   }
 
-  if (!chain) {
-    return {
-      notFound: true,
-    };
-  }
   let gradientColors: [string, string] | null = null;
   try {
     gradientColors = await getGradientColorStops(chain);
