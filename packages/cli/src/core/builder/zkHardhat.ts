@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
 import { join, resolve } from "path";
 
-export class HardhatBuilder extends BaseBuilder {
+export class ZKHardhatBuilder extends BaseBuilder {
   public async compile(options: any): Promise<{
     contracts: ContractPayload[];
   }> {
@@ -35,19 +35,40 @@ export class HardhatBuilder extends BaseBuilder {
     logger.debug("successfully extracted hardhat config", actualHardhatConfig);
 
     await execute("npx hardhat clean", options.projectPath);
-    await execute(`npx hardhat compile`, options.projectPath);
 
-    const solcConfigs = actualHardhatConfig.solidity.compilers;
-    if (solcConfigs) {
-      for (const solcConfig of solcConfigs) {
-        const byteCodeHash = solcConfig.settings?.metadata?.bytecodeHash;
-        if (byteCodeHash && byteCodeHash !== "ipfs") {
-          throw new Error(
-            `Deploying requires "bytecodeHash: 'ipfs'" in your hardhat.config.js file, but it's currently set as "bytecodeHash: '${byteCodeHash}'". Please change it to 'ipfs' and try again.`,
-          );
-        }
-      }
+    let ignoreIpfsHash = false;
+    // if (options.zksync) {
+    const zkNetwork = Object.entries(actualHardhatConfig.networks).find(
+      (network) => {
+        return (network[1] as any).zksync;
+      },
+    );
+
+    if (!(zkNetwork?.[1] as any).zksync) {
+      logger.warn("ZKSync settings not found. Aborting.");
+      process.exit(1);
     }
+
+    ignoreIpfsHash = (zkNetwork?.[1] as any).zksync; // IPFS hash can't be recovered from ZKSync bytecode
+    await execute(
+      `npx hardhat compile --network ${zkNetwork?.[0]}`,
+      options.projectPath,
+    );
+    // } else {
+    //   await execute(`npx hardhat compile`, options.projectPath);
+    // }
+
+    // const solcConfigs = actualHardhatConfig.solidity.compilers;
+    // if (solcConfigs) {
+    //   for (const solcConfig of solcConfigs) {
+    //     const byteCodeHash = solcConfig.settings?.metadata?.bytecodeHash;
+    //     if (byteCodeHash && byteCodeHash !== "ipfs") {
+    //       throw new Error(
+    //         `Deploying requires "bytecodeHash: 'ipfs'" in your hardhat.config.js file, but it's currently set as "bytecodeHash: '${byteCodeHash}'". Please change it to 'ipfs' and try again.`,
+    //       );
+    //     }
+    //   }
+    // }
 
     const artifactsPath = actualHardhatConfig.paths.artifacts;
     const sourcesDir = actualHardhatConfig.paths.sources.replace(
@@ -95,10 +116,13 @@ export class HardhatBuilder extends BaseBuilder {
           }
 
           const bytecode = info.evm.bytecode.object;
-          const deployedBytecode = info.evm.deployedBytecode.object;
+          const deployedBytecode =
+            info.evm.deployedBytecode?.object || bytecode;
           const { metadata, abi } = info;
 
-          const meta = JSON.parse(metadata);
+          const meta = metadata.solc_metadata
+            ? JSON.parse(metadata.solc_metadata)
+            : JSON.parse(metadata);
           const sources = Object.keys(meta.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
@@ -126,9 +150,16 @@ export class HardhatBuilder extends BaseBuilder {
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
-          if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
+          if (
+            this.shouldProcessContract(
+              abi,
+              deployedBytecode,
+              contractName,
+              ignoreIpfsHash,
+            )
+          ) {
             contracts.push({
-              metadata,
+              metadata: JSON.stringify(meta),
               bytecode,
               name: contractName,
               fileName,

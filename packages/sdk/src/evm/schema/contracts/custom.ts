@@ -122,6 +122,21 @@ export const PreDeployMetadata = /* @__PURE__ */ (() =>
       metadataUri: z.string(),
       bytecodeUri: z.string(),
       analytics: z.any().optional(),
+      compilers: z
+        .record(
+          z.string(),
+          // z.record(
+          // z.array(
+          z.object({
+            // compilerVersion: z.string(),
+            // evmVersion: z.string(),
+            metadataUri: z.string(),
+            bytecodeUri: z.string(),
+          }),
+          // ),
+          // ),
+        )
+        .optional(),
     })
     .catchall(z.any()))();
 

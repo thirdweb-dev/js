@@ -27,6 +27,17 @@ export default async function detect(
     .filter((detector) => detector.matches(path))
     .map((detector) => detector.projectType);
 
+  if (options.zksync) {
+    const hardhatProject = possibleProjectTypes.filter(
+      (projectType) => projectType === "hardhat",
+    );
+
+    if (hardhatProject.length === 0) {
+      logger.warn("ZKSync compilation requires hardhat plugins. Aborting.");
+      process.exit(1);
+    }
+  }
+
   //if there is no project returned at all then just return unknown}
   if (!possibleProjectTypes.length) {
     const canCompile = hasContracts(path);
@@ -51,15 +62,28 @@ export default async function detect(
   }
   //if there is only one possible option just return it
   if (possibleProjectTypes.length === 1) {
-    info(`Detected project type: ${possibleProjectTypes[0]}`);
+    if (options.zksync) {
+      info("ZKSync compilation will use hardhat");
+    } else {
+      info(`Detected project type: ${possibleProjectTypes[0]}`);
+    }
     return possibleProjectTypes[0];
   }
 
-  info(
-    `Detected multiple possible build tools: ${possibleProjectTypes
-      .map((s) => `"${s}"`)
-      .join(", ")}`,
-  );
+  if (options.zksync) {
+    info("ZKSync compilation will use hardhat");
+    info(
+      `For regular solc compilation, these are the available options: ${possibleProjectTypes
+        .map((s) => `"${s}"`)
+        .join(", ")}`,
+    );
+  } else {
+    info(
+      `Detected multiple possible build tools: ${possibleProjectTypes
+        .map((s) => `"${s}"`)
+        .join(", ")}`,
+    );
+  }
 
   const question = "How would you like to compile your contracts";
 
