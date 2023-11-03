@@ -210,21 +210,21 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @internal
    */
   public async verify(roles: TRole[], address: AddressOrEns): Promise<void> {
-    await Promise.all(
-      roles.map(async (role) => {
-        const [members, resolvedAddress] = await Promise.all([
-          this.get(role),
-          resolveAddress(address),
-        ]);
-        if (
-          !members
-            .map((a) => a.toLowerCase())
-            .includes(resolvedAddress.toLowerCase())
-        ) {
-          throw new MissingRoleError(resolvedAddress, role);
-        }
-      }),
-    );
+    const [resolvedAddress, fetchedRoles]: [string, string[][]] =
+      await Promise.all([
+        resolveAddress(address),
+        Promise.all(roles.map((role) => this.get(role))),
+      ]);
+    roles.map(async (role, index) => {
+      const members = fetchedRoles[index];
+      if (
+        !members
+          .map((a) => a.toLowerCase())
+          .includes(resolvedAddress.toLowerCase())
+      ) {
+        throw new MissingRoleError(resolvedAddress, role);
+      }
+    });
   }
 
   /** **************************

@@ -2338,25 +2338,26 @@ export class ContractDeployer extends RPCConnectionHandler {
           });
         });
       }
-
-      transactions = (
-        await Promise.all(
-          transactions.map(async (tx) => {
-            const addresses = (
-              await Promise.all(
-                tx.addresses.map(async (address) => {
-                  const isDeployed = await isContractDeployed(
-                    address,
-                    provider,
-                  );
-                  return isDeployed ? null : address;
-                }),
-              )
-            ).filter(Boolean);
-            return addresses.length > 0 ? tx : null;
-          }),
-        )
-      ).filter(Boolean) as DeploymentTransaction[];
+      const isDeployedArr = await Promise.all(
+        transactions.map((tx) =>
+          Promise.all(
+            tx.addresses.map((address) =>
+              isContractDeployed(address, provider),
+            ),
+          ),
+        ),
+      );
+      transactions = transactions
+        .map((tx, index) => {
+          const addresses = tx.addresses
+            .map((address, txIndex) => {
+              const isDeployed = isDeployedArr[index][txIndex];
+              return isDeployed ? null : address;
+            })
+            .filter(Boolean);
+          return addresses.length > 0 ? tx : null;
+        })
+        .filter(Boolean) as DeploymentTransaction[];
 
       transactions.push({
         contractType: "proxy",
