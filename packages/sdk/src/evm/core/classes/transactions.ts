@@ -930,13 +930,13 @@ export async function engineSendFunction(
   const queueId = data.result.queueId as string;
   const startTime = Date.now();
   while (true) {
-    const res = await fetch(
+    const txRes = await fetch(
       `${gaslessOptions.engine.engineUrl}/transaction/${queueId}/status`,
     );
-    const data = await res.json();
+    const txData = await txRes.json();
 
-    if (data.result.transactionHash) {
-      return data.result.transactionHash as string;
+    if (txData.result.transactionHash) {
+      return txData.result.transactionHash as string;
     }
 
     // Time out after 30s
