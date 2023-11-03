@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OzoneChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OzoneChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OzoneChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-OzoneChainTestnet.browser.esm.js"
+  }
+}

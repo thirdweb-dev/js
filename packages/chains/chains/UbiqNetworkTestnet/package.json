@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-UbiqNetworkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-UbiqNetworkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-UbiqNetworkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-UbiqNetworkTestnet.browser.esm.js"
+  }
+}

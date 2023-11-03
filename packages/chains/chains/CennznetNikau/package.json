@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CennznetNikau.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CennznetNikau.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CennznetNikau.esm.js": "./dist/thirdweb-dev-chains-chains-CennznetNikau.browser.esm.js"
+  }
+}

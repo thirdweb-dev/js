@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DubxcoinNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DubxcoinNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DubxcoinNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-DubxcoinNetwork.browser.esm.js"
+  }
+}

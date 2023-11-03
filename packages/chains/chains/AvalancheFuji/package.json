@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AvalancheFuji.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AvalancheFuji.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AvalancheFuji.esm.js": "./dist/thirdweb-dev-chains-chains-AvalancheFuji.browser.esm.js"
+  }
+}

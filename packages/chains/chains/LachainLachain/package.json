@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LachainLachain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LachainLachain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LachainLachain.esm.js": "./dist/thirdweb-dev-chains-chains-LachainLachain.browser.esm.js"
+  }
+}

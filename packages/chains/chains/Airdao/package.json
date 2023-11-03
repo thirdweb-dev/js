@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Airdao.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Airdao.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Airdao.esm.js": "./dist/thirdweb-dev-chains-chains-Airdao.browser.esm.js"
+  }
+}

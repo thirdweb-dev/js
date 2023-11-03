@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Berylbit.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Berylbit.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Berylbit.esm.js": "./dist/thirdweb-dev-chains-chains-Berylbit.browser.esm.js"
+  }
+}

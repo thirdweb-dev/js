@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GatherDevnetNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GatherDevnetNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GatherDevnetNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-GatherDevnetNetwork.browser.esm.js"
+  }
+}

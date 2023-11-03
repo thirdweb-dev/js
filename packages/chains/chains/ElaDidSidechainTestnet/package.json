@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ElaDidSidechainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ElaDidSidechainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ElaDidSidechainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ElaDidSidechainTestnet.browser.esm.js"
+  }
+}

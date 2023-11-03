@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ArmoniaEvaChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ArmoniaEvaChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ArmoniaEvaChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ArmoniaEvaChainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Kava.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Kava.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Kava.esm.js": "./dist/thirdweb-dev-chains-chains-Kava.browser.esm.js"
+  }
+}

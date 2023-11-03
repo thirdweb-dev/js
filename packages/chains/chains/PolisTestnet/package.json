@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PolisTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PolisTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PolisTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PolisTestnet.browser.esm.js"
+  }
+}

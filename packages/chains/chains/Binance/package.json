@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Binance.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Binance.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Binance.esm.js": "./dist/thirdweb-dev-chains-chains-Binance.browser.esm.js"
+  }
+}

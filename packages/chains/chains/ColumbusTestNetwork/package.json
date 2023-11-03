@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ColumbusTestNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ColumbusTestNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ColumbusTestNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-ColumbusTestNetwork.browser.esm.js"
+  }
+}

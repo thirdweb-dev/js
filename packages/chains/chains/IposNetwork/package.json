@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-IposNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-IposNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-IposNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-IposNetwork.browser.esm.js"
+  }
+}

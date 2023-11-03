@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Hapchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Hapchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Hapchain.esm.js": "./dist/thirdweb-dev-chains-chains-Hapchain.browser.esm.js"
+  }
+}

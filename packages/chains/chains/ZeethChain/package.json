@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ZeethChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ZeethChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ZeethChain.esm.js": "./dist/thirdweb-dev-chains-chains-ZeethChain.browser.esm.js"
+  }
+}

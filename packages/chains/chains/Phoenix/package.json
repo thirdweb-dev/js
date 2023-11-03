@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Phoenix.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Phoenix.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Phoenix.esm.js": "./dist/thirdweb-dev-chains-chains-Phoenix.browser.esm.js"
+  }
+}

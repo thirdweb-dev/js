@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MdglTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MdglTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MdglTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MdglTestnet.browser.esm.js"
+  }
+}

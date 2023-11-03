@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DecentraboneLayer1Testnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DecentraboneLayer1Testnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DecentraboneLayer1Testnet.esm.js": "./dist/thirdweb-dev-chains-chains-DecentraboneLayer1Testnet.browser.esm.js"
+  }
+}

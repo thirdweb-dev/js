@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ToolGlobal.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ToolGlobal.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ToolGlobal.esm.js": "./dist/thirdweb-dev-chains-chains-ToolGlobal.browser.esm.js"
+  }
+}

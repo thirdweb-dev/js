@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-WeelinkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-WeelinkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-WeelinkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-WeelinkTestnet.browser.esm.js"
+  }
+}

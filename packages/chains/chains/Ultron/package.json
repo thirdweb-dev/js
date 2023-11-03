@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ultron.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ultron.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ultron.esm.js": "./dist/thirdweb-dev-chains-chains-Ultron.browser.esm.js"
+  }
+}

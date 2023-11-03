@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KrestNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KrestNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KrestNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-KrestNetwork.browser.esm.js"
+  }
+}

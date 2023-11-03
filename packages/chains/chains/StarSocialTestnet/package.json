@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-StarSocialTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-StarSocialTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-StarSocialTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-StarSocialTestnet.browser.esm.js"
+  }
+}

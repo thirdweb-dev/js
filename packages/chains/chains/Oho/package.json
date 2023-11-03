@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Oho.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Oho.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Oho.esm.js": "./dist/thirdweb-dev-chains-chains-Oho.browser.esm.js"
+  }
+}

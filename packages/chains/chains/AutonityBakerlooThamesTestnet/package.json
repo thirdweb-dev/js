@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AutonityBakerlooThamesTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AutonityBakerlooThamesTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AutonityBakerlooThamesTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AutonityBakerlooThamesTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AgungNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AgungNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AgungNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-AgungNetwork.browser.esm.js"
+  }
+}

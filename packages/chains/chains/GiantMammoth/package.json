@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GiantMammoth.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GiantMammoth.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GiantMammoth.esm.js": "./dist/thirdweb-dev-chains-chains-GiantMammoth.browser.esm.js"
+  }
+}

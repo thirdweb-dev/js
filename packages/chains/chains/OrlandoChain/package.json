@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OrlandoChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OrlandoChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OrlandoChain.esm.js": "./dist/thirdweb-dev-chains-chains-OrlandoChain.browser.esm.js"
+  }
+}

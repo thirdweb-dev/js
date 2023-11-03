@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Worldland.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Worldland.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Worldland.esm.js": "./dist/thirdweb-dev-chains-chains-Worldland.browser.esm.js"
+  }
+}

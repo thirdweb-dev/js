@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PaletteChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PaletteChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PaletteChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PaletteChainTestnet.browser.esm.js"
+  }
+}

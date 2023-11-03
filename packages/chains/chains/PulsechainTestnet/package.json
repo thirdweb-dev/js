@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PulsechainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PulsechainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PulsechainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PulsechainTestnet.browser.esm.js"
+  }
+}

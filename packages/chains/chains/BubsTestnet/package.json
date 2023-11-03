@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BubsTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BubsTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BubsTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BubsTestnet.browser.esm.js"
+  }
+}

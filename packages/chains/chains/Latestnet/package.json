@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Latestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Latestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Latestnet.esm.js": "./dist/thirdweb-dev-chains-chains-Latestnet.browser.esm.js"
+  }
+}

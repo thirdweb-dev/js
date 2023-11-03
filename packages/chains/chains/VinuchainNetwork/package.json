@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VinuchainNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VinuchainNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VinuchainNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-VinuchainNetwork.browser.esm.js"
+  }
+}

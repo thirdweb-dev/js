@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-QuantumChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-QuantumChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-QuantumChain.esm.js": "./dist/thirdweb-dev-chains-chains-QuantumChain.browser.esm.js"
+  }
+}

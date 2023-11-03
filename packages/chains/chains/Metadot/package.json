@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Metadot.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Metadot.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Metadot.esm.js": "./dist/thirdweb-dev-chains-chains-Metadot.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BobabaseTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BobabaseTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BobabaseTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BobabaseTestnet.browser.esm.js"
+  }
+}

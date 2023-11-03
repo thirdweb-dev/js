@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Atelier.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Atelier.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Atelier.esm.js": "./dist/thirdweb-dev-chains-chains-Atelier.browser.esm.js"
+  }
+}

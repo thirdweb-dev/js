@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Map.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Map.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Map.esm.js": "./dist/thirdweb-dev-chains-chains-Map.browser.esm.js"
+  }
+}

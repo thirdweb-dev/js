@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SmartHostTeknolojiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SmartHostTeknolojiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SmartHostTeknolojiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SmartHostTeknolojiTestnet.browser.esm.js"
+  }
+}

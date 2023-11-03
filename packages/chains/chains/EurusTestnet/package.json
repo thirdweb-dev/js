@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EurusTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EurusTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EurusTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-EurusTestnet.browser.esm.js"
+  }
+}

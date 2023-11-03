@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TelosEvmTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TelosEvmTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TelosEvmTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TelosEvmTestnet.browser.esm.js"
+  }
+}

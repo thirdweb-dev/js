@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Securechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Securechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Securechain.esm.js": "./dist/thirdweb-dev-chains-chains-Securechain.browser.esm.js"
+  }
+}

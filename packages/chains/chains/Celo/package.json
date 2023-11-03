@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Celo.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Celo.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Celo.esm.js": "./dist/thirdweb-dev-chains-chains-Celo.browser.esm.js"
+  }
+}

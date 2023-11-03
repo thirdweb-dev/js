@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Nautilus.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Nautilus.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Nautilus.esm.js": "./dist/thirdweb-dev-chains-chains-Nautilus.browser.esm.js"
+  }
+}

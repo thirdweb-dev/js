@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TaoNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TaoNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TaoNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-TaoNetwork.browser.esm.js"
+  }
+}

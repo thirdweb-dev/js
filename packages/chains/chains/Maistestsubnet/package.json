@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Maistestsubnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Maistestsubnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Maistestsubnet.esm.js": "./dist/thirdweb-dev-chains-chains-Maistestsubnet.browser.esm.js"
+  }
+}

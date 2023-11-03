@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HorizenYumaTestnetDeprecated.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HorizenYumaTestnetDeprecated.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HorizenYumaTestnetDeprecated.esm.js": "./dist/thirdweb-dev-chains-chains-HorizenYumaTestnetDeprecated.browser.esm.js"
+  }
+}

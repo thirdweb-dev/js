@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TrustEvmTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TrustEvmTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TrustEvmTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TrustEvmTestnet.browser.esm.js"
+  }
+}

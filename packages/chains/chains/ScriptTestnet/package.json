@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ScriptTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ScriptTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ScriptTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ScriptTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Icplaza.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Icplaza.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Icplaza.esm.js": "./dist/thirdweb-dev-chains-chains-Icplaza.browser.esm.js"
+  }
+}

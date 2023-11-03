@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ThetaAmberTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ThetaAmberTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ThetaAmberTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ThetaAmberTestnet.browser.esm.js"
+  }
+}

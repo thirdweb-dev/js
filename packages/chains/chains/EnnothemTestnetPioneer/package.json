@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EnnothemTestnetPioneer.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EnnothemTestnetPioneer.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EnnothemTestnetPioneer.esm.js": "./dist/thirdweb-dev-chains-chains-EnnothemTestnetPioneer.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TomochainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TomochainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TomochainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TomochainTestnet.browser.esm.js"
+  }
+}

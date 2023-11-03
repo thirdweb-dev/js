@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DexalotSubnetTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DexalotSubnetTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DexalotSubnetTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DexalotSubnetTestnet.browser.esm.js"
+  }
+}

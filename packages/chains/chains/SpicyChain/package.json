@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SpicyChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SpicyChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SpicyChain.esm.js": "./dist/thirdweb-dev-chains-chains-SpicyChain.browser.esm.js"
+  }
+}

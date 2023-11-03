@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EtndChainS.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EtndChainS.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EtndChainS.esm.js": "./dist/thirdweb-dev-chains-chains-EtndChainS.browser.esm.js"
+  }
+}

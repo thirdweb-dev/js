@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MemoSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MemoSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MemoSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-MemoSmartChain.browser.esm.js"
+  }
+}

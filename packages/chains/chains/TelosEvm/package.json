@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TelosEvm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TelosEvm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TelosEvm.esm.js": "./dist/thirdweb-dev-chains-chains-TelosEvm.browser.esm.js"
+  }
+}

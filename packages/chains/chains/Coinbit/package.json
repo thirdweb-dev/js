@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Coinbit.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Coinbit.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Coinbit.esm.js": "./dist/thirdweb-dev-chains-chains-Coinbit.browser.esm.js"
+  }
+}

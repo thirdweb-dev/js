@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CeloBaklavaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CeloBaklavaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CeloBaklavaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CeloBaklavaTestnet.browser.esm.js"
+  }
+}

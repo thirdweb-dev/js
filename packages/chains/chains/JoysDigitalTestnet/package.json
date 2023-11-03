@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-JoysDigitalTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-JoysDigitalTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-JoysDigitalTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-JoysDigitalTestnet.browser.esm.js"
+  }
+}

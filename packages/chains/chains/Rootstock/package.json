@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Rootstock.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Rootstock.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Rootstock.esm.js": "./dist/thirdweb-dev-chains-chains-Rootstock.browser.esm.js"
+  }
+}

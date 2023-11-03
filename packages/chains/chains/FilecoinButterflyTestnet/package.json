@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FilecoinButterflyTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FilecoinButterflyTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FilecoinButterflyTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FilecoinButterflyTestnet.browser.esm.js"
+  }
+}

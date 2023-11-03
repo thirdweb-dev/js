@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MintaraTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MintaraTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MintaraTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MintaraTestnet.browser.esm.js"
+  }
+}

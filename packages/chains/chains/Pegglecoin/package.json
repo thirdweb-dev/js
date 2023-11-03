@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Pegglecoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Pegglecoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Pegglecoin.esm.js": "./dist/thirdweb-dev-chains-chains-Pegglecoin.browser.esm.js"
+  }
+}

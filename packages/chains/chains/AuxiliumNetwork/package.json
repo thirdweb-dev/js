@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AuxiliumNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AuxiliumNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AuxiliumNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-AuxiliumNetwork.browser.esm.js"
+  }
+}

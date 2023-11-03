@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Syscoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Syscoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Syscoin.esm.js": "./dist/thirdweb-dev-chains-chains-Syscoin.browser.esm.js"
+  }
+}

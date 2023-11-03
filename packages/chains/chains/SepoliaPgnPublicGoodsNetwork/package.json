@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SepoliaPgnPublicGoodsNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SepoliaPgnPublicGoodsNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SepoliaPgnPublicGoodsNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-SepoliaPgnPublicGoodsNetwork.browser.esm.js"
+  }
+}

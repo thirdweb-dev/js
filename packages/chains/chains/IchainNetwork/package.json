@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-IchainNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-IchainNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-IchainNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-IchainNetwork.browser.esm.js"
+  }
+}

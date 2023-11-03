@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AutobahnNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AutobahnNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AutobahnNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-AutobahnNetwork.browser.esm.js"
+  }
+}

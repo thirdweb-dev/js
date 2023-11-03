@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MoonbaseAlpha.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MoonbaseAlpha.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MoonbaseAlpha.esm.js": "./dist/thirdweb-dev-chains-chains-MoonbaseAlpha.browser.esm.js"
+  }
+}

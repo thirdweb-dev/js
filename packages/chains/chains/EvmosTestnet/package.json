@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EvmosTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EvmosTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EvmosTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-EvmosTestnet.browser.esm.js"
+  }
+}

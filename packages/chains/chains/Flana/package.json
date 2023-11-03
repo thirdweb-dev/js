@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Flana.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Flana.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Flana.esm.js": "./dist/thirdweb-dev-chains-chains-Flana.browser.esm.js"
+  }
+}

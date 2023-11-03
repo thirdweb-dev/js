@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Athereum.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Athereum.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Athereum.esm.js": "./dist/thirdweb-dev-chains-chains-Athereum.browser.esm.js"
+  }
+}

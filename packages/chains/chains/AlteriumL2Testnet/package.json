@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AlteriumL2Testnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AlteriumL2Testnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AlteriumL2Testnet.esm.js": "./dist/thirdweb-dev-chains-chains-AlteriumL2Testnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Alaya.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Alaya.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Alaya.esm.js": "./dist/thirdweb-dev-chains-chains-Alaya.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MoonrockOld.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MoonrockOld.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MoonrockOld.esm.js": "./dist/thirdweb-dev-chains-chains-MoonrockOld.browser.esm.js"
+  }
+}

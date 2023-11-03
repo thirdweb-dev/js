@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SongbirdCanaryNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SongbirdCanaryNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SongbirdCanaryNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-SongbirdCanaryNetwork.browser.esm.js"
+  }
+}

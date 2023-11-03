@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KlaytnCypress.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KlaytnCypress.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KlaytnCypress.esm.js": "./dist/thirdweb-dev-chains-chains-KlaytnCypress.browser.esm.js"
+  }
+}

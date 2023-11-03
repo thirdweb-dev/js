@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DragonflyHexapod.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DragonflyHexapod.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DragonflyHexapod.esm.js": "./dist/thirdweb-dev-chains-chains-DragonflyHexapod.browser.esm.js"
+  }
+}

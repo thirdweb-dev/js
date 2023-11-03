@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Elysium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Elysium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Elysium.esm.js": "./dist/thirdweb-dev-chains-chains-Elysium.browser.esm.js"
+  }
+}

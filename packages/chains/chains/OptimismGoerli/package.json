@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OptimismGoerli.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OptimismGoerli.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OptimismGoerli.esm.js": "./dist/thirdweb-dev-chains-chains-OptimismGoerli.browser.esm.js"
+  }
+}

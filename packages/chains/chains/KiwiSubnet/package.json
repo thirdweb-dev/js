@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KiwiSubnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KiwiSubnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KiwiSubnet.esm.js": "./dist/thirdweb-dev-chains-chains-KiwiSubnet.browser.esm.js"
+  }
+}

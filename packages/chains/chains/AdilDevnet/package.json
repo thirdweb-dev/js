@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AdilDevnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AdilDevnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AdilDevnet.esm.js": "./dist/thirdweb-dev-chains-chains-AdilDevnet.browser.esm.js"
+  }
+}

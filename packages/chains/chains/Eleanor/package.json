@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Eleanor.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Eleanor.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Eleanor.esm.js": "./dist/thirdweb-dev-chains-chains-Eleanor.browser.esm.js"
+  }
+}

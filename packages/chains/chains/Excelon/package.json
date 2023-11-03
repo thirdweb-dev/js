@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Excelon.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Excelon.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Excelon.esm.js": "./dist/thirdweb-dev-chains-chains-Excelon.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CryptoEmergency.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CryptoEmergency.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CryptoEmergency.esm.js": "./dist/thirdweb-dev-chains-chains-CryptoEmergency.browser.esm.js"
+  }
+}

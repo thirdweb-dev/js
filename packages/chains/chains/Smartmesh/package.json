@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Smartmesh.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Smartmesh.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Smartmesh.esm.js": "./dist/thirdweb-dev-chains-chains-Smartmesh.browser.esm.js"
+  }
+}

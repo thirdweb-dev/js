@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ExosamaNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ExosamaNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ExosamaNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-ExosamaNetwork.browser.esm.js"
+  }
+}

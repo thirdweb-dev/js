@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PixieChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PixieChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PixieChain.esm.js": "./dist/thirdweb-dev-chains-chains-PixieChain.browser.esm.js"
+  }
+}

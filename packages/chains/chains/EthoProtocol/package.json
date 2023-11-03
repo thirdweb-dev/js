@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EthoProtocol.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EthoProtocol.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EthoProtocol.esm.js": "./dist/thirdweb-dev-chains-chains-EthoProtocol.browser.esm.js"
+  }
+}

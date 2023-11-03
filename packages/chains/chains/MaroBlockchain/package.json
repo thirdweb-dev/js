@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MaroBlockchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MaroBlockchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MaroBlockchain.esm.js": "./dist/thirdweb-dev-chains-chains-MaroBlockchain.browser.esm.js"
+  }
+}

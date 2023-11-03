@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BlockchainStation.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BlockchainStation.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BlockchainStation.esm.js": "./dist/thirdweb-dev-chains-chains-BlockchainStation.browser.esm.js"
+  }
+}

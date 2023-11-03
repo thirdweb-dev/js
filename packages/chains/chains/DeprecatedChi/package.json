@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DeprecatedChi.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DeprecatedChi.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DeprecatedChi.esm.js": "./dist/thirdweb-dev-chains-chains-DeprecatedChi.browser.esm.js"
+  }
+}

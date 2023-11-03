@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Canxium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Canxium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Canxium.esm.js": "./dist/thirdweb-dev-chains-chains-Canxium.browser.esm.js"
+  }
+}

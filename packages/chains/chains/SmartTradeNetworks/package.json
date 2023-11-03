@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SmartTradeNetworks.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SmartTradeNetworks.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SmartTradeNetworks.esm.js": "./dist/thirdweb-dev-chains-chains-SmartTradeNetworks.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AreonNetworkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AreonNetworkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AreonNetworkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AreonNetworkTestnet.browser.esm.js"
+  }
+}

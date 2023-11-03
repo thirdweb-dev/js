@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Omega.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Omega.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Omega.esm.js": "./dist/thirdweb-dev-chains-chains-Omega.browser.esm.js"
+  }
+}

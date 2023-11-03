@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Godwoken.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Godwoken.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Godwoken.esm.js": "./dist/thirdweb-dev-chains-chains-Godwoken.browser.esm.js"
+  }
+}

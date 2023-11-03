@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Cloudtx.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Cloudtx.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Cloudtx.esm.js": "./dist/thirdweb-dev-chains-chains-Cloudtx.browser.esm.js"
+  }
+}

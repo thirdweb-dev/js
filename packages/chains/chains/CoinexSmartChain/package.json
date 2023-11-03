@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CoinexSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CoinexSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CoinexSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-CoinexSmartChain.browser.esm.js"
+  }
+}

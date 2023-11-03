@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KaibaLightningChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KaibaLightningChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KaibaLightningChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-KaibaLightningChainTestnet.browser.esm.js"
+  }
+}

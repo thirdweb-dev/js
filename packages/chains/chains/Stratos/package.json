@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Stratos.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Stratos.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Stratos.esm.js": "./dist/thirdweb-dev-chains-chains-Stratos.browser.esm.js"
+  }
+}

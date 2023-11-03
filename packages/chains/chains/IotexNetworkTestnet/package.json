@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-IotexNetworkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-IotexNetworkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-IotexNetworkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-IotexNetworkTestnet.browser.esm.js"
+  }
+}

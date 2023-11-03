@@ -21,9 +21,9 @@ import {
 import { TransactionDetailsForUserOp } from "./transaction-details";
 import { getUserOpHashV06 } from "./utils";
 import { DUMMY_PAYMASTER_AND_DATA, SIG_SIZE } from "./paymaster";
-import CeloAlfajoresTestnet from "@thirdweb-dev/chains/chains/44787";
-import Celo from "@thirdweb-dev/chains/chains/42220";
-import CeloBaklavaTestnet from "@thirdweb-dev/chains/chains/62320";
+import CeloAlfajoresTestnet from "@thirdweb-dev/chains/chains/CeloAlfajoresTestnet";
+import Celo from "@thirdweb-dev/chains/chains/Celo";
+import CeloBaklavaTestnet from "@thirdweb-dev/chains/chains/CeloBaklavaTestnet";
 import { Transaction, getDynamicFeeData } from "@thirdweb-dev/sdk";
 
 export type BatchData = {

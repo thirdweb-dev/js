@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DebankTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DebankTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DebankTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DebankTestnet.browser.esm.js"
+  }
+}

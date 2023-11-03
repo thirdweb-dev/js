@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-UzmiNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-UzmiNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-UzmiNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-UzmiNetwork.browser.esm.js"
+  }
+}

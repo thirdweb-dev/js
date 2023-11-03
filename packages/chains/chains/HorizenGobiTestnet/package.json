@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HorizenGobiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HorizenGobiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HorizenGobiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HorizenGobiTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Permission.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Permission.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Permission.esm.js": "./dist/thirdweb-dev-chains-chains-Permission.browser.esm.js"
+  }
+}

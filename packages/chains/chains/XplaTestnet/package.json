@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-XplaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-XplaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-XplaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-XplaTestnet.browser.esm.js"
+  }
+}

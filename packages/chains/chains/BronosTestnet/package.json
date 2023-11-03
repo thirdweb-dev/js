@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BronosTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BronosTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BronosTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BronosTestnet.browser.esm.js"
+  }
+}

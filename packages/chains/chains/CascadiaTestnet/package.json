@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CascadiaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CascadiaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CascadiaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CascadiaTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HyperonchainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HyperonchainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HyperonchainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HyperonchainTestnet.browser.esm.js"
+  }
+}

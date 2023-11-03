@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PlianTestnetMain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PlianTestnetMain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PlianTestnetMain.esm.js": "./dist/thirdweb-dev-chains-chains-PlianTestnetMain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Tbsi.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Tbsi.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Tbsi.esm.js": "./dist/thirdweb-dev-chains-chains-Tbsi.browser.esm.js"
+  }
+}

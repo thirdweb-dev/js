@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bevm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bevm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bevm.esm.js": "./dist/thirdweb-dev-chains-chains-Bevm.browser.esm.js"
+  }
+}

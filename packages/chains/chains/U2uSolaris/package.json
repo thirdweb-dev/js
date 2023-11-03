@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-U2uSolaris.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-U2uSolaris.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-U2uSolaris.esm.js": "./dist/thirdweb-dev-chains-chains-U2uSolaris.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ArbitrumRinkeby.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ArbitrumRinkeby.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ArbitrumRinkeby.esm.js": "./dist/thirdweb-dev-chains-chains-ArbitrumRinkeby.browser.esm.js"
+  }
+}

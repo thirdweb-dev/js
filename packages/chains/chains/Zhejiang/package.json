@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Zhejiang.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Zhejiang.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Zhejiang.esm.js": "./dist/thirdweb-dev-chains-chains-Zhejiang.browser.esm.js"
+  }
+}

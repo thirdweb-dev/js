@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HumansAiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HumansAiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HumansAiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HumansAiTestnet.browser.esm.js"
+  }
+}

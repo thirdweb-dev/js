@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FilecoinLocalTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FilecoinLocalTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FilecoinLocalTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FilecoinLocalTestnet.browser.esm.js"
+  }
+}

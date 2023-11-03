@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AltlayerTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AltlayerTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AltlayerTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AltlayerTestnet.browser.esm.js"
+  }
+}

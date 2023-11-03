@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Cronos.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Cronos.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Cronos.esm.js": "./dist/thirdweb-dev-chains-chains-Cronos.browser.esm.js"
+  }
+}

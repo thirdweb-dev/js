@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OortHuygens.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OortHuygens.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OortHuygens.esm.js": "./dist/thirdweb-dev-chains-chains-OortHuygens.browser.esm.js"
+  }
+}

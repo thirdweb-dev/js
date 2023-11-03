@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-RiniaTestnetOld.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-RiniaTestnetOld.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-RiniaTestnetOld.esm.js": "./dist/thirdweb-dev-chains-chains-RiniaTestnetOld.browser.esm.js"
+  }
+}

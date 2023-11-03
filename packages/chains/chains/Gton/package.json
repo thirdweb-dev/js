@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Gton.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Gton.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Gton.esm.js": "./dist/thirdweb-dev-chains-chains-Gton.browser.esm.js"
+  }
+}

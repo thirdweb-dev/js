@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Datahopper.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Datahopper.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Datahopper.esm.js": "./dist/thirdweb-dev-chains-chains-Datahopper.browser.esm.js"
+  }
+}

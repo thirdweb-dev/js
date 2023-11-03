@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GoldSmartChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GoldSmartChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GoldSmartChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-GoldSmartChainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-IvarChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-IvarChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-IvarChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-IvarChainTestnet.browser.esm.js"
+  }
+}

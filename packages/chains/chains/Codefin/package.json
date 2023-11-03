@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Codefin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Codefin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Codefin.esm.js": "./dist/thirdweb-dev-chains-chains-Codefin.browser.esm.js"
+  }
+}

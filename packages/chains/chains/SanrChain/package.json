@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SanrChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SanrChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SanrChain.esm.js": "./dist/thirdweb-dev-chains-chains-SanrChain.browser.esm.js"
+  }
+}

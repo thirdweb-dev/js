@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FantomTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FantomTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FantomTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FantomTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DecentralizedWeb.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DecentralizedWeb.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DecentralizedWeb.esm.js": "./dist/thirdweb-dev-chains-chains-DecentralizedWeb.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Energi.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Energi.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Energi.esm.js": "./dist/thirdweb-dev-chains-chains-Energi.browser.esm.js"
+  }
+}

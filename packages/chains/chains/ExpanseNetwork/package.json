@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ExpanseNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ExpanseNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ExpanseNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-ExpanseNetwork.browser.esm.js"
+  }
+}

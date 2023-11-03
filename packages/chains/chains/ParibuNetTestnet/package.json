@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ParibuNetTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ParibuNetTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ParibuNetTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ParibuNetTestnet.browser.esm.js"
+  }
+}

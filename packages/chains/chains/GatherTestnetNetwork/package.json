@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GatherTestnetNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GatherTestnetNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GatherTestnetNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-GatherTestnetNetwork.browser.esm.js"
+  }
+}

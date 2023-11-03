@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Jellie.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Jellie.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Jellie.esm.js": "./dist/thirdweb-dev-chains-chains-Jellie.browser.esm.js"
+  }
+}

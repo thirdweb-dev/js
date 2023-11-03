@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SurBlockchainNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SurBlockchainNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SurBlockchainNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-SurBlockchainNetwork.browser.esm.js"
+  }
+}

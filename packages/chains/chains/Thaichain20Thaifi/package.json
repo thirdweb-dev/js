@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Thaichain20Thaifi.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Thaichain20Thaifi.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Thaichain20Thaifi.esm.js": "./dist/thirdweb-dev-chains-chains-Thaichain20Thaifi.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HaqqChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HaqqChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HaqqChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HaqqChainTestnet.browser.esm.js"
+  }
+}

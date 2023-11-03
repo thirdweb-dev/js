@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BeverlyHills.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BeverlyHills.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BeverlyHills.esm.js": "./dist/thirdweb-dev-chains-chains-BeverlyHills.browser.esm.js"
+  }
+}

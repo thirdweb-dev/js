@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BeamTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BeamTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BeamTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BeamTestnet.browser.esm.js"
+  }
+}

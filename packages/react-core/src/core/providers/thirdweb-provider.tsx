@@ -9,7 +9,7 @@ import {
   useWalletContext,
 } from "./thirdweb-wallet-provider";
 import type { Chain } from "@thirdweb-dev/chains";
-import { defaultChains } from "@thirdweb-dev/chains/src/constants";
+import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
 import {
   createAsyncLocalStorage,
   CreateAsyncStorage,

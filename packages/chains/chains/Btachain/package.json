@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Btachain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Btachain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Btachain.esm.js": "./dist/thirdweb-dev-chains-chains-Btachain.browser.esm.js"
+  }
+}

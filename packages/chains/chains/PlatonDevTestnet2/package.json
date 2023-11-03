@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PlatonDevTestnet2.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PlatonDevTestnet2.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PlatonDevTestnet2.esm.js": "./dist/thirdweb-dev-chains-chains-PlatonDevTestnet2.browser.esm.js"
+  }
+}

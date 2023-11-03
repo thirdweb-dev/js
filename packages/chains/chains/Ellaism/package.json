@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ellaism.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ellaism.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ellaism.esm.js": "./dist/thirdweb-dev-chains-chains-Ellaism.browser.esm.js"
+  }
+}

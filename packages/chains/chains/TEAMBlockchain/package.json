@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TEAMBlockchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TEAMBlockchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TEAMBlockchain.esm.js": "./dist/thirdweb-dev-chains-chains-TEAMBlockchain.browser.esm.js"
+  }
+}

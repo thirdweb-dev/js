@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HumanodeTestnet5Israfel.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HumanodeTestnet5Israfel.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HumanodeTestnet5Israfel.esm.js": "./dist/thirdweb-dev-chains-chains-HumanodeTestnet5Israfel.browser.esm.js"
+  }
+}

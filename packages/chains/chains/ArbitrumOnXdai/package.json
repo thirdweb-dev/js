@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ArbitrumOnXdai.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ArbitrumOnXdai.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ArbitrumOnXdai.esm.js": "./dist/thirdweb-dev-chains-chains-ArbitrumOnXdai.browser.esm.js"
+  }
+}

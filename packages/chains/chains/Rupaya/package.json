@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Rupaya.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Rupaya.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Rupaya.esm.js": "./dist/thirdweb-dev-chains-chains-Rupaya.browser.esm.js"
+  }
+}

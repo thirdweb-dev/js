@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-XdcNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-XdcNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-XdcNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-XdcNetwork.browser.esm.js"
+  }
+}

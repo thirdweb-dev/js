@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Thundercore.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Thundercore.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Thundercore.esm.js": "./dist/thirdweb-dev-chains-chains-Thundercore.browser.esm.js"
+  }
+}

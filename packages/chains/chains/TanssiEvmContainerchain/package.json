@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TanssiEvmContainerchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TanssiEvmContainerchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TanssiEvmContainerchain.esm.js": "./dist/thirdweb-dev-chains-chains-TanssiEvmContainerchain.browser.esm.js"
+  }
+}

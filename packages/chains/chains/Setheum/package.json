@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Setheum.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Setheum.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Setheum.esm.js": "./dist/thirdweb-dev-chains-chains-Setheum.browser.esm.js"
+  }
+}

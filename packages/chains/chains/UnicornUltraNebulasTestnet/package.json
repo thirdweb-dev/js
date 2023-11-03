@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-UnicornUltraNebulasTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-UnicornUltraNebulasTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-UnicornUltraNebulasTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-UnicornUltraNebulasTestnet.browser.esm.js"
+  }
+}

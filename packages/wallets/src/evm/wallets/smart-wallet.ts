@@ -22,7 +22,7 @@ import {
 } from "../../core/types/walletConnect";
 import { WalletConnectV2Handler } from "../../core/WalletConnect/WalletConnectV2Handler";
 import { NoOpWalletConnectHandler } from "../../core/WalletConnect/constants";
-import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/utils";
 import { providers, utils } from "ethers";
 
 // export types and utils for convenience

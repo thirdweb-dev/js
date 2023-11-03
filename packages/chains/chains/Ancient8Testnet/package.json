@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ancient8Testnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ancient8Testnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ancient8Testnet.esm.js": "./dist/thirdweb-dev-chains-chains-Ancient8Testnet.browser.esm.js"
+  }
+}

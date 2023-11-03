@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Musicoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Musicoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Musicoin.esm.js": "./dist/thirdweb-dev-chains-chains-Musicoin.browser.esm.js"
+  }
+}

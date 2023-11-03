@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Wemix30.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Wemix30.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Wemix30.esm.js": "./dist/thirdweb-dev-chains-chains-Wemix30.browser.esm.js"
+  }
+}

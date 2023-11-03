@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OrigintrailParachain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OrigintrailParachain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OrigintrailParachain.esm.js": "./dist/thirdweb-dev-chains-chains-OrigintrailParachain.browser.esm.js"
+  }
+}

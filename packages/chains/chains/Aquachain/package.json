@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Aquachain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Aquachain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Aquachain.esm.js": "./dist/thirdweb-dev-chains-chains-Aquachain.browser.esm.js"
+  }
+}

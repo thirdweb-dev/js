@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EmpireNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EmpireNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EmpireNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-EmpireNetwork.browser.esm.js"
+  }
+}

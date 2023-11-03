@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ScrollPreAlphaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ScrollPreAlphaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ScrollPreAlphaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ScrollPreAlphaTestnet.browser.esm.js"
+  }
+}

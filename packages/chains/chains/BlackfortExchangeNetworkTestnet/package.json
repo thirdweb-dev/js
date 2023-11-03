@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BlackfortExchangeNetworkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BlackfortExchangeNetworkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BlackfortExchangeNetworkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BlackfortExchangeNetworkTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Anduschain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Anduschain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Anduschain.esm.js": "./dist/thirdweb-dev-chains-chains-Anduschain.browser.esm.js"
+  }
+}

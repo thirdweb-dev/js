@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Uptick.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Uptick.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Uptick.esm.js": "./dist/thirdweb-dev-chains-chains-Uptick.browser.esm.js"
+  }
+}

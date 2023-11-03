@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ShimmerevmTestnetDeprecated.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ShimmerevmTestnetDeprecated.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ShimmerevmTestnetDeprecated.esm.js": "./dist/thirdweb-dev-chains-chains-ShimmerevmTestnetDeprecated.browser.esm.js"
+  }
+}

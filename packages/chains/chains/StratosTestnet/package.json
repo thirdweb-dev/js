@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-StratosTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-StratosTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-StratosTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-StratosTestnet.browser.esm.js"
+  }
+}

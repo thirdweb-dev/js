@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ekta.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ekta.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ekta.esm.js": "./dist/thirdweb-dev-chains-chains-Ekta.browser.esm.js"
+  }
+}

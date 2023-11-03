@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Filecoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Filecoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Filecoin.esm.js": "./dist/thirdweb-dev-chains-chains-Filecoin.browser.esm.js"
+  }
+}

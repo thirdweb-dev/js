@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Catalyst.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Catalyst.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Catalyst.esm.js": "./dist/thirdweb-dev-chains-chains-Catalyst.browser.esm.js"
+  }
+}

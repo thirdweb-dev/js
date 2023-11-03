@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CloudwalkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CloudwalkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CloudwalkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CloudwalkTestnet.browser.esm.js"
+  }
+}

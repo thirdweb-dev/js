@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CtexScanBlockchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CtexScanBlockchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CtexScanBlockchain.esm.js": "./dist/thirdweb-dev-chains-chains-CtexScanBlockchain.browser.esm.js"
+  }
+}

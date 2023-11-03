@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Highbury.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Highbury.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Highbury.esm.js": "./dist/thirdweb-dev-chains-chains-Highbury.browser.esm.js"
+  }
+}

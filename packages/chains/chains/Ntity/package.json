@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ntity.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ntity.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ntity.esm.js": "./dist/thirdweb-dev-chains-chains-Ntity.browser.esm.js"
+  }
+}

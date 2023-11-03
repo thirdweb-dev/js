@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Taraxa.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Taraxa.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Taraxa.esm.js": "./dist/thirdweb-dev-chains-chains-Taraxa.browser.esm.js"
+  }
+}

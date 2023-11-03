@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-NeonEvmDevnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-NeonEvmDevnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-NeonEvmDevnet.esm.js": "./dist/thirdweb-dev-chains-chains-NeonEvmDevnet.browser.esm.js"
+  }
+}

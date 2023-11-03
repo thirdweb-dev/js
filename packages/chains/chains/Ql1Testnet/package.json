@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ql1Testnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ql1Testnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ql1Testnet.esm.js": "./dist/thirdweb-dev-chains-chains-Ql1Testnet.browser.esm.js"
+  }
+}

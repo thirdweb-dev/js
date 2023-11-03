@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Biteth.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Biteth.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Biteth.esm.js": "./dist/thirdweb-dev-chains-chains-Biteth.browser.esm.js"
+  }
+}

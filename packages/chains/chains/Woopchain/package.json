@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Woopchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Woopchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Woopchain.esm.js": "./dist/thirdweb-dev-chains-chains-Woopchain.browser.esm.js"
+  }
+}

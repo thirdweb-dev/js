@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Irishub.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Irishub.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Irishub.esm.js": "./dist/thirdweb-dev-chains-chains-Irishub.browser.esm.js"
+  }
+}

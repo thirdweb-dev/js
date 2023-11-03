@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-YooldoVerse.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-YooldoVerse.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-YooldoVerse.esm.js": "./dist/thirdweb-dev-chains-chains-YooldoVerse.browser.esm.js"
+  }
+}

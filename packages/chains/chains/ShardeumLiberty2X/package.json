@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ShardeumLiberty2X.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ShardeumLiberty2X.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ShardeumLiberty2X.esm.js": "./dist/thirdweb-dev-chains-chains-ShardeumLiberty2X.browser.esm.js"
+  }
+}

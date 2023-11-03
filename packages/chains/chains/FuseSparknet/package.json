@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FuseSparknet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FuseSparknet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FuseSparknet.esm.js": "./dist/thirdweb-dev-chains-chains-FuseSparknet.browser.esm.js"
+  }
+}

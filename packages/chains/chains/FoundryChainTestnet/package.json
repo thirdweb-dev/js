@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FoundryChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FoundryChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FoundryChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FoundryChainTestnet.browser.esm.js"
+  }
+}

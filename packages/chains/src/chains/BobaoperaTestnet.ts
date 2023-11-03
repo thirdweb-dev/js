@@ -1,0 +1,32 @@
+import type { Chain } from "../types";
+export default {
+  "chain": "Bobaopera Testnet",
+  "chainId": 4051,
+  "explorers": [
+    {
+      "name": "Bobaopera Testnet block explorer",
+      "url": "https://blockexplorer.testnet.bobaopera.boba.network",
+      "standard": "none"
+    }
+  ],
+  "faucets": [],
+  "infoURL": "https://boba.network",
+  "name": "Bobaopera Testnet",
+  "nativeCurrency": {
+    "name": "Boba Token",
+    "symbol": "BOBA",
+    "decimals": 18
+  },
+  "networkId": 4051,
+  "rpc": [
+    "https://bobaopera-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://4051.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.bobaopera.boba.network",
+    "wss://wss.testnet.bobaopera.boba.network",
+    "https://replica.testnet.bobaopera.boba.network",
+    "wss://replica-wss.testnet.bobaopera.boba.network"
+  ],
+  "shortName": "BobaoperaTestnet",
+  "slug": "bobaopera-testnet",
+  "testnet": true
+} as const satisfies Chain;

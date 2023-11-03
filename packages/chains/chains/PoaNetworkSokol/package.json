@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PoaNetworkSokol.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PoaNetworkSokol.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PoaNetworkSokol.esm.js": "./dist/thirdweb-dev-chains-chains-PoaNetworkSokol.browser.esm.js"
+  }
+}

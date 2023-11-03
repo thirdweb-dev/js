@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ThinkiumChain103.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ThinkiumChain103.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ThinkiumChain103.esm.js": "./dist/thirdweb-dev-chains-chains-ThinkiumChain103.browser.esm.js"
+  }
+}

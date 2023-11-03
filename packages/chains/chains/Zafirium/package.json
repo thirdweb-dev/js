@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Zafirium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Zafirium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Zafirium.esm.js": "./dist/thirdweb-dev-chains-chains-Zafirium.browser.esm.js"
+  }
+}

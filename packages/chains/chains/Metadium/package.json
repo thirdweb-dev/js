@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Metadium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Metadium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Metadium.esm.js": "./dist/thirdweb-dev-chains-chains-Metadium.browser.esm.js"
+  }
+}

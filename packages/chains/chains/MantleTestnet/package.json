@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MantleTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MantleTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MantleTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MantleTestnet.browser.esm.js"
+  }
+}

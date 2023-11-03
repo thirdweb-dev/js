@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Genechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Genechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Genechain.esm.js": "./dist/thirdweb-dev-chains-chains-Genechain.browser.esm.js"
+  }
+}

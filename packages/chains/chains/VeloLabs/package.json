@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VeloLabs.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VeloLabs.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VeloLabs.esm.js": "./dist/thirdweb-dev-chains-chains-VeloLabs.browser.esm.js"
+  }
+}

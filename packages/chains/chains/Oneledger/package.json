@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Oneledger.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Oneledger.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Oneledger.esm.js": "./dist/thirdweb-dev-chains-chains-Oneledger.browser.esm.js"
+  }
+}

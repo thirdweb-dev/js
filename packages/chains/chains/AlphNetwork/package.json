@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AlphNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AlphNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AlphNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-AlphNetwork.browser.esm.js"
+  }
+}

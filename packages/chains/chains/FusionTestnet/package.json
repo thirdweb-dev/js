@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FusionTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FusionTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FusionTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FusionTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-RazorSkaleChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-RazorSkaleChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-RazorSkaleChain.esm.js": "./dist/thirdweb-dev-chains-chains-RazorSkaleChain.browser.esm.js"
+  }
+}

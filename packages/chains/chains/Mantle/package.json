@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Mantle.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Mantle.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Mantle.esm.js": "./dist/thirdweb-dev-chains-chains-Mantle.browser.esm.js"
+  }
+}

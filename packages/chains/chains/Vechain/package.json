@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Vechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Vechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Vechain.esm.js": "./dist/thirdweb-dev-chains-chains-Vechain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CennznetRata.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CennznetRata.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CennznetRata.esm.js": "./dist/thirdweb-dev-chains-chains-CennznetRata.browser.esm.js"
+  }
+}

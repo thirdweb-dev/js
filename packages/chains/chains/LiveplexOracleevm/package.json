@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LiveplexOracleevm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LiveplexOracleevm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LiveplexOracleevm.esm.js": "./dist/thirdweb-dev-chains-chains-LiveplexOracleevm.browser.esm.js"
+  }
+}

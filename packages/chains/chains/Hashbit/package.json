@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Hashbit.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Hashbit.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Hashbit.esm.js": "./dist/thirdweb-dev-chains-chains-Hashbit.browser.esm.js"
+  }
+}

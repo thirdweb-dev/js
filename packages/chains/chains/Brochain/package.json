@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Brochain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Brochain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Brochain.esm.js": "./dist/thirdweb-dev-chains-chains-Brochain.browser.esm.js"
+  }
+}

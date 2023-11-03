@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PepeChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PepeChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PepeChain.esm.js": "./dist/thirdweb-dev-chains-chains-PepeChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DChain.esm.js": "./dist/thirdweb-dev-chains-chains-DChain.browser.esm.js"
+  }
+}

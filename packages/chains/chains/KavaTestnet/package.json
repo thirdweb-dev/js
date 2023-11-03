@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KavaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KavaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KavaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-KavaTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ConnectormanagerRobin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ConnectormanagerRobin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ConnectormanagerRobin.esm.js": "./dist/thirdweb-dev-chains-chains-ConnectormanagerRobin.browser.esm.js"
+  }
+}

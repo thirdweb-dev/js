@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Scolcoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Scolcoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Scolcoin.esm.js": "./dist/thirdweb-dev-chains-chains-Scolcoin.browser.esm.js"
+  }
+}

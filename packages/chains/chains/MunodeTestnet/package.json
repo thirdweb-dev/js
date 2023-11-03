@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MunodeTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MunodeTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MunodeTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MunodeTestnet.browser.esm.js"
+  }
+}

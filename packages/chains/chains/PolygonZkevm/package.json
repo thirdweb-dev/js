@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PolygonZkevm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PolygonZkevm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PolygonZkevm.esm.js": "./dist/thirdweb-dev-chains-chains-PolygonZkevm.browser.esm.js"
+  }
+}

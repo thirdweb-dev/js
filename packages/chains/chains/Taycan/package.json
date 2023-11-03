@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Taycan.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Taycan.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Taycan.esm.js": "./dist/thirdweb-dev-chains-chains-Taycan.browser.esm.js"
+  }
+}

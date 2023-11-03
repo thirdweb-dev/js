@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ReiChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ReiChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ReiChain.esm.js": "./dist/thirdweb-dev-chains-chains-ReiChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Zkatana.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Zkatana.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Zkatana.esm.js": "./dist/thirdweb-dev-chains-chains-Zkatana.browser.esm.js"
+  }
+}

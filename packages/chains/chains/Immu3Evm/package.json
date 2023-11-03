@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Immu3Evm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Immu3Evm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Immu3Evm.esm.js": "./dist/thirdweb-dev-chains-chains-Immu3Evm.browser.esm.js"
+  }
+}

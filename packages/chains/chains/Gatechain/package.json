@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Gatechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Gatechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Gatechain.esm.js": "./dist/thirdweb-dev-chains-chains-Gatechain.browser.esm.js"
+  }
+}

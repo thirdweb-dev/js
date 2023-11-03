@@ -29,7 +29,7 @@ import {
   ShuffleIcon,
   TextAlignLeftIcon,
 } from "@radix-ui/react-icons";
-import { Localhost } from "@thirdweb-dev/chains";
+import Localhost from "@thirdweb-dev/chains/chains/Localhost";
 import {
   useChain,
   useAddress,

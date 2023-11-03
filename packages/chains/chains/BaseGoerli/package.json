@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BaseGoerli.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BaseGoerli.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BaseGoerli.esm.js": "./dist/thirdweb-dev-chains-chains-BaseGoerli.browser.esm.js"
+  }
+}

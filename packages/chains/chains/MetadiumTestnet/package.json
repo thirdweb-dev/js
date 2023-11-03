@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MetadiumTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MetadiumTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MetadiumTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MetadiumTestnet.browser.esm.js"
+  }
+}

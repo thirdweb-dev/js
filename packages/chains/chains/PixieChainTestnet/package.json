@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PixieChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PixieChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PixieChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PixieChainTestnet.browser.esm.js"
+  }
+}

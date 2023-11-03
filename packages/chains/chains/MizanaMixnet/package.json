@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MizanaMixnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MizanaMixnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MizanaMixnet.esm.js": "./dist/thirdweb-dev-chains-chains-MizanaMixnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PeperiumChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PeperiumChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PeperiumChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PeperiumChainTestnet.browser.esm.js"
+  }
+}

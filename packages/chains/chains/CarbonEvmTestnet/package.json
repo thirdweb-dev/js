@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CarbonEvmTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CarbonEvmTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CarbonEvmTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CarbonEvmTestnet.browser.esm.js"
+  }
+}

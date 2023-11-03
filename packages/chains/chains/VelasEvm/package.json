@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VelasEvm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VelasEvm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VelasEvm.esm.js": "./dist/thirdweb-dev-chains-chains-VelasEvm.browser.esm.js"
+  }
+}

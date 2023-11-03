@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LycanChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LycanChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LycanChain.esm.js": "./dist/thirdweb-dev-chains-chains-LycanChain.browser.esm.js"
+  }
+}

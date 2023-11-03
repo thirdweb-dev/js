@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Xerom.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Xerom.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Xerom.esm.js": "./dist/thirdweb-dev-chains-chains-Xerom.browser.esm.js"
+  }
+}

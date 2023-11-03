@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Camelark.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Camelark.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Camelark.esm.js": "./dist/thirdweb-dev-chains-chains-Camelark.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CosmicChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CosmicChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CosmicChain.esm.js": "./dist/thirdweb-dev-chains-chains-CosmicChain.browser.esm.js"
+  }
+}

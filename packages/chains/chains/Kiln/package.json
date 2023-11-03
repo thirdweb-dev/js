@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Kiln.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Kiln.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Kiln.esm.js": "./dist/thirdweb-dev-chains-chains-Kiln.browser.esm.js"
+  }
+}

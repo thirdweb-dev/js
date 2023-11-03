@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TaycanTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TaycanTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TaycanTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TaycanTestnet.browser.esm.js"
+  }
+}

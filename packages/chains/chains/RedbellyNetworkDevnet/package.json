@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-RedbellyNetworkDevnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-RedbellyNetworkDevnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-RedbellyNetworkDevnet.esm.js": "./dist/thirdweb-dev-chains-chains-RedbellyNetworkDevnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BitkubChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BitkubChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BitkubChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BitkubChainTestnet.browser.esm.js"
+  }
+}

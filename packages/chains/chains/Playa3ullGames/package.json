@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Playa3ullGames.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Playa3ullGames.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Playa3ullGames.esm.js": "./dist/thirdweb-dev-chains-chains-Playa3ullGames.browser.esm.js"
+  }
+}

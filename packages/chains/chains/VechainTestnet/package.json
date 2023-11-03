@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VechainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VechainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VechainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-VechainTestnet.browser.esm.js"
+  }
+}

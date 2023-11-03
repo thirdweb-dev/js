@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MxcZkevm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MxcZkevm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MxcZkevm.esm.js": "./dist/thirdweb-dev-chains-chains-MxcZkevm.browser.esm.js"
+  }
+}

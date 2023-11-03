@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Joseon.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Joseon.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Joseon.esm.js": "./dist/thirdweb-dev-chains-chains-Joseon.browser.esm.js"
+  }
+}

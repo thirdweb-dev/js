@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-RikezaNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-RikezaNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-RikezaNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-RikezaNetwork.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CalypsoNftHubSkaleTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CalypsoNftHubSkaleTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CalypsoNftHubSkaleTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CalypsoNftHubSkaleTestnet.browser.esm.js"
+  }
+}

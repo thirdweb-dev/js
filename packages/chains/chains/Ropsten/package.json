@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ropsten.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ropsten.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ropsten.esm.js": "./dist/thirdweb-dev-chains-chains-Ropsten.browser.esm.js"
+  }
+}

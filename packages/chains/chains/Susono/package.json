@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Susono.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Susono.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Susono.esm.js": "./dist/thirdweb-dev-chains-chains-Susono.browser.esm.js"
+  }
+}

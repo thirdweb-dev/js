@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-NepalBlockchainNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-NepalBlockchainNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-NepalBlockchainNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-NepalBlockchainNetwork.browser.esm.js"
+  }
+}

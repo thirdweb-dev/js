@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Scroll.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Scroll.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Scroll.esm.js": "./dist/thirdweb-dev-chains-chains-Scroll.browser.esm.js"
+  }
+}

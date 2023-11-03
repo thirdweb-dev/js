@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Sjatsh.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Sjatsh.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Sjatsh.esm.js": "./dist/thirdweb-dev-chains-chains-Sjatsh.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Dogechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Dogechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Dogechain.esm.js": "./dist/thirdweb-dev-chains-chains-Dogechain.browser.esm.js"
+  }
+}

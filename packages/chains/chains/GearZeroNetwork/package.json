@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GearZeroNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GearZeroNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GearZeroNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-GearZeroNetwork.browser.esm.js"
+  }
+}

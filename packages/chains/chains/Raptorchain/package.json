@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Raptorchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Raptorchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Raptorchain.esm.js": "./dist/thirdweb-dev-chains-chains-Raptorchain.browser.esm.js"
+  }
+}

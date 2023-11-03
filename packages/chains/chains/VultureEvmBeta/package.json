@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VultureEvmBeta.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VultureEvmBeta.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VultureEvmBeta.esm.js": "./dist/thirdweb-dev-chains-chains-VultureEvmBeta.browser.esm.js"
+  }
+}

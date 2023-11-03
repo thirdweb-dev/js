@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Avocado.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Avocado.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Avocado.esm.js": "./dist/thirdweb-dev-chains-chains-Avocado.browser.esm.js"
+  }
+}

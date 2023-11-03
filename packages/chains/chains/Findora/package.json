@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Findora.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Findora.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Findora.esm.js": "./dist/thirdweb-dev-chains-chains-Findora.browser.esm.js"
+  }
+}

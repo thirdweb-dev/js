@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HuobiEcoChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HuobiEcoChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HuobiEcoChain.esm.js": "./dist/thirdweb-dev-chains-chains-HuobiEcoChain.browser.esm.js"
+  }
+}

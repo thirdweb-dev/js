@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Rethereum.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Rethereum.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Rethereum.esm.js": "./dist/thirdweb-dev-chains-chains-Rethereum.browser.esm.js"
+  }
+}

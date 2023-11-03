@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-StepNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-StepNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-StepNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-StepNetwork.browser.esm.js"
+  }
+}

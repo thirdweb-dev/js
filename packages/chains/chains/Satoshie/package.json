@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Satoshie.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Satoshie.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Satoshie.esm.js": "./dist/thirdweb-dev-chains-chains-Satoshie.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BandaiNamcoResearchVerse.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BandaiNamcoResearchVerse.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BandaiNamcoResearchVerse.esm.js": "./dist/thirdweb-dev-chains-chains-BandaiNamcoResearchVerse.browser.esm.js"
+  }
+}

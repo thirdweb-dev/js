@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EluvioContentFabric.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EluvioContentFabric.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EluvioContentFabric.esm.js": "./dist/thirdweb-dev-chains-chains-EluvioContentFabric.browser.esm.js"
+  }
+}

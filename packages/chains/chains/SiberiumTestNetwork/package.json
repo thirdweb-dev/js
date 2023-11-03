@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SiberiumTestNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SiberiumTestNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SiberiumTestNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-SiberiumTestNetwork.browser.esm.js"
+  }
+}

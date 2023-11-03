@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-NumbersTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-NumbersTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-NumbersTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-NumbersTestnet.browser.esm.js"
+  }
+}

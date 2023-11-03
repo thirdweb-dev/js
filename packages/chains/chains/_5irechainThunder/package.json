@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-_5irechainThunder.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-_5irechainThunder.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-_5irechainThunder.esm.js": "./dist/thirdweb-dev-chains-chains-_5irechainThunder.browser.esm.js"
+  }
+}

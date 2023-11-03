@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ElectroneumTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ElectroneumTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ElectroneumTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ElectroneumTestnet.browser.esm.js"
+  }
+}

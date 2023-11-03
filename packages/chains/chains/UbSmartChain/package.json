@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-UbSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-UbSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-UbSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-UbSmartChain.browser.esm.js"
+  }
+}

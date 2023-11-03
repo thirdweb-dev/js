@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BearNetworkChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BearNetworkChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BearNetworkChain.esm.js": "./dist/thirdweb-dev-chains-chains-BearNetworkChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VentionSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VentionSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VentionSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-VentionSmartChain.browser.esm.js"
+  }
+}

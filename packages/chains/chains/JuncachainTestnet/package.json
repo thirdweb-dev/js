@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-JuncachainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-JuncachainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-JuncachainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-JuncachainTestnet.browser.esm.js"
+  }
+}

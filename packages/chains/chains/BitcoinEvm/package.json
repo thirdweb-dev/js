@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BitcoinEvm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BitcoinEvm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BitcoinEvm.esm.js": "./dist/thirdweb-dev-chains-chains-BitcoinEvm.browser.esm.js"
+  }
+}

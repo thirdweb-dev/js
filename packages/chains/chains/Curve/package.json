@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Curve.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Curve.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Curve.esm.js": "./dist/thirdweb-dev-chains-chains-Curve.browser.esm.js"
+  }
+}

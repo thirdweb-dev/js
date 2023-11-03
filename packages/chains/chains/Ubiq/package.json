@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ubiq.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ubiq.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ubiq.esm.js": "./dist/thirdweb-dev-chains-chains-Ubiq.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FreightTrustNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FreightTrustNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FreightTrustNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-FreightTrustNetwork.browser.esm.js"
+  }
+}

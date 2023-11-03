@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Dogcoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Dogcoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Dogcoin.esm.js": "./dist/thirdweb-dev-chains-chains-Dogcoin.browser.esm.js"
+  }
+}

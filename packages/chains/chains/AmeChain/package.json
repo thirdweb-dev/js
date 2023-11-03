@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AmeChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AmeChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AmeChain.esm.js": "./dist/thirdweb-dev-chains-chains-AmeChain.browser.esm.js"
+  }
+}

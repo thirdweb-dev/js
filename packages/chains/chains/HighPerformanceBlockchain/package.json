@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HighPerformanceBlockchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HighPerformanceBlockchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HighPerformanceBlockchain.esm.js": "./dist/thirdweb-dev-chains-chains-HighPerformanceBlockchain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SaakuruTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SaakuruTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SaakuruTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SaakuruTestnet.browser.esm.js"
+  }
+}

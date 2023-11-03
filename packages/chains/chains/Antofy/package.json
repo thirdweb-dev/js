@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Antofy.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Antofy.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Antofy.esm.js": "./dist/thirdweb-dev-chains-chains-Antofy.browser.esm.js"
+  }
+}

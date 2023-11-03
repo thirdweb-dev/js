@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Blxq.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Blxq.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Blxq.esm.js": "./dist/thirdweb-dev-chains-chains-Blxq.browser.esm.js"
+  }
+}

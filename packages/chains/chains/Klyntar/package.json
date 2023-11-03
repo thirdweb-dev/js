@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Klyntar.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Klyntar.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Klyntar.esm.js": "./dist/thirdweb-dev-chains-chains-Klyntar.browser.esm.js"
+  }
+}

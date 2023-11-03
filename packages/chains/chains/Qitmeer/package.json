@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Qitmeer.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Qitmeer.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Qitmeer.esm.js": "./dist/thirdweb-dev-chains-chains-Qitmeer.browser.esm.js"
+  }
+}

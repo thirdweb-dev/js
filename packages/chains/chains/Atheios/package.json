@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Atheios.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Atheios.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Atheios.esm.js": "./dist/thirdweb-dev-chains-chains-Atheios.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Etica.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Etica.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Etica.esm.js": "./dist/thirdweb-dev-chains-chains-Etica.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BlgTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BlgTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BlgTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BlgTestnet.browser.esm.js"
+  }
+}

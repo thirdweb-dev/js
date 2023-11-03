@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Openchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Openchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Openchain.esm.js": "./dist/thirdweb-dev-chains-chains-Openchain.browser.esm.js"
+  }
+}

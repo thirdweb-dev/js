@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AutonityPiccadillyThamesTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AutonityPiccadillyThamesTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AutonityPiccadillyThamesTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AutonityPiccadillyThamesTestnet.browser.esm.js"
+  }
+}

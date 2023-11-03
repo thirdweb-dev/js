@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CmpTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CmpTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CmpTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CmpTestnet.browser.esm.js"
+  }
+}

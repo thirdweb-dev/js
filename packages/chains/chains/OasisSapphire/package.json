@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OasisSapphire.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OasisSapphire.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OasisSapphire.esm.js": "./dist/thirdweb-dev-chains-chains-OasisSapphire.browser.esm.js"
+  }
+}

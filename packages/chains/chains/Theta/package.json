@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Theta.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Theta.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Theta.esm.js": "./dist/thirdweb-dev-chains-chains-Theta.browser.esm.js"
+  }
+}

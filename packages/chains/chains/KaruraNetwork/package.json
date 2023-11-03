@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KaruraNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KaruraNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KaruraNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-KaruraNetwork.browser.esm.js"
+  }
+}

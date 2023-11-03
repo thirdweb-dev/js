@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EdexaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EdexaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EdexaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-EdexaTestnet.browser.esm.js"
+  }
+}

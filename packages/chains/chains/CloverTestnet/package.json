@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CloverTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CloverTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CloverTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CloverTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HooSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HooSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HooSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-HooSmartChain.browser.esm.js"
+  }
+}

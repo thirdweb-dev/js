@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BobaAvax.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BobaAvax.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BobaAvax.esm.js": "./dist/thirdweb-dev-chains-chains-BobaAvax.browser.esm.js"
+  }
+}

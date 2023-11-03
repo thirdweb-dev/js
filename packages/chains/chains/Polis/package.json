@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Polis.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Polis.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Polis.esm.js": "./dist/thirdweb-dev-chains-chains-Polis.browser.esm.js"
+  }
+}

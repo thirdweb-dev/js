@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FilecoinCalibrationTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FilecoinCalibrationTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FilecoinCalibrationTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FilecoinCalibrationTestnet.browser.esm.js"
+  }
+}

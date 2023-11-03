@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Web3qGalileo.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Web3qGalileo.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Web3qGalileo.esm.js": "./dist/thirdweb-dev-chains-chains-Web3qGalileo.browser.esm.js"
+  }
+}

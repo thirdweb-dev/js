@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BobaBnbOld.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BobaBnbOld.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BobaBnbOld.esm.js": "./dist/thirdweb-dev-chains-chains-BobaBnbOld.browser.esm.js"
+  }
+}

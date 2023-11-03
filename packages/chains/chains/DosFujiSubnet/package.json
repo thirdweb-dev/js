@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DosFujiSubnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DosFujiSubnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DosFujiSubnet.esm.js": "./dist/thirdweb-dev-chains-chains-DosFujiSubnet.browser.esm.js"
+  }
+}

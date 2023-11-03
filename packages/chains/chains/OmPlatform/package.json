@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OmPlatform.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OmPlatform.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OmPlatform.esm.js": "./dist/thirdweb-dev-chains-chains-OmPlatform.browser.esm.js"
+  }
+}

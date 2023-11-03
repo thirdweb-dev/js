@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Metaplayerone.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Metaplayerone.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Metaplayerone.esm.js": "./dist/thirdweb-dev-chains-chains-Metaplayerone.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-P12Chain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-P12Chain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-P12Chain.esm.js": "./dist/thirdweb-dev-chains-chains-P12Chain.browser.esm.js"
+  }
+}

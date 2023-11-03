@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ExzoNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ExzoNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ExzoNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-ExzoNetwork.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Arbitrum.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Arbitrum.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Arbitrum.esm.js": "./dist/thirdweb-dev-chains-chains-Arbitrum.browser.esm.js"
+  }
+}

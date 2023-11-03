@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ConfluxEspaceTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ConfluxEspaceTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ConfluxEspaceTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ConfluxEspaceTestnet.browser.esm.js"
+  }
+}

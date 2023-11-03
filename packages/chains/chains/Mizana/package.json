@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Mizana.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Mizana.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Mizana.esm.js": "./dist/thirdweb-dev-chains-chains-Mizana.browser.esm.js"
+  }
+}

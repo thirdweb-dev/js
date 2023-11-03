@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Primuschain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Primuschain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Primuschain.esm.js": "./dist/thirdweb-dev-chains-chains-Primuschain.browser.esm.js"
+  }
+}

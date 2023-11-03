@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-NautilusTritionChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-NautilusTritionChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-NautilusTritionChain.esm.js": "./dist/thirdweb-dev-chains-chains-NautilusTritionChain.browser.esm.js"
+  }
+}

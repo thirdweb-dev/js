@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Kortho.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Kortho.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Kortho.esm.js": "./dist/thirdweb-dev-chains-chains-Kortho.browser.esm.js"
+  }
+}

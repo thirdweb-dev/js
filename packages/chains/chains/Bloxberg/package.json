@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bloxberg.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bloxberg.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bloxberg.esm.js": "./dist/thirdweb-dev-chains-chains-Bloxberg.browser.esm.js"
+  }
+}

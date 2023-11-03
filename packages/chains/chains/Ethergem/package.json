@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ethergem.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ethergem.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ethergem.esm.js": "./dist/thirdweb-dev-chains-chains-Ethergem.browser.esm.js"
+  }
+}

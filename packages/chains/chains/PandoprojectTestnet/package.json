@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PandoprojectTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PandoprojectTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PandoprojectTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PandoprojectTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OortAscraeus.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OortAscraeus.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OortAscraeus.esm.js": "./dist/thirdweb-dev-chains-chains-OortAscraeus.browser.esm.js"
+  }
+}

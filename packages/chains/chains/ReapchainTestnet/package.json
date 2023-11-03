@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ReapchainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ReapchainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ReapchainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ReapchainTestnet.browser.esm.js"
+  }
+}

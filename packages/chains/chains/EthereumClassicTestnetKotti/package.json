@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EthereumClassicTestnetKotti.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EthereumClassicTestnetKotti.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EthereumClassicTestnetKotti.esm.js": "./dist/thirdweb-dev-chains-chains-EthereumClassicTestnetKotti.browser.esm.js"
+  }
+}

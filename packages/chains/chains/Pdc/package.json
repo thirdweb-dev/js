@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Pdc.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Pdc.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Pdc.esm.js": "./dist/thirdweb-dev-chains-chains-Pdc.browser.esm.js"
+  }
+}

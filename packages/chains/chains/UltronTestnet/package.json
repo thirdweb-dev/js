@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-UltronTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-UltronTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-UltronTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-UltronTestnet.browser.esm.js"
+  }
+}

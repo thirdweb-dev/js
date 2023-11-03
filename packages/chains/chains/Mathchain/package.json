@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Mathchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Mathchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Mathchain.esm.js": "./dist/thirdweb-dev-chains-chains-Mathchain.browser.esm.js"
+  }
+}

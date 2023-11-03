@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Kerleano.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Kerleano.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Kerleano.esm.js": "./dist/thirdweb-dev-chains-chains-Kerleano.browser.esm.js"
+  }
+}

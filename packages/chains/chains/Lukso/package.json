@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Lukso.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Lukso.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Lukso.esm.js": "./dist/thirdweb-dev-chains-chains-Lukso.browser.esm.js"
+  }
+}

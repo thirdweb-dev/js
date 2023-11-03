@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CatecoinChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CatecoinChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CatecoinChain.esm.js": "./dist/thirdweb-dev-chains-chains-CatecoinChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Botanix.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Botanix.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Botanix.esm.js": "./dist/thirdweb-dev-chains-chains-Botanix.browser.esm.js"
+  }
+}

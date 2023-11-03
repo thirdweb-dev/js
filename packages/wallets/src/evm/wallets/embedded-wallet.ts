@@ -1,5 +1,5 @@
-import { getValidChainRPCs } from "@thirdweb-dev/chains/src/utils";
-import Ethereum from "@thirdweb-dev/chains/chains/1";
+import { getValidChainRPCs } from "@thirdweb-dev/chains/utils";
+import Ethereum from "@thirdweb-dev/chains/chains/Ethereum";
 import type { EmbeddedWalletConnector } from "../connectors/embedded-wallet";
 import {
   AuthParams,

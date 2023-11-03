@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BlockchainGenesis.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BlockchainGenesis.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BlockchainGenesis.esm.js": "./dist/thirdweb-dev-chains-chains-BlockchainGenesis.browser.esm.js"
+  }
+}

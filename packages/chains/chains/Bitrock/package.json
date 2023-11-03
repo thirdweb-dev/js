@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bitrock.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bitrock.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bitrock.esm.js": "./dist/thirdweb-dev-chains-chains-Bitrock.browser.esm.js"
+  }
+}

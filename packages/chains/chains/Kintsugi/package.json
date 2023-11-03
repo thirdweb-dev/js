@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Kintsugi.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Kintsugi.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Kintsugi.esm.js": "./dist/thirdweb-dev-chains-chains-Kintsugi.browser.esm.js"
+  }
+}

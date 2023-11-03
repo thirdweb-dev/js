@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Neonlink.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Neonlink.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Neonlink.esm.js": "./dist/thirdweb-dev-chains-chains-Neonlink.browser.esm.js"
+  }
+}

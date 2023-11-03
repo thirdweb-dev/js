@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MolereumNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MolereumNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MolereumNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-MolereumNetwork.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ShardeumSphinx1X.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ShardeumSphinx1X.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ShardeumSphinx1X.esm.js": "./dist/thirdweb-dev-chains-chains-ShardeumSphinx1X.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LaosArrakis.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LaosArrakis.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LaosArrakis.esm.js": "./dist/thirdweb-dev-chains-chains-LaosArrakis.browser.esm.js"
+  }
+}

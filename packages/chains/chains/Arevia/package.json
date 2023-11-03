@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Arevia.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Arevia.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Arevia.esm.js": "./dist/thirdweb-dev-chains-chains-Arevia.browser.esm.js"
+  }
+}

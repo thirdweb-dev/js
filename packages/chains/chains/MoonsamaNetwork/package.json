@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MoonsamaNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MoonsamaNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MoonsamaNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-MoonsamaNetwork.browser.esm.js"
+  }
+}

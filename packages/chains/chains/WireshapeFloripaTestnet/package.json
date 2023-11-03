@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-WireshapeFloripaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-WireshapeFloripaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-WireshapeFloripaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-WireshapeFloripaTestnet.browser.esm.js"
+  }
+}

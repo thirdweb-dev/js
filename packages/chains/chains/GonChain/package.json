@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GonChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GonChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GonChain.esm.js": "./dist/thirdweb-dev-chains-chains-GonChain.browser.esm.js"
+  }
+}

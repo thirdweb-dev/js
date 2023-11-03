@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AmanaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AmanaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AmanaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AmanaTestnet.browser.esm.js"
+  }
+}

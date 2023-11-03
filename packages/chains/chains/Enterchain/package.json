@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Enterchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Enterchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Enterchain.esm.js": "./dist/thirdweb-dev-chains-chains-Enterchain.browser.esm.js"
+  }
+}

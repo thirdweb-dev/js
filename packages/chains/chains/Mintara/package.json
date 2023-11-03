@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Mintara.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Mintara.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Mintara.esm.js": "./dist/thirdweb-dev-chains-chains-Mintara.browser.esm.js"
+  }
+}

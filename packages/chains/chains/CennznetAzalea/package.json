@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CennznetAzalea.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CennznetAzalea.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CennznetAzalea.esm.js": "./dist/thirdweb-dev-chains-chains-CennznetAzalea.browser.esm.js"
+  }
+}

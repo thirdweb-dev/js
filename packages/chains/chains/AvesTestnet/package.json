@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AvesTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AvesTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AvesTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AvesTestnet.browser.esm.js"
+  }
+}

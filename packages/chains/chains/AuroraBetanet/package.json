@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AuroraBetanet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AuroraBetanet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AuroraBetanet.esm.js": "./dist/thirdweb-dev-chains-chains-AuroraBetanet.browser.esm.js"
+  }
+}

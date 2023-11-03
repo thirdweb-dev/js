@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DfkChainTest.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DfkChainTest.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DfkChainTest.esm.js": "./dist/thirdweb-dev-chains-chains-DfkChainTest.browser.esm.js"
+  }
+}

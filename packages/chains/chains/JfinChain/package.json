@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-JfinChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-JfinChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-JfinChain.esm.js": "./dist/thirdweb-dev-chains-chains-JfinChain.browser.esm.js"
+  }
+}

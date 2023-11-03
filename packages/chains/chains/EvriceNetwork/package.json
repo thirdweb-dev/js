@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EvriceNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EvriceNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EvriceNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-EvriceNetwork.browser.esm.js"
+  }
+}

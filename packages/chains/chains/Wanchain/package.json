@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Wanchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Wanchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Wanchain.esm.js": "./dist/thirdweb-dev-chains-chains-Wanchain.browser.esm.js"
+  }
+}

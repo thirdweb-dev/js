@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BrcChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BrcChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BrcChain.esm.js": "./dist/thirdweb-dev-chains-chains-BrcChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KccTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KccTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KccTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-KccTestnet.browser.esm.js"
+  }
+}

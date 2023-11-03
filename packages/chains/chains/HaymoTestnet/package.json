@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HaymoTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HaymoTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HaymoTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HaymoTestnet.browser.esm.js"
+  }
+}

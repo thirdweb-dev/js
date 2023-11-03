@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AiaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AiaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AiaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AiaTestnet.browser.esm.js"
+  }
+}

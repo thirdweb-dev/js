@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SocialSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SocialSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SocialSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-SocialSmartChain.browser.esm.js"
+  }
+}

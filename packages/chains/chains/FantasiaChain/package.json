@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FantasiaChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FantasiaChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FantasiaChain.esm.js": "./dist/thirdweb-dev-chains-chains-FantasiaChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ShrapnelTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ShrapnelTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ShrapnelTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ShrapnelTestnet.browser.esm.js"
+  }
+}

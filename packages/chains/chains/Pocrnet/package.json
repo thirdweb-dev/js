@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Pocrnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Pocrnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Pocrnet.esm.js": "./dist/thirdweb-dev-chains-chains-Pocrnet.browser.esm.js"
+  }
+}

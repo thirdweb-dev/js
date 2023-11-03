@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Openvessel.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Openvessel.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Openvessel.esm.js": "./dist/thirdweb-dev-chains-chains-Openvessel.browser.esm.js"
+  }
+}

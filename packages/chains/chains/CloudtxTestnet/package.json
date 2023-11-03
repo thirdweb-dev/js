@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CloudtxTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CloudtxTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CloudtxTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CloudtxTestnet.browser.esm.js"
+  }
+}

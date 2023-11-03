@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SingularityZeroTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SingularityZeroTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SingularityZeroTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SingularityZeroTestnet.browser.esm.js"
+  }
+}

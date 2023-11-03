@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EcreditsTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EcreditsTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EcreditsTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-EcreditsTestnet.browser.esm.js"
+  }
+}

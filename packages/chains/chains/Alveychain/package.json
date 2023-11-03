@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Alveychain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Alveychain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Alveychain.esm.js": "./dist/thirdweb-dev-chains-chains-Alveychain.browser.esm.js"
+  }
+}

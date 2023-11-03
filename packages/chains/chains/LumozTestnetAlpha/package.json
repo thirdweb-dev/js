@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LumozTestnetAlpha.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LumozTestnetAlpha.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LumozTestnetAlpha.esm.js": "./dist/thirdweb-dev-chains-chains-LumozTestnetAlpha.browser.esm.js"
+  }
+}

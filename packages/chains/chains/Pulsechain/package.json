@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Pulsechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Pulsechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Pulsechain.esm.js": "./dist/thirdweb-dev-chains-chains-Pulsechain.browser.esm.js"
+  }
+}

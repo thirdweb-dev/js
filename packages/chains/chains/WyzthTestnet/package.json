@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-WyzthTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-WyzthTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-WyzthTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-WyzthTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bitnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bitnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bitnet.esm.js": "./dist/thirdweb-dev-chains-chains-Bitnet.browser.esm.js"
+  }
+}

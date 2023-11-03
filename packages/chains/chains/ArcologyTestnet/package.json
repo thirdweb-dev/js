@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ArcologyTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ArcologyTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ArcologyTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ArcologyTestnet.browser.esm.js"
+  }
+}

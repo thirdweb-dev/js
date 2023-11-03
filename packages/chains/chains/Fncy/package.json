@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Fncy.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Fncy.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Fncy.esm.js": "./dist/thirdweb-dev-chains-chains-Fncy.browser.esm.js"
+  }
+}

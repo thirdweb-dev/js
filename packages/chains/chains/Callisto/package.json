@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Callisto.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Callisto.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Callisto.esm.js": "./dist/thirdweb-dev-chains-chains-Callisto.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DefiOracleMeta.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DefiOracleMeta.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DefiOracleMeta.esm.js": "./dist/thirdweb-dev-chains-chains-DefiOracleMeta.browser.esm.js"
+  }
+}

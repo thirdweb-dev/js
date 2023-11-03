@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AuroraTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AuroraTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AuroraTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AuroraTestnet.browser.esm.js"
+  }
+}

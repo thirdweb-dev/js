@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MiexsSmartchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MiexsSmartchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MiexsSmartchain.esm.js": "./dist/thirdweb-dev-chains-chains-MiexsSmartchain.browser.esm.js"
+  }
+}

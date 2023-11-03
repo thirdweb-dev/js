@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DefiOracleMetaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DefiOracleMetaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DefiOracleMetaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DefiOracleMetaTestnet.browser.esm.js"
+  }
+}

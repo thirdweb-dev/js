@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Qeasyweb3Testnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Qeasyweb3Testnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Qeasyweb3Testnet.esm.js": "./dist/thirdweb-dev-chains-chains-Qeasyweb3Testnet.browser.esm.js"
+  }
+}

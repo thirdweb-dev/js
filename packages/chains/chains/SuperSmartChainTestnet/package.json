@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SuperSmartChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SuperSmartChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SuperSmartChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SuperSmartChainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FrameTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FrameTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FrameTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FrameTestnet.browser.esm.js"
+  }
+}

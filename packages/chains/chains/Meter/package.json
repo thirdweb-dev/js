@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Meter.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Meter.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Meter.esm.js": "./dist/thirdweb-dev-chains-chains-Meter.browser.esm.js"
+  }
+}

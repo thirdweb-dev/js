@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ZMainnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ZMainnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ZMainnet.esm.js": "./dist/thirdweb-dev-chains-chains-ZMainnet.browser.esm.js"
+  }
+}

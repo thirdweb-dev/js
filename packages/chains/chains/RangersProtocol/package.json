@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-RangersProtocol.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-RangersProtocol.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-RangersProtocol.esm.js": "./dist/thirdweb-dev-chains-chains-RangersProtocol.browser.esm.js"
+  }
+}

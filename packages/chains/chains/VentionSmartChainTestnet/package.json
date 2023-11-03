@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VentionSmartChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VentionSmartChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VentionSmartChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-VentionSmartChainTestnet.browser.esm.js"
+  }
+}

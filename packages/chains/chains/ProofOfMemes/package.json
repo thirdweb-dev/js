@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ProofOfMemes.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ProofOfMemes.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ProofOfMemes.esm.js": "./dist/thirdweb-dev-chains-chains-ProofOfMemes.browser.esm.js"
+  }
+}

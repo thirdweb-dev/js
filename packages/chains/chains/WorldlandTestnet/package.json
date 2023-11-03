@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-WorldlandTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-WorldlandTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-WorldlandTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-WorldlandTestnet.browser.esm.js"
+  }
+}

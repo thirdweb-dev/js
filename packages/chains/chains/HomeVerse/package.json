@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HomeVerse.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HomeVerse.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HomeVerse.esm.js": "./dist/thirdweb-dev-chains-chains-HomeVerse.browser.esm.js"
+  }
+}

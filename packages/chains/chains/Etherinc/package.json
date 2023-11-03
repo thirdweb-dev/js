@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Etherinc.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Etherinc.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Etherinc.esm.js": "./dist/thirdweb-dev-chains-chains-Etherinc.browser.esm.js"
+  }
+}

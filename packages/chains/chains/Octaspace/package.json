@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Octaspace.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Octaspace.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Octaspace.esm.js": "./dist/thirdweb-dev-chains-chains-Octaspace.browser.esm.js"
+  }
+}

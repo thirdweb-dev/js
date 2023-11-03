@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HammerChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HammerChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HammerChain.esm.js": "./dist/thirdweb-dev-chains-chains-HammerChain.browser.esm.js"
+  }
+}

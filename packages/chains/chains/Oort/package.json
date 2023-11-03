@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Oort.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Oort.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Oort.esm.js": "./dist/thirdweb-dev-chains-chains-Oort.browser.esm.js"
+  }
+}

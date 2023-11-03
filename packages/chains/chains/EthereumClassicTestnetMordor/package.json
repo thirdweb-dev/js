@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EthereumClassicTestnetMordor.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EthereumClassicTestnetMordor.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EthereumClassicTestnetMordor.esm.js": "./dist/thirdweb-dev-chains-chains-EthereumClassicTestnetMordor.browser.esm.js"
+  }
+}

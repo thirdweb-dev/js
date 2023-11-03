@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Xgon.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Xgon.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Xgon.esm.js": "./dist/thirdweb-dev-chains-chains-Xgon.browser.esm.js"
+  }
+}

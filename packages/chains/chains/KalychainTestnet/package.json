@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KalychainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KalychainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KalychainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-KalychainTestnet.browser.esm.js"
+  }
+}

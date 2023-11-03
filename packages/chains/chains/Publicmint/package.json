@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Publicmint.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Publicmint.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Publicmint.esm.js": "./dist/thirdweb-dev-chains-chains-Publicmint.browser.esm.js"
+  }
+}

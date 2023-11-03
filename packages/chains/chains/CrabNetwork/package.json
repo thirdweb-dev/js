@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CrabNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CrabNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CrabNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-CrabNetwork.browser.esm.js"
+  }
+}

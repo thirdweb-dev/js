@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OptimismBedrockGoerliAlphaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OptimismBedrockGoerliAlphaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OptimismBedrockGoerliAlphaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-OptimismBedrockGoerliAlphaTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ZoraTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ZoraTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ZoraTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ZoraTestnet.browser.esm.js"
+  }
+}

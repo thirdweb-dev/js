@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Zilliqa2EvmDevnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Zilliqa2EvmDevnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Zilliqa2EvmDevnet.esm.js": "./dist/thirdweb-dev-chains-chains-Zilliqa2EvmDevnet.browser.esm.js"
+  }
+}

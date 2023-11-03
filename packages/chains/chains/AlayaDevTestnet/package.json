@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AlayaDevTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AlayaDevTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AlayaDevTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AlayaDevTestnet.browser.esm.js"
+  }
+}

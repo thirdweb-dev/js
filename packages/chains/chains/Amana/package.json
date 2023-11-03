@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Amana.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Amana.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Amana.esm.js": "./dist/thirdweb-dev-chains-chains-Amana.browser.esm.js"
+  }
+}

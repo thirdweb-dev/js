@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Neurochain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Neurochain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Neurochain.esm.js": "./dist/thirdweb-dev-chains-chains-Neurochain.browser.esm.js"
+  }
+}

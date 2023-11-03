@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DefichainEvmNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DefichainEvmNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DefichainEvmNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-DefichainEvmNetwork.browser.esm.js"
+  }
+}

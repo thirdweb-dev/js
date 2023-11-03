@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Altcoinchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Altcoinchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Altcoinchain.esm.js": "./dist/thirdweb-dev-chains-chains-Altcoinchain.browser.esm.js"
+  }
+}

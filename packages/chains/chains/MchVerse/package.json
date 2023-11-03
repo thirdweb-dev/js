@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MchVerse.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MchVerse.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MchVerse.esm.js": "./dist/thirdweb-dev-chains-chains-MchVerse.browser.esm.js"
+  }
+}

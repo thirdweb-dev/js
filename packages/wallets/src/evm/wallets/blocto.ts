@@ -2,7 +2,7 @@ import { Connector, WagmiAdapter } from "../interfaces/connector";
 import { AbstractClientWallet, WalletMeta, WalletOptions } from "./base";
 import { walletIds } from "../constants/walletIds";
 import type { Chain } from "@thirdweb-dev/chains";
-import { updateChainRPCs } from "@thirdweb-dev/chains/src/utils";
+import { updateChainRPCs } from "@thirdweb-dev/chains/utils";
 
 type BloctoOptions = {
   appId?: string;

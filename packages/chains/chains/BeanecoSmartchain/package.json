@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BeanecoSmartchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BeanecoSmartchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BeanecoSmartchain.esm.js": "./dist/thirdweb-dev-chains-chains-BeanecoSmartchain.browser.esm.js"
+  }
+}

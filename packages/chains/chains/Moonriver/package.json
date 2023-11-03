@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Moonriver.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Moonriver.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Moonriver.esm.js": "./dist/thirdweb-dev-chains-chains-Moonriver.browser.esm.js"
+  }
+}

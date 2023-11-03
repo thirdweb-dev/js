@@ -3,9 +3,9 @@ import { Connector } from "../interfaces/connector";
 import { walletIds } from "../constants/walletIds";
 import { AbstractClientWallet, WalletOptions } from "./base";
 import type { Chain } from "@thirdweb-dev/chains";
-import { updateChainRPCs } from "@thirdweb-dev/chains/src/utils";
-import Ethereum from "@thirdweb-dev/chains/chains/1";
-import { defaultChains } from "@thirdweb-dev/chains/src/constants";
+import { updateChainRPCs } from "@thirdweb-dev/chains/utils";
+import Ethereum from "@thirdweb-dev/chains/chains/Ethereum";
+import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
 import { Signer } from "ethers";
 
 export type SignerWalletAdditionalOptions = {

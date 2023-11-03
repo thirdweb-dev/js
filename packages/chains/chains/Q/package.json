@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Q.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Q.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Q.esm.js": "./dist/thirdweb-dev-chains-chains-Q.browser.esm.js"
+  }
+}

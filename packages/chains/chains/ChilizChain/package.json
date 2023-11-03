@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ChilizChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ChilizChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ChilizChain.esm.js": "./dist/thirdweb-dev-chains-chains-ChilizChain.browser.esm.js"
+  }
+}

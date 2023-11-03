@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BombChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BombChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BombChain.esm.js": "./dist/thirdweb-dev-chains-chains-BombChain.browser.esm.js"
+  }
+}

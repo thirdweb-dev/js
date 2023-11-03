@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OasisEmerald.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OasisEmerald.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OasisEmerald.esm.js": "./dist/thirdweb-dev-chains-chains-OasisEmerald.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Opbnb.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Opbnb.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Opbnb.esm.js": "./dist/thirdweb-dev-chains-chains-Opbnb.browser.esm.js"
+  }
+}

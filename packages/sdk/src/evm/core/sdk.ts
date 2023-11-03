@@ -26,7 +26,7 @@ import type {
 import type { NetworkInput, ChainOrRpcUrl } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
 import type { Chain } from "@thirdweb-dev/chains";
-import { defaultChains } from "@thirdweb-dev/chains/src/constants";
+import { defaultChains } from "@thirdweb-dev/chains/defaultChains";
 
 import { ContractAddress, GENERATED_ABI } from "@thirdweb-dev/generated-abis";
 import { IThirdwebStorage, ThirdwebStorage } from "@thirdweb-dev/storage";

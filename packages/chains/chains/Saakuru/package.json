@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Saakuru.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Saakuru.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Saakuru.esm.js": "./dist/thirdweb-dev-chains-chains-Saakuru.browser.esm.js"
+  }
+}

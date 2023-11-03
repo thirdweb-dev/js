@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-JoysDigital.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-JoysDigital.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-JoysDigital.esm.js": "./dist/thirdweb-dev-chains-chains-JoysDigital.browser.esm.js"
+  }
+}

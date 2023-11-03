@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SportsChainNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SportsChainNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SportsChainNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-SportsChainNetwork.browser.esm.js"
+  }
+}

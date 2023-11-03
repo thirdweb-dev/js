@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Idchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Idchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Idchain.esm.js": "./dist/thirdweb-dev-chains-chains-Idchain.browser.esm.js"
+  }
+}

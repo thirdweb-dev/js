@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SoverunTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SoverunTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SoverunTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SoverunTestnet.browser.esm.js"
+  }
+}

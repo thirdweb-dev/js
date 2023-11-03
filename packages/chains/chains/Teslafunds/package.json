@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Teslafunds.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Teslafunds.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Teslafunds.esm.js": "./dist/thirdweb-dev-chains-chains-Teslafunds.browser.esm.js"
+  }
+}

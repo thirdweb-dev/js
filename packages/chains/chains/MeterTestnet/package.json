@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MeterTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MeterTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MeterTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MeterTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EthereumFair.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EthereumFair.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EthereumFair.esm.js": "./dist/thirdweb-dev-chains-chains-EthereumFair.browser.esm.js"
+  }
+}

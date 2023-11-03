@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Wagmi.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Wagmi.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Wagmi.esm.js": "./dist/thirdweb-dev-chains-chains-Wagmi.browser.esm.js"
+  }
+}

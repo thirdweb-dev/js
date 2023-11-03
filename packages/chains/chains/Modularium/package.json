@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Modularium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Modularium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Modularium.esm.js": "./dist/thirdweb-dev-chains-chains-Modularium.browser.esm.js"
+  }
+}

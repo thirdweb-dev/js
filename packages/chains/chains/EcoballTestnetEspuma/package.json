@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EcoballTestnetEspuma.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EcoballTestnetEspuma.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EcoballTestnetEspuma.esm.js": "./dist/thirdweb-dev-chains-chains-EcoballTestnetEspuma.browser.esm.js"
+  }
+}

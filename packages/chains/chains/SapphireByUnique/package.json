@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SapphireByUnique.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SapphireByUnique.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SapphireByUnique.esm.js": "./dist/thirdweb-dev-chains-chains-SapphireByUnique.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Swapdex.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Swapdex.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Swapdex.esm.js": "./dist/thirdweb-dev-chains-chains-Swapdex.browser.esm.js"
+  }
+}

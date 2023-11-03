@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MetachainOne.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MetachainOne.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MetachainOne.esm.js": "./dist/thirdweb-dev-chains-chains-MetachainOne.browser.esm.js"
+  }
+}

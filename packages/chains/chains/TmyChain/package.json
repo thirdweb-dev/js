@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TmyChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TmyChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TmyChain.esm.js": "./dist/thirdweb-dev-chains-chains-TmyChain.browser.esm.js"
+  }
+}

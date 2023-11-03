@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SenjepowersTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SenjepowersTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SenjepowersTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SenjepowersTestnet.browser.esm.js"
+  }
+}

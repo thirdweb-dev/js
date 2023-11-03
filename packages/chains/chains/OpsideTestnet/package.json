@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OpsideTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OpsideTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OpsideTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-OpsideTestnet.browser.esm.js"
+  }
+}

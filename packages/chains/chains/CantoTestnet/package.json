@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CantoTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CantoTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CantoTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CantoTestnet.browser.esm.js"
+  }
+}

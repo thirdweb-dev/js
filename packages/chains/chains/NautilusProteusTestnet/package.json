@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-NautilusProteusTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-NautilusProteusTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-NautilusProteusTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-NautilusProteusTestnet.browser.esm.js"
+  }
+}

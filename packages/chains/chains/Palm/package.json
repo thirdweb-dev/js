@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Palm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Palm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Palm.esm.js": "./dist/thirdweb-dev-chains-chains-Palm.browser.esm.js"
+  }
+}

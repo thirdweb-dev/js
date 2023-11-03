@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Kekchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Kekchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Kekchain.esm.js": "./dist/thirdweb-dev-chains-chains-Kekchain.browser.esm.js"
+  }
+}

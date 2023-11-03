@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bahamut.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bahamut.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bahamut.esm.js": "./dist/thirdweb-dev-chains-chains-Bahamut.browser.esm.js"
+  }
+}

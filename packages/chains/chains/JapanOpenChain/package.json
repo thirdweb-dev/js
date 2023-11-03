@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-JapanOpenChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-JapanOpenChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-JapanOpenChain.esm.js": "./dist/thirdweb-dev-chains-chains-JapanOpenChain.browser.esm.js"
+  }
+}

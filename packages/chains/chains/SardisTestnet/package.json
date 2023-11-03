@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SardisTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SardisTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SardisTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-SardisTestnet.browser.esm.js"
+  }
+}

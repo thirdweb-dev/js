@@ -10,6 +10,7 @@ async function sync() {
   const allChainsInDB = json.data as ApiChain[];
 
   const chainsDir = "./chains";
+  const srcChainsDir = "./src/chains";
   // clean out the chains directory
   await fs.rmdir(chainsDir, { recursive: true });
   // make sure the chain directory exists
@@ -51,6 +52,16 @@ export default ${JSON.stringify(
       if (exportName.match(/^[0-9]/)) {
         exportName = `_${exportName}`;
       }
+
+      await fs.writeFile(
+        `${srcChainsDir}/${exportName}.ts`,
+        `import type { Chain } from "../types";
+export default ${JSON.stringify(
+          sortedChain,
+          null,
+          2,
+        )} as const satisfies Chain;`,
+      );
 
       const key = `c${sortedChain.chainId}`;
 

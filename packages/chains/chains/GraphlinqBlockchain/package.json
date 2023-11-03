@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GraphlinqBlockchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GraphlinqBlockchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GraphlinqBlockchain.esm.js": "./dist/thirdweb-dev-chains-chains-GraphlinqBlockchain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DynoTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DynoTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DynoTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DynoTestnet.browser.esm.js"
+  }
+}

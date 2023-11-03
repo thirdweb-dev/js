@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-IexecSidechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-IexecSidechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-IexecSidechain.esm.js": "./dist/thirdweb-dev-chains-chains-IexecSidechain.browser.esm.js"
+  }
+}

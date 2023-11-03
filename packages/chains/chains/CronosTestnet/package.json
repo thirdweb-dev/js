@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CronosTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CronosTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CronosTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-CronosTestnet.browser.esm.js"
+  }
+}

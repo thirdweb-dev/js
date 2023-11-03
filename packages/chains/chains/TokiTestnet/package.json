@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TokiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TokiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TokiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TokiTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BobafujiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BobafujiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BobafujiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BobafujiTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FastexChainBahamutOasisTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FastexChainBahamutOasisTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FastexChainBahamutOasisTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-FastexChainBahamutOasisTestnet.browser.esm.js"
+  }
+}

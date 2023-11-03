@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Oasischain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Oasischain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Oasischain.esm.js": "./dist/thirdweb-dev-chains-chains-Oasischain.browser.esm.js"
+  }
+}

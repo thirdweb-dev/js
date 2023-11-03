@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CubeChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CubeChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CubeChain.esm.js": "./dist/thirdweb-dev-chains-chains-CubeChain.browser.esm.js"
+  }
+}

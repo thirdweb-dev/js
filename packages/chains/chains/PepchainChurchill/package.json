@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PepchainChurchill.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PepchainChurchill.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PepchainChurchill.esm.js": "./dist/thirdweb-dev-chains-chains-PepchainChurchill.browser.esm.js"
+  }
+}

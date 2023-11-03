@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DexitNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DexitNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DexitNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-DexitNetwork.browser.esm.js"
+  }
+}

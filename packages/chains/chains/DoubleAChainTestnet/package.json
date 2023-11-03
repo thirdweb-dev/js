@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DoubleAChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DoubleAChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DoubleAChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DoubleAChainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PawchainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PawchainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PawchainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PawchainTestnet.browser.esm.js"
+  }
+}

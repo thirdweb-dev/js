@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ImversedTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ImversedTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ImversedTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ImversedTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EuropaSkaleChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EuropaSkaleChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EuropaSkaleChain.esm.js": "./dist/thirdweb-dev-chains-chains-EuropaSkaleChain.browser.esm.js"
+  }
+}

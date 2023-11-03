@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MeverseChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MeverseChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MeverseChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MeverseChainTestnet.browser.esm.js"
+  }
+}

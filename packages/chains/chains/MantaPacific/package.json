@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MantaPacific.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MantaPacific.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MantaPacific.esm.js": "./dist/thirdweb-dev-chains-chains-MantaPacific.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-FlareTestnetCoston.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-FlareTestnetCoston.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-FlareTestnetCoston.esm.js": "./dist/thirdweb-dev-chains-chains-FlareTestnetCoston.browser.esm.js"
+  }
+}

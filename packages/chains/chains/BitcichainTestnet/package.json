@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BitcichainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BitcichainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BitcichainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BitcichainTestnet.browser.esm.js"
+  }
+}

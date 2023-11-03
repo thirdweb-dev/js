@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GenesisCoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GenesisCoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GenesisCoin.esm.js": "./dist/thirdweb-dev-chains-chains-GenesisCoin.browser.esm.js"
+  }
+}

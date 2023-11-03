@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ModeTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ModeTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ModeTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ModeTestnet.browser.esm.js"
+  }
+}

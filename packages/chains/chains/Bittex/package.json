@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bittex.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bittex.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bittex.esm.js": "./dist/thirdweb-dev-chains-chains-Bittex.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TectumEmissionToken.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TectumEmissionToken.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TectumEmissionToken.esm.js": "./dist/thirdweb-dev-chains-chains-TectumEmissionToken.browser.esm.js"
+  }
+}

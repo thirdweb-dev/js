@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Soterone.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Soterone.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Soterone.esm.js": "./dist/thirdweb-dev-chains-chains-Soterone.browser.esm.js"
+  }
+}

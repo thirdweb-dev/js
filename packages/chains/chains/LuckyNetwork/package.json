@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LuckyNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LuckyNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LuckyNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-LuckyNetwork.browser.esm.js"
+  }
+}

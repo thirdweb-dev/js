@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MoacTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MoacTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MoacTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MoacTestnet.browser.esm.js"
+  }
+}

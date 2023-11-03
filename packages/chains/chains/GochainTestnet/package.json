@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-GochainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-GochainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-GochainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-GochainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SixProtocol.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SixProtocol.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SixProtocol.esm.js": "./dist/thirdweb-dev-chains-chains-SixProtocol.browser.esm.js"
+  }
+}

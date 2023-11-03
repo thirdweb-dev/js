@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OoneChainDevnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OoneChainDevnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OoneChainDevnet.esm.js": "./dist/thirdweb-dev-chains-chains-OoneChainDevnet.browser.esm.js"
+  }
+}

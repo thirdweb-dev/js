@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Camdl.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Camdl.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Camdl.esm.js": "./dist/thirdweb-dev-chains-chains-Camdl.browser.esm.js"
+  }
+}

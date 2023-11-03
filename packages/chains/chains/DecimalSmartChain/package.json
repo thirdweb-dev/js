@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DecimalSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DecimalSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DecimalSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-DecimalSmartChain.browser.esm.js"
+  }
+}

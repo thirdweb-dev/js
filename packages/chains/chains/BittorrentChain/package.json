@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BittorrentChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BittorrentChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BittorrentChain.esm.js": "./dist/thirdweb-dev-chains-chains-BittorrentChain.browser.esm.js"
+  }
+}

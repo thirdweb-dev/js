@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Sps.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Sps.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Sps.esm.js": "./dist/thirdweb-dev-chains-chains-Sps.browser.esm.js"
+  }
+}

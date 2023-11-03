@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BitfinityNetworkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BitfinityNetworkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BitfinityNetworkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BitfinityNetworkTestnet.browser.esm.js"
+  }
+}

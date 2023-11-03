@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TreasurenetTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TreasurenetTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TreasurenetTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TreasurenetTestnet.browser.esm.js"
+  }
+}

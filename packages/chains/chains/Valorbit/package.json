@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Valorbit.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Valorbit.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Valorbit.esm.js": "./dist/thirdweb-dev-chains-chains-Valorbit.browser.esm.js"
+  }
+}

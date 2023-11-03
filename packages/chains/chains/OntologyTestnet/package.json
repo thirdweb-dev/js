@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OntologyTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OntologyTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OntologyTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-OntologyTestnet.browser.esm.js"
+  }
+}

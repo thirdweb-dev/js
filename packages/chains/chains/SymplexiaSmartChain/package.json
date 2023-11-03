@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-SymplexiaSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-SymplexiaSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-SymplexiaSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-SymplexiaSmartChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PaletteChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PaletteChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PaletteChain.esm.js": "./dist/thirdweb-dev-chains-chains-PaletteChain.browser.esm.js"
+  }
+}

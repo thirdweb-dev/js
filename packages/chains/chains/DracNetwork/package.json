@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DracNetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DracNetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DracNetwork.esm.js": "./dist/thirdweb-dev-chains-chains-DracNetwork.browser.esm.js"
+  }
+}

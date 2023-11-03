@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ObscuroTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ObscuroTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ObscuroTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ObscuroTestnet.browser.esm.js"
+  }
+}

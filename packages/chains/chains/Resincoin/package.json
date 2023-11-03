@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Resincoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Resincoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Resincoin.esm.js": "./dist/thirdweb-dev-chains-chains-Resincoin.browser.esm.js"
+  }
+}

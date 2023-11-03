@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Factory127.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Factory127.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Factory127.esm.js": "./dist/thirdweb-dev-chains-chains-Factory127.browser.esm.js"
+  }
+}

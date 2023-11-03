@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Pop.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Pop.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Pop.esm.js": "./dist/thirdweb-dev-chains-chains-Pop.browser.esm.js"
+  }
+}

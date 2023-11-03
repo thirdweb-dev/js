@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OeblockTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OeblockTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OeblockTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-OeblockTestnet.browser.esm.js"
+  }
+}

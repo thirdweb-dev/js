@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TbwgChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TbwgChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TbwgChain.esm.js": "./dist/thirdweb-dev-chains-chains-TbwgChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EdgewareEdgeevm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EdgewareEdgeevm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EdgewareEdgeevm.esm.js": "./dist/thirdweb-dev-chains-chains-EdgewareEdgeevm.browser.esm.js"
+  }
+}

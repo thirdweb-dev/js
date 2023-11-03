@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Hedera.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Hedera.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Hedera.esm.js": "./dist/thirdweb-dev-chains-chains-Hedera.browser.esm.js"
+  }
+}

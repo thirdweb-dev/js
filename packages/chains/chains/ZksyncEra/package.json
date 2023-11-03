@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ZksyncEra.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ZksyncEra.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ZksyncEra.esm.js": "./dist/thirdweb-dev-chains-chains-ZksyncEra.browser.esm.js"
+  }
+}

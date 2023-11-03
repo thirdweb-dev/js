@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Venidium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Venidium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Venidium.esm.js": "./dist/thirdweb-dev-chains-chains-Venidium.browser.esm.js"
+  }
+}

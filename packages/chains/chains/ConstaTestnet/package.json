@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ConstaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ConstaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ConstaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ConstaTestnet.browser.esm.js"
+  }
+}

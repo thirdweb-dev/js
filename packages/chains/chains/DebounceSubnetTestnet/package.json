@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DebounceSubnetTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DebounceSubnetTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DebounceSubnetTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DebounceSubnetTestnet.browser.esm.js"
+  }
+}

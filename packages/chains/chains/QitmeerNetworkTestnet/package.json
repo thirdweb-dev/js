@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-QitmeerNetworkTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-QitmeerNetworkTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-QitmeerNetworkTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-QitmeerNetworkTestnet.browser.esm.js"
+  }
+}

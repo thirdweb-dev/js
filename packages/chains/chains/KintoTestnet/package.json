@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-KintoTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-KintoTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-KintoTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-KintoTestnet.browser.esm.js"
+  }
+}

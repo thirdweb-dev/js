@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AxelchainDevNet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AxelchainDevNet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AxelchainDevNet.esm.js": "./dist/thirdweb-dev-chains-chains-AxelchainDevNet.browser.esm.js"
+  }
+}

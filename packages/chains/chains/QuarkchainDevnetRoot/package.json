@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-QuarkchainDevnetRoot.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-QuarkchainDevnetRoot.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-QuarkchainDevnetRoot.esm.js": "./dist/thirdweb-dev-chains-chains-QuarkchainDevnetRoot.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HederaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HederaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HederaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HederaTestnet.browser.esm.js"
+  }
+}

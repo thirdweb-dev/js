@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BitindiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BitindiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BitindiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BitindiTestnet.browser.esm.js"
+  }
+}

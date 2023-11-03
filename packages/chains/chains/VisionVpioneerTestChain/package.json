@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-VisionVpioneerTestChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-VisionVpioneerTestChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-VisionVpioneerTestChain.esm.js": "./dist/thirdweb-dev-chains-chains-VisionVpioneerTestChain.browser.esm.js"
+  }
+}

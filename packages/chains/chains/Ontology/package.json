@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Ontology.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Ontology.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Ontology.esm.js": "./dist/thirdweb-dev-chains-chains-Ontology.browser.esm.js"
+  }
+}

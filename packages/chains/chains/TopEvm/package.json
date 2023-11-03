@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TopEvm.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TopEvm.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TopEvm.esm.js": "./dist/thirdweb-dev-chains-chains-TopEvm.browser.esm.js"
+  }
+}

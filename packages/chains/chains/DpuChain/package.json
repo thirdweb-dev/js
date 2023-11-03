@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DpuChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DpuChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DpuChain.esm.js": "./dist/thirdweb-dev-chains-chains-DpuChain.browser.esm.js"
+  }
+}

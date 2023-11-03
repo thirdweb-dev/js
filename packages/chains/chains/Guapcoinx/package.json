@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Guapcoinx.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Guapcoinx.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Guapcoinx.esm.js": "./dist/thirdweb-dev-chains-chains-Guapcoinx.browser.esm.js"
+  }
+}

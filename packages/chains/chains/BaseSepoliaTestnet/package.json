@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BaseSepoliaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BaseSepoliaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BaseSepoliaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BaseSepoliaTestnet.browser.esm.js"
+  }
+}

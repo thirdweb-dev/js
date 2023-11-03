@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Tenet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Tenet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Tenet.esm.js": "./dist/thirdweb-dev-chains-chains-Tenet.browser.esm.js"
+  }
+}

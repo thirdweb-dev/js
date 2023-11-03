@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-_4goodnetwork.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-_4goodnetwork.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-_4goodnetwork.esm.js": "./dist/thirdweb-dev-chains-chains-_4goodnetwork.browser.esm.js"
+  }
+}

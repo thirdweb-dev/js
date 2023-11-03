@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Planq.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Planq.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Planq.esm.js": "./dist/thirdweb-dev-chains-chains-Planq.browser.esm.js"
+  }
+}

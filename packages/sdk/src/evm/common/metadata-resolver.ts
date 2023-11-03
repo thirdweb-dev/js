@@ -9,7 +9,7 @@ import { getChainProvider } from "../constants/urls";
 import type { TWMultichainRegistryLogic } from "@thirdweb-dev/contracts-js";
 import { constructAbiFromBytecode } from "./feature-detection/getAllDetectedFeatures";
 import { SDKOptions } from "../schema/sdk-options";
-import Polygon from "@thirdweb-dev/chains/chains/137";
+import Polygon from "@thirdweb-dev/chains/chains/Polygon";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};

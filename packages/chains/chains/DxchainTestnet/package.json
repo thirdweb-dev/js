@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-DxchainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-DxchainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-DxchainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-DxchainTestnet.browser.esm.js"
+  }
+}

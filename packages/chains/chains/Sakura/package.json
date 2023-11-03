@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Sakura.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Sakura.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Sakura.esm.js": "./dist/thirdweb-dev-chains-chains-Sakura.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-LightlinkPhoenix.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-LightlinkPhoenix.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-LightlinkPhoenix.esm.js": "./dist/thirdweb-dev-chains-chains-LightlinkPhoenix.browser.esm.js"
+  }
+}

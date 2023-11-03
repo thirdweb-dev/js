@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Realchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Realchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Realchain.esm.js": "./dist/thirdweb-dev-chains-chains-Realchain.browser.esm.js"
+  }
+}

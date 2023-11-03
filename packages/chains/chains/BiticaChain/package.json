@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BiticaChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BiticaChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BiticaChain.esm.js": "./dist/thirdweb-dev-chains-chains-BiticaChain.browser.esm.js"
+  }
+}

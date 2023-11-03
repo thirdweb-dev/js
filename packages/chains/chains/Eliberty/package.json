@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Eliberty.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Eliberty.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Eliberty.esm.js": "./dist/thirdweb-dev-chains-chains-Eliberty.browser.esm.js"
+  }
+}

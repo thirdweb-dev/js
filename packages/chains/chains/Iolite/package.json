@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Iolite.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Iolite.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Iolite.esm.js": "./dist/thirdweb-dev-chains-chains-Iolite.browser.esm.js"
+  }
+}

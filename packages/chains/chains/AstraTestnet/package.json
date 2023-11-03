@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-AstraTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-AstraTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-AstraTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-AstraTestnet.browser.esm.js"
+  }
+}

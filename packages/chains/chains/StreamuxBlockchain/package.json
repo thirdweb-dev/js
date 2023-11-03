@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-StreamuxBlockchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-StreamuxBlockchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-StreamuxBlockchain.esm.js": "./dist/thirdweb-dev-chains-chains-StreamuxBlockchain.browser.esm.js"
+  }
+}

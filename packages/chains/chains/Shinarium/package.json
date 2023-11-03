@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Shinarium.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Shinarium.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Shinarium.esm.js": "./dist/thirdweb-dev-chains-chains-Shinarium.browser.esm.js"
+  }
+}

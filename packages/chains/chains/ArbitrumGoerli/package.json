@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ArbitrumGoerli.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ArbitrumGoerli.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ArbitrumGoerli.esm.js": "./dist/thirdweb-dev-chains-chains-ArbitrumGoerli.browser.esm.js"
+  }
+}

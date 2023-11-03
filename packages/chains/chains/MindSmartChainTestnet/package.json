@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-MindSmartChainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-MindSmartChainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-MindSmartChainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-MindSmartChainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Firechain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Firechain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Firechain.esm.js": "./dist/thirdweb-dev-chains-chains-Firechain.browser.esm.js"
+  }
+}

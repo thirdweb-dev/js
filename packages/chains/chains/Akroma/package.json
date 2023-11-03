@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Akroma.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Akroma.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Akroma.esm.js": "./dist/thirdweb-dev-chains-chains-Akroma.browser.esm.js"
+  }
+}

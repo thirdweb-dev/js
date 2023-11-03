@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BobaoperaTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BobaoperaTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BobaoperaTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BobaoperaTestnet.browser.esm.js"
+  }
+}

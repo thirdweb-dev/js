@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Bosagora.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Bosagora.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Bosagora.esm.js": "./dist/thirdweb-dev-chains-chains-Bosagora.browser.esm.js"
+  }
+}

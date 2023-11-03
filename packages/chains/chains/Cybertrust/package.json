@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Cybertrust.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Cybertrust.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Cybertrust.esm.js": "./dist/thirdweb-dev-chains-chains-Cybertrust.browser.esm.js"
+  }
+}

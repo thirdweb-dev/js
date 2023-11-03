@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ToronetTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ToronetTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ToronetTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ToronetTestnet.browser.esm.js"
+  }
+}

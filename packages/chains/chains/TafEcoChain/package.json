@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TafEcoChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TafEcoChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TafEcoChain.esm.js": "./dist/thirdweb-dev-chains-chains-TafEcoChain.browser.esm.js"
+  }
+}

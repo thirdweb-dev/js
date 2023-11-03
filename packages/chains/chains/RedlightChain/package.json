@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-RedlightChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-RedlightChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-RedlightChain.esm.js": "./dist/thirdweb-dev-chains-chains-RedlightChain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ArcTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ArcTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ArcTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-ArcTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-CicChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-CicChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-CicChain.esm.js": "./dist/thirdweb-dev-chains-chains-CicChain.browser.esm.js"
+  }
+}

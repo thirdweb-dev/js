@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Teleport.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Teleport.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Teleport.esm.js": "./dist/thirdweb-dev-chains-chains-Teleport.browser.esm.js"
+  }
+}

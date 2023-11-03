@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-XtSmartChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-XtSmartChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-XtSmartChain.esm.js": "./dist/thirdweb-dev-chains-chains-XtSmartChain.browser.esm.js"
+  }
+}

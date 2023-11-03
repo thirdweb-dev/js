@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-EnergyWebChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-EnergyWebChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-EnergyWebChain.esm.js": "./dist/thirdweb-dev-chains-chains-EnergyWebChain.browser.esm.js"
+  }
+}

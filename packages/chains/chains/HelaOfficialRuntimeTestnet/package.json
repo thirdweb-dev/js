@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-HelaOfficialRuntimeTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-HelaOfficialRuntimeTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-HelaOfficialRuntimeTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-HelaOfficialRuntimeTestnet.browser.esm.js"
+  }
+}

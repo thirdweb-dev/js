@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-OkexchainTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-OkexchainTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-OkexchainTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-OkexchainTestnet.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-ClvParachain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-ClvParachain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-ClvParachain.esm.js": "./dist/thirdweb-dev-chains-chains-ClvParachain.browser.esm.js"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PortalFantasyChain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PortalFantasyChain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PortalFantasyChain.esm.js": "./dist/thirdweb-dev-chains-chains-PortalFantasyChain.browser.esm.js"
+  }
+}

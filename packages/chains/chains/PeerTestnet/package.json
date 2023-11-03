@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-PeerTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-PeerTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-PeerTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-PeerTestnet.browser.esm.js"
+  }
+}

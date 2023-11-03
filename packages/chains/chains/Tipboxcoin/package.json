@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Tipboxcoin.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Tipboxcoin.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Tipboxcoin.esm.js": "./dist/thirdweb-dev-chains-chains-Tipboxcoin.browser.esm.js"
+  }
+}

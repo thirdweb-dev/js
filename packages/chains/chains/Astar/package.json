@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Astar.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Astar.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Astar.esm.js": "./dist/thirdweb-dev-chains-chains-Astar.browser.esm.js"
+  }
+}

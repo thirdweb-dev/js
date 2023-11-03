@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Gochain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Gochain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Gochain.esm.js": "./dist/thirdweb-dev-chains-chains-Gochain.browser.esm.js"
+  }
+}

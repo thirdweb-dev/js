@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Rollux.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Rollux.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Rollux.esm.js": "./dist/thirdweb-dev-chains-chains-Rollux.browser.esm.js"
+  }
+}

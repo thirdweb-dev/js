@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-TbsiTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-TbsiTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-TbsiTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-TbsiTestnet.browser.esm.js"
+  }
+}

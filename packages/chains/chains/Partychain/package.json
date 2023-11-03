@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Partychain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Partychain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Partychain.esm.js": "./dist/thirdweb-dev-chains-chains-Partychain.browser.esm.js"
+  }
+}

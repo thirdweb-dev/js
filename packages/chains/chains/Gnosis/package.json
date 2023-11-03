@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Gnosis.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Gnosis.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Gnosis.esm.js": "./dist/thirdweb-dev-chains-chains-Gnosis.browser.esm.js"
+  }
+}

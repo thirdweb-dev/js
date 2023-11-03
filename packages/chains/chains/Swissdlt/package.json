@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-Swissdlt.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-Swissdlt.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-Swissdlt.esm.js": "./dist/thirdweb-dev-chains-chains-Swissdlt.browser.esm.js"
+  }
+}

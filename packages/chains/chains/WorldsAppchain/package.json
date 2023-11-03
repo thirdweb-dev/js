@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-WorldsAppchain.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-WorldsAppchain.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-WorldsAppchain.esm.js": "./dist/thirdweb-dev-chains-chains-WorldsAppchain.browser.esm.js"
+  }
+}

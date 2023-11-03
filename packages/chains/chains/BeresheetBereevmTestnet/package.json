@@ -1,0 +1,7 @@
+{
+  "main": "dist/thirdweb-dev-chains-chains-BeresheetBereevmTestnet.cjs.js",
+  "module": "dist/thirdweb-dev-chains-chains-BeresheetBereevmTestnet.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-chains-chains-BeresheetBereevmTestnet.esm.js": "./dist/thirdweb-dev-chains-chains-BeresheetBereevmTestnet.browser.esm.js"
+  }
+}
