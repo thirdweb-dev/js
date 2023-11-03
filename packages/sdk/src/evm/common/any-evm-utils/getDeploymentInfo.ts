@@ -16,6 +16,7 @@ import {
 import { Extension } from "../../types/extensions";
 import { fetchPublishedContractFromPolygon } from "./fetchPublishedContractFromPolygon";
 import invariant from "tiny-invariant";
+import { extractConstructorParamsFromAbi } from "../feature-detection/extractConstructorParamsFromAbi";
 /**
  *
  * Returns txn data for keyless deploys as well as signer deploys.
@@ -45,6 +46,10 @@ export async function getDeploymentInfo(
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
   const defaultExtensions = extendedMetadata?.defaultExtensions;
+
+  const defaultExtensionsParams = extractConstructorParamsFromAbi(
+    compilerMetadata.abi,
+  ).filter((p) => p.name.includes("defaultExtensions"));
 
   if (extendedMetadata?.routerType === "plugin" && defaultExtensions) {
     invariant(clientId || secretKey, "Require Client Id / Secret Key");
@@ -114,7 +119,11 @@ export async function getDeploymentInfo(
     };
 
     finalDeploymentInfo.push(...pluginDeploymentInfo, pluginMapTransaction);
-  } else if (extendedMetadata?.routerType === "dynamic" && defaultExtensions) {
+  } else if (
+    (extendedMetadata?.routerType === "dynamic" ||
+      defaultExtensionsParams.length > 0) &&
+    defaultExtensions
+  ) {
     invariant(clientId || secretKey, "Require Client Id / Secret Key");
     const publishedExtensions = await Promise.all(
       defaultExtensions.map((e) => {
