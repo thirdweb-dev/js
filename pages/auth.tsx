@@ -15,7 +15,7 @@ const TRACKING_CATEGORY = "auth-landing";
 
 const GUIDES = [
   {
-    title: "How to Create a Web3 Creator Platform with a Web2 Backend",
+    title: "How to Build a Web3 Creator Platform with a Web2 Backend",
     image:
       "https://blog.thirdweb.com/content/images/size/w2000/2023/03/How-to-create-a-web3-creator----platform-with-a-web2-backend.png",
     link: "https://blog.thirdweb.com/guides/how-to-create-a-web3-creator-platform/",
