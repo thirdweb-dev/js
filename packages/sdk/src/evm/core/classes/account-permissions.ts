@@ -744,20 +744,26 @@ export class AccountPermissions implements DetectableFeature {
           return !item.makeAdmin;
         })
         .map((item) => item.signer);
-      await Promise.all(
-        allSigners.map(async (item) => {
-          if (!allToMakeSigners.includes(item.signer)) {
-            const data = (
-              await this.sendSignerPermissionRequest(
+
+      const requests = await Promise.all(
+        allSigners.map((item) =>
+          !allToMakeSigners.includes(item.signer)
+            ? this.sendSignerPermissionRequest(
                 item.signer,
                 DEFAULT_PERMISSIONS,
                 AdminFlag.None,
               )
-            ).encode();
-            removeSignerData.push(data);
-          }
-        }),
+            : null,
+        ),
       );
+
+      allSigners.map((item, index) => {
+        const request = requests[index];
+        if (!allToMakeSigners.includes(item.signer) && request) {
+          const data = request.encode();
+          removeSignerData.push(data);
+        }
+      });
 
       for (const member of resolvedSnapshot) {
         // Add new admin
