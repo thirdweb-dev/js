@@ -4,17 +4,14 @@ import { AppLayout } from "components/app-layouts/app";
 import { ApiKeys } from "components/settings/ApiKeys";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { LoggedInOnlyView } from "components/dashboard/LoggedInOnlyView";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
 

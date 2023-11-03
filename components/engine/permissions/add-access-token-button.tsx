@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { Button, Card, Checkbox, CodeBlock, Text } from "tw-components";
+import { Button, Checkbox, CodeBlock, Text } from "tw-components";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState } from "react";
 

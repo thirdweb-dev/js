@@ -11,7 +11,6 @@ import {
   ModalFooter,
   Flex,
   useDisclosure,
-  Stack,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";

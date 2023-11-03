@@ -19,7 +19,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel, Text } from "tw-components";
+import { Button, FormLabel } from "tw-components";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 
 interface AddAdminButtonProps {

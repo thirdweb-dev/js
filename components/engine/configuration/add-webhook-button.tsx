@@ -21,7 +21,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { Button, FormHelperText, FormLabel, Text } from "tw-components";
+import { Button, FormHelperText, FormLabel } from "tw-components";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { beautifyString } from "./webhooks-table";
 
