@@ -68,7 +68,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
           titleWithGradient="easily"
           subtitle="Enable your users to mint, deploy and distribute NFTS through your app with only a few lines of code."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/minting/getting-started/deploying-smart-contract"
+          ctaLink="https://portal.thirdweb.com/signature-minting"
           gradient="linear(to-r, #8E0EFF, #16bdf0)"
           image={require("public/assets/product-pages/hero/desktop-hero-minting.png")}
           mobileImage={require("public/assets/product-pages/hero/mobile-hero-minting.png")}
@@ -159,7 +159,7 @@ const SolutionsMinting: ThirdwebNextPage = () => {
           title="Start building"
           titleWithGradient="today."
           trackingCategory={TRACKING_CATEGORY}
-          ctaLink="https://portal.thirdweb.com/minting/getting-started/deploying-smart-contract"
+          ctaLink="https://portal.thirdweb.com/signature-minting"
           gradient="linear(to-r, #8E0EFF, #16bdf0)"
           contactUsTitle="Book Demo"
         />
