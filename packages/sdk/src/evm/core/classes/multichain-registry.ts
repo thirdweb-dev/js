@@ -149,12 +149,14 @@ export class MultichainRegistry {
     ): Promise<Transaction<TransactionResult>> => {
       const deployerAddress = await this.registryRouter.getSignerAddress();
       const contractEncoder = new ContractEncoder(this.registryLogic);
-
+      const contractAddresses = await Promise.all(
+        contracts.map((item) => resolveAddress(item.address)),
+      );
       const encoded: string[] = await Promise.all(
-        contracts.map(async (contract) =>
+        contracts.map(async (contract, index) =>
           contractEncoder.encode("remove", [
             deployerAddress,
-            await resolveAddress(contract.address),
+            contractAddresses[index],
             contract.chainId,
           ]),
         ),

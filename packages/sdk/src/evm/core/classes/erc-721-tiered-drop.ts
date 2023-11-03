@@ -291,18 +291,20 @@ export class Erc721TieredDrop implements DetectableFeature {
   public async generateBatch(
     payloadsToSign: TieredDropPayloadInput[],
   ): Promise<TieredDropPayloadWithSignature[]> {
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "No signer available");
     const parsedPayloads = await Promise.all(
       payloadsToSign.map((payload) =>
         TieredDropPayloadSchema.parseAsync(payload),
       ),
     );
     const chainId = await this.contractWrapper.getChainID();
-    const signer = this.contractWrapper.getSigner();
-    invariant(signer, "No signer available");
-
-    return await Promise.all(
-      parsedPayloads.map(async (payload) => {
-        const signature = await this.contractWrapper.signTypedData(
+    const contractStructs = await Promise.all(
+      parsedPayloads.map((payload) => this.mapPayloadToContractStruct(payload)),
+    );
+    const signatures = await Promise.all(
+      contractStructs.map((message) =>
+        this.contractWrapper.signTypedData(
           signer,
           {
             name: "SignatureAction",
@@ -311,12 +313,14 @@ export class Erc721TieredDrop implements DetectableFeature {
             verifyingContract: this.contractWrapper.address,
           },
           { GenericRequest: GenericRequest },
-          await this.mapPayloadToContractStruct(payload),
-        );
-
-        return { payload, signature: signature.toString() };
-      }),
+          message,
+        ),
+      ),
     );
+    return parsedPayloads.map((payload, index) => {
+      const signature = signatures[index];
+      return { payload, signature: signature.toString() };
+    });
   }
 
   public async verify(

@@ -268,7 +268,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * ```
    *
    * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata and their ownersfor all NFTs queried.
+   * @returns The NFT metadata and their owners for all NFTs queried.
    */
   public async getAllClaimed(queryParams?: QueryAllParams): Promise<NFT[]> {
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
