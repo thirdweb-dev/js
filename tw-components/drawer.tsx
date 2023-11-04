@@ -23,6 +23,7 @@ export interface DrawerProps extends Omit<ChakraDrawerProps, "placement"> {
   footer?: ModalFooterProps;
   customPlacement?: "bottom" | "right" | "top" | "left";
   closeOnOverlayClick?: boolean;
+  noTopBorderRadius?: boolean;
 }
 
 export const Drawer: ComponentWithChildren<DrawerProps> = ({
@@ -33,6 +34,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
   customPlacement,
   closeButtonProps,
   closeOnOverlayClick,
+  noTopBorderRadius,
   ...restDrawerProps
 }) => {
   const isMobile = useBreakpointValue(
@@ -53,7 +55,10 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
       <DrawerContent
         maxH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
         overflow="hidden"
-        borderTopRadius={{ base: "2xl", md: "none" }}
+        borderTopRadius={{
+          base: noTopBorderRadius ? "none" : "2xl",
+          md: "none",
+        }}
       >
         <DrawerCloseButton {...closeButtonProps} />
         {header && (
