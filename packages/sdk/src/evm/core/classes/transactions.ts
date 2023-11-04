@@ -910,12 +910,11 @@ export async function engineSendFunction(
     "calling engine gasless transaction without engine config in the SDK options",
   );
 
-  const request = await defenderPrepareRequest(
+  const request = await enginePrepareRequest(
     transaction,
     signer,
     provider,
     storage,
-    gaslessOptions,
   );
 
   const res = await fetch(gaslessOptions.engine.relayerUrl, request);
@@ -1008,6 +1007,61 @@ export async function defenderSendFunction(
   throw new Error(
     `relay transaction failed with status: ${response.status} (${response.statusText})`,
   );
+}
+
+async function enginePrepareRequest(
+  transaction: GaslessTransaction,
+  signer: Signer,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+) {
+  const forwarderAddress =
+    CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+      .openzeppelinForwarder ||
+    (await computeForwarderAddress(provider, storage));
+  const ForwarderABI = (
+    await import("@thirdweb-dev/contracts-js/dist/abis/Forwarder.json")
+  ).default;
+
+  const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
+  const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
+    transaction.from,
+  ]);
+
+  const domain = {
+    name: "GSNv2 Forwarder",
+    version: "0.0.1",
+    chainId: transaction.chainId,
+    verifyingContract: forwarderAddress,
+  };
+  const types = {
+    ForwardRequest,
+  };
+  const message: ForwardRequestMessage | PermitRequestMessage = {
+    from: transaction.from,
+    to: transaction.to,
+    value: BigNumber.from(0).toString(),
+    gas: BigNumber.from(transaction.gasLimit).toString(),
+    nonce: BigNumber.from(nonce).toString(),
+    data: transaction.data,
+  };
+
+  const { signature: sig } = await signTypedDataInternal(
+    signer,
+    domain,
+    types,
+    message,
+  );
+  const signature: BytesLike = sig;
+
+  return {
+    method: "POST",
+    body: JSON.stringify({
+      request: message,
+      signature,
+      forwarderAddress,
+    }),
+  };
 }
 
 async function defenderPrepareRequest(
