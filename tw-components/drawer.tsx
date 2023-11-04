@@ -21,6 +21,8 @@ export interface DrawerProps extends Omit<ChakraDrawerProps, "placement"> {
   drawerBodyProps?: ModalBodyProps;
   closeButtonProps?: CloseButtonProps;
   footer?: ModalFooterProps;
+  customPlacement?: "bottom" | "right" | "top" | "left";
+  closeOnOverlayClick?: boolean;
 }
 
 export const Drawer: ComponentWithChildren<DrawerProps> = ({
@@ -28,7 +30,9 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
   header,
   drawerBodyProps,
   footer,
+  customPlacement,
   closeButtonProps,
+  closeOnOverlayClick,
   ...restDrawerProps
 }) => {
   const isMobile = useBreakpointValue(
@@ -40,8 +44,10 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
       {...restDrawerProps}
       allowPinchZoom
       preserveScrollBarGap
-      placement={isMobile ? "bottom" : "right"}
-      closeOnOverlayClick={false}
+      placement={
+        customPlacement ? customPlacement : isMobile ? "bottom" : "right"
+      }
+      closeOnOverlayClick={closeOnOverlayClick ?? false}
     >
       <DrawerOverlay zIndex="modal" />
       <DrawerContent
