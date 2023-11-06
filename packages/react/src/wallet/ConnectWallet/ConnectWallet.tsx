@@ -136,7 +136,7 @@ export type ConnectWalletProps = {
   displayBalanceToken?: Record<number, string>;
 
   /**
-   * Hide option to switch to Personal wallet
+   * Hide option to switch to Personal wallet in the dropdown (when using Smart wallet)
    *
    * @default false
    */
