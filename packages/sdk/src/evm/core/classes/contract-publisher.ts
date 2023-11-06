@@ -547,6 +547,10 @@ export class ContractPublisher extends RPCConnectionHandler {
   private cleanupOldPublishFlowData(
     extraMetadata: ExtraPublishMetadata,
   ): ExtraPublishMetadata {
+    if (extraMetadata.compositeAbi) {
+      delete extraMetadata.compositeAbi;
+    }
+
     return {
       ...extraMetadata,
       isDeployableViaFactory: false,
