@@ -74,7 +74,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
-    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.22.5",
     "@babel/runtime": "^7.22.6",
     "@microsoft/api-documenter": "^7.22.30",
