@@ -48,7 +48,11 @@ interface Web3ButtonProps<TActionFn extends ActionFn> {
   style?: React.CSSProperties;
   connectWallet?: Omit<
     ConnectWalletProps,
-    "detailsBtn" | "hideTestnetFaucet" | "switchToActiveChain" | "theme"
+    | "detailsBtn"
+    | "hideTestnetFaucet"
+    | "switchToActiveChain"
+    | "theme"
+    | "hideSwitchToPersonalWallet"
   >;
 }
 

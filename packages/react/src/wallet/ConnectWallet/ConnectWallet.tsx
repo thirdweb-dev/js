@@ -134,6 +134,13 @@ export type ConnectWalletProps = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Hide option to switch to Personal wallet
+   *
+   * @default false
+   */
+  hideSwitchToPersonalWallet?: boolean;
 };
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
@@ -334,6 +341,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = (props) => {
                 props?.auth?.onLogout?.();
               }
             }}
+            hideSwitchToPersonalWallet={props.hideSwitchToPersonalWallet}
           />
         );
       })()}

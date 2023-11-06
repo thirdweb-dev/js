@@ -82,6 +82,7 @@ export const ConnectedWalletDetails: React.FC<{
   theme: "light" | "dark" | Theme;
   supportedTokens: SupportedTokens;
   displayBalanceToken?: Record<number, string>;
+  hideSwitchToPersonalWallet?: boolean;
 }> = (props) => {
   const chain = useChain();
   const walletChainId = useChainId();
@@ -389,15 +390,17 @@ export const ConnectedWalletDetails: React.FC<{
 
       <Container flex="column" gap="sm">
         {/* Switch to Personal Wallet for Safe */}
-        {personalWallet && personalWalletConfig && (
-          <WalletSwitcher
-            wallet={personalWallet}
-            name="Personal Wallet"
-            onSwitch={() => {
-              setWrapperWallet(activeWallet);
-            }}
-          />
-        )}
+        {personalWallet &&
+          personalWalletConfig &&
+          !props.hideSwitchToPersonalWallet && (
+            <WalletSwitcher
+              wallet={personalWallet}
+              name="Personal Wallet"
+              onSwitch={() => {
+                setWrapperWallet(activeWallet);
+              }}
+            />
+          )}
 
         {/* Switch to Wrapper Wallet */}
         {wrapperWalletConfig && wrapperWallet && (
