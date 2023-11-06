@@ -327,7 +327,7 @@ export const ConnectedWalletDetails: React.FC<{
 
       <ConnectedToSmartWallet />
 
-      {/* Send and Recive */}
+      {/* Send and Receive */}
       <Container
         style={{
           display: "grid",
